@@ -247,6 +247,7 @@
     <div class="dropdown-divider o_debug_leave_section" role="separator"/>
     <a role="menuitem" href="#" data-action="split_assets" class="dropdown-item">Activate Assets Debugging</a>
     <a role="menuitem" href="#" data-action="regenerateAssets" class="dropdown-item">Regenerate Assets Bundles</a>
+    <a t-if="manager._is_admin" role="menuitem" href="/web/become" class="dropdown-item">Become Superuser</a>
     <a role="menuitem" href="#" data-action="leave_debug_mode" class="dropdown-item">Leave the Developer Tools</a>
 </t>
 <t t-name="WebClient.DebugManager.Action">
@@ -512,7 +513,7 @@
     </div>
     <div class="btn-group" role="toolbar" aria-label="Change graph">
         <button class="btn btn-secondary fa fa-bar-chart-o o_graph_button" title="Bar Chart" aria-label="Bar Chart" data-mode="bar"/>
-        <button class="btn btn-secondary fa fa-line-chart o_graph_button" title="Line Chart" aria-label="Line Chart" data-mode="line"/>
+        <button class="btn btn-secondary fa fa-area-chart o_graph_button" title="Line Chart" aria-label="Line Chart" data-mode="line"/>
         <button class="btn btn-secondary fa fa-pie-chart o_graph_button" title="Pie Chart" aria-label="Pie Chart" data-mode="pie"/>
     </div>
 </t>
@@ -540,8 +541,8 @@
         </div>
     </div>
     <div class="btn-group" role="toolbar" aria-label="Pivot settings">
-        <button class="btn btn-secondary fa fa-expand o_pivot_flip_button" title="Flip axis" aria-label="Flip axis"/>
-        <button class="btn btn-secondary fa fa-arrows-alt o_pivot_expand_button" title="Expand all" aria-label="Expand all"/>
+        <button class="btn btn-secondary fa fa-exchange o_pivot_flip_button" title="Flip axis" aria-label="Flip axis"/>
+        <button class="btn btn-secondary fa fa-arrows o_pivot_expand_button" title="Expand all" aria-label="Expand all"/>
         <button class="btn btn-secondary fa fa-download o_pivot_download" title="Download xls" aria-label="Download xls"/>
     </div>
 </t>
@@ -740,12 +741,15 @@
             <i class="fa fa-arrow-left o_field_selector_popover_option o_field_selector_prev_page" title="Previous" role="img" aria-label="Previous"/>
             <div class="o_field_selector_title"/>
             <i class="fa fa-times o_field_selector_popover_option o_field_selector_close" title="Close" role="img" aria-label="Close"/>
+            <div t-if="widget.options.showSearchInput" class="o_field_selector_search">
+                <input type="text" class="o_input"/>
+            </div>
         </div>
         <div class="o_field_selector_popover_body">
             <ul class="o_field_selector_page"/>
         </div>
         <div t-if="widget.options.debugMode" class="o_field_selector_popover_footer">
-            <input type="text" class="o_input"/>
+            <input type="text" class="o_input o_field_selector_debug"/>
         </div>
     </div>
 </div>
@@ -809,7 +813,7 @@
 
 <t t-name="FieldMany2One">
     <t t-if="widget.mode === 'readonly'">
-        <a t-if="!widget.nodeOptions.no_open" class="o_form_uri" href="#"/>
+        <a t-if="!widget.nodeOptions.no_open" t-att-tabindex="widget.attrs.tabindex" class="o_form_uri" href="#"/>
         <span t-if="widget.nodeOptions.no_open"/>
     </t>
     <div t-if="widget.mode === 'edit'" class="o_field_widget o_field_many2one" aria-atomic="true">
@@ -1045,7 +1049,7 @@
         <div t-foreach="widget.value.data" t-as="file" class="oe_attachment">
             <t t-if="!file.data.upload">
                 <div>
-                    <a href="#" class="fa fa-times float-right oe_delete" title="Delete this file" aria-label="Delete this file" t-att-data-id="file.data.id"/>
+                    <a href="#" class="fa fa-times float-right oe_delete pl-1" title="Delete this file" aria-label="Delete this file" t-att-data-id="file.data.id"/>
                     <t t-raw="file.data.name || file.data.filename"/>
                 </div>
                 <a class="o_image" target="_blank" t-att-href="widget.metadata[file.id] ? widget.metadata[file.id].url : false"

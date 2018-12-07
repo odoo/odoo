@@ -3,8 +3,10 @@
     <template id="_assets_utils">
         <link rel="stylesheet" type="text/scss" href="/web/static/lib/bootstrap/scss/_functions.scss"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/lib/bootstrap/scss/_mixins.scss"/>
-        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/utils.scss"/>
+
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/bs_mixins_overrides.scss"/>
+
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/utils.scss"/>
     </template>
 
     <template id="_assets_primary_variables">
@@ -20,26 +22,22 @@
         <t t-call="web._assets_primary_variables"/>
         <t t-call="web._assets_secondary_variables"/>
 
-        <!-- Bootstrap variables should not be necessary, all pages come with bootstrap in at least one of their -->
-        <!-- bundle and, ideally, these should be available in all assets... with their odoo override. This system -->
-        <!-- however works for now as non-backend and non-frontend assets do not need overriden BS variables yet. -->
-        <link t-if="not no_bs_vars" rel="stylesheet" type="text/scss" href="/web/static/lib/bootstrap/scss/_variables.scss"/>
+        <t t-raw="0"/>
+
+        <link rel="stylesheet" type="text/scss" href="/web/static/lib/bootstrap/scss/_variables.scss"/>
     </template>
 
     <template id="_assets_backend_helpers">
-        <t t-call="web._assets_helpers"><t t-set="no_bs_vars" t-value="True"/></t>
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/bootstrap_overridden.scss"/>
     </template>
 
     <template id="_assets_frontend_helpers">
-        <t t-call="web._assets_helpers"><t t-set="no_bs_vars" t-value="True"/></t>
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/bootstrap_overridden_frontend.scss"/>
     </template>
 
     <template id="_assets_bootstrap">
-        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/import_bootstrap_part1.scss"/>
-        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/bs_mixins_overrides.scss"/>
-        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/import_bootstrap_part2.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/import_bootstrap.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/bootstrap_review.scss"/>
     </template>
 
     <template id="assets_common" name="Common Assets (used in backend interface and website)">
@@ -49,6 +47,7 @@
         <link rel="stylesheet" type="text/css" href="/web/static/lib/fontawesome/css/font-awesome.css"/>
         <link rel="stylesheet" type="text/css" href="/web/static/lib/select2/select2.css"/>
         <link rel="stylesheet" type="text/css" href="/web/static/lib/select2-bootstrap-css/select2-bootstrap.css"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/lib/tempusdominus/tempusdominus.scss"/>
 
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/fonts.scss"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/ui.scss"/>
@@ -61,12 +60,12 @@
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/datepicker.scss"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/banner.scss"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/colorpicker.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/keyboard.scss"/>
 
         <t t-if="request and request.env['res.lang'].search([('code', '=', request.env.lang)]).direction == 'rtl'">
             <link rel="stylesheet" type="text/less" href="/web/static/src/scss/fontawesome_overriden.scss"/>
         </t>
 
-        <script type="text/javascript" src="/web/static/lib/es5-shim/es5-shim.min.js"></script>
         <script type="text/javascript" src="/web/static/lib/underscore/underscore.js"></script>
         <script type="text/javascript" src="/web/static/lib/underscore.string/lib/underscore.string.js"></script>
         <script type="text/javascript" src="/web/static/lib/moment/moment.js"></script>
@@ -107,6 +106,7 @@
         <script type="text/javascript" src="/web/static/src/js/libs/jquery.js"></script>
         <script type="text/javascript" src="/web/static/src/js/libs/download.js"></script>
         <script type="text/javascript" src="/web/static/src/js/libs/content-disposition.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/libs/underscore.js"></script>
         <script type="text/javascript" src="/web/static/src/js/services/config.js"></script>
         <script type="text/javascript" src="/web/static/src/js/core/abstract_service.js"></script>
         <script type="text/javascript" src="/web/static/src/js/core/abstract_storage_service.js"></script>
@@ -139,10 +139,11 @@
     </template>
 
     <template id="assets_backend" name="Backend Assets (used in backend interface)">
-        <t t-call="web._assets_backend_helpers"/>
+        <t t-call="web._assets_helpers">
+            <t t-call="web._assets_backend_helpers"/>
+        </t>
 
         <t t-call="web._assets_bootstrap"/>
-        <link rel="stylesheet" type="text/scss" href="/web/static/lib/tempusdominus/tempusdominus.scss"/>
 
         <link rel="stylesheet" type="text/css" href="/base/static/src/css/modules.css"/>
 
@@ -221,6 +222,7 @@
         <script type="text/javascript" src="/web/static/src/js/widgets/change_password.js"></script>
         <script type="text/javascript" src="/web/static/src/js/tools/debug_manager.js"></script>
         <script type="text/javascript" src="/web/static/src/js/tools/test_menus_loader.js"/>
+        <script type="text/javascript" src="/web/static/src/js/tools/tools.js"></script>
         <script type="text/javascript" src="/web/static/src/js/widgets/data_export.js"></script>
         <script type="text/javascript" src="/web/static/src/js/widgets/date_picker.js"></script>
         <script type="text/javascript" src="/web/static/src/js/widgets/domain_selector_dialog.js"></script>
@@ -271,6 +273,7 @@
         <script type="text/javascript" src="/web/static/src/js/views/standalone_field_manager_mixin.js"></script>
         <script type="text/javascript" src="/web/static/src/js/views/view_registry.js"></script>
         <script type="text/javascript" src="/web/static/src/js/views/view_dialogs.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/view_utils.js"></script>
         <script type="text/javascript" src="/web/static/src/js/views/form/form_renderer.js"></script>
         <script type="text/javascript" src="/web/static/src/js/views/form/form_controller.js"></script>
         <script type="text/javascript" src="/web/static/src/js/views/form/form_view.js"></script>
@@ -312,10 +315,11 @@
     </template>
 
     <template id="web.assets_frontend" name="Website Assets">
-        <t t-call="web._assets_frontend_helpers"/>
+        <t t-call="web._assets_helpers">
+            <t t-call="web._assets_frontend_helpers"/>
+        </t>
 
         <t t-call="web._assets_bootstrap"/>
-        <link rel="stylesheet" type="text/scss" href="/web/static/lib/tempusdominus/tempusdominus.scss"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/navbar_mobile.scss"/>
 
         <script type="text/javascript" src="/web/static/src/js/services/session.js"></script>
@@ -408,11 +412,15 @@
                     <t t-esc="message"/>
                 </p>
 
-                <input type="hidden" name="redirect" t-att-value="redirect"/>
                 <div t-attf-class="clearfix oe_login_buttons text-center mb-1 {{'pt-2' if form_small else 'pt-3'}}">
                     <button type="submit" class="btn btn-primary btn-block">Log in</button>
+                    <t t-if="debug">
+                        <button type="submit" name="redirect" value="/web/become" class="btn btn-link btn-sm btn-block">Log in as superuser</button>
+                    </t>
                     <div class="o_login_auth"/>
                 </div>
+
+                <input type="hidden" name="redirect" t-att-value="redirect"/>
             </form>
         </t>
     </template>
@@ -426,6 +434,8 @@
         <t t-call-assets="web.assets_backend" t-js="false"/>
         <t t-call-assets="web.assets_common" t-css="false"/>
         <t t-call-assets="web.assets_backend" t-css="false"/>
+
+        <script type="text/javascript" src="/web/static/tests/helpers/qunit_asserts.js"></script>
 
         <!-- add lazy-loaded libs to make tests synchronous -->
         <link rel="stylesheet" href="/web/static/lib/fullcalendar/css/fullcalendar.css"/>
@@ -482,6 +492,16 @@
             }
         </style>
 
+        <script type="text/javascript" src="/web/static/tests/helpers/test_utils_create.js"></script>
+        <script type="text/javascript" src="/web/static/tests/helpers/test_utils_dom.js"></script>
+        <script type="text/javascript" src="/web/static/tests/helpers/test_utils_fields.js"></script>
+        <script type="text/javascript" src="/web/static/tests/helpers/test_utils_file.js"></script>
+        <script type="text/javascript" src="/web/static/tests/helpers/test_utils_form.js"></script>
+        <script type="text/javascript" src="/web/static/tests/helpers/test_utils_graph.js"></script>
+        <script type="text/javascript" src="/web/static/tests/helpers/test_utils_kanban.js"></script>
+        <script type="text/javascript" src="/web/static/tests/helpers/test_utils_mock.js"></script>
+        <script type="text/javascript" src="/web/static/tests/helpers/test_utils_modal.js"></script>
+        <script type="text/javascript" src="/web/static/tests/helpers/test_utils_pivot.js"></script>
         <script type="text/javascript" src="/web/static/tests/helpers/test_utils.js"></script>
         <script type="text/javascript" src="/web/static/tests/helpers/mock_server.js"></script>
 
@@ -504,6 +524,9 @@
                 <script type="text/javascript" src="/web/static/tests/fields/basic_fields_tests.js"></script>
                 <script type="text/javascript" src="/web/static/tests/fields/field_utils_tests.js"></script>
                 <script type="text/javascript" src="/web/static/tests/fields/relational_fields_tests.js"></script>
+                <script type="text/javascript" src="/web/static/tests/fields/relational_fields/field_many2many_tests.js"></script>
+                <script type="text/javascript" src="/web/static/tests/fields/relational_fields/field_many2one_tests.js"></script>
+                <script type="text/javascript" src="/web/static/tests/fields/relational_fields/field_one2many_tests.js"></script>
                 <script type="text/javascript" src="/web/static/tests/fields/special_fields.js"></script>
                 <script type="text/javascript" src="/web/static/tests/fields/upgrade_fields_tests.js"></script>
 
@@ -540,6 +563,7 @@
                 <script type="text/javascript" src="/web/static/tests/chrome/search_tests.js"></script>
                 <script type="text/javascript" src="/web/static/tests/chrome/pager_tests.js"></script>
                 <script type="text/javascript" src="/web/static/tests/chrome/keyboard_navigation_mixin_tests.js"></script>
+                <script type="text/javascript" src="/web/static/tests/chrome/user_menu_tests.js"></script>
 
                 <script type="text/javascript" src="/web/static/tests/widgets/data_export_tests.js"/>
                 <script type="text/javascript" src="/web/static/tests/widgets/domain_selector_tests.js"/>
@@ -575,6 +599,7 @@
                                     define.call(this, 'web.config.patch', function (require) {
                                         var config = require('web.config');
                                         config.device.isMobile = true;
+                                        config.device.size_class = config.device.SIZES.XS;
                                     });
                                 }
                             };
@@ -616,6 +641,8 @@
                 <t t-call-assets="web.assets_backend" t-js="false"/>
                 <t t-call-assets="web.assets_common" t-css="false"/>
                 <t t-call-assets="web.assets_backend" t-css="false"/>
+
+                <script type="text/javascript" src="/web/static/tests/helpers/qunit_asserts.js"></script>
 
                 <script type="text/javascript">
                     QUnit.config.hidepassed = false;
@@ -659,6 +686,16 @@
                         display: inherit;
                     }
                 </style>
+
+                <script type="text/javascript" src="/web/static/tests/helpers/test_utils_create.js"></script>
+                <script type="text/javascript" src="/web/static/tests/helpers/test_utils_dom.js"></script>
+                <script type="text/javascript" src="/web/static/tests/helpers/test_utils_fields.js"></script>
+                <script type="text/javascript" src="/web/static/tests/helpers/test_utils_form.js"></script>
+                <script type="text/javascript" src="/web/static/tests/helpers/test_utils_graph.js"></script>
+                <script type="text/javascript" src="/web/static/tests/helpers/test_utils_kanban.js"></script>
+                <script type="text/javascript" src="/web/static/tests/helpers/test_utils_mock.js"></script>
+                <script type="text/javascript" src="/web/static/tests/helpers/test_utils_modal.js"></script>
+                <script type="text/javascript" src="/web/static/tests/helpers/test_utils_pivot.js"></script>
                 <script type="text/javascript" src="/web/static/tests/helpers/test_utils.js"></script>
                 <script type="text/javascript" src="/web/static/tests/helpers/mock_server.js"></script>
 

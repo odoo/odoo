@@ -4,14 +4,15 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
-# Bohdan Lisnenko, 2018
+# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
-"Last-Translator: Bohdan Lisnenko, 2018\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-08-24 09:24+0000\n"
+"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2018\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -119,7 +120,7 @@ msgstr "Мітки аналітики"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "Підрахунок прикріплення"
 
 #. module: purchase_requisition
 #: selection:purchase.requisition,state:0
@@ -130,7 +131,7 @@ msgstr "Вибір пропозиції"
 #. module: purchase_requisition
 #: model:purchase.requisition.type,name:purchase_requisition.type_single
 msgid "Blanket Order"
-msgstr "Загальний порядок"
+msgstr "Довгострокове замовлення"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_product_supplierinfo__purchase_requisition_id
@@ -198,6 +199,16 @@ msgstr "Підтверджено"
 #: selection:product.template,purchase_requisition:0
 msgid "Create a draft purchase order"
 msgstr "Створити чернетку замовлення на купівлю"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,help:purchase_requisition.field_product_product__purchase_requisition
+#: model:ir.model.fields,help:purchase_requisition.field_product_template__purchase_requisition
+msgid ""
+"Create a draft purchase order: Based on your product configuration, the "
+"system will create a draft purchase order.Propose a call for tender : If the"
+" 'purchase_requisition' module is installed and this option is selected, the"
+" system will create a draft call for tender."
+msgstr ""
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__create_uid
@@ -326,7 +337,7 @@ msgstr "Якщо відмічено, то нові повідомлення бу
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "Якщо позначено, деякі повідомлення мають помилку доставки."
 
 #. module: purchase_requisition
 #: model_terms:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
@@ -345,11 +356,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "In negotiation"
 msgstr "У переговорах"
-
-#. module: purchase_requisition
-#: model:ir.model,name:purchase_requisition.model_product_supplierinfo
-msgid "Information about a product vendor"
-msgstr "Інформація про товар постачальника"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_is_follower
@@ -385,12 +391,12 @@ msgstr "Рядки"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "Основне прикріплення"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "Помилка доставлення повідомлення"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_ids
@@ -430,7 +436,7 @@ msgstr "Кількість замовлень"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_has_error_counter
 msgid "Number of error"
-msgstr ""
+msgstr "Кількість помилок"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__message_needaction_counter
@@ -440,7 +446,7 @@ msgstr "Кількість повідомлень, які потебують д�
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "Кількість повідомлень з помилковою дставкою"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__message_unread_counter
@@ -477,8 +483,8 @@ msgstr "Забезпечення"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_procurement_group
-msgid "Procurement Requisition"
-msgstr "Замовлення на забезпечення"
+msgid "Procurement Group"
+msgstr "Група забезпечення"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_product_product
@@ -517,11 +523,6 @@ msgstr "Створити тендер"
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__requisition_id
 msgid "Purchase Agreement"
 msgstr "Угода про придбання"
-
-#. module: purchase_requisition
-#: model:ir.model,name:purchase_requisition.model_purchase_requisition_type
-msgid "Purchase Agreement Type"
-msgstr "Тип угоди про придбання"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.tender_type_action
@@ -576,6 +577,11 @@ msgstr "Пошук пропозицій"
 #: model:ir.model.fields,field_description:purchase_requisition.field_product_supplierinfo__purchase_requisition_line_id
 msgid "Purchase Requisition Line"
 msgstr "Рядок пошуку пропозицій"
+
+#. module: purchase_requisition
+#: model:ir.model,name:purchase_requisition.model_purchase_requisition_type
+msgid "Purchase Requisition Type"
+msgstr ""
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.act_res_partner_2_purchase_order
@@ -714,12 +720,17 @@ msgstr "Складське переміщення "
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_stock_rule
 msgid "Stock Rule"
-msgstr ""
+msgstr "Складське правило"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__supplier_info_ids
 msgid "Supplier Info"
 msgstr ""
+
+#. module: purchase_requisition
+#: model:ir.model,name:purchase_requisition.model_product_supplierinfo
+msgid "Supplier Pricelist"
+msgstr "Прайслист постачальника"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form

@@ -14,8 +14,6 @@ import zipfile
 
 import requests
 
-from odoo.tools import pycompat
-
 from docutils import nodes
 from docutils.core import publish_string
 from docutils.transforms import Transform, writer_aux
@@ -273,7 +271,7 @@ class Module(models.Model):
                                    help='An auto-installable module is automatically installed by the '
                                         'system when all its dependencies are satisfied. '
                                         'If the module has no dependency, it is always installed.')
-    state = fields.Selection(STATES, string='Status', default='uninstalled', readonly=True, index=True)
+    state = fields.Selection(STATES, string='Status', default='uninstallable', readonly=True, index=True)
     demo = fields.Boolean('Demo Data', default=False, readonly=True)
     license = fields.Selection([
         ('GPL-2', 'GPL Version 2'),
@@ -684,7 +682,7 @@ class Module(models.Model):
                 updated_values = {}
                 for key in values:
                     old = getattr(mod, key)
-                    updated = tools.ustr(values[key]) if isinstance(values[key], pycompat.string_types) else values[key]
+                    updated = tools.ustr(values[key]) if isinstance(values[key], str) else values[key]
                     if (old or updated) and updated != old:
                         updated_values[key] = values[key]
                 if terp.get('installable', True) and mod.state == 'uninstallable':
@@ -695,11 +693,10 @@ class Module(models.Model):
                     mod.write(updated_values)
             else:
                 mod_path = modules.get_module_path(mod_name)
-                if not mod_path:
+                if not mod_path or not terp:
                     continue
-                if not terp or not terp.get('installable', True):
-                    continue
-                mod = self.create(dict(name=mod_name, state='uninstalled', **values))
+                state = "uninstalled" if terp.get('installable', True) else "uninstallable"
+                mod = self.create(dict(name=mod_name, state=state, **values))
                 res[1] += 1
 
             mod._update_dependencies(terp.get('depends', []))

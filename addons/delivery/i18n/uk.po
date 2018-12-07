@@ -3,15 +3,16 @@
 # * delivery
 # 
 # Translators:
-# Martin Trigaux, 2018
 # Bohdan Lisnenko, 2018
+# Martin Trigaux, 2018
 # Alina Lisnenko <alinasemeniuk1@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
+"POT-Creation-Date: 2018-10-08 06:49+0000\n"
+"PO-Revision-Date: 2018-08-24 09:17+0000\n"
 "Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2018\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
@@ -156,7 +157,6 @@ msgid "Cancel"
 msgstr "Скасувати"
 
 #. module: delivery
-#: model:ir.model,name:delivery.model_delivery_carrier
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__carrier_id
 #: model:ir.model.fields,field_description:delivery.field_product_packaging__package_carrier_type
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__carrier_id
@@ -175,6 +175,11 @@ msgstr "Компанія"
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
 msgid "Condition"
 msgstr "Умова"
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_res_config_settings
+msgid "Config Settings"
+msgstr "Налаштування"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_res_partner
@@ -243,13 +248,13 @@ msgstr "Повідомлення доставки"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__name
 #: model:ir.model.fields,field_description:delivery.field_res_partner__property_delivery_carrier_id
-#: model:ir.model.fields,field_description:delivery.field_res_users__property_delivery_carrier_id
 #: model:ir.model.fields,field_description:delivery.field_sale_order__carrier_id
 msgid "Delivery Method"
 msgstr "Спосіб доставки"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_carrier_form
+#: model:ir.model,name:delivery.model_delivery_carrier
 #: model:ir.ui.menu,name:delivery.menu_action_delivery_carrier_form
 #: model:ir.ui.menu,name:delivery.sale_menu_action_delivery_carrier_form
 #: model_terms:ir.ui.view,arch_db:delivery.res_config_settings_view_form
@@ -272,7 +277,7 @@ msgstr "Упаковки доставки"
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_package__delivery_packaging_id
 #: model_terms:ir.ui.view,arch_db:delivery.product_packaging_delivery_form
 msgid "Delivery Packaging"
-msgstr "Доставка упаковки"
+msgstr "Пакування доставки"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_price_rule
@@ -323,7 +328,7 @@ msgid ""
 "                UPS Express, UPS Standard) with a set of pricing rules attached\n"
 "                to each method."
 msgstr ""
-"Кожен носій (наприклад, UPS) може мати кілька способів доставки (наприклад,\n"
+"Кожен перевізник (наприклад, UPS) може мати кілька способів доставки (наприклад,\n"
 "UPS Express, UPS Standard) із набором правил ціноутворення\n"
 "до кожного методу."
 
@@ -337,7 +342,7 @@ msgstr "Середовище"
 #: code:addons/delivery/models/delivery_grid.py:50
 #, python-format
 msgid "Error: this delivery method is not available for this address."
-msgstr "Помилка. Цей метод доставки недоступний для цієї адреси."
+msgstr "Помилка: цей метод доставки недоступний для цієї адреси."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__delivery_price
@@ -444,7 +449,7 @@ msgstr "Рівень інтеграції"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__invoice_shipping_on_delivery
 msgid "Invoice Shipping on Delivery"
-msgstr "Рахунок доставки на доставці"
+msgstr "Виставити рахунок на доставку"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_line__is_delivery
@@ -495,7 +500,7 @@ msgstr "Маржа"
 #. module: delivery
 #: sql_constraint:delivery.carrier:0
 msgid "Margin cannot be lower than -100%"
-msgstr "Маржа не може бути нижчою, ніж-100%"
+msgstr "Маржа не може бути нижчою, ніж -100%"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -515,7 +520,7 @@ msgstr "Максимальна вага повинна бути позитивн
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__max_value
 msgid "Maximum Value"
-msgstr "Макс. значення"
+msgstr "Максимальне значення"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_product_packaging__max_weight
@@ -548,6 +553,13 @@ msgstr ""
 "може бути обчислена."
 
 #. module: delivery
+#: model:delivery.carrier,name:delivery.normal_delivery_carrier
+#: model:product.product,name:delivery.product_product_delivery_normal
+#: model:product.template,name:delivery.product_product_delivery_normal_product_template
+msgid "Normal Delivery Charges"
+msgstr "Нормальні витрати на доставку"
+
+#. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form
 msgid "OK"
 msgstr "Ок"
@@ -569,7 +581,7 @@ msgstr "Код упаковки"
 
 #. module: delivery
 #: code:addons/delivery/models/stock_picking.py:35
-#: code:addons/delivery/models/stock_picking.py:119
+#: code:addons/delivery/models/stock_picking.py:122
 #, python-format
 msgid "Package Details"
 msgstr "Деталі упаковки"
@@ -581,28 +593,14 @@ msgid "Package too heavy!"
 msgstr ""
 
 #. module: delivery
+#: model:ir.model,name:delivery.model_stock_quant_package
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__package_ids
 msgid "Packages"
 msgstr "Упаковки"
 
 #. module: delivery
-#: model:ir.model,name:delivery.model_product_packaging
-msgid "Packaging"
-msgstr "Упаковка"
-
-#. module: delivery
-#: model:ir.model,name:delivery.model_stock_move_line
-msgid "Packing Operation"
-msgstr "Операції пакування"
-
-#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_package__stock_quant_package_id
 msgid "Physical Package"
-msgstr "Фізична упаковка"
-
-#. module: delivery
-#: model:ir.model,name:delivery.model_stock_quant_package
-msgid "Physical Packages"
 msgstr "Фізична упаковка"
 
 #. module: delivery
@@ -612,7 +610,7 @@ msgid ""
 "Please use \"Check price\" in order to compute a shipping price for this "
 "quotation."
 msgstr ""
-"Будь ласка, використовуйте \"Перевірте ціну\", щоб обчислити ціну доставки "
+"Будь ласка, використовуйте \"Перевірити ціну\", щоб обчислити ціну доставки "
 "за цією комерційною пропозицією."
 
 #. module: delivery
@@ -638,6 +636,16 @@ msgid "Pricing Rules"
 msgstr "Правила ціни"
 
 #. module: delivery
+#: model:ir.model,name:delivery.model_stock_move_line
+msgid "Product Moves (Stock Move Line)"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_product_packaging
+msgid "Product Packaging"
+msgstr "Пакування товару"
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__delivery_type
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__delivery_type
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
@@ -652,11 +660,6 @@ msgid "Quantity"
 msgstr "Кількість"
 
 #. module: delivery
-#: model:ir.model,name:delivery.model_sale_order
-msgid "Quotation"
-msgstr "Комерційна пропозиція"
-
-#. module: delivery
 #: model:ir.model,name:delivery.model_stock_return_picking
 msgid "Return Picking"
 msgstr "Повернути комплектування"
@@ -665,6 +668,11 @@ msgstr "Повернути комплектування"
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__list_base_price
 msgid "Sale Base Price"
 msgstr "Базова ціна продажу"
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_sale_order
+msgid "Sale Order"
+msgstr "Замовлення"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__list_price
@@ -704,7 +712,7 @@ msgstr ""
 "Встановіть Правильно, якщо ваші уповноваження сертифіковані для виробництва."
 
 #. module: delivery
-#: code:addons/delivery/models/stock_picking.py:166
+#: code:addons/delivery/models/stock_picking.py:171
 #, python-format
 msgid ""
 "Shipment sent to carrier %s for shipping with tracking number %s<br/>Cost: "
@@ -741,6 +749,13 @@ msgid "Stock Move"
 msgstr "Складське переміщення "
 
 #. module: delivery
+#: model:delivery.carrier,name:delivery.delivery_carrier
+#: model:product.product,name:delivery.product_product_delivery_poste
+#: model:product.template,name:delivery.product_product_delivery_poste_product_template
+msgid "The Poste"
+msgstr "Проведення"
+
+#. module: delivery
 #: code:addons/delivery/wizard/choose_delivery_package.py:53
 #, python-format
 msgid ""
@@ -762,15 +777,14 @@ msgid ""
 "                quotation) or the invoice (based on the delivery orders)."
 msgstr ""
 "Ці методи дозволяють автоматично розрахувати вартість доставки\n"
-"відповідно до ваших налаштувань; на замовлення клієнта (на підставі\n"
-"комерційної пропозиції або рахунку-фактури (на підставі замовлень на доставку)."
+"відповідно до ваших налаштувань; на замовленні на продаж (на підставі\n"
+"комерційної пропозиції) або рахунку-фактури (на підставі замовлень на доставку)."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_res_partner__property_delivery_carrier_id
-#: model:ir.model.fields,help:delivery.field_res_users__property_delivery_carrier_id
 msgid "This delivery method will be used when invoicing from picking."
 msgstr ""
-"Цей метод доставки буде використано під час виставлення рахунків-фактур "
+"Цей метод доставки буде використано під час виставлення рахунків-фактур з "
 "комплектування."
 
 #. module: delivery
@@ -815,9 +829,13 @@ msgstr "Одиниця виміру для ваги"
 
 #. module: delivery
 #: model:product.product,uom_name:delivery.product_product_delivery
+#: model:product.product,uom_name:delivery.product_product_delivery_normal
+#: model:product.product,uom_name:delivery.product_product_delivery_poste
+#: model:product.template,uom_name:delivery.product_product_delivery_normal_product_template
+#: model:product.template,uom_name:delivery.product_product_delivery_poste_product_template
 #: model:product.template,uom_name:delivery.product_product_delivery_product_template
 msgid "Unit(s)"
-msgstr "шт"
+msgstr "Штука(и)"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__variable
@@ -884,7 +902,7 @@ msgid "Width must be positive"
 msgstr "Ширина повинна бути позитивна"
 
 #. module: delivery
-#: code:addons/delivery/models/stock_picking.py:217
+#: code:addons/delivery/models/stock_picking.py:222
 #, python-format
 msgid ""
 "You are shipping different packaging types in the same shipment.\n"
@@ -906,14 +924,14 @@ msgid "You have multiple tracker links, they are available in the chatter."
 msgstr ""
 
 #. module: delivery
-#: code:addons/delivery/models/stock_picking.py:180
+#: code:addons/delivery/models/stock_picking.py:185
 #, python-format
 msgid ""
 "Your delivery method has no redirect on courier provider's website to track "
 "this order."
 msgstr ""
-"Спосіб доставки не має перенаправлення на веб-сайті постачальника кур'єру, "
-"щоб відслідковувати це замовлення."
+"Спосіб доставки не має перенаправлення на веб-сайті постачальника, щоб "
+"відслідковувати це замовлення."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__zip_from
@@ -932,11 +950,10 @@ msgstr "наприклад, UPS Express"
 
 #. module: delivery
 #: model:product.product,weight_uom_name:delivery.product_product_delivery
+#: model:product.product,weight_uom_name:delivery.product_product_delivery_normal
+#: model:product.product,weight_uom_name:delivery.product_product_delivery_poste
+#: model:product.template,weight_uom_name:delivery.product_product_delivery_normal_product_template
+#: model:product.template,weight_uom_name:delivery.product_product_delivery_poste_product_template
 #: model:product.template,weight_uom_name:delivery.product_product_delivery_product_template
 msgid "kg"
 msgstr "кг"
-
-#. module: delivery
-#: model:ir.model,name:delivery.model_res_config_settings
-msgid "res.config.settings"
-msgstr "res.config.settings"

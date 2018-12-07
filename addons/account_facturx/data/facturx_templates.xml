@@ -159,7 +159,7 @@
 
                         <!-- Reference. -->
                         <ram:BuyerOrderReferencedDocument>
-                            <ram:IssuerAssignedID t-esc="'%s: %s' % str(record.number, record.name) if record.name else record.number"/>
+                            <ram:IssuerAssignedID t-esc="'%s: %s' % (record.number, record.name) if record.name else record.number"/>
                         </ram:BuyerOrderReferencedDocument>
                     </ram:ApplicableHeaderTradeAgreement>
 

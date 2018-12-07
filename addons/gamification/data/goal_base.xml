@@ -113,7 +113,7 @@ Thank you,
                                         <tr><td style="padding:0 30px;">
                                             <table cellspacing="0" cellpadding="0" width="100%" style="table-layout: fixed;">
                                                 <tr>
-                                                    % set top_goals = [line['goals'][1], line['goals'][0], line['goals'][2]]
+                                                    % set top_goals = line['goals'][:3]
                                                     % for goal in top_goals:
                                                         <td align="center" style="width:32%;">
                                                             % if loop.index == 1:
@@ -142,9 +142,8 @@ Thank you,
                                                                 <div style="height:${heightA}px;">
                                                                     ${extra_div | safe}   
                                                                     <div style="height:55px;">
-                                                                        % set path = object.env['res.users'].browse(goal['user_id']).partner_id.image_small
-                                                                        <img style="margin-bottom:5px;width:50px;height:50px;border-radius:50%;" src="data:image/jpeg;base64,${path}" alt="${goal['name']}"/>
-                                                                    </div> 
+                                                                        <img style="margin-bottom:5px;width:50px;height:50px;border-radius:50%;" t-att-src="image_data_uri(object.env['res.users'].browse(goal['user_id']).partner_id.image_small)" alt="${goal['name']}"/>
+                                                                    </div>
                                                                     <div align="center" style ="color:${bgColor};height:20px">
                                                                         ${goal['name']}
                                                                     </div>

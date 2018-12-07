@@ -6,7 +6,6 @@
 # e2f <projects@e2f.com>, 2018
 # fr rev <e2ffr02@hotmail.com>, 2018
 # Martin Trigaux, 2018
-# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2018
 # Lionel Sausin <ls@numerigraphe.com>, 2018
 # Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2018
 # Florian Hatat, 2018
@@ -23,8 +22,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-09-21 13:17+0000\n"
 "Last-Translator: Nathan Grognet <ngr@odoo.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -54,11 +53,6 @@ msgid "Action Needed"
 msgstr "Nécessite une action"
 
 #. module: stock_picking_batch
-#: model:ir.model,name:stock_picking_batch.model_stock_picking_to_batch
-msgid "Add pickings to a batch picking"
-msgstr "Ajouter des préparations à une préparation par lots "
-
-#. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_to_batch_form
 msgid "Add pickings to batch"
 msgstr "Ajouter des préparations à un lot"
@@ -81,11 +75,6 @@ msgid "Barcode"
 msgstr "Code Barre"
 
 #. module: stock_picking_batch
-#: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_internal_search_inherit_stock_picking_batch
-msgid "Batch"
-msgstr "Mode groupé"
-
-#. module: stock_picking_batch
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:64
 #: model:ir.actions.report,name:stock_picking_batch.action_report_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_picking_batch
@@ -95,6 +84,11 @@ msgstr "Mode groupé"
 #, python-format
 msgid "Batch Picking"
 msgstr "Préparation par lots "
+
+#. module: stock_picking_batch
+#: model:ir.model,name:stock_picking_batch.model_stock_picking_to_batch
+msgid "Batch Picking Lines"
+msgstr ""
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__name
@@ -240,11 +234,6 @@ msgid "Immediate Transfer?"
 msgstr "Transfert immédiat ?"
 
 #. module: stock_picking_batch
-#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
-msgid "In Progress"
-msgstr "En cours"
-
-#. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_is_follower
 msgid "Is Follower"
 msgstr "Est un abonné"
@@ -371,10 +360,12 @@ msgstr "Quantité"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__user_id
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
 msgid "Responsible"
 msgstr "Responsable"
 
 #. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
 #: selection:stock.picking.batch,state:0
 msgid "Running"
 msgstr "En cours"
@@ -476,11 +467,6 @@ msgstr "Messages non lus"
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_unread_counter
 msgid "Unread Messages Counter"
 msgstr "Compteur de messages non lus"
-
-#. module: stock_picking_batch
-#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
-msgid "User"
-msgstr "Utilisateur"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__website_message_ids

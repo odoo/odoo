@@ -137,11 +137,12 @@
         <field name="inherit_id" ref="hr.view_employee_form"/>
         <field name="arch" type="xml">
             <xpath expr="//group[@name='active_group']" position="after">
-                <group string="Leaves" groups="base.group_no_one">
+                <group string="Leaves">
                     <label for="remaining_leaves"/>
                     <div>
                         <field name="remaining_leaves" class="oe_inline"/> days
                     </div>
+                    <field name="leave_manager_id"/>
                 </group>
             </xpath>
             <button name="toggle_active" position="before">

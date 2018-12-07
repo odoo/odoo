@@ -73,6 +73,7 @@
                             </div>
                         </div>
                         <div class="col-12 col-lg-6 o_setting_box" >
+                            <field name="iface_start_categ_domain_ids" invisible="1"/>
                             <div class="o_setting_left_pane">
                                 <field name="start_category"/>
                             </div>
@@ -82,7 +83,21 @@
                                     Start selling from a default product category
                                 </div>
                                 <div class="content-group mt16" attrs="{'invisible': [('start_category', '=', False)]}">
-                                    <field name="iface_start_categ_id"/>
+                                    <field name="iface_start_categ_id" domain="[('id', 'in', iface_start_categ_domain_ids)]"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box" >
+                            <div class="o_setting_left_pane">
+                                <field name="limit_categories"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="limit_categories"/>
+                                <div class="text-muted">
+                                    Available Product Categories
+                                </div>
+                                <div class="content-group mt16" attrs="{'invisible': [('limit_categories', '=', False)]}">
+                                    <field name="iface_available_categ_ids" widget="many2many_tags"/>
                                 </div>
                             </div>
                         </div>
@@ -109,7 +124,7 @@
                             </div>
                         </div>
                     </div>
-                    <h2>PosBox / Hardware Proxy</h2>
+                    <h2>IotBox / Hardware Proxy</h2>
                     <div class="row mt16 o_settings_container" id="posbox_reference">
                         <div class="col-12 col-lg-6 o_setting_box">
                             <div class="o_setting_left_pane">
@@ -118,7 +133,7 @@
                             <div class="o_setting_right_pane">
                                 <label for="is_posbox"/>
                                 <div class="text-muted">
-                                    Use an integrated hardware setup like <a href="https://www.odoo.com/documentation/user/online/point_of_sale/overview/setup.html" target="_blank">PosBox</a>
+                                    Use an integrated hardware setup like <a href="https://www.odoo.com/documentation/user/online/iot/pos.html" target="_blank">IoT Box</a>
                                 </div>
                                 <div class="content-group" attrs="{'invisible' : [('is_posbox', '=', False)]}">
                                     <div class="row mt16">
@@ -157,16 +172,15 @@
                         </div>
                         <div id="barcode_scanner" class="col-12 col-lg-6 o_setting_box">
                             <div class="o_setting_left_pane">
-                                <field name="barcode_scanner"/>
                             </div>
                             <div class="o_setting_right_pane">
-                                <label for="barcode_scanner" string="Barcode Scanner"/>
+                                <span class="o_form_label">Barcode Scanner</span>
                                 <div class="text-muted">
                                     Set barcodes to scan products, customer cards, etc.
                                 </div>
-                                <div class="content-group row mt16" attrs="{'invisible': [('barcode_scanner', '=', False)]}">
+                                <div class="content-group mt16 row">
                                     <label for="barcode_nomenclature_id" string="Barcode Nomenclature" class="col-lg-3 o_light_label"/>
-                                    <field name="barcode_nomenclature_id" attrs="{'required': [('barcode_scanner', '=', True)]}"/>
+                                    <field name="barcode_nomenclature_id"/>
                                 </div>
                             </div>
                         </div>
@@ -221,7 +235,7 @@
                                     <div class="mt16"> 
                                         <field name="iface_tax_included" class="o_light_label" widget="radio"/>    
                                     </div> 
-                                    <a attrs="{'invisible': [('iface_tax_included', '!=', 'total')]}" href="https://www.odoo.com/documentation/user/11.0/accounting/others/taxes/tax_included.html"  target="_blank" class="oe-link"><i class="fa fa-fw fa-arrow-right"/>How to manage tax-included prices</a> 
+                                    <a attrs="{'invisible': [('iface_tax_included', '!=', 'total')]}" href="https://www.odoo.com/documentation/user/12.0/accounting/others/taxes/tax_included.html"  target="_blank" class="oe-link"><i class="fa fa-fw fa-arrow-right"/>How to manage tax-included prices</a>
                                 </div> 
                             </div> 
                         </div>
@@ -452,7 +466,7 @@
                         </div>
                     </div>
                     <h2>Accounting</h2>
-                    <div class="row mt16 o_settings_container">
+                    <div class="row mt16 o_settings_container" id="accounting_section">
                         <div class="col-12 col-lg-6 o_setting_box">
                             <div class="o_setting_right_pane">
                                 <span class="o_form_label">Journal Entries</span>

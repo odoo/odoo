@@ -17,11 +17,11 @@ class SaleOrder(models.Model):
     has_delivery = fields.Boolean(
         compute='_compute_has_delivery', string='Has delivery',
         help="Has an order line set for delivery", store=True)
-    website_order_line = fields.One2many(
-        'sale.order.line', 'order_id',
-        string='Order Lines displayed on Website', readonly=True,
-        domain=[('is_delivery', '=', False)],
-        help='Order Lines to be displayed on the website. They should not be used for computation purpose.')
+
+    @api.one
+    def _compute_website_order_line(self):
+        super(SaleOrder, self)._compute_website_order_line()
+        self.website_order_line = self.website_order_line.filtered(lambda l: not l.is_delivery)
 
     @api.depends('order_line.price_unit', 'order_line.tax_id', 'order_line.discount', 'order_line.product_uom_qty')
     def _compute_amount_delivery(self):

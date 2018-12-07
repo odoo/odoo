@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-09-21 13:17+0000\n"
 "Last-Translator: Eloïse Stilmant <est@odoo.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -35,6 +35,11 @@ msgid "Display Name"
 msgstr "Nom affiché"
 
 #. module: google_account
+#: model:ir.model,name:google_account.model_google_service
+msgid "Google Service"
+msgstr ""
+
+#. module: google_account
 #: model:ir.model.fields,field_description:google_account.field_google_service__id
 msgid "ID"
 msgstr "ID"
@@ -55,14 +60,14 @@ msgid "Last Updated on"
 msgstr "Dernière mise à jour le"
 
 #. module: google_account
-#: code:addons/google_account/models/google_service.py:171
+#: code:addons/google_account/models/google_service.py:172
 #, python-format
 msgid "Method not supported [%s] not in [GET, POST, PUT, PATCH or DELETE]!"
 msgstr ""
 "Méthode non supportée [%s] pas dans [GET, POST, PUT, PATCH or DELETE] !"
 
 #. module: google_account
-#: code:addons/google_account/models/google_service.py:119
+#: code:addons/google_account/models/google_service.py:120
 #, python-format
 msgid ""
 "Something went wrong during your token generation. Maybe your Authorization "
@@ -72,7 +77,7 @@ msgstr ""
 "d'autorisation est peut être invalide."
 
 #. module: google_account
-#: code:addons/google_account/models/google_service.py:55
+#: code:addons/google_account/models/google_service.py:56
 #, python-format
 msgid ""
 "Something went wrong during your token generation. Maybe your Authorization "
@@ -82,7 +87,7 @@ msgstr ""
 "d'autorisation est peut être invalide ou expiré."
 
 #. module: google_account
-#: code:addons/google_account/models/google_service.py:149
+#: code:addons/google_account/models/google_service.py:150
 #, python-format
 msgid ""
 "Something went wrong during your token generation. Maybe your Authorization "
@@ -92,19 +97,14 @@ msgstr ""
 "d'autorisation est peut être invalide ou expiré [%s]."
 
 #. module: google_account
-#: code:addons/google_account/models/google_service.py:192
+#: code:addons/google_account/models/google_service.py:193
 #, python-format
 msgid "Something went wrong with your request to google"
 msgstr ""
 "Quelque chose ne s'est pas passé comme prévu avec votre demande à Google"
 
 #. module: google_account
-#: code:addons/google_account/models/google_service.py:130
+#: code:addons/google_account/models/google_service.py:131
 #, python-format
 msgid "The account for the Google service '%s' is not configured."
 msgstr "Le compte pour le service Google '%s' n'est pas configuré."
-
-#. module: google_account
-#: model:ir.model,name:google_account.model_google_service
-msgid "google.service"
-msgstr "google.service"

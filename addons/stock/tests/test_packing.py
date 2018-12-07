@@ -63,7 +63,11 @@ class TestPacking(TransactionCase):
         packing_picking = pack_move_a.picking_id
         shipping_picking = ship_move_a.picking_id
 
+        pick_picking.picking_type_entire_packs = True
+        packing_picking.picking_type_entire_packs = True
+        shipping_picking.picking_type_entire_packs = True
         pick_picking.action_assign()
+        self.assertEqual(len(pick_picking.move_ids_without_package), 2)
         pick_picking.move_line_ids.filtered(lambda ml: ml.product_id == self.productA).qty_done = 1.0
         pick_picking.move_line_ids.filtered(lambda ml: ml.product_id == self.productB).qty_done = 2.0
 
@@ -73,7 +77,10 @@ class TestPacking(TransactionCase):
         pick_picking.move_line_ids.filtered(lambda ml: ml.product_id == self.productA and ml.qty_done == 0.0).qty_done = 4.0
         pick_picking.move_line_ids.filtered(lambda ml: ml.product_id == self.productB and ml.qty_done == 0.0).qty_done = 3.0
         second_pack = pick_picking.put_in_pack()
+        self.assertEqual(len(pick_picking.move_ids_without_package), 0)
+        self.assertEqual(len(packing_picking.move_ids_without_package), 2)
         pick_picking.button_validate()
+        self.assertEqual(len(packing_picking.move_ids_without_package), 0)
         self.assertEqual(len(first_pack.quant_ids), 2)
         self.assertEqual(len(second_pack.quant_ids), 2)
         packing_picking.action_assign()
@@ -91,6 +98,7 @@ class TestPacking(TransactionCase):
             'location_dest_id': self.stock_location.id,
             'state': 'draft',
         })
+        picking.picking_type_entire_packs = True
         package_level = self.env['stock.package_level'].create({
             'package_id': pack.id,
             'picking_id': picking.id,
@@ -99,6 +107,7 @@ class TestPacking(TransactionCase):
         self.assertEquals(package_level.state, 'draft',
                           'The package_level should be in draft as it has no moves, move lines and is not confirmed')
         picking.action_confirm()
+        self.assertEqual(len(picking.move_ids_without_package), 0)
         self.assertEqual(len(picking.move_lines), 1,
                          'One move should be created when the package_level has been confirmed')
         self.assertEquals(len(package_level.move_ids), 1,
@@ -180,3 +189,75 @@ class TestPacking(TransactionCase):
         self.assertEqual(package_level_reserved.location_id.id, shelf1_location.id, 'The reserved package level must be reserved in shelf1')
         self.assertEqual(package_level_confirmed.location_id.id, self.stock_location.id, 'The not reserved package should keep its location')
         self.assertEqual(picking.package_level_ids.mapped('is_done'), [True, True], 'Both package should still done')
+
+    def test_put_in_pack_to_different_location(self):
+        """ Hitting 'Put in pack' button while some move lines go to different
+            location should trigger a wizard. This wizard applies the same destination
+            location to all the move lines
+        """
+        shelf1_location = self.env['stock.location'].create({
+            'name': 'shelf1',
+            'usage': 'internal',
+            'location_id': self.stock_location.id,
+        })
+        shelf2_location = self.env['stock.location'].create({
+            'name': 'shelf2',
+            'usage': 'internal',
+            'location_id': self.stock_location.id,
+        })
+        picking = self.env['stock.picking'].create({
+            'picking_type_id': self.warehouse.in_type_id.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.stock_location.id,
+            'state': 'draft',
+        })
+        ship_move_a = self.env['stock.move'].create({
+            'name': 'move 1',
+            'product_id': self.productA.id,
+            'product_uom_qty': 5.0,
+            'product_uom': self.productA.uom_id.id,
+            'location_id': self.customer_location.id,
+            'location_dest_id': shelf1_location.id,
+            'picking_id': picking.id,
+            'state': 'draft',
+        })
+        picking.action_confirm()
+        picking.action_assign()
+        picking.move_line_ids.filtered(lambda ml: ml.product_id == self.productA).qty_done = 5.0
+        picking.put_in_pack()
+        pack1 = self.env['stock.quant.package'].search([])[-1]
+        picking.write({
+            'move_line_ids': [(0, 0, {
+                'product_id': self.productB.id,
+                'product_uom_qty': 7.0,
+                'qty_done': 7.0,
+                'product_uom_id': self.productB.uom_id.id,
+                'location_id': self.customer_location.id,
+                'location_dest_id': shelf2_location.id,
+                'picking_id': picking.id,
+                'state': 'confirmed',
+            })]
+        })
+        picking.write({
+            'move_line_ids': [(0, 0, {
+                'product_id': self.productA.id,
+                'product_uom_qty': 5.0,
+                'qty_done': 5.0,
+                'product_uom_id': self.productA.uom_id.id,
+                'location_id': self.customer_location.id,
+                'location_dest_id': shelf1_location.id,
+                'picking_id': picking.id,
+                'state': 'confirmed',
+            })]
+        })
+        wizard_values = picking.put_in_pack()
+        wizard = self.env[(wizard_values.get('res_model'))].browse(wizard_values.get('res_id'))
+        wizard.location_dest_id = shelf2_location.id
+        wizard.action_done()
+        picking.action_done()
+        pack2 = self.env['stock.quant.package'].search([])[-1]
+        self.assertEqual(pack2.location_id.id, shelf2_location.id, 'The package must be stored  in shelf2')
+        self.assertEqual(pack1.location_id.id, shelf1_location.id, 'The package must be stored  in shelf1')
+        qp1 = pack2.quant_ids[0]
+        qp2 = pack2.quant_ids[1]
+        self.assertEqual(qp1.quantity + qp2.quantity, 12, 'The quant has not the good quantity')

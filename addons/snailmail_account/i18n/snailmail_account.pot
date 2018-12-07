@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 13.0alpha1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
+"POT-Creation-Date: 2018-11-20 14:11+0000\n"
+"PO-Revision-Date: 2018-11-20 14:11+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,8 +16,26 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: snailmail_account
+#: code:addons/snailmail_account/wizard/account_invoice_send.py:86
+#, python-format
+msgid "%s of the selected invoice(s) had an invalid address and were not sent"
+msgstr ""
+
+#. module: snailmail_account
+#: model_terms:ir.ui.view,arch_db:snailmail_account.account_invoice_send_inherit_account_wizard_form
+msgid "<span class=\"text-danger\">\n"
+"                                            Incomplete customer address\n"
+"                                        </span>"
+msgstr ""
+
+#. module: snailmail_account
 #: model_terms:ir.ui.view,arch_db:snailmail_account.account_invoice_send_inherit_account_wizard_form
 msgid "<span> to: </span>"
+msgstr ""
+
+#. module: snailmail_account
+#: model:ir.model,name:snailmail_account.model_account_invoice_send
+msgid "Account Invoice Send"
 msgstr ""
 
 #. module: snailmail_account
@@ -26,18 +44,27 @@ msgid "Allows to send the document by snail mail (coventional posting delivery s
 msgstr ""
 
 #. module: snailmail_account
+#: code:addons/snailmail_account/wizard/account_invoice_send.py:89
+#, python-format
+msgid "Cannot send by post to an incomplete address.\n"
+"                    Please update the customer's address or uncheck 'Send by Post'."
+msgstr ""
+
+#. module: snailmail_account
 #: model:ir.model,name:snailmail_account.model_res_company
 msgid "Companies"
 msgstr ""
 
 #. module: snailmail_account
-#: model:ir.model.fields,field_description:snailmail_account.field_account_invoice_send__snailmail_cost
-msgid "Credits"
+#: model:ir.model,name:snailmail_account.model_res_config_settings
+msgid "Config Settings"
 msgstr ""
 
 #. module: snailmail_account
-#: model:ir.model.fields,field_description:snailmail_account.field_account_invoice_send__currency_id
-msgid "Currency"
+#: code:addons/snailmail_account/wizard/account_invoice_send.py:85
+#: model:ir.model.fields,field_description:snailmail_account.field_account_invoice_send__invalid_addresses
+#, python-format
+msgid "Invalid Addresses"
 msgstr ""
 
 #. module: snailmail_account
@@ -52,7 +79,7 @@ msgstr ""
 
 #. module: snailmail_account
 #: model_terms:ir.ui.view,arch_db:snailmail_account.res_config_settings_view_form
-msgid "Print In Color"
+msgid "Print in Color"
 msgstr ""
 
 #. module: snailmail_account
@@ -67,17 +94,27 @@ msgstr ""
 
 #. module: snailmail_account
 #: model:ir.model.fields,field_description:snailmail_account.field_account_invoice_send__snailmail_is_letter
-#: model:ir.model.fields,field_description:snailmail_account.field_res_config_settings__invoice_is_snailmail
 msgid "Send by Post"
 msgstr ""
 
 #. module: snailmail_account
-#: model:ir.model,name:snailmail_account.model_account_invoice_send
-msgid "account.invoice.send"
+#: model:ir.model.fields,field_description:snailmail_account.field_res_config_settings__invoice_is_snailmail
+msgid "Send by Post with Snailmail"
 msgstr ""
 
 #. module: snailmail_account
-#: model:ir.model,name:snailmail_account.model_res_config_settings
-msgid "res.config.settings"
+#: model:ir.actions.act_window,name:snailmail_account.action_mail_invoice_letters
+#: model:ir.ui.menu,name:snailmail_account.menu_snailmail_invoice_letters
+msgid "Snailmail Letters"
+msgstr ""
+
+#. module: snailmail_account
+#: model:ir.model.fields,field_description:snailmail_account.field_account_invoice_send__snailmail_cost
+msgid "Stamp(s)"
+msgstr ""
+
+#. module: snailmail_account
+#: model_terms:ir.ui.view,arch_db:snailmail_account.account_invoice_send_inherit_account_wizard_form
+msgid "invoice(s) do not have a complete customer address"
 msgstr ""
 

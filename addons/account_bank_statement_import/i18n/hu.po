@@ -3,17 +3,19 @@
 # * account_bank_statement_import
 # 
 # Translators:
-# krnkris, 2016
-# gezza <geza.nagy@oregional.hu>, 2016
-# Kovács Tibor <kovika@gmail.com>, 2016
-# Martin Trigaux, 2016
+# Martin Trigaux, 2018
+# krnkris, 2018
+# gezza <geza.nagy@oregional.hu>, 2018
+# Kovács Tibor <kovika@gmail.com>, 2018
+# Ákos Nagy <akos.nagy@oregional.hu>, 2018
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:12+0000\n"
-"PO-Revision-Date: 2018-08-02 09:12+0000\n"
-"Last-Translator: Martin Trigaux, 2016\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-08-24 09:15+0000\n"
+"Last-Translator: Ákos Nagy <akos.nagy@oregional.hu>, 2018\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -58,12 +60,12 @@ msgstr "Bankszámlaszám"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__type_control_ids
 msgid "Account Types Allowed"
-msgstr "Elfogadott számla típusok"
+msgstr "Engedélyezett főkönyvi számla típusok"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__account_control_ids
 msgid "Accounts Allowed"
-msgstr "Elfogadott számlák"
+msgstr "Engedélyezett főkönyvi számlák"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__active
@@ -88,7 +90,7 @@ msgstr "Álnév domain"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__update_posted
 msgid "Allow Cancelling Entries"
-msgstr "Érvénytelenítés engedélyezése"
+msgstr "Tételek érvénytelenítésének engedélyezése"
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:238
@@ -124,7 +126,7 @@ msgid "Bank Feeds"
 msgstr "Banki tételek"
 
 #. module: account_bank_statement_import
-#: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
+#: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
 msgid "Bank Journal Name"
 msgstr "Banki napló neve"
 
@@ -139,8 +141,8 @@ msgid "Bank Statement Line"
 msgstr "Bankkivonat tételsor"
 
 #. module: account_bank_statement_import
-#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__account_setup_bank_data_done
-msgid "Bank setup marked as done"
+#: model:ir.model,name:account_bank_statement_import.model_account_setup_bank_manual_config
+msgid "Bank setup manual config"
 msgstr ""
 
 #. module: account_bank_statement_import
@@ -149,10 +151,10 @@ msgid "Belong to the user's current company"
 msgstr "A felhasználó jelenlegi vállalatához tartozik"
 
 #. module: account_bank_statement_import
-#: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
-#: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
+#: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
+#: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
 msgid "Cancel"
-msgstr "Mégse"
+msgstr "Mégsem"
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:171
@@ -181,14 +183,14 @@ msgstr ""
 "vagy számlák érvénytelenítését"
 
 #. module: account_bank_statement_import
-#: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
+#: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
 msgid "Choose a file to import..."
 msgstr "Válasszon egy importálandó fájlt..."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__color
 msgid "Color Index"
-msgstr "Szín index"
+msgstr "Színjegyzék"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__company_id
@@ -198,7 +200,7 @@ msgstr "Vállalat"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__company_id
 msgid "Company related to this journal"
-msgstr "A naplóhoz kapcsolt vállalat"
+msgstr "Ehhez a naplóhoz kapcsolt vállalat"
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:112
@@ -214,13 +216,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import__create_uid
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__create_uid
 msgid "Created by"
-msgstr "Készítette"
+msgstr "Létrehozta"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import__create_date
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__create_date
 msgid "Created on"
-msgstr "Létrehozás dátuma"
+msgstr "Létrehozva"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__refund_sequence_id
@@ -264,7 +266,7 @@ msgid "Display Name"
 msgstr "Megjelenített név"
 
 #. module: account_bank_statement_import
-#: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
+#: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
 msgid ""
 "Download a bank statement from your bank and import it here. Supported "
 "formats:"
@@ -310,7 +312,7 @@ msgstr "Számlatételek összevonása"
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import__id
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__id
 msgid "ID"
-msgstr "Azonosító ID"
+msgstr "Azonosító"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__group_invoice_lines
@@ -324,10 +326,10 @@ msgstr ""
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_journal.py:20
 #: model:ir.actions.act_window,name:account_bank_statement_import.action_account_bank_statement_import
-#: model:ir.ui.view,arch_db:account_bank_statement_import.journal_dashboard_view_inherit
+#: model_terms:ir.ui.view,arch_db:account_bank_statement_import.journal_dashboard_view_inherit
 #, python-format
 msgid "Import"
-msgstr "Import"
+msgstr "Importálás"
 
 #. module: account_bank_statement_import
 #: model:ir.model,name:account_bank_statement_import.model_account_bank_statement_import
@@ -335,12 +337,7 @@ msgid "Import Bank Statement"
 msgstr "Bankkivonat importálása"
 
 #. module: account_bank_statement_import
-#: model:ir.model,name:account_bank_statement_import.model_account_bank_statement_import_journal_creation
-msgid "Import Bank Statement Journal Creation Wizard"
-msgstr "Bankkivonat importálás napló létrehozó varázsló"
-
-#. module: account_bank_statement_import
-#: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
+#: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
 msgid "Import Bank Statements"
 msgstr "Bankkivonatok importálása"
 
@@ -350,7 +347,7 @@ msgid "Import ID"
 msgstr "Importálás ID azonosító"
 
 #. module: account_bank_statement_import
-#: model:ir.ui.view,arch_db:account_bank_statement_import.journal_dashboard_view_inherit
+#: model_terms:ir.ui.view,arch_db:account_bank_statement_import.journal_dashboard_view_inherit
 msgid "Import Statement"
 msgstr "Kivonat importálása"
 
@@ -382,10 +379,15 @@ msgstr "Napló"
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:73
-#: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
+#: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
 #, python-format
 msgid "Journal Creation"
 msgstr "Napló létrehozás"
+
+#. module: account_bank_statement_import
+#: model:ir.model,name:account_bank_statement_import.model_account_bank_statement_import_journal_creation
+msgid "Journal Creation on Bank Statement Import"
+msgstr ""
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__name
@@ -393,7 +395,7 @@ msgid "Journal Name"
 msgstr "Napló neve"
 
 #. module: account_bank_statement_import
-#: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
+#: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
 msgid ""
 "Just click OK to create the account/journal and finish the import. If this "
 "was a mistake, hit cancel to abort the import."
@@ -416,19 +418,19 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import____last_update
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation____last_update
 msgid "Last Modified on"
-msgstr "Utoljára frissítve ekkor"
+msgstr "Legutóbb frissítve"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import__write_uid
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__write_uid
 msgid "Last Updated by"
-msgstr "Utoljára frissítette"
+msgstr "Legutóbb frissítette"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import__write_date
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__write_date
 msgid "Last Updated on"
-msgstr "Utoljára frissítve "
+msgstr "Legutóbb frissítve "
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__loss_account_id
@@ -463,9 +465,14 @@ msgid "No currency found matching '%s'."
 msgstr "Nem található ilyen pénznem: '%s'."
 
 #. module: account_bank_statement_import
-#: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
+#: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
 msgid "OK"
 msgstr "Ok"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__post_at_bank_rec
+msgid "Post At Bank Reconciliation"
+msgstr ""
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__profit_account_id
@@ -480,13 +487,13 @@ msgid ""
 "Select 'Cash' or 'Bank' for journals that are used in customer or vendor payments.\n"
 "Select 'General' for miscellaneous operations journals."
 msgstr ""
-"Válassza az 'Értékesítés'-t a a vásárlói számlák naplóihoz. Válassza a "
-"'Beszerzés'-t a beszállítói számlák naplóihoz. Válassza a 'Készpénz'-t vagy "
-"a 'Bank'-ot olyan naplókhoz melyek a vásárlói vagy beszerzési fizetéseket "
+"Válassza az 'Értékesítés'-t a vevői számlák naplózásához. Válassza a "
+"'Beszerzés'-t a szállítói számlák naplózásához. Válassza a 'Készpénz'-t vagy"
+" a 'Bank'-ot olyan naplókhoz melyek a vevői vagy szállítói fizetéseket "
 "rögzítik. Válassza az 'Általános'-t az egyéb műveletek naplózásához. "
 
 #. module: account_bank_statement_import
-#: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
+#: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
 msgid "Select a bank statement file to import"
 msgstr "Válasszon egy bankkivonat fájl állományt az importáláshoz"
 
@@ -511,12 +518,7 @@ msgid "Show journal on dashboard"
 msgstr "Napló megjelenítése a műszerfalon"
 
 #. module: account_bank_statement_import
-#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__account_setup_bank_data_done
-msgid "Technical field used in the special view for the setup bar step."
-msgstr ""
-
-#. module: account_bank_statement_import
-#: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
+#: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
 msgid ""
 "The account of the statement you are importing is not yet recorded in Odoo. "
 "In order to proceed with the import, you need to create a bank journal for "
@@ -618,6 +620,14 @@ msgstr ""
 "rendszer által számítottól"
 
 #. module: account_bank_statement_import
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__post_at_bank_rec
+msgid ""
+"Whether or not the payments made in this journal should be generated in "
+"draft state, so that the related journal entries are only posted when "
+"performing bank reconciliation."
+msgstr ""
+
+#. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__show_on_dashboard
 msgid "Whether this journal should be displayed on the dashboard or not"
 msgstr "Ez a napló megjelenítésre kerüljön a műszerfalon vagy nem"
@@ -629,7 +639,7 @@ msgid "You already have imported that file."
 msgstr ""
 
 #. module: account_bank_statement_import
-#: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
+#: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
 msgid "You can install more file formats by"
 msgstr ""
 
@@ -642,21 +652,16 @@ msgid ""
 msgstr ""
 
 #. module: account_bank_statement_import
-#: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
+#: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
 msgid "_Import"
 msgstr "_Import"
 
 #. module: account_bank_statement_import
-#: model:ir.model,name:account_bank_statement_import.model_account_setup_bank_manual_config
-msgid "account.setup.bank.manual.config"
-msgstr ""
-
-#. module: account_bank_statement_import
-#: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
+#: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
 msgid "installing the related modules"
 msgstr ""
 
 #. module: account_bank_statement_import
-#: model:ir.ui.view,arch_db:account_bank_statement_import.journal_dashboard_view_inherit
+#: model_terms:ir.ui.view,arch_db:account_bank_statement_import.journal_dashboard_view_inherit
 msgid "or"
 msgstr "vagy"

@@ -4,7 +4,7 @@ import datetime
 import dateutil
 import logging
 import time
-from collections import defaultdict
+from collections import defaultdict, Mapping
 
 from odoo import api, fields, models, SUPERUSER_ID, tools,  _
 from odoo.exceptions import AccessError, UserError, ValidationError
@@ -33,18 +33,29 @@ def make_compute(text, deps):
 
 
 # generic INSERT and UPDATE queries
-INSERT_QUERY = "INSERT INTO {table} ({cols}) VALUES ({vals}) RETURNING id"
+INSERT_QUERY = "INSERT INTO {table} ({cols}) VALUES {rows} RETURNING id"
 UPDATE_QUERY = "UPDATE {table} SET {assignment} WHERE {condition} RETURNING id"
 
-def query_insert(cr, table, values):
+def query_insert(cr, table, rows):
+    """ Insert rows in a table. ``rows`` is a list of dicts, all with the same
+        set of keys. Return the ids of the new rows.
+    """
+    if isinstance(rows, Mapping):
+        rows = [rows]
+    cols = list(rows[0])
     query = INSERT_QUERY.format(
         table=table,
-        cols=",".join(values),
-        vals=",".join("%({0})s".format(v) for v in values),
+        cols=",".join(cols),
+        rows=",".join("%s" for row in rows),
     )
-    cr.execute(query, values)
+    params = [tuple(row[col] for col in cols) for row in rows]
+    cr.execute(query, params)
+    return [row[0] for row in cr.fetchall()]
 
 def query_update(cr, table, values, selectors):
+    """ Update the table with the given values (dict), and use the columns in
+        ``selectors`` to select the rows to update.
+    """
     setters = set(values) - set(selectors)
     query = UPDATE_QUERY.format(
         table=table,
@@ -52,6 +63,7 @@ def query_update(cr, table, values, selectors):
         condition=" AND ".join("{0}=%({0})s".format(s) for s in selectors),
     )
     cr.execute(query, values)
+    return [row[0] for row in cr.fetchall()]
 
 
 #
@@ -60,6 +72,7 @@ def query_update(cr, table, values, selectors):
 class Base(models.AbstractModel):
     """ The base model, which is implicitly inherited by all models. """
     _name = 'base'
+    _description = 'Base'
 
 
 class Unknown(models.AbstractModel):
@@ -68,6 +81,7 @@ class Unknown(models.AbstractModel):
     comodel.
     """
     _name = '_unknown'
+    _description = 'Unknown'
 
 
 class IrModel(models.Model):
@@ -245,11 +259,11 @@ class IrModel(models.Model):
 
         # create/update the entries in 'ir.model' and 'ir.model.data'
         params = self._reflect_model_params(model)
-        query_update(cr, self._table, params, ['model'])
-        if not cr.rowcount:
-            query_insert(cr, self._table, params)
+        ids = query_update(cr, self._table, params, ['model'])
+        if not ids:
+            ids = query_insert(cr, self._table, params)
 
-        record = self.browse(cr.fetchone())
+        record = self.browse(ids)
         self.pool.post_init(record.modified, set(params) - {'model', 'state'})
 
         if model._module == self._context.get('module'):
@@ -268,7 +282,7 @@ class IrModel(models.Model):
     def _instanciate(self, model_data):
         """ Return a class for the custom model given by parameters ``model_data``. """
         class CustomModel(models.Model):
-            _name = pycompat.to_native(model_data['model'])
+            _name = pycompat.to_text(model_data['model'])
             _description = model_data['name']
             _module = False
             _custom = True
@@ -698,11 +712,15 @@ class IrModelFields(models.Model):
                 field = getattr(obj, '_fields', {}).get(item.name)
 
                 if vals.get('name', item.name) != item.name:
-                    # We need to rename the column
+                    # We need to rename the field
                     item._prepare_update()
-                    if column_rename:
-                        raise UserError(_('Can only rename one field at a time!'))
-                    column_rename = (obj._table, item.name, vals['name'], item.index)
+                    if item.ttype in ('one2many', 'many2many'):
+                        # those field names are not explicit in the database!
+                        pass
+                    else:
+                        if column_rename:
+                            raise UserError(_('Can only rename one field at a time!'))
+                        column_rename = (obj._table, item.name, vals['name'], item.index)
 
                 # We don't check the 'state', because it might come from the context
                 # (thus be set for multiple fields) and will be ignored anyway.
@@ -765,6 +783,7 @@ class IrModelFields(models.Model):
             'index': bool(field.index),
             'store': bool(field.store),
             'copied': bool(field.copy),
+            'on_delete': getattr(field, 'ondelete', None),
             'related': ".".join(field.related) if field.related else None,
             'readonly': bool(field.readonly),
             'required': bool(field.required),
@@ -777,61 +796,51 @@ class IrModelFields(models.Model):
             'column2': field.column2 if field.type == 'many2many' else None,
         }
 
-    def _reflect_field(self, field):
-        """ Reflect the given field and return its corresponding record. """
-        fields_data = self._existing_field_data(field.model_name)
-        field_data = fields_data.get(field.name)
-        params = self._reflect_field_params(field)
-        cr = self.env.cr
-        created = False
-
-        if field_data is None:
-            # does not exist, create an entry in this table
-            query_insert(cr, self._table, params)
-            record = self.browse(cr.fetchone())
-            self.pool.post_init(record.modified, list(params))
-            # update fields_data (for recursive calls)
-            fields_data[field.name] = dict(params, id=record.id)
-            created = True
-
-        elif any(field_data[key] != val for key, val in params.items()):
-            # exists, update the entry in this table
-            query_update(cr, self._table, params, ['model', 'name'])
-            record = self.browse(cr.fetchone())
-            names = [key for key, val in params.items() if field_data[key] != val]
-            self.pool.post_init(record.modified, names)
-            # update fields_data (for recursive calls)
-            field_data.update(params)
-
-        else:
-            # exists, but nothing to update
-            record = self.browse(field_data['id'])
-
-        # generate xmlids if necessary, one per module defining the same field
-        module = self._context.get('module')
-        if module and (created or module in field._modules):
-            model_name = field.model_name.replace('.', '_')
-            xmlid = 'field_%s__%s' % (model_name, field.name)
-            cr.execute(
-                """
-                INSERT INTO ir_model_data (module, name, model, res_id, date_init, date_update)
-                SELECT %s, %s, %s, %s, (now() at time zone 'UTC'), (now() at time zone 'UTC')
-                WHERE NOT EXISTS (SELECT id FROM ir_model_data WHERE module=%s AND name=%s)
-                """, (module, xmlid, record._name, record.id, module, xmlid)
-            )
-
-        return record
-
     def _reflect_model(self, model):
         """ Reflect the given model's fields. """
         self.clear_caches()
-        duplicate_fields_label = {}
+        by_label = {}
         for field in model._fields.values():
-            if field.string in duplicate_fields_label:
-                _logger.warning('Two fields (%s, %s) of %s have the same label: %s.', field.name, duplicate_fields_label[field.string], model, field.string)
+            if field.string in by_label:
+                _logger.warning('Two fields (%s, %s) of %s have the same label: %s.',
+                                field.name, by_label[field.string], model, field.string)
             else:
-                duplicate_fields_label[field.string] = field.name
-            self._reflect_field(field)
+                by_label[field.string] = field.name
+
+        cr = self._cr
+        module = self._context.get('module')
+        fields_data = self._existing_field_data(model._name)
+        to_insert = []
+        to_xmlids = []
+        for name, field in model._fields.items():
+            old_vals = fields_data.get(name)
+            new_vals = self._reflect_field_params(field)
+            if old_vals is None:
+                to_insert.append(new_vals)
+            elif any(old_vals[key] != new_vals[key] for key in new_vals):
+                ids = query_update(cr, self._table, new_vals, ['model', 'name'])
+                record = self.browse(ids)
+                keys = [key for key in new_vals if old_vals[key] != new_vals[key]]
+                self.pool.post_init(record.modified, keys)
+                old_vals.update(new_vals)
+            if module and (module == model._original_module or module in field._modules):
+                to_xmlids.append(name)
+
+        if to_insert:
+            # insert missing fields
+            ids = query_insert(cr, self._table, to_insert)
+            records = self.browse(ids)
+            self.pool.post_init(records.modified, to_insert[0])
+            self.clear_caches()
+
+        if to_xmlids:
+            # create or update their corresponding xml ids
+            fields_data = self._existing_field_data(model._name)
+            prefix = '%s.field_%s__' % (module, model._name.replace('.', '_'))
+            self.env['ir.model.data']._update_xmlids([
+                dict(xml_id=prefix + name, record=self.browse(fields_data[name]['id']))
+                for name in to_xmlids
+            ])
 
         if not self.pool._init:
             # remove ir.model.fields that are not in self._fields
@@ -928,6 +937,7 @@ class IrModelConstraint(models.Model):
     models.
     """
     _name = 'ir.model.constraint'
+    _description = 'Model Constraint'
 
     name = fields.Char(string='Constraint', required=True, index=True,
                        help="PostgreSQL constraint or foreign key name.")
@@ -1049,6 +1059,7 @@ class IrModelRelation(models.Model):
     relations.
     """
     _name = 'ir.model.relation'
+    _description = 'Relation Model'
 
     name = fields.Char(string='Relation Name', required=True, index=True,
                        help="PostgreSQL table name implementing a many2many relation.")
@@ -1106,6 +1117,8 @@ class IrModelRelation(models.Model):
 
 class IrModelAccess(models.Model):
     _name = 'ir.model.access'
+    _description = 'Model Access'
+    _order = 'model_id,group_id,name,id'
 
     name = fields.Char(required=True, index=True)
     active = fields.Boolean(default=True, help='If you uncheck the active field, it will disable the ACL without deleting it (if you delete a native ACL, it will be re-created when you reload the module).')
@@ -1139,7 +1152,7 @@ class IrModelAccess(models.Model):
         else:
             model_name = model
 
-        if isinstance(group_ids, pycompat.integer_types):
+        if isinstance(group_ids, int):
             group_ids = [group_ids]
 
         query = """ SELECT 1 FROM ir_model_access a
@@ -1177,7 +1190,7 @@ class IrModelAccess(models.Model):
             # User root have all accesses
             return True
 
-        assert isinstance(model, pycompat.string_types), 'Not a model name: %s' % (model,)
+        assert isinstance(model, str), 'Not a model name: %s' % (model,)
         assert mode in ('read', 'write', 'create', 'unlink'), 'Invalid access mode'
 
         # TransientModel records have no access rights, only an implicit access rule
@@ -1278,6 +1291,7 @@ class IrModelData(models.Model):
              update them seamlessly.
     """
     _name = 'ir.model.data'
+    _description = 'Model Data'
     _order = 'module, model, name'
 
     name = fields.Char(string='External Identifier', required=True,
@@ -1301,14 +1315,6 @@ class IrModelData(models.Model):
     def _compute_reference(self):
         for res in self:
             res.reference = "%s,%s" % (res.model, res.res_id)
-
-    def __init__(self, pool, cr):
-        models.Model.__init__(self, pool, cr)
-        # also stored in pool to avoid being discarded along with this osv instance
-        if getattr(pool, 'model_data_reference_ids', None) is None:
-            self.pool.model_data_reference_ids = {}
-        # put loads on the class, in order to share it among all instances
-        type(self).loads = self.pool.model_data_reference_ids
 
     @api.model_cr_context
     def _auto_init(self):
@@ -1466,17 +1472,20 @@ class IrModelData(models.Model):
 
         # rows to insert
         rowf = "(%s, %s, %s, %s, %s, now() at time zone 'UTC', now() at time zone 'UTC')"
-        rows = set()
+        rows = tools.OrderedSet()
         for data in data_list:
             prefix, suffix = data['xml_id'].split('.', 1)
             record = data['record']
             noupdate = bool(data.get('noupdate'))
-            rows.add((prefix, suffix, record._name, record.id, noupdate))
-            # also create XML ids for parent records
+            # First create XML ids for parent records, then create XML id for
+            # record. The order reflects their actual creation order. This order
+            # is relevant for the uninstallation process: the record must be
+            # deleted before its parent records.
             for parent_model, parent_field in record._inherits.items():
                 parent = record[parent_field]
                 puffix = suffix + '_' + parent_model.replace('.', '_')
                 rows.add((prefix, puffix, parent._name, parent.id, noupdate))
+            rows.add((prefix, suffix, record._name, record.id, noupdate))
 
         for sub_rows in self.env.cr.split_for_in_conditions(rows):
             # insert rows or update them
@@ -1495,9 +1504,8 @@ class IrModelData(models.Model):
                 _logger.error("Failed to insert ir_model_data\n%s", "\n".join(str(row) for row in sub_rows))
                 raise
 
-        # update self.loads
-        for prefix, suffix, res_model, res_id, noupdate in rows:
-            self.loads[(prefix, suffix)] = (res_model, res_id)
+        # update loaded_xmlids
+        self.pool.loaded_xmlids.update("%s.%s" % row[:2] for row in rows)
 
     @api.model
     def _load_xmlid(self, xml_id):
@@ -1506,12 +1514,9 @@ class IrModelData(models.Model):
         """
         record = self.xmlid_to_object(xml_id)
         if record:
-            prefix, suffix = xml_id.split('.', 1)
-            self.loads[(prefix, suffix)] = (record._name, record.id)
+            self.pool.loaded_xmlids.add(xml_id)
             for parent_model, parent_field in record._inherits.items():
-                parent = record[parent_field]
-                puffix = suffix + '_' + parent_model.replace('.', '_')
-                self.loads[(prefix, puffix)] = (parent._name, parent.id)
+                self.pool.loaded_xmlids.add(xml_id + '_' + parent_model.replace('.', '_'))
         return record
 
     @api.model
@@ -1598,22 +1603,23 @@ class IrModelData(models.Model):
         It is meant to removed records that are no longer present in the
         updated data. Such records are recognised as the one with an xml id
         and a module in ir_model_data and noupdate set to false, but not
-        present in self.loads.
+        present in self.pool.loaded_xmlids.
         """
         if not modules or tools.config.get('import_partial'):
             return True
 
         bad_imd_ids = []
         self = self.with_context({MODULE_UNINSTALL_FLAG: True})
+        loaded_xmlids = self.pool.loaded_xmlids
 
-        query = """ SELECT id, name, model, res_id, module FROM ir_model_data
+        query = """ SELECT id, module || '.' || name, model, res_id FROM ir_model_data
                     WHERE module IN %s AND res_id IS NOT NULL AND noupdate=%s ORDER BY id DESC
                 """
         self._cr.execute(query, (tuple(modules), False))
-        for (id, name, model, res_id, module) in self._cr.fetchall():
-            if (module, name) not in self.loads:
+        for (id, xmlid, model, res_id) in self._cr.fetchall():
+            if xmlid not in loaded_xmlids:
                 if model in self.env:
-                    _logger.info('Deleting %s@%s (%s.%s)', res_id, model, module, name)
+                    _logger.info('Deleting %s@%s (%s)', res_id, model, xmlid)
                     record = self.env[model].browse(res_id)
                     if record.exists():
                         record.unlink()
@@ -1621,7 +1627,7 @@ class IrModelData(models.Model):
                         bad_imd_ids.append(id)
         if bad_imd_ids:
             self.browse(bad_imd_ids).unlink()
-        self.loads.clear()
+        loaded_xmlids.clear()
 
     @api.model
     def toggle_noupdate(self, model, res_id):
@@ -1634,6 +1640,7 @@ class IrModelData(models.Model):
 
 class WizardModelMenu(models.TransientModel):
     _name = 'wizard.ir.model.menu.create'
+    _description = 'Create Menu Wizard'
 
     menu_id = fields.Many2one('ir.ui.menu', string='Parent Menu', required=True, ondelete='cascade')
     name = fields.Char(string='Menu Name', required=True)

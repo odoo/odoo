@@ -1,4 +1,23 @@
+body.o_is_superuser .o_menu_systray {
+    background: repeating-linear-gradient(
+        135deg,
+        #d9b904, #d9b904 10px,
+        #373435 10px, #373435 20px
+    );
+    border-bottom-left-radius: 20px;
 
+    > li {
+        > a, > label {
+            &:hover {
+                background-color: fade_out($o-navbar-inverse-link-hover-bg, 0.5);
+            }
+        }
+    }
+
+    .show .dropdown-toggle {
+        background-color: fade_out($o-navbar-inverse-link-hover-bg, 0.5);
+    }
+}
 .o_main_navbar {
     position: relative;
     height: $o-navbar-height;

@@ -7,6 +7,7 @@
         <field name="arch" type="xml">
             <field name="transient" position="after">
                 <field name="is_mail_thread" attrs="{'readonly': [('state','!=', 'manual')]}" groups="base.group_no_one"/>
+                <field name="is_mail_activity" attrs="{'readonly': [('state','!=', 'manual')]}" groups="base.group_no_one"/>
             </field>
             <xpath expr="//field[@name='field_id']//field[@name='copied']" position="after">
                 <field name="track_visibility" attrs="{'readonly': [('state','!=', 'manual')]}"/>
@@ -20,6 +21,7 @@
         <field name="arch" type="xml">
             <field name="model" position="after">
                 <filter string="Mail Thread" name="is_mail_thread" domain="[('is_mail_thread', '=', True)]"/>
+                <filter string="Mail Activity" name="is_mail_activity" domain="[('is_mail_activity', '=', True)]"/>
             </field>
         </field>
     </record>

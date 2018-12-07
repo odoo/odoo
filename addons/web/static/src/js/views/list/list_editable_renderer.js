@@ -61,7 +61,7 @@ ListRenderer.include({
                 }
 
                 _.each(child.children, function (child) {
-                    if (child.tag !== 'create') {
+                    if (child.tag !== 'create' || child.attrs.invisible) {
                         return;
                     }
 
@@ -778,7 +778,7 @@ ListRenderer.include({
         // but we do want to unselect current row
         var self = this;
         this.unselectRow().then(function () {
-            self.trigger_up('add_record', {context: ev.currentTarget.dataset.context}); // TODO write a test, the deferred was not considered
+            self.trigger_up('add_record', {context: ev.currentTarget.dataset.context && [ev.currentTarget.dataset.context]}); // TODO write a test, the deferred was not considered
         });
     },
     /**
@@ -813,6 +813,10 @@ ListRenderer.include({
     _onFooterClick: function () {
         this.unselectRow();
     },
+   /**
+    * @param {KeyDownEvent} e
+    * @private
+    */
     _onKeyDownAddRecord: function(e) {
         switch(e.keyCode) {
             case $.ui.keyCode.ENTER:
@@ -823,36 +827,30 @@ ListRenderer.include({
         }
     },
     /**
-     * It will returns the first visible widget that is editable
+     * It will returns the last visible widget that is editable
      *
      * @private
-     * @returns {Class} Widget returns first widget
+     * @returns {Class} Widget returns last widget
      */
-    _getFirstWidget: function () {
+    _getLastWidget: function () {
         var record = this.state.data[this.currentRow];
         var recordWidgets = this.allFieldWidgets[record.id];
-        var firstWidget = _.find(recordWidgets, function (widget) {
-            var isFirst =
+        var lastWidget = _.chain(recordWidgets).filter(function (widget) {
+            var isLast =
                 widget.$el.is(':visible') &&
                 (
                     widget.$('input').length > 0 || widget.tagName === 'input' ||
                     widget.$('textarea').length > 0 || widget.tagName === 'textarea'
                 ) &&
                 !widget.$el.hasClass('o_readonly_modifier');
-            return isFirst;
-        });
-        return firstWidget;
+            return isLast;
+        }).last().value();
+        return lastWidget;
     },
 
     /**
      * Handles the keyboard navigation according to events triggered by field
      * widgets.
-     * - up/down: move to the cell above/below if any, or the first activable
-     *          one on the row above/below if any on the right of this cell
-     *          above/below (if none on the right, wrap to the beginning of the
-     *          line).
-     * - left/right: move to the first activable cell on the left/right if any
-     *          (wrap to the end/beginning of the line if necessary).
      * - previous: move to the first activable cell on the left if any, if not
      *          move to the rightmost activable cell on the row above.
      * - next: move to the first activable cell on the right if any, if not move
@@ -868,26 +866,6 @@ ListRenderer.include({
     _onNavigationMove: function (ev) {
         ev.stopPropagation(); // stop the event, the action is done by this renderer
         switch (ev.data.direction) {
-            case 'up':
-                if (this.currentRow > 0) {
-                    this._selectCell(this.currentRow - 1, this.currentFieldIndex);
-                }
-                break;
-            case 'right':
-                if (this.currentFieldIndex + 1 < this.columns.length) {
-                    this._selectCell(this.currentRow, this.currentFieldIndex + 1);
-                }
-                break;
-            case 'down':
-                if (this.currentRow < this.state.data.length - 1) {
-                    this._selectCell(this.currentRow + 1, this.currentFieldIndex);
-                }
-                break;
-            case 'left':
-                if (this.currentFieldIndex > 0) {
-                    this._selectCell(this.currentRow, this.currentFieldIndex - 1);
-                }
-                break;
             case 'previous':
                 if (this.currentFieldIndex > 0) {
                     this._selectCell(this.currentRow, this.currentFieldIndex - 1, {wrap: false})
@@ -898,11 +876,22 @@ ListRenderer.include({
                 break;
             case 'next':
                 // When navigating with the keyboard, we want to get out of the list editable if the
-                // first field is left empty.
+                // entire line is left unmodified and we are on the next line.
                 var column = this.columns[this.currentFieldIndex];
-                var firstWidget = this._getFirstWidget();
-                if (column.attrs.name === firstWidget.name && !firstWidget.$input.val()) {
-                    this.trigger_up('activate_next_widget');
+                var lastWidget = this._getLastWidget();
+                if (column.attrs.name === lastWidget.name) {
+                    if (this.currentRow + 1 < this.state.data.length) {
+                        this._selectCell(this.currentRow+1, 0, {wrap:false})
+                            .fail(this._moveToNextLine.bind(this));
+                    } else {
+                        var currentRowData = this.state.data[this.currentRow];
+                        if (currentRowData.isDirty(currentRowData.id)) {
+                            this._moveToNextLine();
+                        }
+                        else {
+                            this.trigger_up('activate_next_widget');
+                        }
+                    }
                 } else {
                     if (this.currentFieldIndex + 1 < this.columns.length) {
                         this._selectCell(this.currentRow, this.currentFieldIndex + 1, {wrap: false})
@@ -918,10 +907,12 @@ ListRenderer.include({
             case 'cancel':
                 // stop the original event (typically an ESCAPE keydown), to
                 // prevent from closing the potential dialog containing this list
+                // also auto-focus the 1st control, if any.
                 ev.data.originalEvent.stopPropagation();
                 this.trigger_up('discard_changes', {
                     recordID: ev.target.dataPointID,
                 });
+                this.$('.o_field_x2many_list_row_add a:first').focus();
                 break;
         }
     },

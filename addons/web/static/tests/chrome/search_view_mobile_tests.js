@@ -62,18 +62,18 @@ QUnit.module('Mobile Search view Screen', {
         assert.ok(!$('.o_mobile_search').is(':visible'),
             'mobile search view is not visible');
         // open the search view
-        $('button.o_enable_searchview').click();
+        testUtils.dom.click($('button.o_enable_searchview'));
 
         assert.ok($('.o_mobile_search').is(':visible'),
             'mobile search view is visible');
 
         // open filter sub menu
-        $('button.o_dropdown_toggler_btn').first().click();
+        testUtils.dom.click($('button.o_dropdown_toggler_btn').first());
 
         filterActiveFlag = true;
 
         // click on Active filter
-        $('.o_filters_menu a:contains(Active)').click();
+        testUtils.dom.click($('.o_filters_menu a:contains(Active)'));
 
         actionManager.destroy();
     });

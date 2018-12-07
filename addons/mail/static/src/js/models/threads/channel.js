@@ -1,6 +1,7 @@
 odoo.define('mail.model.Channel', function (require) {
 "use strict";
 
+var ChannelSeenMixin = require('mail.model.ChannelSeenMixin');
 var SearchableThread = require('mail.model.SearchableThread');
 var ThreadTypingMixin = require('mail.model.ThreadTypingMixin');
 var mailUtils = require('mail.utils');
@@ -16,7 +17,7 @@ var time = require('web.time');
  * Any piece of code in JS that make use of channels must ideally interact with
  * such objects, instead of direct data from the server.
  */
-var Channel = SearchableThread.extend(ThreadTypingMixin, {
+var Channel = SearchableThread.extend(ChannelSeenMixin, ThreadTypingMixin, {
     /**
      * @override
      * @param {Object} params
@@ -29,7 +30,17 @@ var Channel = SearchableThread.extend(ThreadTypingMixin, {
      * @param  {boolean} params.data.is_moderator whether the current user is
      *   moderator of this channel.
      * @param {string} [params.data.last_message_date] date in server-format
+     * @param {Object[]} [params.data.members=[]]
+     * @param {integer} [params.data.members[i].id]
+     * @param {string} [params.data.members[i].name]
+     * @param {string} [params.data.members[i].email]
      * @param {integer} [params.data.message_unread_counter]
+     * @param {boolean} [params.data.moderation=false] whether the channel is
+     *   moderated or not
+     * @param {Object[]} [params.data.partners_info=[]]
+     * @param {integer} [params.data.partners_info[i].partner_id]
+     * @param {integer} [params.data.partners_info[i].fetched_message_id]
+     * @param {integer} [params.data.partners_info[i].seen_message_id]
      * @param {string} params.data.state
      * @param {string} [params.data.uuid]
      * @param {Object} params.options
@@ -39,7 +50,8 @@ var Channel = SearchableThread.extend(ThreadTypingMixin, {
     init: function (params) {
         var self = this;
         this._super.apply(this, arguments);
-        ThreadTypingMixin.init.call(this, arguments);
+        ChannelSeenMixin.init.apply(this, arguments);
+        ThreadTypingMixin.init.apply(this, arguments);
 
         var data = params.data;
         var options = params.options;
@@ -56,17 +68,16 @@ var Channel = SearchableThread.extend(ThreadTypingMixin, {
         this._folded = data.state === 'folded';
         // if set: hide 'Leave channel' button
         this._groupBasedSubscription = data.group_based_subscription;
-        this._isModerated = data.is_moderation;
+        this._isModerated = data.moderation;
         this._isMyselfModerator = data.is_moderator;
         this._lastMessageDate = undefined;
-        this._members = [];
+        this._members = data.members || [];
         // Deferred that is resolved on fetched members of this channel.
         this._membersDef = undefined;
         // number of messages that are 'needaction', which is equivalent to the
         // number of messages in this channel that are in inbox.
         this._needactionCounter = data.message_needaction_counter || 0;
         this._serverType = data.channel_type;
-        this._throttleFetchSeen = _.throttle(this._fetchSeen.bind(this), 3000);
         // unique identifier for this channel, which is required for some rpc
         this._uuid = data.uuid;
 
@@ -177,7 +188,8 @@ var Channel = SearchableThread.extend(ThreadTypingMixin, {
     /**
      * Get listeners of a channel
      *
-     * @returns {$.Promise<Object[]>} resolved with list of channel listeners
+     * @returns {$.Promise<Array<Object[]>>} resolved with list of list of
+     *   channel listeners.
      */
     getMentionPartnerSuggestions: function () {
         var self = this;
@@ -191,7 +203,7 @@ var Channel = SearchableThread.extend(ThreadTypingMixin, {
             })
             .then(function (members) {
                 self._members = members;
-                return members;
+                return [members];
             });
         }
         return this._membersDef;
@@ -214,19 +226,9 @@ var Channel = SearchableThread.extend(ThreadTypingMixin, {
         return _.extend(result, {
             author: lastMessage ? lastMessage.getDisplayedAuthor() : '',
             body: lastMessage ? mailUtils.parseAndTransform(lastMessage.getBody(), mailUtils.inline) : '',
-            date: lastMessage ? lastMessage.getDate() : moment(),
+            date: lastMessage ? lastMessage.getDate() : undefined,
             isMyselfAuthor: this.hasMessages() && this.getLastMessage().isMyselfAuthor(),
         });
-    },
-    /**
-     * Returns the title to display in thread window's headers.
-     * For channels, the title is prefixed with "#".
-     *
-     * @override
-     * @returns {string|Object} the name of the thread by default (see getName)
-     */
-    getTitle: function () {
-        return "#" + this._super.apply(this, arguments);
     },
     /**
      * Get the UUID of the channel.
@@ -339,41 +341,31 @@ var Channel = SearchableThread.extend(ThreadTypingMixin, {
     //--------------------------------------------------------------------------
 
     /**
+     * Override so that it tells whether the channel is moderated or not. This
+     * is useful in order to display pending moderation messages when the
+     * current user is either moderator of the channel or has posted some
+     * messages that are pending moderation.
+     *
+     * @override
      * @private
-     * @returns {$.Promise<integer>} resolved with ID of last seen message
+     * @returns {Object}
      */
-    _fetchSeen: function () {
-        var self = this;
-        return this._rpc({
-            model: 'mail.channel',
-            method: 'channel_seen',
-            args: [[this._id]],
-        }, {
-            shadow: true
-        }).then(function (lastSeenMessageID) {
-            self._lastSeenMessageID = lastSeenMessageID;
-            return lastSeenMessageID;
-        });
+    _getFetchMessagesKwargs: function () {
+        var kwargs = this._super.apply(this, arguments);
+        if (this.isModerated()) {
+            kwargs.moderated_channel_ids = [this.getID()];
+        }
+        return kwargs;
     },
     /**
      * Get the domain to fetch all the messages in the current channel
-     *
-     * Note that with moderation, even though some messages are not really
-     * linked to a channel ('channel_ids'), we should nonetheless display them.
-     * These messages are fetched from their associated document
-     * ('mail.channel' with provided channel ID), and messages that are pending
-     * moderation.
      *
      * @override
      * @private
      * @returns {Array}
      */
     _getThreadDomain: function () {
-        return ['|', '&', '&',
-                ['model', '=', 'mail.channel'],
-                ['res_id', 'in', [this._id]],
-                ['need_moderation', '=', true],
-                ['channel_ids', 'in', [this._id]]];
+        return [['channel_ids', 'in', [this._id]]];
     },
     /**
      * @override {mail.model.ThreadTypingMixin}
@@ -395,8 +387,22 @@ var Channel = SearchableThread.extend(ThreadTypingMixin, {
      */
     _markAsRead: function () {
         var superDef = this._super.apply(this, arguments);
-        var seenDef = this._throttleFetchSeen();
+        var seenDef = this._throttleNotifySeen();
         return $.when(superDef, seenDef);
+    },
+    /**
+     * @override {mail.model.ThreadSeenMixin}
+     * @private
+     * @returns {$.Promise}
+     */
+    _notifyFetched: function () {
+        return this._rpc({
+            model: 'mail.channel',
+            method: 'channel_fetched',
+            args: [[this._id]],
+        }, {
+            shadow: true
+        });
     },
     /**
      * @override {mail.model.ThreadTypingMixin}
@@ -412,6 +418,25 @@ var Channel = SearchableThread.extend(ThreadTypingMixin, {
             args: [this.getID()],
             kwargs: { is_typing: params.typing },
         }, { shadow: true });
+    },
+    /**
+     * @override {mail.model.ThreadSeenMixin}
+     * @private
+     * @returns {$.Promise<integer>} resolved with ID of last seen message
+     */
+    _notifySeen: function () {
+        var self = this;
+        this._cancelThrottledNotifyFetched();
+        return this._rpc({
+            model: 'mail.channel',
+            method: 'channel_seen',
+            args: [[this._id]],
+        }, {
+            shadow: true
+        }).then(function (lastSeenMessageID) {
+            self._lastSeenMessageID = lastSeenMessageID;
+            return lastSeenMessageID;
+        });
     },
     /**
      * Prepare and send a message to the server on this channel.

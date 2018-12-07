@@ -25,6 +25,7 @@ GOOGLE_API_BASE_URL = 'https://www.googleapis.com'
 # FIXME : this needs to become an AbstractModel, to be inhereted by google_calendar_service and google_drive_service
 class GoogleService(models.TransientModel):
     _name = 'google.service'
+    _description = 'Google Service'
 
     @api.model
     def generate_refresh_token(self, service, authorization_code):

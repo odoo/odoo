@@ -40,6 +40,8 @@ class StockRule(models.Model):
 
         # create the MO as SUPERUSER because the current user may not have the rights to do it (mto product launched by a sale for example)
         production = ProductionSudo.create(self._prepare_mo_vals(product_id, product_qty, product_uom, location_id, name, origin, values, bom))
+        production.move_raw_ids = self.env['stock.move'].create(production._get_moves_raw_values())
+        production.action_confirm()
         origin_production = values.get('move_dest_ids') and values['move_dest_ids'][0].raw_material_production_id or False
         orderpoint = values.get('orderpoint_id')
         if orderpoint:

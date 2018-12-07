@@ -44,6 +44,7 @@ def _get_wkhtmltopdf_bin():
 
 # Check the presence of Wkhtmltopdf and return its version at Odoo start-up
 wkhtmltopdf_state = 'install'
+wkhtmltopdf_dpi_zoom_ratio = False
 try:
     process = subprocess.Popen(
         [_get_wkhtmltopdf_bin(), '--version'], stdout=subprocess.PIPE, stderr=subprocess.PIPE
@@ -61,6 +62,8 @@ else:
             wkhtmltopdf_state = 'upgrade'
         else:
             wkhtmltopdf_state = 'ok'
+        if LooseVersion(version) >= LooseVersion('0.12.2'):
+            wkhtmltopdf_dpi_zoom_ratio = True
 
         if config['workers'] == 1:
             _logger.info('You need to start Odoo with at least two workers to print a pdf version of the reports.')
@@ -72,6 +75,7 @@ else:
 
 class IrActionsReport(models.Model):
     _name = 'ir.actions.report'
+    _description = 'Report Action'
     _inherit = 'ir.actions.actions'
     _table = 'ir_act_report_xml'
     _sequence = 'ir_actions_id_seq'
@@ -196,6 +200,10 @@ class IrActionsReport(models.Model):
         return wkhtmltopdf_state
 
     @api.model
+    def get_paperformat(self):
+        return self.paperformat_id or self.env.user.company_id.paperformat_id
+
+    @api.model
     def _build_wkhtmltopdf_args(
             self,
             paperformat_id,
@@ -241,14 +249,19 @@ class IrActionsReport(models.Model):
             else:
                 command_args.extend(['--margin-top', str(paperformat_id.margin_top)])
 
+            dpi = None
             if specific_paperformat_args and specific_paperformat_args.get('data-report-dpi'):
-                command_args.extend(['--dpi', str(specific_paperformat_args['data-report-dpi'])])
+                dpi = int(specific_paperformat_args['data-report-dpi'])
             elif paperformat_id.dpi:
                 if os.name == 'nt' and int(paperformat_id.dpi) <= 95:
                     _logger.info("Generating PDF on Windows platform require DPI >= 96. Using 96 instead.")
-                    command_args.extend(['--dpi', '96'])
+                    dpi = 96
                 else:
-                    command_args.extend(['--dpi', str(paperformat_id.dpi)])
+                    dpi = paperformat_id.dpi
+            if dpi:
+                command_args.extend(['--dpi', str(dpi)])
+                if wkhtmltopdf_dpi_zoom_ratio:
+                    command_args.extend(['--zoom', str(96.0 / dpi)])
 
             if specific_paperformat_args and specific_paperformat_args.get('data-report-header-spacing'):
                 command_args.extend(['--header-spacing', str(specific_paperformat_args['data-report-header-spacing'])])
@@ -300,7 +313,7 @@ class IrActionsReport(models.Model):
         bodies = []
         res_ids = []
 
-        body_parent = root.xpath('//main')
+        body_parent = root.xpath('//main')[0]
         # Retrieve headers
         for node in root.xpath(match_klass.format('header')):
             body_parent = node.getparent()
@@ -314,11 +327,15 @@ class IrActionsReport(models.Model):
             footer_node.append(node)
 
         # Retrieve bodies
-        for node in root.xpath(match_klass.format('page')):
-            body = layout.render(dict(subst=False, body=lxml.html.tostring(node), base_url=base_url))
+        for node in root.xpath(match_klass.format('article')):
+            layout_with_lang = layout
+            # set context language to body language
+            if node.get('data-oe-lang'):
+                layout_with_lang = layout_with_lang.with_context(lang=node.get('data-oe-lang'))
+            body = layout_with_lang.render(dict(subst=False, body=lxml.html.tostring(node), base_url=base_url))
             bodies.append(body)
-            if node.get('data-model') == self.model:
-                res_ids.append(int(node.get('data-id', 0)))
+            if node.get('data-oe-model') == self.model:
+                res_ids.append(int(node.get('data-oe-id', 0)))
             else:
                 res_ids.append(None)
 
@@ -358,7 +375,7 @@ class IrActionsReport(models.Model):
         :param set_viewport_size: Enable a viewport sized '1024x1280' or '1280x1024' depending of landscape arg.
         :return: Content of the pdf as a string
         '''
-        paperformat_id = self.paperformat_id or self.env.user.company_id.paperformat_id
+        paperformat_id = self.get_paperformat()
 
         # Build the base command args for wkhtmltopdf bin
         command_args = self._build_wkhtmltopdf_args(
@@ -572,18 +589,21 @@ class IrActionsReport(models.Model):
         if len(streams) == 1:
             result = streams[0].getvalue()
         else:
-            writer = PdfFileWriter()
-            for stream in streams:
-                reader = PdfFileReader(stream)
-                writer.appendPagesFromReader(reader)
-            result_stream = io.BytesIO()
-            streams.append(result_stream)
-            writer.write(result_stream)
-            result = result_stream.getvalue()
+            result = self._merge_pdfs(streams)
 
         # We have to close the streams after PdfFileWriter's call to write()
         close_streams(streams)
         return result
+
+    def _merge_pdfs(self, streams):
+        writer = PdfFileWriter()
+        for stream in streams:
+            reader = PdfFileReader(stream)
+            writer.appendPagesFromReader(reader)
+        result_stream = io.BytesIO()
+        streams.append(result_stream)
+        writer.write(result_stream)
+        return result_stream.getvalue()
 
     @api.multi
     def render_qweb_pdf(self, res_ids=None, data=None):
@@ -666,7 +686,7 @@ class IrActionsReport(models.Model):
 
         if self.attachment and set(res_ids) != set(html_ids):
             raise UserError(_("The report's template '%s' is wrong, please contact your administrator. \n\n"
-                "Can not separate file to save as attachment because the report's template does not contains the attributes 'data-model' and 'data-id' on the div with 'page' classname.") %  self.name)
+                "Can not separate file to save as attachment because the report's template does not contains the attributes 'data-oe-model' and 'data-oe-id' on the div with 'article' classname.") %  self.name)
 
         pdf_content = self._run_wkhtmltopdf(
             bodies,
@@ -700,12 +720,12 @@ class IrActionsReport(models.Model):
         report_model_name = 'report.%s' % self.report_name
         report_model = self.env.get(report_model_name)
 
+        data = data and dict(data) or {}
+
         if report_model is not None:
-            data = report_model._get_report_values(docids, data=data)
+            data.update(report_model._get_report_values(docids, data=data))
         else:
             docs = self.env[self.model].browse(docids)
-            if not data:
-                data = {}
             data.update({
                 'doc_ids': docids,
                 'doc_model': self.model,

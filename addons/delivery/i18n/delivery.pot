@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
+"POT-Creation-Date: 2018-10-08 06:49+0000\n"
+"PO-Revision-Date: 2018-10-08 06:49+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -142,7 +142,6 @@ msgid "Cancel"
 msgstr ""
 
 #. module: delivery
-#: model:ir.model,name:delivery.model_delivery_carrier
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__carrier_id
 #: model:ir.model.fields,field_description:delivery.field_product_packaging__package_carrier_type
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__carrier_id
@@ -160,6 +159,11 @@ msgstr ""
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
 msgid "Condition"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_res_config_settings
+msgid "Config Settings"
 msgstr ""
 
 #. module: delivery
@@ -229,13 +233,13 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__name
 #: model:ir.model.fields,field_description:delivery.field_res_partner__property_delivery_carrier_id
-#: model:ir.model.fields,field_description:delivery.field_res_users__property_delivery_carrier_id
 #: model:ir.model.fields,field_description:delivery.field_sale_order__carrier_id
 msgid "Delivery Method"
 msgstr ""
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_carrier_form
+#: model:ir.model,name:delivery.model_delivery_carrier
 #: model:ir.ui.menu,name:delivery.menu_action_delivery_carrier_form
 #: model:ir.ui.menu,name:delivery.sale_menu_action_delivery_carrier_form
 #: model_terms:ir.ui.view,arch_db:delivery.res_config_settings_view_form
@@ -514,6 +518,13 @@ msgid "No price rule matching this order; delivery cost cannot be computed."
 msgstr ""
 
 #. module: delivery
+#: model:delivery.carrier,name:delivery.normal_delivery_carrier
+#: model:product.product,name:delivery.product_product_delivery_normal
+#: model:product.template,name:delivery.product_product_delivery_normal_product_template
+msgid "Normal Delivery Charges"
+msgstr ""
+
+#. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form
 msgid "OK"
 msgstr ""
@@ -535,7 +546,7 @@ msgstr ""
 
 #. module: delivery
 #: code:addons/delivery/models/stock_picking.py:35
-#: code:addons/delivery/models/stock_picking.py:119
+#: code:addons/delivery/models/stock_picking.py:122
 #, python-format
 msgid "Package Details"
 msgstr ""
@@ -547,28 +558,14 @@ msgid "Package too heavy!"
 msgstr ""
 
 #. module: delivery
+#: model:ir.model,name:delivery.model_stock_quant_package
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__package_ids
 msgid "Packages"
 msgstr ""
 
 #. module: delivery
-#: model:ir.model,name:delivery.model_product_packaging
-msgid "Packaging"
-msgstr ""
-
-#. module: delivery
-#: model:ir.model,name:delivery.model_stock_move_line
-msgid "Packing Operation"
-msgstr ""
-
-#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_package__stock_quant_package_id
 msgid "Physical Package"
-msgstr ""
-
-#. module: delivery
-#: model:ir.model,name:delivery.model_stock_quant_package
-msgid "Physical Packages"
 msgstr ""
 
 #. module: delivery
@@ -600,6 +597,16 @@ msgid "Pricing Rules"
 msgstr ""
 
 #. module: delivery
+#: model:ir.model,name:delivery.model_stock_move_line
+msgid "Product Moves (Stock Move Line)"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_product_packaging
+msgid "Product Packaging"
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__delivery_type
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__delivery_type
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
@@ -614,11 +621,6 @@ msgid "Quantity"
 msgstr ""
 
 #. module: delivery
-#: model:ir.model,name:delivery.model_sale_order
-msgid "Quotation"
-msgstr ""
-
-#. module: delivery
 #: model:ir.model,name:delivery.model_stock_return_picking
 msgid "Return Picking"
 msgstr ""
@@ -626,6 +628,11 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__list_base_price
 msgid "Sale Base Price"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_sale_order
+msgid "Sale Order"
 msgstr ""
 
 #. module: delivery
@@ -665,7 +672,7 @@ msgid "Set to True if your credentials are certified for production."
 msgstr ""
 
 #. module: delivery
-#: code:addons/delivery/models/stock_picking.py:166
+#: code:addons/delivery/models/stock_picking.py:171
 #, python-format
 msgid "Shipment sent to carrier %s for shipping with tracking number %s<br/>Cost: %.2f %s"
 msgstr ""
@@ -698,6 +705,13 @@ msgid "Stock Move"
 msgstr ""
 
 #. module: delivery
+#: model:delivery.carrier,name:delivery.delivery_carrier
+#: model:product.product,name:delivery.product_product_delivery_poste
+#: model:product.template,name:delivery.product_product_delivery_poste_product_template
+msgid "The Poste"
+msgstr ""
+
+#. module: delivery
 #: code:addons/delivery/wizard/choose_delivery_package.py:53
 #, python-format
 msgid "The weight of your package is higher than the maximum weight authorized for this package type. Please choose another package type."
@@ -718,7 +732,6 @@ msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_res_partner__property_delivery_carrier_id
-#: model:ir.model.fields,help:delivery.field_res_users__property_delivery_carrier_id
 msgid "This delivery method will be used when invoicing from picking."
 msgstr ""
 
@@ -764,6 +777,10 @@ msgstr ""
 
 #. module: delivery
 #: model:product.product,uom_name:delivery.product_product_delivery
+#: model:product.product,uom_name:delivery.product_product_delivery_normal
+#: model:product.product,uom_name:delivery.product_product_delivery_poste
+#: model:product.template,uom_name:delivery.product_product_delivery_normal_product_template
+#: model:product.template,uom_name:delivery.product_product_delivery_poste_product_template
 #: model:product.template,uom_name:delivery.product_product_delivery_product_template
 msgid "Unit(s)"
 msgstr ""
@@ -833,7 +850,7 @@ msgid "Width must be positive"
 msgstr ""
 
 #. module: delivery
-#: code:addons/delivery/models/stock_picking.py:217
+#: code:addons/delivery/models/stock_picking.py:222
 #, python-format
 msgid "You are shipping different packaging types in the same shipment.\n"
 "Packaging Types: %s"
@@ -851,7 +868,7 @@ msgid "You have multiple tracker links, they are available in the chatter."
 msgstr ""
 
 #. module: delivery
-#: code:addons/delivery/models/stock_picking.py:180
+#: code:addons/delivery/models/stock_picking.py:185
 #, python-format
 msgid "Your delivery method has no redirect on courier provider's website to track this order."
 msgstr ""
@@ -873,12 +890,11 @@ msgstr ""
 
 #. module: delivery
 #: model:product.product,weight_uom_name:delivery.product_product_delivery
+#: model:product.product,weight_uom_name:delivery.product_product_delivery_normal
+#: model:product.product,weight_uom_name:delivery.product_product_delivery_poste
+#: model:product.template,weight_uom_name:delivery.product_product_delivery_normal_product_template
+#: model:product.template,weight_uom_name:delivery.product_product_delivery_poste_product_template
 #: model:product.template,weight_uom_name:delivery.product_product_delivery_product_template
 msgid "kg"
-msgstr ""
-
-#. module: delivery
-#: model:ir.model,name:delivery.model_res_config_settings
-msgid "res.config.settings"
 msgstr ""
 

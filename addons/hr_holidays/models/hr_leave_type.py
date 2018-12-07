@@ -20,6 +20,7 @@ class HolidaysType(models.Model):
     _order = "sequence, id"
 
     name = fields.Char('Leave Type', required=True, translate=True)
+    code = fields.Char('Code')
     sequence = fields.Integer(default=100,
                               help='The type with the smallest sequence is the default value in leave request')
     categ_id = fields.Many2one(
@@ -62,9 +63,10 @@ class HolidaysType(models.Model):
         compute='_compute_group_days_leave', string='Group Leaves')
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.user.company_id)
     validation_type = fields.Selection([
-        ('hr', 'Human Resource officer'),
-        ('manager', 'Employee Manager'),
-        ('both', 'Double Validation')], default='hr', string='Validation By')
+        ('no_validation', 'No Validation'),
+        ('hr', 'Payroll Officer'),
+        ('manager', 'Team Leader'),
+        ('both', 'Team Leader and Payroll Officer')], default='hr', string='Validation By')
     allocation_type = fields.Selection([
         ('fixed', 'Fixed by HR'),
         ('fixed_allocation', 'Fixed by HR + allocation request'),
@@ -83,6 +85,8 @@ class HolidaysType(models.Model):
         ('day', 'Day'), ('hour', 'Hours')],
         default='day', string='Take Leaves in', required=True)
     unpaid = fields.Boolean('Is Unpaid', default=False)
+    leave_notif_subtype_id = fields.Many2one('mail.message.subtype', string='Leave Notification Subtype')
+    allocation_notif_subtype_id = fields.Many2one('mail.message.subtype', string='Allocation Notification Subtype')
 
     @api.multi
     @api.constrains('validity_start', 'validity_stop')

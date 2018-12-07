@@ -9,11 +9,12 @@ class AccountAnalyticAccount(models.Model):
     _inherit = 'account.analytic.account'
     _description = 'Analytic Account'
 
-    company_uom_id = fields.Many2one('uom.uom', related='company_id.project_time_mode_id', string="Company UOM")
+    company_uom_id = fields.Many2one('uom.uom', related='company_id.project_time_mode_id', string="Company UOM", readonly=False)
     project_ids = fields.One2many('project.project', 'analytic_account_id', string='Projects')
     project_count = fields.Integer("Project Count", compute='_compute_project_count')
 
     @api.multi
+    @api.depends('project_ids')
     def _compute_project_count(self):
         project_data = self.env['project.project'].read_group([('analytic_account_id', 'in', self.ids)], ['analytic_account_id'], ['analytic_account_id'])
         mapping = {m['analytic_account_id'][0]: m['analytic_account_id_count'] for m in project_data}
@@ -30,18 +31,16 @@ class AccountAnalyticAccount(models.Model):
 
     @api.multi
     def action_view_projects(self):
-        projects = self.mapped('project_ids')
+        kanban_view_id = self.env.ref('project.view_project_kanban').id
         result = {
             "type": "ir.actions.act_window",
             "res_model": "project.project",
-            "views": [[False, "tree"], [False, "form"]],
-            "domain": [["id", "in", projects.ids]],
+            "views": [[kanban_view_id, "kanban"], [False, "form"]],
+            "domain": [['analytic_account_id', '=', self.id]],
             "context": {"create": False},
             "name": "Projects",
         }
-        if len(projects) == 1:
+        if len(self.project_ids) == 1:
             result['views'] = [(False, "form")]
-            result['res_id'] = projects.id
-        else:
-            result = {'type': 'ir.actions.act_window_close'}
+            result['res_id'] = self.project_ids.id
         return result

@@ -39,6 +39,10 @@ tour.register('shop_buy_product', {
             trigger: '#product_detail form[action^="/shop/cart/update"] .btn-primary',
         },
         {
+            content: "click in modal on 'Proceed to checkout' button",
+            trigger: 'button:contains("Proceed to Checkout")',
+        },
+        {
             content: "add suggested",
             extra_trigger: '#wrap:not(:has(#cart_products:contains("[A8767] Storage Box")))',
             trigger: '.oe_cart:has(tr:contains("Steel")) a:contains("Add to Cart")',
@@ -76,7 +80,7 @@ tour.register('shop_buy_product', {
         },
         {
             content: "finish",
-            trigger: '.oe_website_sale:contains("Thank you for your order")',
+            trigger: '.oe_website_sale:contains("Pending... The order will be validated after the payment.")',
             timeout: 30000,
         }
     ]

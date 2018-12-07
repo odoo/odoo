@@ -4,14 +4,16 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2018
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2018
+# Cas Vissers <casvissers@brahoo.nl>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
-"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2018\n"
+"POT-Creation-Date: 2018-10-08 06:49+0000\n"
+"PO-Revision-Date: 2018-10-08 06:49+0000\n"
+"Last-Translator: Cas Vissers <casvissers@brahoo.nl>, 2018\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,16 +30,6 @@ msgstr "Actieomschrijving"
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__name
 msgid "Action Name"
 msgstr "Naam actie"
-
-#. module: base_automation
-#: model:ir.model,name:base_automation.model_base_automation_line_test
-msgid "Action Rule Line Test"
-msgstr "Actieregel test"
-
-#. module: base_automation
-#: model:ir.model,name:base_automation.model_base_automation_lead_test
-msgid "Action Rule Test"
-msgstr "Actieregel test"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__state
@@ -63,7 +55,7 @@ msgstr "Activiteit"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_user_type
 msgid "Activity User Type"
-msgstr ""
+msgstr "Activiteit gebruikerstype"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__channel_ids
@@ -98,6 +90,16 @@ msgid "Automated Actions"
 msgstr "Geautomatiseerde acties"
 
 #. module: base_automation
+#: model:ir.model,name:base_automation.model_base_automation_line_test
+msgid "Automated Rule Line Test"
+msgstr "Automatische regel regeltest"
+
+#. module: base_automation
+#: model:ir.model,name:base_automation.model_base_automation_lead_test
+msgid "Automated Rule Test"
+msgstr "Automatische regeltest"
+
+#. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_tree
 msgid "Automation"
 msgstr "Automatisering"
@@ -108,6 +110,42 @@ msgstr "Automatisering"
 #: model:ir.cron,name:base_automation.ir_cron_data_base_automation_check
 msgid "Base Action Rule: check and execute"
 msgstr "Basis actie regel: controleer en voer uit"
+
+#. module: base_automation
+#: model:base.automation,name:base_automation.test_rule_recursive
+#: model:ir.actions.server,name:base_automation.test_rule_recursive_ir_actions_server
+msgid "Base Automation: test recursive rule"
+msgstr "Basis automatisering: test recursieve regel"
+
+#. module: base_automation
+#: model:base.automation,name:base_automation.test_rule_on_create
+#: model:ir.actions.server,name:base_automation.test_rule_on_create_ir_actions_server
+msgid "Base Automation: test rule on create"
+msgstr "Basis automatisering: test regel bij aanmaken"
+
+#. module: base_automation
+#: model:base.automation,name:base_automation.test_rule_on_recompute
+#: model:ir.actions.server,name:base_automation.test_rule_on_recompute_ir_actions_server
+msgid "Base Automation: test rule on recompute"
+msgstr "Basis automatisering: test regel op herberekening"
+
+#. module: base_automation
+#: model:base.automation,name:base_automation.test_rule_on_line
+#: model:ir.actions.server,name:base_automation.test_rule_on_line_ir_actions_server
+msgid "Base Automation: test rule on secondary model"
+msgstr "Basis automatisring: test regel op secundair model"
+
+#. module: base_automation
+#: model:base.automation,name:base_automation.test_rule_on_write
+#: model:ir.actions.server,name:base_automation.test_rule_on_write_ir_actions_server
+msgid "Base Automation: test rule on write"
+msgstr "Basis automatisering: test regel bij schrijven"
+
+#. module: base_automation
+#: model:base.automation,name:base_automation.test_rule_on_write_check_context
+#: model:ir.actions.server,name:base_automation.test_rule_on_write_check_context_ir_actions_server
+msgid "Base Automation: test rule on write check context"
+msgstr "Basis automatisering: test regel op schrijven controleer context"
 
 #. module: base_automation
 #: selection:base.automation,trigger:0
@@ -141,8 +179,12 @@ msgstr "Geannuleerd"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation_lead_test__customer
-msgid "Check this box if this contact is a customer."
-msgstr "Vink dit aan indien deze relatie een klant is."
+msgid ""
+"Check this box if this contact is a customer. It can be selected in sales "
+"orders."
+msgstr ""
+"Selecteer als dit contact een klant is. Welke kan worden geselecteerd in "
+"verkooporders."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__child_ids
@@ -232,7 +274,7 @@ msgstr "Vervaldatum in"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_date_deadline_range_type
 msgid "Due type"
-msgstr ""
+msgstr "Vervalsoort"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__template_id
@@ -343,7 +385,7 @@ msgstr "Model"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__crud_model_name
 msgid "Model Description"
-msgstr "Omschrijving model"
+msgstr "Modelomschrijving"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__model_name
@@ -475,6 +517,7 @@ msgstr "Reeks"
 
 #. module: base_automation
 #: selection:ir.actions.server,usage:0
+#: model:ir.model,name:base_automation.model_ir_actions_server
 msgid "Server Action"
 msgstr "Serveractie"
 
@@ -524,6 +567,8 @@ msgid ""
 "The \"%(trigger_value)s\" %(trigger_label)s can only be used with the "
 "\"%(state_value)s\" action type"
 msgstr ""
+"De \"%(trigger_value)s\" %(trigger_label)s kan alleen gebruikt worden met de"
+"  \"%(state_value)s\" actie type"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger
@@ -568,6 +613,9 @@ msgid ""
 " 'Generic User From Record' to specify the field name of the user to choose "
 "on the record."
 msgstr ""
+"Gebruik 'Specifieke gebruiker' om altijd dezelfde gebruiker toe te wijzen "
+"aan de volgende activiteit. Gebruik 'Generieke gebruiker van record' om het "
+"veldnaam op te geven van de gebruiker die in de record moet worden gekozen."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_calendar_id
@@ -583,6 +631,11 @@ msgid ""
 "                opportunity which still has status pending after 14 days might\n"
 "                trigger an automatic reminder email."
 msgstr ""
+"Gebruik geautomatiseerde acties om acties automatisch te activeren\n"
+"                 voor verschillende schermen. Voorbeeld: een lead gemaakt door een specifieke gebruiker kan\n"
+"                 automatisch worden ingesteld op een specifiek verkoopteam, of een\n"
+"                 propsect die na 14 dagen nog een status in behandeling heeft\n"
+"                 triggert een automatische herinneringsmail."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test__user_id
@@ -646,8 +699,6 @@ msgid ""
 "Write Python code that the action will execute. Some variables are available"
 " for use; help about python expression is given in the help tab."
 msgstr ""
-
-#. module: base_automation
-#: model:ir.model,name:base_automation.model_ir_actions_server
-msgid "ir.actions.server"
-msgstr "ir.actions.server"
+"Schrijf Python code die de actie uitvoert. Sommige variabelen zijn "
+"beschikbaar voor gebruik; help over Python expressies is gegeven in het hulp"
+" tabblad."

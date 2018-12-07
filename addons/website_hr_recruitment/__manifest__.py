@@ -21,4 +21,5 @@
         'data/hr_job_demo.xml',
     ],
     'installable': True,
+    'application': True,
 }

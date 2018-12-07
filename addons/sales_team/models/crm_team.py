@@ -38,9 +38,10 @@ class CrmTeam(models.Model):
                     default_team_id.check_access_rule('read')
                 except AccessError:
                     return self.env['crm.team']
-                if self.env.context.get('default_type') != 'lead' or default_team_id.use_leads and default_team_id.active:
+                if self.env.context.get('default_type') != 'lead' and default_team_id.active:
                     team_id = default_team_id
         return team_id
+
 
     def _get_default_favorite_user_ids(self):
         return [(6, 0, [self.env.uid])]
@@ -53,7 +54,7 @@ class CrmTeam(models.Model):
         "res.currency", related='company_id.currency_id',
         string="Currency", readonly=True)
     user_id = fields.Many2one('res.users', string='Team Leader')
-    member_ids = fields.One2many('res.users', 'sale_team_id', string='Channel Members')
+    member_ids = fields.One2many('res.users', 'sale_team_id', string='Channel Members', domain= lambda self: [('groups_id', 'in', self.env.ref('base.group_user').id)], help="Add members to automatically assign their documents to this sales team. You can only be member of one team.")
     favorite_user_ids = fields.Many2many(
         'res.users', 'team_favorite_user_rel', 'team_id', 'user_id',
         string='Favorite Members',
@@ -65,35 +66,11 @@ class CrmTeam(models.Model):
     reply_to = fields.Char(string='Reply-To',
                            help="The email address put in the 'Reply-To' of all emails sent by Odoo about cases in this Sales Team")
     color = fields.Integer(string='Color Index', help="The color of the channel")
-    team_type = fields.Selection([('sales', 'Sales'), ('website', 'Website')], string='Team Type', default='sales', required=True,
-                                 help="The type of this channel, it will define the resources this channel uses.")
     dashboard_button_name = fields.Char(string="Dashboard Button", compute='_compute_dashboard_button_name')
     dashboard_graph_data = fields.Text(compute='_compute_dashboard_graph')
-    dashboard_graph_type = fields.Selection([
-        ('line', 'Line'),
-        ('bar', 'Bar'),
-    ], string='Type', compute='_compute_dashboard_graph', help='The type of graph this channel will display in the dashboard.')
-    dashboard_graph_model = fields.Selection([], string="Content", help='The graph this channel will display in the Dashboard.\n')
-    dashboard_graph_group = fields.Selection([
-        ('day', 'Day'),
-        ('week', 'Week'),
-        ('month', 'Month'),
-        ('user', 'Salesperson'),
-    ], string='Group by', default='day', help="How this channel's dashboard graph will group the results.")
-    dashboard_graph_period = fields.Selection([
-        ('week', 'Last Week'),
-        ('month', 'Last Month'),
-        ('year', 'Last Year'),
-    ], string='Scale', default='month', help="The time period this channel's dashboard graph will consider.")
-
-    @api.depends('dashboard_graph_group', 'dashboard_graph_model', 'dashboard_graph_period')
+    
     def _compute_dashboard_graph(self):
-        for team in self.filtered('dashboard_graph_model'):
-            if team.dashboard_graph_group in (False, 'user') or team.dashboard_graph_period == 'week' and team.dashboard_graph_group != 'day' \
-                    or team.dashboard_graph_period == 'month' and team.dashboard_graph_group != 'day':
-                team.dashboard_graph_type = 'bar'
-            else:
-                team.dashboard_graph_type = 'line'
+        for team in self:
             team.dashboard_graph_data = json.dumps(team._get_graph())
 
     def _compute_is_favorite(self):
@@ -107,45 +84,26 @@ class CrmTeam(models.Model):
         (sudoed_self - to_fav).write({'favorite_user_ids': [(3, self.env.uid)]})
         return True
 
-    def _graph_get_dates(self, today):
-        """ return a coherent start and end date for the dashboard graph according to the graph settings.
+    def _graph_get_model(self):
+        """ skeleton function defined here because it'll be called by crm and/or sale
         """
-        if self.dashboard_graph_period == 'week':
-            start_date = today - relativedelta(weeks=1)
-        elif self.dashboard_graph_period == 'year':
-            start_date = today - relativedelta(years=1)
-        else:
-            start_date = today - relativedelta(months=1)
+        raise UserError(_('Undefined graph model for Sales Team: %s') % self.name)
+        
 
-        # we take the start of the following month/week/day if we group by month/week/day
-        # (to avoid having twice the same month/week/day from different years/month/week)
-        if self.dashboard_graph_group == 'month':
-            start_date = date(start_date.year + start_date.month // 12, start_date.month % 12 + 1, 1)
-            # handle period=week, grouping=month for silly managers
-            if self.dashboard_graph_period == 'week':
-                start_date = today.replace(day=1)
-        elif self.dashboard_graph_group == 'week':
-            start_date += relativedelta(days=8 - start_date.isocalendar()[2])
-            # add a week to make sure no overlapping is possible in case of year period (will display max 52 weeks, avoid case of 53 weeks in a year)
-            if self.dashboard_graph_period == 'year':
-                start_date += relativedelta(weeks=1)
-        else:
-            start_date += relativedelta(days=1)
-
+    def _graph_get_dates(self, today):
+        """ return a coherent start and end date for the dashboard graph covering a month period grouped by week.
+        """
+        start_date = today - relativedelta(months=1)
+        # we take the start of the following week if we group by week
+        # (to avoid having twice the same week from different month)
+        start_date += relativedelta(days=8 - start_date.isocalendar()[2])
         return [start_date, today]
 
     def _graph_date_column(self):
         return 'create_date'
 
     def _graph_x_query(self):
-        if self.dashboard_graph_group == 'user':
-            return 'user_id'
-        elif self.dashboard_graph_group == 'week':
-            return 'EXTRACT(WEEK FROM %s)' % self._graph_date_column()
-        elif self.dashboard_graph_group == 'month':
-            return 'EXTRACT(MONTH FROM %s)' % self._graph_date_column()
-        else:
-            return 'DATE(%s)' % self._graph_date_column()
+        return 'EXTRACT(WEEK FROM %s)' % self._graph_date_column()
 
     def _graph_y_query(self):
         raise UserError(_('Undefined graph model for Sales Team: %s') % self.name)
@@ -162,7 +120,7 @@ class CrmTeam(models.Model):
 
     def _graph_data(self, start_date, end_date):
         """ return format should be an iterable of dicts that contain {'x_value': ..., 'y_value': ...}
-            x_values should either be dates, weeks, months or user_ids depending on the self.dashboard_graph_group value.
+            x_values should be weeks.
             y_values are floats.
         """
         query = """SELECT %(x_query)s as x_value, %(y_query)s as y_value
@@ -174,9 +132,8 @@ class CrmTeam(models.Model):
                     GROUP BY x_value;"""
 
         # apply rules
-        if not self.dashboard_graph_model:
-            raise UserError(_('Undefined graph model for Sales Team: %s') % self.name)
-        GraphModel = self.env[self.dashboard_graph_model]
+        dashboard_graph_model = self._graph_get_model()     
+        GraphModel = self.env[dashboard_graph_model]
         graph_table = GraphModel._table
         extra_conditions = self._extra_sql_conditions()
         where_query = GraphModel._where_calc([])
@@ -195,6 +152,7 @@ class CrmTeam(models.Model):
             'end_date': "%s",
             'extra_conditions': extra_conditions
         }
+        
         self._cr.execute(query, [self.id, start_date, end_date] + where_clause_params)
         return self.env.cr.dictfetchall()
 
@@ -217,51 +175,20 @@ class CrmTeam(models.Model):
         today = fields.Date.from_string(fields.Date.context_today(self))
         start_date, end_date = self._graph_get_dates(today)
         graph_data = self._graph_data(start_date, end_date)
-
-        # line graphs and bar graphs require different labels
-        if self.dashboard_graph_type == 'line':
-            x_field = 'x'
-            y_field = 'y'
-        else:
-            x_field = 'label'
-            y_field = 'value'
+        x_field = 'label'
+        y_field = 'value'
 
         # generate all required x_fields and update the y_values where we have data for them
         locale = self._context.get('lang') or 'en_US'
-        if self.dashboard_graph_group == 'day':
-            for day in range(0, (end_date - start_date).days + 1):
-                short_name = format_date(start_date + relativedelta(days=day), 'd MMM', locale=locale)
-                values.append({x_field: short_name, y_field: 0})
-            for data_item in graph_data:
-                index = (data_item.get('x_value') - start_date).days
-                values[index][y_field] = data_item.get('y_value')
+        
+        weeks_in_start_year = int(date(start_date.year, 12, 28).isocalendar()[1]) # This date is always in the last week of ISO years
+        for week in range(0, (end_date.isocalendar()[1] - start_date.isocalendar()[1]) % weeks_in_start_year + 1):
+            short_name = get_week_name(start_date + relativedelta(days=7 * week), locale)
+            values.append({x_field: short_name, y_field: 0})
 
-        elif self.dashboard_graph_group == 'week':
-            weeks_in_start_year = int(date(start_date.year, 12, 28).isocalendar()[1]) # This date is always in the last week of ISO years
-            for week in range(0, (end_date.isocalendar()[1] - start_date.isocalendar()[1]) % weeks_in_start_year + 1):
-                short_name = get_week_name(start_date + relativedelta(days=7 * week), locale)
-                values.append({x_field: short_name, y_field: 0})
-
-            for data_item in graph_data:
-                index = int((data_item.get('x_value') - start_date.isocalendar()[1]) % weeks_in_start_year)
-                values[index][y_field] = data_item.get('y_value')
-
-        elif self.dashboard_graph_group == 'month':
-            for month in range(0, (end_date.month - start_date.month) % 12 + 1):
-                short_name = format_date(start_date + relativedelta(months=month), 'MMM', locale=locale)
-                values.append({x_field: short_name, y_field: 0})
-
-            for data_item in graph_data:
-                index = int((data_item.get('x_value') - start_date.month) % 12)
-                values[index][y_field] = data_item.get('y_value')
-
-        elif self.dashboard_graph_group == 'user':
-            for data_item in graph_data:
-                values.append({x_field: self.env['res.users'].browse(data_item.get('x_value')).name or _('Not Defined'), y_field: data_item.get('y_value')})
-
-        else:
-            for data_item in graph_data:
-                values.append({x_field: data_item.get('x_value'), y_field: data_item.get('y_value')})
+        for data_item in graph_data:
+            index = int((data_item.get('x_value') - start_date.isocalendar()[1]) % weeks_in_start_year)
+            values[index][y_field] = data_item.get('y_value')
 
         [graph_title, graph_key] = self._graph_title_and_key()
         color = '#875A7B' if '+e' in version else '#7c7bad'
@@ -279,11 +206,6 @@ class CrmTeam(models.Model):
         """
         return False
 
-    def _onchange_team_type(self):
-        """ skeleton function defined here because it'll be called by crm and/or sale
-        """
-        self.ensure_one()
-
     @api.model
     def create(self, values):
         team = super(CrmTeam, self.with_context(mail_create_nosubscribe=True)).create(values)
@@ -297,6 +219,18 @@ class CrmTeam(models.Model):
         if values.get('member_ids'):
             self._add_members_to_favorites()
         return res
+
+    @api.multi
+    def unlink(self):
+        default_teams = [
+            self.env.ref('sales_team.salesteam_website_sales'),
+            self.env.ref('sales_team.pos_sales_team'),
+            self.env.ref('sales_team.ebay_sales_team')
+        ]
+        for team in self:
+            if team in default_teams:
+                raise UserError(_('Cannot delete default team "%s"' % (team.name)))
+        return super(CrmTeam,self).unlink()
 
     def _add_members_to_favorites(self):
         for team in self:

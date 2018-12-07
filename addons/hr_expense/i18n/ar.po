@@ -23,13 +23,16 @@
 # Husam Migdadi <samwatson18@gmail.com>, 2018
 # Akram Alfusayal <akram_ma@hotmail.com>, 2018
 # hamza tayseer atieh <hamza.atieh@minervadata.com>, 2018
+# Mostafa Hanafy <mostafa.s.hanafy@gmail.com>, 2018
+# Abdulmajeed Alomar <majeeed87@gmail.com>, 2018
+# Ali Alrehawi <alrehawi@hotmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:48+0000\n"
-"PO-Revision-Date: 2018-09-18 09:48+0000\n"
-"Last-Translator: hamza tayseer atieh <hamza.atieh@minervadata.com>, 2018\n"
+"POT-Creation-Date: 2018-10-08 06:48+0000\n"
+"PO-Revision-Date: 2018-10-08 06:48+0000\n"
+"Last-Translator: Ali Alrehawi <alrehawi@hotmail.com>, 2018\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -156,7 +159,7 @@ msgstr "الأنشطة"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_state
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__activity_state
 msgid "Activity State"
-msgstr ""
+msgstr "حالة النشاط"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.mail_activity_type_action_config_hr_expense
@@ -176,14 +179,20 @@ msgid "Add a new expense,"
 msgstr ""
 
 #. module: hr_expense
+#: model:product.product,name:hr_expense.air_ticket
+#: model:product.template,name:hr_expense.air_ticket_product_template
+msgid "Air Flight"
+msgstr "رحلة جوية"
+
+#. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_all_all
 msgid "All Expense Reports"
-msgstr ""
+msgstr "تقارير جميع المصروفات"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_actions_all
 msgid "All Expenses"
-msgstr ""
+msgstr "جميع المصروفات"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__account_id
@@ -234,7 +243,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_attachment_count
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "عدد المرفقات"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__bank_journal_id
@@ -252,7 +261,6 @@ msgid "Can Reset"
 msgstr ""
 
 #. module: hr_expense
-#: model:ir.model.fields,field_description:hr_expense.field_product_product__can_be_expensed
 #: model:ir.model.fields,field_description:hr_expense.field_product_template__can_be_expensed
 msgid "Can be Expensed"
 msgstr "يمكن أن يكون مصروف"
@@ -262,6 +270,12 @@ msgstr "يمكن أن يكون مصروف"
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_register_payment_view_form
 msgid "Cancel"
 msgstr "إلغاء"
+
+#. module: hr_expense
+#: model:product.product,name:hr_expense.car_travel
+#: model:product.template,name:hr_expense.car_travel_product_template
+msgid "Car Travel Expenses"
+msgstr "مصاريف السفر بالسيارة"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
@@ -282,6 +296,11 @@ msgstr "المؤسسة"
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet_register_payment_wizard__company_id
 msgid "Company related to this journal"
 msgstr "الشركات المرتبطة بهذه اليومية"
+
+#. module: hr_expense
+#: model:ir.model,name:hr_expense.model_res_config_settings
+msgid "Config Settings"
+msgstr "ضبط الإعدادات"
 
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_configuration
@@ -465,15 +484,20 @@ msgid "Expense Products"
 msgstr ""
 
 #. module: hr_expense
-#: model:ir.model,name:hr_expense.model_hr_expense_sheet
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__sheet_id
-#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_tree
-msgid "Expense Report"
+#: model:ir.model,name:hr_expense.model_hr_expense_refuse_wizard
+msgid "Expense Refuse Reason Wizard"
 msgstr ""
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_sheet_register_payment_wizard
-msgid "Expense Report Register Payment wizard"
+msgid "Expense Register Payment Wizard"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.model,name:hr_expense.model_hr_expense_sheet
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__sheet_id
+#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_tree
+msgid "Expense Report"
 msgstr ""
 
 #. module: hr_expense
@@ -518,11 +542,6 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_employee__expense_manager_id
 msgid "Expense Responsible"
-msgstr ""
-
-#. module: hr_expense
-#: model:ir.model,name:hr_expense.model_hr_expense_refuse_wizard
-msgid "Expense refuse Reason wizard"
 msgstr ""
 
 #. module: hr_expense
@@ -727,7 +746,7 @@ msgstr "إذا حددته، سيتم إخطارك بالرسائل الجديد�
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__message_has_error
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "إذا تم تحديده ، فإن بعض الرسائل بها خطأ في التسليم."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_is_follower
@@ -790,7 +809,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_main_attachment_id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "المرفق الرئيسي"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__user_id
@@ -814,7 +833,7 @@ msgstr "مذكرة"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_has_error
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "خطأ في تسليم الرسائل"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_ids
@@ -866,19 +885,19 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_date_deadline
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr ""
+msgstr "الموعد النهائي للنشاط القادم"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_summary
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__activity_summary
 msgid "Next Activity Summary"
-msgstr ""
+msgstr "ملخص النشاط القادم"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_type_id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__activity_type_id
 msgid "Next Activity Type"
-msgstr ""
+msgstr "نوع النشاط التالي"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:244
@@ -938,7 +957,7 @@ msgstr "عدد المرفقات"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_has_error_counter
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__message_has_error_counter
 msgid "Number of error"
-msgstr ""
+msgstr "عدد الاخطاء"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__message_needaction_counter
@@ -950,7 +969,7 @@ msgstr "عدد الرسائل التي تتطلب اجراء"
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__message_has_error_counter
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "عدد الرسائل مع خطأ في التسليم"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__message_unread_counter
@@ -986,14 +1005,14 @@ msgid ""
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:705
+#: code:addons/hr_expense/models/hr_expense.py:706
 #, python-format
 msgid "Only HR Officers or the concerned employee can reset to draft."
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:666
-#: code:addons/hr_expense/models/hr_expense.py:687
+#: code:addons/hr_expense/models/hr_expense.py:667
+#: code:addons/hr_expense/models/hr_expense.py:688
 #, python-format
 msgid "Only Managers and HR Officers can approve expenses"
 msgstr ""
@@ -1050,7 +1069,7 @@ msgstr "نوع السداد"
 #: selection:hr.expense,activity_state:0
 #: selection:hr.expense.sheet,activity_state:0
 msgid "Planned"
-msgstr ""
+msgstr "مخطط"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:248
@@ -1246,9 +1265,8 @@ msgstr ""
 "عرض كافة السجلات التي تاريخ الإجراء التالي فيها يسبق تاريخ اليوم الجاري"
 
 #. module: hr_expense
-#: model:ir.model.fields,help:hr_expense.field_product_product__can_be_expensed
 #: model:ir.model.fields,help:hr_expense.field_product_template__can_be_expensed
-msgid "Specify whether the product can be selected in an HR expense."
+msgid "Specify whether the product can be selected in an expense."
 msgstr ""
 
 #. module: hr_expense
@@ -1272,6 +1290,10 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
+"الحالة على أساس الأنشطة\n"
+"المتأخرة: تاريخ الاستحقاق مر\n"
+"اليوم: تاريخ النشاط هو اليوم\n"
+"المخطط: الأنشطة المستقبلية"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__state
@@ -1413,7 +1435,9 @@ msgid "Unit of Measure"
 msgstr "وحده القياس "
 
 #. module: hr_expense
+#: model:product.product,uom_name:hr_expense.air_ticket
 #: model:product.product,uom_name:hr_expense.product_product_fixed_cost
+#: model:product.template,uom_name:hr_expense.air_ticket_product_template
 #: model:product.template,uom_name:hr_expense.product_product_fixed_cost_product_template
 msgid "Unit(s)"
 msgstr "وحدة(ات)"
@@ -1481,7 +1505,7 @@ msgid "Website communication history"
 msgstr "سجل تواصل الموقع"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:674
+#: code:addons/hr_expense/models/hr_expense.py:675
 #, python-format
 msgid "You can only approve your department expenses"
 msgstr ""
@@ -1493,7 +1517,7 @@ msgid "You can only generate accounting entry for approved expense(s)."
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:695
+#: code:addons/hr_expense/models/hr_expense.py:696
 #, python-format
 msgid "You can only refuse your department expenses"
 msgstr ""
@@ -1515,7 +1539,7 @@ msgid "You cannot add expenses of another employee."
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:671
+#: code:addons/hr_expense/models/hr_expense.py:672
 #, python-format
 msgid "You cannot approve your own expenses"
 msgstr ""
@@ -1533,7 +1557,7 @@ msgid "You cannot delete a posted or paid expense."
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:692
+#: code:addons/hr_expense/models/hr_expense.py:693
 #, python-format
 msgid "You cannot refuse your own expenses"
 msgstr ""
@@ -1553,7 +1577,7 @@ msgstr ""
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_refuse_reason
 msgid "Your Expense"
-msgstr ""
+msgstr "مصروفاتك"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
@@ -1576,18 +1600,23 @@ msgid "has been refused"
 msgstr ""
 
 #. module: hr_expense
+#: model:product.product,weight_uom_name:hr_expense.air_ticket
+#: model:product.product,weight_uom_name:hr_expense.car_travel
 #: model:product.product,weight_uom_name:hr_expense.product_product_fixed_cost
+#: model:product.template,weight_uom_name:hr_expense.air_ticket_product_template
+#: model:product.template,weight_uom_name:hr_expense.car_travel_product_template
 #: model:product.template,weight_uom_name:hr_expense.product_product_fixed_cost_product_template
 msgid "kg"
 msgstr "كجم"
+
+#. module: hr_expense
+#: model:product.product,uom_name:hr_expense.car_travel
+#: model:product.template,uom_name:hr_expense.car_travel_product_template
+msgid "km"
+msgstr "كم"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:159
 #, python-format
 msgid "or send receipts by email to %s."
 msgstr ""
-
-#. module: hr_expense
-#: model:ir.model,name:hr_expense.model_res_config_settings
-msgid "res.config.settings"
-msgstr "الدقة.التكوين.إعدادات"

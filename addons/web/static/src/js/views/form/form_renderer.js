@@ -74,7 +74,7 @@ var FormRenderer = BasicRenderer.extend({
             }
         }
         if (focusWidget) {
-            return focusWidget.activate({noselect: true});
+            return focusWidget.activate({noselect: true, noAutomaticCreate: true});
         }
     },
     /**
@@ -165,7 +165,8 @@ var FormRenderer = BasicRenderer.extend({
      * field.
      */
     focusLastActivatedWidget: function () {
-        this._activateNextFieldWidget(this.state, this.lastActivatedFieldIndex - 1);
+        this._activateNextFieldWidget(this.state, this.lastActivatedFieldIndex - 1,
+            { noAutomaticCreate: true });
     },
     /**
      * returns the active tab pages for each notebook
@@ -191,6 +192,19 @@ var FormRenderer = BasicRenderer.extend({
         return state;
     },
     /**
+     * Reset the tracking of the last activated field. The fast entry with
+     * keyboard navigation needs to track the last activated field in order to
+     * set the focus.
+     *
+     * In particular, when there are changes of mode (e.g. edit -> readonly ->
+     * edit), we do not want to auto-set the focus on the previously last
+     * activated field. To avoid this issue, this method should be called
+     * whenever there is a change of mode.
+     */
+    resetLastActivatedField: function () {
+        this.lastActivatedFieldIndex = -1;
+    },
+    /**
      * restore active tab pages for each notebook
      *
      * @todo make sure this method is called
@@ -208,6 +222,15 @@ var FormRenderer = BasicRenderer.extend({
                 }
             }
         });
+    },
+    /**
+     * Called each time the form view is attached into the DOM
+     */
+    on_attach_callback: function () {
+        _.forEach(this.allFieldWidgets, function (widgets){
+            _.invoke(widgets, 'on_attach_callback');
+        });
+        this._super.apply(this, arguments);
     },
     /**
      * @override method from AbstractRenderer
@@ -960,9 +983,14 @@ var FormRenderer = BasicRenderer.extend({
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
-    _onActivateNextWidget: function (e) {
-        e.stopPropagation();
-        var index = this.allFieldWidgets[this.state.id].indexOf(e.data.target);
+
+    /**
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onActivateNextWidget: function (ev) {
+        ev.stopPropagation();
+        var index = this.allFieldWidgets[this.state.id].indexOf(ev.data.target);
         this._activateNextFieldWidget(this.state, index);
     },
     /**
@@ -981,10 +1009,7 @@ var FormRenderer = BasicRenderer.extend({
      * @param {OdooEvent} ev
      */
     _onNavigationMove: function (ev) {
-        if (ev.data.direction !== "cancel") {
-            ev.stopPropagation();
-        }
-
+        ev.stopPropagation();
         var index;
         if (ev.data.direction === "next") {
             index = this.allFieldWidgets[this.state.id].indexOf(ev.data.target || ev.target);
@@ -1000,9 +1025,9 @@ var FormRenderer = BasicRenderer.extend({
      * @private
      * @param {MouseEvent} ev
      */
-    _onTranslate: function (event) {
-        event.preventDefault();
-        this.trigger_up('translate', {fieldName: event.target.name, id: this.state.id});
+    _onTranslate: function (ev) {
+        ev.preventDefault();
+        this.trigger_up('translate', {fieldName: ev.target.name, id: this.state.id});
     },
 });
 

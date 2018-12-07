@@ -13,10 +13,10 @@
 # Umur Akın <umura@projetgrup.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:56+0000\n"
-"PO-Revision-Date: 2018-08-02 09:56+0000\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-09-21 13:17+0000\n"
 "Last-Translator: Umur Akın <umura@projetgrup.com>, 2018\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
@@ -68,27 +68,27 @@ msgid "Buckaroo"
 msgstr "Buckaroo"
 
 #. module: payment_ogone
-#: model:ir.ui.view,arch_db:payment_ogone.ogone_s2s_form
+#: model_terms:ir.ui.view,arch_db:payment_ogone.ogone_s2s_form
 msgid "CVC"
 msgstr "CVC"
 
 #. module: payment_ogone
-#: model:ir.ui.view,arch_db:payment_ogone.ogone_s2s_form
+#: model_terms:ir.ui.view,arch_db:payment_ogone.ogone_s2s_form
 msgid "Card number"
 msgstr "Kart numarası"
 
 #. module: payment_ogone
-#: model:ir.ui.view,arch_db:payment_ogone.ogone_s2s_form
+#: model_terms:ir.ui.view,arch_db:payment_ogone.ogone_s2s_form
 msgid "Cardholder name"
 msgstr "Kart Sahibinin Adı"
 
 #. module: payment_ogone
-#: model:ir.ui.view,arch_db:payment_ogone.ogone_s2s_form
+#: model_terms:ir.ui.view,arch_db:payment_ogone.ogone_s2s_form
 msgid "Expires (MM / YY)"
 msgstr "Son Kullanma Tarihi (AA/YY)"
 
 #. module: payment_ogone
-#: model:ir.ui.view,arch_db:payment_ogone.acquirer_form_ogone
+#: model_terms:ir.ui.view,arch_db:payment_ogone.acquirer_form_ogone
 msgid "How to configure your Ogone account?"
 msgstr "Ogone hesabınız nasıl ayarlanır?"
 
@@ -148,6 +148,11 @@ msgid "Payment Acquirer"
 msgstr "Ödeme Alıcısı"
 
 #. module: payment_ogone
+#: model:ir.model,name:payment_ogone.model_payment_token
+msgid "Payment Token"
+msgstr "Ödeme Token'ı"
+
+#. module: payment_ogone
 #: model:ir.model,name:payment_ogone.model_payment_transaction
 msgid "Payment Transaction"
 msgstr "Ödeme İşlemi"
@@ -186,8 +191,3 @@ msgstr "Stripe"
 #: selection:payment.acquirer,provider:0
 msgid "Wire Transfer"
 msgstr "Wire Transfer"
-
-#. module: payment_ogone
-#: model:ir.model,name:payment_ogone.model_payment_token
-msgid "payment.token"
-msgstr "payment.token"

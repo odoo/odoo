@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError
 from odoo.http import request
 
@@ -12,11 +12,13 @@ _logger = logging.getLogger(__name__)
 class ResUsers(models.Model):
     _inherit = 'res.users'
 
+    website_id = fields.Many2one('website', related='partner_id.website_id', store=True, related_sudo=False, readonly=True)
+    
     _sql_constraints = [
-        # this is done in Python because a SQL constraint like UNIQUE
-        # (login, website_id) allows ('abc', NULL) and
-        # ('abc', NULL) to coexist because of how SQL handles NULLs.
-        ('login_key', 'CHECK (1=1)', 'You can not have two users with the same login!')
+        # Partial constraint, complemented by unique index (see below). Still
+        # useful to keep because it provides a proper error message when a
+        # violation occurs, as it shares the same prefix as the unique index.
+        ('login_key', 'unique (login, website_id)', 'You can not have two users with the same login!'),
     ]
 
     @api.multi
@@ -25,12 +27,6 @@ class ResUsers(models.Model):
         if self.has_group('website.group_website_designer'):
             return True
         return super(ResUsers, self)._has_unsplash_key_rights()
-
-    @api.constrains('login', 'website_id')
-    def _check_login(self):
-        for user in self:
-            if self.search([('id', '!=', user.id), ('login', '=', user.login)] + user.website_id.website_domain()):
-                raise ValidationError(_('You can not have two users with the same login!'))
 
     @api.model
     def _get_login_domain(self, login):
@@ -49,3 +45,12 @@ class ResUsers(models.Model):
     def _get_signup_invitation_scope(self):
         current_website = self.env['website'].get_current_website()
         return current_website.auth_signup_uninvited or super(ResUsers, self)._get_signup_invitation_scope()
+
+    @api.model_cr_context
+    def _auto_init(self):
+        result = super(ResUsers, self)._auto_init()
+        # Use unique index to implement unique constraint per website, even if website_id is null 
+        # (not possible using a constraint)
+        tools.create_unique_index(self._cr, 'res_users_login_key_unique_website_index',
+            self._table, ['login', 'COALESCE(website_id,-1)'])
+        return result

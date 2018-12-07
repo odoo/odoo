@@ -24,7 +24,7 @@ odoo.define("website_forum.tour_forum", function (require) {
         content: _t("Click <em>Continue</em> to create the forum."),
         position: "right",
     }, {
-        trigger: ".btn-block a:first",
+        trigger: ".btn-lg.btn-block",
         position: "left",
         content: _t("Ask the question in this forum by clicking on the button."),
     }, {

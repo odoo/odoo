@@ -371,6 +371,8 @@ var BasicActivity = AbstractField.extend({
      */
     _onPreviewMailTemplate: function (ev) {
         ev.stopPropagation();
+        ev.preventDefault();
+        var self = this;
         var templateID = $(ev.currentTarget).data('template-id');
         var action = {
             name: _t('Compose Email'),
@@ -386,7 +388,9 @@ var BasicActivity = AbstractField.extend({
                 force_email: true,
             },
         };
-        return this.do_action(action, { on_close: function () {} });
+        return this.do_action(action, { on_close: function () {
+            self.trigger_up('reload');
+        } });
     },
     /**
      * @private
@@ -395,6 +399,7 @@ var BasicActivity = AbstractField.extend({
      */
     _onSendMailTemplate: function (ev) {
         ev.stopPropagation();
+        ev.preventDefault();
         var templateID = $(ev.currentTarget).data('template-id');
         return this._rpc({
                 model: this.model,

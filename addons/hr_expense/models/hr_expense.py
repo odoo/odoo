@@ -57,7 +57,7 @@ class HrExpense(models.Model):
     total_amount_company = fields.Monetary("Total (Company Currency)", compute='_compute_total_amount_company', store=True, currency_field='company_currency_id', digits=dp.get_precision('Account'))
     company_id = fields.Many2one('res.company', string='Company', readonly=True, states={'draft': [('readonly', False)], 'refused': [('readonly', False)]}, default=lambda self: self.env.user.company_id)
     currency_id = fields.Many2one('res.currency', string='Currency', readonly=True, states={'draft': [('readonly', False)], 'refused': [('readonly', False)]}, default=lambda self: self.env.user.company_id.currency_id)
-    company_currency_id = fields.Many2one('res.currency', string="Report Company Currency", related='sheet_id.currency_id', store=True)
+    company_currency_id = fields.Many2one('res.currency', string="Report Company Currency", related='sheet_id.currency_id', store=True, readonly=False)
     analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', states={'post': [('readonly', True)], 'done': [('readonly', True)]}, oldname='analytic_account')
     analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags', states={'post': [('readonly', True)], 'done': [('readonly', True)]})
     account_id = fields.Many2one('account.account', string='Account', states={'post': [('readonly', True)], 'done': [('readonly', True)]}, default=_default_account_id, help="An expense account is expected")
@@ -461,6 +461,7 @@ class HrExpense(models.Model):
             'employee_id': employee.id,
             'product_id': product.id,
             'product_uom_id': product.uom_id.id,
+            'tax_ids': [(4, tax.id, False) for tax in product.supplier_taxes_id],
             'quantity': 1,
             'unit_amount': price,
             'company_id': employee.company_id.id,
@@ -595,11 +596,11 @@ class HrExpenseSheet(models.Model):
     def _track_subtype(self, init_values):
         self.ensure_one()
         if 'state' in init_values and self.state == 'approve':
-            return 'hr_expense.mt_expense_approved'
+            return self.env.ref('hr_expense.mt_expense_approved')
         elif 'state' in init_values and self.state == 'cancel':
-            return 'hr_expense.mt_expense_refused'
+            return self.env.ref('hr_expense.mt_expense_refused')
         elif 'state' in init_values and self.state == 'done':
-            return 'hr_expense.mt_expense_paid'
+            return self.env.ref('hr_expense.mt_expense_paid')
         return super(HrExpenseSheet, self)._track_subtype(init_values)
 
     def _message_auto_subscribe_followers(self, updated_values, subtype_ids):
@@ -659,6 +660,7 @@ class HrExpenseSheet(models.Model):
     @api.multi
     def action_submit_sheet(self):
         self.write({'state': 'submit'})
+        self.activity_update()
 
     @api.multi
     def approve_expense_sheets(self):

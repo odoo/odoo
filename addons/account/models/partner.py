@@ -164,7 +164,7 @@ class AccountFiscalPosition(models.Model):
 
 class AccountFiscalPositionTax(models.Model):
     _name = 'account.fiscal.position.tax'
-    _description = 'Taxes Fiscal Position'
+    _description = 'Tax Mapping of Fiscal Position'
     _rec_name = 'position_id'
 
     position_id = fields.Many2one('account.fiscal.position', string='Fiscal Position',
@@ -175,13 +175,13 @@ class AccountFiscalPositionTax(models.Model):
     _sql_constraints = [
         ('tax_src_dest_uniq',
          'unique (position_id,tax_src_id,tax_dest_id)',
-         'A tax fiscal position could be defined only once time on same taxes.')
+         'A tax fiscal position could be defined only one time on same taxes.')
     ]
 
 
 class AccountFiscalPositionAccount(models.Model):
     _name = 'account.fiscal.position.account'
-    _description = 'Accounts Fiscal Position'
+    _description = 'Accounts Mapping of Fiscal Position'
     _rec_name = 'position_id'
 
     position_id = fields.Many2one('account.fiscal.position', string='Fiscal Position',
@@ -194,7 +194,7 @@ class AccountFiscalPositionAccount(models.Model):
     _sql_constraints = [
         ('account_src_dest_uniq',
          'unique (position_id,account_src_id,account_dest_id)',
-         'An account fiscal position could be defined only once time on same accounts.')
+         'An account fiscal position could be defined only one time on same accounts.')
     ]
 
 
@@ -394,7 +394,7 @@ class ResPartner(models.Model):
         required=True)
     property_account_position_id = fields.Many2one('account.fiscal.position', company_dependent=True,
         string="Fiscal Position",
-        help="The fiscal position will determine taxes and accounts used for the partner.", oldname="property_account_position")
+        help="The fiscal position determines the taxes/accounts used for this contact.", oldname="property_account_position")
     property_payment_term_id = fields.Many2one('account.payment.term', company_dependent=True,
         string='Customer Payment Terms',
         help="This payment term will be used instead of the default one for sales orders and customer invoices", oldname="property_payment_term")

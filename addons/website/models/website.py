@@ -13,7 +13,6 @@ from odoo import api, fields, models, tools
 from odoo.addons.http_routing.models.ir_http import slugify, _guess_mimetype
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.portal.controllers.portal import pager
-from odoo.tools import pycompat
 from odoo.http import request
 from odoo.osv import expression
 from odoo.osv.expression import FALSE_DOMAIN
@@ -56,7 +55,7 @@ class Website(models.Model):
     company_id = fields.Many2one('res.company', string="Company", default=lambda self: self.env.ref('base.main_company').id, required=True)
     language_ids = fields.Many2many('res.lang', 'website_lang_rel', 'website_id', 'lang_id', 'Languages', default=_active_languages)
     default_lang_id = fields.Many2one('res.lang', string="Default Language", default=_default_language, required=True)
-    default_lang_code = fields.Char("Default language code", related='default_lang_id.code', store=True)
+    default_lang_code = fields.Char("Default language code", related='default_lang_id.code', store=True, readonly=False)
     auto_redirect_lang = fields.Boolean('Autoredirect Language', default=True, help="Should users be redirected to their browser's language")
 
     def _default_social_facebook(self):
@@ -87,6 +86,7 @@ class Website(models.Model):
     social_youtube = fields.Char('Youtube Account', default=_default_social_youtube)
     social_googleplus = fields.Char('Google+ Account', default=_default_social_googleplus)
     social_instagram = fields.Char('Instagram Account', default=_default_social_instagram)
+    social_default_image = fields.Binary(string="Default Social Share Image", attachment=True, help="If set, replaces the company logo as the default social share image.")
 
     google_analytics_key = fields.Char('Google Analytics Key')
     google_management_client_id = fields.Char('Google Client ID')
@@ -98,7 +98,7 @@ class Website(models.Model):
     cdn_activated = fields.Boolean('Content Delivery Network (CDN)')
     cdn_url = fields.Char('CDN Base URL', default='')
     cdn_filters = fields.Text('CDN Filters', default=lambda s: '\n'.join(DEFAULT_CDN_FILTERS), help="URL matching those filters will be rewritten using the CDN Base URL")
-    partner_id = fields.Many2one(related='user_id.partner_id', relation='res.partner', string='Public Partner')
+    partner_id = fields.Many2one(related='user_id.partner_id', relation='res.partner', string='Public Partner', readonly=False)
     menu_id = fields.Many2one('website.menu', compute='_compute_menu', string='Main Menu')
     homepage_id = fields.Many2one('website.page', string='Homepage')
     favicon = fields.Binary(string="Website Favicon", help="This field holds the image used to display a favicon on the website.")
@@ -109,6 +109,11 @@ class Website(models.Model):
         ('b2b', 'On invitation'),
         ('b2c', 'Free sign up'),
     ], string='Customer Account', default='b2b')
+
+    @api.onchange('language_ids')
+    def _onchange_language_ids(self):
+        if self.language_ids and self.default_lang_id not in self.language_ids:
+            self.default_lang_id = self.language_ids[0]
 
     @api.multi
     def _compute_menu(self):
@@ -124,6 +129,12 @@ class Website(models.Model):
 
         res = super(Website, self).create(vals)
         res._bootstrap_homepage()
+
+        if not self.env.user.has_group('website.group_multi_website') and self.search_count([]) > 1:
+            all_user_groups = 'base.group_portal,base.group_user,base.group_public'
+            groups = self.env['res.groups'].concat(*(self.env.ref(it) for it in all_user_groups.split(',')))
+            groups.write({'implied_ids': [(4, self.env.ref('website.group_multi_website').id)]})
+
         return res
 
     @api.multi
@@ -157,19 +168,27 @@ class Website(models.Model):
 
         self.homepage_id = self.env['website.page'].search([('website_id', '=', self.id),
                                                             ('key', '=', standard_homepage.key)])
-        top_menu = self.env['website.menu'].create({
-            'name': _('Top Menu for website %s') % self.id,
-            'website_id': self.id,
-            'sequence': 0
-        })
-        self.menu_id = top_menu.id
-        self.env['website.menu'].create({
-            'name': _('Home'),
-            'url': '/',
-            'website_id': self.id,
-            'parent_id': top_menu.id,
-            'sequence': 10
-        })
+
+        # Bootstrap default menu hierarchy, create a new minimalist one if no default
+        default_menu = self.env.ref('website.main_menu')
+        self.copy_menu_hierarchy(default_menu)
+
+    @api.model
+    def copy_menu_hierarchy(self, top_menu):
+        def copy_menu(menu, t_menu):
+            new_menu = menu.copy({
+                'parent_id': t_menu.id,
+                'website_id': self.id,
+            })
+            for submenu in menu.child_id:
+                copy_menu(submenu, new_menu)
+        for website in self:
+            new_top_menu = top_menu.copy({
+                'name': _('Top Menu for Website %s') % website.id,
+                'website_id': website.id,
+            })
+            for submenu in top_menu.child_id:
+                copy_menu(submenu, new_top_menu)
 
     @api.model
     def new_page(self, name=False, add_menu=False, template='website.default_page', ispage=True, namespace=None):
@@ -382,7 +401,6 @@ class Website(models.Model):
 
         return dependencies
 
-
     # ----------------------------------------------------------
     # Languages
     # ----------------------------------------------------------
@@ -435,26 +453,32 @@ class Website(models.Model):
     # ----------------------------------------------------------
 
     @api.model
-    def get_current_website(self):
+    def get_current_website(self, fallback=True):
         if request and request.session.get('force_website_id'):
             return self.browse(request.session['force_website_id'])
+
+        website_id = self.env.context.get('website_id')
+        if website_id:
+            return self.browse(website_id)
 
         domain_name = request and request.httprequest.environ.get('HTTP_HOST', '').split(':')[0] or None
 
         country = request.session.geoip.get('country_code') if request and request.session.geoip else False
         country_id = False
         if country:
-            country_id = request.env['res.country'].search([('code', '=', country)], limit=1).id
+            country_id = self.env['res.country'].search([('code', '=', country)], limit=1).id
 
-        website_id = self._get_current_website_id(domain_name, country_id)
+        website_id = self._get_current_website_id(domain_name, country_id, fallback=fallback)
         return self.browse(website_id)
 
-    @tools.cache('domain_name', 'country_id')
-    def _get_current_website_id(self, domain_name, country_id):
+    @tools.cache('domain_name', 'country_id', 'fallback')
+    def _get_current_website_id(self, domain_name, country_id, fallback=True):
         # sort on country_group_ids so that we fall back on a generic website (empty country_group_ids)
         websites = self.search([('domain', '=', domain_name)]).sorted('country_group_ids')
 
         if not websites:
+            if not fallback:
+                return False
             return self.search([], limit=1).id
         elif len(websites) == 1:
             return websites.id
@@ -467,7 +491,7 @@ class Website(models.Model):
 
     def _force_website(self, website_id):
         if request:
-            request.session['force_website_id'] = website_id and int(website_id)
+            request.session['force_website_id'] = website_id and str(website_id).isdigit() and int(website_id)
 
     @api.model
     def is_publisher(self):
@@ -484,7 +508,7 @@ class Website(models.Model):
     @api.model
     def get_template(self, template):
         View = self.env['ir.ui.view']
-        if isinstance(template, pycompat.integer_types):
+        if isinstance(template, int):
             view_id = template
         else:
             if '.' not in template:
@@ -624,7 +648,7 @@ class Website(models.Model):
     @api.multi
     def get_website_pages(self, domain=[], order='name', limit=None):
         domain += self.get_current_website().website_domain()
-        pages = request.env['website.page'].search(domain, order='name', limit=limit)
+        pages = self.env['website.page'].search(domain, order='name', limit=limit)
         return pages
 
     @api.multi
@@ -701,19 +725,23 @@ class SeoMetadata(models.AbstractModel):
         title = (request.website or company).name
         if 'name' in self:
             title = '%s | %s' % (self.name, title)
+        if request.website.social_default_image:
+            img = '/web/image/website/%s/social_default_image' % request.website.id
+        else:
+            img = '/web/image/res.company/%s/logo' % company.id
         # Default meta for OpenGraph
         default_opengraph = {
             'og:type': 'website',
             'og:title': title,
             'og:site_name': company.name,
             'og:url': request.httprequest.url,
-            'og:image': '/web/image/res.company/%s/logo' % company.id,
+            'og:image': img,
         }
         # Default meta for Twitter
         default_twitter = {
             'twitter:card': 'summary_large_image',
             'twitter:title': title,
-            'twitter:image': '/web/image/res.company/%s/logo' % company.id,
+            'twitter:image': img + '/300x300',
         }
         if company.social_twitter:
             default_twitter['twitter:site'] = "@%s" % company.social_twitter.split('/')[-1]
@@ -755,6 +783,7 @@ class SeoMetadata(models.AbstractModel):
 class WebsiteMultiMixin(models.AbstractModel):
 
     _name = 'website.multi.mixin'
+    _description = 'Multi Website Mixin'
 
     website_id = fields.Many2one('website', string='Website', help='Restrict publishing to this website.')
 
@@ -771,8 +800,9 @@ class WebsiteMultiMixin(models.AbstractModel):
 class WebsitePublishedMixin(models.AbstractModel):
 
     _name = "website.published.mixin"
+    _description = 'Website Published Mixin'
 
-    website_published = fields.Boolean('Visible on current website', related='is_published')
+    website_published = fields.Boolean('Visible on current website', related='is_published', readonly=False)
     is_published = fields.Boolean('Is published')
     website_url = fields.Char('Website URL', compute='_compute_website_url', help='The full URL to access the document through the website.')
 
@@ -798,16 +828,20 @@ class WebsitePublishedMixin(models.AbstractModel):
             'target': 'self',
         }
 
+    def create_and_get_website_url(self, **kwargs):
+        return self.create(kwargs).website_url
+
 
 class WebsitePublishedMultiMixin(WebsitePublishedMixin):
 
     _name = 'website.published.multi.mixin'
     _inherit = ['website.published.mixin', 'website.multi.mixin']
+    _description = 'Multi Website Published Mixin'
 
     website_published = fields.Boolean(compute='_compute_website_published',
                                        inverse='_inverse_website_published',
                                        search='_search_website_published',
-                                       related=False)
+                                       related=False, readonly=False)
 
     @api.multi
     @api.depends('is_published', 'website_id')
@@ -862,7 +896,7 @@ class Page(models.Model):
     header_color = fields.Char()
 
     # don't use mixin website_id but use website_id on ir.ui.view instead
-    website_id = fields.Many2one(related='view_id.website_id', store=True)
+    website_id = fields.Many2one(related='view_id.website_id', store=True, readonly=False)
 
     @api.one
     def _compute_homepage(self):
@@ -958,7 +992,7 @@ class Page(models.Model):
         # Create redirect if needed
         if data['create_redirect']:
             self.env['website.redirect'].create({
-                'type': data['redirect_type'],
+                'redirect_type': data['redirect_type'],
                 'url_from': original_url,
                 'url_to': url,
                 'website_id': website.id,
@@ -1058,8 +1092,14 @@ class Menu(models.Model):
             it for every website.
             Note: Particulary useful when installing a module that adds a menu like
                   /shop. So every website has the shop menu.
+                  Be careful to return correct record for ir.model.data xml_id in case
+                  of default main menus creation.
         '''
-        if vals.get('website_id'):
+        # Only used when creating website_data.xml default menu
+        if vals.get('url') == '/default-main-menu':
+            return super(Menu, self).create(vals)
+
+        if 'website_id' in vals:
             return super(Menu, self).create(vals)
         elif self._context.get('website_id'):
             vals['website_id'] = self._context.get('website_id')
@@ -1067,12 +1107,23 @@ class Menu(models.Model):
         else:
             # create for every site
             for website in self.env['website'].search([]):
-                vals.update({
+                w_vals = dict(vals, **{
                     'website_id': website.id,
                     'parent_id': website.menu_id.id,
                 })
+                res = super(Menu, self).create(w_vals)
+            # if creating a default menu, we should also save it as such
+            default_menu = self.env.ref('website.main_menu', raise_if_not_found=False)
+            if default_menu and vals.get('parent_id') == default_menu.id:
                 res = super(Menu, self).create(vals)
         return res  # Only one record is returned but multiple could have been created
+
+    @api.multi
+    def unlink(self):
+        default_menu = self.env.ref('website.main_menu', raise_if_not_found=False)
+        for menu in self.filtered(lambda m: default_menu and m.parent_id.id == default_menu.id):
+            self.env['website.menu'].search([('url', '=', menu.url), ('id', '!=', menu.id)]).unlink()
+        return super(Menu, self).unlink()
 
     @api.one
     def _compute_visible(self):
@@ -1135,7 +1186,7 @@ class Menu(models.Model):
         for menu in data['data']:
             mid = menu['id']
             # new menu are prefixed by new-
-            if isinstance(mid, pycompat.string_types):
+            if isinstance(mid, str):
                 new_menu = self.create({'name': menu['name'], 'website_id': website_id})
                 replace_id(mid, new_menu.id)
         for menu in data['data']:
@@ -1163,7 +1214,7 @@ class WebsiteRedirect(models.Model):
     _order = "sequence, id"
     _rec_name = 'url_from'
 
-    type = fields.Selection([('301', 'Moved permanently (301)'), ('302', 'Moved temporarily (302)')], string='Redirection Type', required=True)
+    redirect_type = fields.Selection([('301', 'Moved permanently (301)'), ('302', 'Moved temporarily (302)')], string='Redirection Type', required=True, oldname='type')
     url_from = fields.Char('Redirect From', required=True)
     url_to = fields.Char('Redirect To', required=True)
     website_id = fields.Many2one('website', 'Website')

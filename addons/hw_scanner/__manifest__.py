@@ -12,7 +12,7 @@ Barcode Scanner Hardware Driver
 ================================
 
 This module allows the web client to access a remotely installed barcode
-scanner, and is used by the posbox to provide barcode scanner support to the
+scanner, and is used by the IoTBox to provide barcode scanner support to the
 point of sale module. 
 
 """,

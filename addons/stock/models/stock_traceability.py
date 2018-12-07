@@ -18,6 +18,7 @@ def autoIncrement():
 
 class MrpStockReport(models.TransientModel):
     _name = 'stock.traceability.report'
+    _description = 'Traceability Report'
 
     @api.model
     def _get_move_lines(self, move_lines):

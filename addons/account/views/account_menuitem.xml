@@ -17,12 +17,11 @@
             <menuitem id="menu_finance_entries_management" name="Management" parent="menu_finance_entries" sequence="10" groups="account.group_account_invoice"/>
             <menuitem id="menu_finance_entries_actions" name="Actions" parent="account.menu_finance_entries"/>
             <menuitem id="menu_finance_entries_generate_entries" name="Generate Entries" parent="account.menu_finance_entries"/>
+
         <menuitem id="menu_finance_reports" name="Reporting" parent="menu_finance" sequence="20" groups="account.group_account_manager"/>
             <!-- Reporting sub-menus -->
             <menuitem id="account_reports_management_menu" name="Management" parent="account.menu_finance_reports" sequence="4"/>
             <menuitem id="account_reports_legal_statements_menu" name="Generic Statements" parent="account.menu_finance_reports" sequence="1" groups="account.group_account_user"/>
-            <menuitem id="account_reports_business_intelligence_menu" name="Business Intelligence" parent="account.menu_finance_reports" sequence="5" groups="account.group_account_invoice"/>
-            <menuitem id="menu_finance_legal_statement" name="PDF Reports" parent="account.menu_finance_reports"/>
 
         <menuitem id="menu_finance_configuration" name="Configuration" parent="menu_finance" sequence="35" groups="account.group_account_manager"/>
             <!-- Configuration Sub-Menu -->
@@ -30,7 +29,6 @@
             <menuitem id="account_management_menu" name="Management" parent="account.menu_finance_configuration" sequence="3" groups="account.group_account_manager"/>
             <menuitem id="menu_analytic_accounting" name="Analytic Accounting" parent="menu_finance_configuration" groups="analytic.group_analytic_accounting,analytic.group_analytic_tags" sequence="5"/>
             <menuitem id="menu_action_currency_form" action="base.action_currency_form" name="Currencies" parent="account_account_menu" sequence="1" groups="base.group_multi_currency"/>
-            <menuitem id="menu_account_reports" name="Financial Reports" parent="menu_finance_configuration" groups="account.group_account_user"/>
 
 
 

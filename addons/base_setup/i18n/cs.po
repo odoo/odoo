@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-09-21 13:17+0000\n"
 "Last-Translator: trendspotter, 2018\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
@@ -68,7 +68,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_base_import
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Allow users to import data from CSV/XLS/XLSX/ODS files"
-msgstr ""
+msgstr "Povolit uživatelům importovat data z souborů CSV / XLS / XLSX / ODS"
 
 #. module: base_setup
 #: model:ir.model.fields,help:base_setup.field_res_config_settings__group_multi_currency
@@ -83,6 +83,16 @@ msgstr ""
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_google_drive
 msgid "Attach Google documents to any record"
+msgstr ""
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_partner_autocomplete
+msgid "Auto-populate company data"
+msgstr ""
+
+#. module: base_setup
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Autocomplete company data (name, logo, address, etc.)"
 msgstr ""
 
 #. module: base_setup
@@ -102,7 +112,7 @@ msgid "Change Document Template"
 msgstr ""
 
 #. module: base_setup
-#: code:addons/base_setup/models/res_config_settings.py:99
+#: code:addons/base_setup/models/res_config_settings.py:100
 #, python-format
 msgid "Choose Your Document Layout"
 msgstr "Vybrat rozvržení dokumentu"
@@ -131,6 +141,11 @@ msgstr "Firmy v systému"
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__company_id
 msgid "Company"
 msgstr "Firma"
+
+#. module: base_setup
+#: model:ir.model,name:base_setup.model_res_config_settings
+msgid "Config Settings"
+msgstr "Nastavení konfigurace"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -219,8 +234,8 @@ msgstr "Google Spreadsheet"
 
 #. module: base_setup
 #: model:ir.model,name:base_setup.model_ir_http
-msgid "HTTP routing"
-msgstr "HTTP směrování"
+msgid "HTTP Routing"
+msgstr "HTTP Routing"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -286,7 +301,7 @@ msgstr ""
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Set custom access rights for new users"
-msgstr ""
+msgstr "Nastavit vlastní přístupová práva pro nové uživatele"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -334,12 +349,12 @@ msgstr "Přeložte své webové stránky s Gengo"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Translate your website with Gengo"
-msgstr ""
+msgstr "Přeložte své webové stránky s Gengo"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_web_unsplash
 msgid "Unsplash Image Library"
-msgstr ""
+msgstr "Knihovna obrázků Unsplash"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -367,6 +382,9 @@ msgid "Users"
 msgstr "Uživatelé"
 
 #. module: base_setup
-#: model:ir.model,name:base_setup.model_res_config_settings
-msgid "res.config.settings"
-msgstr "res.config.settings"
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid ""
+"When populating your address book, Odoo provides a list of matching "
+"companies. When selecting one item, the company data and logo are auto-"
+"filled."
+msgstr ""

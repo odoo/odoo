@@ -4,14 +4,16 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
+# Thomas Pot <thomas@open2bizz.nl>, 2018
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2018
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2018
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:48+0000\n"
-"PO-Revision-Date: 2018-09-18 09:48+0000\n"
+"POT-Creation-Date: 2018-10-08 06:48+0000\n"
+"PO-Revision-Date: 2018-08-24 09:19+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2018\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -57,6 +59,9 @@ msgid ""
 " selected employee(s) based on the dates and credit note specified on "
 "Payslips Run.</span>"
 msgstr ""
+"<span colspan=\"4\" nolabel=\"1\">Deze wizzard zal loonafschriften "
+"genereren,  voor alle geselecteerde medewerkers, gebaseerd op datum en "
+"creditfactuur gespecificeerd op de loonafschrift run</span>"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslip
@@ -90,13 +95,13 @@ msgstr "<strong>Vanaf</strong>"
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_contributionregister
 msgid "<strong>Date To:</strong>"
-msgstr "<strong>Tot:</strong>"
+msgstr "<strong>T/m:</strong>"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslip
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "<strong>Date To</strong>"
-msgstr "<strong>Tot</strong>"
+msgstr "<strong>T/m</strong>"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslip
@@ -145,6 +150,9 @@ msgid ""
 "            payment of the employees. It can be the social security, the\n"
 "            state or anyone that collect or inject money on payslips."
 msgstr ""
+"Een bijdrage register is een derde partij die betrokken is in de uitbetaling\n"
+"van de werknemers hun loon. Het kan de sociale zekerheid, de\n"
+"staat of eender wie zijn die geld verzamelt of invoert op loonstroken."
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_res_config_settings__module_account_accountant
@@ -385,6 +393,11 @@ msgid "Conditions"
 msgstr "Voorwaarden"
 
 #. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_res_config_settings
+msgid "Config Settings"
+msgstr "Configuratie instellingen"
+
+#. module: hr_payroll
 #: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_configuration
 msgid "Configuration"
 msgstr "Instellingen"
@@ -433,6 +446,16 @@ msgstr "Bijdrage register loonafschriftregels"
 #: model_terms:ir.ui.view,arch_db:hr_payroll.hr_contribution_register_tree
 msgid "Contribution Registers"
 msgstr "Contributie registraties"
+
+#. module: hr_payroll
+#: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_convanceallowance1
+msgid "Conveyance Allowance"
+msgstr "Transporttoelage"
+
+#. module: hr_payroll
+#: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_ca_gravie
+msgid "Conveyance Allowance For Gravie"
+msgstr "Transporttoelage voor Gravie"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template__create_uid
@@ -647,7 +670,7 @@ msgstr ""
 "te maken."
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_salary_rule.py:178
+#: code:addons/hr_payroll/models/hr_salary_rule.py:179
 #, python-format
 msgid "Error! You cannot create recursive hierarchy of Salary Rules."
 msgstr ""
@@ -677,7 +700,7 @@ msgid "For example, enter 50.0 to apply a percentage of 50%"
 msgstr "Tik bijvoorbeeld 50,0 in om een percentage van 50% toe te passen."
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/report/report_contribution_register.py:34
+#: code:addons/hr_payroll/report/report_contribution_register.py:35
 #, python-format
 msgid "Form content is missing, this report cannot be printed."
 msgstr "Formulier inhoud ontbreekt, dit rapport kan niet afgedrukt worden."
@@ -709,6 +732,11 @@ msgid "Generate payslips for all selected employees"
 msgstr "Genereer loonafschriften voor alle geselecteerde werknemers"
 
 #. module: hr_payroll
+#: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_sales_commission
+msgid "Get 1% of sales"
+msgstr "Krijg 1% van verkopen"
+
+#. module: hr_payroll
 #: model:hr.salary.rule,name:hr_payroll.hr_rule_taxable
 #: model:hr.salary.rule.category,name:hr_payroll.GROSS
 msgid "Gross"
@@ -720,6 +748,11 @@ msgstr "Bruto"
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_rule_filter
 msgid "Group By"
 msgstr "Groepeer op"
+
+#. module: hr_payroll
+#: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_houserentallowance1
+msgid "House Rent Allowance"
+msgstr "Huis huuruitkering"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template__id
@@ -904,10 +937,15 @@ msgid "Maximum Range"
 msgstr "Maximum bereik"
 
 #. module: hr_payroll
+#: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_meal_voucher
+msgid "Meal Voucher"
+msgstr "Maaltijdcheque"
+
+#. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__condition_range_min
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__condition_range_min
 msgid "Minimum Range"
-msgstr "Minimum Bereik"
+msgstr "Minimum bereik"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
@@ -1027,11 +1065,6 @@ msgid "PaySlip Lines by Contribution Register"
 msgstr "Loonafschriftregels per bijdrage register"
 
 #. module: hr_payroll
-#: model:ir.model,name:hr_payroll.model_payslip_lines_contribution_register
-msgid "PaySlip Lines by Contribution Registers"
-msgstr "Loonafschriftregels per bijdrage registers"
-
-#. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_contributionregister
 msgid "PaySlip Name"
 msgstr "Loonafschrift naam"
@@ -1042,6 +1075,11 @@ msgstr "Loonafschrift naam"
 #: model_terms:ir.ui.view,arch_db:hr_payroll.res_config_settings_view_form
 msgid "Payroll"
 msgstr "Loonlijst"
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_report_hr_payroll_report_contributionregister
+msgid "Payroll Contribution Register Report"
+msgstr "Loon contributie registratierapport"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.res_config_settings_view_form
@@ -1068,7 +1106,7 @@ msgstr "Loonafschrift"
 #: code:addons/hr_payroll/models/hr_payslip.py:82
 #, python-format
 msgid "Payslip 'Date From' must be earlier 'Date To'."
-msgstr ""
+msgstr "Loonstrook \"Datum van' moet voor 'Datum t/m' liggen."
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payslip_run
@@ -1088,6 +1126,11 @@ msgstr "Details salarisstrookberekening"
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_employee__payslip_count
 msgid "Payslip Count"
 msgstr "Loonstrook teller"
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_report_hr_payroll_report_payslipdetails
+msgid "Payslip Details Report"
+msgstr "Salarisstrook detailsrapport"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payslip_input
@@ -1117,6 +1160,11 @@ msgstr "Salarisstrook-regels"
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "Payslip Lines by Contribution Register"
+msgstr "Loonafschriftregels per bijdrage register"
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_payslip_lines_contribution_register
+msgid "Payslip Lines by Contribution Registers"
 msgstr "Loonafschriftregels per bijdrage register"
 
 #. module: hr_payroll
@@ -1183,6 +1231,16 @@ msgstr "Boek loonstroken in boekhouding"
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_payslip_lines_contribution_register
 msgid "Print"
 msgstr "Afdrukken"
+
+#. module: hr_payroll
+#: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_professionaltax1
+msgid "Professional Tax"
+msgstr "BTW"
+
+#. module: hr_payroll
+#: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_providentfund1
+msgid "Provident Fund"
+msgstr "Voorzieningsfondsen"
 
 #. module: hr_payroll
 #: selection:hr.payslip.line,amount_select:0
@@ -1252,7 +1310,7 @@ msgstr "Referentie"
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Refund"
-msgstr "Creditering"
+msgstr "Creditfacturen"
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/models/hr_payslip.py:102
@@ -1284,6 +1342,11 @@ msgstr "Salaris categorie"
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Salary Computation"
 msgstr "Salarisberekening"
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_hr_salary_rule
+msgid "Salary Rule"
+msgstr "Salarisregel"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_hr_salary_rule_category
@@ -1525,7 +1588,7 @@ msgid "Working Schedule"
 msgstr "Werktijden"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_salary_rule.py:210
+#: code:addons/hr_payroll/models/hr_salary_rule.py:211
 #, python-format
 msgid "Wrong percentage base or quantity defined for salary rule %s (%s)."
 msgstr ""
@@ -1533,25 +1596,25 @@ msgstr ""
 "(%s)."
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_salary_rule.py:216
+#: code:addons/hr_payroll/models/hr_salary_rule.py:217
 #, python-format
 msgid "Wrong python code defined for salary rule %s (%s)."
 msgstr "Foutieve python code gedefinieerd voor salarisregel %s (%s)."
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_salary_rule.py:239
+#: code:addons/hr_payroll/models/hr_salary_rule.py:240
 #, python-format
 msgid "Wrong python condition defined for salary rule %s (%s)."
 msgstr "Foutieve python voorwaarde gedefinieerd voor salarisregel %s (%s)."
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_salary_rule.py:203
+#: code:addons/hr_payroll/models/hr_salary_rule.py:204
 #, python-format
 msgid "Wrong quantity defined for salary rule %s (%s)."
 msgstr "Verkeerd aantal gedefinieerd voor salarisregel %s (%s)."
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_salary_rule.py:233
+#: code:addons/hr_payroll/models/hr_salary_rule.py:234
 #, python-format
 msgid "Wrong range condition defined for salary rule %s (%s)."
 msgstr "Verkeerde bereikvoorwaarde gedefinieerd voor salarisregel %s (%s)."
@@ -1580,27 +1643,7 @@ msgstr "U dient werknemer(s) te selecteren om loonafschrift(en) te genereren."
 #, python-format
 msgid "You must set a contract to create a payslip line."
 msgstr ""
-"U dient een contract in te stellen om een loonafschrift lijn te maken."
-
-#. module: hr_payroll
-#: model:ir.model,name:hr_payroll.model_hr_salary_rule
-msgid "hr.salary.rule"
-msgstr "hr.salary.rule"
-
-#. module: hr_payroll
-#: model:ir.model,name:hr_payroll.model_report_hr_payroll_report_contributionregister
-msgid "report.hr_payroll.report_contributionregister"
-msgstr "report.hr_payroll.report_contributionregister"
-
-#. module: hr_payroll
-#: model:ir.model,name:hr_payroll.model_report_hr_payroll_report_payslipdetails
-msgid "report.hr_payroll.report_payslipdetails"
-msgstr "report.hr_payroll.report_payslipdetails"
-
-#. module: hr_payroll
-#: model:ir.model,name:hr_payroll.model_res_config_settings
-msgid "res.config.settings"
-msgstr "res.config.settings"
+"U dient een contract in te stellen om een loonafschriftregel te maken."
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line__amount_percentage_base

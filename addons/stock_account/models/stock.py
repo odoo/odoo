@@ -5,7 +5,7 @@ from collections import defaultdict
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.tools import float_compare, float_round, float_is_zero, pycompat
+from odoo.tools import float_compare, float_round, float_is_zero
 
 import logging
 _logger = logging.getLogger(__name__)
@@ -133,7 +133,7 @@ class StockMoveLine(models.Model):
 class StockMove(models.Model):
     _inherit = "stock.move"
 
-    to_refund = fields.Boolean(string="To Refund (update SO/PO)", copy=False,
+    to_refund = fields.Boolean(string="Update quantities on SO/PO", copy=False,
                                help='Trigger a decrease of the delivered/received quantity in the associated Sale Order/Purchase Order')
     value = fields.Float(copy=False)
     remaining_qty = fields.Float(copy=False)
@@ -269,7 +269,8 @@ class StockMove(models.Model):
 
         # Update the standard price with the price of the last used candidate, if any.
         if new_standard_price and move.product_id.cost_method == 'fifo':
-            move.product_id.sudo().standard_price = new_standard_price
+            move.product_id.sudo().with_context(force_company=move.company_id.id) \
+                .standard_price = new_standard_price
 
         # If there's still quantity to value but we're out of candidates, we fall in the
         # negative stock use case. We chose to value the out move at the price of the
@@ -348,9 +349,9 @@ class StockMove(models.Model):
                 'price_unit': price_unit if self._is_dropshipped() else -price_unit,
             })
 
-    def _action_done(self):
+    def _action_done(self, cancel_backorder=False):
         self.product_price_update_before_done()
-        res = super(StockMove, self)._action_done()
+        res = super(StockMove, self)._action_done(cancel_backorder=cancel_backorder)
         for move in res:
             # Apply restrictions on the stock move to be able to make
             # consistent accounting entries.
@@ -384,7 +385,8 @@ class StockMove(models.Model):
             qty_done = 0.0
             if float_is_zero(product_tot_qty_available, precision_rounding=rounding):
                 new_std_price = move._get_price_unit()
-            elif float_is_zero(product_tot_qty_available + move.product_qty, precision_rounding=rounding):
+            elif float_is_zero(product_tot_qty_available + move.product_qty, precision_rounding=rounding) or \
+                    float_is_zero(product_tot_qty_available + qty_done, precision_rounding=rounding):
                 new_std_price = move._get_price_unit()
             else:
                 # Get the standard price
@@ -457,7 +459,7 @@ class StockMove(models.Model):
                 # force the amount in the context, but in the case it is 0 it'll create an entry
                 # for the entire cost of the move. This case happens when the candidates moves
                 # entirely compensate the problematic move.
-                if not corrected_value:
+                if move.company_id.currency_id.is_zero(corrected_value):
                     continue
 
                 if move._is_in():
@@ -474,8 +476,6 @@ class StockMove(models.Model):
     def _run_fifo_vacuum(self):
         # Call `_fifo_vacuum` on concerned moves
         fifo_valued_products = self.env['product.product']
-        fifo_valued_products |= self.env['product.template'].search([('property_cost_method', '=', 'fifo')]).mapped(
-            'product_variant_ids')
         fifo_valued_categories = self.env['product.category'].search([('property_cost_method', '=', 'fifo')])
         fifo_valued_products |= self.env['product.product'].search([('categ_id', 'child_of', fifo_valued_categories.ids)])
         moves_to_vacuum = self.env['stock.move']
@@ -507,9 +507,9 @@ class StockMove(models.Model):
         if not accounts_data.get('stock_journal', False):
             raise UserError(_('You don\'t have any stock journal defined on your product category, check if you have installed a chart of accounts.'))
         if not acc_src:
-            raise UserError(_('Cannot find a stock input account for the product %s. You must define one on the product category, or on the location, before processing this operation.') % (self.product_id.name))
+            raise UserError(_('Cannot find a stock input account for the product %s. You must define one on the product category, or on the location, before processing this operation.') % (self.product_id.display_name))
         if not acc_dest:
-            raise UserError(_('Cannot find a stock output account for the product %s. You must define one on the product category, or on the location, before processing this operation.') % (self.product_id.name))
+            raise UserError(_('Cannot find a stock output account for the product %s. You must define one on the product category, or on the location, before processing this operation.') % (self.product_id.display_name))
         if not acc_valuation:
             raise UserError(_('You don\'t have any stock valuation account defined on your product category. You must define one before processing this operation.'))
         journal_id = accounts_data['stock_journal'].id
@@ -533,7 +533,7 @@ class StockMove(models.Model):
 
         # check that all data is correct
         if self.company_id.currency_id.is_zero(debit_value):
-            raise UserError(_("The cost of %s is currently equal to 0. Change the cost or the configuration of your product to avoid an incorrect valuation.") % (self.product_id.name,))
+            raise UserError(_("The cost of %s is currently equal to 0. Change the cost or the configuration of your product to avoid an incorrect valuation.") % (self.product_id.display_name,))
         credit_value = debit_value
 
 
@@ -688,6 +688,13 @@ class StockMove(models.Model):
 class StockReturnPicking(models.TransientModel):
     _inherit = "stock.return.picking"
 
+    @api.model
+    def default_get(self, default_fields):
+        res = super(StockReturnPicking, self).default_get(default_fields)
+        for i, k, vals in res.get('product_return_moves', []):
+            vals.update({'to_refund': True})
+        return res
+
     @api.multi
     def _create_returns(self):
         new_picking_id, pick_type_id = super(StockReturnPicking, self)._create_returns()
@@ -702,7 +709,7 @@ class StockReturnPicking(models.TransientModel):
 class StockReturnPickingLine(models.TransientModel):
     _inherit = "stock.return.picking.line"
 
-    to_refund = fields.Boolean(string="To Refund (update SO/PO)", help='Trigger a decrease of the delivered/received quantity in the associated Sale Order/Purchase Order')
+    to_refund = fields.Boolean(string="Update quantities on SO/PO", help='Trigger a decrease of the delivered/received quantity in the associated Sale Order/Purchase Order')
 
 
 class ProcurementGroup(models.Model):

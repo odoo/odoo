@@ -5,13 +5,14 @@
 # Translators:
 # Martin Trigaux, 2018
 # Kostas Goutoudis <goutoudis@gmail.com>, 2018
+# George Tarasidis <george_tarasidis@yahoo.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:50+0000\n"
-"PO-Revision-Date: 2018-09-18 09:50+0000\n"
-"Last-Translator: Kostas Goutoudis <goutoudis@gmail.com>, 2018\n"
+"POT-Creation-Date: 2018-09-21 13:18+0000\n"
+"PO-Revision-Date: 2018-09-21 13:18+0000\n"
+"Last-Translator: George Tarasidis <george_tarasidis@yahoo.com>, 2018\n"
 "Language-Team: Greek (https://www.transifex.com/odoo/teams/41243/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,11 +25,16 @@ msgstr ""
 #: code:addons/portal/static/src/js/portal_sidebar.js:43
 #, python-format
 msgid "%d days overdue"
-msgstr ""
+msgstr "%d ημέρες καθυστέρησης"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_show_sign_in
 msgid "<b>Sign in</b>"
+msgstr "<b>Σύνδεση</b>"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_back_in_edit_mode
+msgid "<i class=\"fa fa-arrow-right\"/> Back to edit mode"
 msgstr ""
 
 #. module: portal
@@ -172,14 +178,14 @@ msgstr "Εφαρμογή"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_archive_groups
 msgid "Archives"
-msgstr ""
+msgstr "Αρχείο"
 
 #. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/xml/portal_chatter.xml:26
 #, python-format
 msgid "Avatar"
-msgstr ""
+msgstr "Άβαταρ"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_wizard
@@ -205,16 +211,17 @@ msgstr "Πόλη"
 #: code:addons/portal/static/src/xml/portal_signature.xml:12
 #, python-format
 msgid "Clear"
-msgstr ""
+msgstr "Καθαρισμός"
 
 #. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/xml/portal_signature.xml:27
 #, python-format
 msgid "Click here to see your document."
-msgstr ""
+msgstr "Κάντε κλικ εδώ για να δείτε το έγγραφό σας."
 
 #. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_back_in_edit_mode
 #: model_terms:ir.ui.view,arch_db:portal.portal_layout
 msgid "Close"
 msgstr "Κλείσιμο"
@@ -230,6 +237,8 @@ msgid ""
 "Confirm\n"
 "                                <span class=\"fa fa-long-arrow-right\"/>"
 msgstr ""
+"Επιβεβαίωση\n"
+"                                <span class=\"fa fa-long-arrow-right\"/>"
 
 #. module: portal
 #: model:ir.model,name:portal.model_res_partner
@@ -250,7 +259,7 @@ msgstr "Χώρα"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
 msgid "Country..."
-msgstr ""
+msgstr "Χώρα..."
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__create_uid
@@ -269,12 +278,12 @@ msgstr "Δημιουργήθηκε στις"
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_mixin__access_url
 msgid "Customer Portal URL"
-msgstr ""
+msgstr "Διεύθυνση URL Πύλης Πελατών"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_template
 msgid "Dear"
-msgstr ""
+msgstr "Αγαπητέ/η"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_mixin__display_name
@@ -289,14 +298,14 @@ msgstr "Εμφάνιση Ονόματος"
 #: code:addons/portal/static/src/xml/portal_signature.xml:14
 #, python-format
 msgid "Draw your signature"
-msgstr ""
+msgstr "Σχεδιάστε την υπογραφή σας"
 
 #. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/js/portal_sidebar.js:41
 #, python-format
 msgid "Due in %d days"
-msgstr ""
+msgstr "Λήξη σε %d ημέρα/ες"
 
 #. module: portal
 #. openerp-web
@@ -314,7 +323,7 @@ msgstr "Email"
 #. module: portal
 #: model:ir.model,name:portal.model_mail_thread
 msgid "Email Thread"
-msgstr ""
+msgstr "Νήμα Email"
 
 #. module: portal
 #: model:ir.actions.act_window,name:portal.partner_wizard_action
@@ -325,13 +334,13 @@ msgstr ""
 
 #. module: portal
 #: model:ir.model,name:portal.model_ir_http
-msgid "HTTP routing"
-msgstr "Δρομολόγηση HTTP"
+msgid "HTTP Routing"
+msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_breadcrumbs
 msgid "Home"
-msgstr ""
+msgstr "Αρχική"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_mixin__id
@@ -344,18 +353,18 @@ msgstr "Κωδικός"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__in_portal
 msgid "In Portal"
-msgstr ""
+msgstr "Στην Πύλη"
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:201
 #, python-format
 msgid "Invalid Email! Please enter a valid email address."
-msgstr ""
+msgstr "Μη έγκυρο Email! Παρακαλώ εισάγετε μια έγκυρη διεύθυνση Email"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__welcome_message
 msgid "Invitation Message"
-msgstr ""
+msgstr "Μήνυμα Πρόσκλησης"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_mixin____last_update
@@ -384,22 +393,22 @@ msgstr "Τελευταία Ενημέρωση στις"
 #: code:addons/portal/static/src/xml/portal_chatter.xml:21
 #, python-format
 msgid "Leave a comment"
-msgstr ""
+msgstr "Αφήστε ένα σχόλιο"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__share_link
 msgid "Link"
-msgstr ""
+msgstr "Σύνδεσμος"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__user_id
 msgid "Login User"
-msgstr ""
+msgstr "Σύνδεση χρήστη"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.frontend_layout
 msgid "Logout"
-msgstr ""
+msgstr "Αποσύνδεση"
 
 #. module: portal
 #: model:ir.model,name:portal.model_mail_message
@@ -409,7 +418,7 @@ msgstr "Μήνυμα"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.my_account_link
 msgid "My Account"
-msgstr ""
+msgstr "Ο Λογαριασμός μου"
 
 #. module: portal
 #. openerp-web
@@ -417,17 +426,17 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:portal.pager
 #, python-format
 msgid "Next"
-msgstr ""
+msgstr "Επόμενο"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__note
 msgid "Note"
-msgstr ""
+msgstr "Σημείωση"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.frontend_layout
 msgid "Odoo"
-msgstr ""
+msgstr "Odoo"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_record_sidebar
@@ -440,6 +449,8 @@ msgstr "Λογότυπο Odoo"
 #, python-format
 msgid "Oops! Something went wrong. Try to reload the page and log in."
 msgstr ""
+"Ωχ! Κάτι πήγε λάθος. Προσπαθήστε να επαναλάβετε τη φόρτωση της σελίδας και "
+"να συνδεθείτε."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -449,52 +460,62 @@ msgstr "Τηλέφωνο"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_mixin__access_url
 msgid "Portal Access URL"
+msgstr "Διεύθυνση URL πρόσβασης στην Πύλη"
+
+#. module: portal
+#: model:ir.model,name:portal.model_portal_mixin
+msgid "Portal Mixin"
+msgstr ""
+
+#. module: portal
+#: model:ir.model,name:portal.model_portal_share
+msgid "Portal Sharing"
 msgstr ""
 
 #. module: portal
 #: model:ir.model,name:portal.model_portal_wizard_user
 msgid "Portal User Config"
-msgstr ""
+msgstr "Ρυθμίσεις Χρήστη Πύλης"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.frontend_layout
 #: model_terms:ir.ui.view,arch_db:portal.portal_record_sidebar
 msgid "Powered by"
-msgstr ""
+msgstr "Δημιουργήθηκε με "
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.pager
 msgid "Prev"
-msgstr ""
+msgstr "Προηγούμενο"
 
 #. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/xml/portal_chatter.xml:84
 #, python-format
 msgid "Previous"
-msgstr ""
+msgstr "Προηγούμενο"
 
 #. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/js/portal_chatter.js:109
 #, python-format
 msgid "Published on %s"
-msgstr ""
+msgstr "Δημοσιεύθηκε στις %s"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__partner_ids
 msgid "Recipients"
-msgstr ""
+msgstr "Αποδέκτες"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__res_id
 msgid "Related Document ID"
-msgstr ""
+msgstr "Κωδικός σχετικού εγγράφου"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__res_model
 msgid "Related Document Model"
-msgstr ""
+msgstr "Μοντέλο Σχετικού Εγγράφου"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
@@ -504,7 +525,7 @@ msgstr "Αναζήτηση"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_mixin__access_token
 msgid "Security Token"
-msgstr ""
+msgstr "Διακριτικό Ασφαλείας"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
@@ -513,6 +534,9 @@ msgid ""
 "                        The email address of each selected contact must be valid and unique.\n"
 "                        If necessary, you can fix any contact's email address directly in the list."
 msgstr ""
+"Επιλέξτε ποιες επαφές πρέπει να ανήκουν στην πύλη στην παρακάτω λίστα.\n"
+"Η διεύθυνση email κάθε επιλεγμένης επαφής πρέπει να είναι έγκυρη και μοναδική.\n"
+"Εάν είναι απαραίτητο, μπορείτε να διορθώσετε οποιαδήποτε διεύθυνση email μιας επαφής άμεσα στη λίστα."
 
 #. module: portal
 #. openerp-web
@@ -520,13 +544,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_wizard
 #, python-format
 msgid "Send"
-msgstr ""
+msgstr "Αποστολή"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:100
 #, python-format
 msgid "Several contacts have the same email: "
-msgstr ""
+msgstr "Αρκετές επαφές έχουν το ίδιο email:"
 
 #. module: portal
 #: model:ir.actions.act_window,name:portal.portal_share_action
@@ -538,24 +562,26 @@ msgstr ""
 #: code:addons/portal/wizard/portal_wizard.py:97
 #, python-format
 msgid "Some contacts don't have a valid email: "
-msgstr ""
+msgstr "Ορισμένες επαφές δεν έχουν ένα έγκυρο email:"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:103
 #, python-format
 msgid "Some contacts have the same email as an existing portal user:"
 msgstr ""
+"Ορισμένες επαφές έχουν το ίδιο email με μια υπάρχουσα επαφή που έχει ήδη "
+"πρόσβαση στην πύλη:"
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:224
 #, python-format
 msgid "Some required fields are empty."
-msgstr ""
+msgstr "Ορισμένα υποχρεωτικά πεδία είναι κενά."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
 msgid "State / Province"
-msgstr ""
+msgstr "Νομός/Πολιτεία/Επαρχία"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -567,24 +593,33 @@ msgstr "Οδός"
 #: code:addons/portal/static/src/xml/portal_signature.xml:25
 #, python-format
 msgid "Thank You !"
-msgstr ""
+msgstr "Ευχαριστούμε !"
 
 #. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/xml/portal_chatter.xml:12
 #, python-format
 msgid "There are no comments for now."
+msgstr "Δεν υπάρχουν σχόλια έως τώρα."
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_back_in_edit_mode
+msgid "This is a preview of the customer portal."
 msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "This text is included in the email sent to new portal users."
 msgstr ""
+"Αυτό το κείμενο περιλαμβάνεται στο email που θα στέλνεται στους νέους "
+"χρήστες της πύλης."
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_wizard__welcome_message
 msgid "This text is included in the email sent to new users of the portal."
 msgstr ""
+"Αυτό το κείμενο περιλαμβάνεται στο email που θα στέλνεται στους νέους "
+"χρήστες της πύλης."
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:106
@@ -594,6 +629,9 @@ msgid ""
 "- Correct the emails of the relevant contacts\n"
 "- Grant access only to contacts with unique emails"
 msgstr ""
+"Για να επιλύσετε αυτό το σφάλμα, μπορείτε: \n"
+"- Να διορθώσετε τις διευθύνσεις emails των σχετικών επαφών\n"
+"- Να δώσετε πρόσβαση μόνο στις επαφές που έχουν μοναδική διεύθυνση email"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
@@ -608,55 +646,29 @@ msgstr "Χρήστες"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
 msgid "VAT Number"
-msgstr ""
+msgstr "ΑΦΜ"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_account_analytic_account__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_calendar_event__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_event_event__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_event_registration__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_fleet_vehicle__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_fleet_vehicle_log_contract__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_gamification_badge__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_gamification_challenge__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_hr_department__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_hr_employee__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_hr_job__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_mail_blacklist__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_mail_channel__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_mail_thread__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_maintenance_equipment__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_maintenance_equipment_category__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_maintenance_request__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_note_note__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_res_partner__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_res_users__website_message_ids
 msgid "Website Messages"
-msgstr ""
+msgstr "Μηνύματα Ιστότοπου"
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_account_analytic_account__website_message_ids
 #: model:ir.model.fields,help:portal.field_calendar_event__website_message_ids
-#: model:ir.model.fields,help:portal.field_event_event__website_message_ids
-#: model:ir.model.fields,help:portal.field_event_registration__website_message_ids
-#: model:ir.model.fields,help:portal.field_fleet_vehicle__website_message_ids
-#: model:ir.model.fields,help:portal.field_fleet_vehicle_log_contract__website_message_ids
-#: model:ir.model.fields,help:portal.field_gamification_badge__website_message_ids
-#: model:ir.model.fields,help:portal.field_gamification_challenge__website_message_ids
-#: model:ir.model.fields,help:portal.field_hr_department__website_message_ids
-#: model:ir.model.fields,help:portal.field_hr_employee__website_message_ids
-#: model:ir.model.fields,help:portal.field_hr_job__website_message_ids
 #: model:ir.model.fields,help:portal.field_mail_blacklist__website_message_ids
 #: model:ir.model.fields,help:portal.field_mail_channel__website_message_ids
 #: model:ir.model.fields,help:portal.field_mail_thread__website_message_ids
-#: model:ir.model.fields,help:portal.field_maintenance_equipment__website_message_ids
-#: model:ir.model.fields,help:portal.field_maintenance_equipment_category__website_message_ids
-#: model:ir.model.fields,help:portal.field_maintenance_request__website_message_ids
-#: model:ir.model.fields,help:portal.field_note_note__website_message_ids
 #: model:ir.model.fields,help:portal.field_res_partner__website_message_ids
 #: model:ir.model.fields,help:portal.field_res_users__website_message_ids
 msgid "Website communication history"
-msgstr ""
+msgstr "Ιστορικό επικοινωνίας ιστότοπου"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__wizard_id
@@ -668,11 +680,11 @@ msgstr "Αυτόματος Οδηγός"
 #: code:addons/portal/static/src/xml/portal_chatter.xml:31
 #, python-format
 msgid "Write a message..."
-msgstr ""
+msgstr "Γράψε ένα μήνυμα .."
 
 #. module: portal
-#: code:addons/portal/wizard/portal_share.py:58
-#: code:addons/portal/wizard/portal_share.py:70
+#: code:addons/portal/wizard/portal_share.py:59
+#: code:addons/portal/wizard/portal_share.py:71
 #, python-format
 msgid "You are invited to access %s"
 msgstr ""
@@ -687,7 +699,7 @@ msgstr ""
 #: code:addons/portal/static/src/xml/portal_chatter.xml:22
 #, python-format
 msgid "You must be"
-msgstr ""
+msgstr "Πρέπει να είστε"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:175
@@ -695,23 +707,24 @@ msgstr ""
 msgid ""
 "You must have an email address in your User Preferences to send emails."
 msgstr ""
+"Πρέπει να έχετε μια διεύθυνση email στο προφίλ σας για την αποστολή emails."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
 msgid "Your Contact Details"
-msgstr ""
+msgstr "Τα στοιχεία επικοινωνίας σας"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_breadcrumbs
 #: model_terms:ir.ui.view,arch_db:portal.portal_layout
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
 msgid "Your Details"
-msgstr ""
+msgstr "Το προφίλ μου"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_home
 msgid "Your Documents"
-msgstr ""
+msgstr "Τα Έγγραφά σας"
 
 #. module: portal
 #. openerp-web
@@ -719,7 +732,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
 #, python-format
 msgid "Your Name"
-msgstr ""
+msgstr "Το Όνομά σας"
 
 #. module: portal
 #: model:mail.template,subject:portal.mail_template_data_portal_welcome
@@ -734,35 +747,35 @@ msgstr ""
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
 msgid "Zip / Postal Code"
-msgstr ""
+msgstr "Ταχυδρομικός Κώδικας"
 
 #. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/xml/portal_chatter.xml:56
 #, python-format
 msgid "avatar"
-msgstr ""
+msgstr "άβαταρ"
 
 #. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/xml/portal_chatter.xml:9
 #, python-format
 msgid "comment"
-msgstr ""
+msgstr "σχόλιο"
 
 #. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/xml/portal_chatter.xml:10
 #, python-format
 msgid "comments"
-msgstr ""
+msgstr "σχόλια"
 
 #. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/xml/portal_chatter.xml:22
 #, python-format
 msgid "logged in"
-msgstr ""
+msgstr "συνδεδεμένος"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_record_sidebar
@@ -770,23 +783,13 @@ msgid "odoo"
 msgstr ""
 
 #. module: portal
-#: model:ir.model,name:portal.model_portal_mixin
-msgid "portal.mixin"
-msgstr ""
-
-#. module: portal
-#: model:ir.model,name:portal.model_portal_share
-msgid "portal.share"
-msgstr ""
-
-#. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
 msgid "select..."
-msgstr ""
+msgstr "επιλέξτε..."
 
 #. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/xml/portal_chatter.xml:22
 #, python-format
 msgid "to post a comment."
-msgstr ""
+msgstr "για να δημοσιεύσετε ένα σχόλιο."

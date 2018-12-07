@@ -8,7 +8,7 @@ from werkzeug import url_encode
 class HrExpenseSheetRegisterPaymentWizard(models.TransientModel):
 
     _name = "hr.expense.sheet.register.payment.wizard"
-    _description = "Expense Report Register Payment wizard"
+    _description = "Expense Register Payment Wizard"
 
     @api.model
     def _default_partner_id(self):

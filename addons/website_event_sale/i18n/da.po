@@ -3,16 +3,18 @@
 # * website_event_sale
 # 
 # Translators:
-# Hans Henrik Gabelgaard <hhg@gabelgaard.org>, 2017
-# Sanne Kristensen <sanne@vkdata.dk>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2018
+# Hans Henrik Gabelgaard <hhg@gabelgaard.org>, 2018
+# JonathanStein <jstein@image.dk>, 2018
+# Sanne Kristensen <sanne@vkdata.dk>, 2018
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:26+0000\n"
-"PO-Revision-Date: 2017-10-02 11:26+0000\n"
-"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
+"POT-Creation-Date: 2018-09-21 13:18+0000\n"
+"PO-Revision-Date: 2018-08-24 09:34+0000\n"
+"Last-Translator: Sanne Kristensen <sanne@vkdata.dk>, 2018\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,22 +23,32 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_event_sale
-#: model:ir.ui.view,arch_db:website_event_sale.registration_template
+#: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
 msgid "<span>Free</span>"
 msgstr "<span>Gratis</span>"
 
 #. module: website_event_sale
-#: model:ir.ui.view,arch_db:website_event_sale.registration_template
+#: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
 msgid "<span>Unlimited</span>"
 msgstr "<span>Ubegrænset</span>"
 
 #. module: website_event_sale
-#: model:ir.ui.view,arch_db:website_event_sale.registration_template
+#: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
 msgid "<span>left</span>"
 msgstr "<span>venstre</span>"
 
 #. module: website_event_sale
-#: model:ir.ui.view,arch_db:website_event_sale.index
+#: model:ir.model.fields,field_description:website_event_sale.field_product_product__event_ticket_ids
+msgid "Event Tickets"
+msgstr "Billetter til arrangement"
+
+#. module: website_event_sale
+#: model_terms:ir.ui.view,arch_db:website_event_sale.registration_complete_inherit_website_event_sale
+msgid "N/A"
+msgstr "- Ikke angivet -"
+
+#. module: website_event_sale
+#: model_terms:ir.ui.view,arch_db:website_event_sale.index
 msgid "Only"
 msgstr "Kun"
 
@@ -46,23 +58,28 @@ msgid "Product"
 msgstr "Produkt"
 
 #. module: website_event_sale
-#: model:ir.model,name:website_event_sale.model_sale_order
-msgid "Quotation"
-msgstr "Tilbud"
-
-#. module: website_event_sale
-#: code:addons/website_event_sale/controllers/main.py:56
+#: code:addons/website_event_sale/controllers/main.py:59
 #, python-format
 msgid "Registration"
 msgstr "Tilmelding"
 
 #. module: website_event_sale
-#: model:ir.ui.view,arch_db:website_event_sale.index
+#: model_terms:ir.ui.view,arch_db:website_event_sale.index
 msgid "Remaining"
 msgstr "Resterende"
 
 #. module: website_event_sale
-#: model:ir.ui.view,arch_db:website_event_sale.index
+#: model:ir.model,name:website_event_sale.model_sale_order
+msgid "Sale Order"
+msgstr "Salgsordre"
+
+#. module: website_event_sale
+#: model:ir.model,name:website_event_sale.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Salgsordrelinje"
+
+#. module: website_event_sale
+#: model_terms:ir.ui.view,arch_db:website_event_sale.index
 msgid "Sold Out"
 msgstr "Udsolgt"
 
@@ -71,7 +88,8 @@ msgstr "Udsolgt"
 #, python-format
 msgid "Sorry, The %(ticket)s tickets for the %(event)s event are sold out."
 msgstr ""
-"Beklager, men %(ticket)s billetter til denne %(event)s event er udsolgt."
+"Beklager, men %(ticket)s billetter til dette %(event)s arrangement er "
+"udsolgt."
 
 #. module: website_event_sale
 #: code:addons/website_event_sale/models/sale_order.py:77
@@ -81,7 +99,7 @@ msgid ""
 " ticket for the %(event)s event."
 msgstr ""
 "Beklager, men kun disse %(remaining_seats)d pladser er %(ticket)s stadigvæk "
-"ledige til denne %(event)s event."
+"ledige til dette %(event)s arrangement."
 
 #. module: website_event_sale
 #: code:addons/website_event_sale/models/sale_order.py:39
@@ -90,6 +108,11 @@ msgid "The ticket doesn't match with this product."
 msgstr "Billetten stemmer ikke overens med dette produkt."
 
 #. module: website_event_sale
+#: model_terms:ir.ui.view,arch_db:website_event_sale.registration_complete_inherit_website_event_sale
+msgid "Ticket"
+msgstr "Billet"
+
+#. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_website
 msgid "Website"
-msgstr "Website"
+msgstr "Hjemmeside"

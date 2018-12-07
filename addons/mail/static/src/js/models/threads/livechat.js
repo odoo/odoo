@@ -17,13 +17,10 @@ var Livechat = TwoUserChannel.extend({
      * @override
      * @param {Object} params
      * @param {Object} params.data
-     * @param {string} params.data.anonymous_name name of the website user
      */
     init: function (params) {
         this._super.apply(this, arguments);
-
-        this._name = params.data.anonymous_name;
-
+        this._name = params.data.correspondent_name;
         this._WEBSITE_USER_NAME = this._name;
     },
 
@@ -37,7 +34,8 @@ var Livechat = TwoUserChannel.extend({
      * display of a user that is typing.
      *
      * @override
-     * @returns {$.Promise<Object[]>} resolved with list of livechat members
+     * @returns {$.Promise<Array<Object[]>>} resolved with list of list of
+     *   livechat members.
      */
     getMentionPartnerSuggestions: function () {
         var self = this;
@@ -49,7 +47,7 @@ var Livechat = TwoUserChannel.extend({
                     name: self._WEBSITE_USER_NAME,
                 });
             }
-            return self._members;
+            return [self._members];
         });
     },
     /**

@@ -6,7 +6,7 @@ from odoo import models, fields, api
 
 class TaxAdjustments(models.TransientModel):
     _name = 'tax.adjustments.wizard'
-    _description = 'Wizard for Tax Adjustments'
+    _description = 'Tax Adjustments Wizard'
 
     @api.multi
     def _get_default_journal(self):

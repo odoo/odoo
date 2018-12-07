@@ -4,7 +4,6 @@ from odoo.exceptions import AccessError
 from odoo import api, fields, models, _
 from odoo import SUPERUSER_ID
 from odoo.exceptions import UserError
-from odoo.tools import pycompat
 
 import logging
 
@@ -92,7 +91,7 @@ class AccountAccountTemplate(models.Model):
 
 class AccountChartTemplate(models.Model):
     _name = "account.chart.template"
-    _description = "Templates for Account Chart"
+    _description = "Account Chart Template"
 
     name = fields.Char(required=True)
     parent_id = fields.Many2one('account.chart.template', string='Parent Chart Template')
@@ -314,9 +313,6 @@ class AccountChartTemplate(models.Model):
                 'currency_id': acc.get('currency_id', self.env['res.currency']).id,
                 'sequence': 10
             })
-
-        if company.country_id.code in self.get_countries_posting_at_bank_rec():
-            bank_journals.write({'post_at_bank_rec': True})
 
         return bank_journals
 
@@ -568,15 +564,23 @@ class AccountChartTemplate(models.Model):
 
     @api.multi
     def create_record_with_xmlid(self, company, template, model, vals):
-        # Create a record for the given model with the given vals and
-        # also create an entry in ir_model_data to have an xmlid for the newly created record
-        # xmlid is the concatenation of company_id and template_xml_id
-        ir_model_data = self.env['ir.model.data']
-        template_xmlid = ir_model_data.search([('model', '=', template._name), ('res_id', '=', template.id)])
-        xml_id = "%s.%s_%s" % (template_xmlid.module, company.id, template_xmlid.name)
-        data = dict(xml_id=xml_id, values=vals, noupdate=True)
-        record = self.env[model]._load_records([data])
-        return record.id
+        return self._create_records_with_xmlid(model, [(template, vals)], company).id
+
+    def _create_records_with_xmlid(self, model, template_vals, company):
+        """ Create records for the given model name with the given vals, and
+            create xml ids based on each record's template and company id.
+        """
+        if not template_vals:
+            return self.env[model]
+        template_model = template_vals[0][0]
+        template_ids = [template.id for template, vals in template_vals]
+        template_xmlids = template_model.browse(template_ids).get_external_id()
+        data_list = []
+        for template, vals in template_vals:
+            module, name = template_xmlids[template.id].split('.', 1)
+            xml_id = "%s.%s_%s" % (module, company.id, name)
+            data_list.append(dict(xml_id=xml_id, values=vals, noupdate=True))
+        return self.env[model]._load_records(data_list)
 
     @api.model
     def _load_records(self, data_list, update=False):
@@ -587,7 +591,7 @@ class AccountChartTemplate(models.Model):
         #    regular accounts created and that liquidity transfer account
         records = super(AccountChartTemplate, self)._load_records(data_list, update)
         account_data_list = []
-        for data, record in pycompat.izip(data_list, records):
+        for data, record in zip(data_list, records):
             # Create the transfer account only for leaf chart template in the hierarchy.
             if record.parent_id:
                 continue
@@ -638,14 +642,17 @@ class AccountChartTemplate(models.Model):
         self.ensure_one()
         account_tmpl_obj = self.env['account.account.template']
         acc_template = account_tmpl_obj.search([('nocreate', '!=', True), ('chart_template_id', '=', self.id)], order='id')
+        template_vals = []
         for account_template in acc_template:
             code_main = account_template.code and len(account_template.code) or 0
             code_acc = account_template.code or ''
             if code_main > 0 and code_main <= code_digits:
                 code_acc = str(code_acc) + (str('0'*(code_digits-code_main)))
             vals = self._get_account_vals(company, account_template, code_acc, tax_template_ref)
-            new_account = self.create_record_with_xmlid(company, account_template, 'account.account', vals)
-            acc_template_ref[account_template.id] = new_account
+            template_vals.append((account_template, vals))
+        accounts = self._create_records_with_xmlid('account.account', template_vals, company)
+        for template, account in zip(acc_template, accounts):
+            acc_template_ref[template.id] = account.id
         return acc_template_ref
 
     def _prepare_reconcile_model_vals(self, company, account_reconcile_model, acc_template_ref, tax_template_ref):
@@ -669,6 +676,21 @@ class AccountChartTemplate(models.Model):
                 'force_second_tax_included': account_reconcile_model.force_second_tax_included,
                 'second_amount': account_reconcile_model.second_amount,
                 'second_tax_id': account_reconcile_model.second_tax_id and tax_template_ref[account_reconcile_model.second_tax_id.id] or False,
+                'rule_type': account_reconcile_model.rule_type,
+                'auto_reconcile': account_reconcile_model.auto_reconcile,
+                'match_journal_ids': [(6, None, account_reconcile_model.match_journal_ids.ids)],
+                'match_nature': account_reconcile_model.match_nature,
+                'match_amount': account_reconcile_model.match_amount,
+                'match_amount_min': account_reconcile_model.match_amount_min,
+                'match_amount_max': account_reconcile_model.match_amount_max,
+                'match_label': account_reconcile_model.match_label,
+                'match_label_param': account_reconcile_model.match_label_param,
+                'match_same_currency': account_reconcile_model.match_same_currency,
+                'match_total_amount': account_reconcile_model.match_total_amount,
+                'match_total_amount_param': account_reconcile_model.match_total_amount_param,
+                'match_partner': account_reconcile_model.match_partner,
+                'match_partner_ids': [(6, None, account_reconcile_model.match_partner_ids.ids)],
+                'match_partner_category_ids': [(6, None, account_reconcile_model.match_partner_category_ids.ids)],
             }
 
     @api.multi
@@ -718,21 +740,33 @@ class AccountChartTemplate(models.Model):
         """
         self.ensure_one()
         positions = self.env['account.fiscal.position.template'].search([('chart_template_id', '=', self.id)])
+
+        # first create fiscal positions in batch
+        template_vals = []
         for position in positions:
             fp_vals = self._get_fp_vals(company, position)
-            new_fp = self.create_record_with_xmlid(company, position, 'account.fiscal.position', fp_vals)
+            template_vals.append((position, fp_vals))
+        fps = self._create_records_with_xmlid('account.fiscal.position', template_vals, company)
+
+        # then create fiscal position taxes and accounts
+        tax_template_vals = []
+        account_template_vals = []
+        for position, fp in zip(positions, fps):
             for tax in position.tax_ids:
-                self.create_record_with_xmlid(company, tax, 'account.fiscal.position.tax', {
+                tax_template_vals.append((tax, {
                     'tax_src_id': tax_template_ref[tax.tax_src_id.id],
                     'tax_dest_id': tax.tax_dest_id and tax_template_ref[tax.tax_dest_id.id] or False,
-                    'position_id': new_fp
-                })
+                    'position_id': fp.id,
+                }))
             for acc in position.account_ids:
-                self.create_record_with_xmlid(company, acc, 'account.fiscal.position.account', {
+                account_template_vals.append((acc, {
                     'account_src_id': acc_template_ref[acc.account_src_id.id],
                     'account_dest_id': acc_template_ref[acc.account_dest_id.id],
-                    'position_id': new_fp
-                })
+                    'position_id': fp.id,
+                }))
+        self._create_records_with_xmlid('account.fiscal.position.tax', tax_template_vals, company)
+        self._create_records_with_xmlid('account.fiscal.position.account', account_template_vals, company)
+
         return True
 
 
@@ -837,21 +871,38 @@ class AccountTaxTemplate(models.Model):
                 'account_dict': dictionary containing a to-do list with all the accounts to assign on new taxes
             }
         """
+        ChartTemplate = self.env['account.chart.template']
         todo_dict = {}
         tax_template_to_tax = {}
-        for tax in self:
-            vals_tax = tax._get_tax_vals(company, tax_template_to_tax)
-            new_tax = self.env['account.chart.template'].create_record_with_xmlid(company, tax, 'account.tax', vals_tax)
-            tax_template_to_tax[tax.id] = new_tax
-            # Since the accounts have not been created yet, we have to wait before filling these fields
-            todo_dict[new_tax] = {
-                'account_id': tax.account_id.id,
-                'refund_account_id': tax.refund_account_id.id,
-                'cash_basis_account_id': tax.cash_basis_account_id.id,
-                'cash_basis_base_account_id': tax.cash_basis_base_account_id.id,
-            }
 
-        if any([tax.tax_exigibility == 'on_payment' for tax in self]):
+        templates_todo = list(self)
+        while templates_todo:
+            templates = templates_todo
+            templates_todo = []
+
+            # create taxes in batch
+            template_vals = []
+            for template in templates:
+                if all(child.id in tax_template_to_tax for child in template.children_tax_ids):
+                    vals = template._get_tax_vals(company, tax_template_to_tax)
+                    template_vals.append((template, vals))
+                else:
+                    # defer the creation of this tax to the next batch
+                    templates_todo.append(template)
+            taxes = ChartTemplate._create_records_with_xmlid('account.tax', template_vals, company)
+
+            # fill in tax_template_to_tax and todo_dict
+            for tax, (template, vals) in zip(taxes, template_vals):
+                tax_template_to_tax[template.id] = tax.id
+                # Since the accounts have not been created yet, we have to wait before filling these fields
+                todo_dict[tax.id] = {
+                    'account_id': template.account_id.id,
+                    'refund_account_id': template.refund_account_id.id,
+                    'cash_basis_account_id': template.cash_basis_account_id.id,
+                    'cash_basis_base_account_id': template.cash_basis_base_account_id.id,
+                }
+
+        if any(template.tax_exigibility == 'on_payment' for template in self):
             # When a CoA is being installed automatically and if it is creating account tax(es) whose field `Use Cash Basis`(tax_exigibility) is set to True by default
             # (example of such CoA's are l10n_fr and l10n_mx) then in the `Accounting Settings` the option `Cash Basis` should be checked by default.
             company.tax_exigibility = True
@@ -886,7 +937,7 @@ class AccountFiscalPositionTemplate(models.Model):
 
 class AccountFiscalPositionTaxTemplate(models.Model):
     _name = 'account.fiscal.position.tax.template'
-    _description = 'Template Tax Fiscal Position'
+    _description = 'Tax Mapping Template of Fiscal Position'
     _rec_name = 'position_id'
 
     position_id = fields.Many2one('account.fiscal.position.template', string='Fiscal Position', required=True, ondelete='cascade')
@@ -896,7 +947,7 @@ class AccountFiscalPositionTaxTemplate(models.Model):
 
 class AccountFiscalPositionAccountTemplate(models.Model):
     _name = 'account.fiscal.position.account.template'
-    _description = 'Template Account Fiscal Mapping'
+    _description = 'Accounts Mapping Template of Fiscal Position'
     _rec_name = 'position_id'
 
     position_id = fields.Many2one('account.fiscal.position.template', string='Fiscal Mapping', required=True, ondelete='cascade')
@@ -906,28 +957,85 @@ class AccountFiscalPositionAccountTemplate(models.Model):
 
 class AccountReconcileModelTemplate(models.Model):
     _name = "account.reconcile.model.template"
+    _description = 'Reconcile Model Template'
 
+    # Base fields.
     chart_template_id = fields.Many2one('account.chart.template', string='Chart Template', required=True)
     name = fields.Char(string='Button Label', required=True)
     sequence = fields.Integer(required=True, default=10)
-    has_second_line = fields.Boolean(string='Add a second line', default=False)
+
+    rule_type = fields.Selection(selection=[
+        ('writeoff_button', _('Manually create a write-off on clicked button.')),
+        ('writeoff_suggestion', _('Suggest a write-off.')),
+        ('invoice_matching', _('Match existing invoices/bills.'))
+    ], string='Type', default='writeoff_button', required=True)
+    auto_reconcile = fields.Boolean(string='Auto-validate',
+        help='Validate the statement line automatically (reconciliation based on your rule).')
+
+    # ===== Conditions =====
+    match_journal_ids = fields.Many2many('account.journal', string='Journals',
+        domain="[('type', 'in', ('bank', 'cash'))]",
+        help='The reconciliation model will only be available from the selected journals.')
+    match_nature = fields.Selection(selection=[
+        ('amount_received', 'Amount Received'),
+        ('amount_paid', 'Amount Paid'),
+        ('both', 'Amount Paid/Received')
+    ], string='Amount Nature', required=True, default='both',
+        help='''The reconciliation model will only be applied to the selected transaction type:
+        * Amount Received: Only applied when receiving an amount.
+        * Amount Paid: Only applied when paying an amount.
+        * Amount Paid/Received: Applied in both cases.''')
+    match_amount = fields.Selection(selection=[
+        ('lower', 'Is Lower Than'),
+        ('greater', 'Is Greater Than'),
+        ('between', 'Is Between'),
+    ], string='Amount',
+        help='The reconciliation model will only be applied when the amount being lower than, greater than or between specified amount(s).')
+    match_amount_min = fields.Float(string='Amount Min Parameter')
+    match_amount_max = fields.Float(string='Amount Max Parameter')
+    match_label = fields.Selection(selection=[
+        ('contains', 'Contains'),
+        ('not_contains', 'Not Contains'),
+        ('match_regex', 'Match Regex'),
+    ], string='Label', help='''The reconciliation model will only be applied when the label:
+        * Contains: The proposition label must contains this string (case insensitive).
+        * Not Contains: Negation of "Contains".
+        * Match Regex: Define your own regular expression.''')
+    match_label_param = fields.Char(string='Label Parameter')
+    match_same_currency = fields.Boolean(string='Same Currency Matching', default=True,
+        help='Restrict to propositions having the same currency as the statement line.')
+    match_total_amount = fields.Boolean(string='Amount Matching', default=True,
+        help='The sum of total residual amount propositions matches the statement line amount.')
+    match_total_amount_param = fields.Float(string='Amount Matching %', default=100,
+        help='The sum of total residual amount propositions matches the statement line amount under this percentage.')
+    match_partner = fields.Boolean(string='Partner Is Set',
+        help='The reconciliation model will only be applied when a customer/vendor is set.')
+    match_partner_ids = fields.Many2many('res.partner', string='Restrict Partners to',
+        help='The reconciliation model will only be applied to the selected customers/vendors.')
+    match_partner_category_ids = fields.Many2many('res.partner.category', string='Restrict Partner Categories to',
+        help='The reconciliation model will only be applied to the selected customer/vendor categories.')
+
+    # First part fields.
     account_id = fields.Many2one('account.account.template', string='Account', ondelete='cascade', domain=[('deprecated', '=', False)])
     label = fields.Char(string='Journal Item Label')
     amount_type = fields.Selection([
         ('fixed', 'Fixed'),
         ('percentage', 'Percentage of balance')
         ], required=True, default='percentage')
-    amount = fields.Float(digits=0, required=True, default=100.0, help="Fixed amount will count as a debit if it is negative, as a credit if it is positive.")
+    amount = fields.Float(string='Write-off Amount', digits=0, required=True, default=100.0, help="Fixed amount will count as a debit if it is negative, as a credit if it is positive.")
     force_tax_included = fields.Boolean(string='Tax Included in Price',
         help='Force the tax to be managed as a price included tax.')
     tax_id = fields.Many2one('account.tax.template', string='Tax', ondelete='restrict', domain=[('type_tax_use', '=', 'purchase')])
+
+    # Second part fields.
+    has_second_line = fields.Boolean(string='Add a second line', default=False)
     second_account_id = fields.Many2one('account.account.template', string='Second Account', ondelete='cascade', domain=[('deprecated', '=', False)])
     second_label = fields.Char(string='Second Journal Item Label')
     second_amount_type = fields.Selection([
         ('fixed', 'Fixed'),
         ('percentage', 'Percentage of amount')
         ], string="Second Amount type",required=True, default='percentage')
-    second_amount = fields.Float(string='Second Amount', digits=0, required=True, default=100.0, help="Fixed amount will count as a debit if it is negative, as a credit if it is positive.")
+    second_amount = fields.Float(string='Second Write-off Amount', digits=0, required=True, default=100.0, help="Fixed amount will count as a debit if it is negative, as a credit if it is positive.")
     force_second_tax_included = fields.Boolean(string='Second Tax Included in Price',
         help='Force the second tax to be managed as a price included tax.')
     second_tax_id = fields.Many2one('account.tax.template', string='Second Tax', ondelete='restrict', domain=[('type_tax_use', '=', 'purchase')])

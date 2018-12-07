@@ -27,14 +27,14 @@ class ResPartner(models.Model):
     signup_token = fields.Char(copy=False, groups="base.group_erp_manager")
     signup_type = fields.Char(string='Signup Token Type', copy=False, groups="base.group_erp_manager")
     signup_expiration = fields.Datetime(copy=False, groups="base.group_erp_manager")
-    signup_valid = fields.Boolean(compute='_compute_signup_valid', string='Signup Token is Valid')
+    signup_valid = fields.Boolean(compute='_compute_signup_valid', compute_sudo=True, string='Signup Token is Valid')
     signup_url = fields.Char(compute='_compute_signup_url', string='Signup URL')
 
     @api.multi
     @api.depends('signup_token', 'signup_expiration')
     def _compute_signup_valid(self):
         dt = now()
-        for partner in self.sudo():
+        for partner in self:
             partner.signup_valid = bool(partner.signup_token) and \
             (not partner.signup_expiration or dt <= partner.signup_expiration)
 
@@ -57,17 +57,17 @@ class ResPartner(models.Model):
         for partner in self:
             # when required, make sure the partner has a valid signup token
             if self.env.context.get('signup_valid') and not partner.user_ids:
-                partner.signup_prepare()
+                partner.sudo().signup_prepare()
 
             route = 'login'
             # the parameters to encode for the query
             query = dict(db=self.env.cr.dbname)
-            signup_type = self.env.context.get('signup_force_type_in_url', partner.signup_type or '')
+            signup_type = self.env.context.get('signup_force_type_in_url', partner.sudo().signup_type or '')
             if signup_type:
                 route = 'reset_password' if signup_type == 'reset' else signup_type
 
-            if partner.signup_token and signup_type:
-                query['token'] = partner.signup_token
+            if partner.sudo().signup_token and signup_type:
+                query['token'] = partner.sudo().signup_token
             elif partner.user_ids:
                 query['login'] = partner.user_ids[0].login
             else:

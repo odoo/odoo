@@ -32,6 +32,14 @@
         <field name="reconcile" eval="True"/>
         <field name="tag_ids" eval="[(6,0,[ref('account_tag_105_01')])]"/>
     </record>
+    <record id='cuenta107_05_01' model='account.account.template'>
+        <field name='name'>Mercancías Enviadas - No Facturas</field>
+        <field name='code'>107.05.01</field>
+        <field name="chart_template_id" ref="mx_coa"/>
+        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+        <field name="reconcile" eval="True"/>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_107_05')])]"/>
+    </record>
     <record id='cuenta108_01' model='account.account.template'>
         <field name='name'>Estimación de cuentas incobrables nacional</field>
         <field name='code'>108.01.01</field>
@@ -108,7 +116,7 @@
         <field name='name'>Anticipo a proveedores nacional</field>
         <field name='code'>120.01.01</field>
         <field name="chart_template_id" ref="mx_coa"/>
-        <field name="user_type_id" ref="account.data_account_type_receivable"/>
+        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="reconcile" eval="True"/>
         <field name="tag_ids" eval="[(6,0,[ref('account_tag_120_01')])]"/>
     </record>
@@ -116,7 +124,7 @@
         <field name='name'>Anticipo a proveedores extranjero</field>
         <field name='code'>120.02.01</field>
         <field name="chart_template_id" ref="mx_coa"/>
-        <field name="user_type_id" ref="account.data_account_type_receivable"/>
+        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
         <field name="reconcile" eval="True"/>
         <field name="tag_ids" eval="[(6,0,[ref('account_tag_120_02')])]"/>
     </record>
@@ -128,11 +136,19 @@
         <field name="reconcile" eval="True"/>
         <field name="tag_ids" eval="[(6,0,[ref('account_tag_201_01')])]"/>
     </record>
+    <record id='cuenta205_06_01' model='account.account.template'>
+        <field name='name'>Mercancías Recibidas - No Facturas</field>
+        <field name='code'>205.06.01</field>
+        <field name="chart_template_id" ref="mx_coa"/>
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+        <field name="reconcile" eval="True"/>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_205_01')])]"/>
+    </record>
     <record id='cuenta206_01' model='account.account.template'>
         <field name='name'>Anticipo de cliente nacional</field>
         <field name='code'>206.01.01</field>
         <field name="chart_template_id" ref="mx_coa"/>
-        <field name="user_type_id" ref="account.data_account_type_payable"/>
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="reconcile" eval="True"/>
         <field name="tag_ids" eval="[(6,0,[ref('account_tag_206_01')])]"/>
     </record>
@@ -140,9 +156,17 @@
         <field name='name'>Anticipo de cliente extranjero</field>
         <field name='code'>206.02.01</field>
         <field name="chart_template_id" ref="mx_coa"/>
-        <field name="user_type_id" ref="account.data_account_type_payable"/>
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
         <field name="reconcile" eval="True"/>
         <field name="tag_ids" eval="[(6,0,[ref('account_tag_206_02')])]"/>
+    </record>
+    <record id='cuenta206_05_01' model='account.account.template'>
+        <field name='name'>Otros anticipos de clientes</field>
+        <field name='code'>206.05.01</field>
+        <field name="chart_template_id" ref="mx_coa"/>
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+        <field name="reconcile" eval="True"/>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_206_05')])]"/>
     </record>
     <record id='cuenta208_01' model='account.account.template'>
         <field name='name'>IVA trasladado cobrado</field>
@@ -242,6 +266,13 @@
         <field name="user_type_id" ref="account.data_unaffected_earnings"/>
         <field name="tag_ids" eval="[(6,0,[ref('account_tag_801_01')])]"/>
     </record>
+    <record id='cuenta801_01_99' model='account.account.template'>
+        <field name='name'>Base Imponible de Impuestos en Base a Flujo de Efectivo</field>
+        <field name='code'>899.01.99</field>
+        <field name="chart_template_id" ref="mx_coa"/>
+        <field name="user_type_id" ref="account.data_account_type_expenses"/>
+        <field name="tag_ids" eval="[(6,0,[ref('account_tag_801_01')])]"/>
+    </record>
     <!--
         CoA setting accounts
     -->
@@ -250,6 +281,9 @@
         <field name="property_account_payable_id" ref="cuenta201_01"/>
         <field name="property_account_expense_categ_id" ref="cuenta601_84"/>
         <field name="property_account_income_categ_id" ref="cuenta401_01"/>
+        <field name="property_stock_account_input_categ_id" ref="cuenta205_06_01"/>
+        <field name="property_stock_account_output_categ_id" ref="cuenta107_05_01"/>
+        <field name="property_stock_valuation_account_id" ref="cuenta115_01"/>
         <field name="income_currency_exchange_account_id" ref="cuenta702_01"/>
         <field name="expense_currency_exchange_account_id" ref="cuenta701_01"/>
     </record>

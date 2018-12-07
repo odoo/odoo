@@ -10,7 +10,7 @@
             <label>Quantity:</label>
             <div class="row">
                 <div class="col-lg-6">
-                    <input type="number" t-att-value="bom_qty" min="1" class="o_input o_mrp_bom_report_qty"/>
+                    <input type="number" step="any" t-att-value="bom_qty" min="1" class="o_input o_mrp_bom_report_qty"/>
                 </div>
                 <div class="col-lg-6">
                     <t t-if="is_uom_applied" t-esc="bom_uom_name"/>

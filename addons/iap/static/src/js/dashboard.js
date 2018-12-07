@@ -1,29 +1,42 @@
 odoo.define('iap.Dashboard', function (require) {
 "use strict";
 
-var ajax = require('web.ajax');
-var core = require('web.core');
 var Dashboard = require('web_settings_dashboard');
-
-var _t = core._t;
-var QWeb = core.qweb;
+var Widget = require('web.Widget');
 
 Dashboard.Dashboard.include({
     /**
      * @override
      */
-    load_apps: function (data) {
-        var _super = this._super.bind(this);
-        return ajax.jsonRpc('/web/dataset/call_kw', 'call', {
+    init: function () {
+        this._super.apply(this, arguments);
+        return this.all_dashboards.push('iap');
+    },
+            
+    load_iap: function (data) {
+        var self = this;
+        return this._rpc({
             model:  'iap.account',
             method: 'get_account_url',
             args: [],
             kwargs: {},
         }).then(function (url) {
-            data.apps.url = url;
-            return _super(data);
+            data.iap = {};
+            data.iap.url = url;
+            return new DashboardIAP(self, data.iap).replace(self.$('.o_web_settings_dashboard_iap'));
         });
     },
+});
+
+var DashboardIAP = Widget.extend({
+    template: 'iap.web_settings_dashboard_iap',
+
+    init: function(parent, data) {
+        this.data = data;
+        this.parent = parent;
+        return this._super.apply(this, arguments);
+    },
+
 });
 
 });

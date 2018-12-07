@@ -61,6 +61,15 @@
             print_report_name="'Lot-Serial - %s' % object.name"
         />
         <report
+            string="Operation type (PDF)"
+            id="action_report_picking_type_label"
+            model="stock.picking.type"
+            report_type="qweb-pdf"
+            name="stock.report_picking_type_label"
+            file="stock.report_picking_type_label"
+            print_report_name="'Operation-type - %s' % object.name"
+        />
+        <report
             id="action_report_stock_rule"
             model="product.template"
             string="Product Routes Report"

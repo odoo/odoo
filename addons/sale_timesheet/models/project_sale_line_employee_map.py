@@ -6,6 +6,7 @@ from odoo import api, fields, models
 
 class ProjectProductEmployeeMap(models.Model):
     _name = 'project.sale.line.employee.map'
+    _description = 'Project Sales line, employee mapping'
 
     @api.model
     def _default_project_id(self):

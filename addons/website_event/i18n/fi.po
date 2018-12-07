@@ -9,7 +9,6 @@
 # Jussi Lehto <jussi@gulfeo.com>, 2018
 # Mikko Salmela <salmemik@gmail.com>, 2018
 # Sanna Edelman <direct@generare.com>, 2018
-# Kari Lindgren <karisatu@gmail.com>, 2018
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2018
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2018
 # Veikko Väätäjä <veikko.vaataja@gmail.com>, 2018
@@ -20,8 +19,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:50+0000\n"
-"PO-Revision-Date: 2018-09-18 09:50+0000\n"
+"POT-Creation-Date: 2018-10-02 10:07+0000\n"
+"PO-Revision-Date: 2018-10-02 10:07+0000\n"
 "Last-Translator: Joni Kivi <joni.kivi@sprintit.fi>, 2018\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
@@ -339,6 +338,13 @@ msgid "Event Menu"
 msgstr "Tapahtumavalikko"
 
 #. module: website_event
+#. openerp-web
+#: code:addons/website_event/static/src/js/website_event.editor.js:31
+#, python-format
+msgid "Event Name"
+msgstr "Tapahtuman nimi"
+
+#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.404
 msgid "Event not found!"
 msgstr "Tapahtumaa ei löytynyt!"
@@ -429,8 +435,7 @@ msgstr "Nimi"
 #. module: website_event
 #. openerp-web
 #: code:addons/website_event/controllers/main.py:200
-#: code:addons/website_event/static/src/js/website_event.editor.js:29
-#: model_terms:ir.ui.view,arch_db:website_event.content_new_event
+#: code:addons/website_event/static/src/js/website_event.editor.js:30
 #, python-format
 msgid "New Event"
 msgstr "Uusi tapahtuma"
@@ -577,19 +582,9 @@ msgid "Registration for this event is now closed"
 msgstr "Tapahtumaan rekisteröinti on nyt päättynyt"
 
 #. module: website_event
-#: model:ir.model.fields,help:website_event.field_event_event__website_id
-msgid "Restrict publishing to this website."
-msgstr ""
-
-#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.404
 msgid "Return to the event list."
 msgstr "Paluu tapahtumalistaukseen."
-
-#. module: website_event
-#: model:ir.model.fields,field_description:website_event.field_event_event__is_seo_optimized
-msgid "SEO optimized"
-msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.country_events_list
@@ -610,11 +605,6 @@ msgstr "Sosiaalinen media"
 #: model_terms:ir.ui.view,arch_db:website_event.404
 msgid "Sorry, the requested event is not available anymore."
 msgstr "Valitettavasti tämä tapahtuma ei ole enää saatavilla."
-
-#. module: website_event
-#: model:ir.model.fields,help:website_event.field_event_event__website_url
-msgid "The full URL to access the document through the website."
-msgstr "Dokumentin URL-osoite verkkosivustolla."
 
 #. module: website_event
 #: code:addons/website_event/controllers/main.py:44
@@ -645,11 +635,6 @@ msgid "Use the top menu <i>'Content'</i> to create your first event."
 msgstr "Käytä ylävalikkoa <i>'Sisältö'</i> luodaksesi ensimmäisen tapahtuman."
 
 #. module: website_event
-#: model:ir.model.fields,field_description:website_event.field_event_event__website_published
-msgid "Visible on current website"
-msgstr ""
-
-#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 msgid "Visualize on Google Maps"
 msgstr "Näytä Google Mapsissa"
@@ -660,11 +645,6 @@ msgid "We are glad to confirm your registration to our event"
 msgstr "Rekisteröitymisesi tapahtumaan on nyt vahvistettu"
 
 #. module: website_event
-#: model:ir.model.fields,field_description:website_event.field_event_event__website_id
-msgid "Website"
-msgstr "Verkkosivu"
-
-#. module: website_event
 #: model:ir.actions.act_url,name:website_event.action_open_website
 msgid "Website Home"
 msgstr "Etusivu"
@@ -673,31 +653,6 @@ msgstr "Etusivu"
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form_inherit_website
 msgid "Website Menu"
 msgstr "Verkkosivuston valikko"
-
-#. module: website_event
-#: model:ir.model.fields,field_description:website_event.field_event_event__website_url
-msgid "Website URL"
-msgstr "Verkkosivuston osoite"
-
-#. module: website_event
-#: model:ir.model.fields,field_description:website_event.field_event_event__website_meta_description
-msgid "Website meta description"
-msgstr "Verkkosivuston metakuvaus"
-
-#. module: website_event
-#: model:ir.model.fields,field_description:website_event.field_event_event__website_meta_keywords
-msgid "Website meta keywords"
-msgstr "Verkkosivuston meta-avainsanat"
-
-#. module: website_event
-#: model:ir.model.fields,field_description:website_event.field_event_event__website_meta_title
-msgid "Website meta title"
-msgstr "Verkkosivuston metaotsikko"
-
-#. module: website_event
-#: model:ir.model.fields,field_description:website_event.field_event_event__website_meta_og_img
-msgid "Website opengraph image"
-msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full

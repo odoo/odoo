@@ -1,76 +1,101 @@
+$gold: #ffcc00;
+$silver: #cccccc;
+$bronze: #eea91e;
+
+.question-block .question-name {
+    max-width: 80%;
+}
+.o_post_content {
+    pre {
+        padding: 1.5rem;
+        border-radius: 5px;
+        color: $white;
+        background-color: $gray-700;
+    }
+    blockquote {
+        position: relative;
+        padding-left: 3rem;
+        border-left: 2px solid $gray-500;
+        font-style: italic;
+        font-weight: lighter;
+    }
+}
 .vote {
     min-width: 38px;
     margin-right: 12px;
-
     .vote_count {
-        font-size: 160%;
         font-weight: bold;
         line-height: 12px;
+        font-size: 160%;
     }
-
     .vote_down,
     .vote_up {
         font-size: 130%;
     }
 }
 
-.author-box {
-    min-width: 200px;
-    padding: 4px;
-    background-color: #f5f5f5;
-}
-
-.question-block {
-    margin-left: 50px;
-}
-
 .o_forum_tag_follow_box {
-    display: none;
     position: absolute;
+    display: none;
     z-index: 1;
     text-align: center;
     opacity: 0.9;
 }
 
-.question {
-    clear: left;
-}
-
-.question {
-    .question-name {
-        font-size: 150%;
-    }
-
-    .badge {
-        background-color: #ccc;
-        margin-left: 4px;
-    }
-
-    .badge-active {
-        background-color: #428bca;
-    }
-
-    img {
-        max-width: 600px;
-        height: auto !important;
-    }
-}
-
 .forum_answer {
-    img {
-        max-width: 600px;
-        height: auto !important;
+    position: relative;
+}
+
+.post_to_validate {
+    overflow: hidden;
+    .validate_answer {
+        display: none;
     }
+}
+
+.o_wforum_post_count_answer_count {
+    border-left: 3px solid;
+}
+.validate_answer {
+    @include o-position-absolute(0,0,0,0);
+    height: 100%;
+    .bg-success {
+        @include o-position-absolute(0,0,0,0);
+        height: 100%;
+        width: 4px;
+    }
+    span {
+        @include o-position-absolute(10px,0,0,-9px);
+        font-size: 20px;
+        i {
+            padding: 2px 3px;
+            border-radius: 100%;
+        }
+    }
+}
+
+ .user_name_people {
+    font-weight: bold;
+    max-width: 60%;
+}
+
+.o_wforum_people_photo_container {
+    width: 33%;
+}
+.o_profile_main {
+    overflow: hidden;
 }
 
 img.o_forum_avatar {
     max-height: 40px;
     margin-right: 10px;
+    width: auto;
 }
 
 img.o_forum_avatar_big {
     max-width: 75px;
     margin-right: 10px;
+    width: auto;
 }
 
 .oe_grey {
@@ -78,39 +103,46 @@ img.o_forum_avatar_big {
 }
 
 .badge-gold {
-    color: #ffcc00;
+    color: $gold;
+}
+.bg-gold {
+    background-color: $gold;
 }
 
 .badge-silver {
-    color: #cccccc;
+    color: $silver;
+}
+.bg-silver {
+    background-color: $silver;
 }
 
 .badge-bronze {
-    color: #eea91e;
+    color: $bronze;
+}
+.bg-bronze {
+    background-color: $bronze;
 }
 
 .oe_answer_true {
-    color: #3c763d;
-
+    color: theme-color('success');
     &:hover {
-        color: #4D964E;
+        color: lighten(theme-color('success'), 20%);
     }
 }
 
 .oe_answer_false {
-    color: #bbbbbb;
-
+    color: $gray-400;
     &:hover {
-        color: #9E9C9C;
+        color: $gray-600;
     }
 }
 
 .favourite_question {
-    color: #bbbbbb !important;
+    color: $gray-400 !important;
 }
 
 .forum_favourite_question {
-    color: #ffcc00 !important;
+    color: $gold !important;
 }
 
 a.no-decoration {
@@ -118,25 +150,24 @@ a.no-decoration {
     text-decoration: none !important;
 }
 
-.faq-question:hover {
-    text-decoration: none !important;
-    color: #428bca;
-}
-
-.oe_comment_grey {
-    background-color: #f5f5f5;
-    padding: 4px;
-}
-
 .close.comment_delete {
-    font-size: 16px;
+    font-size: 0.875rem;
     float: none;
+    opacity: 1;
+    font-weight: 300;
+    line-height: 1.5;
 }
-
 .country_flag {
-    max-height: 16px;
     display: inline-block;
     margin-left: 2px;
+    max-height: 13px;
+    width: auto !important;
+}
+
+img.country_flag_people {
+    @include o-position-absolute(0,0);
+    max-height: 25px;
+    width: auto;
 }
 
 .tag_text .text-core .text-wrap {
@@ -168,13 +199,13 @@ a.no-decoration {
 }
 
 button.btn-link.text-muted {
-    color: #999;
+    color: $gray-600;
 }
 
 .o_forum_user_bio_expand {
     position: absolute;
-    z-index: 200;
     display: none;
+    z-index: 200;
 }
 
 .o_forum_tooltip_heading {
@@ -184,7 +215,7 @@ button.btn-link.text-muted {
 }
 
 .o_forum_user_bio {
-    color: black;
+    color: $black;
     width: 318px;
     min-height: 100px;
     cursor: auto;
@@ -193,11 +224,9 @@ button.btn-link.text-muted {
     line-height: 13px;
     font-size: 11px;
     word-wrap: break-word;
-
     .o_forum_tooltip_line {
         min-height: 13px;
     }
-
     .o_forum_tooltip_header {
         min-height: 75px;
     }

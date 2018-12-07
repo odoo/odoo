@@ -264,7 +264,9 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
                 resIDs: record.res_ids,
             },
             on_success: def.resolve.bind(def),
-            on_fail: def.reject.bind(def),
+            on_fail: function () {
+                self.update({}, {reload: false}).always(def.reject.bind(def));
+            },
             on_closed: reload,
         });
         return this.alive(def);
@@ -554,16 +556,16 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
      *
      * @todo: rename db_id into handle
      *
-     * @param {OdooEvent} event
-     * @param {Object} event.data
-     * @param {string} [event.data.db_id] handle of the data to reload and
+     * @param {OdooEvent} ev
+     * @param {Object} ev.data
+     * @param {string} [ev.data.db_id] handle of the data to reload and
      *   re-render (reload the whole form by default)
-     * @param {string[]} [event.data.fieldNames] list of the record's fields to
+     * @param {string[]} [ev.data.fieldNames] list of the record's fields to
      *   reload
      */
-    _onReload: function (event) {
-        event.stopPropagation(); // prevent other controllers from handling this request
-        var data = event && event.data || {};
+    _onReload: function (ev) {
+        ev.stopPropagation(); // prevent other controllers from handling this request
+        var data = ev && ev.data || {};
         var handle = data.db_id;
         if (handle) {
             // reload the relational field given its db_id
@@ -589,28 +591,28 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
      * performed through the sidebar.
      *
      * @private
-     * @param {OdooEvent} event
+     * @param {OdooEvent} ev
      */
-    _onSidebarDataAsked: function (event) {
+    _onSidebarDataAsked: function (ev) {
         var sidebarEnv = this._getSidebarEnv();
-        event.data.callback(sidebarEnv);
+        ev.data.callback(sidebarEnv);
     },
     /**
      * open the translation view for the current field
      *
      * @private
-     * @param {OdooEvent} event
+     * @param {OdooEvent} ev
      */
-    _onTranslate: function (event) {
-        event.stopPropagation();
+    _onTranslate: function (ev) {
+        ev.stopPropagation();
         var self = this;
-        var record = this.model.get(event.data.id, {raw: true});
+        var record = this.model.get(ev.data.id, {raw: true});
         this._rpc({
             route: '/web/dataset/call_button',
             params: {
                 model: 'ir.translation',
                 method: 'translate_fields',
-                args: [record.model, record.res_id, event.data.fieldName, record.getContext()],
+                args: [record.model, record.res_id, ev.data.fieldName, record.getContext()],
             }
         }).then(function (result) {
             self.do_action(result, {

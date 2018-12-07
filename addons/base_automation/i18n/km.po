@@ -2,12 +2,17 @@
 # This file contains the translation of the following modules:
 # * base_automation
 # 
+# Translators:
+# Sengtha Chay <sengtha@gmail.com>, 2018
+# Chan Nath <channath@gmail.com>, 2018
+# Samkhann Seang <seangsamkhann@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
+"POT-Creation-Date: 2018-10-08 06:49+0000\n"
+"PO-Revision-Date: 2018-10-08 06:49+0000\n"
+"Last-Translator: Samkhann Seang <seangsamkhann@gmail.com>, 2018\n"
 "Language-Team: Khmer (https://www.transifex.com/odoo/teams/41243/km/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,16 +31,6 @@ msgid "Action Name"
 msgstr ""
 
 #. module: base_automation
-#: model:ir.model,name:base_automation.model_base_automation_line_test
-msgid "Action Rule Line Test"
-msgstr ""
-
-#. module: base_automation
-#: model:ir.model,name:base_automation.model_base_automation_lead_test
-msgid "Action Rule Test"
-msgstr ""
-
-#. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__state
 msgid "Action To Do"
 msgstr ""
@@ -49,12 +44,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__active
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__active
 msgid "Active"
-msgstr ""
+msgstr "សកម្ម"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_type_id
 msgid "Activity"
-msgstr ""
+msgstr "សកម្មភាព"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_user_type
@@ -94,6 +89,16 @@ msgid "Automated Actions"
 msgstr ""
 
 #. module: base_automation
+#: model:ir.model,name:base_automation.model_base_automation_line_test
+msgid "Automated Rule Line Test"
+msgstr ""
+
+#. module: base_automation
+#: model:ir.model,name:base_automation.model_base_automation_lead_test
+msgid "Automated Rule Test"
+msgstr ""
+
+#. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_tree
 msgid "Automation"
 msgstr ""
@@ -103,6 +108,42 @@ msgstr ""
 #: model:ir.cron,cron_name:base_automation.ir_cron_data_base_automation_check
 #: model:ir.cron,name:base_automation.ir_cron_data_base_automation_check
 msgid "Base Action Rule: check and execute"
+msgstr ""
+
+#. module: base_automation
+#: model:base.automation,name:base_automation.test_rule_recursive
+#: model:ir.actions.server,name:base_automation.test_rule_recursive_ir_actions_server
+msgid "Base Automation: test recursive rule"
+msgstr ""
+
+#. module: base_automation
+#: model:base.automation,name:base_automation.test_rule_on_create
+#: model:ir.actions.server,name:base_automation.test_rule_on_create_ir_actions_server
+msgid "Base Automation: test rule on create"
+msgstr ""
+
+#. module: base_automation
+#: model:base.automation,name:base_automation.test_rule_on_recompute
+#: model:ir.actions.server,name:base_automation.test_rule_on_recompute_ir_actions_server
+msgid "Base Automation: test rule on recompute"
+msgstr ""
+
+#. module: base_automation
+#: model:base.automation,name:base_automation.test_rule_on_line
+#: model:ir.actions.server,name:base_automation.test_rule_on_line_ir_actions_server
+msgid "Base Automation: test rule on secondary model"
+msgstr ""
+
+#. module: base_automation
+#: model:base.automation,name:base_automation.test_rule_on_write
+#: model:ir.actions.server,name:base_automation.test_rule_on_write_ir_actions_server
+msgid "Base Automation: test rule on write"
+msgstr ""
+
+#. module: base_automation
+#: model:base.automation,name:base_automation.test_rule_on_write_check_context
+#: model:ir.actions.server,name:base_automation.test_rule_on_write_check_context_ir_actions_server
+msgid "Base Automation: test rule on write check context"
 msgstr ""
 
 #. module: base_automation
@@ -133,11 +174,13 @@ msgstr ""
 #. module: base_automation
 #: selection:base.automation.lead.test,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "បានលុបចោល"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation_lead_test__customer
-msgid "Check this box if this contact is a customer."
+msgid ""
+"Check this box if this contact is a customer. It can be selected in sales "
+"orders."
 msgstr ""
 
 #. module: base_automation
@@ -172,14 +215,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__create_uid
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "បង្កើតដោយ"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__create_date
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__create_date
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test__create_date
 msgid "Created on"
-msgstr ""
+msgstr "បង្កើតនៅ"
 
 #. module: base_automation
 #: selection:base.automation,trg_date_range_type:0
@@ -214,7 +257,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__display_name
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "ឈ្មោះសំរាប់បង្ហាញ"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_date_deadline_range
@@ -246,7 +289,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__id
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__filter_domain
@@ -282,7 +325,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test____last_update
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test____last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "កាលបរិច្ឆេតកែប្រែចុងក្រោយ"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__last_run
@@ -294,19 +337,19 @@ msgstr ""
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__write_uid
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "ផ្លាស់ប្តូរចុងក្រោយ"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__write_date
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__write_date
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "ផ្លាស់ប្តូរចុងក្រោយ"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test__lead_id
 msgid "Lead"
-msgstr ""
+msgstr "Lead"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__line_ids
@@ -358,17 +401,17 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test__name
 msgid "Name"
-msgstr ""
+msgstr "ឈ្មោះ"
 
 #. module: base_automation
 #: selection:base.automation.lead.test,state:0
 msgid "New"
-msgstr ""
+msgstr "ថ្មី"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_note
 msgid "Note"
-msgstr ""
+msgstr "កំណត់សំគាល់"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__on_change_fields
@@ -405,7 +448,7 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__partner_id
 msgid "Partner"
-msgstr ""
+msgstr "ដៃគូ"
 
 #. module: base_automation
 #: selection:base.automation.lead.test,state:0
@@ -453,10 +496,11 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__sequence
 msgid "Sequence"
-msgstr ""
+msgstr "លំដាប់"
 
 #. module: base_automation
 #: selection:ir.actions.server,usage:0
+#: model:ir.model,name:base_automation.model_ir_actions_server
 msgid "Server Action"
 msgstr ""
 
@@ -485,7 +529,7 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__name
 msgid "Subject"
-msgstr ""
+msgstr "ចំណងជើង"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_summary
@@ -608,9 +652,4 @@ msgstr ""
 msgid ""
 "Write Python code that the action will execute. Some variables are available"
 " for use; help about python expression is given in the help tab."
-msgstr ""
-
-#. module: base_automation
-#: model:ir.model,name:base_automation.model_ir_actions_server
-msgid "ir.actions.server"
 msgstr ""

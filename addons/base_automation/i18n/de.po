@@ -4,13 +4,16 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
+# Johannes Croe <jcr@odoo.com>, 2018
+# e2f <projects@e2f.com>, 2018
+# Katharina Moritz <kmo@e2f.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
-"Last-Translator: Martin Trigaux, 2018\n"
+"POT-Creation-Date: 2018-10-08 06:49+0000\n"
+"PO-Revision-Date: 2018-10-08 06:49+0000\n"
+"Last-Translator: Katharina Moritz <kmo@e2f.com>, 2018\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,16 +30,6 @@ msgstr "Aktionsbeschreibung"
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__name
 msgid "Action Name"
 msgstr "Aktionsbezeichnung"
-
-#. module: base_automation
-#: model:ir.model,name:base_automation.model_base_automation_line_test
-msgid "Action Rule Line Test"
-msgstr "Aktionsregel Buchungszeilentest"
-
-#. module: base_automation
-#: model:ir.model,name:base_automation.model_base_automation_lead_test
-msgid "Action Rule Test"
-msgstr "Aktionsregeltest"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__state
@@ -97,6 +90,16 @@ msgid "Automated Actions"
 msgstr "Automatische Aktionen"
 
 #. module: base_automation
+#: model:ir.model,name:base_automation.model_base_automation_line_test
+msgid "Automated Rule Line Test"
+msgstr ""
+
+#. module: base_automation
+#: model:ir.model,name:base_automation.model_base_automation_lead_test
+msgid "Automated Rule Test"
+msgstr ""
+
+#. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_tree
 msgid "Automation"
 msgstr "Automation"
@@ -107,6 +110,42 @@ msgstr "Automation"
 #: model:ir.cron,name:base_automation.ir_cron_data_base_automation_check
 msgid "Base Action Rule: check and execute"
 msgstr "Basisaktionsregel: Überprüfen und Ausführen"
+
+#. module: base_automation
+#: model:base.automation,name:base_automation.test_rule_recursive
+#: model:ir.actions.server,name:base_automation.test_rule_recursive_ir_actions_server
+msgid "Base Automation: test recursive rule"
+msgstr "Basisautomatisierung: rekursive Regel testen"
+
+#. module: base_automation
+#: model:base.automation,name:base_automation.test_rule_on_create
+#: model:ir.actions.server,name:base_automation.test_rule_on_create_ir_actions_server
+msgid "Base Automation: test rule on create"
+msgstr "Basisautomatisierung: Testregel für Erstellen"
+
+#. module: base_automation
+#: model:base.automation,name:base_automation.test_rule_on_recompute
+#: model:ir.actions.server,name:base_automation.test_rule_on_recompute_ir_actions_server
+msgid "Base Automation: test rule on recompute"
+msgstr "Basisautomatisierung: Testregel für Erneut berechnen"
+
+#. module: base_automation
+#: model:base.automation,name:base_automation.test_rule_on_line
+#: model:ir.actions.server,name:base_automation.test_rule_on_line_ir_actions_server
+msgid "Base Automation: test rule on secondary model"
+msgstr "Basisautomatisierung: Testregel für sekundäres Modell"
+
+#. module: base_automation
+#: model:base.automation,name:base_automation.test_rule_on_write
+#: model:ir.actions.server,name:base_automation.test_rule_on_write_ir_actions_server
+msgid "Base Automation: test rule on write"
+msgstr "Basisautomatisierung: Testregel für Schreiben"
+
+#. module: base_automation
+#: model:base.automation,name:base_automation.test_rule_on_write_check_context
+#: model:ir.actions.server,name:base_automation.test_rule_on_write_check_context_ir_actions_server
+msgid "Base Automation: test rule on write check context"
+msgstr "Basisautomatisierung: Testregel für Schreiben bei Kontextprüfung"
 
 #. module: base_automation
 #: selection:base.automation,trigger:0
@@ -140,8 +179,10 @@ msgstr "Abgebrochen"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation_lead_test__customer
-msgid "Check this box if this contact is a customer."
-msgstr "Anwählen, wenn dieser Kontakt ein Kunde ist."
+msgid ""
+"Check this box if this contact is a customer. It can be selected in sales "
+"orders."
+msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__child_ids
@@ -227,12 +268,12 @@ msgstr "Anzeigename"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_date_deadline_range
 msgid "Due Date In"
-msgstr ""
+msgstr "Fälligkeitsdatum"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_date_deadline_range_type
 msgid "Due type"
-msgstr ""
+msgstr "Fälligkeitstyp"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__template_id
@@ -476,6 +517,7 @@ msgstr "Reihenfolge"
 
 #. module: base_automation
 #: selection:ir.actions.server,usage:0
+#: model:ir.model,name:base_automation.model_ir_actions_server
 msgid "Server Action"
 msgstr "Serveraktion"
 
@@ -645,8 +687,3 @@ msgid ""
 "Write Python code that the action will execute. Some variables are available"
 " for use; help about python expression is given in the help tab."
 msgstr ""
-
-#. module: base_automation
-#: model:ir.model,name:base_automation.model_ir_actions_server
-msgid "ir.actions.server"
-msgstr "ir.actions.server"

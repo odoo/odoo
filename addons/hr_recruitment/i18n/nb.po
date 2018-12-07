@@ -4,13 +4,14 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
+# Jorunn D. Newth, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:48+0000\n"
-"PO-Revision-Date: 2018-09-18 09:48+0000\n"
-"Last-Translator: Martin Trigaux, 2018\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-09-21 13:17+0000\n"
+"Last-Translator: Jorunn D. Newth, 2018\n"
 "Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -371,6 +372,11 @@ msgid "Applicant"
 msgstr "Søker"
 
 #. module: hr_recruitment
+#: model:ir.model,name:hr_recruitment.model_hr_recruitment_degree
+msgid "Applicant Degree"
+msgstr ""
+
+#. module: hr_recruitment
 #: model:mail.message.subtype,name:hr_recruitment.mt_applicant_hired
 #: model:mail.message.subtype,name:hr_recruitment.mt_job_applicant_hired
 msgid "Applicant Hired"
@@ -477,7 +483,7 @@ msgstr "Tildelt"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "Antall vedlegg"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__attachment_ids
@@ -566,6 +572,11 @@ msgstr "Fargeindeks"
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
 msgid "Company"
 msgstr "Firma"
+
+#. module: hr_recruitment
+#: model:ir.model,name:hr_recruitment.model_res_config_settings
+msgid "Config Settings"
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_configuration
@@ -697,11 +708,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
 msgid "Degree"
 msgstr "Grad"
-
-#. module: hr_recruitment
-#: model:ir.model,name:hr_recruitment.model_hr_recruitment_degree
-msgid "Degree of Recruitment"
-msgstr "Grad av rekruttering"
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_degree
@@ -1302,11 +1308,6 @@ msgid "New Employee %s Hired"
 msgstr "Tilsatt %s"
 
 #. module: hr_recruitment
-#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_employee_view_search
-msgid "New Hired"
-msgstr "Nyansatt"
-
-#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_department__new_hired_employee
 msgid "New Hired Employee"
 msgstr "Nyansatt"
@@ -1316,6 +1317,11 @@ msgstr "Nyansatt"
 msgid ""
 "New applicants can be generated from incoming emails. You just need to set "
 "email aliases in configuration of job positions.<br>"
+msgstr ""
+
+#. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_employee_view_search
+msgid "Newly Hired"
 msgstr ""
 
 #. module: hr_recruitment
@@ -1587,6 +1593,11 @@ msgid "Recruitment Responsible"
 msgstr "Rekrutteringsansvarlig"
 
 #. module: hr_recruitment
+#: model:ir.model,name:hr_recruitment.model_hr_recruitment_stage
+msgid "Recruitment Stages"
+msgstr ""
+
+#. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_department_view_kanban
 msgid "Recruitments"
 msgstr "Rekruttering"
@@ -1767,11 +1778,6 @@ msgstr "Stadium endret"
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__name
 msgid "Stage name"
 msgstr "Navn på stadium"
-
-#. module: hr_recruitment
-#: model:ir.model,name:hr_recruitment.model_hr_recruitment_stage
-msgid "Stage of Recruitment"
-msgstr "Rekrutteringsstadium"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__last_stage_id
@@ -2061,8 +2067,3 @@ msgstr "for eksempel Salgssjef"
 #, python-format
 msgid "job applicant"
 msgstr ""
-
-#. module: hr_recruitment
-#: model:ir.model,name:hr_recruitment.model_res_config_settings
-msgid "res.config.settings"
-msgstr "res.config.settings"

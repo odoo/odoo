@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-24 09:05+0000\n"
-"PO-Revision-Date: 2018-08-24 09:05+0000\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-09-21 13:17+0000\n"
 "Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2018\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
@@ -27,7 +27,7 @@ msgid "%s chars, fits in %s SMS (%s) "
 msgstr ""
 
 #. module: sms
-#: model:ir.ui.view,arch_db:sms.send_sms_view_form
+#: model_terms:ir.ui.view,arch_db:sms.send_sms_view_form
 msgid "Cancel"
 msgstr "Anulează"
 
@@ -91,7 +91,7 @@ msgid "Message"
 msgstr "Mesaj"
 
 #. module: sms
-#: code:addons/sms/wizard/send_sms.py:81
+#: code:addons/sms/wizard/send_sms.py:82
 #, python-format
 msgid "Missing mobile number for %s."
 msgstr "Lipsă număr mobil pentru %s."
@@ -110,6 +110,11 @@ msgid "Recipients"
 msgstr "Destinatari"
 
 #. module: sms
+#: model:ir.model,name:sms.model_sms_api
+msgid "SMS API"
+msgstr ""
+
+#. module: sms
 #. openerp-web
 #: code:addons/sms/static/src/xml/sms_widget.xml:4
 #, python-format
@@ -123,28 +128,19 @@ msgid "SMS message sent: %s"
 msgstr "Mesaj SMS trimis: %s"
 
 #. module: sms
-#: model:ir.ui.view,arch_db:sms.send_sms_view_form
+#: model_terms:ir.ui.view,arch_db:sms.send_sms_view_form
 msgid "Send"
 msgstr "Trimite"
 
 #. module: sms
 #: model:ir.actions.act_window,name:sms.send_sms_action
 #: model:ir.actions.act_window,name:sms.send_sms_form_action
-#: model:ir.ui.view,arch_db:sms.partner_form_send_sms_form_view
+#: model:ir.model,name:sms.model_sms_send_sms
+#: model_terms:ir.ui.view,arch_db:sms.partner_form_send_sms_form_view
 msgid "Send SMS"
 msgstr "Trimite SMS"
 
 #. module: sms
-#: model:ir.ui.view,arch_db:sms.send_sms_view_form
+#: model_terms:ir.ui.view,arch_db:sms.send_sms_view_form
 msgid "Send an SMS"
 msgstr "Trimite un SMS"
-
-#. module: sms
-#: model:ir.model,name:sms.model_sms_api
-msgid "sms.api"
-msgstr "sms.api"
-
-#. module: sms
-#: model:ir.model,name:sms.model_sms_send_sms
-msgid "sms.send_sms"
-msgstr "sms.send_sms"

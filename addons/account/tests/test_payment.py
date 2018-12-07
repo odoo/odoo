@@ -407,6 +407,32 @@ class TestPayment(AccountingTestCase):
         self.assertTrue(payment.move_line_ids.filtered(lambda l: l.account_id == invoice.account_id)[0].full_reconcile_id)
         self.assertEqual(invoice.state, 'paid')
 
+    def test_payment_and_writeoff_out_refund(self):
+        # Use case:
+        # Company is in EUR, create a credit note for 100 EUR and register payment of 90.
+        # Mark invoice as fully paid with a write_off
+        # Check that all the aml are correctly created.
+        invoice = self.create_invoice(amount=100, type='out_refund', currency_id=self.currency_eur_id, partner=self.partner_agrolait.id)
+        # register payment on invoice
+        payment = self.payment_model.create({'payment_type': 'outbound',
+            'payment_method_id': self.env.ref('account.account_payment_method_manual_in').id,
+            'partner_type': 'customer',
+            'partner_id': self.partner_agrolait.id,
+            'amount': 90,
+            'payment_date': time.strftime('%Y') + '-07-15',
+            'payment_difference_handling': 'reconcile',
+            'writeoff_account_id': self.account_payable.id,
+            'journal_id': self.bank_journal_euro.id,
+            'invoice_ids': [(4, invoice.id, None)]
+            })
+        payment.post()
+        self.assertRecordValues(payment.move_line_ids, [
+            {'account_id': self.account_eur.id, 'debit': 0.0, 'credit': 90.0, 'amount_currency': 0.0, 'currency_id': False},
+            {'account_id': self.account_payable.id, 'debit': 0.0, 'credit': 10.0, 'amount_currency': 0.0, 'currency_id': False},
+            {'account_id': self.account_receivable.id, 'debit': 100.0, 'credit': 0.0, 'amount_currency': 0.0, 'currency_id': False},
+        ])
+        self.assertEqual(invoice.state, 'paid')
+
     def test_payment_and_writeoff_in_other_currency_2(self):
         # Use case:
         # Company is in EUR, create a supplier bill of 5325.6 USD and register payment of 5325 USD, at a different rate
@@ -455,6 +481,7 @@ class TestPayment(AccountingTestCase):
 
         #check the invoice status
         self.assertEqual(invoice.state, 'paid')
+
 
     def test_payment_and_writeoff_in_other_currency_3(self):
         # Use case related in revision 20935462a0cabeb45480ce70114ff2f4e91eaf79
@@ -506,14 +533,14 @@ class TestPayment(AccountingTestCase):
         self.assertTrue(invoice.move_id.line_ids.filtered(lambda l: l.account_id == self.account_receivable)[0].full_reconcile_id)
 
     def test_post_at_bank_reconciliation_payment(self):
-        # Create a new payment in a journal requiring the journal entries to be posted at bank reconciliation
+        # Create two new payments in a journal requiring the journal entries to be posted at bank reconciliation
         post_at_bank_rec_journal = bank_journal_euro = self.env['account.journal'].create({
             'name': 'Bank',
             'type': 'bank',
             'code': 'COUCOU',
             'post_at_bank_rec': True,
         })
-        payment = self.payment_model.create({'payment_type': 'inbound',
+        payment_one = self.payment_model.create({'payment_type': 'inbound',
             'payment_method_id': self.env.ref('account.account_payment_method_manual_in').id,
             'partner_type': 'customer',
             'partner_id': self.partner_agrolait.id,
@@ -523,17 +550,48 @@ class TestPayment(AccountingTestCase):
             'writeoff_account_id': self.account_receivable.id,
             'journal_id': post_at_bank_rec_journal.id,
             })
-        payment.post()
+        payment_one.post()
+        payment_two = self.payment_model.create({'payment_type': 'inbound',
+            'payment_method_id': self.env.ref('account.account_payment_method_manual_in').id,
+            'partner_type': 'customer',
+            'partner_id': self.partner_agrolait.id,
+            'amount': 11,
+            'payment_date': time.strftime('%Y') + '-12-15',
+            'payment_difference_handling': 'reconcile',
+            'writeoff_account_id': self.account_receivable.id,
+            'journal_id': post_at_bank_rec_journal.id,
+            })
+        payment_two.post()
 
-        # Check the payment and move state
-        self.assertEqual(payment.state, 'posted', "Payment shoud be in posted state.")
-        self.assertEqual(payment.mapped('move_line_ids.move_id.state'), ['draft'], "A posted payment in a bank journal with the 'post at bank reconciliation' option activated should correspond to a draft account.move")
+        # Check the payments and their move state
+        self.assertEqual(payment_one.state, 'posted', "Payment one shoud be in posted state.")
+        self.assertEqual(payment_one.mapped('move_line_ids.move_id.state'), ['draft'], "A posted payment (payment_one) in a bank journal with the 'post at bank reconciliation' option activated should correspond to a draft account.move")
+        self.assertEqual(payment_two.state, 'posted', "Payment two shoud be in posted state.")
+        self.assertEqual(payment_two.mapped('move_line_ids.move_id.state'), ['draft'], "A posted payment (payment_two) in a bank journal with the 'post at bank reconciliation' option activated should correspond to a draft account.move")
 
-        # Match the payment with a bank statement line
-        bank_statement = self.reconcile(payment.move_line_ids.filtered(lambda x: x.account_id == post_at_bank_rec_journal.default_debit_account_id), 42)
-        stmt_line_date = bank_statement.mapped('line_ids.date')
+        # Reconcile the two payments with an invoice, whose full amount is equal to their sum
+        invoice = self.create_invoice(amount=53, partner=self.partner_agrolait.id)
+        (payment_one.move_line_ids + payment_two.move_line_ids + invoice.move_id.line_ids).filtered(lambda x: x.account_id.user_type_id.type == 'receivable').reconcile()
 
-        # Check the move has been posted properly
-        self.assertEqual(payment.mapped('move_line_ids.move_id.state'), ['posted'], "After bank reconciliation, the payment's account.move should be posted.")
-        self.assertEqual(payment.mapped('move_line_ids.move_id.date'), stmt_line_date, "After bank reconciliation, the payment's account.move should share the same date as the bank statement.")
-        self.assertEqual([payment.payment_date], stmt_line_date, "After bank reconciliation, the payment should share the same date as the bank statement.")
+        self.assertTrue(invoice.reconciled, "Invoice should have been reconciled with the payments")
+        self.assertEqual(invoice.state, 'in_payment', "Invoice should be in 'in payment' state")
+
+        # Match the first payment with a bank statement line
+        bank_statement_one = self.reconcile(payment_one.move_line_ids.filtered(lambda x: x.account_id.user_type_id.type == 'liquidity'), 42)
+        stmt_line_date_one = bank_statement_one.mapped('line_ids.date')
+
+        self.assertEqual(payment_one.mapped('move_line_ids.move_id.state'), ['posted'], "After bank reconciliation, payment one's account.move should be posted.")
+        self.assertEqual(payment_one.mapped('move_line_ids.move_id.date'), stmt_line_date_one, "After bank reconciliation, payment one's account.move should share the same date as the bank statement.")
+        self.assertEqual([payment_one.payment_date], stmt_line_date_one, "After bank reconciliation, payment one should share the same date as the bank statement.")
+        self.assertEqual(invoice.state, 'in_payment', "The invoice should still be 'in payment', not all its payments are reconciled with a statement")
+
+        # Match the second payment with a bank statement line
+        bank_statement_two = self.reconcile(payment_two.move_line_ids.filtered(lambda x: x.account_id.user_type_id.type == 'liquidity'), 42)
+        stmt_line_date_two = bank_statement_two.mapped('line_ids.date')
+
+        self.assertEqual(payment_two.mapped('move_line_ids.move_id.state'), ['posted'], "After bank reconciliation, payment two's account.move should be posted.")
+        self.assertEqual(payment_two.mapped('move_line_ids.move_id.date'), stmt_line_date_two, "After bank reconciliation, payment two's account.move should share the same date as the bank statement.")
+        self.assertEqual([payment_two.payment_date], stmt_line_date_two, "After bank reconciliation, payment two should share the same date as the bank statement.")
+
+        # The invoice should now be paid
+        self.assertEqual(invoice.state, 'paid', "Invoice should be in 'paid' state after having reconciled the two payments with a bank statement")

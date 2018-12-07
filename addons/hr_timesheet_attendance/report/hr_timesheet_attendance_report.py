@@ -7,6 +7,7 @@ from odoo import api, fields, models
 class TimesheetAttendance(models.Model):
     _name = 'hr.timesheet.attendance.report'
     _auto = False
+    _description = 'Timesheet Attendance Report'
 
     user_id = fields.Many2one('res.users')
     date = fields.Date()

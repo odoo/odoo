@@ -6,7 +6,7 @@ from datetime import date, datetime, time
 from odoo import fields
 from odoo.exceptions import AccessError, UserError
 from odoo.tests import common
-from odoo.tools import mute_logger, float_repr, pycompat
+from odoo.tools import mute_logger, float_repr
 from odoo.tools.date_utils import add, subtract, start_of, end_of
 
 
@@ -18,8 +18,8 @@ class TestFields(common.TransactionCase):
         discussion = self.env.ref('test_new_api.discussion_0')
 
         # read field as a record attribute or as a record item
-        self.assertIsInstance(discussion.name, pycompat.string_types)
-        self.assertIsInstance(discussion['name'], pycompat.string_types)
+        self.assertIsInstance(discussion.name, str)
+        self.assertIsInstance(discussion['name'], str)
         self.assertEqual(discussion['name'], discussion.name)
 
         # read it with method read()
@@ -772,20 +772,42 @@ class TestFields(common.TransactionCase):
                                         'value': tag0, 'type': 'many2one'})
 
         # create/modify a record, and check the value for each user
-        record = self.env['test_new_api.company'].create({'foo': 'main', 'tag_id': tag1})
+        record = self.env['test_new_api.company'].create({
+            'foo': 'main',
+            'date': '1932-11-09',
+            'moment': '1932-11-09 00:00:00',
+            'tag_id': tag1.id,
+        })
         record.invalidate_cache()
         self.assertEqual(record.sudo(user0).foo, 'main')
         self.assertEqual(record.sudo(user1).foo, 'default')
         self.assertEqual(record.sudo(user2).foo, 'default')
+        self.assertEqual(str(record.sudo(user0).date), '1932-11-09')
+        self.assertEqual(record.sudo(user1).date, False)
+        self.assertEqual(record.sudo(user2).date, False)
+        self.assertEqual(str(record.sudo(user0).moment), '1932-11-09 00:00:00')
+        self.assertEqual(record.sudo(user1).moment, False)
+        self.assertEqual(record.sudo(user2).moment, False)
         self.assertEqual(record.sudo(user0).tag_id, tag1)
         self.assertEqual(record.sudo(user1).tag_id, tag0)
         self.assertEqual(record.sudo(user2).tag_id, tag0)
 
-        record.sudo(user1).write({'foo': 'alpha', 'tag_id': tag2.id})
+        record.sudo(user1).write({
+            'foo': 'alpha',
+            'date': '1932-12-10',
+            'moment': '1932-12-10 23:59:59',
+            'tag_id': tag2.id,
+        })
         record.invalidate_cache()
         self.assertEqual(record.sudo(user0).foo, 'main')
         self.assertEqual(record.sudo(user1).foo, 'alpha')
         self.assertEqual(record.sudo(user2).foo, 'default')
+        self.assertEqual(str(record.sudo(user0).date), '1932-11-09')
+        self.assertEqual(str(record.sudo(user1).date), '1932-12-10')
+        self.assertEqual(record.sudo(user2).date, False)
+        self.assertEqual(str(record.sudo(user0).moment), '1932-11-09 00:00:00')
+        self.assertEqual(str(record.sudo(user1).moment), '1932-12-10 23:59:59')
+        self.assertEqual(record.sudo(user2).moment, False)
         self.assertEqual(record.sudo(user0).tag_id, tag1)
         self.assertEqual(record.sudo(user1).tag_id, tag2)
         self.assertEqual(record.sudo(user2).tag_id, tag0)
@@ -795,6 +817,12 @@ class TestFields(common.TransactionCase):
         self.assertEqual(record.sudo(user0).tag_id, tag1)
         self.assertEqual(record.sudo(user1).tag_id, tag0.browse())
         self.assertEqual(record.sudo(user2).tag_id, tag0)
+
+        record.sudo(user1).foo = False
+        record.invalidate_cache()
+        self.assertEqual(record.sudo(user0).foo, 'main')
+        self.assertEqual(record.sudo(user1).foo, False)
+        self.assertEqual(record.sudo(user2).foo, 'default')
 
         # create company record and attribute
         company_record = self.env['test_new_api.company'].create({'foo': 'ABC'})
@@ -922,7 +950,7 @@ class TestFields(common.TransactionCase):
     def test_50_search_many2one(self):
         """ test search through a path of computed fields"""
         messages = self.env['test_new_api.message'].search(
-            [('author_partner.name', '=', 'Marc Brown')])
+            [('author_partner.name', '=', 'Marc Demo')])
         self.assertEqual(messages, self.env.ref('test_new_api.message_0_1'))
 
     def test_60_x2many_domain(self):
@@ -963,6 +991,116 @@ class TestFields(common.TransactionCase):
         self.assertEqual(len(discussion.messages), 5)
         self.assertEqual(len(discussion.important_messages), 2)
         self.assertEqual(len(discussion.very_important_messages), 2)
+
+    def test_80_copy(self):
+        Translations = self.env['ir.translation']
+        discussion = self.env.ref('test_new_api.discussion_0')
+        message = self.env.ref('test_new_api.message_0_0')
+        message1 = self.env.ref('test_new_api.message_0_1')
+
+        email = self.env.ref('test_new_api.emailmessage_0_0')
+        self.assertEqual(email.message, message)
+
+        french = self.env['res.lang']._lang_get('fr_FR')
+        french.active = True
+
+        def count(msg):
+            # return the number of translations of msg.label
+            return Translations.search_count([
+                ('name', '=', 'test_new_api.message,label'),
+                ('res_id', '=', msg.id),
+            ])
+
+        # set a translation for message.label
+        email.with_context(lang='fr_FR').label = "bonjour"
+        self.assertEqual(count(message), 1)
+        self.assertEqual(count(message1), 0)
+
+        # setting the parent record should not copy its translations
+        email.copy({'message': message1.id})
+        self.assertEqual(count(message), 1)
+        self.assertEqual(count(message1), 0)
+
+        # setting a one2many should not copy translations on the lines
+        discussion.copy({'messages': [(6, 0, message1.ids)]})
+        self.assertEqual(count(message), 1)
+        self.assertEqual(count(message1), 0)
+
+    def test_90_binary_svg(self):
+        from odoo.addons.base.tests.test_mimetypes import SVG
+        # This should work without problems
+        self.env['test_new_api.binary_svg'].create({
+            'name': 'Test without attachment',
+            'image_wo_attachment': SVG,
+        })
+        # And this gives error
+        with self.assertRaises(UserError):
+            self.env['test_new_api.binary_svg'].sudo(
+                self.env.ref('base.user_demo'),
+            ).create({
+                'name': 'Test without attachment',
+                'image_wo_attachment': SVG,
+            })
+
+    def test_91_binary_svg_attachment(self):
+        from odoo.addons.base.tests.test_mimetypes import SVG
+        # This doesn't neuter SVG with admin
+        record = self.env['test_new_api.binary_svg'].create({
+            'name': 'Test without attachment',
+            'image_attachment': SVG,
+        })
+        attachment = self.env['ir.attachment'].search([
+            ('res_model', '=', record._name),
+            ('res_field', '=', 'image_attachment'),
+            ('res_id', '=', record.id),
+        ])
+        self.assertEqual(attachment.mimetype, 'image/svg+xml')
+        # ...but this should be neutered with demo user
+        record = self.env['test_new_api.binary_svg'].sudo(
+            self.env.ref('base.user_demo'),
+        ).create({
+            'name': 'Test without attachment',
+            'image_attachment': SVG,
+        })
+        attachment = self.env['ir.attachment'].search([
+            ('res_model', '=', record._name),
+            ('res_field', '=', 'image_attachment'),
+            ('res_id', '=', record.id),
+        ])
+        self.assertEqual(attachment.mimetype, 'text/plain')
+
+    def test_92_binary_self_avatar_svg(self):
+        from odoo.addons.base.tests.test_mimetypes import SVG
+        demo_user = self.env.ref('base.user_demo')
+        # User demo changes his own avatar
+        demo_user.sudo(demo_user).image = SVG
+        # The SVG file should have been neutered
+        attachment = self.env['ir.attachment'].search([
+            ('res_model', '=', demo_user.partner_id._name),
+            ('res_field', '=', 'image'),
+            ('res_id', '=', demo_user.partner_id.id),
+        ])
+        self.assertEqual(attachment.mimetype, 'text/plain')
+
+    def test_93_monetary_related(self):
+        """ Check the currency field on related monetary fields. """
+        # check base field
+        field = self.env['test_new_api.monetary_base']._fields['amount']
+        self.assertEqual(field.currency_field, 'base_currency_id')
+
+        # related fields must use the field 'currency_id' or 'x_currency_id'
+        field = self.env['test_new_api.monetary_related']._fields['amount']
+        self.assertEqual(field.related, ('monetary_id', 'amount'))
+        self.assertEqual(field.currency_field, 'currency_id')
+
+        field = self.env['test_new_api.monetary_custom']._fields['x_amount']
+        self.assertEqual(field.related, ('monetary_id', 'amount'))
+        self.assertEqual(field.currency_field, 'x_currency_id')
+
+        # inherited field must use the same field as its parent field
+        field = self.env['test_new_api.monetary_inherits']._fields['amount']
+        self.assertEqual(field.related, ('monetary_id', 'amount'))
+        self.assertEqual(field.currency_field, 'base_currency_id')
 
 
 class TestX2many(common.TransactionCase):

@@ -24,7 +24,7 @@ class EventTypeMail(models.Model):
     """ Template of event.mail to attach to event.type. Those will be copied
     upon all events created in that type to ease event creation. """
     _name = 'event.type.mail'
-    _description = 'Mail Scheduling on Event Type'
+    _description = 'Mail Scheduling on Event Category'
 
     event_type_id = fields.Many2one(
         'event.type', string='Event Type',

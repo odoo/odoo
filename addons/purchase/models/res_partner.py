@@ -19,7 +19,7 @@ class res_partner(models.Model):
     def _compute_supplier_invoice_count(self):
         Invoice = self.env['account.invoice']
         for partner in self:
-            partner.supplier_invoice_count = Invoice.search_count([('partner_id', 'child_of', partner.id), ('type', '=', 'in_invoice')])
+            partner.supplier_invoice_count = Invoice.search_count([('partner_id', 'child_of', partner.id), ('type', 'in', ('in_invoice', 'in_refund'))])
 
     @api.model
     def _commercial_fields(self):

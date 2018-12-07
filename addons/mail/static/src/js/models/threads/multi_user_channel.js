@@ -18,13 +18,24 @@ var MultiUserChannel = Channel.extend({
         var data = params.data;
 
         this._isMassMailing = data.mass_mailing || false;
-        this._type = data.public !== 'private' ? 'public' : 'private';
+        this._type = 'multi_user_channel';
+        this._public = data.public !== 'private';
     },
 
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------
 
+    /**
+     * Returns the title to display in thread window's headers.
+     * For channels, the title is prefixed with "#".
+     *
+     * @override
+     * @returns {string|Object} the name of the thread by default (see getName)
+     */
+    getTitle: function () {
+        return "#" + this._super.apply(this, arguments);
+    },
     /**
      * States whether this thread has the mass mailing setting active or not.
      * This is a server-side setting, that determine the type of composer that
@@ -34,6 +45,12 @@ var MultiUserChannel = Channel.extend({
      */
     isMassMailing: function () {
         return this._isMassMailing;
+    },
+    /**
+     * @returns {boolean}
+     */
+    isPublic: function () {
+        return this._public;
     },
     /**
      * Unsubscribes from channel

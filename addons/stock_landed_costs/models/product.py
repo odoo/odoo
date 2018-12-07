@@ -15,7 +15,7 @@ SPLIT_METHOD = [
 class ProductTemplate(models.Model):
     _inherit = "product.template"
 
-    landed_cost_ok = fields.Boolean('Is a Landed Cost')
+    landed_cost_ok = fields.Boolean('Is a Landed Cost', help='Indicates whether the product is a landed cost.')
     split_method = fields.Selection(
         selection=SPLIT_METHOD, string='Split Method', default='equal',
         help="Equal : Cost will be equally divided.\n"

@@ -6,6 +6,6 @@ from odoo import api, fields, models
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
-    l10n_be_structured_comm = fields.Selection(related='company_id.l10n_be_structured_comm',
+    l10n_be_structured_comm = fields.Selection(related='company_id.l10n_be_structured_comm', readonly=False,
         string='Communication Algorithm', default='random',
         help='Choose an algorithm to generate the structured communication.')

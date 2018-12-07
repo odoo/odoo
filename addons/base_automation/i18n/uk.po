@@ -4,13 +4,15 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
+# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-24 09:04+0000\n"
-"PO-Revision-Date: 2018-08-24 09:04+0000\n"
-"Last-Translator: Martin Trigaux, 2018\n"
+"POT-Creation-Date: 2018-10-08 06:49+0000\n"
+"PO-Revision-Date: 2018-08-24 09:16+0000\n"
+"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2018\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,16 +29,6 @@ msgstr "Опис дії"
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__name
 msgid "Action Name"
 msgstr "Назва дії"
-
-#. module: base_automation
-#: model:ir.model,name:base_automation.model_base_automation_line_test
-msgid "Action Rule Line Test"
-msgstr "Тест рядка правила дії"
-
-#. module: base_automation
-#: model:ir.model,name:base_automation.model_base_automation_lead_test
-msgid "Action Rule Test"
-msgstr "Тест правила дії"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__state
@@ -97,7 +89,17 @@ msgid "Automated Actions"
 msgstr "Дія"
 
 #. module: base_automation
-#: model:ir.ui.view,arch_db:base_automation.view_base_automation_tree
+#: model:ir.model,name:base_automation.model_base_automation_line_test
+msgid "Automated Rule Line Test"
+msgstr ""
+
+#. module: base_automation
+#: model:ir.model,name:base_automation.model_base_automation_lead_test
+msgid "Automated Rule Test"
+msgstr ""
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_tree
 msgid "Automation"
 msgstr "Автоматизація"
 
@@ -107,6 +109,42 @@ msgstr "Автоматизація"
 #: model:ir.cron,name:base_automation.ir_cron_data_base_automation_check
 msgid "Base Action Rule: check and execute"
 msgstr "Базове правило дії: перевірити та виконати"
+
+#. module: base_automation
+#: model:base.automation,name:base_automation.test_rule_recursive
+#: model:ir.actions.server,name:base_automation.test_rule_recursive_ir_actions_server
+msgid "Base Automation: test recursive rule"
+msgstr "Базова автоматизація: тестове рекурсивне правило"
+
+#. module: base_automation
+#: model:base.automation,name:base_automation.test_rule_on_create
+#: model:ir.actions.server,name:base_automation.test_rule_on_create_ir_actions_server
+msgid "Base Automation: test rule on create"
+msgstr "Базова автоматизація: правило тестування на створення"
+
+#. module: base_automation
+#: model:base.automation,name:base_automation.test_rule_on_recompute
+#: model:ir.actions.server,name:base_automation.test_rule_on_recompute_ir_actions_server
+msgid "Base Automation: test rule on recompute"
+msgstr "Базова автоматизація: тестове правило перевизначення"
+
+#. module: base_automation
+#: model:base.automation,name:base_automation.test_rule_on_line
+#: model:ir.actions.server,name:base_automation.test_rule_on_line_ir_actions_server
+msgid "Base Automation: test rule on secondary model"
+msgstr "Базова автоматизація: правило випробувань на вторинну модель"
+
+#. module: base_automation
+#: model:base.automation,name:base_automation.test_rule_on_write
+#: model:ir.actions.server,name:base_automation.test_rule_on_write_ir_actions_server
+msgid "Base Automation: test rule on write"
+msgstr "Базова автоматизація: тестове правило на написання"
+
+#. module: base_automation
+#: model:base.automation,name:base_automation.test_rule_on_write_check_context
+#: model:ir.actions.server,name:base_automation.test_rule_on_write_check_context_ir_actions_server
+msgid "Base Automation: test rule on write check context"
+msgstr "Базова автоматизація: тестове правило написання перевірки контексту"
 
 #. module: base_automation
 #: selection:base.automation,trigger:0
@@ -140,8 +178,10 @@ msgstr "Скасовано"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation_lead_test__customer
-msgid "Check this box if this contact is a customer."
-msgstr "Позначте це, якщо цей контакт є клієнтом."
+msgid ""
+"Check this box if this contact is a customer. It can be selected in sales "
+"orders."
+msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__child_ids
@@ -444,12 +484,12 @@ msgid "Python Code"
 msgstr "Код Python"
 
 #. module: base_automation
-#: model:ir.ui.view,arch_db:base_automation.view_base_automation_form
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Remove Action"
 msgstr "Дія вилучення"
 
 #. module: base_automation
-#: model:ir.ui.view,arch_db:base_automation.view_base_automation_form
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Remove the contextual action related to this server action"
 msgstr "Видалити контекстну дію, пов'язану з дією цього сервера"
 
@@ -471,8 +511,9 @@ msgstr "Послідовність"
 
 #. module: base_automation
 #: selection:ir.actions.server,usage:0
+#: model:ir.model,name:base_automation.model_ir_actions_server
 msgid "Server Action"
-msgstr "Дії на сервері"
+msgstr "Дія на сервері"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__action_server_id
@@ -489,7 +530,7 @@ msgstr ""
 "моделі."
 
 #. module: base_automation
-#: model:ir.actions.act_window,help:base_automation.base_automation_act
+#: model_terms:ir.actions.act_window,help:base_automation.base_automation_act
 msgid "Setup a new automated automation"
 msgstr ""
 
@@ -570,7 +611,7 @@ msgid "Use Calendar"
 msgstr "Використовувати календар"
 
 #. module: base_automation
-#: model:ir.actions.act_window,help:base_automation.base_automation_act
+#: model_terms:ir.actions.act_window,help:base_automation.base_automation_act
 msgid ""
 "Use automated actions to automatically trigger actions for\n"
 "                various screens. Example: a lead created by a specific user may\n"
@@ -630,7 +671,7 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__active
 msgid "When unchecked, the rule is hidden and will not be executed."
-msgstr "Якщо цей прапорець не позначено, правило сховане і не буде виконано."
+msgstr "Якщо це не позначено, правило сховане і не буде виконано."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__code
@@ -638,8 +679,3 @@ msgid ""
 "Write Python code that the action will execute. Some variables are available"
 " for use; help about python expression is given in the help tab."
 msgstr ""
-
-#. module: base_automation
-#: model:ir.model,name:base_automation.model_ir_actions_server
-msgid "ir.actions.server"
-msgstr "ir.actions.server"

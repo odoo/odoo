@@ -9,6 +9,7 @@ from odoo import api, exceptions, fields, models, tools, _
 
 class PortalMixin(models.AbstractModel):
     _name = "portal.mixin"
+    _description = 'Portal Mixin'
 
     access_url = fields.Char(
         'Portal Access URL', compute='_compute_access_url',
@@ -29,7 +30,9 @@ class PortalMixin(models.AbstractModel):
 
     def _portal_ensure_token(self):
         """ Get the current record access token """
-        self.access_token = self.access_token if self.access_token else str(uuid.uuid4())
+        if not self.access_token:
+            # we use a `write` to force the cache clearing otherwise `return self.access_token` will return False
+            self.sudo().write({'access_token': str(uuid.uuid4())})
         return self.access_token
 
     def _get_share_url(self, redirect=False, signup_partner=False, pid=None):

@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-09-21 13:17+0000\n"
 "Last-Translator: Martin Trigaux, 2018\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
@@ -86,6 +86,16 @@ msgid "Attach Google documents to any record"
 msgstr "Google documents-г өөрийн ямарваа бичлэгтээ хавсаргах"
 
 #. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_partner_autocomplete
+msgid "Auto-populate company data"
+msgstr ""
+
+#. module: base_setup
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Autocomplete company data (name, logo, address, etc.)"
+msgstr ""
+
+#. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Business Documents"
 msgstr ""
@@ -102,7 +112,7 @@ msgid "Change Document Template"
 msgstr ""
 
 #. module: base_setup
-#: code:addons/base_setup/models/res_config_settings.py:99
+#: code:addons/base_setup/models/res_config_settings.py:100
 #, python-format
 msgid "Choose Your Document Layout"
 msgstr ""
@@ -131,6 +141,11 @@ msgstr "Компаниуд"
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__company_id
 msgid "Company"
 msgstr "Компани"
+
+#. module: base_setup
+#: model:ir.model,name:base_setup.model_res_config_settings
+msgid "Config Settings"
+msgstr ""
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -218,8 +233,8 @@ msgstr "Google Spreadsheet"
 
 #. module: base_setup
 #: model:ir.model,name:base_setup.model_ir_http
-msgid "HTTP routing"
-msgstr "HTTP шилжүүлэг"
+msgid "HTTP Routing"
+msgstr ""
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -369,6 +384,9 @@ msgid "Users"
 msgstr "Хэрэглэгчид"
 
 #. module: base_setup
-#: model:ir.model,name:base_setup.model_res_config_settings
-msgid "res.config.settings"
-msgstr "res.config.settings"
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid ""
+"When populating your address book, Odoo provides a list of matching "
+"companies. When selecting one item, the company data and logo are auto-"
+"filled."
+msgstr ""

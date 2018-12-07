@@ -3,18 +3,25 @@
 # * fleet
 # 
 # Translators:
-# Martin Trigaux, 2018
-# liAnGjiA <liangjia@qq.com>, 2018
 # e2f <projects@e2f.com>, 2018
-# 远鼎-Maker <liuct@chinamaker.net>, 2018
+# ChinaMaker <liuct@chinamaker.net>, 2018
 # Jackie Zhang <jzh@odoo.com>, 2018
+# bower Guo <124358678@qq.com>, 2018
+# roye w <159820@qq.com>, 2018
+# 广州救火 <7017511@qq.com>, 2018
+# liAnGjiA <liangjia@qq.com>, 2018
+# e2f_cn c7 <e2f_cn_c7@outlook.com>, 2018
+# inspur qiuguodong <qiuguodong@inspur.com>, 2018
+# snow wang <147156565@qq.com>, 2018
+# Martin Trigaux, 2018
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:50+0000\n"
-"PO-Revision-Date: 2018-09-18 09:50+0000\n"
+"POT-Creation-Date: 2018-10-08 06:49+0000\n"
+"PO-Revision-Date: 2018-08-24 09:18+0000\n"
 "Last-Translator: Jeffery CHEN Fan <jeffery9@gmail.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -31,18 +38,43 @@ msgstr "<span>克/公里</span>"
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "<span>kW</span>"
-msgstr "<span>kW</span>"
+msgstr "<span>千瓦</span>"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_1
+msgid "A/C Compressor Replacement"
+msgstr "A/C 压缩机更换"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_2
+msgid "A/C Condenser Replacement"
+msgstr "A/C 电容器更换"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_3
+msgid "A/C Diagnosis"
+msgstr "A/C 诊断"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_4
+msgid "A/C Evaporator Replacement"
+msgstr "A/C蒸发器更换"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_5
+msgid "A/C Recharge"
+msgstr "A/C充电"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_needaction
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__message_needaction
 msgid "Action Needed"
-msgstr "需要采取行动"
+msgstr "需要激活"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 msgid "Activation Cost"
-msgstr "激活费用"
+msgstr "激活成本"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__active
@@ -85,9 +117,19 @@ msgid "Additional Properties"
 msgstr "附加属性"
 
 #. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_6
+msgid "Air Filter Replacement"
+msgstr "更换空气过滤器"
+
+#. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 msgid "All vehicles"
 msgstr "所有"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_7
+msgid "Alternator Replacement"
+msgstr "交流发电机更换"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__cost_amount
@@ -106,18 +148,23 @@ msgstr "已归档"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__log_drivers
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_assignation_log_view_list
 msgid "Assignation Logs"
-msgstr ""
+msgstr "指派记录"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_service_9
+msgid "Assistance"
+msgstr "协助"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_attachment_count
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "附件数量"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_kanban
 msgid "Attention: renewal overdue"
-msgstr ""
+msgstr "注意：即将更新"
 
 #. module: fleet
 #: selection:fleet.vehicle,transmission:0
@@ -133,6 +180,36 @@ msgid "Automatically Generated"
 msgstr "自动生成"
 
 #. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_8
+msgid "Ball Joint Replacement"
+msgstr "更换万向节"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_9
+msgid "Battery Inspection"
+msgstr "电池检查"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_10
+msgid "Battery Replacement"
+msgstr "更换电池"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_11
+msgid "Brake Caliper Replacement"
+msgstr "制动钳更换"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_12
+msgid "Brake Inspection"
+msgstr "检查制动器"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_13
+msgid "Brake Pad(s) Replacement"
+msgstr "更换刹车片"
+
+#. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__brand_id
 msgid "Brand"
 msgstr "品牌"
@@ -141,6 +218,11 @@ msgstr "品牌"
 #: model:ir.model,name:fleet.model_fleet_vehicle_model_brand
 msgid "Brand of the vehicle"
 msgstr "车辆品牌"
+
+#. module: fleet
+#: model:fleet.vehicle.tag,name:fleet.vehicle_tag_break
+msgid "Break"
+msgstr "分隔"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__co2
@@ -153,9 +235,24 @@ msgid "CO2 emissions of the vehicle"
 msgstr "车辆的CO2排放量"
 
 #. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_service_1
+msgid "Calculation Benefit In Kind"
+msgstr "计算实际利益"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_14
+msgid "Car Wash"
+msgstr "洗车"
+
+#. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__car_value
 msgid "Catalog Value (VAT Incl.)"
 msgstr "目录值（包括增值税）"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_15
+msgid "Catalytic Converter Replacement"
+msgstr "更换催化转化器"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_service_type__category
@@ -174,7 +271,12 @@ msgstr "费用所属类别"
 #: model:mail.message.subtype,description:fleet.mt_fleet_driver_updated
 #: model:mail.message.subtype,name:fleet.mt_fleet_driver_updated
 msgid "Changed Driver"
-msgstr ""
+msgstr "更改驱动"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_16
+msgid "Charging System Diagnosis"
+msgstr "充电系统故障诊断"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__vin_sn
@@ -218,6 +320,11 @@ msgid "Color of the vehicle"
 msgstr "车辆颜色"
 
 #. module: fleet
+#: model:fleet.vehicle.tag,name:fleet.vehicle_tag_compact
+msgid "Compact"
+msgstr "条约"
+
+#. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__company_id
 msgid "Company"
 msgstr "公司"
@@ -235,7 +342,7 @@ msgstr "配置"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel__contract_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__contract_id
 msgid "Contract"
-msgstr "合约"
+msgstr "合同"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_graph
@@ -245,7 +352,7 @@ msgstr "每月合同费用"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__contract_count
 msgid "Contract Count"
-msgstr ""
+msgstr "合同统计"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__expiration_date
@@ -274,7 +381,7 @@ msgstr "合同类型"
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_fuel__contract_id
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services__contract_id
 msgid "Contract attached to this cost"
-msgstr "费用附加的合同"
+msgstr "费用附加合同"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
@@ -284,13 +391,13 @@ msgstr "合同细节"
 #. module: fleet
 #: model:ir.model,name:fleet.model_fleet_vehicle_log_contract
 msgid "Contract information on a vehicle"
-msgstr "车辆的合约信息"
+msgstr "车辆合同信息"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_tree
 msgid "Contract logs"
-msgstr "合同日志"
+msgstr "合同记录"
 
 #. module: fleet
 #: model:mail.activity.type,name:fleet.mail_act_fleet_contract_to_renew
@@ -306,7 +413,12 @@ msgstr "合同"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__log_contracts
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "Contracts"
-msgstr "合约"
+msgstr "合同"
+
+#. module: fleet
+#: model:fleet.vehicle.tag,name:fleet.vehicle_tag_convertible
+msgid "Convertible"
+msgstr "可转换"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__cost_id
@@ -346,7 +458,7 @@ msgstr "车辆相关的费用"
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 msgid "Cost that is paid only once at the creation of the contract"
-msgstr "合同创建时付的一次性费用"
+msgstr "合同创建时支付的一次性费用"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_cost__cost_subtype_id
@@ -354,7 +466,7 @@ msgstr "合同创建时付的一次性费用"
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_fuel__cost_subtype_id
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services__cost_subtype_id
 msgid "Cost type purchased with this cost"
-msgstr "本笔费用与购买的成本类型"
+msgstr "费用类型"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__cost_count
@@ -378,69 +490,69 @@ msgstr "每月的费用"
 msgid ""
 "Costs paid at regular intervals, depending on the cost frequency. If the "
 "cost frequency is set to unique, the cost will be logged at the start date"
-msgstr "定期支付费用，这取决于成本的频率。]如果成本频率被设置为唯一的，其成本将被记录在开始日期内."
+msgstr "根据消费频率定期支出费用。如果消费频率被设置为唯一，其成本将被记录在开始日期中."
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_log_contract_action
 msgid "Create a new contract"
-msgstr ""
+msgstr "创建一个新的合同"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 msgid ""
 "Create a new contract automatically with all the same informations except "
 "for the date that will start at the end of current contract"
-msgstr "在年底开始的日期，自动创建一个新的与目前的合同相同的信息的合同"
+msgstr "在合同完毕将自动开始创建一个与目前合同信息相同（除了日期）的新合同"
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_costs_action
 msgid "Create a new cost"
-msgstr ""
+msgstr "创建一个新的成本"
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_log_fuel_action
 msgid "Create a new fuel log"
-msgstr ""
+msgstr "创建新的加油记录"
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_model_brand_action
 msgid "Create a new make"
-msgstr ""
+msgstr "创建一个新的制作"
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_model_action
 msgid "Create a new model"
-msgstr ""
+msgstr "创建一个新的模型"
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_odometer_action
 msgid "Create a new odometer log"
-msgstr ""
+msgstr "创建一个新的里程记录"
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_log_services_action
 msgid "Create a new service entry"
-msgstr ""
+msgstr "创建一个新的服务条目"
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_contract_types_action
 msgid "Create a new type of contract"
-msgstr ""
+msgstr "创建一个新的合同类别"
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_service_types_action
 msgid "Create a new type of service"
-msgstr ""
+msgstr "创建一个新的服务类型"
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_action
 msgid "Create a new vehicle"
-msgstr ""
+msgstr "创建一个新的交通工具"
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_state_action
 msgid "Create a new vehicle status"
-msgstr ""
+msgstr "创建一个新的交通工具状态"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_service_type__create_uid
@@ -477,7 +589,7 @@ msgstr "创建时间"
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__state_id
 msgid "Current state of the vehicle"
-msgstr "车辆的当前状态"
+msgstr "交通工具当前状态"
 
 #. module: fleet
 #: selection:fleet.vehicle.log.contract,cost_frequency:0
@@ -500,7 +612,7 @@ msgstr "日期"
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_fuel__date
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services__date
 msgid "Date when the cost has been executed"
-msgstr "费用已形成的日期"
+msgstr "费用执行日期"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__start_date
@@ -512,12 +624,17 @@ msgstr "有效期内的合同的起始日期"
 msgid ""
 "Date when the coverage of the contract expirates (by default, one year after"
 " begin date)"
-msgstr "合同的覆盖范围的有效日期（默认情况下，开始日期一年之后）"
+msgstr "合同到期日期（默认为合同开始日期一年之后的日期）"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__acquisition_date
 msgid "Date when the vehicle has been immatriculated"
-msgstr "车辆注册的日期"
+msgstr "车辆注册日期"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_service_2
+msgid "Depreciation and Interests"
+msgstr "折旧及利息"
 
 #. module: fleet
 #: selection:fleet.vehicle,fuel_type:0
@@ -541,9 +658,19 @@ msgid "Display Name"
 msgstr "显示名称"
 
 #. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_17
+msgid "Door Window Motor/Regulator Replacement"
+msgstr "门窗电机/调节器的更换"
+
+#. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__doors
 msgid "Doors Number"
 msgstr "车门数量"
+
+#. module: fleet
+#: model:fleet.vehicle.state,name:fleet.fleet_vehicle_state_downgraded
+msgid "Downgraded"
+msgstr ""
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__driver_id
@@ -564,12 +691,12 @@ msgstr "车辆驾驶员"
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 msgid "Drivers History"
-msgstr ""
+msgstr "驾驶历史"
 
 #. module: fleet
 #: model:ir.model,name:fleet.model_fleet_vehicle_assignation_log
 msgid "Drivers history on a vehicle"
-msgstr ""
+msgstr "交通工具驾驶历史"
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_log_contract_action
@@ -588,18 +715,28 @@ msgstr "每种服务都可以以单个或同时在合同中使用."
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_costs_view_search
 msgid "Effective Costs"
-msgstr "实际费用"
+msgstr "有效成本"
 
 #. module: fleet
 #: selection:fleet.vehicle,fuel_type:0
 msgid "Electric"
-msgstr "电启动"
+msgstr "电子启动"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_service_17
+msgid "Emissions"
+msgstr "排量"
+
+#. module: fleet
+#: model:fleet.vehicle.tag,name:fleet.vehicle_tag_leasing
+msgid "Employee Car"
+msgstr "员工车辆"
 
 #. module: fleet
 #: code:addons/fleet/models/fleet_vehicle_cost.py:44
 #, python-format
 msgid "Emptying the odometer value of a vehicle is not allowed."
-msgstr "不允许私自清空车辆的里程表值。"
+msgstr "不允许私自清空车辆的里程表。"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_assignation_log__date_end
@@ -607,9 +744,34 @@ msgid "End Date"
 msgstr "终止日期"
 
 #. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_18
+msgid "Engine Belt Inspection"
+msgstr "引擎皮带检查"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_19
+msgid "Engine Coolant Replacement"
+msgstr "更换引擎冷却剂"
+
+#. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "Engine Options"
 msgstr "发动机参数"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_20
+msgid "Engine/Drive Belt(s) Replacement"
+msgstr "引擎/驱动皮带备件"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_service_13
+msgid "Entry into service tax"
+msgstr "输入服务税"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_21
+msgid "Exhaust Manifold Replacement"
+msgstr "排气管更换"
 
 #. module: fleet
 #: selection:fleet.vehicle.log.contract,state:0
@@ -626,7 +788,7 @@ msgstr "即将过期"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__first_contract_date
 msgid "First Contract Date"
-msgstr ""
+msgstr "首次合同日期"
 
 #. module: fleet
 #: model:ir.module.category,name:fleet.module_fleet_category
@@ -635,11 +797,16 @@ msgid "Fleet"
 msgstr "车队"
 
 #. module: fleet
+#: model:ir.model,name:fleet.model_fleet_service_type
+msgid "Fleet Service Type"
+msgstr "车辆服务类型"
+
+#. module: fleet
 #: model:ir.actions.server,name:fleet.ir_cron_contract_costs_generator_ir_actions_server
 #: model:ir.cron,cron_name:fleet.ir_cron_contract_costs_generator
 #: model:ir.cron,name:fleet.ir_cron_contract_costs_generator
 msgid "Fleet: Generate contracts costs based on costs frequency"
-msgstr "车队：根据成本频率生成合同成本"
+msgstr "车队：根据支出频率生成合同成本"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_follower_ids
@@ -665,12 +832,12 @@ msgstr "关注者(业务伙伴)"
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_fuel__cost_type
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services__cost_type
 msgid "For internal purpose only"
-msgstr "仅限内部用途"
+msgstr "仅供内部使用"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__cost_frequency
 msgid "Frequency of the recuring cost"
-msgstr "定期费用的频率"
+msgstr "重复费用频率"
 
 #. module: fleet
 #: selection:fleet.vehicle.cost,cost_type:0
@@ -684,16 +851,26 @@ msgid "Fuel Costs Per Month"
 msgstr "每月的燃油费用"
 
 #. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_22
+msgid "Fuel Injector Replacement"
+msgstr "更换化油器"
+
+#. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__fuel_logs_count
 msgid "Fuel Log Count"
-msgstr ""
+msgstr "加油记录统计"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__log_fuel
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_fuel_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_fuel_view_tree
 msgid "Fuel Logs"
-msgstr "燃油日志"
+msgstr "燃油记录"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_23
+msgid "Fuel Pump Replacement"
+msgstr "更换燃油泵"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__fuel_type
@@ -703,12 +880,12 @@ msgstr "燃油类型"
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__fuel_type
 msgid "Fuel Used by the vehicle"
-msgstr "车辆的燃油"
+msgstr "车用燃油"
 
 #. module: fleet
 #: model:ir.model,name:fleet.model_fleet_vehicle_log_fuel
 msgid "Fuel log for vehicles"
-msgstr "车辆燃油日志"
+msgstr "车辆燃油记录"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
@@ -729,12 +906,12 @@ msgstr "常规属性"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__generated_cost_ids
 msgid "Generated Costs"
-msgstr "生成的费用"
+msgstr "已发生费用"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 msgid "Generated Recurring Costs"
-msgstr "生成的经常性费用"
+msgstr "已生成经常费用"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_costs_view_search
@@ -754,7 +931,7 @@ msgstr "有警告"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__contract_renewal_overdue
 msgid "Has Contracts Overdue"
-msgstr "有逾期合约"
+msgstr "有逾期合同"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__contract_renewal_due_soon
@@ -762,9 +939,34 @@ msgid "Has Contracts to renew"
 msgstr "有合同待续签"
 
 #. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_24
+msgid "Head Gasket(s) Replacement"
+msgstr "盖垫密片更换"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_25
+msgid "Heater Blower Motor Replacement"
+msgstr "加热鼓风机电动机更换"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_26
+msgid "Heater Control Valve Replacement"
+msgstr "更换加热器控制阀"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_27
+msgid "Heater Core Replacement"
+msgstr "更换加热器芯"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_28
+msgid "Heater Hose Replacement"
+msgstr "更换热水管"
+
+#. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_log_fuel_action
 msgid "Here you can add refuelling entries for all vehicles."
-msgstr ""
+msgstr "在这里，您可以添加所有燃油车辆。"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__horsepower
@@ -816,6 +1018,11 @@ msgid "If checked, some messages have a delivery error."
 msgstr "如果勾选此项， 某些信息将会产生传递错误。"
 
 #. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_29
+msgid "Ignition Coil Replacement"
+msgstr "点火线圈更换"
+
+#. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__acquisition_date
 msgid "Immatriculation Date"
 msgstr "注册日期"
@@ -865,9 +1072,9 @@ msgid "Indicative Costs Total"
 msgstr "指标性成本总计"
 
 #. module: fleet
-#: model:ir.model,name:fleet.model_fleet_vehicle
-msgid "Information on a vehicle"
-msgstr "车辆上的信息"
+#: model:fleet.service.type,name:fleet.type_service_30
+msgid "Intake Manifold Gasket Replacement"
+msgstr "更换进气管垫圈"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
@@ -884,7 +1091,12 @@ msgstr "发票参考"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_is_follower
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__message_is_follower
 msgid "Is Follower"
-msgstr "是关注者"
+msgstr "关注者"
+
+#. module: fleet
+#: model:fleet.vehicle.tag,name:fleet.vehicle_tag_junior
+msgid "Junior"
+msgstr "初级"
 
 #. module: fleet
 #: selection:fleet.vehicle,odometer_unit:0
@@ -894,7 +1106,7 @@ msgstr "公里"
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_odometer_view_kanban
 msgid "Km"
-msgstr "km"
+msgstr "千米"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_service_type____last_update
@@ -953,7 +1165,12 @@ msgstr "最后更新时间"
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 msgid "Late Activities"
-msgstr "晚活动"
+msgstr "最近活动"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_contract_leasing
+msgid "Leasing"
+msgstr "租赁"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__license_plate
@@ -1004,7 +1221,7 @@ msgstr "车辆标志图片(小图片)"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_main_attachment_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "附件"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__brand_id
@@ -1037,13 +1254,20 @@ msgid ""
 "Manage the costs for your different vehicles.\n"
 "                Costs are created automatically from services, contracts and fuel logs."
 msgstr ""
+"管理不同车辆的成本。\n"
+"        通过服务、合同和燃油记录自动创建成本。"
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_action
 msgid ""
 "Manage your fleet by keeping track of the contracts, services, odometers and"
 " fuel logs associated to each vehicle."
-msgstr ""
+msgstr "通过跟踪每辆车的合同，服务，里程表和燃油记录数据来管理你的车队。"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_service_11
+msgid "Management Fee"
+msgstr "管理费"
 
 #. module: fleet
 #: model:res.groups,name:fleet.fleet_group_manager
@@ -1068,7 +1292,7 @@ msgid ""
 "Medium-sized logo of the brand. It is automatically resized as a 128x128px "
 "image, with aspect ratio preserved. Use this field in form views or some "
 "kanban views."
-msgstr "中等尺寸的商标标识。自动缩放为 128x128px，保留纵横比。用在表单视图或者一些看板视图"
+msgstr "中等尺寸的商标标识。自动缩放为 128x128px，保留纵横比。用在表单视图或者一些看板视图内"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_has_error
@@ -1092,13 +1316,13 @@ msgstr "里程"
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 msgid "Model"
-msgstr "模型"
+msgstr "型号"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_brand_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_brand_view_tree
 msgid "Model Make"
-msgstr "型号制作"
+msgstr "型号生产商"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__model_year
@@ -1155,6 +1379,11 @@ msgid "Name of contract to renew soon"
 msgstr "需马上续签合同的名称"
 
 #. module: fleet
+#: model:fleet.vehicle.state,name:fleet.fleet_vehicle_state_new_request
+msgid "New Request"
+msgstr "新的请求"
+
+#. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__activity_date_deadline
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_date_deadline
 msgid "Next Activity Deadline"
@@ -1181,13 +1410,13 @@ msgstr "否"
 #: code:addons/fleet/models/fleet_vehicle.py:85
 #, python-format
 msgid "No Plate"
-msgstr ""
+msgstr "没有Plate"
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_costs_reporting_action
 #: model_terms:ir.actions.act_window,help:fleet.fleet_costs_reporting_non_effective_action
 msgid "No data for analysis"
-msgstr ""
+msgstr "无分析数据"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel__notes
@@ -1294,7 +1523,7 @@ msgstr "车辆的里程表记录"
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__odometer
 msgid "Odometer measure of the vehicle at the moment of the contract creation"
-msgstr "合同创建时车辆的里程表测量"
+msgstr "合同创建时车辆里程表读数"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__odometer
@@ -1306,7 +1535,7 @@ msgstr "合同创建时车辆的里程表测量"
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services__odometer
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services__odometer_id
 msgid "Odometer measure of the vehicle at the moment of this log"
-msgstr "查看在此日志中为那一刻车辆的里程表"
+msgstr "当前车辆里程表读数"
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_costs_reporting_action
@@ -1314,7 +1543,22 @@ msgstr "查看在此日志中为那一刻车辆的里程表"
 msgid ""
 "Odoo helps you managing the costs for your different vehicles\n"
 "          Costs are generally created from services and contract and appears here."
-msgstr "Odoo能帮你管理不同车辆的费用.费用从服务，合同中产生并显示在这里。"
+msgstr "Odoo能通过基于服务、合同中产生费用数据生成报表。帮你管理不同车辆的费用。"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_31
+msgid "Oil Change"
+msgstr "用油变化"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_32
+msgid "Oil Pump Replacement"
+msgstr "更换油泵"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_contract_omnium
+msgid "Omnium"
+msgstr "Omnium"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_brand_view_kanban
@@ -1322,15 +1566,35 @@ msgid "Open"
 msgstr "打开"
 
 #. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_service_16
+msgid "Options"
+msgstr "选项"
+
+#. module: fleet
+#: model:fleet.vehicle.state,name:fleet.fleet_vehicle_state_ordered
+msgid "Ordered"
+msgstr "已订购"
+
+#. module: fleet
 #: selection:fleet.vehicle.cost,cost_type:0
 msgid "Other"
 msgstr "其他"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_33
+msgid "Other Maintenance"
+msgstr "其他维护"
 
 #. module: fleet
 #: selection:fleet.vehicle,activity_state:0
 #: selection:fleet.vehicle.log.contract,activity_state:0
 msgid "Overdue"
 msgstr "逾期"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_34
+msgid "Oxygen Sensor Replacement"
+msgstr "更换氧传感器"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost__parent_id
@@ -1347,12 +1611,12 @@ msgstr "上级"
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_fuel__parent_id
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services__parent_id
 msgid "Parent cost to this current cost"
-msgstr "对这次的上一级费用成本"
+msgstr "当前成本的母成本"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__purchaser_id
 msgid "Person to which the contract is signed for"
-msgstr "该合约的签署人"
+msgstr "当前合同签署人"
 
 #. module: fleet
 #: selection:fleet.vehicle,activity_state:0
@@ -1363,7 +1627,17 @@ msgstr "已安排"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__power
 msgid "Power"
-msgstr "幂数"
+msgstr "动力"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_35
+msgid "Power Steering Hose Replacement"
+msgstr "动力转向喉管更换"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_36
+msgid "Power Steering Pump Replacement"
+msgstr "动力转向泵更换"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__power
@@ -1384,25 +1658,45 @@ msgid "Price Per Liter"
 msgstr "每公升价格"
 
 #. module: fleet
+#: model:fleet.vehicle.tag,name:fleet.vehicle_tag_purchased
+msgid "Purchased"
+msgstr "已采购"
+
+#. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel__purchaser_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__purchaser_id
 msgid "Purchaser"
 msgstr "采购"
 
 #. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_37
+msgid "Radiator Repair"
+msgstr "散热器修理"
+
+#. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__cost_generated
 msgid "Recurring Cost Amount"
-msgstr "经常性费用金额"
+msgstr "经常成本数量"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__cost_frequency
 msgid "Recurring Cost Frequency"
-msgstr "经常性费用频率"
+msgstr "经常成本频率"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_refueling
+msgid "Refueling"
+msgstr "加油"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_fuel_view_form
 msgid "Refueling Details"
 msgstr "加油明细"
+
+#. module: fleet
+#: model:fleet.vehicle.state,name:fleet.fleet_vehicle_state_registered
+msgid "Registered"
+msgstr ""
 
 #. module: fleet
 #: code:addons/fleet/models/fleet_vehicle_cost.py:209
@@ -1413,14 +1707,49 @@ msgid "Renew Contract"
 msgstr "续签合同"
 
 #. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_service_12
+msgid "Rent (Excluding VAT)"
+msgstr "租金（不含增值税）"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_service_8
+msgid "Repair and maintenance"
+msgstr "修理及维护"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_contract_repairing
+msgid "Repairing"
+msgstr "正在修理"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_service_10
+msgid "Replacement Vehicle"
+msgstr "更换车辆"
+
+#. module: fleet
 #: model:ir.ui.menu,name:fleet.menu_fleet_reporting
 msgid "Reporting"
 msgstr "报告"
 
 #. module: fleet
+#: model:fleet.vehicle.state,name:fleet.fleet_vehicle_state_reserve
+msgid "Reserve"
+msgstr "预留"
+
+#. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__residual_value
 msgid "Residual Value"
 msgstr "残余价值"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_service_15
+msgid "Residual value (Excluding VAT)"
+msgstr "残值率（不含增值税）"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_service_19
+msgid "Residual value in %"
+msgstr "剩余值%"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__user_id
@@ -1434,9 +1763,34 @@ msgid "Responsible User"
 msgstr "责任用户"
 
 #. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_38
+msgid "Resurface Rotors"
+msgstr "重置转轮"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_39
+msgid "Rotate Tires"
+msgstr "轮换车胎"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_40
+msgid "Rotor Replacement"
+msgstr "更换转子"
+
+#. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__seats
 msgid "Seats Number"
 msgstr "座位数"
+
+#. module: fleet
+#: model:fleet.vehicle.tag,name:fleet.vehicle_tag_sedan
+msgid "Sedan"
+msgstr "轿车"
+
+#. module: fleet
+#: model:fleet.vehicle.tag,name:fleet.vehicle_tag_senior
+msgid "Senior"
+msgstr "高级"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state__sequence
@@ -1486,7 +1840,7 @@ msgstr "服务细节"
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_search
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_tree
 msgid "Services Logs"
-msgstr "服务日志"
+msgstr "服务记录"
 
 #. module: fleet
 #: model:ir.model,name:fleet.model_fleet_vehicle_log_services
@@ -1502,7 +1856,7 @@ msgstr "设置合同为履行中"
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 msgid "Show all records which has next action date is before today"
-msgstr "显示在今天之前的下一个行动日期之所有记录"
+msgstr "显示当前所有的下一次活动记录"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand__image_small
@@ -1517,12 +1871,27 @@ msgid ""
 "Small-sized logo of the brand. It is automatically resized as a 64x64px "
 "image, with aspect ratio preserved. Use this field anywhere a small image is"
 " required."
-msgstr "小尺寸照片的品牌。它会自动调整大小为64X64像素的图像，保存采用宽高比。使用此字段可存放任意一个小图像。"
+msgstr "小尺寸商标。它会自动调整大小为64X64像素的图像，纵横比保持不变。在需要小图像的任何地方可使用此字段。。"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_service_6
+msgid "Snow tires"
+msgstr "雪地胎"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_41
+msgid "Spark Plug Replacement"
+msgstr "更换火花塞"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_assignation_log__date_start
 msgid "Start Date"
 msgstr "开始日期"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_42
+msgid "Starter Replacement"
+msgstr "更换启动器"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__state_id
@@ -1556,6 +1925,12 @@ msgstr ""
 " 计划：未来的活动。"
 
 #. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_service_5
+#: model:fleet.service.type,name:fleet.type_service_service_7
+msgid "Summer tires"
+msgstr "夏季轮胎"
+
+#. module: fleet
 #: sql_constraint:fleet.vehicle.tag:0
 msgid "Tag name already exists !"
 msgstr "标签名已存在!"
@@ -1564,6 +1939,11 @@ msgstr "标签名已存在!"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__tag_ids
 msgid "Tags"
 msgstr "标签"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_service_3
+msgid "Tax roll"
+msgstr "税单"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__notes
@@ -1577,7 +1957,14 @@ msgstr "条款和条件"
 msgid ""
 "Thanks to the different filters, Odoo can only print the effective\n"
 "          costs, sort them by type and by vehicle."
-msgstr "感谢有不同的筛选，Odoo 能只打印生效的费用，并且用类型和车辆排序。"
+msgstr ""
+"由于不同的过滤规则, Odoo只能打印生效的\n"
+"          费用, 按类型和车辆分类."
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_43
+msgid "Thermostat Replacement"
+msgstr "温控器更换"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__image
@@ -1586,7 +1973,22 @@ msgstr "感谢有不同的筛选，Odoo 能只打印生效的费用，并且用�
 msgid ""
 "This field holds the image used as logo for the brand, limited to "
 "1024x1024px."
-msgstr "这个字段保存的图像作为标志的品牌，尺寸你不超过1024X1024PX。"
+msgstr "当前图像作为商标，尺寸限制为1024x1024px。。"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_44
+msgid "Tie Rod End Replacement"
+msgstr "万向轴更换"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_45
+msgid "Tire Replacement"
+msgstr "轮胎更换"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_46
+msgid "Tire Service"
+msgstr "轮胎修理"
 
 #. module: fleet
 #: selection:fleet.vehicle,activity_state:0
@@ -1614,9 +2016,19 @@ msgid "Total Price"
 msgstr "总价"
 
 #. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_service_14
+msgid "Total expenses (Excluding VAT)"
+msgstr "费用总计(不含增值税)"
+
+#. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__contract_renewal_total
 msgid "Total of contracts due or overdue minus one"
-msgstr "截止或者逾期减一的合约总计"
+msgstr "截止或者逾期减一的合同总计"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_service_18
+msgid "Touring Assistance"
+msgstr "转动助力"
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_log_services_action
@@ -1624,11 +2036,28 @@ msgid ""
 "Track all the services done on your vehicle.\n"
 "            Services can be of many types: occasional repair, fixed maintenance, etc."
 msgstr ""
+"跟踪你的车辆所做的所有服务。\n"
+"         服务可以有多种类型：临时维修、定期保养等。"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__transmission
 msgid "Transmission"
 msgstr "变速器"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_47
+msgid "Transmission Filter Replacement"
+msgstr "滤清器更换"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_48
+msgid "Transmission Fluid Replacement"
+msgstr "传动液更换"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_49
+msgid "Transmission Replacement"
+msgstr "变速箱更换"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__transmission
@@ -1642,11 +2071,6 @@ msgstr "车辆的变速器"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__cost_subtype_id
 msgid "Type"
 msgstr "类型"
-
-#. module: fleet
-#: model:ir.model,name:fleet.model_fleet_service_type
-msgid "Type of services available on a vehicle"
-msgstr "提供的服务车辆的类型"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__vin_sn
@@ -1700,6 +2124,7 @@ msgid "Value of the bought vehicle"
 msgstr "购买车辆的价钱"
 
 #. module: fleet
+#: model:ir.model,name:fleet.model_fleet_vehicle
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_assignation_log__vehicle_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost__vehicle_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__vehicle_id
@@ -1718,8 +2143,6 @@ msgid "Vehicle"
 msgstr "车辆"
 
 #. module: fleet
-#: model:ir.actions.act_window,name:fleet.fleet_vehicle_costs_action
-#: model:ir.ui.menu,name:fleet.fleet_vehicle_costs_menu
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_cost_view_tree
 msgid "Vehicle Costs"
 msgstr "车辆成本"
@@ -1727,7 +2150,7 @@ msgstr "车辆成本"
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_costs_view_search
 msgid "Vehicle Costs by Date"
-msgstr ""
+msgstr "按日期计算车辆成本"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_fuel_view_form
@@ -1735,16 +2158,16 @@ msgid "Vehicle Details"
 msgstr "车辆的详细资料"
 
 #. module: fleet
-#: model:ir.actions.act_window,name:fleet.fleet_vehicle_model_action
-#: model:ir.ui.menu,name:fleet.fleet_vehicle_model_menu
-msgid "Vehicle Model"
-msgstr "车辆型号"
-
-#. module: fleet
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_state_action
+#: model:ir.model,name:fleet.model_fleet_vehicle_state
 #: model:ir.ui.menu,name:fleet.fleet_vehicle_state_menu
 msgid "Vehicle Status"
 msgstr "车辆状态"
+
+#. module: fleet
+#: model:ir.model,name:fleet.model_fleet_vehicle_tag
+msgid "Vehicle Tag"
+msgstr "车辆标签"
 
 #. module: fleet
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_tag_action
@@ -1759,7 +2182,7 @@ msgstr "车辆标签"
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_fuel__vehicle_id
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services__vehicle_id
 msgid "Vehicle concerned by this log"
-msgstr "此车辆的有关日志"
+msgstr "日志相关车辆"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_costs_view_form
@@ -1781,11 +2204,23 @@ msgid "Vehicles Contracts"
 msgstr "车辆合同"
 
 #. module: fleet
+#: model:ir.actions.act_window,name:fleet.fleet_vehicle_costs_action
+#: model:ir.ui.menu,name:fleet.fleet_vehicle_costs_menu
+msgid "Vehicles Costs"
+msgstr "车辆成本"
+
+#. module: fleet
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_log_fuel_action
 #: model:ir.ui.menu,name:fleet.fleet_vehicle_log_fuel_menu
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_fuel_view_search
 msgid "Vehicles Fuel Logs"
 msgstr "车辆燃油记录"
+
+#. module: fleet
+#: model:ir.actions.act_window,name:fleet.fleet_vehicle_model_action
+#: model:ir.ui.menu,name:fleet.fleet_vehicle_model_menu
+msgid "Vehicles Model"
+msgstr "车辆型号"
 
 #. module: fleet
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_odometer_action
@@ -1797,7 +2232,7 @@ msgstr "车辆里程表"
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_log_services_action
 #: model:ir.ui.menu,name:fleet.fleet_vehicle_log_services_menu
 msgid "Vehicles Services Logs"
-msgstr "车辆服务日志"
+msgstr "车辆服务记录"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_cost_indicative_view_graph
@@ -1829,6 +2264,11 @@ msgid "Vendors"
 msgstr "供应商"
 
 #. module: fleet
+#: model:fleet.vehicle.state,name:fleet.fleet_vehicle_state_waiting_list
+msgid "Waiting List"
+msgstr ""
+
+#. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__days_left
 msgid "Warning Date"
 msgstr "警告日期"
@@ -1836,7 +2276,12 @@ msgstr "警告日期"
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_kanban
 msgid "Warning: renewal due soon"
-msgstr ""
+msgstr "警告：即将到期"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_50
+msgid "Water Pump Replacement"
+msgstr "更换水泵"
 
 #. module: fleet
 #: selection:fleet.vehicle.log.contract,cost_frequency:0
@@ -1844,29 +2289,44 @@ msgid "Weekly"
 msgstr "每周"
 
 #. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_51
+msgid "Wheel Alignment"
+msgstr "四轮定位"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_52
+msgid "Wheel Bearing Replacement"
+msgstr "更换轮毂轴承"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_53
+msgid "Windshield Wiper(s) Replacement"
+msgstr "更换雨刷"
+
+#. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 msgid "Write here all other information relative to this contract"
-msgstr "与该合约相关的所有其它信息写于此处。"
+msgstr "在此输入与合同相关的其他信息。"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__notes
 msgid "Write here all supplementary information relative to this contract"
-msgstr "在此处输入与此合同相关的所有补充信息"
+msgstr "在此输入与合同相关的其他补充信息。"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_fuel_view_form
 msgid "Write here any other information"
-msgstr "任意其它信息写于此处"
+msgstr "其它信息写于此处"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_form
 msgid "Write here any other information related to the service completed."
-msgstr "与该服务完成相关联的任意信息写于此处。"
+msgstr "在此输入与服务相关的其他信息。"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__model_year
 msgid "Year of the model"
-msgstr "模型年份"
+msgstr "型号年份"
 
 #. module: fleet
 #: selection:fleet.vehicle.log.contract,cost_frequency:0
@@ -1876,7 +2336,7 @@ msgstr "每年"
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_odometer_action
 msgid "You can add various odometer entries for all vehicles."
-msgstr ""
+msgstr "您可以添加已登记车辆的里程表"
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_state_action
@@ -1884,11 +2344,13 @@ msgid ""
 "You can customize available status to track the evolution of\n"
 "            each vehicle. Example: active, being repaired, sold."
 msgstr ""
+"您可以自定义可用状态来跟踪\n"
+"         每辆车。例如：在用的，正在维修，已售出。"
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_model_action
 msgid "You can define several models (e.g. A3, A4) for each make (Audi)."
-msgstr "你能定义多种车型( 比如 A3，A4) 为每个品牌(Audi)"
+msgstr "你可以为每个品牌定义多种车型( 比如 A3，A4) 为每个品牌(Audi)"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
@@ -1899,7 +2361,7 @@ msgstr "数量"
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "e.g. Model S"
-msgstr "例如S模块"
+msgstr "例如. 型号S"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
@@ -1910,16 +2372,6 @@ msgstr "例如：PAE 326"
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_form
 msgid "e.g. Tesla"
 msgstr "例如：特斯拉"
-
-#. module: fleet
-#: model:ir.model,name:fleet.model_fleet_vehicle_state
-msgid "fleet.vehicle.state"
-msgstr "fleet.vehicle.state"
-
-#. module: fleet
-#: model:ir.model,name:fleet.model_fleet_vehicle_tag
-msgid "fleet.vehicle.tag"
-msgstr "fleet.vehicle.tag"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
@@ -1934,7 +2386,7 @@ msgstr "显示该车辆的合同"
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "show the fuel logs for this vehicle"
-msgstr "显示车辆的燃油日志"
+msgstr "显示车辆的燃油记录"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
@@ -1944,4 +2396,4 @@ msgstr "显示辆车的里程表记录"
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "show the services logs for this vehicle"
-msgstr "显示该车辆的服务日志"
+msgstr "显示该车辆的服务记录"

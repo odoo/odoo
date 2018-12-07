@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:48+0000\n"
-"PO-Revision-Date: 2018-09-18 09:48+0000\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-09-21 13:17+0000\n"
 "Last-Translator: Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2018\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
@@ -267,6 +267,12 @@ msgid "If checked, some messages have a delivery error."
 msgstr ""
 
 #. module: stock_landed_costs
+#: model:ir.model.fields,help:stock_landed_costs.field_product_product__landed_cost_ok
+#: model:ir.model.fields,help:stock_landed_costs.field_product_template__landed_cost_ok
+msgid "Indicates whether the product is a landed cost."
+msgstr ""
+
+#. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_type_form
 msgid "Information"
 msgstr "Мэдээлэл"
@@ -492,19 +498,14 @@ msgstr "Барааны Газардсан Өртөг"
 
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_stock_landed_cost_lines
-msgid "Stock Landed Cost Lines"
-msgstr "Барааны Газардсан Өртөгийн Мөрүүд"
+msgid "Stock Landed Cost Line"
+msgstr ""
 
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_stock_move
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__move_id
 msgid "Stock Move"
 msgstr "Барааны Хөдөлгөөн"
-
-#. module: stock_landed_costs
-#: model:ir.model,name:stock_landed_costs.model_stock_valuation_adjustment_lines
-msgid "Stock Valuation Adjustment Lines"
-msgstr "Барааны Үнэлгээний Тохируулгын Мөрүүд"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__amount_total
@@ -540,6 +541,11 @@ msgid ""
 msgstr ""
 "Батласан газардсан өртөгийг цуцлах боломжгүй, гэхдээ буцаахын тулд хасах "
 "газардсан өртөг үүсгэж болно"
+
+#. module: stock_landed_costs
+#: model:ir.model,name:stock_landed_costs.model_stock_valuation_adjustment_lines
+msgid "Valuation Adjustment Lines"
+msgstr ""
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__valuation_adjustment_lines

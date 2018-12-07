@@ -41,7 +41,6 @@ psycopg2.extensions.register_type(psycopg2.extensions.new_type((700, 701, 1700,)
 
 from . import tools
 from .tools.func import frame_codeinfo
-from .tools import pycompat
 
 from .tools import parse_version as pv
 if pv(psycopg2.__version__) < pv('2.7'):
@@ -52,8 +51,7 @@ if pv(psycopg2.__version__) < pv('2.7'):
             raise ValueError("A string literal cannot contain NUL (0x00) characters.")
         return QuotedString(adapted)
 
-    for type_ in pycompat.string_types:
-        psycopg2.extensions.register_adapter(type_, adapt_string)
+    psycopg2.extensions.register_adapter(str, adapt_string)
 
 from datetime import timedelta
 import threading

@@ -15,7 +15,7 @@ class MergeOpportunity(models.TransientModel):
     """
 
     _name = 'crm.merge.opportunity'
-    _description = 'Merge opportunities'
+    _description = 'Merge Opportunities'
 
     @api.model
     def default_get(self, fields):

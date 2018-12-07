@@ -203,7 +203,7 @@ class WebsiteSlides(http.Controller):
         return request.render("website.403")
 
     @http.route('''/slides/slide/<model("slide.slide"):slide>/promote''', type='http', auth='user', website=True)
-    def slide_set_promoted(self, slide):
+    def slide_set_promoted(self, slide, **kwargs):
         slide.channel_id.promoted_slide_id = slide.id
         return request.redirect("/slides/%s" % slide.channel_id.id)
 

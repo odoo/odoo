@@ -4,7 +4,6 @@
 from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError
-from odoo.tools import pycompat
 from odoo.tools.float_utils import float_round
 from datetime import datetime
 import operator as py_operator
@@ -161,15 +160,15 @@ class Product(models.Model):
         if self.env.context.get('company_owned', False):
             company_id = self.env.user.company_id.id
             return (
-                [('location_id.company_id', '=', company_id)],
+                [('location_id.company_id', '=', company_id), ('location_id.usage', 'in', ['internal', 'transit'])],
                 [('location_id.company_id', '=', False), ('location_dest_id.company_id', '=', company_id)],
                 [('location_id.company_id', '=', company_id), ('location_dest_id.company_id', '=', False),
             ])
         location_ids = []
         if self.env.context.get('location', False):
-            if isinstance(self.env.context['location'], pycompat.integer_types):
+            if isinstance(self.env.context['location'], int):
                 location_ids = [self.env.context['location']]
-            elif isinstance(self.env.context['location'], pycompat.string_types):
+            elif isinstance(self.env.context['location'], str):
                 domain = [('complete_name', 'ilike', self.env.context['location'])]
                 if self.env.context.get('force_company', False):
                     domain += [('company_id', '=', self.env.context['force_company'])]
@@ -178,9 +177,9 @@ class Product(models.Model):
                 location_ids = self.env.context['location']
         else:
             if self.env.context.get('warehouse', False):
-                if isinstance(self.env.context['warehouse'], pycompat.integer_types):
+                if isinstance(self.env.context['warehouse'], int):
                     wids = [self.env.context['warehouse']]
-                elif isinstance(self.env.context['warehouse'], pycompat.string_types):
+                elif isinstance(self.env.context['warehouse'], str):
                     domain = [('name', 'ilike', self.env.context['warehouse'])]
                     if self.env.context.get('force_company', False):
                         domain += [('company_id', '=', self.env.context['force_company'])]
@@ -316,7 +315,7 @@ class Product(models.Model):
     @api.model
     def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
         res = super(Product, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
-        if self._context.get('location') and isinstance(self._context['location'], pycompat.integer_types):
+        if self._context.get('location') and isinstance(self._context['location'], int):
             location = self.env['stock.location'].browse(self._context['location'])
             fields = res.get('fields')
             if fields:
@@ -338,11 +337,6 @@ class Product(models.Model):
                         res['fields']['virtual_available']['string'] = _('Future P&L')
                     if fields.get('qty_available'):
                         res['fields']['qty_available']['string'] = _('P&L Qty')
-                elif location.usage == 'procurement':
-                    if fields.get('virtual_available'):
-                        res['fields']['virtual_available']['string'] = _('Future Qty')
-                    if fields.get('qty_available'):
-                        res['fields']['qty_available']['string'] = _('Unplanned Qty')
                 elif location.usage == 'production':
                     if fields.get('virtual_available'):
                         res['fields']['virtual_available']['string'] = _('Future Productions')
@@ -367,6 +361,14 @@ class Product(models.Model):
         action = self.env.ref('stock.action_production_lot_form').read()[0]
         action['domain'] = [('product_id', '=', self.id)]
         action['context'] = {'default_product_id': self.id}
+        return action
+
+    def action_open_quants(self):
+        self.ensure_one()
+        self.env['stock.quant']._quant_tasks()
+        action = self.env.ref('stock.product_open_quants').read()[0]
+        action['domain'] = [('product_id', '=', self.id)]
+        action['context'] = {'search_default_internal_loc': 1}
         return action
 
     @api.model
@@ -402,7 +404,7 @@ class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
     responsible_id = fields.Many2one(
-        'res.users', string='Responsible', default=lambda self: self.env.uid, required=True,
+        'res.users', string='Responsible', default=lambda self: self.env.uid,
         help="This user will be responsible of the next activities related to logistic operations for this product.")
     type = fields.Selection(selection_add=[('product', 'Storable Product')])
     property_stock_production = fields.Many2one(
@@ -415,11 +417,11 @@ class ProductTemplate(models.Model):
         help="This stock location will be used, instead of the default one, as the source location for stock moves generated when you do an inventory.")
     sale_delay = fields.Float(
         'Customer Lead Time', default=0,
-        help="Delivery lead time, in days. It's the number of days, promised to the customer, between the confirmation of the order and the delivery.")
+        help="Delivery lead time, in days. It's the number of days, promised to the customer, between the confirmation of the sales order and the delivery.")
     tracking = fields.Selection([
         ('serial', 'By Unique Serial Number'),
         ('lot', 'By Lots'),
-        ('none', 'No Tracking')], string="Tracking", default='none', required=True)
+        ('none', 'No Tracking')], string="Tracking", help="Ensure the traceability of a storable product in your warehouse.", default='none', required=True)
     description_picking = fields.Text('Description on Picking', translate=True)
     description_pickingout = fields.Text('Description on Delivery Orders', translate=True)
     description_pickingin = fields.Text('Description on Receptions', translate=True)
@@ -443,7 +445,7 @@ class ProductTemplate(models.Model):
     route_ids = fields.Many2many(
         'stock.location.route', 'stock_route_product', 'product_id', 'route_id', 'Routes',
         domain=[('product_selectable', '=', True)],
-        help="Depending on the modules installed, this will allow you to define the route of the product: whether it will be bought, manufactured, MTO/MTS,...")
+        help="Depending on the modules installed, this will allow you to define the route of the product: whether it will be bought, manufactured, replenished on order, etc.")
     nbr_reordering_rules = fields.Integer('Reordering Rules', compute='_compute_nbr_reordering_rules')
     # TDE FIXME: really used ?
     reordering_min_qty = fields.Float(compute='_compute_nbr_reordering_rules')
@@ -451,7 +453,7 @@ class ProductTemplate(models.Model):
     # TDE FIXME: seems only visible in a view - remove me ?
     route_from_categ_ids = fields.Many2many(
         relation="stock.location.route", string="Category Routes",
-        related='categ_id.total_route_ids')
+        related='categ_id.total_route_ids', readonly=False)
 
     def _is_cost_method_standard(self):
         return True
@@ -570,6 +572,7 @@ class ProductTemplate(models.Model):
                 }
 
     def action_open_quants(self):
+        self.env['stock.quant']._quant_tasks()
         products = self.mapped('product_variant_ids')
         action = self.env.ref('stock.product_open_quants').read()[0]
         action['domain'] = [('product_id', 'in', products.ids)]

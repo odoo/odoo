@@ -9,9 +9,13 @@ odoo.define('web.UserMenu', function (require) {
  * editing its preferences, accessing the documentation, logging out...
  */
 
+var core = require('web.core');
 var framework = require('web.framework');
+var Dialog = require('web.Dialog');
 var Widget = require('web.Widget');
 
+var _t = core._t;
+var QWeb = core.qweb;
 
 var UserMenu = Widget.extend({
     template: 'UserMenu',
@@ -110,6 +114,17 @@ var UserMenu = Widget.extend({
      */
     _onMenuSupport: function () {
         window.open('https://www.odoo.com/buy', '_blank');
+    },
+    /**
+     * @private
+     */
+    _onMenuShortcuts: function() {
+        new Dialog(this, {
+            size: 'large',
+            dialogClass: 'o_act_window',
+            title: _t("Keyboard Shortcuts"),
+            $content: $(QWeb.render("UserMenu.shortcuts"))
+        }).open();
     },
 });
 

@@ -186,6 +186,7 @@ class AliasMixin(models.AbstractModel):
     """
     _name = 'mail.alias.mixin'
     _inherits = {'mail.alias': 'alias_id'}
+    _description = 'Email Aliases Mixin'
 
     alias_id = fields.Many2one('mail.alias', string='Alias', ondelete="restrict", required=True)
 

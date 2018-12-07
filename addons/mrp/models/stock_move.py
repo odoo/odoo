@@ -17,7 +17,7 @@ class StockMoveLine(models.Model):
         'Quantity Finished Product', digits=dp.get_precision('Product Unit of Measure'),
         help="Informative, not used in matching")
     done_wo = fields.Boolean('Done for Work Order', default=True, help="Technical Field which is False when temporarily filled in in work order")  # TDE FIXME: naming
-    done_move = fields.Boolean('Move Done', related='move_id.is_done', store=True)  # TDE FIXME: naming
+    done_move = fields.Boolean('Move Done', related='move_id.is_done', readonly=False, store=True)  # TDE FIXME: naming
 
     def _get_similar_move_lines(self):
         lines = super(StockMoveLine, self)._get_similar_move_lines()
@@ -163,10 +163,16 @@ class StockMove(models.Model):
             return self
         phantom_moves = self.env['stock.move']
         processed_moves = self.env['stock.move']
-        factor = self.product_uom._compute_quantity(self.product_uom_qty, bom.product_uom_id) / bom.product_qty
+        if self.picking_id.immediate_transfer:
+            factor = self.product_uom._compute_quantity(self.quantity_done, bom.product_uom_id) / bom.product_qty
+        else:
+            factor = self.product_uom._compute_quantity(self.product_uom_qty, bom.product_uom_id) / bom.product_qty
         boms, lines = bom.sudo().explode(self.product_id, factor, picking_type=bom.picking_type_id)
         for bom_line, line_data in lines:
-            phantom_moves += self._generate_move_phantom(bom_line, line_data['qty'])
+            if self.picking_id.immediate_transfer:
+                phantom_moves += self._generate_move_phantom(bom_line, 0, line_data['qty'])
+            else:
+                phantom_moves += self._generate_move_phantom(bom_line, line_data['qty'], 0)
 
         for new_move in phantom_moves:
             processed_moves |= new_move.action_explode()
@@ -182,19 +188,20 @@ class StockMove(models.Model):
         self.sudo().unlink()
         return processed_moves
 
-    def _prepare_phantom_move_values(self, bom_line, quantity):
+    def _prepare_phantom_move_values(self, bom_line, product_qty, quantity_done):
         return {
             'picking_id': self.picking_id.id if self.picking_id else False,
             'product_id': bom_line.product_id.id,
             'product_uom': bom_line.product_uom_id.id,
-            'product_uom_qty': quantity,
+            'product_uom_qty': product_qty,
+            'quantity_done': quantity_done,
             'state': 'draft',  # will be confirmed below
             'name': self.name,
         }
 
-    def _generate_move_phantom(self, bom_line, quantity):
+    def _generate_move_phantom(self, bom_line, product_qty, quantity_done):
         if bom_line.product_id.type in ['product', 'consu']:
-            return self.copy(default=self._prepare_phantom_move_values(bom_line, quantity))
+            return self.copy(default=self._prepare_phantom_move_values(bom_line, product_qty, quantity_done))
         return self.env['stock.move']
 
     def _generate_consumed_move_line(self, qty_to_add, final_lot, lot=False):

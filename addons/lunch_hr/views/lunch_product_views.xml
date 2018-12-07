@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="lunch_product_view_search_inherit" model="ir.ui.view">
+        <field name="name">lunch.product.search.inherit</field>
+        <field name="model">lunch.product</field>
+        <field name="inherit_id" ref="lunch.lunch_product_view_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='inactive']" position="after">
+                <filter name="available" string="Available at current location" domain="[('is_available_at', '=', False)]"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

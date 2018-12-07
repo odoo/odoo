@@ -11,14 +11,13 @@
 # Sahar Daraye <sahar.daraye.1369@gmail.com>, 2018
 # mohammad azarbara <mohammadazarbara98@gmail.com>, 2018
 # Hamed Mohammadi <hamed@dehongi.com>, 2018
-# Arash Sardari <arashss77@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:48+0000\n"
-"PO-Revision-Date: 2018-09-18 09:48+0000\n"
-"Last-Translator: Arash Sardari <arashss77@gmail.com>, 2018\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-09-21 13:17+0000\n"
+"Last-Translator: Hamed Mohammadi <hamed@dehongi.com>, 2018\n"
 "Language-Team: Persian (https://www.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -225,10 +224,9 @@ msgstr "<strong>مرجع سفارش شما:</strong>"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__product_type
 msgid ""
-"A storable product is a product for which you manage stock. The \"Inventory\" app has to be installed.\n"
-"A consumable product, on the other hand, is a product for which stock is not managed.\n"
-"A service is a non-material product you provide.\n"
-"A digital content is a non-material product you sell online. The files attached to the products are the one that are sold on the e-commerce such as e-books, music, pictures,... The \"Digital Product\" module has to be installed."
+"A storable product is a product for which you manage stock. The Inventory app has to be installed.\n"
+"A consumable product is a product for which stock is not managed.\n"
+"A service is a non-material product you provide."
 msgstr ""
 
 #. module: purchase
@@ -363,11 +361,6 @@ msgid "Bills"
 msgstr "صورتحساب"
 
 #. module: purchase
-#: model:ir.model,name:purchase.model_purchase_bill_union
-msgid "Bills & Purchases"
-msgstr ""
-
-#. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Bills Received"
 msgstr "صورتهای دریافت شده"
@@ -452,6 +445,11 @@ msgstr "ارز شرکت"
 #, python-format
 msgid "Compose Email"
 msgstr "نگارش ایمیل"
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_res_config_settings
+msgid "Config Settings"
+msgstr ""
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_config
@@ -730,7 +728,7 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/product.py:39
+#: code:addons/purchase/models/product.py:38
 #, python-format
 msgid "Import Template for Products"
 msgstr ""
@@ -957,6 +955,11 @@ msgid "Name"
 msgstr "نام"
 
 #. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+msgid "Name, TIN, Email, or Reference"
+msgstr ""
+
+#. module: purchase
 #: code:addons/purchase/controllers/portal.py:40
 #, python-format
 msgid "Newest"
@@ -1044,19 +1047,14 @@ msgstr "تعداد سفارش داده شده"
 #: model:ir.model.fields,help:purchase.field_product_product__purchase_method
 #: model:ir.model.fields,help:purchase.field_product_template__purchase_method
 msgid ""
-"On ordered quantities: control bills based on ordered quantities.\n"
-"On received quantities: control bills based on received quantity."
+"On ordered quantities: Control bills based on ordered quantities.\n"
+"On received quantities: Control bills based on received quantities."
 msgstr ""
 
 #. module: purchase
 #: selection:product.template,purchase_method:0
 msgid "On received quantities"
 msgstr "تعداد دریافت شده"
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_res_config_settings__po_order_approval
-msgid "Order Approval"
-msgstr "تایید سفارش"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__date_order
@@ -1125,11 +1123,6 @@ msgstr "همکار"
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__country_id
 msgid "Partner Country"
 msgstr "کشور همکار"
-
-#. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
-msgid "Partner's Country"
-msgstr "کشورهای همکار"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__payment_term_id
@@ -1292,6 +1285,11 @@ msgid "Purchase Order #"
 msgstr ""
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_res_config_settings__po_order_approval
+msgid "Purchase Order Approval"
+msgstr ""
+
+#. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "Purchase Order Confirmation #"
 msgstr "تایید سفارش خرید #"
@@ -1368,6 +1366,11 @@ msgid "Purchase Orders Statistics"
 msgstr "آمار سفارشات خرید"
 
 #. module: purchase
+#: model:ir.model,name:purchase.model_purchase_report
+msgid "Purchase Report"
+msgstr ""
+
+#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__user_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__user_id
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
@@ -1418,9 +1421,9 @@ msgid "Purchases"
 msgstr "خریدها"
 
 #. module: purchase
-#: model:ir.model,name:purchase.model_purchase_report
-msgid "Purchases Orders"
-msgstr "سفارشات خریدها"
+#: model:ir.model,name:purchase.model_purchase_bill_union
+msgid "Purchases & Bills Union"
+msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__dest_address_id
@@ -1858,7 +1861,6 @@ msgstr "باز کردن قفل"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_unread
-#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Unread Messages"
 msgstr "پیام های ناخوانده"
 
@@ -1927,6 +1929,11 @@ msgstr "صورت فروشنده"
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_bill_union_filter
 msgid "Vendor Bills"
 msgstr "صورتهای فروشنده"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
+msgid "Vendor Country"
+msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__group_manage_vendor_price
@@ -2013,6 +2020,12 @@ msgstr ""
 "چیزی که خرید کرده‌اید (خدمات) یا چیزی که دریافت کرده‌اید (محصولات) کنترل کنید."
 
 #. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order__partner_id
+#: model:ir.model.fields,help:purchase.field_purchase_order_line__partner_id
+msgid "You can find a vendor by its Name, TIN, Email or Internal Reference."
+msgstr ""
+
+#. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.product_product_action
 msgid ""
 "You must define a product for everything you purchase,\n"
@@ -2025,8 +2038,3 @@ msgid ""
 "You must define a product for everything you purchase,\n"
 "            whether it's a physical product, a consumable or services."
 msgstr ""
-
-#. module: purchase
-#: model:ir.model,name:purchase.model_res_config_settings
-msgid "res.config.settings"
-msgstr "res.config.settings"

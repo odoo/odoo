@@ -17,6 +17,7 @@ class Image(models.AbstractModel):
         set as attribute on the generated <img> tag
     """
     _name = 'ir.qweb.field.image'
+    _description = 'Qweb Field Image'
     _inherit = 'ir.qweb.field.image'
 
     @api.model
@@ -31,7 +32,7 @@ class Image(models.AbstractModel):
 
         aclasses = ['img', 'img-fluid'] if options.get('qweb_img_responsive', True) else ['img']
         aclasses += options.get('class', '').split()
-        classes = ' '.join(pycompat.imap(escape, aclasses))
+        classes = ' '.join(map(escape, aclasses))
 
         max_size = None
         if options.get('resize'):

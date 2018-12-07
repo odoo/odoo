@@ -4,14 +4,6 @@ from odoo.tests import common
 
 class TestMenu(common.TransactionCase):
 
-    def test_website_own_menu_container(self):
-        Website = self.env['website']
-        Menu = self.env['website.menu']
-
-        total_menus = Menu.search_count([])
-        Website.create({'name': 'new website'})
-        self.assertEqual(total_menus + 2, Menu.search_count([]), "New website's bootstraping should have created a container menu and home menu")
-
     def test_menu_got_duplicated(self):
         Menu = self.env['website.menu']
         total_menu_items = Menu.search_count([])
@@ -49,3 +41,29 @@ class TestMenu(common.TransactionCase):
         Menu.save(1, {'data': data, 'to_delete': []})
 
         self.assertEqual(total_menu_items + 2, Menu.search_count([]), "Creating 2 new menus should create only 2 menus records")
+
+    def test_default_menu_for_new_website(self):
+        Website = self.env['website']
+        Menu = self.env['website.menu']
+        total_menu_items = Menu.search_count([])
+
+        # Simulating website.menu created on module install (blog, shop, forum..) that will be created on default menu tree
+        default_menu = self.env.ref('website.main_menu')
+        Menu.create({
+            'name': 'Sub Default Menu',
+            'parent_id': default_menu.id,
+        })
+        self.assertEqual(total_menu_items + 3, Menu.search_count([]), "Creating a default child menu should create it as such and copy it on every website")
+
+        # Ensure new website got a top menu
+        total_menus = Menu.search_count([])
+        Website.create({'name': 'new website'})
+        self.assertEqual(total_menus + 4, Menu.search_count([]), "New website's bootstraping should have duplicate default menu tree (Top/Home/Contactus/Sub Default Menu)")
+
+    def test_default_menu_unlink(self):
+        Menu = self.env['website.menu']
+        total_menu_items = Menu.search_count([])
+
+        default_menu = self.env.ref('website.main_menu')
+        default_menu.child_id[0].unlink()
+        self.assertEqual(total_menu_items - 3, Menu.search_count([]), "Deleting a default menu item should delete its 'copies' (same URL) from website's menu trees. In this case, the default child menu and its copies on website 1 and website 2")

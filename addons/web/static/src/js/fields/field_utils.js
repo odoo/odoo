@@ -153,15 +153,21 @@ function formatDateTime(value, field, options) {
  *   python description of the field.
  * @param {integer[]} [options.digits] the number of digits that should be used,
  *   instead of the default digits precision in the field.
+ * @param {function} [options.humanReadable] if returns true,
+ *   formatFloat acts like utils.human_number
  * @returns {string}
  */
 function formatFloat(value, field, options) {
+    options = options || {};
     if (value === false) {
         return "";
     }
+    if (options.humanReadable && options.humanReadable(value)) {
+        return utils.human_number(value, options.decimals, options.minDigits, options.formatterCallback);
+    }
     var l10n = core._t.database.parameters;
     var precision;
-    if (options && options.digits) {
+    if (options.digits) {
         precision = options.digits[1];
     } else if (field && field.digits) {
         precision = field.digits[1];
@@ -220,10 +226,13 @@ function formatFloatTime(value) {
  *        a description of the field (note: this parameter is ignored)
  * @param {Object} [options] additional options
  * @param {boolean} [options.isPassword=false] if true, returns '********'
+ * @param {function} [options.humanReadable] if returns true,
+ *   formatFloat acts like utils.human_number
  * @returns {string}
  */
 function formatInteger(value, field, options) {
-    if (options && options.isPassword) {
+    options = options || {};
+    if (options.isPassword) {
         return _.str.repeat('*', String(value).length);
     }
     if (!value && value !== 0) {
@@ -231,6 +240,9 @@ function formatInteger(value, field, options) {
         // view, I want to display the concept of 'no value' with an empty
         // string.
         return "";
+    }
+    if (options.humanReadable && options.humanReadable(value)) {
+        return utils.human_number(value, options.decimals, options.minDigits, options.formatterCallback);
     }
     return utils.insert_thousand_seps(_.str.sprintf('%d', value));
 }
@@ -322,9 +334,9 @@ function formatMonetary(value, field, options) {
     if (options.field_digits === true) {
         digits = field.digits || digits;
     }
-    var formatted_value = formatFloat(value, field, {
-        digits: digits,
-    });
+    var formatted_value = formatFloat(value, field,
+        _.extend({}, options , {digits: digits})
+    );
 
     if (!currency || options.noSymbol) {
         return formatted_value;
@@ -342,11 +354,16 @@ function formatMonetary(value, field, options) {
  * @param {number | false} value
  * @param {Object} [field]
  * @param {Object} [options]
+ * @param {function} [options.humanReadable] if returns true, parsing is avoided
  * @returns {string}
  */
 function formatPercentage(value, field, options) {
-    value = formatFloat(value * 100, field, options) || '0';
-    return parseFloat(value) + "%";
+    options = options || {};
+    var result = formatFloat(value * 100, field, options) || '0';
+    if (options.humanReadable && options.humanReadable(value * 100)) {
+        return result + "%";
+    }
+    return parseFloat(result) + "%";
 }
 /**
  * Returns a string representing the value of the selection.
@@ -570,6 +587,22 @@ function parseFloatTime(value) {
 }
 
 /**
+ * Parse a String containing a percentage and convert it to float.
+ * The percentage can be a regular xx.xx float or a xx%.
+ *
+ * @param {string} value
+ *                The string to be parsed
+ * @returns {float}
+ * @throws {Error} if the value couldn't be converted to float
+ */
+function parsePercentage(value) {
+    if (value.slice(-1) === '%') {
+        return parseFloat(value.slice(0, -1)) / 100;
+    }
+    return parseFloat(value);
+}
+
+/**
  * Parse a String containing integer with language formating
  *
  * @param {string} value
@@ -651,6 +684,7 @@ return {
         many2one: parseMany2one,
         monetary: parseMonetary,
         one2many: _.identity,
+        percentage: parsePercentage,
         reference: parseMany2one,
         selection: _.identity, // todo
         text: _.identity, // todo

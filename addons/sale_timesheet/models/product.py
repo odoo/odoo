@@ -30,6 +30,15 @@ class ProductTemplate(models.Model):
         'project.project', 'Project Template', company_dependent=True, domain=[('billable_type', '=', 'no')], copy=True,
         help='Select a non billable project to be the skeleton of the new created project when selling the current product. Its stages and tasks will be duplicated.')
 
+    @api.multi
+    def _compute_visible_expense_policy(self):
+        super(ProductTemplate, self)._compute_visible_expense_policy()
+
+        visibility = self.user_has_groups('project.group_project_user')
+        for product_template in self:
+            if not product_template.visible_expense_policy:
+                product_template.visible_expense_policy = visibility
+
     @api.depends('invoice_policy', 'service_type')
     def _compute_service_policy(self):
         for product in self:
@@ -85,3 +94,17 @@ class ProductTemplate(models.Model):
             self.service_type = 'timesheet'
         elif self.type == 'consu' and self.service_policy == 'ordered_timesheet':
             self.invoice_policy = 'order'
+
+
+class ProductProduct(models.Model):
+    _inherit = 'product.product'
+
+    @api.onchange('service_tracking')
+    def _onchange_service_tracking(self):
+        if self.service_tracking == 'no':
+            self.project_id = False
+            self.project_template_id = False
+        elif self.service_tracking == 'task_global_project':
+            self.project_template_id = False
+        elif self.service_tracking in ['task_new_project', 'project_only']:
+            self.project_id = False

@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
+"POT-Creation-Date: 2018-09-21 13:18+0000\n"
+"PO-Revision-Date: 2018-09-21 13:18+0000\n"
 "Last-Translator: Pekko Tuomisto <pekko.tuomisto@web-veistamo.fi>, 2018\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
@@ -49,11 +49,6 @@ msgid "Ask each attendee"
 msgstr "Kysy jokaiselta osallistujalta"
 
 #. module: website_event_questions
-#: model:ir.model,name:website_event_questions.model_event_registration
-msgid "Attendee"
-msgstr "Osallistuja"
-
-#. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_answer__create_uid
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question__create_uid
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer__create_uid
@@ -84,6 +79,7 @@ msgid "Event"
 msgstr "Tapahtuma"
 
 #. module: website_event_questions
+#: model:ir.model,name:website_event_questions.model_event_answer
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer__event_answer_id
 msgid "Event Answer"
 msgstr ""
@@ -94,9 +90,25 @@ msgid "Event Category"
 msgstr "Tapahtumaryhmä"
 
 #. module: website_event_questions
+#: model:ir.model,name:website_event_questions.model_event_question
+msgid "Event Question"
+msgstr ""
+
+#. module: website_event_questions
+#: model:ir.model,name:website_event_questions.model_event_question_report
+msgid "Event Question Report"
+msgstr ""
+
+#. module: website_event_questions
+#: model:ir.model,name:website_event_questions.model_event_registration
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer__event_registration_id
 msgid "Event Registration"
 msgstr "Tapahtuman rekisteröinti"
+
+#. module: website_event_questions
+#: model:ir.model,name:website_event_questions.model_event_registration_answer
+msgid "Event Registration Answer"
+msgstr ""
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question__event_type_id
@@ -163,7 +175,7 @@ msgid "Question"
 msgstr "Kysymys"
 
 #. module: website_event_questions
-#: code:addons/website_event_questions/models/event.py:78
+#: code:addons/website_event_questions/models/event.py:80
 #, python-format
 msgid "Question cannot belong to both the event category and itself."
 msgstr ""
@@ -210,23 +222,3 @@ msgstr "Erityskysymykset"
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question__title
 msgid "Title"
 msgstr "Titteli"
-
-#. module: website_event_questions
-#: model:ir.model,name:website_event_questions.model_event_answer
-msgid "event.answer"
-msgstr "event.answer"
-
-#. module: website_event_questions
-#: model:ir.model,name:website_event_questions.model_event_question
-msgid "event.question"
-msgstr "event.question"
-
-#. module: website_event_questions
-#: model:ir.model,name:website_event_questions.model_event_question_report
-msgid "event.question.report"
-msgstr "event.question.report"
-
-#. module: website_event_questions
-#: model:ir.model,name:website_event_questions.model_event_registration_answer
-msgid "event.registration.answer"
-msgstr "event.registration.answer"

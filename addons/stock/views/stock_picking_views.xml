@@ -9,6 +9,10 @@
                     <field name="sequence_id"/>
                     <field name="warehouse_id"/>
                     <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Type of Operation" name="groupby_code" domain="[]" context="{'group_by': 'code'}"/>
+                        <filter string="Warehouse" name="groupby_warehouse_id" domain="[]" context="{'group_by': 'warehouse_id'}"/>
+                    </group>
                 </search>
             </field>
         </record>
@@ -41,6 +45,7 @@
                                 <field name="name"/>
                                 <field name="sequence_id"/>
                                 <field name="warehouse_id" groups="stock.group_stock_multi_warehouses"/>
+                                <field name="barcode"/>
                             </group>
                             <group>
                                 <field name="code"/>
@@ -178,7 +183,8 @@
             <field name="arch" type="xml">
                 <tree decoration-info="state == 'draft'" decoration-muted="state == 'cancel'" decoration-danger="state not in ('cancel', 'done') and scheduled_date &lt; current_date" string="Picking list">
                     <field name="name"/>
-                    <field name="location_dest_id" groups="stock.group_stock_multi_locations"/>
+                    <field name="location_id" string="From" groups="stock.group_stock_multi_locations"/>
+                    <field name="location_dest_id" string="To" groups="stock.group_stock_multi_locations"/>
                     <field name="partner_id"/>
                     <field name="date" invisible="1"/>
                     <field name="scheduled_date"/>
@@ -218,7 +224,7 @@
                     <field name="show_operations" invisible="1" readonly="1"/>
                     <field name="move_line_exist" invisible="1"/>
                     <field name="has_packages" invisible="1"/>
-                    <button name="button_scrap" type="object" string="Scrap" attrs="{'invisible': ['|', '|', '&amp;', ('picking_type_code', '!=', 'incoming'), ('state', 'in', ('draft', 'cancel', 'waiting')), '&amp;', ('picking_type_code', '=', 'incoming'), ('state', '!=', 'done'), ('is_locked', '=', False)]}"/>
+                    <button name="button_scrap" type="object" string="Scrap" attrs="{'invisible': ['|', '|', ('picking_type_code', '=', 'incoming'), ('state', 'in', ('draft', 'cancel', 'waiting', 'done')), ('is_locked', '=', False)]}"/>
                     <button name="action_toggle_is_locked" attrs="{'invisible': ['|', ('state', 'in', ('draft','cancel')), ('is_locked', '=', False)]}" string="Unlock" groups="stock.group_stock_manager" type="object" help="If the picking is unlocked you can edit initial demand (for a draft picking) or done quantities (for a done picking)."/>
                     <button name="action_toggle_is_locked" attrs="{'invisible': [('is_locked', '=', True)]}" string="Lock" class="oe_highlight" groups="stock.group_stock_manager" type="object"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,partially_available,assigned,done" />
@@ -260,7 +266,7 @@
                     </group>
                     <notebook>
                         <page string="Detailed Operations" attrs="{'invisible': [('show_operations', '=', False)]}">
-                            <field name="move_line_ids_without_package" attrs="{'readonly': ['|', ('state', '=', 'cancel'), '&amp;', ('state', '=', 'done'), ('is_locked', '=', True)]}" context="{'default_picking_id': id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id}">
+                            <field name="move_line_ids_without_package" attrs="{'readonly': ['|', '|', ('show_operations', '=', False), ('state', '=', 'cancel'), '&amp;', ('state', '=', 'done'), ('is_locked', '=', True)]}" context="{'default_picking_id': id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id}">
                                 <tree editable="bottom" decoration-muted="(state == 'done' and is_locked == True)" decoration-danger="qty_done&gt;product_uom_qty and state!='done'" decoration-success="qty_done==product_uom_qty and state!='done' and not result_package_id">
                                     <field name="product_id" required="1" attrs="{'readonly': ['|', ('state', '=', 'done'), ('move_id', '!=', False)]}"/>
                                     <field name="move_id" invisible="1"/>
@@ -307,7 +313,7 @@
                                     <field name="is_initial_demand_editable" invisible="1"/>
                                     <field name="is_quantity_done_editable" invisible="1"/>
                                     <field name="product_uom_qty" string="Initial Demand" attrs="{'column_invisible': ['&amp;',('parent.immediate_transfer', '=', True), ('parent.is_locked', '=', True)], 'readonly': [('is_initial_demand_editable', '=', False)]}"/>
-                                    <field name="reserved_availability" string="Reserved" attrs="{'column_invisible': (['|','&amp;', ('parent.state','=', 'done'), ('parent.picking_type_code', '=', 'incoming'),'&amp;',('parent.immediate_transfer', '=', True), ('parent.is_locked', '=', True)])}"/>
+                                    <field name="reserved_availability" string="Reserved" attrs="{'column_invisible': (['|','|', ('parent.state','=', 'done'), ('parent.picking_type_code', '=', 'incoming'),'&amp;',('parent.immediate_transfer', '=', True), ('parent.is_locked', '=', True)])}"/>
                                     <field name="quantity_done" string="Done" attrs="{'readonly': [('is_quantity_done_editable', '=', False)]}"/>
                                     <field name="product_uom" attrs="{'readonly': [('state', '!=', 'draft'), ('additional', '=', False)]}" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="uom.group_uom"/>
                                     <button name="action_show_details" string="Register lots, packs, location" type="object" icon="fa-list" attrs="{'invisible': [('show_details_visible', '=', False)]}" options='{"warn": true}'/>
@@ -318,17 +324,17 @@
                         </page>
                         <page string="Additional Info" name="extra">
                             <group>
-                                <group>
+                                <group string="Other Information" name="other_infos">
                                     <field name="picking_type_code" invisible="1"/>
                                     <field name="move_type" attrs="{'invisible': [('picking_type_code', '=', 'incoming')]}"/>
-                                    <field name="date_done" string="Completion Date" readonly="1" attrs="{'invisible': [('state', '!=', 'done')]}"/>
-                                </group>
-                                <group>
-                                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                                    <field name="priority"/>
                                     <field name="group_id" groups="base.group_no_one"/>
-                                    <field name="priority" attrs="{'invisible': [('picking_type_code', '=', 'incoming')]}"/>
+                                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                                 </group>
                             </group>
+                        </page>
+                        <page string="Note" name="note">
+                            <field name="note" string="Note" placeholder="Add an internal note that will be printed on the Picking Operations sheet"/>
                         </page>
                     </notebook>
                 </sheet>
@@ -375,10 +381,9 @@
                     <group expand="0" string="Group By">
                         <filter string="Status" name="status" domain="[]" context="{'group_by':'state'}"/>
                         <filter string="Order Date" name="order_date" domain="[]"  context="{'group_by':'date'}"/>
-                        <filter string="Expected Date" name="expected_date" domain="[]" context="{'group_by':'scheduled_date'}"/>
+                        <filter string="Scheduled Date" name="expected_date" domain="[]" context="{'group_by': 'scheduled_date'}"/>
                         <filter string="Origin" name="origin" domain="[]" context="{'group_by':'origin'}"/>
                         <filter name="picking_type" string="Operation Type" domain="[]" context="{'group_by':'picking_type_id'}"/>
-                        <filter string="Procurement Group" name="procurement_group" domain="[]" context="{'group_by':'group_id'}"/>
                     </group>
                 </search>
             </field>
@@ -724,7 +729,7 @@
                                             <div class="col-8" role="menuitem" aria-haspopup="true">
                                                 <ul class="oe_kanban_colorpicker" data-field="color" role="menu"/>
                                             </div>
-                                            <div role="menuitem" class="col-4 text-right">
+                                            <div role="menuitem" class="col-4 text-center">
                                                 <a type="edit">Settings</a>
                                             </div>
                                         </div>

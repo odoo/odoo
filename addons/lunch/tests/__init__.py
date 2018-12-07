@@ -1,3 +1,4 @@
 # -*- coding: utf-8 -*-
 
-from . import test_lunch
+from . import common
+from . import test_supplier

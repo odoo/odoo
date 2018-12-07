@@ -159,7 +159,6 @@ options.registry.carousel = options.Class.extend({
     onBuilt: function () {
         this.id = 'myCarousel' + new Date().getTime();
         this.$target.attr('id', this.id);
-        this.$target.find('[data-slide]').attr('data-cke-saved-href', '#' + this.id);
         this.$target.find('[data-target]').attr('data-target', '#' + this.id);
         this._rebindEvents();
     },
@@ -210,7 +209,7 @@ options.registry.carousel = options.Class.extend({
         var index = $active.index();
         this.$('.carousel-control-prev, .carousel-control-next, .carousel-indicators').removeClass('d-none');
         this.$indicators.append('<li data-target="#' + this.id + '" data-slide-to="' + cycle + '"></li>');
-        var $clone = this.$('.carousel-item:first').clone(true);
+        var $clone = $active.clone(true);
         $clone.removeClass('active').insertAfter($active);
         _.defer(function () {
             self.$target.carousel().carousel(++index);
@@ -247,6 +246,10 @@ options.registry.carousel = options.Class.extend({
                 }
             });
             _.defer(function () {
+                self.trigger_up('animation_start_demand', {
+                    editableMode: true,
+                    $target: self.$target,
+                });
                 self.$target.carousel(index > 0 ? --index : cycle);
             });
         }
@@ -268,6 +271,7 @@ options.registry.carousel = options.Class.extend({
      * @override
      */
     _setActive: function () {
+        this._super.apply(this, arguments);
         this.$el.find('[data-interval]').removeClass('active')
             .filter('[data-interval=' + this.$target.attr('data-interval') + ']').addClass('active');
     },
@@ -287,6 +291,115 @@ options.registry.carousel = options.Class.extend({
 
         /* Fix: backward compatibility saas-3 */
         this.$target.find('.item.text_image, .item.image_text, .item.text_only').find('.container > .carousel-caption > div, .container > img.carousel-image').attr('contentEditable', 'true');
+    },
+});
+
+options.registry.navTabs = options.Class.extend({
+    /**
+     * @override
+     */
+    start: function () {
+        this._findLinksAndPanes();
+        return this._super.apply(this, arguments);
+    },
+    /**
+     * @override
+     */
+    onBuilt: function () {
+        this._generateUniqueIDs();
+    },
+    /**
+     * @override
+     */
+    onClone: function () {
+        this._generateUniqueIDs();
+    },
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * Creates a new tab and tab-pane.
+     *
+     * @see this.selectClass for parameters
+     */
+    addTab: function (previewMode, value, $opt) {
+        var $activeItem = this.$navLinks.filter('.active').parent();
+        var $activePane = this.$tabPanes.filter('.active');
+
+        var $navItem = $activeItem.clone();
+        var $navLink = $navItem.find('.nav-link').removeClass('active show');
+        var $tabPane = $activePane.clone().removeClass('active show');
+        $navItem.insertAfter($activeItem);
+        $tabPane.insertAfter($activePane);
+        this._findLinksAndPanes();
+        this._generateUniqueIDs();
+
+        $navLink.tab('show');
+    },
+    /**
+     * Removes the current active tab and its content.
+     *
+     * @see this.selectClass for parameters
+     */
+    removeTab: function (previewMode, value, $opt) {
+        var self = this;
+
+        var $activeLink = this.$navLinks.filter('.active');
+        var $activePane = this.$tabPanes.filter('.active');
+
+        var $next = this.$navLinks.eq((this.$navLinks.index($activeLink) + 1) % this.$navLinks.length);
+        $next.one('shown.bs.tab', function () {
+            $activeLink.parent().remove();
+            $activePane.remove();
+            self._findLinksAndPanes();
+            self._setActive(); // TODO forced to do this because we do not return deferred for options
+        });
+        $next.tab('show');
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _findLinksAndPanes: function () {
+        this.$navLinks = this.$target.find('.nav-link');
+        var $el = this.$target;
+        do {
+            $el = $el.parent();
+            this.$tabPanes = $el.find('.tab-pane');
+        } while (this.$tabPanes.length === 0 && !$el.is('body'));
+    },
+    /**
+     * @private
+     */
+    _generateUniqueIDs: function () {
+        for (var i = 0 ; i < this.$navLinks.length ; i++) {
+            var id = _.now() + '_' + _.uniqueId();
+            var idLink = 'nav_tabs_link_' + id;
+            var idContent = 'nav_tabs_content_' + id;
+            this.$navLinks.eq(i).attr({
+                'id': idLink,
+                'href': '#' + idContent,
+                'aria-controls': idContent,
+            });
+            this.$tabPanes.eq(i).attr({
+                'id': idContent,
+                'aria-labelledby': idLink,
+            });
+        }
+    },
+    /**
+     * @private
+     * @override
+     */
+    _setActive: function () {
+        this._super.apply(this, arguments);
+        this.$el.filter('[data-remove-tab]').toggleClass('d-none', this.$tabPanes.length <= 2);
     },
 });
 
@@ -410,7 +523,7 @@ options.registry.layout_column = options.Class.extend({
         var colClass = 'col-lg-' + colSize;
         _.each($columns, function (column) {
             var $column = $(column);
-            $column.attr('class', $column.attr('class').replace(/\bcol-lg-(offset-)?\d+\b/g, ''));
+            $column.attr('class', $column.attr('class').replace(/\b(col|offset)-lg(-\d+)?\b/g, ''));
             $column.addClass(colClass);
         });
         if (colOffset) {
@@ -938,6 +1051,7 @@ options.registry.gallery = options.Class.extend({
      * Displays the images with the "masonry" layout.
      */
     masonry: function () {
+        var self = this;
         var imgs = this._getImages();
         var columns = this._getColumns();
         var colClass = 'col-lg-' + (12 / columns);
@@ -960,7 +1074,7 @@ options.registry.gallery = options.Class.extend({
             var $lowest;
             _.each(cols, function (col) {
                 var $col = $(col);
-                var height = $col.height();
+                var height = $col.is(':empty') ? 0 : $col.find('img').last().offset().top + $col.find('img').last().height() - self.$target.offset().top;
                 if (height < min) {
                     min = height;
                     $lowest = $col;

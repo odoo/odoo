@@ -8,7 +8,7 @@ function createDropdownMenu(dropdownTitle, groups, params) {
     params = params || {};
     var target = params.debug ? document.body :  $('#qunit-fixture');
     var menu = new DropdownMenu(null, dropdownTitle, groups);
-    testUtils.addMockEnvironment(menu, params);
+    testUtils.mock.addMockEnvironment(menu, params);
     menu.appendTo(target);
     return menu;
 }
@@ -44,7 +44,7 @@ QUnit.module('Web', {
         assert.expect(2);
 
         var dropdownMenu = createDropdownMenu(this.dropdownHeader, this.items);
-        assert.strictEqual(dropdownMenu.$('.dropdown-divider, .dropdown-item, .dropdown-item-text').length, 4, 'should have 4 elements counting the dividers');
+        assert.containsN(dropdownMenu, '.dropdown-divider, .dropdown-item, .dropdown-item-text', 4, 'should have 4 elements counting the dividers');
         assert.strictEqual(dropdownMenu.$('.dropdown-divider, .dropdown-item, .dropdown-item-text').eq(1).text().trim(), 'Some Item',
             'first element should have "Some Item" description');
         dropdownMenu.destroy();
@@ -68,14 +68,14 @@ QUnit.module('Web', {
                 },
             },
         });
-        dropdownMenu.$('button:first').click();
-        assert.ok(!dropdownMenu.$('.o_menu_item:first > .dropdown-item').hasClass('selected'));
-        dropdownMenu.$('.o_menu_item a').first().click();
-        assert.ok(dropdownMenu.$('.o_menu_item:first > .dropdown-item').hasClass('selected'));
+        testUtils.dom.click(dropdownMenu.$('button:first'));
+        assert.doesNotHaveClass(dropdownMenu.$('.o_menu_item:first > .dropdown-item'), 'selected');
+        testUtils.dom.click(dropdownMenu.$('.o_menu_item a').first());
+        assert.hasClass(dropdownMenu.$('.o_menu_item:first > .dropdown-item'), 'selected');
         assert.ok(dropdownMenu.$('.o_menu_item:first').is(':visible'),
             'item should still be visible');
-        dropdownMenu.$('.o_menu_item a').first().click();
-        assert.ok(!dropdownMenu.$('.o_menu_item:first > .dropdown-item').hasClass('selected'));
+        testUtils.dom.click(dropdownMenu.$('.o_menu_item a').first());
+        assert.doesNotHaveClass(dropdownMenu.$('.o_menu_item:first > .dropdown-item'), 'selected');
         assert.ok(dropdownMenu.$('.o_menu_item:first').is(':visible'),
             'item should still be visible');
 
@@ -86,11 +86,12 @@ QUnit.module('Web', {
         assert.expect(0);
 
         var dropdownMenu = createDropdownMenu(this.dropdownHeader, this.items);
+        testUtils.dom.click(dropdownMenu.$('.o_dropdown_toggler_btn'));
         dropdownMenu.$el.click(function () {
             // we do not want a click to get out and change the url, for example
             throw new Error('No click should get out of the dropdown menu');
         });
-        dropdownMenu.$('.o_menu_item a').first().click();
+        testUtils.dom.click(dropdownMenu.$('.o_menu_item a').first());
 
         dropdownMenu.destroy();
     });
@@ -102,14 +103,14 @@ QUnit.module('Web', {
 
         var dropdownMenu = createDropdownMenu(this.dropdownHeader, this.items);
         // open dropdown
-        dropdownMenu.$('button:first').click();
-        assert.strictEqual(dropdownMenu.$('.dropdown-divider, .dropdown-item, .dropdown-item-text').length, 4);
+        testUtils.dom.click(dropdownMenu.$('button:first'));
+        assert.containsN(dropdownMenu, '.dropdown-divider, .dropdown-item, .dropdown-item-text', 4);
         // open options menu
-        dropdownMenu.$('span.fa-caret-right').click();
-        assert.strictEqual(dropdownMenu.$('.dropdown-divider, .dropdown-item, .dropdown-item-text').length, 7);
+        testUtils.dom.click(dropdownMenu.$('span.fa-caret-right'));
+        assert.containsN(dropdownMenu, '.dropdown-divider, .dropdown-item, .dropdown-item-text', 7);
         // close options menu
-        dropdownMenu.$('span.fa-caret-down').click();
-        assert.strictEqual(dropdownMenu.$('.dropdown-divider, .dropdown-item, .dropdown-item-text').length, 4);
+        testUtils.dom.click(dropdownMenu.$('span.fa-caret-down'));
+        assert.containsN(dropdownMenu, '.dropdown-divider, .dropdown-item, .dropdown-item-text', 4);
 
         dropdownMenu.destroy();
     });
@@ -120,13 +121,13 @@ QUnit.module('Web', {
         this.items[0].options = [{optionId: 1, description: "First Option"}, {optionId: 2, description: "Second Option"}];
 
         var dropdownMenu = createDropdownMenu(this.dropdownHeader, this.items);
-        dropdownMenu.$('button:first').click();
+        testUtils.dom.click(dropdownMenu.$('button:first'));
         // open options menu
-        dropdownMenu.$('span.fa-caret-right').click();
-        assert.strictEqual(dropdownMenu.$('.dropdown-divider, .dropdown-item, .dropdown-item-text').length, 7);
-        dropdownMenu.$('button:first').click();
-        dropdownMenu.$('button:first').click();
-        assert.strictEqual(dropdownMenu.$('.dropdown-divider, .dropdown-item, .dropdown-item-text').length, 4);
+        testUtils.dom.click(dropdownMenu.$('span.fa-caret-right'));
+        assert.containsN(dropdownMenu, '.dropdown-divider, .dropdown-item, .dropdown-item-text', 7);
+        testUtils.dom.click(dropdownMenu.$('button:first'));
+        testUtils.dom.click(dropdownMenu.$('button:first'));
+        assert.containsN(dropdownMenu, '.dropdown-divider, .dropdown-item, .dropdown-item-text', 4);
 
         dropdownMenu.destroy();
     });
@@ -162,26 +163,26 @@ QUnit.module('Web', {
             },
         });
         // open dropdown menu
-        dropdownMenu.$('button:first').click();
+        testUtils.dom.click(dropdownMenu.$('button:first'));
         // open options menu
-        dropdownMenu.$('span.fa-caret-right').click();
-        assert.strictEqual(dropdownMenu.$('.dropdown-divider, .dropdown-item, .dropdown-item-text').length, 7);
+        testUtils.dom.click(dropdownMenu.$('span.fa-caret-right'));
+        assert.containsN(dropdownMenu, '.dropdown-divider, .dropdown-item, .dropdown-item-text', 7);
         // Don't forget there is a hidden li.divider element at first place among children
-        assert.ok(!dropdownMenu.$('.o_menu_item:nth-child(2) > .dropdown-item').hasClass('selected'));
-        assert.ok(!dropdownMenu.$('.o_item_option:nth-child(2) > .dropdown-item').hasClass('selected'));
-        assert.ok(!dropdownMenu.$('.o_item_option:nth-child(3) > .dropdown-item').hasClass('selected'));
-        dropdownMenu.$('.o_item_option:first').click();
-        assert.ok(dropdownMenu.$('.o_menu_item:nth-child(2) > .dropdown-item').hasClass('selected'));
-        assert.ok(dropdownMenu.$('.o_item_option:nth-child(2) > .dropdown-item').hasClass('selected'));
-        assert.ok(!dropdownMenu.$('.o_item_option:nth-child(3) > .dropdown-item').hasClass('selected'));
-        dropdownMenu.$('.o_item_option:nth-child(3)').click();
-        assert.ok(dropdownMenu.$('.o_menu_item:nth-child(2) > .dropdown-item').hasClass('selected'));
-        assert.ok(!dropdownMenu.$('.o_item_option:nth-child(2) > .dropdown-item').hasClass('selected'));
-        assert.ok(dropdownMenu.$('.o_item_option:nth-child(3) > .dropdown-item').hasClass('selected'));
-        dropdownMenu.$('.o_item_option:nth-child(3)').click();
-        assert.ok(!dropdownMenu.$('.o_menu_item:nth-child(2) > .dropdown-item').hasClass('selected'));
-        assert.ok(!dropdownMenu.$('.o_item_option:nth-child(2) > .dropdown-item').hasClass('selected'));
-        assert.ok(!dropdownMenu.$('.o_item_option:nth-child(3) > .dropdown-item').hasClass('selected'));
+        assert.doesNotHaveClass(dropdownMenu.$('.o_menu_item:nth-child(2) > .dropdown-item'), 'selected');
+        assert.doesNotHaveClass(dropdownMenu.$('.o_item_option:nth-child(2) > .dropdown-item'), 'selected');
+        assert.doesNotHaveClass(dropdownMenu.$('.o_item_option:nth-child(3) > .dropdown-item'), 'selected');
+        testUtils.dom.click(dropdownMenu.$('.o_item_option:first'));
+        assert.hasClass(dropdownMenu.$('.o_menu_item:nth-child(2) > .dropdown-item'), 'selected');
+        assert.hasClass(dropdownMenu.$('.o_item_option:nth-child(2) > .dropdown-item'), 'selected');
+        assert.doesNotHaveClass(dropdownMenu.$('.o_item_option:nth-child(3) > .dropdown-item'), 'selected');
+        testUtils.dom.click(dropdownMenu.$('.o_item_option:nth-child(3)'));
+        assert.hasClass(dropdownMenu.$('.o_menu_item:nth-child(2) > .dropdown-item'), 'selected');
+        assert.doesNotHaveClass(dropdownMenu.$('.o_item_option:nth-child(2) > .dropdown-item'), 'selected');
+        assert.hasClass(dropdownMenu.$('.o_item_option:nth-child(3) > .dropdown-item'), 'selected');
+        testUtils.dom.click(dropdownMenu.$('.o_item_option:nth-child(3)'));
+        assert.doesNotHaveClass(dropdownMenu.$('.o_menu_item:nth-child(2) > .dropdown-item'), 'selected');
+        assert.doesNotHaveClass(dropdownMenu.$('.o_item_option:nth-child(2) > .dropdown-item'), 'selected');
+        assert.doesNotHaveClass(dropdownMenu.$('.o_item_option:nth-child(3) > .dropdown-item'), 'selected');
         dropdownMenu.destroy();
     });
 
@@ -195,10 +196,10 @@ QUnit.module('Web', {
                 },
             },
         });
-        dropdownMenu.$('button:first').click();
-        assert.strictEqual(dropdownMenu.$('.dropdown-divider, .dropdown-item, .dropdown-item-text').length, 4);
-        dropdownMenu.$('span.o_trash_button').click();
-        assert.strictEqual(dropdownMenu.$('.dropdown-divider, .dropdown-item, .dropdown-item-text').length, 2);
+        testUtils.dom.click(dropdownMenu.$('button:first'));
+        assert.containsN(dropdownMenu, '.dropdown-divider, .dropdown-item, .dropdown-item-text', 4);
+        testUtils.dom.click(dropdownMenu.$('span.o_trash_button'));
+        assert.containsN(dropdownMenu, '.dropdown-divider, .dropdown-item, .dropdown-item-text', 2);
         dropdownMenu.destroy();
     });
 });

@@ -17,8 +17,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:50+0000\n"
-"PO-Revision-Date: 2018-09-18 09:50+0000\n"
+"POT-Creation-Date: 2018-10-02 10:07+0000\n"
+"PO-Revision-Date: 2018-10-02 10:07+0000\n"
 "Last-Translator: Eloïse Stilmant <est@odoo.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -351,6 +351,13 @@ msgid "Event Menu"
 msgstr "Menu de l'événement"
 
 #. module: website_event
+#. openerp-web
+#: code:addons/website_event/static/src/js/website_event.editor.js:31
+#, python-format
+msgid "Event Name"
+msgstr "Nom de l'événement"
+
+#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.404
 msgid "Event not found!"
 msgstr "Événement introuvable !"
@@ -441,8 +448,7 @@ msgstr "Nom"
 #. module: website_event
 #. openerp-web
 #: code:addons/website_event/controllers/main.py:200
-#: code:addons/website_event/static/src/js/website_event.editor.js:29
-#: model_terms:ir.ui.view,arch_db:website_event.content_new_event
+#: code:addons/website_event/static/src/js/website_event.editor.js:30
 #, python-format
 msgid "New Event"
 msgstr "Nouvel événement"
@@ -591,19 +597,9 @@ msgid "Registration for this event is now closed"
 msgstr "Les inscriptions à cet événement sont maintenant fermées"
 
 #. module: website_event
-#: model:ir.model.fields,help:website_event.field_event_event__website_id
-msgid "Restrict publishing to this website."
-msgstr "Limiter la publication sur ce site web."
-
-#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.404
 msgid "Return to the event list."
 msgstr "Retournez à la liste d'événements."
-
-#. module: website_event
-#: model:ir.model.fields,field_description:website_event.field_event_event__is_seo_optimized
-msgid "SEO optimized"
-msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.country_events_list
@@ -624,11 +620,6 @@ msgstr "Flux social"
 #: model_terms:ir.ui.view,arch_db:website_event.404
 msgid "Sorry, the requested event is not available anymore."
 msgstr "Désolé, l'événement demandé n'est plus disponible."
-
-#. module: website_event
-#: model:ir.model.fields,help:website_event.field_event_event__website_url
-msgid "The full URL to access the document through the website."
-msgstr "L'URL complète afin d'accéder au document à travers le site web."
 
 #. module: website_event
 #: code:addons/website_event/controllers/main.py:44
@@ -661,11 +652,6 @@ msgstr ""
 "événement."
 
 #. module: website_event
-#: model:ir.model.fields,field_description:website_event.field_event_event__website_published
-msgid "Visible on current website"
-msgstr "Visible sur le site web actuel"
-
-#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 msgid "Visualize on Google Maps"
 msgstr "Visualiser sur Google Maps"
@@ -677,11 +663,6 @@ msgstr ""
 "Nous sommes ravis de vous confirmer votre inscription à notre événement"
 
 #. module: website_event
-#: model:ir.model.fields,field_description:website_event.field_event_event__website_id
-msgid "Website"
-msgstr "Site Web"
-
-#. module: website_event
 #: model:ir.actions.act_url,name:website_event.action_open_website
 msgid "Website Home"
 msgstr "Page d'acceuil du site web"
@@ -690,31 +671,6 @@ msgstr "Page d'acceuil du site web"
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form_inherit_website
 msgid "Website Menu"
 msgstr "Menu du site web"
-
-#. module: website_event
-#: model:ir.model.fields,field_description:website_event.field_event_event__website_url
-msgid "Website URL"
-msgstr "Adresse du site"
-
-#. module: website_event
-#: model:ir.model.fields,field_description:website_event.field_event_event__website_meta_description
-msgid "Website meta description"
-msgstr "Description du site"
-
-#. module: website_event
-#: model:ir.model.fields,field_description:website_event.field_event_event__website_meta_keywords
-msgid "Website meta keywords"
-msgstr "Mots-clés du site"
-
-#. module: website_event
-#: model:ir.model.fields,field_description:website_event.field_event_event__website_meta_title
-msgid "Website meta title"
-msgstr "Titre du site"
-
-#. module: website_event
-#: model:ir.model.fields,field_description:website_event.field_event_event__website_meta_og_img
-msgid "Website opengraph image"
-msgstr "Image opengraph"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full

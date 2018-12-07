@@ -11,6 +11,7 @@ from odoo.tools.safe_eval import safe_eval
 
 class ReportAssertAccount(models.AbstractModel):
     _name = 'report.account_test.report_accounttest'
+    _description = 'Account Test Report'
 
     @api.model
     def execute_code(self, code_exec):

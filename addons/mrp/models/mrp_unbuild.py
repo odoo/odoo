@@ -37,18 +37,18 @@ class MrpUnbuild(models.Model):
         domain="[('product_id', '=', product_id), ('state', 'in', ['done', 'cancel'])]",
         states={'done': [('readonly', True)]})
     lot_id = fields.Many2one(
-        'stock.production.lot', 'Lot',
+        'stock.production.lot', 'Lot/Serial Number',
         domain="[('product_id', '=', product_id)]",
-        states={'done': [('readonly', True)]})
+        states={'done': [('readonly', True)]}, help="Lot/Serial Number of the product to unbuild.")
     has_tracking=fields.Selection(related='product_id.tracking', readonly=True)
     location_id = fields.Many2one(
-        'stock.location', 'Location',
+        'stock.location', 'Source Location',
         default=_get_default_location_id,
-        required=True, states={'done': [('readonly', True)]})
+        required=True, states={'done': [('readonly', True)]}, help="Location where the product you want to unbuild is.")
     location_dest_id = fields.Many2one(
         'stock.location', 'Destination Location',
         default=_get_default_location_dest_id,
-        required=True, states={'done': [('readonly', True)]})
+        required=True, states={'done': [('readonly', True)]}, help="Location where you want to send the components resulting from the unbuild order.")
     consume_line_ids = fields.One2many(
         'stock.move', 'consume_unbuild_id', readonly=True,
         string='Consumed Disassembly Lines')
@@ -123,7 +123,7 @@ class MrpUnbuild(models.Model):
             if produce_move.has_tracking != 'none':
                 original_move = self.mo_id.move_raw_ids.filtered(lambda move: move.product_id == produce_move.product_id)
                 needed_quantity = produce_move.product_qty
-                for move_lines in original_move.mapped('move_line_ids'):
+                for move_lines in original_move.mapped('move_line_ids').filtered(lambda ml: ml.lot_produced_id == self.lot_id):
                     # Iterate over all move_lines until we unbuilded the correct quantity.
                     taken_quantity = min(needed_quantity, move_lines.qty_done)
                     if taken_quantity:

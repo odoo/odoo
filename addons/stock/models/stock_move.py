@@ -65,7 +65,7 @@ class StockMove(models.Model):
     # TDE FIXME: make it stored, otherwise group will not work
     product_tmpl_id = fields.Many2one(
         'product.template', 'Product Template',
-        related='product_id.product_tmpl_id',
+        related='product_id.product_tmpl_id', readonly=False,
         help="Technical: used in views")
     product_packaging = fields.Many2one(
         'product.packaging', 'Preferred Packaging',
@@ -91,7 +91,7 @@ class StockMove(models.Model):
         copy=False,
         help="Optional: previous stock move when chaining them")
     picking_id = fields.Many2one('stock.picking', 'Transfer Reference', index=True, states={'done': [('readonly', True)]})
-    picking_partner_id = fields.Many2one('res.partner', 'Transfer Destination Address', related='picking_id.partner_id')
+    picking_partner_id = fields.Many2one('res.partner', 'Transfer Destination Address', related='picking_id.partner_id', readonly=False)
     note = fields.Text('Notes')
     state = fields.Selection([
         ('draft', 'New'), ('cancel', 'Cancelled'),
@@ -109,7 +109,7 @@ class StockMove(models.Model):
     price_unit = fields.Float(
         'Unit Price', help="Technical field used to record the product cost set by the user during a picking confirmation (when costing "
                            "method used is 'average price' or 'real'). Value given in company currency and in product uom.", copy=False)  # as it's a technical field, we intentionally don't provide the digits attribute
-    backorder_id = fields.Many2one('stock.picking', 'Back Order of', related='picking_id.backorder_id', index=True)
+    backorder_id = fields.Many2one('stock.picking', 'Back Order of', related='picking_id.backorder_id', index=True, readonly=False)
     origin = fields.Char("Source Document")
     procure_method = fields.Selection([
         ('make_to_stock', 'Default: Take From Stock'),
@@ -147,7 +147,7 @@ class StockMove(models.Model):
     warehouse_id = fields.Many2one('stock.warehouse', 'Warehouse', help="Technical field depicting the warehouse to consider for the route selection on the next procurement (if any).")
     has_tracking = fields.Selection(related='product_id.tracking', string='Product with Tracking')
     quantity_done = fields.Float('Quantity Done', compute='_quantity_done_compute', digits=dp.get_precision('Product Unit of Measure'), inverse='_quantity_done_set')
-    show_operations = fields.Boolean(related='picking_id.picking_type_id.show_operations')
+    show_operations = fields.Boolean(related='picking_id.picking_type_id.show_operations', readonly=False)
     show_details_visible = fields.Boolean('Details Visible', compute='_compute_show_details_visible')
     show_reserved_availability = fields.Boolean('From Supplier', compute='_compute_show_reserved_availability')
     picking_code = fields.Selection(related='picking_id.picking_type_id.code', readonly=True)
@@ -167,28 +167,24 @@ class StockMove(models.Model):
             if move.picking_id:
                 move.is_locked = move.picking_id.is_locked
 
-
-    @api.depends('product_id', 'has_tracking', 'move_line_ids', 'location_id', 'location_dest_id')
+    @api.depends('product_id', 'has_tracking')
     def _compute_show_details_visible(self):
         """ According to this field, the button that calls `action_show_details` will be displayed
         to work on a move from its picking form view, or not.
         """
+        has_package = self.user_has_groups('stock.group_tracking_lot')
+        multi_locations_enabled = self.user_has_groups('stock.group_stock_multi_locations')
+        consignment_enabled = self.user_has_groups('stock.group_tracking_owner')
+
+        show_details_visible = multi_locations_enabled or consignment_enabled or has_package
+
         for move in self:
             if not move.product_id:
                 move.show_details_visible = False
-                continue
-
-            multi_locations_enabled = False
-            if self.user_has_groups('stock.group_stock_multi_locations'):
-                multi_locations_enabled = move.location_id.child_ids or move.location_dest_id.child_ids
-            has_package = move.move_line_ids.mapped('package_id') | move.move_line_ids.mapped('result_package_id')
-            consignment_enabled = self.user_has_groups('stock.group_tracking_owner')
-            if move.picking_id.picking_type_id.show_operations is False\
-                    and (move.state != 'draft' or (move.picking_id.immediate_transfer and move.state == 'draft'))\
-                    and (multi_locations_enabled or move.has_tracking != 'none' or len(move.move_line_ids) > 1 or has_package or consignment_enabled):
-                move.show_details_visible = True
             else:
-                move.show_details_visible = False
+                move.show_details_visible = ((show_details_visible or move.has_tracking != 'none') and
+                                             (move.state != 'draft' or (move.picking_id.immediate_transfer and move.state == 'draft')) and
+                                             move.picking_id.picking_type_id.show_operations is False)
 
     def _compute_show_reserved_availability(self):
         """ This field is only of use in an attrs in the picking view, in order to hide the
@@ -574,6 +570,7 @@ class StockMove(models.Model):
         moves_to_merge = []
         for candidate_moves in candidate_moves_list:
             # First step find move to merge.
+            candidate_moves = candidate_moves.with_context(prefetch_fields=False)
             for k, g in groupby(sorted(candidate_moves, key=self._prepare_merge_move_sort_method), key=itemgetter(*distinct_fields)):
                 moves = self.env['stock.move'].concat(*g).filtered(lambda m: m.state not in ('done', 'cancel', 'draft'))
                 # If we have multiple records we will merge then in a single one.
@@ -617,7 +614,7 @@ class StockMove(models.Model):
             .filtered(lambda move: move.state not in ['cancel', 'done'])\
             .sorted(key=lambda move: (sort_map.get(move.state, 0), move.product_uom_qty))
         # The picking should be the same for all moves.
-        if moves_todo[0].picking_id.move_type == 'one':
+        if moves_todo[0].picking_id and moves_todo[0].picking_id.move_type == 'one':
             most_important_move = moves_todo[0]
             if most_important_move.state == 'confirmed':
                 return 'confirmed' if most_important_move.product_uom_qty else 'assigned'
@@ -1020,7 +1017,7 @@ class StockMove(models.Model):
             if move.propagate:
                 # only cancel the next move if all my siblings are also cancelled
                 if all(state == 'cancel' for state in siblings_states):
-                    move.move_dest_ids._action_cancel()
+                    move.move_dest_ids.filtered(lambda m: m.state != 'done')._action_cancel()
             else:
                 if all(state in ('done', 'cancel') for state in siblings_states):
                     move.move_dest_ids.write({'procure_method': 'make_to_stock'})
@@ -1030,6 +1027,7 @@ class StockMove(models.Model):
 
     def _prepare_extra_move_vals(self, qty):
         vals = {
+            'origin_returned_move_id': self.origin_returned_move_id.id,
             'product_uom_qty': qty,
             'picking_id': self.picking_id.id,
             'price_unit': self.price_unit,
@@ -1083,10 +1081,9 @@ class StockMove(models.Model):
     def _unreserve_initial_demand(self, new_move):
         pass
 
-    def _action_done(self):
+    def _action_done(self, cancel_backorder=False):
         self.filtered(lambda move: move.state == 'draft')._action_confirm()  # MRP allows scrapping draft moves
-
-        moves = self.filtered(lambda x: x.state not in ('done', 'cancel'))
+        moves = self.exists().filtered(lambda x: x.state not in ('done', 'cancel'))
         moves_todo = self.env['stock.move']
 
         # Cancel moves where necessary ; we should do it before creating the extra moves because
@@ -1124,6 +1121,8 @@ class StockMove(models.Model):
                         except UserError:
                             pass
                 move._unreserve_initial_demand(new_move)
+                if cancel_backorder:
+                    self.env['stock.move'].browse(new_move)._action_cancel()
         moves_todo.mapped('move_line_ids')._action_done()
         # Check the consistency of the result packages; there should be an unique location across
         # the contained quants.
@@ -1140,7 +1139,7 @@ class StockMove(models.Model):
         if all(move_todo.scrapped for move_todo in moves_todo):
             return moves_todo
 
-        if picking:
+        if picking and not cancel_backorder:
             picking._create_backorder()
         return moves_todo
 

@@ -4,13 +4,15 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
+# Johannes Croe <jcr@odoo.com>, 2018
+# Jan Brodersen <4rmitxes@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:48+0000\n"
-"PO-Revision-Date: 2018-09-18 09:48+0000\n"
-"Last-Translator: Martin Trigaux, 2018\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-09-21 13:17+0000\n"
+"Last-Translator: Jan Brodersen <4rmitxes@gmail.com>, 2018\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -217,10 +219,9 @@ msgstr "<strong>Ihre Bestellreferenz:</strong>"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__product_type
 msgid ""
-"A storable product is a product for which you manage stock. The \"Inventory\" app has to be installed.\n"
-"A consumable product, on the other hand, is a product for which stock is not managed.\n"
-"A service is a non-material product you provide.\n"
-"A digital content is a non-material product you sell online. The files attached to the products are the one that are sold on the e-commerce such as e-books, music, pictures,... The \"Digital Product\" module has to be installed."
+"A storable product is a product for which you manage stock. The Inventory app has to be installed.\n"
+"A consumable product is a product for which stock is not managed.\n"
+"A service is a non-material product you provide."
 msgstr ""
 
 #. module: purchase
@@ -232,7 +233,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__access_warning
 msgid "Access warning"
-msgstr ""
+msgstr "Zugriffswarnung"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_needaction
@@ -303,12 +304,12 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "# Anhänge"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_account_invoice__vendor_bill_purchase_id
 msgid "Auto-Complete"
-msgstr ""
+msgstr "Autovervollständigung"
 
 #. module: purchase
 #: model:ir.filters,name:purchase.filter_purchase_order_average_delivery_time
@@ -354,11 +355,6 @@ msgstr "Fakturastatus"
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__invoice_ids
 msgid "Bills"
 msgstr "Rechnung"
-
-#. module: purchase
-#: model:ir.model,name:purchase.model_purchase_bill_union
-msgid "Bills & Purchases"
-msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
@@ -449,6 +445,11 @@ msgstr "Betriebl. Währung"
 #, python-format
 msgid "Compose Email"
 msgstr "E-Mail schreiben"
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_res_config_settings
+msgid "Config Settings"
+msgstr "Konfiguration "
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_config
@@ -716,6 +717,8 @@ msgstr "Falls markiert, benötigen neue Nachrichten Ihre Kenntnisnahme."
 #: model:ir.model.fields,help:purchase.field_purchase_order__message_has_error
 msgid "If checked, some messages have a delivery error."
 msgstr ""
+"Das Senden mancher Nachrichten ist fehlgeschlagen wenn dieses Fenster "
+"angekreuzt ist."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -727,7 +730,7 @@ msgstr ""
 "aktiviert: Die Artikel müssen zum Bezahlen der Rechnung eingetroffen sein."
 
 #. module: purchase
-#: code:addons/purchase/models/product.py:39
+#: code:addons/purchase/models/product.py:38
 #, python-format
 msgid "Import Template for Products"
 msgstr ""
@@ -849,7 +852,7 @@ msgstr "Gesperrt"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "Hauptanhänge"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -910,7 +913,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "Error beim senden der Nachricht"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_partner__purchase_warn_msg
@@ -960,6 +963,11 @@ msgstr ""
 #, python-format
 msgid "Name"
 msgstr "Name"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+msgid "Name, TIN, Email, or Reference"
+msgstr ""
 
 #. module: purchase
 #: code:addons/purchase/controllers/portal.py:40
@@ -1025,7 +1033,7 @@ msgstr "Anzahl der Aktionen"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_has_error_counter
 msgid "Number of error"
-msgstr ""
+msgstr "Fehlernummer"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__message_needaction_counter
@@ -1035,7 +1043,7 @@ msgstr "Anzahl der Nachrichten, die eine Aktion erfordern"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "Anzahl der Nachrichten mit einem Fehler beim Senden."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__message_unread_counter
@@ -1051,21 +1059,14 @@ msgstr "Auf bestellte Mengen"
 #: model:ir.model.fields,help:purchase.field_product_product__purchase_method
 #: model:ir.model.fields,help:purchase.field_product_template__purchase_method
 msgid ""
-"On ordered quantities: control bills based on ordered quantities.\n"
-"On received quantities: control bills based on received quantity."
+"On ordered quantities: Control bills based on ordered quantities.\n"
+"On received quantities: Control bills based on received quantities."
 msgstr ""
-"Bei Warenausgangsmengen: Rechnungskontrolle anhand der bestellten Mengen.\n"
-"Bei Wareneingang: Rechnungkontrolle anhand der gelieferten Menge."
 
 #. module: purchase
 #: selection:product.template,purchase_method:0
 msgid "On received quantities"
 msgstr "Auf erhaltene Mengen"
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_res_config_settings__po_order_approval
-msgid "Order Approval"
-msgstr "Bestellbestätigung"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__date_order
@@ -1134,11 +1135,6 @@ msgstr "Partner"
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__country_id
 msgid "Partner Country"
 msgstr "Partnerland"
-
-#. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
-msgid "Partner's Country"
-msgstr "Land des Partner"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__payment_term_id
@@ -1304,6 +1300,11 @@ msgid "Purchase Order #"
 msgstr ""
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_res_config_settings__po_order_approval
+msgid "Purchase Order Approval"
+msgstr ""
+
+#. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "Purchase Order Confirmation #"
 msgstr "Bestellbestätigung #"
@@ -1380,6 +1381,11 @@ msgid "Purchase Orders Statistics"
 msgstr "Bestellstatistik"
 
 #. module: purchase
+#: model:ir.model,name:purchase.model_purchase_report
+msgid "Purchase Report"
+msgstr ""
+
+#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__user_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__user_id
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
@@ -1430,9 +1436,9 @@ msgid "Purchases"
 msgstr "Einkauf"
 
 #. module: purchase
-#: model:ir.model,name:purchase.model_purchase_report
-msgid "Purchases Orders"
-msgstr "Bestellungen"
+#: model:ir.model,name:purchase.model_purchase_bill_union
+msgid "Purchases & Bills Union"
+msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__dest_address_id
@@ -1896,7 +1902,6 @@ msgstr "Entsperren"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_unread
-#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Unread Messages"
 msgstr "Ungelesene Nachrichten"
 
@@ -1969,6 +1974,11 @@ msgstr "Lieferantenrechnung"
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_bill_union_filter
 msgid "Vendor Bills"
 msgstr "Eingangsrechnungen"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
+msgid "Vendor Country"
+msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__group_manage_vendor_price
@@ -2057,6 +2067,12 @@ msgstr ""
 "(Dienstleistungen) oder Ihres Warenempfangs (Produkte) kontrollieren."
 
 #. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order__partner_id
+#: model:ir.model.fields,help:purchase.field_purchase_order_line__partner_id
+msgid "You can find a vendor by its Name, TIN, Email or Internal Reference."
+msgstr ""
+
+#. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.product_product_action
 msgid ""
 "You must define a product for everything you purchase,\n"
@@ -2069,8 +2085,3 @@ msgid ""
 "You must define a product for everything you purchase,\n"
 "            whether it's a physical product, a consumable or services."
 msgstr ""
-
-#. module: purchase
-#: model:ir.model,name:purchase.model_res_config_settings
-msgid "res.config.settings"
-msgstr "res.config.settings"

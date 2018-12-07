@@ -3,18 +3,22 @@
 # * account_analytic_default
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
-# Arma Gedonsky <armagedonsky@hot.ee>, 2017
-# Rivo Zängov <eraser@eraser.ee>, 2017
-# Egon Raamat <egon@avalah.ee>, 2017
-# Wanradt Koell <wanradt@gmail.com>, 2017
+# Rivo Zängov <eraser@eraser.ee>, 2018
+# Martin Trigaux, 2018
+# Wanradt Koell <wanradt@gmail.com>, 2018
+# Arma Gedonsky <armagedonsky@hot.ee>, 2018
+# Egon Raamat <egon@avalah.ee>, 2018
+# Eneli Õigus <enelioigus@gmail.com>, 2018
+# Martin Aavastik <martin@avalah.ee>, 2018
+# Helen Sulaoja <helen@avalah.ee>, 2018
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Wanradt Koell <wanradt@gmail.com>, 2017\n"
+"POT-Creation-Date: 2018-09-18 09:49+0000\n"
+"PO-Revision-Date: 2018-08-24 09:15+0000\n"
+"Last-Translator: Helen Sulaoja <helen@avalah.ee>, 2018\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,36 +27,44 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: account_analytic_default
-#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_kanban
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_kanban
 msgid "<i class=\"fa fa-calendar\"/> From"
 msgstr "<i class=\"fa fa-calendar\"/> Alates"
 
 #. module: account_analytic_default
-#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_kanban
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_kanban
 msgid "<strong>Customer</strong>"
 msgstr "<strong>Klient </strong>"
 
 #. module: account_analytic_default
-#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_kanban
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_kanban
 msgid "<strong>Product</strong>"
 msgstr "<strong>Toode</strong>"
 
 #. module: account_analytic_default
-#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "Accounts"
 msgstr "Kontod"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_analytic_id
-#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
+#: code:addons/account_analytic_default/models/account_analytic_default.py:27
+#, python-format
+msgid ""
+"An analytic default requires at least an analytic account or an analytic "
+"tag."
+msgstr ""
+
+#. module: account_analytic_default
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__analytic_id
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "Analytic Account"
 msgstr "Analüütiline konto"
 
 #. module: account_analytic_default
 #: model:ir.actions.act_window,name:account_analytic_default.action_analytic_default_list
 #: model:ir.ui.menu,name:account_analytic_default.menu_analytic_default_list
-#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form
-#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_tree
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_tree
 msgid "Analytic Defaults"
 msgstr "Analüütilised vaikeväärtused"
 
@@ -63,71 +75,75 @@ msgstr "Analüütiline jaotus"
 
 #. module: account_analytic_default
 #: model:ir.actions.act_window,name:account_analytic_default.action_product_default_list
-#: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_partner
 #: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_user
 msgid "Analytic Rules"
 msgstr "Analüütilised reeglid"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_company_id
-#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__analytic_tag_ids
+msgid "Analytic Tags"
+msgstr "Analüütilised sildid"
+
+#. module: account_analytic_default
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__company_id
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "Company"
 msgstr "Ettevõte"
 
 #. module: account_analytic_default
-#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form
 msgid "Conditions"
 msgstr "Tingimused"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_create_uid
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__create_uid
 msgid "Created by"
 msgstr "Loonud"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_create_date
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__create_date
 msgid "Created on"
-msgstr "Loodud"
+msgstr "Loomise kuupäev"
 
 #. module: account_analytic_default
-#: model:ir.ui.view,arch_db:account_analytic_default.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.res_config_settings_view_form
 msgid "Default Analytic Values"
 msgstr "Vaike analüütilised väärtused"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_date_stop
+#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default__date_stop
 msgid "Default end date for this Analytic Account."
 msgstr "Analüütilise konto vaikimisi lõppkuupäev."
 
 #. module: account_analytic_default
-#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_date_start
+#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default__date_start
 msgid "Default start date for this Analytic Account."
 msgstr "Analüütilise konto vaikimisi alguskuupäev."
 
 #. module: account_analytic_default
-#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_display_name
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__display_name
 msgid "Display Name"
 msgstr "Näidatav nimi"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_date_stop
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__date_stop
 msgid "End Date"
-msgstr "Lõppkuupäev"
+msgstr "Lõpukuupäev"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_sequence
+#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default__sequence
 msgid ""
 "Gives the sequence order when displaying a list of analytic distribution"
 msgstr ""
 "Annab sorteeritud järjestuse, kui näidatakse nimekirja analüütilist jaotust"
 
 #. module: account_analytic_default
-#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "Group By"
 msgstr "Rühmitamine"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_id
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__id
 msgid "ID"
 msgstr "ID"
 
@@ -137,29 +153,29 @@ msgid "Invoice Line"
 msgstr "Arve rida"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default___last_update
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default____last_update
 msgid "Last Modified on"
-msgstr "Viimati muudetud"
+msgstr "Viimati muudetud (millal)"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_write_uid
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__write_uid
 msgid "Last Updated by"
-msgstr "Viimati uuendatud"
+msgstr "Viimati uuendatud (kelle poolt)"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_write_date
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__write_date
 msgid "Last Updated on"
-msgstr "Viimati uuendatud"
+msgstr "Viimati uuendatud (millal)"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_partner_id
-#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__partner_id
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "Partner"
 msgstr "Partner"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_product_id
-#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__product_id
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "Product"
 msgstr "Toode"
 
@@ -169,7 +185,7 @@ msgid "Sales Order Line"
 msgstr "Müügitellimuse rida"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_company_id
+#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default__company_id
 msgid ""
 "Select a company which will use analytic account specified in analytic "
 "default (e.g. create new customer invoice or Sales order if we select this "
@@ -181,7 +197,7 @@ msgstr ""
 "analüütilise konto)"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_partner_id
+#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default__partner_id
 msgid ""
 "Select a partner which will use analytic account specified in analytic "
 "default (e.g. create new customer invoice or Sales order if we select this "
@@ -193,7 +209,7 @@ msgstr ""
 "analüütilise konto)"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_product_id
+#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default__product_id
 msgid ""
 "Select a product which will use analytic account specified in analytic "
 "default (e.g. create new customer invoice or Sales order if we select this "
@@ -205,7 +221,7 @@ msgstr ""
 "analüütilise konto)"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_user_id
+#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default__user_id
 msgid ""
 "Select a user which will use analytic account specified in analytic default."
 msgstr ""
@@ -213,22 +229,22 @@ msgstr ""
 "kontode vaikeseades."
 
 #. module: account_analytic_default
-#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_sequence
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__sequence
 msgid "Sequence"
 msgstr "Järjestus"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_date_start
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__date_start
 msgid "Start Date"
 msgstr "Alguskuupäev"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_user_id
-#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__user_id
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "User"
 msgstr "Kasutaja"
 
 #. module: account_analytic_default
-#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_kanban
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_kanban
 msgid "to"
 msgstr "kuni"

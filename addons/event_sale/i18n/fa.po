@@ -11,10 +11,10 @@
 # Hamed Mohammadi <hamed@dehongi.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
+"POT-Creation-Date: 2018-10-08 06:49+0000\n"
+"PO-Revision-Date: 2018-10-08 06:49+0000\n"
 "Last-Translator: Hamed Mohammadi <hamed@dehongi.com>, 2018\n"
 "Language-Team: Persian (https://www.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
@@ -27,11 +27,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
 msgid "Apply"
 msgstr "اعمال"
-
-#. module: event_sale
-#: model:ir.model,name:event_sale.model_event_registration
-msgid "Attendee"
-msgstr "شرکت‌کننده"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__seats_availability
@@ -86,20 +81,21 @@ msgid ""
 msgstr ""
 
 #. module: event_sale
-#: model:ir.model.fields,help:event_sale.field_product_product__event_ok
-#: model:ir.model.fields,help:event_sale.field_product_template__event_ok
-#: model:ir.model.fields,help:event_sale.field_sale_order_line__event_ok
-msgid ""
-"Determine if a product needs to create automatically an event registration "
-"at the confirmation of a sales order line."
-msgstr ""
-
-#. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__display_name
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor__display_name
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__display_name
 msgid "Display Name"
 msgstr "نام نمایشی"
+
+#. module: event_sale
+#: model:ir.model,name:event_sale.model_registration_editor
+msgid "Edit Attendee Details on Sales Confirmation"
+msgstr ""
+
+#. module: event_sale
+#: model:ir.model,name:event_sale.model_registration_editor_line
+msgid "Edit Attendee Line on Sales Confirmation"
+msgstr ""
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__editor_id
@@ -131,6 +127,7 @@ msgid "Event Name"
 msgstr "نام رویداد"
 
 #. module: event_sale
+#: model:ir.model,name:event_sale.model_event_registration
 #: model:product.product,name:event_sale.product_product_event
 #: model:product.template,name:event_sale.product_product_event_product_template
 msgid "Event Registration"
@@ -180,6 +177,14 @@ msgid "ID"
 msgstr "شناسه"
 
 #. module: event_sale
+#: model:ir.model.fields,help:event_sale.field_product_template__event_ok
+#: model:ir.model.fields,help:event_sale.field_sale_order_line__event_ok
+msgid ""
+"If checked this product automatically creates an event registration at the "
+"sales order confirmation."
+msgstr ""
+
+#. module: event_sale
 #: model:ir.model,name:event_sale.model_account_invoice
 msgid "Invoice"
 msgstr "فاکتور"
@@ -190,7 +195,6 @@ msgid "Is Expired"
 msgstr ""
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_product_product__event_ok
 #: model:ir.model.fields,field_description:event_sale.field_product_template__event_ok
 #: model:ir.model.fields,field_description:event_sale.field_sale_order_line__event_ok
 msgid "Is an Event Ticket"
@@ -307,11 +311,6 @@ msgid "Product Template"
 msgstr "قالب محصول"
 
 #. module: event_sale
-#: model:ir.model,name:event_sale.model_sale_order
-msgid "Quotation"
-msgstr "پیش فاکتور"
-
-#. module: event_sale
 #: code:addons/event_sale/models/event.py:20
 #: code:addons/event_sale/models/event.py:33
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
@@ -340,6 +339,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__seats_reserved
 msgid "Reserved Seats"
 msgstr ""
+
+#. module: event_sale
+#: model:ir.model,name:event_sale.model_sale_order
+msgid "Sale Order"
+msgstr "سفارش فروش"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__deadline
@@ -377,6 +381,12 @@ msgstr "پرش"
 #: model:ir.model.fields,field_description:event_sale.field_event_registration__sale_order_id
 msgid "Source Sales Order"
 msgstr ""
+
+#. module: event_sale
+#: model:event.event.ticket,name:event_sale.event_0_ticket_1
+#: model:event.event.ticket,name:event_sale.event_2_ticket_1
+msgid "Standard"
+msgstr "استاندارد"
 
 #. module: event_sale
 #: code:addons/event_sale/models/event.py:257
@@ -437,6 +447,12 @@ msgid "Unlimited"
 msgstr "نامحدود"
 
 #. module: event_sale
+#: model:event.event.ticket,name:event_sale.event_0_ticket_2
+#: model:event.event.ticket,name:event_sale.event_2_ticket_2
+msgid "VIP"
+msgstr ""
+
+#. module: event_sale
 #: model:product.product,weight_uom_name:event_sale.product_product_event
 #: model:product.template,weight_uom_name:event_sale.product_product_event_product_template
 msgid "kg"
@@ -445,16 +461,6 @@ msgstr "کیلوگرم"
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
 msgid "please give details about the registrations"
-msgstr ""
-
-#. module: event_sale
-#: model:ir.model,name:event_sale.model_registration_editor
-msgid "registration.editor"
-msgstr ""
-
-#. module: event_sale
-#: model:ir.model,name:event_sale.model_registration_editor_line
-msgid "registration.editor.line"
 msgstr ""
 
 #. module: event_sale

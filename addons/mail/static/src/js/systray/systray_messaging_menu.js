@@ -102,8 +102,8 @@ var MessagingMenu = Widget.extend({
         var channelUnreadCounters = _.map(channels, function (channel) {
             return channel.getUnreadCounter();
         });
-        var unreadChannelCounter = _.reduce(channelUnreadCounters, function (c1, c2) {
-            return c1 + c2;
+        var unreadChannelCounter = _.reduce(channelUnreadCounters, function (acc, c) {
+            return c > 0 ? acc + 1 : acc;
         }, 0);
         var inboxCounter = this.call('mail_service', 'getMailbox', 'inbox').getMailboxCounter();
         var mailFailureCounter = this.call('mail_service', 'getMailFailures').length;
@@ -282,7 +282,11 @@ var MessagingMenu = Widget.extend({
             // e.g. needaction message of channel
             var documentID = $target.data('document-id');
             var documentModel = $target.data('document-model');
-            this._openDocument(documentModel, documentID);
+            if (!documentModel) {
+                this._openDiscuss('mailbox_inbox');
+            } else {
+                this._openDocument(documentModel, documentID);
+            }
         } else {
             // preview of thread
             this.call('mail_service', 'openThread', previewID);
@@ -300,19 +304,11 @@ var MessagingMenu = Widget.extend({
         var thread;
         var $preview = $(ev.currentTarget).closest('.o_mail_preview');
         var previewID = $preview.data('preview-id');
-        var documentModel = $preview.data('document-model');
         if (previewID === 'mailbox_inbox') {
-            var documentID = $preview.data('document-id');
-            var inbox = this.call('mail_service', 'getMailbox', 'inbox');
-            var messages = inbox.getMessages({
-                documentModel: documentModel,
-                documentID: documentID,
-            });
-            var messageIDs = _.map(messages, function (message) {
-                return message.getID();
-            });
+            var messageIDs = [].concat($preview.data('message-ids'));
             this.call('mail_service', 'markMessagesAsRead', messageIDs);
         } else if (previewID === 'mail_failure') {
+            var documentModel = $preview.data('document-model');
             var unreadCounter = $preview.data('unread-counter');
             this.do_action('mail.mail_resend_cancel_action', {
                 additional_context: {

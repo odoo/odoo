@@ -8,10 +8,10 @@ from odoo.exceptions import UserError, ValidationError
 class Project(models.Model):
     _inherit = "project.project"
 
-    allow_timesheets = fields.Boolean("Allow timesheets", default=True)
+    allow_timesheets = fields.Boolean("Allow timesheets", default=True, help="Enable timesheeting on the project.")
     analytic_account_id = fields.Many2one('account.analytic.account', string="Analytic Account", copy=False, ondelete='set null',
-        help="Link this project to an analytic account if you need financial management on projects. "
-             "It enables you to connect projects with budgets, planning, cost and revenue analysis, timesheets on projects, etc.")
+        help="Analytic account to which this project is linked for financial management."
+             "Use an analytic account to record cost and revenue on your project.")
 
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
@@ -22,7 +22,7 @@ class Project(models.Model):
 
     @api.onchange('analytic_account_id')
     def _onchange_analytic_account(self):
-        if not self.analytic_account_id:
+        if not self.analytic_account_id and self._origin:
             self.allow_timesheets = False
 
     @api.constrains('allow_timesheets', 'analytic_account_id')
@@ -96,7 +96,7 @@ class Task(models.Model):
     _inherit = "project.task"
 
     analytic_account_active = fields.Boolean("Analytic Account", related='project_id.analytic_account_id.active', readonly=True)
-    allow_timesheets = fields.Boolean("Allow timesheets", related='project_id.allow_timesheets', help="Timesheets can be logged on this task.")
+    allow_timesheets = fields.Boolean("Allow timesheets", related='project_id.allow_timesheets', help="Timesheets can be logged on this task.", readonly=True)
     remaining_hours = fields.Float("Remaining Hours", compute='_compute_remaining_hours', store=True, readonly=True, help="Total remaining time, can be re-estimated periodically by the assignee of the task.")
     effective_hours = fields.Float("Hours Spent", compute='_compute_effective_hours', compute_sudo=True, store=True, help="Computed using the sum of the task work done.")
     total_hours_spent = fields.Float("Total Hours", compute='_compute_total_hours_spent', store=True, help="Computed as: Time Spent + Sub-tasks Hours.")

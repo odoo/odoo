@@ -47,6 +47,7 @@
         'wizard/stock_warn_insufficient_qty_views.xml',
         'wizard/product_replenish_views.xml',
         'wizard/stock_track_confirmation_views.xml',
+        'wizard/stock_package_destination_views.xml',
 
         'views/res_partner_views.xml',
         'views/product_strategy_views.xml',
@@ -77,5 +78,4 @@
     'application': True,
     'auto_install': False,
     'pre_init_hook': 'pre_init_hook',
-    'post_init_hook': '_create_warehouse',
 }

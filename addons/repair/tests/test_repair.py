@@ -25,14 +25,12 @@ class TestRepair(AccountingTestCase):
         self.res_repair_user = self.ResUsers.create({
             'name': 'Repair User',
             'login': 'maru',
-            'password': 'maru',
             'email': 'repair_user@yourcompany.com',
             'groups_id': [(6, 0, [self.res_group_user.id])]})
 
         self.res_repair_manager = self.ResUsers.create({
             'name': 'Repair Manager',
             'login': 'marm',
-            'password': 'marm',
             'email': 'repair_manager@yourcompany.com',
             'groups_id': [(6, 0, [self.res_group_manager.id])]})
 
@@ -61,7 +59,7 @@ class TestRepair(AccountingTestCase):
             'price_unit': price_unit,
             'repair_id': repair_id,
             'location_id': self.env.ref('stock.stock_location_stock').id,
-            'location_dest_id': self.env.ref('stock.location_production').id,
+            'location_dest_id': product_to_add.property_stock_production.id,
         })
 
     def _create_simple_fee(self, repair_id=False, qty=0.0, price_unit=0.0):
@@ -147,7 +145,7 @@ class TestRepair(AccountingTestCase):
                          'Repaired product went to the wrong location')
         self.assertEqual(repair.operations.move_id.location_id.id, self.env.ref('stock.stock_location_stock').id,
                          'Consumed product was taken in the wrong location')
-        self.assertEqual(repair.operations.move_id.location_dest_id.id, self.env.ref('stock.location_production').id,
+        self.assertEqual(repair.operations.move_id.location_dest_id.id, self.env.ref('product.product_product_5').property_stock_production.id,
                          'Consumed product went to the wrong location')
 
         # I define Invoice Method 'No Invoice' option in this repair order.

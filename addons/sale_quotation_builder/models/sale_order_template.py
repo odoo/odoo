@@ -23,7 +23,7 @@ class SaleOrderTemplate(models.Model):
 class SaleOrderTemplateLine(models.Model):
     _inherit = "sale.order.template.line"
 
-    website_description = fields.Html('Website Description', related='product_id.product_tmpl_id.quotation_only_description', translate=html_translate)
+    website_description = fields.Html('Website Description', related='product_id.product_tmpl_id.quotation_only_description', translate=html_translate, readonly=False)
 
     @api.onchange('product_id')
     def _onchange_product_id(self):

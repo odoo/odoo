@@ -13,10 +13,10 @@ class LeaveReport(models.Model):
     employee_id = fields.Many2one('hr.employee', string="Employee", readonly=True)
     name = fields.Char('Description', readonly=True)
     number_of_days = fields.Float('Number of Days', readonly=True)
-    type = fields.Selection([
+    leave_type = fields.Selection([
         ('allocation', 'Allocation Request'),
         ('request', 'Leave Request')
-        ], string='Request Type', readonly=True)
+        ], string='Request Type', readonly=True, oldname='type')
     department_id = fields.Many2one('hr.department', string='Department', readonly=True)
     category_id = fields.Many2one('hr.employee.category', string='Employee Tag', readonly=True)
     holiday_status_id = fields.Many2one("hr.leave.type", string="Leave Type", readonly=True)
@@ -43,7 +43,7 @@ class LeaveReport(models.Model):
             CREATE or REPLACE view hr_leave_report as (
                 SELECT row_number() over(ORDER BY leaves.employee_id) as id,
                 leaves.employee_id as employee_id, leaves.name as name,
-                leaves.number_of_days as number_of_days, leaves.type as type,
+                leaves.number_of_days as number_of_days, leaves.leave_type as leave_type,
                 leaves.category_id as category_id, leaves.department_id as department_id,
                 leaves.holiday_status_id as holiday_status_id, leaves.state as state,
                 leaves.holiday_type as holiday_type, leaves.date_from as date_from,
@@ -60,7 +60,7 @@ class LeaveReport(models.Model):
                     null as date_from,
                     null as date_to,
                     FALSE as payslip_status,
-                    'allocation' as type
+                    'allocation' as leave_type
                 from hr_leave_allocation as allocation
                 union all select
                     request.employee_id as employee_id,
@@ -74,7 +74,7 @@ class LeaveReport(models.Model):
                     request.date_from as date_from,
                     request.date_to as date_to,
                     request.payslip_status as payslip_status,
-                    'request' as type
+                    'request' as leave_type
                 from hr_leave as request) leaves
             );
         """)

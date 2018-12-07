@@ -3,18 +3,20 @@
 # * stock_landed_costs
 # 
 # Translators:
-# Martin Trigaux, 2018
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2018
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2018
 # Cas Vissers <casvissers@brahoo.nl>, 2018
 # Pol Van Dingenen <pol.vandingenen@vanroey.be>, 2018
+# Martin Trigaux, 2018
+# Gunther Clauwaert <gclauwae@hotmail.com>, 2018
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:48+0000\n"
-"PO-Revision-Date: 2018-09-18 09:48+0000\n"
-"Last-Translator: Pol Van Dingenen <pol.vandingenen@vanroey.be>, 2018\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-08-24 09:25+0000\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2018\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -54,7 +56,7 @@ msgstr "Aanvullende kosten"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "Aantal bijlagen"
 
 #. module: stock_landed_costs
 #: selection:product.template,split_method:0
@@ -266,6 +268,12 @@ msgid "If checked, some messages have a delivery error."
 msgstr "indien aangevinkt hebben sommige leveringen een fout."
 
 #. module: stock_landed_costs
+#: model:ir.model.fields,help:stock_landed_costs.field_product_product__landed_cost_ok
+#: model:ir.model.fields,help:stock_landed_costs.field_product_template__landed_cost_ok
+msgid "Indicates whether the product is a landed cost."
+msgstr "Geeft aan of het product een extra kosten product is."
+
+#. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_type_form
 msgid "Information"
 msgstr "Informatie"
@@ -364,12 +372,12 @@ msgstr "Laatst bijgewerkt op"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "Hoofd bijlage"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_has_error
 msgid "Message Delivery error"
-msgstr "Bericht aflever fout"
+msgstr "Bericht afleverfout"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_ids
@@ -490,19 +498,14 @@ msgstr "Voorraad extra kosten"
 
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_stock_landed_cost_lines
-msgid "Stock Landed Cost Lines"
-msgstr "Voorraad extra kosten"
+msgid "Stock Landed Cost Line"
+msgstr "Voorraad extra kostenregel"
 
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_stock_move
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__move_id
 msgid "Stock Move"
 msgstr "Voorraadmutatie"
-
-#. module: stock_landed_costs
-#: model:ir.model,name:stock_landed_costs.model_stock_valuation_adjustment_lines
-msgid "Stock Valuation Adjustment Lines"
-msgstr "Voorraadwaarde correctie regels"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__amount_total
@@ -527,7 +530,7 @@ msgstr "Aantal ongelezen berichten"
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Validate"
-msgstr "Valideer"
+msgstr "Bevestig"
 
 #. module: stock_landed_costs
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:83
@@ -538,6 +541,11 @@ msgid ""
 msgstr ""
 "Bevestigde extra kosten kunnen niet geannuleerd worden, maar u kan een "
 "negatieve extra kost aanmaken om ze om te keren"
+
+#. module: stock_landed_costs
+#: model:ir.model,name:stock_landed_costs.model_stock_valuation_adjustment_lines
+msgid "Valuation Adjustment Lines"
+msgstr "Voorraadwaarde correctieregels"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__valuation_adjustment_lines
@@ -573,6 +581,9 @@ msgid ""
 "only be applied for products with automated inventory valuation and FIFO "
 "costing method."
 msgstr ""
+"U kunt geen extra kosten toepassen op de gekozen verplaatsing(en). Extra "
+"kosten kunnen alleen worden toegepast voor producten met geautomatiseerde "
+"voorraadwaardering en FIFO-calculatiemethode."
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_type_form

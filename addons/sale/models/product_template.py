@@ -4,6 +4,7 @@
 from odoo import api, fields, models, _
 from odoo.addons.base.models.res_partner import WARNING_MESSAGE, WARNING_HELP
 from odoo.tools.float_utils import float_round
+import json
 
 
 class ProductTemplate(models.Model):
@@ -18,29 +19,25 @@ class ProductTemplate(models.Model):
     sale_line_warn_msg = fields.Text('Message for Sales Order Line')
     expense_policy = fields.Selection(
         [('no', 'No'), ('cost', 'At cost'), ('sales_price', 'Sales price')],
-        string='Re-Invoice Policy',
+        string='Re-Invoice Expenses',
         default='no',
-        help="Expenses registered in Expense app or in a vendor bill (with an analytic account set) "
-        "can be automatically re-invoiced to the customer. This is useful for customer projects. "
-        "With this option activated, the validated expense is added to the sales order linked to the "
-        "analytic account, in order to be invoiced. With Project Management, such an analytic account "
-        "can be automatically generated at the order confirmation, if set on the Service Tracking "
-        "option of one product item.")
+        help="Expenses and vendor bills can be re-invoiced to a customer."
+             "With this option, a validated expense can be re-invoice to a customer at its cost or sales price.")
+    visible_expense_policy = fields.Boolean("Re-Invoice Policy visible", compute='_compute_visible_expense_policy')
     sales_count = fields.Float(compute='_compute_sales_count', string='Sold')
-    hide_expense_policy = fields.Boolean(compute='_compute_hide_expense_policy')
-    invoice_policy = fields.Selection(
-        [('order', 'Ordered quantities'),
-         ('delivery', 'Delivered quantities'),
-        ], string='Invoicing Policy',
-        help='Ordered Quantity: Invoice based on the quantity the customer ordered.\n'
-             'Delivered Quantity: Invoiced based on the quantity the vendor delivered (time or deliveries).',
+    invoice_policy = fields.Selection([
+        ('order', 'Ordered quantities'),
+        ('delivery', 'Delivered quantities')], string='Invoicing Policy',
+        help='Ordered Quantity: Invoice quantities ordered by the customer.\n'
+             'Delivered Quantity: Invoice quantities delivered to the customer.',
         default='order')
 
     @api.multi
-    def _compute_hide_expense_policy(self):
-        hide_expense_policy = self.user_has_groups('!analytic.group_analytic_accounting,!project.group_project_user,!hr_expense.group_hr_expense_user')
-        for template in self:
-            template.hide_expense_policy = hide_expense_policy
+    @api.depends('name')
+    def _compute_visible_expense_policy(self):
+        visibility = self.user_has_groups('analytic.group_analytic_accounting')
+        for product_template in self:
+            product_template.visible_expense_policy = visibility
 
     @api.multi
     @api.depends('product_variant_ids.sales_count')
@@ -53,11 +50,29 @@ class ProductTemplate(models.Model):
         action = self.env.ref('sale.report_all_channels_sales_action').read()[0]
         action['domain'] = [('product_tmpl_id', 'in', self.ids)]
         action['context'] = {
-            'search_default_last_year': 1,
-            'pivot_measures': ['product_qty'],
-            'search_default_team_id': 1
+            'pivot_measures': ['product_uom_qty'],
+            'active_id': self._context.get('active_id'),
+            'active_model': 'sale.report',
+            'search_default_Sales': 1,
+            'time_ranges': {'field': 'date', 'range': 'last_365_days'}
         }
         return action
+
+    def create_product_variant(self, product_template_attribute_value_ids):
+        self.ensure_one()
+
+        attribute_value_ids = \
+            self.env['product.template.attribute.value'] \
+                .browse(json.loads(product_template_attribute_value_ids)) \
+                .mapped('product_attribute_value_id') \
+                .filtered(lambda attribute_value_id: attribute_value_id.attribute_id.create_variant != 'no_variant')
+
+        product_variant = self.env['product.product'].create({
+            'product_tmpl_id': self.id,
+            'attribute_value_ids': [(6, 0, attribute_value_ids.ids)]
+        })
+
+        return product_variant.id
 
     @api.onchange('type')
     def _onchange_type(self):

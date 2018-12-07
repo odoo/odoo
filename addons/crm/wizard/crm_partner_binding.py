@@ -15,7 +15,7 @@ class PartnerBinding(models.TransientModel):
     """
 
     _name = 'crm.partner.binding'
-    _description = 'Handle partner binding or generation in CRM wizards.'
+    _description = 'Partner linking/binding in CRM wizard'
 
     @api.model
     def default_get(self, fields):

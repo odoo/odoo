@@ -4,7 +4,8 @@
 import ast
 import unittest
 
-from odoo.exceptions import ValidationError
+from odoo import SUPERUSER_ID
+from odoo.exceptions import UserError, ValidationError
 from odoo.tests.common import TransactionCase, tagged
 from odoo.tools import mute_logger
 from odoo.tools.safe_eval import safe_eval, const_eval
@@ -556,3 +557,12 @@ class TestGroups(TransactionCase):
         a = self.env['res.groups'].with_context(lang='en_US').create({'name': 'A'})
         b = a.copy()
         self.assertFalse(a.name == b.name)
+
+
+class TestUsers(TransactionCase):
+    def test_superuser(self):
+        """ The superuser is inactive and must remain as such. """
+        user = self.env['res.users'].browse(SUPERUSER_ID)
+        self.assertFalse(user.active)
+        with self.assertRaises(UserError):
+            user.write({'active': True})

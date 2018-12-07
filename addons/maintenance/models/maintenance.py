@@ -23,7 +23,7 @@ class MaintenanceStage(models.Model):
 class MaintenanceEquipmentCategory(models.Model):
     _name = 'maintenance.equipment.category'
     _inherit = ['mail.alias.mixin', 'mail.thread']
-    _description = 'Asset Category'
+    _description = 'Maintenance Equipment Category'
 
     @api.one
     @api.depends('equipment_ids')
@@ -92,13 +92,13 @@ class MaintenanceEquipmentCategory(models.Model):
 class MaintenanceEquipment(models.Model):
     _name = 'maintenance.equipment'
     _inherit = ['mail.thread', 'mail.activity.mixin']
-    _description = 'Equipment'
+    _description = 'Maintenance Equipment'
 
     @api.multi
     def _track_subtype(self, init_values):
         self.ensure_one()
         if 'owner_user_id' in init_values and self.owner_user_id:
-            return 'maintenance.mt_mat_assign'
+            return self.env.ref('maintenance.mt_mat_assign')
         return super(MaintenanceEquipment, self)._track_subtype(init_values)
 
     @api.multi
@@ -267,9 +267,9 @@ class MaintenanceRequest(models.Model):
     def _track_subtype(self, init_values):
         self.ensure_one()
         if 'stage_id' in init_values and self.stage_id.sequence <= 1:
-            return 'maintenance.mt_req_created'
+            return self.env.ref('maintenance.mt_req_created')
         elif 'stage_id' in init_values and self.stage_id.sequence > 1:
-            return 'maintenance.mt_req_status'
+            return self.env.ref('maintenance.mt_req_status')
         return super(MaintenanceRequest, self)._track_subtype(init_values)
 
     def _get_default_team_id(self):
@@ -349,8 +349,8 @@ class MaintenanceRequest(models.Model):
         res = super(MaintenanceRequest, self).write(vals)
         if vals.get('owner_user_id') or vals.get('user_id'):
             self._add_followers()
-        if self.stage_id.done and 'stage_id' in vals:
-            self.write({'close_date': fields.Date.today()})
+        if 'stage_id' in vals:
+            self.filtered(lambda m: m.stage_id.done).write({'close_date': fields.Date.today()})
             self.activity_feedback(['maintenance.mail_act_maintenance_request'])
         if vals.get('user_id') or vals.get('schedule_date'):
             self.activity_update()

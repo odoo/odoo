@@ -14,7 +14,7 @@
         var Discuss = odoo.__DEBUG__.services['mail.Discuss'];
         var WebClient = odoo.__DEBUG__.services["web.WebClient"];
 
-        WebClient.include({ 
+        WebClient.include({
             current_action_updated : function (action, controller) {
                 this._super(action, controller);
                 clientActionCount++;
@@ -47,7 +47,7 @@
     // Main function that starts orchestration of tests
     function clickEverywhere(){
         console.log("Starting ClickEverywhere test");
-        var startTime = performance.now()
+        var startTime = performance.now();
         createWebClientHooks();
         testedApps = [];
         testedMenus = [];
@@ -55,12 +55,12 @@
         // finding applications menus
         var $listOfAppMenuItems;
         if (isEnterprise) {
-            console.log("Odoo flavor: Enterprise")
+            console.log("Odoo flavor: Enterprise");
             var $homeMenu = $("nav.o_main_navbar > a.o_menu_toggle.fa-th");
-            $homeMenu.click()
-            $listOfAppMenuItems = $(".o_app, .o_menuitem")
+            $homeMenu.click();
+            $listOfAppMenuItems = $(".o_app, .o_menuitem");
         } else {
-            console.log("Odoo flavor: Community")
+            console.log("Odoo flavor: Community");
             $listOfAppMenuItems = $('a.o_app');
         }
         console.log('Found ', $listOfAppMenuItems.length, 'apps to test');
@@ -73,10 +73,10 @@
             console.log("ok");
         }).always(function() {
             console.log("Test took ", (performance.now() - startTime)/1000, " seconds");
-        }).fail(function () { 
-            console.error("Error !")
+        }).fail(function () {
+            console.error("Error !");
         });
-    } 
+    }
 
 
     /**
@@ -190,7 +190,7 @@
     function testFilters() {
         var filterDef = $.when();
         // var $filters = $('div.o_control_panel div.btn-group.o_dropdown > ul.o_filters_menu > li:not(.o_add_custom_filter)');
-        var $filters = $('.o_filters_menu > .o_menu_item')
+        var $filters = $('.o_filters_menu > .o_menu_item');
         console.log("Testing " + $filters.length + " filters");
         var filter_ids = _.compact(_.map($filters, function(f) { return f.dataset.id}));
         _.each(filter_ids, function(filter_id){
@@ -251,7 +251,7 @@
         return def;
     };
 
-    
+
     /**
      * chain deferred actions
      * @param $elements: a list of jquery elements to be passed as arg to the function

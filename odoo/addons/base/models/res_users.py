@@ -16,12 +16,12 @@ from lxml import etree
 from lxml.builder import E
 import passlib.context
 
-from odoo import api, fields, models, tools, SUPERUSER_ID, ADMINUSER_ID, _
+from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import AccessDenied, AccessError, UserError, ValidationError
 from odoo.http import request
 from odoo.osv import expression
 from odoo.service.db import check_super
-from odoo.tools import partition, pycompat, collections
+from odoo.tools import partition, collections
 
 _logger = logging.getLogger(__name__)
 
@@ -110,7 +110,7 @@ class Groups(models.Model):
     @api.depends('category_id.name', 'name')
     def _compute_full_name(self):
         # Important: value must be stored in environment of group, not group1!
-        for group, group1 in pycompat.izip(self, self.sudo()):
+        for group, group1 in zip(self, self.sudo()):
             if group1.category_id:
                 group.full_name = '%s / %s' % (group1.category_id.name, group1.name)
             else:
@@ -124,7 +124,7 @@ class Groups(models.Model):
                 return expression.AND(domains)
             else:
                 return expression.OR(domains)
-        if isinstance(operand, pycompat.string_types):
+        if isinstance(operand, str):
             lst = False
             operand = [operand]
         where = []
@@ -179,6 +179,7 @@ class Groups(models.Model):
 class ResUsersLog(models.Model):
     _name = 'res.users.log'
     _order = 'id desc'
+    _description = 'Users Log'
     # Currenly only uses the magical fields: create_uid, create_date,
     # for recording logins. To be extended for other uses (chat presence, etc.)
 
@@ -227,7 +228,7 @@ class Users(models.Model):
         help="If specified, this action will be opened at log on for this user, in addition to the standard menu.")
     groups_id = fields.Many2many('res.groups', 'res_groups_users_rel', 'uid', 'gid', string='Groups', default=_default_groups)
     log_ids = fields.One2many('res.users.log', 'create_uid', string='User log entries')
-    login_date = fields.Datetime(related='log_ids.create_date', string='Latest connection')
+    login_date = fields.Datetime(related='log_ids.create_date', string='Latest authentication', readonly=False)
     share = fields.Boolean(compute='_compute_share', compute_sudo=True, string='Share User', store=True,
          help="External user with limited access, created only for the purpose of sharing data.")
     companies_count = fields.Integer(compute='_compute_companies_count', string="Number of Companies", default=_companies_count)
@@ -247,8 +248,15 @@ class Users(models.Model):
 
     # overridden inherited fields to bypass access rights, in case you have
     # access to the user but not its corresponding partner
-    name = fields.Char(related='partner_id.name', inherited=True)
-    email = fields.Char(related='partner_id.email', inherited=True)
+    name = fields.Char(related='partner_id.name', inherited=True, readonly=False)
+    email = fields.Char(related='partner_id.email', inherited=True, readonly=False)
+
+    accesses_count = fields.Integer('# Access Rights', help='Number of access rights that apply to the current user',
+                                    compute='_compute_accesses_count')
+    rules_count = fields.Integer('# Record Rules', help='Number of record rules that apply to the current user',
+                                 compute='_compute_accesses_count')
+    groups_count = fields.Integer('# Groups', help='Number of groups that apply to the current user',
+                                  compute='_compute_accesses_count')
 
     _sql_constraints = [
         ('login_key', 'UNIQUE (login)',  'You can not have two users with the same login !')
@@ -349,6 +357,14 @@ class Users(models.Model):
         for user in self:
             user.tz_offset = datetime.datetime.now(pytz.timezone(user.tz or 'GMT')).strftime('%z')
 
+    @api.depends('groups_id')
+    def _compute_accesses_count(self):
+        for user in self:
+            groups = user.groups_id
+            user.accesses_count = len(groups.mapped('model_access'))
+            user.rules_count = len(groups.mapped('rule_groups'))
+            user.groups_count = len(groups)
+
     @api.onchange('login')
     def on_change_login(self):
         if self.login and tools.single_email_re.match(self.login):
@@ -405,7 +421,7 @@ class Users(models.Model):
 
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
-        groupby_fields = set([groupby] if isinstance(groupby, pycompat.string_types) else groupby)
+        groupby_fields = set([groupby] if isinstance(groupby, str) else groupby)
         if groupby_fields.intersection(USER_PRIVATE_FIELDS):
             raise AccessError(_("Invalid 'group by' parameter"))
         return super(Users, self).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
@@ -430,12 +446,10 @@ class Users(models.Model):
 
     @api.multi
     def write(self, values):
-        if values.get('active') == False:
-            for user in self:
-                if user.id == SUPERUSER_ID:
-                    raise UserError(_("You cannot deactivate the admin user."))
-                elif user.id == self._uid:
-                    raise UserError(_("You cannot deactivate the user you're currently logged in as."))
+        if values.get('active') and SUPERUSER_ID in self._ids:
+            raise UserError(_("You cannot activate the superuser."))
+        if values.get('active') == False and self._uid in self._ids:
+            raise UserError(_("You cannot deactivate the user you're currently logged in as."))
 
         if values.get('active'):
             for user in self:
@@ -450,7 +464,7 @@ class Users(models.Model):
                     if values['company_id'] not in self.env.user.company_ids.ids:
                         del values['company_id']
                 # safe fields only, so we write as super-user to bypass access rights
-                self = self.sudo()
+                self = self.sudo().with_context(binary_field_real_user=self.env.user)
 
         res = super(Users, self).write(values)
         if 'company_id' in values:
@@ -512,20 +526,19 @@ class Users(models.Model):
     @tools.ormcache('self._uid')
     def context_get(self):
         user = self.env.user
-        result = {}
-        for k in self._fields:
-            if k.startswith('context_'):
-                context_key = k[8:]
-            elif k in ['lang', 'tz']:
-                context_key = k
-            else:
-                context_key = False
-            if context_key:
-                res = getattr(user, k) or False
-                if isinstance(res, models.BaseModel):
-                    res = res.id
-                result[context_key] = res or False
-        return result
+        # determine field names to read
+        name_to_key = {
+            name: name[8:] if name.startswith('context_') else name
+            for name in self._fields
+            if name.startswith('context_') or name in ('lang', 'tz')
+        }
+        # use read() to not read other fields: this must work while modifying
+        # the schema of models res.users or res.partner
+        values = user.read(list(name_to_key), load=False)[0]
+        return {
+            key: values[name]
+            for name, key in name_to_key.items()
+        }
 
     @api.model
     @api.returns('ir.actions.act_window', lambda record: record.id)
@@ -580,18 +593,19 @@ class Users(models.Model):
                relevant environment attributes
         """
         uid = cls._login(db, login, password)
-        if uid == ADMINUSER_ID:
-            # Successfully logged in as admin!
-            # Attempt to guess the web base url...
-            if user_agent_env and user_agent_env.get('base_location'):
-                try:
-                    with cls.pool.cursor() as cr:
+        if user_agent_env and user_agent_env.get('base_location'):
+            with cls.pool.cursor() as cr:
+                env = api.Environment(cr, uid, {})
+                if env.user.has_group('base.group_system'):
+                    # Successfully logged in as system user!
+                    # Attempt to guess the web base url...
+                    try:
                         base = user_agent_env['base_location']
-                        ICP = api.Environment(cr, uid, {})['ir.config_parameter']
+                        ICP = env['ir.config_parameter']
                         if not ICP.get_param('web.base.url.freeze'):
                             ICP.set_param('web.base.url', base)
-                except Exception:
-                    _logger.exception("Failed to update web.base.url configuration parameter")
+                    except Exception:
+                        _logger.exception("Failed to update web.base.url configuration parameter")
         return uid
 
     @classmethod
@@ -699,6 +713,45 @@ class Users(models.Model):
     # for a few places explicitly clearing the has_group cache
     has_group.clear_cache = _has_group.clear_cache
 
+    def action_show_groups(self):
+        self.ensure_one()
+        return {
+            'name': _('Groups'),
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'res_model': 'res.groups',
+            'type': 'ir.actions.act_window',
+            'context': {'create': False, 'delete': False},
+            'domain': [('id','in', self.groups_id.ids)],
+            'target': 'current',
+        }
+
+    def action_show_accesses(self):
+        self.ensure_one()
+        return {
+            'name': _('Access Rights'),
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'res_model': 'ir.model.access',
+            'type': 'ir.actions.act_window',
+            'context': {'create': False, 'delete': False},
+            'domain': [('id', 'in', self.mapped('groups_id.model_access').ids)],
+            'target': 'current',
+        }
+
+    def action_show_rules(self):
+        self.ensure_one()
+        return {
+            'name': _('Record Rules'),
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'res_model': 'ir.rule',
+            'type': 'ir.actions.act_window',
+            'context': {'create': False, 'delete': False},
+            'domain': [('id', 'in', self.mapped('groups_id.rule_groups').ids)],
+            'target': 'current',
+        }
+
     @api.multi
     def _is_public(self):
         self.ensure_one()
@@ -786,7 +839,7 @@ class Users(models.Model):
                     "and *might* be a proxy. If your Odoo is behind a proxy, "
                     "it may be mis-configured. Check that you are running "
                     "Odoo in Proxy Mode and that the proxy is properly configured, see "
-                    "https://www.odoo.com/documentation/11.0/setup/deploy.html#https for details.",
+                    "https://www.odoo.com/documentation/12.0/setup/deploy.html#https for details.",
                     source
                 )
             raise AccessDenied(_("Too many login failures, please wait a bit before trying again."))
@@ -857,7 +910,7 @@ class GroupsImplied(models.Model):
     def create(self, vals_list):
         user_ids_list = [vals.pop('users', None) for vals in vals_list]
         groups = super(GroupsImplied, self).create(vals_list)
-        for group, user_ids in pycompat.izip(groups, user_ids_list):
+        for group, user_ids in zip(groups, user_ids_list):
             if user_ids:
                 # delegate addition of users to add implied groups
                 group.write({'users': user_ids})
@@ -869,7 +922,7 @@ class GroupsImplied(models.Model):
         if values.get('users') or values.get('implied_ids'):
             # add all implied groups (to all users of each group)
             for group in self:
-                vals = {'users': list(pycompat.izip(repeat(4), group.with_context(active_test=False).users.ids))}
+                vals = {'users': list(zip(repeat(4), group.with_context(active_test=False).users.ids))}
                 super(GroupsImplied, group.trans_implied_ids).write(vals)
         return res
 
@@ -1040,7 +1093,7 @@ class GroupsView(models.Model):
         def linearize(app, gs):
             # 'User Type' is an exception
             if app.xml_id == 'base.module_category_user_type':
-                return (app, 'selection', gs)
+                return (app, 'selection', gs.sorted('id'))
             # determine sequence order: a group appears after its implied groups
             order = {g: len(g.trans_implied_ids & gs) for g in gs}
             # check whether order is total, i.e., sequence orders are distinct
@@ -1111,8 +1164,8 @@ class UsersView(models.Model):
         if 'groups_id' not in values and (add or rem):
             # remove group ids in `rem` and add group ids in `add`
             values1['groups_id'] = list(itertools.chain(
-                pycompat.izip(repeat(3), rem),
-                pycompat.izip(repeat(4), add)
+                zip(repeat(3), rem),
+                zip(repeat(4), add)
             ))
 
         return values1
@@ -1228,7 +1281,7 @@ class ChangePasswordWizard(models.TransientModel):
 class ChangePasswordUser(models.TransientModel):
     """ A model to configure users in the change password wizard. """
     _name = 'change.password.user'
-    _description = 'Change Password Wizard User'
+    _description = 'User, Change Password Wizard'
 
     wizard_id = fields.Many2one('change.password.wizard', string='Wizard', required=True, ondelete='cascade')
     user_id = fields.Many2one('res.users', string='User', required=True, ondelete='cascade')

@@ -5,16 +5,14 @@
 # Translators:
 # Martin Trigaux, 2018
 # Faraz Sadri Alamdari <ifarazir@gmail.com>, 2018
-# mehdi samadi <mehsamadi@gmail.com>, 2018
 # Hamed Mohammadi <hamed@dehongi.com>, 2018
-# Arash Sardari <arashss77@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
-"Last-Translator: Arash Sardari <arashss77@gmail.com>, 2018\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-09-21 13:17+0000\n"
+"Last-Translator: Hamed Mohammadi <hamed@dehongi.com>, 2018\n"
 "Language-Team: Persian (https://www.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -89,6 +87,16 @@ msgid "Attach Google documents to any record"
 msgstr "پیوست اسناد گوگل به هر رکورد"
 
 #. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_partner_autocomplete
+msgid "Auto-populate company data"
+msgstr ""
+
+#. module: base_setup
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Autocomplete company data (name, logo, address, etc.)"
+msgstr ""
+
+#. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Business Documents"
 msgstr "اسناد تجاری"
@@ -107,7 +115,7 @@ msgid "Change Document Template"
 msgstr "تغییر قالب سند"
 
 #. module: base_setup
-#: code:addons/base_setup/models/res_config_settings.py:99
+#: code:addons/base_setup/models/res_config_settings.py:100
 #, python-format
 msgid "Choose Your Document Layout"
 msgstr "طرح بندی سند خود انتخاب کنید"
@@ -136,6 +144,11 @@ msgstr "شرکت‌ها"
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__company_id
 msgid "Company"
 msgstr "شرکت"
+
+#. module: base_setup
+#: model:ir.model,name:base_setup.model_res_config_settings
+msgid "Config Settings"
+msgstr ""
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -223,8 +236,8 @@ msgstr "صفحه گسترده گوگل"
 
 #. module: base_setup
 #: model:ir.model,name:base_setup.model_ir_http
-msgid "HTTP routing"
-msgstr "مسیریابی پروتکل HTTP"
+msgid "HTTP Routing"
+msgstr ""
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -371,6 +384,9 @@ msgid "Users"
 msgstr "کاربران"
 
 #. module: base_setup
-#: model:ir.model,name:base_setup.model_res_config_settings
-msgid "res.config.settings"
-msgstr "res.config.settings"
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid ""
+"When populating your address book, Odoo provides a list of matching "
+"companies. When selecting one item, the company data and logo are auto-"
+"filled."
+msgstr ""

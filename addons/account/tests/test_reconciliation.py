@@ -782,12 +782,12 @@ class TestReconciliation(AccountingTestCase):
     def test_aged_report(self):
         AgedReport = self.env['report.account.report_agedpartnerbalance'].with_context(include_nullified_amount=True)
         account_type = ['receivable']
-        report_date_to = time.strftime('%Y') + '-07-16'
+        report_date_to = time.strftime('%Y') + '-07-17'
         partner = self.env['res.partner'].create({'name': 'AgedPartner'})
         currency = self.env.user.company_id.currency_id
 
         invoice = self.create_invoice_partner(currency_id=currency.id, partner_id=partner.id)
-        journal = self.env['account.journal'].create({'name': 'Bank', 'type': 'bank', 'code': 'THE', 'currency_id': currency.id})
+        journal = self.env['account.journal'].create({'name': 'Bank', 'type': 'bank', 'code': 'THE'})
 
         statement = self.make_payment(invoice, journal, 50)
 
@@ -889,6 +889,83 @@ class TestReconciliation(AccountingTestCase):
         _move_revert_test_pair(payment_move, reverted_payment_move)
         _move_revert_test_pair(exchange_move, reverted_exchange_move)
 
+    def test_aged_report_future_payment(self):
+        AgedReport = self.env['report.account.report_agedpartnerbalance'].with_context(include_nullified_amount=True)
+        account_type = ['receivable']
+        partner = self.env['res.partner'].create({'name': 'AgedPartner'})
+        currency = self.env.user.company_id.currency_id
+
+        invoice = self.create_invoice_partner(currency_id=currency.id, partner_id=partner.id)
+        journal = self.env['account.journal'].create({'name': 'Bank', 'type': 'bank', 'code': 'THE'})
+
+        statement = self.make_payment(invoice, journal, 50)
+
+        # Force the payment recording to take place on the invoice date
+        # Although the payment due_date is in the future relative to the invoice
+        # Also, in this case, there can be only 1 partial_reconcile
+        statement_partial_id = statement.move_line_ids.mapped(lambda l: l.matched_credit_ids + l.matched_debit_ids)
+        self.env.cr.execute('UPDATE account_partial_reconcile SET create_date = %(date)s WHERE id = %(partial_id)s',
+            {'date': invoice.date_invoice,
+             'partial_id': statement_partial_id.id})
+
+        # Case 1: report date is invoice date
+        # There should be an entry for the partner
+        report_date_to = invoice.date_invoice
+        report_lines, total, amls = AgedReport._get_partner_move_lines(account_type, report_date_to, 'posted', 30)
+
+        partner_lines = [line for line in report_lines if line['partner_id'] == partner.id]
+        self.assertEqual(partner_lines, [{
+            'name': 'AgedPartner',
+            'trust': 'normal',
+            'partner_id': partner.id,
+            '0': 0.0,
+            '1': 0.0,
+            '2': 0.0,
+            '3': 0.0,
+            '4': 0.0,
+            'total': 50.0,
+            'direction': 50.0,
+        }], 'We should have a line in the report for the partner')
+        self.assertEqual(len(amls[partner.id]), 1, 'We should have 1 account move lines for the partner')
+
+        positive_line = [line for line in amls[partner.id] if line['line'].balance > 0]
+
+        self.assertEqual(positive_line[0]['amount'], 50.0, 'The amount of the amls should be 50')
+
+        # Case 2: report date between invoice date and payment date
+        # There should be an entry for the partner
+        # And the amount has shifted to '1-30 due'
+        report_date_to = time.strftime('%Y') + '-07-08'
+        report_lines, total, amls = AgedReport._get_partner_move_lines(account_type, report_date_to, 'posted', 30)
+
+        partner_lines = [line for line in report_lines if line['partner_id'] == partner.id]
+        self.assertEqual(partner_lines, [{
+            'name': 'AgedPartner',
+            'trust': 'normal',
+            'partner_id': partner.id,
+            '0': 0.0,
+            '1': 0.0,
+            '2': 0.0,
+            '3': 0.0,
+            '4': 50.0,
+            'total': 50.0,
+            'direction': 0.0,
+        }], 'We should have a line in the report for the partner')
+        self.assertEqual(len(amls[partner.id]), 1, 'We should have 1 account move lines for the partner')
+
+        positive_line = [line for line in amls[partner.id] if line['line'].balance > 0]
+
+        self.assertEqual(positive_line[0]['amount'], 50.0, 'The amount of the amls should be 50')
+
+        # Case 2: report date on payment date
+        # There should not be an entry for the partner
+        report_date_to = time.strftime('%Y') + '-07-15'
+        report_lines, total, amls = AgedReport._get_partner_move_lines(account_type, report_date_to, 'posted', 30)
+
+        partner_lines = [line for line in report_lines if line['partner_id'] == partner.id]
+        self.assertEqual(partner_lines, [], 'The aged receivable shouldn\'t have lines at this point')
+        self.assertFalse(amls.get(partner.id, False), 'The aged receivable should not have amls either')
+
     def test_partial_reconcile_currencies_02(self):
         ####
         # Day 1: Invoice Cust/001 to customer (expressed in USD)
@@ -971,3 +1048,62 @@ class TestReconciliation(AccountingTestCase):
         # because they owe us still 50 CC.
         self.assertEqual(invoice_cust_1.state, 'open',
                          'Invoice is in status %s' % invoice_cust_1.state)
+
+    def test_multiple_term_reconciliation_opw_1906665(self):
+        '''Test that when registering a payment to an invoice with multiple
+        payment term lines the reconciliation happens against the line
+        with the earliest date_maturity
+        '''
+
+        payment_term = self.env['account.payment.term'].create({
+            'name': 'Pay in 2 installments',
+            'line_ids': [
+                # Pay 50% immediately
+                (0, 0, {
+                    'value': 'percent',
+                    'value_amount': 50,
+                }),
+                # Pay the rest after 14 days
+                (0, 0, {
+                    'value': 'balance',
+                    'days': 14,
+                })
+            ],
+        })
+
+        # can't use self.create_invoice because it validates and we need to set payment_term_id
+        invoice = self.account_invoice_model.create({
+            'partner_id': self.partner_agrolait_id,
+            'payment_term_id': payment_term.id,
+            'currency_id': self.currency_usd_id,
+            'name': 'Multiple payment terms',
+            'account_id': self.account_rcv.id,
+            'type': 'out_invoice',
+            'date_invoice': time.strftime('%Y') + '-07-01',
+        })
+        self.account_invoice_line_model.create({
+            'product_id': self.product.id,
+            'quantity': 1,
+            'price_unit': 50,
+            'invoice_id': invoice.id,
+            'name': self.product.display_name,
+            'account_id': self.env['account.account'].search([('user_type_id', '=', self.env.ref('account.data_account_type_revenue').id)], limit=1).id,
+        })
+
+        invoice.action_invoice_open()
+
+        payment = self.env['account.payment'].create({
+            'payment_type': 'inbound',
+            'payment_method_id': self.env.ref('account.account_payment_method_manual_in').id,
+            'partner_type': 'customer',
+            'partner_id': self.partner_agrolait_id,
+            'amount': 25,
+            'currency_id': self.currency_usd_id,
+            'journal_id': self.bank_journal_usd.id,
+        })
+        payment.post()
+
+        invoice.assign_outstanding_credit(payment.move_line_ids.filtered('credit').id)
+
+        receivable_lines = invoice.move_id.line_ids.filtered(lambda line: line.account_id == self.account_rcv).sorted('date_maturity')[0]
+        self.assertTrue(receivable_lines.matched_credit_ids)

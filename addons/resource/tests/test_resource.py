@@ -224,6 +224,15 @@ class TestCalendar(TestResourceCommon):
 
         leave.unlink()
 
+    def test_calendar_working_hours_count(self):
+        calendar = self.env.ref('resource.resource_calendar_std_35h')
+        calendar.tz = 'UTC'
+        res = calendar.get_work_hours_count(
+            fields.Datetime.from_string('2017-05-03 14:03:00'),  # Wednesday (8:00-12:00, 13:00-16:00)
+            fields.Datetime.from_string('2017-05-04 11:03:00'),  # Thursday (8:00-12:00, 13:00-16:00)
+            compute_leaves=False)
+        self.assertEqual(res, 5.0)
+
     def test_calendar_working_hours_24(self):
         self.att_4 = self.env['resource.calendar.attendance'].create({
             'name': 'Att4',
@@ -351,7 +360,7 @@ class TestResMixin(TestResourceCommon):
             datetime_tz(2018, 4, 2, 0, 0, 0, tzinfo=self.jean.tz),
             datetime_tz(2018, 4, 6, 23, 0, 0, tzinfo=self.jean.tz),
         )
-        self.assertEqual(data, {'days': 1.375, 'hours': 13})
+        self.assertEqual(data, {'days': 1.4375, 'hours': 13})
 
         # Viewing it as Patel
         # Views from 2018/04/01 11:00:00 to 2018/04/06 10:00:00
@@ -359,7 +368,7 @@ class TestResMixin(TestResourceCommon):
             datetime_tz(2018, 4, 2, 0, 0, 0, tzinfo=self.patel.tz),
             datetime_tz(2018, 4, 6, 23, 0, 0, tzinfo=self.patel.tz),
         )
-        self.assertEqual(data, {'days': 1.125, 'hours': 10})
+        self.assertEqual(data, {'days': 1.1875, 'hours': 10})
 
         # Viewing it as John
         data = self.john.get_work_days_data(
@@ -505,7 +514,7 @@ class TestResMixin(TestResourceCommon):
             datetime_tz(2018, 4, 9, 0, 0, 0, tzinfo=self.john.tz),
             datetime_tz(2018, 4, 13, 23, 59, 59, tzinfo=self.john.tz),
         )
-        self.assertEqual(data, {'days': 1, 'hours': 10})
+        self.assertEqual(data, {'days': 0.9375, 'hours': 10})
 
         # half days
         leave = self.env['resource.calendar.leaves'].create({

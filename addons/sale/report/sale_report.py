@@ -7,7 +7,7 @@ from odoo import api, fields, models
 
 class SaleReport(models.Model):
     _name = "sale.report"
-    _description = "Sales Orders Statistics"
+    _description = "Sales Analysis Report"
     _auto = False
     _rec_name = 'date'
     _order = 'date desc'
@@ -136,6 +136,7 @@ class SaleReport(models.Model):
 
 class SaleOrderReportProforma(models.AbstractModel):
     _name = 'report.sale.report_saleproforma'
+    _description = 'Proforma Report'
 
     @api.multi
     def _get_report_values(self, docids, data=None):

@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
-import codecs
 import collections
 import unicodedata
 
@@ -85,6 +84,7 @@ class ImportMapping(models.Model):
     time.
     """
     _name = 'base_import.mapping'
+    _description = 'Base Import Mapping'
 
     res_model = fields.Char(index=True)
     column_name = fields.Char()
@@ -107,6 +107,7 @@ class ResUsers(models.Model):
 class Import(models.TransientModel):
 
     _name = 'base_import.import'
+    _description = 'Base Import'
 
     # allow imports to survive for 12h in case user is slow
     _transient_max_hours = 12.0
@@ -262,15 +263,15 @@ class Import(models.TransientModel):
     def _read_xls_book(self, book):
         sheet = book.sheet_by_index(0)
         # emulate Sheet.get_rows for pre-0.9.4
-        for row in pycompat.imap(sheet.row, range(sheet.nrows)):
+        for row in map(sheet.row, range(sheet.nrows)):
             values = []
             for cell in row:
                 if cell.ctype is xlrd.XL_CELL_NUMBER:
                     is_float = cell.value % 1 != 0.0
                     values.append(
-                        pycompat.text_type(cell.value)
+                        str(cell.value)
                         if is_float
-                        else pycompat.text_type(int(cell.value))
+                        else str(int(cell.value))
                     )
                 elif cell.ctype is xlrd.XL_CELL_DATE:
                     is_datetime = cell.value % 1 != 0.0
@@ -427,11 +428,13 @@ class Import(models.TransientModel):
 
     def _try_match_date_time(self, preview_values, options):
         # Or a date/datetime if it matches the pattern
-        dt = datetime.datetime
-
         date_patterns = [options['date_format']] if options.get(
             'date_format') else []
         date_patterns.extend(DATE_PATTERNS)
+        match = check_patterns(date_patterns, preview_values)
+        if match:
+            options['date_format'] = match
+            return ['date', 'datetime']
 
         datetime_patterns = [options['datetime_format']] if options.get(
             'datetime_format') else []
@@ -440,28 +443,7 @@ class Import(models.TransientModel):
             for d in date_patterns
             for t in TIME_PATTERNS
         )
-
-        def check_patterns(patterns):
-            for pattern in patterns:
-                for val in preview_values:
-                    if not val:
-                        continue
-
-                    try:
-                        dt.strptime(val, pattern)
-                    except ValueError:
-                        break
-                else: # no break, all match
-                    return pattern
-
-            return None
-
-        match = check_patterns(date_patterns)
-        if match:
-            options['date_format'] = match
-            return ['date', 'datetime']
-
-        match = check_patterns(datetime_patterns)
+        match = check_patterns(datetime_patterns, preview_values)
         if match:
             options['datetime_format'] = match
             return ['datetime']
@@ -660,7 +642,7 @@ class Import(models.TransientModel):
         if options.get('headers'):
             rows_to_import = itertools.islice(rows_to_import, 1, None)
         data = [
-            list(row) for row in pycompat.imap(mapper, rows_to_import)
+            list(row) for row in map(mapper, rows_to_import)
             # don't try inserting completely empty rows (e.g. from
             # filtering out o2m fields)
             if any(row)
@@ -881,7 +863,7 @@ class Import(models.TransientModel):
             return {
                 'messages': [{
                     'type': 'error',
-                    'message': pycompat.text_type(error),
+                    'message': str(error),
                     'record': False,
                 }]
             }
@@ -903,6 +885,8 @@ class Import(models.TransientModel):
         try:
             if dryrun:
                 self._cr.execute('ROLLBACK TO SAVEPOINT import')
+                # cancel all changes done to the registry/ormcache
+                self.pool.reset_changes()
             else:
                 self._cr.execute('RELEASE SAVEPOINT import')
         except psycopg2.InternalError:
@@ -940,7 +924,7 @@ DATE_FORMATS = []
 # the previous two
 for ps in _PATTERN_BASELINE:
     patterns = {ps}
-    for s, t in [('%Y', '%y'), ('%m', '%b'), ('%m', '%B')]:
+    for s, t in [('%Y', '%y')]:
         patterns.update([ # need listcomp: with genexpr "set changed size during iteration"
             tuple(t if it == s else it for it in f)
             for f in patterns
@@ -955,3 +939,40 @@ TIME_PATTERNS = [
     '%H:%M:%S', '%H:%M', '%H', # 24h
     '%I:%M:%S %p', '%I:%M %p', '%I %p', # 12h
 ]
+
+def check_patterns(patterns, values):
+    for pattern in patterns:
+        p = to_re(pattern)
+        for val in values:
+            if val and not p.match(val):
+                break
+
+        else:  # no break, all match
+            return pattern
+
+    return None
+
+def to_re(pattern):
+    """ cut down version of TimeRE converting strptime patterns to regex
+    """
+    pattern = re.sub(r'\s+', r'\\s+', pattern)
+    pattern = re.sub('%([a-z])', _replacer, pattern, flags=re.IGNORECASE)
+    pattern = '^' + pattern + '$'
+    return re.compile(pattern, re.IGNORECASE)
+def _replacer(m):
+    return _P_TO_RE[m.group(1)]
+
+_P_TO_RE = {
+    'd': r"(3[0-1]|[1-2]\d|0[1-9]|[1-9]| [1-9])",
+    'H': r"(2[0-3]|[0-1]\d|\d)",
+    'I': r"(1[0-2]|0[1-9]|[1-9])",
+    'm': r"(1[0-2]|0[1-9]|[1-9])",
+    'M': r"([0-5]\d|\d)",
+    'S': r"(6[0-1]|[0-5]\d|\d)",
+    'y': r"(\d\d)",
+    'Y': r"(\d\d\d\d)",
+
+    'p': r"(am|pm)",
+
+    '%': '%',
+}

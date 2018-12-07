@@ -9,7 +9,7 @@ from odoo.tools.translate import _
 class Lead2OpportunityPartner(models.TransientModel):
 
     _name = 'crm.lead2opportunity.partner'
-    _description = 'Lead To Opportunity Partner'
+    _description = 'Convert Lead to Opportunity (not in mass)'
     _inherit = 'crm.partner.binding'
 
     @api.model
@@ -157,7 +157,7 @@ class Lead2OpportunityPartner(models.TransientModel):
 class Lead2OpportunityMassConvert(models.TransientModel):
 
     _name = 'crm.lead2opportunity.partner.mass'
-    _description = 'Mass Lead To Opportunity Partner'
+    _description = 'Convert Lead to Opportunity (in mass)'
     _inherit = 'crm.lead2opportunity.partner'
 
     @api.model

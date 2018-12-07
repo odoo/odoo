@@ -3,27 +3,29 @@
 # * crm
 # 
 # Translators:
-# Sergio Zanchetta <primes2h@gmail.com>, 2018
+# Pietro Della Notte <pdellanotte@gmail.com>, 2018
 # Francesco Garganese <francesco.garganese@aeromnia.aero>, 2018
+# Simone Bernini <simone@aperturelabs.it>, 2018
+# Giacomo Grasso <giacomo.grasso.82@gmail.com>, 2018
+# Christian <chris@effeci.info>, 2018
+# Alberto Carollo <baba75@gmail.com>, 2018
+# Sebastiano Pistore <SebastianoPistore.info@protonmail.ch>, 2018
+# Cécile Collart <cco@odoo.com>, 2018
+# Romica Paun <roa@odoo.com>, 2018
 # Martin Trigaux, 2018
 # Luigi Di Naro <gigidn@gmail.com>, 2018
-# Simone Bernini <simone@aperturelabs.it>, 2018
 # Paolo Valier, 2018
-# Cécile Collart <cco@odoo.com>, 2018
-# Pietro Della Notte <pdellanotte@gmail.com>, 2018
-# Alberto Carollo <baba75@gmail.com>, 2018
 # David Minneci <david@numeko.it>, 2018
+# Sergio Zanchetta <primes2h@gmail.com>, 2018
 # Léonie Bouchat <lbo@odoo.com>, 2018
-# Giacomo Grasso <giacomo.grasso.82@gmail.com>, 2018
-# Sebastiano Pistore <SebastianoPistore.info@protonmail.ch>, 2018
-# Christian <chris@effeci.info>, 2018
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:48+0000\n"
-"PO-Revision-Date: 2018-09-18 09:48+0000\n"
-"Last-Translator: Christian <chris@effeci.info>, 2018\n"
+"POT-Creation-Date: 2018-10-08 06:48+0000\n"
+"PO-Revision-Date: 2018-08-24 09:17+0000\n"
+"Last-Translator: Léonie Bouchat <lbo@odoo.com>, 2018\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,14 +36,13 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__meeting_count
 #: model:ir.model.fields,field_description:crm.field_res_partner__meeting_count
-#: model:ir.model.fields,field_description:crm.field_res_users__meeting_count
 msgid "# Meetings"
 msgstr "# Riunioni"
 
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
 msgid "% endif"
-msgstr ""
+msgstr "% endif"
 
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
@@ -50,6 +51,9 @@ msgid ""
 "    % if email\n"
 "    <strong style=\"font-size: 16px;\">Try the mail gateway</strong>"
 msgstr ""
+"% set email = object.env['crm.team'].search([('alias_name','!=', False)],limit=1).alias_id.display_name\n"
+" % if email\n"
+"<strong style=\"font-size: 16px;\">Prova la mail gateway</strong>"
 
 #. module: crm
 #. openerp-web
@@ -59,6 +63,8 @@ msgid ""
 "<b>Choose a name</b> for your opportunity, example: <i>'Need a new "
 "website'</i>"
 msgstr ""
+"<b>Scegli un nome</b>per la tua opportunità, esempio: <i>Necessità di un "
+"nuovo sito internet</i>"
 
 #. module: crm
 #. openerp-web
@@ -82,7 +88,7 @@ msgstr ""
 "riga.</i>"
 
 #. module: crm
-#: code:addons/crm/models/crm_team.py:138
+#: code:addons/crm/models/crm_team.py:139
 #, python-format
 msgid ""
 "<p class='o_view_nocontent_smiling_face'>Add new opportunities</p><p>\n"
@@ -90,6 +96,10 @@ msgid ""
 "    as a member of one of the Sales Team.\n"
 "</p>"
 msgstr ""
+"<p class='o_view_nocontent_smiling_face'>Aggiungi nuove opportunità</p><p>\n"
+"Sembra che tu non sia un membro di un team di vendita. Dovresti aggiungerti\n"
+"come membro di un team di vendita\n"
+"</p>"
 
 #. module: crm
 #. openerp-web
@@ -114,6 +124,10 @@ msgid ""
 "after</li><li>second call 3 days after, ...</li></ol><p "
 "class='mb0'><i>Select a standard activity for now.</i></p>"
 msgstr ""
+"<p>Sarai in grado di personalizzare le tue attività di follow-up. Esempi: "
+"</p><ol><li>email introduttiva</li><li>chiamare 10 giorni "
+"dopo</li><li>seconda chiamata 3 giorni dopo, ...</li></ol><p "
+"class='mb0'><i>Seleziona un'attività standard per ora.</i></p>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
@@ -128,15 +142,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "<span class=\"oe_grey\"> at </span>"
 msgstr "<span class=“oe_grey”> a </span>"
-
-#. module: crm
-#: model:ir.model.fields,help:crm.field_crm_team__alias_defaults
-msgid ""
-"A Python dictionary that will be evaluated to provide default values when "
-"creating new records for this alias."
-msgstr ""
-"Un dizionario Python che verrà valutato per fornire valori predefiniti "
-"durante la creazione di nuovi record per questo alias."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
@@ -197,10 +202,10 @@ msgid "Activity Types"
 msgstr "Tipi di Attività"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:924
+#: code:addons/crm/models/crm_lead.py:933
 #, python-format
 msgid "Add a new lead"
-msgstr ""
+msgstr "Aggiungi un nuovo lead"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -220,26 +225,6 @@ msgid "Alias"
 msgstr "Alias"
 
 #. module: crm
-#: model:ir.model.fields,field_description:crm.field_crm_team__alias_contact
-msgid "Alias Contact Security"
-msgstr "Alias contatto per la sicurezza"
-
-#. module: crm
-#: model:ir.model.fields,field_description:crm.field_crm_team__alias_name
-msgid "Alias Name"
-msgstr "Nome Alias"
-
-#. module: crm
-#: model:ir.model.fields,field_description:crm.field_crm_team__alias_domain
-msgid "Alias domain"
-msgstr "Dominio Alias"
-
-#. module: crm
-#: model:ir.model.fields,field_description:crm.field_crm_team__alias_model_id
-msgid "Aliased Model"
-msgstr "Modello Alias"
-
-#. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_leads
 msgid "Analysis"
 msgstr "Analisi"
@@ -248,17 +233,6 @@ msgstr "Analisi"
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass__deduplicate
 msgid "Apply deduplication"
 msgstr "Applica deduplicazioni"
-
-#. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
-msgid "Archive"
-msgstr "Archivio"
-
-#. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
-#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
-msgid "Archived"
-msgstr "Contatti Archiviati"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.merge_opportunity_form
@@ -283,7 +257,7 @@ msgstr "Data di assegnazione"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "Numero di allegati"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_tree_view_oppor
@@ -293,10 +267,10 @@ msgstr "Media delle probabilità"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__is_blacklisted
 msgid "Blacklist"
-msgstr ""
+msgstr "Lista nera"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:399
+#: code:addons/crm/models/crm_lead.py:400
 #, python-format
 msgid "Boom! Team record for the past 30 days."
 msgstr "Boom! Record della squadra negli ultimi 30 giorni."
@@ -319,6 +293,16 @@ msgid "CRM Activity Analysis"
 msgstr "CRM Analisi delle Attività"
 
 #. module: crm
+#: model:ir.model,name:crm.model_crm_stage
+msgid "CRM Stages"
+msgstr ""
+
+#. module: crm
+#: model:mail.activity.type,name:crm.mail_activity_demo_call_demo
+msgid "Call for Demo"
+msgstr "Chiama per una Demo"
+
+#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__campaign_id
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
@@ -337,11 +321,6 @@ msgstr "Annulla"
 #: model:ir.actions.act_window,name:crm.crm_team_act_tree
 msgid "Cases by Sales Team"
 msgstr "Casi per Team di vendita"
-
-#. module: crm
-#: model:ir.model,name:crm.model_crm_lead_tag
-msgid "Category of lead"
-msgstr "Categorie di lead"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage__on_change
@@ -393,7 +372,7 @@ msgstr ""
 #: code:addons/crm/static/src/js/tour.js:32
 #, python-format
 msgid "Click here to <b>add your opportunity</b>."
-msgstr ""
+msgstr "Clicca qui per <b>aggiungi la tua opportunità</b>."
 
 #. module: crm
 #. openerp-web
@@ -411,11 +390,12 @@ msgstr ""
 #: code:addons/crm/static/src/js/tour.js:60
 #, python-format
 msgid "Click on the opportunity to zoom in."
-msgstr ""
+msgstr "Clicca sull'opportunità per visualizzare i dettagli."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__date_closed
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Closed Date"
 msgstr "Data chiusa"
@@ -437,6 +417,7 @@ msgstr "Indice Colore"
 #: model:ir.model.fields,field_description:crm.field_crm_lead__company_id
 #: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Company"
 msgstr "Azienda"
@@ -444,7 +425,12 @@ msgstr "Azienda"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_leads
 msgid "Company Name"
-msgstr "Nome dell’azienda"
+msgstr "Nome azienda"
+
+#. module: crm
+#: model:ir.model,name:crm.model_res_config_settings
+msgid "Config Settings"
+msgstr "Impostazioni di configurazione"
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.crm_menu_config
@@ -460,6 +446,11 @@ msgid "Configuration options are available in the Settings app."
 msgstr "Le opzioni di configurazione sono disponibili nel settings delle app."
 
 #. module: crm
+#: model:crm.lead.tag,name:crm.categ_oppor7
+msgid "Consulting"
+msgstr "Consulenza"
+
+#. module: crm
 #: model:ir.model,name:crm.model_res_partner
 msgid "Contact"
 msgstr "Contatto"
@@ -467,7 +458,7 @@ msgstr "Contatto"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__contact_name
 msgid "Contact Name"
-msgstr "Nome di contatto"
+msgstr "Nome contatto"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -488,6 +479,7 @@ msgstr "Azione di Conversione"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__date_conversion
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Conversion Date"
 msgstr "Data di conversione"
@@ -501,6 +493,16 @@ msgstr "Data di conversione da lead a opportunità"
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
 msgid "Conversion Options"
 msgstr "Opzioni di conversione"
+
+#. module: crm
+#: model:ir.model,name:crm.model_crm_lead2opportunity_partner_mass
+msgid "Convert Lead to Opportunity (in mass)"
+msgstr "Converti lead in opportunità (in massa)"
+
+#. module: crm
+#: model:ir.model,name:crm.model_crm_lead2opportunity_partner
+msgid "Convert Lead to Opportunity (not in mass)"
+msgstr "Converti lead in opportunità (non in massa)"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
@@ -520,13 +522,20 @@ msgid "Convert to opportunities"
 msgstr "Converti in opportunità"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:1107
+#: code:addons/crm/models/crm_lead.py:1116
 #: selection:crm.lead2opportunity.partner,name:0
 #: selection:crm.lead2opportunity.partner.mass,name:0
 #: model:ir.actions.act_window,name:crm.action_crm_lead2opportunity_partner
 #, python-format
 msgid "Convert to opportunity"
 msgstr "Converti in opportunità"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
+msgid ""
+"Convert visitors of your website into leads in the CRM. We do data "
+"enrichment based on their IP address."
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__message_bounce
@@ -556,6 +565,11 @@ msgid "Create & Edit"
 msgstr "Crea & Modifica"
 
 #. module: crm
+#: model:ir.model.fields,field_description:crm.field_res_config_settings__module_crm_reveal
+msgid "Create Leads/Opportunities from your website's traffic"
+msgstr "Crea lead/opportunità dal traffico del tuo sito Web"
+
+#. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner
 msgid "Create Opportunity"
 msgstr "Crea Opportunità"
@@ -570,12 +584,12 @@ msgstr "Crea un nuovo cliente"
 #: model_terms:ir.actions.act_window,help:crm.crm_case_form_view_salesteams_lead
 #: model_terms:ir.actions.act_window,help:crm.crm_case_form_view_salesteams_opportunity
 msgid "Create a new lead"
-msgstr ""
+msgstr "Crea un nuovo lead"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lead_tag_action
 msgid "Create a new tag for your opportunities"
-msgstr ""
+msgstr "Crea un nuovo tag per le tue opportunità"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.create_opportunity_simplified
@@ -586,13 +600,13 @@ msgstr "Crea un'Opportunità"
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.relate_partner_opportunities
 msgid "Create an new opportunity related to this customer"
-msgstr ""
+msgstr "Crea una nuova opportunità relativa a questo cliente"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:926
+#: code:addons/crm/models/crm_lead.py:935
 #, python-format
 msgid "Create an opportunity in your pipeline"
-msgstr ""
+msgstr "Crea un'opportunità nella tua pipeline"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lead_tag_action
@@ -600,6 +614,8 @@ msgid ""
 "Create tags that fit your business (product structure, sales type, etc.) to "
 "better manage and tack your opportunities."
 msgstr ""
+"Crea etichette che si adattano all'attività (struttura del prodotto, tipo di"
+" vendita ecc.) per gestire e affinare meglio le opportunità."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__author_id
@@ -651,13 +667,7 @@ msgid "Currency"
 msgstr "Valuta"
 
 #. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
-#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
-msgid "Current"
-msgstr "Attuale"
-
-#. module: crm
-#: code:addons/crm/models/crm_lead.py:1159
+#: code:addons/crm/models/crm_lead.py:1168
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner__partner_id
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass__partner_id
 #: model:ir.model.fields,field_description:crm.field_crm_lead__partner_id
@@ -672,12 +682,7 @@ msgid "Customer"
 msgstr "Cliente"
 
 #. module: crm
-#: model:ir.model.fields,field_description:crm.field_res_config_settings__module_web_clearbit
-msgid "Customer Autocomplete"
-msgstr "Compila automaticamente i dati dei clienti"
-
-#. module: crm
-#: code:addons/crm/models/crm_lead.py:1161
+#: code:addons/crm/models/crm_lead.py:1170
 #, python-format
 msgid "Customer Email"
 msgstr "Email del Cliente"
@@ -688,7 +693,7 @@ msgid "Customer Name"
 msgstr "Nome del Cliente"
 
 #. module: crm
-#: model:ir.ui.menu,name:crm.res_partner_menu_crm
+#: model:ir.ui.menu,name:crm.res_partner_menu_customer
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
 msgid "Customers"
@@ -721,14 +726,9 @@ msgid "Default Alias Name for Leads"
 msgstr "Nome alias predefinito per lead"
 
 #. module: crm
-#: model:ir.model.fields,field_description:crm.field_crm_team__alias_defaults
-msgid "Default Values"
-msgstr "Prezzo Standard"
-
-#. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lost_reason_action
 msgid "Define a new lost reason"
-msgstr ""
+msgstr "Definire un motivo per cui hai perso questa opportunità"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
@@ -738,12 +738,17 @@ msgstr "Elimina"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_leads
 msgid "Describe the lead..."
-msgstr "Descrivi il Lead…"
+msgstr "Descrivere il lead…"
+
+#. module: crm
+#: model:crm.lead.tag,name:crm.categ_oppor5
+msgid "Design"
+msgstr "Design"
 
 #. module: crm
 #: model:ir.model,name:crm.model_digest_digest
 msgid "Digest"
-msgstr ""
+msgstr "Digest"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_create_opportunity_simplified
@@ -810,6 +815,8 @@ msgid ""
 "Email sent to <strong>${email}</strong> generate opportunities in your "
 "pipeline.<br>"
 msgstr ""
+"Le email inviate a <strong>${email}</strong> generano opportunità nella tua "
+"pipeline.<br>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -819,6 +826,11 @@ msgid ""
 "Incoming emails can be automatically assigned to specific Sales Teams. To do"
 " so, set an email alias on the Sales Team."
 msgstr ""
+"Le email ricevute a questo indirizzo generano nuovi lead non ancora "
+"assegnati a nessun team di vendita. Questo può essere effettuato durante la "
+"conversione in opportunità. Le email in arrivo possono essere "
+"automaticamente assegnate a specifici team di vendita, definendo un alias "
+"email al team di vendita. "
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage__requirements
@@ -840,11 +852,6 @@ msgid "Event"
 msgstr "Evento"
 
 #. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
-msgid "Exclude blacklisted"
-msgstr ""
-
-#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__date_deadline
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
@@ -852,6 +859,7 @@ msgid "Expected Closing"
 msgstr "Chiusura Prevista"
 
 #. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Expected Closing Date"
 msgstr "Data di chiusura prevista"
@@ -903,12 +911,17 @@ msgstr "Filtri Estesi"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_leads
 msgid "Extra Info"
-msgstr "Info aggiuntive"
+msgstr "Informazioni aggiuntive"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage__fold
 msgid "Folded in Pipeline"
 msgstr "Chiuso nella Pipeline"
+
+#. module: crm
+#: model:mail.activity.type,name:crm.mail_activity_demo_followup_quote
+msgid "Follow-up Quote"
+msgstr "Citazione di follow-up"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_follower_ids
@@ -941,13 +954,12 @@ msgid "Format phone numbers based on national conventions"
 msgstr "Formatta numeri telefonici in base alle convenzioni nazionali"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:597
+#: code:addons/crm/models/crm_lead.py:606
 #, python-format
 msgid "From %s : %s"
 msgstr "Da %s : %s"
 
 #. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Future Activities"
 msgstr "Attività future"
@@ -958,6 +970,8 @@ msgid ""
 "Generate leads from incoming emails and assign them\n"
 "                                    to a Sales Team manually"
 msgstr ""
+"Genera lead dalle email in arrivo ed assegnali\n"
+"                                    manualmente a un team di vendita"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead_lost
@@ -968,6 +982,7 @@ msgstr "Ottieni la ragione persa"
 #: model_terms:ir.ui.view,arch_db:crm.crm_stage_form
 msgid "Give your team the requirements to move an opportunity to this stage."
 msgstr ""
+"Dai al tuo team i requisiti per passare un'opportunità alla fase successiva."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__email_cc
@@ -975,7 +990,7 @@ msgid "Global CC"
 msgstr "CC globale"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:397
+#: code:addons/crm/models/crm_lead.py:398
 #, python-format
 msgid "Go, go, go! Congrats for your first deal."
 msgstr "Via! Via! Via! Congratulazioni per il tuo primo contratto."
@@ -986,7 +1001,7 @@ msgstr "Via! Via! Via! Congratulazioni per il tuo primo contratto."
 #: code:addons/crm/static/src/js/tour.js:95
 #, python-format
 msgid "Good job! You completed the tour of the CRM app."
-msgstr ""
+msgstr "Buon lavoro! Hai finito la guida dell'app CRM"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
@@ -999,14 +1014,7 @@ msgstr "Raggruppa per"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__dashboard_graph_group_pipeline
 msgid "Grouping Method"
-msgstr ""
-
-#. module: crm
-#: model:ir.model,name:crm.model_crm_partner_binding
-msgid "Handle partner binding or generation in CRM wizards."
-msgstr ""
-"Gestire l’associazione o la generazione del partner nelle procedure guidate "
-"di CRM."
+msgstr "Metodo di raggruppamento"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lead_action_activities
@@ -1044,15 +1052,6 @@ msgid "ID"
 msgstr "ID"
 
 #. module: crm
-#: model:ir.model.fields,help:crm.field_crm_team__alias_parent_thread_id
-msgid ""
-"ID of the parent record holding the alias (example: project holding the task"
-" creation alias)"
-msgstr ""
-"ID del record padre che contiene l’alias (esempio: progetto che contiene "
-"l’alias di creazione dell’attività)"
-
-#. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__message_unread
 msgid "If checked new messages require your attention."
 msgstr "Se selezionato, nuovi messaggi richiedono la tua attenzione"
@@ -1073,6 +1072,8 @@ msgid ""
 "If set, this Sales Team will be used for sales and assignations related to "
 "this partner"
 msgstr ""
+"Se definito, questo team di vendita sarà usato per le vendite e le "
+"assegnazioni associate a questo partner."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__is_blacklisted
@@ -1081,6 +1082,8 @@ msgid ""
 "If the email address is on the blacklist, the contact won't receive mass "
 "mailing anymore, from any list"
 msgstr ""
+"Se l'indirizzo email è sulla lista nera, il contatto non riceverà più email "
+"di massa da nessuna lista."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead2opportunity_partner_mass__force_assignation
@@ -1095,10 +1098,10 @@ msgid "Import & Synchronize"
 msgstr "Importa e Sincronizza"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:1221
+#: code:addons/crm/models/crm_lead.py:1230
 #, python-format
 msgid "Import Template for Leads & Opportunities"
-msgstr ""
+msgstr "Importa template per lead & opportunità"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lost_reason_view_search
@@ -1106,9 +1109,14 @@ msgid "Include archived"
 msgstr "Incluso archiviati"
 
 #. module: crm
+#: model:crm.lead.tag,name:crm.categ_oppor4
+msgid "Information"
+msgstr "Informazioni"
+
+#. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "Initial Contact Information"
-msgstr ""
+msgstr "Informazioni iniziali sul contatto"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_leads
@@ -1197,13 +1205,12 @@ msgid "Last Updated on"
 msgstr "Ultima modifica il"
 
 #. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Late Activities"
 msgstr "Attività in ritardo"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:904
+#: code:addons/crm/models/crm_lead.py:913
 #: selection:crm.activity.report,lead_type:0 selection:crm.lead,type:0
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__lead_id
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_leads
@@ -1214,20 +1221,15 @@ msgid "Lead"
 msgstr "Lead"
 
 #. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
-msgid "Lead / Customer"
-msgstr "Lead / Cliente"
+#: model:ir.model,name:crm.model_crm_lead_tag
+msgid "Lead Tag"
+msgstr "Tag lead"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_tag_form
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_tag_tree
 msgid "Lead Tags"
-msgstr "Tag associati ai lead"
-
-#. module: crm
-#: model:ir.model,name:crm.model_crm_lead2opportunity_partner
-msgid "Lead To Opportunity Partner"
-msgstr "Partner Da Lead a Opportunità"
+msgstr "Etichette associate ai lead"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead
@@ -1239,12 +1241,14 @@ msgstr "Lead/Opportunità"
 #: model:ir.actions.act_window,name:crm.crm_lead_all_leads
 #: model:ir.model.fields,field_description:crm.field_crm_team__use_leads
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__group_use_lead
+#: model:ir.ui.menu,name:crm.crm_menu_leads
 #: model:ir.ui.menu,name:crm.crm_opportunity_report_menu_lead
 #: model:ir.ui.menu,name:crm.menu_crm_leads
 #: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_tree_view_leads
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 msgid "Leads"
 msgstr "Leads"
 
@@ -1284,11 +1288,6 @@ msgid "Leads that are assigned to me"
 msgstr "Leads a me assegnate"
 
 #. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
-msgid "Leads that did ask to not receive mass mailing anymore"
-msgstr ""
-
-#. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
 msgid ""
 "Leads that you selected that have duplicates. If the list is empty, it means"
@@ -1312,7 +1311,7 @@ msgstr "Leads/Opportunità"
 #: code:addons/crm/static/src/js/tour.js:47
 #, python-format
 msgid "Let's schedule an activity."
-msgstr ""
+msgstr "Pianifichiamo un'attività."
 
 #. module: crm
 #: selection:crm.lead2opportunity.partner,action:0
@@ -1322,20 +1321,20 @@ msgstr "Collega ad un cliente esistente"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__partner_id
-msgid "Linked partner (optional). Usually created when converting the lead."
+msgid ""
+"Linked partner (optional). Usually created when converting the lead. You can"
+" find a partner by its Name, TIN, Email or Internal Reference."
 msgstr ""
-"Partner collegato (facoltativo). Generalmente creato durante la conversione "
-"del lead."
+"Partner collegato (opzionale). Solitamente creato durante la conversione del"
+" lead. È possibile trovare un partner dal suo nome, dal suo codice fiscale, "
+"dalla sua email o dal suo riferimento interno."
 
 #. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
-msgid "Look up company information (name, logo, etc.)"
-msgstr "Cerca informazioni sulla società (nome, logo, ecc.)"
-
-#. module: crm
-#: code:addons/crm/models/crm_lead.py:1113
+#: code:addons/crm/models/crm_lead.py:1122
+#: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_leads
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 #, python-format
 msgid "Lost"
@@ -1366,7 +1365,12 @@ msgstr "Basso"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "Allegato principale"
+
+#. module: crm
+#: model:mail.activity.type,name:crm.mail_activity_demo_make_quote
+msgid "Make Quote"
+msgstr "Fai un’offerta"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__generate_lead_from_alias
@@ -1376,7 +1380,7 @@ msgstr "Assegnazione manuale delle e-mail"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Manual Assignation of Incoming Emails"
-msgstr ""
+msgstr "Assegnazione manuale delle email in arrivo"
 
 #. module: crm
 #: model:ir.actions.server,name:crm.action_mark_activities_done
@@ -1399,6 +1403,11 @@ msgid "Mark Won"
 msgstr "Segna Vinta"
 
 #. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_leads
+msgid "Mark as Lost"
+msgstr "Segna come persa"
+
+#. module: crm
 #: model:ir.actions.server,name:crm.action_mark_as_lost
 msgid "Mark as lost"
 msgstr "Segna come persa"
@@ -1409,11 +1418,6 @@ msgid "Marketing"
 msgstr "Marketing"
 
 #. module: crm
-#: model:ir.model,name:crm.model_crm_lead2opportunity_partner_mass
-msgid "Mass Lead To Opportunity Partner"
-msgstr "Partner di massa per opportunità"
-
-#. module: crm
 #: selection:crm.lead,priority:0
 #: model:ir.model.fields,field_description:crm.field_crm_lead__medium_id
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -1422,7 +1426,7 @@ msgid "Medium"
 msgstr "Mezzo"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:949
+#: code:addons/crm/models/crm_lead.py:958
 #, python-format
 msgid "Meeting scheduled at '%s'<br> Subject: %s <br> Duration: %s hour(s)"
 msgstr "Riunione pianificata su ‘%s’<br> Oggetto: %s <br> Durata: %s ora / e"
@@ -1431,7 +1435,6 @@ msgstr "Riunione pianificata su ‘%s’<br> Oggetto: %s <br> Durata: %s ora / e
 #: model:ir.actions.act_window,name:crm.act_crm_opportunity_calendar_event_new
 #: model:ir.actions.act_window,name:crm.calendar_event_partner
 #: model:ir.model.fields,field_description:crm.field_res_partner__meeting_ids
-#: model:ir.model.fields,field_description:crm.field_res_users__meeting_ids
 #: model_terms:ir.ui.view,arch_db:crm.view_partners_form_crm1
 msgid "Meetings"
 msgstr "Riunioni"
@@ -1448,14 +1451,14 @@ msgid "Merge Leads/Opportunities"
 msgstr "Unisci Leads/Opportunità"
 
 #. module: crm
+#: model:ir.model,name:crm.model_crm_merge_opportunity
+msgid "Merge Opportunities"
+msgstr "Unisci opportunità"
+
+#. module: crm
 #: model:ir.actions.act_window,name:crm.merge_opportunity_act
 msgid "Merge leads/opportunities"
 msgstr "Unisci Leads/Opportunità"
-
-#. module: crm
-#: model:ir.model,name:crm.model_crm_merge_opportunity
-msgid "Merge opportunities"
-msgstr "Unisci Opportunità"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead2opportunity_partner_mass__deduplicate
@@ -1469,25 +1472,25 @@ msgid "Merge with existing opportunities"
 msgstr "Unisci con opportunità esistenti"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:547
+#: code:addons/crm/models/crm_lead.py:556
 #, python-format
 msgid "Merged lead"
 msgstr "Lead Unito"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:579
+#: code:addons/crm/models/crm_lead.py:588
 #, python-format
 msgid "Merged leads"
 msgstr "Leads Uniti"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:579
+#: code:addons/crm/models/crm_lead.py:588
 #, python-format
 msgid "Merged opportunities"
 msgstr "Opportunità Unite"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:547
+#: code:addons/crm/models/crm_lead.py:556
 #, python-format
 msgid "Merged opportunity"
 msgstr "Opportunità unita"
@@ -1514,7 +1517,6 @@ msgstr "Cellulare"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
-#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 msgid "My Activities"
 msgstr "Le mie attività"
 
@@ -1529,6 +1531,7 @@ msgid "My Opportunities"
 msgstr "Le mie Opportunità"
 
 #. module: crm
+#: model:ir.ui.menu,name:crm.menu_crm_opportunities
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "My Pipeline"
 msgstr "La mia Bacheca"
@@ -1547,7 +1550,7 @@ msgstr "Nuovo"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_digest_digest__kpi_crm_lead_created
 msgid "New Leads/Opportunities"
-msgstr ""
+msgstr "Nuovi lead/nuove opportunità"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_opportunity_form
@@ -1586,7 +1589,7 @@ msgid "Next activity late"
 msgstr "Prossima attività in ritardo"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:1181
+#: code:addons/crm/models/crm_lead.py:1190
 #, python-format
 msgid "No Subject"
 msgstr "Nessun soggetto"
@@ -1594,7 +1597,7 @@ msgstr "Nessun soggetto"
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lead_action_activities
 msgid "No next activity"
-msgstr ""
+msgstr "Nessuna attività pianificata"
 
 #. module: crm
 #: selection:crm.lead,kanban_state:0
@@ -1602,7 +1605,6 @@ msgid "No next activity planned"
 msgstr "Non ci sono prossima attività pianificate"
 
 #. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "No salesperson"
 msgstr "Numero venditori/Agenti"
@@ -1667,19 +1669,24 @@ msgid "Open Opportunity"
 msgstr "Apri Opportunità"
 
 #. module: crm
+#: model:ir.model,name:crm.model_crm_lost_reason
+msgid "Opp. Lost Reason"
+msgstr ""
+
+#. module: crm
 #: model:ir.actions.act_window,name:crm.crm_case_form_view_salesteams_opportunity
 #: model:ir.actions.act_window,name:crm.crm_lead_opportunities
 #: model:ir.actions.act_window,name:crm.relate_partner_opportunities
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner__opportunity_ids
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass__opportunity_ids
 #: model:ir.model.fields,field_description:crm.field_res_partner__opportunity_ids
-#: model:ir.model.fields,field_description:crm.field_res_users__opportunity_ids
 #: model:ir.ui.menu,name:crm.menu_crm_config_opportunity
 #: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_tree_view_oppor
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_graph
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner
 #: model_terms:ir.ui.view,arch_db:crm.view_partners_form_crm1
 msgid "Opportunities"
@@ -1713,7 +1720,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_digest_digest__kpi_crm_opportunities_won
 msgid "Opportunities Won"
-msgstr ""
+msgstr "Opportunità vinte"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
@@ -1726,13 +1733,12 @@ msgid "Opportunities with a date of Expected Closing which is in the past"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:445
-#: code:addons/crm/models/crm_lead.py:879
+#: code:addons/crm/models/crm_lead.py:446
+#: code:addons/crm/models/crm_lead.py:888
 #: selection:crm.activity.report,lead_type:0 selection:crm.lead,type:0
 #: model:ir.model.fields,field_description:crm.field_calendar_event__opportunity_id
 #: model:ir.model.fields,field_description:crm.field_crm_lead__name
 #: model:ir.model.fields,field_description:crm.field_res_partner__opportunity_count
-#: model:ir.model.fields,field_description:crm.field_res_users__opportunity_count
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_tree_view_oppor
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
@@ -1745,7 +1751,7 @@ msgstr "Opportunità"
 #: model:mail.message.subtype,name:crm.mt_lead_create
 #: model:mail.message.subtype,name:crm.mt_salesteam_lead
 msgid "Opportunity Created"
-msgstr ""
+msgstr "Opportunità creata"
 
 #. module: crm
 #: model:mail.message.subtype,name:crm.mt_lead_lost
@@ -1772,7 +1778,7 @@ msgstr "Opportunità Vinte"
 #. module: crm
 #: model:mail.message.subtype,description:crm.mt_lead_create
 msgid "Opportunity created"
-msgstr ""
+msgstr "Opportunità creata"
 
 #. module: crm
 #: model:mail.message.subtype,description:crm.mt_lead_lost
@@ -1785,15 +1791,9 @@ msgid "Opportunity won"
 msgstr "Opportunità vinte"
 
 #. module: crm
-#: model:ir.model.fields,help:crm.field_crm_team__alias_force_thread_id
-msgid ""
-"Optional ID of a thread (record) to which all incoming messages will be "
-"attached, even if they did not reply to it. If set, this will disable the "
-"creation of new records completely."
-msgstr ""
-"ID facoltativo di un thread (record) a cui verranno allegati tutti i "
-"messaggi in arrivo, anche se non hanno risposto ad esso. Se impostato, "
-"disabiliterà completamente la creazione di nuovi record."
+#: model:crm.lead.tag,name:crm.categ_oppor8
+msgid "Other"
+msgstr "Altro"
 
 #. module: crm
 #: selection:crm.lead,activity_state:0
@@ -1804,37 +1804,6 @@ msgstr "Scaduto"
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Overdue Opportunities"
 msgstr "Opportunità in ritardo"
-
-#. module: crm
-#: model:ir.model.fields,field_description:crm.field_crm_team__alias_user_id
-msgid "Owner"
-msgstr "Proprietario"
-
-#. module: crm
-#: model:ir.model.fields,field_description:crm.field_crm_team__alias_parent_model_id
-msgid "Parent Model"
-msgstr "Modello Genitore"
-
-#. module: crm
-#: model:ir.model.fields,field_description:crm.field_crm_team__alias_parent_thread_id
-msgid "Parent Record Thread ID"
-msgstr "ID discussione record principale"
-
-#. module: crm
-#: model:ir.model.fields,help:crm.field_crm_team__alias_parent_model_id
-msgid ""
-"Parent model holding the alias. The model holding the alias reference is not"
-" necessarily the model given by alias_model_id (example: project "
-"(parent_model) and task (model))"
-msgstr ""
-"Modello principale con alias. Il modello che contiene il riferimento alias "
-"non è necessariamente il modello fornito da alias_model_id (esempio: "
-"progetto (parent_model) e attività (modello))"
-
-#. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
-msgid "Partner"
-msgstr "Partner"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__partner_address_email
@@ -1849,11 +1818,16 @@ msgstr "Nome Contatto del Partner"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__partner_address_phone
 msgid "Partner Contact Phone"
-msgstr ""
+msgstr "Numero di telefono del contatto"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__partner_is_blacklisted
 msgid "Partner is blacklisted"
+msgstr "Il partner è sulla lista nera"
+
+#. module: crm
+#: model:ir.model,name:crm.model_crm_partner_binding
+msgid "Partner linking/binding in CRM wizard"
 msgstr ""
 
 #. module: crm
@@ -1873,14 +1847,12 @@ msgid "Phone Formatting"
 msgstr "Formattazione numeri telefonici"
 
 #. module: crm
-#: code:addons/crm/models/crm_team.py:154
+#: code:addons/crm/models/crm_team.py:155
 #: selection:crm.team,dashboard_graph_model:0
 #: model:ir.actions.act_window,name:crm.crm_lead_opportunities_tree_view
 #: model:ir.model.fields,field_description:crm.field_crm_team__use_opportunities
-#: model:ir.ui.menu,name:crm.crm_menu_pipeline
 #: model:ir.ui.menu,name:crm.crm_opportunity_report_menu
 #: model:ir.ui.menu,name:crm.menu_crm_config_lead
-#: model:ir.ui.menu,name:crm.menu_crm_opportunities
 #, python-format
 msgid "Pipeline"
 msgstr "Pipeline"
@@ -1919,9 +1891,13 @@ msgid ""
 "mainly used by the sales manager in order to periodically review the pipeline\n"
 "with the the Sales Team."
 msgstr ""
+"L'analisi delle opportunità dà un accesso immediato \n"
+"a informazioni quali i ricavi attesi, i costi previsti,\n"
+"il mancato rispetto delle scadenze o il numero di attività per ogni opportunità. Questo report è\n"
+"utilizzato principalmente dai responsabili di vendita, al fine di fare una revisione periodica con i team di vendita. "
 
 #. module: crm
-#: code:addons/crm/models/crm_team.py:223
+#: code:addons/crm/models/crm_team.py:224
 #, python-format
 msgid "Pipeline: Expected Revenue"
 msgstr "Pipeline: Entrate Previste"
@@ -1932,7 +1908,7 @@ msgid "Planned"
 msgstr "Pianificato"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:651
+#: code:addons/crm/models/crm_lead.py:660
 #, python-format
 msgid ""
 "Please select more than one element (lead or opportunity) from the list "
@@ -1940,19 +1916,6 @@ msgid ""
 msgstr ""
 "Seleziona più di un elemento (lead o opportunità) dalla visualizzazione "
 "elenco."
-
-#. module: crm
-#: model:ir.model.fields,help:crm.field_crm_team__alias_contact
-msgid ""
-"Policy to post a message on the document using the mailgateway.\n"
-"- everyone: everyone can post\n"
-"- partners: only authenticated partners\n"
-"- followers: only followers of the related document or members of following channels\n"
-msgstr ""
-"Politica per pubblicare un messaggio sul documento utilizzando il mail gateway.\n"
-"- tutti: tutti possono postare\n"
-"- partner: solo partner autenticati\n"
-"- follower: solo follower del documento correlato o membri dei seguenti canali\n"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__priority
@@ -1974,6 +1937,11 @@ msgstr "Probabilità"
 #: model:ir.model.fields,field_description:crm.field_crm_stage__probability
 msgid "Probability (%)"
 msgstr "Probabilità (%)"
+
+#. module: crm
+#: model:crm.lead.tag,name:crm.categ_oppor1
+msgid "Product"
+msgstr "Prodotto"
 
 #. module: crm
 #: model:crm.stage,name:crm.stage_lead3
@@ -1999,16 +1967,8 @@ msgid ""
 "Ready to boost your sales? Your <b>Pipeline</b> can be found here, under the"
 " <b>CRM</b> app."
 msgstr ""
-
-#. module: crm
-#: model:ir.model,name:crm.model_crm_lost_reason
-msgid "Reason for loosing leads"
-msgstr "Motivo della perdita per la lead"
-
-#. module: crm
-#: model:ir.model.fields,field_description:crm.field_crm_team__alias_force_thread_id
-msgid "Record Thread ID"
-msgstr "Registra ID discussione"
+"Pronto per aumentare le vendite? La tua <b>pipeline</b> si trova qui, sotto "
+"l’applicazione <b>CRM</b>."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__referred
@@ -2039,17 +1999,28 @@ msgid "Responsible User"
 msgstr "Utente Responsabile"
 
 #. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
+#: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_leads
+#: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "Restore"
 msgstr "Ripristina"
 
 #. module: crm
 #: selection:crm.team,dashboard_graph_model:0
+#: model:ir.ui.menu,name:crm.crm_menu_sales
 msgid "Sales"
 msgstr "Vendite"
 
 #. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
+msgid "Sales Channel"
+msgstr "Canale di vendita"
+
+#. module: crm
 #: model:ir.model,name:crm.model_crm_team
+msgid "Sales Channels"
+msgstr "Canali di Vendita"
+
+#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__team_id
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner__team_id
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass__team_id
@@ -2059,22 +2030,20 @@ msgstr "Vendite"
 #: model:ir.model.fields,field_description:crm.field_res_partner__team_id
 #: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
-#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Sales Team"
 msgstr "Team di vendita"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:1116
+#: code:addons/crm/models/crm_lead.py:1125
 #, python-format
 msgid "Sales Team Settings"
-msgstr ""
+msgstr "Impostazioni team di vendita"
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.crm_team_config
-#: model:ir.ui.menu,name:crm.sales_team_menu_report_crm
 msgid "Sales Teams"
-msgstr "Team di Vendita"
+msgstr "Team di vendita"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass__user_ids
@@ -2113,7 +2082,7 @@ msgstr "Seleziona Leads/Opportunità"
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_lead_mass_mail
 msgid "Send an email"
-msgstr ""
+msgstr "Invia una email"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage__sequence
@@ -2121,9 +2090,14 @@ msgid "Sequence"
 msgstr "Sequenza"
 
 #. module: crm
+#: model:crm.lead.tag,name:crm.categ_oppor3
+msgid "Services"
+msgstr "Servizi"
+
+#. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_stage_action
 msgid "Set a new stage in your opportunity pipeline"
-msgstr ""
+msgstr "Definisci una nuova fase nella tua pipeline di opportunità"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage__on_change
@@ -2153,12 +2127,6 @@ msgstr ""
 "prima di oggi"
 
 #. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
-msgid "Show all records which has next action date is before today"
-msgstr ""
-"Mostra tutti i record che hanno la prossima data dell’azione è prima di oggi"
-
-#. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 msgid "Show only lead"
@@ -2169,6 +2137,11 @@ msgstr "Vedi solo le Leads"
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 msgid "Show only opportunity"
 msgstr "Vedi solo le Opportunutà"
+
+#. module: crm
+#: model:crm.lead.tag,name:crm.categ_oppor2
+msgid "Software"
+msgstr "Software"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lost_reason_action
@@ -2226,11 +2199,6 @@ msgstr "Cerca Fase"
 #: model:mail.message.subtype,description:crm.mt_lead_stage
 msgid "Stage changed"
 msgstr "Fase cambiata"
-
-#. module: crm
-#: model:ir.model,name:crm.model_crm_stage
-msgid "Stage of case"
-msgstr "Fase del caso"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_stage_action
@@ -2321,7 +2289,12 @@ msgstr "Il nome del Tag esiste già !"
 #: model:ir.model.fields,field_description:crm.field_crm_lead__tag_ids
 #: model:ir.ui.menu,name:crm.menu_crm_lead_categ
 msgid "Tags"
-msgstr "Tags"
+msgstr "Etichette"
+
+#. module: crm
+#: model:ir.ui.menu,name:crm.sales_team_menu_team_pipeline
+msgid "Team Pipelines"
+msgstr "Pipeline dei team"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_id
@@ -2338,27 +2311,6 @@ msgid "The graph this channel will display in the Dashboard.\n"
 msgstr "Il grafico di questo canale sarà visibile sul Dashboard.\n"
 
 #. module: crm
-#: model:ir.model.fields,help:crm.field_crm_team__alias_model_id
-msgid ""
-"The model (Odoo Document Kind) to which this alias corresponds. Any incoming"
-" email that does not reply to an existing record will cause the creation of "
-"a new record of this model (e.g. a Project Task)"
-msgstr ""
-"Il modello (Odoo Document Kind) a cui corrisponde questo alias. Qualsiasi "
-"messaggio di posta elettronica in arrivo che non risponde a un record "
-"esistente causerà la creazione di un nuovo record di questo modello (ad "
-"esempio un’attività di progetto)"
-
-#. module: crm
-#: model:ir.model.fields,help:crm.field_crm_team__alias_name
-msgid ""
-"The name of the email alias, e.g. 'jobs' if you want to catch emails for "
-"<jobs@example.odoo.com>"
-msgstr ""
-"Il nome dell’alias email, ad es. “lavori” se vuoi prendere e-mail per "
-"<jobs@example.odoo.com>"
-
-#. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__partner_name
 msgid ""
 "The name of the future partner company that will be created while converting"
@@ -2366,20 +2318,6 @@ msgid ""
 msgstr ""
 "Il nome della futura società partner che verrà creata durante la conversione"
 " del lead in opportunità"
-
-#. module: crm
-#: model:ir.model.fields,help:crm.field_crm_team__alias_user_id
-msgid ""
-"The owner of records created upon receiving emails on this alias. If this "
-"field is not set the system will attempt to find the right owner based on "
-"the sender (From) address, or will use the Administrator account if no "
-"system user is found for that address."
-msgstr ""
-"Il proprietario dei record creati al ricevimento di e-mail su questo alias. "
-"Se questo campo non è impostato, il sistema tenterà di trovare il "
-"proprietario corretto in base all’indirizzo mittente (Da) o utilizzerà "
-"l’account Amministratore se nessun utente di sistema viene trovato per "
-"quell’indirizzo."
 
 #. module: crm
 #: sql_constraint:crm.lead:0
@@ -2409,6 +2347,8 @@ msgstr ""
 msgid ""
 "This bar allows to filter the opportunities based on scheduled activities."
 msgstr ""
+"Questa barra consente di filtrare le opportunità in base alle attività "
+"pianificate. "
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__campaign_id
@@ -2416,11 +2356,13 @@ msgid ""
 "This is a name that helps you keep track of your different campaign efforts,"
 " e.g. Fall_Drive, Christmas_Special"
 msgstr ""
+"Questo nome può aiutarti a tenere traccia delle diverse campagne marketing. "
+"Ad esempio: Sconti_Natalizi, Saldi_Autunnali, ecc."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__medium_id
 msgid "This is the method of delivery, e.g. Postcard, Email, or Banner Ad"
-msgstr ""
+msgstr "Il metodo di consegna. Esempio: cartolina, email o banner"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__source_id
@@ -2428,13 +2370,15 @@ msgid ""
 "This is the source of the link, e.g. Search Engine, another domain, or name "
 "of email list"
 msgstr ""
+"Questa è l'origine del link, es.: Motore di ricerca, altro dominio o nome "
+"dell'elenco di email"
 
 #. module: crm
 #. openerp-web
 #: code:addons/crm/static/src/js/tour.js:42
 #, python-format
 msgid "This opportunity has <b>no activity planned</b>."
-msgstr ""
+msgstr "Questa opportunità non ha <b>attività pianificate</b>."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage__probability
@@ -2460,7 +2404,7 @@ msgstr ""
 "quella fase da visualizzare."
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:1079
+#: code:addons/crm/models/crm_lead.py:1088
 #, python-format
 msgid "This target does not exist."
 msgstr "Questo Target non esiste."
@@ -2478,7 +2422,6 @@ msgid "Today"
 msgstr "Oggi"
 
 #. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Today Activities"
 msgstr "Attività di Oggi"
@@ -2494,9 +2437,14 @@ msgid "Tracking"
 msgstr "Traccia"
 
 #. module: crm
+#: model:crm.lead.tag,name:crm.categ_oppor6
+msgid "Training"
+msgstr "Formazione"
+
+#. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
 msgid "Try Now"
-msgstr ""
+msgstr "Prova ora"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__lead_type
@@ -2511,7 +2459,6 @@ msgid "Type is used to separate Leads and Opportunities"
 msgstr "Il Tipo è usato per separare Leads e Opportunità"
 
 #. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Unassigned"
 msgstr "Non assegnato"
@@ -2528,7 +2475,7 @@ msgid "Unassigned Leads"
 msgstr "Leads non assegnate"
 
 #. module: crm
-#: code:addons/crm/models/crm_team.py:200
+#: code:addons/crm/models/crm_team.py:201
 #, python-format
 msgid "Undefined"
 msgstr "Non definito"
@@ -2536,7 +2483,6 @@ msgstr "Non definito"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_unread
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
-#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead_kanban
 msgid "Unread Messages"
@@ -2579,6 +2525,12 @@ msgid ""
 "qualified, the lead can be converted into a business opportunity and/or a "
 "new customer in your address book."
 msgstr ""
+"Usa i lead se hai bisogno di una fase di qualificazione prima di creare "
+"un'opportunità o un cliente. Può essere un biglietto da visita che hai "
+"ricevuto, un modulo di contatto compilato nel tuo sito Web o un file di "
+"prospettive non qualificate che importi, ecc. Una volta qualificato, il lead"
+" può essere convertito in un'opportunità di business e/o in un nuovo cliente"
+" nella tua rubrica."
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lost_reason_action
@@ -2647,6 +2599,11 @@ msgid "Website"
 msgstr "Sito Web"
 
 #. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
+msgid "Website Lead Generation"
+msgstr ""
+
+#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__website_message_ids
 msgid "Website Messages"
 msgstr "Messaggi sito web"
@@ -2662,22 +2619,12 @@ msgid "Website of the contact"
 msgstr "Sito web del contatto"
 
 #. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
-msgid ""
-"When populating your address book, Odoo relies on Clearbit’s API to provide "
-"you with a list of matching contacts or companies.When selecting one item, "
-"the partner name, logo and website get automatically set."
-msgstr ""
-"Quando compila la tua rubrica, Odoo fa affidamento sull’API di Clearbit per "
-"fornirti un elenco di contatti o società corrispondenti. Quando selezioni un"
-" elemento, il nome del partner, il logo e il sito web vengono impostati "
-"automaticamente."
-
-#. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__team_id
 msgid ""
 "When sending mails, the default email address is taken from the Sales Team."
 msgstr ""
+"Quando si inviano delle email, l'indirizzo email predefinito è quello del "
+"team di vendita."
 
 #. module: crm
 #: selection:crm.team,dashboard_graph_period_pipeline:0
@@ -2695,12 +2642,13 @@ msgid "Within a Year"
 msgstr "Entro un anno"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:1112
+#: code:addons/crm/models/crm_lead.py:1121
 #: model:crm.stage,name:crm.stage_lead4
 #: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_leads
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 #, python-format
 msgid "Won"
@@ -2712,13 +2660,13 @@ msgid "Won in Opportunities Target"
 msgstr "Accettato nei Target delle opportunità"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:401
+#: code:addons/crm/models/crm_lead.py:402
 #, python-format
 msgid "Yeah! Deal of the last 7 days for the team."
 msgstr "Si! Offerta degli ultimi 7 giorni per la squadra."
 
 #. module: crm
-#: code:addons/crm/models/crm_team.py:121
+#: code:addons/crm/models/crm_team.py:122
 #, python-format
 msgid ""
 "You have to enable the Pipeline on your Sales Team to be able to set it as a"
@@ -2726,13 +2674,13 @@ msgid ""
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:403
+#: code:addons/crm/models/crm_lead.py:404
 #, python-format
 msgid "You just beat your personal record for the past 30 days."
 msgstr "Hai appena battuto il tuo record personale negli ultimi 30 giorni."
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:405
+#: code:addons/crm/models/crm_lead.py:406
 #, python-format
 msgid "You just beat your personal record for the past 7 days."
 msgstr "Hai appena battuto il tuo record personale negli ultimi 7 giorni."
@@ -2787,23 +2735,18 @@ msgid "e.g. www.odoo.com"
 msgstr "per esempio www.odoo.com"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:937
+#: code:addons/crm/models/crm_lead.py:946
 #, python-format
 msgid "or send an email to %s"
-msgstr ""
-
-#. module: crm
-#: model:ir.model,name:crm.model_res_config_settings
-msgid "res.config.settings"
-msgstr "res.config.settings"
+msgstr "o invia una email a %s"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage__team_count
 msgid "team_count"
-msgstr ""
+msgstr "team_count"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:943
+#: code:addons/crm/models/crm_lead.py:952
 #, python-format
 msgid "unknown"
 msgstr "sconosciuto"

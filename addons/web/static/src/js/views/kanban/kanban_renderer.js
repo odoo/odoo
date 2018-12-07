@@ -2,13 +2,14 @@ odoo.define('web.KanbanRenderer', function (require) {
 "use strict";
 
 var BasicRenderer = require('web.BasicRenderer');
+var ColumnQuickCreate = require('web.kanban_column_quick_create');
 var core = require('web.core');
 var KanbanColumn = require('web.KanbanColumn');
 var KanbanRecord = require('web.KanbanRecord');
-var ColumnQuickCreate = require('web.kanban_column_quick_create');
 var QWeb = require('web.QWeb');
 var session = require('web.session');
 var utils = require('web.utils');
+var viewUtils = require('web.viewUtils');
 
 var qweb = core.qweb;
 
@@ -98,6 +99,9 @@ var KanbanRenderer = BasicRenderer.extend({
 
     /**
      * @override
+     * @param {Object} params
+     * @param {boolean} params.quickCreateEnabled set to false to disable the
+     *   quick create feature
      */
     init: function (parent, state, params) {
         this._super.apply(this, arguments);
@@ -116,12 +120,14 @@ var KanbanRenderer = BasicRenderer.extend({
         if (this.columnOptions.hasProgressBar) {
             this.columnOptions.progressBarStates = {};
         }
+        this.quickCreateEnabled = params.quickCreateEnabled;
         this._setState(state);
     },
     /**
      * Called each time the renderer is attached into the DOM.
      */
     on_attach_callback: function () {
+        this._isInDom = true;
         _.invoke(this.widgets, 'on_attach_callback');
         if (this.quickCreate) {
             this.quickCreate.on_attach_callback();
@@ -131,6 +137,7 @@ var KanbanRenderer = BasicRenderer.extend({
      * Called each time the renderer is detached from the DOM.
      */
     on_detach_callback: function () {
+        this._isInDom = false;
         _.invoke(this.widgets, 'on_detach_callback');
     },
 
@@ -146,7 +153,10 @@ var KanbanRenderer = BasicRenderer.extend({
     addQuickCreate: function () {
         return this.widgets[0].addQuickCreate();
     },
-    giveFocus:function() {
+    /**
+     * Focuses the first kanban record
+     */
+    giveFocus: function () {
         this.$('.o_kanban_record:first').focus();
     },
     /**
@@ -244,21 +254,22 @@ var KanbanRenderer = BasicRenderer.extend({
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
+
     /**
-    * @private
-    * @param {DOMElement} currentColumn
-    */
-    _focusOnNextCard: function(currentCardElement) {
+     * @private
+     * @param {DOMElement} currentColumn
+     */
+    _focusOnNextCard: function (currentCardElement) {
         var nextCard = currentCardElement.nextElementSibling;
         if (nextCard) {
             nextCard.focus();
         }
     },
     /**
-    * @private
-    * @param {DOMElement} currentColumn
-    */
-    _focusOnPreviousCard: function(currentCardElement) {
+     * @private
+     * @param {DOMElement} currentColumn
+     */
+    _focusOnPreviousCard: function (currentCardElement) {
         var previousCard = currentCardElement.previousElementSibling;
         if (previousCard && previousCard.classList.contains("o_kanban_record")) { //previous element might be column title
             previousCard.focus();
@@ -372,6 +383,7 @@ var KanbanRenderer = BasicRenderer.extend({
      * @private
      */
     _renderView: function () {
+        var self = this;
         var oldWidgets = this.widgets;
         this.widgets = [];
         this.$el.empty();
@@ -392,6 +404,9 @@ var KanbanRenderer = BasicRenderer.extend({
         var defs = this.defs;
         return this._super.apply(this, arguments).then(function () {
             _.invoke(oldWidgets, 'destroy');
+            if (self._isInDom) {
+                _.invoke(self.widgets, 'on_attach_callback');
+            }
             return $.when.apply(null, defs);
         });
     },
@@ -453,6 +468,7 @@ var KanbanRenderer = BasicRenderer.extend({
             groupedBy: groupByField,
             grouped_by_m2o: this.groupedByM2O,
             relation: relation,
+            quick_create: this.quickCreateEnabled && viewUtils.isQuickCreateEnabled(state),
         });
         this.createColumnEnabled = this.groupedByM2O && this.columnOptions.group_creatable;
     },
@@ -494,6 +510,7 @@ var KanbanRenderer = BasicRenderer.extend({
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
+
     /**
      * Closes the opened quick create widgets in columns
      *
@@ -507,10 +524,10 @@ var KanbanRenderer = BasicRenderer.extend({
     },
     /**
      * @private
-     * @param {OdooEvent} event
+     * @param {OdooEvent} ev
      */
-    _onQuickCreateColumnUpdated: function (event) {
-        event.stopPropagation();
+    _onQuickCreateColumnUpdated: function (ev) {
+        ev.stopPropagation();
         this._toggleNoContentHelper();
     },
     /**

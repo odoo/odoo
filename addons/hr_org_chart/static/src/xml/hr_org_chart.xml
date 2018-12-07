@@ -3,7 +3,7 @@
 
 <t t-name="hr_org_chart_employee">
     <div t-attf-class="o_org_chart_entry o_org_chart_entry_#{employee_type} media">
-        <t t-set="is_self" t-value="employee_type == 'self'"/>
+        <t t-set="is_self" t-value="employee.id == view_employee_id"/>
 
         <div class="o_media_left">
             <!-- NOTE: Since by the default on not squared images odoo add white borders,
@@ -60,8 +60,7 @@
         <t t-if='managers_more'>
             <div class="o_org_chart_entry o_org_chart_more media">
                 <div class="o_media_left">
-                    <a class="text-center o_employee_redirect"
-                            t-att-href="managers[0].link"
+                    <a class="text-center o_employee_more_managers"
                             t-att-data-employee-id="managers[0].id">
                         <i t-attf-class="fa fa-angle-double-up" role="img" aria-label="More managers" title="More managers"/>
                     </a>
@@ -93,14 +92,14 @@
     <div t-if="children.length" class="o_org_chart_group_down">
         <t t-foreach="children" t-as="employee">
             <t t-set="emp_count" t-value="emp_count + 1"/>
-            <t t-if="emp_count &lt; 8">
+            <t t-if="emp_count &lt; 20">
                 <t t-call="hr_org_chart_employee">
                     <t t-set="employee_type" t-value="'sub'"/>
                 </t>
             </t>
         </t>
 
-        <t t-if="(children.length + managers.length) &gt; 7">
+        <t t-if="(children.length + managers.length) &gt; 19">
             <div class="o_org_chart_entry o_org_chart_more media">
                 <div class="o_media_left">
                     <a href="#"

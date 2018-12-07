@@ -65,7 +65,7 @@ class MaintenanceEquipment(models.Model):
     def _track_subtype(self, init_values):
         self.ensure_one()
         if ('employee_id' in init_values and self.employee_id) or ('department_id' in init_values and self.department_id):
-            return 'maintenance.mt_mat_assign'
+            return self.env.ref('maintenance.mt_mat_assign')
         return super(MaintenanceEquipment, self)._track_subtype(init_values)
 
 

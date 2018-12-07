@@ -48,8 +48,8 @@ class SaleOrder(models.Model):
         super(SaleOrder, self)._compute_expected_date()
         for order in self:
             dates_list = []
-            confirm_date = fields.Datetime.from_string(order.confirmation_date if order.state == 'sale' else fields.Datetime.now())
-            for line in order.order_line.filtered(lambda x: x.state != 'cancel'):
+            confirm_date = fields.Datetime.from_string((order.confirmation_date or order.write_date) if order.state == 'sale' else fields.Datetime.now())
+            for line in order.order_line.filtered(lambda x: x.state != 'cancel' and not x._is_delivery()):
                 dt = confirm_date + timedelta(days=line.customer_lead or 0.0)
                 dates_list.append(dt)
             if dates_list:
@@ -185,9 +185,9 @@ class SaleOrderLine(models.Model):
         for line in self:  # TODO: maybe one day, this should be done in SQL for performance sake
             if line.qty_delivered_method == 'stock_move':
                 qty = 0.0
-                for move in line.move_ids.filtered(lambda r: r.state == 'done' and not r.scrapped):
+                for move in line.move_ids.filtered(lambda r: r.state == 'done' and not r.scrapped and line.product_id == r.product_id):
                     if move.location_dest_id.usage == "customer":
-                        if not move.origin_returned_move_id:
+                        if not move.origin_returned_move_id or (move.origin_returned_move_id and move.to_refund):
                             qty += move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom)
                     elif move.location_dest_id.usage != "customer" and move.to_refund:
                         qty -= move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom)
@@ -201,14 +201,15 @@ class SaleOrderLine(models.Model):
 
     @api.multi
     def write(self, values):
-        lines = False
+        lines = self.env['sale.order.line']
         if 'product_uom_qty' in values:
             precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
             lines = self.filtered(
                 lambda r: r.state == 'sale' and not r.is_expense and float_compare(r.product_uom_qty, values['product_uom_qty'], precision_digits=precision) == -1)
+        previous_product_uom_qty = {line.id: line.product_uom_qty for line in lines}
         res = super(SaleOrderLine, self).write(values)
         if lines:
-            lines._action_launch_stock_rule()
+            lines.with_context(previous_product_uom_qty=previous_product_uom_qty)._action_launch_stock_rule()
         return res
 
     @api.depends('order_id.state')
@@ -257,13 +258,16 @@ class SaleOrderLine(models.Model):
             return {}
         if self.product_id.type == 'product':
             precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
-            product = self.product_id.with_context(warehouse=self.order_id.warehouse_id.id)
+            product = self.product_id.with_context(
+                warehouse=self.order_id.warehouse_id.id,
+                lang=self.order_id.partner_id.lang or self.env.user.lang or 'en_US'
+            )
             product_qty = self.product_uom._compute_quantity(self.product_uom_qty, self.product_id.uom_id)
             if float_compare(product.virtual_available, product_qty, precision_digits=precision) == -1:
                 is_available = self._check_routing()
                 if not is_available:
-                    message =  _('You plan to sell %s %s but you only have %s %s available in %s warehouse.') % \
-                            (self.product_uom_qty, self.product_uom.name, product.virtual_available, product.uom_id.name, self.order_id.warehouse_id.name)
+                    message =  _('You plan to sell %s %s of %s but you only have %s %s available in %s warehouse.') % \
+                            (self.product_uom_qty, self.product_uom.name, self.product_id.name, product.virtual_available, product.uom_id.name, self.order_id.warehouse_id.name)
                     # We check if some products are available in other warehouses.
                     if float_compare(product.virtual_available, self.product_id.virtual_available, precision_digits=precision) == -1:
                         message += _('\nThere are %s %s available across all warehouses.\n\n') % \
@@ -323,7 +327,10 @@ class SaleOrderLine(models.Model):
         self.ensure_one()
         qty = 0.0
         for move in self.move_ids.filtered(lambda r: r.state != 'cancel'):
-            qty += move.product_uom._compute_quantity(move.product_uom_qty, self.product_uom, rounding_method='HALF-UP')
+            if move.picking_code == 'outgoing':
+                qty += move.product_uom._compute_quantity(move.product_uom_qty, self.product_uom, rounding_method='HALF-UP')
+            elif move.picking_code == 'incoming':
+                qty -= move.product_uom._compute_quantity(move.product_uom_qty, self.product_uom, rounding_method='HALF-UP')
         return qty
 
     @api.multi
@@ -411,7 +418,7 @@ class SaleOrderLine(models.Model):
         else:
             mto_route = False
             try:
-                mto_route = self.env['stock.warehouse']._find_global_route('stock.route_warehouse0_mto', 'Make To Order')
+                mto_route = self.env['stock.warehouse']._find_global_route('stock.route_warehouse0_mto', _('Make To Order'))
             except UserError:
                 # if route MTO not found in ir_model_data, we treat the product as in MTS
                 pass
@@ -429,7 +436,8 @@ class SaleOrderLine(models.Model):
         return is_available
 
     def _update_line_quantity(self, values):
-        if self.mapped('qty_delivered') and values['product_uom_qty'] < max(self.mapped('qty_delivered')):
+        precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        if self.mapped('qty_delivered') and float_compare(values['product_uom_qty'], max(self.mapped('qty_delivered')), precision_digits=precision) == -1:
             raise UserError(_('You cannot decrease the ordered quantity below the delivered quantity.\n'
                               'Create a return first.'))
         super(SaleOrderLine, self)._update_line_quantity(values)

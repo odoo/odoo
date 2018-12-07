@@ -49,7 +49,7 @@ tour.register('crm_tour', {
 }, {
     trigger: '.modal-body .o_field_many2one',
     extra_trigger: ".o_opportunity_kanban",
-    content: _t("<p>You will be able to customize your followup activities. Examples:</p><ol><li>introductory email</li><li>call 10 days after</li><li>second call 3 days after, ...</li></ol><p class='mb0'><i>Select a standard activity for now.</i></p>"),
+    content: _t("Choose an activity type.<br/>You can customize them in the general settings."),
     position: "bottom",
     run: function (actions) {
         actions.auto('.modal-footer button[special=cancel]');

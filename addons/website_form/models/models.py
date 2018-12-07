@@ -18,11 +18,12 @@ class website_form_config(models.Model):
 
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
-    website_form_enable_metadata = fields.Boolean(related="website_id.website_form_enable_metadata")
+    website_form_enable_metadata = fields.Boolean(related="website_id.website_form_enable_metadata", readonly=False)
 
 
 class website_form_model(models.Model):
     _name = 'ir.model'
+    _description = 'Models'
     _inherit = 'ir.model'
 
     website_form_access = fields.Boolean('Allowed to use in forms', help='Enable the form builder feature for this model.')
@@ -74,6 +75,7 @@ class website_form_model(models.Model):
 class website_form_model_fields(models.Model):
     """ fields configuration for form builder """
     _name = 'ir.model.fields'
+    _description = 'Fields'
     _inherit = 'ir.model.fields'
 
     @api.model_cr

@@ -13,7 +13,6 @@ from __future__ import print_function
 #   http://support.microsoft.com/default.aspx?scid=kb;en-us;310294#XSLTH3194121123120121120120
 # - Mac OS X: http://developer.apple.com/documentation/MacOSX/Conceptual/BPFileSystem/index.html
 # - XDG spec for Un*x: http://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html
-from . import pycompat
 
 __version_info__ = (1, 3, 0)
 __version__ = '.'.join(str(v) for v in __version_info__)
@@ -392,7 +391,7 @@ def _get_win_folder_with_pywin32(csidl_name):
     # not return unicode strings when there is unicode data in the
     # path.
     try:
-        dir = pycompat.text_type(dir)
+        dir = str(dir)
 
         # Downgrade to short path name if have highbit chars. See
         # <http://bugs.activestate.com/show_bug.cgi?id=85099>.

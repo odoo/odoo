@@ -700,9 +700,10 @@ Model Reference
 
     .. attribute:: _parent_store
 
-        Alongside :attr:`~.parent_left` and :attr:`~.parent_right`, sets up a
-        `nested set <http://en.wikipedia.org/wiki/Nested_set_model>`_  to
-        enable fast hierarchical queries on the records of the current model
+        Alongside a :attr:`~.parent_path` field, sets up an indexed storage
+        of the tree structure of records, to enable faster hierarchical queries
+        on the records of the current model using the ``child_of`` and
+        ``parent_of`` domain operators.
         (default: ``False``)
 
         :type: bool
@@ -825,17 +826,17 @@ Model Reference
     .. attribute:: parent_id
 
         used to order records in a tree structure and enables the ``child_of``
-        operator in domains
+        and ``parent_of`` operators in domains
 
         :type: :class:`~odoo.fields.Many2one`
 
-    .. attribute:: parent_left
+    .. attribute:: parent_path
 
-        used with :attr:`~._parent_store`, allows faster tree structure access
+        used to store an index of the tree structure when :attr:`~._parent_store`
+        is set to True - must be declared with ``index=True`` for proper operation.
 
-    .. attribute:: parent_right
+        :type: :class:`~odoo.fields.Char`
 
-        see :attr:`~.parent_left`
 
 .. _reference/orm/decorators:
 
@@ -1010,17 +1011,17 @@ them (e.g. to change their default sort order):
 
 .. literalinclude:: ../../odoo/addons/test_documentation_examples/extension.py
     :language: python
-    :lines: 5-
+    :lines: 7-
 
 .. literalinclude:: ../../odoo/addons/test_documentation_examples/tests/test_extension.py
     :language: python
-    :lines: 8,13
+    :lines: 10,15
 
 will yield:
 
 .. literalinclude:: ../../odoo/addons/test_documentation_examples/tests/test_extension.py
     :language: text
-    :lines: 11
+    :lines: 13
 
 .. note:: it will also yield the various :ref:`automatic fields
           <reference/orm/model/automatic>` unless they've been disabled
@@ -1033,7 +1034,9 @@ at runtime) but less power: using the :attr:`~odoo.models.Model._inherits`
 a model *delegates* the lookup of any field not found on the current model
 to "children" models. The delegation is performed via
 :class:`~odoo.fields.Reference` fields automatically set up on the parent
-model:
+model. The main difference is in the meaning. When using Delegation, the model
+**has one** instead of **is one**, turning the relationship in a composition
+instead of inheritance:
 
 .. literalinclude:: ../../odoo/addons/test_documentation_examples/delegation.py
     :language: python

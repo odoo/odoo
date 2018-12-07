@@ -19,12 +19,15 @@ Help your customers with this chat, and analyse their feedback.
 
         """,
     'data': [
+        "data/mail_shortcode_data.xml",
+        "data/im_livechat_channel_data.xml",
         "security/im_livechat_channel_security.xml",
         "security/ir.model.access.csv",
         "views/rating_views.xml",
         "views/mail_channel_views.xml",
         "views/im_livechat_channel_views.xml",
         "views/im_livechat_channel_templates.xml",
+        "views/res_users_views.xml",
         "report/im_livechat_report_channel_views.xml",
         "report/im_livechat_report_operator_views.xml"
     ],

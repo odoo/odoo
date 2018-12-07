@@ -9,24 +9,15 @@ Tour.register('bank_statement_reconciliation', {
         test: true,
         // Go to the reconciliation page of the statement: "BNK/2014/001"
     }, [
-        // Reconciliation of 'SAJ/2018/002'
-        // Select the 'INV/2018/0002' line and click on reconcile.
+        // Reconciliation of 'INV/2018/0002'
+        // Click on reconcile (matching done automatically by the reconciliation rule).
 
-        {
-            content: "open the last line in match mode to test the reconcile button",
-            trigger: '.toggle_match:last',
-            extra_trigger: '.o_reconciliation',
-        },
-        {
-            content: "select the 'INV/2018/0002' line",
-            trigger: '.o_reconciliation_line:last .match .cell_label:contains("INV/2018/0002")'
-        },
         {
             content: "reconcile the line",
-            trigger: '.o_reconciliation_line:last .o_reconcile:visible',
+            trigger: '.o_reconciliation_line:nth-child(1) .o_reconcile:visible',
         },
 
-        // Reconciliation of 'First 2000 € of SAJ/2014/0001'
+        // Reconciliation of 'First 2000 $ of INV/2018/0001'
         // Make a partial reconciliation
 
         {
@@ -35,12 +26,22 @@ Tour.register('bank_statement_reconciliation', {
             trigger: '.o_reconciliation_line:last .cell_label:contains("First")'
         },
         {
-            content: "select a line with with a higher amount",
-            trigger: '.o_reconciliation_line:last .match .cell_label:contains("INV/2018/0001")'
+            content: "click on partial reconcile",
+            trigger: '.o_reconciliation_line:last .accounting_view .edit_amount',
         },
         {
-            content: "click on partial reconcile",
-            trigger: '.o_reconciliation_line:last .accounting_view .do_partial_reconcile_true'
+            content: "Edit amount",
+            trigger: '.o_reconciliation_line:last .accounting_view .edit_amount_input:not(.d-none)',
+            run: 'text 2000'
+        },
+        {
+            content: "Press enter to validate amount",
+            trigger: '.o_reconciliation_line:last .accounting_view .edit_amount_input:not(.d-none)',
+            run: 'keydown 13'
+        },
+        {
+            content: "Check that amount has changed",
+            trigger: '.o_reconciliation_line:last .accounting_view .line_amount:contains("2,000.00")'
         },
         {
             content: "reconcile the line",
@@ -67,12 +68,14 @@ Tour.register('bank_statement_reconciliation', {
         },
         {
             content: "select a line linked to Deco Addict ",
-            extra_trigger: '.o_reconciliation_line:nth-child(2) .match:not(:has(tr:eq(1)))',
             trigger: ".o_reconciliation_line:nth-child(2) .match .line_info_button[data-content*='Deco Addict']"
         },
         {
             content: "deselect the line",
-            trigger: '.o_reconciliation_line:nth-child(2) .accounting_view tbody .cell_label:first'
+            trigger: '.o_reconciliation_line:nth-child(2) .accounting_view tbody .cell_label:first',
+            run: function() {
+                    $('.o_reconciliation_line:nth-child(2) .accounting_view tbody .cell_label:first').trigger('click');
+            }
         },
         {
             content: "create a write-off",

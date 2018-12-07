@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
+"POT-Creation-Date: 2018-09-21 13:18+0000\n"
+"PO-Revision-Date: 2018-09-21 13:18+0000\n"
 "Last-Translator: Jorunn D. Newth, 2018\n"
 "Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
@@ -37,11 +37,6 @@ msgstr ""
 "kundefaktura/kreditnota"
 
 #. module: website_sale_delivery
-#: model:ir.model,name:website_sale_delivery.model_delivery_carrier
-msgid "Carrier"
-msgstr "Transportfirma"
-
-#. module: website_sale_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.payment_delivery
 msgid "Choose a delivery method"
 msgstr "Velg leveransemetode"
@@ -62,6 +57,7 @@ msgid "Delivery Amount"
 msgstr "Leveringsbeløp"
 
 #. module: website_sale_delivery
+#: model:ir.model,name:website_sale_delivery.model_delivery_carrier
 #: model:ir.ui.menu,name:website_sale_delivery.menu_ecommerce_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.res_config_settings_view_form
 msgid "Delivery Methods"
@@ -152,14 +148,14 @@ msgid "Published"
 msgstr "Publisert"
 
 #. module: website_sale_delivery
-#: model:ir.model,name:website_sale_delivery.model_sale_order
-msgid "Quotation"
-msgstr "Pristilbud"
-
-#. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier__website_id
 msgid "Restrict publishing to this website."
 msgstr ""
+
+#. module: website_sale_delivery
+#: model:ir.model,name:website_sale_delivery.model_sale_order
+msgid "Sale Order"
+msgstr "Salgsordre"
 
 #. module: website_sale_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.payment_delivery_methods

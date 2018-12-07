@@ -18,11 +18,11 @@ class HrContract(models.Model):
     # YTI: Check if could be removed
     new_car_model_id = fields.Many2one('fleet.vehicle.model', string="Model", domain=lambda self: self._get_possible_model_domain())
     max_unused_cars = fields.Integer(compute='_compute_max_unused_cars')
-    acquisition_date = fields.Date(related='car_id.acquisition_date')
-    car_value = fields.Float(related="car_id.car_value")
-    fuel_type = fields.Selection(related="car_id.fuel_type")
-    co2 = fields.Float(related="car_id.co2")
-    driver_id = fields.Many2one('res.partner', related="car_id.driver_id")
+    acquisition_date = fields.Date(related='car_id.acquisition_date', readonly=False)
+    car_value = fields.Float(related="car_id.car_value", readonly=False)
+    fuel_type = fields.Selection(related="car_id.fuel_type", readonly=False)
+    co2 = fields.Float(related="car_id.co2", readonly=False)
+    driver_id = fields.Many2one('res.partner', related="car_id.driver_id", readonly=False)
     car_open_contracts_count = fields.Integer(compute='_compute_car_open_contracts_count')
     recurring_cost_amount_depreciated = fields.Float(
         compute='_compute_recurring_cost_amount_depreciated',

@@ -3,14 +3,17 @@
 # * website_slides
 # 
 # Translators:
+# sejun huang <sejun.huang@gmail.com>, 2018
 # Martin Trigaux, 2018
+# Andy Cheng <andy.cheng@richsoda.com>, 2018
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2018
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:50+0000\n"
-"PO-Revision-Date: 2018-09-18 09:50+0000\n"
+"POT-Creation-Date: 2018-10-08 06:49+0000\n"
+"PO-Revision-Date: 2018-08-24 09:35+0000\n"
 "Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2018\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -220,7 +223,7 @@ msgstr "<i class=\"fa fa-thumbs-up\"/> 喜歡"
 #, python-format
 msgid ""
 "<p>This channel is private and its content is restricted to some users.</p>"
-msgstr ""
+msgstr "這個頻道是私有的，它的內容僅限於某些使用者。"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -334,12 +337,22 @@ msgstr "歸檔"
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_attachment_count
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "附件計數"
 
 #. module: website_slides
 #: selection:slide.slide,download_security:0
 msgid "Authenticated Users Only"
 msgstr "僅限已驗證的使用者"
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_5
+msgid "Awesome Timesheet by Odoo"
+msgstr "Odoo 超棒的時間表"
+
+#. module: website_slides
+#: model:slide.tag,name:website_slides.tag1
+msgid "CMS"
+msgstr "CMS"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__can_see
@@ -352,6 +365,13 @@ msgid "Can Upload"
 msgstr "可以上傳"
 
 #. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/website_slides.editor.js:55
+#, python-format
+msgid "Cancel"
+msgstr "取消"
+
+#. module: website_slides
 #: model:ir.actions.act_window,name:website_slides.action_ir_slide_category
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__category_ids
 #: model:ir.ui.menu,name:website_slides.menu_action_ir_slide_category_global
@@ -361,7 +381,7 @@ msgstr "類別"
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides_upload.js:252
+#: code:addons/website_slides/static/src/js/slides_upload.js:254
 #: code:addons/website_slides/static/src/xml/website_slides.xml:54
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__category_id
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_search
@@ -372,11 +392,14 @@ msgid "Category"
 msgstr "類別"
 
 #. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides.xml:81
 #: model:ir.model.fields,field_description:website_slides.field_slide_category__channel_id
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__channel_id
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_search
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_tree
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_search
+#, python-format
 msgid "Channel"
 msgstr "群組"
 
@@ -397,16 +420,11 @@ msgstr "頻道設定"
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides_upload.js:172
+#: code:addons/website_slides/static/src/js/slides_upload.js:174
 #, python-format
 msgid ""
 "Channel contains the given title, please change before Save or Publish."
 msgstr "標題在頻道裡已經存在，請在保存或者發佈前修改標題。"
-
-#. module: website_slides
-#: model:ir.model,name:website_slides.model_slide_channel
-msgid "Channel for Slides"
-msgstr "幻燈片頻道"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
@@ -425,6 +443,16 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "Channels"
 msgstr "群組"
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_10
+msgid "Company Culture"
+msgstr "企業文化"
+
+#. module: website_slides
+#: model:ir.model,name:website_slides.model_res_config_settings
+msgid "Config Settings"
+msgstr "配置設置"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__datas
@@ -449,7 +477,7 @@ msgstr ""
 "這是已收到的回覆：%s"
 
 #. module: website_slides
-#: code:addons/website_slides/models/slides.py:325
+#: code:addons/website_slides/models/slides.py:330
 #, python-format
 msgid ""
 "Could not fetch data from url. Document or access right not available:\n"
@@ -470,7 +498,7 @@ msgstr ""
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides_upload.js:221
+#: code:addons/website_slides/static/src/js/slides_upload.js:223
 #, python-format
 msgid "Create new tag '%s'"
 msgstr "創建新的標籤 '%s'"
@@ -519,6 +547,42 @@ msgid "Discard"
 msgstr "放棄"
 
 #. module: website_slides
+#: model:slide.slide,description:website_slides.slide_6
+msgid "Discover how easy marketing your business can be with Odoo"
+msgstr "瞭解 Odoo 如何輕鬆實現業務行銷"
+
+#. module: website_slides
+#: model:slide.slide,description:website_slides.slide_0
+msgid ""
+"Discover how you can integrate MRP, PLM, Quality and Maintenance in a single application to maximize the efficiency of your manufacturing operations.\n"
+"\n"
+"Read more about the features at: https://www.odoo.com/page/manufacturing-features\n"
+"\n"
+"Discover Odoo MRP: https://www.odoo.com/page/manufacturing"
+msgstr ""
+"瞭解如何在單個應用程序上集成 MRP、 PLM、品質和維護，以便最大化製造業務的效率。\n"
+"\n"
+" 欲瞭解更多功能，請訪問以下網址：https://www.odoo.com/page/manufacturing-features  \n"
+"\n"
+" 瞭解 Odoo MRP：https://www.odoo.com/page/manufacturing"
+
+#. module: website_slides
+#: model:slide.slide,description:website_slides.slide_1
+msgid "Discover the CRM sales people love https://www.odoo.com/page/crm"
+msgstr "瞭解銷售人員喜愛的客戶關係管理 https://www.odoo.com/page/crm"
+
+#. module: website_slides
+#: model:slide.slide,description:website_slides.slide_2
+msgid ""
+"Discover the all-in-one business management software solution that fits any business size and use case.\n"
+"\n"
+"Learn more at https://odoo.com"
+msgstr ""
+"瞭解適合任何業務規模和用例的一體化業務管理軟體解決方案。\n"
+"\n"
+" 欲瞭解更多內容，請訪問 https://odoo.com "
+
+#. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__dislikes
 msgid "Dislikes"
 msgstr "不喜歡"
@@ -563,6 +627,19 @@ msgstr "文檔"
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
 msgid "Download"
 msgstr "下載"
+
+#. module: website_slides
+#: model:slide.slide,description:website_slides.slide_5
+msgid ""
+"Download Awesome Timesheet by Odoo and discover how easy time tracking and employee management can be!\n"
+"\n"
+"Chrome: http://bit.ly/2613LcY\n"
+"iOS: http://bit.ly/1ZUZsZD"
+msgstr ""
+"下載 Odoo Awesome Timesheet，瞭解時間追蹤和員工管理可以變得多麼輕鬆！\n"
+"\n"
+"Chrome: http://bit.ly/2613LcY\n"
+"iOS: http://bit.ly/1ZUZsZD"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__download_security
@@ -626,6 +703,11 @@ msgid "Featured Presentation"
 msgstr "特性介紹"
 
 #. module: website_slides
+#: model:slide.category,name:website_slides.category_1
+msgid "Featured Presentations"
+msgstr "特性介紹"
+
+#. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__promoted_slide_id
 msgid "Featured Slide"
 msgstr "特性幻燈片"
@@ -638,7 +720,7 @@ msgstr "特性政策"
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/controllers/main.py:274
-#: code:addons/website_slides/static/src/js/slides_upload.js:89
+#: code:addons/website_slides/static/src/js/slides_upload.js:91
 #, python-format
 msgid "File is too big. File size cannot exceed 25MB"
 msgstr "文件太大。文件大小不能超過 25 MB"
@@ -729,7 +811,7 @@ msgstr "如果勾選此項，有新消息會提醒您。"
 #: model:ir.model.fields,help:website_slides.field_slide_channel__message_has_error
 #: model:ir.model.fields,help:website_slides.field_slide_slide__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "如果勾選此項， 某些信息將會產生傳遞錯誤。"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__image
@@ -758,7 +840,7 @@ msgstr ""
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides_upload.js:84
+#: code:addons/website_slides/static/src/js/slides_upload.js:86
 #, python-format
 msgid "Invalid file type. Please select pdf or image file"
 msgstr "錯誤的文件類型。請選擇pfd文件或者圖像"
@@ -773,7 +855,7 @@ msgstr "是訂閱者"
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__is_published
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__is_published
 msgid "Is published"
-msgstr ""
+msgstr "發表"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_category____last_update
@@ -813,6 +895,11 @@ msgid "Latest Published"
 msgstr "最新發佈"
 
 #. module: website_slides
+#: model:slide.slide,description:website_slides.slide_8
+msgid "Learn more at https://www.odoo.com/page/sales"
+msgstr "欲瞭解更多內容，請訪問 https://www.odoo.com/page/sales"
+
+#. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__likes
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid "Likes"
@@ -822,7 +909,12 @@ msgstr "喜愛"
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_main_attachment_id
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "主要附件"
+
+#. module: website_slides
+#: model:slide.tag,name:website_slides.tag2
+msgid "Marketing"
+msgstr "市場行銷"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__image_medium
@@ -833,7 +925,7 @@ msgstr "媒體"
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_has_error
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "郵件傳遞錯誤"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__access_error_msg
@@ -877,6 +969,13 @@ msgstr "名稱"
 #: model:mail.template,subject:website_slides.slide_template_published
 msgid "New ${object.slide_type} published on ${object.channel_id.name}"
 msgstr "在${object.channel_id.name}發佈的新的${object.slide_type}"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/website_slides.editor.js:39
+#, python-format
+msgid "New slide"
+msgstr ""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_channel_header
@@ -947,7 +1046,7 @@ msgstr "視頻數量"
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_has_error_counter
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_has_error_counter
 msgid "Number of error"
-msgstr ""
+msgstr "錯誤數量"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__message_needaction_counter
@@ -959,13 +1058,71 @@ msgstr "需要行動消息的數量"
 #: model:ir.model.fields,help:website_slides.field_slide_channel__message_has_error_counter
 #: model:ir.model.fields,help:website_slides.field_slide_slide__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "發送錯誤的郵件數"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__message_unread_counter
 #: model:ir.model.fields,help:website_slides.field_slide_slide__message_unread_counter
 msgid "Number of unread messages"
 msgstr "未讀消息的數量"
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_2
+msgid "Odoo All-in-One Software Demonstration"
+msgstr "Odoo 一體化軟體演示"
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_1
+msgid "Odoo CRM"
+msgstr "Odoo 客戶關係管理"
+
+#. module: website_slides
+#: model:slide.category,name:website_slides.category_2
+#: model:slide.tag,name:website_slides.tag5
+msgid "Odoo Days"
+msgstr "Odoo 日"
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_7
+msgid "Odoo Inventory"
+msgstr "Odoo 庫存"
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_0
+msgid "Odoo MRP"
+msgstr "Odoo 物料需求計劃"
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_6
+msgid "Odoo Marketing"
+msgstr "Odoo 市場行銷"
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_8
+msgid "Odoo Sales"
+msgstr "Odoo 銷售"
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_3
+msgid "Odoo Sign Demonstration"
+msgstr "Odoo 標誌演示"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/website_slides.editor.js:40
+#, python-format
+msgid "On which channel do you want to add a slide?"
+msgstr ""
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_9
+msgid "Open Days 2014 Infographic"
+msgstr "2014年信息圖開放日"
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_11
+msgid "OpenSource CMS, A performance comparison - Mantavya Gajjar"
+msgstr "開源CMS，性能對比－Mantavya Gajjar"
 
 #. module: website_slides
 #. openerp-web
@@ -992,8 +1149,8 @@ msgid "Please <a href=\"/web?redirect=%s\">login</a> to vote this slide"
 msgstr "請<a href=\"/web?redirect=%s\">登錄</A> 以對幻燈片投票"
 
 #. module: website_slides
-#: code:addons/website_slides/models/slides.py:328
-#: code:addons/website_slides/models/slides.py:557
+#: code:addons/website_slides/models/slides.py:333
+#: code:addons/website_slides/models/slides.py:562
 #, python-format
 msgid "Please enter valid Youtube or Google Doc URL"
 msgstr "請輸入有效的YouTube或Google文檔的網址"
@@ -1082,7 +1239,7 @@ msgstr "相關的"
 #: model:ir.model.fields,help:website_slides.field_slide_channel__website_id
 #: model:ir.model.fields,help:website_slides.field_slide_slide__website_id
 msgid "Restrict publishing to this website."
-msgstr ""
+msgstr "限制發佈到本網站。"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.home
@@ -1100,7 +1257,7 @@ msgstr "查看您的頻道設定，以促進您的觀看次數最多或最近發
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__is_seo_optimized
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__is_seo_optimized
 msgid "SEO optimized"
-msgstr ""
+msgstr "SEO 已最佳化"
 
 #. module: website_slides
 #. openerp-web
@@ -1135,6 +1292,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "Security"
 msgstr "安全"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/website_slides.editor.js:44
+#, python-format
+msgid "Select"
+msgstr "選擇"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.channels
@@ -1208,6 +1372,11 @@ msgid "Slide"
 msgstr "幻燈片"
 
 #. module: website_slides
+#: model:ir.model,name:website_slides.model_slide_channel
+msgid "Slide Channel"
+msgstr "滑動頻道"
+
+#. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_tag
 msgid "Slide Tag"
 msgstr "幻燈片標籤"
@@ -1216,7 +1385,7 @@ msgstr "幻燈片標籤"
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid "Slide image"
-msgstr ""
+msgstr "幻燈片圖像"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__custom_slide_id
@@ -1245,13 +1414,24 @@ msgid "Sorry, but nothing matches your search criteria"
 msgstr "抱歉，沒有符合您的搜尋條件"
 
 #. module: website_slides
+#: model:slide.slide,description:website_slides.slide_3
+msgid ""
+"Stop doing manual printing and scanning. Move to electronic signature with Odoo Sign!\n"
+"\n"
+"Discover more at https://www.odoo.com/page/sign"
+msgstr ""
+"告別手動列印和掃瞄。轉投帶有 Odoo 標誌的電子簽名！\n"
+"\n"
+" 欲瞭解更多內容，請訪問 https://www.odoo.com/page/sign"
+
+#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_tag_form
 msgid "Tag"
 msgstr "標籤"
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides_upload.js:275
+#: code:addons/website_slides/static/src/js/slides_upload.js:277
 #: code:addons/website_slides/static/src/xml/website_slides.xml:48
 #: model:ir.actions.act_window,name:website_slides.action_slide_tag
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__tag_ids
@@ -1357,7 +1537,7 @@ msgid "Uncategorized presentation"
 msgstr "未分類的演示"
 
 #. module: website_slides
-#: code:addons/website_slides/models/slides.py:546
+#: code:addons/website_slides/models/slides.py:551
 #, python-format
 msgid "Unknown document"
 msgstr "未知文檔"
@@ -1447,12 +1627,23 @@ msgstr "可見性"
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__website_published
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__website_published
 msgid "Visible on current website"
-msgstr ""
+msgstr "在當前網站上可見"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_search
 msgid "Waiting for validation"
 msgstr "等待驗證"
+
+#. module: website_slides
+#: model:slide.slide,description:website_slides.slide_7
+msgid ""
+"Warehouse management software for the 21st century.\n"
+"\n"
+"Discover Odoo Inventory: https://www.odoo.com/page/warehouse"
+msgstr ""
+"面向 21 世紀的倉庫管理軟體 \n"
+"\n"
+" 瞭解 Odoo 庫存：https://www.odoo.com/page/warehouse"
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_website
@@ -1502,11 +1693,11 @@ msgstr "網站元標題"
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__website_meta_og_img
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__website_meta_og_img
 msgid "Website opengraph image"
-msgstr ""
+msgstr "網站 opengraph 圖片"
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides_upload.js:114
+#: code:addons/website_slides/static/src/js/slides_upload.js:116
 #, python-format
 msgid "You can not upload password protected file."
 msgstr "您無法上傳密碼保護的文件。"
@@ -1567,11 +1758,6 @@ msgstr "私人的。"
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
 msgid "login"
 msgstr "登錄"
-
-#. module: website_slides
-#: model:ir.model,name:website_slides.model_res_config_settings
-msgid "res.config.settings"
-msgstr "res.config.settings"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_search

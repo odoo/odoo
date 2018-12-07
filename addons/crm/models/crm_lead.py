@@ -51,7 +51,7 @@ class Lead(models.Model):
     _description = "Lead/Opportunity"
     _order = "priority desc,activity_date_deadline,id desc"
     _inherit = ['mail.thread', 'mail.activity.mixin', 'utm.mixin', 'format.address.mixin', 'mail.blacklist.mixin']
-    _primary_email = ['email_from']
+    _primary_email = 'email_from'
 
     def _default_probability(self):
         stage_id = self._default_stage_id()
@@ -65,8 +65,8 @@ class Lead(models.Model):
 
     name = fields.Char('Opportunity', required=True, index=True)
     partner_id = fields.Many2one('res.partner', string='Customer', track_visibility='onchange', track_sequence=1, index=True,
-        help="Linked partner (optional). Usually created when converting the lead.")
-    active = fields.Boolean('Active', default=True)
+        help="Linked partner (optional). Usually created when converting the lead. You can find a partner by its Name, TIN, Email or Internal Reference.")
+    active = fields.Boolean('Active', default=True, track_visibility=True)
     date_action_last = fields.Datetime('Last Action', readonly=True)
     email_from = fields.Char('Email', help="Email address of the contact", track_visibility='onchange', track_sequence=4, index=True)
     website = fields.Char('Website', index=True, help="Website of the contact")
@@ -78,7 +78,7 @@ class Lead(models.Model):
     description = fields.Text('Notes', track_visibility='onchange', track_sequence=6)
     tag_ids = fields.Many2many('crm.lead.tag', 'crm_lead_tag_rel', 'lead_id', 'tag_id', string='Tags', help="Classify and analyze your lead/opportunity categories like: Training, Service")
     contact_name = fields.Char('Contact Name', track_visibility='onchange', track_sequence=3)
-    partner_name = fields.Char("Customer Name", track_visibility='onchange', track_sequence=2, index=True, help='The name of the future partner company that will be created while converting the lead into opportunity')
+    partner_name = fields.Char("Company Name", track_visibility='onchange', track_sequence=2, index=True, help='The name of the future partner company that will be created while converting the lead into opportunity')
     type = fields.Selection([('lead', 'Lead'), ('opportunity', 'Opportunity')], index=True, required=True,
         default=lambda self: 'lead' if self.env['res.users'].has_group('crm.group_use_lead') else 'opportunity',
         help="Type is used to separate Leads and Opportunities")
@@ -88,7 +88,7 @@ class Lead(models.Model):
     stage_id = fields.Many2one('crm.stage', string='Stage', ondelete='restrict', track_visibility='onchange', index=True,
         domain="['|', ('team_id', '=', False), ('team_id', '=', team_id)]",
         group_expand='_read_group_stage_ids', default=lambda self: self._default_stage_id())
-    user_id = fields.Many2one('res.users', string='Salesperson', index=True, track_visibility='onchange', default=lambda self: self.env.user)
+    user_id = fields.Many2one('res.users', string='Salesperson', track_visibility='onchange', default=lambda self: self.env.user)
     referred = fields.Char('Referred By')
 
     date_open = fields.Datetime('Assignation Date', readonly=True, default=fields.Datetime.now)
@@ -132,6 +132,13 @@ class Lead(models.Model):
     _sql_constraints = [
         ('check_probability', 'check(probability >= 0 and probability <= 100)', 'The probability of closing the deal should be between 0% and 100%!')
     ]
+
+    @api.model_cr_context
+    def _auto_init(self):
+        res = super(Lead, self)._auto_init()
+        tools.create_index(self._cr, 'crm_lead_user_id_team_id_type_index',
+                           self._table, ['user_id', 'team_id', 'type'])
+        return res
 
     @api.model
     def _read_group_stage_ids(self, stages, domain, order):
@@ -252,8 +259,9 @@ class Lead(models.Model):
     @api.onchange('user_id')
     def _onchange_user_id(self):
         """ When changing the user, also set a team_id or restrict team id to the ones user_id is member of. """
-        values = self._onchange_user_values(self.user_id.id)
-        self.update(values)
+        if self.user_id.sale_team_id:
+            values = self._onchange_user_values(self.user_id.id)
+            self.update(values)
 
     @api.constrains('user_id')
     @api.multi
@@ -355,14 +363,6 @@ class Lead(models.Model):
         return self.write({'probability': 0, 'active': False})
 
     @api.multi
-    def action_set_active(self):
-        return self.write({'active': True})
-
-    @api.multi
-    def action_set_unactive(self):
-        return self.write({'active': False})
-
-    @api.multi
     def action_set_won(self):
         """ Won semantic: probability = 100 (active untouched) """
         for lead in self:
@@ -458,6 +458,14 @@ class Lead(models.Model):
             'target': 'inline',
             'context': {'default_type': 'opportunity'}
         }
+
+    def toggle_active(self):
+        """ When re-activating leads and opportunities set their probability
+        to the default stage one. """
+        res = super(Lead, self).toggle_active()
+        for lead in self.filtered(lambda lead: lead.active and lead.stage_id.probability):
+            lead.probability = lead.stage_id.probability
+        return res
 
     # ----------------------------------------
     # Business Methods
@@ -562,11 +570,11 @@ class Lead(models.Model):
                 value = next((v[1] for v in selections if v[0] == value), value)
             elif field.ttype == 'many2one':
                 if value:
-                    value = value.sudo().name_get()[0][1]
+                    value = value.sudo().display_name
             elif field.ttype == 'many2many':
                 if value:
                     value = ','.join(
-                        val.name_get()[0][1]
+                        val.display_name
                         for val in value.sudo()
                     )
             body.append("%s: %s" % (field.field_description, value or ''))
@@ -929,7 +937,7 @@ class Lead(models.Model):
     def get_empty_list_help(self, help):
         help_title, sub_title = "", ""
         if self._context.get('default_type') == 'lead':
-            help_title = _('Add a new lead')
+            help_title = _('Create a new lead')
         else:
             help_title = _('Create an opportunity in your pipeline')
         alias_record = self.env['mail.alias'].search([
@@ -1094,13 +1102,13 @@ class Lead(models.Model):
     def _track_subtype(self, init_values):
         self.ensure_one()
         if 'stage_id' in init_values and self.probability == 100 and self.stage_id and self.stage_id.on_change:
-            return 'crm.mt_lead_won'
+            return self.env.ref('crm.mt_lead_won')
         elif 'active' in init_values and self.probability == 0 and not self.active:
-            return 'crm.mt_lead_lost'
+            return self.env.ref('crm.mt_lead_lost')
         elif 'stage_id' in init_values and self.stage_id and self.stage_id.sequence <= 1:
-            return 'crm.mt_lead_create'
+            return self.env.ref('crm.mt_lead_create')
         elif 'stage_id' in init_values:
-            return 'crm.mt_lead_stage'
+            return self.env.ref('crm.mt_lead_stage')
         return super(Lead, self)._track_subtype(init_values)
 
     @api.multi
@@ -1153,7 +1161,7 @@ class Lead(models.Model):
     def message_get_default_recipients(self):
         return {
             r.id : {'partner_ids': [],
-                    'email_to': r.email_from,
+                    'email_to': r.email_normalized,
                     'email_cc': False}
             for r in self.sudo()
         }
@@ -1181,7 +1189,8 @@ class Lead(models.Model):
         # do not want to explicitly set user_id to False; however we do not
         # want the gateway user to be responsible if no other responsible is
         # found.
-        self = self.with_context(default_user_id=False)
+        if self._uid == self.env.ref('base.user_root').id:
+            self = self.with_context(default_user_id=False)
 
         if custom_values is None:
             custom_values = {}
@@ -1234,7 +1243,7 @@ class Lead(models.Model):
 class Tag(models.Model):
 
     _name = "crm.lead.tag"
-    _description = "Category of lead"
+    _description = "Lead Tag"
 
     name = fields.Char('Name', required=True, translate=True)
     color = fields.Integer('Color Index')
@@ -1246,7 +1255,7 @@ class Tag(models.Model):
 
 class LostReason(models.Model):
     _name = "crm.lost.reason"
-    _description = 'Reason for loosing leads'
+    _description = 'Opp. Lost Reason'
 
     name = fields.Char('Name', required=True, translate=True)
     active = fields.Boolean('Active', default=True)

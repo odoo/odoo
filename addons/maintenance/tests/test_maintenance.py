@@ -24,7 +24,6 @@ class TestEquipment(TransactionCase):
             name="Normal User/Employee",
             company_id=self.main_company.id,
             login="emp",
-            password="emp",
             email="empuser@yourcompany.example.com",
             groups_id=[(6, 0, [res_user.id])]
         ))
@@ -33,7 +32,6 @@ class TestEquipment(TransactionCase):
             name="Equipment Manager",
             company_id=self.main_company.id,
             login="hm",
-            password="hm",
             email="eqmanager@yourcompany.example.com",
             groups_id=[(6, 0, [res_manager.id])]
         ))

@@ -33,20 +33,29 @@
         <field name="priority" eval="1"/>
         <field name="arch" type="xml">
             <form string="Stage">
-                <group>
-                    <field name="team_count" invisible="1"/>
+                <sheet>
+                    <div class="oe_title">
+                        <div class="oe_edit_only">
+                            <label for="name"/>
+                        </div>
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
                     <group>
-                        <field name="name"/>
-                        <field name="team_id" options='{"no_open": True, "no_create": True}' attrs="{'invisible': [('team_count', '&lt;=', 1)]}"/>
-                        <field name="fold"/>
+                        <group>
+                            <field name="on_change"/>
+                            <field name="probability" attrs="{'invisible': [('on_change', '=', False)]}"/>
+                        </group>
+                        <field name="team_count" invisible="1"/>
+                        <group>
+                            <field name="fold"/>
+                            <field name="team_id" options='{"no_open": True, "no_create": True}' attrs="{'invisible': [('team_count', '&lt;=', 1)]}"/>
+                        </group>
                     </group>
-                    <group>
-                        <field name="on_change"/>
-                        <field name="probability" attrs="{'invisible': [('on_change', '=', False)]}"/>
-                    </group>
-                </group>
-                <separator string="Requirements"/>
-                <field name="requirements" nolabel="1" placeholder="Give your team the requirements to move an opportunity to this stage."/>
+                    <separator string="Requirements"/>
+                    <field name="requirements" nolabel="1" placeholder="Give your team the requirements to move an opportunity to this stage."/>
+                </sheet>
             </form>
         </field>
     </record>

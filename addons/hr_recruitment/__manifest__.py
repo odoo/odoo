@@ -14,7 +14,7 @@
         'calendar',
         'fetchmail',
         'utm',
-        'document',
+        'attachment_indexation',
         'web_tour',
         'digest',
     ],

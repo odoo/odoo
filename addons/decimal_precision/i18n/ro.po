@@ -3,15 +3,14 @@
 # * decimal_precision
 # 
 # Translators:
-# Dorin Hongu <dhongu@gmail.com>, 2018
-# Cozmin Candea <office@terrabit.ro>, 2018
+# Martin Trigaux, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
-"Last-Translator: Cozmin Candea <office@terrabit.ro>, 2018\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-09-21 13:17+0000\n"
+"Last-Translator: Martin Trigaux, 2018\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -38,10 +37,16 @@ msgid "Decimal Accuracy"
 msgstr "Exactitate zecimală"
 
 #. module: decimal_precision
-#: model:ir.ui.view,arch_db:decimal_precision.view_decimal_precision_form
-#: model:ir.ui.view,arch_db:decimal_precision.view_decimal_precision_tree
+#: model:ir.model,name:decimal_precision.model_decimal_precision
+#: model_terms:ir.ui.view,arch_db:decimal_precision.view_decimal_precision_form
+#: model_terms:ir.ui.view,arch_db:decimal_precision.view_decimal_precision_tree
 msgid "Decimal Precision"
 msgstr "Precizie zecimală"
+
+#. module: decimal_precision
+#: model:ir.model,name:decimal_precision.model_decimal_precision_test
+msgid "Decimal Precision Test"
+msgstr ""
 
 #. module: decimal_precision
 #: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision__digits
@@ -100,21 +105,11 @@ msgstr ""
 "Doar o singură valoare poate fi definită pentru fiecare utilizare dată!"
 
 #. module: decimal_precision
+#: model:ir.model,name:decimal_precision.model_ir_qweb_field_float
+msgid "Qweb Field Float"
+msgstr ""
+
+#. module: decimal_precision
 #: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision__name
 msgid "Usage"
 msgstr "Utilizare"
-
-#. module: decimal_precision
-#: model:ir.model,name:decimal_precision.model_decimal_precision
-msgid "decimal.precision"
-msgstr "decimal.precision"
-
-#. module: decimal_precision
-#: model:ir.model,name:decimal_precision.model_decimal_precision_test
-msgid "decimal.precision.test"
-msgstr "decimal.precision.test"
-
-#. module: decimal_precision
-#: model:ir.model,name:decimal_precision.model_ir_qweb_field_float
-msgid "ir.qweb.field.float"
-msgstr "ir.qweb.field.float"

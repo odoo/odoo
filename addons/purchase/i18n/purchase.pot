@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:48+0000\n"
-"PO-Revision-Date: 2018-09-18 09:48+0000\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-09-21 13:17+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -206,10 +206,9 @@ msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__product_type
-msgid "A storable product is a product for which you manage stock. The \"Inventory\" app has to be installed.\n"
-"A consumable product, on the other hand, is a product for which stock is not managed.\n"
-"A service is a non-material product you provide.\n"
-"A digital content is a non-material product you sell online. The files attached to the products are the one that are sold on the e-commerce such as e-books, music, pictures,... The \"Digital Product\" module has to be installed."
+msgid "A storable product is a product for which you manage stock. The Inventory app has to be installed.\n"
+"A consumable product is a product for which stock is not managed.\n"
+"A service is a non-material product you provide."
 msgstr ""
 
 #. module: purchase
@@ -340,11 +339,6 @@ msgid "Bills"
 msgstr ""
 
 #. module: purchase
-#: model:ir.model,name:purchase.model_purchase_bill_union
-msgid "Bills & Purchases"
-msgstr ""
-
-#. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Bills Received"
 msgstr ""
@@ -422,6 +416,11 @@ msgstr ""
 #: code:addons/purchase/models/purchase.py:268
 #, python-format
 msgid "Compose Email"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_res_config_settings
+msgid "Config Settings"
 msgstr ""
 
 #. module: purchase
@@ -693,7 +692,7 @@ msgid "If enabled, activates 3-way matching on vendor bills : the items must be 
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/product.py:39
+#: code:addons/purchase/models/product.py:38
 #, python-format
 msgid "Import Template for Products"
 msgstr ""
@@ -907,6 +906,11 @@ msgid "Name"
 msgstr ""
 
 #. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+msgid "Name, TIN, Email, or Reference"
+msgstr ""
+
+#. module: purchase
 #: code:addons/purchase/controllers/portal.py:40
 #, python-format
 msgid "Newest"
@@ -991,18 +995,13 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_product_product__purchase_method
 #: model:ir.model.fields,help:purchase.field_product_template__purchase_method
-msgid "On ordered quantities: control bills based on ordered quantities.\n"
-"On received quantities: control bills based on received quantity."
+msgid "On ordered quantities: Control bills based on ordered quantities.\n"
+"On received quantities: Control bills based on received quantities."
 msgstr ""
 
 #. module: purchase
 #: selection:product.template,purchase_method:0
 msgid "On received quantities"
-msgstr ""
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_res_config_settings__po_order_approval
-msgid "Order Approval"
 msgstr ""
 
 #. module: purchase
@@ -1071,11 +1070,6 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__country_id
 msgid "Partner Country"
-msgstr ""
-
-#. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
-msgid "Partner's Country"
 msgstr ""
 
 #. module: purchase
@@ -1237,6 +1231,11 @@ msgid "Purchase Order #"
 msgstr ""
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_res_config_settings__po_order_approval
+msgid "Purchase Order Approval"
+msgstr ""
+
+#. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "Purchase Order Confirmation #"
 msgstr ""
@@ -1309,6 +1308,11 @@ msgid "Purchase Orders Statistics"
 msgstr ""
 
 #. module: purchase
+#: model:ir.model,name:purchase.model_purchase_report
+msgid "Purchase Report"
+msgstr ""
+
+#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__user_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__user_id
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
@@ -1359,8 +1363,8 @@ msgid "Purchases"
 msgstr ""
 
 #. module: purchase
-#: model:ir.model,name:purchase.model_purchase_report
-msgid "Purchases Orders"
+#: model:ir.model,name:purchase.model_purchase_bill_union
+msgid "Purchases & Bills Union"
 msgstr ""
 
 #. module: purchase
@@ -1777,7 +1781,6 @@ msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_unread
-#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Unread Messages"
 msgstr ""
 
@@ -1844,6 +1847,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:purchase.res_partner_view_purchase_account_buttons
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_bill_union_filter
 msgid "Vendor Bills"
+msgstr ""
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
+msgid "Vendor Country"
 msgstr ""
 
 #. module: purchase
@@ -1927,6 +1935,12 @@ msgid "You can control the invoice from your vendor according to\n"
 msgstr ""
 
 #. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order__partner_id
+#: model:ir.model.fields,help:purchase.field_purchase_order_line__partner_id
+msgid "You can find a vendor by its Name, TIN, Email or Internal Reference."
+msgstr ""
+
+#. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.product_product_action
 msgid "You must define a product for everything you purchase,\n"
 "                whether it's a physical product, a consumable or services."
@@ -1936,10 +1950,5 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:purchase.product_normal_action_puchased
 msgid "You must define a product for everything you purchase,\n"
 "            whether it's a physical product, a consumable or services."
-msgstr ""
-
-#. module: purchase
-#: model:ir.model,name:purchase.model_res_config_settings
-msgid "res.config.settings"
 msgstr ""
 

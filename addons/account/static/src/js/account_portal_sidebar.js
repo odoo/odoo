@@ -49,10 +49,10 @@ var AccountPortalSidebar = PortalSidebar.extend({
      * @param {object} $el: the iframe
      */
     _updateIframeSize: function ($el) {
-        var $body = $el.contents().find('body');
+        var $wrapwrap = $el.contents().find('div#wrapwrap');
         // Set it to 0 first to handle the case where scrollHeight is too big for its content.
         $el.height(0);
-        $el.height($body[0].scrollHeight);
+        $el.height($wrapwrap[0].scrollHeight);
     },
     /**
      * @private

@@ -3,20 +3,21 @@
 # * hr_payroll
 # 
 # Translators:
-# Martin Trigaux, 2018
 # Chris <krystof.reklamy13@gmail.com>, 2018
 # Jaroslav Helemik Nemec <nemec@helemik.cz>, 2018
-# Ladislav Tomm <tomm@helemik.cz>, 2018
 # Jan Horzinka <jan.horzinka@centrum.cz>, 2018
+# Martin Trigaux, 2018
+# Ladislav Tomm <tomm@helemik.cz>, 2018
 # Michal Veselý <michal@veselyberanek.net>, 2018
-# trendspotter, 2018
+# trendspotter <j.podhorecky@volny.cz>, 2018
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:48+0000\n"
-"PO-Revision-Date: 2018-09-18 09:48+0000\n"
-"Last-Translator: trendspotter, 2018\n"
+"POT-Creation-Date: 2018-10-08 06:48+0000\n"
+"PO-Revision-Date: 2018-08-24 09:19+0000\n"
+"Last-Translator: trendspotter <j.podhorecky@volny.cz>, 2018\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -59,7 +60,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslip
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "<strong>Address</strong>"
-msgstr ""
+msgstr "<strong>Addresa</strong>"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslip
@@ -380,6 +381,11 @@ msgid "Conditions"
 msgstr "Podmínky"
 
 #. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_res_config_settings
+msgid "Config Settings"
+msgstr "Nastavení konfigurace"
+
+#. module: hr_payroll
 #: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_configuration
 msgid "Configuration"
 msgstr "Konfigurace"
@@ -428,6 +434,16 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_payroll.hr_contribution_register_tree
 msgid "Contribution Registers"
 msgstr "Registr příspěvků"
+
+#. module: hr_payroll
+#: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_convanceallowance1
+msgid "Conveyance Allowance"
+msgstr ""
+
+#. module: hr_payroll
+#: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_ca_gravie
+msgid "Conveyance Allowance For Gravie"
+msgstr ""
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template__create_uid
@@ -486,7 +502,7 @@ msgstr "Datum do"
 #. module: hr_payroll
 #: model:hr.salary.rule.category,name:hr_payroll.DED
 msgid "Deduction"
-msgstr ""
+msgstr "Dedukce"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template__default_value
@@ -608,7 +624,7 @@ msgstr "Funkce zaměstnance"
 #: model:ir.actions.act_window,name:hr_payroll.action_view_hr_payslip_form
 #: model:ir.ui.menu,name:hr_payroll.menu_department_tree
 msgid "Employee Payslips"
-msgstr ""
+msgstr "Zaměstnanecké výplatní pásky"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_contract_advantage_template
@@ -633,9 +649,10 @@ msgstr "Zaměstnanci"
 #, python-format
 msgid "Error! You cannot create recursive hierarchy of Salary Rule Category."
 msgstr ""
+"Chyba! Nemůžete vytvořit rekurzivní hierarchii kategorie platových pravidel."
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_salary_rule.py:178
+#: code:addons/hr_payroll/models/hr_salary_rule.py:179
 #, python-format
 msgid "Error! You cannot create recursive hierarchy of Salary Rules."
 msgstr ""
@@ -661,10 +678,10 @@ msgid "For example, enter 50.0 to apply a percentage of 50%"
 msgstr ""
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/report/report_contribution_register.py:34
+#: code:addons/hr_payroll/report/report_contribution_register.py:35
 #, python-format
 msgid "Form content is missing, this report cannot be printed."
-msgstr ""
+msgstr "Obsah formuláře chybí, tento přehled nelze vytisknout."
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_res_config_settings__module_l10n_fr_hr_payroll
@@ -693,6 +710,11 @@ msgid "Generate payslips for all selected employees"
 msgstr ""
 
 #. module: hr_payroll
+#: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_sales_commission
+msgid "Get 1% of sales"
+msgstr ""
+
+#. module: hr_payroll
 #: model:hr.salary.rule,name:hr_payroll.hr_rule_taxable
 #: model:hr.salary.rule.category,name:hr_payroll.GROSS
 msgid "Gross"
@@ -704,6 +726,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_rule_filter
 msgid "Group By"
 msgstr "Seskupit podle"
+
+#. module: hr_payroll
+#: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_houserentallowance1
+msgid "House Rent Allowance"
+msgstr ""
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template__id
@@ -738,6 +765,8 @@ msgid ""
 "If the active field is set to false, it will allow you to hide the salary "
 "rule without removing it."
 msgstr ""
+"Pokud je aktivní pole nastaveno na hodnotu false, umožní vám skrytí "
+"platového pravidla bez jeho odebrání."
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_res_config_settings__module_l10n_in_hr_payroll
@@ -747,7 +776,7 @@ msgstr "Indická mzda"
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip__credit_note
 msgid "Indicates this payslip has a refund of another"
-msgstr ""
+msgstr "Označuje, že tato výplatní položka je vratkou jiné částky"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
@@ -875,6 +904,11 @@ msgid "Maximum Range"
 msgstr ""
 
 #. module: hr_payroll
+#: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_meal_voucher
+msgid "Meal Voucher"
+msgstr ""
+
+#. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__condition_range_min
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__condition_range_min
 msgid "Minimum Range"
@@ -912,7 +946,7 @@ msgstr ""
 #. module: hr_payroll
 #: model:hr.salary.rule,name:hr_payroll.hr_rule_net
 msgid "Net Salary"
-msgstr ""
+msgstr "Čistá mzda"
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/models/hr_payslip.py:201
@@ -980,7 +1014,7 @@ msgstr ""
 #. module: hr_payroll
 #: model:ir.actions.report,name:hr_payroll.payslip_details_report
 msgid "PaySlip Details"
-msgstr ""
+msgstr "detaily služby PaySlip"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_payslip_lines_contribution_register
@@ -998,11 +1032,6 @@ msgid "PaySlip Lines by Contribution Register"
 msgstr ""
 
 #. module: hr_payroll
-#: model:ir.model,name:hr_payroll.model_payslip_lines_contribution_register
-msgid "PaySlip Lines by Contribution Registers"
-msgstr ""
-
-#. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_contributionregister
 msgid "PaySlip Name"
 msgstr ""
@@ -1013,6 +1042,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_payroll.res_config_settings_view_form
 msgid "Payroll"
 msgstr "Mzdy"
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_report_hr_payroll_report_contributionregister
+msgid "Payroll Contribution Register Report"
+msgstr ""
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.res_config_settings_view_form
@@ -1061,6 +1095,11 @@ msgid "Payslip Count"
 msgstr ""
 
 #. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_report_hr_payroll_report_payslipdetails
+msgid "Payslip Details Report"
+msgstr ""
+
+#. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payslip_input
 msgid "Payslip Input"
 msgstr ""
@@ -1088,6 +1127,11 @@ msgstr ""
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "Payslip Lines by Contribution Register"
+msgstr ""
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_payslip_lines_contribution_register
+msgid "Payslip Lines by Contribution Registers"
 msgstr ""
 
 #. module: hr_payroll
@@ -1156,6 +1200,16 @@ msgid "Print"
 msgstr "Tisk"
 
 #. module: hr_payroll
+#: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_professionaltax1
+msgid "Professional Tax"
+msgstr ""
+
+#. module: hr_payroll
+#: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_providentfund1
+msgid "Provident Fund"
+msgstr ""
+
+#. module: hr_payroll
 #: selection:hr.payslip.line,amount_select:0
 #: selection:hr.salary.rule,amount_select:0
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__amount_python_compute
@@ -1190,7 +1244,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslip
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "Quantity/rate"
-msgstr ""
+msgstr "Množství / míra"
 
 #. module: hr_payroll
 #: selection:hr.contract,schedule_pay:0
@@ -1255,6 +1309,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Salary Computation"
 msgstr "Výpočet mzdy"
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_hr_salary_rule
+msgid "Salary Rule"
+msgstr ""
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_hr_salary_rule_category
@@ -1396,7 +1455,7 @@ msgstr ""
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line__amount_select
 #: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule__amount_select
 msgid "The computation method for the rule amount."
-msgstr ""
+msgstr "Metoda výpočtu velikosti pravidla."
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_input__contract_id
@@ -1491,31 +1550,31 @@ msgid "Working Schedule"
 msgstr "Pracovní plán"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_salary_rule.py:210
+#: code:addons/hr_payroll/models/hr_salary_rule.py:211
 #, python-format
 msgid "Wrong percentage base or quantity defined for salary rule %s (%s)."
 msgstr ""
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_salary_rule.py:216
+#: code:addons/hr_payroll/models/hr_salary_rule.py:217
 #, python-format
 msgid "Wrong python code defined for salary rule %s (%s)."
 msgstr ""
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_salary_rule.py:239
+#: code:addons/hr_payroll/models/hr_salary_rule.py:240
 #, python-format
 msgid "Wrong python condition defined for salary rule %s (%s)."
 msgstr ""
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_salary_rule.py:203
+#: code:addons/hr_payroll/models/hr_salary_rule.py:204
 #, python-format
 msgid "Wrong quantity defined for salary rule %s (%s)."
 msgstr ""
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_salary_rule.py:233
+#: code:addons/hr_payroll/models/hr_salary_rule.py:234
 #, python-format
 msgid "Wrong range condition defined for salary rule %s (%s)."
 msgstr ""
@@ -1543,26 +1602,6 @@ msgstr ""
 #, python-format
 msgid "You must set a contract to create a payslip line."
 msgstr ""
-
-#. module: hr_payroll
-#: model:ir.model,name:hr_payroll.model_hr_salary_rule
-msgid "hr.salary.rule"
-msgstr ""
-
-#. module: hr_payroll
-#: model:ir.model,name:hr_payroll.model_report_hr_payroll_report_contributionregister
-msgid "report.hr_payroll.report_contributionregister"
-msgstr ""
-
-#. module: hr_payroll
-#: model:ir.model,name:hr_payroll.model_report_hr_payroll_report_payslipdetails
-msgid "report.hr_payroll.report_payslipdetails"
-msgstr ""
-
-#. module: hr_payroll
-#: model:ir.model,name:hr_payroll.model_res_config_settings
-msgid "res.config.settings"
-msgstr "res.config.settings"
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line__amount_percentage_base

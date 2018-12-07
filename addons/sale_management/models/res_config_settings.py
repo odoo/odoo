@@ -15,3 +15,4 @@ class ResConfigSettings(models.TransientModel):
     def _onchange_group_sale_order_template(self):
         if not self.group_sale_order_template:
             self.module_sale_quotation_builder = False
+            self.default_sale_order_template_id = False

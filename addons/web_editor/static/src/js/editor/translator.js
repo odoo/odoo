@@ -34,12 +34,12 @@ var RTETranslatorWidget = rte.Class.extend({
                 method: 'save_html',
                 args: [
                     [+$el.data('oe-translation-id')],
-                    this._getEscapedElement($el).html(),
-                    context || weContext.get()
+                    this._getEscapedElement($el).html()
                 ],
+                context: context,
             }).fail(function (error) {
-                   Dialog.alert(null, error.data.message);
-               });
+                Dialog.alert(null, error.data.message);
+            });
         }
         return this._super($el, context, withLang === undefined ? true : withLang);
     },

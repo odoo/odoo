@@ -170,17 +170,7 @@ a date or an e-mail address, add CC's addresses as followers, etc.).
         using the subtypes given in the parameters
     :return: Success/Failure
     :rtype: bool
-    
-.. method:: message_subscribe_users(user_ids=None, subtype_ids=None)
 
-    Wrapper on message_subscribe, using users instead of partners.
-    
-    :param list(int) user_ids: IDs of the users that will be subscribed
-        to the record; if ``None``, subscribe the current user instead.
-    :param list(int) subtype_ids: IDs of the subtypes that the channels/partners
-        will be subscribed to
-    :return: Success
-    :rtype: bool
 
 .. method:: message_unsubscribe(partner_ids=None, channel_ids=None)
 
@@ -331,7 +321,7 @@ can override the ``_track_subtype()`` function:
                 # in cache
                 self.ensure_one()
                 if 'state' in init_values and self.state == 'confirmed':
-                    return 'my_module.mt_state_change'  # Full external id
+                    return self.env.ref('my_module.mt_state_change')
                 return super(BusinessTrip, self)._track_subtype(init_values)
 
 

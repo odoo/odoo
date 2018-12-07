@@ -4,19 +4,21 @@
 # 
 # Translators:
 # Yaroslav Molochko <onorua@gmail.com>, 2018
-# Martin Trigaux, 2018
 # Bohdan Lisnenko, 2018
-# ТАрас <tratatuta@i.ua>, 2018
-# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2018
 # Zoriana Zaiats, 2018
+# ТАрас <tratatuta@i.ua>, 2018
 # zhanna shewchuk <zhanna_shewchuk@rambler.ru>, 2018
+# Martin Trigaux, 2018
+# Oleg Pikarevskyi <o@btegri.co>, 2018
+# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:50+0000\n"
-"PO-Revision-Date: 2018-09-18 09:50+0000\n"
-"Last-Translator: zhanna shewchuk <zhanna_shewchuk@rambler.ru>, 2018\n"
+"POT-Creation-Date: 2018-10-02 10:06+0000\n"
+"PO-Revision-Date: 2018-08-24 09:34+0000\n"
+"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2018\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -547,10 +549,10 @@ msgstr "Додати коментар"
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.editor.js:43
+#: code:addons/website_forum/static/src/js/website_forum.editor.js:45
 #, python-format
 msgid "Add to menu"
-msgstr ""
+msgstr "Додати в меню"
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum__allow_share
@@ -563,7 +565,7 @@ msgstr ""
 "розповсюдження вмісту форуму в соціальній мережі."
 
 #. module: website_forum
-#: code:addons/website_forum/controllers/main.py:201
+#: code:addons/website_forum/controllers/main.py:203
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
 #, python-format
 msgid "All"
@@ -580,7 +582,7 @@ msgid "Answer"
 msgstr "Відповідь"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:520
+#: code:addons/website_forum/models/forum.py:521
 #: model:mail.message.subtype,description:website_forum.mt_answer_edit
 #: model:mail.message.subtype,name:website_forum.mt_answer_edit
 #, python-format
@@ -754,7 +756,7 @@ msgstr "Задавання питання"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__message_attachment_count
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "Підрахунок прикріплення"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_search
@@ -782,9 +784,9 @@ msgstr ""
 "Уникайте непотрібних інтродукцій (Привіт ... Будь-ласка ... Спасибі ...),"
 
 #. module: website_forum
-#: code:addons/website_forum/controllers/main.py:341
 #: code:addons/website_forum/controllers/main.py:343
-#: code:addons/website_forum/controllers/main.py:412
+#: code:addons/website_forum/controllers/main.py:345
+#: code:addons/website_forum/controllers/main.py:414
 #, python-format
 msgid "Bad Request"
 msgstr "Поганий запит"
@@ -812,11 +814,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_profile
 msgid "Biography"
 msgstr "Біографія"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.badge
-msgid "Bronwe badge"
-msgstr ""
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.badge
@@ -1159,12 +1156,12 @@ msgstr "Дата створення"
 #. module: website_forum
 #: model_terms:ir.actions.act_window,help:website_forum.action_forum_post
 msgid "Create a new forum post"
-msgstr ""
+msgstr "Створити новий пост"
 
 #. module: website_forum
 #: model_terms:ir.actions.act_window,help:website_forum.forum_tag_action
 msgid "Create a new tag"
-msgstr ""
+msgstr "Створити нови тег"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_tag_create
@@ -1555,7 +1552,10 @@ msgid "Forum Karma"
 msgstr "Карма форуму"
 
 #. module: website_forum
+#. openerp-web
+#: code:addons/website_forum/static/src/js/website_forum.editor.js:34
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__name
+#, python-format
 msgid "Forum Name"
 msgstr "Назва форуму"
 
@@ -1590,18 +1590,18 @@ msgstr "Форуми"
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_gamification_badge
-msgid "Gamification badge"
-msgstr "Значок геміфікації"
+msgid "Gamification Badge"
+msgstr "Геміфікація значка"
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_gamification_challenge
-msgid "Gamification challenge"
-msgstr "Випробування геміфікації"
+msgid "Gamification Challenge"
+msgstr ""
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_gamification_badge_user
-msgid "Gamification user badge"
-msgstr "Значок користувача геміфікації"
+msgid "Gamification User Badge"
+msgstr "Геміфікація користувацького значка"
 
 #. module: website_forum
 #. openerp-web
@@ -1696,6 +1696,11 @@ msgid "Help"
 msgstr "Допомога"
 
 #. module: website_forum
+#: model_terms:forum.forum,welcome_message:website_forum.forum_help
+msgid "Hide Intro"
+msgstr "Сховати вступ"
+
+#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
 msgid ""
 "How to create a physical inventory at an anterior date?, How is the "
@@ -1738,7 +1743,7 @@ msgstr "Якщо відмічено, то нові повідомлення бу
 #: model:ir.model.fields,help:website_forum.field_forum_post__message_has_error
 #: model:ir.model.fields,help:website_forum.field_forum_tag__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "Якщо позначено, деякі повідомлення мають помилку доставки."
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum__karma_dofollow
@@ -1836,8 +1841,8 @@ msgid "It appears your email has not been verified."
 msgstr "Здається, ваш електронний лист не підтверджений."
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:889
-#: code:addons/website_forum/models/forum.py:909
+#: code:addons/website_forum/models/forum.py:890
+#: code:addons/website_forum/models/forum.py:910
 #, python-format
 msgid "It is not allowed to vote for its own post."
 msgstr ""
@@ -1951,7 +1956,7 @@ msgstr "Посилання"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__message_main_attachment_id
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "Основне прикріплення"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.close_post
@@ -1964,7 +1969,7 @@ msgstr "Позначте як неприйнятний"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__message_has_error
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "Помилка доставлення повідомлення"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__message_ids
@@ -2044,8 +2049,7 @@ msgstr "Нове обговорення"
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.editor.js:32
-#: model_terms:ir.ui.view,arch_db:website_forum.content_new_forum
+#: code:addons/website_forum/static/src/js/website_forum.editor.js:33
 #, python-format
 msgid "New Forum"
 msgstr "Новий форум"
@@ -2098,7 +2102,7 @@ msgid "Nofollow links"
 msgstr "Недодані посилання"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:510
+#: code:addons/website_forum/models/forum.py:511
 #, python-format
 msgid "Not enough karma to retag."
 msgstr "Недостатньо карми для видалення тегу."
@@ -2136,7 +2140,7 @@ msgstr "Кількість відповідей"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__message_has_error_counter
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__message_has_error_counter
 msgid "Number of error"
-msgstr ""
+msgstr "Кількість помилок"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__count_flagged_posts
@@ -2155,7 +2159,7 @@ msgstr "Кількість повідомлень, які потебують д�
 #: model:ir.model.fields,help:website_forum.field_forum_post__message_has_error_counter
 #: model:ir.model.fields,help:website_forum.field_forum_tag__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "Кількість повідомлень з помилковою дставкою"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__count_posts_waiting_validation
@@ -2310,6 +2314,11 @@ msgid "Post Types"
 msgstr "Типи публікації"
 
 #. module: website_forum
+#: model:ir.model,name:website_forum.model_forum_post_vote
+msgid "Post Vote"
+msgstr ""
+
+#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
 msgid "Post Your Question"
 msgstr "Опублікуйте ваше запитання"
@@ -2335,7 +2344,7 @@ msgid "Posted 100 comments"
 msgstr "Опубліковано 100 коментарів"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:447
+#: code:addons/website_forum/models/forum.py:448
 #, python-format
 msgid "Posting answer on a [Deleted] or [Closed] question is not possible."
 msgstr ""
@@ -2388,7 +2397,7 @@ msgid "Question"
 msgstr "Запитання"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:523
+#: code:addons/website_forum/models/forum.py:524
 #: model:mail.message.subtype,description:website_forum.mt_question_edit
 #: model:mail.message.subtype,name:website_forum.mt_question_edit
 #, python-format
@@ -2426,7 +2435,7 @@ msgid "Question set as favorite by 5 users"
 msgstr "Питання встановлене як найкраще 5 користувачами"
 
 #. module: website_forum
-#: code:addons/website_forum/controllers/main.py:343
+#: code:addons/website_forum/controllers/main.py:345
 #, python-format
 msgid "Question should not be empty."
 msgstr "Питання не повинно бути порожнім."
@@ -2465,7 +2474,7 @@ msgid "Questions"
 msgstr "Запитання"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:541
+#: code:addons/website_forum/models/forum.py:542
 #, python-format
 msgid "Re: %s"
 msgstr "Відповідь: %s"
@@ -2511,6 +2520,11 @@ msgid "Refuse"
 msgstr "Відхилити"
 
 #. module: website_forum
+#: model_terms:forum.forum,welcome_message:website_forum.forum_help
+msgid "Register"
+msgstr "Зареєструватися"
+
+#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Reject <i class=\"fa fa-times\"/>"
 msgstr "Відхилити <i class=\"fa fa-times\"/>"
@@ -2547,7 +2561,7 @@ msgstr "Відповісти на власне запитання"
 #: model:ir.model.fields,help:website_forum.field_forum_forum__website_id
 #: model:ir.model.fields,help:website_forum.field_forum_post__website_id
 msgid "Restrict publishing to this website."
-msgstr ""
+msgstr "Обмеження публікації на цьому веб-сайті."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.404
@@ -2565,7 +2579,7 @@ msgstr "Переглянуто"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__is_seo_optimized
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__is_seo_optimized
 msgid "SEO optimized"
-msgstr ""
+msgstr "Оптимізовано SEO"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_post
@@ -2622,7 +2636,7 @@ msgstr "Самовчитель"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_answers
-msgid "Send answer"
+msgid "Accept answer"
 msgstr ""
 
 #. module: website_forum
@@ -2878,6 +2892,7 @@ msgstr ""
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:51
 #: model:forum.forum,description:website_forum.forum_help
+#: model_terms:forum.forum,welcome_message:website_forum.forum_help
 #, python-format
 msgid ""
 "This community is for professionals and enthusiasts of our products and "
@@ -2901,7 +2916,7 @@ msgstr ""
 "моменту створення публікації"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:410
+#: code:addons/website_forum/models/forum.py:411
 #, python-format
 msgid "This forum does not allow %s"
 msgstr "Цей форум не дозволяє %s"
@@ -2956,8 +2971,8 @@ msgid "Title must not be empty"
 msgstr "Заголовок не може бути порожнім"
 
 #. module: website_forum
-#: code:addons/website_forum/controllers/main.py:341
-#: code:addons/website_forum/controllers/main.py:412
+#: code:addons/website_forum/controllers/main.py:343
+#: code:addons/website_forum/controllers/main.py:414
 #, python-format
 msgid "Title should not be empty."
 msgstr "Заголовок не повинен бути пустим."
@@ -3129,7 +3144,6 @@ msgid "Views"
 msgstr "Переглядів"
 
 #. module: website_forum
-#: model:ir.model,name:website_forum.model_forum_post_vote
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote__vote
 msgid "Vote"
 msgstr "Голос"
@@ -3216,12 +3230,17 @@ msgstr "Мета-заголовок сайту"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__website_meta_og_img
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__website_meta_og_img
 msgid "Website opengraph image"
-msgstr ""
+msgstr "Зображення веб-сайту opengraph"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__welcome_message
 msgid "Welcome Message"
 msgstr "Привітальне пвідомлення"
+
+#. module: website_forum
+#: model_terms:forum.forum,welcome_message:website_forum.forum_help
+msgid "Welcome!"
+msgstr "Вітаємо!"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -3271,7 +3290,7 @@ msgstr ""
 "Будь ласка, зачекайте, поки модератор підтвердить попередній пост, перш ніж продовжувати."
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:138
+#: code:addons/website_forum/models/forum.py:139
 #, python-format
 msgid ""
 "You cannot choose %s as default post since the forum does not allow it."
@@ -3280,10 +3299,10 @@ msgstr ""
 "дозволить це."
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:437
+#: code:addons/website_forum/models/forum.py:438
 #, python-format
 msgid "You cannot create recursive forum posts."
-msgstr ""
+msgstr "Ви не можете створити рекурсивні повідомлення форуму."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_answer
@@ -3291,7 +3310,7 @@ msgid "You cannot post an empty answer"
 msgstr "Ви не можете опублікувати пусту відповідь"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:952
+#: code:addons/website_forum/models/forum.py:953
 #, python-format
 msgid "You don't have enough karma to create a new Tag."
 msgstr ""

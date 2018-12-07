@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <template id="report_mrp_bom">
-        <t t-raw="'&lt;base href=%s&gt;' % base_url"/>
         <div class="container o_mrp_bom_report_page">
             <t t-if="data.get('components') or data.get('lines')">
                 <div class="row">
@@ -170,7 +169,6 @@
     </template>
 
     <template id="report_mrp_bom_pdf">
-        <t t-raw="'&lt;base href=%s&gt;' % base_url"/>
         <t t-call="web.html_container">
             <t t-call="mrp.report_mrp_bom"/>
         </t>
@@ -207,16 +205,13 @@
 
     <template id="report_bom_structure">
         <t t-set="data_report_landscape" t-value="True"/>
-        <t t-call="web.html_container">
-            <t t-call="web.basic_layout">
-                <t t-foreach="docs" t-as="data">
-                    <div class="page">
-                        <t t-raw="'&lt;base href=%s&gt;' % base_url"/>
-                        <t t-call-assets="mrp.assets_common" t-js="False"/>
-                        <t t-call="mrp.report_mrp_bom"/>
-                    </div>
-                    <p style="page-break-before:always;"> </p>
-                </t>
+        <t t-call="web.basic_layout">
+            <t t-call-assets="mrp.assets_common" t-js="False"/>
+            <t t-foreach="docs" t-as="data">
+                <div class="page">
+                    <t t-call="mrp.report_mrp_bom"/>
+                </div>
+                <p style="page-break-before:always;"> </p>
             </t>
         </t>
     </template>

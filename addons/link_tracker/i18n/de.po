@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-09-21 13:17+0000\n"
 "Last-Translator: Martin Trigaux, 2018\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
@@ -131,9 +131,20 @@ msgstr "Link"
 
 #. module: link_tracker
 #: model:ir.actions.act_window,name:link_tracker.action_link_tracker
+#: model:ir.model,name:link_tracker.model_link_tracker
 #: model:ir.ui.menu,name:link_tracker.menu_url_shortener_main
 msgid "Link Tracker"
 msgstr "Link Tracker"
+
+#. module: link_tracker
+#: model:ir.model,name:link_tracker.model_link_tracker_click
+msgid "Link Tracker Click"
+msgstr ""
+
+#. module: link_tracker
+#: model:ir.model,name:link_tracker.model_link_tracker_code
+msgid "Link Tracker Code"
+msgstr ""
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__medium_id
@@ -226,7 +237,7 @@ msgid "Visit Page"
 msgstr "Seite besuchen"
 
 #. module: link_tracker
-#: code:addons/link_tracker/models/link_tracker.py:141
+#: code:addons/link_tracker/models/link_tracker.py:142
 #, python-format
 msgid "Visit Webpage"
 msgstr "Website besuchen"
@@ -257,21 +268,6 @@ msgstr "Websiten-Links"
 #: model_terms:ir.ui.view,arch_db:link_tracker.view_link_tracker_click_tree
 msgid "Website Links Clicks"
 msgstr "Klicks für Websiten-Links"
-
-#. module: link_tracker
-#: model:ir.model,name:link_tracker.model_link_tracker
-msgid "link.tracker"
-msgstr "link.tracker"
-
-#. module: link_tracker
-#: model:ir.model,name:link_tracker.model_link_tracker_click
-msgid "link.tracker.click"
-msgstr "link.tracker.click"
-
-#. module: link_tracker
-#: model:ir.model,name:link_tracker.model_link_tracker_code
-msgid "link.tracker.code"
-msgstr "link.tracker.code"
 
 #. module: link_tracker
 #: model:ir.actions.act_window,name:link_tracker.action_link_tracker_stats

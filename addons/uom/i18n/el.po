@@ -4,13 +4,15 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
+# Kostas Goutoudis <goutoudis@gmail.com>, 2018
+# George Tarasidis <george_tarasidis@yahoo.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-18 09:49+0000\n"
 "PO-Revision-Date: 2018-09-18 09:49+0000\n"
-"Last-Translator: Martin Trigaux, 2018\n"
+"Last-Translator: George Tarasidis <george_tarasidis@yahoo.com>, 2018\n"
 "Language-Team: Greek (https://www.transifex.com/odoo/teams/41243/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,12 +38,12 @@ msgstr ""
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__factor_inv
 msgid "Bigger Ratio"
-msgstr ""
+msgstr "Μεγαλύτερη Αναλογία"
 
 #. module: uom
 #: selection:uom.uom,uom_type:0
 msgid "Bigger than the reference Unit of Measure"
-msgstr ""
+msgstr "Μεγαλύτερη από την αναφορά Μονάδας Μέτρησης"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__category_id
@@ -54,6 +56,8 @@ msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
 msgstr ""
+"Μετατροπή ανάμεσα σε Μονάδες Μέτρησης μπορεί να πραγματοποιηθεί μόνο αν "
+"ανήκουν στην ίδια κατηγορία. Η μετατροπή θα γίνει βάσει των αναλογιών."
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__create_uid
@@ -70,7 +74,7 @@ msgstr "Δημιουργήθηκε στις"
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_day
 msgid "Day(s)"
-msgstr ""
+msgstr "Ημέρα(ες)"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__display_name
@@ -81,12 +85,12 @@ msgstr "Εμφάνιση Ονόματος"
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_dozen
 msgid "Dozen(s)"
-msgstr ""
+msgstr "Δωδεκάδες"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_hour
 msgid "Hour(s)"
-msgstr ""
+msgstr "Ώρα"
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__factor_inv
@@ -129,27 +133,27 @@ msgstr "Τελευταία Ενημέρωση στις"
 #. module: uom
 #: selection:uom.category,measure_type:0
 msgid "Length"
-msgstr ""
+msgstr "Μήκος"
 
 #. module: uom
 #: model:uom.category,name:uom.uom_categ_length
 msgid "Length / Distance"
-msgstr ""
+msgstr "Μήκος/Απόσταση"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_litre
 msgid "Liter(s)"
-msgstr ""
+msgstr "Λίτρο"
 
 #. module: uom
 #: model:res.groups,name:uom.group_uom
 msgid "Manage Multiple Units of Measure"
-msgstr ""
+msgstr "Διαχείριση Πολλαπλών Μονάδων Μέτρησης"
 
 #. module: uom
 #: model:ir.model,name:uom.model_uom_uom
 msgid "Product Unit of Measure"
-msgstr ""
+msgstr "Μονάδα Μέτρησης Είδους"
 
 #. module: uom
 #: model:ir.model,name:uom.model_uom_category
@@ -159,22 +163,22 @@ msgstr ""
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__factor
 msgid "Ratio"
-msgstr ""
+msgstr "Σχέση"
 
 #. module: uom
 #: selection:uom.uom,uom_type:0
 msgid "Reference Unit of Measure for this category"
-msgstr ""
+msgstr "Αναφορά Μονάδα Μέτρησης για αυτή την κατηγορία "
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__rounding
 msgid "Rounding Precision"
-msgstr ""
+msgstr "Ακρίβεια στρογγυλοποίησης"
 
 #. module: uom
 #: selection:uom.uom,uom_type:0
 msgid "Smaller than the reference Unit of Measure"
-msgstr ""
+msgstr "Μικρότερη από την αναφορά μονάδα μέτρησης"
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__rounding
@@ -182,11 +186,14 @@ msgid ""
 "The computed quantity will be a multiple of this value. Use 1.0 for a Unit "
 "of Measure that cannot be further split, such as a piece."
 msgstr ""
+"Η υπολογιζόμενη ποσότητα θα είναι ένα πολλαπλάσιο από αυτή την τιμή. "
+"Χρησιμοποίησε το 1.0 για Μονάδα Μέτρησης που δεν μπορεί να κατατμηθεί "
+"παραπάνω, όπως είναι το τεμάχιο."
 
 #. module: uom
 #: sql_constraint:uom.uom:0
 msgid "The conversion ratio for a unit of measure cannot be 0!"
-msgstr ""
+msgstr "Η σχέση μετατροπής για μια μονάδα μέτρησης δεν μπορεί να είναι 0!"
 
 #. module: uom
 #: sql_constraint:uom.uom:0
@@ -211,7 +218,7 @@ msgstr ""
 #. module: uom
 #: selection:uom.category,measure_type:0
 msgid "Time"
-msgstr ""
+msgstr "Χρόνος"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__uom_type
@@ -237,17 +244,17 @@ msgstr ""
 #. module: uom
 #: model:uom.category,name:uom.product_uom_categ_unit
 msgid "Unit"
-msgstr ""
+msgstr "Μονάδα"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__name
 msgid "Unit of Measure"
-msgstr ""
+msgstr "Μονάδα Μέτρησης"
 
 #. module: uom
 #: model:ir.actions.act_window,name:uom.product_uom_categ_form_action
 msgid "Unit of Measure Categories"
-msgstr ""
+msgstr "Κατηγορίες Μονάδων Μέτρησης"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__name
@@ -257,7 +264,7 @@ msgstr ""
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_unit
 msgid "Unit(s)"
-msgstr ""
+msgstr "Μονάδες"
 
 #. module: uom
 #: selection:uom.category,measure_type:0
@@ -269,12 +276,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_form_view
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_tree_view
 msgid "Units of Measure"
-msgstr ""
+msgstr "Μονάδες Μέτρησης"
 
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_categ_form_view
 msgid "Units of Measure categories"
-msgstr ""
+msgstr "Κατηγορίες Μονάδων Μέτρησης"
 
 #. module: uom
 #: model_terms:ir.actions.act_window,help:uom.product_uom_categ_form_action
@@ -303,18 +310,18 @@ msgstr ""
 #: selection:uom.category,measure_type:0
 #: model:uom.category,name:uom.product_uom_categ_vol
 msgid "Volume"
-msgstr ""
+msgstr "Όγκος"
 
 #. module: uom
 #: selection:uom.category,measure_type:0
 #: model:uom.category,name:uom.product_uom_categ_kgm
 msgid "Weight"
-msgstr ""
+msgstr "Βάρος"
 
 #. module: uom
 #: model:uom.category,name:uom.uom_categ_wtime
 msgid "Working Time"
-msgstr ""
+msgstr "Ωράριο Εργασίας"
 
 #. module: uom
 #: sql_constraint:uom.category:0
@@ -345,64 +352,64 @@ msgstr ""
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_cm
 msgid "cm"
-msgstr ""
+msgstr "εκ"
 
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_form_view
 msgid "e.g: 1 * (reference unit) = ratio * (this unit)"
-msgstr ""
+msgstr "π.χ.: 1 * (μονάδα αναφοράς) = σχέση * (αυτή η μονάδα)"
 
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_form_view
 msgid "e.g: 1 * (this unit) = ratio * (reference unit)"
-msgstr ""
+msgstr "π.χ.: 1 * (αυτή η μονάδα) = σχέση * (μονάδα αναφοράς)"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_floz
 msgid "fl oz"
-msgstr ""
+msgstr "ουγγιά(ές)"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_foot
 msgid "foot(ft)"
-msgstr ""
+msgstr "πόδι(α)"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_gal
 msgid "gal(s)"
-msgstr ""
+msgstr "γαλόνι(α)"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_inch
 msgid "inch(es)"
-msgstr ""
+msgstr "ίντσα(ες)"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_kgm
 msgid "kg"
-msgstr ""
+msgstr "κιλά"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_km
 msgid "km"
-msgstr ""
+msgstr "χλμ"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_lb
 msgid "lb(s)"
-msgstr ""
+msgstr "λίμπρα(ες)"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_mile
 msgid "mile(s)"
-msgstr ""
+msgstr "μίλι(α)"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_oz
 msgid "oz(s)"
-msgstr ""
+msgstr "ουγγιά(ές)"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_qt
 msgid "qt"
-msgstr ""
+msgstr "ποσ"

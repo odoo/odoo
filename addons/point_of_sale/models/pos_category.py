@@ -4,7 +4,7 @@ from odoo import api, fields, models, tools, _
 
 class PosCategory(models.Model):
     _name = "pos.category"
-    _description = "PoS Category"
+    _description = "Point of Sale Category"
     _order = "sequence, name"
 
     @api.constrains('parent_id')

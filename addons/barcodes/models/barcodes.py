@@ -16,6 +16,7 @@ UPC_EAN_CONVERSIONS = [
 
 class BarcodeNomenclature(models.Model):
     _name = 'barcode.nomenclature'
+    _description = 'Barcode Nomenclature'
 
     name = fields.Char(string='Barcode Nomenclature', size=32, required=True, help='An internal identification of the barcode nomenclature')
     rule_ids = fields.One2many('barcode.rule', 'barcode_nomenclature_id', string='Rules', help='The list of barcode rules')
@@ -167,6 +168,7 @@ class BarcodeNomenclature(models.Model):
 
 class BarcodeRule(models.Model):
     _name = 'barcode.rule'
+    _description = 'Barcode Rule'
     _order = 'sequence asc'
 
 

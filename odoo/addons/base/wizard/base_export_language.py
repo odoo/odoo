@@ -11,6 +11,7 @@ NEW_LANG_KEY = '__new__'
 
 class BaseLanguageExport(models.TransientModel):
     _name = "base.language.export"
+    _description = 'Language Export'
 
     @api.model
     def _get_languages(self):

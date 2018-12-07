@@ -67,9 +67,10 @@ class ProjectTaskType(models.Model):
 class Project(models.Model):
     _name = "project.project"
     _description = "Project"
-    _inherit = ['portal.mixin', 'mail.alias.mixin', 'mail.thread']
+    _inherit = ['portal.mixin', 'mail.alias.mixin', 'mail.thread', 'rating.parent.mixin']
     _order = "sequence, name, id"
     _period_number = 5
+    _rating_satisfaction_days = False  # takes all existing ratings
 
     def get_alias_model_name(self, vals):
         return vals.get('alias_model', 'project.task')
@@ -185,8 +186,8 @@ class Project(models.Model):
         default=_get_default_favorite_user_ids,
         string='Members')
     is_favorite = fields.Boolean(compute='_compute_is_favorite', inverse='_inverse_is_favorite', string='Show Project on dashboard',
-        help="Whether this project should be displayed on the dashboard or not")
-    label_tasks = fields.Char(string='Use Tasks as', default='Tasks', help="Gives label to tasks on project's kanban view.")
+        help="Whether this project should be displayed on your dashboard.")
+    label_tasks = fields.Char(string='Use Tasks as', default='Tasks', help="Label used for the tasks of the project.")
     tasks = fields.One2many('project.task', 'project_id', string="Task Activities")
     resource_calendar_id = fields.Many2one(
         'resource.calendar', string='Working Time',
@@ -208,27 +209,23 @@ class Project(models.Model):
         ],
         string='Privacy', required=True,
         default='portal',
-        help="Holds visibility of the tasks or issues that belong to the current project:\n"
-                "- On invitation only: Employees may only see the followed project, tasks or issues\n"
-                "- Visible by all employees: Employees may see all project, tasks or issues\n"
-                "- Visible by following customers: employees see everything;\n"
-                "   if website is activated, portal users may see project, tasks or issues followed by\n"
-                "   them or by someone of their company\n")
+        help="Defines the visibility of the tasks of the project:\n"
+                "- On invitation only: employees may only see the followed project and tasks.\n"
+                "- Visible by all employees: employees may see all project and tasks.\n"
+                "- Visible by following customers: employees may see everything."
+                "   if website is activated, portal users may see project and tasks followed by.\n"
+                "   them or by someone of their company.")
     doc_count = fields.Integer(compute='_compute_attached_docs_count', string="Number of documents attached")
     date_start = fields.Date(string='Start Date')
     date = fields.Date(string='Expiration Date', index=True, track_visibility='onchange')
     subtask_project_id = fields.Many2one('project.project', string='Sub-task Project', ondelete="restrict",
-        help="Choosing a sub-tasks project will both enable sub-tasks and set their default project (possibly the project itself)")
+        help="Project in which sub-tasks of the current project will be created. It can be the current project itself.")
 
     # rating fields
-    percentage_satisfaction_task = fields.Integer(
-        compute='_compute_percentage_satisfaction_task', string="Happy % on Task", store=True, default=-1)
-    percentage_satisfaction_project = fields.Integer(
-        compute="_compute_percentage_satisfaction_project", string="Happy % on Project", store=True, default=-1)
     rating_request_deadline = fields.Datetime(compute='_compute_rating_request_deadline', store=True)
-    rating_status = fields.Selection([('stage', 'Rating when changing stage'), ('periodic', 'Periodical Rating'), ('no','No rating')], 'Customer(s) Ratings', help="How to get the customer's feedbacks?\n"
-                    "- Rating when changing stage: Email will be sent when a task/issue is pulled in another stage\n"
-                    "- Periodical Rating: Email will be sent periodically\n\n"
+    rating_status = fields.Selection([('stage', 'Rating when changing stage'), ('periodic', 'Periodical Rating'), ('no','No rating')], 'Customer(s) Ratings', help="How to get customer feedback?\n"
+                    "- Rating when changing stage: an email will be sent when a task is pulled in another stage.\n"
+                    "- Periodical Rating: email will be sent periodically.\n\n"
                     "Don't forget to set up the mail templates on the stages for which you want to get the customer's feedbacks.", default="no", required=True)
     rating_status_period = fields.Selection([
         ('daily', 'Daily'), ('weekly', 'Weekly'), ('bimonthly', 'Twice a Month'),
@@ -252,20 +249,6 @@ class Project(models.Model):
             project.access_warning = _(
                 "The project cannot be shared with the recipient(s) because the privacy of the project is too restricted. Set the privacy to 'Visible by following customers' in order to make it accessible by the recipient(s).")
 
-    @api.depends('percentage_satisfaction_task')
-    def _compute_percentage_satisfaction_project(self):
-        domain = [('create_date', '>=', fields.Datetime.to_string(fields.datetime.now() - timedelta(days=30)))]
-        for project in self:
-            activity = project.tasks.rating_get_grades(domain)
-            project.percentage_satisfaction_project = activity['great'] * 100 / sum(activity.values()) if sum(activity.values()) else -1
-
-    #TODO JEM: Only one field can be kept since project only contains task
-    @api.depends('tasks.rating_ids.rating')
-    def _compute_percentage_satisfaction_task(self):
-        for project in self:
-            activity = project.tasks.rating_get_grades()
-            project.percentage_satisfaction_task = activity['great'] * 100 / sum(activity.values()) if sum(activity.values()) else -1
-
     @api.depends('rating_status', 'rating_status_period')
     def _compute_rating_request_deadline(self):
         periods = {'daily': 1, 'weekly': 7, 'bimonthly': 15, 'monthly': 30, 'quarterly': 90, 'yearly': 365}
@@ -284,7 +267,9 @@ class Project(models.Model):
     def map_tasks(self, new_project_id):
         """ copy and map tasks from old to new project """
         tasks = self.env['project.task']
-        for task in self.tasks:
+        # We want to copy archived task, but do not propagate an active_test context key
+        task_ids = self.env['project.task'].with_context(active_test=False).search([('project_id', '=', self.id)]).ids
+        for task in self.env['project.task'].browse(task_ids):
             # preserve task name and stage, normally altered during copy
             defaults = self._map_tasks_default_valeus(task)
             tasks += task.copy(defaults)
@@ -295,7 +280,6 @@ class Project(models.Model):
     def copy(self, default=None):
         if default is None:
             default = {}
-        self = self.with_context(active_test=False)
         if not default.get('name'):
             default['name'] = _("%s (copy)") % (self.name)
         project = super(Project, self).copy(default)
@@ -775,13 +759,13 @@ class Task(models.Model):
     def _track_subtype(self, init_values):
         self.ensure_one()
         if 'kanban_state_label' in init_values and self.kanban_state == 'blocked':
-            return 'project.mt_task_blocked'
+            return self.env.ref('project.mt_task_blocked')
         elif 'kanban_state_label' in init_values and self.kanban_state == 'done':
-            return 'project.mt_task_ready'
+            return self.env.ref('project.mt_task_ready')
         elif 'stage_id' in init_values and self.stage_id and self.stage_id.sequence <= 1:  # start stage -> new
-            return 'project.mt_task_new'
+            return self.env.ref('project.mt_task_new')
         elif 'stage_id' in init_values:
-            return 'project.mt_task_stage'
+            return self.env.ref('project.mt_task_stage')
         return super(Task, self)._track_subtype(init_values)
 
     @api.multi
@@ -956,14 +940,14 @@ class Task(models.Model):
     def rating_apply(self, rate, token=None, feedback=None, subtype=None):
         return super(Task, self).rating_apply(rate, token=token, feedback=feedback, subtype="project.mt_task_rating")
 
-    def rating_get_parent(self):
+    def _rating_get_parent_field_name(self):
         return 'project_id'
 
 
 class ProjectTags(models.Model):
     """ Tags of project's tasks """
     _name = "project.tags"
-    _description = "Tasks Tags"
+    _description = "Project Tags"
 
     name = fields.Char(required=True)
     color = fields.Integer(string='Color Index')

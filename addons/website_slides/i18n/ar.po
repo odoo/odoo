@@ -18,13 +18,16 @@
 # Shaima Safar <shaima.safar@open-inside.com>, 2018
 # Akram Alfusayal <akram_ma@hotmail.com>, 2018
 # Mohammed Albasha <m.albasha.ma@gmail.com>, 2018
+# Mostafa Hanafy <mostafa.s.hanafy@gmail.com>, 2018
+# aymen rahmani <aymen.isims@gmail.com>, 2018
+# Ali Alrehawi <alrehawi@hotmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:50+0000\n"
-"PO-Revision-Date: 2018-09-18 09:50+0000\n"
-"Last-Translator: Mohammed Albasha <m.albasha.ma@gmail.com>, 2018\n"
+"POT-Creation-Date: 2018-10-08 06:49+0000\n"
+"PO-Revision-Date: 2018-10-08 06:49+0000\n"
+"Last-Translator: Ali Alrehawi <alrehawi@hotmail.com>, 2018\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -347,11 +350,21 @@ msgstr "مؤرشف"
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_attachment_count
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "عدد المرفقات"
 
 #. module: website_slides
 #: selection:slide.slide,download_security:0
 msgid "Authenticated Users Only"
+msgstr ""
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_5
+msgid "Awesome Timesheet by Odoo"
+msgstr ""
+
+#. module: website_slides
+#: model:slide.tag,name:website_slides.tag1
+msgid "CMS"
 msgstr ""
 
 #. module: website_slides
@@ -365,6 +378,13 @@ msgid "Can Upload"
 msgstr "يمكن تحميل"
 
 #. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/website_slides.editor.js:55
+#, python-format
+msgid "Cancel"
+msgstr "إلغاء"
+
+#. module: website_slides
 #: model:ir.actions.act_window,name:website_slides.action_ir_slide_category
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__category_ids
 #: model:ir.ui.menu,name:website_slides.menu_action_ir_slide_category_global
@@ -374,7 +394,7 @@ msgstr "التصنيفات"
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides_upload.js:252
+#: code:addons/website_slides/static/src/js/slides_upload.js:254
 #: code:addons/website_slides/static/src/xml/website_slides.xml:54
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__category_id
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_search
@@ -385,11 +405,14 @@ msgid "Category"
 msgstr "الفئة"
 
 #. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides.xml:81
 #: model:ir.model.fields,field_description:website_slides.field_slide_category__channel_id
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__channel_id
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_search
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_tree
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_search
+#, python-format
 msgid "Channel"
 msgstr "القناة"
 
@@ -410,15 +433,10 @@ msgstr "اعدادات القناة"
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides_upload.js:172
+#: code:addons/website_slides/static/src/js/slides_upload.js:174
 #, python-format
 msgid ""
 "Channel contains the given title, please change before Save or Publish."
-msgstr ""
-
-#. module: website_slides
-#: model:ir.model,name:website_slides.model_slide_channel
-msgid "Channel for Slides"
 msgstr ""
 
 #. module: website_slides
@@ -438,6 +456,16 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "Channels"
 msgstr "قنوات"
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_10
+msgid "Company Culture"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.model,name:website_slides.model_res_config_settings
+msgid "Config Settings"
+msgstr "ضبط الإعدادات"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__datas
@@ -460,7 +488,7 @@ msgid ""
 msgstr ""
 
 #. module: website_slides
-#: code:addons/website_slides/models/slides.py:325
+#: code:addons/website_slides/models/slides.py:330
 #, python-format
 msgid ""
 "Could not fetch data from url. Document or access right not available:\n"
@@ -479,7 +507,7 @@ msgstr ""
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides_upload.js:221
+#: code:addons/website_slides/static/src/js/slides_upload.js:223
 #, python-format
 msgid "Create new tag '%s'"
 msgstr ""
@@ -528,6 +556,34 @@ msgid "Discard"
 msgstr "تجاهل"
 
 #. module: website_slides
+#: model:slide.slide,description:website_slides.slide_6
+msgid "Discover how easy marketing your business can be with Odoo"
+msgstr ""
+
+#. module: website_slides
+#: model:slide.slide,description:website_slides.slide_0
+msgid ""
+"Discover how you can integrate MRP, PLM, Quality and Maintenance in a single application to maximize the efficiency of your manufacturing operations.\n"
+"\n"
+"Read more about the features at: https://www.odoo.com/page/manufacturing-features\n"
+"\n"
+"Discover Odoo MRP: https://www.odoo.com/page/manufacturing"
+msgstr ""
+
+#. module: website_slides
+#: model:slide.slide,description:website_slides.slide_1
+msgid "Discover the CRM sales people love https://www.odoo.com/page/crm"
+msgstr ""
+
+#. module: website_slides
+#: model:slide.slide,description:website_slides.slide_2
+msgid ""
+"Discover the all-in-one business management software solution that fits any business size and use case.\n"
+"\n"
+"Learn more at https://odoo.com"
+msgstr ""
+
+#. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__dislikes
 msgid "Dislikes"
 msgstr ""
@@ -572,6 +628,15 @@ msgstr "الوثائق"
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
 msgid "Download"
 msgstr "تنزيل"
+
+#. module: website_slides
+#: model:slide.slide,description:website_slides.slide_5
+msgid ""
+"Download Awesome Timesheet by Odoo and discover how easy time tracking and employee management can be!\n"
+"\n"
+"Chrome: http://bit.ly/2613LcY\n"
+"iOS: http://bit.ly/1ZUZsZD"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__download_security
@@ -635,6 +700,11 @@ msgid "Featured Presentation"
 msgstr ""
 
 #. module: website_slides
+#: model:slide.category,name:website_slides.category_1
+msgid "Featured Presentations"
+msgstr ""
+
+#. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__promoted_slide_id
 msgid "Featured Slide"
 msgstr ""
@@ -647,7 +717,7 @@ msgstr ""
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/controllers/main.py:274
-#: code:addons/website_slides/static/src/js/slides_upload.js:89
+#: code:addons/website_slides/static/src/js/slides_upload.js:91
 #, python-format
 msgid "File is too big. File size cannot exceed 25MB"
 msgstr ""
@@ -738,7 +808,7 @@ msgstr "إذا حددته، سيتم إخطارك بالرسائل الجديد�
 #: model:ir.model.fields,help:website_slides.field_slide_channel__message_has_error
 #: model:ir.model.fields,help:website_slides.field_slide_slide__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "إذا تم تحديده ، فإن بعض الرسائل بها خطأ في التسليم."
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__image
@@ -765,7 +835,7 @@ msgstr ""
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides_upload.js:84
+#: code:addons/website_slides/static/src/js/slides_upload.js:86
 #, python-format
 msgid "Invalid file type. Please select pdf or image file"
 msgstr ""
@@ -820,6 +890,11 @@ msgid "Latest Published"
 msgstr ""
 
 #. module: website_slides
+#: model:slide.slide,description:website_slides.slide_8
+msgid "Learn more at https://www.odoo.com/page/sales"
+msgstr ""
+
+#. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__likes
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid "Likes"
@@ -829,7 +904,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_main_attachment_id
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "المرفق الرئيسي"
+
+#. module: website_slides
+#: model:slide.tag,name:website_slides.tag2
+msgid "Marketing"
+msgstr "التسويق"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__image_medium
@@ -840,7 +920,7 @@ msgstr "متوسط"
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_has_error
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "خطأ في تسليم الرسائل"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__access_error_msg
@@ -883,6 +963,13 @@ msgstr "الاسم"
 #. module: website_slides
 #: model:mail.template,subject:website_slides.slide_template_published
 msgid "New ${object.slide_type} published on ${object.channel_id.name}"
+msgstr ""
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/website_slides.editor.js:39
+#, python-format
+msgid "New slide"
 msgstr ""
 
 #. module: website_slides
@@ -954,7 +1041,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_has_error_counter
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_has_error_counter
 msgid "Number of error"
-msgstr ""
+msgstr "عدد الاخطاء"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__message_needaction_counter
@@ -966,13 +1053,71 @@ msgstr "عدد الرسائل التي تتطلب اجراء"
 #: model:ir.model.fields,help:website_slides.field_slide_channel__message_has_error_counter
 #: model:ir.model.fields,help:website_slides.field_slide_slide__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "عدد الرسائل مع خطأ في التسليم"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__message_unread_counter
 #: model:ir.model.fields,help:website_slides.field_slide_slide__message_unread_counter
 msgid "Number of unread messages"
 msgstr "عدد الرسائل الجديدة"
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_2
+msgid "Odoo All-in-One Software Demonstration"
+msgstr ""
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_1
+msgid "Odoo CRM"
+msgstr ""
+
+#. module: website_slides
+#: model:slide.category,name:website_slides.category_2
+#: model:slide.tag,name:website_slides.tag5
+msgid "Odoo Days"
+msgstr ""
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_7
+msgid "Odoo Inventory"
+msgstr ""
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_0
+msgid "Odoo MRP"
+msgstr ""
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_6
+msgid "Odoo Marketing"
+msgstr ""
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_8
+msgid "Odoo Sales"
+msgstr ""
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_3
+msgid "Odoo Sign Demonstration"
+msgstr ""
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/website_slides.editor.js:40
+#, python-format
+msgid "On which channel do you want to add a slide?"
+msgstr ""
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_9
+msgid "Open Days 2014 Infographic"
+msgstr ""
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_11
+msgid "OpenSource CMS, A performance comparison - Mantavya Gajjar"
+msgstr ""
 
 #. module: website_slides
 #. openerp-web
@@ -999,8 +1144,8 @@ msgid "Please <a href=\"/web?redirect=%s\">login</a> to vote this slide"
 msgstr ""
 
 #. module: website_slides
-#: code:addons/website_slides/models/slides.py:328
-#: code:addons/website_slides/models/slides.py:557
+#: code:addons/website_slides/models/slides.py:333
+#: code:addons/website_slides/models/slides.py:562
 #, python-format
 msgid "Please enter valid Youtube or Google Doc URL"
 msgstr ""
@@ -1144,6 +1289,13 @@ msgid "Security"
 msgstr "الأمن"
 
 #. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/website_slides.editor.js:44
+#, python-format
+msgid "Select"
+msgstr "إختيار"
+
+#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.channels
 msgid "Select a Channel"
 msgstr ""
@@ -1215,6 +1367,11 @@ msgid "Slide"
 msgstr ""
 
 #. module: website_slides
+#: model:ir.model,name:website_slides.model_slide_channel
+msgid "Slide Channel"
+msgstr ""
+
+#. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_tag
 msgid "Slide Tag"
 msgstr ""
@@ -1252,13 +1409,21 @@ msgid "Sorry, but nothing matches your search criteria"
 msgstr ""
 
 #. module: website_slides
+#: model:slide.slide,description:website_slides.slide_3
+msgid ""
+"Stop doing manual printing and scanning. Move to electronic signature with Odoo Sign!\n"
+"\n"
+"Discover more at https://www.odoo.com/page/sign"
+msgstr ""
+
+#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_tag_form
 msgid "Tag"
 msgstr "الوسم"
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides_upload.js:275
+#: code:addons/website_slides/static/src/js/slides_upload.js:277
 #: code:addons/website_slides/static/src/xml/website_slides.xml:48
 #: model:ir.actions.act_window,name:website_slides.action_slide_tag
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__tag_ids
@@ -1364,7 +1529,7 @@ msgid "Uncategorized presentation"
 msgstr ""
 
 #. module: website_slides
-#: code:addons/website_slides/models/slides.py:546
+#: code:addons/website_slides/models/slides.py:551
 #, python-format
 msgid "Unknown document"
 msgstr "وثيقة غير محدد"
@@ -1464,6 +1629,14 @@ msgid "Waiting for validation"
 msgstr "في انتظار التحقققيد انتظار المراجعة"
 
 #. module: website_slides
+#: model:slide.slide,description:website_slides.slide_7
+msgid ""
+"Warehouse management software for the 21st century.\n"
+"\n"
+"Discover Odoo Inventory: https://www.odoo.com/page/warehouse"
+msgstr ""
+
+#. module: website_slides
 #: model:ir.model,name:website_slides.model_website
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__website_id
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__website_id
@@ -1515,7 +1688,7 @@ msgstr ""
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides_upload.js:114
+#: code:addons/website_slides/static/src/js/slides_upload.js:116
 #, python-format
 msgid "You can not upload password protected file."
 msgstr ""
@@ -1576,11 +1749,6 @@ msgstr "خاص"
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
 msgid "login"
 msgstr "تسجيل الدخول"
-
-#. module: website_slides
-#: model:ir.model,name:website_slides.model_res_config_settings
-msgid "res.config.settings"
-msgstr "الدقة.التكوين.إعدادات"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_search

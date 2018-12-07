@@ -3,25 +3,25 @@
 # * purchase_requisition
 # 
 # Translators:
-# Sergio Zanchetta <primes2h@gmail.com>, 2018
 # Francesco Garganese <francesco.garganese@aeromnia.aero>, 2018
-# Martin Trigaux, 2018
 # Luigi Di Naro <gigidn@gmail.com>, 2018
 # Simone Bernini <simone@aperturelabs.it>, 2018
 # Sebastiano Pistore <SebastianoPistore.info@protonmail.ch>, 2018
 # Christian <chris@effeci.info>, 2018
-# Massimo Bianchi <bianchi.massimo@gmail.com>, 2018
-# Paolo Valier, 2018
 # David Minneci <david@numeko.it>, 2018
 # maiolif <maiolif@mgftools.com>, 2018
 # Léonie Bouchat <lbo@odoo.com>, 2018
+# Martin Trigaux, 2018
+# Paolo Valier, 2018
+# Sergio Zanchetta <primes2h@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
-"Last-Translator: Léonie Bouchat <lbo@odoo.com>, 2018\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-08-24 09:24+0000\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2018\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -129,7 +129,7 @@ msgstr "Tag Analitici"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "Numero di allegati"
 
 #. module: purchase_requisition
 #: selection:purchase.requisition,state:0
@@ -208,6 +208,16 @@ msgstr "Confermato"
 #: selection:product.template,purchase_requisition:0
 msgid "Create a draft purchase order"
 msgstr "Crea bozza di ordine di acquisto"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,help:purchase_requisition.field_product_product__purchase_requisition
+#: model:ir.model.fields,help:purchase_requisition.field_product_template__purchase_requisition
+msgid ""
+"Create a draft purchase order: Based on your product configuration, the "
+"system will create a draft purchase order.Propose a call for tender : If the"
+" 'purchase_requisition' module is installed and this option is selected, the"
+" system will create a draft call for tender."
+msgstr ""
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__create_uid
@@ -348,11 +358,6 @@ msgid "In negotiation"
 msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.model,name:purchase_requisition.model_product_supplierinfo
-msgid "Information about a product vendor"
-msgstr "Informazioni sul fornitore del prodotto"
-
-#. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_is_follower
 msgid "Is Follower"
 msgstr "È Follower"
@@ -386,7 +391,7 @@ msgstr "Righe"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "Allegato principale"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_has_error
@@ -478,8 +483,8 @@ msgstr "Approvvigionamento"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_procurement_group
-msgid "Procurement Requisition"
-msgstr "Richiesta di approvvigionamento"
+msgid "Procurement Group"
+msgstr "Gruppo di Approvvigionamento"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_product_product
@@ -518,11 +523,6 @@ msgstr "Proponi un bando di gara"
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__requisition_id
 msgid "Purchase Agreement"
 msgstr "Contratto d'Acquisto"
-
-#. module: purchase_requisition
-#: model:ir.model,name:purchase_requisition.model_purchase_requisition_type
-msgid "Purchase Agreement Type"
-msgstr "Tipo Contratto d'Acquisto"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.tender_type_action
@@ -565,7 +565,7 @@ msgstr "Ordini D'acquisto con richiesta"
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__user_id
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Purchase Representative"
-msgstr ""
+msgstr "Referente acquisti"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_requisition
@@ -577,6 +577,11 @@ msgstr "Richiesta d'acquisto"
 #: model:ir.model.fields,field_description:purchase_requisition.field_product_supplierinfo__purchase_requisition_line_id
 msgid "Purchase Requisition Line"
 msgstr "Riga di Richiesta d'Acquisto"
+
+#. module: purchase_requisition
+#: model:ir.model,name:purchase_requisition.model_purchase_requisition_type
+msgid "Purchase Requisition Type"
+msgstr ""
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.act_res_partner_2_purchase_order
@@ -718,6 +723,11 @@ msgstr "Regola dello stock"
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__supplier_info_ids
 msgid "Supplier Info"
 msgstr ""
+
+#. module: purchase_requisition
+#: model:ir.model,name:purchase_requisition.model_product_supplierinfo
+msgid "Supplier Pricelist"
+msgstr "Listino Fornitore"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form

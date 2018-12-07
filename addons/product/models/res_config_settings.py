@@ -13,7 +13,7 @@ class ResConfigSettings(models.TransientModel):
              " * Checked : Product are visible for every company, even if a company is defined on the partner.\n"
              " * Unchecked : Each company can see only its product (product where company is defined). Product not related to a company are visible for all companies.")
     group_uom = fields.Boolean("Units of Measure", implied_group='uom.group_uom')
-    group_product_variant = fields.Boolean("Attributes and Variants", implied_group='product.group_product_variant')
+    group_product_variant = fields.Boolean("Variants and Options", implied_group='product.group_product_variant')
     group_stock_packaging = fields.Boolean('Product Packagings',
         implied_group='product.group_stock_packaging')
     group_sale_pricelist = fields.Boolean("Use pricelists to adapt your price per customers",
@@ -28,6 +28,10 @@ class ResConfigSettings(models.TransientModel):
         ('0', 'Kilogram'),
         ('1', 'Pound'),
     ], 'Weight unit of measure', config_parameter='product.weight_in_lbs', default='0')
+    product_volume_volume_in_cubic_feet = fields.Selection([
+        ('0', 'Cubic Meters'),
+        ('1', 'Cubic Feet'),
+    ], 'Volume unit of measure', config_parameter='product.volume_in_cubic_feet', default='0')
 
 
     @api.model

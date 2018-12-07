@@ -9,6 +9,7 @@ from odoo.exceptions import UserError
 
 class ReportHrSalaryEmployeeBymonth(models.AbstractModel):
     _name = 'report.l10n_in_hr_payroll.report_hrsalarybymonth'
+    _description = "Indian Salary by Month Report"
 
     def get_periods(self, form):
         #       Get start year-month-date and end year-month-date

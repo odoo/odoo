@@ -3,25 +3,27 @@
 # * sale_timesheet
 # 
 # Translators:
-# Mustafa Rawi <mustafa@cubexco.com>, 2018
 # Akram Alfusayal <akram_ma@hotmail.com>, 2018
 # amrnegm <amrnegm.01@gmail.com>, 2018
-# Martin Trigaux, 2018
 # hamza tayseer atieh <hamza.atieh@minervadata.com>, 2018
-# Osoul <baruni@osoul.ly>, 2018
 # Mohammed Albasha <m.albasha.ma@gmail.com>, 2018
-# Mohammed Ibrahim <m.ibrahim@mussder.com>, 2018
 # Ghaith Gammar <g.gammar@saharaifs.net>, 2018
 # Osama Ahmaro <osamaahmaro@gmail.com>, 2018
 # Ahmed AL-Haddad <ahmed@utech-sa.com>, 2018
 # Shaima Safar <shaima.safar@open-inside.com>, 2018
+# Mustafa Rawi <mustafa@cubexco.com>, 2018
+# Martin Trigaux, 2018
+# aymen rahmani <aymen.isims@gmail.com>, 2018
+# Mohammed Ibrahim <m.ibrahim@mussder.com>, 2018
+# Walid Baruni <baruni@osoul.ly>, 2018
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
-"Last-Translator: Shaima Safar <shaima.safar@open-inside.com>, 2018\n"
+"POT-Creation-Date: 2018-10-08 06:49+0000\n"
+"PO-Revision-Date: 2018-08-24 09:25+0000\n"
+"Last-Translator: Walid Baruni <baruni@osoul.ly>, 2018\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -270,6 +272,21 @@ msgid "Create Invoice"
 msgstr "إنشاء فاتورة"
 
 #. module: sale_timesheet
+#: model:ir.model,name:sale_timesheet.model_project_create_invoice
+msgid "Create Invoice from project"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model,name:sale_timesheet.model_project_create_sale_order_line
+msgid "Create SO Line from project"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model,name:sale_timesheet.model_project_create_sale_order
+msgid "Create SO from project"
+msgstr ""
+
+#. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:102
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_create_sale_order_view_form
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form
@@ -280,16 +297,6 @@ msgstr ""
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_create_invoice_view_form
 msgid "Create Sales Order from Project"
-msgstr ""
-
-#. module: sale_timesheet
-#: model:ir.model,name:sale_timesheet.model_project_create_invoice
-msgid "Create a Invoice from project"
-msgstr ""
-
-#. module: sale_timesheet
-#: model:ir.model,name:sale_timesheet.model_project_create_sale_order
-msgid "Create a SO from project"
 msgstr ""
 
 #. module: sale_timesheet
@@ -349,6 +356,12 @@ msgid "Customer"
 msgstr "العميل"
 
 #. module: sale_timesheet
+#: model:product.product,name:sale_timesheet.product_service_order_timesheet
+#: model:product.template,name:sale_timesheet.product_service_order_timesheet_product_template
+msgid "Customer Care (Prepaid Hours)"
+msgstr ""
+
+#. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_create_sale_order__partner_id
 msgid "Customer of the sales order"
 msgstr ""
@@ -370,6 +383,7 @@ msgstr ""
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/controllers/main.py:249
+#: model:project.task.type,legend_done:sale_timesheet.project_stage_fixed
 #, python-format
 msgid "Done"
 msgstr "تم"
@@ -392,6 +406,7 @@ msgstr ""
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
+#: model:project.task.type,name:sale_timesheet.project_stage_fixed
 msgid "Fixed"
 msgstr "ثابت"
 
@@ -416,6 +431,16 @@ msgid "Group By"
 msgstr "تجميع حسب"
 
 #. module: sale_timesheet
+#: model:product.product,uom_name:sale_timesheet.product_service_deliver_timesheet_1
+#: model:product.product,uom_name:sale_timesheet.product_service_deliver_timesheet_2
+#: model:product.product,uom_name:sale_timesheet.product_service_order_timesheet
+#: model:product.template,uom_name:sale_timesheet.product_service_deliver_timesheet_1_product_template
+#: model:product.template,uom_name:sale_timesheet.product_service_deliver_timesheet_2_product_template
+#: model:product.template,uom_name:sale_timesheet.product_service_order_timesheet_product_template
+msgid "Hour(s)"
+msgstr "ساعة(ـات)"
+
+#. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Hours"
 msgstr "الساعات"
@@ -429,6 +454,12 @@ msgstr "الساعات"
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task_assign_sale__id
 msgid "ID"
 msgstr "المعرف"
+
+#. module: sale_timesheet
+#: model:project.task,legend_normal:sale_timesheet.project_task_internal
+#: model:project.task.type,legend_normal:sale_timesheet.project_stage_fixed
+msgid "In Progress"
+msgstr "في تَقَدم "
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_account_invoice
@@ -470,6 +501,18 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line__is_service
 msgid "Is a Service"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:product.product,name:sale_timesheet.product_service_deliver_timesheet_2
+#: model:product.template,name:sale_timesheet.product_service_deliver_timesheet_2_product_template
+msgid "Junior Architect (Invoice on Timesheets)"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:product.product,name:sale_timesheet.product_service_deliver_manual
+#: model:product.template,name:sale_timesheet.product_service_deliver_manual_product_template
+msgid "Kitchen Assembly (Milestones)"
 msgstr ""
 
 #. module: sale_timesheet
@@ -545,6 +588,11 @@ msgid "Name"
 msgstr "الاسم"
 
 #. module: sale_timesheet
+#: model:project.task.type,legend_blocked:sale_timesheet.project_stage_fixed
+msgid "Need functional or technical help"
+msgstr "تحتاج مساعدة تقنية و عملية "
+
+#. module: sale_timesheet
 #: selection:project.project,billable_type:0
 #: selection:project.task,billable_type:0
 msgid "No Billable"
@@ -593,12 +641,16 @@ msgid "Non billable"
 msgstr ""
 
 #. module: sale_timesheet
+#: model:project.task,legend_blocked:sale_timesheet.project_task_internal
+msgid "Not validated"
+msgstr ""
+
+#. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_invoice__timesheet_count
 msgid "Number of timesheets"
 msgstr ""
 
 #. module: sale_timesheet
-#: model:ir.model.fields,help:sale_timesheet.field_product_product__service_tracking
 #: model:ir.model.fields,help:sale_timesheet.field_product_template__service_tracking
 msgid ""
 "On Sales order confirmation, this product can generate a project and/or "
@@ -626,7 +678,7 @@ msgstr ""
 #: model:ir.actions.client,name:sale_timesheet.project_timesheet_action_client_timesheet_plan
 #, python-format
 msgid "Overview"
-msgstr ""
+msgstr "اللوحة"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__product_id
@@ -674,7 +726,6 @@ msgstr ""
 #: code:addons/sale_timesheet/controllers/main.py:373
 #: code:addons/sale_timesheet/controllers/main.py:424
 #: model:ir.model,name:sale_timesheet.model_project_project
-#: model:ir.model.fields,field_description:sale_timesheet.field_product_product__project_id
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_template__project_id
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__project_id
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__project_id
@@ -709,11 +760,15 @@ msgstr "مدير المشروع"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_profitability_report
-msgid "Project Profitability Analysis"
+msgid "Project Profitability Report"
 msgstr ""
 
 #. module: sale_timesheet
-#: model:ir.model.fields,field_description:sale_timesheet.field_product_product__project_template_id
+#: model:ir.model,name:sale_timesheet.model_project_sale_line_employee_map
+msgid "Project Sales line, employee mapping"
+msgstr ""
+
+#. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_template__project_template_id
 msgid "Project Template"
 msgstr ""
@@ -751,11 +806,6 @@ msgid "Projects used in this sales order."
 msgstr ""
 
 #. module: sale_timesheet
-#: model:ir.model,name:sale_timesheet.model_sale_order
-msgid "Quotation"
-msgstr "عرض مبدئي"
-
-#. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Rates"
 msgstr "الأسعار"
@@ -766,12 +816,18 @@ msgid "Re-invoiced costs"
 msgstr ""
 
 #. module: sale_timesheet
+#: model:project.task,legend_done:sale_timesheet.project_task_internal
+msgid "Ready for Next Stage"
+msgstr ""
+
+#. module: sale_timesheet
 #: code:addons/sale_timesheet/controllers/main.py:249
 #, python-format
 msgid "Remaining"
 msgstr "المتبقي "
 
 #. module: sale_timesheet
+#: model:ir.model,name:sale_timesheet.model_sale_order
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__sale_order_id
 msgid "Sale Order"
 msgstr "أمر البيع"
@@ -842,7 +898,6 @@ msgid "Sales Orders"
 msgstr "أوامر المبيعات"
 
 #. module: sale_timesheet
-#: model:ir.model.fields,help:sale_timesheet.field_product_product__project_id
 #: model:ir.model.fields,help:sale_timesheet.field_product_template__project_id
 msgid ""
 "Select a non billable project on which tasks can be created. This setting "
@@ -850,7 +905,6 @@ msgid ""
 msgstr ""
 
 #. module: sale_timesheet
-#: model:ir.model.fields,help:sale_timesheet.field_product_product__project_template_id
 #: model:ir.model.fields,help:sale_timesheet.field_product_template__project_template_id
 msgid ""
 "Select a non billable project to be the skeleton of the new created project "
@@ -878,19 +932,23 @@ msgid "Sell services and invoice time spent"
 msgstr ""
 
 #. module: sale_timesheet
+#: model:product.product,name:sale_timesheet.product_service_deliver_timesheet_1
+#: model:product.template,name:sale_timesheet.product_service_deliver_timesheet_1_product_template
+msgid "Senior Architect (Invoice on Timesheets)"
+msgstr ""
+
+#. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__product_id
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line__product_id
 msgid "Service"
 msgstr "الخدمة"
 
 #. module: sale_timesheet
-#: model:ir.model.fields,field_description:sale_timesheet.field_product_product__service_policy
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_template__service_policy
 msgid "Service Invoicing Policy"
 msgstr ""
 
 #. module: sale_timesheet
-#: model:ir.model.fields,field_description:sale_timesheet.field_product_product__service_tracking
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_template__service_tracking
 msgid "Service Tracking"
 msgstr ""
@@ -914,7 +972,7 @@ msgstr ""
 #: code:addons/sale_timesheet/controllers/main.py:249
 #, python-format
 msgid "Sold"
-msgstr ""
+msgstr "تم البيع"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
@@ -949,6 +1007,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task_assign_sale__task_ids
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__tasks_count
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_order_form_inherit_sale_timesheet
+#: model:project.project,label_tasks:sale_timesheet.project_support
 #, python-format
 msgid "Tasks"
 msgstr "المهام"
@@ -1153,6 +1212,12 @@ msgid "Unit price of the sales order item."
 msgstr ""
 
 #. module: sale_timesheet
+#: model:product.product,uom_name:sale_timesheet.product_service_deliver_manual
+#: model:product.template,uom_name:sale_timesheet.product_service_deliver_manual_product_template
+msgid "Unit(s)"
+msgstr "وحدة(ات)"
+
+#. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__amount_untaxed_invoiced
 msgid "Untaxed Amount Invoiced"
 msgstr ""
@@ -1186,6 +1251,11 @@ msgid "Wizard"
 msgstr "المعالج"
 
 #. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_project_task_assign_sale__partner_id
+msgid "You can find a customer by its Name, TIN, Email or Internal Reference."
+msgstr ""
+
+#. module: sale_timesheet
 #: code:addons/sale_timesheet/models/account.py:62
 #, python-format
 msgid ""
@@ -1216,11 +1286,13 @@ msgid ""
 msgstr ""
 
 #. module: sale_timesheet
-#: model:ir.model,name:sale_timesheet.model_project_create_sale_order_line
-msgid "project.create.sale.order.line"
-msgstr ""
-
-#. module: sale_timesheet
-#: model:ir.model,name:sale_timesheet.model_project_sale_line_employee_map
-msgid "project.sale.line.employee.map"
-msgstr ""
+#: model:product.product,weight_uom_name:sale_timesheet.product_service_deliver_manual
+#: model:product.product,weight_uom_name:sale_timesheet.product_service_deliver_timesheet_1
+#: model:product.product,weight_uom_name:sale_timesheet.product_service_deliver_timesheet_2
+#: model:product.product,weight_uom_name:sale_timesheet.product_service_order_timesheet
+#: model:product.template,weight_uom_name:sale_timesheet.product_service_deliver_manual_product_template
+#: model:product.template,weight_uom_name:sale_timesheet.product_service_deliver_timesheet_1_product_template
+#: model:product.template,weight_uom_name:sale_timesheet.product_service_deliver_timesheet_2_product_template
+#: model:product.template,weight_uom_name:sale_timesheet.product_service_order_timesheet_product_template
+msgid "kg"
+msgstr "كجم"

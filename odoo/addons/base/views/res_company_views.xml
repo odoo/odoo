@@ -183,12 +183,12 @@
                                 }"/>
                     </group>
                     <group>
-                        <field name="logo" widget="image" />
+                        <field name="logo" widget="image" style="width: 50%"/>
                         <field name="report_header"  widget="char"
                             placeholder="e.g. Global Business Solutions" />
                         <field name="report_footer" string="Footer"
-                            placeholder="e.g. Opening hours, bank accounts (one per line)" />
-                        <field name="paperformat_id" widget="selection" />
+                            placeholder="e.g. Bank accounts (one per line)" />
+                        <field name="paperformat_id" widget="selection" required="1"/>
                     </group>
                     <footer>
                         <button special="save" string="Save"

@@ -124,6 +124,9 @@
                         <field name="description_picking" placeholder="This note will show up on internal transfer orders (e.g. where to pick the product in the warehouse)." nolabel="1"/>
                     </group>
                 </page>
+                <page name="inventory" position="attributes">
+                    <attribute name="groups">stock.group_stock_user,product.group_stock_packaging</attribute>
+                </page>
             </field>
         </record>
 
@@ -193,9 +196,9 @@
                     </header>
                     <button name="toggle_active" position="before">
                         <button class="oe_stat_button"
-                               name="%(product_open_quants)d"
+                               name="action_open_quants"
                                icon="fa-building-o"
-                               type="action" attrs="{'invisible':[('type', '!=', 'product')]}">
+                               type="object" attrs="{'invisible':[('type', '!=', 'product')]}">
                                <div class="o_field_widget o_stat_info">
                                     <span class="o_stat_value">
                                         <field name="qty_available" widget="statinfo" nolabel="1" class="mr4"/>
@@ -341,7 +344,7 @@
                     <!-- change attrs of fields added in view_template_property_form
                     to restrict the display for templates -->
                     <xpath expr="//group[@name='group_lots_and_weight']" position="attributes">
-                        <attribute name="attrs">{'invisible':['|', ('type', 'not in', ['product', 'consu']), ('product_variant_count', '&gt;', 1)]}</attribute>
+                        <attribute name="attrs">{'invisible':['|', ('type', 'not in', ['product', 'consu'])]}</attribute>
                     </xpath>
 
                     <xpath expr="//group[@name='group_lots_and_weight']" position="inside">

@@ -128,12 +128,12 @@
         <field name="arch" type="xml">
             <form string="Payslip">
             <header>
-                <button string="Confirm" name="action_payslip_done" type="object" states="draft" class="oe_highlight"/>
+                <button string="Confirm" name="action_payslip_done" type="object" states="verify" class="oe_highlight"/>
                 <button string="Refund" name="refund_sheet" states="confirm,done" type='object' />
                 <button string="Set to Draft" name="action_payslip_draft" type="object" states="cancel"/>
                 <button string="Compute Sheet" name="compute_sheet" type="object" states="draft" class="oe_highlight"/>
-                <button string="Cancel Payslip" name="action_payslip_cancel" type="object" states="draft,hr_check,confirm,verify"/>
-                <field name="state" widget="statusbar" statusbar_visible="draft,confirm"/>
+                <button string="Cancel Payslip" name="action_payslip_cancel" type="object" states="draft,confirm,verify"/>
+                <field name="state" widget="statusbar" statusbar_visible="draft,verify,confirm"/>
             </header>
             <sheet>
                 <div class="oe_button_box" name="button_box">
@@ -157,7 +157,7 @@
                     <field name="number"/>
                     <field name="struct_id" attrs="{'required':[('contract_id','!=',False)]}"/>
                     <field name="name"/>
-                    <field name="credit_note"/>
+                    <field name="credit_note" invisible="1"/>
                 </group>
                 <notebook>
                     <page string="Worked Days &amp; Inputs">
@@ -168,7 +168,7 @@
                                 <field name="code"/>
                                 <field name="number_of_days" sum="Total Working Days"/>
                                 <field name="number_of_hours"/>
-                                <field name="contract_id"/>
+                                <field name="contract_id" invisible="True"/>
                                 <field name="sequence" invisible="True"/>
                             </tree>
                             <form string="Worked Day">
@@ -188,7 +188,7 @@
                                 <field name="name"/>
                                 <field name="code"/>
                                 <field name="amount"/>
-                                <field name="contract_id"/>
+                                <field name="contract_id" invisible="True"/>
                                 <field name="sequence" invisible="True"/>
                             </tree>
                             <form string="Payslip Line">
@@ -230,17 +230,7 @@
                             </form>
                         </field>
                     </page>
-                    <page string="Details By Salary Rule Category">
-                        <field name="details_by_salary_rule_category" context="{'group_by':'category_id'}" domain="[('appears_on_payslip', '=', True)]">
-                            <tree string="Payslip Lines" decoration-info="total == 0">
-                                <field name="category_id"/>
-                                <field name="name"/>
-                                <field name="code"/>
-                                <field name="total"/>
-                            </tree>
-                        </field>
-                   </page>
-                   <page string="Accounting Information">
+                    <page string="Accounting Information">
                         <group>
                             <group string="Miscellaneous">
                                 <field name="company_id" groups="base.group_multi_company"/>
@@ -253,7 +243,7 @@
                         <div colspan="4">
                             <field name="note" placeholder="Add an internal note..."/>
                         </div>
-                   </page>
+                    </page>
                 </notebook>
                 </sheet>
             </form>
@@ -265,15 +255,17 @@
         <field name="model">hr.payslip</field>
         <field name="arch" type="xml">
             <search string="Search Payslips">
+                <field name="employee_id"/>
                 <field name="name" string="Payslips" filter_domain="['|',('name','ilike',self),('number','ilike',self)]"/>
                 <field name="date_from"/>
+                <field name="payslip_run_id"/>
                 <filter string="Draft" name="draft" domain="[('state','=','draft')]" help="Draft Slip"/>
                 <filter string="Done" name="done" domain="[('state','=','done')]" help="Done Slip"/>
-                <field name="employee_id"/>
-                <field name="payslip_run_id"/>
+                <separator/>
+                <filter string="Credit Notes" name="credit_note" domain="[('credit_note', '=', True)]"/>
                 <group expand="0" string="Group By">
                     <filter string="Employees" name="employee_id" context="{'group_by':'employee_id'}"/>
-                    <filter string="PaySlip Batch" name="payslip_run_id" context="{'group_by':'payslip_run_id'}"/>
+                    <filter string="PaySlip Batch" name="group_by_batch" context="{'group_by':'payslip_run_id'}"/>
                     <filter string="Companies" name="company_id" groups="base.group_multi_company" context="{'group_by':'company_id'}"/>
                     <filter string="States" name="state" context="{'group_by':'state'}"/>
                 </group>
@@ -286,6 +278,7 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,kanban,form</field>
         <field name="search_view_id" ref="view_hr_payslip_filter"/>
+        <field name="context">{'search_default_group_by_batch': 1}</field>
     </record>
 
     <menuitem action="action_view_hr_payslip_form" id="menu_department_tree" parent="menu_hr_payroll_root" groups="hr_payroll.group_hr_payroll_user"/>
@@ -367,12 +360,20 @@
         <field name="arch" type="xml">
             <form string="Payslips Batches">
             <header>
-                <button name="close_payslip_run" type="object" string="Close" states="draft" class="oe_highlight"/>
                 <button name="%(action_hr_payslip_by_employees)d" type="action" states="draft" string="Generate Payslips" class="oe_highlight"/>
-                <button string="Set to Draft" name="draft_payslip_run" type="object" states="close" />
+                <button name="close_payslip_run" type="object" string="Validate" states="verify" class="oe_highlight"/>
+                <button string="Set to Draft" name="draft_payslip_run" type="object" states="close"/>
                 <field name="state" widget="statusbar"/>
             </header>
             <sheet>
+                <div class="oe_button_box" name="button_box">
+                    <button name="action_open_payslips" class="oe_stat_button" icon="fa-book" type="object" help="Generated Payslips" attrs="{'invisible': [('payslip_count', '=', 0)]}">
+                        <div class="o_field_widget o_stat_info">
+                            <span class="o_stat_value"><field name="payslip_count"/></span>
+                            <span class="o_stat_text">Payslips</span>
+                         </div>
+                    </button>
+                </div>
                 <label for="name" class="oe_edit_only"/>
                 <h1>
                     <field name="name"/>
@@ -384,8 +385,6 @@
                      </div>
                     <field name="credit_note"/>
                 </group>
-                <separator string="Payslips"/>
-                <field name="slip_ids"/>
             </sheet>
             </form>
         </field>

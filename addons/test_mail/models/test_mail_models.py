@@ -78,7 +78,7 @@ class MailTestFull(models.Model):
     def _track_subtype(self, init_values):
         self.ensure_one()
         if 'umbrella_id' in init_values and self.umbrella_id:
-            return 'test_mail.st_mail_test_full_umbrella_upd'
+            return self.env.ref('test_mail.st_mail_test_full_umbrella_upd')
         return super(MailTestFull, self)._track_subtype(init_values)
 
 
@@ -110,6 +110,7 @@ class MailTestAlias(models.Model):
 
 class MailModel(models.Model):
     _name = 'test_performance.mail'
+    _description = 'Test Performance Mail'
     _inherit = 'mail.thread'
 
     name = fields.Char()

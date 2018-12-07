@@ -180,7 +180,7 @@ class Inventory(models.Model):
         else:
             self._action_done()
 
-    def _action_done(self):
+    def _action_done(self, cancel_backorder=False):
         negative = next((line for line in self.mapped('line_ids') if line.product_qty < 0 and line.product_qty != line.theoretical_qty), False)
         if negative:
             raise UserError(_('You cannot set a negative product quantity in an inventory line:\n\t%s - qty: %s') % (negative.product_id.name, negative.product_qty))
@@ -233,7 +233,7 @@ class Inventory(models.Model):
     def _get_inventory_lines_values(self):
         # TDE CLEANME: is sql really necessary ? I don't think so
         locations = self.env['stock.location'].search([('id', 'child_of', [self.location_id.id])])
-        domain = ' location_id in %s AND quantity != 0'
+        domain = ' location_id in %s AND quantity != 0 AND active = TRUE'
         args = (tuple(locations.ids),)
 
         vals = []
@@ -274,6 +274,8 @@ class Inventory(models.Model):
 
         self.env.cr.execute("""SELECT product_id, sum(quantity) as product_qty, location_id, lot_id as prod_lot_id, package_id, owner_id as partner_id
             FROM stock_quant
+            LEFT JOIN product_product
+            ON product_product.id = stock_quant.product_id
             WHERE %s
             GROUP BY product_id, location_id, lot_id, package_id, partner_id """ % domain, args)
 
@@ -331,6 +333,7 @@ class InventoryLine(models.Model):
         'uom.uom', 'Product Unit of Measure',
         required=True,
         default=lambda self: self.env.ref('uom.product_uom_unit', raise_if_not_found=True))
+    product_uom_category_id = fields.Many2one(string='Uom category', related='product_uom_id.category_id', readonly=True)
     product_qty = fields.Float(
         'Checked Quantity',
         digits=dp.get_precision('Product Unit of Measure'), default=0)
@@ -352,7 +355,7 @@ class InventoryLine(models.Model):
         'Theoretical Quantity', compute='_compute_theoretical_qty',
         digits=dp.get_precision('Product Unit of Measure'), readonly=True, store=True)
     inventory_location_id = fields.Many2one(
-        'stock.location', 'Inventory Location', related='inventory_id.location_id', related_sudo=False)
+        'stock.location', 'Inventory Location', related='inventory_id.location_id', related_sudo=False, readonly=False)
     product_tracking = fields.Selection('Tracking', related='product_id.tracking', readonly=True)
 
     @api.one

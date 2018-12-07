@@ -5,7 +5,6 @@ var config = require('web.config');
 var core = require('web.core');
 var ColorpickerDialog = require('web.colorpicker');
 var Dialog = require('web.Dialog');
-var weContext = require('web_editor.context');
 var widgets = require('web_editor.widget');
 var websiteNavbarData = require('website.navbar');
 
@@ -31,6 +30,7 @@ var ThemeCustomizeDialog = Dialog.extend({
         options = options || {};
         this._super(parent, _.extend({
             title: _t("Customize this theme"),
+            buttons: [],
         }, options));
 
         this.defaultTab = options.tab || 0;
@@ -43,7 +43,7 @@ var ThemeCustomizeDialog = Dialog.extend({
             templateDef = this._rpc({
                 model: 'ir.ui.view',
                 method: 'read_template',
-                args: ['website.theme_customize', weContext.get()],
+                args: ['website.theme_customize'],
             }).then(function (data) {
                 return core.qweb.add_template(data);
             });
@@ -154,72 +154,45 @@ var ThemeCustomizeDialog = Dialog.extend({
 
                 switch (item.tagName) {
                     case 'OPT':
-                        var colorPalette = $item.data('colorPalette') === 'user';
-                        var icon = $item.data('icon');
+                        var widgetName = $item.data('widget');
 
                         // Build the options template
-                        var $multiChoiceLabel = $(core.qweb.render('website.theme_customize_modal_option', {
+                        var $option = $(core.qweb.render('website.theme_customize_modal_option', {
                             name: optionsName,
                             id: $item.attr('id') || _.uniqueId('o_theme_customize_input_id_'),
 
                             string: $item.attr('string'),
-                            icon: icon,
-                            color: $item.data('color'),
+                            icon: $item.data('icon'),
                             font: $item.data('font'),
-
-                            colorPalette: colorPalette,
 
                             xmlid: $item.data('xmlid'),
                             enable: $item.data('enable'),
                             disable: $item.data('disable'),
                             reload: $item.data('reload'),
+
+                            widget: widgetName,
                         }));
 
-                        $multiChoiceLabel.find('.o_theme_customize_color[data-color="primary"]').addClass('d-none').removeClass('d-flex');
-                        $multiChoiceLabel.find('.o_theme_customize_color[data-color="secondary"]').addClass('d-none').removeClass('d-flex');
+                        if (widgetName) {
+                            var $widget = $(core.qweb.render('website.theme_customize_' + widgetName));
+                            $option.append($widget);
+                        }
 
                         if ($container.hasClass('form-row')) {
-                            $col = $('<div/>', {class: (icon ? 'col-4' : (colorPalette ? 'col-12' : 'col-6'))});
-                            $col.append($multiChoiceLabel);
+                            $col = $('<div/>', {
+                                class: _.str.sprintf('col-%s', $item.data('col') || 6),
+                            });
+                            $col.append($option);
                             $container.append($col);
                         } else {
-                            $container.append($multiChoiceLabel);
+                            $container.append($option);
                         }
-                        break;
-
-                    case 'MORE':
-                        var collapseID = _.uniqueId('collapse-');
-
-                        $col = $('<div/>', {
-                            class: 'col-12',
-                        }).appendTo($container);
-
-                        var string = $item.attr('string');
-                        if (string) {
-                            var $button = $('<button/>', {
-                                'type': 'button',
-                                class: 'btn btn-primary d-block mx-auto mt-3 collapsed',
-                                'data-toggle': 'collapse',
-                                'data-target': "#" + collapseID,
-                                text: string,
-                            });
-                            $col.append($button);
-                        }
-
-                        var $collapse = $('<div/>',{
-                            id: collapseID,
-                            class: 'collapse form-row justify-content-between mt-3',
-                            'data-depends': $item.data('depends'),
-                        });
-                        $col.append($collapse);
-
-                        _processItems($item.children(), $collapse);
                         break;
 
                     case 'LIST':
                         var $listContainer = $('<div/>', {class: 'py-1 px-2 o_theme_customize_option_list'});
                         $col = $('<div/>', {
-                            class: 'col-6 mt-2',
+                            class: _.str.sprintf('col-%s mt-2', $item.data('col') || 6),
                             'data-depends': $item.data('depends'),
                         }).append($('<h6/>', {text: $item.attr('string')}), $listContainer);
                         $container.append($col);
@@ -312,7 +285,6 @@ var ThemeCustomizeDialog = Dialog.extend({
                         data[1],
                         '#wrapwrap { background-image: url("' + src + '"); }',
                         '//style',
-                        weContext.get(),
                     ],
                 });
             }).then(function () {
@@ -354,21 +326,13 @@ var ThemeCustomizeDialog = Dialog.extend({
             $set.prop('checked', checked).closest('label').toggleClass('checked', checked);
         });
 
-        // Mark the collapsed section as visible if their dependencies are met
-        var $collapsedElements = this.$('[data-depends]');
-        _.each($collapsedElements, function (collapsed) {
-            var $collapsed = $(collapsed);
-            var enabled = false;
-            var nbDependencies = $collapsed.data('depends') ? $collapsed.data('depends').split(',').length : 0;
-            if (self._getInputs($collapsed.data('depends')).filter(':checked').length === nbDependencies) {
-                enabled = true;
-            }
-
-            if ($collapsed.is('.collapse')) {
-                $collapsed.collapse(enabled ? 'show' : 'hide');
-            } else {
-                $collapsed.toggleClass('d-none', !enabled);
-            }
+        // Make the hidden sections visible if their dependencies are met
+        _.each(this.$('[data-depends]'), function (hidden) {
+            var $hidden = $(hidden);
+            var depends = $hidden.data('depends');
+            var nbDependencies = depends ? depends.split(',').length : 0;
+            var enabled = self._getInputs(depends).filter(':checked').length === nbDependencies;
+            $hidden.toggleClass('d-none', !enabled);
         });
     },
     /**
@@ -378,8 +342,8 @@ var ThemeCustomizeDialog = Dialog.extend({
         if (reload || config.debug === 'assets') {
             window.location.href = $.param.querystring('/website/theme_customize_reload', {
                 href: window.location.href,
-                enable: enable.join(','),
-                disable: disable.join(','),
+                enable: (enable || []).join(','),
+                disable: (disable || []).join(','),
                 tab: this.$('.nav-link.active').parent().index(),
             });
             return $.Deferred();
@@ -503,17 +467,12 @@ var ThemeCustomizeDialog = Dialog.extend({
             }).then(function (data) {
                 var files = data.scss[0][1];
                 var file = _.find(files, function (file) {
-                    switch (colorType) {
-                        case 'theme':
-                            return file.url === '/website/static/src/scss/options/colors/user_theme_color_palette.scss';
-                        case 'typo':
-                            return file.url === '/website/static/src/scss/options/colors/user_color_palette_typo.scss';
-                    }
-                    return file.url === '/website/static/src/scss/options/colors/user_color_palette_' + colorName + '.scss';
+                    var baseURL = '/website/static/src/scss/options/colors/';
+                    return file.url === _.str.sprintf('%suser_%scolor_palette.scss', baseURL, (colorType ? (colorType + '_') : ''));
                 });
 
                 var colors = {};
-                colors[colorName] = ev.data.hex;
+                colors[colorName] = ev.data.cssColor;
                 if (colorName === 'alpha') {
                     colors['beta'] = 'null';
                     colors['gamma'] = 'null';
@@ -523,7 +482,16 @@ var ThemeCustomizeDialog = Dialog.extend({
 
                 var updatedFileContent = file.arch;
                 _.each(colors, function (colorValue, colorName) {
-                    updatedFileContent = updatedFileContent.replace(new RegExp(colorName + ': (?:null|#[a-fA-F0-9]{6}),'), colorName + ': ' + colorValue + ',');
+                    var pattern = _.str.sprintf("'%s': %%s,\n", colorName);
+                    var regex = new RegExp(_.str.sprintf(pattern, ".+"));
+                    var replacement = _.str.sprintf(pattern, colorValue);
+                    if (regex.test(updatedFileContent)) {
+                        updatedFileContent = updatedFileContent
+                            .replace(regex, replacement);
+                    } else {
+                        updatedFileContent = updatedFileContent
+                            .replace(/( *)(.*hook.*)/, _.str.sprintf('$1%s$1$2', replacement));
+                    }
                 });
 
                 return self._rpc({
@@ -535,7 +503,7 @@ var ThemeCustomizeDialog = Dialog.extend({
                     },
                 });
             }).then(function () {
-                self.$('#' + $color.closest('.o_theme_customize_color_previews').data('depends')).click();
+                return self._updateStyle();
             });
         });
         colorpicker.open();
@@ -554,13 +522,12 @@ var ThemeCustomizeMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
      * @override
      */
     start: function () {
-        var def;
         if ((window.location.hash || '').indexOf('theme=true') > 0) {
             var tab = window.location.hash.match(/tab=(\d+)/);
-            def = this._openThemeCustomizeDialog(tab ? tab[1] : false);
+            this._openThemeCustomizeDialog(tab ? tab[1] : false);
             window.location.hash = '';
         }
-        return $.when(this._super.apply(this, arguments), def);
+        return this._super.apply(this, arguments);
     },
 
     //--------------------------------------------------------------------------

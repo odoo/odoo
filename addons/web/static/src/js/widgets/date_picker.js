@@ -15,6 +15,7 @@ var DateWidget = Widget.extend({
         'change.datetimepicker': 'changeDatetime',
         'change .o_datepicker_input': 'changeDatetime',
         'input input': '_onInput',
+        'show.datetimepicker': '_onDateTimePickerShow',
     },
     /**
      * @override
@@ -93,8 +94,6 @@ var DateWidget = Widget.extend({
                 }
             }
             if (hasChanged) {
-                // The condition is strangely written; this is because the
-                // values can be false/undefined
                 if (this.options.warn_future) {
                     this._warnFuture(newValue);
                 }
@@ -182,7 +181,7 @@ var DateWidget = Widget.extend({
             this.$warning.attr('title', title);
             this.$input.after(this.$warning);
         }
-        if (currentDate.isAfter(moment())) {
+        if (currentDate && currentDate.isAfter(moment())) {
             this.$warning.show();
         } else {
             this.$warning.hide();
@@ -227,6 +226,18 @@ var DateWidget = Widget.extend({
     // Handlers
     //--------------------------------------------------------------------------
 
+    /**
+     * Reacts to the datetimepicker being shown
+     * Could set/verify our widget value
+     * And subsequently update the datetimepicker
+     *
+     * @private
+     */
+    _onDateTimePickerShow: function () {
+        if (this.$input.val().length !== 0 && this.isValid()) {
+            this.$input.select();
+        }
+    },
     /**
      * Prevents 'input' events triggered by the library to bubble up, as they
      * might have unwanted effects (like triggering 'field_changed' events in

@@ -7,6 +7,7 @@ var core = require('web.core');
 var Widget = require('web.Widget');
 var weContext = require('web_editor.context');
 var summernote = require('web_editor.summernote');
+var summernoteCustomColors = require('web_editor.rte.summernote_custom_colors');
 
 var _t = core._t;
 
@@ -42,7 +43,10 @@ var History = function History($editable) {
             $editable.removeAttr('contentEditable').removeProp('contentEditable');
         }
 
+        $editable.trigger('content_will_be_destroyed');
         $editable.html(oSnap.contents).scrollTop(oSnap.scrollTop);
+        $editable.trigger('content_was_recreated');
+
         $('.oe_overlay').remove();
         $('.note-control-selection').hide();
 
@@ -290,6 +294,20 @@ var RTEWidget = Widget.extend({
 
         var $editable = this.editable();
 
+        // When a undo/redo is performed, the whole DOM is changed so we have
+        // to prepare for it (website will restart animations for example)
+        // TODO should be better handled
+        $editable.on('content_will_be_destroyed', function (ev) {
+            self.trigger_up('content_will_be_destroyed', {
+                $target: $(ev.currentTarget),
+            });
+        });
+        $editable.on('content_was_recreated', function (ev) {
+            self.trigger_up('content_was_recreated', {
+                $target: $(ev.currentTarget),
+            });
+        });
+
         $editable.addClass('o_editable')
         .data('rte', this)
         .each(function () {
@@ -533,7 +551,8 @@ var RTEWidget = Widget.extend({
             'lang': 'odoo',
             'onChange': function (html, $editable) {
                 $editable.trigger('content_changed');
-            }
+            },
+            'colors': summernoteCustomColors,
         };
     },
     /**
@@ -573,8 +592,10 @@ var RTEWidget = Widget.extend({
                 $el.data('oe-id'),
                 this._getEscapedElement($el).prop('outerHTML'),
                 $el.data('oe-xpath') || null,
-                withLang ? context : _.omit(context, 'lang')
             ],
+            context: context,
+        }, withLang ? undefined : {
+            noContextKeys: 'lang',
         });
     },
 
@@ -606,6 +627,14 @@ var RTEWidget = Widget.extend({
         if (!$editable.length || $.summernote.core.dom.isContentEditableFalse($target)) {
             return;
         }
+
+        // Removes strange _moz_abspos attribute when it appears. Cannot
+        // find another solution which works in all cases. A grabber still
+        // appears at the same time which I did not manage to remove.
+        // TODO find a complete and better solution
+        _.defer(function () {
+            $editable.find('[_moz_abspos]').removeAttr('_moz_abspos');
+        });
 
         if ($target.is('a')) {
             /**
@@ -702,4 +731,19 @@ return {
     Class: RTEWidget,
     history: history,
 };
+});
+
+odoo.define('web_editor.rte.summernote_custom_colors', function (require) {
+'use strict';
+
+return [
+    ['#000000', '#424242', '#636363', '#9C9C94', '#CEC6CE', '#EFEFEF', '#F7F7F7', '#FFFFFF'],
+    ['#FF0000', '#FF9C00', '#FFFF00', '#00FF00', '#00FFFF', '#0000FF', '#9C00FF', '#FF00FF'],
+    ['#F7C6CE', '#FFE7CE', '#FFEFC6', '#D6EFD6', '#CEDEE7', '#CEE7F7', '#D6D6E7', '#E7D6DE'],
+    ['#E79C9C', '#FFC69C', '#FFE79C', '#B5D6A5', '#A5C6CE', '#9CC6EF', '#B5A5D6', '#D6A5BD'],
+    ['#E76363', '#F7AD6B', '#FFD663', '#94BD7B', '#73A5AD', '#6BADDE', '#8C7BC6', '#C67BA5'],
+    ['#CE0000', '#E79439', '#EFC631', '#6BA54A', '#4A7B8C', '#3984C6', '#634AA5', '#A54A7B'],
+    ['#9C0000', '#B56308', '#BD9400', '#397B21', '#104A5A', '#085294', '#311873', '#731842'],
+    ['#630000', '#7B3900', '#846300', '#295218', '#083139', '#003163', '#21104A', '#4A1031']
+];
 });

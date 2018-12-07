@@ -5,13 +5,14 @@
 # Translators:
 # Martin Trigaux, 2018
 # Kostas Goutoudis <goutoudis@gmail.com>, 2018
+# George Tarasidis <george_tarasidis@yahoo.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
-"Last-Translator: Kostas Goutoudis <goutoudis@gmail.com>, 2018\n"
+"POT-Creation-Date: 2018-09-21 13:18+0000\n"
+"PO-Revision-Date: 2018-09-21 13:18+0000\n"
+"Last-Translator: George Tarasidis <george_tarasidis@yahoo.com>, 2018\n"
 "Language-Team: Greek (https://www.transifex.com/odoo/teams/41243/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,6 +31,8 @@ msgstr ""
 #: model:ir.model.fields,help:website_sale_stock.field_product_template__inventory_availability
 msgid "Adds an inventory availability status on the web product page."
 msgstr ""
+"Προσθέτει μία κατάσταση διαθεσιμότητας αποθέματος στη σελίδα του είδους στον"
+" ιστότοπο."
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
@@ -46,6 +49,11 @@ msgstr ""
 #. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_product__cart_qty
 msgid "Cart Qty"
+msgstr ""
+
+#. module: website_sale_stock
+#: model:ir.model,name:website_sale_stock.model_res_config_settings
+msgid "Config Settings"
 msgstr ""
 
 #. module: website_sale_stock
@@ -76,7 +84,7 @@ msgstr ""
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:16
 #, python-format
 msgid "In stock"
-msgstr ""
+msgstr "Σε απόθεμα"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
@@ -88,7 +96,7 @@ msgstr "Αποθήκη"
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_template__inventory_availability
 #: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__inventory_availability
 msgid "Inventory Availability"
-msgstr ""
+msgstr "Διαθεσιμότητα Αποθέματος"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
@@ -100,46 +108,50 @@ msgstr ""
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_product_product
 msgid "Product"
-msgstr ""
+msgstr "Είδος"
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_product_template
 msgid "Product Template"
-msgstr ""
+msgstr "Πρότυπο Είδους "
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_sale_order
-msgid "Quotation"
-msgstr ""
+msgid "Sale Order"
+msgstr "Παραγγελία"
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_sale_order_line
 msgid "Sales Order Line"
-msgstr ""
+msgstr "Γραμμή Παραγγελίας"
 
 #. module: website_sale_stock
 #: selection:product.template,inventory_availability:0
 #: selection:res.config.settings,inventory_availability:0
 msgid "Sell regardless of inventory"
-msgstr ""
+msgstr "Πώληση ασχέτως αποθέματος"
 
 #. module: website_sale_stock
 #: selection:product.template,inventory_availability:0
 #: selection:res.config.settings,inventory_availability:0
 msgid "Show inventory below a threshold and prevent sales if not enough stock"
 msgstr ""
+"Προβολή αποθέματος κάτω από ένα όριο και αποτροπή της πώλησης εάν δεν "
+"υπάρχει αρκετό απόθεμα"
 
 #. module: website_sale_stock
 #: selection:product.template,inventory_availability:0
 #: selection:res.config.settings,inventory_availability:0
 msgid "Show inventory on website and prevent sales if not enough stock"
 msgstr ""
+"Προβολή αποθέματος στον ιστότοπο και αποτροπή της πώλησης εάν δεν υπάρχει "
+"αρκετό απόθεμα."
 
 #. module: website_sale_stock
 #: selection:product.template,inventory_availability:0
 #: selection:res.config.settings,inventory_availability:0
 msgid "Show product-specific notifications"
-msgstr ""
+msgstr "Εμφάνιση ειδικών ειδοποιήσεων για το είδος"
 
 #. module: website_sale_stock
 #: code:addons/website_sale_stock/models/sale_order.py:30
@@ -202,7 +214,7 @@ msgstr ""
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:20
 #, python-format
 msgid "all"
-msgstr ""
+msgstr "όλα"
 
 #. module: website_sale_stock
 #. openerp-web
@@ -218,8 +230,3 @@ msgstr ""
 #, python-format
 msgid "in your cart."
 msgstr ""
-
-#. module: website_sale_stock
-#: model:ir.model,name:website_sale_stock.model_res_config_settings
-msgid "res.config.settings"
-msgstr "res.config.settings"

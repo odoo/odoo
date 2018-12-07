@@ -32,6 +32,7 @@ def hashable(key):
 class ImBus(models.Model):
 
     _name = 'bus.bus'
+    _description = 'Communication Bus'
 
     channel = fields.Char('Channel')
     message = fields.Char('Message')
@@ -52,8 +53,6 @@ class ImBus(models.Model):
                 "message": json_dump(message)
             }
             self.sudo().create(values)
-            if random.random() < 0.01:
-                self.gc()
         if channels:
             # We have to wait until the notifications are commited in database.
             # When calling `NOTIFY imbus`, some concurrent threads will be
@@ -118,8 +117,7 @@ class ImDispatch(object):
         # it will handle a longpolling request
         if not odoo.evented:
             current = threading.current_thread()
-            current._Thread__daemonic = True # PY2
-            current._daemonic = True         # PY3
+            current._daemonic = True
             # rename the thread to avoid tests waiting for a longpolling
             current.setName("openerp.longpolling.request.%s" % current.ident)
 

@@ -4,14 +4,14 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
-# José Vicente <txusev@gmail.com>, 2018
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-24 09:05+0000\n"
-"PO-Revision-Date: 2018-08-24 09:05+0000\n"
-"Last-Translator: José Vicente <txusev@gmail.com>, 2018\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-09-21 13:17+0000\n"
+"Last-Translator: Pedro M. Baeza <pedro.baeza@gmail.com>, 2018\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,12 +20,12 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sale_crm
-#: model:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
+#: model_terms:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
 msgid "<span class=\"o_stat_text\"> Orders</span>"
 msgstr "<span class=\"o_stat_text\"> Pedidos</span>"
 
 #. module: sale_crm
-#: model:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
+#: model_terms:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
 msgid "<span class=\"o_stat_text\"> Quotation(s) </span>"
 msgstr "<span class=\"o_stat_text\">Presupuesto(s)</span>"
 
@@ -51,12 +51,12 @@ msgid "Lead/Opportunity"
 msgstr "Iniciativa/Oportunidad"
 
 #. module: sale_crm
-#: model:ir.ui.view,arch_db:sale_crm.sale_view_inherit123
+#: model_terms:ir.ui.view,arch_db:sale_crm.sale_view_inherit123
 msgid "Log in the chatter from which opportunity the order originates"
 msgstr "Entra en el chat desde cada oportunidad que genere el pedido"
 
 #. module: sale_crm
-#: model:ir.ui.view,arch_db:sale_crm.sale_view_inherit123
+#: model_terms:ir.ui.view,arch_db:sale_crm.sale_view_inherit123
 msgid "Marketing"
 msgstr "Marketing"
 
@@ -67,7 +67,12 @@ msgid "Medium"
 msgstr "Media"
 
 #. module: sale_crm
-#: model:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
+#: model:ir.ui.menu,name:sale_crm.sale_order_menu_quotations_crm
+msgid "My Quotations"
+msgstr "Mis presupuestos"
+
+#. module: sale_crm
+#: model_terms:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
 msgid "New Quotation"
 msgstr "Nuevo Presupuesto"
 
@@ -94,15 +99,18 @@ msgstr "Flujo"
 
 #. module: sale_crm
 #: model:ir.actions.act_window,name:sale_crm.sale_action_quotations_new
-#: model:ir.model,name:sale_crm.model_sale_order
 msgid "Quotation"
 msgstr "Presupuesto"
 
 #. module: sale_crm
 #: model:ir.actions.act_window,name:sale_crm.sale_action_quotations
-#: model:ir.ui.menu,name:sale_crm.sale_order_menu_quotations_crm
 msgid "Quotations"
 msgstr "Presupuestos"
+
+#. module: sale_crm
+#: model:ir.model,name:sale_crm.model_sale_order
+msgid "Sale Order"
+msgstr "Pedido de venta"
 
 #. module: sale_crm
 #: model:ir.actions.act_window,name:sale_crm.sale_action_orders
@@ -111,8 +119,8 @@ msgstr "Órdenes de venta"
 
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_crm_team
-msgid "Sales Team"
-msgstr "Equipo de ventas"
+msgid "Sales Channels"
+msgstr "Canales de Ventas"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_account_invoice__source_id

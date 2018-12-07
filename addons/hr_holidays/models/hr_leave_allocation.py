@@ -59,17 +59,18 @@ class HolidaysAllocation(models.Model):
     employee_id = fields.Many2one(
         'hr.employee', string='Employee', index=True, readonly=True,
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, default=_default_employee, track_visibility='onchange')
+    manager_id = fields.Many2one('hr.employee', string='Manager', readonly=True)
     notes = fields.Text('Reasons', readonly=True, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
     # duration
     number_of_days = fields.Float(
         'Number of Days', track_visibility='onchange',
         help='Duration in days. Reference field to use when necessary.')
     number_of_days_display = fields.Float(
-        'Duration (days)', compute='_compute_number_of_days_display', inverse='_inverse_number_of_days_display',
+        'Duration (days)', compute='_compute_number_of_days_display',
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]},
         help="UX field allowing to see and modify the allocation duration, computed in days.")
     number_of_hours_display = fields.Float(
-        'Duration (hours)', compute='_compute_number_of_hours_display', inverse='_inverse_number_of_hours_display',
+        'Duration (hours)', compute='_compute_number_of_hours_display',
         help="UX field allowing to see and modify the allocation duration, computed in hours.")
     # details
     parent_id = fields.Many2one('hr.leave.allocation', string='Parent')
@@ -143,7 +144,7 @@ class HolidaysAllocation(models.Model):
         """
         today = fields.Date.from_string(fields.Date.today())
 
-        holidays = self.search([('accrual', '=', True), ('state', '=', 'validate'),
+        holidays = self.search([('accrual', '=', True), ('state', '=', 'validate'), ('holiday_type', '=', 'employee'),
                                 '|', ('date_to', '=', False), ('date_to', '>', fields.Datetime.now()),
                                 '|', ('nextcall', '=', False), ('nextcall', '<=', today)])
 
@@ -201,20 +202,10 @@ class HolidaysAllocation(models.Model):
             allocation.number_of_days_display = allocation.number_of_days
 
     @api.multi
-    def _inverse_number_of_days_display(self):
-        for allocation in self:
-            allocation.number_of_days = allocation.number_of_days_display
-
-    @api.multi
     @api.depends('number_of_days', 'employee_id')
     def _compute_number_of_hours_display(self):
         for allocation in self:
             allocation.number_of_hours_display = allocation.number_of_days * (allocation.employee_id.resource_calendar_id.hours_per_day or HOURS_PER_DAY)
-
-    @api.multi
-    def _inverse_number_of_hours_display(self):
-        for allocation in self:
-            allocation.number_of_days = allocation.number_of_hours_display / (allocation.employee_id.resource_calendar_id.hours_per_day or HOURS_PER_DAY)
 
     @api.multi
     @api.depends('state', 'employee_id', 'department_id')
@@ -240,6 +231,18 @@ class HolidaysAllocation(models.Model):
             else:
                 allocation.can_approve = True
 
+    @api.multi
+    @api.onchange('number_of_hours_display')
+    def _onchange_number_of_hours_display(self):
+        for allocation in self:
+            allocation.number_of_days = allocation.number_of_hours_display / (allocation.employee_id.resource_calendar_id.hours_per_day or HOURS_PER_DAY)
+
+    @api.multi
+    @api.onchange('number_of_days_display')
+    def _onchange_number_of_days_display(self):
+        for allocation in self:
+            allocation.number_of_days = allocation.number_of_days_display
+
     @api.onchange('holiday_type')
     def _onchange_type(self):
         if self.holiday_type == 'employee' and not self.employee_id:
@@ -255,6 +258,7 @@ class HolidaysAllocation(models.Model):
 
     @api.onchange('employee_id')
     def _onchange_employee(self):
+        self.manager_id = self.employee_id and self.employee_id.parent_id
         if self.holiday_type == 'employee':
             self.department_id = self.employee_id.department_id
 
@@ -334,6 +338,8 @@ class HolidaysAllocation(models.Model):
             values.update({'department_id': self.env['hr.employee'].browse(employee_id).department_id.id})
         holiday = super(HolidaysAllocation, self.with_context(mail_create_nolog=True, mail_create_nosubscribe=True)).create(values)
         holiday.add_follower(employee_id)
+        if 'employee_id' in values:
+            holiday._onchange_employee()
         holiday.activity_update()
         return holiday
 
@@ -344,6 +350,8 @@ class HolidaysAllocation(models.Model):
             self._check_approval_update(values['state'])
         result = super(HolidaysAllocation, self).write(values)
         self.add_follower(employee_id)
+        if 'employee_id' in values:
+            self._onchange_employee()
         return result
 
     @api.multi
@@ -370,7 +378,13 @@ class HolidaysAllocation(models.Model):
             'notes': self.notes,
             'number_of_days': self.number_of_days,
             'parent_id': self.id,
-            'employee_id': employee.id
+            'employee_id': employee.id,
+            'accrual': self.accrual,
+            'date_to': self.date_to,
+            'interval_unit': self.interval_unit,
+            'interval_number': self.interval_number,
+            'number_per_interval': self.number_per_interval,
+            'unit_per_interval': self.unit_per_interval,
         }
         return values
 
@@ -542,9 +556,8 @@ class HolidaysAllocation(models.Model):
     @api.multi
     def _track_subtype(self, init_values):
         if 'state' in init_values and self.state == 'validate':
-            return 'hr_holidays.mt_leave_allocation_approved'
-        elif 'state' in init_values and self.state == 'refuse':
-            return 'hr_holidays.mt_leave_allocation_refused'
+            allocation_notif_subtype_id = self.holiday_status_id.allocation_notif_subtype_id
+            return allocation_notif_subtype_id or self.env.ref('hr_holidays.mt_leave_allocation')
         return super(HolidaysAllocation, self)._track_subtype(init_values)
 
     @api.multi

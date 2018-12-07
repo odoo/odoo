@@ -76,18 +76,17 @@ QUnit.module('base_settings_tests', {
                 '</form>',
         });
 
-        form.$("div[setting='project']").click();
-        assert.strictEqual(form.$('.selected').attr('data-key'),"crm","crm setting selected");
-        assert.strictEqual(form.$(".settings .app_settings_block").hasClass('o_hidden'),false,"project settings show");
+        assert.hasAttrValue(form.$('.selected'), 'data-key',"crm","crm setting selected");
+        assert.isVisible(form.$(".settings .app_settings_block"), "project settings show");
         form.$('.searchInput').val('b').trigger('keyup');
         assert.strictEqual($('.highlighter').html(),"B","b word hilited");
         form.$('.searchInput').val('bx').trigger('keyup');
-        assert.strictEqual(form.$('.notFound').hasClass('o_hidden'),false,"record not found message shown");
+        assert.isVisible(form.$('.notFound'), "record not found message shown");
         form.destroy();
     });
 
     QUnit.test('settings views does not read existing id when coming back in breadcrumbs', function (assert) {
-        assert.expect(7);
+        assert.expect(8);
 
         var actions = [{
             id: 1,
@@ -125,8 +124,9 @@ QUnit.module('base_settings_tests', {
         });
 
         actionManager.doAction(1);
-        actionManager.$('button[name="4"]').click();
-        $('.o_control_panel .breadcrumb-item a').click();
+        testUtils.dom.click(actionManager.$('button[name="4"]'));
+        testUtils.dom.click($('.o_control_panel .breadcrumb-item a'));
+        assert.hasClass(actionManager.$('.o_form_view'), 'o_form_editable');
         assert.verifySteps([
             'load_views', // initial setting action
             'default_get', // this is a setting view => create new record

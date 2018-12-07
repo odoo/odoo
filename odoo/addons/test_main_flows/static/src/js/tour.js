@@ -58,8 +58,8 @@ tour.register('main_flow_tour', {
     content: _t('Uncheck Buy'),
     position: 'right',
 }, {
-    trigger: '.o_field_widget[name=route_ids] .custom-checkbox > label:contains("Make To Order")',
-    content: _t('Uncheck  Make To Order'),
+    trigger: '.o_field_widget[name=route_ids] .custom-checkbox > label:contains("Replenish on Order (MTO)")',
+    content: _t('Uncheck  Replenish on Order (MTO)'),
     position: 'right',
 }, {
     trigger: '.o_notebook a:contains("General Information")',
@@ -114,8 +114,8 @@ tour.register('main_flow_tour', {
     content: _t('Go to inventory tab'),
     position: 'top',
 }, {
-    trigger: '.o_field_widget[name=route_ids] .custom-checkbox > label:contains("Make To Order")',
-    content: _t('Check Make To Order'),
+    trigger: '.o_field_widget[name=route_ids] .custom-checkbox > label:contains("Replenish on Order (MTO)")',
+    content: _t('Check Replenish on Order (MTO)'),
     position: 'right',
 }, {
     trigger: '.o_notebook a:contains("Purchase")',
@@ -555,7 +555,7 @@ tour.register('main_flow_tour', {
     content: _t("Check availability"),
     position: "bottom",
 }, {
-    trigger: ".o_statusbar_buttons > button.btn-primary:enabled:contains('Produce')",
+    trigger: ".o_statusbar_buttons > button:enabled:contains('Produce')",
     content: _t("Produce"),
     position: "bottom",
 }, {
@@ -671,7 +671,7 @@ tour.register('main_flow_tour', {
     position: 'bottom',
 }, {
     edition: "enterprise",
-    trigger: '.o_app[data-menu-xmlid="account.menu_finance"]',
+    trigger: '.o_app[data-menu-xmlid="account_accountant.menu_accounting"]',
     content: _t('Go to Accounting'),
     position: 'bottom',
 }, {

@@ -3,16 +3,16 @@
 # * google_calendar
 # 
 # Translators:
-# Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2017
-# Yoshi Tashiro <tashiro@roomsfor.hk>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2018
+# Yoshi Tashiro <tashiro@roomsfor.hk>, 2018
+# Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 11.0\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-10 11:35+0000\n"
-"PO-Revision-Date: 2017-10-10 11:35+0000\n"
-"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-09-21 13:17+0000\n"
+"Last-Translator: Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2018\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,14 +21,9 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: google_calendar
-#: model:ir.ui.view,arch_db:google_calendar.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:google_calendar.res_config_settings_view_form
 msgid "<i class=\"fa fa-fw fa-arrow-right\"/>Tutorial"
 msgstr ""
-
-#. module: google_calendar
-#: model:ir.ui.menu,name:google_calendar.menu_calendar_google_tech_config
-msgid "API Credentials"
-msgstr "API認証情報"
 
 #. module: google_calendar
 #. openerp-web
@@ -65,39 +60,44 @@ msgid ""
 msgstr "以前のアカウントからイベントを切断中にエラーが発生しました。 再試行するか、管理者にお問い合わせください。"
 
 #. module: google_calendar
-#: model:ir.model,name:google_calendar.model_calendar_attendee
-msgid "Attendee information"
-msgstr "出席者情報"
-
-#. module: google_calendar
-#: model:ir.ui.view,arch_db:google_calendar.view_users_form
+#: model_terms:ir.ui.view,arch_db:google_calendar.view_users_form
 msgid "Calendar"
 msgstr "カレンダ"
 
 #. module: google_calendar
-#: model:ir.model.fields,field_description:google_calendar.field_res_users_google_calendar_cal_id
+#: model:ir.model,name:google_calendar.model_calendar_attendee
+msgid "Calendar Attendee Information"
+msgstr ""
+
+#. module: google_calendar
+#: model:ir.model.fields,field_description:google_calendar.field_res_users__google_calendar_cal_id
 msgid "Calendar ID"
 msgstr "カレンダーID"
 
 #. module: google_calendar
-#: model:ir.ui.view,arch_db:google_calendar.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:google_calendar.res_config_settings_view_form
 msgid "Client ID"
 msgstr "クライアントID"
 
 #. module: google_calendar
-#: model:ir.ui.view,arch_db:google_calendar.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:google_calendar.res_config_settings_view_form
 msgid "Client Secret"
 msgstr "クライアントシークレット"
 
 #. module: google_calendar
-#: model:ir.model.fields,field_description:google_calendar.field_res_config_settings_cal_client_id
+#: model:ir.model.fields,field_description:google_calendar.field_res_config_settings__cal_client_id
 msgid "Client_id"
 msgstr "Client_id"
 
 #. module: google_calendar
-#: model:ir.model.fields,field_description:google_calendar.field_res_config_settings_cal_client_secret
+#: model:ir.model.fields,field_description:google_calendar.field_res_config_settings__cal_client_secret
 msgid "Client_key"
 msgstr "Client_key"
+
+#. module: google_calendar
+#: model:ir.model,name:google_calendar.model_res_config_settings
+msgid "Config Settings"
+msgstr ""
 
 #. module: google_calendar
 #. openerp-web
@@ -108,7 +108,7 @@ msgid "Configuration"
 msgstr "設定"
 
 #. module: google_calendar
-#: model:ir.model.fields,field_description:google_calendar.field_google_calendar_display_name
+#: model:ir.model.fields,field_description:google_calendar.field_google_calendar__display_name
 msgid "Display Name"
 msgstr "表示名"
 
@@ -139,7 +139,12 @@ msgid "Event disconnection success"
 msgstr "イベント切断成功"
 
 #. module: google_calendar
-#: model:ir.model.fields,field_description:google_calendar.field_calendar_attendee_google_internal_event_id
+#: model:ir.model,name:google_calendar.model_google_calendar
+msgid "Google Calendar"
+msgstr "Googleカレンダ"
+
+#. module: google_calendar
+#: model:ir.model.fields,field_description:google_calendar.field_calendar_attendee__google_internal_event_id
 msgid "Google Calendar Event Id"
 msgstr "GoogleカレンダーイベントID"
 
@@ -156,7 +161,7 @@ msgid "Google ID should be unique!"
 msgstr "Google IDは一意である必要があります。"
 
 #. module: google_calendar
-#: code:addons/google_calendar/models/google_calendar.py:687
+#: code:addons/google_calendar/models/google_calendar.py:688
 #, python-format
 msgid ""
 "Google is lost... the next synchro will be a full synchro. \n"
@@ -168,7 +173,7 @@ msgstr ""
 " %s"
 
 #. module: google_calendar
-#: model:ir.model.fields,field_description:google_calendar.field_google_calendar_id
+#: model:ir.model.fields,field_description:google_calendar.field_google_calendar__id
 msgid "ID"
 msgstr "ID"
 
@@ -182,29 +187,29 @@ msgid ""
 msgstr "これを行うには、まず、既存のすべてのイベントを古いアカウントから切断する必要があります。"
 
 #. module: google_calendar
-#: model:ir.model.fields,help:google_calendar.field_res_users_google_calendar_cal_id
+#: model:ir.model.fields,help:google_calendar.field_res_users__google_calendar_cal_id
 msgid ""
 "Last Calendar ID who has been synchronized. If it is changed, we remove all "
 "links between GoogleID and Odoo Google Internal ID"
 msgstr "同期された最後のカレンダーID。 変更された場合、Google IDとOdoo Google内部IDの間のリンクはすべて削除されます"
 
 #. module: google_calendar
-#: model:ir.model.fields,field_description:google_calendar.field_google_calendar___last_update
+#: model:ir.model.fields,field_description:google_calendar.field_google_calendar____last_update
 msgid "Last Modified on"
 msgstr "最終更新日"
 
 #. module: google_calendar
-#: model:ir.model.fields,field_description:google_calendar.field_res_users_google_calendar_last_sync_date
+#: model:ir.model.fields,field_description:google_calendar.field_res_users__google_calendar_last_sync_date
 msgid "Last synchro date"
 msgstr "最終同期日"
 
 #. module: google_calendar
-#: model:ir.model.fields,field_description:google_calendar.field_calendar_attendee_oe_synchro_date
+#: model:ir.model.fields,field_description:google_calendar.field_calendar_attendee__oe_synchro_date
 msgid "Odoo Synchro Date"
 msgstr "Odoo 同期日"
 
 #. module: google_calendar
-#: model:ir.model.fields,field_description:google_calendar.field_calendar_event_oe_update_date
+#: model:ir.model.fields,field_description:google_calendar.field_calendar_event__oe_update_date
 msgid "Odoo Update Date"
 msgstr "Odoo 更新日"
 
@@ -216,14 +221,9 @@ msgid "Redirection"
 msgstr "リダイレクション"
 
 #. module: google_calendar
-#: model:ir.model.fields,field_description:google_calendar.field_res_users_google_calendar_rtoken
+#: model:ir.model.fields,field_description:google_calendar.field_res_users__google_calendar_rtoken
 msgid "Refresh Token"
 msgstr "リフレッシュトークン"
-
-#. module: google_calendar
-#: model:ir.actions.act_window,name:google_calendar.action_config_settings_google_calendar
-msgid "Settings"
-msgstr "管理設定"
 
 #. module: google_calendar
 #. openerp-web
@@ -251,17 +251,17 @@ msgid ""
 msgstr "同期しようとしているアカウント (%s)は、最後に使用したアカウント (%s)と同じではありません！"
 
 #. module: google_calendar
-#: model:ir.model.fields,field_description:google_calendar.field_res_users_google_calendar_token_validity
+#: model:ir.model.fields,field_description:google_calendar.field_res_users__google_calendar_token_validity
 msgid "Token Validity"
 msgstr "トークン有効性"
 
 #. module: google_calendar
-#: model:ir.model.fields,field_description:google_calendar.field_res_config_settings_server_uri
+#: model:ir.model.fields,field_description:google_calendar.field_res_config_settings__server_uri
 msgid "URI for tuto"
 msgstr "tutoのURI"
 
 #. module: google_calendar
-#: model:ir.model.fields,field_description:google_calendar.field_res_users_google_calendar_token
+#: model:ir.model.fields,field_description:google_calendar.field_res_users__google_calendar_token
 msgid "User token"
 msgstr "ユーザートークン"
 
@@ -278,17 +278,7 @@ msgid "You will be redirected to Google to authorize access to your calendar!"
 msgstr "あなたのカレンダーへのアクセスを許可するためにGoogleにリダイレクトされます！"
 
 #. module: google_calendar
-#: code:addons/google_calendar/models/google_calendar.py:295
+#: code:addons/google_calendar/models/google_calendar.py:296
 #, python-format
 msgid "Your token is invalid or has been revoked !"
 msgstr "あなたのトークンは無効であるか、取り消されました！"
-
-#. module: google_calendar
-#: model:ir.model,name:google_calendar.model_google_calendar
-msgid "google.calendar"
-msgstr "google.calendar"
-
-#. module: google_calendar
-#: model:ir.model,name:google_calendar.model_res_config_settings
-msgid "res.config.settings"
-msgstr "res.config.settings"

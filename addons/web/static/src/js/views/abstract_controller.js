@@ -12,12 +12,12 @@ odoo.define('web.AbstractController', function (require) {
  * reading localstorage, ...) has to go through the controller.
  */
 
+var AbstractAction = require('web.AbstractAction');
 var ajax = require('web.ajax');
 var concurrency = require('web.concurrency');
 var config = require('web.config');
 var ControlPanelMixin = require('web.ControlPanelMixin');
 var core = require('web.core');
-var AbstractAction = require('web.AbstractAction');
 
 var QWeb = core.qweb;
 
@@ -124,12 +124,6 @@ var AbstractController = AbstractAction.extend(ControlPanelMixin, {
         this.renderer.on_detach_callback();
     },
 
-    /**
-     * Gives the focus to the renderer
-     */
-    giveFocus:function(){
-        this.renderer.giveFocus();
-    },
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------
@@ -179,6 +173,12 @@ var AbstractController = AbstractAction.extend(ControlPanelMixin, {
      */
     getTitle: function () {
         return this.displayName;
+    },
+    /**
+     * Gives the focus to the renderer
+     */
+    giveFocus: function() {
+        this.renderer.giveFocus();
     },
     /**
      * The use of this method is discouraged.  It is still snakecased, because
@@ -283,23 +283,23 @@ var AbstractController = AbstractAction.extend(ControlPanelMixin, {
             state: state || {},
         });
     },
-   /**
-    * Renders the html provided by the route specified by the
-    * bannerRoute attribute on the controller (banner_route in the template).
-    * Renders it before the view output and add a css class 'o_has_banner' to it.
-    * There can be only one banner displayed at a time.
-    *
-    * If the banner contains stylesheet links or js files, they are moved to <head>
-    * (and will only be fetched once).
-    *
-    * Route example:
-    * @http.route('/module/hello', auth='user', type='json')
-    * def hello(self):
-    *     return {'html': '<h1>hello, world</h1>'}
-    *
-    * @private
-    * @returns {Deferred}
-    */
+    /**
+     * Renders the html provided by the route specified by the
+     * bannerRoute attribute on the controller (banner_route in the template).
+     * Renders it before the view output and add a css class 'o_has_banner' to it.
+     * There can be only one banner displayed at a time.
+     *
+     * If the banner contains stylesheet links or js files, they are moved to <head>
+     * (and will only be fetched once).
+     *
+     * Route example:
+     * @http.route('/module/hello', auth='user', type='json')
+     * def hello(self):
+     *     return {'html': '<h1>hello, world</h1>'}
+     *
+     * @private
+     * @returns {Deferred}
+     */
     _renderBanner: function () {
         if (this.bannerRoute !== undefined) {
             var self = this;
@@ -441,30 +441,6 @@ var AbstractController = AbstractAction.extend(ControlPanelMixin, {
     //--------------------------------------------------------------------------
 
     /**
-     * When an Odoo event arrives requesting a record to be opened, this method
-     * gets the res_id, and request a switch view in the appropriate mode
-     *
-     * Note: this method seems wrong, it relies on the model being a basic model,
-     * to get the res_id.  It should receive the res_id in the event data
-     * @todo move this to basic controller?
-     *
-     * @private
-     * @param {OdooEvent} event
-     * @param {number} event.data.id The local model ID for the record to be
-     *   opened
-     * @param {string} [event.data.mode='readonly']
-     */
-    _onOpenRecord: function (event) {
-        event.stopPropagation();
-        var record = this.model.get(event.data.id, {raw: true});
-        this.trigger_up('switch_view', {
-            view_type: 'form',
-            res_id: record.res_id,
-            mode: event.data.mode || 'readonly',
-            model: this.modelName,
-        });
-    },
-    /**
      * When a user clicks on an <a> link with type="action", we need to actually
      * do the action. This kind of links is used a lot in no-content helpers.
      *
@@ -475,10 +451,10 @@ var AbstractController = AbstractAction.extend(ControlPanelMixin, {
      *   reloaded after the dialog has been closed.
      *
      * @private
-     * @param {OdooEvent} event
+     * @param {OdooEvent} ev
      */
-    _onActionClicked: function (event) {
-        var $target = $(event.currentTarget);
+    _onActionClicked: function (ev) {
+        var $target = $(ev.currentTarget);
         var self = this;
         var model = $target.data('model');
         var method = $target.data('method');
@@ -503,13 +479,37 @@ var AbstractController = AbstractAction.extend(ControlPanelMixin, {
         }
     },
     /**
+     * When an Odoo event arrives requesting a record to be opened, this method
+     * gets the res_id, and request a switch view in the appropriate mode
+     *
+     * Note: this method seems wrong, it relies on the model being a basic model,
+     * to get the res_id.  It should receive the res_id in the event data
+     * @todo move this to basic controller?
+     *
+     * @private
+     * @param {OdooEvent} ev
+     * @param {number} ev.data.id The local model ID for the record to be
+     *   opened
+     * @param {string} [ev.data.mode='readonly']
+     */
+    _onOpenRecord: function (ev) {
+        ev.stopPropagation();
+        var record = this.model.get(ev.data.id, {raw: true});
+        this.trigger_up('switch_view', {
+            view_type: 'form',
+            res_id: record.res_id,
+            mode: ev.data.mode || 'readonly',
+            model: this.modelName,
+        });
+    },
+    /**
      * Intercepts the 'switch_view' event to add the controllerID into the data,
      * and lets the event bubble up.
      *
-     * @param {OdooEvent} event
+     * @param {OdooEvent} ev
      */
-    _onSwitchView: function (event) {
-        event.data.controllerID = this.controllerID;
+    _onSwitchView: function (ev) {
+        ev.data.controllerID = this.controllerID;
     },
 
 });

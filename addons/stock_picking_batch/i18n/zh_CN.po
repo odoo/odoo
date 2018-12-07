@@ -7,15 +7,20 @@
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2018
 # e2f_cn c7 <e2f_cn_c7@outlook.com>, 2018
-# 远鼎-Maker <liuct@chinamaker.net>, 2018
+# ChinaMaker <liuct@chinamaker.net>, 2018
 # Jackie Zhang <jzh@odoo.com>, 2018
+# bower Guo <124358678@qq.com>, 2018
+# roye w <159820@qq.com>, 2018
+# 珠海-杜哥 <liangjia@qq.com>, 2018
+# snow wang <147156565@qq.com>, 2018
+# keecome <7017511@qq.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
-"Last-Translator: Jackie Zhang <jzh@odoo.com>, 2018\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-09-21 13:17+0000\n"
+"Last-Translator: keecome <7017511@qq.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,17 +41,12 @@ msgstr "<strong>包裹</strong>"
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
 msgid "<strong>Responsible:</strong>"
-msgstr ""
+msgstr "<strong>负责人：</strong>"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_needaction
 msgid "Action Needed"
 msgstr "需要采取行动"
-
-#. module: stock_picking_batch
-#: model:ir.model,name:stock_picking_batch.model_stock_picking_to_batch
-msgid "Add pickings to a batch picking"
-msgstr "添加拣货到批量拣货"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_to_batch_form
@@ -63,17 +63,12 @@ msgstr "添加到批"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "附件数量"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
 msgid "Barcode"
 msgstr "条码"
-
-#. module: stock_picking_batch
-#: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_internal_search_inherit_stock_picking_batch
-msgid "Batch"
-msgstr "批"
 
 #. module: stock_picking_batch
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:64
@@ -85,6 +80,11 @@ msgstr "批"
 #, python-format
 msgid "Batch Picking"
 msgstr "批量拣货"
+
+#. module: stock_picking_batch
+#: model:ir.model,name:stock_picking_batch.model_stock_picking_to_batch
+msgid "Batch Picking Lines"
+msgstr "批量拣货明细行"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__name
@@ -141,7 +141,7 @@ msgstr "确认拣货"
 #. module: stock_picking_batch
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.stock_picking_batch_action
 msgid "Create a new batch picking"
-msgstr ""
+msgstr "创建新批拣选"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__create_uid
@@ -230,11 +230,6 @@ msgid "Immediate Transfer?"
 msgstr "立即调拨？"
 
 #. module: stock_picking_batch
-#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
-msgid "In Progress"
-msgstr "进行中"
-
-#. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_is_follower
 msgid "Is Follower"
 msgstr "是关注者"
@@ -265,7 +260,7 @@ msgstr "与此批相关的拣货清单"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "附件"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_has_error
@@ -331,7 +326,7 @@ msgstr "分拣"
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
 msgid "Picking Reference"
-msgstr ""
+msgstr "拣货参考"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_immediate_transfer__pick_to_backorder_ids
@@ -361,10 +356,12 @@ msgstr "数量"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__user_id
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
 msgid "Responsible"
 msgstr "负责人"
 
 #. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
 #: selection:stock.picking.batch,state:0
 msgid "Running"
 msgstr "运行中"
@@ -396,7 +393,7 @@ msgstr "有些捡货还在等待货物。 请在设置此批次之前检查或�
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:77
 #, python-format
 msgid "Some products require lots/serial numbers."
-msgstr ""
+msgstr "有些产品需要批次/序列号。"
 
 #. module: stock_picking_batch
 #: model:mail.message.subtype,description:stock_picking_batch.mt_batch_state
@@ -442,7 +439,7 @@ msgstr ""
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
 msgid "To take from:"
-msgstr ""
+msgstr "取自:"
 
 #. module: stock_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_picking
@@ -464,11 +461,6 @@ msgstr "未读消息"
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_unread_counter
 msgid "Unread Messages Counter"
 msgstr "未读消息计数器"
-
-#. module: stock_picking_batch
-#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
-msgid "User"
-msgstr "用户"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__website_message_ids

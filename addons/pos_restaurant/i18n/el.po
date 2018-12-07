@@ -4,19 +4,73 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
+# Kostas Goutoudis <goutoudis@gmail.com>, 2018
+# Stefanos Nikou <stefanos.nikou@gmail.com>, 2018
+# Giota Dandidou <giotadandidou@gmail.com>, 2018
+# George Tarasidis <george_tarasidis@yahoo.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:48+0000\n"
-"PO-Revision-Date: 2018-09-18 09:48+0000\n"
-"Last-Translator: Martin Trigaux, 2018\n"
+"POT-Creation-Date: 2018-10-08 06:48+0000\n"
+"PO-Revision-Date: 2018-10-08 06:48+0000\n"
+"Last-Translator: George Tarasidis <george_tarasidis@yahoo.com>, 2018\n"
 "Language-Team: Greek (https://www.transifex.com/odoo/teams/41243/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: el\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: pos_restaurant
+#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
+msgid "$ 3.12"
+msgstr "3.12 &euro;"
+
+#. module: pos_restaurant
+#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
+msgid "$ 4.40"
+msgstr "4.40 &euro;"
+
+#. module: pos_restaurant
+#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
+msgid "$ 4.50"
+msgstr "4.50 &euro;"
+
+#. module: pos_restaurant
+#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
+msgid "$ 8.50"
+msgstr "8.50 &euro;"
+
+#. module: pos_restaurant
+#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
+msgid "<span class=\"pos-change_amount\">$ 0.86</span>"
+msgstr "<span class=\"pos-change_amount\">0.86 &euro;</span>"
+
+#. module: pos_restaurant
+#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
+msgid "<span class=\"pos-change_title\">Change</span>"
+msgstr "<span class=\"pos-change_title\">Ρέστα</span>"
+
+#. module: pos_restaurant
+#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
+msgid "<span class=\"total-amount-formatting\">TOTAL</span>"
+msgstr "<span class=\"total-amount-formatting\">ΣΥΝΟΛΟ</span>"
+
+#. module: pos_restaurant
+#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
+msgid "<span id=\"total-amount\" class=\"pos_total-amount\">$ 469.14</span>"
+msgstr "<span id=\"total-amount\" class=\"pos_total-amount\">469.14 &euro;</span>"
+
+#. module: pos_restaurant
+#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
+msgid "<span>$ 470.00</span>"
+msgstr "<span>470.00 &euro;</span>"
+
+#. module: pos_restaurant
+#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
+msgid "<span>Cash (USD):</span>"
+msgstr "<span>Μετρητά (USD):</span>"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_kanban
@@ -41,6 +95,8 @@ msgid ""
 "A restaurant floor represents the place where customers are served, this is where you can\n"
 "                define and position the tables."
 msgstr ""
+"Η κάτοψη του εστιατορίου αντιπροσωπεύει τον τόπο όπου εξυπηρετούνται οι πελάτες, \n"
+"                όπου μπορείτε να ορίσετε και να τοποθετήσετε τα τραπέζια..."
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
@@ -57,7 +113,7 @@ msgstr "Σε Ισχύ"
 #: code:addons/pos_restaurant/static/src/xml/floors.xml:113
 #, python-format
 msgid "Add"
-msgstr ""
+msgstr "Προσθήκη"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -136,7 +192,7 @@ msgstr ""
 #: code:addons/pos_restaurant/static/src/xml/splitbill.xml:61
 #, python-format
 msgid "Back"
-msgstr ""
+msgstr "Πίσω"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -148,19 +204,19 @@ msgstr ""
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__background_color
 msgid "Background Color"
-msgstr ""
+msgstr "Χρώμα Φόντου"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__background_image
 msgid "Background Image"
-msgstr ""
+msgstr "Εικόνα φόντου"
 
 #. module: pos_restaurant
 #. openerp-web
 #: code:addons/pos_restaurant/static/src/xml/printbill.xml:31
 #, python-format
 msgid "Bill"
-msgstr ""
+msgstr "Χρέωση"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -184,7 +240,7 @@ msgstr ""
 #: code:addons/pos_restaurant/static/src/xml/floors.xml:150
 #, python-format
 msgid "Blue"
-msgstr ""
+msgstr "Μπλε"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -211,9 +267,15 @@ msgid "Close"
 msgstr "Κλείσιμο"
 
 #. module: pos_restaurant
+#: model:product.product,name:pos_restaurant.coke
+#: model:product.template,name:pos_restaurant.coke_product_template
+msgid "Coca-Cola"
+msgstr ""
+
+#. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__color
 msgid "Color"
-msgstr ""
+msgstr "Χρώμα"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__create_uid
@@ -234,6 +296,11 @@ msgstr "Δημιουργήθηκε στις"
 #: code:addons/pos_restaurant/static/src/xml/floors.xml:160
 #, python-format
 msgid "Delete"
+msgstr "Διαγραφή"
+
+#. module: pos_restaurant
+#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
+msgid "Desk Organizer"
 msgstr ""
 
 #. module: pos_restaurant
@@ -241,14 +308,14 @@ msgstr ""
 #: code:addons/pos_restaurant/static/src/xml/printbill.xml:91
 #, python-format
 msgid "Discount:"
-msgstr ""
+msgstr "Έκπτωση:"
 
 #. module: pos_restaurant
 #. openerp-web
 #: code:addons/pos_restaurant/static/src/xml/printbill.xml:140
 #, python-format
 msgid "Discounts"
-msgstr ""
+msgstr "Eκπτώσεις"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__display_name
@@ -258,16 +325,21 @@ msgid "Display Name"
 msgstr "Εμφάνιση Ονόματος"
 
 #. module: pos_restaurant
+#: model:pos.category,name:pos_restaurant.drinks
+msgid "Drinks"
+msgstr ""
+
+#. module: pos_restaurant
 #. openerp-web
 #: code:addons/pos_restaurant/static/src/xml/floors.xml:116
 #, python-format
 msgid "Duplicate"
-msgstr ""
+msgstr "Δημιουργία Αντίγραφου"
 
 #. module: pos_restaurant
 #: model_terms:ir.actions.act_window,help:pos_restaurant.action_restaurant_printer_form
 msgid ""
-"Each Order Printer has an IP Address that defines the PosBox/Hardware\n"
+"Each Order Printer has an IP Address that defines the IoT Box/Hardware\n"
 "                Proxy where the printer can be found, and a list of product categories.\n"
 "                An Order Printer will only print updates for products belonging to one of\n"
 "                its categories."
@@ -278,7 +350,7 @@ msgstr ""
 #: code:addons/pos_restaurant/static/src/xml/floors.xml:110
 #, python-format
 msgid "Edit"
-msgstr ""
+msgstr "Επεξεργασία"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config__iface_splitbill
@@ -299,7 +371,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:pos_restaurant.action_restaurant_floor_form
 #: model:ir.ui.menu,name:pos_restaurant.menu_restaurant_floor_all
 msgid "Floor Plans"
-msgstr ""
+msgstr "Κατόψεις Μαγαζιού"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
@@ -312,7 +384,7 @@ msgstr ""
 #: code:addons/pos_restaurant/static/src/xml/floors.xml:149
 #, python-format
 msgid "Green"
-msgstr ""
+msgstr "Πράσινο"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -348,7 +420,7 @@ msgstr ""
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__height
 msgid "Height"
-msgstr ""
+msgstr "Ύψος"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__position_h
@@ -372,7 +444,7 @@ msgstr ""
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__module_pos_restaurant
 msgid "Is a Bar/Restaurant"
-msgstr ""
+msgstr "Είναι Μπαρ/Εστιατόριο"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor____last_update
@@ -396,6 +468,11 @@ msgid "Last Updated on"
 msgstr "Τελευταία Ενημέρωση στις"
 
 #. module: pos_restaurant
+#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
+msgid "Led Lamp"
+msgstr ""
+
+#. module: pos_restaurant
 #. openerp-web
 #: code:addons/pos_restaurant/static/src/xml/floors.xml:141
 #: code:addons/pos_restaurant/static/src/xml/floors.xml:155
@@ -408,7 +485,7 @@ msgstr ""
 #: code:addons/pos_restaurant/static/src/xml/printbill.xml:39
 #, python-format
 msgid "Logo"
-msgstr ""
+msgstr "Λογότυπο"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
@@ -416,11 +493,22 @@ msgid "Manage table orders"
 msgstr ""
 
 #. module: pos_restaurant
+#: model:product.product,name:pos_restaurant.minute_maid
+#: model:product.template,name:pos_restaurant.minute_maid_product_template
+msgid "Minute Maid"
+msgstr ""
+
+#. module: pos_restaurant
+#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
+msgid "Monitor Stand"
+msgstr ""
+
+#. module: pos_restaurant
 #. openerp-web
 #: code:addons/pos_restaurant/static/src/xml/multiprint.xml:62
 #, python-format
 msgid "NEW"
-msgstr ""
+msgstr "ΝΕΑ"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -436,7 +524,7 @@ msgstr ""
 #: code:addons/pos_restaurant/static/src/xml/notes.xml:16
 #, python-format
 msgid "Note"
-msgstr ""
+msgstr "Σημείωση"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -446,11 +534,16 @@ msgid "Number of Seats ?"
 msgstr ""
 
 #. module: pos_restaurant
+#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
+msgid "Odoo Logo"
+msgstr "Λογότυπο Odoo"
+
+#. module: pos_restaurant
 #. openerp-web
 #: code:addons/pos_restaurant/static/src/xml/printbill.xml:13
 #, python-format
 msgid "Ok"
-msgstr ""
+msgstr "ΟΚ"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -465,7 +558,7 @@ msgstr ""
 #: code:addons/pos_restaurant/static/src/xml/multiprint.xml:6
 #, python-format
 msgid "Order"
-msgstr ""
+msgstr "Παραγγελία"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__is_order_printer
@@ -477,7 +570,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__printer_ids
 #: model:ir.ui.menu,name:pos_restaurant.menu_restaurant_printer_all
 msgid "Order Printers"
-msgstr ""
+msgstr "Εκτυπωτές Παραγγελιών"
 
 #. module: pos_restaurant
 #: model_terms:ir.actions.act_window,help:pos_restaurant.action_restaurant_printer_form
@@ -501,6 +594,11 @@ msgstr ""
 #: code:addons/pos_restaurant/static/src/xml/splitbill.xml:78
 #, python-format
 msgid "Payment"
+msgstr "Πληρωμή"
+
+#. module: pos_restaurant
+#: model:product.category,name:pos_restaurant.product_category_pos
+msgid "PoS"
 msgstr ""
 
 #. module: pos_restaurant
@@ -509,16 +607,26 @@ msgid "Point of Sale"
 msgstr "Εντατική Λιανική"
 
 #. module: pos_restaurant
+#: model:ir.model,name:pos_restaurant.model_pos_config
+msgid "Point of Sale Configuration"
+msgstr "Διαμόρφωση του Σταθμού Εργασίας"
+
+#. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_pos_order
 msgid "Point of Sale Orders"
-msgstr ""
+msgstr "Παραγγελίες Εντατικής Λιανικής"
+
+#. module: pos_restaurant
+#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
+msgid "Price"
+msgstr "ΤΙΜΗ"
 
 #. module: pos_restaurant
 #. openerp-web
 #: code:addons/pos_restaurant/static/src/xml/printbill.xml:20
 #, python-format
 msgid "Print"
-msgstr ""
+msgstr "Εκτύπωση"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
@@ -528,12 +636,12 @@ msgstr ""
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_printer__product_categories_ids
 msgid "Printed Product Categories"
-msgstr ""
+msgstr "Εκτυπωμένες Κατηγορίες Ειδών"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_printer__name
 msgid "Printer Name"
-msgstr ""
+msgstr "Όνομα Εκτυπωτή"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
@@ -543,7 +651,7 @@ msgstr ""
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_printer__proxy_ip
 msgid "Proxy IP Address"
-msgstr ""
+msgstr "Proxy IP διεύθυνση"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -551,7 +659,12 @@ msgstr ""
 #: code:addons/pos_restaurant/static/src/xml/floors.xml:153
 #, python-format
 msgid "Purple"
-msgstr ""
+msgstr "Μωβ"
+
+#. module: pos_restaurant
+#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
+msgid "Quantity"
+msgstr "Ποσότητα"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -559,7 +672,7 @@ msgstr ""
 #: code:addons/pos_restaurant/static/src/xml/floors.xml:148
 #, python-format
 msgid "Red"
-msgstr ""
+msgstr "Κόκκινο"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -576,6 +689,7 @@ msgid "Rename"
 msgstr ""
 
 #. module: pos_restaurant
+#: model:ir.model,name:pos_restaurant.model_restaurant_floor
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_form
 msgid "Restaurant Floor"
 msgstr ""
@@ -589,12 +703,18 @@ msgstr ""
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_printer
 msgid "Restaurant Order Printers"
+msgstr "Εκτυπωτές Παραγγελιών Εστιατορίου"
+
+#. module: pos_restaurant
+#: model:ir.model,name:pos_restaurant.model_restaurant_printer
+msgid "Restaurant Printer"
 msgstr ""
 
 #. module: pos_restaurant
+#: model:ir.model,name:pos_restaurant.model_restaurant_table
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_table_form
 msgid "Restaurant Table"
-msgstr ""
+msgstr "Τραπέζι Εστιατορίου"
 
 #. module: pos_restaurant
 #: selection:restaurant.table,shape:0
@@ -626,7 +746,7 @@ msgstr "Ακολουθία"
 #: code:addons/pos_restaurant/static/src/xml/printbill.xml:71
 #, python-format
 msgid "Served by"
-msgstr ""
+msgstr "Εξυπηρετείται από"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__shape
@@ -638,7 +758,7 @@ msgstr ""
 #: code:addons/pos_restaurant/static/src/xml/splitbill.xml:6
 #, python-format
 msgid "Split"
-msgstr ""
+msgstr "Διαχωρισμός"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
@@ -648,7 +768,7 @@ msgstr ""
 #. module: pos_restaurant
 #: selection:restaurant.table,shape:0
 msgid "Square"
-msgstr ""
+msgstr "Τετράγωνο"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -662,24 +782,24 @@ msgstr ""
 #: code:addons/pos_restaurant/static/src/xml/printbill.xml:118
 #, python-format
 msgid "Subtotal"
-msgstr ""
+msgstr "Μερικό σύνολο"
 
 #. module: pos_restaurant
 #. openerp-web
 #: code:addons/pos_restaurant/static/src/xml/printbill.xml:131
 #, python-format
 msgid "TOTAL"
-msgstr ""
+msgstr "ΣΥΝΟΛΟ"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_order__table_id
 msgid "Table"
-msgstr ""
+msgstr "Πίνακας"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__is_table_management
 msgid "Table Management"
-msgstr ""
+msgstr "Διαχείριση Τραπεζιών"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__name
@@ -697,19 +817,19 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__table_ids
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_form
 msgid "Tables"
-msgstr ""
+msgstr "Πίνακες"
 
 #. module: pos_restaurant
 #. openerp-web
 #: code:addons/pos_restaurant/static/src/xml/printbill.xml:54
 #, python-format
 msgid "Tel:"
-msgstr ""
+msgstr "Τηλ:"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_printer__proxy_ip
 msgid "The IP Address or hostname of the Printer's hardware proxy"
-msgstr ""
+msgstr "Η IP διεύθυνση ή το hostname του εκτυπωτή  (Printer's hardware proxy)"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_order__customer_count
@@ -736,7 +856,7 @@ msgstr ""
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config__floor_ids
 msgid "The restaurant floors served by this point of sale."
-msgstr ""
+msgstr "Οι χώροι του εστιατορίου εξυπηρετούνται από αυτό το POS."
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_order__table_id
@@ -794,19 +914,19 @@ msgstr ""
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
 msgid "Tip Product"
-msgstr ""
+msgstr "Είδος Φιλοδώρημα"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
 msgid "Tips"
-msgstr ""
+msgstr "Φιλοδωρήματα"
 
 #. module: pos_restaurant
 #. openerp-web
 #: code:addons/pos_restaurant/static/src/xml/floors.xml:37
 #, python-format
 msgid "Transfer"
-msgstr ""
+msgstr "Μεταφορά"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -815,6 +935,16 @@ msgstr ""
 #, python-format
 msgid "Turquoise"
 msgstr ""
+
+#. module: pos_restaurant
+#: model:product.product,uom_name:pos_restaurant.coke
+#: model:product.product,uom_name:pos_restaurant.minute_maid
+#: model:product.product,uom_name:pos_restaurant.water
+#: model:product.template,uom_name:pos_restaurant.coke_product_template
+#: model:product.template,uom_name:pos_restaurant.minute_maid_product_template
+#: model:product.template,uom_name:pos_restaurant.water_product_template
+msgid "Unit(s)"
+msgstr "Μονάδες"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_floor__sequence
@@ -827,16 +957,27 @@ msgid "Vertical Position"
 msgstr ""
 
 #. module: pos_restaurant
+#: model:product.product,name:pos_restaurant.water
+#: model:product.template,name:pos_restaurant.water_product_template
+msgid "Water"
+msgstr "Νερό"
+
+#. module: pos_restaurant
+#: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
+msgid "Whiteboard Pen"
+msgstr ""
+
+#. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__width
 msgid "Width"
-msgstr ""
+msgstr "Πλάτος"
 
 #. module: pos_restaurant
 #. openerp-web
 #: code:addons/pos_restaurant/static/src/xml/splitbill.xml:44
 #, python-format
 msgid "With a"
-msgstr ""
+msgstr "Με ένα "
 
 #. module: pos_restaurant
 #. openerp-web
@@ -844,7 +985,7 @@ msgstr ""
 #: code:addons/pos_restaurant/static/src/xml/floors.xml:152
 #, python-format
 msgid "Yellow"
-msgstr ""
+msgstr "Κίτρινο"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -882,24 +1023,14 @@ msgstr ""
 #: code:addons/pos_restaurant/static/src/xml/splitbill.xml:46
 #, python-format
 msgid "discount"
-msgstr ""
+msgstr "έκπτωση"
 
 #. module: pos_restaurant
-#: model:ir.model,name:pos_restaurant.model_pos_config
-msgid "pos.config"
-msgstr ""
-
-#. module: pos_restaurant
-#: model:ir.model,name:pos_restaurant.model_restaurant_floor
-msgid "restaurant.floor"
-msgstr ""
-
-#. module: pos_restaurant
-#: model:ir.model,name:pos_restaurant.model_restaurant_printer
-msgid "restaurant.printer"
-msgstr ""
-
-#. module: pos_restaurant
-#: model:ir.model,name:pos_restaurant.model_restaurant_table
-msgid "restaurant.table"
-msgstr ""
+#: model:product.product,weight_uom_name:pos_restaurant.coke
+#: model:product.product,weight_uom_name:pos_restaurant.minute_maid
+#: model:product.product,weight_uom_name:pos_restaurant.water
+#: model:product.template,weight_uom_name:pos_restaurant.coke_product_template
+#: model:product.template,weight_uom_name:pos_restaurant.minute_maid_product_template
+#: model:product.template,weight_uom_name:pos_restaurant.water_product_template
+msgid "kg"
+msgstr "κιλά"

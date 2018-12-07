@@ -44,6 +44,9 @@ var Chatter = Widget.extend({
      * @param {string} [mailFields.mail_activity]
      * @param {string} [mailFields.mail_followers]
      * @param {string} [mailFields.mail_thread]
+     * @param {Object} options
+     * @param {string} [options.viewType=record.viewType] current viewType in
+     *   which the chatter is instantiated
      */
     init: function (parent, record, mailFields, options) {
         this._super.apply(this, arguments);
@@ -66,7 +69,7 @@ var Chatter = Widget.extend({
         }
         if (mailFields.mail_thread) {
             this.fields.thread = new ThreadField(this, mailFields.mail_thread, record, options);
-            var fieldsInfo = this.record.fieldsInfo[record.viewType];
+            var fieldsInfo = record.fieldsInfo[options.viewType || record.viewType];
             var nodeOptions = fieldsInfo[mailFields.mail_thread].options || {};
             this.hasLogButton = options.display_log_button || nodeOptions.display_log_button;
             this.postRefresh = nodeOptions.post_refresh || 'never';
@@ -180,6 +183,12 @@ var Chatter = Widget.extend({
         this.$('.btn').prop('disabled', true); // disable buttons
     },
     /**
+     * @private
+     */
+    _disableComposer: function () {
+        this.$(".o_composer_button_send").prop('disabled', true);
+    },
+    /**
      * Discard changes on the record.
      *
      * @private
@@ -215,6 +224,12 @@ var Chatter = Widget.extend({
      */
     _enableChatter: function () {
         this.$('.btn').prop('disabled', false); // enable buttons
+    },
+    /**
+     * @private
+     */
+    _enableComposer: function () {
+        this.$(".o_composer_button_send").prop('disabled', false);
     },
     /**
      * @private
@@ -265,6 +280,7 @@ var Chatter = Widget.extend({
             }
             self._composer.on('post_message', self, function (messageData) {
                 self._discardOnReload(messageData).then(function () {
+                    self._disableComposer();
                     self.fields.thread.postMessage(messageData).then(function () {
                         self._closeComposer(true);
                         if (self._reloadAfterPost(messageData)) {
@@ -272,6 +288,8 @@ var Chatter = Widget.extend({
                         } else if (messageData.attachment_ids.length) {
                             self.trigger_up('reload', {fieldNames: ['message_attachment_count']});
                         }
+                    }).fail(function () {
+                        self._enableComposer();
                     });
                 });
             });

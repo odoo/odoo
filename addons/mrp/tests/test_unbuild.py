@@ -513,14 +513,14 @@ class TestUnbuild(TestMrpCommon):
         StockQuant._update_available_quantity(component2, self.stock_location, 1)
 
         # Create mo
-        mo = self.env['mrp.production'].create({
-            'name': 'MO 1',
-            'product_id': finshed_product.id,
-            'product_uom_id': finshed_product.uom_id.id,
-            'product_qty': 1.0,
-            'bom_id': bom.id,
-        })
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = finshed_product
+        mo_form.bom_id = bom
+        mo_form.product_uom_id = finshed_product.uom_id
+        mo_form.product_qty = 1.0
+        mo = mo_form.save()
         self.assertEqual(len(mo), 1, 'MO should have been created')
+        mo.action_confirm()
         mo.action_assign()
 
         # Produce the final product

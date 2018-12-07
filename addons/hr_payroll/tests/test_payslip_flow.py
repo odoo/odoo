@@ -71,9 +71,6 @@ class TestPayslipFlow(TestPayslipBase):
         # I print the payslip report
         data, data_format = self.env.ref('hr_payroll.action_report_payslip').render(richard_payslip.ids)
 
-        # I print the payslip details report
-        data, data_format = self.env.ref('hr_payroll.payslip_details_report').render(richard_payslip.ids)
-
         # I print the contribution register report
         context = {'model': 'hr.contribution.register', 'active_ids': [self.ref('hr_payroll.hr_houserent_register')]}
         test_reports.try_report_action(self.env.cr, self.env.uid, 'action_payslip_lines_contribution_register', context=context, our_module='hr_payroll')

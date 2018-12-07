@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.test_mail.tests.common import BaseFunctionalTest, TestRecipients, MockEmails
+from odoo.addons.test_mail.tests.common import mail_new_test_user
 
 
 class TestChatterTweaks(BaseFunctionalTest, TestRecipients):
@@ -77,7 +78,7 @@ class TestNotifications(BaseFunctionalTest, MockEmails):
 
     def setUp(self):
         super(TestNotifications, self).setUp()
-        self.partner_1 = self.env['res.partner'].with_context(self._quick_create_ctx).create({
+        self.partner_1 = self.env['res.partner'].with_context(BaseFunctionalTest._test_context).create({
             'name': 'Valid Lelitre',
             'email': 'valid.lelitre@agrolait.com'})
 
@@ -103,13 +104,7 @@ class TestNotifications(BaseFunctionalTest, MockEmails):
             message.sudo(self.user_employee).set_message_done()
 
     def test_set_message_done_portal(self):
-        user_portal = self.env['res.users'].with_context(self._quick_create_user_ctx).create({
-            'name': 'Chell Gladys',
-            'login': 'chell',
-            'email': 'chell@gladys.portal',
-            'notification_type': 'inbox',
-            'groups_id': [(6, 0, [self.env.ref('base.group_portal').id])],
-        })
+        user_portal = mail_new_test_user(self.env, login='chell', groups='base.group_portal', name='Chell Gladys', notification_type='inbox')
         self.partner_portal = user_portal.partner_id
 
         with self.assertNotifications(partner_employee=(1, 'inbox', 'unread'), partner_portal=(1, 'inbox', 'read')):

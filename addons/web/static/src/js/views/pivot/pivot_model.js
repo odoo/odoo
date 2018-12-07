@@ -831,6 +831,9 @@ var PivotModel = AbstractModel.extend({
             if (data.length) {
                 for (var k = 0; k < data[index].length; k++) {
                     dataPoint  = data[index][k];
+                    if (_.isEmpty(dataPoint)){
+                        break;
+                    }
                     value = this._getValue(dataPoint, groupBys[index]);
                     groupIdentifier = value.join();
                     for (m=0; m < this.data.measures.length; m++) {
@@ -857,17 +860,20 @@ var PivotModel = AbstractModel.extend({
                             };
                         }
                     }
-                    dataPoint.__count = dataPoint.__count ? {
+                    dataPoint.__count = {
                         data: dataPoint.__count,
                         comparisonData: 0,
                         variation: computeVariation(dataPoint.__count, 0)
-                    } : undefined;
+                    };
                     dataPoints[groupIdentifier] = dataPoint;
                 }
             }
             if (comparisonData.length) {
                 for (var l = 0; l < comparisonData[index].length; l++) {
                     dataPoint  = comparisonData[index][l];
+                    if (_.isEmpty(dataPoint)){
+                        break;
+                    }
                     value = this._getValue(dataPoint, groupBys[index]);
                     groupIdentifier = value.join();
                     if (!dataPoints[groupIdentifier]) {
@@ -896,11 +902,11 @@ var PivotModel = AbstractModel.extend({
                                 };
                             }
                         }
-                        dataPoint.__count = dataPoint.__count ? {
+                        dataPoint.__count = {
                             data: 0,
                             comparisonData: dataPoint.__count,
                             variation: computeVariation(0, dataPoint.__count)
-                        } : undefined;
+                        };
                         dataPoint.__comparisonCount = dataPoint.__count;
                         dataPoint.__comparisonDomain = dataPoint.__domain;
                         dataPoints[groupIdentifier] = _.omit(dataPoint, '__domain');
@@ -933,14 +939,11 @@ var PivotModel = AbstractModel.extend({
 
                             }
                         }
-                        if (dataPoint.__count) {
-                            dataPoints[groupIdentifier].__count.data = dataPoints[groupIdentifier].__count.data || 0;
-                            dataPoints[groupIdentifier].__count.comparisonData = dataPoint.__count;
-                            dataPoints[groupIdentifier].__count.variation = computeVariation(
-                                dataPoints[groupIdentifier].__count.data,
-                                dataPoint.__count
-                            );
-                        }
+                        dataPoints[groupIdentifier].__count.comparisonData = dataPoint.__count;
+                        dataPoints[groupIdentifier].__count.variation = computeVariation(
+                            dataPoints[groupIdentifier].__count.data,
+                            dataPoint.__count
+                        );
                         dataPoints[groupIdentifier].__comparisonCount = dataPoint.__count;
                         dataPoints[groupIdentifier].__comparisonDomain = dataPoint.__domain;
                     }

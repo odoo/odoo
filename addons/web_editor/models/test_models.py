@@ -6,6 +6,7 @@ from odoo import models, fields
 
 class ConverterTest(models.Model):
     _name = 'web_editor.converter.test'
+    _description = 'Web Editor Converter Test'
 
     # disable translation export for those brilliant field labels and values
     _translate = False
@@ -37,5 +38,6 @@ class ConverterTest(models.Model):
 
 class ConverterTestSub(models.Model):
     _name = 'web_editor.converter.test.sub'
+    _description = 'Web Editor Converter Subtest'
 
     name = fields.Char()

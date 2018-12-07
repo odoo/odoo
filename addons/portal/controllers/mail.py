@@ -42,7 +42,7 @@ def _message_post_helper(res_model='', res_id=None, message='', token='', nosubs
         access_as_sudo = _has_token_access(res_model, res_id, token=token)
         if access_as_sudo:
             record = record.sudo()
-            if request.env.user == request.env.ref('base.public_user'):
+            if request.env.user._is_public():
                 if kw.get('pid') and consteq(kw.get('hash'), record._sign_token(int(kw.get('pid')))):
                     author_id = kw.get('pid')
                 else:
@@ -100,8 +100,10 @@ class PortalChatter(http.Controller):
         # Only search into website_message_ids, so apply the same domain to perform only one search
         # extract domain from the 'website_message_ids' field
         field_domain = request.env[res_model]._fields['website_message_ids'].domain
-        domain += field_domain(request.env[res_model]) if callable(field_domain) else field_domain
-        domain += [('res_id', '=', res_id)]
+        if callable(field_domain):
+            field_domain = field_domain(request.env[res_model])
+        domain = expression.AND([domain, field_domain, [('res_id', '=', res_id)]])
+
         # Check access
         Message = request.env['mail.message']
         if kw.get('token'):

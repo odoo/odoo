@@ -4,13 +4,14 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
+# Jorunn D. Newth, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-24 09:04+0000\n"
-"PO-Revision-Date: 2018-08-24 09:04+0000\n"
-"Last-Translator: Martin Trigaux, 2018\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-09-21 13:17+0000\n"
+"Last-Translator: Jorunn D. Newth, 2018\n"
 "Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,7 +24,7 @@ msgstr ""
 #: code:addons/account_bank_statement_import/static/src/js/account_bank_statement_import.js:13
 #, python-format
 msgid " Import Template for Bank Statements"
-msgstr ""
+msgstr "Importmal for kontoutskrifter"
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:236
@@ -45,7 +46,7 @@ msgstr "Transaksjoner for bankkonto kan bare importeres én gang!"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__company_partner_id
 msgid "Account Holder"
-msgstr ""
+msgstr "Kontoeier"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__bank_acc_number
@@ -121,7 +122,7 @@ msgid "Bank Feeds"
 msgstr ""
 
 #. module: account_bank_statement_import
-#: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
+#: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
 msgid "Bank Journal Name"
 msgstr ""
 
@@ -136,13 +137,18 @@ msgid "Bank Statement Line"
 msgstr "Kontoutskrift linje."
 
 #. module: account_bank_statement_import
+#: model:ir.model,name:account_bank_statement_import.model_account_setup_bank_manual_config
+msgid "Bank setup manual config"
+msgstr ""
+
+#. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__belongs_to_company
 msgid "Belong to the user's current company"
 msgstr "Tilhører brukers nåværende firma"
 
 #. module: account_bank_statement_import
-#: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
-#: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
+#: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
+#: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
 msgid "Cancel"
 msgstr "Kanseller"
 
@@ -169,7 +175,7 @@ msgid ""
 msgstr ""
 
 #. module: account_bank_statement_import
-#: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
+#: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
 msgid "Choose a file to import..."
 msgstr "Velg en fil å importere..."
 
@@ -250,7 +256,7 @@ msgid "Display Name"
 msgstr "Visningsnavn"
 
 #. module: account_bank_statement_import
-#: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
+#: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
 msgid ""
 "Download a bank statement from your bank and import it here. Supported "
 "formats:"
@@ -306,7 +312,7 @@ msgstr ""
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_journal.py:20
 #: model:ir.actions.act_window,name:account_bank_statement_import.action_account_bank_statement_import
-#: model:ir.ui.view,arch_db:account_bank_statement_import.journal_dashboard_view_inherit
+#: model_terms:ir.ui.view,arch_db:account_bank_statement_import.journal_dashboard_view_inherit
 #, python-format
 msgid "Import"
 msgstr "Import"
@@ -317,12 +323,7 @@ msgid "Import Bank Statement"
 msgstr "Importer bankutskrift"
 
 #. module: account_bank_statement_import
-#: model:ir.model,name:account_bank_statement_import.model_account_bank_statement_import_journal_creation
-msgid "Import Bank Statement Journal Creation Wizard"
-msgstr ""
-
-#. module: account_bank_statement_import
-#: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
+#: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
 msgid "Import Bank Statements"
 msgstr ""
 
@@ -332,7 +333,7 @@ msgid "Import ID"
 msgstr "Import-ID"
 
 #. module: account_bank_statement_import
-#: model:ir.ui.view,arch_db:account_bank_statement_import.journal_dashboard_view_inherit
+#: model_terms:ir.ui.view,arch_db:account_bank_statement_import.journal_dashboard_view_inherit
 msgid "Import Statement"
 msgstr ""
 
@@ -364,9 +365,14 @@ msgstr "Journal"
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:73
-#: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
+#: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
 #, python-format
 msgid "Journal Creation"
+msgstr ""
+
+#. module: account_bank_statement_import
+#: model:ir.model,name:account_bank_statement_import.model_account_bank_statement_import_journal_creation
+msgid "Journal Creation on Bank Statement Import"
 msgstr ""
 
 #. module: account_bank_statement_import
@@ -375,7 +381,7 @@ msgid "Journal Name"
 msgstr "Journalnavn"
 
 #. module: account_bank_statement_import
-#: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
+#: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
 msgid ""
 "Just click OK to create the account/journal and finish the import. If this "
 "was a mistake, hit cancel to abort the import."
@@ -442,7 +448,7 @@ msgid "No currency found matching '%s'."
 msgstr "Ingen valuta som stemmer med  '%s'."
 
 #. module: account_bank_statement_import
-#: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
+#: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
 msgid "OK"
 msgstr "OK"
 
@@ -466,7 +472,7 @@ msgid ""
 msgstr ""
 
 #. module: account_bank_statement_import
-#: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
+#: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
 msgid "Select a bank statement file to import"
 msgstr ""
 
@@ -491,7 +497,7 @@ msgid "Show journal on dashboard"
 msgstr "Vis journal på dashbord"
 
 #. module: account_bank_statement_import
-#: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
+#: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
 msgid ""
 "The account of the statement you are importing is not yet recorded in Odoo. "
 "In order to proceed with the import, you need to create a bank journal for "
@@ -603,7 +609,7 @@ msgid "You already have imported that file."
 msgstr ""
 
 #. module: account_bank_statement_import
-#: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
+#: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
 msgid "You can install more file formats by"
 msgstr ""
 
@@ -616,21 +622,16 @@ msgid ""
 msgstr ""
 
 #. module: account_bank_statement_import
-#: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
+#: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
 msgid "_Import"
 msgstr "_Import"
 
 #. module: account_bank_statement_import
-#: model:ir.model,name:account_bank_statement_import.model_account_setup_bank_manual_config
-msgid "account.setup.bank.manual.config"
-msgstr ""
-
-#. module: account_bank_statement_import
-#: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
+#: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
 msgid "installing the related modules"
 msgstr ""
 
 #. module: account_bank_statement_import
-#: model:ir.ui.view,arch_db:account_bank_statement_import.journal_dashboard_view_inherit
+#: model_terms:ir.ui.view,arch_db:account_bank_statement_import.journal_dashboard_view_inherit
 msgid "or"
 msgstr "eller"

@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:50+0000\n"
-"PO-Revision-Date: 2018-09-18 09:50+0000\n"
+"POT-Creation-Date: 2018-10-08 06:49+0000\n"
+"PO-Revision-Date: 2018-10-08 06:49+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -294,9 +294,8 @@ msgid "<table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\" style=\"backgro
 "                                                                <div style=\"height:${heightA}px;\">\n"
 "                                                                    ${extra_div | safe}   \n"
 "                                                                    <div style=\"height:55px;\">\n"
-"                                                                        % set path = object.env['res.users'].browse(goal['user_id']).partner_id.image_small\n"
-"                                                                        <img style=\"margin-bottom:5px;width:50px;height:50px;border-radius:50%;\" src=\"data:image/jpeg;base64,${path}\" alt=\"${goal['name']}\"/>\n"
-"                                                                    </div> \n"
+"                                                                        <img style=\"margin-bottom:5px;width:50px;height:50px;border-radius:50%;\" t-att-src=\"image_data_uri(object.env['res.users'].browse(goal['user_id']).partner_id.image_small)\" alt=\"${goal['name']}\"/>\n"
+"                                                                    </div>\n"
 "                                                                    <div align=\"center\" style=\"color:${bgColor};height:20px\">\n"
 "                                                                        ${goal['name']}\n"
 "                                                                    </div>\n"
@@ -894,38 +893,48 @@ msgid "Full Suffix"
 msgstr ""
 
 #. module: gamification
+#: model:ir.model,name:gamification.model_gamification_badge
+msgid "Gamification Badge"
+msgstr ""
+
+#. module: gamification
+#: model:ir.model,name:gamification.model_gamification_challenge
+msgid "Gamification Challenge"
+msgstr ""
+
+#. module: gamification
+#: model:ir.model,name:gamification.model_gamification_goal
+msgid "Gamification Goal"
+msgstr ""
+
+#. module: gamification
+#: model:ir.model,name:gamification.model_gamification_goal_definition
+msgid "Gamification Goal Definition"
+msgstr ""
+
+#. module: gamification
+#: model:ir.model,name:gamification.model_gamification_goal_wizard
+msgid "Gamification Goal Wizard"
+msgstr ""
+
+#. module: gamification
 #: model:ir.ui.menu,name:gamification.gamification_menu
 msgid "Gamification Tools"
 msgstr ""
 
 #. module: gamification
-#: model:ir.model,name:gamification.model_gamification_badge
-msgid "Gamification badge"
+#: model:ir.model,name:gamification.model_gamification_badge_user
+msgid "Gamification User Badge"
 msgstr ""
 
 #. module: gamification
-#: model:ir.model,name:gamification.model_gamification_challenge
-msgid "Gamification challenge"
+#: model:ir.model,name:gamification.model_gamification_badge_user_wizard
+msgid "Gamification User Badge Wizard"
 msgstr ""
 
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_challenge_line
 msgid "Gamification generic goal for challenge"
-msgstr ""
-
-#. module: gamification
-#: model:ir.model,name:gamification.model_gamification_goal_definition
-msgid "Gamification goal definition"
-msgstr ""
-
-#. module: gamification
-#: model:ir.model,name:gamification.model_gamification_goal
-msgid "Gamification goal instance"
-msgstr ""
-
-#. module: gamification
-#: model:ir.model,name:gamification.model_gamification_badge_user
-msgid "Gamification user badge"
 msgstr ""
 
 #. module: gamification
@@ -2048,7 +2057,7 @@ msgid "You are not in the user allowed list."
 msgstr ""
 
 #. module: gamification
-#: code:addons/gamification/wizard/grant_badge.py:24
+#: code:addons/gamification/wizard/grant_badge.py:25
 #, python-format
 msgid "You can not grant a badge to yourself."
 msgstr ""
@@ -2115,16 +2124,6 @@ msgstr ""
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_definition_form_view
 msgid "e.g. user.partner_id.id"
-msgstr ""
-
-#. module: gamification
-#: model:ir.model,name:gamification.model_gamification_badge_user_wizard
-msgid "gamification.badge.user.wizard"
-msgstr ""
-
-#. module: gamification
-#: model:ir.model,name:gamification.model_gamification_goal_wizard
-msgid "gamification.goal.wizard"
 msgstr ""
 
 #. module: gamification

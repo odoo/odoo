@@ -6,13 +6,12 @@ from collections import Counter
 from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools.pycompat import izip
 from odoo.tools.float_utils import float_round, float_compare, float_is_zero
 
 
 class StockMoveLine(models.Model):
     _name = "stock.move.line"
-    _description = "Packing Operation"
+    _description = "Product Moves (Stock Move Line)"
     _rec_name = "product_id"
     _order = "result_package_id desc, id"
 
@@ -21,7 +20,8 @@ class StockMoveLine(models.Model):
         help='The stock operation where the packing has been made')
     move_id = fields.Many2one(
         'stock.move', 'Stock Move',
-        help="Change to a better name")
+        help="Change to a better name", index=True)
+    company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env['res.users']._get_company(), readonly=True)
     product_id = fields.Many2one('product.product', 'Product', ondelete="cascade")
     product_uom_id = fields.Many2one('uom.uom', 'Unit of Measure', required=True)
     product_qty = fields.Float(
@@ -44,13 +44,14 @@ class StockMoveLine(models.Model):
     lots_visible = fields.Boolean(compute='_compute_lots_visible')
     picking_type_use_create_lots = fields.Boolean(related='picking_id.picking_type_id.use_create_lots', readonly=True)
     picking_type_use_existing_lots = fields.Boolean(related='picking_id.picking_type_id.use_existing_lots', readonly=True)
-    state = fields.Selection(related='move_id.state', store=True, related_sudo=False)
-    is_initial_demand_editable = fields.Boolean(related='move_id.is_initial_demand_editable')
+    state = fields.Selection(related='move_id.state', store=True, related_sudo=False, readonly=False)
+    is_initial_demand_editable = fields.Boolean(related='move_id.is_initial_demand_editable', readonly=False)
     is_locked = fields.Boolean(related='move_id.is_locked', default=True, readonly=True)
     consume_line_ids = fields.Many2many('stock.move.line', 'stock_move_line_consume_rel', 'consume_line_id', 'produce_line_id', help="Technical link to see who consumed what. ")
     produce_line_ids = fields.Many2many('stock.move.line', 'stock_move_line_consume_rel', 'produce_line_id', 'consume_line_id', help="Technical link to see which line was produced with this. ")
-    reference = fields.Char(related='move_id.reference', store=True, related_sudo=False)
+    reference = fields.Char(related='move_id.reference', store=True, related_sudo=False, readonly=False)
     tracking = fields.Selection(related='product_id.tracking', readonly=True)
+    origin = fields.Char(related='move_id.origin', string='Source')
     picking_type_entire_packs = fields.Boolean(related='picking_id.picking_type_id.show_entire_packs', readonly=True)
 
     @api.one
@@ -72,6 +73,12 @@ class StockMoveLine(models.Model):
         for line in self:
             if line.lot_id and line.product_id != line.lot_id.product_id:
                 raise ValidationError(_('This lot %s is incompatible with this product %s' % (line.lot_id.name, line.product_id.display_name)))
+
+    @api.constrains('company_id', 'move_id')
+    def _check_same_company_id(self):
+        for line in self:
+            if line.move_id and line.move_id.company_id != line.company_id:
+                raise ValidationError(_('The move line a a different company than its move'))
 
     @api.one
     def _set_product_qty(self):
@@ -182,6 +189,8 @@ class StockMoveLine(models.Model):
 
         for ml in mls:
             if ml.state == 'done':
+                if 'qty_done' in vals:
+                    ml.move_id.product_uom_qty = ml.move_id.quantity_done
                 if ml.product_id.type == 'product':
                     Quant = self.env['stock.quant']
                     quantity = ml.product_uom_id._compute_quantity(ml.qty_done, ml.move_id.product_id.uom_id,rounding_method='HALF-UP')
@@ -351,7 +360,7 @@ class StockMoveLine(models.Model):
             moves._recompute_state()
         return res
 
-    def _action_done(self):
+    def _action_done(self, cancel_backorder=False):
         """ This method is called during a move's `action_done`. It'll actually move a quant from
         the source location to the destination location, and unreserve if needed in the source
         location.
@@ -507,6 +516,8 @@ class StockMoveLine(models.Model):
                         candidate.product_uom_qty = 0.0
                     else:
                         candidate.unlink()
+                    if float_is_zero(quantity, precision_rounding=rounding):
+                        break
                 else:
                     # split this move line and assign the new part to our extra move
                     quantity_split = float_round(
@@ -514,8 +525,6 @@ class StockMoveLine(models.Model):
                         precision_rounding=self.product_uom_id.rounding,
                         rounding_method='UP')
                     candidate.product_uom_qty = self.product_id.uom_id._compute_quantity(quantity_split, candidate.product_uom_id, rounding_method='HALF-UP')
-                    quantity -= quantity_split
                     move_to_recompute_state |= candidate.move_id
-                if quantity == 0.0:
                     break
             move_to_recompute_state._recompute_state()

@@ -123,6 +123,8 @@
             <script type="text/javascript" src="/web/static/lib/qweb/qweb2.js"></script>
             <!-- Odoo JS Framework -->
             <script type="text/javascript" src="/web/static/src/js/boot.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/libs/download.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/libs/content-disposition.js"></script>
             <script type="text/javascript" src="/web/static/src/js/services/config.js"></script>
             <script type="text/javascript" src="/web/static/src/js/core/abstract_service.js"></script>
             <script type="text/javascript" src="/web/static/src/js/core/class.js"></script>
@@ -144,6 +146,8 @@
             <script type="text/javascript" src="/web/static/src/js/core/local_storage.js"></script>
             <script type="text/javascript" src="/web/static/src/js/core/ram_storage.js"></script>
             <script type="text/javascript" src="/web/static/src/js/core/abstract_storage_service.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/chrome/public_root_widget.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/services/ajax_service.js"></script>
             <script type="text/javascript" src="/web/static/src/js/services/local_storage_service.js"></script>
             <!-- Bus, Mail, Livechat -->
                 <!-- thread windows -->
@@ -162,14 +166,14 @@
                     <!-- threads -->
                     <script type="text/javascript" src="/mail/static/src/js/models/threads/abstract_thread.js"></script>
                     <script type="text/javascript" src="/im_livechat/static/src/js/models/website_livechat.js"></script>
-                        <!-- thread typing mixin -->
-                        <script type="text/javascript" src="/mail/static/src/js/models/threads/thread_typing_mixin/thread_typing_mixin.js"></script>
-                        <script type="text/javascript" src="/mail/static/src/js/models/threads/thread_typing_mixin/timer.js"></script>
-                        <script type="text/javascript" src="/mail/static/src/js/models/threads/thread_typing_mixin/timers.js"></script>
-                        <script type="text/javascript" src="/mail/static/src/js/models/threads/thread_typing_mixin/cc_throttle_function.js"></script>
+                    <script type="text/javascript" src="/mail/static/src/js/models/threads/mixins/thread_typing_mixin.js"></script>
                     <!-- messages -->
                     <script type="text/javascript" src="/mail/static/src/js/models/messages/abstract_message.js"></script>
                     <script type="text/javascript" src="/im_livechat/static/src/js/models/website_livechat_message.js"></script>
+                    <!-- utils -->
+                    <script type="text/javascript" src="/mail/static/src/js/models/utils/timer.js"></script>
+                    <script type="text/javascript" src="/mail/static/src/js/models/utils/timers.js"></script>
+                    <script type="text/javascript" src="/mail/static/src/js/models/utils/cc_throttle_function.js"></script>
             <t t-call="web._assets_helpers"/>
             <link rel="stylesheet" type="text/scss" href="/im_livechat/static/src/scss/im_livechat_bootstrap.scss"/>
             <link rel="stylesheet" type="text/scss" href="/mail/static/src/scss/abstract_thread_window.scss"></link>
@@ -195,10 +199,10 @@
 
                     odoo.define('im_livechat.livesupport', function (require) {
             <t t-if="info['available']" t-translation="off">
-                        var websiteRoot = require('root.widget');
+                        var rootWidget = require('root.widget');
                         var im_livechat = require('im_livechat.im_livechat');
                         var button = new im_livechat.LivechatButton(
-                            websiteRoot,
+                            rootWidget,
                             "<t t-esc="info['server_url']"/>",
                             <t t-raw="json.dumps(info.get('options', {}))"/>
                         );

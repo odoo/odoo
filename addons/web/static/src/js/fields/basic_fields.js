@@ -334,7 +334,8 @@ var InputField = DebouncedField.extend({
             }
             if (ev.data.direction ==='next' &&
                 this.attrs.modifiersValue &&
-                this.attrs.modifiersValue.required) {
+                this.attrs.modifiersValue.required &&
+                this.viewType !== 'list') {
                 if (!this.$input.val()){
                     this.setInvalidClass();
                     ev.stopPropagation();
@@ -388,7 +389,7 @@ var NumericField = InputField.extend({
      *
      * Note: We have to overwrite this method to set the input's type to number if
      * option setted into the field.
-     * 
+     *
      * @override
      * @private
      */
@@ -499,6 +500,11 @@ var FieldDate = InputField.extend({
         this._super.apply(this, arguments);
         // use the session timezone when formatting dates
         this.formatOptions.timezone = true;
+        this.datepickerOptions = _.defaults(
+            {},
+            this.nodeOptions.datepicker || {},
+            {defaultDate: this.value}
+        );
     },
     /**
      * In edit mode, instantiates a DateWidget datepicker and listen to changes.
@@ -537,7 +543,7 @@ var FieldDate = InputField.extend({
      * @override
      */
     activate: function () {
-        if (this.datewidget) {
+        if (this.isFocusable() && this.datewidget) {
             this.datewidget.focus();
             return true;
         }
@@ -582,13 +588,7 @@ var FieldDate = InputField.extend({
      * @private
      */
     _makeDatePicker: function () {
-        return new datepicker.DateWidget(
-            this,
-            _.defaults(
-                this.nodeOptions.datepicker || {},
-                {defaultDate: this.value}
-            )
-        );
+        return new datepicker.DateWidget(this, this.datepickerOptions);
     },
 
     /**
@@ -606,6 +606,17 @@ var FieldDate = InputField.extend({
 var FieldDateTime = FieldDate.extend({
     supportedFieldTypes: ['datetime'],
 
+    /**
+     * @override
+     */
+    init: function () {
+        this._super.apply(this, arguments);
+        if (this.value) {
+            var offset = this.getSession().getTZOffset(this.value);
+            var displayedValue = this.value.clone().add(offset, 'minutes');
+            this.datepickerOptions.defaultDate = displayedValue;
+        }
+    },
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
@@ -636,10 +647,8 @@ var FieldDateTime = FieldDate.extend({
      * @private
      */
     _makeDatePicker: function () {
-        var value = this.value && this.value.clone().add(this.getSession().getTZOffset(this.value), 'minutes');
-        return new datepicker.DateTimeWidget(this, {defaultDate: value});
+        return new datepicker.DateTimeWidget(this, this.datepickerOptions);
     },
-
     /**
      * Set the datepicker to the right value rather than the default one.
      *
@@ -1170,6 +1179,9 @@ var HandleWidget = AbstractField.extend({
 
 var FieldEmail = InputField.extend({
     className: 'o_field_email',
+    events: _.extend({}, InputField.prototype.events, {
+        'click': '_onClick',
+    }),
     prefix: 'mailto',
     supportedFieldTypes: ['char'],
 
@@ -1210,7 +1222,21 @@ var FieldEmail = InputField.extend({
         this.$el.text(this.value)
             .addClass('o_form_uri o_text_overflow')
             .attr('href', this.prefix + ':' + this.value);
-    }
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Prevent the URL click from opening the record (when used on a list).
+     *
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onClick: function (ev) {
+        ev.stopPropagation();
+    },
 });
 
 var FieldPhone = FieldEmail.extend({
@@ -1237,6 +1263,9 @@ var FieldPhone = FieldEmail.extend({
 
 var UrlWidget = InputField.extend({
     className: 'o_field_url',
+    events: _.extend({}, InputField.prototype.events, {
+        'click': '_onClick',
+    }),
     supportedFieldTypes: ['char'],
 
     /**
@@ -1278,7 +1307,21 @@ var UrlWidget = InputField.extend({
             .addClass('o_form_uri o_text_overflow')
             .attr('target', '_blank')
             .attr('href', this.value);
-    }
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Prevent the URL click from opening the record (when used on a list).
+     *
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onClick: function (ev) {
+        ev.stopPropagation();
+    },
 });
 
 var CopyClipboard = {
@@ -1362,7 +1405,7 @@ var AbstractFieldBinary = AbstractField.extend({
         'click .o_select_file_button': function () {
             this.$('.o_input_file').click();
         },
-        'click .o_clear_file_button': 'on_clear',
+        'click .o_clear_file_button': '_onClearClick',
     }),
     init: function (parent, name, record) {
         this._super.apply(this, arguments);
@@ -1448,10 +1491,32 @@ var AbstractFieldBinary = AbstractField.extend({
             });
         }
     },
-    on_clear: function () {
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+    /**
+     * Clear the file input
+     *
+     * @private
+     */
+    _clearFile: function (){
         this.set_filename('');
         this._setValue(false);
         this._render();
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+    /**
+     * On "clear file" button click
+     *
+     * @param {MouseEvent} ev
+     * @private
+     */
+    _onClearClick: function (ev) {
+        this._clearFile();
     },
 });
 
@@ -1470,12 +1535,19 @@ var FieldBinaryImage = AbstractFieldBinary.extend({
         },
     }),
     supportedFieldTypes: ['binary'],
+    file_type_magic_word: {
+        '/': 'jpg',
+        'R': 'gif',
+        'i': 'png',
+        'P': 'svg+xml',
+    },
     _render: function () {
         var self = this;
         var url = this.placeholder;
         if (this.value) {
             if (!utils.is_bin_size(this.value)) {
-                url = 'data:image/png;base64,' + this.value;
+                // Use magic-word technique for detecting image type
+                url = 'data:image/' + (this.file_type_magic_word[this.value[0]] || 'png') + ';base64,' + this.value;
             } else {
                 url = session.url('/web/image', {
                     model: this.model,
@@ -1502,7 +1574,7 @@ var FieldBinaryImage = AbstractFieldBinary.extend({
         this.$('> img').remove();
         this.$el.prepend($img);
         $img.on('error', function () {
-            self.on_clear();
+            self._clearFile();
             $img.attr('src', self.placeholder);
             self.do_warn(_t("Image"), _t("Could not display the selected image."));
         });
@@ -1615,19 +1687,23 @@ var FieldPdfViewer = FieldBinaryFile.extend({
     },
     /**
      * @private
+     * @param {string} [fileURI] file URI if specified
      * @returns {string} the pdf viewer URI
      */
-    _getURI: function () {
-        var queryObj = {
-            model: this.model,
-            field: this.name,
-            id: this.res_id,
-        };
+    _getURI: function (fileURI) {
         var page = this.recordData[this.name + '_page'] || 1;
-        var queryString = $.param(queryObj);
-        var url = encodeURIComponent('/web/image?' + queryString);
+        if (!fileURI) {
+            var queryObj = {
+                model: this.model,
+                field: this.name,
+                id: this.res_id,
+            };
+            var queryString = $.param(queryObj);
+            fileURI = '/web/image?' + queryString
+        }
+        fileURI = encodeURIComponent(fileURI);
         var viewerURL = '/web/static/lib/pdfjs/web/viewer.html?file=';
-        return viewerURL + url + '#page=' + page;
+        return viewerURL + fileURI + '#page=' + page;
     },
     /**
      * @private
@@ -1671,14 +1747,16 @@ var FieldPdfViewer = FieldBinaryFile.extend({
      */
     on_file_change: function (ev) {
         this._super.apply(this, arguments);
+        var files = ev.target.files;
+        if (!files || files.length === 0) {
+            return;
+        }
+        // TOCheck: is there requirement to fallback on FileReader if browser don't support URL
+        var fileURI = URL.createObjectURL(files[0]);
         if (this.PDFViewerApplication) {
-            var files = ev.target.files;
-            if (!files || files.length === 0) {
-              return;
-            }
-            var file = files[0];
-            // TOCheck: is there requirement to fallback on FileReader if browser don't support URL
-            this.PDFViewerApplication.open(URL.createObjectURL(file), 0);
+            this.PDFViewerApplication.open(fileURI, 0);
+        } else {
+            this.$('.o_pdfview_iframe').attr('src', this._getURI(fileURI));
         }
     },
     /**
@@ -1882,11 +1960,10 @@ var StateSelectionWidget = AbstractField.extend({
      * @override
      */
     _render: function () {
-        var self = this;
         var states = this._prepareDropdownValues();
         // Adapt "FormSelection"
         // Like priority, default on the first possible value if no value is given.
-        var currentState = _.findWhere(states, {name: self.value}) || states[0];
+        var currentState = _.findWhere(states, {name: this.value}) || states[0];
         this.$('.o_status')
             .removeClass('o_status_red o_status_green')
             .addClass(currentState.state_class)
@@ -1901,6 +1978,10 @@ var StateSelectionWidget = AbstractField.extend({
         var $dropdown = this.$('.dropdown-menu');
         $dropdown.children().remove(); // remove old items
         $items.appendTo($dropdown);
+
+        // Disable edition if the field is readonly
+        var isReadonly = this.record.evalModifiers(this.attrs.modifiers).readonly;
+        this.$('a[data-toggle=dropdown]').toggleClass('disabled', isReadonly || false);
     },
 
     //--------------------------------------------------------------------------
@@ -2330,6 +2411,18 @@ var FieldProgressBar = AbstractField.extend({
             this.$('.o_progressbar_value').val(this.edit_max_value ? max_value : value);
             this.$('.o_progressbar_value').focus().select();
         }
+    },
+    /**
+     * The progress bar has more than one field/value to deal with
+     * i.e. max_value
+     *
+     * @override
+     * @private
+     */
+    _reset: function () {
+        this._super.apply(this, arguments);
+        var new_max_value = this.recordData[this.nodeOptions.max_value];
+        this.max_value =  new_max_value !== undefined ? new_max_value : this.max_value;
     },
     isSet: function () {
         return true;

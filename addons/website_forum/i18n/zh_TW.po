@@ -3,16 +3,19 @@
 # * website_forum
 # 
 # Translators:
-# Martin Trigaux, 2018
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2018
 # Bill Hsu <hcm86@icloud.com>, 2018
+# Martin Trigaux, 2018
+# sejun huang <sejun.huang@gmail.com>, 2018
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2018
+# Andy Cheng <andy.cheng@richsoda.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:50+0000\n"
-"PO-Revision-Date: 2018-09-18 09:50+0000\n"
-"Last-Translator: Bill Hsu <hcm86@icloud.com>, 2018\n"
+"POT-Creation-Date: 2018-10-02 10:06+0000\n"
+"PO-Revision-Date: 2018-08-24 09:34+0000\n"
+"Last-Translator: Andy Cheng <andy.cheng@richsoda.com>, 2018\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -508,10 +511,10 @@ msgstr "增加一條評論"
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.editor.js:43
+#: code:addons/website_forum/static/src/js/website_forum.editor.js:45
 #, python-format
 msgid "Add to menu"
-msgstr ""
+msgstr "新增至選單"
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum__allow_share
@@ -521,7 +524,7 @@ msgid ""
 msgstr "發帖後，使用者將提議分享其問題或社交網路上的回答，使論壇內容以社會化網路傳播。"
 
 #. module: website_forum
-#: code:addons/website_forum/controllers/main.py:201
+#: code:addons/website_forum/controllers/main.py:203
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
 #, python-format
 msgid "All"
@@ -538,7 +541,7 @@ msgid "Answer"
 msgstr "答案"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:520
+#: code:addons/website_forum/models/forum.py:521
 #: model:mail.message.subtype,description:website_forum.mt_answer_edit
 #: model:mail.message.subtype,name:website_forum.mt_answer_edit
 #, python-format
@@ -712,7 +715,7 @@ msgstr "提問"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__message_attachment_count
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "附件計數"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_search
@@ -739,9 +742,9 @@ msgid "Avoid unnecessary introductions (Hi,... Please... Thanks...),"
 msgstr "避免不必要的介紹(嗨..請...謝謝),"
 
 #. module: website_forum
-#: code:addons/website_forum/controllers/main.py:341
 #: code:addons/website_forum/controllers/main.py:343
-#: code:addons/website_forum/controllers/main.py:412
+#: code:addons/website_forum/controllers/main.py:345
+#: code:addons/website_forum/controllers/main.py:414
 #, python-format
 msgid "Bad Request"
 msgstr "壞的請求"
@@ -769,11 +772,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_profile
 msgid "Biography"
 msgstr "傳記"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.badge
-msgid "Bronwe badge"
-msgstr ""
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.badge
@@ -1113,7 +1111,7 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.actions.act_window,help:website_forum.forum_tag_action
 msgid "Create a new tag"
-msgstr ""
+msgstr "創建一個新標籤"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_tag_create
@@ -1325,7 +1323,7 @@ msgstr "為您的新論壇輸入一個名稱。"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
 msgid "External link"
-msgstr ""
+msgstr "外部鏈接"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_3
@@ -1503,7 +1501,10 @@ msgid "Forum Karma"
 msgstr "論壇貢獻"
 
 #. module: website_forum
+#. openerp-web
+#: code:addons/website_forum/static/src/js/website_forum.editor.js:34
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__name
+#, python-format
 msgid "Forum Name"
 msgstr "論壇名字"
 
@@ -1538,18 +1539,18 @@ msgstr "論壇"
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_gamification_badge
-msgid "Gamification badge"
+msgid "Gamification Badge"
 msgstr "遊戲化徽章"
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_gamification_challenge
-msgid "Gamification challenge"
-msgstr "遊戲化任務"
+msgid "Gamification Challenge"
+msgstr "遊戲化挑戰"
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_gamification_badge_user
-msgid "Gamification user badge"
-msgstr "遊戲化的使用者徽章"
+msgid "Gamification User Badge"
+msgstr "遊戲化使用者徽章"
 
 #. module: website_forum
 #. openerp-web
@@ -1644,6 +1645,11 @@ msgid "Help"
 msgstr "幫助"
 
 #. module: website_forum
+#: model_terms:forum.forum,welcome_message:website_forum.forum_help
+msgid "Hide Intro"
+msgstr ""
+
+#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
 msgid ""
 "How to create a physical inventory at an anterior date?, How is the "
@@ -1684,7 +1690,7 @@ msgstr "如果勾選此項，有新消息會提醒您。"
 #: model:ir.model.fields,help:website_forum.field_forum_post__message_has_error
 #: model:ir.model.fields,help:website_forum.field_forum_tag__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "如果勾選此項， 某些信息將會產生傳遞錯誤。"
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum__karma_dofollow
@@ -1772,8 +1778,8 @@ msgid "It appears your email has not been verified."
 msgstr "您的信件沒有驗證。"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:889
-#: code:addons/website_forum/models/forum.py:909
+#: code:addons/website_forum/models/forum.py:890
+#: code:addons/website_forum/models/forum.py:910
 #, python-format
 msgid "It is not allowed to vote for its own post."
 msgstr ""
@@ -1887,7 +1893,7 @@ msgstr "鏈接"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__message_main_attachment_id
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "主要附件"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.close_post
@@ -1900,7 +1906,7 @@ msgstr "標記為具有攻擊性"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__message_has_error
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "郵件傳遞錯誤"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__message_ids
@@ -1978,8 +1984,7 @@ msgstr "新的討論"
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.editor.js:32
-#: model_terms:ir.ui.view,arch_db:website_forum.content_new_forum
+#: code:addons/website_forum/static/src/js/website_forum.editor.js:33
 #, python-format
 msgid "New Forum"
 msgstr "論壇新貼"
@@ -2032,7 +2037,7 @@ msgid "Nofollow links"
 msgstr "不能跟貼的鏈接"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:510
+#: code:addons/website_forum/models/forum.py:511
 #, python-format
 msgid "Not enough karma to retag."
 msgstr "貢獻值不足，無法更換標籤。"
@@ -2070,7 +2075,7 @@ msgstr "回覆數量"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__message_has_error_counter
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__message_has_error_counter
 msgid "Number of error"
-msgstr ""
+msgstr "錯誤數量"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__count_flagged_posts
@@ -2089,7 +2094,7 @@ msgstr "需要行動消息的數量"
 #: model:ir.model.fields,help:website_forum.field_forum_post__message_has_error_counter
 #: model:ir.model.fields,help:website_forum.field_forum_tag__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "發送錯誤的郵件數"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__count_posts_waiting_validation
@@ -2242,6 +2247,11 @@ msgid "Post Types"
 msgstr "帖子類型"
 
 #. module: website_forum
+#: model:ir.model,name:website_forum.model_forum_post_vote
+msgid "Post Vote"
+msgstr ""
+
+#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
 msgid "Post Your Question"
 msgstr "提交您的問題"
@@ -2267,7 +2277,7 @@ msgid "Posted 100 comments"
 msgstr "張貼的100個評論"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:447
+#: code:addons/website_forum/models/forum.py:448
 #, python-format
 msgid "Posting answer on a [Deleted] or [Closed] question is not possible."
 msgstr ""
@@ -2320,7 +2330,7 @@ msgid "Question"
 msgstr "疑問"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:523
+#: code:addons/website_forum/models/forum.py:524
 #: model:mail.message.subtype,description:website_forum.mt_question_edit
 #: model:mail.message.subtype,name:website_forum.mt_question_edit
 #, python-format
@@ -2358,7 +2368,7 @@ msgid "Question set as favorite by 5 users"
 msgstr "問題被5個使用者收藏"
 
 #. module: website_forum
-#: code:addons/website_forum/controllers/main.py:343
+#: code:addons/website_forum/controllers/main.py:345
 #, python-format
 msgid "Question should not be empty."
 msgstr "問題不應為空。"
@@ -2397,7 +2407,7 @@ msgid "Questions"
 msgstr "問題"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:541
+#: code:addons/website_forum/models/forum.py:542
 #, python-format
 msgid "Re: %s"
 msgstr "回覆: %s"
@@ -2443,6 +2453,11 @@ msgid "Refuse"
 msgstr "退回"
 
 #. module: website_forum
+#: model_terms:forum.forum,welcome_message:website_forum.forum_help
+msgid "Register"
+msgstr "註冊"
+
+#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Reject <i class=\"fa fa-times\"/>"
 msgstr "拒絕<i class=\"fa fa-times\"/>"
@@ -2479,7 +2494,7 @@ msgstr "回覆自己的問題"
 #: model:ir.model.fields,help:website_forum.field_forum_forum__website_id
 #: model:ir.model.fields,help:website_forum.field_forum_post__website_id
 msgid "Restrict publishing to this website."
-msgstr ""
+msgstr "限制發佈到本網站。"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.404
@@ -2497,7 +2512,7 @@ msgstr "被審閱"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__is_seo_optimized
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__is_seo_optimized
 msgid "SEO optimized"
-msgstr ""
+msgstr "SEO 已最佳化"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_post
@@ -2554,7 +2569,7 @@ msgstr "自我學習者"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_answers
-msgid "Send answer"
+msgid "Accept answer"
 msgstr ""
 
 #. module: website_forum
@@ -2800,6 +2815,7 @@ msgstr ""
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:51
 #: model:forum.forum,description:website_forum.forum_help
+#: model_terms:forum.forum,welcome_message:website_forum.forum_help
 #, python-format
 msgid ""
 "This community is for professionals and enthusiasts of our products and "
@@ -2816,7 +2832,7 @@ msgid ""
 msgstr "這個公式中使用相關性搜尋。變量'投票'表示為一個帖子的票數，'天'是自帖子創建後的天數"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:410
+#: code:addons/website_forum/models/forum.py:411
 #, python-format
 msgid "This forum does not allow %s"
 msgstr "這個論壇不允許%s"
@@ -2869,8 +2885,8 @@ msgid "Title must not be empty"
 msgstr "標題不能為空"
 
 #. module: website_forum
-#: code:addons/website_forum/controllers/main.py:341
-#: code:addons/website_forum/controllers/main.py:412
+#: code:addons/website_forum/controllers/main.py:343
+#: code:addons/website_forum/controllers/main.py:414
 #, python-format
 msgid "Title should not be empty."
 msgstr "標題不能為空。"
@@ -3038,7 +3054,6 @@ msgid "Views"
 msgstr "視圖"
 
 #. module: website_forum
-#: model:ir.model,name:website_forum.model_forum_post_vote
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote__vote
 msgid "Vote"
 msgstr "投票"
@@ -3123,12 +3138,17 @@ msgstr "網站元標題"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__website_meta_og_img
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__website_meta_og_img
 msgid "Website opengraph image"
-msgstr ""
+msgstr "網站 opengraph 圖片"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__welcome_message
 msgid "Welcome Message"
 msgstr "歡迎訊息"
+
+#. module: website_forum
+#: model_terms:forum.forum,welcome_message:website_forum.forum_help
+msgid "Welcome!"
+msgstr "歡迎!"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -3178,14 +3198,14 @@ msgstr ""
 " 繼續之前，請等待核對人驗證您之前的帖子。"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:138
+#: code:addons/website_forum/models/forum.py:139
 #, python-format
 msgid ""
 "You cannot choose %s as default post since the forum does not allow it."
 msgstr "您不能選擇%s作為預設帖子，論壇不允許這樣做。"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:437
+#: code:addons/website_forum/models/forum.py:438
 #, python-format
 msgid "You cannot create recursive forum posts."
 msgstr ""
@@ -3196,7 +3216,7 @@ msgid "You cannot post an empty answer"
 msgstr "您不能發表空的回覆"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:952
+#: code:addons/website_forum/models/forum.py:953
 #, python-format
 msgid "You don't have enough karma to create a new Tag."
 msgstr ""

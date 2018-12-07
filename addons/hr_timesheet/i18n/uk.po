@@ -3,15 +3,16 @@
 # * hr_timesheet
 # 
 # Translators:
-# Martin Trigaux, 2018
 # Bohdan Lisnenko, 2018
+# Martin Trigaux, 2018
 # Alina Lisnenko <alinasemeniuk1@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:48+0000\n"
-"PO-Revision-Date: 2018-09-18 09:48+0000\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-08-24 09:19+0000\n"
 "Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2018\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
@@ -79,14 +80,14 @@ msgstr "Дії"
 #: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_all
 #: model:ir.ui.menu,name:hr_timesheet.timesheet_menu_activity_all
 msgid "All Timesheets"
-msgstr "Усі розклади"
+msgstr "Усі табелі"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project__allow_timesheets
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__allow_timesheets
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_invoice_form
 msgid "Allow timesheets"
-msgstr "Дозволити розклади"
+msgstr "Дозволити табелі"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_account_analytic_account
@@ -98,7 +99,7 @@ msgstr "Аналітичний рахунок"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_form
 msgid "Analytic Entry"
-msgstr "Проводка аналітики"
+msgstr "Аналітичний запис"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_account_analytic_line
@@ -152,6 +153,11 @@ msgstr "Розраховується так: Витрачений час + Го�
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__effective_hours
 msgid "Computed using the sum of the task work done."
 msgstr "Обчислено, використовуючи суму виконаних завдань."
+
+#. module: hr_timesheet
+#: model:ir.model,name:hr_timesheet.model_res_config_settings
+msgid "Config Settings"
+msgstr "Налаштування"
 
 #. module: hr_timesheet
 #: model:ir.ui.menu,name:hr_timesheet.hr_timesheet_menu_configuration
@@ -229,7 +235,7 @@ msgstr "Групувати за"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_ir_http
-msgid "HTTP routing"
+msgid "HTTP Routing"
 msgstr "Маршрутизація HTTP"
 
 #. module: hr_timesheet
@@ -266,7 +272,7 @@ msgid ""
 msgstr ""
 "Зв'яжіть цей проект з аналітичним рахунком, якщо вам потрібне фінансове "
 "управління проектами. Це дає змогу об'єднати проекти з бюджетами, "
-"плануванням, аналізом витрат та доходів, таблицями часу на проекти тощо."
+"плануванням, аналізом витрат та доходів, табелями на проектах тощо."
 
 #. module: hr_timesheet
 #: model:res.groups,name:hr_timesheet.group_timesheet_manager
@@ -407,8 +413,8 @@ msgstr "Завдання"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_report_project_task_user
-msgid "Tasks by user and project"
-msgstr "Завдання користувачів а проект"
+msgid "Tasks Analysis"
+msgstr "Аналіз завдань"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/models/hr_timesheet.py:113
@@ -456,7 +462,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_hr_timesheet_line_pivot
 msgid "Timesheet"
-msgstr "Табель часу"
+msgstr "Табель"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_tree
@@ -543,7 +549,7 @@ msgstr "Користувач"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
 msgid "Validated leaves create timesheets automatically."
-msgstr "Перевірені листи створюють таблиці часу автоматично."
+msgstr "Перевірені листи створюють табелі автоматично."
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_uom_uom__timesheet_widget
@@ -584,8 +590,3 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_view_form_inherit_timesheet
 msgid "per hour"
 msgstr "на годину"
-
-#. module: hr_timesheet
-#: model:ir.model,name:hr_timesheet.model_res_config_settings
-msgid "res.config.settings"
-msgstr "res.config.settings"

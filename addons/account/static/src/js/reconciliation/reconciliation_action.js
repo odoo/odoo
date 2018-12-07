@@ -7,6 +7,7 @@ var ReconciliationRenderer = require('account.ReconciliationRenderer');
 var ControlPanelMixin = require('web.ControlPanelMixin');
 var Widget = require('web.Widget');
 var core = require('web.core');
+var _t = core._t;
 
 
 /**
@@ -21,16 +22,17 @@ var StatementAction = AbstractAction.extend(ControlPanelMixin, {
         change_offset: '_onAction',
         change_partner: '_onAction',
         add_proposition: '_onAction',
-        search_balance_amount: '_onAction',
         remove_proposition: '_onAction',
         update_proposition: '_onAction',
         create_proposition: '_onAction',
+        getPartialAmount: '_onActionPartialAmount',
         quick_create_proposition: '_onAction',
-        toggle_partial_reconcile: '_onAction',
+        partial_reconcile: '_onAction',
         validate: '_onValidate',
         change_name: '_onChangeName',
         close_statement: '_onCloseStatement',
         load_more: '_onLoadMore',
+        reload: 'reload',
     },
     config: {
         // used to instantiate the model
@@ -41,6 +43,8 @@ var StatementAction = AbstractAction.extend(ControlPanelMixin, {
         LineRenderer: ReconciliationRenderer.LineRenderer,
         // used context params
         params: ['statement_ids'],
+        // number of statements/partners/accounts to display
+        defaultDisplayQty: 10,
         // number of moves lines displayed in 'match' mode
         limitMoveLines: 15,
     },
@@ -57,6 +61,7 @@ var StatementAction = AbstractAction.extend(ControlPanelMixin, {
         this.params = params;
         this.model = new this.config.Model(this, {
             modelName: "account.reconciliation.widget",
+            defaultDisplayQty: params.params && params.params.defaultDisplayQty || this.config.defaultDisplayQty,
             limitMoveLines: params.params && params.params.limitMoveLines || this.config.limitMoveLines,
         });
         this.widgets = [];
@@ -96,6 +101,21 @@ var StatementAction = AbstractAction.extend(ControlPanelMixin, {
             });
     },
 
+    reload: function() {
+        // On reload destroy all rendered line widget, reload data and then rerender widget
+        var self = this;
+        _.each(this.widgets, function(widget) {
+            widget.destroy();
+        })
+        this.widgets = [];
+        this.model.reload()
+            .then(function() {
+                self.$('.o_reconciliation_lines').html('');
+                self._renderLines();
+                self._openFirstLine();
+            });
+    },
+
     /**
      * append the renderer and instantiate the line renderers
      *
@@ -109,7 +129,18 @@ var StatementAction = AbstractAction.extend(ControlPanelMixin, {
 
         this.renderer.prependTo(self.$('.o_form_sheet'));
         this._renderLines();
-        this._openFirstLine();
+
+        // No more lines to reconcile, trigger the rainbowman.
+        var initialState = this.renderer._initialState;
+        if(initialState.valuenow === initialState.valuemax){
+            initialState.context = this.model.getContext();
+            this.renderer.showRainbowMan(initialState);
+        }else{
+            // Create a notification if some lines has been reconciled automatically.
+            if(initialState.valuenow > 0)
+                this.renderer._renderNotifications(this.model.statement.notifications);
+            this._openFirstLine();
+        }
     },
 
     /**
@@ -184,7 +215,10 @@ var StatementAction = AbstractAction.extend(ControlPanelMixin, {
             widget.appendTo(self.$('.o_reconciliation_lines'));
         });
         if (this.model.hasMoreLines() === false) {
-            this.renderer.hideLoadMoreButton();
+            this.renderer.hideLoadMoreButton(true);
+        }
+        else {
+            this.renderer.hideLoadMoreButton(false);
         }
     },
 
@@ -219,6 +253,14 @@ var StatementAction = AbstractAction.extend(ControlPanelMixin, {
                 });
             }
         });
+    },
+
+    _onActionPartialAmount: function(event) {
+        var self = this;
+        var handle = event.target.handle;
+        var line = this.model.getLine(handle);
+        var amount = this.model.getPartialReconcileAmount(handle, event.data);
+        self._getWidget(handle).updatePartialAmount(event.data.data, amount);
     },
 
     /**
@@ -317,6 +359,7 @@ var ManualAction = StatementAction.extend({
         ActionRenderer: ReconciliationRenderer.ManualRenderer,
         LineRenderer: ReconciliationRenderer.ManualLineRenderer,
         params: ['company_ids', 'mode', 'partner_ids', 'account_ids'],
+        defaultDisplayQty: 30,
         limitMoveLines: 15,
     },
 

@@ -8,8 +8,6 @@ from odoo.exceptions import UserError, ValidationError
 
 from odoo.addons import decimal_precision as dp
 
-from odoo.tools import pycompat
-
 
 class Pricelist(models.Model):
     _name = "product.pricelist"
@@ -36,6 +34,11 @@ class Pricelist(models.Model):
     sequence = fields.Integer(default=16)
     country_group_ids = fields.Many2many('res.country.group', 'res_country_group_pricelist_rel',
                                          'pricelist_id', 'res_country_group_id', string='Country Groups')
+
+    discount_policy = fields.Selection([
+        ('with_discount', 'Discount included in the price'),
+        ('without_discount', 'Show public price & discount to the customer')],
+        default='with_discount')
 
     @api.multi
     def name_get(self):
@@ -151,8 +154,10 @@ class Pricelist(models.Model):
             'AND (item.pricelist_id = %s) '
             'AND (item.date_start IS NULL OR item.date_start<=%s) '
             'AND (item.date_end IS NULL OR item.date_end>=%s)'
-            'ORDER BY item.applied_on, item.min_quantity desc, categ.complete_name desc',
+            'ORDER BY item.applied_on, item.min_quantity desc, categ.complete_name desc, item.id desc',
             (prod_tmpl_ids, prod_ids, categ_ids, self.id, date, date))
+        # NOTE: if you change `order by` on that query, make sure it matches
+        # _order from model to avoid inconstencies and undeterministic issues.
 
         item_ids = [x[0] for x in self._cr.fetchall()]
         items = self.env['product.pricelist.item'].browse(item_ids)
@@ -255,7 +260,7 @@ class Pricelist(models.Model):
         return {
             product_id: res_tuple[0]
             for product_id, res_tuple in self._compute_price_rule(
-                list(pycompat.izip(products, quantities, partners)),
+                list(zip(products, quantities, partners)),
                 date=date,
                 uom_id=uom_id
             ).items()
@@ -297,7 +302,7 @@ class Pricelist(models.Model):
     def _price_get_multi(self, pricelist, products_by_qty_by_partner):
         """ Mono pricelist, multi product - return price per product """
         return pricelist.get_products_price(
-            list(pycompat.izip(**products_by_qty_by_partner)))
+            list(zip(**products_by_qty_by_partner)))
 
     def _get_partner_pricelist(self, partner_id, company_id=None):
         """ Retrieve the applicable pricelist for a given partner in a given company.
@@ -359,8 +364,11 @@ class ResCountryGroup(models.Model):
 
 class PricelistItem(models.Model):
     _name = "product.pricelist.item"
-    _description = "Pricelist item"
-    _order = "applied_on, min_quantity desc, categ_id desc, id"
+    _description = "Pricelist Item"
+    _order = "applied_on, min_quantity desc, categ_id desc, id desc"
+    # NOTE: if you change _order on this model, make sure it matches the SQL
+    # query built in _compute_price_rule() above in this file to avoid
+    # inconstencies and undeterministic issues.
 
     product_tmpl_id = fields.Many2one(
         'product.template', 'Product Template', ondelete='cascade',

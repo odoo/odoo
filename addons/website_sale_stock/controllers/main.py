@@ -3,25 +3,33 @@
 
 from odoo.addons.website_sale.controllers.main import WebsiteSale
 from odoo.http import request
-from odoo.tools import ustr
-from odoo.tools.pycompat import izip
 
 class WebsiteSale(WebsiteSale):
+    def _get_combination_info(self, product_template_id, product_id, combination, add_qty, pricelist, **kw):
+        res = super(WebsiteSale, self)._get_combination_info(product_template_id, product_id, combination, add_qty, pricelist, **kw)
 
-    def get_attribute_value_ids(self, product):
-        res = super(WebsiteSale, self).get_attribute_value_ids(product)
-        variant_ids = [r[0] for r in res]
-        # recordsets conserve the order
-        for r, variant in izip(res, request.env['product.product'].sudo().browse(variant_ids)):
-            r.extend([{
-                'virtual_available': variant.virtual_available,
-                'product_type': variant.type,
-                'inventory_availability': variant.inventory_availability,
-                'available_threshold': variant.available_threshold,
-                'custom_message': variant.custom_message,
-                'product_template': variant.product_tmpl_id.id,
-                'cart_qty': variant.cart_qty,
-                'uom_name': variant.uom_id.name,
-            }])
+        if res['product_id']:
+            product = request.env['product.product'].sudo().browse(res['product_id'])
+            res.update({
+                'virtual_available': product.virtual_available,
+                'product_type': product.type,
+                'inventory_availability': product.inventory_availability,
+                'available_threshold': product.available_threshold,
+                'custom_message': product.custom_message,
+                'product_template': product.product_tmpl_id.id,
+                'cart_qty': product.cart_qty,
+                'uom_name': product.uom_id.name,
+            })
+        else:
+            product_template = request.env['product.template'].sudo().browse(product_template_id)
+            res.update({
+                'virtual_available': 0,
+                'product_type': product_template.type,
+                'inventory_availability': product_template.inventory_availability,
+                'available_threshold': product_template.available_threshold,
+                'custom_message': product_template.custom_message,
+                'product_template': product_template.id,
+                'cart_qty': 0
+            })
 
         return res

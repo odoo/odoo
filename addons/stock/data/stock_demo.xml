@@ -7,36 +7,6 @@
         </record>
 
 
-        <!-- Resource: stock.location -->
-
-        <record id="stock_location_3" model="stock.location">
-            <field name="name">IT Vendors</field>
-            <field name="location_id" ref="stock_location_suppliers"/>
-            <field name="usage">supplier</field>
-            <field name="barcode">2601985</field>
-        </record>
-        <record id="stock_location_4" model="stock.location">
-            <field name="name">Big Vendors</field>
-            <field name="location_id" ref="stock_location_3"/>
-            <field name="usage">supplier</field>
-        </record>
-        <record id="stock_location_5" model="stock.location">
-            <field name="name">Generic IT Vendors</field>
-            <field name="location_id" ref="stock_location_3"/>
-            <field name="usage">supplier</field>
-        </record>
-        <record id="stock_location_7" model="stock.location">
-            <field name="name">European Customers</field>
-            <field name="location_id" ref="stock_location_customers"/>
-            <field name="usage">customer</field>
-        </record>
-        <record id="stock_location_8" model="stock.location">
-            <field name="name">Non European Customers</field>
-            <field name="location_id" ref="stock_location_customers"/>
-            <field name="usage">customer</field>
-        </record>
-
-
         <!-- Resource: stock.inventory -->
 
         <record id="stock_inventory_0" model="stock.inventory">
@@ -153,7 +123,11 @@
             <field name="currency_id" ref="base.USD"/>
             <field name="partner_id" ref="res_partner_company_1"/>
             <field name="parent_id" ref="base.main_company"/>
-            <field name="name">My Company, Chicago</field>
+            <field name="name">My Company (Chicago)</field>
+        </record>
+
+        <record id="base.main_company" model="res.company">
+            <field name="name">My Company (San Francisco)</field>
         </record>
 
         <record id="stock_warehouse_shop0" model="stock.warehouse">

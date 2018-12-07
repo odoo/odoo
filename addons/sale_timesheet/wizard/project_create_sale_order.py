@@ -8,7 +8,7 @@ from odoo.addons import decimal_precision as dp
 
 class ProjectCreateSalesOrder(models.TransientModel):
     _name = 'project.create.sale.order'
-    _description = "Create a SO from project"
+    _description = "Create SO from project"
 
     @api.model
     def default_get(self, fields):
@@ -31,7 +31,7 @@ class ProjectCreateSalesOrder(models.TransientModel):
     partner_id = fields.Many2one('res.partner', string="Customer", domain=[('customer', '=', True)], required=True, help="Customer of the sales order")
     product_id = fields.Many2one('product.product', domain=[('type', '=', 'service'), ('invoice_policy', '=', 'delivery'), ('service_type', '=', 'timesheet')], string="Service", help="Product of the sales order item. Must be a service invoiced based on timesheets on tasks.")
     price_unit = fields.Float("Unit Price", help="Unit price of the sales order item.")
-    currency_id = fields.Many2one('res.currency', string="Currency", related='product_id.currency_id')
+    currency_id = fields.Many2one('res.currency', string="Currency", related='product_id.currency_id', readonly=False)
 
     billable_type = fields.Selection([
         ('project_rate', 'At Project Rate'),
@@ -194,13 +194,14 @@ class ProjectCreateSalesOrder(models.TransientModel):
 
 class ProjectCreateSalesOrderLine(models.TransientModel):
     _name = 'project.create.sale.order.line'
+    _description = 'Create SO Line from project'
     _order = 'id,create_date'
 
     wizard_id = fields.Many2one('project.create.sale.order', required=True)
     product_id = fields.Many2one('product.product', domain=[('type', '=', 'service'), ('invoice_policy', '=', 'delivery'), ('service_type', '=', 'timesheet')], string="Service", required=True,
         help="Product of the sales order item. Must be a service invoiced based on timesheets on tasks.")
     price_unit = fields.Float("Unit Price", default=1.0, help="Unit price of the sales order item.")
-    currency_id = fields.Many2one('res.currency', string="Currency", related='product_id.currency_id')
+    currency_id = fields.Many2one('res.currency', string="Currency", related='product_id.currency_id', readonly=False)
     employee_id = fields.Many2one('hr.employee', string="Employee", required=True, help="Employee that has timesheets on the project.")
 
     _sql_constraints = [

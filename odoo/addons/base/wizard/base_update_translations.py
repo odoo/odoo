@@ -9,6 +9,7 @@ from odoo.exceptions import UserError
 
 class BaseUpdateTranslations(models.TransientModel):
     _name = 'base.update.translations'
+    _description = 'Update Translations'
 
     @api.model
     def _get_languages(self):

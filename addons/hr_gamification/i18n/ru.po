@@ -3,21 +3,14 @@
 # * hr_gamification
 # 
 # Translators:
-# Martin Trigaux, 2017
-# Max Belyanin <maxbelyanin@gmail.com>, 2017
-# Viktor Pogrebniak <vp@aifil.ru>, 2017
-# Collex100, 2017
-# Sergey Vilizhanin, 2017
-# Максим Дронь <dronmax@gmail.com>, 2017
-# sergeiruzkiicode <sergei.ruzki@icode.by>, 2018
-# Denis Trepalin <zekarious@gmail.com>, 2018
+# Martin Trigaux, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:56+0000\n"
-"PO-Revision-Date: 2018-08-02 09:56+0000\n"
-"Last-Translator: Denis Trepalin <zekarious@gmail.com>, 2018\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-09-21 13:17+0000\n"
+"Last-Translator: Martin Trigaux, 2018\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,7 +19,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: hr_gamification
-#: model:ir.actions.act_window,help:hr_gamification.goals_menu_groupby_action2
+#: model_terms:ir.actions.act_window,help:hr_gamification.goals_menu_groupby_action2
 msgid ""
 "A goal is defined by a user and a goal type.\n"
 "                    Goals can be created automatically by using challenges."
@@ -44,7 +37,7 @@ msgstr ""
 "через пользователя"
 
 #. module: hr_gamification
-#: model:ir.actions.act_window,help:hr_gamification.challenge_list_action2
+#: model_terms:ir.actions.act_window,help:hr_gamification.challenge_list_action2
 msgid ""
 "Assign a list of goals to chosen users to evaluate them.\n"
 "                    The challenge can use a period (weekly, monthly...) for automatic creation of goals.\n"
@@ -61,7 +54,7 @@ msgid "Badges"
 msgstr "Значки"
 
 #. module: hr_gamification
-#: model:ir.ui.view,arch_db:hr_gamification.hr_hr_employee_view_form
+#: model_terms:ir.ui.view,arch_db:hr_gamification.hr_hr_employee_view_form
 msgid ""
 "Badges are rewards of good work. Give them to people you believe deserve it."
 msgstr ""
@@ -74,7 +67,7 @@ msgid "Badges directly linked to the employee"
 msgstr "Значки непосредственно связанные с работником"
 
 #. module: hr_gamification
-#: model:ir.ui.view,arch_db:hr_gamification.view_badge_wizard_reward
+#: model_terms:ir.ui.view,arch_db:hr_gamification.view_badge_wizard_reward
 msgid "Cancel"
 msgstr "Отменить"
 
@@ -86,17 +79,17 @@ msgid "Challenges"
 msgstr "Соревнования"
 
 #. module: hr_gamification
-#: model:ir.actions.act_window,help:hr_gamification.challenge_list_action2
+#: model_terms:ir.actions.act_window,help:hr_gamification.challenge_list_action2
 msgid "Create a new challenge"
 msgstr ""
 
 #. module: hr_gamification
-#: model:ir.actions.act_window,help:hr_gamification.goals_menu_groupby_action2
+#: model_terms:ir.actions.act_window,help:hr_gamification.goals_menu_groupby_action2
 msgid "Create a new goal"
 msgstr ""
 
 #. module: hr_gamification
-#: model:ir.ui.view,arch_db:hr_gamification.view_badge_wizard_reward
+#: model_terms:ir.ui.view,arch_db:hr_gamification.view_badge_wizard_reward
 msgid "Describe what they did and why it matters (will be public)"
 msgstr ""
 "Опишите, что они сделали и почему это важно (будет в публичном доступе)"
@@ -125,13 +118,18 @@ msgstr "HR-цели сотрудника"
 
 #. module: hr_gamification
 #: model:ir.model,name:hr_gamification.model_gamification_badge
-msgid "Gamification badge"
-msgstr "Значок игрофикации"
+msgid "Gamification Badge"
+msgstr ""
 
 #. module: hr_gamification
 #: model:ir.model,name:hr_gamification.model_gamification_badge_user
-msgid "Gamification user badge"
-msgstr "Значок пользователя игрофикации"
+msgid "Gamification User Badge"
+msgstr ""
+
+#. module: hr_gamification
+#: model:ir.model,name:hr_gamification.model_gamification_badge_user_wizard
+msgid "Gamification User Badge Wizard"
+msgstr ""
 
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_res_users__goal_ids
@@ -145,17 +143,17 @@ msgid "Goals History"
 msgstr "История целей"
 
 #. module: hr_gamification
-#: model:ir.ui.view,arch_db:hr_gamification.hr_hr_employee_view_form
+#: model_terms:ir.ui.view,arch_db:hr_gamification.hr_hr_employee_view_form
 msgid "Grant a Badge"
 msgstr "Наградить значком"
 
 #. module: hr_gamification
-#: model:ir.ui.view,arch_db:hr_gamification.hr_hr_employee_view_form
+#: model_terms:ir.ui.view,arch_db:hr_gamification.hr_hr_employee_view_form
 msgid "Grant this employee his first badge"
 msgstr ""
 
 #. module: hr_gamification
-#: model:ir.ui.view,arch_db:hr_gamification.hr_badge_form_view
+#: model_terms:ir.ui.view,arch_db:hr_gamification.hr_badge_form_view
 msgid "Granted"
 msgstr "Награжденые"
 
@@ -170,7 +168,7 @@ msgid "Has Badges"
 msgstr "Есть значки"
 
 #. module: hr_gamification
-#: model:ir.ui.view,arch_db:hr_gamification.hr_hr_employee_view_form
+#: model_terms:ir.ui.view,arch_db:hr_gamification.hr_hr_employee_view_form
 msgid "Received Badges"
 msgstr "Полученные награды"
 
@@ -181,12 +179,12 @@ msgstr "Пользователь управляющий доступом к ре
 
 #. module: hr_gamification
 #: model:ir.actions.act_window,name:hr_gamification.action_reward_wizard
-#: model:ir.ui.view,arch_db:hr_gamification.view_badge_wizard_reward
+#: model_terms:ir.ui.view,arch_db:hr_gamification.view_badge_wizard_reward
 msgid "Reward Employee"
 msgstr "Вознаградить сотрудника"
 
 #. module: hr_gamification
-#: model:ir.ui.view,arch_db:hr_gamification.view_badge_wizard_reward
+#: model_terms:ir.ui.view,arch_db:hr_gamification.view_badge_wizard_reward
 msgid "Reward Employee with"
 msgstr "Вознаградить сотрудника"
 
@@ -207,28 +205,23 @@ msgid "Users"
 msgstr "Пользователи"
 
 #. module: hr_gamification
-#: model:ir.ui.view,arch_db:hr_gamification.view_badge_wizard_reward
+#: model_terms:ir.ui.view,arch_db:hr_gamification.view_badge_wizard_reward
 msgid "What are you thankful for?"
 msgstr "За что вас поблагодарили?"
 
 #. module: hr_gamification
-#: code:addons/hr_gamification/wizard/gamification_badge_user_wizard.py:21
+#: code:addons/hr_gamification/wizard/gamification_badge_user_wizard.py:22
 #, python-format
 msgid "You can not send a badge to yourself."
 msgstr ""
 
 #. module: hr_gamification
-#: code:addons/hr_gamification/wizard/gamification_badge_user_wizard.py:18
+#: code:addons/hr_gamification/wizard/gamification_badge_user_wizard.py:19
 #, python-format
 msgid "You can send badges only to employees linked to a user."
 msgstr "Вы можете выдавать значки только сотрудникам, имеющим учётные записи."
 
 #. module: hr_gamification
-#: model:ir.model,name:hr_gamification.model_gamification_badge_user_wizard
-msgid "gamification.badge.user.wizard"
-msgstr "gamification.badge.user.wizard"
-
-#. module: hr_gamification
-#: model:ir.ui.view,arch_db:hr_gamification.hr_hr_employee_view_form
+#: model_terms:ir.ui.view,arch_db:hr_gamification.hr_hr_employee_view_form
 msgid "to reward this employee for a good action"
 msgstr "наградить этого сотрудника за хорошие действия"

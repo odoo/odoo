@@ -12,7 +12,7 @@ class BadgeUser(models.Model):
     """User having received a badge"""
 
     _name = 'gamification.badge.user'
-    _description = 'Gamification user badge'
+    _description = 'Gamification User Badge'
     _order = "create_date desc"
     _rec_name = "badge_name"
 
@@ -21,7 +21,7 @@ class BadgeUser(models.Model):
     badge_id = fields.Many2one('gamification.badge', string='Badge', required=True, ondelete="cascade", index=True)
     challenge_id = fields.Many2one('gamification.challenge', string='Challenge originating', help="If this badge was rewarded through a challenge")
     comment = fields.Text('Comment')
-    badge_name = fields.Char(related='badge_id.name', string="Badge Name")
+    badge_name = fields.Char(related='badge_id.name', string="Badge Name", readonly=False)
 
     def _send_badge(self):
         """Send a notification to a user for receiving a badge
@@ -60,7 +60,7 @@ class GamificationBadge(models.Model):
     TOO_MANY = 5
 
     _name = 'gamification.badge'
-    _description = 'Gamification badge'
+    _description = 'Gamification Badge'
     _inherit = ['mail.thread']
 
     name = fields.Char('Badge', required=True, translate=True)

@@ -3,7 +3,6 @@
 # * im_livechat
 # 
 # Translators:
-# Mustafa Rawi <mustafa@cubexco.com>, 2018
 # Mustafa J. Kadhem <safi2266@gmail.com>, 2018
 # Akram Alfusayal <akram_ma@hotmail.com>, 2018
 # amrnegm <amrnegm.01@gmail.com>, 2018
@@ -17,13 +16,15 @@
 # AMAAL RU <Fabu1410@yahoo.com>, 2018
 # Shaima Safar <shaima.safar@open-inside.com>, 2018
 # Yihya Hugirat <hugirat@gmail.com>, 2018
+# Mustafa Rawi <mustafa@cubexco.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:50+0000\n"
-"PO-Revision-Date: 2018-09-18 09:50+0000\n"
-"Last-Translator: Yihya Hugirat <hugirat@gmail.com>, 2018\n"
+"POT-Creation-Date: 2018-09-21 13:18+0000\n"
+"PO-Revision-Date: 2018-08-24 09:19+0000\n"
+"Last-Translator: Mustafa Rawi <mustafa@cubexco.com>, 2018\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -117,6 +118,11 @@ msgid "Auto popup timer"
 msgstr "موقت المنبثقة تلقائياً"
 
 #. module: im_livechat
+#: model:ir.model,name:im_livechat.model_ir_autovacuum
+msgid "Automatic Vacuum"
+msgstr ""
+
+#. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.mail_channel_view_form
 msgid "Avatar"
 msgstr "الصورة الرمزية"
@@ -183,7 +189,6 @@ msgid "Channel Rule"
 msgstr ""
 
 #. module: im_livechat
-#: model:ir.model,name:im_livechat.model_im_livechat_channel_rule
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Channel Rules"
 msgstr ""
@@ -360,8 +365,8 @@ msgstr ""
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid ""
-"For website built with Odoo CMS, please install the website_livechat module."
-" Then go to Website Admin &gt; Configuration &gt; Settings and select the "
+"For websites built with the Odoo CMS, please install the website_livechat "
+"module. Then go to Website &gt; Configuration &gt; Settings and select the "
 "Website Live Chat Channel you want to add on your website."
 msgstr ""
 
@@ -516,8 +521,18 @@ msgid "Livechat Channel"
 msgstr "قناة الدردشة المباشرة"
 
 #. module: im_livechat
+#: model:ir.model,name:im_livechat.model_im_livechat_channel_rule
+msgid "Livechat Channel Rules"
+msgstr ""
+
+#. module: im_livechat
 #: selection:mail.channel,channel_type:0
 msgid "Livechat Conversation"
+msgstr ""
+
+#. module: im_livechat
+#: model:ir.model,name:im_livechat.model_im_livechat_report_channel
+msgid "Livechat Support Channel Report"
 msgstr ""
 
 #. module: im_livechat
@@ -530,9 +545,8 @@ msgid ""
 msgstr ""
 
 #. module: im_livechat
-#: model:ir.model,name:im_livechat.model_im_livechat_report_channel
 #: model:ir.model,name:im_livechat.model_im_livechat_report_operator
-msgid "Livechat Support Report"
+msgid "Livechat Support Operator Report"
 msgstr ""
 
 #. module: im_livechat
@@ -595,7 +609,7 @@ msgid "No customer ratings on live chat session yet"
 msgstr ""
 
 #. module: im_livechat
-#: code:addons/im_livechat/models/mail_channel.py:118
+#: code:addons/im_livechat/models/mail_channel.py:119
 #, python-format
 msgid "No history found"
 msgstr ""
@@ -774,7 +788,7 @@ msgid "Search report"
 msgstr ""
 
 #. module: im_livechat
-#: code:addons/im_livechat/models/mail_channel.py:106
+#: code:addons/im_livechat/models/mail_channel.py:107
 #, python-format
 msgid "See 15 last visited pages"
 msgstr ""
@@ -989,11 +1003,6 @@ msgstr "مثل: مرحباً، كيف يمكنني مساعدتك؟"
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "e.g. YourWebsite.com"
 msgstr "مثل: YourWebSite.com"
-
-#. module: im_livechat
-#: model:ir.model,name:im_livechat.model_ir_autovacuum
-msgid "ir.autovacuum"
-msgstr ""
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form

@@ -150,6 +150,14 @@ var BasicView = AbstractView.extend({
                             }
                         }
                     }
+                    // Many2one: context is not the same between the different views
+                    // this means the result of a name_get could differ
+                    if (fieldType === 'many2one') {
+                        if (JSON.stringify(record.data[name].context) !==
+                                JSON.stringify(fieldInfo.context)) {
+                            fieldNames.push(name);
+                        }
+                    }
                 }
             });
 
@@ -225,7 +233,7 @@ var BasicView = AbstractView.extend({
             attrs.options = attrs.options ? pyUtils.py_eval(attrs.options) : {};
         }
 
-        if (attrs.on_change && !field.onChange) {
+        if (attrs.on_change && attrs.on_change !== "0" && !field.onChange) {
             field.onChange = "1";
         }
 
@@ -377,6 +385,10 @@ var BasicView = AbstractView.extend({
                     }
                     if (!(dependency_name in fields)) {
                         fields[dependency_name] = dependency_dict;
+                    }
+
+                    if (fv.fields && !(dependency_name in fv.fields)) {
+                        fv.fields[dependency_name] = dependency_dict;
                     }
                 }
             }

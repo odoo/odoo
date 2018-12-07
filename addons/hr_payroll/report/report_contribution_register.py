@@ -11,6 +11,7 @@ from odoo.exceptions import UserError
 
 class ContributionRegisterReport(models.AbstractModel):
     _name = 'report.hr_payroll.report_contributionregister'
+    _description = 'Payroll Contribution Register Report'
 
     def _get_payslip_lines(self, register_ids, date_from, date_to):
         result = {}

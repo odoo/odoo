@@ -38,9 +38,9 @@ class ResCompany(models.Model):
         ('round_globally', 'Round Globally'),
         ], default='round_per_line', string='Tax Calculation Rounding Method')
     currency_exchange_journal_id = fields.Many2one('account.journal', string="Exchange Gain or Loss Journal", domain=[('type', '=', 'general')])
-    income_currency_exchange_account_id = fields.Many2one('account.account', related='currency_exchange_journal_id.default_credit_account_id',
+    income_currency_exchange_account_id = fields.Many2one('account.account', related='currency_exchange_journal_id.default_credit_account_id', readonly=False,
         string="Gain Exchange Rate Account", domain="[('internal_type', '=', 'other'), ('deprecated', '=', False), ('company_id', '=', id)]")
-    expense_currency_exchange_account_id = fields.Many2one('account.account', related='currency_exchange_journal_id.default_debit_account_id',
+    expense_currency_exchange_account_id = fields.Many2one('account.account', related='currency_exchange_journal_id.default_debit_account_id', readonly=False,
         string="Loss Exchange Rate Account", domain="[('internal_type', '=', 'other'), ('deprecated', '=', False), ('company_id', '=', id)]")
     anglo_saxon_accounting = fields.Boolean(string="Use anglo-saxon accounting")
     property_stock_account_input_categ_id = fields.Many2one('account.account', string="Input Account for Stock Valuation", oldname="property_stock_account_input_categ")
@@ -67,16 +67,14 @@ Best Regards,'''))
                                               default='invoice_number', help='You can set here the default communication that will appear on customer invoices, once validated, to help the customer to refer to that particular invoice when making the payment.')
 
     qr_code = fields.Boolean(string='Display SEPA QR code')
-    qr_code_payment_journal_id = fields.Many2one('account.journal', string='SEPA QR Code Bank Journal account')
-    qr_code_valid = fields.Boolean(string='Has all required arguments', related="qr_code_payment_journal_id.bank_account_id.qr_code_valid")
 
     invoice_is_email = fields.Boolean('Email by default', default=True)
     invoice_is_print = fields.Boolean('Print by default', default=True)
 
     #Fields of the setup step for opening move
     account_opening_move_id = fields.Many2one(string='Opening Journal Entry', comodel_name='account.move', help="The journal entry containing the initial balance of all this company's accounts.")
-    account_opening_journal_id = fields.Many2one(string='Opening Journal', comodel_name='account.journal', related='account_opening_move_id.journal_id', help="Journal where the opening entry of this company's accounting has been posted.")
-    account_opening_date = fields.Date(string='Opening Date', related='account_opening_move_id.date', help="Date at which the opening entry of this company's accounting has been posted.")
+    account_opening_journal_id = fields.Many2one(string='Opening Journal', comodel_name='account.journal', related='account_opening_move_id.journal_id', help="Journal where the opening entry of this company's accounting has been posted.", readonly=False)
+    account_opening_date = fields.Date(string='Opening Date', related='account_opening_move_id.date', help="Date at which the opening entry of this company's accounting has been posted.", readonly=False)
 
     # Fields marking the completion of a setup step
     # YTI FIXME : The selection should be factorize as a static list in base, like ONBOARDING_STEP_STATES
@@ -90,6 +88,22 @@ Best Regards,'''))
     # account dashboard onboarding
     account_invoice_onboarding_state = fields.Selection([('not_done', "Not done"), ('just_done', "Just done"), ('done', "Done"), ('closed', "Closed")], string="State of the account invoice onboarding panel", default='not_done')
     account_dashboard_onboarding_state = fields.Selection([('not_done', "Not done"), ('just_done', "Just done"), ('done', "Done"), ('closed', "Closed")], string="State of the account dashboard onboarding panel", default='not_done')
+
+    @api.constrains('account_opening_date', 'fiscalyear_last_day', 'fiscalyear_last_month')
+    def _check_fiscalyear_last_day(self):
+        # if the user explicitly chooses the 29th of February we allow it:
+        # there is no "fiscalyear_last_year" so we do not know his intentions.
+        if self.fiscalyear_last_day == 29 and self.fiscalyear_last_month == 2:
+            return
+
+        if self.account_opening_date:
+            year = self.account_opening_date.year
+        else:
+            year = datetime.now().year
+
+        max_day = calendar.monthrange(year, self.fiscalyear_last_month)[1]
+        if self.fiscalyear_last_day > max_day:
+            raise ValidationError(_("Invalid fiscal year last day"))
 
     def get_and_update_account_invoice_onboarding_state(self):
         """ This method is called on the controller rendering method and ensures that the animations
@@ -287,6 +301,7 @@ Best Regards,'''))
     def setting_init_fiscal_year_action(self):
         """ Called by the 'Fiscal Year Opening' button of the setup bar."""
         company = self.env.user.company_id
+        company.create_op_move_if_non_existant()
         new_wizard = self.env['account.financial.year.op'].create({'company_id': company.id})
         view_id = self.env.ref('account.setup_financial_year_opening_form').id
 
@@ -341,10 +356,16 @@ Best Regards,'''))
             if not default_journal:
                 raise UserError(_("Please install a chart of accounts or create a miscellaneous journal before proceeding."))
 
+            today = datetime.today().date()
+            opening_date = today.replace(month=self.fiscalyear_last_month, day=self.fiscalyear_last_day) + timedelta(days=1)
+            if opening_date > today:
+                opening_date = opening_date + relativedelta(years=-1)
+
             self.account_opening_move_id = self.env['account.move'].create({
                 'name': _('Opening Journal Entry'),
                 'company_id': self.id,
                 'journal_id': default_journal.id,
+                'date': opening_date,
             })
 
     def opening_move_posted(self):

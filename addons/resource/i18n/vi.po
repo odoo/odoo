@@ -4,13 +4,16 @@
 # 
 # Translators:
 # thanh nguyen <thanhnguyen.icsc@gmail.com>, 2018
+# Martin Trigaux, 2018
+# Tuan Tran <tmtuan.projects@gmail.com>, 2018
+# Duy BQ <duybq86@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
-"Last-Translator: thanh nguyen <thanhnguyen.icsc@gmail.com>, 2018\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-09-21 13:17+0000\n"
+"Last-Translator: Duy BQ <duybq86@gmail.com>, 2018\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -92,13 +95,13 @@ msgstr ""
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__dayofweek
 msgid "Day of Week"
-msgstr ""
+msgstr "Ngày trong tuần"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_res_company__resource_calendar_id
 #: model:ir.model.fields,field_description:resource.field_res_users__resource_calendar_id
 msgid "Default Working Hours"
-msgstr ""
+msgstr "Khung Giờ làm việc Mặc định"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_res_users__resource_calendar_id
@@ -106,7 +109,7 @@ msgstr ""
 #: model:ir.model.fields,help:resource.field_resource_resource__calendar_id
 #: model:ir.model.fields,help:resource.field_resource_test__resource_calendar_id
 msgid "Define the schedule of resource"
-msgstr ""
+msgstr "Định nghĩa lịch hoạt động cho nguồn lực"
 
 #. module: resource
 #: model_terms:ir.actions.act_window,help:resource.action_resource_calendar_form
@@ -114,6 +117,8 @@ msgid ""
 "Define working hours and time table that could be scheduled to your project "
 "members"
 msgstr ""
+"Định nghĩa các khung giờ làm việc và thời gian biểu mà có thể được ấn định "
+"cho các thành viên dự án của bạn"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__display_name
@@ -128,7 +133,7 @@ msgstr "Tên hiển thị"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_resource__time_efficiency
 msgid "Efficiency Factor"
-msgstr ""
+msgstr "Hệ số Hiệu suất"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__date_to
@@ -139,25 +144,25 @@ msgstr "Ngày kết thúc"
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
 msgid "Friday"
-msgstr ""
+msgstr "Thứ sáu"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:166
 #, python-format
 msgid "Friday Evening"
-msgstr ""
+msgstr "Tối Thứ Sáu"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:165
 #, python-format
 msgid "Friday Morning"
-msgstr ""
+msgstr "Sáng Thứ Sáu"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__global_leave_ids
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "Global Leaves"
-msgstr ""
+msgstr "Nghỉ Toàn cục"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
@@ -173,7 +178,7 @@ msgstr "Giờ"
 #. module: resource
 #: selection:resource.resource,resource_type:0
 msgid "Human"
-msgstr ""
+msgstr "Con người"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__id
@@ -191,6 +196,8 @@ msgid ""
 "If empty, this is a generic holiday for the company. If a resource is set, "
 "the holiday/leave is only for this resource"
 msgstr ""
+"Nếu để trống, đây là ngày nghỉ chung của toàn công ty. Nếu một nguồn lực "
+"được thiết lập, ngày nghỉ chỉ áp dụng cho nguồn lực được chọn"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource__active
@@ -198,6 +205,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the resource "
 "record without removing it."
 msgstr ""
+"Nếu bỏ chọn trường Hiệu lực, sẽ cho phép bạn ẩn Nguồn lực mà không cần xóa "
+"bỏ nó."
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_resource_search
@@ -235,7 +244,7 @@ msgstr "Cập nhật lần cuối vào"
 #. module: resource
 #: selection:resource.calendar.leaves,time_type:0
 msgid "Leave"
-msgstr ""
+msgstr "Nghỉ"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
@@ -243,39 +252,38 @@ msgid "Leave Date"
 msgstr ""
 
 #. module: resource
-#: model:ir.model,name:resource.model_resource_calendar_leaves
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_leave_form
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_leave_tree
 msgid "Leave Detail"
-msgstr ""
+msgstr "Chi tiết Nghỉ"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__leave_ids
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "Leaves"
-msgstr ""
+msgstr "Ngày nghỉ"
 
 #. module: resource
 #: selection:resource.resource,resource_type:0
 msgid "Material"
-msgstr ""
+msgstr "Nguyên liệu/Máy móc"
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
 msgid "Monday"
-msgstr ""
+msgstr "Thư Hai"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:158
 #, python-format
 msgid "Monday Evening"
-msgstr ""
+msgstr "Tối Thứ Hai"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:157
 #, python-format
 msgid "Monday Morning"
-msgstr ""
+msgstr "Sáng Thứ Hai"
 
 #. module: resource
 #: selection:resource.calendar.attendance,day_period:0
@@ -305,7 +313,7 @@ msgstr "Lý do"
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource__user_id
 msgid "Related user name for the resource to manage its access."
-msgstr ""
+msgstr "Người dùng liên quan đến nguồn lực để quản lý sự truy cập"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__resource_id
@@ -320,20 +328,15 @@ msgid "Resource"
 msgstr "Tài nguyên"
 
 #. module: resource
-#: model:ir.model,name:resource.model_resource_calendar
-msgid "Resource Calendar"
-msgstr ""
-
-#. module: resource
-#: model:ir.model,name:resource.model_resource_resource
-msgid "Resource Detail"
-msgstr ""
-
-#. module: resource
 #: model:ir.actions.act_window,name:resource.action_resource_calendar_leave_tree
 #: model:ir.actions.act_window,name:resource.resource_calendar_leaves_action_from_calendar
 #: model:ir.ui.menu,name:resource.menu_view_resource_calendar_leaves_search
 msgid "Resource Leaves"
+msgstr "Nguồn lực Nghỉ"
+
+#. module: resource
+#: model:ir.model,name:resource.model_resource_calendar_leaves
+msgid "Resource Leaves Detail"
 msgstr ""
 
 #. module: resource
@@ -344,26 +347,32 @@ msgstr ""
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_resource__resource_type
 msgid "Resource Type"
+msgstr "Kiểu Nguồn lực"
+
+#. module: resource
+#: model:ir.model,name:resource.model_resource_calendar
+msgid "Resource Working Time"
 msgstr ""
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__calendar_id
 msgid "Resource's Calendar"
-msgstr ""
+msgstr "Lịch của Nguồn lực"
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.action_resource_resource_tree
 #: model:ir.actions.act_window,name:resource.resource_resource_action_from_calendar
+#: model:ir.model,name:resource.model_resource_resource
 #: model:ir.model.fields,field_description:resource.field_res_users__resource_ids
 #: model:ir.ui.menu,name:resource.menu_resource_resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_resource_tree
 msgid "Resources"
-msgstr ""
+msgstr "Nguồn lực"
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.resource_calendar_resources_leaves
 msgid "Resources Leaves"
-msgstr ""
+msgstr "Nguồn lực Nghỉ"
 
 #. module: resource
 #: model_terms:ir.actions.act_window,help:resource.action_resource_resource_tree
@@ -377,12 +386,12 @@ msgstr ""
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
 msgid "Saturday"
-msgstr ""
+msgstr "Thứ Bảy"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_resource_search
 msgid "Search Resource"
-msgstr ""
+msgstr "Tìm kiếm Nguồn lực"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
@@ -392,13 +401,13 @@ msgstr ""
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_search
 msgid "Search Working Time"
-msgstr ""
+msgstr "Tìm kiếm Thời gian làm việc"
 
 #. module: resource
 #: code:addons/resource/models/res_company.py:22
 #, python-format
 msgid "Standard 40 hours/week"
-msgstr ""
+msgstr "Tiêu chuẩn 40 giờ/tuần"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__date_from
@@ -415,7 +424,7 @@ msgstr ""
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__date_from
 msgid "Starting Date"
-msgstr ""
+msgstr "Ngày bắt đầu"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
@@ -425,7 +434,7 @@ msgstr ""
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
 msgid "Sunday"
-msgstr ""
+msgstr "Chủ nhật"
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_test
@@ -436,7 +445,7 @@ msgstr ""
 #: code:addons/resource/models/resource.py:464
 #, python-format
 msgid "The efficiency factor cannot be equal to 0."
-msgstr ""
+msgstr "Hệ số hiệu suất không thể bằng 0"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:519
@@ -463,23 +472,27 @@ msgid ""
 "the efficiency factor is 200%, however the expected duration will be 30 "
 "minutes."
 msgstr ""
+"Trường dữ liệu này được sử dụng để tính toán thời gian dự kiến của một lệnh "
+"sản xuất tại quy trình làm việc này. Ví dụ: nếu một lệnh sản xuất mất một "
+"giờ và hệ số hiệu xuất là 100% thì thời lượng dự kiến sẽ là một giờ. Nếu hệ "
+"số hiệu suất là 200%, thì thời lượng dự kiến sẽ là 30 phút."
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
 msgid "Thursday"
-msgstr ""
+msgstr "Thứ năm"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:164
 #, python-format
 msgid "Thursday Evening"
-msgstr ""
+msgstr "Tối Thứ Năm"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:163
 #, python-format
 msgid "Thursday Morning"
-msgstr ""
+msgstr "Sáng Thứ Năm"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__time_type
@@ -489,7 +502,7 @@ msgstr ""
 #. module: resource
 #: sql_constraint:resource.resource:0
 msgid "Time efficiency must be strictly positive"
-msgstr ""
+msgstr "Hiệu suất thời gian phải là số dương"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__tz
@@ -502,19 +515,19 @@ msgstr "Múi giờ"
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
 msgid "Tuesday"
-msgstr ""
+msgstr "Thứ Ba"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:160
 #, python-format
 msgid "Tuesday Evening"
-msgstr ""
+msgstr "Tối Thứ Ba"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:159
 #, python-format
 msgid "Tuesday Morning"
-msgstr ""
+msgstr "Sáng Thứ Ba"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_resource_search
@@ -535,19 +548,19 @@ msgstr "Người dùng"
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
 msgid "Wednesday"
-msgstr ""
+msgstr "Thứ Tư"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:162
 #, python-format
 msgid "Wednesday Evening"
-msgstr ""
+msgstr "Tối Thứ Tư"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:161
 #, python-format
 msgid "Wednesday Morning"
-msgstr ""
+msgstr "Sáng Thứ Tư"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar_leaves__time_type
@@ -558,22 +571,22 @@ msgstr ""
 #. module: resource
 #: model:ir.model,name:resource.model_resource_calendar_attendance
 msgid "Work Detail"
-msgstr ""
+msgstr "Chi tiết Công việc"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "Work Resources"
-msgstr ""
+msgstr "Nguồn lực Công việc"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__hour_from
 msgid "Work from"
-msgstr ""
+msgstr "Làm việc từ"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__hour_to
 msgid "Work to"
-msgstr ""
+msgstr "Làm việc đến"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_res_company__resource_calendar_ids
@@ -582,18 +595,18 @@ msgstr ""
 #: model:ir.model.fields,field_description:resource.field_resource_test__resource_calendar_id
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "Working Hours"
-msgstr ""
+msgstr "Giờ làm việc"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:152
 #, python-format
 msgid "Working Hours of %s"
-msgstr ""
+msgstr "Khung Giờ làm việc của %s"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_resource_search
 msgid "Working Period"
-msgstr ""
+msgstr "Chu kỳ Làm việc"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__attendance_ids
@@ -604,7 +617,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_search
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_tree
 msgid "Working Time"
-msgstr ""
+msgstr "Thời gian Làm việc"
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.action_resource_calendar_form

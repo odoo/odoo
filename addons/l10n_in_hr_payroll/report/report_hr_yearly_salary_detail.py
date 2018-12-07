@@ -8,6 +8,7 @@ from odoo.exceptions import UserError
 
 class EmployeesYearlySalaryReport(models.AbstractModel):
     _name = 'report.l10n_in_hr_payroll.report_hryearlysalary'
+    _description = "Indian Yearly Salary Report"
 
     def get_periods(self, form):
         self.mnths = []

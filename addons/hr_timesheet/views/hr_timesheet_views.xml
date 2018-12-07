@@ -44,7 +44,7 @@
                     <field name="name"/>
                     <field name="project_id" required="1"/>
                     <field name="task_id" context="{'default_project_id': project_id}" domain="[('project_id', '=', project_id)]"/>
-                    <field name="unit_amount" widget="timesheet_uom"/>
+                    <field name="unit_amount" widget="timesheet_uom" sum="Total"/>
                 </tree>
             </field>
         </record>

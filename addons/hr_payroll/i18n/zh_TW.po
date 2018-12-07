@@ -4,13 +4,15 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2018
+# Michael Yeung, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:48+0000\n"
-"PO-Revision-Date: 2018-09-18 09:48+0000\n"
-"Last-Translator: Martin Trigaux, 2018\n"
+"POT-Creation-Date: 2018-10-08 06:48+0000\n"
+"PO-Revision-Date: 2018-10-08 06:48+0000\n"
+"Last-Translator: Michael Yeung, 2018\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -46,7 +48,7 @@ msgstr ""
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Payroll Rules</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">薪資規則</span>"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_by_employees
@@ -54,7 +56,7 @@ msgid ""
 "<span colspan=\"4\" nolabel=\"1\">This wizard will generate payslips for all"
 " selected employee(s) based on the dates and credit note specified on "
 "Payslips Run.</span>"
-msgstr ""
+msgstr "<span colspan=\"4\" nolabel=\"1\">嚮導將根據薪資單生成器上輸入的日期和付款單號生成所選員工的薪資單.</span>"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslip
@@ -143,6 +145,9 @@ msgid ""
 "            payment of the employees. It can be the social security, the\n"
 "            state or anyone that collect or inject money on payslips."
 msgstr ""
+"繳費登記方是參與員工薪資 \n"
+" 支付的第三方。有可能是社會保障、\n"
+" 國家或在薪資單中收取或注入資金的任何人。"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_res_config_settings__module_account_accountant
@@ -169,7 +174,7 @@ msgstr "有效"
 #. module: hr_payroll
 #: model_terms:ir.actions.act_window,help:hr_payroll.action_contribution_register_form
 msgid "Add a new contribution register"
-msgstr ""
+msgstr "添加提留登記冊"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
@@ -381,6 +386,11 @@ msgid "Conditions"
 msgstr "條件"
 
 #. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_res_config_settings
+msgid "Config Settings"
+msgstr "配置設定"
+
+#. module: hr_payroll
 #: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_configuration
 msgid "Configuration"
 msgstr "配置"
@@ -429,6 +439,16 @@ msgstr "繳納登記冊的薪資單明細"
 #: model_terms:ir.ui.view,arch_db:hr_payroll.hr_contribution_register_tree
 msgid "Contribution Registers"
 msgstr "繳納登記冊"
+
+#. module: hr_payroll
+#: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_convanceallowance1
+msgid "Conveyance Allowance"
+msgstr "交通津貼"
+
+#. module: hr_payroll
+#: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_ca_gravie
+msgid "Conveyance Allowance For Gravie"
+msgstr ""
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template__create_uid
@@ -633,13 +653,13 @@ msgstr "員工"
 #: code:addons/hr_payroll/models/hr_salary_rule.py:92
 #, python-format
 msgid "Error! You cannot create recursive hierarchy of Salary Rule Category."
-msgstr ""
+msgstr "錯誤！您無法創建薪資規則類別的遞歸層次結構。"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_salary_rule.py:178
+#: code:addons/hr_payroll/models/hr_salary_rule.py:179
 #, python-format
 msgid "Error! You cannot create recursive hierarchy of Salary Rules."
-msgstr ""
+msgstr "錯誤！您無法創建薪資規則的遞歸層次結構。"
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line__register_id
@@ -662,7 +682,7 @@ msgid "For example, enter 50.0 to apply a percentage of 50%"
 msgstr "例如，輸入50.0意味著適用50%的百分比"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/report/report_contribution_register.py:34
+#: code:addons/hr_payroll/report/report_contribution_register.py:35
 #, python-format
 msgid "Form content is missing, this report cannot be printed."
 msgstr "表單內容丟失，無法列印此報告。"
@@ -694,6 +714,11 @@ msgid "Generate payslips for all selected employees"
 msgstr "為已選的所有員工生成薪資單"
 
 #. module: hr_payroll
+#: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_sales_commission
+msgid "Get 1% of sales"
+msgstr "獲得銷售額的1%"
+
+#. module: hr_payroll
 #: model:hr.salary.rule,name:hr_payroll.hr_rule_taxable
 #: model:hr.salary.rule.category,name:hr_payroll.GROSS
 msgid "Gross"
@@ -705,6 +730,11 @@ msgstr "總額"
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_rule_filter
 msgid "Group By"
 msgstr "分組"
+
+#. module: hr_payroll
+#: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_houserentallowance1
+msgid "House Rent Allowance"
+msgstr "住屋津貼"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template__id
@@ -878,6 +908,11 @@ msgid "Maximum Range"
 msgstr "最大範圍"
 
 #. module: hr_payroll
+#: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_meal_voucher
+msgid "Meal Voucher"
+msgstr "膳食津貼"
+
+#. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__condition_range_min
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__condition_range_min
 msgid "Minimum Range"
@@ -1001,11 +1036,6 @@ msgid "PaySlip Lines by Contribution Register"
 msgstr "薪資單明細行，按繳納登記冊"
 
 #. module: hr_payroll
-#: model:ir.model,name:hr_payroll.model_payslip_lines_contribution_register
-msgid "PaySlip Lines by Contribution Registers"
-msgstr "薪資單明細行，按繳納登記冊"
-
-#. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_contributionregister
 msgid "PaySlip Name"
 msgstr "薪資單名稱"
@@ -1016,6 +1046,11 @@ msgstr "薪資單名稱"
 #: model_terms:ir.ui.view,arch_db:hr_payroll.res_config_settings_view_form
 msgid "Payroll"
 msgstr "薪資表"
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_report_hr_payroll_report_contributionregister
+msgid "Payroll Contribution Register Report"
+msgstr "薪資表提留登記冊報告"
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.res_config_settings_view_form
@@ -1042,7 +1077,7 @@ msgstr "薪資單"
 #: code:addons/hr_payroll/models/hr_payslip.py:82
 #, python-format
 msgid "Payslip 'Date From' must be earlier 'Date To'."
-msgstr ""
+msgstr "薪資單的'開始日期'必須早於『結束日期'。"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payslip_run
@@ -1061,7 +1096,12 @@ msgstr "薪資單計算詳情"
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_employee__payslip_count
 msgid "Payslip Count"
-msgstr ""
+msgstr "薪資統計"
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_report_hr_payroll_report_payslipdetails
+msgid "Payslip Details Report"
+msgstr "薪資單明細"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payslip_input
@@ -1091,6 +1131,11 @@ msgstr "薪資單明細"
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "Payslip Lines by Contribution Register"
+msgstr "薪資單明細行，按繳納登記冊"
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_payslip_lines_contribution_register
+msgid "Payslip Lines by Contribution Registers"
 msgstr "薪資單明細行，按繳納登記冊"
 
 #. module: hr_payroll
@@ -1157,6 +1202,16 @@ msgstr "在會計帳簿中發佈薪資單"
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_payslip_lines_contribution_register
 msgid "Print"
 msgstr "列印"
+
+#. module: hr_payroll
+#: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_professionaltax1
+msgid "Professional Tax"
+msgstr "專業稅"
+
+#. module: hr_payroll
+#: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_providentfund1
+msgid "Provident Fund"
+msgstr "公積金"
 
 #. module: hr_payroll
 #: selection:hr.payslip.line,amount_select:0
@@ -1258,6 +1313,11 @@ msgstr "薪資類別"
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Salary Computation"
 msgstr "薪資計算"
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_hr_salary_rule
+msgid "Salary Rule"
+msgstr "薪酬制度"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_hr_salary_rule_category
@@ -1494,31 +1554,31 @@ msgid "Working Schedule"
 msgstr "工作安排"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_salary_rule.py:210
+#: code:addons/hr_payroll/models/hr_salary_rule.py:211
 #, python-format
 msgid "Wrong percentage base or quantity defined for salary rule %s (%s)."
 msgstr "薪資規則 %s (%s)百分比基數或者數量定義錯誤。"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_salary_rule.py:216
+#: code:addons/hr_payroll/models/hr_salary_rule.py:217
 #, python-format
 msgid "Wrong python code defined for salary rule %s (%s)."
 msgstr "薪資規則 %s (%s) Python代碼定義錯誤。"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_salary_rule.py:239
+#: code:addons/hr_payroll/models/hr_salary_rule.py:240
 #, python-format
 msgid "Wrong python condition defined for salary rule %s (%s)."
 msgstr "薪資規則 %s (%s) Python條件定義錯誤。"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_salary_rule.py:203
+#: code:addons/hr_payroll/models/hr_salary_rule.py:204
 #, python-format
 msgid "Wrong quantity defined for salary rule %s (%s)."
 msgstr "為薪資規則  %s (%s) 定義的數量錯誤。"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_salary_rule.py:233
+#: code:addons/hr_payroll/models/hr_salary_rule.py:234
 #, python-format
 msgid "Wrong range condition defined for salary rule %s (%s)."
 msgstr "薪資規則%s (%s) 範圍條件定義錯誤。"
@@ -1527,7 +1587,7 @@ msgstr "薪資規則%s (%s) 範圍條件定義錯誤。"
 #: code:addons/hr_payroll/models/hr_salary_rule.py:36
 #, python-format
 msgid "You cannot create a recursive salary structure."
-msgstr ""
+msgstr "您不能創建遞歸的薪資結構。"
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/models/hr_payslip.py:127
@@ -1546,26 +1606,6 @@ msgstr "您必須選擇員工以生成薪資單。"
 #, python-format
 msgid "You must set a contract to create a payslip line."
 msgstr "您必須設定一份合同以創建薪資單。"
-
-#. module: hr_payroll
-#: model:ir.model,name:hr_payroll.model_hr_salary_rule
-msgid "hr.salary.rule"
-msgstr "hr.salary.rule"
-
-#. module: hr_payroll
-#: model:ir.model,name:hr_payroll.model_report_hr_payroll_report_contributionregister
-msgid "report.hr_payroll.report_contributionregister"
-msgstr "report.hr_payroll.report_contributionregister"
-
-#. module: hr_payroll
-#: model:ir.model,name:hr_payroll.model_report_hr_payroll_report_payslipdetails
-msgid "report.hr_payroll.report_payslipdetails"
-msgstr "report.hr_payroll.report_payslipdetails"
-
-#. module: hr_payroll
-#: model:ir.model,name:hr_payroll.model_res_config_settings
-msgid "res.config.settings"
-msgstr "res.config.settings"
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line__amount_percentage_base

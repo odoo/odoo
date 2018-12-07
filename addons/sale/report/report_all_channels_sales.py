@@ -6,7 +6,7 @@ from odoo import api, fields, models, tools
 
 class PosSaleReport(models.Model):
     _name = "report.all.channels.sales"
-    _description = "All sales orders grouped by Sales Teams"
+    _description = "Sales by Channel (All in One)"
     _auto = False
 
     name = fields.Char('Order Reference', readonly=True)

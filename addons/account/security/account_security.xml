@@ -41,9 +41,8 @@
         <field name="implied_ids" eval="[(4, ref('group_account_invoice'))]"/>
     </record>
 
-    <!-- Grant full accounting features to admin -->
     <record id="base.user_admin" model="res.users">
-        <field name="groups_id" eval="[(4, ref('account.group_account_user'))]"/>
+        <field name="groups_id" eval="[(4, ref('account.group_account_invoice'))]"/>
     </record>
 
     <record id="base.group_system" model="res.groups">

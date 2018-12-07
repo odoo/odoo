@@ -3,26 +3,27 @@
 # * website_slides
 # 
 # Translators:
-# Francesco Garganese <francesco.garganese@aeromnia.aero>, 2018
-# Martin Trigaux, 2018
-# Luigi Di Naro <gigidn@gmail.com>, 2018
-# Simone Bernini <simone@aperturelabs.it>, 2018
 # Sebastiano Pistore <SebastianoPistore.info@protonmail.ch>, 2018
-# ginfriz <ginfriz84@hotmail.it>, 2018
 # Christian <chris@effeci.info>, 2018
-# Paolo Valier, 2018
-# Cécile Collart <cco@odoo.com>, 2018
 # David Minneci <david@numeko.it>, 2018
 # maiolif <maiolif@mgftools.com>, 2018
-# Sergio Zanchetta <primes2h@gmail.com>, 2018
 # Lorenzo Battistini <lorenzo.battistini@agilebg.com>, 2018
+# Simone Bernini <simone@aperturelabs.it>, 2018
+# ginfriz <ginfriz84@hotmail.it>, 2018
+# Paolo Valier, 2018
+# Cécile Collart <cco@odoo.com>, 2018
+# Sergio Zanchetta <primes2h@gmail.com>, 2018
+# Martin Trigaux, 2018
+# Francesco Garganese <francesco.garganese@aeromnia.aero>, 2018
+# Luigi Di Naro <gigidn@gmail.com>, 2018
 # Léonie Bouchat <lbo@odoo.com>, 2018
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:50+0000\n"
-"PO-Revision-Date: 2018-09-18 09:50+0000\n"
+"POT-Creation-Date: 2018-10-08 06:49+0000\n"
+"PO-Revision-Date: 2018-08-24 09:35+0000\n"
 "Last-Translator: Léonie Bouchat <lbo@odoo.com>, 2018\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
@@ -57,6 +58,8 @@ msgid ""
 "(Un)archiving a channel automatically (un)archives its slides. Do you want "
 "to proceed?"
 msgstr ""
+"Ripristinare un canale dall'archivio ripristina anche tutte le sue diapositive.\n"
+"Sei sicuro di voler procedere?"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_search
@@ -114,6 +117,21 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Buongiorno<br/><br/>\n"
+"        ${user.name} ha condiviso ${object.slide_type} <strong>${object.name}</strong> con te!\n"
+"        <div style=\"margin: 16px 8px 16px 8px; text-align: center;\">\n"
+"            <a href=\"${object.website_url}\">\n"
+"                <img alt=\"${object.name}\" src=\"${ctx['base_url']}/web/image/slide.slide/${object.id}/image\" style=\"height:auto; width:150px; margin: 16px;\"/>\n"
+"            </a>\n"
+"        </div>\n"
+"        <div style=\"margin: 16px 8px 16px 8px; text-align: center;\">\n"
+"            <a href=\"${object.website_url}\" style=\"background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">Vedi <strong>${object.name}</strong></a>\n"
+"        </div>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: website_slides
 #: model:mail.template,body_html:website_slides.slide_template_published
@@ -134,6 +152,21 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Buongiorno,<br/><br/>\n"
+"        Una nuova ${object.slide_type} <strong>${object.name}</strong> è stata pubblicata su ${object.channel_id.name} a ${format_tz(object.write_date, tz=user.tz)}\n"
+"        <div style=\"margin: 16px 8px 16px 8px; text-align: center;\">\n"
+"            <a href=\"${object.website_url}\">\n"
+"                <img alt=\"${object.name}\" src=\"${ctx['base_url']}/web/image/slide.slide/${object.id}/image\" style=\"height:auto; width:150px; margin: 16px;\"/>\n"
+"            </a>\n"
+"        </div>\n"
+"        <div style=\"margin: 16px 8px 16px 8px; text-align: center;\">\n"
+"            <a href=\"${object.website_url}\" style=\"background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">Vedi <strong>${object.name}</strong></a>\n"
+"        </div>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -174,7 +207,7 @@ msgstr "<i class=\"fa fa-comments-o\"/> Commentis"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
 msgid "<i class=\"fa fa-envelope-o\"/> Send Email"
-msgstr ""
+msgstr "<i class=\"fa fa-envelope-o\"/> Invia una email"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
@@ -184,6 +217,8 @@ msgid ""
 "<i class=\"fa fa-exclamation-triangle\" role=\"img\" aria-"
 "label=\"Attention\" title=\"Attention\"/> This"
 msgstr ""
+"<i class=\"fa fa-exclamation-triangle\" role=\"img\" aria-"
+"label=\"Attention\" title=\"Attention\"/> Questo"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -237,6 +272,8 @@ msgstr "<i class=\"fa fa-thumbs-up\"/> Likes"
 msgid ""
 "<p>This channel is private and its content is restricted to some users.</p>"
 msgstr ""
+"<p>Questo canale è privato e il suo contenuto è limitato ad alcuni "
+"utenti.</p>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -244,6 +281,8 @@ msgid ""
 "<span class=\"badge badge-pill\" id=\"facebook-badge\">0</span>\n"
 "                                                    <i class=\"fa fa-facebook-square\"/> Facebook"
 msgstr ""
+"<span class=\"badge badge-pill\" id=\"facebook-badge\">0</span>\n"
+"                                                    <i class=\"fa fa-facebook-square\"/> Facebook"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -251,6 +290,8 @@ msgid ""
 "<span class=\"badge badge-pill\" id=\"google-badge\">0</span>\n"
 "                                                    <i class=\"fa fa-google-plus-square\"/> Google+"
 msgstr ""
+"<span class=\"badge badge-pill\" id=\"google-badge\">0</span>\n"
+"                                                    <i class=\"fa fa-google-plus-square\"/> Google+"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -258,6 +299,8 @@ msgid ""
 "<span class=\"badge badge-pill\" id=\"linkedin-badge\">0</span>\n"
 "                                                    <i class=\"fa fa-linkedin-square\"/> LinkedIn"
 msgstr ""
+"<span class=\"badge badge-pill\" id=\"linkedin-badge\">0</span>\n"
+"                                                    <i class=\"fa fa-linkedin-square\"/> LinkedIn"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -265,6 +308,8 @@ msgid ""
 "<span class=\"badge badge-pill\" id=\"total-share\">0</span>\n"
 "                                                    <i class=\"fa fa-share-alt\"/> Social Shares"
 msgstr ""
+"<span class=\"badge badge-pill\" id=\"total-share\">0</span>\n"
+"                                                    <i class=\"fa fa-share-alt\"/> Social Shares"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -272,6 +317,8 @@ msgid ""
 "<span class=\"badge badge-pill\" id=\"twitter-badge\">0</span>\n"
 "                                                    <i class=\"fa fa-twitter-square\"/> Twitter"
 msgstr ""
+"<span class=\"badge badge-pill\" id=\"twitter-badge\">0</span>\n"
+"                                                    <i class=\"fa fa-twitter-square\"/> Twitter"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
@@ -279,17 +326,21 @@ msgid ""
 "<span class=\"fa fa-arrow-right\"/>\n"
 "                                    Create a Google Project and Get a Key"
 msgstr ""
+"<span class=\"fa fa-arrow-right\"/>\n"
+"                                    Crea un progetto Google e ricevi una chiave"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
 msgid "<span class=\"form-text\">Send presentation through email</span>"
-msgstr ""
+msgstr "<span class=\"form-text\">Invia presentazioni via email</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_media
 msgid ""
 "<span class=\"form-text\">Use permanent link to share in social media</span>"
 msgstr ""
+"<span class=\"form-text\">Usa un link permanente per condividere sui social "
+"media</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
@@ -297,6 +348,8 @@ msgid ""
 "<span class=\"o_form_label\">Slides</span>\n"
 "                        <span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-specific.\" groups=\"website.group_multi_website\"/>"
 msgstr ""
+"<span class=\"o_form_label\">Diapositive</span>\n"
+"                        <span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-specific.\" groups=\"website.group_multi_website\"/>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -338,7 +391,7 @@ msgstr "Attivo"
 #. module: website_slides
 #: model_terms:ir.actions.act_window,help:website_slides.action_slides_slides
 msgid "Add a new slide"
-msgstr ""
+msgstr "Aggiungi una nuova diapositiva"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_search
@@ -350,12 +403,22 @@ msgstr "Contatti Archiviati"
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_attachment_count
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "Numero di allegati"
 
 #. module: website_slides
 #: selection:slide.slide,download_security:0
 msgid "Authenticated Users Only"
-msgstr ""
+msgstr "Solo Utenti Autentificati "
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_5
+msgid "Awesome Timesheet by Odoo"
+msgstr "Awesome Timesheet di Odoo"
+
+#. module: website_slides
+#: model:slide.tag,name:website_slides.tag1
+msgid "CMS"
+msgstr "CMS"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__can_see
@@ -368,6 +431,13 @@ msgid "Can Upload"
 msgstr "Puoi caricare"
 
 #. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/website_slides.editor.js:55
+#, python-format
+msgid "Cancel"
+msgstr "Annulla"
+
+#. module: website_slides
 #: model:ir.actions.act_window,name:website_slides.action_ir_slide_category
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__category_ids
 #: model:ir.ui.menu,name:website_slides.menu_action_ir_slide_category_global
@@ -377,7 +447,7 @@ msgstr "Categorie"
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides_upload.js:252
+#: code:addons/website_slides/static/src/js/slides_upload.js:254
 #: code:addons/website_slides/static/src/xml/website_slides.xml:54
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__category_id
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_search
@@ -388,18 +458,21 @@ msgid "Category"
 msgstr "Categoria"
 
 #. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides.xml:81
 #: model:ir.model.fields,field_description:website_slides.field_slide_category__channel_id
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__channel_id
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_search
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_tree
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_search
+#, python-format
 msgid "Channel"
 msgstr "Canale"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid "Channel #{slide.channel_id.name}"
-msgstr ""
+msgstr "Canale #{slide.channel_id.name}"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__group_ids
@@ -413,18 +486,13 @@ msgstr "Impostazioni canale"
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides_upload.js:172
+#: code:addons/website_slides/static/src/js/slides_upload.js:174
 #, python-format
 msgid ""
 "Channel contains the given title, please change before Save or Publish."
 msgstr ""
 "I canali contengono i titoli propri, cambiali prima di salvarli o "
 "pubblicarli"
-
-#. module: website_slides
-#: model:ir.model,name:website_slides.model_slide_channel
-msgid "Channel for Slides"
-msgstr "Canale delle slide"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
@@ -445,6 +513,16 @@ msgid "Channels"
 msgstr "Canali"
 
 #. module: website_slides
+#: model:slide.slide,name:website_slides.slide_10
+msgid "Company Culture"
+msgstr "Cultura dell'azienda"
+
+#. module: website_slides
+#: model:ir.model,name:website_slides.model_res_config_settings
+msgid "Config Settings"
+msgstr "Impostazioni di configurazione"
+
+#. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__datas
 msgid "Content"
 msgstr "Contenuto"
@@ -463,9 +541,11 @@ msgid ""
 "Could not fetch data from url. Document or access right not available.\n"
 "Here is the received response: %s"
 msgstr ""
+"Non è possibile recuperare i dati dall'URL. Documenti o diritti di accesso non disponibili:\n"
+"Qui trovi la risposta ricevuta: %s"
 
 #. module: website_slides
-#: code:addons/website_slides/models/slides.py:325
+#: code:addons/website_slides/models/slides.py:330
 #, python-format
 msgid ""
 "Could not fetch data from url. Document or access right not available:\n"
@@ -477,16 +557,16 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.actions.act_window,help:website_slides.action_slide_channels
 msgid "Create a channel"
-msgstr ""
+msgstr "Crea un canale"
 
 #. module: website_slides
 #: model_terms:ir.actions.act_window,help:website_slides.action_ir_slide_category
 msgid "Create a new category"
-msgstr ""
+msgstr "Crea una nuova categoria"
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides_upload.js:221
+#: code:addons/website_slides/static/src/js/slides_upload.js:223
 #, python-format
 msgid "Create new tag '%s'"
 msgstr "Crea nuova tag '%s'"
@@ -537,6 +617,42 @@ msgid "Discard"
 msgstr "Annulla"
 
 #. module: website_slides
+#: model:slide.slide,description:website_slides.slide_6
+msgid "Discover how easy marketing your business can be with Odoo"
+msgstr "Scopri come promuovere facilmente il tuo business con Odoo"
+
+#. module: website_slides
+#: model:slide.slide,description:website_slides.slide_0
+msgid ""
+"Discover how you can integrate MRP, PLM, Quality and Maintenance in a single application to maximize the efficiency of your manufacturing operations.\n"
+"\n"
+"Read more about the features at: https://www.odoo.com/page/manufacturing-features\n"
+"\n"
+"Discover Odoo MRP: https://www.odoo.com/page/manufacturing"
+msgstr ""
+"Scopri come integrare MRP, PLM, qualità e manutenzione in un'unica applicazione per ottimizzare l'efficienza delle tue operazioni di produzione. \n"
+"\n"
+"Per saperne di più sulle funzionalità: https://www.odoo.com/page/manufacturing-features\n"
+"\n"
+"Scopri Odoo MRP: https://www.odoo.com/page/manufacturing"
+
+#. module: website_slides
+#: model:slide.slide,description:website_slides.slide_1
+msgid "Discover the CRM sales people love https://www.odoo.com/page/crm"
+msgstr "Scopri il CRM che i commerciali amano: https://www.odoo.com/page/crm"
+
+#. module: website_slides
+#: model:slide.slide,description:website_slides.slide_2
+msgid ""
+"Discover the all-in-one business management software solution that fits any business size and use case.\n"
+"\n"
+"Learn more at https://odoo.com"
+msgstr ""
+"Scopri la soluzione software di gestione aziendale all-in-one che si adatta a tutte le aziende e situazioni.\n"
+"\n"
+"Per saperne di più: https://odoo.com"
+
+#. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__dislikes
 msgid "Dislikes"
 msgstr "dislikes"
@@ -581,6 +697,19 @@ msgstr "Documenti"
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
 msgid "Download"
 msgstr "Download"
+
+#. module: website_slides
+#: model:slide.slide,description:website_slides.slide_5
+msgid ""
+"Download Awesome Timesheet by Odoo and discover how easy time tracking and employee management can be!\n"
+"\n"
+"Chrome: http://bit.ly/2613LcY\n"
+"iOS: http://bit.ly/1ZUZsZD"
+msgstr ""
+"Scarica Awesome Timesheet di Odoo e scopri quanto sia facile rintracciare il tempo e gestire i dipendenti.!\n"
+"\n"
+"Chrome: http://bit.ly/2613LcY\n"
+"iOS: http://bit.ly/1ZUZsZD"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__download_security
@@ -644,6 +773,11 @@ msgid "Featured Presentation"
 msgstr "Presentazioni in primo piano"
 
 #. module: website_slides
+#: model:slide.category,name:website_slides.category_1
+msgid "Featured Presentations"
+msgstr "Presentazioni in primo piano "
+
+#. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__promoted_slide_id
 msgid "Featured Slide"
 msgstr "Slide in primo piano"
@@ -656,7 +790,7 @@ msgstr "Politica in primo piano"
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/controllers/main.py:274
-#: code:addons/website_slides/static/src/js/slides_upload.js:89
+#: code:addons/website_slides/static/src/js/slides_upload.js:91
 #, python-format
 msgid "File is too big. File size cannot exceed 25MB"
 msgstr "Il file è troppo grande. Non può superare i 25MB"
@@ -698,7 +832,7 @@ msgstr "Google doc key"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
 msgid "Google Drive API Key"
-msgstr ""
+msgstr "Chiave API Google Drive"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_graph
@@ -778,7 +912,7 @@ msgstr ""
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides_upload.js:84
+#: code:addons/website_slides/static/src/js/slides_upload.js:86
 #, python-format
 msgid "Invalid file type. Please select pdf or image file"
 msgstr "Tipo di file non valido. Seleziona un PDF o una immagine"
@@ -825,12 +959,17 @@ msgstr "Ultima modifica il"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
 msgid "Last slide"
-msgstr ""
+msgstr "Ultima diapositiva"
 
 #. module: website_slides
 #: selection:slide.channel,promote_strategy:0
 msgid "Latest Published"
 msgstr "Ultima pubblicazione"
+
+#. module: website_slides
+#: model:slide.slide,description:website_slides.slide_8
+msgid "Learn more at https://www.odoo.com/page/sales"
+msgstr "Per saperne di più: https://www.odoo.com/page/sales"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__likes
@@ -842,7 +981,12 @@ msgstr "Likes"
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_main_attachment_id
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "Allegato principale"
+
+#. module: website_slides
+#: model:slide.tag,name:website_slides.tag2
+msgid "Marketing"
+msgstr "Marketing"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__image_medium
@@ -899,6 +1043,13 @@ msgid "New ${object.slide_type} published on ${object.channel_id.name}"
 msgstr "Nuovo ${object.slide_type} pubblicato in ${object.channel_id.name}"
 
 #. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/website_slides.editor.js:39
+#, python-format
+msgid "New slide"
+msgstr "Nuova diapositiva"
+
+#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_channel_header
 msgid "Newest"
 msgstr "i più recenti"
@@ -906,7 +1057,7 @@ msgstr "i più recenti"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
 msgid "Next slide"
-msgstr ""
+msgstr "Prossima diapositiva"
 
 #. module: website_slides
 #: selection:slide.channel,promote_strategy:0
@@ -988,6 +1139,64 @@ msgid "Number of unread messages"
 msgstr "Numero di messaggi non letti"
 
 #. module: website_slides
+#: model:slide.slide,name:website_slides.slide_2
+msgid "Odoo All-in-One Software Demonstration"
+msgstr "Dimostrazione del software all-in-one Odoo"
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_1
+msgid "Odoo CRM"
+msgstr "Odoo CRM"
+
+#. module: website_slides
+#: model:slide.category,name:website_slides.category_2
+#: model:slide.tag,name:website_slides.tag5
+msgid "Odoo Days"
+msgstr "Odoo Days"
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_7
+msgid "Odoo Inventory"
+msgstr "Odoo Inventario"
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_0
+msgid "Odoo MRP"
+msgstr "Odoo MRP"
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_6
+msgid "Odoo Marketing"
+msgstr "Odoo Marketing"
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_8
+msgid "Odoo Sales"
+msgstr "Odoo Vendite"
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_3
+msgid "Odoo Sign Demonstration"
+msgstr "Dimostrazione di Odoo Firma"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/website_slides.editor.js:40
+#, python-format
+msgid "On which channel do you want to add a slide?"
+msgstr "Su quale canale vuoi aggiungere una diapositiva?"
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_9
+msgid "Open Days 2014 Infographic"
+msgstr "Open Days 2'14 Infografica"
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_11
+msgid "OpenSource CMS, A performance comparison - Mantavya Gajjar"
+msgstr "OpenSource CMS, Una comparazione di performance - MAntavya Gajjar"
+
+#. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides.xml:28
 #, python-format
@@ -1012,8 +1221,8 @@ msgid "Please <a href=\"/web?redirect=%s\">login</a> to vote this slide"
 msgstr "Pr favore <a href=\"/web?redirect=%s\">login</a> per  votare questa slide"
 
 #. module: website_slides
-#: code:addons/website_slides/models/slides.py:328
-#: code:addons/website_slides/models/slides.py:557
+#: code:addons/website_slides/models/slides.py:333
+#: code:addons/website_slides/models/slides.py:562
 #, python-format
 msgid "Please enter valid Youtube or Google Doc URL"
 msgstr "Per favore inserisci un URL Google Doc o Youtube valido"
@@ -1045,7 +1254,7 @@ msgstr "Presentazioni"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
 msgid "Previous slide"
-msgstr ""
+msgstr "Diapositiva precedente"
 
 #. module: website_slides
 #: selection:slide.channel,visibility:0
@@ -1060,7 +1269,7 @@ msgstr "Canale Privato"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_grid_view
 msgid "Promote this #{slide.slide_type}"
-msgstr ""
+msgstr "Promuovi questa #{slide.slide_type}"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.channels
@@ -1122,7 +1331,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__is_seo_optimized
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__is_seo_optimized
 msgid "SEO optimized"
-msgstr ""
+msgstr "SEO ottimizzato"
 
 #. module: website_slides
 #. openerp-web
@@ -1151,12 +1360,19 @@ msgstr "Cerca slides"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_channel_header
 msgid "Search in #{channel.name}"
-msgstr ""
+msgstr "Cerca in #{channel.name}"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "Security"
 msgstr "Sicurezza"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/website_slides.editor.js:44
+#, python-format
+msgid "Select"
+msgstr "Seleziona"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.channels
@@ -1187,17 +1403,17 @@ msgstr "Condividi conti"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_share
 msgid "Share on Facebook"
-msgstr ""
+msgstr "Condividi su Facebook"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_share
 msgid "Share on Google Plus"
-msgstr ""
+msgstr "Condividi su Google Plus"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_share
 msgid "Share on LinkedIn"
-msgstr ""
+msgstr "Condividi su Linkedln"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_media
@@ -1207,7 +1423,7 @@ msgstr "Condividi sui social Networks"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_share
 msgid "Share on Twitter"
-msgstr ""
+msgstr "Condividi su Twitter"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
@@ -1228,6 +1444,11 @@ msgstr "Mostra canale ma riduci le presentazioni "
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "Slide"
 msgstr "Slide"
+
+#. module: website_slides
+#: model:ir.model,name:website_slides.model_slide_channel
+msgid "Slide Channel"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_tag
@@ -1267,13 +1488,24 @@ msgid "Sorry, but nothing matches your search criteria"
 msgstr "Scusaci, niente corrisponde al tuo criterio di ricerca"
 
 #. module: website_slides
+#: model:slide.slide,description:website_slides.slide_3
+msgid ""
+"Stop doing manual printing and scanning. Move to electronic signature with Odoo Sign!\n"
+"\n"
+"Discover more at https://www.odoo.com/page/sign"
+msgstr ""
+"Smettila di stampare i documenti, firmarli e poi scannerizzarli. Passa alla firma elettronica con Odoo Firma\n"
+"\n"
+"Per saperne di più: https://www.odoo.com/page/sign"
+
+#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_tag_form
 msgid "Tag"
 msgstr "Tag"
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides_upload.js:275
+#: code:addons/website_slides/static/src/js/slides_upload.js:277
 #: code:addons/website_slides/static/src/xml/website_slides.xml:48
 #: model:ir.actions.act_window,name:website_slides.action_slide_tag
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__tag_ids
@@ -1299,6 +1531,9 @@ msgid ""
 "The document type will be set automatically based on the document URL and "
 "properties (e.g. height and width for presentation and document)."
 msgstr ""
+"Il tipo di documento sarà definito automaticamente in base al suo URL e alle"
+" sue proprietà (es: altezza e larghezza per una presentazione o un "
+"documento)."
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__website_url
@@ -1382,7 +1617,7 @@ msgid "Uncategorized presentation"
 msgstr "Presentazione senza categoria"
 
 #. module: website_slides
-#: code:addons/website_slides/models/slides.py:546
+#: code:addons/website_slides/models/slides.py:551
 #, python-format
 msgid "Unknown document"
 msgstr "Documento sconosciuto"
@@ -1482,6 +1717,17 @@ msgid "Waiting for validation"
 msgstr "In attesa di validazione"
 
 #. module: website_slides
+#: model:slide.slide,description:website_slides.slide_7
+msgid ""
+"Warehouse management software for the 21st century.\n"
+"\n"
+"Discover Odoo Inventory: https://www.odoo.com/page/warehouse"
+msgstr ""
+"Software di gestione del magazzino per il 21o secolo.\n"
+"\n"
+"Scopri Odoo Inventorio: https://www.odoo.com/page/warehouse"
+
+#. module: website_slides
 #: model:ir.model,name:website_slides.model_website
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__website_id
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__website_id
@@ -1529,11 +1775,11 @@ msgstr "Meta titolo Sito web"
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__website_meta_og_img
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__website_meta_og_img
 msgid "Website opengraph image"
-msgstr ""
+msgstr "Immagine OpenGraph"
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides_upload.js:114
+#: code:addons/website_slides/static/src/js/slides_upload.js:116
 #, python-format
 msgid "You can not upload password protected file."
 msgstr "Non puoi caricare file protetti da password"
@@ -1596,11 +1842,6 @@ msgid "login"
 msgstr "login"
 
 #. module: website_slides
-#: model:ir.model,name:website_slides.model_res_config_settings
-msgid "res.config.settings"
-msgstr "res.config.settings"
-
-#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_search
 msgid "results found for the given criteria"
 msgstr "Risultati trovati per il criterio di ricerca"
@@ -1609,7 +1850,7 @@ msgstr "Risultati trovati per il criterio di ricerca"
 #: model_terms:ir.ui.view,arch_db:website_slides.related_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_grid_view
 msgid "slide.name"
-msgstr ""
+msgstr "slide.name"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide

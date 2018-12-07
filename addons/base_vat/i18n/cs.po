@@ -9,10 +9,10 @@
 # trendspotter, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-09-21 13:17+0000\n"
 "Last-Translator: trendspotter, 2018\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
@@ -27,12 +27,17 @@ msgid "Companies"
 msgstr "Firmy v systému"
 
 #. module: base_vat
+#: model:ir.model,name:base_vat.model_res_config_settings
+msgid "Config Settings"
+msgstr "Nastavení konfigurace"
+
+#. module: base_vat
 #: model:ir.model,name:base_vat.model_res_partner
 msgid "Contact"
 msgstr "Kontakt"
 
 #. module: base_vat
-#: model:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
 msgid ""
 "If this checkbox is ticked, you will not be able to save a contact if its "
 "VAT number cannot be verified by the European VIES service."
@@ -57,8 +62,9 @@ msgid ""
 msgstr ""
 
 #. module: base_vat
-#: model:ir.ui.view,arch_db:base_vat.view_partner_form
-#: model:ir.ui.view,arch_db:base_vat.view_partner_short_form
+#: model_terms:ir.ui.view,arch_db:base_vat.company_form_vat
+#: model_terms:ir.ui.view,arch_db:base_vat.view_partner_form
+#: model_terms:ir.ui.view,arch_db:base_vat.view_partner_short_form
 msgid "VAT"
 msgstr "DIČ"
 
@@ -69,11 +75,6 @@ msgid "Verify VAT Numbers"
 msgstr "Ověrení DIČ"
 
 #. module: base_vat
-#: model:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
 msgid "Verify VAT numbers using the European VIES service"
 msgstr "Ověření DIČ prostřednictvím evropské služby VIES"
-
-#. module: base_vat
-#: model:ir.model,name:base_vat.model_res_config_settings
-msgid "res.config.settings"
-msgstr "res.config.settings"

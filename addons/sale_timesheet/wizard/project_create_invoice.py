@@ -7,7 +7,7 @@ from odoo.exceptions import UserError
 
 class ProjectCreateInvoice(models.TransientModel):
     _name = 'project.create.invoice'
-    _description = "Create a Invoice from project"
+    _description = "Create Invoice from project"
 
     @api.model
     def default_get(self, fields):

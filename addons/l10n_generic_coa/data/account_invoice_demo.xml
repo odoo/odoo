@@ -134,6 +134,25 @@
             <field name="price_unit">4.0</field>
             <field name="quantity">5.0</field>
         </record>
+        <record id="demo_invoice_extract" model="account.invoice">
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="type">in_invoice</field>
+        </record>
+        <record id="ir_attachment_in_invoice_draft" model="ir.attachment">
+            <field name="name">in_invoice_pdf</field>
+            <field name="type">binary</field>
+            <field name="datas" type="base64" file="l10n_generic_coa/static/src/demo/in_invoice_yourcompany_demo.pdf"/>
+            <field name="datas_fname">in_invoice_yourcompany_demo.pdf</field>
+        </record>
+        <record id="mail_message_in_invoice_0" model="mail.message">
+            <field name="model">account.invoice</field>
+            <field name="res_id" ref="l10n_generic_coa.demo_invoice_extract"/>
+            <field name="body">Vendor Bill attachment</field>
+            <field name="message_type">comment</field>
+            <field name="author_id" ref="base.partner_demo"/>
+            <field name="date" eval="(DateTime.today() - timedelta(days=5)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="attachment_ids" eval="[(6, 0, [ref('ir_attachment_in_invoice_draft')])]"/>
+        </record>
 
         <record id="demo_invoice_january_wages" model="account.invoice">
             <field name="partner_id" ref="base.res_partner_12"/>

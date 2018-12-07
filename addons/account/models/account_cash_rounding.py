@@ -12,7 +12,7 @@ class AccountCashRounding(models.Model):
     see https://en.wikipedia.org/wiki/Cash_rounding for more details.
     """
     _name = 'account.cash.rounding'
-    _description = 'Account Rounding'
+    _description = 'Account Cash Rounding'
 
     name = fields.Char(string='Name', translate=True, required=True)
     rounding = fields.Float(string='Rounding Precision', required=True,

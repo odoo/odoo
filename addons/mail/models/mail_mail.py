@@ -64,7 +64,18 @@ class MailMail(models.Model):
         # notification field: if not set, set if mail comes from an existing mail.message
         if 'notification' not in values and values.get('mail_message_id'):
             values['notification'] = True
-        return super(MailMail, self).create(values)
+        new_mail = super(MailMail, self).create(values)
+        if values.get('attachment_ids'):
+            new_mail.attachment_ids.check(mode='read')
+        return new_mail
+
+    @api.multi
+    def write(self, vals):
+        res = super(MailMail, self).write(vals)
+        if vals.get('attachment_ids'):
+            for mail in self:
+                mail.attachment_ids.check(mode='read')
+        return res
 
     @api.multi
     def unlink(self):
@@ -119,6 +130,8 @@ class MailMail(models.Model):
             ids = filtered_ids
         else:
             ids = list(set(filtered_ids) & set(ids))
+        ids.sort()
+
         res = None
         try:
             # auto-commit except in testing mode
@@ -292,7 +305,6 @@ class MailMail(models.Model):
                     values['partner_id'] = partner
                     email_list.append(values)
 
-
                 # headers
                 headers = {}
                 ICP = self.env['ir.config_parameter'].sudo()
@@ -316,6 +328,22 @@ class MailMail(models.Model):
                     'state': 'exception',
                     'failure_reason': _('Error without exception. Probably due do sending an email without computed recipients.'),
                 })
+                # Update notification in a transient exception state to avoid concurrent
+                # update in case an email bounces while sending all emails related to current
+                # mail record.
+                notifs = self.env['mail.notification'].search([
+                    ('is_email', '=', True),
+                    ('mail_id', 'in', mail.ids),
+                    ('email_status', 'not in', ('sent', 'canceled'))
+                ])
+                if notifs:
+                    notif_msg = _('Error without exception. Probably due do concurrent access update of notification records. Please see with an administrator.')
+                    notifs.write({
+                        'email_status': 'exception',
+                        'failure_type': 'UNKNOWN',
+                        'failure_reason': notif_msg,
+                    })
+
                 # build an RFC2822 email.message.Message object and send it without queuing
                 res = None
                 for email in email_list:
@@ -378,10 +406,13 @@ class MailMail(models.Model):
                 mail.write({'state': 'exception', 'failure_reason': failure_reason})
                 mail._postprocess_sent_message(success_pids=success_pids, failure_reason=failure_reason, failure_type='UNKNOWN')
                 if raise_exception:
-                    if isinstance(e, AssertionError):
-                        # get the args of the original error, wrap into a value and throw a MailDeliveryException
-                        # that is an except_orm, with name and value as arguments
-                        value = '. '.join(e.args)
+                    if isinstance(e, (AssertionError, UnicodeEncodeError)):
+                        if isinstance(e, UnicodeEncodeError):
+                            value = "Invalid text: %s" % e.object
+                        else:
+                            # get the args of the original error, wrap into a value and throw a MailDeliveryException
+                            # that is an except_orm, with name and value as arguments
+                            value = '. '.join(e.args)
                         raise MailDeliveryException(_("Mail Delivery Failed"), value)
                     raise
 

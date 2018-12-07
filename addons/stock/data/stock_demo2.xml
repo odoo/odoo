@@ -34,12 +34,11 @@
             <field name="tracking">lot</field>
             <field name="uom_id" ref="uom.product_uom_kgm"/>
             <field name="uom_po_id" ref="uom.product_uom_kgm"/>
-            <field name="property_stock_inventory" ref="stock.location_inventory"/>
             <field name="image" type="base64" file="stock/static/img/cable_management.png"/>
         </record>
 
         <record id="lot_product_cable_management" model="stock.production.lot">
-            <field name="name">0000000000017</field>
+            <field name="name">LOT-000001</field>
             <field name="product_id" ref="stock.product_cable_management_box"/>
         </record>
 

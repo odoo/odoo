@@ -14,7 +14,6 @@ from werkzeug import urls
 
 from odoo import _, api, fields, models, tools
 from odoo.exceptions import UserError
-from odoo.tools import pycompat
 
 _logger = logging.getLogger(__name__)
 
@@ -45,7 +44,7 @@ def format_tz(env, dt, tz=False, format=False):
         return format_datetime(ts, format or 'medium', locale=env.context.get("lang") or 'en_US')
 
     if format:
-        return pycompat.text_type(ts.strftime(format))
+        return str(ts.strftime(format))
     else:
         lang = env.context.get("lang")
         langs = env['res.lang']
@@ -54,9 +53,9 @@ def format_tz(env, dt, tz=False, format=False):
         format_date = langs.date_format or '%B-%d-%Y'
         format_time = langs.time_format or '%I-%M %p'
 
-        fdate = pycompat.text_type(ts.strftime(format_date))
-        ftime = pycompat.text_type(ts.strftime(format_time))
-        return u"%s %s%s" % (fdate, ftime, (u' (%s)' % tz) if tz else u'')
+        fdate = ts.strftime(format_date)
+        ftime = ts.strftime(format_time)
+        return "%s %s%s" % (fdate, ftime, (' (%s)' % tz) if tz else '')
 
 def format_amount(env, amount, currency):
     fmt = "%.{0}f".format(currency.decimal_places)
@@ -289,7 +288,7 @@ class MailTemplate(models.Model):
         return html
 
     @api.model
-    def render_template(self, template_txt, model, res_ids, post_process=False):
+    def _render_template(self, template_txt, model, res_ids, post_process=False):
         """ Render the given template text, replace mako expressions ``${expr}``
         with the result of evaluating these expressions with an evaluation
         context containing:
@@ -303,7 +302,7 @@ class MailTemplate(models.Model):
         :param int res_ids: list of ids of document records those mails are related to.
         """
         multi_mode = True
-        if isinstance(res_ids, pycompat.integer_types):
+        if isinstance(res_ids, int):
             multi_mode = False
             res_ids = [res_ids]
 
@@ -349,7 +348,7 @@ class MailTemplate(models.Model):
     @api.multi
     def get_email_template(self, res_ids):
         multi_mode = True
-        if isinstance(res_ids, pycompat.integer_types):
+        if isinstance(res_ids, int):
             res_ids = [res_ids]
             multi_mode = False
 
@@ -361,7 +360,7 @@ class MailTemplate(models.Model):
             return results
         self.ensure_one()
 
-        langs = self.render_template(self.lang, self.model, res_ids)
+        langs = self._render_template(self.lang, self.model, res_ids)
         for res_id, lang in langs.items():
             if lang:
                 template = self.with_context(lang=lang)
@@ -413,7 +412,7 @@ class MailTemplate(models.Model):
         """
         self.ensure_one()
         multi_mode = True
-        if isinstance(res_ids, pycompat.integer_types):
+        if isinstance(res_ids, int):
             res_ids = [res_ids]
             multi_mode = False
         if fields is None:
@@ -434,7 +433,7 @@ class MailTemplate(models.Model):
                 Template = Template.with_context(lang=template._context.get('lang'))
             for field in fields:
                 Template = Template.with_context(safe=field in {'subject'})
-                generated_field_values = Template.render_template(
+                generated_field_values = Template._render_template(
                     getattr(template, field), template.model, template_res_ids,
                     post_process=(field == 'body_html'))
                 for res_id, field_value in generated_field_values.items():
@@ -465,7 +464,7 @@ class MailTemplate(models.Model):
             if template.report_template:
                 for res_id in template_res_ids:
                     attachments = []
-                    report_name = self.render_template(template.report_name, template.model, res_id)
+                    report_name = self._render_template(template.report_name, template.model, res_id)
                     report = template.report_template
                     report_service = report.report_name
 

@@ -1,9 +1,36 @@
+from datetime import date, datetime
 from xmlrpc.client import dumps, loads
+import xmlrpc.client
 
 from werkzeug.wrappers import Response
 
 from odoo.http import Controller, dispatch_rpc, request, route
 from odoo.service import wsgi_server
+from odoo.fields import Date, Datetime
+
+
+class OdooMarshaller(xmlrpc.client.Marshaller):
+
+    """
+    XMLRPC Marshaller that converts date(time) objects to strings in iso8061 format.
+    """
+
+    dispatch = dict(xmlrpc.client.Marshaller.dispatch)
+
+    def dump_datetime(self, value, write):
+        # override to marshall as a string for backwards compatibility
+        value = Datetime.to_string(value)
+        self.dump_unicode(value, write)
+    dispatch[datetime] = dump_datetime
+
+    def dump_date(self, value, write):
+        value = Date.to_string(value)
+        self.dump_unicode(value, write)
+    dispatch[date] = dump_date
+
+
+# monkey-patch xmlrpc.client's marshaller
+xmlrpc.client.Marshaller = OdooMarshaller
 
 
 class RPC(Controller):

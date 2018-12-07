@@ -19,6 +19,7 @@ return Widget.extend({
         },
         'click .o_save_search': function (ev) {
             ev.preventDefault();
+            ev.stopPropagation();
             this.toggle_save_menu();
         },
         'click .o_save_name button': 'save_favorite',
@@ -102,9 +103,17 @@ return Widget.extend({
         var controllerContext;
         this.trigger_up('get_controller_context', {
             callback: function (ctx) {
-                controllerContext = ctx;
+                if (ctx && ctx.orderedBy) {
+                    var sort = _.map(ctx.orderedBy, function (obj) {
+                        var order = obj.asc ? 'ASC' : 'DESC';
+                        return obj.name + ' ' + order;
+                    });
+                    self.searchview.dataset.set_sort(sort);
+                }
+                controllerContext = _.omit(ctx, ['orderedBy']);
             },
         });
+
         var results = pyUtils.eval_domains_and_contexts({
                 domains: [],
                 contexts: [user_context].concat(search.contexts.concat(controllerContext || [])),
@@ -185,7 +194,18 @@ return Widget.extend({
             category: _t("Custom Filter"),
             icon: 'fa-star',
             field: {
-                get_context: function () { return filter.context; },
+                get_context: function () {
+                    var sortParsed = JSON.parse(filter.sort || "[]");
+                    var orderedBy = [];
+                    _.each(sortParsed, function (sort) {
+                        orderedBy.push({
+                            name: sort[0] === '-' ? sort.slice(1) : sort,
+                            asc: sort[0] === '-' ? false : true,
+                        });
+                    });
+
+                return _.defaults({}, filter.context, {orderedBy : orderedBy});
+                },
                 get_groupby: function () { return [filter.context]; },
                 // facet is not used
                 get_domain: function (facet, noEvaluation) {

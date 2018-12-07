@@ -52,16 +52,14 @@ class StockWarehouse(models.Model):
                 'pbm_sam': [
                     self.Routing(warehouse.lot_stock_id, warehouse.pbm_loc_id, warehouse.pbm_type_id, 'pull'),
                     self.Routing(warehouse.pbm_loc_id, production_location_id, warehouse.manu_type_id, 'pull'),
-                    self.Routing(production_location_id, warehouse.sam_loc_id, warehouse.sam_type_id, 'push'),
+                    self.Routing(warehouse.sam_loc_id, warehouse.lot_stock_id, warehouse.sam_type_id, 'push'),
                 ],
             })
         return result
 
     @api.model
     def _get_production_location(self):
-        location = self.env.ref('stock.location_production', raise_if_not_found=False)
-        if not location:
-            location = self.env['stock.location'].search([('usage', '=', 'production')], limit=1)
+        location = self.env['stock.location'].with_context(force_company=self.company_id.id).search([('usage', '=', 'production'), ('company_id', '=', self.company_id.id)], limit=1)
         if not location:
             raise UserError(_('Can\'t find any production location.'))
         return location
@@ -110,8 +108,9 @@ class StockWarehouse(models.Model):
                 'create_values': {
                     'action': 'manufacture',
                     'procure_method': 'make_to_order',
+                    'company_id': self.company_id.id,
                     'picking_type_id': self.manu_type_id.id,
-                    'route_id': self._find_global_route('mrp.route_warehouse0_manufacture', 'Manufacture').id
+                    'route_id': self._find_global_route('mrp.route_warehouse0_manufacture', _('Manufacture')).id
                 },
                 'update_values': {
                     'active': self.manufacture_to_resupply,
@@ -127,7 +126,7 @@ class StockWarehouse(models.Model):
                     'action': 'pull',
                     'auto': 'manual',
                     'propagate': True,
-                    'route_id': self._find_global_route('stock.route_warehouse0_mto', 'Make To Order').id,
+                    'route_id': self._find_global_route('stock.route_warehouse0_mto', _('Make To Order')).id,
                     'name': self._format_rulename(self.lot_stock_id, self.pbm_loc_id, 'MTO'),
                     'location_id': self.pbm_loc_id.id,
                     'location_src_id': self.lot_stock_id.id,
@@ -151,7 +150,7 @@ class StockWarehouse(models.Model):
                     'action': 'pull',
                     'auto': 'manual',
                     'propagate': True,
-                    'route_id': self._find_global_route('mrp.route_warehouse0_manufacture', 'Manufacture').id,
+                    'route_id': self._find_global_route('mrp.route_warehouse0_manufacture', _('Manufacture')).id,
                     'name': self._format_rulename(self.sam_loc_id, self.lot_stock_id, False),
                     'location_id': self.lot_stock_id.id,
                     'location_src_id': self.sam_loc_id.id,
@@ -223,7 +222,7 @@ class StockWarehouse(models.Model):
             'manu_type_id': {
                 'active': self.manufacture_to_resupply,
                 'default_location_src_id': self.manufacture_steps in ('pbm', 'pbm_sam') and self.pbm_loc_id.id or self.lot_stock_id.id,
-                'default_location_dest_id': self.manufacture_steps == 'pbm_sam' and self.sam_loc_id or self.lot_stock_id.id,
+                'default_location_dest_id': self.manufacture_steps == 'pbm_sam' and self.sam_loc_id.id or self.lot_stock_id.id,
             },
         })
         return data
@@ -242,17 +241,8 @@ class StockWarehouse(models.Model):
         return routes
 
     def _update_location_manufacture(self, new_manufacture_step):
-        switch_warehouses = self.filtered(lambda wh: wh.manufacture_steps != new_manufacture_step)
-        loc_warehouse = switch_warehouses.filtered(lambda wh: not wh._location_used(wh.pbm_loc_id))
-        if loc_warehouse:
-            loc_warehouse.mapped('pbm_loc_id').write({'active': False})
-        loc_warehouse = switch_warehouses.filtered(lambda wh: not wh._location_used(wh.sam_loc_id))
-        if loc_warehouse:
-            loc_warehouse.mapped('sam_loc_id').write({'active': False})
-        if new_manufacture_step != 'mrp_one_step':
-            self.mapped('pbm_loc_id').write({'active': True})
-        if new_manufacture_step == 'pbm_sam':
-            self.mapped('sam_loc_id').write({'active': True})
+        self.mapped('pbm_loc_id').write({'active': new_manufacture_step != 'mrp_one_step'})
+        self.mapped('sam_loc_id').write({'active': new_manufacture_step == 'pbm_sam'})
 
     @api.multi
     def _update_name_and_code(self, name=False, code=False):

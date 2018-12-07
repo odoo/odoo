@@ -51,6 +51,23 @@ class AccountInvoice(models.Model):
             self.comment = company.with_context(lang=self.partner_id.lang).sale_note
 
     @api.multi
+    def action_invoice_open(self):
+        # OVERRIDE
+        # Auto-reconcile the invoice with payments coming from transactions.
+        # It's useful when you have a "paid" sale order (using a payment transaction) and you invoice it later.
+        res = super(AccountInvoice, self).action_invoice_open()
+
+        if not self:
+            return res
+
+        for invoice in self:
+            payments = invoice.mapped('transaction_ids.payment_id')
+            move_lines = payments.mapped('move_line_ids').filtered(lambda line: not line.reconciled and line.credit > 0.0)
+            for line in move_lines:
+                invoice.assign_outstanding_credit(line.id)
+        return res
+
+    @api.multi
     def action_invoice_paid(self):
         res = super(AccountInvoice, self).action_invoice_paid()
         todo = set()
@@ -64,13 +81,16 @@ class AccountInvoice(models.Model):
 
     @api.model
     def _refund_cleanup_lines(self, lines):
+        """ This override will link Sale line to all its invoice lines (direct invoice, refund create from invoice, ...)
+            in order to have the invoiced quantity taking invoice (in/out) into account in its computation everytime,
+            whatever the refund policy (create, cancel or modify).
+        """
         result = super(AccountInvoice, self)._refund_cleanup_lines(lines)
-        if self.env.context.get('mode') == 'modify':
+        if lines._name == 'account.invoice.line':  # avoid side effects as lines can be taxes ....
             for i, line in enumerate(lines):
                 for name, field in line._fields.items():
                     if name == 'sale_line_ids':
-                        result[i][2][name] = [(6, 0, line[name].ids)]
-                        line[name] = False
+                        result[i][2][name] = [(4, line_id) for line_id in line[name].ids]
         return result
 
     @api.multi

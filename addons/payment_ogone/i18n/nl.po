@@ -3,13 +3,15 @@
 # * payment_ogone
 # 
 # Translators:
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2018
 # Martin Trigaux, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-08-24 09:22+0000\n"
 "Last-Translator: Martin Trigaux, 2018\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -123,8 +125,8 @@ msgid ""
 "Ogone: received data with missing reference (%s) or pay_id (%s) or shasign "
 "(%s)"
 msgstr ""
-"Ogone: data ontvangen met missende referentie (%s) of pay_id (%s) of shasign"
-" (%s)"
+"Ogone: data ontvangen met ontbrekende referentie (%s) of pay_id (%s) of "
+"shasign (%s)"
 
 #. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer__ogone_pspid
@@ -139,7 +141,12 @@ msgstr "PayUmoney"
 #. module: payment_ogone
 #: model:ir.model,name:payment_ogone.model_payment_acquirer
 msgid "Payment Acquirer"
-msgstr "Betaling verwerver"
+msgstr "Betalingsprovider"
+
+#. module: payment_ogone
+#: model:ir.model,name:payment_ogone.model_payment_token
+msgid "Payment Token"
+msgstr "Betalingstoken"
 
 #. module: payment_ogone
 #: model:ir.model,name:payment_ogone.model_payment_transaction
@@ -180,8 +187,3 @@ msgstr "Stripe"
 #: selection:payment.acquirer,provider:0
 msgid "Wire Transfer"
 msgstr "Overschrijving"
-
-#. module: payment_ogone
-#: model:ir.model,name:payment_ogone.model_payment_token
-msgid "payment.token"
-msgstr "payment.token"

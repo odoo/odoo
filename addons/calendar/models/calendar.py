@@ -35,7 +35,7 @@ def calendar_id2real_id(calendar_id=None, with_date=False):
         :param with_date: if a value is passed to this param it will return dates based on value of withdate + calendar_id
         :return: real event id
     """
-    if calendar_id and isinstance(calendar_id, pycompat.string_types):
+    if calendar_id and isinstance(calendar_id, str):
         res = [bit for bit in calendar_id.split('-') if bit]
         if len(res) == 2:
             real_id = res[0]
@@ -49,7 +49,7 @@ def calendar_id2real_id(calendar_id=None, with_date=False):
 
 
 def get_real_ids(ids):
-    if isinstance(ids, (pycompat.string_types, pycompat.integer_types)):
+    if isinstance(ids, (str, int)):
         return calendar_id2real_id(ids)
 
     if isinstance(ids, (list, tuple)):
@@ -71,7 +71,7 @@ def any_id2key(record_id):
     :type record_id: int | str
     :rtype: (int, str)
     """
-    if isinstance(record_id, pycompat.integer_types):
+    if isinstance(record_id, int):
         return record_id, u''
 
     (real_id, virtual_id) = record_id.split('-')
@@ -92,6 +92,7 @@ def sort_remap(f):
 
 class Contacts(models.Model):
     _name = 'calendar.contacts'
+    _description = 'Calendar Contacts'
 
     user_id = fields.Many2one('res.users', 'Me', required=True, default=lambda self: self.env.user)
     partner_id = fields.Many2one('res.partner', 'Employee', required=True)
@@ -111,7 +112,7 @@ class Attendee(models.Model):
 
     _name = 'calendar.attendee'
     _rec_name = 'common_name'
-    _description = 'Calendar Registration'
+    _description = 'Calendar Attendee Information'
 
     def _default_access_token(self):
         return uuid.uuid4().hex
@@ -240,6 +241,7 @@ class Attendee(models.Model):
 class AlarmManager(models.AbstractModel):
 
     _name = 'calendar.alarm_manager'
+    _description = 'Event Alarm Manager'
 
     def get_next_potential_limit_alarm(self, alarm_type, seconds=None, partner_id=None):
         result = {}
@@ -249,7 +251,7 @@ class AlarmManager(models.AbstractModel):
             FROM
                 calendar_alarm_calendar_event_rel AS rel
             LEFT JOIN calendar_alarm AS alarm ON alarm.id = rel.calendar_alarm_id
-            WHERE alarm.type = %s
+            WHERE alarm.alarm_type = %s
             GROUP BY rel.calendar_event_id
         """
         base_request = """
@@ -338,7 +340,7 @@ class AlarmManager(models.AbstractModel):
         # TODO: remove event_maxdelta and if using it
         if one_date - timedelta(minutes=(missing and 0 or event_maxdelta)) < datetime.datetime.now() + timedelta(seconds=in_the_next_X_seconds):  # if an alarm is possible for this date
             for alarm in event.alarm_ids:
-                if alarm.type == alarm_type and \
+                if alarm.alarm_type == alarm_type and \
                     one_date - timedelta(minutes=(missing and 0 or alarm.duration_minutes)) < datetime.datetime.now() + timedelta(seconds=in_the_next_X_seconds) and \
                         (not after or one_date - timedelta(minutes=alarm.duration_minutes) > fields.Datetime.from_string(after)):
                         alert = {
@@ -436,7 +438,7 @@ class AlarmManager(models.AbstractModel):
         alarm = self.env['calendar.alarm'].browse(alert['alarm_id'])
 
         result = False
-        if alarm.type == 'email':
+        if alarm.alarm_type == 'email':
             result = meeting.attendee_ids.filtered(lambda r: r.state != 'declined')._send_mail_to_attendees('calendar.calendar_template_meeting_reminder', force_send=True)
         return result
 
@@ -444,7 +446,7 @@ class AlarmManager(models.AbstractModel):
         alarm = self.env['calendar.alarm'].browse(alert['alarm_id'])
         meeting = self.env['calendar.event'].browse(alert['event_id'])
 
-        if alarm.type == 'notification':
+        if alarm.alarm_type == 'notification':
             message = meeting.display_time
 
             delta = alert['notify_at'] - datetime.datetime.now()
@@ -471,7 +473,7 @@ class AlarmManager(models.AbstractModel):
 
 class Alarm(models.Model):
     _name = 'calendar.alarm'
-    _description = 'Event alarm'
+    _description = 'Event Alarm'
 
     @api.depends('interval', 'duration')
     def _compute_duration_minutes(self):
@@ -488,7 +490,7 @@ class Alarm(models.Model):
     _interval_selection = {'minutes': 'Minute(s)', 'hours': 'Hour(s)', 'days': 'Day(s)'}
 
     name = fields.Char('Name', translate=True, required=True)
-    type = fields.Selection([('notification', 'Notification'), ('email', 'Email')], 'Type', required=True, default='email')
+    alarm_type = fields.Selection([('notification', 'Notification'), ('email', 'Email')], string='Type', required=True, default='email', oldname='type')
     duration = fields.Integer('Remind Before', required=True, default=1)
     interval = fields.Selection(list(_interval_selection.items()), 'Unit', required=True, default='hours')
     duration_minutes = fields.Integer('Duration in minutes', compute='_compute_duration_minutes', store=True, help="Duration in minutes")
@@ -503,7 +505,7 @@ class Alarm(models.Model):
             cron = self.env['ir.model.data'].sudo().get_object('calendar', 'ir_cron_scheduler_alarm')
         except ValueError:
             return False
-        return cron.toggle(model=self._name, domain=[('type', '=', 'email')])
+        return cron.toggle(model=self._name, domain=[('alarm_type', '=', 'email')])
 
     @api.model
     def create(self, values):
@@ -527,7 +529,7 @@ class Alarm(models.Model):
 class MeetingType(models.Model):
 
     _name = 'calendar.event.type'
-    _description = 'Meeting Type'
+    _description = 'Event Meeting Type'
 
     name = fields.Char('Name', required=True)
 
@@ -585,7 +587,7 @@ class Meeting(models.Model):
         """ Get recurrent start and stop dates based on Rule string"""
         start_dates = self._get_recurrent_date_by_event(date_field='start')
         stop_dates = self._get_recurrent_date_by_event(date_field='stop')
-        return list(pycompat.izip(start_dates, stop_dates))
+        return list(zip(start_dates, stop_dates))
 
     @api.multi
     def _get_recurrent_date_by_event(self, date_field='start'):
@@ -605,13 +607,16 @@ class Meeting(models.Model):
             event_date = datetime.datetime.now()
 
         use_naive_datetime = self.allday and self.rrule and 'UNTIL' in self.rrule and 'Z' not in self.rrule
-        if use_naive_datetime:
-            rset1 = rrule.rrulestr(str(self.rrule), dtstart=event_date.replace(tzinfo=None), forceset=True, ignoretz=True)
-        else:
+        if not use_naive_datetime:
             # Convert the event date to saved timezone (or context tz) as it'll
             # define the correct hour/day asked by the user to repeat for recurrence.
-            event_date = event_date.astimezone(timezone)  # transform "+hh:mm" timezone
-            rset1 = rrule.rrulestr(str(self.rrule), dtstart=event_date, forceset=True, tzinfos={})
+            event_date = event_date.astimezone(timezone)
+
+        # The start date is naive
+        # the timezone will be applied, if necessary, at the very end of the process
+        # to allow for DST timezone reevaluation
+        rset1 = rrule.rrulestr(str(self.rrule), dtstart=event_date.replace(tzinfo=None), forceset=True, ignoretz=True)
+
         recurring_meetings = self.search([('recurrent_id', '=', self.id), '|', ('active', '=', False), ('active', '=', True)])
 
         # We handle a maximum of 50,000 meetings at a time, and clear the cache at each step to
@@ -627,12 +632,15 @@ class Meeting(models.Model):
                 else:
                     if not recurring_date.tzinfo:
                         recurring_date = pytz.UTC.localize(recurring_date)
-                    recurring_date = recurring_date.astimezone(timezone)
+                    recurring_date = recurring_date.astimezone(timezone).replace(tzinfo=None)
                 if date_field == "stop":
                     recurring_date += timedelta(hours=self.duration)
                 rset1.exdate(recurring_date)
             invalidate = True
-        return [d.astimezone(pytz.UTC) if d.tzinfo else d for d in rset1 if d.year < MAXYEAR]
+
+        def naive_tz_to_utc(d):
+            return timezone.localize(d).astimezone(pytz.UTC)
+        return [naive_tz_to_utc(d) if not use_naive_datetime else d for d in rset1 if d.year < MAXYEAR]
 
     @api.multi
     def _get_recurrency_end_date(self):
@@ -689,9 +697,8 @@ class Meeting(models.Model):
                 'time_format': record_lang.time_format
             }
 
-        # formats will be used for str{f,p}time() which do not support unicode in Python 2, coerce to str
-        format_date = pycompat.to_native(lang_params.get("date_format", '%B-%d-%Y'))
-        format_time = pycompat.to_native(lang_params.get("time_format", '%I-%M %p'))
+        format_date = lang_params.get("date_format", '%B-%d-%Y')
+        format_time = lang_params.get("time_format", '%I-%M %p')
         return (format_date, format_time)
 
     @api.model
@@ -707,7 +714,6 @@ class Meeting(models.Model):
                 2) if event all day ,return : AllDay, July-31-2013
         """
         timezone = self._context.get('tz') or self.env.user.partner_id.tz or 'UTC'
-        timezone = pycompat.to_native(timezone)  # make safe for str{p,f}time()
 
         # get date/time format according to context
         format_date, format_time = self._get_date_formats()
@@ -872,7 +878,7 @@ class Meeting(models.Model):
             the duration for not allday meeting ; otherwise the duration is set to zero, since the meeting last all the day.
         """
         for meeting in self:
-            if meeting.allday:
+            if meeting.allday and meeting.start and meeting.stop:
                 meeting.start_date = meeting.start.date()
                 meeting.start_datetime = False
                 meeting.stop_date = meeting.stop.date()
@@ -891,17 +897,17 @@ class Meeting(models.Model):
     def _inverse_dates(self):
         for meeting in self:
             if meeting.allday:
-                tz = pytz.timezone(self.env.user.tz) if self.env.user.tz else pytz.utc
 
+                # Convention break:
+                # stop and start are NOT in UTC in allday event
+                # in this case, they actually represent a date
+                # i.e. Christmas is on 25/12 for everyone
+                # even if people don't celebrate it simultaneously
                 enddate = fields.Datetime.from_string(meeting.stop_date)
-                enddate = tz.localize(enddate)
                 enddate = enddate.replace(hour=18)
-                enddate = enddate.astimezone(pytz.utc)
 
                 startdate = fields.Datetime.from_string(meeting.start_date)
-                startdate = tz.localize(startdate)  # Add "+hh:mm" timezone
-                startdate = startdate.replace(hour=8)  # Set 8 AM in localtime
-                startdate = startdate.astimezone(pytz.utc)  # Convert to UTC
+                startdate = startdate.replace(hour=8)  # Set 8 AM
 
                 meeting.write({
                     'start': startdate.replace(tzinfo=None),
@@ -1087,9 +1093,8 @@ class Meeting(models.Model):
             else:
                 sort_fields[field] = self[field]
                 if isinstance(self[field], models.BaseModel):
-                    name_get = self[field].name_get()
-                    if len(name_get) and len(name_get[0]) >= 2:
-                        sort_fields[field] = name_get[0][1]
+                    name_get = self[field].mapped('display_name')
+                    sort_fields[field] = name_get and name_get[0] or ''
         if r_date:
             sort_fields['sort_start'] = r_date.strftime(VIRTUALID_DATETIME_FORMAT)
         else:
@@ -1181,7 +1186,7 @@ class Meeting(models.Model):
                 pile.reverse()
                 new_pile = []
                 for item in pile:
-                    if not isinstance(item, pycompat.string_types):
+                    if not isinstance(item, str):
                         res = item
                     elif str(item) == str('&'):
                         first = new_pile.pop()
@@ -1348,7 +1353,7 @@ class Meeting(models.Model):
 
         if interval == 'day':
             # Day number (1-31)
-            result = pycompat.text_type(date.day)
+            result = str(date.day)
 
         elif interval == 'month':
             # Localized month name and year
@@ -1386,7 +1391,6 @@ class Meeting(models.Model):
         meeting_origin = self.browse(real_id)
 
         data = self.read(['allday', 'start', 'stop', 'rrule', 'duration'])[0]
-        d_class = fields.Date if data['allday'] else fields.Datetime
         if data.get('rrule'):
             data.update(
                 values,
@@ -1395,8 +1399,8 @@ class Meeting(models.Model):
                 rrule_type=False,
                 rrule='',
                 recurrency=False,
-                final_date=d_class.from_string(data.get('start')) \
-                    + timedelta(hours=values.get('duration', False) or data.get('duration'))
+                final_date=False,
+                end_type=False
             )
 
             # do not copy the id
@@ -1462,7 +1466,7 @@ class Meeting(models.Model):
     @api.returns('mail.message', lambda value: value.id)
     def message_post(self, **kwargs):
         thread_id = self.id
-        if isinstance(self.id, pycompat.string_types):
+        if isinstance(self.id, str):
             thread_id = get_real_ids(self.id)
         if self.env.context.get('default_date'):
             context = dict(self.env.context)
@@ -1499,7 +1503,7 @@ class Meeting(models.Model):
         for arg in args:
             if arg[0] == 'id':
                 for n, calendar_id in enumerate(arg[2]):
-                    if isinstance(calendar_id, pycompat.string_types):
+                    if isinstance(calendar_id, str):
                         arg[2][n] = calendar_id.split('-')[0]
         return super(Meeting, self)._name_search(name=name, args=args, operator=operator, limit=limit, name_get_uid=name_get_uid)
 
@@ -1655,7 +1659,7 @@ class Meeting(models.Model):
                 continue
             res = real_data[real_id].copy()
             ls = calendar_id2real_id(calendar_id, with_date=res and res.get('duration', 0) > 0 and res.get('duration') or 1)
-            if not isinstance(ls, (pycompat.string_types, pycompat.integer_types)) and len(ls) >= 2:
+            if not isinstance(ls, (str, int)) and len(ls) >= 2:
                 res['start'] = ls[1]
                 res['stop'] = ls[2]
 
@@ -1782,7 +1786,15 @@ class Meeting(models.Model):
             if values.get('description'):
                 activity_values['note'] = values['description']
             if values.get('start'):
-                activity_values['date_deadline'] = fields.Datetime.from_string(values['start']).date()
+                # self.start is a datetime UTC *only when the event is not allday*
+                # activty.date_deadline is a date (No TZ, but should represent the day in which the user's TZ is)
+                # See 72254129dbaeae58d0a2055cba4e4a82cde495b7 for the same issue, but elsewhere
+                deadline = fields.Datetime.from_string(values['start'])
+                user_tz = self.env.context.get('tz')
+                if user_tz and not self.allday:
+                    deadline = pytz.UTC.localize(deadline)
+                    deadline = deadline.astimezone(pytz.timezone(user_tz))
+                activity_values['date_deadline'] = deadline.date()
             if values.get('user_id'):
                 activity_values['user_id'] = values['user_id']
             if activity_values.keys():

@@ -6,10 +6,13 @@ from odoo.tools import config
 from odoo.addons.web.controllers import main as web
 from openerp.addons.hw_posbox_homepage.controllers import main as homepage
 
+import jinja2
+import json
 import logging
 import netifaces as ni
 import os
 from subprocess import call
+import sys
 import time
 import threading
 
@@ -17,7 +20,20 @@ self_port = str(config['http_port'] or 8069)
 
 _logger = logging.getLogger(__name__)
 
-class Homepage(homepage.PosboxHomepage):
+if hasattr(sys, 'frozen'):
+    # When running on compiled windows binary, we don't have access to package loader.
+    path = os.path.realpath(os.path.join(os.path.dirname(__file__), '..', 'views'))
+    loader = jinja2.FileSystemLoader(path)
+else:
+    loader = jinja2.PackageLoader('odoo.addons.hw_screen', "views")
+
+jinja_env = jinja2.Environment(loader=loader, autoescape=True)
+jinja_env.filters["json"] = json.dumps
+
+pos_display_template = jinja_env.get_template('pos_display.html')
+
+
+class Homepage(homepage.IoTboxHomepage):
 
     def get_hw_screen_message(self):
         return """
@@ -41,7 +57,7 @@ class HardwareScreen(web.Home):
             call(['xdotool', 'key', keystroke])
             return "xdotool succeeded in stroking " + keystroke
         except:
-            return "xdotool threw an error, maybe it is not installed on the posbox"
+            return "xdotool threw an error, maybe it is not installed on the IoTBox"
 
     @http.route('/hw_proxy/display_refresh', type='json', auth='none', cors='*')
     def display_refresh(self):
@@ -91,9 +107,12 @@ class HardwareScreen(web.Home):
             if HardwareScreen.failure_count[request_addr] > 0:
                 time.sleep(10)
             HardwareScreen.failure_count[request_addr] += 1
-            return {'rendered_html': """<div class="pos-customer_facing_display"><p>Not Authorized. Another browser is in use to display for the client. Please refresh.</p></div> """,
-                    'stop_longpolling': True,
-                    'ip_from': request_addr}
+            return {
+                'rendered_html': False,
+                'error': "Not Authorized. Another browser is in use to display for the client. Please refresh.",
+                'stop_longpolling': True,
+                'ip_from': request_addr,
+            }
 
         # IMPLEMENTATION OF LONGPOLLING
         # Times out 2 seconds before the JS request does
@@ -101,75 +120,35 @@ class HardwareScreen(web.Home):
             HardwareScreen.event_data.clear()
             HardwareScreen.failure_count[request_addr] = 0
             return result
-        return {'rendered_html': False,
-                'ip_from': HardwareScreen.pos_client_data['ip_from']}
+        return {
+            'rendered_html': False,
+            'ip_from': HardwareScreen.pos_client_data['ip_from'],
+        }
 
     def _get_html(self):
         cust_js = None
         interfaces = ni.interfaces()
-        my_ip = '127.0.0.1'
         HardwareScreen.display_in_use = http.request.httprequest.remote_addr
 
         with open(os.path.join(os.path.dirname(__file__), "../static/src/js/worker.js")) as js:
             cust_js = js.read()
 
-        with open(os.path.join(os.path.dirname(__file__), "../static/src/css/cust_css.css")) as css:
-            cust_css = css.read()
-
-        display_ifaces = ""
+        display_ifaces = []
         for iface_id in interfaces:
-            iface_obj = ni.ifaddresses(iface_id)
-            ifconfigs = iface_obj.get(ni.AF_INET, [])
-            for conf in ifconfigs:
-                if conf.get('addr'):
-                    display_ifaces += "<tr><td>" + iface_id + "</td>"
-                    display_ifaces += "<td>" + conf.get('addr') + "</td>"
-                    display_ifaces += "<td>" + conf.get('netmask') + "</td></tr>"
-                    # What is my external IP ?
-                    if iface_id != 'lo':
-                        my_ip = conf.get('addr')
+            if 'wlan' in iface_id or 'eth' in iface_id:
+                iface_obj = ni.ifaddresses(iface_id)
+                ifconfigs = iface_obj.get(ni.AF_INET, [])
+                for conf in ifconfigs:
+                    if conf.get('addr'):
+                        display_ifaces.append({
+                            'iface_id': iface_id,
+                            'addr': conf.get('addr'),
+                            'icon': 'sitemap' if 'eth' in iface_id else 'wifi',
+                        })
 
-        my_ip_port = my_ip + ":" + self_port
-
-        html = """
-            <!DOCTYPE html>
-            <html>
-                <head>
-                <title class="origin">Odoo -- Point of Sale</title>
-                <script type="text/javascript" class="origin" src="http://""" + my_ip_port + """/web/static/lib/jquery/jquery.js" >
-                </script>
-                <script type="text/javascript" class="origin">
-                    """ + cust_js + """
-                </script>
-                <link rel="stylesheet" class="origin" href="http://""" + my_ip_port + """/web/static/lib/bootstrap/css/bootstrap.css" >
-                </link>
-                <script class="origin" src="http://""" + my_ip_port + """/web/static/lib/bootstrap/js/bootstrap.min.js"></script>
-                <style class="origin">
-                    """ + cust_css + """
-                </style>
-                </head>
-                <body class="original_body">
-                    <div hidden class="shadow"></div>
-                    <div class="container">
-                    <div class="row">
-                        <div class="col-lg-4 offset-lg-4">
-                            <h1>Odoo Point of Sale</h1>
-                            <h2>POSBox Client display</h2>
-                            <h3>My IPs</h3>
-                                <table id="table_ip" class="table table-sm">
-                                    <tr>
-                                        <th>Interface</th>
-                                        <th>IP</th>
-                                        <th>Netmask</th>
-                                    </tr>
-                                    """ + display_ifaces + """
-                                </table>
-                            <p>The customer cart will be displayed here once a Point of Sale session is started.</p>
-                            <p>Odoo version 11 or above is required.</p>
-                        </div>
-                    </div>
-                    </div>
-                </body>
-                </html>
-            """
-        return html
+        return pos_display_template.render({
+            'title': "Odoo -- Point of Sale",
+            'breadcrumb': 'POS Client display',
+            'cust_js': cust_js,
+            'display_ifaces': display_ifaces,
+        })

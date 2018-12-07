@@ -34,6 +34,7 @@ var core = require('web.core');
 var rpc = require('web.rpc');
 var utils = require('web.utils');
 var field_utils = require('web.field_utils');
+var BarcodeEvents = require('barcodes.BarcodeEvents').BarcodeEvents;
 
 var QWeb = core.qweb;
 var _t = core._t;
@@ -841,7 +842,7 @@ var ProductListWidget = PosBaseWidget.extend({
         };
 
         this.keypress_product_handler = function(ev){
-            if (e.which != 13 && e.which != 32) {
+            if (ev.which != 13 && ev.which != 32) {
                 // Key is not space or enter
                 return;
             }
@@ -1288,6 +1289,9 @@ var ClientListScreenWidget = ScreenWidget.extend({
         } else {
             fields.property_product_pricelist = false;
         }
+        var contents = this.$(".client-details-contents");
+        contents.off("click", ".button.save");
+
 
         rpc.query({
                 model: 'res.partner',
@@ -1307,6 +1311,7 @@ var ClientListScreenWidget = ScreenWidget.extend({
                     'title': _t('Error: Could not Save Changes'),
                     'body': error_body,
                 });
+                contents.on('click','.button.save',function(){ self.save_client_details(partner); });
             });
     },
     
@@ -1324,6 +1329,8 @@ var ClientListScreenWidget = ScreenWidget.extend({
                 // has created, and reload_partner() must have loaded the newly created partner. 
                 self.display_client_details('hide');
             }
+        }).always(function(){
+            $(".client-details-contents").on('click','.button.save',function(){ self.save_client_details(partner); });
         });
     },
 
@@ -1562,11 +1569,21 @@ var ReceiptScreenWidget = ScreenWidget.extend({
         };
     },
     print_web: function() {
-        if($.browser.safari){
+        if ($.browser.safari) {
             document.execCommand('print', false, null);
-        }
-        else{
-            window.print();
+        } else {
+            try {
+                window.print();
+            } catch(err) {
+                if (navigator.userAgent.toLowerCase().indexOf("android") > -1) {
+                    this.gui.show_popup('error',{
+                        'title':_t('Printing is not supported on some android browsers'),
+                        'body': _t('Printing is not supported on some android browsers due to no default printing protocol is available. It is possible to print your tickets by making use of an IoT Box.'),
+                    });
+                } else {
+                    throw err;
+                }
+            }
         }
         this.pos.get_order()._printed = true;
     },
@@ -1689,6 +1706,13 @@ var PaymentScreenWidget = ScreenWidget.extend({
         // also called explicitly to handle some keydown events that
         // do not generate keypress events.
         this.keyboard_handler = function(event){
+            // On mobile Chrome BarcodeEvents relies on an invisible
+            // input being filled by a barcode device. Let events go
+            // through when this input is focused.
+            if (BarcodeEvents.$barcodeInput && BarcodeEvents.$barcodeInput.is(":focus")) {
+                return;
+            }
+
             var key = '';
 
             if (event.type === "keypress") {

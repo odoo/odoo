@@ -5,7 +5,6 @@ import base64
 import re
 
 from odoo import _, api, fields, models, SUPERUSER_ID, tools
-from odoo.tools import pycompat
 from odoo.tools.safe_eval import safe_eval
 
 
@@ -280,15 +279,15 @@ class MailComposer(models.TransientModel):
             reply_to_value = self.env['mail.thread']._notify_get_reply_to_on_records(default=self.email_from, records=records)
 
         blacklisted_rec_ids = []
-        if mass_mail_mode and hasattr(self.env[self.model], "_primary_email"):
-            blacklist = self.env['mail.blacklist'].sudo().search([]).mapped('email')
+        if mass_mail_mode and issubclass(type(self.env[self.model]), self.pool['mail.blacklist.mixin']):
+            BL_sudo = self.env['mail.blacklist'].sudo()
+            blacklist = set(BL_sudo.search([]).mapped('email'))
             if blacklist:
-                [email_field] = self.env[self.model]._primary_email
-                sql = """ SELECT id from %s WHERE LOWER(%s) = any (array[%s]) AND id in (%s)""" % \
-                      (self.env[self.model]._table, email_field, ', '.join("'" + rec + "'" for rec in blacklist),
-                       ', '.join(str(res_id) for res_id in res_ids))
-                self._cr.execute(sql)
-                blacklisted_rec_ids = [rec[0] for rec in self._cr.fetchall()]
+                targets = self.env[self.model].browse(res_ids).read(['email_normalized'])
+                # First extract email from recipient before comparing with blacklist
+                blacklisted_rec_ids.extend([target['id'] for target in targets
+                                            if target['email_normalized'] and target['email_normalized'] in blacklist])
+
         for res_id in res_ids:
             # static wizard (mail.message) values
             mail_values = {
@@ -453,14 +452,14 @@ class MailComposer(models.TransientModel):
         """
         self.ensure_one()
         multi_mode = True
-        if isinstance(res_ids, pycompat.integer_types):
+        if isinstance(res_ids, int):
             multi_mode = False
             res_ids = [res_ids]
 
-        subjects = self.render_template(self.subject, self.model, res_ids)
-        bodies = self.render_template(self.body, self.model, res_ids, post_process=True)
-        emails_from = self.render_template(self.email_from, self.model, res_ids)
-        replies_to = self.render_template(self.reply_to, self.model, res_ids)
+        subjects = self.env['mail.template']._render_template(self.subject, self.model, res_ids)
+        bodies = self.env['mail.template']._render_template(self.body, self.model, res_ids, post_process=True)
+        emails_from = self.env['mail.template']._render_template(self.email_from, self.model, res_ids)
+        replies_to = self.env['mail.template']._render_template(self.reply_to, self.model, res_ids)
         default_recipients = {}
         if not self.partner_ids:
             default_recipients = self.env['mail.thread'].message_get_default_recipients(res_model=self.model, res_ids=res_ids)
@@ -503,7 +502,7 @@ class MailComposer(models.TransientModel):
         """ Call email_template.generate_email(), get fields relevant for
             mail.compose.message, transform email_cc and email_to into partner_ids """
         multi_mode = True
-        if isinstance(res_ids, pycompat.integer_types):
+        if isinstance(res_ids, int):
             multi_mode = False
             res_ids = [res_ids]
 
@@ -519,7 +518,3 @@ class MailComposer(models.TransientModel):
             values[res_id] = res_id_values
 
         return multi_mode and values or values[res_ids[0]]
-
-    @api.model
-    def render_template(self, template, model, res_ids, post_process=False):
-        return self.env['mail.template'].render_template(template, model, res_ids, post_process=post_process)

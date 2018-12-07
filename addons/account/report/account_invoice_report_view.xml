@@ -69,31 +69,29 @@
                 <filter string="My Invoices" name="my_invoice" domain="[('user_id', '=', uid)]"/>
                 <separator/>
                 <field name="date"/>
-                <filter string="This Year" name="thisyear" domain="['|', ('date', '=', False), '&amp;',('date','&lt;=', time.strftime('%%Y-12-31')),('date','&gt;=',time.strftime('%%Y-01-01'))]" help="Journal invoices with period in current year"/>
                 <separator/>
                 <filter string="To Invoice" name="toinvoice" domain="[('state','=','draft')]" help = "Draft Invoices"/>
                 <filter string="Invoiced" name="current" domain="[('state','not in', ('draft','cancel'))]"/>
                 <separator/>
-                <filter string="Date" name="date_filter" date="date"/>
-                <filter string="Customer" name="customer" domain="['|', ('type','=','out_invoice'),('type','=','out_refund')]"/>
-                <filter string="Vendor" name="supplier" domain="['|', ('type','=','in_invoice'),('type','=','in_refund')]"/>
+                <filter string="Customers" name="customer" domain="['|', ('type','=','out_invoice'),('type','=','out_refund')]"/>
+                <filter string="Vendors" name="supplier" domain="['|', ('type','=','in_invoice'),('type','=','in_refund')]"/>
                 <separator/>
-                <filter string="Invoice" name="invoice" domain="['|', ('type','=','out_invoice'),('type','=','in_invoice')]"/>
-                <filter string="Credit Note" name="creditnote" domain="['|', ('type','=','out_refund'),('type','=','in_refund')]"/>
+                <filter string="Invoices" name="invoice" domain="['|', ('type','=','out_invoice'),('type','=','in_invoice')]"/>
+                <filter string="Credit Notes" name="creditnote" domain="['|', ('type','=','out_refund'),('type','=','in_refund')]"/>
                 <field name="partner_id" operator="child_of"/>
                 <field name="user_id" />
+                <field name="product_id" />
                 <field name="categ_id" filter_domain="[('categ_id', 'child_of', self)]"/>
-                <field name="account_analytic_id"/>
                 <group expand="1" string="Group By">
-                    <filter string="Partner" name="partner_id" context="{'group_by':'partner_id','residual_visible':True}"/>
                     <filter string="Salesperson" name='user' context="{'group_by':'user_id'}"/>
+                    <filter string="Partner" name="partner_id" context="{'group_by':'partner_id','residual_visible':True}"/>
                     <filter string="Product Category" name="category_product" context="{'group_by':'categ_id','residual_invisible':True}"/>
                     <filter string="Status" name="status" context="{'group_by':'state'}"/>
+                    <filter string="Analytic Account" name="account_analytic_id" context="{'group_by':'account_analytic_id'}" groups="analytic.group_analytic_accounting" />
                     <filter string="Company" name="company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                     <separator orientation="vertical" />
                     <filter string="Date" name="date" context="{'group_by':'date'}"/>
                     <filter string="Due Date" name="duemonth" context="{'group_by':'date_due:month'}"/>
-                    <filter string="Analytic Account" name="account_analytic_id" context="{'group_by':'account_analytic_id'}" groups="analytic.group_analytic_accounting" />
                 </group>
             </search>
         </field>
@@ -118,7 +116,7 @@
         <field name="help">From this report, you can have an overview of the amount invoiced to your customers. The search tool can also be used to personalise your Invoices reports and so, match this analysis to your needs.</field>
     </record>
 
-    <menuitem name="Invoices" action="action_account_invoice_report_all" id="menu_action_account_invoice_report_all" parent="account.account_reports_management_menu" sequence="25"/>
+    <menuitem name="Invoices" action="action_account_invoice_report_all" id="menu_action_account_invoice_report_all" parent="account.account_reports_management_menu" sequence="1"/>
 
 </data>
 </odoo>

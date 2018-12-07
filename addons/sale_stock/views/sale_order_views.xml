@@ -20,7 +20,7 @@
                     <attribute name="groups"></attribute> <!-- Remove the res.group on the group and set it on the field directly-->
                 </xpath>
                 <xpath expr="//field[@name='expected_date']" position="before">
-                    <field name="warehouse_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>
+                    <field name="warehouse_id" options="{'no_create': True}" groups="stock.group_stock_multi_warehouses"/>
                     <field name="incoterm" widget="selection" groups="sale_stock.group_display_incoterm"/>
                     <field name="picking_policy" required="True"/>
                 </xpath>

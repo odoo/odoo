@@ -6,8 +6,8 @@ helpers and classes to write tests.
 """
 import base64
 import collections
-import inspect
 import importlib
+import inspect
 import itertools
 import json
 import logging
@@ -33,7 +33,7 @@ from lxml import etree, html
 
 from odoo.models import BaseModel
 from odoo.osv.expression import normalize_domain
-from odoo.tools import pycompat
+from odoo.tools import single_email_re
 from odoo.tools.misc import find_in_path
 from odoo.tools.safe_eval import safe_eval
 
@@ -99,10 +99,7 @@ def at_install(flag):
         ``at_install`` is now a flag, you can use :func:`tagged` to
         add/remove it, although ``tagged`` only works on test classes
     """
-    def decorator(obj):
-        obj.at_install = flag
-        return obj
-    return decorator
+    return tagged('at_install' if flag else '-at_install')
 
 def post_install(flag):
     """ Sets the post-install state of a test. The flag is a boolean
@@ -117,10 +114,51 @@ def post_install(flag):
         ``post_install`` is now a flag, you can use :func:`tagged` to
         add/remove it, although ``tagged`` only works on test classes
     """
-    def decorator(obj):
-        obj.post_install = flag
-        return obj
-    return decorator
+    return tagged('post_install' if flag else '-post_install')
+
+
+def new_test_user(env, login='', groups='base.group_user', context=None, **kwargs):
+    """ Helper function to create a new test user. It allows to quickly create
+    users given its login and groups (being a comma separated list of xml ids).
+    Kwargs are directly propagated to the create to further customize the
+    created user.
+
+    User creation uses a potentially customized environment using the context
+    parameter allowing to specify a custom context. It can be used to force a
+    specific behavior and/or simplify record creation. An example is to use
+    mail-related context keys in mail tests to speedup record creation.
+
+    Some specific fields are automatically filled to avoid issues
+
+     * groups_id: it is filled using groups function parameter;
+     * name: "login (groups)" by default as it is required;
+     * email: it is either the login (if it is a valid email) or a generated
+       string 'x.x@example.com' (x being the first login letter). This is due
+       to email being required for most odoo operations;
+    """
+    if not login:
+        raise ValueError('New users require at least a login')
+    if not groups:
+        raise ValueError('New users require at least user groups')
+    if context is None:
+        context = {}
+
+    groups_id = [(6, 0, [env.ref(g).id for g in groups.split(',')])]
+    create_values = dict(kwargs, login=login, groups_id=groups_id)
+    if not create_values.get('name'):
+        create_values['name'] = '%s (%s)' % (login, groups)
+    if not create_values.get('email'):
+        if single_email_re.match(login):
+            create_values['email'] = login
+        else:
+            create_values['email'] = '%s.%s@example.com' % (login[0], login[0])
+
+    return env['res.users'].with_context(**context).create(create_values)
+
+# ------------------------------------------------------------
+# Main classes
+# ------------------------------------------------------------
+
 
 class TreeCase(unittest.TestCase):
     def __init__(self, methodName='runTest'):
@@ -275,7 +313,7 @@ class BaseCase(TreeCase, MetaCase('DummyCase', (object,), {})):
                 field_type = record._fields[field_name].type
                 if field_type == 'monetary':
                     # Compare monetary field.
-                    currency_field_name = record._fields[field_name]._related_currency_field
+                    currency_field_name = record._fields[field_name].currency_field
                     record_currency = record[currency_field_name]
                     if record_currency.compare_amounts(candidate_value, record_value)\
                             if record_currency else candidate_value != record_value:
@@ -316,10 +354,10 @@ class BaseCase(TreeCase, MetaCase('DummyCase', (object,), {})):
         doc = self._testMethodDoc
         return doc and ' '.join(l.strip() for l in doc.splitlines() if not l.isspace()) or None
 
-    if not pycompat.PY2:
-        # turns out this thing may not be quite as useful as we thought...
-        def assertItemsEqual(self, a, b, msg=None):
-            self.assertCountEqual(a, b, msg=None)
+    # turns out this thing may not be quite as useful as we thought...
+    def assertItemsEqual(self, a, b, msg=None):
+        self.assertCountEqual(a, b, msg=None)
+
 
 class TransactionCase(BaseCase):
     """ TestCase in which each test method is run in its own transaction,
@@ -407,7 +445,7 @@ class SavepointCase(SingleTransactionCase):
 class ChromeBrowser():
     """ Helper object to control a Chrome headless process. """
 
-    def __init__(self, logger):
+    def __init__(self, logger, window_size):
         self._logger = logger
         if websocket is None:
             self._logger.warning("websocket-client module is not installed")
@@ -419,6 +457,7 @@ class ChromeBrowser():
         self.user_data_dir = tempfile.mkdtemp(suffix='_chrome_odoo')
         self.chrome_process = None
         self.screencast_frames = []
+        self.window_size = window_size
         self._chrome_start()
         self._find_websocket()
         self._logger.info('Websocket url found: %s', self.ws_url)
@@ -489,8 +528,9 @@ class ChromeBrowser():
             '--disable-extensions': '',
             '--user-data-dir': self.user_data_dir,
             '--disable-translate': '',
-            '--window-size': '1366x768',
-            '--remote-debugging-port': str(self.devtools_port)
+            '--window-size': self.window_size,
+            '--remote-debugging-port': str(self.devtools_port),
+            '--no-sandbox': '',
         }
         cmd = [self.executable]
         cmd += ['%s=%s' % (k, v) if v else k for k, v in switches.items()]
@@ -748,6 +788,7 @@ class HttpCase(TransactionCase):
     """
     registry_test_mode = True
     browser = None
+    browser_size = '1366x768'
 
     def __init__(self, methodName='runTest'):
         super(HttpCase, self).__init__(methodName)
@@ -763,7 +804,7 @@ class HttpCase(TransactionCase):
     def start_browser(cls, logger):
         # start browser on demand
         if cls.browser is None:
-            cls.browser = ChromeBrowser(logger)
+            cls.browser = ChromeBrowser(logger, cls.browser_size)
 
     @classmethod
     def tearDownClass(cls):
@@ -949,10 +990,10 @@ def can_import(module):
 
 # TODO: sub-views (o2m, m2m) -> sub-form?
 # TODO: domains
-ref_re = re.compile("""
+ref_re = re.compile(r"""
 # first match 'form_view_ref' key, backrefs are used to handle single or
 # double quoting of the value
-(['"])(?P<view_type>\w+)_view_ref\1
+(['"])(?P<view_type>\w+_view_ref)\1
 # colon separator (with optional spaces around)
 \s*:\s*
 # open quote for value
@@ -963,7 +1004,7 @@ ref_re = re.compile("""
     [.\w]+
 )
 # close with same quote as opening
-\2
+\3
 """, re.VERBOSE)
 class Form(object):
     """ Server-side form view implementation (partial)
@@ -1048,7 +1089,7 @@ class Form(object):
         if isinstance(view, BaseModel):
             assert view._name == 'ir.ui.view', "the view parameter must be a view id, xid or record, got %s" % view
             view_id = view.id
-        elif isinstance(view, pycompat.string_types):
+        elif isinstance(view, str):
             view_id = env.ref(view).id
         else:
             view_id = view or False
@@ -1056,40 +1097,6 @@ class Form(object):
         arch = etree.fromstring(fvg['arch'])
 
         object.__setattr__(self, '_view', fvg)
-        # TODO: make this less crappy?
-        # look up edition view for the O2M
-        for f, descr in fvg['fields'].items():
-            if descr['type'] != 'one2many':
-                continue
-
-            node = next(n for n in arch.iter('field') if n.get('name') == f)
-            default_view = next(
-                (m for m in node.get('mode', 'tree').split(',') if m != 'form'),
-                'tree'
-            )
-
-            refs = {
-                m.group('view_type'): m.group('view_id')
-                for m in ref_re.finditer(node.get('context', ''))
-            }
-            # always fetch for simplicity, ensure we always have a tree and
-            # a form view
-            submodel = env[descr['relation']]
-            views = submodel.with_context(**refs) \
-                .load_views([(False, 'tree'), (False, 'form')])['fields_views']
-            # embedded views should take the priority on externals
-            views.update(descr['views'])
-
-            # if the default view is a kanban or a non-editable list, the
-            # "edition controller" is the form view
-            edition = views['form']
-            if default_view == 'tree':
-                subarch = etree.fromstring(views['tree']['arch'])
-                if subarch.get('editable'):
-                    edition = views['tree']
-
-            self._process_fvg(submodel, edition)
-            descr['views']['edition'] = edition
 
         self._process_fvg(recordp, fvg)
 
@@ -1105,6 +1112,35 @@ class Form(object):
             self._init_from_values(recordp)
         else:
             self._init_from_defaults(self._model)
+
+    def _o2m_set_edition_view(self, descr, node):
+        default_view = next(
+            (m for m in node.get('mode', 'tree').split(',') if m != 'form'),
+            'tree'
+        )
+        refs = {
+            m.group('view_type'): m.group('view_id')
+            for m in ref_re.finditer(node.get('context', ''))
+        }
+        # always fetch for simplicity, ensure we always have a tree and
+        # a form view
+        submodel = self._env[descr['relation']]
+        views = submodel.with_context(**refs) \
+            .load_views([(False, 'tree'), (False, 'form')])['fields_views']
+        # embedded views should take the priority on externals
+        views.update(descr['views'])
+        # re-set all resolved views on the descriptor
+        descr['views'] = views
+        # if the default view is a kanban or a non-editable list, the
+        # "edition controller" is the form view
+        edition = views['form']
+        if default_view == 'tree':
+            subarch = etree.fromstring(views['tree']['arch'])
+            if subarch.get('editable'):
+                edition = views['tree']
+
+        self._process_fvg(submodel, edition)
+        descr['views']['edition'] = edition
 
     def __str__(self):
         return "<%s %s(%s)>" % (
@@ -1124,7 +1160,7 @@ class Form(object):
         # pre-resolve modifiers & bind to arch toplevel
         modifiers = fvg['modifiers'] = {}
         contexts = fvg['contexts'] = {}
-        for f in etree.fromstring(fvg['arch']).iter('field'):
+        for f in etree.fromstring(fvg['arch']).xpath('//field[not(ancestor::field)]'):
             fname = f.get('name')
             modifiers[fname] = {
                 modifier: domain if isinstance(domain, bool) else normalize_domain(domain)
@@ -1133,6 +1169,11 @@ class Form(object):
             ctx = f.get('context')
             if ctx:
                 contexts[fname] = ctx
+
+            descr = fvg['fields'].get(fname) or {'type': None}
+            if descr['type'] == 'one2many':
+                self._o2m_set_edition_view(descr, f)
+
         fvg['modifiers']['id'] = {'required': False, 'readonly': True}
         fvg['onchange'] = model._onchange_spec(fvg)
 

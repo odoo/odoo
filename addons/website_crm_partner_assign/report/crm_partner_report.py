@@ -9,7 +9,7 @@ class CrmPartnerReportAssign(models.Model):
     """ CRM Lead Report """
     _name = "crm.partner.report.assign"
     _auto = False
-    _description = "CRM Partner Report"
+    _description = "CRM Partnership Analysis"
 
     partner_id = fields.Many2one('res.partner', 'Partner', required=False, readonly=True)
     grade_id = fields.Many2one('res.partner.grade', 'Grade', readonly=True)

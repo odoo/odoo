@@ -15,7 +15,7 @@
 -->
 <t t-name="AppsMenu">
     <li class="dropdown">
-        <a class="dropdown-toggle full" data-toggle="dropdown" href="#">
+        <a class="full" data-toggle="dropdown" href="#">
             <i class="fa fa-th-large"/>
         </a>
         <div class="dropdown-menu" role="menu">
@@ -92,20 +92,6 @@
                 </t>
             </t>
         </section>
-    </t>
-</t>
-
-<t t-extend="DashboardShare">
-    <t t-jquery=".user-heading h3" t-operation="replace">
-        <h3>
-            Odoo <t t-esc="server_version"/> (Enterprise Edition)
-        </h3>
-    </t>
-    <t t-jquery=".user-heading h3" t-operation="after">
-        <t t-set="expiration_date" t-value="new moment(widget.data.expiration_date).format('LL')"/>
-        <t t-if="expiration_date">
-            <h5>Database expiration: <t t-esc="expiration_date"/></h5>
-        </t>
     </t>
 </t>
 
@@ -198,15 +184,6 @@
                             </td>
                             <td>
                                 <span class="o_key">Control</span> + <span class="o_key">Alt</span> + <span class="o_key">n</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td align="left">Open app menu</td>
-                            <td>
-                                <span class="o_key">Alt</span> + <span class="o_key">h</span>
-                            </td>
-                            <td>
-                                <span class="o_key">Control</span> + <span class="o_key">Alt</span> + <span class="o_key">h</span>
                             </td>
                         </tr>
 

@@ -9,10 +9,17 @@ from PIL import ImageEnhance
 from random import randrange
 
 # Preload PIL with the minimal subset of image formats we need
-from odoo.tools import pycompat
-
 Image.preinit()
 Image._initialized = 2
+
+# Maps only the 6 first bits of the base64 data, accurate enough
+# for our purpose and faster than decoding the full blob first
+FILETYPE_BASE64_MAGICWORD = {
+    b'/': 'jpg',
+    b'R': 'gif',
+    b'i': 'png',
+    b'P': 'svg+xml',
+}
 
 # ----------------------------------------
 # Image resizing
@@ -51,7 +58,10 @@ def image_resize_image(base64_source, size=(1024, 1024), encoding='base64', file
     """
     if not base64_source:
         return False
-    if size == (None, None):
+    # Return unmodified content if no resize or we etect first 6 bits of '<'
+    # (0x3C) for SVG documents - This will bypass XML files as well, but it's
+    # harmless for these purposes
+    if size == (None, None) or base64_source[:1] == b'P':
         return base64_source
     image_stream = io.BytesIO(codecs.decode(base64_source, encoding))
     image = Image.open(image_stream)
@@ -65,11 +75,9 @@ def image_resize_image(base64_source, size=(1024, 1024), encoding='base64', file
     asked_width, asked_height = size
     if upper_limit:
         if asked_width:
-            if asked_width >= image.size[0]:
-                asked_width = image.size[0]
+            asked_width = min(asked_width, image.size[0])
         if asked_height:
-            if asked_height >= image.size[1]:
-                asked_height = image.size[1]
+            asked_height = min(asked_height, image.size[1])
 
         if image.size[0] >= image.size[1]:
             asked_height = None
@@ -177,7 +185,7 @@ def image_resize_image_small(base64_source, size=(64, 64), encoding='base64', fi
 # ----------------------------------------
 # Crop Image
 # ----------------------------------------
-def crop_image(data, type='top', ratio=False, size=None, image_format=None):
+def crop_image(data, type='top', ratio=None, size=None, image_format=None):
     """ Used for cropping image and create thumbnail
         :param data: base64 data of image.
         :param type: Used for cropping position possible
@@ -279,7 +287,7 @@ def image_get_resized_images(base64_source, return_big=False, return_medium=True
     size_big = sizes.get(big_name, (1024, 1024))
     size_medium = sizes.get(medium_name, (128, 128))
     size_small = sizes.get(small_name, (64, 64))
-    if isinstance(base64_source, pycompat.text_type):
+    if isinstance(base64_source, str):
         base64_source = base64_source.encode('ascii')
     if return_big:
         return_dict[big_name] = image_resize_image_big(base64_source, avoid_if_small=avoid_resize_big, size=size_big)
@@ -309,6 +317,38 @@ def image_resize_images(vals, big_name='image', medium_name='image_medium', smal
     elif big_name in vals or medium_name in vals or small_name in vals:
         vals[big_name] = vals[medium_name] = vals[small_name] = False
 
+def limited_image_resize(content, width=None, height=None, crop=False, upper_limit=False, avoid_if_small=False):
+    """
+    :param content: bytes (should be an image)
+    """
+    if content:
+        signatures = [b'\xFF\xD8\xFF', b'\x89PNG\r\n\x1A\n']
+        decoded_content = base64.b64decode(content)
+        is_image = any(decoded_content.startswith(signature) for signature in signatures)
+        if (width or height) and is_image:
+            height = int(height or 0)
+            width = int(width or 0)
+            if crop:
+                return crop_image(content, type='center', size=(width, height), ratio=(1, 1))
+            else:
+                if not upper_limit:
+                    # resize maximum 500*500
+                    width = min(width, 500)
+                    height = min(height, 500)
+                return image_resize_image(
+                    base64_source=content, size=(width or None, height or None), encoding='base64', upper_limit=upper_limit,
+                    avoid_if_small=avoid_if_small)
+    return content
+
+def image_data_uri(base64_source):
+    """This returns data URL scheme according RFC 2397
+    (https://tools.ietf.org/html/rfc2397) for all kind of supported images
+    (PNG, GIF, JPG and SVG), defaulting on PNG type if not mimetype detected.
+    """
+    return 'data:image/%s;base64,%s' % (
+        FILETYPE_BASE64_MAGICWORD.get(base64_source[:1], 'png'),
+        base64_source.decode(),
+    )
 
 if __name__=="__main__":
     import sys

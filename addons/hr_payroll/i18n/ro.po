@@ -4,13 +4,16 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
+# nle_odoo, 2018
+# Cozmin Candea <office@terrabit.ro>, 2018
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:48+0000\n"
-"PO-Revision-Date: 2018-09-18 09:48+0000\n"
-"Last-Translator: Martin Trigaux, 2018\n"
+"POT-Creation-Date: 2018-10-08 06:48+0000\n"
+"PO-Revision-Date: 2018-08-24 09:19+0000\n"
+"Last-Translator: Cozmin Candea <office@terrabit.ro>, 2018\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -376,6 +379,11 @@ msgid "Conditions"
 msgstr "Condiții"
 
 #. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_res_config_settings
+msgid "Config Settings"
+msgstr ""
+
+#. module: hr_payroll
 #: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_configuration
 msgid "Configuration"
 msgstr "Configurare"
@@ -424,6 +432,16 @@ msgstr "Linii fluturași de salariu după Registrul contribuției"
 #: model_terms:ir.ui.view,arch_db:hr_payroll.hr_contribution_register_tree
 msgid "Contribution Registers"
 msgstr "Registre contributie"
+
+#. module: hr_payroll
+#: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_convanceallowance1
+msgid "Conveyance Allowance"
+msgstr "Indemnizație pentru transport"
+
+#. module: hr_payroll
+#: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_ca_gravie
+msgid "Conveyance Allowance For Gravie"
+msgstr ""
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template__create_uid
@@ -636,7 +654,7 @@ msgid "Error! You cannot create recursive hierarchy of Salary Rule Category."
 msgstr ""
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_salary_rule.py:178
+#: code:addons/hr_payroll/models/hr_salary_rule.py:179
 #, python-format
 msgid "Error! You cannot create recursive hierarchy of Salary Rules."
 msgstr ""
@@ -662,7 +680,7 @@ msgid "For example, enter 50.0 to apply a percentage of 50%"
 msgstr "De exemplu, introduceți 50.0 pentru a aplica un procent de 50%"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/report/report_contribution_register.py:34
+#: code:addons/hr_payroll/report/report_contribution_register.py:35
 #, python-format
 msgid "Form content is missing, this report cannot be printed."
 msgstr ""
@@ -694,6 +712,11 @@ msgid "Generate payslips for all selected employees"
 msgstr "Generați fluturașii de salariu pentru toți angajații selectați"
 
 #. module: hr_payroll
+#: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_sales_commission
+msgid "Get 1% of sales"
+msgstr ""
+
+#. module: hr_payroll
 #: model:hr.salary.rule,name:hr_payroll.hr_rule_taxable
 #: model:hr.salary.rule.category,name:hr_payroll.GROSS
 msgid "Gross"
@@ -705,6 +728,11 @@ msgstr "Brut"
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_rule_filter
 msgid "Group By"
 msgstr "Grupează după"
+
+#. module: hr_payroll
+#: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_houserentallowance1
+msgid "House Rent Allowance"
+msgstr "Indemnizație pentru chirie"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template__id
@@ -889,6 +917,11 @@ msgid "Maximum Range"
 msgstr "Limita maxima"
 
 #. module: hr_payroll
+#: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_meal_voucher
+msgid "Meal Voucher"
+msgstr "Tichet de masă"
+
+#. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__condition_range_min
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__condition_range_min
 msgid "Minimum Range"
@@ -1012,11 +1045,6 @@ msgid "PaySlip Lines by Contribution Register"
 msgstr "Linii fluturas de salariu dupa Contributia inregistrata"
 
 #. module: hr_payroll
-#: model:ir.model,name:hr_payroll.model_payslip_lines_contribution_register
-msgid "PaySlip Lines by Contribution Registers"
-msgstr "Linii Fluturas de salariu dupa Registrele de contributie"
-
-#. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_contributionregister
 msgid "PaySlip Name"
 msgstr "Numele Fluturasului de salariu"
@@ -1027,6 +1055,11 @@ msgstr "Numele Fluturasului de salariu"
 #: model_terms:ir.ui.view,arch_db:hr_payroll.res_config_settings_view_form
 msgid "Payroll"
 msgstr "Stat de plată"
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_report_hr_payroll_report_contributionregister
+msgid "Payroll Contribution Register Report"
+msgstr ""
 
 #. module: hr_payroll
 #: model_terms:ir.ui.view,arch_db:hr_payroll.res_config_settings_view_form
@@ -1075,6 +1108,11 @@ msgid "Payslip Count"
 msgstr ""
 
 #. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_report_hr_payroll_report_payslipdetails
+msgid "Payslip Details Report"
+msgstr ""
+
+#. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payslip_input
 msgid "Payslip Input"
 msgstr "Introducere Fluturas de salariu"
@@ -1103,6 +1141,11 @@ msgstr "Linii Fluturas de salariu"
 #: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "Payslip Lines by Contribution Register"
 msgstr "Linii Fluturaș de salariu după Registrul Contributiei"
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_payslip_lines_contribution_register
+msgid "Payslip Lines by Contribution Registers"
+msgstr ""
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__name
@@ -1168,6 +1211,16 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_payslip_lines_contribution_register
 msgid "Print"
 msgstr "Tipăriți"
+
+#. module: hr_payroll
+#: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_professionaltax1
+msgid "Professional Tax"
+msgstr ""
+
+#. module: hr_payroll
+#: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_providentfund1
+msgid "Provident Fund"
+msgstr ""
 
 #. module: hr_payroll
 #: selection:hr.payslip.line,amount_select:0
@@ -1269,6 +1322,11 @@ msgstr "Categorii Salariale"
 #: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Salary Computation"
 msgstr "Calcul Salariu"
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_hr_salary_rule
+msgid "Salary Rule"
+msgstr ""
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_hr_salary_rule_category
@@ -1440,10 +1498,10 @@ msgid ""
 " but you can also use categories code fields in lowercase as a variable "
 "names (hra, ma, lta, etc.) and the variable basic."
 msgstr ""
-"Acesta va fi folosit pentru a calcula valorile campurilor %s; în general "
-"este de baza, dar puteți de asemenea sa folositi campurile categorii de "
-"coduri cu litere mici ca nume al variabilei (hra, ma, lta, etc.) si "
-"valiabila de baza."
+"Acesta va fi folosit pentru a calcula valorile campurilor %; în general este"
+" de baza, dar puteți de asemenea sa folositi campurile categorii de coduri "
+"cu litere mici ca nume al variabilei (hra, ma, lta, etc.) si valiabila de "
+"baza."
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__total
@@ -1511,7 +1569,7 @@ msgid "Working Schedule"
 msgstr "Program de lucru"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_salary_rule.py:210
+#: code:addons/hr_payroll/models/hr_salary_rule.py:211
 #, python-format
 msgid "Wrong percentage base or quantity defined for salary rule %s (%s)."
 msgstr ""
@@ -1519,25 +1577,25 @@ msgstr ""
 "(%s)."
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_salary_rule.py:216
+#: code:addons/hr_payroll/models/hr_salary_rule.py:217
 #, python-format
 msgid "Wrong python code defined for salary rule %s (%s)."
 msgstr "Cod python gresit definit pentru regula salariala %s (%s)."
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_salary_rule.py:239
+#: code:addons/hr_payroll/models/hr_salary_rule.py:240
 #, python-format
 msgid "Wrong python condition defined for salary rule %s (%s)."
 msgstr "Conditie python gresita definita pentru regula salariala %s (%s)."
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_salary_rule.py:203
+#: code:addons/hr_payroll/models/hr_salary_rule.py:204
 #, python-format
 msgid "Wrong quantity defined for salary rule %s (%s)."
 msgstr "Cantitate gresita definita pentru regula salariala %s (%s)."
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_salary_rule.py:233
+#: code:addons/hr_payroll/models/hr_salary_rule.py:234
 #, python-format
 msgid "Wrong range condition defined for salary rule %s (%s)."
 msgstr "Conditie gresita a limitei definita pentru regula salariala %s (%s)."
@@ -1566,26 +1624,6 @@ msgstr "Trebuie sa selectati angajatii pentru a genera fluturasii de salariu."
 #, python-format
 msgid "You must set a contract to create a payslip line."
 msgstr "Trebuie selectat un contract pentru a crea o linie în fluturaș"
-
-#. module: hr_payroll
-#: model:ir.model,name:hr_payroll.model_hr_salary_rule
-msgid "hr.salary.rule"
-msgstr "ru.regula.salarizare"
-
-#. module: hr_payroll
-#: model:ir.model,name:hr_payroll.model_report_hr_payroll_report_contributionregister
-msgid "report.hr_payroll.report_contributionregister"
-msgstr "report.hr_payroll.report_contributionregister"
-
-#. module: hr_payroll
-#: model:ir.model,name:hr_payroll.model_report_hr_payroll_report_payslipdetails
-msgid "report.hr_payroll.report_payslipdetails"
-msgstr "report.hr_payroll.report_payslipdetails"
-
-#. module: hr_payroll
-#: model:ir.model,name:hr_payroll.model_res_config_settings
-msgid "res.config.settings"
-msgstr "res.config.settings"
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line__amount_percentage_base

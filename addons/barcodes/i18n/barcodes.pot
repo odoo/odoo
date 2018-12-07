@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-09-21 13:17+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,25 +16,25 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: barcodes
-#: code:addons/barcodes/models/barcodes.py:202
+#: code:addons/barcodes/models/barcodes.py:204
 #, python-format
 msgid " '*' is not a valid Regex Barcode Pattern. Did you mean '.*' ?"
 msgstr ""
 
 #. module: barcodes
-#: code:addons/barcodes/models/barcodes.py:200
+#: code:addons/barcodes/models/barcodes.py:202
 #, python-format
 msgid ": a rule can only contain one pair of braces."
 msgstr ""
 
 #. module: barcodes
-#: code:addons/barcodes/models/barcodes.py:196
+#: code:addons/barcodes/models/barcodes.py:198
 #, python-format
 msgid ": braces can only contain N's followed by D's."
 msgstr ""
 
 #. module: barcodes
-#: code:addons/barcodes/models/barcodes.py:198
+#: code:addons/barcodes/models/barcodes.py:200
 #, python-format
 msgid ": empty braces."
 msgstr ""
@@ -58,10 +58,8 @@ msgid "Add a new barcode nomenclature"
 msgstr ""
 
 #. module: barcodes
-#: code:addons/barcodes/models/barcodes.py:183
 #: selection:barcode.rule,type:0
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__alias
-#, python-format
 msgid "Alias"
 msgstr ""
 
@@ -81,13 +79,17 @@ msgid "An internal identification of the barcode nomenclature"
 msgstr ""
 
 #. module: barcodes
-#: code:addons/barcodes/models/barcodes.py:177
 #: selection:barcode.rule,encoding:0
-#, python-format
 msgid "Any"
 msgstr ""
 
 #. module: barcodes
+#: model:ir.model,name:barcodes.model_barcodes_barcode_events_mixin
+msgid "Barcode Event Mixin"
+msgstr ""
+
+#. module: barcodes
+#: model:ir.model,name:barcodes.model_barcode_nomenclature
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__name
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__barcode_nomenclature_id
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
@@ -106,6 +108,7 @@ msgid "Barcode Pattern"
 msgstr ""
 
 #. module: barcodes
+#: model:ir.model,name:barcodes.model_barcode_rule
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_rule_form
 msgid "Barcode Rule"
 msgstr ""
@@ -219,7 +222,7 @@ msgstr ""
 
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_ir_http
-msgid "HTTP routing"
+msgid "HTTP Routing"
 msgstr ""
 
 #. module: barcodes
@@ -338,9 +341,9 @@ msgid "The matched pattern will alias to this barcode"
 msgstr ""
 
 #. module: barcodes
-#: code:addons/barcodes/models/barcodes.py:196
 #: code:addons/barcodes/models/barcodes.py:198
 #: code:addons/barcodes/models/barcodes.py:200
+#: code:addons/barcodes/models/barcodes.py:202
 #, python-format
 msgid "There is a syntax error in the barcode pattern "
 msgstr ""
@@ -390,9 +393,7 @@ msgid "UPC/EAN Conversion"
 msgstr ""
 
 #. module: barcodes
-#: code:addons/barcodes/models/barcodes.py:184
 #: selection:barcode.rule,type:0
-#, python-format
 msgid "Unit Product"
 msgstr ""
 
@@ -409,20 +410,5 @@ msgstr ""
 #. module: barcodes
 #: selection:barcode.rule,type:0
 msgid "Weighted Product"
-msgstr ""
-
-#. module: barcodes
-#: model:ir.model,name:barcodes.model_barcode_nomenclature
-msgid "barcode.nomenclature"
-msgstr ""
-
-#. module: barcodes
-#: model:ir.model,name:barcodes.model_barcode_rule
-msgid "barcode.rule"
-msgstr ""
-
-#. module: barcodes
-#: model:ir.model,name:barcodes.model_barcodes_barcode_events_mixin
-msgid "barcodes.barcode_events_mixin"
 msgstr ""
 

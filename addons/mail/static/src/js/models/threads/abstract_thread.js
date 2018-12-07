@@ -103,6 +103,16 @@ var AbstractThread = Class.extend(Mixins.EventDispatcherMixin, {
         return !_.isEmpty(this.getMessages());
     },
     /**
+     * States whether this thread is compatible with the 'seen' feature.
+     * By default, threads do not have thsi feature active.
+     * @see {mail.model.ThreadSeenMixin} to enable this feature on a thread.
+     *
+     * @returns {boolean}
+     */
+    hasSeenFeature: function () {
+        return false;
+    },
+    /**
      * States whether this thread is compatible with the 'is typing...' feature.
      * By default, threads do not have this feature active.
      * @see {mail.model.ThreadTypingMixin} to enable this feature on a thread.
@@ -147,6 +157,7 @@ var AbstractThread = Class.extend(Mixins.EventDispatcherMixin, {
      */
     resetUnreadCounter: function () {
         this._unreadCounter = 0;
+        this._warnUpdatedUnreadCounter();
     },
 
     //--------------------------------------------------------------------------
@@ -177,7 +188,6 @@ var AbstractThread = Class.extend(Mixins.EventDispatcherMixin, {
      */
     _markAsRead: function () {
         this.resetUnreadCounter();
-        this._warnUpdatedUnreadCounter();
         return $.when();
     },
     /**
@@ -191,6 +201,14 @@ var AbstractThread = Class.extend(Mixins.EventDispatcherMixin, {
     _postMessage: function () {
         return $.when();
     },
+    /**
+     * Warn views (e.g. discuss app, thread window, etc.) to update visually
+     * the unread counter of this thread.
+     *
+     * @abstract
+     * @private
+     */
+    _warnUpdatedUnreadCounter: function () {},
 });
 
 return AbstractThread;

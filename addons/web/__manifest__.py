@@ -25,6 +25,7 @@ This module provides the core of the Odoo Web Client.
         "static/src/xml/base.xml",
         "static/src/xml/kanban.xml",
         "static/src/xml/menu.xml",
+        "static/src/xml/pie_chart.xml",
         "static/src/xml/rainbow_man.xml",
         "static/src/xml/report.xml",
         "static/src/xml/web_calendar.xml",

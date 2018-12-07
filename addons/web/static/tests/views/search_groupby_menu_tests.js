@@ -8,7 +8,7 @@ function createGroupByMenu(groupbys, fields, params) {
     params = params || {};
     var target = params.debug ? document.body :  $('#qunit-fixture');
     var menu = new GroupByMenu(null, groupbys, fields);
-    testUtils.addMockEnvironment(menu, params);
+    testUtils.mock.addMockEnvironment(menu, params);
     menu.appendTo(target);
     return menu;
 }
@@ -34,8 +34,8 @@ QUnit.module('GroupByMenu', {
         assert.expect(2);
 
         var groupByMenu = createGroupByMenu(this.groupbys, this.fields);
-        groupByMenu.$('button:first').click();
-        assert.strictEqual(groupByMenu.$('.dropdown-divider, .dropdown-item, .dropdown-item-text').length, 2, 'should have 2 elements');
+        testUtils.dom.click(groupByMenu.$('button:first'));
+        assert.containsN(groupByMenu, '.dropdown-divider, .dropdown-item, .dropdown-item-text', 2, 'should have 2 elements');
         assert.strictEqual(groupByMenu.$('.dropdown-divider, .dropdown-item, .dropdown-item-text').eq(1).text().trim(), 'some group by',
             'should have proper filter name');
         groupByMenu.destroy();
@@ -45,8 +45,8 @@ QUnit.module('GroupByMenu', {
         assert.expect(1);
 
         var groupByMenu = createGroupByMenu([], {});
-        groupByMenu.$('button:first').click();
-        assert.strictEqual(groupByMenu.$('.dropdown-divider, .dropdown-item, .dropdown-item-text').length, 0, 'should have 0 element');
+        testUtils.dom.click(groupByMenu.$('button:first'));
+        assert.containsNone(groupByMenu, '.dropdown-divider, .dropdown-item, .dropdown-item-text', 'should have 0 element');
         groupByMenu.destroy();
     });
 
@@ -57,8 +57,8 @@ QUnit.module('GroupByMenu', {
             [],
             {fieldname: {sortable: true, string: 'Super Date', type: 'date', isDate: true}}
             );
-        groupByMenu.$('button:first').click();
-        assert.strictEqual(groupByMenu.$('.dropdown-divider, .dropdown-item, .dropdown-item-text').length, 1, 'should have 1 element');
+        testUtils.dom.click(groupByMenu.$('button:first'));
+        assert.containsOnce(groupByMenu, '.dropdown-divider, .dropdown-item, .dropdown-item-text', 'should have 1 element');
         groupByMenu.destroy();
     });
 
@@ -66,10 +66,10 @@ QUnit.module('GroupByMenu', {
         assert.expect(2);
 
         var groupByMenu = createGroupByMenu([], {fieldname: {sortable: true, string: 'Super Date', type: 'date', isDate: true}});
-        groupByMenu.$('button:first').click();
+        testUtils.dom.click(groupByMenu.$('button:first'));
         var selector = groupByMenu.$('select.o_group_selector');
         assert.ok(!selector.is(":visible"), 'should be invisible');
-        groupByMenu.$('.o_add_custom_group').click();
+        testUtils.dom.click(groupByMenu.$('.o_add_custom_group'));
         selector = groupByMenu.$('select.o_group_selector');
         assert.ok(selector.is(":visible"), 'should be visible');
         groupByMenu.destroy();
@@ -84,12 +84,12 @@ QUnit.module('GroupByMenu', {
                 fieldName: {sortable: true, name: 'candlelight', string: 'Candlelight', type: 'boolean'},
             }
         );
-        groupByMenu.$('button:first').click();
-        groupByMenu.$('.o_add_custom_group').click();
+        testUtils.dom.click(groupByMenu.$('button:first'));
+        testUtils.dom.click(groupByMenu.$('.o_add_custom_group'));
         assert.strictEqual(groupByMenu.$('select').val(), 'fieldName',
             'the select value should be "fieldName"');
-        groupByMenu.$('button.o_apply_group').click();
-        assert.strictEqual(groupByMenu.$('.o_menu_item > .dropdown-item.selected').length, 1, 'there should be a groupby selected');
+        testUtils.dom.click(groupByMenu.$('button.o_apply_group'));
+        assert.containsOnce(groupByMenu, '.o_menu_item > .dropdown-item.selected', 'there should be a groupby selected');
         groupByMenu.destroy();
     });
 
@@ -113,10 +113,10 @@ QUnit.module('GroupByMenu', {
                 },
             },
         });
-        groupByMenu.$('button:first').click();
-        assert.ok(!groupByMenu.$('.o_menu_item:first > .dropdown-item').hasClass('selected'));
-        groupByMenu.$('.o_menu_item a').first().click();
-        assert.ok(groupByMenu.$('.o_menu_item:first > .dropdown-item').hasClass('selected'));
+        testUtils.dom.click(groupByMenu.$('button:first'));
+        assert.doesNotHaveClass(groupByMenu.$('.o_menu_item:first > .dropdown-item'), 'selected');
+        testUtils.dom.click(groupByMenu.$('.o_menu_item a').first());
+        assert.hasClass(groupByMenu.$('.o_menu_item:first > .dropdown-item'), 'selected');
         assert.ok(groupByMenu.$('.o_menu_item:first').is(':visible'),
             'group by filter should still be visible');
         groupByMenu.destroy();
@@ -127,10 +127,10 @@ QUnit.module('GroupByMenu', {
 
         var groupByMenu = createGroupByMenu(this.groupbys,
             {fieldname: {sortable: true, string: 'Super Date', type: 'date', isDate: true}});
-        groupByMenu.$('button:first').click();
-        assert.ok(!groupByMenu.$('.o_menu_item:first > .dropdown-item').hasClass('selected'));
-        groupByMenu.$('.o_menu_item a').first().click();
-        assert.ok(!groupByMenu.$('.o_menu_item:first > .dropdown-item').hasClass('selected'));
+        testUtils.dom.click(groupByMenu.$('button:first'));
+        assert.doesNotHaveClass(groupByMenu.$('.o_menu_item:first > .dropdown-item'), 'selected');
+        testUtils.dom.click(groupByMenu.$('.o_menu_item a').first());
+        assert.doesNotHaveClass(groupByMenu.$('.o_menu_item:first > .dropdown-item'), 'selected');
         assert.ok(groupByMenu.$('.o_menu_item:first').is(':visible'),
             'group by filter should still be visible');
         assert.ok(groupByMenu.$('.o_item_option').length, 5);
@@ -143,11 +143,12 @@ QUnit.module('GroupByMenu', {
         var groupByMenu = createGroupByMenu(this.groupbys,
             {fieldname: {sortable: true, string: 'Super Date', type: 'date', isDate: true}}
         );
+        testUtils.dom.click(groupByMenu.$('.o_dropdown_toggler_btn'));
         groupByMenu.$el.click(function (event) {
             // we do not want a click to get out and change the url, for example
             throw new Error('No click should get out of the groupby menu');
         });
-        groupByMenu.$('.o_menu_item a').first().click();
+        testUtils.dom.click(groupByMenu.$('.o_menu_item a').first());
 
         groupByMenu.destroy();
     });

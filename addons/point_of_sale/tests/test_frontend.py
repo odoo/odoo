@@ -31,15 +31,14 @@ class TestUi(odoo.tests.HttpCase):
         pear = env.ref('point_of_sale.whiteboard')
         attribute_value = env['product.attribute.value'].create({
             'name': 'add 2',
-            'product_ids': [(6, 0, [pear.id])],
             'attribute_id': env['product.attribute'].create({
                 'name': 'add 2',
             }).id,
         })
-        env['product.attribute.price'].create({
+        env['product.template.attribute.value'].create({
             'product_tmpl_id': pear.product_tmpl_id.id,
             'price_extra': 2,
-            'value_id': attribute_value.id,
+            'product_attribute_value_id': attribute_value.id,
         })
 
         fixed_pricelist = env['product.pricelist'].create({
@@ -188,6 +187,10 @@ class TestUi(odoo.tests.HttpCase):
         one_week_from_now = today + timedelta(weeks=1)
         two_weeks_from_now = today + timedelta(weeks=2)
 
+        public_pricelist = env['product.pricelist'].create({
+            'name': 'Public Pricelist',
+        })
+
         env['product.pricelist'].create({
             'name': 'Dates',
             'item_ids': [(0, 0, {
@@ -266,7 +269,22 @@ class TestUi(odoo.tests.HttpCase):
         all_pricelists = env['product.pricelist'].search([('id', '!=', excluded_pricelist.id)])
         all_pricelists.write(dict(currency_id=main_company.currency_id.id))
 
+        src_tax = env['account.tax'].create({'name': "SRC", 'amount': 10})
+        dst_tax = env['account.tax'].create({'name': "DST", 'amount': 5})
+
+        env.ref('point_of_sale.letter_tray').taxes_id = [(6, 0, [src_tax.id])]
+
+
         main_pos_config.write({
+            'tax_regime_selection': True,
+            'fiscal_position_ids': [(0, 0, {
+                                            'name': "FP-POS-2M",
+                                            'tax_ids': [
+                                                (0,0,{'tax_src_id': src_tax.id,
+                                                      'tax_dest_id': src_tax.id}),
+                                                (0,0,{'tax_src_id': src_tax.id,
+                                                      'tax_dest_id': dst_tax.id})]
+                                            })],
             'journal_id': test_sale_journal.id,
             'invoice_journal_id': test_sale_journal.id,
             'journal_ids': [(0, 0, {'name': 'Cash Journal - Test',
@@ -275,8 +293,18 @@ class TestUi(odoo.tests.HttpCase):
                                                        'company_id': main_company.id,
                                                        'journal_user': True})],
             'use_pricelist': True,
+            'pricelist_id': public_pricelist.id,
             'available_pricelist_ids': [(4, pricelist.id) for pricelist in all_pricelists],
         })
+
+        # Change the default sale pricelist of customers,
+        # so the js tests can expect deterministically this pricelist when selecting a customer.
+        field = env['ir.model.fields']._get('res.partner', 'property_product_pricelist')
+        env['ir.property'].search([
+            ('name', '=', 'property_product_pricelist'),
+            ('fields_id', '=', field.id),
+            ('res_id', '=', False)
+        ]).write({'value_reference': 'product.pricelist,%s' % public_pricelist.id})
 
         # open a session, the /pos/web controller will redirect to it
         main_pos_config.open_session_cb()

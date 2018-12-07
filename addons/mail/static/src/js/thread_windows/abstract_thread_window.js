@@ -79,7 +79,6 @@ var AbstractThreadWindow = Widget.extend({
         this.$header = this.$('.o_thread_window_header');
 
         this._threadWidget = new ThreadWidget(this, {
-            displayDocumentLinks: false,
             displayMarkAsRead: false,
             displayStars: this.options.displayStars,
         });
@@ -138,6 +137,15 @@ var AbstractThreadWindow = Widget.extend({
      */
     getID: function () {
         return this._getThreadID();
+    },
+    /**
+     * @returns {mail.model.Thread|undefined}
+     */
+    getThread: function () {
+        if (!this.hasThread) {
+            return undefined;
+        }
+        return this._thread;
     },
     /**
      * Get the status of the thread, such as the im status of a DM chat
@@ -258,14 +266,6 @@ var AbstractThreadWindow = Widget.extend({
             QWeb.render('mail.AbstractThreadWindow.HeaderContent', options));
     },
     /**
-     * Render the 'is typing...' notification bar text on the thread in this
-     * thread window. This is called when there is a change in the list of users
-     * currently typing something on this thread.
-     */
-    renderTypingNotificationBar: function () {
-        this._threadWidget.renderTypingNotificationBar(this._thread);
-    },
-    /**
      * Scroll to the bottom of the thread in the thread window
      */
     scrollToBottom: function () {
@@ -293,7 +293,9 @@ var AbstractThreadWindow = Widget.extend({
     updateVisualFoldState: function () {
         if (!this.isFolded()) {
             this._threadWidget.scrollToBottom();
-            this._focusInput();
+            if (this.options.autofocus) {
+                this._focusInput();
+            }
         }
         this._animateFold();
     },
@@ -338,6 +340,7 @@ var AbstractThreadWindow = Widget.extend({
     _getHeaderRenderingOptions: function () {
         return {
             status: this.getThreadStatus(),
+            thread: this.getThread(),
             title: this.getTitle(),
             unreadCounter: this.getUnreadCounter(),
             widget: this,

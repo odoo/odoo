@@ -165,7 +165,7 @@ PAPER_SIZES = [
 
 class report_paperformat(models.Model):
     _name = "report.paperformat"
-    _description = "Allows customization of a report."
+    _description = "Paper Format Config"
 
     name = fields.Char('Name', required=True)
     default = fields.Boolean('Default paper format ?')

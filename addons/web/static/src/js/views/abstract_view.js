@@ -108,10 +108,11 @@ var AbstractView = Class.extend({
         // the boolean parameter 'isEmbedded' determines if the view should be considered
         // as a subview. For now this is only used by the graph controller that appends a
         // 'Group By' button beside the 'Measures' button when the graph view is embedded.
-        this.isEmbedded = params.isEmbedded || false;
+        var isEmbedded = params.isEmbedded || false;
 
         this.rendererParams = {
             arch: this.arch,
+            isEmbedded: isEmbedded,
             noContentHelp: params.action && params.action.help,
         };
 
@@ -141,7 +142,7 @@ var AbstractView = Class.extend({
             },
             groupable: this.groupable,
             enableTimeRangeMenu: this.enableTimeRangeMenu,
-            isEmbedded: this.isEmbedded,
+            isEmbedded: isEmbedded,
             controllerID: params.controllerID,
             bannerRoute: this.arch.attrs.banner_route,
         };
@@ -161,6 +162,11 @@ var AbstractView = Class.extend({
             this.controllerParams.withControlPanel = params.withControlPanel;
         }
 
+        var groupBy = params.groupBy;
+        if (typeof groupBy === 'string') {
+            groupBy = [groupBy];
+        }
+
         this.loadParams = {
             context: params.context,
             count: params.count || ((this.controllerParams.ids !== undefined) &&
@@ -171,10 +177,11 @@ var AbstractView = Class.extend({
             comparisonTimeRange: comparisonTimeRange,
             comparisonTimeRangeDescription: comparisonTimeRangeDescription,
             compare: compare,
-            groupedBy: params.groupBy,
+            groupedBy: groupBy,
             modelName: params.modelName,
             res_id: params.currentId,
             res_ids: params.ids,
+            orderedBy: params.context ? params.context.orderedBy : [],
         };
         if (params.modelName) {
             this.loadParams.modelName = params.modelName;

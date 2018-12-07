@@ -46,28 +46,6 @@ var Mailbox = SearchableThread.extend({
         this._mailboxCounter = Math.max(this._mailboxCounter - num, 0);
     },
     /**
-     * Override so that there are options to filter messages based on document
-     * model and ID.
-     *
-     * @override
-     * @param {Object} [options]
-     * @param {string} [options.documentModel] model of the document that the
-     *   local messages of inbox must be linked to.
-     * @param {integer} [options.documentID] ID of the document that the local
-     *   messages of inbox must be linked to.
-     * @returns {mail.model.Message[]}
-     */
-    getMessages: function (options) {
-        var messages = this._super.apply(this, arguments);
-        if (options.documentModel && options.documentID) {
-            return _.filter(messages, function (message) {
-                return message.getDocumentModel() === options.documentModel &&
-                        message.getDocumentID() === options.documentID;
-            });
-        }
-        return messages;
-    },
-    /**
      * Get the mailbox counter of this mailbox.
      *
      * @returns {integer}
@@ -89,31 +67,40 @@ var Mailbox = SearchableThread.extend({
         return this.fetchMessages().then(function (messages) {
             // pick only last message of chatter
             // items = list of objects
-            // { unreadCounter: integer, message: mail.model.Message }
+            // {
+            //    unreadCounter: {integer},
+            //    message: {mail.model.Message},
+            //    messageIDs: {integer[]},
+            // }
             var items = [];
             _.each(messages, function (message) {
                 var unreadCounter = 1;
+                var messageIDs = [message.getID()];
                 var similarItem = _.find(items, function (item) {
                     return self._areMessagesFromSameDocumentThread(item.message, message) ||
                             self._areMessagesFromSameChannel(item.message, message);
                 });
                 if (similarItem) {
                     unreadCounter = similarItem.unreadCounter + 1;
+                    messageIDs = similarItem.messageIDs.concat(messageIDs);
                     var index = _.findIndex(items, similarItem);
                     items[index] = {
                         unreadCounter: unreadCounter,
                         message: message,
+                        messageIDs: messageIDs
                     };
                 } else {
                     items.push({
                         unreadCounter: unreadCounter,
                         message: message,
+                        messageIDs: messageIDs,
                     });
                 }
             });
             return _.map(items, function (item) {
                 return _.extend(item.message.getPreview(), {
                     unreadCounter: item.unreadCounter,
+                    messageIDs: item.messageIDs,
                 });
             });
         });
@@ -201,6 +188,27 @@ var Mailbox = SearchableThread.extend({
         } else {
             throw (_.str(_t("Missing domain for mailbox with ID '%s'"), this._id));
         }
+    },
+    /**
+     * Post a message from inbox. This is used when using the 'reply' feature
+     * on a message that is linked to a document thread.
+     *
+     * @override
+     * @private
+     * @param {Object} messageData
+     * @param {Object} options
+     * @param {integer} options.documentID
+     * @param {string} options.documentModel
+     * @returns {$.Promise}
+     */
+    _postMessage: function (messageData, options) {
+        var documentThread = this.call(
+            'mail_service',
+            'getDocumentThread',
+            options.documentModel,
+            options.documentID
+        );
+        return documentThread.postMessage(messageData);
     },
 });
 

@@ -48,7 +48,7 @@ tour.register('shop_wishlist', {
         },
         {
             content: "check that logged in and search for Customizable Desk",
-            extra_trigger: "li span:contains('Mitchell Stephens')",
+            extra_trigger: "li span:contains('Mitchell Admin')",
             trigger: 'form input[name="search"]',
             run: "text Customizable Desk",
         },

@@ -5,6 +5,7 @@ from odoo import models, fields, api, SUPERUSER_ID
 
 class test_model(models.Model):
     _name = 'test_converter.test_model'
+    _description = 'Test Converter Model'
 
     char = fields.Char()
     integer = fields.Integer()
@@ -41,9 +42,11 @@ class test_model(models.Model):
 
 class test_model_sub(models.Model):
     _name = 'test_converter.test_model.sub'
+    _description = 'Subtraction For Test Model & Test Converter'
     name = fields.Char()
 
 
 class test_model_monetary(models.Model):
     _name = 'test_converter.monetary'
+    _description = 'Test Converter Monetary'
     value = fields.Float(digits=(16, 55))

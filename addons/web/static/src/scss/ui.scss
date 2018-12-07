@@ -53,6 +53,10 @@
             background: none;
             outline: 1px solid $o-main-text-color;
         }
+        &:disabled ~ .custom-control-label:before {
+            background: $o-brand-lightsecondary;
+            opacity: 0.25;
+        }
     }
     @media print {
         -webkit-print-color-adjust: exact !important;
@@ -73,4 +77,9 @@
     100% {
         outline: 20px solid fade-out($o-brand-primary, 1.0);
     }
+}
+
+// Declare a similar class as 'disabled' but with no visual effect
+.o_debounce_disabled {
+    pointer-events: none;
 }

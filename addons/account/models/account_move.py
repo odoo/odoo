@@ -18,7 +18,7 @@ from lxml import etree
 
 class AccountMove(models.Model):
     _name = "account.move"
-    _description = "Account Entry"
+    _description = "Journal Entries"
     _order = 'date desc, id desc'
 
     @api.multi
@@ -167,8 +167,8 @@ class AccountMove(models.Model):
             return line_ids.filtered(lambda x: tax in x.tax_ids)
 
         def _get_tax_account(tax, amount):
-            if tax.tax_exigibility == 'on_payment' and tax.cash_basis_account:
-                return tax.cash_basis_account
+            if tax.tax_exigibility == 'on_payment' and tax.cash_basis_account_id:
+                return tax.cash_basis_account_id
             if tax.type_tax_use == 'purchase':
                 return tax.refund_account_id if amount < 0 else tax.account_id
             return tax.refund_account_id if amount >= 0 else tax.account_id
@@ -396,7 +396,7 @@ class AccountMove(models.Model):
         reversed_move = self.copy(default={
             'date': date,
             'journal_id': journal_id.id if journal_id else self.journal_id.id,
-            'ref': _('%sreversal of: ') % (_('Automatic ') if auto else '') + self.name,
+            'ref': (_('Automatic reversal of: %s') if auto else _('Reversal of: %s')) % (self.name),
             'auto_reverse': False})
         for acm_line in reversed_move.line_ids.with_context(check_move_validity=False):
             acm_line.write({
@@ -423,7 +423,7 @@ class AccountMove(models.Model):
             aml = ac_move.line_ids.filtered(lambda x: x.account_id.reconcile or x.account_id.internal_type == 'liquidity')
             aml.remove_move_reconcile()
             #reconcile together the reconcilable (or the liquidity aml) and their newly created counterpart
-            for account in list(set([x.account_id for x in aml])):
+            for account in set([x.account_id for x in aml]):
                 to_rec = aml.filtered(lambda y: y.account_id == account)
                 to_rec |= reversed_move.line_ids.filtered(lambda y: y.account_id == account)
                 #reconciliation will be full, so speed up the computation by using skip_full_reconcile_check in the context
@@ -611,25 +611,25 @@ class AccountMoveLine(models.Model):
         ondelete="cascade", domain=[('deprecated', '=', False)], default=lambda self: self._context.get('account_id', False))
     move_id = fields.Many2one('account.move', string='Journal Entry', ondelete="cascade",
         help="The move of this entry line.", index=True, required=True, auto_join=True)
-    narration = fields.Text(related='move_id.narration', string='Narration')
-    ref = fields.Char(related='move_id.ref', string='Reference', store=True, copy=False, index=True)
+    narration = fields.Text(related='move_id.narration', string='Narration', readonly=False)
+    ref = fields.Char(related='move_id.ref', string='Reference', store=True, copy=False, index=True, readonly=False)
     payment_id = fields.Many2one('account.payment', string="Originator Payment", help="Payment that created this entry", copy=False)
     statement_line_id = fields.Many2one('account.bank.statement.line', index=True, string='Bank statement line reconciled with this entry', copy=False, readonly=True)
     statement_id = fields.Many2one('account.bank.statement', related='statement_line_id.statement_id', string='Statement', store=True,
         help="The bank statement used for bank reconciliation", index=True, copy=False)
     reconciled = fields.Boolean(compute='_amount_residual', store=True)
-    full_reconcile_id = fields.Many2one('account.full.reconcile', string="Matching Number", copy=False)
+    full_reconcile_id = fields.Many2one('account.full.reconcile', string="Matching Number", copy=False, index=True)
     matched_debit_ids = fields.One2many('account.partial.reconcile', 'credit_move_id', String='Matched Debits',
         help='Debit journal items that are matched with this journal item.')
     matched_credit_ids = fields.One2many('account.partial.reconcile', 'debit_move_id', String='Matched Credits',
         help='Credit journal items that are matched with this journal item.')
-    journal_id = fields.Many2one('account.journal', related='move_id.journal_id', string='Journal',
+    journal_id = fields.Many2one('account.journal', related='move_id.journal_id', string='Journal', readonly=False,
         index=True, store=True, copy=False)  # related is required
     blocked = fields.Boolean(string='No Follow-up', default=False,
         help="You can check this box to mark this journal item as a litigation with the associated partner")
     date_maturity = fields.Date(string='Due date', index=True, required=True,
         help="This field is used for payable and receivable journal entries. You can put the limit date for the payment of this line.")
-    date = fields.Date(related='move_id.date', string='Date', index=True, store=True, copy=False)  # related is required
+    date = fields.Date(related='move_id.date', string='Date', index=True, store=True, copy=False, readonly=False)  # related is required
     analytic_line_ids = fields.One2many('account.analytic.line', 'move_id', string='Analytic lines', oldname="analytic_lines")
     tax_ids = fields.Many2many('account.tax', string='Taxes', domain=['|', ('active', '=', False), ('active', '=', True)])
     tax_line_id = fields.Many2one('account.tax', string='Originator tax', ondelete='restrict')
@@ -641,7 +641,7 @@ class AccountMoveLine(models.Model):
     # TODO: put the invoice link and partner_id on the account_move
     invoice_id = fields.Many2one('account.invoice', oldname="invoice")
     partner_id = fields.Many2one('res.partner', string='Partner', ondelete='restrict')
-    user_type_id = fields.Many2one('account.account.type', related='account_id.user_type_id', index=True, store=True, oldname="user_type")
+    user_type_id = fields.Many2one('account.account.type', related='account_id.user_type_id', index=True, store=True, oldname="user_type", readonly=True)
     tax_exigible = fields.Boolean(string='Appears in VAT report', default=True,
         help="Technical field used to mark a tax line as exigible in the vat report or not (only exigible journal items are displayed). By default all new journal items are directly exigible, but with the feature cash_basis on taxes, some will become exigible only when the payment is recorded.")
     parent_state = fields.Char(compute="_compute_parent_state", help="State of the parent account.move")
@@ -701,7 +701,7 @@ class AccountMoveLine(models.Model):
             unaffected_earnings_type = self.env.ref("account.data_unaffected_earnings")
             record.is_unaffected_earnings_line = unaffected_earnings_type == record.account_id.user_type_id
 
-    @api.onchange('amount_currency', 'currency_id')
+    @api.onchange('amount_currency', 'currency_id', 'account_id')
     def _onchange_amount_currency(self):
         '''Recompute the debit/credit based on amount_currency/currency_id and date.
         However, date is a related field on account.move. Then, this onchange will not be triggered
@@ -709,9 +709,10 @@ class AccountMoveLine(models.Model):
         To fix this problem, see _onchange_date method on account.move.
         '''
         for line in self:
+            company_currency_id = line.account_id.company_id.currency_id
             amount = line.amount_currency
-            if line.currency_id and line.currency_id != line.company_currency_id:
-                amount = line.currency_id._convert(amount, line.company_currency_id, line.company_id, line.date or fields.Date.today())
+            if line.currency_id and company_currency_id and line.currency_id != company_currency_id:
+                amount = line.currency_id._convert(amount, company_currency_id, line.company_id, line.date or fields.Date.today())
                 line.debit = amount > 0 and amount or 0.0
                 line.credit = amount < 0 and -amount or 0.0
 
@@ -876,8 +877,8 @@ class AccountMoveLine(models.Model):
         # Create list of debit and list of credit move ordered by date-currency
         debit_moves = self.filtered(lambda r: r.debit != 0 or r.amount_currency > 0)
         credit_moves = self.filtered(lambda r: r.credit != 0 or r.amount_currency < 0)
-        debit_moves.sorted(key=lambda a: (a.date, a.currency_id))
-        credit_moves.sorted(key=lambda a: (a.date, a.currency_id))
+        debit_moves = debit_moves.sorted(key=lambda a: (a.date_maturity or a.date, a.currency_id))
+        credit_moves = credit_moves.sorted(key=lambda a: (a.date_maturity or a.date, a.currency_id))
         # Compute on which field reconciliation should be based upon:
         field = self[0].account_id.currency_id and 'amount_residual_currency' or 'amount_residual'
         #if all lines share the same currency, use amount_residual_currency to avoid currency rounding error
@@ -1072,10 +1073,8 @@ class AccountMoveLine(models.Model):
             # the provided values were not already multi-currency
             if account.currency_id and 'amount_currency' not in vals and account.currency_id.id != account.company_id.currency_id.id:
                 vals['currency_id'] = account.currency_id.id
-                ctx = {}
-                if 'date' in vals:
-                    ctx['date'] = vals['date']
-                vals['amount_currency'] = account.company_id.currency_id._convert(amount, account.currency_id, account.company_id, vals.get('date', fields.Date.today()))
+                date = vals.get('date') or vals.get('date_maturity') or fields.Date.today()
+                vals['amount_currency'] = account.company_id.currency_id._convert(amount, account.currency_id, account.company_id, date)
 
             #Toggle the 'tax_exigible' field to False in case it is not yet given and the tax in 'tax_line_id' or one of
             #the 'tax_ids' is a cash based tax.
@@ -1118,7 +1117,7 @@ class AccountMoveLine(models.Model):
             self._update_check()
         #when we set the expected payment date, log a note on the invoice_id related (if any)
         if vals.get('expected_pay_date') and self.invoice_id:
-            msg = _('New expected payment date: ') + vals['expected_pay_date'] + '.\n' + vals.get('internal_note', '')
+            msg = _('New expected payment date: ') + fields.Date.to_string(vals['expected_pay_date']) + '.\n' + vals.get('internal_note', '')
             self.invoice_id.message_post(body=msg) #TODO: check it is an internal note (not a regular email)!
         #when making a reconciliation on an existing liquidity journal item, mark the payment as reconciled
         for record in self:
@@ -1268,8 +1267,9 @@ class AccountMoveLine(models.Model):
         """
         self.ensure_one()
         amount = -self.balance * distribution.percentage / 100.0
+        default_name = self.name or (self.ref or '/' + ' -- ' + (self.partner_id and self.partner_id.name or '/'))
         return {
-            'name': self.name,
+            'name': default_name,
             'date': self.date,
             'account_id': distribution.account_id.id,
             'partner_id': self.partner_id.id,
@@ -1376,7 +1376,7 @@ class AccountPartialReconcile(models.Model):
     currency_id = fields.Many2one('res.currency', string='Currency')
     company_currency_id = fields.Many2one('res.currency', string="Company Currency", related='company_id.currency_id', readonly=True,
         help='Utility field to express amount currency')
-    company_id = fields.Many2one('res.company', related='debit_move_id.company_id', store=True, string='Company')
+    company_id = fields.Many2one('res.company', related='debit_move_id.company_id', store=True, string='Company', readonly=False)
     full_reconcile_id = fields.Many2one('account.full.reconcile', string="Full Reconcile", copy=False)
     max_date = fields.Date(string='Max Date of Matched Lines', compute='_compute_max_date',
         readonly=True, copy=False, store=True,
@@ -1581,7 +1581,7 @@ class AccountPartialReconcile(models.Model):
                 full_to_unlink |= rec.full_reconcile_id
         #reverse the tax basis move created at the reconciliation time
         for move in self.env['account.move'].search([('tax_cash_basis_rec_id', 'in', self._ids)]):
-            if move.date > (move.company_id.period_lock_date or '0000-00-00'):
+            if move.date > (move.company_id.period_lock_date or date.min):
                 move.reverse_moves(date=move.date)
             else:
                 move.reverse_moves()

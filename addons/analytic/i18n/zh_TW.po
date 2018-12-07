@@ -4,13 +4,15 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2018
+# sejun huang <sejun.huang@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
-"Last-Translator: Martin Trigaux, 2018\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-09-21 13:17+0000\n"
+"Last-Translator: sejun huang <sejun.huang@gmail.com>, 2018\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,12 +35,12 @@ msgstr "有效"
 #: model_terms:ir.actions.act_window,help:analytic.action_account_analytic_account_form
 #: model_terms:ir.actions.act_window,help:analytic.action_analytic_account_form
 msgid "Add a new analytic account"
-msgstr ""
+msgstr "添加一個新的分析帳戶"
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_tag_action
 msgid "Add a new tag"
-msgstr ""
+msgstr "添加新標籤"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__amount
@@ -58,11 +60,16 @@ msgid "Analytic Account"
 msgstr "分析帳戶"
 
 #. module: analytic
+#: model:ir.model,name:analytic.model_account_analytic_distribution
+msgid "Analytic Account Distribution"
+msgstr "分析帳戶分配"
+
+#. module: analytic
 #: model:ir.actions.act_window,name:analytic.account_analytic_group_action
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_group_form_view
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_group_tree_view
 msgid "Analytic Account Groups"
-msgstr ""
+msgstr "分析帳戶組"
 
 #. module: analytic
 #: model:res.groups,name:analytic.group_analytic_accounting
@@ -72,7 +79,7 @@ msgstr "分析會計"
 #. module: analytic
 #: model:res.groups,name:analytic.group_analytic_tags
 msgid "Analytic Accounting Tags"
-msgstr ""
+msgstr "分析會計標籤"
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.action_account_analytic_account_form
@@ -84,7 +91,7 @@ msgstr "分析帳戶"
 #. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_group
 msgid "Analytic Categories"
-msgstr ""
+msgstr "分析類別"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag__active_analytic_distribution
@@ -112,12 +119,12 @@ msgstr "輔助核算明細"
 #. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_line
 msgid "Analytic Line"
-msgstr "分析行"
+msgstr "分析項目"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__line_ids
 msgid "Analytic Lines"
-msgstr "分析行"
+msgstr "分析項目"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag__name
@@ -145,7 +152,7 @@ msgstr "關聯的業務夥伴"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "附件數量"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__balance
@@ -166,12 +173,12 @@ msgstr "分析帳戶表"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_group__children_ids
 msgid "Childrens"
-msgstr ""
+msgstr "下級"
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_group_action
 msgid "Click to add a new analytic account group."
-msgstr ""
+msgstr "按一下此處添加新的分析帳戶組。"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag__color
@@ -207,7 +214,7 @@ msgstr "成本與收入"
 msgid ""
 "Costs will be created automatically when you register supplier\n"
 "                invoices, expenses or timesheets."
-msgstr "當您登記供應商發票、費用或者工時表的時候成本將會自動的生成。"
+msgstr "當您登記供應商憑單、費用或者工時表的時候成本將會自動的生成。"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__create_uid
@@ -319,7 +326,7 @@ msgstr "如果勾選此項，有新消息會提醒您。"
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_account__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "如果勾選此項， 某些信息將會產生傳遞錯誤。"
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_account__active
@@ -375,12 +382,12 @@ msgstr "最後更新時間"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "附件"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "消息遞送錯誤"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_ids
@@ -397,12 +404,12 @@ msgstr "名稱"
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid "No activity yet"
-msgstr ""
+msgstr "尚未啟用"
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action
 msgid "No activity yet on this account"
-msgstr ""
+msgstr "此分析會計帳戶尚未啟用"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_needaction_counter
@@ -412,7 +419,7 @@ msgstr "行動數量"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_has_error_counter
 msgid "Number of error"
-msgstr ""
+msgstr "錯誤數"
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_account__message_needaction_counter
@@ -422,7 +429,7 @@ msgstr "需要行動消息的數量"
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_account__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "遞送錯誤的消息數量"
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_account__message_unread_counter
@@ -437,12 +444,12 @@ msgstr "上級"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_group__parent_path
 msgid "Parent Path"
-msgstr ""
+msgstr "上級路徑"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution__tag_id
 msgid "Parent tag"
-msgstr ""
+msgstr "上級標籤"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__partner_id
@@ -474,15 +481,15 @@ msgid ""
 "                (fixed price invoices), on timesheets (based on the work done) or\n"
 "                on expenses (e.g. reinvoicing of travel costs)."
 msgstr ""
-"創建客戶發票時將自動創建\n"
-"                收入。可根據銷售訂單 （固定價格發票）、\n"
+"創建客戶憑單時將自動創建\n"
+"                收入。可根據銷售訂單 （固定價格憑單）、\n"
 "                時間表（根據已完成工作）或費用（例如\n"
-"                差旅費的再開立發票）創建客戶發票。"
+"                差旅費的再開立憑單）創建客戶應收憑單。"
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
 msgid "Search Analytic Lines"
-msgstr "搜尋分析行"
+msgstr "搜尋分析項目"
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_tag__active
@@ -497,26 +504,26 @@ msgstr "摘要"
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
 msgid "Tasks Date"
-msgstr ""
+msgstr "任務日期"
 
 #. module: analytic
 #: sql_constraint:account.analytic.distribution:0
 msgid ""
 "The percentage of an analytic distribution should be between 0 and 100."
-msgstr ""
+msgstr "分析分配的百分比應該在0 與 100 之間."
 
 #. module: analytic
-#: code:addons/analytic/models/analytic_account.py:194
+#: code:addons/analytic/models/analytic_account.py:195
 #, python-format
 msgid ""
 "The selected account belongs to another company that the one you're trying "
 "to create an analytic item for"
-msgstr ""
+msgstr "所選帳戶屬於您嘗試為其創建分析項目的另一家公司"
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_group_action
 msgid "This allows to classify your analytic accounts."
-msgstr ""
+msgstr "這允許對您的分析帳戶進行分類。"
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_tree
@@ -542,11 +549,6 @@ msgstr "未讀消息計數器"
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__user_id
 msgid "User"
 msgstr "使用者"
-
-#. module: analytic
-#: model:ir.model,name:analytic.model_account_analytic_distribution
-msgid "account.analytic.distribution"
-msgstr ""
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form

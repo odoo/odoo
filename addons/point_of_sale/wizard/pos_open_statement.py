@@ -7,7 +7,7 @@ from odoo.exceptions import UserError
 
 class PosOpenStatement(models.TransientModel):
     _name = 'pos.open.statement'
-    _description = 'Open Statements'
+    _description = 'Point of Sale Open Statement'
 
     @api.multi
     def open_statement(self):

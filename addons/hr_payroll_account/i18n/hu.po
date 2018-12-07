@@ -3,15 +3,17 @@
 # * hr_payroll_account
 # 
 # Translators:
-# Martin Trigaux, 2016
-# krnkris, 2016
+# Martin Trigaux, 2018
+# krnkris, 2018
+# gezza <geza.nagy@oregional.hu>, 2018
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
-"Last-Translator: krnkris, 2016\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-08-24 09:19+0000\n"
+"Last-Translator: gezza <geza.nagy@oregional.hu>, 2018\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,8 +22,8 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr_payroll_account
-#: model:ir.ui.view,arch_db:hr_payroll_account.hr_contract_form_inherit
-#: model:ir.ui.view,arch_db:hr_payroll_account.hr_salary_rule_form_inherit
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account.hr_contract_form_inherit
+#: model_terms:ir.ui.view,arch_db:hr_payroll_account.hr_salary_rule_form_inherit
 msgid "Accounting"
 msgstr "Könyvelés"
 
@@ -31,8 +33,8 @@ msgid "Accounting Entry"
 msgstr "Könyvelési bevitel"
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/models/hr_payroll_account.py:113
-#: code:addons/hr_payroll_account/models/hr_payroll_account.py:128
+#: code:addons/hr_payroll_account/models/hr_payroll_account.py:114
+#: code:addons/hr_payroll_account/models/hr_payroll_account.py:129
 #, python-format
 msgid "Adjustment Entry"
 msgstr "Kerekítés bevitel"
@@ -42,7 +44,7 @@ msgstr "Kerekítés bevitel"
 #: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip_line__analytic_account_id
 #: model:ir.model.fields,field_description:hr_payroll_account.field_hr_salary_rule__analytic_account_id
 msgid "Analytic Account"
-msgstr "Analitikus/elemző könyvelés"
+msgstr "Analitikus számla"
 
 #. module: hr_payroll_account
 #: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip_line__account_credit
@@ -93,7 +95,7 @@ msgid "Payslip Line"
 msgstr "Fizetési jegyzék sor"
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/models/hr_payroll_account.py:64
+#: code:addons/hr_payroll_account/models/hr_payroll_account.py:65
 #, python-format
 msgid "Payslip of %s"
 msgstr "%s fizetési jegyzék (Payslip)"
@@ -106,13 +108,18 @@ msgid "Salary Journal"
 msgstr "Fizetési napló"
 
 #. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_hr_salary_rule
+msgid "Salary Rule"
+msgstr ""
+
+#. module: hr_payroll_account
 #: model:ir.model.fields,field_description:hr_payroll_account.field_hr_payslip_line__account_tax_id
 #: model:ir.model.fields,field_description:hr_payroll_account.field_hr_salary_rule__account_tax_id
 msgid "Tax"
 msgstr "Adó"
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/models/hr_payroll_account.py:111
+#: code:addons/hr_payroll_account/models/hr_payroll_account.py:112
 #, python-format
 msgid "The Expense Journal \"%s\" has not properly configured the Credit Account!"
 msgstr ""
@@ -120,12 +127,7 @@ msgstr ""
 "számla!"
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/models/hr_payroll_account.py:126
+#: code:addons/hr_payroll_account/models/hr_payroll_account.py:127
 #, python-format
 msgid "The Expense Journal \"%s\" has not properly configured the Debit Account!"
 msgstr "A \"%s\" költség naplón nem lett helyesen beállítva a terhelendő számla!"
-
-#. module: hr_payroll_account
-#: model:ir.model,name:hr_payroll_account.model_hr_salary_rule
-msgid "hr.salary.rule"
-msgstr "hr.salary.rule"

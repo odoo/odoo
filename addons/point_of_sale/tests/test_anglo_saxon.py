@@ -24,21 +24,26 @@ class TestAngloSaxonCommon(common.TransactionCase):
         self.account = self.env['account.account'].create({'name': 'Receivable', 'code': 'RCV00' , 'user_type_id': account_type_rcv.id, 'reconcile': True})
         account_expense = self.env['account.account'].create({'name': 'Expense', 'code': 'EXP00' , 'user_type_id': account_type_oth.id, 'reconcile': True})
         account_output = self.env['account.account'].create({'name': 'Output', 'code': 'OUT00' , 'user_type_id': account_type_oth.id, 'reconcile': True})
+        account_valuation = self.env['account.account'].create({'name': 'Valuation', 'code': 'STV00', 'user_type_id': account_type_oth.id, 'reconcile': True})
         self.partner.property_account_receivable_id = self.account
         self.category.property_account_income_categ_id = self.account
         self.category.property_account_expense_categ_id = account_expense
         self.category.property_stock_account_input_categ_id = self.account
         self.category.property_stock_account_output_categ_id = account_output
-        self.category.property_stock_valuation_account_id = self.account
+        self.category.property_stock_valuation_account_id = account_valuation
         self.category.property_stock_journal = self.env['account.journal'].create({'name': 'Stock journal', 'type': 'sale', 'code': 'STK00'})
         self.pos_config = self.env.ref('point_of_sale.pos_config_main')
         self.pos_config = self.pos_config.copy({'name': 'New POS config'})
         self.product = self.product.copy({'name': 'New product','standard_price': 100})
         self.company.anglo_saxon_accounting = True
         self.product.categ_id = self.category
+        self.product.property_account_expense_id = account_expense
+        self.product.property_account_income_id = self.account
         sale_journal = self.env['account.journal'].create({'name': 'POS journal', 'type': 'sale', 'code': 'POS00'})
         self.pos_config.journal_id = sale_journal
         self.cash_journal = self.env['account.journal'].create({'name': 'CASH journal', 'type': 'cash', 'code': 'CSH00'})
+        self.pos_config.invoice_journal_id = False
+        self.pos_config.journal_ids = [self.cash_journal.id]
 
 
 class TestAngloSaxonFlow(TestAngloSaxonCommon):

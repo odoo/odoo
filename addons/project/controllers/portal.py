@@ -121,9 +121,18 @@ class CustomerPortal(CustomerPortal):
             'none': {'input': 'none', 'label': _('None')},
             'project': {'input': 'project', 'label': _('Project')},
         }
+
+        # extends filterby criteria with project the customer has access to
+        projects = request.env['project.project'].search([])
+        for project in projects:
+            searchbar_filters.update({
+                str(project.id): {'label': project.name, 'domain': [('project_id', '=', project.id)]}
+            })
+
         # extends filterby criteria with project (criteria name is the project id)
         # Note: portal users can't view projects they don't follow
-        project_groups = request.env['project.task'].read_group([], ['project_id'], ['project_id'])
+        project_groups = request.env['project.task'].read_group([('project_id', 'not in', projects.ids)],
+                                                                ['project_id'], ['project_id'])
         for group in project_groups:
             proj_id = group['project_id'][0] if group['project_id'] else False
             proj_name = group['project_id'][1] if group['project_id'] else _('Others')

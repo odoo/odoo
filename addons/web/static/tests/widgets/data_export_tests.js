@@ -104,18 +104,19 @@ QUnit.module('widgets', {
                 };
             },
         };
-        list.$('thead th.o_list_record_selector input').click();
-        list.sidebar.$('a:contains(Export)').click();
+        testUtils.dom.click(list.$('thead th.o_list_record_selector input'));
+        testUtils.dom.click(list.sidebar.$('.o_dropdown_toggler_btn:contains(Action)'));
+        testUtils.dom.click(list.sidebar.$('a:contains(Export)'));
 
         assert.strictEqual($('.modal').length, 1, "a modal dialog should be open");
         assert.strictEqual($('span.o_tree_column:contains(Activities)').length, 1,
             "the Activities field should be in the list of exportable fields");
 
         // select the field Description, click on add, then export and close
-        $('.modal span:contains(Description)').click();
-        $('.modal .o_add_field').click();
-        $('.modal span:contains(Export To File)').click();
-        $('.modal span:contains(Close)').click();
+        testUtils.dom.click($('.modal span:contains(Description)'));
+        testUtils.dom.click($('.modal .o_add_field'));
+        testUtils.dom.click($('.modal span:contains(Export To File)'));
+        testUtils.dom.click($('.modal span:contains(Close)'));
 
         list.destroy();
         framework.blockUI = blockUI;
@@ -183,28 +184,29 @@ QUnit.module('widgets', {
         };
 
         // Open the export modal
-        list.$('thead th.o_list_record_selector input').click();
-        list.sidebar.$('a:contains(Export)').click();
+        testUtils.dom.click(list.$('thead th.o_list_record_selector input'));
+        testUtils.dom.click(list.sidebar.$('.o_dropdown_toggler_btn:contains(Action)'));
+        testUtils.dom.click(list.sidebar.$('a:contains(Export)'));
         assert.strictEqual($('.modal').length, 1,
             "a modal dialog should be open");
 
         // Select 'Activities' in fields to export
         assert.strictEqual($('.modal select.o_fields_list option').length, 0,
             "the fields list should be empty");
-        $('.modal .o_export_tree_item:contains(Activities)').click();
-        $('.modal button:contains(Add)').click();
+        testUtils.dom.click($('.modal .o_export_tree_item:contains(Activities)'));
+        testUtils.dom.click($('.modal button:contains(Add)'));
         assert.strictEqual($('.modal select.o_fields_list option').length, 1,
             "there should be one item in the fields list");
 
         // Save fields list
-        $('.modal a:contains(Save fields list)').click();
-        $('.modal .o_save_list > input').val('fields list').trigger('input');
-        $('.modal .o_save_list > button').click();
+        testUtils.dom.click($('.modal a:contains(Save fields list)'));
+        testUtils.fields.editInput($('.modal .o_save_list > input'), 'fields list');
+        testUtils.dom.click($('.modal .o_save_list > button'));
         assert.verifySteps(['build_search_data', 'create'],
             "create should have been called");
 
         // Close the modal and destroy list
-        $('.modal button span:contains(Close)').click();
+        testUtils.dom.click($('.modal button span:contains(Close)'));
         list.destroy();
 
         // restore create function

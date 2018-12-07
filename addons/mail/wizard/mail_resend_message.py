@@ -101,8 +101,8 @@ class PartnerResend(models.TransientModel):
     _description = 'Partner with additionnal information for mail resend'
 
     partner_id = fields.Many2one('res.partner', string='Partner', required=True, ondelete='cascade')
-    name = fields.Char(related="partner_id.name", related_sudo=False)
-    email = fields.Char(related="partner_id.email", related_sudo=False)
+    name = fields.Char(related="partner_id.name", related_sudo=False, readonly=False)
+    email = fields.Char(related="partner_id.email", related_sudo=False, readonly=False)
     resend = fields.Boolean(string="Send Again", default=True)
     resend_wizard_id = fields.Many2one('mail.resend.message', string="Resend wizard")
     message = fields.Char(string="Help message")

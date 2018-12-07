@@ -339,6 +339,7 @@ var SnippetEditor = Widget.extend({
                 }
             },
         });
+        this.trigger_up('snippet_cloned', {$target: $clone});
     },
     /**
      * Called when the overlay dimensions/positions should be recomputed.
@@ -782,7 +783,8 @@ var SnippetsMenu = Widget.extend({
      * @param {jQuery|false} $snippet
      *        The DOM element whose editor need to be enabled. Only disable the
      *        current one if false is given.
-     * @returns {Deferred} (might be async when an editor must be created)
+     * @returns {Deferred<SnippetEditor>}
+     *          (might be async when an editor must be created)
      */
     _activateSnippet: function ($snippet) {
         if ($snippet) {
@@ -790,25 +792,26 @@ var SnippetsMenu = Widget.extend({
                 $snippet = globalSelector.closest($snippet);
             }
             if (this.$activeSnippet && this.$activeSnippet[0] === $snippet[0]) {
-                return $.when();
+                return $.when($snippet.data('snippet-editor'));
             }
         }
+        var editor = null;
         if (this.$activeSnippet) {
-            if (this.$activeSnippet.data('snippet-editor')) {
-                this.$activeSnippet.data('snippet-editor').toggleFocus(false);
+            editor = this.$activeSnippet.data('snippet-editor');
+            if (editor) {
+                editor.toggleFocus(false);
             }
             this.$activeSnippet = false;
         }
         if ($snippet && $snippet.length) {
             var self = this;
-            return this._createSnippetEditor($snippet).then(function () {
+            return this._createSnippetEditor($snippet).then(function (editor) {
                 self.$activeSnippet = $snippet;
-                if (self.$activeSnippet.data('snippet-editor')) {
-                    self.$activeSnippet.data('snippet-editor').toggleFocus(true);
-                }
+                editor.toggleFocus(true);
+                return editor;
             });
         }
-        return $.when();
+        return $.when(editor);
     },
     /**
      * @private

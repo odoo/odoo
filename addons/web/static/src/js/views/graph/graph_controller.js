@@ -88,7 +88,7 @@ var GraphController = AbstractController.extend(GroupByMenuInterfaceMixin,{
     renderButtons: function ($node) {
         if ($node) {
             var context = {
-                measures: _.sortBy(_.pairs(_.omit(this.measures, '__count__')), function (x) { return x[0]; }),
+                measures: _.sortBy(_.pairs(_.omit(this.measures, '__count__')), function (x) { return x[1].string.toLowerCase(); }),
             };
             this.$buttons = $(qweb.render('GraphView.buttons', context));
             this.$measureList = this.$buttons.find('.o_graph_measures_list');
@@ -175,17 +175,16 @@ var GraphController = AbstractController.extend(GroupByMenuInterfaceMixin,{
      * Do what need to be done when a button from the control panel is clicked.
      *
      * @private
-     * @param {MouseEvent} event
+     * @param {MouseEvent} ev
      */
-    _onButtonClick: function (event) {
-        var $target = $(event.target);
-        var parent;
+    _onButtonClick: function (ev) {
+        var $target = $(ev.target);
         var field;
         if ($target.hasClass('o_graph_button')) {
             this._setMode($target.data('mode'));
         } else if ($target.parents('.o_graph_measures_list').length) {
-            event.preventDefault();
-            event.stopPropagation();
+            ev.preventDefault();
+            ev.stopPropagation();
             field = $target.data('field');
             this._setMeasure(field);
         }

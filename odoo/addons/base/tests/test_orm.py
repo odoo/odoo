@@ -5,7 +5,7 @@ from collections import defaultdict
 
 from odoo.exceptions import AccessError, MissingError
 from odoo.tests.common import TransactionCase
-from odoo.tools import mute_logger, pycompat
+from odoo.tools import mute_logger
 
 
 class TestORM(TransactionCase):
@@ -243,7 +243,7 @@ class TestORM(TransactionCase):
 
         records = self.env['res.bank'].create(vals_list)
         self.assertEqual(len(records), len(vals_list))
-        for record, vals in pycompat.izip(records, vals_list):
+        for record, vals in zip(records, vals_list):
             self.assertEqual(record.name, vals['name'])
             self.assertEqual(record.email, vals.get('email', False))
 
@@ -279,7 +279,7 @@ class TestInherits(TransactionCase):
         """ `default_get` cannot return a dictionary or a new id """
         defaults = self.env['res.users'].default_get(['partner_id'])
         if 'partner_id' in defaults:
-            self.assertIsInstance(defaults['partner_id'], (bool, pycompat.integer_types))
+            self.assertIsInstance(defaults['partner_id'], (bool, int))
 
     def test_create(self):
         """ creating a user should automatically create a new partner """
@@ -356,6 +356,17 @@ class TestInherits(TransactionCase):
         self.assertFalse(user_bar.password, "password should not be copied from original record")
         self.assertEqual(user_bar.name, 'Bar', "name is given from specific partner")
         self.assertEqual(user_bar.signature, user_foo.signature, "signature should be copied")
+
+    @mute_logger('odoo.models')
+    def test_write_date(self):
+        """ modifying inherited fields must update write_date """
+        user = self.env.user
+        write_date_before = user.write_date
+
+        # write base64 image
+        user.write({'image': 'R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='})
+        write_date_after = user.write_date
+        self.assertNotEqual(write_date_before, write_date_after)
 
 
 CREATE = lambda values: (0, False, values)

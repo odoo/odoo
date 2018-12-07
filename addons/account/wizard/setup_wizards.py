@@ -1,35 +1,53 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from datetime import date
+
+from odoo import _, api, fields, models
+from odoo.exceptions import ValidationError
 
 
 class FinancialYearOpeningWizard(models.TransientModel):
     _name = 'account.financial.year.op'
+    _description = 'Opening Balance of Financial Year'
 
     company_id = fields.Many2one(comodel_name='res.company', required=True)
     opening_move_posted = fields.Boolean(string='Opening Move Posted', compute='_compute_opening_move_posted')
-    opening_date = fields.Date(string='Opening Date', required=True, related='company_id.account_opening_date', help="Date from which the accounting is managed in Odoo. It is the date of the opening entry.")
-    fiscalyear_last_day = fields.Integer(related="company_id.fiscalyear_last_day", required=True,
-                                         help="The last day of the month will be taken if the chosen day doesn't exist.")
+    opening_date = fields.Date(string='Opening Date', required=True, related='company_id.account_opening_date', help="Date from which the accounting is managed in Odoo. It is the date of the opening entry.", readonly=False)
+    fiscalyear_last_day = fields.Integer(related="company_id.fiscalyear_last_day", required=True, readonly=False,
+                                         help="Fiscal year last day.")
     fiscalyear_last_month = fields.Selection(selection=[(1, 'January'), (2, 'February'), (3, 'March'), (4, 'April'), (5, 'May'), (6, 'June'), (7, 'July'), (8, 'August'), (9, 'September'), (10, 'October'), (11, 'November'), (12, 'December')],
-                                             related="company_id.fiscalyear_last_month",
+                                             related="company_id.fiscalyear_last_month", readonly=False,
                                              required=True,
-                                             help="The last day of the month will be taken if the chosen day doesn't exist.")
+                                             help="Fiscal year last month.")
 
     @api.depends('company_id.account_opening_move_id')
     def _compute_opening_move_posted(self):
         for record in self:
             record.opening_move_posted = record.company_id.opening_move_posted()
 
-
+    @api.constrains('fiscalyear_last_day', 'fiscalyear_last_month')
+    def _check_fiscalyear(self):
+        # We try if the date exists in 2020, which is a leap year.
+        # We do not define the constrain on res.company, since the recomputation of the related
+        # fields is done one field at a time.
+        for wiz in self:
+            try:
+                date(2020, wiz.fiscalyear_last_month, wiz.fiscalyear_last_day)
+            except ValueError:
+                raise ValidationError(
+                    _('Incorrect fiscal year date: day is out of range for month. Month: %s; Day: %s') %
+                    (wiz.fiscalyear_last_month, wiz.fiscalyear_last_day)
+                )
     @api.multi
     def action_save_onboarding_fiscal_year(self):
         self.env.user.company_id.set_onboarding_step_done('account_setup_fy_data_state')
 
+
 class SetupBarBankConfigWizard(models.TransientModel):
     _inherits = {'res.partner.bank': 'res_partner_bank_id'}
     _name = 'account.setup.bank.manual.config'
+    _description = 'Bank setup manual config'
 
     res_partner_bank_id = fields.Many2one(comodel_name='res.partner.bank', ondelete='cascade', required=True)
     create_or_link_option = fields.Selection(selection=[('new', 'Create new journal'), ('link', 'Link to an existing journal')], default='new')
@@ -87,4 +105,4 @@ class SetupBarBankConfigWizard(models.TransientModel):
         """ Called by the validation button of this wizard. Serves as an
         extension hook in account_bank_statement_import.
         """
-        pass
+        self.env.user.company_id.set_onboarding_step_done('account_setup_bank_data_state')

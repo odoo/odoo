@@ -1,68 +1,106 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * web_settings_dashboard
-#
+# 
 # Translators:
-# MinGi KYUNG <moonend@gmail.com>, 2016
+# Martin Trigaux, 2018
+# 최재호 <hwangtog@gmail.com>, 2018
+# 경민기 <moonend@gmail.com>, 2018
+# 종현 엄 <whd5367@naver.com>, 2018
+# Link Up링크업 <linkup.way@gmail.com>, 2018
+# Linkup <link-up@naver.com>, 2018
+# Mark Lee <odoos@soti.33mail.com>, 2018
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2016-06-17 08:57+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Korean (http://www.transifex.com/odoo/odoo-9/language/ko/)\n"
-"Language: ko\n"
+"POT-Creation-Date: 2018-09-18 09:49+0000\n"
+"PO-Revision-Date: 2018-08-24 09:33+0000\n"
+"Last-Translator: Mark Lee <odoos@soti.33mail.com>, 2018\n"
+"Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ko\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: web_settings_dashboard
 #. openerp-web
-#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:90
+#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:113
 #, python-format
-msgid ""
-"%\n"
-"                Implementation"
-msgstr ""
-"%\n"
-"구현"
+msgid "(Community Edition)"
+msgstr "(커뮤니티 에디션)"
+
+#. module: web_settings_dashboard
+#: code:addons/web_settings_dashboard/controllers/main.py:16
+#, python-format
+msgid "Access Denied"
+msgstr "접근이 거부됨"
 
 #. module: web_settings_dashboard
 #. openerp-web
-#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:56
+#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:58
+#, python-format
+msgid "Access rights"
+msgstr ""
+
+#. module: web_settings_dashboard
+#. openerp-web
+#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:126
+#, python-format
+msgid "Activate the developer mode"
+msgstr "개발자모드 활성화하기"
+
+#. module: web_settings_dashboard
+#. openerp-web
+#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:128
+#, python-format
+msgid "Activate the developer mode (with assets)"
+msgstr "개발자모드 (with assets) 활성화하기"
+
+#. module: web_settings_dashboard
+#. openerp-web
+#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:64
 #, python-format
 msgid "Active User"
 msgstr "활성 사용자"
 
 #. module: web_settings_dashboard
 #. openerp-web
-#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:57
+#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:65
 #, python-format
 msgid "Active Users"
-msgstr ""
+msgstr "활성 사용자"
 
 #. module: web_settings_dashboard
 #. openerp-web
-#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:42
+#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:40
 #, python-format
 msgid "App store"
 msgstr "앱스토어"
 
 #. module: web_settings_dashboard
 #. openerp-web
-#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:39
+#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:24
+#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:37
 #, python-format
 msgid "Browse Apps"
-msgstr "앱 둘러보기"
+msgstr "앱 목록 찾아보기"
 
 #. module: web_settings_dashboard
 #. openerp-web
-#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:102
+#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:167
 #, python-format
-msgid "Browse the documentation."
-msgstr "문서 둘러보기"
+msgid "Company"
+msgstr "회사"
+
+#. module: web_settings_dashboard
+#. openerp-web
+#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:120
+#, python-format
+msgid "Copyright © 2004"
+msgstr ""
 
 #. module: web_settings_dashboard
 #: model:ir.actions.client,name:web_settings_dashboard.web_settings_dashboard_action
@@ -72,139 +110,242 @@ msgstr "알림판"
 
 #. module: web_settings_dashboard
 #. openerp-web
-#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:66
+#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:130
 #, python-format
-msgid "Enter e-mail addresses (one per line)"
-msgstr "이메일 주소를 입력하기 바랍니다. (한 줄에 하나의 이메일 주소)"
+msgid "Deactivate the developer mode"
+msgstr "개발자모드 비활성화하기"
 
 #. module: web_settings_dashboard
 #. openerp-web
-#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:94
+#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:74
 #, python-format
-msgid "Follow these implementation guides to get the most out of Odoo."
+msgid "Enter e-mail addresses"
 msgstr ""
-"Odoo를 최대한 활용하기 위해 다음의 구현 가이드라인을 따라주기 바랍니다."
 
 #. module: web_settings_dashboard
 #. openerp-web
-#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:151
+#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:103
+#, python-format
+msgid "Facebook"
+msgstr "페이스북"
+
+#. module: web_settings_dashboard
+#. openerp-web
+#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:120
+#, python-format
+msgid "GNU LGPL Licensed"
+msgstr "GNU LGPL로 라이센스됨"
+
+#. module: web_settings_dashboard
+#. openerp-web
+#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:140
 #, python-format
 msgid "Get more features with the Enterprise Edition!"
-msgstr "엔터프라이즈 에디션을 통해서 더 많은 기능을 사용해보세요!"
+msgstr "더 많은 기능을 원하면 기업용 에디션을 사용해보세요!"
 
 #. module: web_settings_dashboard
 #. openerp-web
-#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:133
+#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:97
 #, python-format
 msgid "Help us spread the word: Share Odoo's awesomeness with your friends!"
-msgstr "Odoo를 알려주세요: Odoo의 멋진 기능을 친구들에게 알려주세요!"
+msgstr "제품을 퍼뜨려서 우리를 도와주세요: 친구들한테 ERP의 끝판왕 Odoo를 공유해보세요!"
 
 #. module: web_settings_dashboard
 #. openerp-web
-#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:31
+#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:29
 #, python-format
 msgid "Installed App"
 msgstr "설치된 앱"
 
 #. module: web_settings_dashboard
 #. openerp-web
-#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:32
+#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:30
 #, python-format
 msgid "Installed Apps"
-msgstr "설치된 앱"
+msgstr "설치된 앱 리스트"
 
 #. module: web_settings_dashboard
 #. openerp-web
-#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:67
+#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:75
 #, python-format
 msgid "Invite"
 msgstr "초대"
 
 #. module: web_settings_dashboard
 #. openerp-web
-#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:65
+#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:73
 #, python-format
 msgid "Invite new users:"
-msgstr "새로운 사용자를 초대하기:"
+msgstr "새 사용자 초대하기:"
 
 #. module: web_settings_dashboard
 #. openerp-web
-#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:61
+#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:104
+#, python-format
+msgid "LinkedIn"
+msgstr ""
+
+#. module: web_settings_dashboard
+#. openerp-web
+#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:160
+#, python-format
+msgid "Load a Translation"
+msgstr "번역 불러오기"
+
+#. module: web_settings_dashboard
+#. openerp-web
+#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:132
+#, python-format
+msgid "Load demo data"
+msgstr ""
+
+#. module: web_settings_dashboard
+#. openerp-web
+#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:69
 #, python-format
 msgid "Manage access rights"
-msgstr "접근 권한을 관리하기"
+msgstr "접근권한관리하기"
 
 #. module: web_settings_dashboard
 #. openerp-web
-#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:101
-#, python-format
-msgid "Need more help?"
-msgstr "추가 정보가 필요하십니까?"
-
-#. module: web_settings_dashboard
-#. openerp-web
-#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:34
+#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:32
 #, python-format
 msgid "No app installed"
 msgstr "설치된 앱이 없습니다"
 
 #. module: web_settings_dashboard
 #. openerp-web
-#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:150
+#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:112
+#, python-format
+msgid "Odoo"
+msgstr "Odoo"
+
+#. module: web_settings_dashboard
+#. openerp-web
+#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:139
 #, python-format
 msgid "Odoo Enterprise"
 msgstr "Odoo Enterprise"
 
 #. module: web_settings_dashboard
 #. openerp-web
-#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:73
+#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:120
 #, python-format
-msgid "Pending invitations:"
-msgstr "대기 중인 초대:"
-
-#. module: web_settings_dashboard
-#. openerp-web
-#: code:addons/web_settings_dashboard/static/src/js/dashboard.js:107
-#, python-format
-msgid "Please provide valid email addresses"
-msgstr "제대로된 이메일 주소를 입력하기 바랍니다"
-
-#. module: web_settings_dashboard
-#. openerp-web
-#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:131
-#, python-format
-msgid "Social Share"
-msgstr "소셜 미디어를 통해 공유하기"
-
-#. module: web_settings_dashboard
-#. openerp-web
-#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:43
-#, python-format
-msgid "Theme store"
-msgstr "테마 스토어"
-
-#. module: web_settings_dashboard
-#. openerp-web
-#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:154
-#, python-format
-msgid "Upgrade Now"
-msgstr "지금 업그레이드하기"
-
-#. module: web_settings_dashboard
-#: model:ir.model,name:web_settings_dashboard.model_res_users
-msgid "Users"
-msgstr "사용자"
-
-#. module: web_settings_dashboard
-#. openerp-web
-#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:109
-#, python-format
-msgid "You need to install some apps first."
-msgstr "먼저 앱을 설치하세요."
+msgid "Odoo S.A."
+msgstr ""
 
 #. module: web_settings_dashboard
 #. openerp-web
 #: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:79
 #, python-format
+msgid "Pending invitations:"
+msgstr "대기중인 초대건:"
+
+#. module: web_settings_dashboard
+#. openerp-web
+#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:52
+#, python-format
+msgid "Remove Email"
+msgstr ""
+
+#. module: web_settings_dashboard
+#. openerp-web
+#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:155
+#, python-format
+msgid ""
+"Send your documents in your partner's language or set up a language for your"
+" users"
+msgstr ""
+
+#. module: web_settings_dashboard
+#. openerp-web
+#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:177
+#, python-format
+msgid "Set Up"
+msgstr "세팅하기"
+
+#. module: web_settings_dashboard
+#. openerp-web
+#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:172
+#, python-format
+msgid "Set up your company information"
+msgstr "회사정보를 셋팅하세요"
+
+#. module: web_settings_dashboard
+#. openerp-web
+#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:94
+#, python-format
+msgid "Share"
+msgstr "공유"
+
+#. module: web_settings_dashboard
+#. openerp-web
+#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:95
+#, python-format
+msgid "Share the Love"
+msgstr "좋아하는사람에게 공유하기"
+
+#. module: web_settings_dashboard
+#. openerp-web
+#: code:addons/web_settings_dashboard/static/src/js/dashboard.js:116
+#, python-format
+msgid "The following email addresses already exist: %s."
+msgstr ""
+
+#. module: web_settings_dashboard
+#. openerp-web
+#: code:addons/web_settings_dashboard/static/src/js/dashboard.js:105
+#, python-format
+msgid "The following email addresses are invalid: %s."
+msgstr ""
+
+#. module: web_settings_dashboard
+#. openerp-web
+#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:41
+#, python-format
+msgid "Theme store"
+msgstr "테마스토어"
+
+#. module: web_settings_dashboard
+#. openerp-web
+#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:150
+#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:151
+#, python-format
+msgid "Translations"
+msgstr "번역"
+
+#. module: web_settings_dashboard
+#. openerp-web
+#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:102
+#, python-format
+msgid "Twitter"
+msgstr "트위터"
+
+#. module: web_settings_dashboard
+#. openerp-web
+#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:143
+#, python-format
+msgid "Upgrade Now"
+msgstr "지금 업그레이드하기"
+
+#. module: web_settings_dashboard
+#. openerp-web
+#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:141
+#, python-format
+msgid "Upgrade to enterprise"
+msgstr ""
+
+#. module: web_settings_dashboard
+#. openerp-web
+#: code:addons/web_settings_dashboard/static/src/js/dashboard.js:176
+#: model:ir.model,name:web_settings_dashboard.model_res_users
+#, python-format
+msgid "Users"
+msgstr "사용자"
+
+#. module: web_settings_dashboard
+#. openerp-web
+#: code:addons/web_settings_dashboard/static/src/xml/dashboard.xml:85
+#, python-format
 msgid "more"
-msgstr "더 보기"
+msgstr "더보기"

@@ -13,7 +13,7 @@ class TestOdoobot(BaseFunctionalTest, MockEmails, TestRecipients):
 
     def setUp(self):
         super(TestOdoobot, self).setUp()
-        self.odoobot = self.env.ref("mail_bot.partner_odoobot")
+        self.odoobot = self.env.ref("base.partner_root")
         self.message_post_default_kwargs = {
             'body': '',
             'attachment_ids': [],
@@ -23,6 +23,14 @@ class TestOdoobot(BaseFunctionalTest, MockEmails, TestRecipients):
         }
         self.odoobot_ping_body = '<a href="http://odoo.com/web#model=res.partner&amp;id=%s" class="o_mail_redirect" data-oe-id="%s" data-oe-model="res.partner" target="_blank">@OdooBot</a>' % (self.odoobot.id, self.odoobot.id)
         self.test_record_employe = self.test_record.sudo(self.user_employee)
+
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_fetch_listener(self):
+        channel = self.env['mail.channel'].sudo(self.user_employee).init_odoobot()
+        partners = self.env['mail.channel'].channel_fetch_listeners(channel.uuid)
+        odoobot = self.env.ref("base.partner_root")
+        odoobot_in_fetch_listeners = [partner for partner in partners if partner['id'] == odoobot.id]
+        self.assertEqual(len(odoobot_in_fetch_listeners), 1, 'odoobot should appear only once in channel_fetch_listeners')
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_odoobot_ping(self):

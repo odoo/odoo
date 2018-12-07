@@ -32,7 +32,6 @@ from odoo.tools.safe_eval import safe_eval
 
 
 _logger = logging.getLogger(__name__)
-BLACKLIST_MAX_BOUNCED_LIMIT = 5
 
 
 class MailThread(models.AbstractModel):
@@ -111,7 +110,7 @@ class MailThread(models.AbstractModel):
         'Number of error', compute='_compute_message_has_error',
         help="Number of messages with delivery error")
     message_attachment_count = fields.Integer('Attachment Count', compute='_compute_message_attachment_count')
-    message_main_attachment_id = fields.Many2one(string="Main Attachment", comodel_name='ir.attachment')
+    message_main_attachment_id = fields.Many2one(string="Main Attachment", comodel_name='ir.attachment', index=True)
 
     @api.one
     @api.depends('message_follower_ids')
@@ -200,6 +199,8 @@ class MailThread(models.AbstractModel):
     @api.multi
     def _get_message_needaction(self):
         res = dict((res_id, 0) for res_id in self.ids)
+        if not res:
+            return
 
         # search for unread messages, directly in SQL to improve performances
         self._cr.execute(""" SELECT msg.res_id FROM mail_message msg
@@ -240,7 +241,7 @@ class MailThread(models.AbstractModel):
 
     @api.multi
     def _compute_message_attachment_count(self):
-        read_group_var = self.env['ir.attachment'].read_group([('res_model', '=', self._name)],
+        read_group_var = self.env['ir.attachment'].read_group([('res_id', 'in', self.ids), ('res_model', '=', self._name)],
                                                               fields=['res_id'],
                                                               groupby=['res_id'])
 
@@ -278,7 +279,7 @@ class MailThread(models.AbstractModel):
                 thread._message_log(body=_('%s created') % doc_name)
 
         # auto_subscribe: take values and defaults into account
-        for thread, values in pycompat.izip(threads, vals_list):
+        for thread, values in zip(threads, vals_list):
             create_values = dict(values)
             for key, val in self._context.items():
                 if key.startswith('default_') and key[8:] not in create_values:
@@ -291,7 +292,7 @@ class MailThread(models.AbstractModel):
                 track_threads = threads.with_context(lang=self.env.user.lang)
             else:
                 track_threads = threads
-            for thread, values in pycompat.izip(track_threads, vals_list):
+            for thread, values in zip(track_threads, vals_list):
                 tracked_fields = thread._get_tracked_fields(list(values))
                 if tracked_fields:
                     initial_values = {thread.id: dict.fromkeys(tracked_fields, False)}
@@ -377,7 +378,7 @@ class MailThread(models.AbstractModel):
                 alias = aliases[0]
 
         if alias:
-            email_link = "<a href='mailto:%(email)s'>%(email)s</a>" % {'email': alias.name_get()[0][1]}
+            email_link = "<a href='mailto:%(email)s'>%(email)s</a>" % {'email': alias.display_name}
             if nothing_here:
                 return "<p class='o_view_nocontent_smiling_face'>%(dyn_help)s</p>" % {
                     'dyn_help': _("Add a new %(document)s or send an email to %(email_link)s") % {
@@ -563,7 +564,7 @@ class MailThread(models.AbstractModel):
         :param init_values: the original values of the record; only modified fields
                             are present in the dict
         :type init_values: dict
-        :returns: a subtype xml_id or False if no subtype is trigerred
+        :returns: a subtype browse record or False if no subtype is trigerred
         """
         return False
 
@@ -579,7 +580,7 @@ class MailThread(models.AbstractModel):
         for field_name, (template, post_kwargs) in templates.items():
             if not template:
                 continue
-            if isinstance(template, pycompat.string_types):
+            if isinstance(template, str):
                 self.message_post_with_view(template, **post_kwargs)
             else:
                 self.message_post_with_template(template.id, **post_kwargs)
@@ -636,17 +637,15 @@ class MailThread(models.AbstractModel):
                 continue
 
             # find subtypes and post messages or log if no subtype found
-            subtype_xmlid = False
+            subtype = False
             # By passing this key, that allows to let the subtype empty and so don't sent email because partners_to_notify from mail_message._notify will be empty
             if not self._context.get('mail_track_log_only'):
-                subtype_xmlid = record._track_subtype(dict((col_name, initial_values[record.id][col_name]) for col_name in changes))
-
-            if subtype_xmlid:
-                subtype_rec = self.env.ref(subtype_xmlid)  # TDE FIXME check for raise if not found
-                if not (subtype_rec and subtype_rec.exists()):
-                    _logger.debug('subtype %s not found' % subtype_xmlid)
+                subtype = record._track_subtype(dict((col_name, initial_values[record.id][col_name]) for col_name in changes))
+            if subtype:
+                if not subtype.exists():
+                    _logger.debug('subtype "%s" not found' % subtype.name)
                     continue
-                record.message_post(subtype=subtype_xmlid, tracking_value_ids=tracking_value_ids)
+                record.message_post(subtype_id=subtype.id, tracking_value_ids=tracking_value_ids)
             elif tracking_value_ids:
                 record._message_log(tracking_value_ids=tracking_value_ids)
 
@@ -1172,7 +1171,7 @@ class MailThread(models.AbstractModel):
                     final_recipient_data = tools.decode_message_header(dsn, 'Final-Recipient')
                     partner_address = final_recipient_data.split(';', 1)[1].strip()
                     if partner_address:
-                        partners = partners.sudo().search([('email', 'like', partner_address)])
+                        partners = partners.sudo().search([('email', '=', partner_address)])
                         for partner in partners:
                             partner.message_receive_bounce(partner_address, partner, mail_id=bounced_mail_id)
 
@@ -1323,6 +1322,7 @@ class MailThread(models.AbstractModel):
                     # if a new thread is created, parent is irrelevant
                     message_dict.pop('parent_id', None)
                     thread = MessageModel.message_new(message_dict, custom_values)
+                    thread_id = thread.id
             else:
                 if thread_id:
                     raise ValueError("Posting a message without model should be with a null res_id, to create a private message.")
@@ -1390,15 +1390,9 @@ class MailThread(models.AbstractModel):
         # convert it to utf-8 for transport between the mailgate script and here.
         if isinstance(message, xmlrpclib.Binary):
             message = bytes(message.data)
-        # message_from_string parses from a *native string*, except apparently
-        # sometimes message is ISO-8859-1 binary data or some shit and the
-        # straightforward version (pycompat.to_native) won't work right ->
-        # always encode message to bytes then use the relevant method
-        # depending on ~python version
-        if isinstance(message, pycompat.text_type):
+        if isinstance(message, str):
             message = message.encode('utf-8')
-        extract = getattr(email, 'message_from_bytes', email.message_from_string)
-        msg_txt = extract(message)
+        msg_txt = email.message_from_bytes(message)
 
         # parse the message, verify we are not in a loop by checking message_id is not duplicated
         msg = self.message_parse(msg_txt, save_original=save_original)
@@ -1470,14 +1464,6 @@ class MailThread(models.AbstractModel):
         Mail Returned to Sender) is received for an existing thread. The default
         behavior is to check is an integer  ``message_bounce`` column exists.
         If it is the case, its content is incremented.
-        In addition, an auto blacklist rule check if the email can be blacklisted
-        to avoid sending mails indefinitely to this email address.
-        This rule checks if the email bounced too much. If this is the case,
-        the email address is added to the blacklist in order to avoid continuing
-        to send mass_mail to that email address. If it bounced too much times
-        in the last month and the bounced are at least separated by one week,
-        to avoid blacklist someone because of a temporary mail server error,
-        then the email is considered as invalid and is blacklisted.
 
         :param mail_id: ID of the sent email that bounced. It may not exist anymore
                         but it could be usefull if the information was kept. This is
@@ -1487,14 +1473,6 @@ class MailThread(models.AbstractModel):
         if 'message_bounce' in self._fields:
             for record in self:
                 record.message_bounce = record.message_bounce + 1
-                three_months_ago = fields.Datetime.to_string(datetime.datetime.now() - datetime.timedelta(weeks=13))
-                stats = self.env['mail.mail.statistics']\
-                    .search(['&', ('bounced', '>', three_months_ago), ('email','=ilike',email)])\
-                    .mapped('bounced')
-                if len(stats) >= BLACKLIST_MAX_BOUNCED_LIMIT:
-                    if max(stats) > min(stats) + datetime.timedelta(weeks=1):
-                        blacklist_rec = self.env['mail.blacklist'].sudo()._add(email)
-                        blacklist_rec._message_log('This email has been automatically blacklisted because of too much bounced.')
 
     def _message_extract_payload_postprocess(self, message, body, attachments):
         """ Perform some cleaning / postprocess in the body and attachments
@@ -1528,8 +1506,7 @@ class MailThread(models.AbstractModel):
         for node in to_remove:
             node.getparent().remove(node)
         if postprocessed:
-            body = etree.tostring(root, pretty_print=False, encoding='UTF-8')
-            body = pycompat.to_native(body)
+            body = etree.tostring(root, pretty_print=False, encoding='unicode')
         return body, attachments
 
     def _message_extract_payload(self, message, save_original=False):
@@ -1641,7 +1618,7 @@ class MailThread(models.AbstractModel):
         }
         if not isinstance(message, Message):
             # message_from_string works on a native str
-            message = pycompat.to_native(message)
+            message = pycompat.to_text(message)
             message = email.message_from_string(message)
 
         message_id = message['message-id']
@@ -1713,6 +1690,8 @@ class MailThread(models.AbstractModel):
             recipient_ids, email_to, email_cc = set(), False, False
             if 'partner_id' in self._fields and record.partner_id:
                 recipient_ids.add(record.partner_id.id)
+            elif 'email_normalized' in self._fields and record.email_normalized:
+                email_to = record.email_normalized
             elif 'email_from' in self._fields and record.email_from:
                 email_to = record.email_from
             elif 'partner_email' in self._fields and record.partner_email:
@@ -1899,7 +1878,7 @@ class MailThread(models.AbstractModel):
                 cid = info and info.get('cid')
             else:
                 continue
-            if isinstance(content, pycompat.text_type):
+            if isinstance(content, str):
                 content = content.encode('utf-8')
             elif content is None:
                 continue
@@ -1942,7 +1921,7 @@ class MailThread(models.AbstractModel):
     def message_post(self, body='', subject=None,
                      message_type='notification', subtype=None,
                      parent_id=False, attachments=None,
-                     notif_layout=False, add_sign=False, model_description=False,
+                     notif_layout=False, add_sign=True, model_description=False,
                      mail_auto_delete=True, **kwargs):
         """ Post a new message in an existing thread, returning the new
             mail.message ID.
@@ -1993,7 +1972,7 @@ class MailThread(models.AbstractModel):
                 partner_ids.add(partner_id[1])
             if isinstance(partner_id, (list, tuple)) and partner_id[0] == 6 and len(partner_id) == 3:
                 partner_ids |= set(partner_id[2])
-            elif isinstance(partner_id, pycompat.integer_types):
+            elif isinstance(partner_id, int):
                 partner_ids.add(partner_id)
             else:
                 pass  # we do not manage anything else
@@ -2058,12 +2037,6 @@ class MailThread(models.AbstractModel):
         #   - HACK TDE FIXME: Chatter: attachments linked to the document (not done JS-side), load the message
         attachment_ids = self._message_post_process_attachments(attachments, kwargs.pop('attachment_ids', []), values)
         values['attachment_ids'] = attachment_ids
-        if attachment_ids and self.ids and not self.message_main_attachment_id:
-            all_attachments = self.env['ir.attachment'].browse([attachment_tuple[1] for attachment_tuple in attachment_ids])
-            prioritary_attachments = all_attachments.filtered(lambda x: x.mimetype.endswith('pdf')) \
-                                     or all_attachments.filtered(lambda x: x.mimetype.startswith('image')) \
-                                     or all_attachments
-            self.write({'message_main_attachment_id': prioritary_attachments[0].id})
 
         # Avoid warnings about non-existing fields
         for x in ('from', 'to', 'cc'):
@@ -2082,6 +2055,14 @@ class MailThread(models.AbstractModel):
         """ Hook to add custom behavior after having posted the message. Both
         message and computed value are given, to try to lessen query count by
         using already-computed values instead of having to rebrowse things. """
+        # Set main attachment field if necessary
+        attachment_ids = msg_vals['attachment_ids']
+        if not self._abstract and attachment_ids and self.ids and not self.message_main_attachment_id:
+            all_attachments = self.env['ir.attachment'].browse([attachment_tuple[1] for attachment_tuple in attachment_ids])
+            prioritary_attachments = all_attachments.filtered(lambda x: x.mimetype.endswith('pdf')) \
+                                     or all_attachments.filtered(lambda x: x.mimetype.startswith('image')) \
+                                     or all_attachments
+            self.write({'message_main_attachment_id': prioritary_attachments[0].id})
         # Notify recipients of the newly-created message (Inbox / Email + channels)
         if msg_vals.get('moderation_status') != 'pending_moderation':
             message._notify(
@@ -2111,7 +2092,7 @@ class MailThread(models.AbstractModel):
             values['slug'] = slug
         except ImportError:
             values['slug'] = lambda self: self.id
-        if isinstance(views_or_xmlid, pycompat.string_types):
+        if isinstance(views_or_xmlid, str):
             views = self.env.ref(views_or_xmlid, raise_if_not_found=False)
         else:
             views = views_or_xmlid
@@ -2352,6 +2333,8 @@ class MailThread(models.AbstractModel):
         :param template: XML ID of template used for the notification;
         """
         if not self or self.env.context.get('mail_auto_subscribe_no_notify'):
+            return
+        if not self.env.registry.ready:  # Don't send notification during install
             return
 
         view = self.env['ir.ui.view'].browse(self.env['ir.model.data'].xmlid_to_res_id(template))

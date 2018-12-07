@@ -135,7 +135,7 @@ QUnit.test('format binary', function (assert) {
 });
 
 QUnit.test('format percentage', function (assert) {
-    assert.expect(8);
+    assert.expect(9);
 
     assert.strictEqual(fieldUtils.format.percentage(0), '0%');
     assert.strictEqual(fieldUtils.format.percentage(0.5), '50%');
@@ -148,6 +148,9 @@ QUnit.test('format percentage', function (assert) {
     assert.strictEqual(fieldUtils.format.percentage(0.666666), '66.67%');
 
     assert.strictEqual(fieldUtils.format.percentage(false), '0%');
+    assert.strictEqual(fieldUtils.format.percentage(50, null,
+        {humanReadable: function (val) {return true;}}), '5k%'
+    );
 });
 
 QUnit.test('parse float', function(assert) {
@@ -257,5 +260,18 @@ QUnit.test('parse monetary', function(assert) {
 
     session.currencies = originalCurrencies;
 });
+
+QUnit.test('parse percentage', function(assert) {
+    assert.expect(7);
+
+    assert.strictEqual(fieldUtils.parse.percentage(""), 0);
+    assert.strictEqual(fieldUtils.parse.percentage("0"), 0);
+    assert.strictEqual(fieldUtils.parse.percentage("0%"), 0);
+    assert.strictEqual(fieldUtils.parse.percentage("0.02"), 0.02);
+    assert.strictEqual(fieldUtils.parse.percentage("1"), 1);
+    assert.strictEqual(fieldUtils.parse.percentage("2%"), 0.02);
+    assert.strictEqual(fieldUtils.parse.percentage("100%"), 1);
+})
+
 });
 });

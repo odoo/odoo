@@ -82,18 +82,6 @@ class StockMove(models.Model):
         super(StockMove, self)._clean_merged()
         self.write({'created_purchase_line_id': False})
 
-    def _action_done(self):
-        res = super(StockMove, self)._action_done()
-        self.mapped('purchase_line_id').sudo()._update_received_qty()
-        return res
-
-    def write(self, vals):
-        res = super(StockMove, self).write(vals)
-        if 'product_uom_qty' in vals:
-            self.filtered(lambda m: m.state == 'done' and m.purchase_line_id).mapped(
-                'purchase_line_id').sudo()._update_received_qty()
-        return res
-
     def _get_upstream_documents_and_responsibles(self, visited):
         if self.created_purchase_line_id and self.created_purchase_line_id.state not in ('done', 'cancel'):
             return [(self.created_purchase_line_id.order_id, self.created_purchase_line_id.order_id.user_id, visited)]
@@ -124,7 +112,9 @@ class StockWarehouse(models.Model):
                 'create_values': {
                     'action': 'buy',
                     'picking_type_id': self.in_type_id.id,
-                    'route_id': self._find_global_route('purchase.route_warehouse0_buy', 'Buy').id
+                    'group_propagation_option': 'none',
+                    'company_id': self.company_id.id,
+                    'route_id': self._find_global_route('purchase_stock.route_warehouse0_buy', _('Buy')).id
                 },
                 'update_values': {
                     'active': self.buy_to_resupply,

@@ -76,13 +76,11 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
     willStart: function () {
         var defs = [this._super.apply(this, arguments)];
         var self = this;
-        var context = weContext.get();
 
         defs.push(this._rpc({
             model: 'website.page',
             method: 'get_page_info',
             args: [this.page_id],
-            context: context,
         }).then(function (page) {
             page[0].url = _.str.startsWith(page[0].url, '/') ? page[0].url.substring(1) : page[0].url;
             self.page = page[0];
@@ -102,7 +100,6 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
      */
     start: function () {
         var self = this;
-        var context = weContext.get();
 
         var defs = [this._super.apply(this, arguments)];
 
@@ -110,7 +107,7 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
         this.$('.redirect_type').addClass('d-none');
         this.$('.warn_about_call').addClass('d-none');
 
-        defs.push(this._getPageDependencies(this.page_id, context)
+        defs.push(this._getPageDependencies(this.page_id)
         .then(function (dependencies) {
             var dep_text = [];
             _.each(dependencies, function (value, index) {
@@ -125,12 +122,12 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
             });
         }));
 
-        defs.push(this._getSupportedMimetype(context)
+        defs.push(this._getSupportedMimetype()
         .then(function (mimetypes) {
             self.supportedMimetype = mimetypes;
         }));
 
-        defs.push(this._getPageKeyDependencies(this.page_id, context)
+        defs.push(this._getPageKeyDependencies(this.page_id)
         .then(function (dependencies) {
             var dep_text = [];
             _.each(dependencies, function (value, index) {
@@ -147,8 +144,7 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
 
         defs.push(this._rpc({model: 'res.users',
                              method: 'has_group',
-                             args: ['website.group_multi_website'],
-                             context: context})
+                             args: ['website.group_multi_website']})
                   .then(function (has_group) {
                       if (!has_group) {
                           self.$('#website_restriction').addClass('hidden');
@@ -229,7 +225,6 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
             model: 'website.page',
             method: 'save_page_info',
             args: [[context.website_id], params],
-            context: context,
         }).then(function (url) {
             // If from page manager: reload url, if from page itself: go to
             // (possibly) new url
@@ -256,15 +251,13 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
      *
      * @private
      * @param {integer} moID
-     * @param {Object} context
      * @returns {Deferred<Array>}
      */
-    _getPageDependencies: function (moID, context) {
+    _getPageDependencies: function (moID) {
         return this._rpc({
             model: 'website',
             method: 'page_search_dependencies',
             args: [moID],
-            context: context,
         });
     },
     /**
@@ -272,29 +265,25 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
      *
      * @private
      * @param {integer} moID
-     * @param {Object} context
      * @returns {Deferred<Array>}
      */
-    _getPageKeyDependencies: function (moID, context) {
+    _getPageKeyDependencies: function (moID) {
         return this._rpc({
             model: 'website',
             method: 'page_search_key_dependencies',
             args: [moID],
-            context: context,
         });
     },
     /**
      * Retrieves supported mimtype
      *
      * @private
-     * @param {Object} context
      * @returns {Deferred<Array>}
      */
-    _getSupportedMimetype: function (context) {
+    _getSupportedMimetype: function () {
         return this._rpc({
             model: 'website',
             method: 'guess_mimetype',
-            context: context,
         });
     },
     /**
@@ -483,7 +472,6 @@ var EditMenuDialog = weWidgets.Dialog.extend({
             model: 'website.menu',
             method: 'get_tree',
             args: [context.website_id, this.rootID],
-            context: context,
         }).then(function (menu) {
             self.menu = menu;
             self.root_menu_id = menu.id;
@@ -542,7 +530,6 @@ var EditMenuDialog = weWidgets.Dialog.extend({
             model: 'website.menu',
             method: 'save',
             args: [context.website_id, { data: data, to_delete: self.to_delete }],
-            context: context,
         }).then(function () {
             return _super();
         });
@@ -892,15 +879,13 @@ var PageManagement = Widget.extend({
      *
      * @private
      * @param {integer} moID
-     * @param {Object} context
      * @returns {Deferred<Array>}
      */
-    _getPageDependencies: function (moID, context) {
+    _getPageDependencies: function (moID) {
         return this._rpc({
             model: 'website',
             method: 'page_search_dependencies',
             args: [moID],
-            context: context,
         });
     },
 
@@ -915,14 +900,10 @@ var PageManagement = Widget.extend({
     },
     _onClonePageButtonClick: function (ev) {
         var pageId = $(ev.currentTarget).data('id');
-        var context = weContext.get();
         this._rpc({
             model: 'website.page',
             method: 'clone_page',
             args: [pageId],
-            kwargs: {
-                context: context,
-            },
         }).then(function (path) {
             window.location.href = path;
         });
@@ -945,11 +926,10 @@ var PageManagement = Widget.extend({
 // TODO: This function should be integrated in a widget in the future
 function _deletePage(pageId, fromPageManagement) {
     var self = this;
-    var context = weContext.get();
     var def = $.Deferred();
 
     // Search the page dependencies
-    this._getPageDependencies(pageId, context)
+    this._getPageDependencies(pageId)
     .then(function (dependencies) {
     // Inform the user about those dependencies and ask him confirmation
         var confirmDef = $.Deferred();
@@ -966,7 +946,6 @@ function _deletePage(pageId, fromPageManagement) {
             model: 'website.page',
             method: 'unlink',
             args: [pageId],
-            context: context,
         });
     }).then(function () {
         if (fromPageManagement) {

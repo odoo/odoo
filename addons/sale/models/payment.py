@@ -67,7 +67,7 @@ class PaymentTransaction(models.Model):
             sales_orders.force_quotation_send()
 
             if record.acquirer_id.provider == 'transfer':
-                for so in sales_orders:
+                for so in record.sale_order_ids:
                     so.reference = record._compute_sale_order_reference(so)
 
     @api.multi
@@ -86,10 +86,10 @@ class PaymentTransaction(models.Model):
     def _reconcile_after_transaction_done(self):
         # Override of '_set_transaction_done' in the 'payment' module
         # to confirm the quotations automatically and to generate the invoices if needed.
-        sales_orders = self.mapped('sale_order_ids').filtered(lambda so: so.state == 'draft')
-        sales_orders.force_quotation_send()
-        sales_orders = self.mapped('sale_order_ids').filtered(lambda so: so.state == 'sent')
-        sales_orders.action_confirm()
+        sales_orders = self.mapped('sale_order_ids').filtered(lambda so: so.state in ('draft', 'sent'))
+        for so in sales_orders:
+            # For loop because some override of action_confirm are ensure_one.
+            so.with_context(send_email=True).action_confirm()
         # invoice the sale orders if needed
         self._invoice_sale_orders()
         res = super(PaymentTransaction, self)._reconcile_after_transaction_done()
@@ -108,7 +108,7 @@ class PaymentTransaction(models.Model):
 
     @api.multi
     def _invoice_sale_orders(self):
-        if self.env['ir.config_parameter'].sudo().get_param('website_sale.automatic_invoice'):
+        if self.env['ir.config_parameter'].sudo().get_param('sale.automatic_invoice'):
             ctx_company = {'company_id': self.acquirer_id.company_id.id,
                            'force_company': self.acquirer_id.company_id.id}
             for trans in self.filtered(lambda t: t.sale_order_ids):
@@ -146,9 +146,8 @@ class PaymentTransaction(models.Model):
     # Tools for payment
     # --------------------------------------------------
 
-    def render_sale_button(self, order, return_url, submit_txt=None, render_values=None):
+    def render_sale_button(self, order, submit_txt=None, render_values=None):
         values = {
-            'return_url': return_url,
             'partner_id': order.partner_shipping_id.id or order.partner_invoice_id.id,
             'billing_partner_id': order.partner_invoice_id.id,
         }

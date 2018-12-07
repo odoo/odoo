@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-09-21 13:17+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -196,6 +196,12 @@ msgid "Create a draft purchase order"
 msgstr ""
 
 #. module: purchase_requisition
+#: model:ir.model.fields,help:purchase_requisition.field_product_product__purchase_requisition
+#: model:ir.model.fields,help:purchase_requisition.field_product_template__purchase_requisition
+msgid "Create a draft purchase order: Based on your product configuration, the system will create a draft purchase order.Propose a call for tender : If the 'purchase_requisition' module is installed and this option is selected, the system will create a draft call for tender."
+msgstr ""
+
+#. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__create_uid
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__create_uid
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type__create_uid
@@ -331,11 +337,6 @@ msgid "In negotiation"
 msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.model,name:purchase_requisition.model_product_supplierinfo
-msgid "Information about a product vendor"
-msgstr ""
-
-#. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_is_follower
 msgid "Is Follower"
 msgstr ""
@@ -461,7 +462,7 @@ msgstr ""
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_procurement_group
-msgid "Procurement Requisition"
+msgid "Procurement Group"
 msgstr ""
 
 #. module: purchase_requisition
@@ -500,11 +501,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order__requisition_id
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__requisition_id
 msgid "Purchase Agreement"
-msgstr ""
-
-#. module: purchase_requisition
-#: model:ir.model,name:purchase_requisition.model_purchase_requisition_type
-msgid "Purchase Agreement Type"
 msgstr ""
 
 #. module: purchase_requisition
@@ -559,6 +555,11 @@ msgstr ""
 #: model:ir.model,name:purchase_requisition.model_purchase_requisition_line
 #: model:ir.model.fields,field_description:purchase_requisition.field_product_supplierinfo__purchase_requisition_line_id
 msgid "Purchase Requisition Line"
+msgstr ""
+
+#. module: purchase_requisition
+#: model:ir.model,name:purchase_requisition.model_purchase_requisition_type
+msgid "Purchase Requisition Type"
 msgstr ""
 
 #. module: purchase_requisition
@@ -699,6 +700,11 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__supplier_info_ids
 msgid "Supplier Info"
+msgstr ""
+
+#. module: purchase_requisition
+#: model:ir.model,name:purchase_requisition.model_product_supplierinfo
+msgid "Supplier Pricelist"
 msgstr ""
 
 #. module: purchase_requisition

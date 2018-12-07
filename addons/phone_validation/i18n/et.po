@@ -3,16 +3,18 @@
 # * phone_validation
 # 
 # Translators:
-# Rivo Zängov <eraser@eraser.ee>, 2017
-# Arma Gedonsky <armagedonsky@hot.ee>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2018
+# Eneli Õigus <enelioigus@gmail.com>, 2018
+# Martin Aavastik <martin@avalah.ee>, 2018
+# Helen Sulaoja <helen@avalah.ee>, 2018
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 11.0\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-24 09:00+0000\n"
-"PO-Revision-Date: 2017-10-24 09:00+0000\n"
-"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
+"POT-Creation-Date: 2018-09-21 13:18+0000\n"
+"PO-Revision-Date: 2018-08-24 09:22+0000\n"
+"Last-Translator: Helen Sulaoja <helen@avalah.ee>, 2018\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,15 +25,18 @@ msgstr ""
 #. module: phone_validation
 #: selection:res.company,phone_international_format:0
 msgid "Add international prefix"
-msgstr ""
+msgstr "Lisa rahvusvaheline suunakood"
 
 #. module: phone_validation
-#: model:ir.model.fields,help:phone_validation.field_res_company_phone_international_format
+#: model:ir.model.fields,help:phone_validation.field_res_company__phone_international_format
 msgid ""
 "Always encode phone numbers using international format. Otherwise numbers "
 "coming from the company's country are nationaly formatted. International "
 "numbers are always using international format."
 msgstr ""
+"Always encode phone numbers using international format. Otherwise numbers "
+"coming from the company's country are nationaly formatted. International "
+"numbers are always using international format."
 
 #. module: phone_validation
 #: model:ir.model,name:phone_validation.model_res_company
@@ -39,12 +44,12 @@ msgid "Companies"
 msgstr "Ettevõtted"
 
 #. module: phone_validation
-#: model:ir.model.fields,field_description:phone_validation.field_phone_validation_mixin_display_name
+#: model:ir.model.fields,field_description:phone_validation.field_phone_validation_mixin__display_name
 msgid "Display Name"
 msgstr "Näidatav nimi"
 
 #. module: phone_validation
-#: model:ir.model.fields,field_description:phone_validation.field_phone_validation_mixin_id
+#: model:ir.model.fields,field_description:phone_validation.field_phone_validation_mixin__id
 msgid "ID"
 msgstr "ID"
 
@@ -61,18 +66,23 @@ msgid "Invalid number %s: probably incorrect prefix"
 msgstr ""
 
 #. module: phone_validation
-#: model:ir.model.fields,field_description:phone_validation.field_phone_validation_mixin___last_update
+#: model:ir.model.fields,field_description:phone_validation.field_phone_validation_mixin____last_update
 msgid "Last Modified on"
-msgstr "Viimati muudetud"
+msgstr "Viimati muudetud (millal)"
 
 #. module: phone_validation
-#: model:ir.model.fields,field_description:phone_validation.field_res_company_phone_international_format
+#: model:ir.model.fields,field_description:phone_validation.field_res_company__phone_international_format
 msgid "Local Numbers"
-msgstr ""
+msgstr "Kohalikud numbrid"
 
 #. module: phone_validation
 #: selection:res.company,phone_international_format:0
 msgid "No prefix"
+msgstr "Suunakood puudub"
+
+#. module: phone_validation
+#: model:ir.model,name:phone_validation.model_phone_validation_mixin
+msgid "Phone Validation Mixin"
 msgstr ""
 
 #. module: phone_validation
@@ -89,9 +99,4 @@ msgstr ""
 msgid ""
 "Unable to parse %s:\n"
 "%s"
-msgstr ""
-
-#. module: phone_validation
-#: model:ir.model,name:phone_validation.model_phone_validation_mixin
-msgid "phone.validation.mixin"
 msgstr ""

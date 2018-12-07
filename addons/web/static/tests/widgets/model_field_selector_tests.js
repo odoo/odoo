@@ -59,7 +59,7 @@ QUnit.module('ModelFieldSelector', {
             readonly: false,
             debugMode: true,
         });
-        testUtils.addMockEnvironment(fieldSelector, {data: this.data});
+        testUtils.mock.addMockEnvironment(fieldSelector, {data: this.data});
         fieldSelector.appendTo($target);
         var $value = fieldSelector.$("> .o_field_selector_value");
 
@@ -84,7 +84,7 @@ QUnit.module('ModelFieldSelector', {
 
         // Clicking the "Bar" field should close the popover and set the field
         // chain to "bar" as it is a basic field
-        $barLi.click();
+        testUtils.dom.click($barLi);
         assert.notOk($fieldSelectorPopover.is("visible"),
             "field selector popover should be closed now");
         assert.strictEqual(getValueFromDOM($value), "Bar",
@@ -118,7 +118,7 @@ QUnit.module('ModelFieldSelector', {
 
         // Clicking on the "Product" field should update the popover to show
         // the product fields (so only "Product Name" should be there)
-        $productLi.click();
+        testUtils.dom.click($productLi);
         $lis = $fieldSelectorPopover.find("li");
         assert.strictEqual($lis.length, 1,
             "there should be only one field proposition for 'product' model");
@@ -127,7 +127,7 @@ QUnit.module('ModelFieldSelector', {
 
         // Clicking on "Product Name" should close the popover and set the chain
         // to "product_id.name"
-        $lis.first().click();
+        testUtils.dom.click($lis.first());
         assert.notOk($fieldSelectorPopover.is("visible"),
             "field selector popover should be closed now");
         assert.strictEqual(getValueFromDOM($value), "Product -> Product Name",
@@ -135,8 +135,8 @@ QUnit.module('ModelFieldSelector', {
 
         // Remove the current selection and recreate it again
         fieldSelector.$el.trigger('focusin');
-        fieldSelector.$('.o_field_selector_prev_page').click();
-        fieldSelector.$('.o_field_selector_close').click();
+        testUtils.dom.click(fieldSelector.$('.o_field_selector_prev_page'));
+        testUtils.dom.click(fieldSelector.$('.o_field_selector_close'));
 
         fieldSelector.$el.trigger('focusin');
         $fieldSelectorPopover = fieldSelector.$(".o_field_selector_popover:visible");
@@ -151,9 +151,9 @@ QUnit.module('ModelFieldSelector', {
         assert.strictEqual($productLi.length, 1,
             "field selector popover should contain the 'Product' field");
 
-        $productLi.click();
+        testUtils.dom.click($productLi);
         $lis = $fieldSelectorPopover.find("li");
-        $lis.first().click();
+        testUtils.dom.click($lis.first());
         assert.notOk($fieldSelectorPopover.is("visible"),
             "field selector popover should be closed now");
         assert.strictEqual(getValueFromDOM($value), "Product -> Product Name",
@@ -180,7 +180,7 @@ QUnit.module('ModelFieldSelector', {
                 return field.type === 'many2one';
             },
         });
-        testUtils.addMockEnvironment(fieldSelector, {data: this.data});
+        testUtils.mock.addMockEnvironment(fieldSelector, {data: this.data});
         fieldSelector.appendTo($target);
 
         fieldSelector.$el.trigger('focusin');
@@ -188,6 +188,37 @@ QUnit.module('ModelFieldSelector', {
         var $lis = $fieldSelectorPopover.find("li");
         assert.strictEqual($lis.length, 1, "there should only be one element");
         assert.strictEqual($lis.text().trim(), "Product", "the available field should be the many2one");
+
+        fieldSelector.destroy();
+    });
+
+    QUnit.test("use the `showSearchInput` option", function (assert) {
+        assert.expect(6);
+
+        var $target = $("#qunit-fixture");
+
+        // Create the field selector and its mock environment
+        var fieldSelector = new ModelFieldSelector(null, "partner", [], {
+            readonly: false,
+            showSearchInput: true,
+        });
+        testUtils.mock.addMockEnvironment(fieldSelector, {data: this.data});
+        fieldSelector.appendTo($target);
+
+        fieldSelector.$el.trigger('focusin');
+        var $fieldSelectorPopover = fieldSelector.$(".o_field_selector_popover:visible");
+        var $searchInput = $fieldSelectorPopover.find(".o_field_selector_search input");
+        assert.strictEqual($searchInput.length, 1, "there should be a search input");
+
+        // without search
+        assert.strictEqual($fieldSelectorPopover.find("li").length, 3, "there should be three available fields");
+        assert.strictEqual($fieldSelectorPopover.find("li").text().trim().replace(/\s+/g, ' '), "Bar Foo Product", "the available field should be correct");
+        $searchInput.val('xx').trigger('keyup');
+
+        assert.strictEqual($fieldSelectorPopover.find("li").length, 0, "there shouldn't be any element");
+        $searchInput.val('Pro').trigger('keyup');
+        assert.strictEqual($fieldSelectorPopover.find("li").length, 1, "there should only be one element");
+        assert.strictEqual($fieldSelectorPopover.find("li").text().trim().replace(/\s+/g, ' '), "Product", "the available field should be the Product");
 
         fieldSelector.destroy();
     });

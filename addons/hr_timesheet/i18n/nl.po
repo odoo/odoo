@@ -3,16 +3,20 @@
 # * hr_timesheet
 # 
 # Translators:
-# Martin Trigaux, 2018
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2018
+# Martin Trigaux, 2018
+# Thomas Pot <thomas@open2bizz.nl>, 2018
+# Cas Vissers <c.vissers@brahoo.nl>, 2018
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2018
+# Cas Vissers <casvissers@brahoo.nl>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:48+0000\n"
-"PO-Revision-Date: 2018-09-18 09:48+0000\n"
-"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2018\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-08-24 09:19+0000\n"
+"Last-Translator: Cas Vissers <casvissers@brahoo.nl>, 2018\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -38,22 +42,22 @@ msgstr "<span>geplande uren</span>"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet
 msgid "<span>Date</span>"
-msgstr ""
+msgstr "<span>Datum</span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet
 msgid "<span>Description</span>"
-msgstr ""
+msgstr "<span>Omschrijving</span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet
 msgid "<span>Responsible</span>"
-msgstr ""
+msgstr "<span>Verantwoordelijke</span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet
 msgid "<span>Time</span>"
-msgstr ""
+msgstr "<span>Tijd</span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet
@@ -154,9 +158,14 @@ msgid "Computed using the sum of the task work done."
 msgstr "Berekend met de som van het werk dat verricht is."
 
 #. module: hr_timesheet
+#: model:ir.model,name:hr_timesheet.model_res_config_settings
+msgid "Config Settings"
+msgstr "Configuratie instellingen"
+
+#. module: hr_timesheet
 #: model:ir.ui.menu,name:hr_timesheet.hr_timesheet_menu_configuration
 msgid "Configuration"
-msgstr "Configuratie"
+msgstr "Instellingen"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_hr_employee__currency_id
@@ -193,7 +202,7 @@ msgstr "Duur"
 #: code:addons/hr_timesheet/models/hr_timesheet.py:95
 #, python-format
 msgid "Duration (%s)"
-msgstr ""
+msgstr "Duur(%s)"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user__hours_effective
@@ -210,7 +219,7 @@ msgstr "Werknemer"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__timesheet_encode_uom_id
 msgid "Encoding Unit"
-msgstr ""
+msgstr "Ingave eenheid"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
@@ -229,7 +238,7 @@ msgstr "Groepeer op"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_ir_http
-msgid "HTTP routing"
+msgid "HTTP Routing"
 msgstr "HTTP routing"
 
 #. module: hr_timesheet
@@ -370,7 +379,7 @@ msgstr "Verantwoordelijke"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
 msgid "Set time unit used to record your timesheets"
-msgstr ""
+msgstr "Stel tijdseenheid in welke op urenstaten gebruikt zal worden"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.hr_timesheet_config_settings_action
@@ -408,8 +417,8 @@ msgstr "Taak"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_report_project_task_user
-msgid "Tasks by user and project"
-msgstr "Taken per gebruiker en project"
+msgid "Tasks Analysis"
+msgstr "Takenanalyse"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/models/hr_timesheet.py:113
@@ -418,6 +427,8 @@ msgid ""
 "The project you are timesheeting on is not linked to an active analytic "
 "account. Set one on the project configuration."
 msgstr ""
+"Het project waarop u urenstaten boekt is niet gelinkt aan een actieve "
+"kostenplaats. Stel een kostenplaats in bij de projectinstellingen."
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/models/project.py:147
@@ -447,6 +458,8 @@ msgid ""
 "This will set the unit of measure used to encode timesheet. This will simply provide tools\n"
 "        and widgets to help the encoding. All reporting will still be expressed in hours (default value)."
 msgstr ""
+"Hiermee wordt de maateenheid ingesteld die wordt gebruikt op de urenstaat. Dit levert eenvoudige hulpmiddelen\n"
+"         en widgets op  om bij de ingave te helpen. Alle rapportages wordt nog steeds uitgedrukt in uren (standaardwaarde)."
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
@@ -480,7 +493,7 @@ msgstr "Urenstaat datum"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_company__timesheet_encode_uom_id
 msgid "Timesheet Encoding Unit"
-msgstr ""
+msgstr "Urenstaat ingave eenheid"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.project_task_action_view_timesheet
@@ -561,6 +574,8 @@ msgid ""
 "Widget used in the webclient when this unit is the one used to encode "
 "timesheets."
 msgstr ""
+"Widget gebruikt in de webclient wanneer deze eenheid gebruikt wordt om om "
+"een urenstaat in te voeren."
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
@@ -569,6 +584,9 @@ msgid ""
 "analytic account. Please change it, or reactivate the current one to "
 "timesheet on the project."
 msgstr ""
+"U kunt geen urenstaten op dit project registreren omdat dit is gekoppeld aan"
+" een inactieve kostenplaats. Verander de kostenplaats of heractiveer de "
+"huidige."
 
 #. module: hr_timesheet
 #: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line
@@ -582,14 +600,9 @@ msgid ""
 "                customers if required."
 msgstr ""
 "U kan elke dag uw werkuren registeren en opvolgen per project.\n"
-"Alle tijd die gespendeerd wordt op een project wordt een kost in de analytische rekening/contract en kan opnieuw gefactureerd worden aan klanten indien nodig"
+"Alle tijd die gespendeerd wordt op een project wordt als kosten geboekt en kan opnieuw gefactureerd worden aan klanten indien nodig"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_view_form_inherit_timesheet
 msgid "per hour"
 msgstr "per uur"
-
-#. module: hr_timesheet
-#: model:ir.model,name:hr_timesheet.model_res_config_settings
-msgid "res.config.settings"
-msgstr "res.config.settings"

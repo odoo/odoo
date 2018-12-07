@@ -19,7 +19,7 @@ class ProductionLot(models.Model):
         domain=[('type', 'in', ['product', 'consu'])], required=True)
     product_uom_id = fields.Many2one(
         'uom.uom', 'Unit of Measure',
-        related='product_id.uom_id', store=True)
+        related='product_id.uom_id', store=True, readonly=False)
     quant_ids = fields.One2many('stock.quant', 'lot_id', 'Quants', readonly=True)
     product_qty = fields.Float('Quantity', compute='_product_qty')
 
@@ -53,3 +53,9 @@ class ProductionLot(models.Model):
         # We only care for the quants in internal or transit locations.
         quants = self.quant_ids.filtered(lambda q: q.location_id.usage in ['internal', 'transit'])
         self.product_qty = sum(quants.mapped('quantity'))
+
+    def action_lot_open_quants(self):
+        self.env['stock.quant']._quant_tasks()
+        action = self.env.ref('stock.lot_open_quants').read()[0]
+        action['context'] = {'search_default_lot_id': self.id}
+        return action

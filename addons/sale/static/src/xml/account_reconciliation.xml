@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+
+    <t t-name="reconciliation.line" t-extend="reconciliation.line">
+        <t t-jquery="caption" t-operation="append">
+            <t t-if="state.sale_order_ids &amp;&amp; state.sale_order_ids.length > 0"> 
+                <div class="alert alert-info">
+                    There are <strong><a href="#" class="js_open_so">uninvoiced sales orders</a></strong> matching the communication of the bank statement line
+                </div>
+            </t>
+        </t>
+    </t>
+
+</templates>

@@ -60,6 +60,13 @@ Discuss.include({
     //--------------------------------------------------------------------------
 
     /**
+     * @override
+     * @private
+     */
+    _initThreads: function () {
+        return this._updateThreads();
+    },
+    /**
      * @private
      * @returns {Boolean} true iff we currently are in the Inbox tab
      */
@@ -73,7 +80,7 @@ Discuss.include({
     _renderButtons: function () {
         var self = this;
         this._super.apply(this, arguments);
-        _.each(['dm_chat', 'public', 'private'], function (type) {
+        _.each(['dm_chat', 'multi_user_channel'], function (type) {
             var selector = '.o_mail_discuss_button_' + type;
             self.$buttons.on('click', selector, self._onAddThread.bind(self));
         });
@@ -194,13 +201,17 @@ Discuss.include({
 
             // update control panel
             self.$buttons.find('button')
-                         .addClass('o_hidden');
+                         .removeClass('d-block')
+                         .addClass('d-none');
             self.$buttons.find('.o_mail_discuss_button_' + type)
-                         .removeClass('o_hidden');
+                         .removeClass('d-none')
+                         .addClass('d-block');
             self.$buttons.find('.o_mail_discuss_button_mark_all_read')
-                         .toggleClass('o_hidden', type !== 'mailbox_inbox');
+                         .toggleClass('d-none', type !== 'mailbox_inbox')
+                         .toggleClass('d-block', type === 'mailbox_inbox');
             self.$buttons.find('.o_mail_discuss_button_unstar_all')
-                         .toggleClass('o_hidden', type !== 'mailbox_starred');
+                         .toggleClass('d-none', type !== 'mailbox_starred')
+                         .toggleClass('d-block', type === 'mailbox_starred');
 
             // update Mailbox page buttons
             if (inMailbox) {

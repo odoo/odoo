@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from odoo.tests import common
-from odoo.tools import pycompat
 
 ANSWER_TO_ULTIMATE_QUESTION = 42
 
@@ -17,7 +16,7 @@ class TestAttributes(common.TransactionCase):
         self.assertTrue(hasattr(instance, 'unknown'))
 
         # Is it the right type ?
-        self.assertIsInstance(instance.unknown, pycompat.integer_types)
+        self.assertIsInstance(instance.unknown, int)
 
         # Is it the right value, in case of, we don't know ;-)
         self.assertEqual(instance.unknown, ANSWER_TO_ULTIMATE_QUESTION)

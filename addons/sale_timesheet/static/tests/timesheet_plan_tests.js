@@ -10,7 +10,7 @@ function createPlan(params) {
         do_push_state: function () {},
     });
     var parent = new Parent();
-    testUtils.addMockEnvironment(parent, params);
+    testUtils.mock.addMockEnvironment(parent, params);
     var plan = new ProjectPlan(parent, params.action);
     var selector = params.debug ? 'body' : '#qunit-fixture';
     plan.appendTo($(selector));

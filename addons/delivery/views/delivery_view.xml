@@ -203,10 +203,8 @@
             <field name="inherit_id" ref="stock.view_picking_form"/>
             <field name="arch" type="xml">
               <data>
-                <xpath expr="//page[@name='extra']" position="inside">
-                <separator string="Delivery Information"/>
-                <group>
-                    <group name='carrier_data'>
+                <xpath expr="//group[@name='other_infos']" position="before">
+                    <group name='carrier_data' string="Shipping Information">
                         <field name="carrier_id" attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}" options="{'no_create': True, 'no_open': True}"/>
                         <field name="delivery_type" attrs="{'invisible':True}"/>
                         <label for="carrier_tracking_ref"/>
@@ -214,16 +212,17 @@
                             <field name="carrier_tracking_ref" class="oe_inline" attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}"/>
                             <button type='object' class="fa fa-arrow-right oe_link" name="cancel_shipment" string="Cancel" attrs="{'invisible':['|','|','|',('carrier_tracking_ref','=',False),('delivery_type','in', ['fixed', 'base_on_rule']),('delivery_type','=',False),('state','not in',('done'))]}"/>
                         </div>
-                    </group>
-                    <group>
                         <label for="weight" string="Weight"/>
                         <div>
                             <field name="weight" class="oe_inline"/>
-                            <field name="weight_uom_id" nolabel="1" class="oe_inline" style="margin-left:5px"/>
+                            <field name="weight_uom_name" nolabel="1" class="oe_inline" style="margin-left:5px"/>
                         </div>
-                        <field name="shipping_weight"/>
+                        <label for="shipping_weight" string="Weight for shipping"/>
+                        <div>
+                            <field name="shipping_weight" class="oe_inline"/>
+                            <field name="weight_uom_name" nolabel="1" class="oe_inline" style="margin-left:5px"/>
+                        </div>
                     </group>
-                </group>
                 </xpath>
                 <div name="button_box" position="inside">
                     <button type="object" name="open_website_url" class="oe_stat_button" icon='fa-truck' string="Tracking"
@@ -236,6 +235,9 @@
                     <button name="action_send_confirmation_email" string="Send Confirmation Email" type="object" attrs="{'invisible':['|', ('state', '!=', 'done'), ('carrier_id', '=', False)]}"/>
                  </xpath>
               </data>
+              <xpath expr="//field[@name='partner_id']" position="attributes">
+                  <attribute name="attrs">{'required': ['&amp;', ('delivery_type', '!=', False), ('delivery_type', 'not in', ['fixed', 'base_on_rule'])]}</attribute>
+              </xpath>
             </field>
         </record>
 
@@ -257,8 +259,16 @@
             <field name="arch" type="xml">
                 <field name="company_id" position="before">
                     <field name="packaging_id" domain="[('product_id', '=', False)]"/>
-                    <field name="weight"/>
-                    <field name="shipping_weight"/>
+                    <label for="weight" string="Weight"/>
+                    <div>
+                        <field name="weight" class="oe_inline"/>
+                        <field name="weight_uom_name" nolabel="1" class="oe_inline" style="margin-left:5px"/>
+                    </div>
+                    <label for="shipping_weight"/>
+                    <div class="o_row" name="Shipping Weight">
+                        <field name="shipping_weight"/>
+                        <span><field name="weight_uom_name"/></span>
+                    </div>
                 </field>
             </field>
         </record>

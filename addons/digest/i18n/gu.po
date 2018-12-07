@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-24 09:04+0000\n"
-"PO-Revision-Date: 2018-08-24 09:04+0000\n"
+"POT-Creation-Date: 2018-10-02 10:05+0000\n"
+"PO-Revision-Date: 2018-10-02 10:05+0000\n"
 "Last-Translator: Dharmraj Jhala <dja@openerp.com>, 2018\n"
 "Language-Team: Gujarati (https://www.transifex.com/odoo/teams/41243/gu/)\n"
 "MIME-Version: 1.0\n"
@@ -176,12 +176,12 @@ msgid ""
 msgstr ""
 
 #. module: digest
-#: model:digest.tip,tip_description:digest.digest_tip_mail_0
+#: model_terms:digest.tip,tip_description:digest.digest_tip_mail_0
 msgid "${', '.join(users.mapped('name'))} signed up. Say hello in the"
 msgstr ""
 
 #. module: digest
-#: model:digest.tip,tip_description:digest.digest_tip_mail_0
+#: model_terms:digest.tip,tip_description:digest.digest_tip_mail_0
 msgid ""
 "% set users = object.env['res.users'].search([], limit=10, order='id desc')\n"
 "    % set channel_id = object.env.ref('mail.channel_all_employees').id\n"
@@ -189,13 +189,13 @@ msgid ""
 msgstr ""
 
 #. module: digest
-#: model:digest.tip,tip_description:digest.digest_tip_mail_1
+#: model_terms:digest.tip,tip_description:digest.digest_tip_mail_1
 msgid ""
 "<strong style=\"font-size: 16px;\">Get things done with activities</strong>"
 msgstr ""
 
 #. module: digest
-#: model:ir.ui.view,arch_db:digest.digest_digest_view_form
+#: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
 msgid "Activate"
 msgstr ""
 
@@ -205,7 +205,7 @@ msgid "Activated"
 msgstr ""
 
 #. module: digest
-#: model:ir.ui.view,arch_db:digest.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:digest.res_config_settings_view_form
 msgid "Add new users as recipient of a periodic email with key metrics"
 msgstr ""
 
@@ -225,7 +225,12 @@ msgid "Company"
 msgstr "કંપની"
 
 #. module: digest
-#: model:ir.ui.view,arch_db:digest.res_config_settings_view_form
+#: model:ir.model,name:digest.model_res_config_settings
+msgid "Config Settings"
+msgstr ""
+
+#. module: digest
+#: model_terms:ir.ui.view,arch_db:digest.res_config_settings_view_form
 msgid "Configure Digest Emails"
 msgstr ""
 
@@ -235,7 +240,7 @@ msgid "Connected Users"
 msgstr ""
 
 #. module: digest
-#: model:ir.ui.view,arch_db:digest.digest_digest_view_form
+#: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
 msgid ""
 "Create or edit the mail template: you may get computed KPI's value using "
 "these fields:"
@@ -259,7 +264,7 @@ msgid "Currency"
 msgstr "ચલણ"
 
 #. module: digest
-#: model:ir.ui.view,arch_db:digest.digest_digest_view_form
+#: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
 msgid "Deactivate for everyone"
 msgstr ""
 
@@ -275,7 +280,7 @@ msgstr ""
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_res_config_settings__digest_id
-#: model:ir.ui.view,arch_db:digest.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:digest.res_config_settings_view_form
 msgid "Digest Email"
 msgstr ""
 
@@ -290,7 +295,7 @@ msgid "Digest Emails"
 msgstr ""
 
 #. module: digest
-#: model:ir.ui.view,arch_db:digest.portal_digest_unsubscribed
+#: model_terms:ir.ui.view,arch_db:digest.portal_digest_unsubscribed
 msgid "Digest Subscriptions"
 msgstr ""
 
@@ -311,17 +316,17 @@ msgid "Email Template"
 msgstr ""
 
 #. module: digest
-#: model:ir.ui.view,arch_db:digest.digest_digest_view_form
+#: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
 msgid "General"
 msgstr "જનરલ"
 
 #. module: digest
-#: model:ir.ui.view,arch_db:digest.digest_digest_view_search
+#: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_search
 msgid "Group by"
 msgstr ""
 
 #. module: digest
-#: model:ir.ui.view,arch_db:digest.digest_digest_view_form
+#: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
 msgid "How to customize your digest?"
 msgstr ""
 
@@ -332,7 +337,7 @@ msgid "ID"
 msgstr "ઓળખ"
 
 #. module: digest
-#: model:ir.ui.view,arch_db:digest.digest_digest_view_form
+#: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
 msgid "In order to build your customized digest, follow these steps:"
 msgstr ""
 
@@ -342,13 +347,13 @@ msgid "Is user subscribed"
 msgstr ""
 
 #. module: digest
-#: model:ir.ui.view,arch_db:digest.digest_digest_view_form
-#: model:ir.ui.view,arch_db:digest.digest_digest_view_tree
+#: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
+#: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_tree
 msgid "KPI Digest"
 msgstr ""
 
 #. module: digest
-#: model:ir.ui.view,arch_db:digest.digest_digest_view_form
+#: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
 msgid "KPIs"
 msgstr ""
 
@@ -396,7 +401,7 @@ msgid "Name"
 msgstr "નામ"
 
 #. module: digest
-#: model:ir.ui.view,arch_db:digest.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:digest.res_config_settings_view_form
 msgid ""
 "New users are automatically added as recipient of the following digest "
 "email."
@@ -409,7 +414,7 @@ msgstr ""
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__periodicity
-#: model:ir.ui.view,arch_db:digest.digest_digest_view_search
+#: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_search
 msgid "Periodicity"
 msgstr ""
 
@@ -425,12 +430,12 @@ msgid "Recipients"
 msgstr ""
 
 #. module: digest
-#: model:ir.ui.view,arch_db:digest.digest_digest_view_form
+#: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
 msgid "Select your KPIs in the KPI's tab."
 msgstr ""
 
 #. module: digest
-#: model:ir.ui.view,arch_db:digest.digest_digest_view_form
+#: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
 msgid "Send Now"
 msgstr ""
 
@@ -445,7 +450,7 @@ msgid "Status"
 msgstr "સ્થિતિ"
 
 #. module: digest
-#: model:ir.ui.view,arch_db:digest.digest_digest_view_form
+#: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
 msgid "Subscribe"
 msgstr "ઉમેદવારી નોંધાવો"
 
@@ -455,7 +460,7 @@ msgid "Tip description"
 msgstr ""
 
 #. module: digest
-#: model:ir.ui.view,arch_db:digest.digest_digest_view_form
+#: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
 msgid "Unsubscribe me"
 msgstr ""
 
@@ -485,57 +490,52 @@ msgid "Weekly Digest"
 msgstr ""
 
 #. module: digest
-#: model:digest.tip,tip_description:digest.digest_tip_mail_0
+#: model_terms:digest.tip,tip_description:digest.digest_tip_mail_0
 msgid ""
 "You can ping colleagues by tagging them in your messages using \"@\". They "
 "will be instantly notified.<br>"
 msgstr ""
 
 #. module: digest
-#: model:digest.tip,tip_description:digest.digest_tip_mail_1
+#: model_terms:digest.tip,tip_description:digest.digest_tip_mail_1
 msgid ""
 "You don't have any activity scheduled. Use activities on any business "
 "document to schedule meetings, calls and todos."
 msgstr ""
 
 #. module: digest
-#: model:ir.ui.view,arch_db:digest.portal_digest_unsubscribed
+#: model_terms:ir.ui.view,arch_db:digest.portal_digest_unsubscribed
 msgid "You have been successfully unsubscribed from"
 msgstr ""
 
 #. module: digest
-#: model:ir.ui.view,arch_db:digest.digest_digest_view_form
+#: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
 msgid "You may want to add new computed fields with Odoo Studio:"
 msgstr ""
 
 #. module: digest
-#: model:digest.tip,tip_description:digest.digest_tip_mail_0
+#: model_terms:digest.tip,tip_description:digest.digest_tip_mail_0
 msgid "company's discussion channel."
 msgstr ""
 
 #. module: digest
-#: model:ir.ui.view,arch_db:digest.digest_digest_view_form
+#: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
 msgid ""
 "first create a boolean field called\n"
-"                                                <code>x_kpi_myfield</code>\n"
+"                                                <code>kpi_myfield</code>\n"
 "                                                and display it in the KPI's tab;"
 msgstr ""
 
 #. module: digest
-#: model:ir.model,name:digest.model_res_config_settings
-msgid "res.config.settings"
-msgstr ""
-
-#. module: digest
-#: model:ir.ui.view,arch_db:digest.digest_digest_view_form
+#: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
 msgid ""
 "then create a computed field called\n"
-"                                                <code>x_kpi_myfield_value</code>\n"
+"                                                <code>kpi_myfield_value</code>\n"
 "                                                that will compute your customized KPI."
 msgstr ""
 
 #. module: digest
-#: model:ir.ui.view,arch_db:digest.digest_digest_view_form
+#: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
 msgid ""
 "you must create 2 fields on the\n"
 "                                                <code>digest</code>\n"

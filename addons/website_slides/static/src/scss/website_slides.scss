@@ -15,10 +15,6 @@ $MAX-Z-INDEX : 2147483647 !default;
     object-position: top;
 }
 
-.oe_slides_panel_footer {
-    background-color: $light;
-}
-
 .oe_slides_panel_footer .fa, .oe_slide_js_embed_option_link{
     color : theme-color('primary');
     cursor: pointer;
@@ -98,10 +94,6 @@ textarea.o_slides_comment {
 }
 
 // Thumbnails
-.oe_slides_thumbnail_container{
-    height: 300px
-}
-
 .oe_slides_grid_thumbnail {
     @include top-covered-image;
     height: 200px;
@@ -161,12 +153,6 @@ textarea.o_slides_comment {
     padding: 10px;
 }
 
-.oe_slides_panel{
-    padding-bottom: 50px;
-    height:100%;
-    margin-bottom:0px;
-}
-
 // PDF Viewer Share bar
 .oe_slides_share_bar{
     padding: 10px 0;
@@ -178,14 +164,4 @@ textarea.o_slides_comment {
 
 .oe_show_footer {
     z-index: $MAX-Z-INDEX; // Looks terrible but seems necessary due to fullscreen & canvas in PDFSlidesViewer
-}
-// Display Slide Navigation Footer bit clear on mobile preview
-@media screen and (max-width: 300px) {
-    .o_slide_navigation_buttons {
-        margin-left: 15px;
-        margin-right: -15px;
-        .col-4 {
-            display: none;
-        }
-    }
 }

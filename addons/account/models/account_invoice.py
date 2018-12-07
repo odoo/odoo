@@ -226,7 +226,7 @@ class AccountInvoice(models.Model):
         for line in self.move_id.line_ids.filtered(lambda l: l.account_id.id == self.account_id.id):
             payment_lines.update(line.mapped('matched_credit_ids.credit_move_id.id'))
             payment_lines.update(line.mapped('matched_debit_ids.debit_move_id.id'))
-        self.payment_move_line_ids = self.env['account.move.line'].browse(list(payment_lines))
+        self.payment_move_line_ids = self.env['account.move.line'].browse(list(payment_lines)).sorted()
 
     name = fields.Char(string='Reference/Description', index=True,
         readonly=True, states={'draft': [('readonly', False)]}, copy=False, help='The name that will be used on account move lines')
@@ -279,7 +279,7 @@ class AccountInvoice(models.Model):
              "means direct payment.")
     partner_id = fields.Many2one('res.partner', string='Partner', change_default=True,
         readonly=True, states={'draft': [('readonly', False)]},
-        track_visibility='always')
+        track_visibility='always', help="You can find a contact by its Name, TIN, Email or Internal Reference.")
     vendor_bill_id = fields.Many2one('account.invoice', string='Vendor Bill',
         help="Auto-complete from a past bill.")
     payment_term_id = fields.Many2one('account.payment.term', string='Payment Terms', oldname='payment_term',
@@ -381,16 +381,28 @@ class AccountInvoice(models.Model):
     def _get_vendor_display_info(self):
         for invoice in self:
             vendor_display_name = invoice.partner_id.name
-            if not vendor_display_name and invoice.source_email:
-                vendor_display_name = _('From: ') + invoice.source_email
+            invoice.invoice_icon = ''
+            if not vendor_display_name:
+                if invoice.source_email:
+                    vendor_display_name = _('From: ') + invoice.source_email
+                    invoice.invoice_icon = '@'
+                else:
+                    vendor_display_name = ('Created by: ') + invoice.create_uid.name
+                    invoice.invoice_icon = '#'
             invoice.vendor_display_name = vendor_display_name
-            invoice.invoice_icon = invoice.source_email and '@' or ''
 
     @api.multi
     def _get_computed_reference(self):
         self.ensure_one()
         if self.company_id.invoice_reference_type == 'invoice_number':
-            identification_number = int(re.match('.*?([0-9]+)$', self.number).group(1))
+            seq_suffix = self.journal_id.sequence_id.suffix or ''
+            regex_number = '.*?([0-9]+)%s$' % seq_suffix
+            exact_match = re.match(regex_number, self.number)
+            if exact_match:
+                identification_number = int(exact_match.group(1))
+            else:
+                ran_num = str(uuid.uuid4().int)
+                identification_number = int(ran_num[:5] + ran_num[-5:])
             prefix = self.number
         else:
             #self.company_id.invoice_reference_type == 'partner'
@@ -528,7 +540,7 @@ class AccountInvoice(models.Model):
         reconciled = self.filtered(lambda invoice: invoice.reconciled)
         not_reconciled = self - reconciled
         (reconciled & pre_reconciled).filtered(lambda invoice: invoice.state == 'open').action_invoice_paid()
-        (not_reconciled & pre_not_reconciled).filtered(lambda invoice: invoice.state == 'paid').action_invoice_re_open()
+        (not_reconciled & pre_not_reconciled).filtered(lambda invoice: invoice.state in ('in_payment', 'paid')).action_invoice_re_open()
         return res
 
     @api.model
@@ -579,7 +591,7 @@ class AccountInvoice(models.Model):
         """ Print the invoice and mark it as sent, so that we can see more
             easily the next step of the workflow
         """
-        self.write({'sent': True})
+        self.filtered(lambda inv: not inv.sent).write({'sent': True})
         if self.user_has_groups('account.group_account_invoice'):
             return self.env.ref('account.account_invoices').report_action(self)
         else:
@@ -916,7 +928,7 @@ class AccountInvoice(models.Model):
 
     @api.multi
     def action_invoice_re_open(self):
-        if self.filtered(lambda inv: inv.state != 'paid'):
+        if self.filtered(lambda inv: inv.state not in ('in_payment', 'paid')):
             raise UserError(_('Invoice must be paid in order to set it to register payment.'))
         return self.write({'state': 'open'})
 
@@ -1479,7 +1491,7 @@ class AccountInvoice(models.Model):
             :param date: payment date, defaults to fields.Date.context_today(self)
             :param writeoff_acc: account in which to create a writeoff if pay_amount < self.residual, so that the invoice is fully paid
         """
-        if isinstance(pay_journal, pycompat.integer_types):
+        if isinstance(pay_journal, int):
             pay_journal = self.env['account.journal'].browse([pay_journal])
         assert len(self) == 1, "Can only pay one invoice at a time."
 
@@ -1493,11 +1505,11 @@ class AccountInvoice(models.Model):
     def _track_subtype(self, init_values):
         self.ensure_one()
         if 'state' in init_values and self.state == 'paid' and self.type in ('out_invoice', 'out_refund'):
-            return 'account.mt_invoice_paid'
+            return self.env.ref('account.mt_invoice_paid')
         elif 'state' in init_values and self.state == 'open' and self.type in ('out_invoice', 'out_refund'):
-            return 'account.mt_invoice_validated'
+            return self.env.ref('account.mt_invoice_validated')
         elif 'state' in init_values and self.state == 'draft' and self.type in ('out_invoice', 'out_refund'):
-            return 'account.mt_invoice_created'
+            return self.env.ref('account.mt_invoice_created')
         return super(AccountInvoice, self)._track_subtype(init_values)
 
     def _amount_by_group(self):
@@ -1507,7 +1519,7 @@ class AccountInvoice(models.Model):
             res = {}
             for line in invoice.tax_line_ids:
                 res.setdefault(line.tax_id.tax_group_id, {'base': 0.0, 'amount': 0.0})
-                res[line.tax_id.tax_group_id]['amount'] += line.amount
+                res[line.tax_id.tax_group_id]['amount'] += line.amount_total
                 res[line.tax_id.tax_group_id]['base'] += line.base
             res = sorted(res.items(), key=lambda l: l[0].sequence)
             invoice.amount_by_group = [(
@@ -1571,11 +1583,12 @@ class AccountInvoiceLine(models.Model):
         help="Gives the sequence of this line when displaying the invoice.")
     invoice_id = fields.Many2one('account.invoice', string='Invoice Reference',
         ondelete='cascade', index=True)
+    invoice_type = fields.Selection(related='invoice_id.type', readonly=True)
     uom_id = fields.Many2one('uom.uom', string='Unit of Measure',
         ondelete='set null', index=True, oldname='uos_id')
     product_id = fields.Many2one('product.product', string='Product',
         ondelete='restrict', index=True)
-    product_image = fields.Binary('Product Image', related="product_id.image", store=False)
+    product_image = fields.Binary('Product Image', related="product_id.image", store=False, readonly=True)
     account_id = fields.Many2one('account.account', string='Account', domain=[('deprecated', '=', False)],
         default=_default_account,
         help="The income or expense account related to the selected product.")
@@ -1602,7 +1615,7 @@ class AccountInvoiceLine(models.Model):
         related='invoice_id.company_id', store=True, readonly=True, related_sudo=False)
     partner_id = fields.Many2one('res.partner', string='Partner',
         related='invoice_id.partner_id', store=True, readonly=True, related_sudo=False)
-    currency_id = fields.Many2one('res.currency', related='invoice_id.currency_id', store=True, related_sudo=False)
+    currency_id = fields.Many2one('res.currency', related='invoice_id.currency_id', store=True, related_sudo=False, readonly=False)
     company_currency_id = fields.Many2one('res.currency', related='invoice_id.company_currency_id', readonly=True, related_sudo=False)
     is_rounding_line = fields.Boolean(string='Rounding Line', help='Is a rounding line in case of cash rounding.')
 
@@ -1720,9 +1733,9 @@ class AccountInvoiceLine(models.Model):
         self.ensure_one()
         if not self.product_id:
             return ''
-
+        invoice_type = self.invoice_id.type
         rslt = self.product_id.partner_ref
-        if type in ('in_invoice', 'in_refund'):
+        if invoice_type in ('in_invoice', 'in_refund'):
             if self.product_id.description_purchase:
                 rslt += '\n' + self.product_id.description_purchase
         else:
@@ -1749,14 +1762,14 @@ class AccountInvoiceLine(models.Model):
         result = {}
         if not self.uom_id:
             self.price_unit = 0.0
-        else:
+
+        if self.product_id and self.uom_id:
             if self.invoice_id.type in ('in_invoice', 'in_refund'):
                 price_unit = self.product_id.standard_price
             else:
                 price_unit = self.product_id.lst_price
             self.price_unit = self.product_id.uom_id._compute_price(price_unit, self.uom_id)
 
-        if self.product_id and self.uom_id:
             if self.product_id.uom_id.category_id.id != self.uom_id.category_id.id:
                 warning = {
                     'title': _('Warning!'),

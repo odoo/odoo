@@ -294,7 +294,7 @@
                                 <field name="code" widget="ace" options="{'mode': 'python'}" placeholder="Enter Python code here. Help about Python expression is available in the help tab of this document."/>
                             </page>
 
-                            <page string="Data to Write" autofocus="autofocus"
+                            <page string="Data to Write" name="page_object" autofocus="autofocus"
                                     attrs="{'invisible':[('state', 'not in', ['object_create', 'object_write'])]}">
                                 <p attrs="{'invisible': [('model_id', '!=', False)]}">
                                     Please set the Model to Create before choosing values
@@ -302,9 +302,9 @@
                                 <field name="fields_lines">
                                      <tree string="Field Mappings" editable="bottom">
                                         <field name="col1" domain="['|', ('model_id', '=', parent.crud_model_id), ('model_id', '=', parent.model_id)]"/>
-                                        <field name="type"/>
-                                        <field name="resource_ref" attrs="{'readonly': [('type', '!=', 'reference')]}" options="{'hide_model': True}"/>
-                                        <field name="value" attrs="{'readonly': [('type', '=', 'reference')]}" force_save="1"/>
+                                        <field name="evaluation_type"/>
+                                        <field name="resource_ref" attrs="{'readonly': [('evaluation_type', '!=', 'reference')]}" options="{'hide_model': True}"/>
+                                        <field name="value" attrs="{'readonly': [('evaluation_type', '=', 'reference')]}" force_save="1"/>
                                     </tree>
                                 </field>
                             </page>
@@ -318,7 +318,7 @@
                                 <field name="child_ids" domain="[('model_id', '=', model_id)]"/>
                             </page>
 
-                            <page string="Help"
+                            <page string="Help" autofocus="autofocus"
                                     attrs="{'invisible': [('state', '!=', 'code')]}">
                                 <group>
                                     <div style="margin-top: 4px;">

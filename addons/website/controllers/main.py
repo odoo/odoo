@@ -16,7 +16,7 @@ import odoo
 
 from odoo import http, models, fields, _
 from odoo.http import request
-from odoo.tools import pycompat, OrderedSet
+from odoo.tools import OrderedSet
 from odoo.addons.http_routing.models.ir_http import slug, _guess_mimetype
 from odoo.addons.web.controllers.main import Binary
 from odoo.addons.portal.controllers.portal import pager as portal_pager
@@ -121,7 +121,7 @@ class Website(Home):
         return dict(fields=fields, states=[(st.id, st.name, st.code) for st in country.state_ids], phone_code=country.phone_code)
 
     @http.route(['/robots.txt'], type='http', auth="public")
-    def robots(self):
+    def robots(self, **kwargs):
         return request.render('website.robots', {'url_root': request.httprequest.url_root}, mimetype='text/plain')
 
     @http.route('/sitemap.xml', type='http', auth="public", website=True, multilang=False)
@@ -193,7 +193,7 @@ class Website(Home):
         return request.make_response(content, [('Content-Type', mimetype)])
 
     @http.route('/website/info', type='http', auth="public", website=True)
-    def website_info(self):
+    def website_info(self, **kwargs):
         try:
             request.website.get_template('website.website_info').name
         except Exception as e:
@@ -256,7 +256,7 @@ class Website(Home):
         return request.render("website.list_website_pages", values)
 
     @http.route(['/website/add/', '/website/add/<path:path>'], type='http', auth="user", website=True)
-    def pagenew(self, path="", noredirect=False, add_menu=False, template=False):
+    def pagenew(self, path="", noredirect=False, add_menu=False, template=False, **kwargs):
         # for supported mimetype, get correct default template
         _, ext = os.path.splitext(path)
         ext_special_case = ext and ext in _guess_mimetype() and ext != '.html'
@@ -286,7 +286,7 @@ class Website(Home):
         return views.read(['name', 'id', 'key', 'xml_id', 'arch', 'active', 'inherit_id'])
 
     @http.route('/website/reset_templates', type='http', auth='user', methods=['POST'], website=True)
-    def reset_template(self, templates, redirect='/'):
+    def reset_template(self, templates, redirect='/', **kwargs):
         templates = request.httprequest.form.getlist('templates')
         modules_to_update = []
         for temp_id in templates:
@@ -362,15 +362,17 @@ class Website(Home):
         return [enable, disable]
 
     @http.route(['/website/theme_customize'], type='json', auth="public", website=True)
-    def theme_customize(self, enable, disable, get_bundle=False):
+    def theme_customize(self, enable=None, disable=None, get_bundle=False):
         """ enable or Disable lists of ``xml_id`` of the inherit templates """
         def set_active(xml_ids, active):
             if xml_ids:
                 real_ids = self.get_view_ids(xml_ids)
                 request.env['ir.ui.view'].browse(real_ids).write({'active': active})
 
-        set_active(disable, False)
-        set_active(enable, True)
+        if disable:
+            set_active(disable, False)
+        if enable:
+            set_active(enable, True)
 
         if get_bundle:
             context = dict(request.context)
@@ -383,7 +385,7 @@ class Website(Home):
         return True
 
     @http.route(['/website/theme_customize_reload'], type='http', auth="public", website=True)
-    def theme_customize_reload(self, href, enable, disable, tab=0):
+    def theme_customize_reload(self, href, enable, disable, tab=0, **kwargs):
         self.theme_customize(enable and enable.split(",") or [], disable and disable.split(",") or [])
         return request.redirect(href + ("&theme=true" if "#" in href else "#theme=true") + ("&tab=" + tab))
 
@@ -408,7 +410,7 @@ class Website(Home):
         action = action_id = None
 
         # find the action_id: either an xml_id, the path, or an ID
-        if isinstance(path_or_xml_id_or_id, pycompat.string_types) and '.' in path_or_xml_id_or_id:
+        if isinstance(path_or_xml_id_or_id, str) and '.' in path_or_xml_id_or_id:
             action = request.env.ref(path_or_xml_id_or_id, raise_if_not_found=False)
         if not action:
             action = ServerActions.search([('website_path', '=', path_or_xml_id_or_id), ('website_published', '=', True)], limit=1)

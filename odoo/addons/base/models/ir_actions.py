@@ -5,7 +5,7 @@ import odoo
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import MissingError, UserError, ValidationError, AccessError
 from odoo.tools.safe_eval import safe_eval, test_python_expr
-from odoo.tools import pycompat, wrap_module
+from odoo.tools import wrap_module
 from odoo.http import request
 
 import base64
@@ -31,6 +31,7 @@ dateutil = wrap_module(dateutil, mods | attribs)
 
 class IrActions(models.Model):
     _name = 'ir.actions.actions'
+    _description = 'Actions'
     _table = 'ir_actions'
     _order = 'name'
 
@@ -126,6 +127,7 @@ class IrActions(models.Model):
 
 class IrActionsActWindow(models.Model):
     _name = 'ir.actions.act_window'
+    _description = 'Action Window'
     _table = 'ir_act_window'
     _inherit = 'ir.actions.actions'
     _sequence = 'ir_actions_id_seq'
@@ -232,6 +234,9 @@ class IrActionsActWindow(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         self.clear_caches()
+        for vals in vals_list:
+            if not vals.get('name') and vals.get('res_model'):
+                vals['name'] = self.env[vals['res_model']]._description
         return super(IrActionsActWindow, self).create(vals_list)
 
     @api.multi
@@ -269,6 +274,7 @@ VIEW_TYPES = [
 
 class IrActionsActWindowView(models.Model):
     _name = 'ir.actions.act_window.view'
+    _description = 'Action Window View'
     _table = 'ir_act_window_view'
     _rec_name = 'view_id'
     _order = 'sequence,id'
@@ -289,6 +295,7 @@ class IrActionsActWindowView(models.Model):
 
 class IrActionsActWindowclose(models.Model):
     _name = 'ir.actions.act_window_close'
+    _description = 'Action Window Close'
     _inherit = 'ir.actions.actions'
     _table = 'ir_actions'
 
@@ -297,6 +304,7 @@ class IrActionsActWindowclose(models.Model):
 
 class IrActionsActUrl(models.Model):
     _name = 'ir.actions.act_url'
+    _description = 'Action URL'
     _table = 'ir_act_url'
     _inherit = 'ir.actions.actions'
     _sequence = 'ir_actions_id_seq'
@@ -331,6 +339,7 @@ class IrActionsServer(models.Model):
       server actions
     """
     _name = 'ir.actions.server'
+    _description = 'Server Actions'
     _table = 'ir_act_server'
     _inherit = 'ir.actions.actions'
     _sequence = 'ir_actions_id_seq'
@@ -339,7 +348,7 @@ class IrActionsServer(models.Model):
     DEFAULT_PYTHON_CODE = """# Available variables:
 #  - env: Odoo Environment on which the action is triggered
 #  - model: Odoo Model of the record on which the action is triggered; is a void recordset
-#  - record: record on which the action is triggered; may be be void
+#  - record: record on which the action is triggered; may be void
 #  - records: recordset of all records on which the action is triggered in multi-mode; may be void
 #  - time, datetime, dateutil, timezone: useful Python libraries
 #  - log: log(message, level='info'): logging function to record debug information in ir.logging table
@@ -562,6 +571,9 @@ class IrActionsServer(models.Model):
                 active_id = self._context.get('active_id')
                 if not active_id and self._context.get('onchange_self'):
                     active_id = self._context['onchange_self']._origin.id
+                    if not active_id:  # onchange on new record
+                        func = getattr(self, 'run_action_%s' % action.state)
+                        res = func(action, eval_context=eval_context)
                 active_ids = self._context.get('active_ids', [active_id] if active_id else [])
                 for active_id in active_ids:
                     # run context dedicated to a particular active_id
@@ -592,11 +604,11 @@ class IrServerObjectLines(models.Model):
                                             "When Formula type is selected, this field may be a Python expression "
                                             " that can use the same values as for the code field on the server action.\n"
                                             "If Value type is selected, the value will be used directly without evaluation.")
-    type = fields.Selection([
+    evaluation_type = fields.Selection([
         ('value', 'Value'),
         ('reference', 'Reference'),
         ('equation', 'Python expression')
-    ], 'Evaluation Type', default='value', required=True, change_default=True)
+    ], 'Evaluation Type', default='value', required=True, change_default=True, oldname='type')
     resource_ref = fields.Reference(
         string='Record', selection='_selection_target_model',
         compute='_compute_resource_ref', inverse='_set_resource_ref')
@@ -606,10 +618,10 @@ class IrServerObjectLines(models.Model):
         models = self.env['ir.model'].search([])
         return [(model.model, model.name) for model in models]
 
-    @api.depends('col1.relation', 'value', 'type')
+    @api.depends('col1.relation', 'value', 'evaluation_type')
     def _compute_resource_ref(self):
         for line in self:
-            if line.type in ['reference', 'value'] and line.col1 and line.col1.relation:
+            if line.evaluation_type in ['reference', 'value'] and line.col1 and line.col1.relation:
                 value = line.value or ''
                 try:
                     value = int(value)
@@ -625,7 +637,7 @@ class IrServerObjectLines(models.Model):
 
     @api.onchange('resource_ref')
     def _set_resource_ref(self):
-        for line in self.filtered(lambda line: line.type == 'reference'):
+        for line in self.filtered(lambda line: line.evaluation_type == 'reference'):
             if line.resource_ref:
                 line.value = str(line.resource_ref.id)
 
@@ -634,7 +646,7 @@ class IrServerObjectLines(models.Model):
         result = dict.fromkeys(self.ids, False)
         for line in self:
             expr = line.value
-            if line.type == 'equation':
+            if line.evaluation_type == 'equation':
                 expr = safe_eval(line.value, eval_context)
             elif line.col1.ttype in ['many2one', 'integer']:
                 try:
@@ -741,6 +753,7 @@ class IrActionsTodo(models.Model):
 
 class IrActionsActClient(models.Model):
     _name = 'ir.actions.client'
+    _description = 'Client Action'
     _inherit = 'ir.actions.actions'
     _table = 'ir_act_client'
     _sequence = 'ir_actions_id_seq'
@@ -764,7 +777,7 @@ class IrActionsActClient(models.Model):
     @api.depends('params_store')
     def _compute_params(self):
         self_bin = self.with_context(bin_size=False, bin_size_params_store=False)
-        for record, record_bin in pycompat.izip(self, self_bin):
+        for record, record_bin in zip(self, self_bin):
             record.params = record_bin.params_store and safe_eval(record_bin.params_store, {'uid': self._uid})
 
     def _inverse_params(self):

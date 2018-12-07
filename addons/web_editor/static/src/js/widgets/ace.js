@@ -593,7 +593,9 @@ var ViewEditor = Widget.extend({
         this._rpc({
             model: 'ir.ui.view',
             method: 'write',
-            args: [[session.id], {arch: session.text}, _.extend(weContext.get(), {lang: null})],
+            args: [[session.id], {arch: session.text}],
+        }, {
+            noContextKeys: 'lang',
         }).then(function () {
             self._toggleDirtyInfo(session.id, 'xml', false);
             def.resolve();

@@ -2,13 +2,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import itertools
+import operator
 import psycopg2
 
 from odoo.addons import decimal_precision as dp
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError, RedirectWarning, except_orm
-from odoo.tools import pycompat
+from odoo.exceptions import UserError
 
 
 class ProductTemplate(models.Model):
@@ -33,15 +34,18 @@ class ProductTemplate(models.Model):
     def _get_default_uom_id(self):
         return self.env["uom.uom"].search([], limit=1, order='id').id
 
+    def _get_default_weight_uom(self):
+        return self._get_weight_uom_name_from_ir_config_parameter()
+
+    def _get_default_volume_uom(self):
+        return self._get_volume_uom_name_from_ir_config_parameter()
+
     name = fields.Char('Name', index=True, required=True, translate=True)
     sequence = fields.Integer('Sequence', default=1, help='Gives the sequence order when displaying a product list')
     description = fields.Text(
-        'Description', translate=True,
-        help="A precise description of the Product, used only for internal information purposes.")
+        'Description', translate=True)
     description_purchase = fields.Text(
-        'Purchase Description', translate=True,
-        help="A description of the Product that you want to communicate to your vendors. "
-             "This description will be copied to every Purchase Order, Receipt and Vendor Bill/Credit Note.")
+        'Purchase Description', translate=True)
     description_sale = fields.Text(
         'Sale Description', translate=True,
         help="A description of the Product that you want to communicate to your customers. "
@@ -49,11 +53,9 @@ class ProductTemplate(models.Model):
     type = fields.Selection([
         ('consu', 'Consumable'),
         ('service', 'Service')], string='Product Type', default='consu', required=True,
-        help='A storable product is a product for which you manage stock. The "Inventory" app has to be installed.\n'
-             'A consumable product, on the other hand, is a product for which stock is not managed.\n'
-             'A service is a non-material product you provide.\n'
-             'A digital content is a non-material product you sell online. The files attached to the products are the one that are sold on '
-             'the e-commerce such as e-books, music, pictures,... The "Digital Product" module has to be installed.')
+        help='A storable product is a product for which you manage stock. The Inventory app has to be installed.\n'
+             'A consumable product is a product for which stock is not managed.\n'
+             'A service is a non-material product you provide.')
     rental = fields.Boolean('Can be Rent')
     categ_id = fields.Many2one(
         'product.category', 'Product Category',
@@ -68,33 +70,27 @@ class ProductTemplate(models.Model):
         'Price', compute='_compute_template_price', inverse='_set_template_price',
         digits=dp.get_precision('Product Price'))
     list_price = fields.Float(
-        'Sales Price', default=1.0,
+        'Sale Price', default=1.0,
         digits=dp.get_precision('Product Price'),
-        help="Base price to compute the customer price. Sometimes called the catalog price.")
+        help="Price at which the product is sold to customers.")
     lst_price = fields.Float(
-        'Public Price', related='list_price',
+        'Public Price', related='list_price', readonly=False,
         digits=dp.get_precision('Product Price'))
     standard_price = fields.Float(
         'Cost', compute='_compute_standard_price',
         inverse='_set_standard_price', search='_search_standard_price',
         digits=dp.get_precision('Product Price'), groups="base.group_user",
-        help = "Cost used for stock valuation in standard price and as a first price to set in average/fifo. "
-               "Also used as a base price for pricelists. "
-               "Expressed in the default unit of measure of the product. ")
+        help = "Cost used for stock valuation in standard price and as a first price to set in average/FIFO.")
 
     volume = fields.Float(
-        'Volume', compute='_compute_volume', inverse='_set_volume',
-        help="The volume in m3.", store=True)
+        'Volume', compute='_compute_volume', inverse='_set_volume', store=True)
+    volume_uom_name = fields.Char(string='Volume unit of measure label', compute='_compute_volume_uom_name', default=_get_default_volume_uom)
     weight = fields.Float(
         'Weight', compute='_compute_weight', digits=dp.get_precision('Stock Weight'),
-        inverse='_set_weight', store=True,
-        help="The weight of the contents in Kg, not including any packaging, etc.")
-    weight_uom_id = fields.Many2one('uom.uom', string='Weight Unit of Measure', compute='_compute_weight_uom_id')
-    weight_uom_name = fields.Char(string='Weight unit of measure label', related='weight_uom_id.name', readonly=True)
+        inverse='_set_weight', store=True)
+    weight_uom_name = fields.Char(string='Weight unit of measure label', compute='_compute_weight_uom_name', readonly=True, default=_get_default_weight_uom)
 
-    sale_ok = fields.Boolean(
-        'Can be Sold', default=True,
-        help="Specify if the product can be selected in a sales order line.")
+    sale_ok = fields.Boolean('Can be Sold', default=True)
     purchase_ok = fields.Boolean('Can be Purchased', default=True)
     pricelist_id = fields.Many2one(
         'product.pricelist', 'Pricelist', store=False,
@@ -102,26 +98,26 @@ class ProductTemplate(models.Model):
     uom_id = fields.Many2one(
         'uom.uom', 'Unit of Measure',
         default=_get_default_uom_id, required=True,
-        help="Default Unit of Measure used for all stock operation.")
+        help="Default unit of measure used for all stock operations.")
     uom_name = fields.Char(string='Unit of Measure Name', related='uom_id.name', readonly=True)
     uom_po_id = fields.Many2one(
         'uom.uom', 'Purchase Unit of Measure',
         default=_get_default_uom_id, required=True,
-        help="Default Unit of Measure used for purchase orders. It must be in the same category than the default unit of measure.")
+        help="Default unit of measure used for purchase orders. It must be in the same category as the default unit of measure.")
     company_id = fields.Many2one(
         'res.company', 'Company',
         default=lambda self: self.env['res.company']._company_default_get('product.template'), index=1)
     packaging_ids = fields.One2many(
         'product.packaging', string="Product Packages", compute="_compute_packaging_ids", inverse="_set_packaging_ids",
         help="Gives the different ways to package the same product.")
-    seller_ids = fields.One2many('product.supplierinfo', 'product_tmpl_id', 'Vendors')
+    seller_ids = fields.One2many('product.supplierinfo', 'product_tmpl_id', 'Vendors', help="Define vendor pricelists.")
     variant_seller_ids = fields.One2many('product.supplierinfo', 'product_tmpl_id')
 
     active = fields.Boolean('Active', default=True, help="If unchecked, it will allow you to hide the product without removing it.")
     color = fields.Integer('Color Index')
 
     is_product_variant = fields.Boolean(string='Is a product variant', compute='_compute_is_product_variant')
-    attribute_line_ids = fields.One2many('product.attribute.line', 'product_tmpl_id', 'Product Attributes')
+    attribute_line_ids = fields.One2many('product.template.attribute.line', 'product_tmpl_id', 'Product Attributes')
     product_variant_ids = fields.One2many('product.product', 'product_tmpl_id', 'Products', required=True)
     # performance: product_variant_id provides prefetching on the first product variant only
     product_variant_id = fields.Many2one('product.product', 'Product', compute='_compute_product_variant_id')
@@ -130,7 +126,7 @@ class ProductTemplate(models.Model):
         '# Product Variants', compute='_compute_product_variant_count')
 
     # related to display product product information if is_product_variant
-    barcode = fields.Char('Barcode', oldname='ean13', related='product_variant_ids.barcode')
+    barcode = fields.Char('Barcode', oldname='ean13', related='product_variant_ids.barcode', readonly=False)
     default_code = fields.Char(
         'Internal Reference', compute='_compute_default_code',
         inverse='_set_default_code', store=True)
@@ -168,6 +164,15 @@ class ProductTemplate(models.Model):
 
     @api.multi
     def _compute_template_price(self):
+        prices = self._compute_template_price_no_inverse()
+        for template in self:
+            template.price = prices.get(template.id, 0.0)
+
+    @api.multi
+    def _compute_template_price_no_inverse(self):
+        """The _compute_template_price writes the 'list_price' field with an inverse method
+        This method allows computing the price without writing the 'list_price'
+        """
         prices = {}
         pricelist_id_or_name = self._context.get('pricelist')
         if pricelist_id_or_name:
@@ -176,11 +181,11 @@ class ProductTemplate(models.Model):
             quantity = self._context.get('quantity', 1.0)
 
             # Support context pricelists specified as display_name or ID for compatibility
-            if isinstance(pricelist_id_or_name, pycompat.string_types):
+            if isinstance(pricelist_id_or_name, str):
                 pricelist_data = self.env['product.pricelist'].name_search(pricelist_id_or_name, operator='=', limit=1)
                 if pricelist_data:
                     pricelist = self.env['product.pricelist'].browse(pricelist_data[0][0])
-            elif isinstance(pricelist_id_or_name, pycompat.integer_types):
+            elif isinstance(pricelist_id_or_name, int):
                 pricelist = self.env['product.pricelist'].browse(pricelist_id_or_name)
 
             if pricelist:
@@ -188,8 +193,7 @@ class ProductTemplate(models.Model):
                 partners = [partner] * len(self)
                 prices = pricelist.get_products_price(self, quantities, partners)
 
-        for template in self:
-            template.price = prices.get(template.id, 0.0)
+        return prices
 
     @api.multi
     def _set_template_price(self):
@@ -240,10 +244,7 @@ class ProductTemplate(models.Model):
 
     def _compute_is_product_variant(self):
         for template in self:
-            if template._name == 'product.template':
-                template.is_product_variant = False
-            else:
-                template.is_product_variant = True
+            template.is_product_variant = False
 
     @api.model
     def _get_weight_uom_id_from_ir_config_parameter(self):
@@ -259,10 +260,27 @@ class ProductTemplate(models.Model):
         else:
             return self.env.ref('uom.product_uom_kgm')
 
-    def _compute_weight_uom_id(self):
-        weight_uom_id = self._get_weight_uom_id_from_ir_config_parameter()
-        for product_template in self:
-            product_template.weight_uom_id = weight_uom_id
+    @api.model
+    def _get_weight_uom_name_from_ir_config_parameter(self):
+        return self._get_weight_uom_id_from_ir_config_parameter().display_name
+
+    def _compute_weight_uom_name(self):
+        for template in self:
+            template.weight_uom_name = self._get_weight_uom_name_from_ir_config_parameter()
+
+    @api.model
+    def _get_volume_uom_name_from_ir_config_parameter(self):
+        """ Get the unit of measure to interpret the `volume` field. By default, we consider
+        that volumes are expressed in cubic meters. Users can configure to express them in cubic feet
+        by adding an ir.config_parameter record with "product.volume_in_cubic_feet" as key
+        and "1" as value.
+        """
+        get_param = self.env['ir.config_parameter'].sudo().get_param
+        return "ft³" if get_param('product.volume_in_cubic_feet') == '1' else "m³"
+
+    def _compute_volume_uom_name(self):
+        for template in self:
+            template.volume_uom_name = self._get_volume_uom_name_from_ir_config_parameter()
 
     @api.one
     def _set_weight(self):
@@ -321,7 +339,7 @@ class ProductTemplate(models.Model):
             templates.with_context(create_from_tmpl=True).create_variant_ids()
 
         # This is needed to set given values to first variant after creation
-        for template, vals in pycompat.izip(templates, vals_list):
+        for template, vals in zip(templates, vals_list):
             related_vals = {}
             if vals.get('barcode'):
                 related_vals['barcode'] = vals['barcode']
@@ -412,6 +430,11 @@ class ProductTemplate(models.Model):
         prices = dict.fromkeys(self.ids, 0.0)
         for template in templates:
             prices[template.id] = template[price_type] or 0.0
+            # yes, there can be attribute values for product template if it's not a variant YET
+            # (see field product.attribute create_variant)
+            if price_type == 'list_price' and self._context.get('current_attributes_price_extra'):
+                # we have a list of price_extra that comes from the attribute values, we need to sum all that
+                prices[template.id] += sum(self._context.get('current_attributes_price_extra'))
 
             if uom:
                 prices[template.id] = template.uom_id._compute_price(prices[template.id], uom)
@@ -431,7 +454,6 @@ class ProductTemplate(models.Model):
     @api.multi
     def create_variant_ids(self):
         Product = self.env["product.product"]
-        AttributeValues = self.env['product.attribute.value']
 
         variants_to_create = []
         variants_to_activate = []
@@ -440,33 +462,55 @@ class ProductTemplate(models.Model):
         for tmpl_id in self.with_context(active_test=False):
             # adding an attribute with only one value should not recreate product
             # write this attribute on every product to make sure we don't lose them
-            variant_alone = tmpl_id.attribute_line_ids.filtered(lambda line: line.attribute_id.create_variant and len(line.value_ids) == 1).mapped('value_ids')
+            variant_alone = tmpl_id.attribute_line_ids.filtered(lambda line: line.attribute_id.create_variant == 'always' and len(line.value_ids) == 1).mapped('value_ids')
             for value_id in variant_alone:
                 updated_products = tmpl_id.product_variant_ids.filtered(lambda product: value_id.attribute_id not in product.mapped('attribute_value_ids.attribute_id'))
                 updated_products.write({'attribute_value_ids': [(4, value_id.id)]})
 
-            # iterator of n-uple of product.attribute.value *ids*
-            variant_matrix = [
-                AttributeValues.browse(value_ids)
-                for value_ids in itertools.product(*(line.value_ids.ids for line in tmpl_id.attribute_line_ids if line.value_ids[:1].attribute_id.create_variant))
-            ]
+            # Determine which product variants need to be created based on the attribute
+            # configuration. If any attribute is set to generate variants dynamically, skip the
+            # process.
+            # Technical note: if there is no attribute, a variant is still created because
+            # 'not any([])' and 'set([]) not in set([])' are True.
+            if not any(attrib.create_variant == 'dynamic' for attrib in tmpl_id.mapped('attribute_line_ids.attribute_id')):
+                # Iterator containing all possible attribute values combination
+                # The iterator is used to avoid MemoryError in case of a huge number of combination.
+                all_variants = itertools.product(*(
+                    line.value_ids.ids for line in tmpl_id.attribute_line_ids if line.value_ids[:1].attribute_id.create_variant != 'no_variant'
+                ))
+                # Set containing existing attribute values combination
+                existing_variants = {
+                    frozenset(variant.attribute_value_ids.filtered(lambda r: r.attribute_id.create_variant != 'no_variant').ids)
+                    for variant in tmpl_id.product_variant_ids
+                }
+                # For each possible variant, create if it doesn't exist yet.
+                for value_ids in all_variants:
+                    value_ids = frozenset(value_ids)
+                    if value_ids not in existing_variants:
+                        variants_to_create.append({
+                            'product_tmpl_id': tmpl_id.id,
+                            'attribute_value_ids': [(6, 0, list(value_ids))],
+                        })
+                        if len(variants_to_create) > 1000:
+                            raise UserError(_(
+                            'The number of variants to generate is too high. '
+                            'You should either not generate variants for each combination or generate them on demand from the sales order. '
+                            'To do so, open the form view of attributes and change the mode of *Create Variants*.'))
 
-            # get the value (id) sets of existing variants
-            existing_variants = {frozenset(variant.attribute_value_ids.filtered(lambda r: r.attribute_id.create_variant).ids) for variant in tmpl_id.product_variant_ids}
-            # -> for each value set, create a recordset of values to create a
-            #    variant for if the value set isn't already a variant
-            for value_ids in variant_matrix:
-                if set(value_ids.ids) not in existing_variants:
-                    variants_to_create.append({
-                        'product_tmpl_id': tmpl_id.id,
-                        'attribute_value_ids': [(6, 0, value_ids.ids)]
-                    })
-
-            # check product
+            # Check existing variants if any needs to be activated or unlinked.
+            # - if the product is not active and has valid attributes and attribute values, it
+            #   should be activated
+            # - if the product does not have valid attributes or attribute values, it should be
+            #   deleted
+            valid_value_ids = tmpl_id.mapped('attribute_line_ids.value_ids').filtered(
+                lambda v: v.attribute_id.create_variant != 'no_variant'
+            )
+            valid_attribute_ids = valid_value_ids.mapped('attribute_id')
             for product_id in tmpl_id.product_variant_ids:
-                if not product_id.active and product_id.attribute_value_ids.filtered(lambda r: r.attribute_id.create_variant) in variant_matrix:
-                    variants_to_activate.append(product_id)
-                elif product_id.attribute_value_ids.filtered(lambda r: r.attribute_id.create_variant) not in variant_matrix:
+                if product_id._has_valid_attributes(valid_attribute_ids, valid_value_ids):
+                    if not product_id.active:
+                        variants_to_activate.append(product_id)
+                else:
                     variants_to_unlink.append(product_id)
 
         if variants_to_activate:
@@ -487,6 +531,69 @@ class ProductTemplate(models.Model):
                 pass
 
         return True
+
+    def has_dynamic_attributes(self):
+        return self.attribute_line_ids and \
+            any(create_variant == 'dynamic'
+            for create_variant in self.mapped('attribute_line_ids.value_ids.attribute_id.create_variant'))
+
+    @api.multi
+    def get_filtered_variants(self, reference_product=None):
+        """
+        Will filter availability (excluded) for the product
+        combinations (ex: color: white excludes size: large).
+
+        Will also filter availability (excluded) for the parent
+        product if specified (meaning that this product is a an optionnal or
+        accessory product of the reference_product).
+        Args:
+            reference_product (product.product): The reference product that has
+            the current product as an option or accessory product.
+        Returns:
+            The filtered list of product variants
+        """
+        self.ensure_one()
+        product_template_attribute_values = self.env['product.template.attribute.value'].search([('product_tmpl_id', '=', self.id)])
+        if reference_product:
+            # append the reference_product if provided
+            product_template_attribute_values |= reference_product.product_template_attribute_value_ids
+            if reference_product._context.get('no_variant_attribute_values'):
+                # Add "no_variant" attribute values' exclusions
+                # They are kept in the context since they are not linked to this product variant
+                product_template_attribute_values |= reference_product._context.get('no_variant_attribute_values')
+
+        product_variants = self.product_variant_ids
+        for product_template_attribute_value in product_template_attribute_values:
+            # CASE 1: The whole product is excluded when no attribute values are selected in the parent product
+            # returns empty recordset of product.product if so. What is checked is:
+            # If the product_attribute value doesn't belong to self (i.e. belongs to the reference product)
+            # and self is the excluded product template on the exclusion lines
+            # and the exclusions is on the product without specified product attribute values (i.e. the whole product is excluded)
+            if product_template_attribute_value.product_tmpl_id != self \
+                    and self in product_template_attribute_value.exclude_for.mapped('product_tmpl_id') \
+                    and any(not exclude_for.value_ids
+                            for exclude_for in product_template_attribute_value.exclude_for.filtered(
+                                lambda excluded_product_attribute_value: excluded_product_attribute_value.product_tmpl_id == self)):
+                return self.env['product.product']
+
+            # CASE 2: Check if some of the product.template.attribute.value of the product are excluded
+            # for this prodcut. A variant could be excluded:
+            # - Either by itself (eg: The office chair with iron legs excludes the color white)
+            # - Or by the reference product (eg: The customizable desk with iron legs excludes the office chair with aluminium legs)
+            for excluded in product_template_attribute_value.exclude_for.filtered(
+                    lambda excluded_product_attribute_value: excluded_product_attribute_value.product_tmpl_id == self):
+                product_variants -= product_variants.filtered(
+                    lambda variant:
+                    # 1/ Check the applicability of the exclusion
+                    # i.e: the restriction comes from the parent
+                    # OR the restriction is on a product_attribute_value that this variant has, eg:
+                    # if the office chair with iron legs excludes the color white, we must check
+                    # that this variant has iron legs to check the exclusion
+                    (product_template_attribute_value.product_tmpl_id != self or product_template_attribute_value in variant.product_template_attribute_value_ids) and
+                    # 2/ Check the variant has one of the excluded attribute values
+                    any(attribute_value in excluded.value_ids for attribute_value in variant.product_template_attribute_value_ids))
+
+        return product_variants
 
     @api.model
     def get_empty_list_help(self, help):

@@ -52,11 +52,11 @@ CrashManager.include({
                     $content: content,
                     buttons: [{
                         text: self._getButtonMessage(error_data.trial),
-                        classes: "btn-primary",
+                        classes : "btn-primary",
                         click: function () {
                             window.open(url, '_blank');
                         },
-                        close: true,
+                        close:true,
                     }, {
                         text: _t("Cancel"),
                         close: true,

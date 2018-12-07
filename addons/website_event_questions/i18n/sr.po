@@ -2,12 +2,15 @@
 # This file contains the translation of the following modules:
 # * website_event_questions
 # 
+# Translators:
+# Martin Trigaux, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
+"POT-Creation-Date: 2018-09-21 13:18+0000\n"
+"PO-Revision-Date: 2018-09-21 13:18+0000\n"
+"Last-Translator: Martin Trigaux, 2018\n"
 "Language-Team: Serbian (https://www.transifex.com/odoo/teams/41243/sr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,23 +28,18 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question_report__answer_id
 #: model_terms:ir.ui.view,arch_db:website_event_questions.view_event_question_report_search
 msgid "Answer"
-msgstr ""
+msgstr "Odgovor"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question__answer_ids
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration__answer_ids
 #: model_terms:ir.ui.view,arch_db:website_event_questions.view_registration_search_inherit_question
 msgid "Answers"
-msgstr ""
+msgstr "Odgovori"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question__is_individual
 msgid "Ask each attendee"
-msgstr ""
-
-#. module: website_event_questions
-#: model:ir.model,name:website_event_questions.model_event_registration
-msgid "Attendee"
 msgstr ""
 
 #. module: website_event_questions
@@ -56,7 +54,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question__create_date
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer__create_date
 msgid "Created on"
-msgstr ""
+msgstr "Kreiran"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_answer__display_name
@@ -72,9 +70,10 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question_report__event_id
 #: model_terms:ir.ui.view,arch_db:website_event_questions.view_event_question_report_search
 msgid "Event"
-msgstr ""
+msgstr "Događaj"
 
 #. module: website_event_questions
+#: model:ir.model,name:website_event_questions.model_event_answer
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer__event_answer_id
 msgid "Event Answer"
 msgstr ""
@@ -85,14 +84,30 @@ msgid "Event Category"
 msgstr ""
 
 #. module: website_event_questions
+#: model:ir.model,name:website_event_questions.model_event_question
+msgid "Event Question"
+msgstr ""
+
+#. module: website_event_questions
+#: model:ir.model,name:website_event_questions.model_event_question_report
+msgid "Event Question Report"
+msgstr ""
+
+#. module: website_event_questions
+#: model:ir.model,name:website_event_questions.model_event_registration
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer__event_registration_id
 msgid "Event Registration"
+msgstr "Registracioni Dogadjaj"
+
+#. module: website_event_questions
+#: model:ir.model,name:website_event_questions.model_event_registration_answer
+msgid "Event Registration Answer"
 msgstr ""
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question__event_type_id
 msgid "Event Type"
-msgstr ""
+msgstr "Tip Dogadjaja"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_event__general_question_ids
@@ -102,7 +117,7 @@ msgstr ""
 #. module: website_event_questions
 #: model_terms:ir.ui.view,arch_db:website_event_questions.view_event_question_report_search
 msgid "Group By"
-msgstr ""
+msgstr "Grupiši po"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_answer__id
@@ -110,7 +125,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question_report__id
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: website_event_questions
 #: model:ir.model.fields,help:website_event_questions.field_event_question__is_individual
@@ -148,10 +163,10 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_event_questions.view_event_question_form
 #: model_terms:ir.ui.view,arch_db:website_event_questions.view_event_question_report_search
 msgid "Question"
-msgstr ""
+msgstr "Pitanje"
 
 #. module: website_event_questions
-#: code:addons/website_event_questions/models/event.py:78
+#: code:addons/website_event_questions/models/event.py:80
 #, python-format
 msgid "Question cannot belong to both the event category and itself."
 msgstr ""
@@ -162,7 +177,7 @@ msgstr ""
 #: model:ir.ui.menu,name:website_event_questions.menu_report_event_questions
 #: model_terms:ir.ui.view,arch_db:website_event_questions.view_event_form_inherit_question
 msgid "Questions"
-msgstr ""
+msgstr "Pitanja"
 
 #. module: website_event_questions
 #: model:ir.actions.act_window,name:website_event_questions.action_event_question_report
@@ -181,13 +196,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question_report__attendee_id
 #: model_terms:ir.ui.view,arch_db:website_event_questions.view_event_question_report_search
 msgid "Registration"
-msgstr ""
+msgstr "Registracija"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_answer__sequence
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question__sequence
 msgid "Sequence"
-msgstr ""
+msgstr "Niz"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_event__specific_question_ids
@@ -197,24 +212,4 @@ msgstr ""
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question__title
 msgid "Title"
-msgstr ""
-
-#. module: website_event_questions
-#: model:ir.model,name:website_event_questions.model_event_answer
-msgid "event.answer"
-msgstr ""
-
-#. module: website_event_questions
-#: model:ir.model,name:website_event_questions.model_event_question
-msgid "event.question"
-msgstr ""
-
-#. module: website_event_questions
-#: model:ir.model,name:website_event_questions.model_event_question_report
-msgid "event.question.report"
-msgstr ""
-
-#. module: website_event_questions
-#: model:ir.model,name:website_event_questions.model_event_registration_answer
-msgid "event.registration.answer"
-msgstr ""
+msgstr "Naslov"

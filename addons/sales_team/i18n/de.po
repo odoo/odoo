@@ -11,13 +11,14 @@
 # darenkster <inactive+darenkster@transifex.com>, 2018
 # Katharina Moritz <kmo@e2f.com>, 2018
 # Nico Dor <nicolas.dorweiler@gmail.com>, 2018
+# Johannes Croe <jcr@odoo.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
-"Last-Translator: Nico Dor <nicolas.dorweiler@gmail.com>, 2018\n"
+"POT-Creation-Date: 2018-10-08 06:49+0000\n"
+"PO-Revision-Date: 2018-10-08 06:49+0000\n"
+"Last-Translator: Johannes Croe <jcr@odoo.com>, 2018\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -56,6 +57,11 @@ msgid "Activity Types"
 msgstr "Aktivitätstypen"
 
 #. module: sales_team
+#: model:crm.team,name:sales_team.crm_team_1
+msgid "America"
+msgstr "Amerika"
+
+#. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
 msgid "Archived"
 msgstr "Archiviert"
@@ -63,7 +69,7 @@ msgstr "Archiviert"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "# Anhänge"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
@@ -158,6 +164,11 @@ msgid "Display Name"
 msgstr "Anzeigename"
 
 #. module: sales_team
+#: model:crm.team,name:sales_team.team_sales_department
+msgid "Europe"
+msgstr "Europa"
+
+#. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__favorite_user_ids
 msgid "Favorite Members"
 msgstr "Mitglieder-Favoriten"
@@ -233,14 +244,17 @@ msgstr "Falls markiert, benötigen neue Nachrichten Ihre Kenntnisnahme."
 #: model:ir.model.fields,help:sales_team.field_crm_team__message_has_error
 msgid "If checked, some messages have a delivery error."
 msgstr ""
+"Das Senden mancher Nachrichten ist fehlgeschlagen wenn dieses Fenster "
+"angekreuzt ist."
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_res_partner__team_id
-#: model:ir.model.fields,help:sales_team.field_res_users__team_id
 msgid ""
 "If set, this Sales Team will be used for sales and assignations related to "
 "this partner"
 msgstr ""
+"Wenn festgelegt, wird dieser Vertriebskanal für den Verkauf und die "
+"Zuteilung zu diesem Partner verwendet."
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__active
@@ -297,7 +311,7 @@ msgstr "Zeile"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "Hauptanhänge"
 
 #. module: sales_team
 #: model:res.groups,name:sales_team.group_sale_manager
@@ -307,7 +321,7 @@ msgstr "Manager"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "Error beim senden der Nachricht"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_ids
@@ -338,7 +352,7 @@ msgstr "Anzahl der Aktionen"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_has_error_counter
 msgid "Number of error"
-msgstr ""
+msgstr "Fehlernummer"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__message_needaction_counter
@@ -348,7 +362,7 @@ msgstr "Anzahl der Nachrichten, die eine Aktion erfordern"
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "Anzahl der Nachrichten mit einem Fehler beim Senden."
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__message_unread_counter
@@ -371,22 +385,18 @@ msgid "Reply-To"
 msgstr "Antwort an"
 
 #. module: sales_team
-#: selection:crm.team,dashboard_graph_model:0
-#: model:crm.team,name:sales_team.team_sales_department
-#: selection:crm.team,team_type:0
+#: selection:crm.team,dashboard_graph_model:0 selection:crm.team,team_type:0
 msgid "Sales"
 msgstr "Verkauf"
 
 #. module: sales_team
-#: model:ir.actions.act_window,name:sales_team.crm_team_salesteams_act
-msgid "Sales Dashboard"
-msgstr ""
+#: model:ir.model,name:sales_team.model_crm_team
+msgid "Sales Channels"
+msgstr "Vertriebskänale"
 
 #. module: sales_team
-#: model:ir.model,name:sales_team.model_crm_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__name
 #: model:ir.model.fields,field_description:sales_team.field_res_partner__team_id
-#: model:ir.model.fields,field_description:sales_team.field_res_users__team_id
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_tree
 msgid "Sales Team"
@@ -444,6 +454,11 @@ msgstr "Teamleiter"
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "Team Members"
 msgstr "Teammitglieder"
+
+#. module: sales_team
+#: model:ir.actions.act_window,name:sales_team.crm_team_salesteams_act
+msgid "Team Pipelines"
+msgstr "Team Pipelines"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__team_type

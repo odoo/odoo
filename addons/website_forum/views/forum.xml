@@ -17,9 +17,6 @@
                     <field name="name"/>
                     <field name="website_id" groups="website.group_multi_website"/>
                     <field name="active" invisible="1"/>
-                    <field name="allow_question"/>
-                    <field name="allow_link"/>
-                    <field name="allow_discussion"/>
                 </tree>
             </field>
         </record>
@@ -45,12 +42,6 @@
                         </group>
                         <notebook>
                             <page string="Options">
-                              <group string="Post Types">
-                                <field name="allow_question"/>
-                                <field name="allow_link"/>
-                                <field name="allow_discussion"/>
-                                <field name="default_post_type"/>
-                              </group>
                               <group string="Orders">
                                 <field name="default_order"/>
                                 <label for="relevancy_post_vote" string="Relevance Computation" groups="base.group_no_one"/>

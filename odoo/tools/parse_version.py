@@ -7,8 +7,6 @@
 from __future__ import print_function
 import re
 
-from odoo.tools import pycompat
-
 component_re = re.compile(r'(\d+ | [a-z]+ | \.| -)', re.VERBOSE)
 replace = {'pre':'c', 'preview':'c','-':'final-','_':'final-','rc':'c','dev':'@','saas':'','~':''}.get
 
@@ -74,7 +72,7 @@ if __name__ == '__main__':
                 if verbose:
                     print(v, pv)
 
-            for a, b in pycompat.izip(pvs, pvs[1:]):
+            for a, b in zip(pvs, pvs[1:]):
                 assert a < b, '%s < %s == %s' % (a, b, a < b)
         
         chk(('0', '4.2', '4.2.3.4', '5.0.0-alpha', '5.0.0-rc1', '5.0.0-rc1.1', '5.0.0_rc2', '5.0.0_rc3', '5.0.0'), False)

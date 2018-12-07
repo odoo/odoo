@@ -4,13 +4,15 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
+# Kostas Goutoudis <goutoudis@gmail.com>, 2018
+# George Tarasidis <george_tarasidis@yahoo.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
-"Last-Translator: Martin Trigaux, 2018\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-09-21 13:17+0000\n"
+"Last-Translator: George Tarasidis <george_tarasidis@yahoo.com>, 2018\n"
 "Language-Team: Greek (https://www.transifex.com/odoo/teams/41243/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -46,6 +48,8 @@ msgstr ""
 msgid ""
 "<strong>Save</strong> this page and come back here to set up the feature."
 msgstr ""
+"<strong>Αποθηκεύστε</strong> αυτήν την σελίδα και επιστρέψτε εδώ για να "
+"ρυθμίσετε αυτό το χαρακτηριστικό."
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -61,12 +65,15 @@ msgstr ""
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_google_calendar
 msgid "Allow the users to synchronize their calendar  with Google Calendar"
 msgstr ""
+"Επιτρέπει στους χρήστες να συγχρονίζουν αυτό το ημερολόγιο με το Google "
+"Calendar"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_base_import
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Allow users to import data from CSV/XLS/XLSX/ODS files"
 msgstr ""
+"Να επιτρέπεται στους χρήστες να εισάγουν δεδομένα από CSV/XLS/XLSX/ODS files"
 
 #. module: base_setup
 #: model:ir.model.fields,help:base_setup.field_res_config_settings__group_multi_currency
@@ -81,12 +88,22 @@ msgstr ""
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_google_drive
 msgid "Attach Google documents to any record"
+msgstr "Επισύναψη αρχείων Google σε οποιαδήποτε εγγραφή"
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_partner_autocomplete
+msgid "Auto-populate company data"
+msgstr ""
+
+#. module: base_setup
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Autocomplete company data (name, logo, address, etc.)"
 msgstr ""
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Business Documents"
-msgstr ""
+msgstr "Επιχειρησιακά Έγγραφα"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -97,10 +114,10 @@ msgstr ""
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Change Document Template"
-msgstr ""
+msgstr "Αλλαγή Πρότυπου Εγγράφου"
 
 #. module: base_setup
-#: code:addons/base_setup/models/res_config_settings.py:99
+#: code:addons/base_setup/models/res_config_settings.py:100
 #, python-format
 msgid "Choose Your Document Layout"
 msgstr "Επιλέξτε τη Διάταξη των Εγγράφων σας"
@@ -108,7 +125,7 @@ msgstr "Επιλέξτε τη Διάταξη των Εγγράφων σας"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Choose your document's header and footer layout"
-msgstr ""
+msgstr "Επιλέξτε τη διάταξη κεφαλίδας και υποσέλιδου του εγγράφου"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_pad
@@ -131,6 +148,11 @@ msgid "Company"
 msgstr "Εταιρία"
 
 #. module: base_setup
+#: model:ir.model,name:base_setup.model_res_config_settings
+msgid "Config Settings"
+msgstr ""
+
+#. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid ""
 "Configure company rules to automatically create SO/PO when one of your "
@@ -141,6 +163,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Create and attach Google Drive documents to any record"
 msgstr ""
+"Δημιουργήστε και επισυνάψτε έγγραφα του Google Drive σε οποιαδήποτε εγγραφή"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__report_footer
@@ -151,7 +174,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__user_default_rights
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Default Access Rights"
-msgstr ""
+msgstr "Προεπιλεγμένα δικαιώματα πρόσβασης"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__external_report_layout_id
@@ -161,7 +184,7 @@ msgstr "Πρότυπο Εγγράφου"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Edit Layout"
-msgstr ""
+msgstr "Επεξεργασία Εμφάνισης"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__external_email_server_default
@@ -172,6 +195,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Extract and analyze Odoo data from Google Spreadsheet"
 msgstr ""
+"Εξαγάγετε και αναλύστε τα δεδομένα Odoo από το υπολογιστικό φύλλο Google"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -187,7 +211,7 @@ msgstr ""
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Format"
-msgstr ""
+msgstr "Διαμόρφωση"
 
 #. module: base_setup
 #: model:ir.ui.menu,name:base_setup.menu_config
@@ -198,7 +222,7 @@ msgstr "Γενικές Ρυθμίσεις"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Gengo Translations"
-msgstr ""
+msgstr "Gengo Μεταφράσεις"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -208,7 +232,7 @@ msgstr "Google Ημερολόγιο"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Google Drive"
-msgstr ""
+msgstr "Google Drive"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_google_spreadsheet
@@ -217,8 +241,8 @@ msgstr "Google Υπολογιστικά Φύλλα"
 
 #. module: base_setup
 #: model:ir.model,name:base_setup.model_ir_http
-msgid "HTTP routing"
-msgstr "Δρομολόγηση HTTP"
+msgid "HTTP Routing"
+msgstr ""
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -228,7 +252,7 @@ msgstr ""
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Integrations"
-msgstr ""
+msgstr "Ενσωματώσεις"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -249,17 +273,17 @@ msgstr ""
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__group_multi_company
 msgid "Manage multiple companies"
-msgstr ""
+msgstr "Διαχείριση πολλαπλών εταιριών"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Manage multiple legal entities with separate accounting"
-msgstr ""
+msgstr "Διαχειριστείτε πολλαπλές νομικές οντότητες με χωριστή λογιστική"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__group_multi_currency
 msgid "Multi-Currencies"
-msgstr ""
+msgstr "Πολύ-Νομισματικές Συναλλαγές"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -279,17 +303,17 @@ msgstr "Μορφή χαρτιού"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Preview Document"
-msgstr ""
+msgstr "Προεπισκόπηση Eγγράφου"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Set custom access rights for new users"
-msgstr ""
+msgstr "Ορίστε προσαρμοσμένα δικαιώματα πρόσβασης για νέους χρήστες"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Set the paper format of printed documents"
-msgstr ""
+msgstr "Ρυθμίστε τη μορφή χαρτιού των εκτυπωμένων εγγράφων"
 
 #. module: base_setup
 #: model:ir.actions.act_window,name:base_setup.action_general_configuration
@@ -317,22 +341,22 @@ msgstr ""
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Synchronize your calendar with Google Calendar"
-msgstr ""
+msgstr "Συγχρονίστε το ημερολόγιό σας με το Ημερολόγιο Google"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Template"
-msgstr ""
+msgstr "Πρότυπο"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_base_gengo
 msgid "Translate Your Website with Gengo"
-msgstr ""
+msgstr "Μεταφράστε τον Ιστότοπο σας με την Gengo"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Translate your website with Gengo"
-msgstr ""
+msgstr "Μεταφράστε τον ιστότοπο σας με την Gengo"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_web_unsplash
@@ -342,12 +366,14 @@ msgstr ""
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Use LDAP credentials to log in"
-msgstr ""
+msgstr "Χρησιμοποιήστε τα διαπιστευτήρια LDAP για να συνδεθείτε"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Use external accounts to log in (Google, Facebook, etc.)"
 msgstr ""
+"Χρησιμοποιήστε εξωτερικούς λογαριασμούς για να συνδεθείτε (Google, Facebook,"
+" κλπ)"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_auth_oauth
@@ -365,6 +391,9 @@ msgid "Users"
 msgstr "Χρήστες"
 
 #. module: base_setup
-#: model:ir.model,name:base_setup.model_res_config_settings
-msgid "res.config.settings"
-msgstr "res.config.settings"
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid ""
+"When populating your address book, Odoo provides a list of matching "
+"companies. When selecting one item, the company data and logo are auto-"
+"filled."
+msgstr ""

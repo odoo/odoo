@@ -3,16 +3,20 @@
 # * project_timesheet_holidays
 # 
 # Translators:
-# krnkris, 2017
-# gezza <geza.nagy@oregional.hu>, 2017
-# Martin Trigaux, 2017
+# Tamás Dombos, 2018
+# Martin Trigaux, 2018
+# krnkris, 2018
+# gezza <geza.nagy@oregional.hu>, 2018
+# Ákos Nagy <akos.nagy@oregional.hu>, 2018
+# Tibor Kőnig <konig.tibor@evitalit.hu>, 2018
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:56+0000\n"
-"PO-Revision-Date: 2018-08-02 09:56+0000\n"
-"Last-Translator: Martin Trigaux, 2017\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-08-24 09:23+0000\n"
+"Last-Translator: Tibor Kőnig <konig.tibor@evitalit.hu>, 2018\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,7 +27,7 @@ msgstr ""
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_account_analytic_line
 msgid "Analytic Line"
-msgstr "Analitikus/elemző tételsor"
+msgstr "Analitikus tétel"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_hr_leave__timesheet_ids
@@ -42,6 +46,11 @@ msgstr ""
 #: model:ir.model,name:project_timesheet_holidays.model_res_company
 msgid "Companies"
 msgstr "Vállalatok"
+
+#. module: project_timesheet_holidays
+#: model:ir.model,name:project_timesheet_holidays.model_res_config_settings
+msgid "Config Settings"
+msgstr "Konfigurációs beállítások"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,help:project_timesheet_holidays.field_res_company__leave_timesheet_project_id
@@ -103,14 +112,14 @@ msgid "Leaves"
 msgstr "Távollétek"
 
 #. module: project_timesheet_holidays
-#: model:ir.ui.view,arch_db:project_timesheet_holidays.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:project_timesheet_holidays.res_config_settings_view_form
 msgid "Project"
 msgstr "Projekt"
 
 #. module: project_timesheet_holidays
-#: model:ir.ui.view,arch_db:project_timesheet_holidays.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:project_timesheet_holidays.res_config_settings_view_form
 msgid "Task"
-msgstr "Fladat"
+msgstr "Feladat"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,help:project_timesheet_holidays.field_hr_leave_type__timesheet_project_id
@@ -119,19 +128,9 @@ msgid ""
 msgstr ""
 
 #. module: project_timesheet_holidays
-#: model:ir.ui.view,arch_db:project_timesheet_holidays.hr_holiday_status_view_form_inherit
-msgid "Timesheet"
-msgstr "Munkaidő-kiosztás"
-
-#. module: project_timesheet_holidays
 #: code:addons/project_timesheet_holidays/models/account_analytic.py:16
 #, python-format
 msgid ""
 "You cannot delete timesheet lines attached to a leaves. Please cancel the "
 "leaves instead."
 msgstr ""
-
-#. module: project_timesheet_holidays
-#: model:ir.model,name:project_timesheet_holidays.model_res_config_settings
-msgid "res.config.settings"
-msgstr "res.config.settings"

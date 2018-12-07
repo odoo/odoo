@@ -4,13 +4,15 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
+# Kostas Goutoudis <goutoudis@gmail.com>, 2018
+# George Tarasidis <george_tarasidis@yahoo.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:50+0000\n"
-"PO-Revision-Date: 2018-09-18 09:50+0000\n"
-"Last-Translator: Martin Trigaux, 2018\n"
+"POT-Creation-Date: 2018-09-21 13:18+0000\n"
+"PO-Revision-Date: 2018-09-21 13:18+0000\n"
+"Last-Translator: George Tarasidis <george_tarasidis@yahoo.com>, 2018\n"
 "Language-Team: Greek (https://www.transifex.com/odoo/teams/41243/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,6 +29,7 @@ msgstr ""
 #: model:mail.template,subject:repair.mail_template_repair_quotation
 msgid "${object.partner_id.name} Repair Orders (Ref ${object.name or 'n/a' })"
 msgstr ""
+"${object.partner_id.name} Εντολές Επισκευής (Αναφ. ${object.name or 'μ/δ' })"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -36,7 +39,7 @@ msgstr ""
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "(update)"
-msgstr ""
+msgstr "(ενημέρωση)"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__state
@@ -102,12 +105,12 @@ msgstr ""
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Printing Date:</strong>"
-msgstr ""
+msgstr "<strong>Ημερομηνία εκτύπωσης:</strong>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Product to Repair:</strong>"
-msgstr ""
+msgstr "<strong>Είδος για Επισκευή:</strong>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -117,12 +120,12 @@ msgstr ""
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Total Without Taxes</strong>"
-msgstr ""
+msgstr "<strong>Σύνολο Χωρίς Φόρους</strong>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Total</strong>"
-msgstr ""
+msgstr "<strong>Σύνολο</strong>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -132,27 +135,27 @@ msgstr ""
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "Απαιτείται ενέργεια"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__activity_ids
 msgid "Activities"
-msgstr ""
+msgstr "Δραστηριότητες"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__activity_state
 msgid "Activity State"
-msgstr ""
+msgstr "Κατάσταση Δραστηριότητας"
 
 #. module: repair
 #: selection:repair.line,type:0
 msgid "Add"
-msgstr ""
+msgstr "Προσθήκη"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Add internal notes..."
-msgstr ""
+msgstr "Προσθήκη εσωτερικών σημειώσεων..."
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -195,17 +198,19 @@ msgstr ""
 #. module: repair
 #: selection:repair.line,state:0 selection:repair.order,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "Ακυρώθηκε"
 
 #. module: repair
 #: code:addons/repair/models/repair.py:244
 #, python-format
 msgid "Cannot cancel completed repairs."
-msgstr ""
+msgstr "Δεν μπορεί να ακυρωθεί μία επιβεβαιωμένη εντολή επισκευής."
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__partner_id
-msgid "Choose partner for whom the order will be invoiced and delivered."
+msgid ""
+"Choose partner for whom the order will be invoiced and delivered. You can "
+"find a partner by its Name, TIN, Email or Internal Reference."
 msgstr ""
 
 #. module: repair
@@ -217,13 +222,13 @@ msgstr "Εταιρία"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Confirm Repair"
-msgstr ""
+msgstr "Επιβεβαίωση Επισκευής"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 #: selection:repair.line,state:0 selection:repair.order,state:0
 msgid "Confirmed"
-msgstr ""
+msgstr "Επιβεβαιώθηκε"
 
 #. module: repair
 #: code:addons/repair/models/repair.py:607
@@ -239,6 +244,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:repair.view_make_invoice
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Create Invoice"
+msgstr "Δημιουργία Τιμολογίου"
+
+#. module: repair
+#: model:ir.model,name:repair.model_repair_order_make_invoice
+msgid "Create Mass Invoice (repair)"
 msgstr ""
 
 #. module: repair
@@ -249,7 +259,7 @@ msgstr ""
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_make_invoice
 msgid "Create invoices"
-msgstr ""
+msgstr "Δημιουργία τιμολογίων"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_cancel__create_uid
@@ -274,7 +284,7 @@ msgstr "Δημιουργήθηκε στις"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__partner_id
 msgid "Customer"
-msgstr ""
+msgstr "Πελάτης"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__default_address_id
@@ -284,7 +294,7 @@ msgstr ""
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__address_id
 msgid "Delivery Address"
-msgstr ""
+msgstr "Διεύθυνση Παράδοσης"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_fee__name
@@ -296,7 +306,7 @@ msgstr "Περιγραφή"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_line__location_dest_id
 msgid "Dest. Location"
-msgstr ""
+msgstr "Τοποθεσία Προορ."
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_cancel__display_name
@@ -311,7 +321,7 @@ msgstr "Εμφάνιση Ονόματος"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_make_invoice
 msgid "Do you really want to create the invoice(s)?"
-msgstr ""
+msgstr "Είστε σίγουροι ότι θέλετε να δημιουργήσετε το τιμολόγιο(α);"
 
 #. module: repair
 #: selection:repair.line,state:0
@@ -321,7 +331,7 @@ msgstr "Ολοκληρωμένη"
 #. module: repair
 #: selection:repair.line,state:0
 msgid "Draft"
-msgstr ""
+msgstr "Προσχέδιο"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -329,34 +339,39 @@ msgid "End Repair"
 msgstr ""
 
 #. module: repair
+#: model:ir.model.fields,help:repair.field_repair_order__tracking
+msgid "Ensure the traceability of a storable product in your warehouse."
+msgstr ""
+
+#. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Extra Info"
-msgstr ""
+msgstr "Περισσότερες Πληροφορίες"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Fees"
-msgstr ""
+msgstr "Προμήθεια"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_follower_ids
 msgid "Followers"
-msgstr ""
+msgstr "Ακόλουθοι"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "Ακόλουθοι (Κανάλια)"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "Ακόλουθοι (Συνεργάτες)"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Future Activities"
-msgstr ""
+msgstr "Μελλοντικές Δραστηριότητες"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
@@ -386,12 +401,12 @@ msgstr "Κωδικός"
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__message_unread
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Εάν επιλεγεί τα νέα μηνύματα χρειάζονται την προσοχή σας"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "Εάν επιλεγεί τα νέα μηνύματα χρειάζονται την προσοχή σας."
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__message_has_error
@@ -410,7 +425,7 @@ msgstr ""
 #: code:addons/repair/models/repair.py:210
 #, python-format
 msgid "Insufficient Quantity"
-msgstr ""
+msgstr "Ανεπαρκής Ποσότητα"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__internal_notes
@@ -426,18 +441,18 @@ msgstr ""
 #: model:ir.model.fields,field_description:repair.field_repair_order__invoice_id
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Invoice"
-msgstr ""
+msgstr "Τιμολόγιο"
 
 #. module: repair
 #: selection:repair.order,state:0
 msgid "Invoice Exception"
-msgstr ""
+msgstr "Εξαίρεση Τιμολογίου"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_fee__invoice_line_id
 #: model:ir.model.fields,field_description:repair.field_repair_line__invoice_line_id
 msgid "Invoice Line"
-msgstr ""
+msgstr "Γραμμή Τιμολογίου"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__invoice_method
@@ -447,12 +462,12 @@ msgstr ""
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "Invoice address:"
-msgstr ""
+msgstr "Διεύθυνση τιμολόγησης:"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "Invoice and shipping address:"
-msgstr ""
+msgstr "Invoice and shipping address: "
 
 #. module: repair
 #: code:addons/repair/models/repair.py:385
@@ -466,17 +481,17 @@ msgstr ""
 #: model:ir.model.fields,field_description:repair.field_repair_order__invoiced
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Invoiced"
-msgstr ""
+msgstr "Τιμολογημένα"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__partner_invoice_id
 msgid "Invoicing Address"
-msgstr ""
+msgstr "Διεύθυνση Τιμολόγησης"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "Είναι Ακόλουθος"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_cancel____last_update
@@ -511,28 +526,23 @@ msgstr "Τελευταία Ενημέρωση στις"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Late Activities"
-msgstr ""
+msgstr "Καθυστερημένες Δραστηριότητες"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__location_id
 #: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__location_id
 msgid "Location"
-msgstr ""
+msgstr "Τοποθεσία"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_line__lot_id
 #: model:ir.model.fields,field_description:repair.field_repair_order__lot_id
 msgid "Lot/Serial"
-msgstr ""
+msgstr "Παρτίδα/Σειριακός"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
-
-#. module: repair
-#: model:ir.model,name:repair.model_repair_order_make_invoice
-msgid "Make Invoice"
 msgstr ""
 
 #. module: repair
@@ -543,12 +553,12 @@ msgstr ""
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_ids
 msgid "Messages"
-msgstr ""
+msgstr "Μηνύματα"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__move_id
 msgid "Move"
-msgstr ""
+msgstr "Μετακίνηση"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__move_id
@@ -558,22 +568,22 @@ msgstr ""
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "My Activities"
-msgstr ""
+msgstr "Οι Δραστηριότητες μου"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr ""
+msgstr "Επόμενη Προθεσμία Δραστηριότητας"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__activity_summary
 msgid "Next Activity Summary"
-msgstr ""
+msgstr "Σύνοψη Επόμενης Δραστηριότητας"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__activity_type_id
 msgid "Next Activity Type"
-msgstr ""
+msgstr "Επόμενος Τύπος Δραστηριότητας"
 
 #. module: repair
 #: selection:repair.order,invoice_method:0
@@ -621,7 +631,7 @@ msgstr "Σημειώσεις"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "Πλήθος ενεργειών"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_has_error_counter
@@ -631,7 +641,7 @@ msgstr ""
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr ""
+msgstr "Πλήθος μηνυμάτων που απαιτούν ενέργεια"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__message_has_error_counter
@@ -641,7 +651,7 @@ msgstr ""
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__message_unread_counter
 msgid "Number of unread messages"
-msgstr ""
+msgstr "Πλήθος μη αναγνωσμένων μηνυμάτων"
 
 #. module: repair
 #: code:addons/repair/models/repair.py:232
@@ -653,12 +663,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:repair.field_repair_order__fees_lines
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Operations"
-msgstr ""
+msgstr "Λειτουργίες"
 
 #. module: repair
 #: selection:repair.order,activity_state:0
 msgid "Overdue"
-msgstr ""
+msgstr "Εκπρόθεσμο"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
@@ -674,27 +684,27 @@ msgstr ""
 #. module: repair
 #: selection:repair.order,activity_state:0
 msgid "Planned"
-msgstr ""
+msgstr "Προγραμματισμένη"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "Price"
-msgstr ""
+msgstr "ΤΙΜΗ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__pricelist_id
 msgid "Pricelist"
-msgstr ""
+msgstr "Τιμοκατάλογος"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__pricelist_id
 msgid "Pricelist of the selected partner."
-msgstr ""
+msgstr "Τιμοκατάλογος του επιλεγμένου συνεργάτη."
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Print Quotation"
-msgstr ""
+msgstr "Εκτύπωση Προσφοράς"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_fee__product_id
@@ -702,24 +712,24 @@ msgstr ""
 #: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__product_id
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Product"
-msgstr ""
+msgstr "Είδος"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__product_qty
 msgid "Product Quantity"
-msgstr ""
+msgstr "Ποσότητα Είδους"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_fee__product_uom
 #: model:ir.model.fields,field_description:repair.field_repair_line__product_uom
 #: model:ir.model.fields,field_description:repair.field_repair_order__product_uom
 msgid "Product Unit of Measure"
-msgstr ""
+msgstr "Μονάδα Μέτρησης Είδους"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__product_id
 msgid "Product to Repair"
-msgstr ""
+msgstr "Είδος για Επισκευή"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__lot_id
@@ -729,7 +739,7 @@ msgstr ""
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__quant_ids
 msgid "Quant"
-msgstr ""
+msgstr "Quant"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_fee__product_uom_qty
@@ -737,27 +747,27 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Quantity"
-msgstr ""
+msgstr "Ποσότητα"
 
 #. module: repair
 #: selection:repair.order,state:0
 msgid "Quotation"
-msgstr ""
+msgstr "Προσφορά"
 
 #. module: repair
 #: model:ir.actions.report,name:repair.action_report_repair_order
 msgid "Quotation / Order"
-msgstr ""
+msgstr "Προσφορά / Εντολή"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__quotation_notes
 msgid "Quotation Notes"
-msgstr ""
+msgstr "Σημειώσεις Προσφοράς"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Quotations"
-msgstr ""
+msgstr "Προσφορές"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
@@ -772,7 +782,7 @@ msgstr ""
 #. module: repair
 #: selection:repair.line,type:0
 msgid "Remove"
-msgstr ""
+msgstr "Αφαίρεση"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_move__repair_id
@@ -782,13 +792,17 @@ msgstr ""
 
 #. module: repair
 #: model:ir.model,name:repair.model_repair_fee
-msgid "Repair Fees Line"
+msgid "Repair Fees"
+msgstr ""
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
+msgid "Repair Line"
 msgstr ""
 
 #. module: repair
 #: model:ir.model,name:repair.model_repair_line
-#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
-msgid "Repair Line"
+msgid "Repair Line (parts)"
 msgstr ""
 
 #. module: repair
@@ -817,7 +831,7 @@ msgstr ""
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "Repair Quotation #:"
-msgstr ""
+msgstr "Προσφορά Επισκευής #:"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__name
@@ -863,18 +877,18 @@ msgstr ""
 #. module: repair
 #: model:ir.ui.menu,name:repair.menu_repair_order
 msgid "Repairs"
-msgstr ""
+msgstr "Επισκευές"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_tree
 msgid "Repairs order"
-msgstr ""
+msgstr "Εντολή Επισκευής"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__activity_user_id
 msgid "Responsible User"
-msgstr ""
+msgstr "Υπεύθυνος Χρήστης"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
@@ -892,7 +906,7 @@ msgstr ""
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Send Quotation"
-msgstr ""
+msgstr "Αποστολή Προσφοράς"
 
 #. module: repair
 #: code:addons/repair/models/repair.py:545
@@ -903,17 +917,19 @@ msgstr ""
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Set to Draft"
-msgstr ""
+msgstr "Ορισμός σε Πρόχειρη"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Show all records which has next action date is before today"
 msgstr ""
+"Εμφάνιση όλων των εγγραφών όπου η ημερομηνία επόμενης δράσης είναι πριν από "
+"σήμερα"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_line__location_id
 msgid "Source Location"
-msgstr ""
+msgstr "Τοποθεσία Προέλευσης"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -935,22 +951,26 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
+"Κατάσταση βασισμένη σε δραστηριότητες\n"
+"Καθυστερημένη: Η ημερομηνία λήξης έχει ήδη περάσει\n"
+"Σήμερα: Η ημερομηνία δραστηριότητας είναι σήμερα\n"
+"Προγραμματισμένες: Μελλοντικές δραστηριότητες."
 
 #. module: repair
 #: model:ir.model,name:repair.model_stock_move
 msgid "Stock Move"
-msgstr ""
+msgstr "Κίνηση Αποθέματος"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_fee__price_subtotal
 #: model:ir.model.fields,field_description:repair.field_repair_line__price_subtotal
 msgid "Subtotal"
-msgstr ""
+msgstr "Μερικό σύνολο"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "Tax"
-msgstr ""
+msgstr "Φόρος"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_fee__tax_id
@@ -958,7 +978,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:repair.field_repair_order__amount_tax
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "Taxes"
-msgstr ""
+msgstr "Φόροι"
 
 #. module: repair
 #: sql_constraint:repair.order:0
@@ -1007,27 +1027,32 @@ msgstr ""
 #. module: repair
 #: selection:repair.order,activity_state:0
 msgid "Today"
-msgstr ""
+msgstr "Σήμερα"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Today Activities"
-msgstr ""
+msgstr "Σημερινές Δραστηριότητες"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__amount_total
 msgid "Total"
-msgstr ""
+msgstr "Σύνολο"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Total amount"
+msgstr "Σύνολικό ποσό"
+
+#. module: repair
+#: model:ir.model,name:repair.model_stock_traceability_report
+msgid "Traceability Report"
 msgstr ""
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__tracking
 msgid "Tracking"
-msgstr ""
+msgstr "Παρακολούθηση"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_line__type
@@ -1044,31 +1069,36 @@ msgstr ""
 #: model:ir.model.fields,field_description:repair.field_repair_line__price_unit
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "Unit Price"
-msgstr ""
+msgstr "Τιμή Μονάδας"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Unit of Measure"
-msgstr ""
+msgstr "Μονάδα Μέτρησης"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_unread
 msgid "Unread Messages"
-msgstr ""
+msgstr "Μη αναγνωσμένα μηνύματα"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_unread_counter
 msgid "Unread Messages Counter"
-msgstr ""
+msgstr "Μετρητής μη αναγνωσμένων μηνυμάτων"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__amount_untaxed
 msgid "Untaxed Amount"
-msgstr ""
+msgstr "Αφορολόγητο Ποσό"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Untaxed amount"
+msgstr "Αφορολόγητο ποσό"
+
+#. module: repair
+#: model:ir.model,name:repair.model_stock_warn_insufficient_qty_repair
+msgid "Warn Insufficient Repair Quantity"
 msgstr ""
 
 #. module: repair
@@ -1086,17 +1116,17 @@ msgstr ""
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__website_message_ids
 msgid "Website Messages"
-msgstr ""
+msgstr "Μηνύματα Ιστότοπου"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__website_message_ids
 msgid "Website communication history"
-msgstr ""
+msgstr "Ιστορικό επικοινωνίας ιστότοπου"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_cancel_repair
 msgid "Yes"
-msgstr ""
+msgstr "Ναι"
 
 #. module: repair
 #: code:addons/repair/models/repair.py:600
@@ -1111,14 +1141,4 @@ msgstr ""
 #: code:addons/repair/models/repair.py:296
 #, python-format
 msgid "You have to select an invoice address in the repair form."
-msgstr ""
-
-#. module: repair
-#: model:ir.model,name:repair.model_stock_traceability_report
-msgid "stock.traceability.report"
-msgstr ""
-
-#. module: repair
-#: model:ir.model,name:repair.model_stock_warn_insufficient_qty_repair
-msgid "stock.warn.insufficient.qty.repair"
 msgstr ""

@@ -23,10 +23,10 @@
 # Mikko Närjänen <mikko.narjanen@web-veistamo.fi>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:48+0000\n"
-"PO-Revision-Date: 2018-09-18 09:48+0000\n"
+"POT-Creation-Date: 2018-10-24 09:34+0000\n"
+"PO-Revision-Date: 2018-10-24 09:34+0000\n"
 "Last-Translator: Mikko Närjänen <mikko.narjanen@web-veistamo.fi>, 2018\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
@@ -87,7 +87,13 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_bom.py:330
+#: model:product.product,description:mrp.product_product_computer_desk_leg
+#: model:product.template,description:mrp.product_product_computer_desk_leg_product_template
+msgid "18″ x 2½″ Square Leg"
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_bom.py:339
 #, python-format
 msgid ""
 "<p class=\"o_view_nocontent_smiling_face\">\n"
@@ -401,7 +407,7 @@ msgstr "Liitteen URL"
 
 #. module: mrp
 #. openerp-web
-#: code:addons/mrp/models/mrp_bom.py:322
+#: code:addons/mrp/models/mrp_bom.py:331
 #: code:addons/mrp/static/src/js/mrp_bom_report.js:178
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
@@ -431,7 +437,6 @@ msgid "Avatar"
 msgstr "Avatar"
 
 #. module: mrp
-#: model:ir.model.fields,help:mrp.field_product_product__produce_delay
 #: model:ir.model.fields,help:mrp.field_product_template__produce_delay
 msgid ""
 "Average lead time in days to manufacture this product. In the case of multi-"
@@ -447,6 +452,11 @@ msgstr ""
 #: model:ir.model.fields,help:mrp.field_mrp_bom_line__attribute_value_ids
 msgid "BOM Product Variants needed form apply this line."
 msgstr "Osaluettelon tuotevariantit tämän rivin muodostamiseen"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_report_mrp_report_bom_structure
+msgid "BOM Structure Report"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__child_line_ids
@@ -472,6 +482,11 @@ msgid "Bill of Material"
 msgstr "Osaluettelo"
 
 #. module: mrp
+#: model:ir.model,name:mrp.model_mrp_bom_line
+msgid "Bill of Material Line"
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_line_view_form
 msgid "Bill of Material line"
 msgstr "Osaluettelon rivi"
@@ -479,7 +494,6 @@ msgstr "Osaluettelon rivi"
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.product_open_bom
 #: model:ir.actions.act_window,name:mrp.template_open_bom
-#: model:ir.model.fields,field_description:mrp.field_product_product__bom_ids
 #: model:ir.model.fields,field_description:mrp.field_product_template__bom_ids
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_tree_view
 #: model_terms:ir.ui.view,arch_db:mrp.product_product_form_view_bom_button
@@ -614,6 +628,12 @@ msgstr ""
 "valmistuva tuote."
 
 #. module: mrp
+#: model:product.product,name:mrp.product_product_computer_desk_bolt
+#: model:product.template,name:mrp.product_product_computer_desk_bolt_product_template
+msgid "Bolt"
+msgstr "Pultti"
+
+#. module: mrp
 #: selection:stock.rule,action:0
 msgid "Buy"
 msgstr "Osta"
@@ -667,14 +687,14 @@ msgid "Change Product Qty"
 msgstr "Muuta tuotteen määrää"
 
 #. module: mrp
+#: model:ir.model,name:mrp.model_change_production_qty
+msgid "Change Production Qty"
+msgstr ""
+
+#. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_change_production_qty
 msgid "Change Quantity To Produce"
 msgstr "Muuta valmistettavaa määrää"
-
-#. module: mrp
-#: model:ir.model,name:mrp.model_change_production_qty
-msgid "Change Quantity of Products"
-msgstr "Muuta tuotteiden määrää"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__check_to_done
@@ -734,6 +754,11 @@ msgstr "Komponentit"
 #: selection:mrp.routing.workcenter,time_mode:0
 msgid "Compute based on real time"
 msgstr "Laske käyttäen todellista ajanottoa"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_res_config_settings
+msgid "Config Settings"
+msgstr ""
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_configuration
@@ -901,11 +926,6 @@ msgid "Customers"
 msgstr "Asiakkaat"
 
 #. module: mrp
-#: model:ir.ui.menu,name:mrp.menu_mrp_dashboard
-msgid "Dashboard"
-msgstr "Työpöytä"
-
-#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__db_datas
 msgid "Database Data"
 msgstr "Tietokannan data"
@@ -1004,6 +1024,11 @@ msgid "Display Name"
 msgstr "Näyttönimi"
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_document_file_kanban_mrp
+msgid "Document"
+msgstr "Dokumentti"
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__is_done
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
@@ -1024,15 +1049,28 @@ msgid "Done for Work Order"
 msgstr ""
 
 #. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.view_document_file_kanban_mrp
-msgid "Download"
-msgstr "Lataa"
-
-#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
 #: selection:mrp.unbuild,state:0
 msgid "Draft"
 msgstr "Luonnos"
+
+#. module: mrp
+#: model:product.product,name:mrp.product_product_drawer_drawer
+#: model:product.template,name:mrp.product_product_drawer_drawer_product_template
+msgid "Drawer Black"
+msgstr ""
+
+#. module: mrp
+#: model:product.product,name:mrp.product_product_drawer_case
+#: model:product.template,name:mrp.product_product_drawer_case_product_template
+msgid "Drawer Case Black"
+msgstr ""
+
+#. module: mrp
+#: model:product.product,description:mrp.product_product_drawer_drawer
+#: model:product.template,description:mrp.product_product_drawer_drawer_product_template
+msgid "Drawer on casters for great usability."
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__time_cycle
@@ -1087,6 +1125,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity__date_end
 msgid "End Date"
 msgstr "Päättymispäivä"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_product_produce__product_tracking
+#: model:ir.model.fields,help:mrp.field_mrp_product_produce_line__product_tracking
+#: model:ir.model.fields,help:mrp.field_mrp_unbuild__has_tracking
+msgid "Ensure the traceability of a storable product in your warehouse."
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.exception_on_mo
@@ -1423,7 +1468,7 @@ msgid "Informative, not used in matching"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_unbuild.py:220
+#: code:addons/mrp/models/mrp_unbuild.py:219
 #, python-format
 msgid "Insufficient Quantity"
 msgstr ""
@@ -1585,6 +1630,12 @@ msgid "Late Activities"
 msgstr "Yliaikaiset toiminnot"
 
 #. module: mrp
+#: model:product.product,description:mrp.product_product_wood_ply
+#: model:product.template,description:mrp.product_product_wood_ply_product_template
+msgid "Layers that are stick together to assemble wood panels."
+msgstr ""
+
+#. module: mrp
 #: code:addons/mrp/models/mrp_production.py:492
 #, python-format
 msgid ""
@@ -1669,12 +1720,24 @@ msgid "MRP Work Orders"
 msgstr ""
 
 #. module: mrp
+#: model:ir.model,name:mrp.model_mrp_workcenter_productivity_loss_type
+msgid "MRP Workorder productivity losses"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_main_attachment_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__message_main_attachment_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__message_main_attachment_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__message_main_attachment_id
 msgid "Main Attachment"
 msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_production.py:465
+#: code:addons/mrp/models/stock_warehouse.py:130
+#, python-format
+msgid "Make To Order"
+msgstr "Tilausohjautuva valmistus"
 
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_routings
@@ -1692,10 +1755,13 @@ msgid "Manual Duration"
 msgstr "Manuaalinen kesto"
 
 #. module: mrp
+#: code:addons/mrp/models/stock_warehouse.py:114
+#: code:addons/mrp/models/stock_warehouse.py:154
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__manufacture_steps
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_report_stock_rule
 #: model:stock.location.route,name:mrp.route_warehouse0_manufacture
 #: selection:stock.rule,action:0
+#, python-format
 msgid "Manufacture"
 msgstr "Valmista"
 
@@ -1748,7 +1814,6 @@ msgid "Manufacturing"
 msgstr "Valmistus"
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_product_product__produce_delay
 #: model:ir.model.fields,field_description:mrp.field_product_template__produce_delay
 #: model:ir.model.fields,field_description:mrp.field_res_company__manufacturing_lead
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__manufacturing_lead
@@ -1972,11 +2037,6 @@ msgid "Next Work Order to Use"
 msgstr ""
 
 #. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
-msgid "No Routing"
-msgstr "Ei reititystä"
-
-#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid "No attachment"
 msgstr ""
@@ -2147,7 +2207,7 @@ msgid "Operation Type"
 msgstr "Toiminnon tyyppi"
 
 #. module: mrp
-#: code:addons/mrp/report/mrp_report_bom_structure.py:207
+#: code:addons/mrp/report/mrp_report_bom_structure.py:221
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing__operation_ids
 #: model:ir.ui.menu,name:mrp.menu_mrp_manufacturing
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workorder_view_gantt
@@ -2213,14 +2273,19 @@ msgid "Overdue"
 msgstr "Myöhässä"
 
 #. module: mrp
-#: model:ir.model,name:mrp.model_stock_move_line
-msgid "Packing Operation"
-msgstr "Pakkaustoiminto"
+#: model:ir.ui.menu,name:mrp.menu_mrp_dashboard
+msgid "Overview"
+msgstr "Analyysi"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__bom_id
 msgid "Parent BoM"
 msgstr "Ylempi osaluettelo"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__parent_product_tmpl_id
+msgid "Parent Product Template"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__routing_id
@@ -2306,6 +2371,11 @@ msgid "Picking Before Manufacturing Route"
 msgstr ""
 
 #. module: mrp
+#: model:ir.model,name:mrp.model_stock_picking_type
+msgid "Picking Type"
+msgstr "Keräilyn tyyppi"
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__picking_ids
 msgid "Picking associated to this manufacturing order"
 msgstr ""
@@ -2345,6 +2415,12 @@ msgid "Planning"
 msgstr "Suunnittelu"
 
 #. module: mrp
+#: model:product.product,name:mrp.product_product_plastic_laminate
+#: model:product.template,name:mrp.product_product_plastic_laminate_product_template
+msgid "Plastic Laminate"
+msgstr ""
+
+#. module: mrp
 #: code:addons/mrp/wizard/mrp_product_produce.py:103
 #, python-format
 msgid "Please enter a lot or serial number for %s !"
@@ -2356,6 +2432,18 @@ msgstr ""
 msgid ""
 "Please set the quantity you are currently producing. It should be different "
 "from zero."
+msgstr ""
+
+#. module: mrp
+#: model:product.product,name:mrp.product_product_wood_ply
+#: model:product.template,name:mrp.product_product_wood_ply_product_template
+msgid "Ply Layer"
+msgstr ""
+
+#. module: mrp
+#: model:product.product,name:mrp.product_product_ply_veneer
+#: model:product.template,name:mrp.product_product_ply_veneer_product_template
+msgid "Ply Veneer"
 msgstr ""
 
 #. module: mrp
@@ -2455,6 +2543,11 @@ msgid "Product Moves"
 msgstr "Tuotteiden siirrot"
 
 #. module: mrp
+#: model:ir.model,name:mrp.model_stock_move_line
+msgid "Product Moves (Stock Move Line)"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_line__product_produce_id
 msgid "Product Produce"
 msgstr "Valmista tuote"
@@ -2490,7 +2583,6 @@ msgid "Product to Track"
 msgstr "Seurattava tuote"
 
 #. module: mrp
-#: model:ir.model,name:mrp.model_mrp_production
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce__production_id
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
@@ -2516,6 +2608,7 @@ msgstr "Valmistuksen paikka"
 
 #. module: mrp
 #: model:ir.actions.report,name:mrp.action_report_production_order
+#: model:ir.model,name:mrp.model_mrp_production
 #: model:ir.model.fields,field_description:mrp.field_stock_move_line__production_id
 #: model_terms:ir.ui.view,arch_db:mrp.stock_production_type_kanban
 msgid "Production Order"
@@ -2869,6 +2962,7 @@ msgid "Schedule manufacturing orders earlier to avoid delays"
 msgstr ""
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
 msgid "Scheduled Date"
 msgstr "Suunniteltu päivämäärä"
@@ -2889,13 +2983,9 @@ msgid "Scheduled Date by Month"
 msgstr "Suunniteltu päivämäärä kuukauden mukaan"
 
 #. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
-msgid "Scheduled Month"
-msgstr "Suunniteltu kuukausi"
-
-#. module: mrp
-#: code:addons/mrp/models/mrp_production.py:694
+#: code:addons/mrp/models/mrp_production.py:695
 #: code:addons/mrp/models/mrp_workorder.py:511
+#: model:ir.model,name:mrp.model_stock_scrap
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__scrap_ids
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
@@ -2917,6 +3007,12 @@ msgstr "Romutusmääräykset"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__scrap_ids
 msgid "Scraps"
+msgstr ""
+
+#. module: mrp
+#: model:product.product,name:mrp.product_product_computer_desk_screw
+#: model:product.template,name:mrp.product_product_computer_desk_screw_product_template
+msgid "Screw"
 msgstr ""
 
 #. module: mrp
@@ -3015,7 +3111,19 @@ msgid "Show all records which has next action date is before today"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_unbuild.py:106
+#: model:product.product,description:mrp.product_product_computer_desk_head
+#: model:product.template,description:mrp.product_product_computer_desk_head_product_template
+msgid "Solid wood is a durable natural material."
+msgstr ""
+
+#. module: mrp
+#: model:product.product,description:mrp.product_product_computer_desk
+#: model:product.template,description:mrp.product_product_computer_desk_product_template
+msgid "Solid wood table."
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_unbuild.py:105
 #, python-format
 msgid ""
 "Some of your components are tracked, you have to specify a manufacturing "
@@ -3026,8 +3134,8 @@ msgstr ""
 #: code:addons/mrp/models/mrp_production.py:590
 #, python-format
 msgid ""
-"Some raw materials were produced for a lot without finished product. You can"
-" correct the following components by unlocking:\n"
+"Some raw materials have been consumed for a lot/serial number that has not been produced. Unlock the MO and click on the components lines to correct it.\n"
+"List of the components:\n"
 msgstr ""
 
 #. module: mrp
@@ -3041,9 +3149,20 @@ msgid "Specify cost of work center per hour."
 msgstr ""
 
 #. module: mrp
+#: model:product.product,description:mrp.product_product_computer_desk_screw
+#: model:product.template,description:mrp.product_product_computer_desk_screw_product_template
+msgid "Stainless steel screw"
+msgstr ""
+
+#. module: mrp
+#: model:product.product,description:mrp.product_product_computer_desk_bolt
+#: model:product.template,description:mrp.product_product_computer_desk_bolt_product_template
+msgid "Stainless steel screw full (dia - 5mm, Length - 10mm)"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__date_start
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity__date_start
-#: model_terms:ir.ui.view,arch_db:mrp.oee_search_view
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_work_order_search
 msgid "Start Date"
 msgstr "Alkupäivä"
@@ -3121,6 +3240,11 @@ msgid "Stock after Manufacturing Location"
 msgstr ""
 
 #. module: mrp
+#: model:ir.model,name:mrp.model_report_stock_report_stock_rule
+msgid "Stock rule report"
+msgstr ""
+
+#. module: mrp
 #: code:addons/mrp/models/stock_warehouse.py:200
 #, python-format
 msgid "Store Finished Product"
@@ -3142,8 +3266,33 @@ msgid "Sub BoM"
 msgstr ""
 
 #. module: mrp
-#: model:ir.model,name:mrp.model_mrp_workcenter_productivity_loss
-msgid "TPM Big Losses"
+#: model:product.product,name:mrp.product_product_computer_desk
+#: model:product.template,name:mrp.product_product_computer_desk_product_template
+msgid "Table (MTO)"
+msgstr ""
+
+#. module: mrp
+#: model:product.product,name:mrp.product_product_table_kit
+#: model:product.template,name:mrp.product_product_table_kit_product_template
+msgid "Table Kit"
+msgstr ""
+
+#. module: mrp
+#: model:product.product,name:mrp.product_product_computer_desk_leg
+#: model:product.template,name:mrp.product_product_computer_desk_leg_product_template
+msgid "Table Leg"
+msgstr ""
+
+#. module: mrp
+#: model:product.product,name:mrp.product_product_computer_desk_head
+#: model:product.template,name:mrp.product_product_computer_desk_head_product_template
+msgid "Table Top"
+msgstr ""
+
+#. module: mrp
+#: model:product.product,description:mrp.product_product_table_kit
+#: model:product.template,description:mrp.product_product_table_kit_product_template
+msgid "Table kit"
 msgstr ""
 
 #. module: mrp
@@ -3216,7 +3365,7 @@ msgid "Technical: used to figure out default serial number on work orders"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_bom.py:95 code:addons/mrp/models/mrp_bom.py:288
+#: code:addons/mrp/models/mrp_bom.py:95 code:addons/mrp/models/mrp_bom.py:290
 #, python-format
 msgid ""
 "The Product Unit of Measure you chose has a different category than in the "
@@ -3264,11 +3413,6 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__qty_produced
 msgid "The number of products already handled by this work order"
-msgstr ""
-
-#. module: mrp
-#: model:ir.model,name:mrp.model_stock_picking_type
-msgid "The operation type determines the picking view"
 msgstr ""
 
 #. module: mrp
@@ -3485,6 +3629,12 @@ msgid "Today Activities"
 msgstr "Tämän päivän toimenpiteet"
 
 #. module: mrp
+#: model:product.product,description:mrp.product_product_wood_wear
+#: model:product.template,description:mrp.product_product_wood_wear_product_template
+msgid "Top layer of a wood panel."
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__workorder_late_count
 msgid "Total Late Orders"
 msgstr ""
@@ -3515,6 +3665,7 @@ msgid "Total duration"
 msgstr ""
 
 #. module: mrp
+#: model:ir.model,name:mrp.model_stock_traceability_report
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Traceability Report"
 msgstr ""
@@ -3595,6 +3746,36 @@ msgid ""
 "Unit of Measure (Unit of Measure) is the unit of measurement for the "
 "inventory control"
 msgstr "Yksikkö on varastovalvonnassa käytettävä mittayksikkö"
+
+#. module: mrp
+#: model:product.product,uom_name:mrp.product_product_computer_desk
+#: model:product.product,uom_name:mrp.product_product_computer_desk_bolt
+#: model:product.product,uom_name:mrp.product_product_computer_desk_head
+#: model:product.product,uom_name:mrp.product_product_computer_desk_leg
+#: model:product.product,uom_name:mrp.product_product_computer_desk_screw
+#: model:product.product,uom_name:mrp.product_product_drawer_case
+#: model:product.product,uom_name:mrp.product_product_drawer_drawer
+#: model:product.product,uom_name:mrp.product_product_plastic_laminate
+#: model:product.product,uom_name:mrp.product_product_ply_veneer
+#: model:product.product,uom_name:mrp.product_product_table_kit
+#: model:product.product,uom_name:mrp.product_product_wood_panel
+#: model:product.product,uom_name:mrp.product_product_wood_ply
+#: model:product.product,uom_name:mrp.product_product_wood_wear
+#: model:product.template,uom_name:mrp.product_product_computer_desk_bolt_product_template
+#: model:product.template,uom_name:mrp.product_product_computer_desk_head_product_template
+#: model:product.template,uom_name:mrp.product_product_computer_desk_leg_product_template
+#: model:product.template,uom_name:mrp.product_product_computer_desk_product_template
+#: model:product.template,uom_name:mrp.product_product_computer_desk_screw_product_template
+#: model:product.template,uom_name:mrp.product_product_drawer_case_product_template
+#: model:product.template,uom_name:mrp.product_product_drawer_drawer_product_template
+#: model:product.template,uom_name:mrp.product_product_plastic_laminate_product_template
+#: model:product.template,uom_name:mrp.product_product_ply_veneer_product_template
+#: model:product.template,uom_name:mrp.product_product_table_kit_product_template
+#: model:product.template,uom_name:mrp.product_product_wood_panel_product_template
+#: model:product.template,uom_name:mrp.product_product_wood_ply_product_template
+#: model:product.template,uom_name:mrp.product_product_wood_wear_product_template
+msgid "Unit(s)"
+msgstr "Kpl"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -3696,7 +3877,6 @@ msgstr "Erittäin kiireellinen"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.stock_production_type_kanban
-#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 #: selection:mrp.production,availability:0
 msgid "Waiting"
 msgstr "Odottaa"
@@ -3714,16 +3894,32 @@ msgid "Waiting Materials"
 msgstr ""
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+msgid "Waiting for Materials"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model,name:mrp.model_stock_warehouse
 msgid "Warehouse"
 msgstr "Varasto"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_bom.py:95 code:addons/mrp/models/mrp_bom.py:288
+#: model:ir.model,name:mrp.model_stock_warn_insufficient_qty_unbuild
+msgid "Warn Insufficient Unbuild Quantity"
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_bom.py:95 code:addons/mrp/models/mrp_bom.py:290
 #: code:addons/mrp/wizard/mrp_product_produce.py:202
 #, python-format
 msgid "Warning"
 msgstr "Varoitus"
+
+#. module: mrp
+#: model:product.product,name:mrp.product_product_wood_wear
+#: model:product.template,name:mrp.product_product_wood_wear_product_template
+msgid "Wear Layer"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__website_id
@@ -3780,6 +3976,12 @@ msgid ""
 msgstr ""
 
 #. module: mrp
+#: model:product.product,name:mrp.product_product_wood_panel
+#: model:product.template,name:mrp.product_product_wood_panel_product_template
+msgid "Wood Panel"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model,name:mrp.model_mrp_workcenter
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__workcenter_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__name
@@ -3832,7 +4034,7 @@ msgstr "Työpisteet"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_workcenter_kanban_action
-msgid "Work Centers Dashboard"
+msgid "Work Centers Overview"
 msgstr ""
 
 #. module: mrp
@@ -3927,7 +4129,7 @@ msgid "Work Sheet"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_production.py:670
+#: code:addons/mrp/models/mrp_production.py:671
 #, python-format
 msgid "Work order %s is still running"
 msgstr ""
@@ -3960,6 +4162,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mrp.oee_loss_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.oee_loss_tree_view
 msgid "Workcenter Productivity Loss"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_mrp_workcenter_productivity_loss
+msgid "Workcenter Productivity Losses"
 msgstr ""
 
 #. module: mrp
@@ -4001,7 +4208,7 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_production.py:604
+#: code:addons/mrp/models/mrp_production.py:605
 #, python-format
 msgid ""
 "You can not cancel production order, a work order is still in progress."
@@ -4014,7 +4221,7 @@ msgid "You can not change the finished work order."
 msgstr "Et voi muuttaa valmista työtilausta."
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_production.py:656
+#: code:addons/mrp/models/mrp_production.py:657
 #, python-format
 msgid "You can not consume without telling for which lot you consumed it"
 msgstr ""
@@ -4055,7 +4262,7 @@ msgstr ""
 #. module: mrp
 #: code:addons/mrp/models/mrp_unbuild.py:88
 #, python-format
-msgid "You cannot delete an unbuild order if the stateis \"Done\""
+msgid "You cannot delete an unbuild order if the state is 'Done'."
 msgstr ""
 
 #. module: mrp
@@ -4065,7 +4272,7 @@ msgid "You cannot produce the same serial number twice."
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_unbuild.py:100
+#: code:addons/mrp/models/mrp_unbuild.py:99
 #, python-format
 msgid "You cannot unbuild a undone manufacturing order."
 msgstr ""
@@ -4117,7 +4324,7 @@ msgid "You need to provide a lot for the finished product."
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_unbuild.py:96
+#: code:addons/mrp/models/mrp_unbuild.py:95
 #, python-format
 msgid "You should provide a lot number for the final product."
 msgstr ""
@@ -4159,12 +4366,42 @@ msgid "hour(s)"
 msgstr ""
 
 #. module: mrp
+#: model:product.product,weight_uom_name:mrp.product_product_computer_desk
+#: model:product.product,weight_uom_name:mrp.product_product_computer_desk_bolt
+#: model:product.product,weight_uom_name:mrp.product_product_computer_desk_head
+#: model:product.product,weight_uom_name:mrp.product_product_computer_desk_leg
+#: model:product.product,weight_uom_name:mrp.product_product_computer_desk_screw
+#: model:product.product,weight_uom_name:mrp.product_product_drawer_case
+#: model:product.product,weight_uom_name:mrp.product_product_drawer_drawer
+#: model:product.product,weight_uom_name:mrp.product_product_plastic_laminate
+#: model:product.product,weight_uom_name:mrp.product_product_ply_veneer
+#: model:product.product,weight_uom_name:mrp.product_product_table_kit
+#: model:product.product,weight_uom_name:mrp.product_product_wood_panel
+#: model:product.product,weight_uom_name:mrp.product_product_wood_ply
+#: model:product.product,weight_uom_name:mrp.product_product_wood_wear
+#: model:product.template,weight_uom_name:mrp.product_product_computer_desk_bolt_product_template
+#: model:product.template,weight_uom_name:mrp.product_product_computer_desk_head_product_template
+#: model:product.template,weight_uom_name:mrp.product_product_computer_desk_leg_product_template
+#: model:product.template,weight_uom_name:mrp.product_product_computer_desk_product_template
+#: model:product.template,weight_uom_name:mrp.product_product_computer_desk_screw_product_template
+#: model:product.template,weight_uom_name:mrp.product_product_drawer_case_product_template
+#: model:product.template,weight_uom_name:mrp.product_product_drawer_drawer_product_template
+#: model:product.template,weight_uom_name:mrp.product_product_plastic_laminate_product_template
+#: model:product.template,weight_uom_name:mrp.product_product_ply_veneer_product_template
+#: model:product.template,weight_uom_name:mrp.product_product_table_kit_product_template
+#: model:product.template,weight_uom_name:mrp.product_product_wood_panel_product_template
+#: model:product.template,weight_uom_name:mrp.product_product_wood_ply_product_template
+#: model:product.template,weight_uom_name:mrp.product_product_wood_wear_product_template
+msgid "kg"
+msgstr "kg"
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
 msgid "last"
 msgstr "viimeinen"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_production.py:716
+#: code:addons/mrp/models/mrp_production.py:717
 #, python-format
 msgid "manufacturing order"
 msgstr ""
@@ -4175,24 +4412,14 @@ msgid "minute(s)"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/report/mrp_report_bom_structure.py:210
-#: code:addons/mrp/report/mrp_report_bom_structure.py:220
+#: code:addons/mrp/report/mrp_report_bom_structure.py:224
+#: code:addons/mrp/report/mrp_report_bom_structure.py:234
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 #, python-format
 msgid "minutes"
 msgstr "minuutit"
-
-#. module: mrp
-#: model:ir.model,name:mrp.model_mrp_bom_line
-msgid "mrp.bom.line"
-msgstr "mrp.bom.line"
-
-#. module: mrp
-#: model:ir.model,name:mrp.model_mrp_workcenter_productivity_loss_type
-msgid "mrp.workcenter.productivity.loss.type"
-msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.exception_on_mo
@@ -4221,36 +4448,6 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.production_message
 msgid "quantity has been updated."
-msgstr ""
-
-#. module: mrp
-#: model:ir.model,name:mrp.model_report_mrp_report_bom_structure
-msgid "report.mrp.report_bom_structure"
-msgstr ""
-
-#. module: mrp
-#: model:ir.model,name:mrp.model_report_stock_report_stock_rule
-msgid "report.stock.report_stock_rule"
-msgstr ""
-
-#. module: mrp
-#: model:ir.model,name:mrp.model_res_config_settings
-msgid "res.config.settings"
-msgstr "res.config.settings"
-
-#. module: mrp
-#: model:ir.model,name:mrp.model_stock_scrap
-msgid "stock.scrap"
-msgstr ""
-
-#. module: mrp
-#: model:ir.model,name:mrp.model_stock_traceability_report
-msgid "stock.traceability.report"
-msgstr ""
-
-#. module: mrp
-#: model:ir.model,name:mrp.model_stock_warn_insufficient_qty_unbuild
-msgid "stock.warn.insufficient.qty.unbuild"
 msgstr ""
 
 #. module: mrp

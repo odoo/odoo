@@ -23,6 +23,9 @@
         border-bottom: 1px solid #cacaca;
         > tr > th {
             border-left: 1px solid #dfdfdf;
+            @include media-breakpoint-down(sm) {
+                white-space: nowrap;
+            }
             &:not(.o_column_sortable):hover {
                 cursor: default;
             }
@@ -80,16 +83,24 @@
 
     .o_list_record_remove button {
         padding: 0px;
-        background-style: none;
+        background: none;
         border-style: none;
         display: table-cell;
+        cursor: pointer;
     }
 
+    // Contextual classes
+    @each $color, $value in $theme-colors {
+        $safe: saturate(theme-color-level($color, 2), 10%);
+        @include text-emphasis-variant(".text-#{$color}", $safe);
+    }
 
     // Grouped list views
     tbody > tr.o_group_header {
-        height: 31px;
-
+        > th, > td {
+            padding-top: ($table-cell-padding-sm*2);
+            padding-bottom: ($table-cell-padding-sm*2);
+        }
         .o_group_name {
             white-space: nowrap;
         }
@@ -213,6 +224,13 @@
         }
         .o_field_boolean {
             width: auto!important; // Override the width computed in JS (needed for Chrome)
+        }
+    }
+
+    .o_field_x2many_list_row_add {
+        a:focus, a:active {
+            color: $link-hover-color;
+            outline: none;
         }
     }
 }

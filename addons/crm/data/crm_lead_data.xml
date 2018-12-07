@@ -58,12 +58,7 @@
             <field name="default" eval="False"/>
             <field name="parent_id" eval="ref('mt_lead_lost')"/>
             <field name="relation_field">team_id</field>
-        </record>
-
-        <function model="crm.team" name="message_unsubscribe"
-            eval="[ref('sales_team.team_sales_department'),ref('sales_team.salesteam_website_sales')], [ref('base.partner_root')]"/>
-        <function model="crm.team" name="message_subscribe"
-            eval="[ref('sales_team.team_sales_department'),ref('sales_team.salesteam_website_sales')], [ref('base.partner_root')]"/>
+        </record>       
 
         <!--Definition of an email template with an empty body that will be used in opportunity mailing.
             Used to give a basis for email recipients, name and to ease the definition of a further

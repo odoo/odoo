@@ -5,7 +5,7 @@ from werkzeug import urls, utils
 
 from odoo import http, _
 from odoo.http import request
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
 
 _logger = logging.getLogger(__name__)
 
@@ -20,16 +20,14 @@ class AuthorizeController(http.Controller):
     ], type='http', auth='public', csrf=False)
     def authorize_form_feedback(self, **post):
         _logger.info('Authorize: entering form_feedback with post data %s', pprint.pformat(post))
-        return_url = '/'
         if post:
             request.env['payment.transaction'].sudo().form_feedback(post, 'authorize')
-            return_url = post.pop('return_url', '/')
         base_url = request.env['ir.config_parameter'].sudo().get_param('web.base.url')
         # Authorize.Net is expecting a response to the POST sent by their server.
         # This response is in the form of a URL that Authorize.Net will pass on to the
         # client's browser to redirect them to the desired location need javascript.
         return request.render('payment_authorize.payment_authorize_redirect', {
-            'return_url': urls.url_join(base_url, return_url)
+            'return_url': urls.url_join(base_url, "/payment/process")
         })
 
     @http.route(['/payment/authorize/s2s/create_json'], type='json', auth='public')
@@ -38,13 +36,18 @@ class AuthorizeController(http.Controller):
         acquirer = request.env['payment.acquirer'].browse(acquirer_id)
         if not kwargs.get('partner_id'):
             kwargs = dict(kwargs, partner_id=request.env.user.partner_id.id)
-        return acquirer.s2s_process(kwargs).id
+        try:
+           return acquirer.s2s_process(kwargs).id
+        except (ValidationError, UserError) as e:
+           return {
+               'error': e.name,
+           }
 
     @http.route(['/payment/authorize/s2s/create_json_3ds'], type='json', auth='public', csrf=False)
     def authorize_s2s_create_json_3ds(self, verify_validity=False, **kwargs):
         token = False
         acquirer = request.env['payment.acquirer'].browse(int(kwargs.get('acquirer_id')))
-        
+
         try:
             if not kwargs.get('partner_id'):
                 kwargs = dict(kwargs, partner_id=request.env.user.partner_id.id)
@@ -64,6 +67,10 @@ class AuthorizeController(http.Controller):
 
             return {
                 'error': message
+            }
+        except UserError as e:
+            return {
+                'error': e.name,
             }
 
         if not token:
@@ -91,4 +98,4 @@ class AuthorizeController(http.Controller):
         acquirer_id = int(post.get('acquirer_id'))
         acquirer = request.env['payment.acquirer'].browse(acquirer_id)
         acquirer.s2s_process(post)
-        return utils.redirect(post.get('return_url', '/'))
+        return utils.redirect("/payment/process")

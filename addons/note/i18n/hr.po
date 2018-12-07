@@ -35,7 +35,7 @@ msgstr "Potrebna dodatna radnja"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__open
-#: model:ir.ui.view,arch_db:note.view_note_note_filter
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Active"
 msgstr "Aktivan"
 
@@ -60,12 +60,12 @@ msgid "Activity Type"
 msgstr "Vrsta aktivnosti"
 
 #. module: note
-#: model:ir.actions.act_window,help:note.action_note_note
+#: model_terms:ir.actions.act_window,help:note.action_note_note
 msgid "Add a new personal note"
 msgstr ""
 
 #. module: note
-#: model:ir.actions.act_window,help:note.note_tag_action
+#: model_terms:ir.actions.act_window,help:note.note_tag_action
 msgid "Add a new tag"
 msgstr "Dodaj novu oznaku"
 
@@ -84,12 +84,12 @@ msgid "Add new note"
 msgstr ""
 
 #. module: note
-#: model:ir.ui.view,arch_db:note.view_note_note_filter
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Archive"
 msgstr "Arhiviraj"
 
 #. module: note
-#: model:ir.ui.view,arch_db:note.view_note_note_filter
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "By sticky note Category"
 msgstr "Po kategoriji bilješke"
 
@@ -134,7 +134,7 @@ msgid "Date done"
 msgstr "Datum izvršenja"
 
 #. module: note
-#: model:ir.ui.view,arch_db:note.view_note_note_kanban
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_kanban
 msgid "Delete"
 msgstr "Obriši"
 
@@ -166,12 +166,12 @@ msgid "Followers (Partners)"
 msgstr "Pratitelji (Partneri)"
 
 #. module: note
-#: model:ir.ui.view,arch_db:note.view_note_note_filter
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Future Activities"
 msgstr "Buduće aktivnosti"
 
 #. module: note
-#: model:ir.ui.view,arch_db:note.view_note_note_filter
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Group By"
 msgstr "Grupiraj po"
 
@@ -224,7 +224,7 @@ msgid "Last Updated on"
 msgstr "Vrijeme promjene"
 
 #. module: note
-#: model:ir.ui.view,arch_db:note.view_note_note_filter
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Late Activities"
 msgstr ""
 
@@ -249,7 +249,7 @@ msgid "Messages"
 msgstr "Poruke"
 
 #. module: note
-#: model:ir.ui.view,arch_db:note.view_note_note_filter
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "My Activities"
 msgstr "Moje aktivnosti"
 
@@ -275,8 +275,8 @@ msgstr ""
 
 #. module: note
 #: model:ir.model,name:note.model_note_note
-#: model:ir.ui.view,arch_db:note.view_note_note_filter
-#: model:ir.ui.view,arch_db:note.view_note_note_form
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_form
 msgid "Note"
 msgstr "Bilješka"
 
@@ -304,7 +304,7 @@ msgstr "Oznaka bilješke"
 #: code:addons/note/models/res_users.py:61
 #: model:ir.actions.act_window,name:note.action_note_note
 #: model:ir.ui.menu,name:note.menu_note_notes
-#: model:ir.ui.view,arch_db:note.view_note_note_filter
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 #: model:note.stage,name:note.note_stage_02
 #, python-format
 msgid "Notes"
@@ -398,13 +398,13 @@ msgid "Sequence"
 msgstr "Sekvenca"
 
 #. module: note
-#: model:ir.ui.view,arch_db:note.view_note_note_filter
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Show all records which has next action date is before today"
 msgstr ""
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__stage_id
-#: model:ir.ui.view,arch_db:note.view_note_note_filter
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Stage"
 msgstr "Faza"
 
@@ -414,19 +414,19 @@ msgid "Stage Name"
 msgstr "Naziv faze"
 
 #. module: note
-#: model:ir.ui.view,arch_db:note.view_note_stage_form
+#: model_terms:ir.ui.view,arch_db:note.view_note_stage_form
 msgid "Stage of Notes"
 msgstr "Faza bilježaka"
 
 #. module: note
 #: model:ir.actions.act_window,name:note.action_note_stage
 #: model:ir.ui.menu,name:note.menu_notes_stage
-#: model:ir.ui.view,arch_db:note.view_note_note_tree
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_tree
 msgid "Stages"
 msgstr "Faze"
 
 #. module: note
-#: model:ir.ui.view,arch_db:note.view_note_stage_tree
+#: model_terms:ir.ui.view,arch_db:note.view_note_stage_tree
 msgid "Stages of Notes"
 msgstr "Faze bilježaka"
 
@@ -458,9 +458,9 @@ msgstr "Naziv oznake već postoji !"
 #: model:ir.actions.act_window,name:note.note_tag_action
 #: model:ir.model.fields,field_description:note.field_note_note__tag_ids
 #: model:ir.ui.menu,name:note.notes_tag_menu
-#: model:ir.ui.view,arch_db:note.note_tag_view_form
-#: model:ir.ui.view,arch_db:note.note_tag_view_tree
-#: model:ir.ui.view,arch_db:note.view_note_note_form
+#: model_terms:ir.ui.view,arch_db:note.note_tag_view_form
+#: model_terms:ir.ui.view,arch_db:note.note_tag_view_tree
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_form
 msgid "Tags"
 msgstr "Oznake"
 
@@ -473,7 +473,7 @@ msgid "Today"
 msgstr "Danas"
 
 #. module: note
-#: model:ir.ui.view,arch_db:note.view_note_note_filter
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Today Activities"
 msgstr "Današnje aktivnosti"
 
@@ -493,7 +493,7 @@ msgid "Unread Messages Counter"
 msgstr "Brojač nepročitanih poruka"
 
 #. module: note
-#: model:ir.actions.act_window,help:note.action_note_note
+#: model_terms:ir.actions.act_window,help:note.action_note_note
 msgid ""
 "Use notes to organize personal tasks or notes. All\n"
 "            notes are private; no one else will be able to see them. However\n"
@@ -513,7 +513,7 @@ msgid "Users"
 msgstr "Korisnici"
 
 #. module: note
-#: model:ir.actions.act_window,help:note.action_note_note
+#: model_terms:ir.actions.act_window,help:note.action_note_note
 msgid ""
 "You can customize how you process your notes/tasks by adding,\n"
 "            removing or modifying columns."

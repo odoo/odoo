@@ -87,7 +87,7 @@
                         <field string="Used In" name="used_in_bom_count" widget="statinfo" />
                     </button>
                     <button class="oe_stat_button" name="action_view_mos" type="object"
-                        attrs="{'invisible': [('type', 'not in', ['product', 'consu'])]}" icon="fa-list-alt" help="Manufactured in the last 365 days">
+                        attrs="{'invisible': ['|', ('type', 'not in', ['product', 'consu']), ('bom_count', '=', 0)]}" icon="fa-list-alt" help="Manufactured in the last 365 days">
                         <div class="o_field_widget o_stat_info">
                             <span class="o_stat_value">
                                 <field name="mrp_product_qty" widget="statinfo" nolabel="1" class="mr4"/>
@@ -116,7 +116,7 @@
                         <field string="Used In" name="used_in_bom_count" widget="statinfo" />
                     </button>
                     <button class="oe_stat_button" name="action_view_mos" type="object"
-                        attrs="{'invisible': [('type', 'not in', ['product', 'consu'])]}" icon="fa-list-alt" help="Manufactured in the last 365 days">
+                        attrs="{'invisible': ['|', ('type', 'not in', ['product', 'consu']), ('bom_count', '=', 0)]}" icon="fa-list-alt" help="Manufactured in the last 365 days">
                         <div class="o_field_widget o_stat_info">
                             <span class="o_stat_value">
                                 <field name="mrp_product_qty" widget="statinfo" nolabel="1" class="mr4"/>

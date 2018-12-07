@@ -22,6 +22,7 @@ import time
 import zlib
 
 import werkzeug
+import werkzeug.exceptions
 import werkzeug.utils
 import werkzeug.wrappers
 import werkzeug.wsgi
@@ -35,7 +36,8 @@ import odoo
 import odoo.modules.registry
 from odoo.api import call_kw, Environment
 from odoo.modules import get_resource_path
-from odoo.tools import crop_image, topological_sort, html_escape, pycompat
+from odoo.tools import limited_image_resize, topological_sort, html_escape, pycompat
+from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools.translate import _
 from odoo.tools.misc import str2bool, xlwt, file_open
 from odoo.tools.safe_eval import safe_eval
@@ -44,7 +46,7 @@ from odoo.http import content_disposition, dispatch_rpc, request, \
     serialize_exception as _serialize_exception, Response
 from odoo.exceptions import AccessError, UserError, AccessDenied
 from odoo.models import check_method_name
-from odoo.service import db
+from odoo.service import db, security
 
 _logger = logging.getLogger(__name__)
 
@@ -422,16 +424,6 @@ def xml2json_from_elementtree(el, preserve_whitespaces=False):
     res["children"] = kids
     return res
 
-def binary_content(xmlid=None, model='ir.attachment', id=None, field='datas', unique=False,
-                   filename=None, filename_field='datas_fname', download=False, mimetype=None,
-                   default_mimetype='application/octet-stream', share_id=None, share_token=None, access_token=None,
-                   env=None):
-    return request.registry['ir.http'].binary_content(
-        xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename,
-        filename_field=filename_field, download=download, mimetype=mimetype,
-        default_mimetype=default_mimetype, share_id=share_id, share_token=share_token, access_token=access_token,
-        env=env)
-
 #----------------------------------------------------------
 # Odoo Web web Controllers
 #----------------------------------------------------------
@@ -505,11 +497,25 @@ class Home(http.Controller):
         if not odoo.tools.config['list_db']:
             values['disable_database_manager'] = True
 
+        # otherwise no real way to test debug mode in template as ?debug =>
+        # values['debug'] = '' but that's also the fallback value when
+        # missing variables in qweb
+        if 'debug' in values:
+            values['debug'] = True
+
         response = request.render('web.login', values)
         response.headers['X-Frame-Options'] = 'DENY'
         return response
 
+    @http.route('/web/become', type='http', auth='user', sitemap=False)
+    def switch_to_admin(self):
+        uid = request.env.user.id
+        if request.env.user._is_system():
+            uid = request.session.uid = odoo.SUPERUSER_ID
+            request.env['res.users']._invalidate_session_cache()
+            request.session.session_token = security.compute_session_token(request.session, request.env)
 
+        return http.local_redirect(self._login_redirect(uid), keep_hash=True)
 
 class WebClient(http.Controller):
 
@@ -803,12 +809,18 @@ class Session(http.Controller):
             return {'error':_('You cannot leave any password empty.'),'title': _('Change Password')}
         if new_password != confirm_password:
             return {'error': _('The new password and its confirmation must be identical.'),'title': _('Change Password')}
+
+        msg = _("Error, password not changed !")
         try:
             if request.env['res.users'].change_password(old_password, new_password):
                 return {'new_password':new_password}
-        except Exception:
-            return {'error': _('The old password you provided is incorrect, your password was not changed.'), 'title': _('Change Password')}
-        return {'error': _('Error, password not changed !'), 'title': _('Change Password')}
+        except UserError as e:
+            msg = e.name
+        except AccessDenied as e:
+            msg = e.args[0]
+            if msg == AccessDenied().args[0]:
+                msg = _('The old password you provided is incorrect, your password was not changed.')
+        return {'title': _('Change Password'), 'error': msg}
 
     @http.route('/web/session/get_lang_list', type='json', auth="none")
     def get_lang_list(self):
@@ -1007,18 +1019,14 @@ class Binary(http.Controller):
         '/web/content/<string:model>/<int:id>/<string:field>/<string:filename>'], type='http', auth="public")
     def content_common(self, xmlid=None, model='ir.attachment', id=None, field='datas',
                        filename=None, filename_field='datas_fname', unique=None, mimetype=None,
-                       download=None, data=None, token=None, share_id=None, share_token=None, access_token=None,
-                       **kw):
-        status, headers, content = binary_content(
+                       download=None, data=None, token=None, access_token=None, **kw):
+
+        status, headers, content = request.env['ir.http'].binary_content(
             xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename,
-            filename_field=filename_field, download=download, mimetype=mimetype,
-            access_token=access_token, share_id=share_id, share_token=share_token)
-        if status == 304:
-            response = werkzeug.wrappers.Response(status=status, headers=headers)
-        elif status == 301:
-            return werkzeug.utils.redirect(content, code=301)
-        elif status != 200:
-            response = request.not_found()
+            filename_field=filename_field, download=download, mimetype=mimetype, access_token=access_token)
+
+        if status != 200:
+            return request.env['ir.http']._response_by_status(status, headers, content)
         else:
             content_base64 = base64.b64decode(content)
             headers.append(('Content-Length', len(content_base64)))
@@ -1046,44 +1054,28 @@ class Binary(http.Controller):
         '/web/image/<int:id>-<string:unique>/<int:width>x<int:height>/<string:filename>'], type='http', auth="public")
     def content_image(self, xmlid=None, model='ir.attachment', id=None, field='datas',
                       filename_field='datas_fname', unique=None, filename=None, mimetype=None,
-                      download=None, width=0, height=0, crop=False, share_id=None, share_token=None, access_token=None, avoid_if_small=False,
-                      upper_limit=False, signature=False):
-        status, headers, content = binary_content(
+                      download=None, width=0, height=0, crop=False, access_token=None, avoid_if_small=False,
+                      upper_limit=False, **kw):
+        status, headers, content = request.env['ir.http'].binary_content(
             xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename,
             filename_field=filename_field, download=download, mimetype=mimetype,
-            default_mimetype='image/png', share_id=share_id, share_token=share_token, access_token=access_token)
-        if status == 304:
-            return werkzeug.wrappers.Response(status=304, headers=headers)
-        elif status == 301:
-            return werkzeug.utils.redirect(content, code=301)
-        elif status != 200 and download:
-            return request.not_found()
+            default_mimetype='image/png', access_token=access_token)
 
-        if headers and dict(headers).get('Content-Type', '') == 'image/svg+xml':  # we shan't resize svg images
-            height = 0
-            width = 0
-        else:
-            height = int(height or 0)
-            width = int(width or 0)
+        if status != 200 and download:
+            return request.env['ir.http']._response_by_status(status, headers, content)
 
-        if crop and (width or height):
-            content = crop_image(content, type='center', size=(width, height), ratio=(1, 1))
-
-        elif content and (width or height):
-            if not upper_limit:
-                # resize maximum 500*500
-                if width > 500:
-                    width = 500
-                if height > 500:
-                    height = 500
-            content = odoo.tools.image_resize_image(base64_source=content, size=(width or None, height or None),
-                                                    encoding='base64', upper_limit=upper_limit,
-                                                    avoid_if_small=avoid_if_small)
+        content = limited_image_resize(
+            content, width=width, height=height, crop=crop, upper_limit=upper_limit, avoid_if_small=avoid_if_small)
 
         if content:
             image_base64 = base64.b64decode(content)
         else:
-            image_base64 = self.placeholder(image='placeholder.png')  # could return (contenttype, content) in master
+            suffix = field.split('_')[-1]
+            if suffix in ('small', 'medium', 'big'):
+                encoded_placeholder = base64.b64encode(self.placeholder(image='placeholder.png'))
+                image_base64 = base64.b64decode(getattr(odoo.tools, 'image_resize_image_%s' % suffix)(encoded_placeholder))
+            else:
+                image_base64 = self.placeholder(image='placeholder.png')  # could return (contenttype, content) in master
             headers = self.force_contenttype(headers, contenttype='image/png')
 
         headers.append(('Content-Length', len(image_base64)))
@@ -1150,7 +1142,8 @@ class Binary(http.Controller):
                 args.append({
                     'filename': filename,
                     'mimetype': ufile.content_type,
-                    'id': attachment.id
+                    'id': attachment.id,
+                    'size': attachment.file_size
                 })
         return out % (json.dumps(callback), json.dumps(args))
 
@@ -1197,8 +1190,11 @@ class Binary(http.Controller):
                     if row and row[0]:
                         image_base64 = base64.b64decode(row[0])
                         image_data = io.BytesIO(image_base64)
-                        imgext = '.' + (imghdr.what(None, h=image_base64) or 'png')
-                        response = http.send_file(image_data, filename=imgname + imgext, mtime=row[1])
+                        mimetype = guess_mimetype(image_base64, default='image/png')
+                        imgext = '.' + mimetype.split('/')[1]
+                        if imgext == '.svg+xml':
+                            imgext = '.svg'
+                        response = http.send_file(image_data, filename=imgname + imgext, mimetype=mimetype, mtime=row[1])
                     else:
                         response = http.send_file(placeholder('nologo.png'))
             except Exception:
@@ -1459,7 +1455,7 @@ class CSVExport(ExportFormat, http.Controller):
             row = []
             for d in data:
                 # Spreadsheet apps tend to detect formulas on leading =, + and -
-                if isinstance(d, pycompat.string_types) and d.startswith(('=', '-', '+')):
+                if isinstance(d, str) and d.startswith(('=', '-', '+')):
                     d = "'" + d
 
                 row.append(pycompat.to_text(d))
@@ -1502,7 +1498,7 @@ class ExcelExport(ExportFormat, http.Controller):
             for cell_index, cell_value in enumerate(row):
                 cell_style = base_style
 
-                if isinstance(cell_value, bytes) and not isinstance(cell_value, pycompat.string_types):
+                if isinstance(cell_value, bytes) and not isinstance(cell_value, str):
                     # because xls uses raw export, we can get a bytes object
                     # here. xlwt does not support bytes values in Python 3 ->
                     # assume this is base64 and decode to a string, if this
@@ -1512,7 +1508,7 @@ class ExcelExport(ExportFormat, http.Controller):
                     except UnicodeDecodeError:
                         raise UserError(_("Binary fields can not be exported to Excel unless their content is base64-encoded. That does not seem to be the case for %s.") % fields[cell_index])
 
-                if isinstance(cell_value, pycompat.string_types):
+                if isinstance(cell_value, str):
                     cell_value = re.sub("\r", " ", pycompat.to_text(cell_value))
                     # Excel supports a maximum of 32767 characters in each cell:
                     cell_value = cell_value[:32767]

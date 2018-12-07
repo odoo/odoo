@@ -45,6 +45,8 @@
                             <page string="Technical Information" groups='base.group_no_one'>
                                 <group>
                                     <group string="Locations">
+                                        <field name="view_location_id" string="Warehouse view location" readonly="1" required="0"/>
+                                        <field name="lot_stock_id" readonly="1" required="0"/>
                                         <field name="wh_input_stock_loc_id" readonly="1"/>
                                         <field name="wh_qc_stock_loc_id" readonly="1"/>
                                         <field name="wh_pack_stock_loc_id" readonly="1"/>
@@ -217,7 +219,7 @@
                             <group>
                                 <field name="warehouse_id" widget="selection" groups="stock.group_stock_multi_locations"/>
                                 <field name="product_uom" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom"/>
-                                <field name="location_id" groups="stock.group_stock_multi_locations"/>
+                                <field name="location_id" groups="stock.group_stock_multi_locations" domain="[('usage', 'in', ('internal', 'view'))]"/>
                                 <field name="group_id" groups="stock.group_adv_location"/>
                                 <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                             </group>

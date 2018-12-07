@@ -8,6 +8,7 @@ from odoo.exceptions import UserError
 class AccountInvoiceSend(models.TransientModel):
     _name = 'account.invoice.send'
     _inherits = {'mail.compose.message':'composer_id'}
+    _description = 'Account Invoice Send'
 
     is_email = fields.Boolean('Email', default=lambda self: self.env.user.company_id.invoice_is_email)
     is_print = fields.Boolean('Print', default=lambda self: self.env.user.company_id.invoice_is_print)
@@ -48,6 +49,8 @@ class AccountInvoiceSend(models.TransientModel):
     def _send_email(self):
         if self.is_email:
             self.composer_id.send_mail()
+            if self.env.context.get('mark_invoice_as_sent'):
+                self.mapped('invoice_ids').write({'sent': True})
 
     @api.multi
     def _print_document(self):

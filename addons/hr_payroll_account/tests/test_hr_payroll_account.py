@@ -56,7 +56,6 @@ class TestHrPayrollAccount(common.TransactionCase):
                     self.ref('hr_payroll.hr_salary_rule_professionaltax1'),
                     self.ref('hr_payroll.hr_salary_rule_providentfund1'),
                     self.ref('hr_payroll.hr_salary_rule_meal_voucher'),
-                    self.ref('hr_payroll.hr_salary_rule_sales_commission')
             ])],
         })
 
@@ -75,23 +74,16 @@ class TestHrPayrollAccount(common.TransactionCase):
         self.hr_payslip = self.env['hr.payslip'].create({
             'employee_id': self.hr_employee_john.id,
             'journal_id': self.ref('hr_payroll_account.expenses_journal'),
+            'name': 'Test Payslip',
         })
 
     def test_00_hr_payslip(self):
         """ checking the process of payslip. """
 
-        date_from = time.strftime('%Y-%m-01')
-        date_to = str(datetime.now() + relativedelta.relativedelta(months=+1, day=1, days=-1))[:10]
-        res = self.hr_payslip.onchange_employee_id(date_from, date_to, self.hr_employee_john.id)
-        vals = {
-            'struct_id': res['value']['struct_id'],
-            'contract_id': res['value']['contract_id'],
-            'name': res['value']['name'],
-        }
-        vals['worked_days_line_ids'] = [(0, 0, i) for i in res['value']['worked_days_line_ids']]
-        vals['input_line_ids'] = [(0, 0, i) for i in res['value']['input_line_ids']]
-        vals.update({'contract_id': self.hr_contract_john.id})
-        self.hr_payslip.write(vals)
+        self.hr_payslip.date_from = time.strftime('%Y-%m-01')
+        self.hr_payslip.date_to = str(datetime.now() + relativedelta.relativedelta(months=+1, day=1, days=-1))[:10]
+        self.hr_payslip.onchange_employee()
+        self.hr_payslip.onchange_contract()
 
         # I assign the amount to Input data.
         payslip_input = self.env['hr.payslip.input'].search([('payslip_id', '=', self.hr_payslip.id)])

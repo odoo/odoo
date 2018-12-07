@@ -7,7 +7,7 @@ from dateutil.relativedelta import relativedelta
 from odoo.tools.misc import split_every
 from psycopg2 import OperationalError
 
-from odoo import api, fields, models, registry, _
+from odoo import api, fields, models, registry, SUPERUSER_ID, _
 from odoo.osv import expression
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, float_compare, float_round
 
@@ -49,7 +49,7 @@ class StockRule(models.Model):
         default='make_to_stock', required=True,
         help="""Create Procurement: A procurement will be created in the source location and the system will try to find a rule to resolve it. The available stock will be ignored.
              Take from Stock: The products will be taken from the available stock.""")
-    route_sequence = fields.Integer('Route Sequence', related='route_id.sequence', store=True)
+    route_sequence = fields.Integer('Route Sequence', related='route_id.sequence', store=True, readonly=False)
     picking_type_id = fields.Many2one(
         'stock.picking.type', 'Operation Type',
         required=True)
@@ -81,7 +81,8 @@ class StockRule(models.Model):
     @api.onchange('route_id', 'company_id')
     def _onchange_route(self):
         """ Ensure that the rule's company is the same than the route's company. """
-        self.company_id = self.route_id.company_id
+        if self.route_id.company_id:
+            self.company_id = self.route_id.company_id
         if self.picking_type_id.warehouse_id.company_id != self.route_id.company_id:
             self.picking_type_id = False
         domain = {'company_id': self.route_id.company_id and [('id', '=', self.route_id.company_id.id)] or []}
@@ -244,7 +245,7 @@ class StockRule(models.Model):
             self.env['mail.activity'].create({
                 'activity_type_id': activity_type_id,
                 'note': note,
-                'user_id': product_id.responsible_id.id,
+                'user_id': product_id.responsible_id.id or SUPERUSER_ID,
                 'res_id': product_id.product_tmpl_id.id,
                 'res_model_id': self.env.ref('product.model_product_template').id,
             })
@@ -277,7 +278,7 @@ class ProcurementGroup(models.Model):
     sequence computed if created manually.
     """
     _name = 'procurement.group'
-    _description = 'Procurement Requisition'
+    _description = 'Procurement Group'
     _order = "id desc"
 
     partner_id = fields.Many2one('res.partner', 'Partner')
@@ -361,8 +362,10 @@ class ProcurementGroup(models.Model):
         self.sudo()._procure_orderpoint_confirm(use_new_cursor=use_new_cursor, company_id=company_id)
 
         # Search all confirmed stock_moves and try to assign them
-        confirmed_moves = self.env['stock.move'].search([('state', '=', 'confirmed'), ('product_uom_qty', '!=', 0.0)], limit=None, order='priority desc, date_expected asc')
-        for moves_chunk in split_every(100, confirmed_moves.ids):
+        moves_to_assign = self.env['stock.move'].search([
+            ('state', 'in', ['confirmed', 'partially_available']), ('product_uom_qty', '!=', 0.0)
+        ], limit=None, order='priority desc, date_expected asc')
+        for moves_chunk in split_every(100, moves_to_assign.ids):
             self.env['stock.move'].browse(moves_chunk)._action_assign()
             if use_new_cursor:
                 self._cr.commit()
@@ -371,8 +374,7 @@ class ProcurementGroup(models.Model):
             self._cr.commit()
 
         # Merge duplicated quants
-        self.env['stock.quant']._merge_quants()
-        self.env['stock.quant']._unlink_zero_quants()
+        self.env['stock.quant']._quant_tasks()
 
     @api.model
     def run_scheduler(self, use_new_cursor=False, company_id=False):
