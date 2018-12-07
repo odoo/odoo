@@ -205,7 +205,8 @@ class IrUiView(models.Model):
             return self.search([('key', '=', view_id)], limit=1) or self.env.ref(view_id)
         elif isinstance(view_id, pycompat.integer_types):
             return self.browse(view_id)
-        # assume it's already a view object (WTF?)
+        # It can already be a view object when called by '_views_get()' that is calling '_view_obj'
+        # for it's inherit_children_ids, passing them directly as object record.
         return view_id
 
     # Returns all views (called and inherited) related to a view
@@ -224,7 +225,7 @@ class IrUiView(models.Model):
             view = self._view_obj(view_id)
         except ValueError:
             _logger.warning("Could not find view object with view_id '%s'", view_id)
-            return []
+            return self.env['ir.ui.view']
 
         while root and view.inherit_id:
             view = view.inherit_id
@@ -240,7 +241,7 @@ class IrUiView(models.Model):
                 called_view = self._view_obj(child.get('t-call', child.get('t-call-assets')))
             except ValueError:
                 continue
-            if called_view not in views_to_return:
+            if called_view and called_view not in views_to_return:
                 views_to_return += self._views_get(called_view, options=options, bundles=bundles)
 
         extensions = view.inherit_children_ids

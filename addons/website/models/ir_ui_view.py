@@ -126,7 +126,9 @@ class View(models.Model):
         # get_related_views can be called through website=False routes
         # (e.g. /web_editor/get_assets_editor_resources), so website
         # dispatch_parameters may not be added. Manually set
-        # website_id.
+        # website_id. (It will then always fallback on a website, this
+        # method should never be called in a generic context, even for
+        # tests)
         self = self.with_context(website_id=self.env['website'].get_current_website().id)
         views = super(View, self).get_related_views(key, bundles=bundles)
         current_website_id = self._context.get('website_id')
@@ -151,7 +153,7 @@ class View(models.Model):
                 * then if the view has no set website
         """
         self.ensure_one()
-        context_website_id = self.env.context.get('website_id', 1)
+        context_website_id = self.env.context.get('website_id', None)
         website_id = self.website_id.id or 0
         different_website = context_website_id != website_id
         return (different_website, website_id)
@@ -167,23 +169,18 @@ class View(models.Model):
 
     @api.model
     def _view_obj(self, view_id):
-        if isinstance(view_id, pycompat.string_types):
-            if 'website_id' in self._context:
-                domain = [('key', '=', view_id)] + self.env['website'].website_domain(self._context.get('website_id'))
-                order = 'website_id'
-            else:
-                domain = [('key', '=', view_id)]
-                order = self._order
-            views = self.search(domain, order=order)
-            if views:
-                return views.filter_duplicate()
-            else:
-                return self.env.ref(view_id)
-        elif isinstance(view_id, pycompat.integer_types):
-            return self.browse(view_id)
-
-        # assume it's already a view object (WTF?)
-        return view_id
+        ''' Given an xml_id or a view_id, return the corresponding view record.
+            In case of website context, return the most specific one.
+            :param view_id: either a string xml_id or an integer view_id
+            :return: The view record or empty recordset
+        '''
+        if isinstance(view_id, pycompat.string_types) or isinstance(view_id, pycompat.integer_types):
+            return self.env['website'].viewref(view_id)
+        else:
+            # It can already be a view object when called by '_views_get()' that is calling '_view_obj'
+            # for it's inherit_children_ids, passing them directly as object record. (Note that it might
+            # be a view_id from another website but it will be filtered in 'get_related_views()')
+            return view_id if view_id._name == 'ir.ui.view' else self.env['ir.ui.view']
 
     @api.model
     def _get_inheriting_views_arch_website(self, view_id):
