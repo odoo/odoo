@@ -6,8 +6,8 @@ from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
 
-class AccountPayment(models.Model):
-    _inherit = 'account.payment'
+class account_abstract_payment(models.AbstractModel):
+    _inherit = 'account.abstract.payment'
 
     payment_transaction_id = fields.Many2one('payment.transaction', string='Payment Transaction', readonly=True)
     payment_token_id = fields.Many2one('payment.token', string="Saved payment token", domain=[('acquirer_id.capture_manually', '=', False)],
@@ -93,7 +93,7 @@ class AccountPayment(models.Model):
         payments_need_trans = self.filtered(lambda pay: pay.payment_token_id and not pay.payment_transaction_id)
         transactions = payments_need_trans._create_payment_transaction()
 
-        res = super(AccountPayment, self - payments_need_trans).post()
+        res = super(account_abstract_payment, self - payments_need_trans).post()
 
         transactions.s2s_do_transaction()
 

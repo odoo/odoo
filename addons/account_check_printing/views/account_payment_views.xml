@@ -19,17 +19,6 @@
             </field>
         </record>
 
-        <record id="view_account_payment_invoice_form_inherited" model="ir.ui.view">
-            <field name="name">account.payment.invoice.form.inherited</field>
-            <field name="model">account.payment</field>
-            <field name="inherit_id" ref="account.view_account_payment_invoice_form" />
-            <field name="arch" type="xml">
-                <xpath expr="//div[@name='amount_div']" position="after">
-                    <field name="check_amount_in_words" attrs="{'invisible': [('payment_method_code', '!=', 'check_printing')]}"/>
-                </xpath>
-            </field>
-        </record>
-
         <record id="view_account_payment_from_invoices_inherited" model="ir.ui.view">
             <field name="name">account.register.payments.wizard.inherited</field>
             <field name="model">account.register.payments</field>

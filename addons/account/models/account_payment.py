@@ -35,9 +35,11 @@ class account_abstract_payment(models.AbstractModel):
     _description = "Contains the logic shared between models which allows to register payments"
 
     invoice_ids = fields.Many2many('account.invoice', string='Invoices', copy=False)
+    invoice_number = fields.Integer(compute="_compute_invoice_number")
     multi = fields.Boolean(string='Multi',
                            help='Technical field indicating if the user selected invoices from multiple partners or from different types.')
 
+    state = fields.Selection([('draft', 'Draft'), ('posted', 'Posted'), ('sent', 'Sent'), ('reconciled', 'Reconciled'), ('cancelled', 'Cancelled')], readonly=True, default='draft', copy=False, string="Status")
     payment_type = fields.Selection([('outbound', 'Send Money'), ('inbound', 'Receive Money')], string='Payment Type', required=True)
     payment_method_id = fields.Many2one('account.payment.method', string='Payment Method Type', required=True, oldname="payment_method",
         help="Manual: Get paid by cash, check or any other method outside of Odoo.\n"\
@@ -56,6 +58,7 @@ class account_abstract_payment(models.AbstractModel):
     payment_date = fields.Date(string='Payment Date', default=fields.Date.context_today, required=True, copy=False, tracking=True)
     communication = fields.Char(string='Memo')
     journal_id = fields.Many2one('account.journal', string='Payment Journal', required=True, tracking=True, domain=[('type', 'in', ('bank', 'cash'))])
+    company_id = fields.Many2one('res.company', related='journal_id.company_id', string='Company', readonly=True)
 
     hide_payment_method = fields.Boolean(compute='_compute_hide_payment_method',
         help="Technical field used to hide the payment method if the selected journal has only one available which is 'manual'")
@@ -121,6 +124,11 @@ class account_abstract_payment(models.AbstractModel):
     def _get_method_codes_using_bank_account(self):
         return []
 
+    @api.depends('invoice_ids')
+    def _compute_invoice_number(self):
+        for payment in self:
+            payment.invoice_number = len(payment.invoice_ids)
+
     @api.depends('payment_method_code')
     def _compute_show_partner_bank(self):
         """ Computes if the destination bank account must be displayed in the payment form view. By default, it
@@ -140,7 +148,7 @@ class account_abstract_payment(models.AbstractModel):
                 or payment.journal_id.outbound_payment_method_ids
             payment.hide_payment_method = len(journal_payment_methods) == 1 and journal_payment_methods[0].code == 'manual'
 
-    @api.depends('invoice_ids', 'amount', 'payment_date', 'currency_id')
+    @api.depends('invoice_ids', 'amount', 'payment_date', 'currency_id', 'payment_type')
     def _compute_payment_difference(self):
         for pay in self.filtered(lambda p: p.invoice_ids):
             payment_amount = -pay.amount if pay.payment_type == 'outbound' else pay.amount
@@ -162,6 +170,7 @@ class account_abstract_payment(models.AbstractModel):
 
             # Set payment method domain (restrict to methods enabled for the journal and to selected payment type)
             payment_type = self.payment_type in ('outbound', 'transfer') and 'outbound' or 'inbound'
+            #if i add paypal, empty/useless field appears, can only select in multi
             return {'domain': {'payment_method_id': [('payment_type', '=', payment_type), ('id', 'in', payment_methods_list)]}}
         return {}
 
@@ -181,6 +190,33 @@ class account_abstract_payment(models.AbstractModel):
             else:
                 self.partner_bank_account_id = False
         return {'domain': {'partner_bank_account_id': [('partner_id', 'in', [self.partner_id.id, self.partner_id.commercial_partner_id.id])]}}
+        
+    @api.onchange('partner_type')
+    def _onchange_partner_type(self):
+        self.ensure_one()
+        # Set partner_id domain
+        if self.partner_type:
+            return {'domain': {'partner_id': [(self.partner_type, '=', True)]}}
+
+    @api.onchange('payment_type')
+    def _onchange_payment_type(self):
+        if not self.invoice_ids:
+            # Set default partner type for the payment type
+            if self.payment_type == 'inbound':
+                self.partner_type = 'customer'
+            elif self.payment_type == 'outbound':
+                self.partner_type = 'supplier'
+            else:
+                self.partner_type = False
+        # Set payment method domain
+        res = self._onchange_journal()
+        if not res.get('domain', {}):
+            res['domain'] = {}
+        jrnl_filters = self._compute_journal_domain_and_types()
+        journal_types = jrnl_filters['journal_types']
+        journal_types.update(['bank', 'cash'])
+        res['domain']['journal_id'] = jrnl_filters['domain'] + [('type', 'in', list(journal_types))]
+        return res
 
     def _compute_journal_domain_and_types(self):
         journal_type = ['bank', 'cash']
@@ -208,7 +244,7 @@ class account_abstract_payment(models.AbstractModel):
 
     @api.onchange('currency_id')
     def _onchange_currency(self):
-        self.amount = abs(self._compute_payment_amount())
+        self.amount = abs(self._compute_payment_amount()) #never check inbound/outbound ?
 
         # Set by default the first liquidity journal having this currency if exists.
         if self.journal_id:
@@ -219,7 +255,7 @@ class account_abstract_payment(models.AbstractModel):
             return {'value': {'journal_id': journal.id}}
 
     @api.multi
-    def _compute_payment_amount(self, invoices=None, currency=None):
+    def _compute_payment_amount(self, invoices=None, currency=None): #why not return directly if multi here ?
         '''Compute the total amount for the payment wizard.
 
         :param invoices: If not specified, pick all the invoices.
@@ -234,6 +270,7 @@ class account_abstract_payment(models.AbstractModel):
         # Get the payment currency
         if not currency:
             currency = self.currency_id or self.journal_id.currency_id or self.journal_id.company_id.currency_id or invoices and invoices[0].currency_id
+            #company currency_id required, why check invoice ?
 
         # Avoid currency rounding issues by summing the amounts according to the company_currency_id before
         total = 0.0
@@ -268,7 +305,7 @@ class account_register_payments(models.TransientModel):
                                               or record.group_invoices and len(record.mapped('invoice_ids.partner_id.commercial_partner_id')) == 1
 
     @api.onchange('journal_id')
-    def _onchange_journal(self):
+    def _onchange_journal(self): #why, and why only in transient ? i dont think it is necessary anymore https://github.com/odoo/odoo/commit/ec7109c
         res = super(account_register_payments, self)._onchange_journal()
         active_ids = self._context.get('active_ids')
         invoices = self.env['account.invoice'].browse(active_ids)
@@ -320,9 +357,9 @@ class account_register_payments(models.TransientModel):
         :param invoices: The invoices that should have the same commercial partner and the same type.
         :return: The payment values as a dictionary.
         '''
-        amount = self._compute_payment_amount(invoices=invoices) if self.multi else self.amount
+        amount = self._compute_payment_amount(invoices=invoices) if self.multi else self.amount #check self.multi in _compute_payment_amount
         payment_type = ('inbound' if amount > 0 else 'outbound') if self.multi else self.payment_type
-        bank_account = self.multi and invoices[0].partner_bank_id or self.partner_bank_account_id
+        bank_account = self.multi and invoices[0].partner_bank_id or self.partner_bank_account_id #why not always invoice.partner_bank_id ?
         pmt_communication = self.show_communication_field and self.communication \
                             or self.group_invoices and ' '.join([inv.reference or inv.number for inv in invoices]) \
                             or invoices[0].reference # in this case, invoices contains only one element, since group_invoices is False
@@ -352,7 +389,7 @@ class account_register_payments(models.TransientModel):
 
         :return: a list of payment values (dictionary).
         '''
-        if self.multi:
+        if self.multi: #groupby_invoices should return a valid dict even if not multi, condition unecessary, _prepare_payment_vals unecessary
             groups = self._groupby_invoices()
             return [self._prepare_payment_vals(invoices) for invoices in groups.values()]
         return [self._prepare_payment_vals(self.invoice_ids)]
@@ -406,13 +443,11 @@ class account_payment(models.Model):
             for aml in payment.move_line_ids.filtered(lambda x: x.account_id.reconcile):
                 if not aml.reconciled:
                     rec = False
+                    break
             payment.move_reconciled = rec
 
-    company_id = fields.Many2one('res.company', related='journal_id.company_id', string='Company', readonly=True)
     name = fields.Char(readonly=True, copy=False) # The name is attributed upon post()
-    state = fields.Selection([('draft', 'Draft'), ('posted', 'Posted'), ('sent', 'Sent'), ('reconciled', 'Reconciled'), ('cancelled', 'Cancelled')], readonly=True, default='draft', copy=False, string="Status")
-
-    payment_type = fields.Selection(selection_add=[('transfer', 'Internal Transfer')])
+    payment_type = fields.Selection(selection_add=[('transfer', 'Internal Transfer')]) #Why only in account_payment ? We even check for it in the abstract class...
     payment_reference = fields.Char(copy=False, readonly=True, help="Reference of the document used to issue this payment. Eg. check number, file name, etc.")
     move_name = fields.Char(string='Journal Entry Name', readonly=True,
         default=False, copy=False,
@@ -483,33 +518,6 @@ class account_payment(models.Model):
                                             record.move_line_ids.mapped('matched_credit_ids.credit_move_id.invoice_id'))
             record.has_invoices = bool(record.reconciled_invoice_ids)
 
-    @api.onchange('partner_type')
-    def _onchange_partner_type(self):
-        self.ensure_one()
-        # Set partner_id domain
-        if self.partner_type:
-            return {'domain': {'partner_id': [(self.partner_type, '=', True)]}}
-
-    @api.onchange('payment_type')
-    def _onchange_payment_type(self):
-        if not self.invoice_ids:
-            # Set default partner type for the payment type
-            if self.payment_type == 'inbound':
-                self.partner_type = 'customer'
-            elif self.payment_type == 'outbound':
-                self.partner_type = 'supplier'
-            else:
-                self.partner_type = False
-        # Set payment method domain
-        res = self._onchange_journal()
-        if not res.get('domain', {}):
-            res['domain'] = {}
-        jrnl_filters = self._compute_journal_domain_and_types()
-        journal_types = jrnl_filters['journal_types']
-        journal_types.update(['bank', 'cash'])
-        res['domain']['journal_id'] = jrnl_filters['domain'] + [('type', 'in', list(journal_types))]
-        return res
-
     @api.model
     def default_get(self, fields):
         rec = super(account_payment, self).default_get(fields)
@@ -564,10 +572,6 @@ class account_payment(models.Model):
             'type': 'ir.actions.act_window',
             'domain': [('id', 'in', [x.id for x in self.reconciled_invoice_ids])],
         }
-
-    @api.multi
-    def button_dummy(self):
-        return True
 
     @api.multi
     def unreconcile(self):
@@ -651,17 +655,6 @@ class account_payment(models.Model):
     @api.multi
     def action_draft(self):
         return self.write({'state': 'draft'})
-
-    def action_validate_invoice_payment(self):
-        """ Posts a payment used to pay an invoice. This function only posts the
-        payment by default but can be overridden to apply specific post or pre-processing.
-        It is called by the "validate" button of the popup window
-        triggered on invoice form by the "Register Payment" button.
-        """
-        if any(len(record.invoice_ids) != 1 for record in self):
-            # For multiple invoices, there is account.register.payments wizard
-            raise UserError(_("This method should only be called to process a single invoice's payment."))
-        return self.post()
 
     def _create_payment_entry(self, amount):
         """ Create a journal entry corresponding to a payment, if the payment references invoice(s) they are reconciled.
