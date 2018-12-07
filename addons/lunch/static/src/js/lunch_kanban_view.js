@@ -25,7 +25,6 @@ var LunchKanbanView = KanbanView.extend({
         Renderer: LunchKanbanRenderer,
     }),
     display_name: _lt('Lunch Kanban'),
-    groupable: false,
 
     /**
      * @override

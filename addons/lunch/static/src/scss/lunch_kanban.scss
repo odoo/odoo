@@ -1,6 +1,14 @@
+.o_list_view {
+    .o_data_row {
+        .o_text_overflow {
+            @include o-text-overflow(table-cell);
+        }
+    }
+}
+
 .o_lunch_kanban {
-    .o_pink {
-        color: nth($o-colors, 10);
+    .o_lunch_purple {
+        color: $o-brand-odoo;
     }
 
     .o_lunch_widget {
@@ -8,14 +16,15 @@
         border-bottom: 1px solid #CED4DA;
         background-color: white;
         min-height: 90px;
-        overflow-y: visible;
+        max-height: 33vh;
+        overflow-y: auto;
 
         .o_lunch_widget_info {
             padding: 5px 12px;
             margin: 4px 8px;
             width: 300px;
             flex: 1 1 auto;
-            overflow-y: visible;
+            overflow-y: auto;
 
             .o_lunch_ordered {
                 color: white;
@@ -41,6 +50,13 @@
                 width: 100%;
                 margin-bottom: 4px;
                 margin-top: 12px;
+            }
+
+            .o_lunch_open_wizard {
+                cursor: pointer;
+                &:hover {
+                    font-weight: bolder;
+                }
             }
         }
     }

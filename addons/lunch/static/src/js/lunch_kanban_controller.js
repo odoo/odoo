@@ -7,6 +7,7 @@ odoo.define('lunch.LunchKanbanController', function (require) {
  */
 
 var core = require('web.core');
+var Domain = require('web.Domain');
 var KanbanController = require('web.KanbanController');
 var LunchKanbanWidget = require('lunch.LunchKanbanWidget');
 var LunchPaymentDialog = require('lunch.LunchPaymentDialog');
@@ -17,8 +18,8 @@ var _t = core._t;
 
 var LunchKanbanController = KanbanController.extend({
     custom_events: _.extend({}, KanbanController.prototype.custom_events, {
-        add_money: '_onAddMoney',
         add_product: '_onAddProduct',
+        change_location: '_onLocationChanged',
         change_user: '_onUserChanged',
         edit_order: '_onEditOrder',
         open_wizard: '_onOpenWizard',
@@ -34,6 +35,8 @@ var LunchKanbanController = KanbanController.extend({
     init: function () {
         this.userId = null;
         this.editMode = false;
+        this.updated = false;
+        this.widgetData = null;
         return this._super.apply(this, arguments);
     },
     start: function () {
@@ -46,20 +49,25 @@ var LunchKanbanController = KanbanController.extend({
             route: '/lunch/payment_message',
         });
     },
-
-    _onAddMoney: function (ev) {
+    _fetchWidgetData: function () {
         var self = this;
 
-        ev.stopPropagation();
-
-        this._showPaymentDialog(_t('Your wallet is empty!'));
+        return this._rpc({
+            route: '/lunch/infos',
+            params: {
+                user_id: this.userId,
+            },
+        }).then(function (data) {
+            self.widgetData = data;
+            self.model._updateLocation(data.user_location[0]);
+        });
     },
     _onAddProduct: function (ev) {
         var self = this;
         ev.stopPropagation();
 
         this._rpc({
-            model: 'lunch.order.line',
+            model: 'lunch.order',
             method: 'update_quantity',
             args: [[ev.data.lineId], 1],
         }).then(function () {
@@ -71,6 +79,23 @@ var LunchKanbanController = KanbanController.extend({
 
         this.editMode = true;
         this.reload();
+    },
+    _onLocationChanged: function (ev) {
+        var self = this;
+
+        ev.stopPropagation();
+
+        this._rpc({
+            route: '/lunch/user_location_set',
+            params: {
+                user_id: this.userId,
+                location_id: ev.data.locationId,
+            },
+        }).then(function () {
+            self.model._updateLocation(ev.data.locationId).then(function () {
+                self.reload();
+            });
+        });
     },
     _onOpenWizard: function (ev) {
         var self = this;
@@ -85,11 +110,11 @@ var LunchKanbanController = KanbanController.extend({
         };
 
         this.do_action({
-            res_model: 'lunch.order.line.temp',
+            res_model: 'lunch.order.temp',
             type: 'ir.actions.act_window',
             views: [[false, 'form']],
             target: 'new',
-            context: _.extend(ctx, {default_product_id: ev.data.res_id}),
+            context: _.extend(ctx, {default_product_id: ev.data.productId, line_id: ev.data.lineId || false}),
         }, options);
     },
     _onOrderNow: function (ev) {
@@ -106,7 +131,7 @@ var LunchKanbanController = KanbanController.extend({
                 // TODO: feedback?
                 self.reload();
             } else {
-                self._showPaymentDialog();
+                self._showPaymentDialog(_t("Not enough money in your wallet"));
                 self.reload();
             }
         });
@@ -116,7 +141,7 @@ var LunchKanbanController = KanbanController.extend({
         ev.stopPropagation();
 
         this._rpc({
-            model: 'lunch.order.line',
+            model: 'lunch.order',
             method: 'update_quantity',
             args: [[ev.data.lineId], -1],
         }).then(function () {
@@ -132,8 +157,12 @@ var LunchKanbanController = KanbanController.extend({
     _onUserChanged: function (ev) {
         ev.stopPropagation();
 
+        var self = this;
+
         this.userId = ev.data.userId;
-        this.reload();
+        this.model._updateUser(ev.data.userId).then(function () {
+            self.reload();
+        });
     },
     _onUnlinkOrder: function (ev) {
         var self = this;
@@ -149,7 +178,7 @@ var LunchKanbanController = KanbanController.extend({
         });
     },
     _orderPaid: function () {
-        Dialog.alert(this, _t('Your order has been paid have a nice day'), {'title': 'Order Paid'});
+        Dialog.alert(this, _t('Your order has been paid have a nice day'), {'title': _t('Order Paid')});
     },
     _orderNotPaid: function () {
         this._showPaymentDialog();
@@ -167,21 +196,15 @@ var LunchKanbanController = KanbanController.extend({
     _update: function () {
         var self = this;
 
-        this._rpc({
-            route: '/lunch/infos',
-            params: {
-                user_id: this.userId,
-            },
-        }).then(function (data) {
+        this._fetchWidgetData().then(function () {
             if (self.widget) {
                 self.widget.destroy();
             }
-            data.wallet = parseFloat(data.wallet).toFixed(2);
-            self.widget = new LunchKanbanWidget(self, _.extend(data, {edit: self.editMode}));
+            self.widgetData.wallet = parseFloat(self.widgetData.wallet).toFixed(2);
+            self.widget = new LunchKanbanWidget(self, _.extend(self.widgetData, {edit: self.editMode}));
             self.widget.insertBefore(self.$('.o_kanban_view'));
         });
-
-        return this._super.apply(this, arguments);
+        return this._super.apply(self, arguments);
     },
 });
 

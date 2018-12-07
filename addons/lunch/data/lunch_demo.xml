@@ -2,7 +2,24 @@
 <odoo>
     <data noupdate="1">
 
+        <record id="location_office_1" model="lunch.location">
+            <field name="name">Office 1</field>
+        </record>
+
+        <record id="location_office_2" model="lunch.location">
+            <field name="name">Office 2</field>
+        </record>
+
+        <record id="location_office_3" model="lunch.location">
+            <field name="name">Office 3</field>
+        </record>
+
+        <record id="base.user_admin" model="res.users">
+            <field name="last_lunch_location_id" ref="location_office_2"/>
+        </record>
+
         <record id="base.user_demo" model="res.users">
+            <field name="last_lunch_location_id" ref="location_office_3"/>
             <field name="groups_id" eval="[(4, ref('lunch.group_lunch_user'))]"/>
         </record>
 
@@ -37,12 +54,6 @@
             <field name="email">coin.gourmand@yourcompany.example.com</field>
         </record>
 
-        <record model="lunch.supplier" id="supplier_coin_gourmand">
-            <field name="partner_id" ref="partner_coin_gourmand"/>
-            <field name="recurrency_from">8</field>
-            <field name="recurrency_to">23</field>
-        </record>
-
         <record id="partner_pizza_inn" model="res.partner">
             <field name="name">Pizza Inn</field>
             <field name="city">New Delhi TN</field>
@@ -62,12 +73,6 @@
             <field name="email">info@corner.com</field>
         </record>
 
-        <record model="lunch.supplier" id="supplier_corner">
-            <field name="partner_id" ref="partner_corner"/>
-            <field name="recurrency_from">8</field>
-            <field name="recurrency_to">23</field>
-        </record>
-
         <record model="res.partner" id="partner_sushi_shop">
             <field name="name">Sushi Shop</field>
             <field name="city">Paris</field>
@@ -77,10 +82,34 @@
             <field name="email">order@sushi.com</field>
         </record>
 
+        <record model="lunch.supplier" id="supplier_coin_gourmand">
+            <field name="partner_id" ref="partner_coin_gourmand"/>
+            <field name="available_location_ids" eval="[
+                (6, 0, [ref('location_office_1'), ref('location_office_2')]),
+                ]"/>
+        </record>
+
+        <record model="lunch.supplier" id="supplier_pizza_inn">
+            <field name="partner_id" ref="partner_pizza_inn"/>
+            <field name="send_by">mail</field>
+            <field name="automatic_email_time">11</field>
+            <field name="available_location_ids" eval="[
+                (6, 0, [ref('location_office_1'), ref('location_office_2')]),
+                ]"/>
+        </record>
+
+        <record model="lunch.supplier" id="supplier_corner">
+            <field name="partner_id" ref="partner_corner"/>
+            <field name="available_location_ids" eval="[
+                (6, 0, [ref('location_office_3')]),
+                ]"/>
+        </record>
+
         <record model="lunch.supplier" id="supplier_sushi_shop">
             <field name="partner_id" ref="partner_sushi_shop"/>
-            <field name="recurrency_from">8</field>
-            <field name="recurrency_to">23</field>
+            <field name="available_location_ids" eval="[
+                (6, 0, [ref('location_office_1'), ref('location_office_2')]),
+                ]"/>
         </record>
 
         <record model="lunch.product" id="product_bacon">
@@ -90,6 +119,7 @@
             <field name="supplier_id" ref="supplier_corner"/>
             <field name="description">Beef, Bacon, Salad, Cheddar, Fried Onion, BBQ Sauce</field>
             <field name="image" type="base64" file="lunch/static/img/bacon_burger.png"/>
+            <field name="new_until" eval="datetime.today() + relativedelta(weeks=1)"/>
         </record>
 
         <record model="lunch.product" id="product_cheeseburger">
@@ -142,6 +172,7 @@
             <field name="supplier_id" ref="supplier_sushi_shop"/>
             <field name="description">6 Maki Salmon - 6 Maki Tuna - 6 Maki Shrimp/Avocado</field>
             <field name="image" type="base64" file="lunch/static/img/maki.png"/>
+            <field name="new_until" eval="datetime.today() + relativedelta(weeks=1)"/>
         </record>
 
         <record model="lunch.product" id="product_salmon">
@@ -151,6 +182,7 @@
             <field name="supplier_id" ref="supplier_sushi_shop"/>
             <field name="description">4 Sushi Salmon - 6 Maki Salmon - 4 Sashimi Salmon </field>
             <field name="image" type="base64" file="lunch/static/img/salmon_sushi.png"/>
+            <field name="new_until" eval="datetime.today() + relativedelta(weeks=1)"/>
         </record>
 
         <record model="lunch.product" id="product_temaki">
@@ -160,6 +192,7 @@
             <field name="supplier_id" ref="supplier_sushi_shop"/>
             <field name="description">1 Avocado - 1 Salmon - 1 Eggs - 1 Tuna</field>
             <field name="image" type="base64" file="lunch/static/img/temaki.png"/>
+            <field name="new_until" eval="datetime.today() + relativedelta(weeks=1)"/>
         </record>
 
         <record model="lunch.product" id="product_chirashi">
@@ -169,21 +202,7 @@
             <field name="supplier_id" ref="supplier_sushi_shop"/>
             <field name="description">2 Tempuras, Cabbages, Onions, Sesame Sauce</field>
             <field name="image" type="base64" file="lunch/static/img/chirashi.png"/>
-        </record>
-
-        <record model="lunch.supplier" id="supplier_pizza_inn">
-            <field name="partner_id" ref="partner_pizza_inn"/>
-            <field name="send_by">mail</field>
-            <field name="automatic_email_send" eval="True"/>
-            <field name="automatic_email_time">11</field>
-            <field name="recurrency_from">8</field>
-            <field name="recurrency_to">23</field>
-            <field name="recurrency">reccurent</field>
-            <field name="recurrency_monday" eval="True"/>
-            <field name="recurrency_tuesday" eval="True"/>
-            <field name="recurrency_wednesday" eval="True"/>
-            <field name="recurrency_thursday" eval="True"/>
-            <field name="recurrency_friday" eval="True"/>
+            <field name="new_until" eval="datetime.today() + relativedelta(weeks=1)"/>
         </record>
 
         <record model="lunch.product" id="product_cheese_ham">
@@ -285,15 +304,10 @@
             <field name="image" type="base64" file="lunch/static/img/napoli.png"/>
         </record>
 
-        <record model="lunch.topping.type" id="type_garniture">
-            <field name="name">Garniture</field>
-        </record>
-
         <record model="lunch.topping" id="product_olives">
             <field name="name">Olives</field>
             <field name="price">0.30</field>
             <field name="category_id" ref="categ_pizza"/>
-            <field name="type_id" ref="type_garniture"/>
         </record>
 
          <record model="lunch.product" id="product_4formaggi">
@@ -305,132 +319,67 @@
             <field name="image" type="base64" file="lunch/static/img/4formaggio.png"/>
         </record>
 
-        <record model="lunch.order" id="order_1">
-            <field name="user_id" ref="base.user_demo"/>
-            <field name="date" eval="(DateTime.now() + timedelta(days=2)).strftime('%Y-%m-%d')"/>
-            <field name="order_line_ids" eval="[]"/>
-            <field name="state">new</field>
-            <field name="mail_sent" eval="True"/>
-        </record>
-
-        <record model="lunch.order" id="order_2">
-            <field name="user_id" ref="base.user_demo"/>
-            <field name="date" eval="(DateTime.now() + timedelta(days=1)).strftime('%Y-%m-%d')"/>
-            <field name="order_line_ids" eval="[]"/>
-            <field name="state">confirmed</field>
-            <field name="mail_sent" eval="True"/>
-        </record>
-
-        <record model="lunch.order" id="order_3">
+        <record model="lunch.cashmove" id="cashmove_1">
             <field name="user_id" ref="base.user_demo"/>
             <field name="date" eval="(DateTime.now() + timedelta(days=3)).strftime('%Y-%m-%d')"/>
-            <field name="order_line_ids" eval="[]"/>
-            <field name="state">confirmed</field>
-            <field name="mail_sent" eval="True"/>
+            <field name="description">Payment: 5 lunch tickets (6€)</field>
+            <field name="amount">30</field>
         </record>
 
-        <record model="lunch.order" id="order_4">
+        <record model="lunch.cashmove" id="cashmove_2">
             <field name="user_id" ref="base.user_admin"/>
-            <field name="date" eval="(DateTime.now() + timedelta(days=3)).strftime('%Y-%m-%d')"/>
-            <field name="order_line_ids" eval="[]"/>
-            <field name="state">confirmed</field>
+            <field name="date" eval="(DateTime.now() - timedelta(days=3)).strftime('%Y-%m-%d')"/>
+            <field name="description">Payment: 7 lunch tickets (6€)</field>
+            <field name="amount">42</field>
         </record>
 
-        <record model="lunch.order.line" id="order_line_1">
+        <record model="lunch.order" id="order_line_1">
             <field name="user_id" ref="base.user_demo"/>
             <field name="product_id" ref="product_Bolognese"/>
             <field name="price">7.70</field>
             <field name="date" eval="(DateTime.now() + timedelta(days=2)).strftime('%Y-%m-%d')"/>
             <field name="state">new</field>
             <field name="supplier_id" ref="supplier_pizza_inn"/>
-            <field name="order_id" ref="order_1"/>
             <field name="quantity">1</field>
         </record>
 
-        <record model="lunch.order.line" id="order_line_2">
+        <record model="lunch.order" id="order_line_2">
             <field name="user_id" ref="base.user_demo"/>
             <field name="product_id" ref="product_italiana"/>
             <field name="price">7.40</field>
             <field name="date" eval="(DateTime.now() + timedelta(days=1)).strftime('%Y-%m-%d')"/>
             <field name="state">confirmed</field>
             <field name="supplier_id" ref="supplier_pizza_inn"/>
-            <field name="order_id" ref="order_2"/>
             <field name="quantity">1</field>
         </record>
 
-        <record model="lunch.order.line" id="order_line_3">
+        <record model="lunch.order" id="order_line_3">
             <field name="user_id" ref="base.user_demo"/>
             <field name="product_id" ref="product_gouda"/>
             <field name="price">2.50</field>
             <field name="date" eval="(DateTime.now() + timedelta(days=3)).strftime('%Y-%m-%d')"/>
             <field name="state">cancelled</field>
             <field name="supplier_id" ref="supplier_coin_gourmand"/>
-            <field name="order_id" ref="order_3"/>
             <field name="quantity">1</field>
         </record>
 
-        <record model="lunch.order.line" id="order_line_4">
+        <record model="lunch.order" id="order_line_4">
             <field name="user_id" ref="base.user_demo"/>
             <field name="product_id" ref="product_chicken_curry"/>
             <field name="price">2.60</field>
             <field name="date" eval="(DateTime.now() + timedelta(days=3)).strftime('%Y-%m-%d')"/>
             <field name="state">confirmed</field>
             <field name="supplier_id" ref="supplier_coin_gourmand"/>
-            <field name="order_id" ref="order_3"/>
             <field name="quantity">1</field>
         </record>
 
-        <record model="lunch.order.line" id="order_line_5">
+        <record model="lunch.order" id="order_line_5">
             <field name="user_id" ref="base.user_admin"/>
             <field name="product_id" ref="product_4formaggi"/>
             <field name="price">5.50</field>
             <field name="date" eval="(DateTime.now() + timedelta(days=3)).strftime('%Y-%m-%d')"/>
             <field name="state">confirmed</field>
             <field name="supplier_id" ref="supplier_pizza_inn"/>
-            <field name="order_id" ref="order_4"/>
-        </record>
-
-        <record model="lunch.cashmove" id="cashmove_1">
-            <field name="user_id" ref="base.user_demo"/>
-            <field name="date" eval="(DateTime.now() + timedelta(days=2)).strftime('%Y-%m-%d')"/>
-            <field name="description">Pizza Italiana</field>
-            <field name="amount">-7.40</field>
-            <field name="order_line_id" ref="order_line_1"/>
-            <field name="state">order</field>
-        </record>
-
-        <record model="lunch.cashmove" id="cashmove_2">
-            <field name="user_id" ref="base.user_demo"/>
-            <field name="date" eval="(DateTime.now() + timedelta(days=3)).strftime('%Y-%m-%d')"/>
-            <field name="description">Chicken curry</field>
-            <field name="amount">-2.60</field>
-            <field name="order_line_id" ref="order_line_2"/>
-            <field name="state">order</field>
-        </record>
-
-        <record model="lunch.cashmove" id="cashmove_3">
-            <field name="user_id" ref="base.user_demo"/>
-            <field name="date" eval="(DateTime.now() + timedelta(days=3)).strftime('%Y-%m-%d')"/>
-            <field name="description">Payment: 5 lunch tickets (6€)</field>
-            <field name="amount">30</field>
-            <field name="state">payment</field>
-        </record>
-
-        <record model="lunch.cashmove" id="cashmove_4">
-            <field name="user_id" ref="base.user_admin"/>
-            <field name="date" eval="(DateTime.now() - timedelta(days=3)).strftime('%Y-%m-%d')"/>
-            <field name="description">Cash given to HR manager</field>
-            <field name="amount">40</field>
-            <field name="state">payment</field>
-        </record>
-
-        <record model="lunch.cashmove" id="cashmove_5">
-            <field name="user_id" ref="base.user_admin"/>
-            <field name="date" eval="(DateTime.now() + timedelta(days=3)).strftime('%Y-%m-%d')"/>
-            <field name="description">Pasta 4 Formaggi</field>
-            <field name="amount">-5.50</field>
-            <field name="order_line_id" ref="order_line_3"/>
-            <field name="state">order</field>
         </record>
     </data>
 </odoo>

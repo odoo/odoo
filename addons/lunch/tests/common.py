@@ -9,6 +9,14 @@ class TestsCommon(common.TransactionCase):
     def setUp(self):
         super(TestsCommon, self).setUp()
 
+        self.location_office_1 = self.env['lunch.location'].create({
+            'name' : 'Farm 1',
+        })
+
+        self.location_office_2 = self.env['lunch.location'].create({
+            'name': 'Farm 2',
+        })
+
         self.partner_pizza_inn = self.env['res.partner'].create({
             'name': 'Pizza Inn',
         })
@@ -16,16 +24,10 @@ class TestsCommon(common.TransactionCase):
         self.supplier_pizza_inn = self.env['lunch.supplier'].create({
             'partner_id': self.partner_pizza_inn.id,
             'send_by': 'mail',
-            'automatic_email_send': True,
             'automatic_email_time': 11,
-            'recurrency': 'reccurent',
-            'recurrency_from': 8,
-            'recurrency_to': 23,
-            'recurrency_monday': True,
-            'recurrency_tuesday': True,
-            'recurrency_wednesday': True,
-            'recurrency_thursday': True,
-            'recurrency_friday': True,
+            'available_location_ids': [
+                (6, 0, [self.location_office_1.id, self.location_office_2.id])
+            ],
         })
 
         self.partner_coin_gourmand = self.env['res.partner'].create({
@@ -35,14 +37,9 @@ class TestsCommon(common.TransactionCase):
         self.supplier_coin_gourmand = self.env['lunch.supplier'].create({
             'partner_id': self.partner_coin_gourmand.id,
             'send_by': 'phone',
-            'recurrency': 'reccurent',
-            'recurrency_from': 8,
-            'recurrency_to': 23,
-            'recurrency_monday': True,
-            'recurrency_tuesday': True,
-            'recurrency_wednesday': True,
-            'recurrency_thursday': True,
-            'recurrency_friday': True,
+            'available_location_ids': [
+                (6, 0, [self.location_office_1.id, self.location_office_2.id])
+            ],
         })
 
         self.category_pizza = self.env['lunch.product.category'].create({
@@ -67,13 +64,12 @@ class TestsCommon(common.TransactionCase):
             'supplier_id': self.supplier_coin_gourmand.id,
         })
 
-        self.garniture_type = self.env['lunch.topping.type'].create({
-            'name': 'Graniture',
-        })
-
         self.topping_olives = self.env['lunch.topping'].create({
             'name': 'Olives',
             'price': 0.3,
             'category_id': self.category_pizza.id,
-            'type_id': self.garniture_type.id,
+        })
+
+        self.env['lunch.cashmove'].create({
+            'amount': 100,
         })

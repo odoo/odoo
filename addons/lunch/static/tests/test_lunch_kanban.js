@@ -12,9 +12,10 @@ QUnit.module('Views', {
             product: {
                 fields: {
                     id: {string: 'ID', type: 'integer'},
+                    is_available_at: {string: 'available_location_ids', type: 'integer'},
                 },
                 records: [
-                    {id: 1, name: 'Tuna sandwich', price: 3.0},
+                    {id: 1, name: 'Tuna sandwich', price: 3.0, is_available_at: 1},
                 ]
             },
         };
@@ -23,7 +24,7 @@ QUnit.module('Views', {
     QUnit.module('LunchKanbanView');
 
     QUnit.test('Simple rendering of LunchKanbanView', function (assert) {
-        assert.expect(8);
+        assert.expect(7);
 
         var lunchKanban = createView({
             View: LunchKanbanView,
@@ -51,7 +52,13 @@ QUnit.module('Views', {
                             {id: 1, product: ['Pizza Italiana', 7.4], toppings: [], quantity: 1.0, price: 7.4}
                         ],
                         alerts: [],
+                        locations: ['hello', 'hallo'],
+                        user_location: [1, 'hello'],
                     });
+                } else if (route === '/lunch/user_location_get') {
+                    return $.when(1);
+                } else if (route === '/web/dataset/call_kw/ir.model.data/xmlid_to_res_id') {
+                    return $.when();
                 } else if (route.startsWith('data:image/png;base64,')) {
                     return $.when();
                 }
@@ -62,8 +69,6 @@ QUnit.module('Views', {
         var $section = $(lunchKanban.$('.o_lunch_widget_info')[0]);
         // username
         assert.strictEqual($section.find('div:eq(1) div:eq(0)').text().trim(), 'Marc Demo', 'Username should have been Marc Demo');
-        // wallet_balance
-        assert.strictEqual($section.find('div:eq(1) div:eq(1) span:eq(0)').text().trim(), '20.00', 'Wallet balance should have been 20');
         // your order section
         $section = $(lunchKanban.$('.o_lunch_widget_info')[1]);
         // only one line
@@ -76,7 +81,7 @@ QUnit.module('Views', {
 
         $section = $(lunchKanban.$('.o_lunch_widget_info')[2]);
         // total
-        assert.strictEqual($section.find('div:eq(0) div:eq(1)').text().trim(), '7.4', 'total should be of 7.4');
+        assert.strictEqual($section.find('div:eq(0) div:eq(1)').text().trim(), '7.40', 'total should be of 7.40');
         // order now button
         assert.strictEqual($section.find('button').length, 1, 'order now button should be available');
 
@@ -84,7 +89,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('User interactions', function (assert) {
-        assert.expect(8);
+        assert.expect(9);
 
         var state = 'new';
 
@@ -109,18 +114,25 @@ QUnit.module('Views', {
                             {id: 2, name: 'Marc Demo'},
                         ],
                         total: 7.4,
-                        state: state,
+                        raw_state: state,
+                        state: 'New',
                         lines: [
                             {id: 1, product: ['Pizza Italiana', 7.4], toppings: [], quantity: 1.0, price: 7.4}
                         ],
                         alerts: [],
+                        locations: ['hello', 'hallo'],
+                        user_location: [1, 'hello'],
                     });
                 } else if (route === '/lunch/payment_message') {
                     return $.when({message: 'Hello'});
                 } else if (route === '/lunch/pay') {
                     return $.when(true);
+                } else if (route === '/lunch/user_location_get') {
+                    return $.when(1);
                 } else if (args.method === 'update_quantity') {
                     assert.step(args.args);
+                    return $.when();
+                } else if (route === '/web/dataset/call_kw/ir.model.data/xmlid_to_res_id') {
                     return $.when();
                 } else if (route.startsWith('data:image/png;base64,')) {
                     return $.when();
@@ -129,11 +141,6 @@ QUnit.module('Views', {
             },
         });
 
-        lunchKanban.$('.o_add_money').click();
-        var modal = $('.modal-dialog');
-        assert.strictEqual(modal.find('.modal-body').text().trim(), 'Hello', 'Message should have been Hello');
-        modal.find('.btn.btn-primary').click();
-
         lunchKanban.$('.o_add_product').click();
         lunchKanban.$('.o_remove_product').click();
 
@@ -141,13 +148,17 @@ QUnit.module('Views', {
         lunchKanban.$('.o_lunch_widget_order_button').click();
         // state is shown
         assert.strictEqual(lunchKanban.$('.o_lunch_ordered').length, 1, 'state should be shown as ordered');
-        // no more buttons
-        assert.strictEqual(lunchKanban.$('.o_remove_product').length, 0, 'button to remove product should not be shown anymore');
-        assert.strictEqual(lunchKanban.$('.o_add_product').length, 0, 'button to add product should not be shown anymore');
+        // buttons
+        assert.strictEqual(lunchKanban.$('.o_remove_product').length, 1, 'button to remove product should be shown');
+        assert.strictEqual(lunchKanban.$('.o_add_product').length, 1, 'button to add product should be shown');
         state = 'confirmed';
         lunchKanban.reload();
         // state is updated
         assert.strictEqual(lunchKanban.$('.o_lunch_confirmed').length, 1, 'state should be shown as confirmed');
+        // Buttons not shown anymore
+        assert.strictEqual(lunchKanban.$('.o_remove_product').length, 0, 'button to remove product should not be shown');
+        assert.strictEqual(lunchKanban.$('.o_add_product').length, 0, 'button to add product should not be shown');
+
 
         assert.verifySteps([
             [[1], 1],
@@ -158,7 +169,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('Manager interactions', function (assert) {
-        assert.expect(5);
+        assert.expect(1);
 
         var lunchKanban = createView({
             View: LunchKanbanView,
@@ -181,12 +192,19 @@ QUnit.module('Views', {
                             {id: 2, name: 'Marc Demo'},
                         ],
                         total: 7.4,
-                        state: 'new',
+                        raw_state: 'new',
+                        state: 'New',
                         lines: [
                             {id: 1, product: ['Pizza Italiana', 7.4], toppings: [], quantity: 1.0, price: 7.4}
                         ],
                         alerts: [],
+                        locations: ['hello', 'hallo'],
+                        user_location: [1, 'hello'],
                     });
+                } else if (route === '/lunch/user_location_get') {
+                    return $.when(1);
+                } else if (route === '/web/dataset/call_kw/ir.model.data/xmlid_to_res_id') {
+                    return $.when();
                 } else if (route.startsWith('data:image/png;base64,')) {
                     return $.when();
                 }
@@ -194,14 +212,9 @@ QUnit.module('Views', {
             },
         });
 
-        var select = lunchKanban.$('select.o_input');
-        var options = select.find('option');
+        var select = lunchKanban.$('div.o_lunch_user_field div.o_field_widget.o_field_many2one');
 
-        assert.strictEqual(select.length, 1, 'There should be a selection field');
-        assert.strictEqual(options.length, 2, 'Select should have two options');
-        assert.strictEqual(options.text().trim(), 'Mitchell AdminMarc Demo', 'Options should be the name of the users');
-        assert.strictEqual($(options[0]).data('user-id'), 1, 'user id should be on option');
-        assert.strictEqual($(options[1]).data('user-id'), 2, 'user id should be on option');
+        assert.strictEqual(select.length, 1, 'There should be a user selection field');
 
         lunchKanban.destroy();
     });

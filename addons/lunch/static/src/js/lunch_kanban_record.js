@@ -12,7 +12,7 @@ var LunchKanbanRecord = KanbanRecord.extend({
         ev.preventDefault();
         // ignore clicks on oe_kanban_action elements
         if (!$(ev.target).hasClass('oe_kanban_action')) {
-            this.trigger_up('open_wizard', {res_id: this.id});
+            this.trigger_up('open_wizard', {productId: this.recordData.product_id});
         }
     },
 });
