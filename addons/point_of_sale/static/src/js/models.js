@@ -367,7 +367,7 @@ exports.PosModel = Backbone.Model.extend({
                  'product_tmpl_id','tracking'],
         order:  _.map(['sequence','default_code','name'], function (name) { return {name: name}; }),
         domain: [['sale_ok','=',true],['available_in_pos','=',true]],
-        context: function(self){ return { display_default_code: false }; },
+        context: function(self){ return { display_default_code: false, prefetch_fields: false }; },
         loaded: function(self, products){
             var using_company_currency = self.config.currency_id[0] === self.company.currency_id[0];
             var conversion_rate = self.currency.rate / self.company_currency.rate;
