@@ -161,5 +161,12 @@
         <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
     </record>
 
+    <record model="ir.rule" id="stock_forecast_report_rule">
+        <field name="name">stock_forecast_report multi-company</field>
+        <field name="model_id" search="[('model','=','report.stock.forecast')]" model="ir.model"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    </record>
+
 </data>
 </odoo>
