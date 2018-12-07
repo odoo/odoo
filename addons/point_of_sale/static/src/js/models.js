@@ -193,8 +193,11 @@ exports.PosModel = Backbone.Model.extend({
         model:  'res.partner',
         fields: ['name','street','city','state_id','country_id','vat',
                  'phone','zip','mobile','email','barcode','write_date',
-                 'property_account_position_id','property_product_pricelist'],
+                 'property_account_position_id','property_product_pricelist',
+                 'display_name'],
         domain: [['customer','=',true]],
+        order:  [{name: 'display_name'}],
+        load_in_batches: true,
         loaded: function(self,partners){
             self.partners = partners;
             self.db.add_partners(partners);
@@ -363,9 +366,10 @@ exports.PosModel = Backbone.Model.extend({
         // todo remove list_price in master, it is unused
         fields: ['display_name', 'list_price', 'lst_price', 'standard_price', 'categ_id', 'pos_categ_id', 'taxes_id',
                  'barcode', 'default_code', 'to_weight', 'uom_id', 'description_sale', 'description',
-                 'product_tmpl_id','tracking'],
+                 'product_tmpl_id','tracking', 'sequence', 'name'],
         order:  _.map(['sequence','default_code','name'], function (name) { return {name: name}; }),
         domain: [['sale_ok','=',true],['available_in_pos','=',true]],
+        load_in_batches: true,
         context: function(self){ return { display_default_code: false }; },
         loaded: function(self, products){
             var using_company_currency = self.config.currency_id[0] === self.company.currency_id[0];
@@ -531,7 +535,7 @@ exports.PosModel = Backbone.Model.extend({
         var progress_step = 1.0 / self.models.length;
         var tmp = {}; // this is used to share a temporary state between models loaders
 
-        function load_model(index){
+        function load_model(index, loaded_records){
             if(index >= self.models.length){
                 loaded.resolve();
             }else{
@@ -549,6 +553,7 @@ exports.PosModel = Backbone.Model.extend({
                 var context = typeof model.context === 'function' ? model.context(self,tmp) : model.context || {};
                 var ids     = typeof model.ids === 'function'     ? model.ids(self,tmp) : model.ids;
                 var order   = typeof model.order === 'function'   ? model.order(self,tmp):    model.order;
+                var load_in_batches = typeof model.load_in_batches === 'function' ? model.load_in_batches(self,tmp) : model.load_in_batches;
                 progress += progress_step;
 
                 if( model.model ){
@@ -567,11 +572,52 @@ exports.PosModel = Backbone.Model.extend({
                         params.orderBy = order;
                     }
 
+                    if (load_in_batches) {
+                        // read in batches of 10000 records
+                        params.limit = 10000;
+
+                        // we have to order by id to be able to load in batch
+                        params.orderBy = [{name: 'id'}];
+
+                        var last_loaded_id = 0;
+                        if (loaded_records) {
+                            last_loaded_id = loaded_records[loaded_records.length - 1].id;
+                        }
+                        params.domain.push(['id', '>', last_loaded_id]);
+                    }
+
                     rpc.query(params).then(function(result){
                         try{    // catching exceptions in model.loaded(...)
-                            $.when(model.loaded(self,result,tmp))
-                                .then(function(){ load_model(index + 1); },
-                                      function(err){ loaded.reject(err); });
+                            loaded_records = (loaded_records || []).concat(result);
+
+                            // keep loading a next batch until we have an empty one
+                            if (load_in_batches && result.length) {
+                                progress -= progress_step;
+                                load_model(index, loaded_records);
+                            } else {
+                                // Loading in batches overrides the order so it
+                                // sorts by id. Now that everything's loaded sort
+                                // the records like specified.
+                                if (load_in_batches && order) {
+                                    loaded_records.sort(function (a, b) {
+                                        for (var i = 0; i < order.length; ++i) {
+                                            var key = order[i].name;
+
+                                            if (a[key] < b[key]) {
+                                                return -1;
+                                            } else if (a[key] > b[key]) {
+                                                return 1;
+                                            }
+                                        }
+
+                                        // all keys were equal
+                                        return 0;
+                                    });
+                                }
+                                $.when(model.loaded(self,loaded_records,tmp))
+                                    .then(function(){ load_model(index + 1); },
+                                          function(err){ loaded.reject(err); });
+                            }
                         }catch(err){
                             console.error(err.message, err.stack);
                             loaded.reject(err);
