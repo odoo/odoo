@@ -177,31 +177,29 @@ class Survey(http.Controller):
 
         survey_sudo, answer_sudo = access_data['survey_sudo'], access_data['answer_sudo']
 
-        # Select the right page
-        if answer_sudo.state == 'new':  # First page
-            page, page_nr, last = survey_sudo.next_page(answer_sudo, 0, go_back=False)
-            data = {'survey': survey_sudo, 'page': page, 'page_nr': page_nr, 'token': answer_sudo.token, 'test_entry': answer_sudo.test_entry}
-            if last:
-                data.update({'last': True})
-            return request.render('survey.survey', data)
-        elif answer_sudo.state == 'done':  # Display success message
-            return request.render('survey.sfinished', {'survey': survey_sudo,
-                                                       'token': token,
-                                                       'user_input': answer_sudo})
-        elif answer_sudo.state == 'skip':
-            flag = (True if prev and prev == 'prev' else False)
-            page, page_nr, last = survey_sudo.next_page(answer_sudo, answer_sudo.last_displayed_page_id.id, go_back=flag)
-
-            #special case if you click "previous" from the last page, then leave the survey, then reopen it from the URL, avoid crash
-            if not page:
-                page, page_nr, last = survey_sudo.next_page(answer_sudo, answer_sudo.last_displayed_page_id.id, go_back=True)
-
-            data = {'survey': survey_sudo, 'page': page, 'page_nr': page_nr, 'token': answer_sudo.token, 'test_entry': answer_sudo.test_entry}
-            if last:
-                data.update({'last': True})
-            return request.render('survey.survey', data)
+        if prev and prev == 'prev':
+            next_page = answer_sudo.get_previous_page()
         else:
-            return request.render("survey.403", {'survey': survey_sudo})
+            next_page = answer_sudo.get_next_page()
+        if not next_page:
+            return request.render('survey.sfinished', {
+                'survey': survey,
+                'token': token,
+                'user_input': answer_sudo,
+                'test_entry': answer_sudo.test_entry,
+            })
+
+        page_data = {
+            'survey': survey,
+            'user_input': answer_sudo,
+            'test_entry': answer_sudo.test_entry,
+            'page': next_page,
+            'page_nbr': next_page._get_pagination()[0],
+            'page_count': next_page._get_pagination()[1],
+            'page_is_first': next_page._is_first(),
+            'page_is_last': next_page._is_last(),
+        }
+        return request.render('survey.survey_page', page_data)
 
     @http.route('/survey/prefill/<int:survey_id>/<string:token>', type='http', auth='public', website=True)
     def survey_get_answers(self, survey_id, token, page_id=None):
@@ -294,9 +292,13 @@ class Survey(http.Controller):
                 request.env['survey.user_input_line'].sudo().save_lines(answer_sudo.id, question, post, answer_tag)
 
             go_back = post['button_submit'] == 'previous'
-            next_page, _, last = request.env['survey.survey'].next_page(answer_sudo, page_id, go_back=go_back)
+            if go_back:
+                next_page = answer_sudo.get_previous_page()
+            else:
+                next_page = answer_sudo.get_next_page()
+
             vals = {'last_displayed_page_id': page_id}
-            if next_page is None and not go_back:
+            if not next_page and not go_back:
                 vals.update({'state': 'done'})
             else:
                 vals.update({'state': 'skip'})

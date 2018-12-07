@@ -17,3 +17,13 @@ class SurveyPage(models.Model):
     question_ids = fields.One2many('survey.question', 'page_id', string='Questions', copy=True)
     sequence = fields.Integer('Page number', default=10)
     description = fields.Html('Description', translate=True, oldname="note", help="An introductory text to your page")
+
+    def _is_first(self):
+        return self.sequence == self.survey_id.page_ids[0].sequence
+
+    def _is_last(self):
+        return self.sequence == self.survey_id.page_ids[-1].sequence
+
+    def _get_pagination(self):
+        sequences = self.survey_id.page_ids.mapped('sequence')
+        return (sequences.index(self.sequence) + 1, len(sequences))

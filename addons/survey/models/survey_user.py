@@ -58,6 +58,28 @@ class SurveyUserInput(models.Model):
         ('unique_token', 'UNIQUE (token)', 'A token must be unique!'),
     ]
 
+    @api.multi
+    def get_next_page(self):
+        """ Return next survey page based on last displayed page stored on user answxer. """
+        self.ensure_one()
+
+        current_page = self.last_displayed_page_id
+        if not current_page:
+            return self.survey_id.page_ids[0]
+        next_page = next((page for page in self.survey_id.page_ids if page.sequence > current_page.sequence), False)
+        return next_page
+
+    @api.multi
+    def get_previous_page(self):
+        """ Return previous survey page based on last displayed page stored on user answxer. """
+        self.ensure_one()
+
+        current_page = self.last_displayed_page_id
+        if not current_page:
+            return self.survey_id.page_ids[-1]
+        previous_page = next((page for page in reversed(self.survey_id.page_ids) if page.sequence < current_page.sequence), False)
+        return previous_page
+
     @api.model
     def do_clean_emptys(self):
         """ Remove empty user inputs that have been created manually

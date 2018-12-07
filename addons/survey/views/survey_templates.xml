@@ -168,15 +168,15 @@
     </template>
 
     <!-- A survey -->
-    <template id="survey" name="Survey">
+    <template id="survey_page" name="Survey Page">
         <t t-call="survey.layout">
             <div class="wrap">
-                <div class="oe_structure" id="oe_structure_survey_survey_1"/>
+                <div class="oe_structure"/>
                 <div class="container">
-                    <t t-call="survey.back" />
-                    <t t-call="survey.page" />
+                    <t t-call="survey.back"/>
+                    <t t-call="survey.survey_page_content"/>
                 </div>
-                <div class="oe_structure" id="oe_structure_survey_survey_2"/>
+                <div class="oe_structure"/>
             </div>
         </t>
     </template>
@@ -184,24 +184,25 @@
     <!-- SUB TEMPLATES TO DISPLAY SPECIFIC SURVEY PARTS -->
 
     <!-- A page -->
-    <template id="page" name="Page">
+    <template id="survey_page_content" name="Survey Page Content">
         <div class="o_page_header">
             <div class="alert alert-danger text-center no_print" t-if="test_entry">
                 <span>This is a test survey. Your answer will not be registered in the answers. </span>
             </div>
-            <p class="float-right">Page <span t-raw='page_nr + 1'/> of <span t-raw="len(survey.page_ids)"/></p>
-            <h1 t-field='page.title' />
+            <p class="float-right">Page <span t-raw='page_nbr'/> of <span t-raw="page_count"/></p>
+            <h1 t-field='page.title'/>
             <div t-field='page.description' class="oe_no_empty"/>
         </div>
 
-        <form role="form" method="post" class="js_surveyform" t-att-name="'%s_%s' % (survey.id, page.id)"
-                t-att-action="'/survey/fill/%s/%s' % (survey.id, token)"
-                t-att-data-prefill="'/survey/prefill/%s/%s?page_id=%s' % (survey.id, token, page.id)"
+        <form role="form" method="post" class="js_surveyform"
+                t-att-name="'%s_%s' % (survey.id, page.id)"
+                t-att-action="'/survey/fill/%s/%s' % (survey.id, user_input.token)"
+                t-att-data-prefill="'/survey/prefill/%s/%s?page_id=%s' % (survey.id, user_input.token, page.id)"
                 t-att-data-validate="'/survey/validate/%s/%s' % (survey.id, token)"
                 t-att-data-submit="'/survey/submit/%s/%s' % (survey.id, token)">
             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
             <input type="hidden" name="page_id" t-att-value="page.id" />
-            <input type="hidden" name="token" t-att-value="token" />
+            <input type="hidden" name="token" t-att-value="user_input.token" />
             <t t-foreach='page.question_ids' t-as='question'>
                 <t t-set="prefix" t-value="'%s_%s_%s' % (survey.id, page.id, question.id)" />
                 <div class="js_question-wrapper" t-att-id="prefix">
@@ -221,9 +222,9 @@
                 </div>
             </t>
             <div class="text-center mt16 mb16">
-                <button t-if="survey.users_can_go_back and page_nr > 0" type="submit" class="btn btn-secondary" name="button_submit" value="previous">Previous page</button>
-                <button t-if="not last" type="submit" class="btn btn-primary" name="button_submit" value="next">Next page</button>
-                <button t-if="last" type="submit" class="btn btn-primary" name="button_submit" value="finish">Submit survey</button>
+                <button t-if="survey.users_can_go_back and not page_is_first" type="submit" class="btn btn-secondary" name="button_submit" value="previous">Previous page</button>
+                <button t-if="not page_is_last" type="submit" class="btn btn-primary" name="button_submit" value="next">Next page</button>
+                <button t-if="page_is_last" type="submit" class="btn btn-primary" name="button_submit" value="finish">Submit survey</button>
             </div>
         </form>
 

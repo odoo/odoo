@@ -153,47 +153,6 @@ class Survey(models.Model):
             if self.access_mode == 'internal' and (not user or not user.has_group('base.group_user')):
                 raise UserError(_('Creating token for anybody else than employees is not allowed for internal surveys.'))
 
-    @api.model
-    def next_page(self, user_input, page_id, go_back=False):
-        """ The next page to display to the user, knowing that page_id is the id
-            of the last displayed page.
-
-            If page_id == 0, it will always return the first page of the survey.
-
-            If all the pages have been displayed and go_back == False, it will
-            return None
-
-            If go_back == True, it will return the *previous* page instead of the
-            next page.
-
-            .. note::
-                It is assumed here that a careful user will not try to set go_back
-                to True if she knows that the page to display is the first one!
-                (doing this will probably cause a giant worm to eat her house)
-        """
-        survey = user_input.survey_id
-        pages = list(enumerate(survey.page_ids))
-
-        # First page
-        if page_id == 0:
-            return (pages[0][1], 0, len(pages) == 1)
-
-        current_page_index = pages.index(next(p for p in pages if p[1].id == page_id))
-
-        # All the pages have been displayed
-        if current_page_index == len(pages) - 1 and not go_back:
-            return (None, -1, False)
-        # Let's get back, baby!
-        elif go_back and survey.users_can_go_back:
-            return (pages[current_page_index - 1][1], current_page_index - 1, False)
-        else:
-            # This will show the last page
-            if current_page_index == len(pages) - 2:
-                return (pages[current_page_index + 1][1], current_page_index + 1, True)
-            # This will show a regular page
-            else:
-                return (pages[current_page_index + 1][1], current_page_index + 1, False)
-
     @api.multi
     def filter_input_ids(self, filters, finished=False):
         """If user applies any filters, then this function returns list of
