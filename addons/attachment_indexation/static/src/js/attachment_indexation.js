@@ -1,10 +1,5 @@
-odoo.define('document.document', function (require) {
+odoo.define('attachment_indexation.document', function (require) {
 "use strict";
-/**
- * The feature is disabled as it was replaced by another feature
- * while still holding unfixed bugs and doing unnecessary rpc.
- */
-return;
 
 var core = require('web.core');
 var Dialog = require('web.Dialog');
