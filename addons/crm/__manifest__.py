@@ -4,7 +4,7 @@
 {
     'name': 'CRM',
     'version': '1.0',
-    'category': 'Sales',
+    'category': 'Sales/CRM',
     'sequence': 5,
     'summary': 'Track leads and close opportunities',
     'description': "",

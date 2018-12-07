@@ -20,7 +20,7 @@
             <field name="name">timesheet_grid</field>
             <field name="shortdesc">Timesheets</field>
             <field name="sequence">11</field>
-            <field name="category_id" ref="base.module_category_hr_timesheet"/>
+            <field name="category_id" ref="base.module_category_operations_timesheets"/>
             <field name="application" eval="True"/>
             <field name="summary">Track time &amp; costs</field>
             <field name="license">OEEL-1</field>
@@ -34,7 +34,7 @@
             <field name="name">account_accountant</field>
             <field name="sequence">15</field>
             <field name="shortdesc">Accounting</field>
-            <field name="category_id" ref="base.module_category_accounting_and_finance"/>
+            <field name="category_id" ref="base.module_category_accounting_invoicing"/>
             <field name="application" eval="True"/>
             <field name="summary">Accounting, Taxes, Budgets, Assets...</field>
             <field name="license">OEEL-1</field>
@@ -48,7 +48,7 @@
             <field name="name">helpdesk</field>
             <field name="shortdesc">Helpdesk</field>
             <field name="sequence">65</field>
-            <field name="category_id" ref="base.module_category_helpdesk"/>
+            <field name="category_id" ref="base.module_category_operations_helpdesk"/>
             <field name="application" eval="True"/>
             <field name="summary">Track support tickets</field>
             <field name="license">OEEL-1</field>
@@ -61,7 +61,7 @@
         <record model="ir.module.module" id="base.module_hr_appraisal">
             <field name="name">hr_appraisal</field>
             <field name="shortdesc">Appraisal</field>
-            <field name="category_id" ref="base.module_category_hr_appraisal"/>
+            <field name="category_id" ref="base.module_category_human_resources_appraisals"/>
             <field name="application" eval="True"/>
             <field name="summary">Assess your employees</field>
             <field name="license">OEEL-1</field>
@@ -75,7 +75,7 @@
             <field name="name">marketing_automation</field>
             <field name="shortdesc">Marketing Automation</field>
             <field name="sequence">111</field>
-            <field name="category_id" ref="base.module_category_mass_mailing"/>
+            <field name="category_id" ref="base.module_category_marketing_email_marketing"/>
             <field name="application" eval="True"/>
             <field name="summary">Build automated mailing campaigns</field>
             <field name="license">OEEL-1</field>
@@ -88,7 +88,7 @@
         <record model="ir.module.module" id="base.module_mrp_plm">
             <field name="name">mrp_plm</field>
             <field name="shortdesc">Product Lifecycle Management (PLM)</field>
-            <field name="category_id" ref="base.module_category_manufacturing"/>
+            <field name="category_id" ref="base.module_category_manufacturing_manufacturing"/>
             <field name="sequence">17</field>
             <field name="application" eval="True"/>
             <field name="summary">PLM, ECOs, Versions</field>
@@ -103,7 +103,7 @@
             <field name="name">quality_control</field>
             <field name="shortdesc">Quality</field>
             <field name="sequence">17</field>
-            <field name="category_id" ref="base.module_category_manufacturing"/>
+            <field name="category_id" ref="base.module_category_manufacturing_manufacturing"/>
             <field name="application" eval="True"/>
             <field name="summary">Quality Alerts, Control Points</field>
             <field name="license">OEEL-1</field>
@@ -116,7 +116,7 @@
         <record model="ir.module.module" id="base.module_sale_ebay">
             <field name="name">sale_ebay</field>
             <field name="shortdesc">eBay Connector</field>
-            <field name="category_id" ref="base.module_category_sales_management"/>
+            <field name="category_id" ref="base.module_category_sales_sales"/>
             <field name="application" eval="True"/>
             <field name="summary">Sell on eBay easily</field>
             <field name="license">OEEL-1</field>
@@ -129,7 +129,7 @@
         <record model="ir.module.module" id="base.module_project_forecast">
             <field name="name">project_forecast</field>
             <field name="shortdesc">Project Forecast</field>
-            <field name="category_id" ref="base.module_category_project_management"/>
+            <field name="category_id" ref="base.module_category_operations_project"/>
             <field name="application" eval="True"/>
             <field name="summary">Project forecasts, resource allocation</field>
             <field name="license">OEEL-1</field>
@@ -142,7 +142,7 @@
         <record model="ir.module.module" id="base.module_sale_subscription">
             <field name="name">sale_subscription</field>
             <field name="shortdesc">Subscriptions</field>
-            <field name="category_id" ref="base.module_category_sales_management"/>
+            <field name="category_id" ref="base.module_category_sales_sales"/>
             <field name="application" eval="True"/>
             <field name="summary">MRR, Churn, Recurring payments</field>
             <field name="license">OEEL-1</field>
@@ -155,7 +155,7 @@
         <record model="ir.module.module" id="base.module_sign">
             <field name="name">sign</field>
             <field name="shortdesc">Sign</field>
-            <field name="category_id" ref="base.module_category_sign"/>
+            <field name="category_id" ref="base.module_category_communication_sign"/>
             <field name="application" eval="True"/>
             <field name="summary">Send documents to sign online</field>
             <field name="license">OEEL-1</field>
@@ -169,7 +169,7 @@
             <field name="name">stock_barcode</field>
             <field name="shortdesc">Barcode</field>
             <field name="sequence">14</field>
-            <field name="category_id" ref="base.module_category_warehouse_management"/>
+            <field name="category_id" ref="base.module_category_operations_inventory"/>
             <field name="application" eval="True"/>
             <field name="summary">Barcode scanner for warehouses</field>
             <field name="license">OEEL-1</field>
@@ -183,7 +183,7 @@
             <field name="name">voip</field>
             <field name="shortdesc">VoIP</field>
             <field name="sequence">100</field>
-            <field name="category_id" ref="base.module_category_sales_management"/>
+            <field name="category_id" ref="base.module_category_sales_sales"/>
             <field name="application" eval="True"/>
             <field name="summary">Call using VoIP</field>
             <field name="license">OEEL-1</field>
@@ -196,7 +196,7 @@
         <record model="ir.module.module" id="base.module_website_calendar">
             <field name="name">website_calendar</field>
             <field name="shortdesc">Appointments</field>
-            <field name="category_id" ref="base.module_category_sales_management"/>
+            <field name="category_id" ref="base.module_category_sales_sales"/>
             <field name="application" eval="True"/>
             <field name="summary">Online appointments scheduler</field>
             <field name="license">OEEL-1</field>
@@ -210,7 +210,7 @@
             <field name="name">mrp_workorder</field>
             <field name="sequence">16</field>
             <field name="shortdesc">MRP II</field>
-            <field name="category_id" ref="base.module_category_manufacturing"/>
+            <field name="category_id" ref="base.module_category_manufacturing_manufacturing"/>
             <field name="application" eval="True"/>
             <field name="summary">Work Orders, Planning, Routing</field>
             <field name="license">OEEL-1</field>
@@ -238,7 +238,7 @@
             <field name="name">website_twitter_wall</field>
             <field name="shortdesc">Twitter Wall</field>
             <field name="summary">Interactive twitter wall for events</field>
-            <field name="category_id" ref="base.module_category_website"/>
+            <field name="category_id" ref="base.module_category_website_website"/>
             <field name="license">OEEL-1</field>
             <field name="author">Odoo S.A.</field>
             <field name="to_buy" eval="True"/>
@@ -249,7 +249,7 @@
             <field name="name">website_form_editor</field>
             <field name="shortdesc">Form Builder</field>
             <field name="summary">Customize web forms with drag and drop</field>
-            <field name="category_id" ref="base.module_category_website"/>
+            <field name="category_id" ref="base.module_category_website_website"/>
             <field name="license">OEEL-1</field>
             <field name="author">Odoo S.A.</field>
             <field name="to_buy" eval="True"/>

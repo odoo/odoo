@@ -1,16 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="1">
+        <record model="ir.module.category" id="base.module_category_marketing_survey">
+            <field name="description">Helps you manage your survey for review of different-different users.</field>
+            <field name="sequence">20</field>
+        </record>
+
         <!-- Survey users -->
         <record model="res.groups" id="group_survey_user">
             <field name="name">User</field>
-            <field name="category_id" ref="base.module_category_survey"/>
+            <field name="category_id" ref="base.module_category_marketing_survey"/>
         </record>
 
         <!-- Survey managers -->
         <record model="res.groups" id="group_survey_manager">
-            <field name="name">Manager</field>
-            <field name="category_id" ref="base.module_category_survey"/>
+            <field name="name">Administrator</field>
+            <field name="category_id" ref="base.module_category_marketing_survey"/>
             <field name="implied_ids" eval="[(4, ref('group_survey_user'))]"/>
             <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
         </record>

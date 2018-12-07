@@ -5,7 +5,7 @@
     'sequence': 120,
     'version': '1.0',
     'depends': ['decimal_precision', 'mail'],
-    'category': 'Human Resources',
+    'category': 'Human Resources/Lunch',
     'summary': 'Handle lunch orders of your employees',
     'description': """
 The base module to manage lunch.
