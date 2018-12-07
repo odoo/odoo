@@ -8,6 +8,7 @@ var _t = core._t;
 
 tour.register('mail_tour', {
     url: "/web",
+    test: true,
 }, [tour.STEPS.SHOW_APPS_MENU_ITEM, {
     trigger: '.o_app[data-menu-xmlid="mail.menu_root_discuss"]',
     content: _t('Want to <b>get in touch</b> with your contacts? <i>Discuss with them here.</i>'),
