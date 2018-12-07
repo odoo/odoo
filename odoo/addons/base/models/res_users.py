@@ -1038,11 +1038,11 @@ class GroupsView(models.Model):
             group_no_one = view.env.ref('base.group_no_one')
             group_employee = view.env.ref('base.group_user')
             xml1, xml2, xml3 = [], [], []
+            xml_by_category = {}
             xml1.append(E.separator(string=_('User Type'), colspan="2", groups='base.group_no_one'))
-            xml2.append(E.separator(string=_('Application Accesses'), colspan="2"))
 
             user_type_field_name = ''
-            for app, kind, gs in self.get_groups_by_application():
+            for app, kind, gs, category_name in self.get_groups_by_application():
                 attrs = {}
                 # hide groups in categories 'Hidden' and 'Extra' (except for group_no_one)
                 if app.xml_id in ('base.module_category_hidden', 'base.module_category_extra', 'base.module_category_usability'):
@@ -1062,8 +1062,12 @@ class GroupsView(models.Model):
                 elif kind == 'selection':
                     # application name with a selection field
                     field_name = name_selection_groups(gs.ids)
-                    xml2.append(E.field(name=field_name, **attrs))
-                    xml2.append(E.newline())
+                    if category_name not in xml_by_category:
+                        xml_by_category[category_name] = []
+                        xml_by_category[category_name].append(E.newline())
+                    xml_by_category[category_name].append(E.field(name=field_name, **attrs))
+                    xml_by_category[category_name].append(E.newline())
+
                 else:
                     # application separator with boolean fields
                     app_name = app.name or _('Other')
@@ -1081,6 +1085,11 @@ class GroupsView(models.Model):
                 user_type_attrs = {'invisible': [(user_type_field_name, '!=', group_employee.id)]}
             else:
                 user_type_attrs = {}
+
+            for xml_cat in sorted(xml_by_category.keys(), key=lambda it: it[0]):
+                xml_cat_name = xml_cat[1]
+                master_category_name = (_(xml_cat_name))
+                xml2.append(E.group(*(xml_by_category[xml_cat]), col="2", string=master_category_name))
 
             xml = E.field(
                 E.group(*(xml1), col="2"),
@@ -1109,17 +1118,17 @@ class GroupsView(models.Model):
             order.  If ``kind`` is ``'selection'``, ``groups`` are given in
             reverse implication order.
         """
-        def linearize(app, gs):
+        def linearize(app, gs, category_name):
             # 'User Type' is an exception
             if app.xml_id == 'base.module_category_user_type':
-                return (app, 'selection', gs.sorted('id'))
+                return (app, 'selection', gs.sorted('id'), category_name)
             # determine sequence order: a group appears after its implied groups
             order = {g: len(g.trans_implied_ids & gs) for g in gs}
             # check whether order is total, i.e., sequence orders are distinct
             if len(set(order.values())) == len(gs):
-                return (app, 'selection', gs.sorted(key=order.get))
+                return (app, 'selection', gs.sorted(key=order.get), category_name)
             else:
-                return (app, 'boolean', gs)
+                return (app, 'boolean', gs, (100, 'Other'))
 
         # classify all groups by application
         by_app, others = defaultdict(self.browse), self.browse()
@@ -1131,9 +1140,13 @@ class GroupsView(models.Model):
         # build the result
         res = []
         for app, gs in sorted(by_app.items(), key=lambda it: it[0].sequence or 0):
-            res.append(linearize(app, gs))
+            if app.parent_id:
+                res.append(linearize(app, gs, (app.parent_id.sequence, app.parent_id.name)))
+            else:
+                res.append(linearize(app, gs, (100, 'Other')))
+
         if others:
-            res.append((self.env['ir.module.category'], 'boolean', others))
+            res.append((self.env['ir.module.category'], 'boolean', others, (100,'Other')))
         return res
 
 
@@ -1236,7 +1249,7 @@ class UsersView(models.Model):
     def fields_get(self, allfields=None, attributes=None):
         res = super(UsersView, self).fields_get(allfields, attributes=attributes)
         # add reified groups fields
-        for app, kind, gs in self.env['res.groups'].sudo().get_groups_by_application():
+        for app, kind, gs, category_name in self.env['res.groups'].sudo().get_groups_by_application():
             if kind == 'selection':
                 # 'User Type' should not be 'False'. A user is either 'employee', 'portal' or 'public' (required).
                 selection_vals = [(False, '')]

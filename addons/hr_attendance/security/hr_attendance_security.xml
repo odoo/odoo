@@ -1,22 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <record model="ir.module.category" id="base.module_category_human_resources_attendances">
+        <field name="description">Helps you manage the attendances.</field>
+        <field name="sequence">14</field>
+    </record>
 
     <record id="group_hr_attendance_user" model="res.groups">
         <field name="name">Officer</field>
-        <field name="category_id" ref="base.module_category_hr_attendance"/>
+        <field name="category_id" ref="base.module_category_human_resources_attendances"/>
         <field name="implied_ids" eval="[(4, ref('hr.group_hr_user'))]"/>
     </record>
 
     <record id="group_hr_attendance_manager" model="res.groups">
-        <field name="name">Manager</field>
-        <field name="category_id" ref="base.module_category_hr_attendance"/>
+        <field name="name">Administrator</field>
+        <field name="category_id" ref="base.module_category_human_resources_attendances"/>
         <field name="implied_ids" eval="[(4, ref('hr_attendance.group_hr_attendance_user'))]"/>
         <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
     </record>
 
     <record id="group_hr_attendance" model="res.groups">
         <field name="name">Manual Attendance</field>
-        <field name="category_id" ref="base.module_category_hr_attendance"/>
+        <field name="category_id" ref="base.module_category_human_resources_attendances"/>
         <field name="comment">The user will gain access to the human resources attendance menu, enabling him to manage his own attendance.</field>
     </record>
 
