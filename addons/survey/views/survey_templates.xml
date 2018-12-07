@@ -1,6 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 <data>
+    <!-- MAIN LAYOUT SECTION -->
+
+    <!-- Layout uses its own layout on frontend as it is independent from portal / website -->
+    <template id="survey.layout" name="Survey Layout">
+        <t t-call="web.layout">
+            <t t-set="head">
+                <script type="text/javascript">
+                    odoo.session_info = {
+                        is_admin: <t t-esc="json.dumps(request.env.user._is_admin())"/>,
+                        is_system: <t t-esc="json.dumps(request.env.user._is_system())"/>,
+                        is_website_user: <t t-esc="json.dumps(request.env.user._is_public())"/>,
+                        user_id: <t t-esc="json.dumps(request.env.user.id)" />,
+                        is_frontend: true
+                    };
+                </script>
+                <t t-call-assets="web.assets_common"/>
+                <t t-call-assets="survey.survey_assets"/>
+            </t>
+            <body>
+                <header>
+                    <div><title>Odoo</title></div>
+                    <div class="text-center">
+                        <img t-attf-src="/web/binary/company_logo" alt="Logo"/>
+                    </div>
+                </header>
+                <div id="wrap" class="oe_structure oe_empty"/>
+                <main>
+                    <t t-raw="0"/>
+                </main>
+            </body>
+            <xpath expr="//footer" position="replace">
+                <div class="container mt16 mb8">
+                    <div class="float-right" t-ignore="true" t-if="not editable">
+                        Create a <a target="_blank" href="https://www.odoo.com/page/website-builder">free website</a> with
+                        <a target="_blank" class="badge badge-danger" href="https://www.odoo.com/page/website-builder">Odoo</a>
+                    </div>
+                    <div class="float-left text-muted" itemscope="itemscope" itemtype="https://schema.org/Organization">
+                        Copyright &amp;copy; <span t-field="res_company.name" itemprop="name">Company name</span>
+                    </div>
+                </div>
+            </xpath>
+        </t>
+    </template>
+
     <!-- Forbidden error messages-->
     <template id="403">
         <t t-call="survey.layout">
@@ -85,52 +129,21 @@
         </t>
     </template>
 
-    <!-- Back Button to redirect in form view of survey -->
-    <template id="back" name="Back">
-        <div groups="website.group_website_publisher" t-ignore="true" class="float-right">
-            <a role="button" t-attf-href="/web#view_type=form&amp;model=survey.survey&amp;id=#{survey.id}&amp;action=survey.action_survey_form" class="btn btn-secondary">Back to Survey</a>
-        </div>
-    </template>
-
-    <!-- new layout for survey -->
-    <template id="survey.layout" name="Survey Layout">
-        <t t-call="web.layout">
-            <t t-set="head">
-                <script type="text/javascript">
-                    odoo.session_info = {
-                        is_admin: <t t-esc="json.dumps(request.env.user._is_admin())"/>,
-                        is_system: <t t-esc="json.dumps(request.env.user._is_system())"/>,
-                        is_website_user: <t t-esc="json.dumps(request.env.user._is_public())"/>,
-                        user_id: <t t-esc="json.dumps(request.env.user.id)" />,
-                        is_frontend: true
-                    };
-                </script>
-                <t t-call-assets="web.assets_common"/>
-                <t t-call-assets="survey.survey_assets"/>
-            </t>
-            <body>
-                <header>
-                    <div><title>Odoo</title></div>
-                    <div class="text-center">
-                        <img t-attf-src="/web/binary/company_logo" alt="Logo"/>
-                    </div>
-                </header>
-                <div id="wrap" class="oe_structure oe_empty"/>
-                <main>
-                    <t t-raw="0"/>
-                </main>
-            </body>
-            <xpath expr="//footer" position="replace">
-                <div class="container mt16 mb8">
-                    <div class="float-right" t-ignore="true" t-if="not editable">
-                        Create a <a target="_blank" href="https://www.odoo.com/page/website-builder">free website</a> with
-                        <a target="_blank" class="badge badge-danger" href="https://www.odoo.com/page/website-builder">Odoo</a>
-                    </div>
-                    <div class="float-left text-muted" itemscope="itemscope" itemtype="https://schema.org/Organization">
-                        Copyright &amp;copy; <span t-field="res_company.name" itemprop="name">Company name</span>
-                    </div>
+    <!-- Message when the survey has no statistics -->
+    <template id="no_result" name="Survey Result">
+        <t t-call="survey.layout">
+            <div class="container">
+                <t t-call="survey.back" />
+                <h2><span t-field='survey.title'></span></h2>
+                <div class="jumbotron mt32">
+                    <h2 class="text-muted">
+                        <span>
+                            <i style="font-size:1.8em" class="fa fa-users float-right" role="img" aria-label="No answer" title="No answer"></i>
+                        </span>
+                        Sorry, No one answered this survey yet
+                    </h2>
                 </div>
-            </xpath>
+            </div>
         </t>
     </template>
 
@@ -170,6 +183,8 @@
             </div>
         </t>
     </template>
+
+    <!-- SUB TEMPLATES TO DISPLAY SPECIFIC SURVEY PARTS -->
 
     <!-- A page -->
     <template id="page" name="Page">
@@ -390,6 +405,8 @@
             </div>
         </t>
     </template>
+
+    <!-- STATISTICS -->
 
     <template id="result" name="Survey Result">
         <t t-call="survey.layout">
@@ -704,22 +721,9 @@
             </div>
         </div>
     </template>
-    <template id="no_result" name="Survey Result">
-        <t t-call="survey.layout">
-            <div class="container">
-                <t t-call="survey.back" />
-                <h2><span t-field='survey.title'></span></h2>
-                <div class="jumbotron mt32">
-                    <h2 class="text-muted">
-                        <span>
-                            <i style="font-size:1.8em" class="fa fa-users float-right" role="img" aria-label="No answer" title="No answer"></i>
-                        </span>
-                        Sorry, No one answered this survey yet
-                    </h2>
-                </div>
-            </div>
-        </t>
-    </template>
+
+    <!-- HELPERS -->
+
     <!-- Pagination Element -->
     <template id="pagination" name="Survey Result">
         <t t-set="record_limit" t-value="10"/><!-- Change This record_limit to change number of record  per page-->
@@ -730,6 +734,13 @@
                 </li>
             </t>
         </ul>
+    </template>
+
+    <!-- Back Button to redirect in form view of survey -->
+    <template id="back" name="Back">
+        <div groups="website.group_website_publisher" t-ignore="true" class="float-right">
+            <a role="button" t-attf-href="/web#view_type=form&amp;model=survey.survey&amp;id=#{survey.id}&amp;action=survey.action_survey_form" class="btn btn-secondary">Back to Survey</a>
+        </div>
     </template>
 </data>
 </odoo>
