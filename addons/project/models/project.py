@@ -253,19 +253,18 @@ class Project(models.Model):
             project.access_warning = _(
                 "The project cannot be shared with the recipient(s) because the privacy of the project is too restricted. Set the privacy to 'Visible by following customers' in order to make it accessible by the recipient(s).")
 
-    @api.depends('percentage_satisfaction_task')
+    @api.depends('tasks.rating_ids.rating', 'tasks.rating_ids.parent_res_id')
     def _compute_percentage_satisfaction_project(self):
-        domain = [('create_date', '>=', fields.Datetime.to_string(fields.datetime.now() - timedelta(days=30)))]
+        res = self.env['project.task']._compute_parent_rating_percentage_satisfaction(self, rating_satisfaction_days=30)
         for project in self:
-            activity = project.tasks.rating_get_grades(domain)
-            project.percentage_satisfaction_project = activity['great'] * 100 / sum(activity.values()) if sum(activity.values()) else -1
+            project.percentage_satisfaction_project = res[project.id]
 
     #TODO JEM: Only one field can be kept since project only contains task
-    @api.depends('tasks.rating_ids.rating')
+    @api.depends('tasks.rating_ids.rating', 'tasks.rating_ids.parent_res_id')
     def _compute_percentage_satisfaction_task(self):
+        res = self.env['project.task']._compute_parent_rating_percentage_satisfaction(self)
         for project in self:
-            activity = project.tasks.rating_get_grades()
-            project.percentage_satisfaction_task = activity['great'] * 100 / sum(activity.values()) if sum(activity.values()) else -1
+            project.percentage_satisfaction_task = res[project.id]
 
     @api.depends('rating_status', 'rating_status_period')
     def _compute_rating_request_deadline(self):
