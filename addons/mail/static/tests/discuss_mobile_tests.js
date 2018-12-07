@@ -26,7 +26,7 @@ QUnit.test('mobile basic rendering', function (assert) {
     // /mail/client_action route is always called when the test suite is
     // launched), and we must wait for this RPC to be done before starting to
     // test the interface. This should be refactored to facilitate the testing.
-    assert.expect(19);
+    assert.expect(16);
     var done = assert.async();
 
     createDiscuss({
@@ -35,6 +35,7 @@ QUnit.test('mobile basic rendering', function (assert) {
         params: {},
         data: this.data,
         services: this.services,
+        debug: true,
     }).then(function (discuss) {
         // test basic rendering in mobile
         assert.containsOnce(discuss, '.o_mail_discuss_content .o_mail_no_content',
@@ -49,7 +50,7 @@ QUnit.test('mobile basic rendering', function (assert) {
             "should be in inbox");
         assert.hasClass($('.o_mail_discuss_button_dm_chat'),'d-none',
             "should have invisible button 'New Message'");
-        assert.hasClass($('.o_mail_discuss_button_public'),'d-none',
+        assert.hasClass($('.o_mail_discuss_button_multi_user_channel'),'d-none',
             "should have invisible button 'New Channel'");
 
         // move to 'Chat' tab
@@ -62,29 +63,19 @@ QUnit.test('mobile basic rendering', function (assert) {
             "should have a button to open DM chat in 'Chat' tab");
         assert.doesNotHaveClass($('.o_mail_discuss_button_dm_chat'), 'd-none',
             "should be visible in 'Chat' tab");
-        assert.hasClass($('.o_mail_discuss_button_public'),'d-none',
+        assert.hasClass($('.o_mail_discuss_button_multi_user_channel'),'d-none',
             "should have invisible button 'New Channel' in 'Chat' tab");
         testUtils.dom.click($('.o_mail_discuss_button_dm_chat'));
         assert.containsOnce(discuss, '.o_mail_add_thread input:visible',
             "should display the input to add a channel");
 
         // move to 'Channels' tab
-        testUtils.dom.click(discuss.$('.o_mail_mobile_tab[data-type=public]'));
+        testUtils.dom.click(discuss.$('.o_mail_mobile_tab[data-type=multi_user_channel]'));
         assert.hasClass($('.o_mail_discuss_button_dm_chat'),'d-none',
             "should have invisible button 'New Message' in 'Channels' tab");
-        assert.doesNotHaveClass($('.o_mail_discuss_button_public'), 'd-none',
+        assert.doesNotHaveClass($('.o_mail_discuss_button_multi_user_channel'), 'd-none',
             "should have visible button 'New Channel' in 'Channels' tab");
-        testUtils.dom.click($('.o_mail_discuss_button_public'));
-        assert.containsOnce(discuss, '.o_mail_add_thread input:visible',
-            "should display the input to add a channel");
-
-        // move to Private Channels tab
-        testUtils.dom.click(discuss.$('.o_mail_mobile_tab[data-type=private]'));
-        assert.hasClass($('.o_mail_discuss_button_dm_chat'),'d-none',
-            "should have invisible button 'New Message' in 'Private Channels' tab");
-        assert.doesNotHaveClass($('.o_mail_discuss_button_private'), 'd-none',
-            "should have invisible button 'New Channel' in 'Private Channels' tab");
-        testUtils.dom.click($('.o_mail_discuss_button_private'));
+        testUtils.dom.click($('.o_mail_discuss_button_multi_user_channel'));
         assert.containsOnce(discuss, '.o_mail_add_thread input:visible',
             "should display the input to add a channel");
 

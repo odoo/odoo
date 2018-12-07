@@ -198,6 +198,9 @@ MockServer.include({
         if (args.method === 'channel_seen') {
             return $.when();
         }
+        if (args.method === 'channel_fetched') {
+            return $.when();
+        }
         if (args.method === 'message_fetch') {
             return $.when(this._mockMessageFetch(args));
         }

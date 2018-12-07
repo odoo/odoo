@@ -147,6 +147,11 @@
             }
             .o_composer_send {
                 margin-top: $o-mail-chatter-gap;
+
+                > .o_composer_button_discard:not(:hover) {
+                    background: theme-color('light');
+                    border-color: transparent;
+                }
             }
         }
 
@@ -182,6 +187,11 @@
             }
             .o_composer_attachments_list {
                 flex: 1 0 100%;
+            }
+
+            .o_composer_thread_typing {
+                font-size: 0.9em;
+                color: gray('600');
             }
 
             .o_chatter_composer_tools {

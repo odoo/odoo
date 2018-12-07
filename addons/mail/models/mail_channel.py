@@ -24,9 +24,11 @@ class ChannelPartner(models.Model):
     _table = 'mail_channel_partner'
     _rec_name = 'partner_id'
 
+    custom_channel_name = fields.Char('Custom channel name')
     partner_id = fields.Many2one('res.partner', string='Recipient', ondelete='cascade')
     partner_email = fields.Char('Email', related='partner_id.email', readonly=False)
     channel_id = fields.Many2one('mail.channel', string='Channel', ondelete='cascade')
+    fetched_message_id = fields.Many2one('mail.message', string='Last Fetched')
     seen_message_id = fields.Many2one('mail.message', string='Last Seen')
     fold_state = fields.Selection([('open', 'Open'), ('folded', 'Folded'), ('closed', 'Closed')], string='Conversation Fold State', default='open')
     is_minimized = fields.Boolean("Conversation is minimized")
@@ -537,10 +539,13 @@ class Channel(models.Model):
             :rtype : list(dict)
         """
         channel_infos = []
-        partner_channels = self.env['mail.channel.partner']
-        # find the channel partner state, if logged user
-        if self.env.user and self.env.user.partner_id:
-            partner_channels = self.env['mail.channel.partner'].search([('partner_id', '=', self.env.user.partner_id.id), ('channel_id', 'in', self.ids)])
+
+        # all relations partner_channel on those channels
+        all_partner_channel = self.env['mail.channel.partner'].search([('channel_id', 'in', self.ids)])
+
+        # all partner infos on those channels
+        partner_infos = all_partner_channel.mapped('partner_id').read(['id', 'name', 'email'])
+
         # for each channel, build the information header and include the logged partner information
         for channel in self:
             info = {
@@ -573,17 +578,34 @@ class Channel(models.Model):
                 if last_message:
                     info['last_message'] = last_message[0].get('last_message')
 
-            # add user session state, if available and if user is logged
-            if partner_channels.ids:
-                partner_channel = partner_channels.filtered(lambda c: channel.id == c.channel_id.id)
-                if len(partner_channel) >= 1:
-                    partner_channel = partner_channel[0]
-                    info['state'] = partner_channel.fold_state or 'open'
-                    info['is_minimized'] = partner_channel.is_minimized
-                    info['seen_message_id'] = partner_channel.seen_message_id.id
+            # listeners of the channel
+            channel_partners = all_partner_channel.filtered(lambda pc: channel.id == pc.channel_id.id)
+
+            # find the channel partner state, if logged user
+            partner_channel = self.env['mail.channel.partner']
+            if self.env.user and self.env.user.partner_id:
+                partner_channel = channel_partners.filtered(lambda pc: pc.partner_id.id == self.env.user.partner_id.id)
                 # add needaction and unread counter, since the user is logged
                 info['message_needaction_counter'] = channel.message_needaction_counter
                 info['message_unread_counter'] = channel.message_unread_counter
+
+            # add user session state, if available and if user is logged
+            if len(partner_channel.ids):
+                partner_channel = partner_channel[0]
+                info['state'] = partner_channel.fold_state or 'open'
+                info['is_minimized'] = partner_channel.is_minimized
+                info['seen_message_id'] = partner_channel.seen_message_id.id
+                info['custom_channel_name'] = partner_channel.custom_channel_name
+
+            # add members infos
+            partner_ids = channel_partners.mapped('partner_id').ids
+            info['members'] = [partner_info for partner_info in partner_infos if partner_info['id'] in partner_ids]
+            info['seen_partners_info'] = [{
+                'partner_id': cp.partner_id.id,
+                'fetched_message_id': cp.fetched_message_id.id,
+                'seen_message_id': cp.seen_message_id.id,
+            } for cp in channel_partners]
+
             channel_infos.append(info)
         return channel_infos
 
@@ -700,9 +722,35 @@ class Channel(models.Model):
         self.ensure_one()
         if self.channel_message_ids.ids:
             last_message_id = self.channel_message_ids.ids[0] # zero is the index of the last message
-            self.env['mail.channel.partner'].search([('channel_id', 'in', self.ids), ('partner_id', '=', self.env.user.partner_id.id)]).write({'seen_message_id': last_message_id})
-            self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), {'info': 'channel_seen', 'id': self.id, 'last_message_id': last_message_id})
+            self.env['mail.channel.partner'].search([('channel_id', 'in', self.ids), ('partner_id', '=', self.env.user.partner_id.id)]).write({
+                'seen_message_id': last_message_id,
+                'fetched_message_id': last_message_id,
+            })
+            data = {
+                'info': 'channel_seen',
+                'last_message_id': last_message_id,
+                'partner_id': self.env.user.partner_id.id,
+            }
+            self.env['bus.bus'].sendmany([[(self._cr.dbname, 'mail.channel', self.id), data]])
             return last_message_id
+
+    @api.multi
+    def channel_fetched(self):
+        """ Broadcast the channel_fetched notification to channel members
+        """
+        self.ensure_one()
+        if not self.channel_message_ids.ids:
+            return
+        last_message_id = self.channel_message_ids.ids[0] # zero is the index of the last message
+        self.env['mail.channel.partner'].search([('channel_id', 'in', self.ids), ('partner_id', '=', self.env.user.partner_id.id)]).write({
+            'fetched_message_id': last_message_id,
+        })
+        data = {
+            'info': 'channel_fetched',
+            'last_message_id': last_message_id,
+            'partner_id': self.env.user.partner_id.id,
+        }
+        self.env['bus.bus'].sendmany([[(self._cr.dbname, 'mail.channel', self.id), data]])
 
     @api.multi
     def channel_invite(self, partner_ids):
@@ -728,6 +776,14 @@ class Channel(models.Model):
 
         # broadcast the channel header to the added partner
         self._broadcast(partner_ids)
+
+    @api.model
+    def channel_set_custom_name(self, channel_id, name=False):
+        domain = [('partner_id', '=', self.env.user.partner_id.id), ('channel_id.id', '=', channel_id)]
+        channel_partners = self.env['mail.channel.partner'].search(domain, limit=1)
+        channel_partners.write({
+            'custom_channel_name': name,
+        })
 
     @api.multi
     def notify_typing(self, is_typing, is_website_user=False):

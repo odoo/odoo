@@ -18,6 +18,16 @@
             width: $o-mail-chat-sidebar-width + 50px;
         }
 
+        .o_discuss_sidebar_quick_search {
+            display: flex;
+            justify-content: center;
+
+            > input {
+                border-radius: 15px;
+                flex-basis: 80%;
+            }
+        }
+
         .o_mail_sidebar_title {
             display: flex;
             padding: 6px $o-horizontal-padding 0 $o-horizontal-padding;
@@ -43,6 +53,9 @@
             .o_thread_name {
                 flex: 1 1 auto;
                 @include o-text-overflow;
+            }
+            .o_mail_thread_typing_icon_dot {
+                background: gray('600');;
             }
             .o_mail_sidebar_needaction, .o_mail_partner_unpin, .o_mail_channel_settings {
                 flex: 0 0 auto;
@@ -122,6 +135,23 @@
         background-color: gray('900');
         color: gray('300');
 
+        .o_discuss_sidebar_quick_search {
+
+            > input:focus {
+                &::placeholder {
+                    color: transparent;
+                }
+            }
+
+            > input {
+                outline: none;
+                background-color: gray('800');
+                border: gray('600');
+                text-align: center;
+                color: gray('400');
+            }
+        }
+
         .o_mail_discuss_item {
             cursor: pointer;
 
@@ -129,7 +159,7 @@
                 background-color: darken(gray('900'),2%);
 
                 .o_mail_partner_unpin, .o_mail_channel_settings {
-                    opacity: $o-mail-sidebar-icon-opacity;
+                    display: inline-block;
                 }
             }
 
@@ -143,7 +173,7 @@
             }
 
             .o_mail_partner_unpin, .o_mail_channel_settings {
-                @include o-hover-opacity($default-opacity: 0, $hover-opacity: 1);
+                display: none;
             }
             &.o_unread_message {
                 color: white;
