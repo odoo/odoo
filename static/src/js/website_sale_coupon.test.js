@@ -22,7 +22,7 @@ tour.register('shop_sale_coupon', {
             trigger: "#customize-menu a:contains(Show # found)",
             run: function () {
                 if (!$('#customize-menu a:contains(Show # found) input').prop('checked')) {
-                    testUtils.dom.click($('#customize-menu a:contains(Show # found)'));
+                    $('#customize-menu a:contains(Show # found)').click();
                 }
             }
         },
@@ -51,7 +51,7 @@ tour.register('shop_sale_coupon', {
             trigger: "#customize-menu a:contains(Promo Code)",
             run: function () {
                 if (!$('#customize-menu a:contains(Promo Code) input').prop('checked')) {
-                    testUtils.dom.click($('#customize-menu a:contains(Promo Code)'));
+                    $('#customize-menu a:contains(Promo Code)').click();
                 }
             }
         },
