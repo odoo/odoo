@@ -205,7 +205,11 @@ var Followers = AbstractField.extend({
         }
         return $.when(def).then(function (results) {
             if (results) {
-                self.followers = _.uniq(results.followers.concat(self.followers), 'id');
+                self.followers = _(results.followers.concat(self.followers)).chain()
+                    .uniq('id')
+                    .sortBy(function(follower) { return follower.name.toLowerCase(); })
+                    .value();
+
                 if (results.subtypes) { //read_followers will return False if current user is not in the list
                     self.subtypes = results.subtypes;
                 }

@@ -37,15 +37,17 @@
                 <!-- Text for followers -->
                 <small class="o_chatter_composer_info">
                     <b class="text-muted">To: </b>
-                    <em class="text-muted">Followers of </em>
-                    <b>
-                        <t t-if="widget.options.recordName">
-                            &#32;&quot;<t t-esc="widget.options.recordName"/>&quot;
-                        </t>
-                        <t t-if="!widget.options.recordName">
-                            this document
-                        </t>
-                    </b>
+                    <span class="o_follower_names">
+                        <em class="text-muted">Followers of </em>
+                        <b>
+                            <t t-if="widget.options.recordName">
+                                &#32;&quot;<t t-esc="widget.options.recordName"/>&quot;
+                            </t>
+                            <t t-if="!widget.options.recordName">
+                                this document
+                            </t>
+                        </b>
+                    </span>
                 </small>
                 <!-- List of followers -->
                 <div class="o_composer_suggested_partners">

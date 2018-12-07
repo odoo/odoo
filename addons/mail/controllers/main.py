@@ -128,6 +128,19 @@ class MailController(http.Controller):
         for follower in follower_recs:
             is_uid = partner_id == follower.partner_id
             follower_id = follower.id if is_uid else follower_id
+
+            if follower.partner_id:
+                if any(user.has_group("base.group_portal") for user in follower.partner_id.mapped('user_ids')):
+                    priority = 1
+                elif not follower.partner_id.mapped('user_ids'):
+                    priority = 2
+                elif any(user.has_group("base.group_public") for user in follower.partner_id.mapped('user_ids')):
+                    priority = 3
+                else:
+                    priority = 4
+            else:
+                priority = None
+
             followers.append({
                 'id': follower.id,
                 'name': follower.partner_id.name or follower.channel_id.name,
@@ -136,6 +149,7 @@ class MailController(http.Controller):
                 'res_id': follower.partner_id.id or follower.channel_id.id,
                 'is_editable': is_editable,
                 'is_uid': is_uid,
+                'priority': priority,
             })
         return {
             'followers': followers,

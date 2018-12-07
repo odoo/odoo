@@ -300,6 +300,37 @@ var Chatter = Widget.extend({
             self.$('.o_chatter_button_new_message, .o_chatter_button_log_note').removeClass('o_active');
             self.$('.o_chatter_button_new_message').toggleClass('o_active', !self._composer.options.isLog);
             self.$('.o_chatter_button_log_note').toggleClass('o_active', self._composer.options.isLog);
+
+            var limit = 3;
+            var $followers_el = self.$('.o_follower_names');
+            var followers_length = self.fields.followers ? self.fields.followers.followers.length : false;
+            var is_channels = false;
+
+            if (followers_length && $followers_el.length){
+                var partner_names = _(self.fields.followers.followers).chain()
+                    .filter(function (follower) {   // filtered followers who don't have partners (e.g. channels)
+                        if(!follower.priority){
+                            is_channels = true
+                            return false;
+                        }
+                        return true;
+                    })
+                    .sortBy(function(follower) { return follower.name.toLowerCase(); })      // Sorting by name
+                    .sortBy(function(follower) { return follower.priority; })                // Sorting by priority
+                    .slice(0, limit)
+                    .map(function (val, key) { return val.name.split(' ')[0]; })             // Returns list of only first word
+                    .value();
+
+                if(partner_names.length){
+                    var str = partner_names.join(', ');
+                    if(followers_length > limit){
+                        str += " and "+ (followers_length - limit) + " more";
+                    }else if(is_channels){
+                        str += " and channels";
+                    }
+                    $followers_el.replaceWith("<span class='o_follower_names'>"+ str +"</span>")
+                }
+            }
         });
     },
     /**
