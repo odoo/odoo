@@ -1122,6 +1122,15 @@
                                 <t t-if="mode[1] == 'shipping'">
                                     <h2 class="o_page_header mt8">Shipping Address </h2>
                                 </t>
+                                <t t-if="partner_id == website_sale_order.partner_shipping_id.id == website_sale_order.partner_invoice_id.id">
+                                    <div class="alert alert-warning" role="alert">
+                                        <h4 class="alert-heading">Be aware!</h4>
+                                        <p>
+                                            You are editing your <b>billing and shipping</b> addresses at the same time!<br/>
+                                            If you want to modify your shipping address, create a <a href='/shop/address'>new address</a>.
+                                        </p>
+                                    </div>
+                                </t>
                                 <t t-if="error" t-foreach="error.get('error_message', [])" t-as="err">
                                     <h4 class="text-danger" t-esc="err" />
                                 </t>
