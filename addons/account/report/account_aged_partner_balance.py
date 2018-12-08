@@ -111,7 +111,7 @@ class ReportAgedPartnerBalance(models.AbstractModel):
             for partial_line in line.matched_credit_ids:
                 if partial_line.max_date <= date_from:
                     line_amount -= ResCurrency._compute(partial_line.company_id.currency_id, user_currency, partial_line.amount)
-            if not self.env.user.company_id.currency_id.is_zero(line_amount):
+            if not user_currency.is_zero(line_amount):
                 undue_amounts[partner_id] += line_amount
                 lines[partner_id].append({
                     'line': line,
