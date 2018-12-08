@@ -214,7 +214,7 @@ class PurchaseRequisitionLine(models.Model):
                 ('product_id', '=', vals.get('product_id')),
                 ('name', '=', res.requisition_id.vendor_id.id),
             ])
-            if not [s.requisition_id for s in supplier_infos]:
+            if not any([s.purchase_requisition_id for s in supplier_infos]):
                 res.create_supplier_info()
             if vals['price_unit'] <= 0.0:
                 raise UserError(_('You cannot confirm the blanket order without price.'))
