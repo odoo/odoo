@@ -1083,7 +1083,8 @@ msgstr "Керувати ціною постачальника"
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Manage your purchase agreements (call for tenders, blanket orders)"
 msgstr ""
-"Керуйте своїми угодами про покупку (дзвінки на тендери, загальний порядок)"
+"Керуйте своїми угодами про покупку (дзвінки на тендери, довгострокові "
+"замовлення)"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_purchase_manager
@@ -1634,27 +1635,27 @@ msgstr "Комерційні пропозиції"
 #. module: purchase
 #: selection:purchase.order,state:0
 msgid "RFQ"
-msgstr "ЗКП"
+msgstr "ЗНКП"
 
 #. module: purchase
 #: model:mail.message.subtype,name:purchase.mt_rfq_approved
 msgid "RFQ Approved"
-msgstr "ЗКП затвердженно"
+msgstr "ЗНКП затвердженно"
 
 #. module: purchase
 #: model:mail.message.subtype,name:purchase.mt_rfq_confirmed
 msgid "RFQ Confirmed"
-msgstr "ЗКП підтвердженно"
+msgstr "ЗНКП підтвердженно"
 
 #. module: purchase
 #: model:mail.message.subtype,name:purchase.mt_rfq_done
 msgid "RFQ Done"
-msgstr "ЗКП виконано"
+msgstr "ЗНКП виконано"
 
 #. module: purchase
 #: selection:purchase.order,state:0 selection:purchase.report,state:0
 msgid "RFQ Sent"
-msgstr "ЗКП відправлено"
+msgstr "ЗНКП відправлено"
 
 #. module: purchase
 #: model:mail.template,report_name:purchase.email_template_edi_purchase
@@ -1664,12 +1665,12 @@ msgstr "RFQ_${(object.name or '').replace('/','_')}"
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_purchase_order
 msgid "RFQs and Purchases"
-msgstr "ЗКП та купівлі"
+msgstr "ЗНКП та купівлі"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Re-Send RFQ by Email"
-msgstr "Переслати ЗКП по пошті"
+msgstr "Переслати ЗНКП по пошті"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1733,12 +1734,12 @@ msgstr "Звітування"
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
 #: model:ir.ui.view,arch_db:purchase.report_purchasequotation_document
 msgid "Request for Quotation"
-msgstr "Запит комерційної пропозиції"
+msgstr "Запит на комерційну пропозицію"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "Request for Quotation #"
-msgstr "Запит комерційної пропозиції №"
+msgstr "Запит на комерційну пропозицію №"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -1749,7 +1750,7 @@ msgstr "Попросіть своїх постачальників достав�
 #: model:ir.actions.act_window,name:purchase.purchase_rfq
 #: model:ir.ui.menu,name:purchase.menu_purchase_rfq
 msgid "Requests for Quotation"
-msgstr "Запити комерційної пропозиції"
+msgstr "Запити на комерційну пропозицію"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_move_ids
@@ -1967,7 +1968,7 @@ msgid ""
 "                    converted into a purchase order, you will be able to control the receipt\n"
 "                    of the products and the vendor bill."
 msgstr ""
-"Запит комерційної пропозиції - це перший крок у процесі закупівлі. "
+"Запит на комерційну пропозицію - це перший крок у процесі закупівлі. "
 "Перетворюючи його на замовлення на купівлю ви можете контролювати свої "
 "надходження товарів та рахунки постачальників."
 
@@ -2234,7 +2235,7 @@ msgstr "Прайс-листи постачальника"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_partner_ref
 msgid "Vendor Reference"
-msgstr "Посилання на постачальника"
+msgstr "Посилання постачальника"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management_supplier_name

@@ -3870,6 +3870,26 @@ msgid ""
 "* In a module, so that administrators and users of Odoo who do not\n"
 "  need or want an online import can avoid it being available to users.\n"
 msgstr ""
+"\n"
+"Nuova importazione di file estensibile per Odoo\n"
+"======================================\n"
+"\n"
+"Reimplementazione del sistema di importazione di file di Odoo:\n"
+"\n"
+"* Lato server: il sistema precedente effettuava principalmente elaborazioni\n"
+"  lato client. Il lavoro era così duplicato (tra i client), era molto più difficile\n"
+"  usare il sistema di importazione senza un client (RPC diretto o\n"
+"  altre forme di automazione) e era molto più difficile controllare il\n"
+"  sistema di importazione/esportazione in quanto era distribuito\n"
+"  su più di 3 progetti diversi.\n"
+"\n"
+"* Più in generale: gli utenti e i partner possono creare la propria interfaccia\n"
+"  front-end per importare altri formati di file (ad esempio, dei file\n"
+"  OpenDocument) che possono essere più facili da gestire nel loro flusso di\n"
+"  lavoro o dalle loro fonti di produzione di dati.\n"
+"\n"
+"* In un modulo: gli amministratori di Odoo e gli utenti, secondo le loro\n"
+"  esigenze o desideri, possono evitare che un'importazione online sia disponibile per gli utenti.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_sa
@@ -4539,6 +4559,34 @@ msgid ""
 "(technically: Server Actions) to be triggered for each incoming mail.\n"
 "    "
 msgstr ""
+"\n"
+"Recupera le email in arrivo sui server POP/IMAP.\n"
+"============================================\n"
+"\n"
+"Inserisci i parametri dei tuoi account POP/IMAP, e tutte le email che arrivano su\n"
+"questi account saranno scaricate automaticamente nel tuo sistema Odoo. Sono\n"
+"supportati tutti i server compatibili POP3/IMAP, compresi quelli che richiedono\n"
+"una connessione SSL/TLS criptata.\n"
+"\n"
+"Puoi così creare facilmente flussi di lavoro basati su email per molti documenti Odoo utilizzando le funzioni email, ad esempio:\n"
+"----------------------------------------------------------------------------------------------------------\n"
+"    * Lead/Opportunità CRM\n"
+"    * Richieste CRM\n"
+"    * Domande di progetto\n"
+"    * Compiti di progetto\n"
+"    * Assunzioni in risorse umane (candidati)\n"
+"\n"
+"Basta installare l'applicazione in questione per poter assegnare uno qualsiasi\n"
+"di questi tipi di documenti (lead, domande di progetto) al proprio account di posta elettronica in arrivo. Le nuove email\n"
+"genereranno automaticamente nuovi documenti del tipo scelto, quindi è molto veloce per creare\n"
+"un'integrazione email-verso-Odoo. Ancora meglio: questi documenti funzionano direttamente come mini\n"
+"conversazioni sincronizzate per email. Puoi rispondere da Odoo e\n"
+"le risposte saranno raccolte automaticamente al loro ritorno, e allegate\n"
+"allo stesso documento di *conversazione*.\n"
+"\n"
+"Per esigenze più specifiche, è anche possibile assegnare azioni personalizzate\n"
+"(tecnicamente: Azioni Server) da attivare per ogni email in arrivo.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_subscription_dashboard
@@ -5159,6 +5207,35 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Modulo di gestione del piano dei conti per il Belgio in Odoo.\n"
+"==============================================================================\n"
+"\n"
+"Dopo l'installazione di questo modulo, viene avviata il wizard di configurazione per la contabilità.\n"
+"    * Abbiamo i modelli di conto che possono essere utili per generare i piani dei conti.\n"
+"    * Su questo particolare wizard, ti sarà chiesto di inserire il nome dell'azienda,\n"
+"      il modello del piano da seguire, il numero di cifre da generare, il codice\n"
+"      dell'account e il conto bancario e la valuta per creare i sezionali.\n"
+"\n"
+"Così, la copia pura del modello di piano viene generata.\n"
+"\n"
+"Wizard forniti da questo modulo:\n"
+"--------------------------------\n"
+"    * Partner IVA Intra: Registra i partner con la loro partita IVA e gli importi\n"
+"      fatturati. Prepara un formato di file XML.\n"
+"      \n"
+"        **Percorso di accesso:** Fatturazione/Analisi/Rapporti legali/Dichiarazioni del Belgio /Partner IVA Intra\n"
+"    * Dichiarazione periodica dell'IVA: Prepara un file XML per la dichiarazione dell'IVA\n"
+"      dell'azienda principale dell'utente attualmente connesso.\n"
+"      \n"
+"        **Percorso di accesso:** Fatturazione/Analisi/Rapporti legali/Dichiarazioni del Belgio/Dichiarazioni periodiche dell'IVA\n"
+"    * Elenco annuale dei clienti assoggettati all'IVA: Prepara un file XML per la dichiarazione\n"
+"      dell'IVA dell'azienda principale dell'utente attualmente connesso in base\n"
+"      all'anno fiscale.\n"
+"      \n"
+"        **Percorso di accesso :** Fatturazione/Analisi/Rapporti legali/Dichiarazioni del Belgio/Elenco annuale dei clienti assoggettati all'IVA.\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_do_reports
@@ -5560,6 +5637,15 @@ msgid ""
 "of this module is to allow the display of a customer portal without having\n"
 "a dependency towards website edition and customization capabilities."
 msgstr ""
+"\n"
+"Questo modulo aggiunge il codice di base richiesto per un portale clienti completamente integrato.\n"
+"Contiene la classe di controller di base e modelli di base. I moduli aziendali\n"
+"aggiungono i propri modelli e controller per sviluppare il portale\n"
+"clienti.\n"
+"\n"
+"Questo modulo contiene essenzialmente il codice del website_portale versione 10 di Odoo. L'obiettivo\n"
+"di questo modulo è quello di consentire la visualizzazione di un portale clienti senza\n"
+"dipendere dalle funzionalità di modifica e di personalizzazione del sito Web."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fr_sale_closing
@@ -8268,7 +8354,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view_arch_fs
 msgid "Arch Filename"
-msgstr ""
+msgstr "Nome file arch"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_view_form
@@ -8328,7 +8414,7 @@ msgstr "Gestione associazioni"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_membership
 msgid "Associations: Members"
-msgstr "Associazioni: Membri"
+msgstr "Associazioni: membri"
 
 #. module: base
 #: code:addons/base/res/res_lang.py:53
@@ -8339,7 +8425,7 @@ msgstr "Almeno una lingua deve essere attiva."
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_attachment_search
 msgid "Attached Document Name"
-msgstr "Nome del Documento in Allegato"
+msgstr "Nome documento allegato"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_attachment_form
@@ -8354,7 +8440,7 @@ msgstr "Allegato"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment_name
 msgid "Attachment Name"
-msgstr "Nome Allegato"
+msgstr "Nome allegato"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_attachment
@@ -8714,7 +8800,7 @@ msgstr "Vista base"
 #: model:ir.cron,cron_name:base.autovacuum_job
 #: model:ir.cron,name:base.autovacuum_job
 msgid "Base: Auto-vacuum internal data"
-msgstr ""
+msgstr "Base: pulizia automatica dati interni"
 
 #. module: base
 #: model:ir.actions.server,name:base.action_server_module_immediate_install
@@ -12165,7 +12251,7 @@ msgstr "File"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment_datas
 msgid "File Content"
-msgstr "Contenuto File"
+msgstr "Contenuto file"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_language_export_format
@@ -12177,7 +12263,7 @@ msgstr "Formato File"
 #: model:ir.model.fields,field_description:base.field_base_language_import_filename
 #: model:ir.model.fields,field_description:base.field_ir_attachment_datas_fname
 msgid "File Name"
-msgstr "Nome File"
+msgstr "Nome file"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment_file_size
@@ -15367,7 +15453,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_membership
 msgid "Membership Management"
-msgstr "Gestione Appartenenze"
+msgstr "Gestione iscrizioni"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_note_pad
@@ -15408,7 +15494,7 @@ msgstr "Personalizzazione Menu"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_mercury
 msgid "Mercury Payment Services"
-msgstr "Servizio pagamento Mercury "
+msgstr "Servizi di pagamento Mercury"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_logging_message
@@ -15418,7 +15504,7 @@ msgstr "Messaggio"
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_users_form
 msgid "Messaging and Social"
-msgstr "Messagi e Social"
+msgstr "Messaggistica e social"
 
 #. module: base
 #: code:addons/base/res/res_config.py:498
@@ -19686,7 +19772,7 @@ msgstr "QWeb"
 #. module: base
 #: model:ir.ui.view,arch_db:base.act_report_xml_view
 msgid "QWeb views"
-msgstr ""
+msgstr "Viste qweb"
 
 #. module: base
 #: model:res.country,name:base.qa
@@ -20125,7 +20211,7 @@ msgstr "Rivenditore"
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_timesheet
 msgid "Review and approve employees time reports"
-msgstr "Esamina e approva i report di tempo dei dipendenti"
+msgstr "Esamina e approva i resoconti ore dei dipendenti"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat_margin_right
@@ -20436,7 +20522,7 @@ msgstr "Salva e Stampa"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_report_xml_attachment
 msgid "Save as Attachment Prefix"
-msgstr "Nome allegato"
+msgstr "Salva come prefisso allegato"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_calendar
@@ -23691,7 +23777,7 @@ msgstr "Settimane"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hw_scale
 msgid "Weighing Scale Hardware Driver"
-msgstr ""
+msgstr "Driver hardware bilancia"
 
 #. module: base
 #: model:res.country,name:base.eh
