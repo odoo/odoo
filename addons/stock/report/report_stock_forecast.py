@@ -130,31 +130,25 @@ class ReportStockForecat(models.Model):
         lists = []
         final_val = {'qty_for_final_line': [], 'cumulative_qty_final_line': []}
         res_list = {}
-        line_having_id = False
         if 'cumulative_quantity' in fields:
             for line in res:
                 if line.get('product_id'):
                     index = res.index(line)
-                    if res_list.get(line['product_id']):  # Get cumulative quantity product wise
-                        res_list[line['product_id']].append(line['quantity'])
-                    else:
-                        res_list[line['product_id']] = [line['quantity']]
+                    if not res_list.get(line['product_id']):
+                        res_list.update({line['product_id']: []})
+                    res_list[line['product_id']].append(line['quantity'])  # Get cumulative quantity product wise
                     line['cumulative_quantity'] = sum(res_list[line['product_id']])  # Sum of all quantities (i.e. cumulative quantity) product wise
                     if line.get('reference') == 'Starting Inventory':
-                        if line.get('quantity'):
-                            line['cumulative_quantity'] = line['quantity']  # Set cumulatiove quantity if line does not have any cumulative
-                        else:
-                            line['quantity'] = line['cumulative_quantity'] if line.get('__count') == 1 else line['quantity']   # Set quantity if line's quantity is 0.0
-                            if index > 1 and line.get('__count') > 1:
-                                line['cumulative_quantity'] = res[index-1]['cumulative_quantity']  # Set cumulatiove quantity if line does not have any cumulative
+                        line['quantity'] = line['cumulative_quantity'] if line.get('__count') == 1 else line['quantity']   # Set quantity if line's quantity is 0.0
+                        if index > 1 and line.get('__count') > 1:
+                            line['cumulative_quantity'] = res[index-1]['cumulative_quantity']  # Set cumulatiove quantity if line does not have any cumulative
                 else:
                     lists.append(line['quantity']) if line.get('quantity') else lists
                     line['cumulative_quantity'] = sum(lists)  # Sum of all Move Operations' quantity
-                line_having_id = line if line.get('id') else line_having_id
                 if not line.get('reference'):
                     final_val['qty_for_final_line'].append(line['quantity'])  # To set the quantity of first line (i.e. total inventory)
                     final_val['cumulative_qty_final_line'].append(line['cumulative_quantity'])  # To set the cumulative quantity of first line (i.e. total inventory)
-                if line_having_id:
-                    line_having_id.update({'quantity': sum(final_val['qty_for_final_line']),
-                                           'cumulative_quantity': sum(final_val['cumulative_qty_final_line'])})  # To set the quantity and cumulative quantity of total inventory
+                if line.get('id'):
+                    line.update({'quantity': sum(final_val['qty_for_final_line']),
+                                 'cumulative_quantity': sum(final_val['cumulative_qty_final_line'])})  # To set the quantity and cumulative quantity of total inventory
         return res
