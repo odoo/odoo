@@ -3,24 +3,26 @@
 # * membership
 # 
 # Translators:
-# Martin Trigaux, 2017
 # Cécile Collart <cco@odoo.com>, 2017
-# Paolo Valier, 2017
 # Cesare Cugnasco <cesare.cugnasco@gmail.com>, 2018
 # Manuela Feliciani <mfeliciani@alice.it>, 2018
 # Francesco Garganese <francesco.garganese@aeromnia.aero>, 2018
+# Martin Trigaux, 2018
 # Simone Bernini <simone@aperturelabs.it>, 2018
 # Giacomo Grasso <giacomo.grasso.82@gmail.com>, 2018
 # Luca Tralli, 2018
 # Massimo Bianchi <bianchi.massimo@gmail.com>, 2018
+# Paolo Valier, 2018
 # Alessandro Forte <a.forte1010@gmail.com>, 2018
+# mymage <stefano.consolaro@mymage.it>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Alessandro Forte <a.forte1010@gmail.com>, 2018\n"
+"PO-Revision-Date: 2017-09-20 10:19+0000\n"
+"Last-Translator: mymage <stefano.consolaro@mymage.it>, 2018\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -46,7 +48,7 @@ msgstr "# In attesa"
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.membership_products_kanban
 msgid "<i class=\"fa fa-clock-o\" aria-hidden=\"true\"/><strong> From: </strong>"
-msgstr ""
+msgstr "<i class=\"fa fa-clock-o\" aria-hidden=\"true\"/><strong> Dal: </strong>"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.membership_products_kanban
@@ -60,6 +62,8 @@ msgid ""
 "A member with whom you want to associate your membership. It will consider "
 "the membership state of the associated member."
 msgstr ""
+"Un socio a cui si vuole collegare la propria iscrizione. Verrà preso in "
+"considerazione lo stato dell'iscrizione del socio collegato."
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line_account_invoice_line
@@ -92,7 +96,7 @@ msgstr "Importo dell'Iscrizione"
 #: model:ir.model.fields,field_description:membership.field_res_users_associate_member
 #: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "Associate Member"
-msgstr "Membro associato"
+msgstr "Socio collegato"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_report_membership_search
@@ -377,6 +381,13 @@ msgid ""
 "-Invoiced Member: A member whose invoice has been created.\n"
 "-Paid Member: A member who has paid the membership amount."
 msgstr ""
+"Indica lo stato dell'iscrizione.\n"
+"-Non richiesta: un socio che non ha richiesto nessuna iscrizione.\n"
+"-Annullata: un socio che ha cancellato la sua iscrizione.\n"
+"-Scaduta: un socio la cui iscrizione è scaduta.\n"
+"-In attesa: un socio che ha richiesto l'iscrizione e la cui fattura deve essere creata.\n"
+"-Fatturata: un socio la cui fattura è stata creata.\n"
+"-Pagata: un socio che ha pagato la quota di iscrizione."
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line_date
@@ -523,7 +534,7 @@ msgstr "Prodotti Iscrizione"
 #: model:ir.cron,cron_name:membership.ir_cron_update_membership
 #: model:ir.cron,name:membership.ir_cron_update_membership
 msgid "Membership: update memberships"
-msgstr ""
+msgstr "Iscrizione: aggiorna iscrizione"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_partner_form
@@ -553,6 +564,8 @@ msgid ""
 "Odoo helps you easily track all activities related to a member: \n"
 "                 Current Membership Status, Discussions and History of Membership, etc."
 msgstr ""
+"Odoo consente di tracciare le attività relative a un socio: \n"
+"                 Stato attuale iscrizione, discussioni e storico iscrizione, ecc."
 
 #. module: membership
 #: selection:membership.membership_line,state:0
