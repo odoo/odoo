@@ -241,13 +241,13 @@ msgstr ""
 #: code:addons/payment/models/account_invoice.py:72
 #, python-format
 msgid "A journal must be specified of the acquirer %s."
-msgstr "Deve essere specificato un registro per il servizio %s."
+msgstr "Deve essere specificato un registro per il sistema %s."
 
 #. module: payment
 #: code:addons/payment/models/account_invoice.py:65
 #, python-format
 msgid "A payment acquirer is required to create a transaction."
-msgstr "Per creare una transazione è necessario un servizio di pagamento."
+msgstr "Per creare una transazione è necessario un sistema di pagamento."
 
 #. module: payment
 #: code:addons/payment/models/account_payment.py:55
@@ -305,7 +305,7 @@ msgstr "Numero conto"
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__acquirer_id
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_kanban
 msgid "Acquirer"
-msgstr "Servizio"
+msgstr "Sistema"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__acquirer_id
@@ -315,22 +315,22 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__acquirer_ref
 msgid "Acquirer Ref."
-msgstr "Rif. servizio"
+msgstr "Rif. sistema"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__acquirer_reference
 msgid "Acquirer Reference"
-msgstr "Riferimento servizio"
+msgstr "Riferimento sistema"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_icon__acquirer_ids
 msgid "Acquirers"
-msgstr "Servizi"
+msgstr "Sistemi"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_icon_form_view
 msgid "Acquirers list"
-msgstr "Elenco servizi"
+msgstr "Elenco sistemi"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_kanban
@@ -607,7 +607,7 @@ msgstr "Nazione"
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_acquirer
 msgid "Create a new payment acquirer"
-msgstr "Crea un nuovo servizio di pagamento"
+msgstr "Crea un nuovo sistema di pagamento"
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_transaction
@@ -617,7 +617,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_icon
 msgid "Create a payment icon"
-msgstr ""
+msgstr "Crea una carta di pagamento"
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.payment_token_action
@@ -715,7 +715,7 @@ msgstr "Email"
 #. module: payment
 #: model:account.payment.method,name:payment.account_payment_method_electronic_in
 msgid "Electronic"
-msgstr ""
+msgstr "Elettronico"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_email
@@ -881,7 +881,7 @@ msgstr ""
 #: code:addons/payment/models/account_invoice.py:55
 #, python-format
 msgid "Invalid token found! Token acquirer %s != %s"
-msgstr "Rilevato token non valido. Token del servizio %s != %s"
+msgstr "Rilevato token non valido. Token del sistema %s != %s"
 
 #. module: payment
 #: code:addons/payment/models/account_invoice.py:58
@@ -951,12 +951,12 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_icon__acquirer_ids
 msgid "List of Acquirers supporting this payment icon."
-msgstr ""
+msgstr "Elenco di sistemi che supportano questa carta di pagamento."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__website_published
 msgid "Make this payment acquirer available (Customer invoices, etc.)"
-msgstr ""
+msgstr "Rende disponibile questo sistema di pagamento (fatture cliente ecc.)"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay_methods
@@ -1084,7 +1084,7 @@ msgstr "Mai"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
 msgid "No payment acquirer found."
-msgstr "Nessun servizio di pagamento trovato."
+msgstr "Nessun sistema di pagamento trovato."
 
 #. module: payment
 #. openerp-web
@@ -1238,14 +1238,14 @@ msgstr "Pagamento"
 #: model:ir.model,name:payment.model_payment_acquirer
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
 msgid "Payment Acquirer"
-msgstr "Servizio di pagamento"
+msgstr "Sistema di pagamento"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_payment_acquirer
 #: model:ir.ui.menu,name:payment.payment_acquirer_menu
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_list
 msgid "Payment Acquirers"
-msgstr "Servizi di pagamento"
+msgstr "Sistemi di pagamento"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__payment_flow
@@ -1256,13 +1256,13 @@ msgstr ""
 #: model:ir.model,name:payment.model_payment_icon
 #: model_terms:ir.ui.view,arch_db:payment.payment_icon_form_view
 msgid "Payment Icon"
-msgstr ""
+msgstr "Carta di pagamento"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_payment_icon
 #: model:ir.ui.menu,name:payment.payment_icon_menu
 msgid "Payment Icons"
-msgstr "Icone di pagamento"
+msgstr "Carte di pagamento"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__manual_post_msg
@@ -1304,7 +1304,7 @@ msgstr "Token Pagamento"
 #: model:ir.model,name:payment.model_payment_transaction
 #: model:ir.model.fields,field_description:payment.field_account_payment__payment_transaction_id
 msgid "Payment Transaction"
-msgstr "Transazione Pagamento"
+msgstr "Transazione di pagamento"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_payment_transaction
@@ -1314,7 +1314,7 @@ msgstr "Transazione Pagamento"
 #: model_terms:ir.ui.view,arch_db:payment.transaction_form
 #: model_terms:ir.ui.view,arch_db:payment.transaction_list
 msgid "Payment Transactions"
-msgstr "Transazioni di Pagamento"
+msgstr "Transazioni di pagamento"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_acquirer_onboarding_wizard
@@ -1404,7 +1404,7 @@ msgstr "Telefono"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
 msgid "Please configure a payment acquirer."
-msgstr ""
+msgstr "Configurare un sistema di pagamento."
 
 #. module: payment
 #: code:addons/payment/wizards/payment_acquirer_onboarding_wizard.py:33
@@ -1646,7 +1646,7 @@ msgstr "Chiave segreta Stripe"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__payment_icon_ids
 msgid "Supported Payment Icons"
-msgstr ""
+msgstr "Carte di pagamento supportate"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__registration_view_template_id
@@ -1724,6 +1724,8 @@ msgid ""
 "This field holds the image used for this payment icon, limited to "
 "1024x1024px"
 msgstr ""
+"Questo campo contiene l'immagine usata per questa carta di pagamento, con "
+"limite 1024x1024 px"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__image
