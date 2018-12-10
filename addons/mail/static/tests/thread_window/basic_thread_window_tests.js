@@ -593,7 +593,7 @@ QUnit.test('do not auto-focus chat window on receiving new message from new DM',
     };
     this.data['mail.message'].records.push(messageData);
     var notification = [[false, 'mail.channel', 2], messageData];
-    parent.call('bus_service', 'trigger', 'notification', [notification]);
+    parent.call('bus_service', 'trigger', 'notification', {notifications: [notification]});
 
     assert.strictEqual($('.o_thread_window').length, 1,
         "should have DM window open");
@@ -609,7 +609,7 @@ QUnit.test('do not auto-focus chat window on receiving new message from new DM',
         state: 'open',
     });
     notification = [[false, 'res.partner', 3], dmInfo];
-    parent.call('bus_service', 'trigger', 'notification', [notification]);
+    parent.call('bus_service', 'trigger', 'notification', {notifications: [notification]});
 
     assert.strictEqual($('.o_thread_window').length, 1,
         "should still have DM window open after receiving DM info from polling");
@@ -620,7 +620,7 @@ QUnit.test('do not auto-focus chat window on receiving new message from new DM',
 
     // simulate receiving detached DM notification (cross-tab synchronization)
     notification = [[false, 'res.partner', 3], self.data['mail.channel'].records[0]];
-    parent.call('bus_service', 'trigger', 'notification', [notification]);
+    parent.call('bus_service', 'trigger', 'notification', {notifications: [notification]});
 
     assert.strictEqual($('.o_thread_window').length, 1,
         "should still have DM open after receiving detached info from polling");
