@@ -888,6 +888,8 @@ class Picking(models.Model):
 
         documents = {}
         for (parent, responsible), moves in grouped_moves:
+            if not parent:
+                continue
             moves = list(moves)
             moves = self.env[moves[0]._name].concat(*moves)
             # Get the note
@@ -962,7 +964,11 @@ class Picking(models.Model):
             return self.env.ref('stock.exception_on_picking').render(values=values)
 
         documents = self._log_activity_get_documents(moves, 'move_dest_ids', 'DOWN', _keys_in_sorted, _keys_in_groupby)
+        documents = self._less_quantities_than_expected_add_documents(moves, documents)
         self._log_activity(_render_note_exception_quantity, documents)
+
+    def _less_quantities_than_expected_add_documents(self, moves, documents):
+        return documents
 
     def _get_impacted_pickings(self, moves):
         """ This function is used in _log_less_quantities_than_expected
