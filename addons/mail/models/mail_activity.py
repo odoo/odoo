@@ -578,6 +578,71 @@ class MailActivityMixin(models.AbstractModel):
         ).unlink()
         return result
 
+    @api.model
+    def read_progress_bar(self, domain, group_by, progress_bar):
+        if progress_bar.get('field') == 'activity_state':
+            sub_select_alias = '_last_activity_state'
+            gb = group_by.partition(':')[0]
+            field_type = self._fields[gb].type
+            if field_type == 'selection':
+                selection_labels = dict(self.fields_get()[gb]['selection'])
+            query = self._where_calc(domain)
+            self._apply_ir_rules(query, 'read')
+            annotated_groupbys = [self._read_group_process_groupby(gb, query) for gb in [group_by, 'activity_state']]
+            groupby_dict = {gb['groupby']: gb for gb in annotated_groupbys}
+            for gb in annotated_groupbys:
+                if gb['field'] == 'activity_state':
+                    gb['qualified_field'] = '"%s"."activity_state"' % sub_select_alias
+            groupby_terms, orderby_terms = self._read_group_prepare('activity_state', [], annotated_groupbys, query)
+            select_terms = ['%s as "%s"' % (gb['qualified_field'], gb['groupby']) for gb in annotated_groupbys]
+            from_clause, where_clause, where_clause_args = query.get_sql()
+            tz = self._context.get('tz') or self.env.user.tz or 'UTC'
+            select_query = """
+                SELECT 1 as id, %(fields)s, count(*)
+                FROM %(from)s
+                JOIN (
+                    SELECT res_id,
+                    CASE
+                        WHEN min(date_deadline - (current_date at time zone coalesce(res_partner.tz, %%s))::date) > 0 THEN 'planned'
+                        WHEN min(date_deadline - (current_date at time zone coalesce(res_partner.tz, %%s))::date) < 0 THEN 'overdue'
+                        WHEN min(date_deadline - (current_date at time zone coalesce(res_partner.tz, %%s))::date) = 0 THEN 'today'
+                        ELSE null
+                    END as activity_state
+                    FROM mail_activity
+                    JOIN res_users ON (res_users.id = mail_activity.user_id)
+                    JOIN res_partner ON (res_partner.id = res_users.partner_id)
+                    WHERE res_model = '%(model)s'
+                    GROUP BY res_id
+                ) as "%(sub_select_alias)s" ON (%(table)s.id = "%(sub_select_alias)s".res_id)
+                %(where)s
+                GROUP BY %(group_by)s
+            """ % {
+                'fields': ', '.join(select_terms),
+                'from': from_clause,
+                'group_by': ', '.join(groupby_terms),
+                'model': self._name,
+                'sub_select_alias': sub_select_alias,
+                'table': self._table,
+                'where': ('WHERE %s' % (where_clause,)) if where_clause else '',
+            }
+            self.env.cr.execute(select_query, [tz] * 3 + where_clause_args)
+            data = {}
+            fetched_data = self.env.cr.dictfetchall()
+            self._read_group_resolve_many2one_fields(fetched_data, annotated_groupbys)
+            fetched_data = [{k: self._read_group_prepare_data(k, v, groupby_dict) for k, v in r.items()} for r in fetched_data]
+            groups = [self._read_group_format_result(d, annotated_groupbys, [group_by], domain) for d in fetched_data]
+            for g in groups:
+                group_by_value = g[group_by]
+                if field_type == 'selection':
+                    group_by_value = selection_labels[group_by_value]
+                elif field_type == 'many2one':
+                    group_by_value = group_by_value and group_by_value[1]._value or group_by_value
+                elif type(group_by_value) == tuple:
+                    group_by_value = group_by_value[1]
+                data.setdefault(group_by_value, {key: 0 for key in progress_bar['colors']})[g['activity_state']] = g['count']
+            return data
+        return super(MailActivityMixin, self).read_progress_bar(domain, group_by, progress_bar)
+
     @api.multi
     def toggle_active(self):
         """ Before archiving the record we should also remove its ongoing
