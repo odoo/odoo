@@ -69,9 +69,6 @@ var PivotView = AbstractView.extend({
                 widgets[name] = field.attrs.widget;
             }
 
-            if (field.attrs.string) {
-                measures[name].string = field.attrs.string;
-            }
 
             if (field.attrs.invisible && py.eval(field.attrs.invisible)) {
                 delete measures[name];
@@ -88,6 +85,11 @@ var PivotView = AbstractView.extend({
             if (field.attrs.type === 'measure' && !(field.attrs.name in measures)) {
                 measures[field.attrs.name] = self.fields[field.attrs.name];
             }
+
+            if (field.attrs.string) {
+              measures[name].string = field.attrs.string;
+            }
+
             if (field.attrs.type === 'measure' || 'operator' in field.attrs) {
                 activeMeasures.push(name);
                 measures[name] = self.fields[name];
