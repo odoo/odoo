@@ -145,6 +145,7 @@ TRANSLATED_ELEMENTS = {
 TRANSLATED_ATTRS = {
     'string', 'help', 'sum', 'avg', 'confirm', 'placeholder', 'alt', 'title', 'aria-label',
     'aria-keyshortcuts', 'aria-placeholder', 'aria-roledescription', 'aria-valuetext',
+    'value_label',
 }
 
 TRANSLATED_ATTRS = TRANSLATED_ATTRS | {'t-attf-' + attr for attr in TRANSLATED_ATTRS}
