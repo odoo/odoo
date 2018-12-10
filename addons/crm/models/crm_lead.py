@@ -742,6 +742,7 @@ class Lead(models.Model):
             'email_from': customer and customer.email or self.email_from,
             'phone': customer and customer.phone or self.phone,
             'date_conversion': fields.Datetime.now(),
+            'team_id': team_id,
         }
         if not self.stage_id:
             stage = self._stage_find(team_id=team_id)
@@ -862,9 +863,9 @@ class Lead(models.Model):
         index = 0
         for lead in self:
             value = {}
-            if team_id:
+            if team_id and lead.team_id.id != team_id:
                 value['team_id'] = team_id
-            if user_ids:
+            if user_ids and lead.user_id.id != user_ids[index]:
                 value['user_id'] = user_ids[index]
                 # Cycle through user_ids
                 index = (index + 1) % len(user_ids)

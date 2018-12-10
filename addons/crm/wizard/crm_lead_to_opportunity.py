@@ -98,7 +98,7 @@ class Lead2OpportunityPartner(models.TransientModel):
             self_def_user = self.with_context(default_user_id=self.user_id.id)
             partner_id = self_def_user._create_partner(
                 lead.id, self.action, vals.get('partner_id') or lead.partner_id.id)
-            res = lead.convert_opportunity(partner_id, [], False)
+            res = lead.convert_opportunity(partner_id, [], vals.get('team_id', False))
         user_ids = vals.get('user_ids')
 
         leads_to_allocate = leads
