@@ -2355,7 +2355,7 @@ class MailThread(models.AbstractModel):
             assignation_msg = view.render(values, engine='ir.qweb', minimal_qcontext=True)
             assignation_msg = self.env['mail.thread']._replace_local_links(assignation_msg)
             record.message_notify(
-                subject='You have been assigned to %s' % record.display_name,
+                subject=_('You have been assigned to %s') % record.display_name,
                 body=assignation_msg,
                 partner_ids=[(4, pid) for pid in partner_ids],
                 record_name=record.display_name,
