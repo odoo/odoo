@@ -124,10 +124,8 @@ class ReportStockForecat(models.Model):
 
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
-        if not orderby:
-            orderby = 'date, id'  # Sort result by date_expected and id
-        if 'quantity' not in fields and 'cumulative_quantity' in fields:
-            fields.append('quantity')
+        orderby = 'date, id' if not orderby else orderby  # Sort result by date_expected and id
+        fields.append('quantity') if 'quantity' not in fields else fields
         res = super(ReportStockForecat, self).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
         list_index = []
         lists = []
@@ -151,19 +149,15 @@ class ReportStockForecat(models.Model):
                             if index > 1 and line.get('__count') > 1:
                                 line['cumulative_quantity'] = res[index-1]['cumulative_quantity']
                     else:
-                        if not line.get('reference'):
-                            list_index.append(res.index(line))
+                        list_index.append(res.index(line)) if not line.get('reference') else list_index
                 else:
-                        if line.get('quantity'):
-                            lists.append(line['quantity'])
-                        line['cumulative_quantity'] = sum(lists)
-        for line in res:
-            if line.get('id'):
-                line_having_id.append(line)
-            if not line.get('reference'):
-                qty_for_final_line.append(line['quantity'])
-                cumulative_qty_final_line.append(line['cumulative_quantity'])
-            if line_having_id:
-                line_having_id[0]['quantity'] = sum(qty_for_final_line)
-                line_having_id[0]['cumulative_quantity'] = sum(cumulative_qty_final_line)
+                    if line.get('quantity'):
+                        lists.append(line['quantity'])
+                    line['cumulative_quantity'] = sum(lists)
+                line_having_id.append(line) if line.get('id') else line_having_id
+                if not line.get('reference'):
+                    qty_for_final_line.append(line['quantity'])
+                    cumulative_qty_final_line.append(line['cumulative_quantity'])
+                if line_having_id:
+                    line_having_id[0].update({'quantity': sum(qty_for_final_line), 'cumulative_quantity': sum(cumulative_qty_final_line)})
         return res
