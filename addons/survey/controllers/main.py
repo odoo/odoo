@@ -58,7 +58,7 @@ class Survey(http.Controller):
                 'survey_id': survey.id,
                 'test_entry': True
             })
-            return request.redirect('/survey/start/%s/%s' % survey.id, user_input.token)
+            return request.redirect('/survey/start/%s/%s' % (survey.id, user_input.token))
         return werkzeug.utils.redirect('/')
 
     @http.route(['/survey/start/<model("survey.survey"):survey>',
