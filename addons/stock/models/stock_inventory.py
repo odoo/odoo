@@ -331,8 +331,7 @@ class InventoryLine(models.Model):
         index=True, required=True)
     product_uom_id = fields.Many2one(
         'uom.uom', 'Product Unit of Measure',
-        required=True,
-        default=lambda self: self.env.ref('uom.product_uom_unit', raise_if_not_found=True))
+        required=True)
     product_uom_category_id = fields.Many2one(string='Uom category', related='product_uom_id.category_id', readonly=True)
     product_qty = fields.Float(
         'Checked Quantity',
