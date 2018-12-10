@@ -1,0 +1,26 @@
+.o_resume_line {
+    width: 100%;
+}
+
+.o_list_view tbody:first-of-type > tr.o_resume_group_header:first-child {
+    box-shadow: none;
+}
+
+.o_group_skills table {
+    table-layout: fixed;
+}
+
+.o_group_skills th.o_group_name {
+    background-color: #e9ecef;
+}
+
+.o_group_resume tbody tr.o_resume_group_header th {
+    font-weight: normal;
+}
+
+/*Override bootstap class because the field with name progress (from hr.skill.level')
+* makes a <td class="progress"> to be generated in the footer of a one2many field
+*/
+td.progress {
+    background-color: transparent;
+}
