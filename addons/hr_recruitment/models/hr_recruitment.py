@@ -277,7 +277,7 @@ class Applicant(models.Model):
             vals['date_open'] = fields.Datetime.now()
         if 'stage_id' in vals:
             vals.update(self._onchange_stage_id_internal(vals.get('stage_id'))['value'])
-        return super(Applicant, self.with_context(mail_create_nolog=True)).create(vals)
+        return super(Applicant, self).create(vals)
 
     @api.multi
     def write(self, vals):

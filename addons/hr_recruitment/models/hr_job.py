@@ -64,7 +64,7 @@ class Job(models.Model):
 
     @api.model
     def create(self, vals):
-        return super(Job, self.with_context(mail_create_nolog=True)).create(vals)
+        return super(Job, self).create(vals)
 
     @api.multi
     def _track_subtype(self, init_values):

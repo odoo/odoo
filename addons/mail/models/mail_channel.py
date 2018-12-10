@@ -215,7 +215,7 @@ class Channel(models.Model):
         tools.image_resize_images(vals)
         # Create channel and alias
         channel = super(Channel, self.with_context(
-            alias_model_name=self._name, alias_parent_model_name=self._name, mail_create_nolog=True, mail_create_nosubscribe=True)
+            alias_model_name=self._name, alias_parent_model_name=self._name, mail_create_nosubscribe=True)
         ).create(vals)
         channel.alias_id.write({"alias_force_thread_id": channel.id, 'alias_parent_thread_id': channel.id})
 

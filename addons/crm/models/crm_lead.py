@@ -307,7 +307,7 @@ class Lead(models.Model):
             vals['email_from'] = partner.email
 
         # context: no_log, because subtype already handle this
-        return super(Lead, self.with_context(context, mail_create_nolog=True)).create(vals)
+        return super(Lead, self).create(vals)
 
     @api.multi
     def write(self, vals):

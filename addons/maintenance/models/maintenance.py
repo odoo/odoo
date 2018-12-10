@@ -331,7 +331,6 @@ class MaintenanceRequest(models.Model):
     @api.model
     def create(self, vals):
         # context: no_log, because subtype already handle this
-        self = self.with_context(mail_create_nolog=True)
         request = super(MaintenanceRequest, self).create(vals)
         if request.owner_user_id or request.user_id:
             request._add_followers()

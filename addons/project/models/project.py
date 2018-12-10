@@ -658,8 +658,7 @@ class Task(models.Model):
 
     @api.model
     def create(self, vals):
-        # context: no_log, because subtype already handle this
-        context = dict(self.env.context, mail_create_nolog=True)
+        context = dict(self.env.context)
         # force some parent values, if needed
         if 'parent_id' in vals and vals['parent_id']:
             vals.update(self._subtask_values_from_parent(vals['parent_id']))

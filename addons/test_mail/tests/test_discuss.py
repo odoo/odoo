@@ -37,10 +37,10 @@ class TestChatterTweaks(BaseFunctionalTest, TestRecipients):
 
     def test_chatter_mail_create_nolog(self):
         """ Test disable of automatic chatter message at create """
-        rec = self.env['mail.test.simple'].sudo(self.user_employee).with_context({'mail_create_nolog': True}).create({'name': 'Test'})
+        rec = self.env['mail.test.simple'].sudo(self.user_employee).create({'name': 'Test'})
         self.assertEqual(rec.message_ids, self.env['mail.message'])
 
-        rec = self.env['mail.test.simple'].sudo(self.user_employee).with_context({'mail_create_nolog': False}).create({'name': 'Test'})
+        rec = self.env['mail.test.simple'].sudo(self.user_employee).create({'name': 'Test'})
         self.assertEqual(len(rec.message_ids), 1)
 
     def test_chatter_mail_notrack(self):

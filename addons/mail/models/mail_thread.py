@@ -286,18 +286,6 @@ class MailThread(models.AbstractModel):
                     create_values[key[8:]] = val
             thread._message_auto_subscribe(create_values)
 
-        # track values
-        if not self._context.get('mail_notrack'):
-            if 'lang' not in self._context:
-                track_threads = threads.with_context(lang=self.env.user.lang)
-            else:
-                track_threads = threads
-            for thread, values in zip(track_threads, vals_list):
-                tracked_fields = thread._get_tracked_fields(list(values))
-                if tracked_fields:
-                    initial_values = {thread.id: dict.fromkeys(tracked_fields, False)}
-                    thread.message_track(tracked_fields, initial_values)
-
         return threads
 
     @api.multi
@@ -1318,7 +1306,7 @@ class MailThread(models.AbstractModel):
 
                 # disabled subscriptions during message_new/update to avoid having the system user running the
                 # email gateway become a follower of all inbound messages
-                MessageModel = Model.sudo(user_id).with_context(mail_create_nosubscribe=True, mail_create_nolog=True)
+                MessageModel = Model.sudo(user_id).with_context(mail_create_nosubscribe=True)
                 if thread_id and hasattr(MessageModel, 'message_update'):
                     thread = MessageModel.browse(thread_id)
                     thread.message_update(message_dict)

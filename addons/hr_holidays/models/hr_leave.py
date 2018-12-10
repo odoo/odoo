@@ -478,7 +478,7 @@ class HolidaysRequest(models.Model):
 
         if not values.get('department_id'):
             values.update({'department_id': self.env['hr.employee'].browse(employee_id).department_id.id})
-        holiday = super(HolidaysRequest, self.with_context(mail_create_nolog=True, mail_create_nosubscribe=True)).create(values)
+        holiday = super(HolidaysRequest, self.with_context(mail_create_nosubscribe=True)).create(values)
         holiday.add_follower(employee_id)
         if employee_id:
             holiday._onchange_employee_id()

@@ -516,7 +516,7 @@ class AccountInvoice(models.Model):
                     if field not in vals and invoice[field]:
                         vals[field] = invoice._fields[field].convert_to_write(invoice[field], invoice)
 
-        invoice = super(AccountInvoice, self.with_context(mail_create_nolog=True)).create(vals)
+        invoice = super(AccountInvoice, self).create(vals)
 
         if any(line.invoice_line_tax_ids for line in invoice.invoice_line_ids) and not invoice.tax_line_ids:
             invoice.compute_taxes()
