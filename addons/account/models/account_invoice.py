@@ -1290,6 +1290,11 @@ class AccountInvoice(models.Model):
             # Auto-compute reference, if not already existing and if configured on company
             if not invoice.reference and invoice.type == 'out_invoice':
                 invoice.reference = invoice._get_computed_reference()
+
+            # DO NOT FORWARD-PORT.
+            # The reference is copied after the move creation because we need the move to get the invoice number but
+            # we need the invoice number to get the reference.
+            invoice.move_id.ref = invoice.reference
         self._check_duplicate_supplier_reference()
 
         return self.write({'state': 'open'})
