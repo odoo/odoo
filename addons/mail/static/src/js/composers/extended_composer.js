@@ -129,7 +129,7 @@ var ExtendedComposer = BasicComposer.extend({
      * @private
      */
     _onClickDiscard: function () {
-        this.trigger_up('discard_extended_composer');
+        this.trigger('discard_extended_composer');
     },
 });
 

@@ -37,48 +37,48 @@ var LunchKanbanWidget = Widget.extend({
     _onAddMoney: function (ev) {
         ev.preventDefault();
         ev.stopPropagation();
-        this.trigger_up('add_money', {});
+        this.trigger('add_money', {});
     },
     _onAddProduct: function (ev) {
         ev.preventDefault();
         ev.stopPropagation();
 
-        this.trigger_up('add_product', {lineId: $(ev.currentTarget).data('id')});
+        this.trigger('add_product', {lineId: $(ev.currentTarget).data('id')});
     },
     _onEditOrder: function (ev) {
         ev.preventDefault();
         ev.stopPropagation();
 
-        this.trigger_up('edit_order', {});
+        this.trigger('edit_order', {});
     },
     _onOrderNow: function (ev) {
         ev.preventDefault();
         ev.stopPropagation();
 
-        this.trigger_up('order_now', {});
+        this.trigger('order_now', {});
     },
     _onRemoveProduct: function (ev) {
         ev.preventDefault();
         ev.stopPropagation();
 
-        this.trigger_up('remove_product', {lineId: $(ev.currentTarget).data('id')});
+        this.trigger('remove_product', {lineId: $(ev.currentTarget).data('id')});
     },
     _onSaveOrder: function (ev) {
         ev.preventDefault();
         ev.stopPropagation();
 
-        this.trigger_up('save_order', {});
+        this.trigger('save_order', {});
     },
     _onUnlinkOrder: function (ev) {
         ev.preventDefault();
         ev.stopPropagation();
 
-        this.trigger_up('unlink_order', {});
+        this.trigger('unlink_order', {});
     },
     _onUserChanged: function (ev) {
         ev.stopPropagation();
 
-        this.trigger_up('change_user', {userId: $(ev.currentTarget).find(':selected').data('user-id')});
+        this.trigger('change_user', {userId: $(ev.currentTarget).find(':selected').data('user-id')});
     }
 });
 

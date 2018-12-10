@@ -17,7 +17,7 @@ LineRenderer.include({
 
     _onOpenSaleOrder: function (event) {
         event.preventDefault();
-        this.trigger_up('open_sale_orders');
+        this.trigger('open_sale_orders');
     },
 });
 
@@ -45,7 +45,7 @@ StatementAction.include({
                 domain: [['id', 'in', line.sale_order_ids]]
             },
             {
-                on_reverse_breadcrumb: function() {self.trigger_up('reload');},
+                on_reverse_breadcrumb: function() {self.trigger('reload');},
             });
         }
         else if (line.sale_order_ids && line.sale_order_ids.length === 1) {
@@ -59,7 +59,7 @@ StatementAction.include({
                 res_id: line.sale_order_ids[0],
             }, 
             {
-                on_reverse_breadcrumb: function() {self.trigger_up('reload');},
+                on_reverse_breadcrumb: function() {self.trigger('reload');},
             });
         }
     },

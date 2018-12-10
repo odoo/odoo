@@ -298,12 +298,12 @@ var RTEWidget = Widget.extend({
         // to prepare for it (website will restart animations for example)
         // TODO should be better handled
         $editable.on('content_will_be_destroyed', function (ev) {
-            self.trigger_up('content_will_be_destroyed', {
+            self.trigger('content_will_be_destroyed', {
                 $target: $(ev.currentTarget),
             });
         });
         $editable.on('content_was_recreated', function (ev) {
-            self.trigger_up('content_was_recreated', {
+            self.trigger('content_was_recreated', {
                 $target: $(ev.currentTarget),
             });
         });

@@ -6961,7 +6961,7 @@ QUnit.module('Views', {
         form.$('.o_field_x2many_list_row_add a').click();
         form.$('input[name=display_name]').val('abc').trigger('input');
 
-        // click button which will trigger_up 'execute_action' (this will save)
+        // click button which will trigger 'execute_action' (this will save)
         values = {
             display_name: 'abc',
             product_id: false,

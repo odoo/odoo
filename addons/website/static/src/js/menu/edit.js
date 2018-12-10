@@ -120,7 +120,7 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
      * @param {OdooEvent} ev
      */
     _onContentWillBeDestroyed: function (ev) {
-        this.trigger_up('animation_stop_demand', {
+        this.trigger('animation_stop_demand', {
             $target: ev.data.$target,
         });
     },
@@ -132,7 +132,7 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
      * @param {OdooEvent} ev
      */
     _onContentWasRecreated: function (ev) {
-        this.trigger_up('animation_start_demand', {
+        this.trigger('animation_start_demand', {
             editableMode: true,
             $target: ev.data.$target,
         });
@@ -145,7 +145,7 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
      * @param {OdooEvent} ev
      */
     _onSnippetCloned: function (ev) {
-        this.trigger_up('animation_start_demand', {
+        this.trigger('animation_start_demand', {
             editableMode: true,
             $target: ev.data.$target,
         });

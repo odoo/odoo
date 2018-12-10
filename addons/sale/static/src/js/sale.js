@@ -51,7 +51,7 @@ KanbanRecord.include({
             this.trigger('kanban_record_update', {invoiced_target: value});
             this.trigger('reload');
                 // TODO: previous lines can be refactored as follows (in master)
-                // self.trigger_up('kanban_record_update', {invoiced_target: value});
+                // self.trigger('kanban_record_update', {invoiced_target: value});
         }
     },
 });

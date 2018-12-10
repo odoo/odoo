@@ -612,14 +612,14 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
             target: 'current'
         }, 
         {
-            on_reverse_breadcrumb: function() {self.trigger_up('reload');},
+            on_reverse_breadcrumb: function() {self.trigger('reload');},
         });
     },
     _editAmount: function (event) {
         event.stopPropagation();
         var $line = $(event.target);
         var moveLineId = $line.closest('.mv_line').data('line-id');
-        this.trigger_up('partial_reconcile', {'data': {mvLineId: moveLineId, 'amount': $line.val()}});
+        this.trigger('partial_reconcile', {'data': {mvLineId: moveLineId, 'amount': $line.val()}});
     },
     _onEditAmount: function (event) {
         event.preventDefault();
@@ -627,7 +627,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
         // Don't call when clicking inside the input field
         if (! $(event.target).hasClass('edit_amount_input')){
             var $line = $(event.target);
-            this.trigger_up('getPartialAmount', {'data': $line.closest('.mv_line').data('line-id')});
+            this.trigger('getPartialAmount', {'data': $line.closest('.mv_line').data('line-id')});
         }
     },
     /**
@@ -646,7 +646,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
             target: 'current'
         },
         {
-            on_reverse_breadcrumb: function() {self.trigger_up('reload');},
+            on_reverse_breadcrumb: function() {self.trigger('reload');},
         });
     },
     /**
