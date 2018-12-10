@@ -30,7 +30,6 @@
                 t-att-data-callback-method="callback_method or ''"
                 t-att-data-order-id="order_id or ''">
             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-            <input type="hidden" t-if="verify_validity==True" name="verify_validity" value="1"/>
             <input type="hidden" t-if="prepare_tx_url" name="prepare_tx_url" t-att-value="prepare_tx_url"/>
             <input type="hidden" t-if="order_id" name="order_id" t-att-value="order_id"/>
             <!-- s2s form submission -->
@@ -99,6 +98,7 @@
                         <div t-attf-id="o_payment_add_token_acq_{{acq.id}}"
                              t-attf-class="card-footer {{'d-none' if(acquirers_count &gt; 1 and pms_count==0 and acquirers[0]!=acq) else 'd-none' if pms_count &gt;0 else ''}}">
                             <div class="clearfix">
+                                <input type="hidden" t-if="(verify_validity==True or mode == 'manage') and acq.check_validity" name="verify_validity" t-att-value="acq.check_validity"/>
                                 <t t-call="{{acq.sudo().get_s2s_form_xml_id()}}">
                                     <t t-set="id" t-value="acq.id"/>
                                     <t t-set="partner_id" t-value="partner_id"/>
@@ -109,21 +109,23 @@
                     </t>
                 </t>
                 <t t-foreach="pms" t-as="pm">
-                    <div class="card-body o_payment_acquirer_select">
-                        <label>
-                            <input t-if="mode == 'payment'" type="radio" name="pm_id" t-att-value="pm.id" t-att-checked="checked_pm_id == pm.id"/>
-                            <span class="payment_option_name" t-esc="pm.name"/>
-                            <t t-if="pm.verified">
-                                <i class="fa fa-check text-success" title="This payment method is verified by our system." role="img" aria-label="Ok"></i>
-                            </t>
-                            <t t-else="">
-                                <i class="fa fa-close text-danger" title="This payment method has not been verified by our system." role="img" aria-label="Not verified"></i>
-                            </t>
-                        </label>
-                        <button t-if="mode == 'manage'" name="delete_pm" t-att-value="pm.id" class="btn btn-primary btn-sm float-right">
-                            <i class="fa fa-trash"></i> Delete
-                        </button>
-                    </div>
+                    <t t-if="not verify_validity or (pm.acquirer_id.check_validity and pm.verified) or not pm.acquirer_id.check_validity">
+                        <div class="card-body o_payment_acquirer_select">
+                            <label>
+                                <input t-if="mode == 'payment'" type="radio" name="pm_id" t-att-value="pm.id" t-att-checked="checked_pm_id == pm.id"/>
+                                <span class="payment_option_name" t-esc="pm.name"/>
+                                <t t-if="pm.verified">
+                                    <i class="fa fa-check text-success" title="This payment method is verified by our system." role="img" aria-label="Ok"></i>
+                                </t>
+                                <t t-else="">
+                                    <i class="fa fa-check text-muted" title="This payment method has not been verified by our system." role="img" aria-label="Not verified"></i>
+                                </t>
+                            </label>
+                            <button t-if="mode == 'manage'" name="delete_pm" t-att-value="pm.id" class="btn btn-primary btn-sm float-right">
+                                <i class="fa fa-trash"></i> Delete
+                            </button>
+                        </div>
+                    </t>
                 </t>
             </div>
             <div t-if='back_button_txt' class="float-left mt-2">

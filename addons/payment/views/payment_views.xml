@@ -117,6 +117,7 @@
                                     <field name="registration_view_template_id" groups="base.group_no_one" attrs="{'invisible': [('payment_flow', '!=', 's2s')]}"/>
                                     <field name="payment_icon_ids" widget="many2many_tags"/>
                                     <field name="payment_flow" widget="radio" attrs="{'invisible': [('token_implemented', '=', False)]}"/>
+                                    <field name="check_validity" attrs="{'invisible': [('payment_flow', '!=', 's2s')]}" groups="base.group_no_one"/>
                                 </group>
                             </page>
                         </notebook>

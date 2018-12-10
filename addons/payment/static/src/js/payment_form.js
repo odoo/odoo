@@ -188,12 +188,6 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
                 $(button).children('.fa-plus-circle').removeClass('fa-plus-circle');
                 $(button).prepend('<span class="o_loader"><i class="fa fa-refresh fa-spin"></i>&nbsp;</span>');
 
-                var verify_validity = this.$el.find('input[name="verify_validity"]');
-
-                if (verify_validity.length>0) {
-                    form_data.verify_validity = verify_validity[0].value === "1";
-                }
-
                 // do the call to the route stored in the 'data_set' input of the acquirer form, the data must be called 'create-route'
                 return this._rpc({
                     route: ds.dataset.createRoute,
@@ -365,9 +359,6 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
             $(button).attr('disabled', true);
             $(button).children('.fa-plus-circle').removeClass('fa-plus-circle');
             $(button).prepend('<span class="o_loader"><i class="fa fa-refresh fa-spin"></i>&nbsp;</span>');
-
-            // we force the check when adding a card trough here
-            form_data.verify_validity = true;
 
             // do the call to the route stored in the 'data_set' input of the acquirer form, the data must be called 'create-route'
             this._rpc({
