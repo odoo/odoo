@@ -15,7 +15,8 @@ Sidebar.include({
      */
     init : function (parent, options) {
         this._super.apply(this, arguments);
-        this.hasAttachments = options.viewType === "form";
+        this.hasChatter = parent && parent.renderer && !_.isEmpty(parent.renderer.mailFields);
+        this.hasAttachments = options.viewType === "form" && !this.hasChatter;
         if (this.hasAttachments) {
             this.sections.splice(1, 0, { 'name' : 'files', 'label' : _t('Attachment(s)'), });
             this.items.files = [];
