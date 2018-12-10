@@ -176,7 +176,7 @@
             $element.click();
         },250);
         var waitViewSwitch = waitForCondition(function(){
-            return $('.o_content > .o_view_controller').data('view-type') === viewType;
+            return $('.o_action_manager> .o_action.o_view_controller').data('view-type') === viewType;
         });
         return waitViewSwitch.then(function() {
             return testFilters();
