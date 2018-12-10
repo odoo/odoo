@@ -101,6 +101,9 @@ class PaymentAcquirer(models.Model):
                 templates to do it in one-click.""")
     specific_countries = fields.Boolean(string="Specific Countries",
         help="If you leave it empty, the payment acquirer will be available for all the countries.")
+    check_validity = fields.Boolean(string="Verify Card Validity",
+        help="""Trigger a transaction of 1 currency unit and its refund to check the validity of new credit cards entered in the customer portal.
+        Without this check, the validity will be verified at the very first transaction.""")
     country_ids = fields.Many2many(
         'res.country', 'payment_country_rel',
         'payment_id', 'country_id', 'Countries',
@@ -1129,6 +1132,7 @@ class PaymentToken(models.Model):
             'payment_token_id': self.id,
             'partner_id': self.partner_id.id,
             'partner_country_id': self.partner_id.country_id.id,
+            'state_message': _('This Transaction was automatically processed & refunded in order to validate a new credit card.'),
         })
 
         kwargs.update({'3d_secure': True})
