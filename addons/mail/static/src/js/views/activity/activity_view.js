@@ -13,7 +13,7 @@ var _lt = core._lt;
 var ActivityView = AbstractView.extend({
     accesskey: "a",
     display_name: _lt('Activity'),
-    icon: 'fa-th',
+    icon: 'fa-clock-o',
     config: _.extend({}, AbstractView.prototype.config, {
         Controller: ActivityController,
         Model: ActivityModel,
