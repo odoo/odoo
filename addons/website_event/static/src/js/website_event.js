@@ -37,6 +37,9 @@ var EventRegistrationForm = Widget.extend({
                     self.on_click(ev);
                 });
         });
+        if($('.o_right_col').children().length == 0){
+            $('.o_right_col').addClass('d-none');
+        }
         return res;
     },
     on_click: function (ev) {
@@ -75,4 +78,45 @@ var EventRegistrationForm = Widget.extend({
 });
 
 return EventRegistrationForm;
+});
+
+// To remove or not the right col in the 
+odoo.define('website_event.o_event_list_container.secondInstance', function (require) {
+'use strict';
+
+require('web_editor.ready');
+var EventRightColDisplay = require('website_event.website_event');
+
+var $rightCol = $('#o_event_list_container');
+if (!$rightCol.length) {
+    return null;
+}
+
+var secondInstance = new EventRightColDisplay();
+return secondInstance.appendTo($rightCol).then(function () {
+    return secondInstance;
+});
+});
+
+//==============================================================================
+
+odoo.define('website_event.website_event_display_col', function (require) {
+
+var ajax = require('web.ajax');
+var core = require('web.core');
+var Widget = require('web.Widget');
+
+var _t = core._t;
+
+// test to display or not the right col
+var EventRightColDisplay = Widget.extend({
+    start: function () {
+        var self = this;
+        if($('.o_right_col').children().length == 0){
+            $('.o_right_col').addClass('d-none');
+        }
+    },
+});
+
+return EventRightColDisplay;
 });

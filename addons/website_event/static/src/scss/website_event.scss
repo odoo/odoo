@@ -1,0 +1,11 @@
+#wrapwrap .o_wevent_participating_container{
+    position: relative;
+    .o_wevent_participating_block{
+        width: 3px;
+        height: 100%;
+        @include o-position-absolute(0, 0, 0, 0);
+    }
+}
+.o_wevent_registration_list_attendees:nth-child(2n){
+        background-color: $gray-200;
+    }
