@@ -156,6 +156,7 @@ var DataImport = AbstractAction.extend({
     },
     start: function () {
         var self = this;
+        this.$form = this.$('form');
         this.setup_encoding_picker();
         this.setup_separator_picker();
         this.setup_float_format_picker();
@@ -319,25 +320,25 @@ var DataImport = AbstractAction.extend({
         this.$('.oe_import_date_format').select2('val', '');
         this.$('.oe_import_datetime_format').val('');
 
-        this.$el.removeClass('oe_import_preview oe_import_error');
+        this.$form.removeClass('oe_import_preview oe_import_error');
         var import_toggle = false;
         var file = this.$('input.oe_import_file')[0].files[0];
         // some platforms send text/csv, application/csv, or other things if Excel is prevent
         if ((file.type && _.last(file.type.split('/')) === "csv") || ( _.last(file.name.split('.')) === "csv")) {
             import_toggle = true;
         }
-        this.$el.find('.oe_import_box').toggle(import_toggle);
-        jsonp(this.$el, {
+        this.$form.find('.oe_import_box').toggle(import_toggle);
+        jsonp(this.$form, {
             url: '/base_import/set_file'
         }, this.proxy('settings_changed'));
     },
     onpreviewing: function () {
         var self = this;
         this.$buttons.filter('.o_import_import, .o_import_validate, .o_import_file_reload').addClass('d-none');
-        this.$el.addClass('oe_import_with_file');
+        this.$form.addClass('oe_import_with_file');
         // TODO: test that write // succeeded?
-        this.$el.removeClass('oe_import_preview_error oe_import_error');
-        this.$el.toggleClass(
+        this.$form.removeClass('oe_import_preview_error oe_import_error');
+        this.$form.toggleClass(
             'oe_import_noheaders text-muted',
             !this.$('input.oe_import_has_header').prop('checked'));
         this._rpc({
@@ -353,9 +354,9 @@ var DataImport = AbstractAction.extend({
     onpreview_error: function (event, from, to, result) {
         this.$('.oe_import_options').show();
         this.$buttons.filter('.o_import_file_reload').removeClass('d-none');
-        this.$el.addClass('oe_import_preview_error oe_import_error');
-        this.$el.find('.oe_import_box, .oe_import_with_file').removeClass('d-none');
-        this.$el.find('.o_view_nocontent').addClass('d-none');
+        this.$form.addClass('oe_import_preview_error oe_import_error');
+        this.$form.find('.oe_import_box, .oe_import_with_file').removeClass('d-none');
+        this.$form.find('.o_view_nocontent').addClass('d-none');
         this.$('.oe_import_error_report').html(
                 QWeb.render('ImportView.preview.error', result));
     },
@@ -366,9 +367,9 @@ var DataImport = AbstractAction.extend({
             .removeClass('btn-primary').addClass('btn-secondary')
             .blur();
         this.$buttons.filter('.o_import_import, .o_import_validate, .o_import_file_reload').removeClass('d-none');
-        this.$el.find('.oe_import_box, .oe_import_with_file').removeClass('d-none');
-        this.$el.find('.o_view_nocontent').addClass('d-none');
-        this.$el.addClass('oe_import_preview');
+        this.$form.find('.oe_import_box, .oe_import_with_file').removeClass('d-none');
+        this.$form.find('.o_view_nocontent').addClass('d-none');
+        this.$form.addClass('oe_import_preview');
         this.$('input.oe_import_advanced_mode').prop('checked', result.advanced_mode);
         this.$('.oe_import_grid').html(QWeb.render('ImportView.preview', result));
 
@@ -632,7 +633,7 @@ var DataImport = AbstractAction.extend({
         // offset more if header
         if (this.import_options().headers) { offset += 1; }
 
-        this.$el.addClass('oe_import_error');
+        this.$form.addClass('oe_import_error');
         this.$('.oe_import_error_report').html(
             QWeb.render('ImportView.error', {
                 errors: _(message).groupBy('message'),
