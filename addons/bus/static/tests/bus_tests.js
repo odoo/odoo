@@ -218,7 +218,6 @@ QUnit.module('Bus', {
     QUnit.test('cross tab bus elect new master on master unload', function (assert) {
         var done = assert.async();
         assert.expect(8);
-
         // master
         var pollDeferredMaster = $.Deferred();
 
@@ -246,8 +245,8 @@ QUnit.module('Bus', {
         var master = new Widget(parentMaster);
         master.appendTo($('#qunit-fixture'));
 
-        master.call('bus_service', 'onNotification', master, function (notifications) {
-            assert.step(['master', 'notification', notifications]);
+        master.call('bus_service', 'onNotification', master, function (ev) {
+            assert.step(['master', 'notification', ev.data.notifications]);
         });
         master.call('bus_service', 'addChannel', 'lambda');
 
@@ -278,8 +277,8 @@ QUnit.module('Bus', {
             var slave = new Widget(parentSlave);
             slave.appendTo($('#qunit-fixture'));
 
-            slave.call('bus_service', 'onNotification', slave, function (notifications) {
-                assert.step(['slave', 'notification', notifications]);
+            slave.call('bus_service', 'onNotification', slave, function (ev) {
+                assert.step(['slave', 'notification', ev.data.notifications]);
             });
             slave.call('bus_service', 'addChannel', 'lambda');
 
