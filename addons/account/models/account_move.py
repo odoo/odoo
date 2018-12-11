@@ -1466,6 +1466,9 @@ class AccountPartialReconcile(models.Model):
         '''
         return tax.cash_basis_base_account_id or line.account_id
 
+    def _get_amount_tax_cash_basis(self, amount, line):
+        return line.company_id.currency_id.round(amount)
+
     def create_tax_cash_basis_entry(self, percentage_before_rec):
         self.ensure_one()
         move_date = self.debit_move_id.date
@@ -1480,7 +1483,7 @@ class AccountPartialReconcile(models.Model):
                     percentage_after = line._get_matched_percentage()[move.id]
                     #amount is the current cash_basis amount minus the one before the reconciliation
                     amount = line.balance * percentage_after - line.balance * percentage_before
-                    rounded_amt = line.company_id.currency_id.round(amount)
+                    rounded_amt = self._get_amount_tax_cash_basis(amount, line)
                     if float_is_zero(rounded_amt, precision_rounding=line.company_id.currency_id.rounding):
                         continue
                     if line.tax_line_id and line.tax_line_id.tax_exigibility == 'on_payment':
