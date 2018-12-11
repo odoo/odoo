@@ -756,11 +756,11 @@
                                 <t t-set="icon" t-value="'fa-check'"/>
                                 <t t-set="karma" t-value="not question.can_moderate and question.forum_id.karma_moderate or 0"/>
                             </t>
-                            <a t-if="question.active" t-attf-style="#{not question.can_flag and 'display:none;' or ''}"
+                            <a t-if="question.active" href="#" t-attf-style="#{not question.can_flag and 'display:none;' or ''}"
                                 t-attf-class="flag px-3 py-2 #{not question.can_flag and 'karma_required' or ''}"
                                 t-attf-data-karma="#{not question.can_flag and question.forum_id.karma_flag or 0}"
                                 t-attf-data-href="/forum/#{slug(forum)}/post/#{slug(question)}/flag" title="Flag"
-                                ><i t-attf-class="text-primary fa #{not question.can_flag and 'karma_required fa-flag-o' or 'fa-flag'}"/>
+                                ><i t-attf-class="fa #{not question.can_flag and 'karma_required fa-flag-o' or 'fa-flag'}"/>
                             </a>
                         </div>
                     </div>
@@ -982,7 +982,6 @@
                         <div class="mt-2"><span t-field="message.body" class="oe_no_empty text-dark"/></div>
                     </small>
                 </div>
-                
             </div>
             <div class="css_editable_mode_hidden">
                 <form t-attf-id="comment#{ object._name.replace('.','') + '-' + str(object.id) }" class="collapse oe_comment_grey js_website_submit_form"
