@@ -178,7 +178,7 @@ class PyJsParser:
                 code = code * 16 + HEX_CONV[ch]
             else:
                 return ''
-        return unichr(code)
+        return chr(code)
 
     def scanUnicodeCodePointEscape(self):
         ch = self.source[self.index]
@@ -196,10 +196,10 @@ class PyJsParser:
             self.throwUnexpectedToken()
         # UTF-16 Encoding
         if (code <= 0xFFFF):
-            return unichr(code)
+            return chr(code)
         cu1 = ((code - 0x10000) >> 10) + 0xD800;
         cu2 = ((code - 0x10000) & 1023) + 0xDC00;
-        return unichr(cu1) + unichr(cu2)
+        return chr(cu1) + chr(cu2)
 
     def ccode(self, offset=0):
         return ord(self.source[self.index + offset])
@@ -524,14 +524,14 @@ class PyJsParser:
                     if ch == 'u':
                         digs = self.source[self.index:self.index + 4]
                         if len(digs) == 4 and all(isHexDigit(d) for d in digs):
-                            st += template % unichr(int(digs, 16))
+                            st += template % chr(int(digs, 16))
                             self.index += 4
                         else:
                             st += 'u'
                     elif ch == 'x':
                         digs = self.source[self.index:self.index + 2]
                         if len(digs) == 2 and all(isHexDigit(d) for d in digs):
-                            st += template % unichr(int(digs, 16))
+                            st += template % chr(int(digs, 16))
                             self.index += 2
                         else:
                             st += 'x'
