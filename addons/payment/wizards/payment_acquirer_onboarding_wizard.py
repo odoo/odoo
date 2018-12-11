@@ -41,7 +41,7 @@ class PaymentWizard(models.TransientModel):
             env = self.env
         module_id = env.ref('base.module_payment_transfer').id
         return env['payment.acquirer'].search([('module_id', '=', module_id),
-            ('company_id', '=', env.user.company_id.id)], limit=1)
+            ('company_id', '=', env.user.company_id.id), ('journal_id', '!=', False)], limit=1)
 
     def _get_default_payment_acquirer_onboarding_value(self, key):
         if not self.env.user._is_admin():
