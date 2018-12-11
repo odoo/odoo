@@ -294,6 +294,10 @@ class MailActivity(models.Model):
                         _('Assigned user %s has no access to the document and is not able to handle this activity.') %
                         activity.user_id.display_name)
 
+    # ------------------------------------------------------
+    # ORM overrides
+    # ------------------------------------------------------
+
     @api.model
     def create(self, values):
         activity = super(MailActivity, self).create(values)
@@ -350,6 +354,10 @@ class MailActivity(models.Model):
                     {'type': 'activity_updated', 'activity_deleted': True})
         return super(MailActivity, self).unlink()
 
+    # ------------------------------------------------------
+    # Business Methods
+    # ------------------------------------------------------
+
     @api.multi
     def action_notify(self):
         if not self:
@@ -375,11 +383,71 @@ class MailActivity(models.Model):
     def action_done(self):
         """ Wrapper without feedback because web button add context as
         parameter, therefore setting context to feedback """
-        return self.action_feedback()
+        messages, next_activities = self._action_done()
+        return messages.ids and messages.ids[0] or False
 
+    @api.multi
     def action_feedback(self, feedback=False):
-        message = self.env['mail.message']
+        messages, next_activities = self._action_done(feedback=feedback)
+        return messages.ids and messages.ids[0] or False
+
+    def action_done_schedule_next(self):
+        """ Wrapper without feedback because web button add context as
+        parameter, therefore setting context to feedback """
+        return self.action_feedback_schedule_next()
+
+    @api.multi
+    def action_feedback_schedule_next(self, feedback=False):
+        ctx = dict(
+            clean_context(self.env.context),
+            default_previous_activity_type_id=self.activity_type_id.id,
+            activity_previous_deadline=self.date_deadline,
+            default_res_id=self.res_id,
+            default_res_model=self.res_model,
+        )
+        messages, next_activities = self._action_done(feedback=feedback)  # will unlink activity, dont access self after that
+        if next_activities:
+            return False
+        return {
+            'name': _('Schedule an Activity'),
+            'context': ctx,
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'mail.activity',
+            'views': [(False, 'form')],
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+        }
+
+    def _action_done(self, feedback=False):
+        """ Private implementation of marking activity as done: posting a message, deleting activity
+            (since done), and eventually create the automatical next activity (depending on config).
+            :param feedback: optional feedback from user when marking activity as done
+            :returns (messages, activities) where
+                - messages is a recordset of posted mail.message
+                - activities is a recordset of mail.activity of forced automically created activities
+        """
+        # marking as 'done'
+        messages = self.env['mail.message']
+        next_activities_values = []
         for activity in self:
+            # extract value to generate next activities
+            if activity.force_next:
+                Activity = self.env['mail.activity'].with_context(activity_previous_deadline=activity.date_deadline)  # context key is required in the onchange to set deadline
+                vals = Activity.default_get(Activity.fields_get())
+
+                vals.update({
+                    'previous_activity_type_id': activity.activity_type_id.id,
+                    'res_id': activity.res_id,
+                    'res_model': activity.res_model,
+                    'res_model_id': self.env['ir.model']._get(activity.res_model).id,
+                })
+                virtual_activity = Activity.new(vals)
+                virtual_activity._onchange_previous_activity_type_id()
+                virtual_activity._onchange_activity_type_id()
+                next_activities_values.append(virtual_activity._convert_to_write(virtual_activity._cache))
+
+            # post message on activity, before deleting it
             record = self.env[activity.res_model].browse(activity.res_id)
             record.message_post_with_view(
                 'mail.message_activity_done',
@@ -391,45 +459,12 @@ class MailActivity(models.Model):
                 subtype_id=self.env['ir.model.data'].xmlid_to_res_id('mail.mt_activities'),
                 mail_activity_type_id=activity.activity_type_id.id,
             )
-            message |= record.message_ids[0]
+            messages |= record.message_ids[0]
 
-        self.unlink()
-        return message.ids and message.ids[0] or False
+        next_activities = self.env['mail.activity'].create(next_activities_values)
+        self.unlink()  # will unlink activity, dont access `self` after that
 
-    def action_done_schedule_next(self):
-        """ Wrapper without feedback because web button add context as
-        parameter, therefore setting context to feedback """
-        return self.action_feedback_schedule_next()
-
-    @api.multi
-    def action_feedback_schedule_next(self, feedback=False):
-        ctx = dict(
-                    clean_context(self.env.context),
-                    default_previous_activity_type_id=self.activity_type_id.id,
-                    activity_previous_deadline=self.date_deadline,
-                    default_res_id=self.res_id,
-                    default_res_model=self.res_model,
-                )
-        force_next = self.force_next
-        self.action_feedback(feedback)  # will unlink activity, dont access self after that
-        if force_next:
-            Activity = self.env['mail.activity'].with_context(ctx)
-            res = Activity.new(Activity.default_get(Activity.fields_get()))
-            res._onchange_previous_activity_type_id()
-            res._onchange_activity_type_id()
-            Activity.create(res._convert_to_write(res._cache))
-            return False
-        else:
-            return {
-                'name': _('Schedule an Activity'),
-                'context': ctx,
-                'view_type': 'form',
-                'view_mode': 'form',
-                'res_model': 'mail.activity',
-                'views': [(False, 'form')],
-                'type': 'ir.actions.act_window',
-                'target': 'new',
-            }
+        return messages, next_activities
 
     @api.multi
     def action_close_dialog(self):
