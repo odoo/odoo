@@ -87,6 +87,13 @@ ul.flex-column > li > a {
     padding: 2px 15px;
 }
 
+// Link without text but an icon
+a, .btn-link {
+    &.fa:hover {
+        text-decoration: $o-theme-btn-icon-hover-decoration;
+    }
+}
+
 // Odoo options classes
 .jumbotron {
     margin-bottom: 0;
