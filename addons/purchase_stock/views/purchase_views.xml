@@ -21,6 +21,9 @@
             <xpath expr="//field[@name='currency_id']" position="after">
                 <field name="is_shipped" invisible="1"/>
             </xpath>
+            <xpath expr="//field[@name='order_line']/tree//field[@name='price_unit']" position="after">
+                <field name="location_dest_id"/>
+            </xpath>
             <xpath expr="//field[@name='order_line']/tree//field[@name='date_planned']" position="after">
                 <field name="move_dest_ids" invisible="1"/>
             </xpath>

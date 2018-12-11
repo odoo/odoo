@@ -8,10 +8,9 @@ class PurchaseOrderLine(models.Model):
     _inherit = "purchase.order.line"
 
     @api.multi
-    def _prepare_stock_moves(self, picking):
-        res = super(PurchaseOrderLine, self)._prepare_stock_moves(picking)
-        for re in res:
-            re['sale_line_id'] = self.sale_line_id.id
+    def _prepare_stock_moves(self):
+        res = super(PurchaseOrderLine, self)._prepare_stock_moves()
+        res['sale_line_id'] = self.sale_line_id.id
         return res
 
     def _merge_in_existing_line(self, product_id, product_qty, product_uom, location_id, name, origin, values):
@@ -36,7 +35,7 @@ class StockRule(models.Model):
         return procurement.values.get('sale_line_id'), super(StockRule, self)._get_procurements_to_merge_sorted(procurement)
 
     @api.model
-    def _prepare_purchase_order_line(self, product_id, product_qty, product_uom, company_id, values, po):
-        res = super(StockRule, self)._prepare_purchase_order_line(product_id, product_qty, product_uom, company_id, values, po)
+    def _prepare_purchase_order_line(self, product_id, product_qty, location_id, product_uom, company_id, values, po):
+        res = super(StockRule, self)._prepare_purchase_order_line(product_id, product_qty, location_id, product_uom, company_id, values, po)
         res['sale_line_id'] = values.get('sale_line_id', False)
         return res

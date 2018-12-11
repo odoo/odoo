@@ -99,7 +99,7 @@ class StockRule(models.Model):
                     # If the procurement can be merge in an existing line. Directly
                     # write the new values on it.
                     vals = self._update_purchase_order_line(procurement.product_id,
-                        procurement.product_qty, procurement.product_uom, company_id,
+                        procurement.product_qty, procurement.product_uom, procurement.location_id, company_id,
                         procurement.values, po_line)
                     po_line.write(vals)
                 else:
@@ -108,8 +108,8 @@ class StockRule(models.Model):
                     # order to create it in batch.
                     partner = procurement.values['supplier'].name
                     po_line_values.append(self._prepare_purchase_order_line(
-                        procurement.product_id, procurement.product_qty,
-                        procurement.product_uom, procurement.company_id,
+                        procurement.product_id, procurement.product_qty,procurement.location_id,
+                        procurement.product_uom,  procurement.company_id,
                         procurement.values, po))
             self.env['purchase.order.line'].sudo().create(po_line_values)
 
@@ -165,13 +165,14 @@ class StockRule(models.Model):
             })
             merged_procurement = self.env['procurement.group'].Procurement(
                 procurement.product_id, quantity, procurement.product_uom,
-                procurement.location_id, procurement.name, procurement.origin,
+                procurement.location_id,
+                procurement.name, procurement.origin,
                 procurement.company_id, values
             )
             merged_procurements.append(merged_procurement)
         return merged_procurements
 
-    def _update_purchase_order_line(self, product_id, product_qty, product_uom, company_id, values, line):
+    def _update_purchase_order_line(self, product_id, product_qty, product_uom, location_id, company_id, values, line):
         partner = values['supplier'].name
         procurement_uom_po_qty = product_uom._compute_quantity(product_qty, product_id.uom_po_id)
         seller = product_id._select_seller(
@@ -188,11 +189,12 @@ class StockRule(models.Model):
         return {
             'product_qty': line.product_qty + procurement_uom_po_qty,
             'price_unit': price_unit,
+            'location_dest_id': location_id.id,
             'move_dest_ids': [(4, x.id) for x in values.get('move_dest_ids', [])]
         }
 
     @api.model
-    def _prepare_purchase_order_line(self, product_id, product_qty, product_uom, company_id, values, po):
+    def _prepare_purchase_order_line(self, product_id, product_qty, location_id, product_uom, company_id, values, po):
         partner = values['supplier'].name
         procurement_uom_po_qty = product_uom._compute_quantity(product_qty, product_id.uom_po_id)
         # _select_seller is used if the supplier have different price depending
@@ -223,7 +225,6 @@ class StockRule(models.Model):
             name += '\n' + product_lang.description_purchase
 
         date_planned = self.env['purchase.order.line']._get_date_planned(seller, po=po)
-
         return {
             'name': name,
             'product_qty': procurement_uom_po_qty,
@@ -231,6 +232,7 @@ class StockRule(models.Model):
             'product_uom': product_id.uom_po_id.id,
             'price_unit': price_unit,
             'date_planned': date_planned,
+            'location_dest_id': location_id.id,
             'orderpoint_id': values.get('orderpoint_id', False) and values.get('orderpoint_id').id,
             'taxes_id': [(6, 0, taxes_id.ids)],
             'order_id': po.id,

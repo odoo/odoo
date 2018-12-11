@@ -94,6 +94,17 @@ class StockMove(models.Model):
         rslt += self.mapped('picking_id.purchase_id.invoice_ids').filtered(lambda x: x.state not in ('draft', 'cancel'))
         return rslt
 
+    def _assign_picking_post_process(self, new=False):
+        super(StockMove, self)._assign_picking_post_process(new=new)
+        if new:
+            picking = self.mapped('picking_id')
+            purchase_orders = self.mapped('purchase_line_id.order_id')
+            for order in purchase_orders:
+                picking.message_post_with_view(
+                    'mail.message_origin_link',
+                    values={'self': picking, 'origin': order},
+                    subtype_id=self.env.ref('mail.mt_note').id)
+
 
 class StockWarehouse(models.Model):
     _inherit = 'stock.warehouse'

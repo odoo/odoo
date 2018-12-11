@@ -84,7 +84,12 @@ class PurchaseOrder(models.Model):
     @api.multi
     def button_approve(self, force=False):
         result = super(PurchaseOrder, self).button_approve(force=force)
-        self._create_picking()
+        if not self.group_id:
+            self.group_id = self.group_id.create({
+                'name': self.name,
+                'partner_id': self.partner_id.id
+        })
+        self.order_line._create_moves()
         return result
 
     @api.multi
@@ -175,58 +180,15 @@ class PurchaseOrder(models.Model):
             return self.dest_address_id.property_stock_customer.id
         return self.picking_type_id.default_location_dest_id.id
 
-    @api.model
-    def _prepare_picking(self):
-        if not self.group_id:
-            self.group_id = self.group_id.create({
-                'name': self.name,
-                'partner_id': self.partner_id.id
-            })
-        if not self.partner_id.property_stock_supplier.id:
-            raise UserError(_("You must set a Vendor Location for this partner %s") % self.partner_id.name)
-        return {
-            'picking_type_id': self.picking_type_id.id,
-            'partner_id': self.partner_id.id,
-            'user_id': False,
-            'date': self.date_order,
-            'origin': self.name,
-            'location_dest_id': self._get_destination_location(),
-            'location_id': self.partner_id.property_stock_supplier.id,
-            'company_id': self.company_id.id,
-        }
-
-    @api.multi
-    def _create_picking(self):
-        StockPicking = self.env['stock.picking']
-        for order in self:
-            if any([ptype in ['product', 'consu'] for ptype in order.order_line.mapped('product_id.type')]):
-                pickings = order.picking_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
-                if not pickings:
-                    res = order._prepare_picking()
-                    picking = StockPicking.create(res)
-                else:
-                    picking = pickings[0]
-                moves = order.order_line._create_stock_moves(picking)
-                moves = moves.filtered(lambda x: x.state not in ('done', 'cancel'))._action_confirm()
-                seq = 0
-                for move in sorted(moves, key=lambda move: move.date_expected):
-                    seq += 5
-                    move.sequence = seq
-                moves._action_assign()
-                picking.message_post_with_view('mail.message_origin_link',
-                    values={'self': picking, 'origin': order},
-                    subtype_id=self.env.ref('mail.mt_note').id)
-        return True
-
 
 class PurchaseOrderLine(models.Model):
     _inherit = 'purchase.order.line'
 
     qty_received_method = fields.Selection(selection_add=[('stock_moves', 'Stock Moves')])
-
     move_ids = fields.One2many('stock.move', 'purchase_line_id', string='Reservation', readonly=True, ondelete='set null', copy=False)
     orderpoint_id = fields.Many2one('stock.warehouse.orderpoint', 'Orderpoint')
     move_dest_ids = fields.One2many('stock.move', 'created_purchase_line_id', 'Downstream Moves')
+    location_dest_id = fields.Many2one('stock.location', 'Destination location')
 
     @api.multi
     def _compute_qty_received_method(self):
@@ -255,7 +217,7 @@ class PurchaseOrderLine(models.Model):
     def create(self, values):
         line = super(PurchaseOrderLine, self).create(values)
         if line.order_id.state == 'purchase':
-            line._create_or_update_picking()
+            line._create_moves()
         return line
 
     @api.multi
@@ -267,7 +229,7 @@ class PurchaseOrderLine(models.Model):
                 ('purchase_line_id', 'in', self.ids), ('state', '!=', 'done')
             ]).write({'date_expected': values['date_planned']})
         if 'product_qty' in values:
-            self.filtered(lambda l: l.order_id.state == 'purchase')._create_or_update_picking()
+            self.filtered(lambda l: l.order_id.state == 'purchase')._create_moves()
         return result
 
     # --------------------------------------------------
@@ -275,7 +237,8 @@ class PurchaseOrderLine(models.Model):
     # --------------------------------------------------
 
     @api.multi
-    def _create_or_update_picking(self):
+    def _create_moves(self):
+        move_vals = []
         for line in self:
             if line.product_id.type in ('product', 'consu'):
                 # Prevent decreasing below received quantity
@@ -293,19 +256,11 @@ class PurchaseOrderLine(models.Model):
                         'res_model_id': self.env.ref('account.model_account_invoice').id,
                     })
                     activity._onchange_activity_type_id()
-
-                # If the user increased quantity of existing line or created a new line
-                pickings = line.order_id.picking_ids.filtered(lambda x: x.state not in ('done', 'cancel') and x.location_dest_id.usage in ('internal', 'transit'))
-                picking = pickings and pickings[0] or False
-                if not picking:
-                    res = line.order_id._prepare_picking()
-                    picking = self.env['stock.picking'].create(res)
-                move_vals = line._prepare_stock_moves(picking)
-                for move_val in move_vals:
-                    self.env['stock.move']\
-                        .create(move_val)\
-                        ._action_confirm()\
-                        ._action_assign()
+                move_vals.append(line._prepare_stock_moves())
+        if move_vals:
+            moves = self.env['stock.move'].create(move_vals)
+            new_moves = moves._action_confirm()
+            new_moves._action_assign()
 
     @api.multi
     def _get_stock_move_price_unit(self):
@@ -325,14 +280,13 @@ class PurchaseOrderLine(models.Model):
         return price_unit
 
     @api.multi
-    def _prepare_stock_moves(self, picking):
+    def _prepare_stock_moves(self):
         """ Prepare the stock moves data for one order line. This function returns a list of
         dictionary ready to be used in stock.move's create()
         """
         self.ensure_one()
-        res = []
         if self.product_id.type not in ['product', 'consu']:
-            return res
+            return {}
         qty = 0.0
         price_unit = self._get_stock_move_price_unit()
         for move in self.move_ids.filtered(lambda x: x.state != 'cancel' and not x.location_dest_id.usage == "supplier"):
@@ -344,9 +298,8 @@ class PurchaseOrderLine(models.Model):
             'date': self.order_id.date_order,
             'date_expected': self.date_planned,
             'location_id': self.order_id.partner_id.property_stock_supplier.id,
-            'location_dest_id': self.order_id._get_destination_location(),
-            'picking_id': picking.id,
-            'partner_id': self.order_id.dest_address_id.id,
+            'location_dest_id': self.location_dest_id.id or self.order_id._get_destination_location(),
+            'partner_id': self.partner_id.id or self.order_id.dest_address_id.id,
             'move_dest_ids': [(4, x) for x in self.move_dest_ids.ids],
             'state': 'draft',
             'purchase_line_id': self.id,
@@ -366,20 +319,12 @@ class PurchaseOrderLine(models.Model):
             product_uom_qty, product_uom = po_line_uom._adjust_uom_quantities(diff_quantity, quant_uom)
             template['product_uom_qty'] = product_uom_qty
             template['product_uom'] = product_uom.id
-            res.append(template)
-        return res
-
-    @api.multi
-    def _create_stock_moves(self, picking):
-        values = []
-        for line in self:
-            for val in line._prepare_stock_moves(picking):
-                values.append(val)
-        return self.env['stock.move'].create(values)
+        return template
 
     def _find_candidate(self, product_id, product_qty, product_uom, location_id, name, origin, company_id, values):
         """ Return the record in self where the procument with values passed as
         args can be merged. If it returns an empty record then a new line will
         be created.
         """
-        return self and self[0] or self.env['purchase.order.line']
+        lines = self.filtered(lambda x: x.location_dest_id == location_id)
+        return lines and lines[0] or self.env['purchase.order.line']
