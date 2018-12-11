@@ -363,7 +363,8 @@ class HolidaysRequest(models.Model):
     def _compute_number_of_hours_display(self):
         for holiday in self:
             calendar = holiday.employee_id.resource_calendar_id or self.env.user.company_id.resource_calendar_id
-            holiday.number_of_hours_display = holiday.number_of_days * (calendar.hours_per_day or HOURS_PER_DAY)
+            number_of_hours = calendar.get_work_hours_count(self.date_from, self.date_to)
+            holiday.number_of_hours_display = number_of_hours or (holiday.number_of_days * HOURS_PER_DAY)
 
     @api.multi
     @api.depends('state', 'employee_id', 'department_id')
