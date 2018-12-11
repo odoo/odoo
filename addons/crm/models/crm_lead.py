@@ -865,7 +865,8 @@ class Lead(models.Model):
             if team_id:
                 value['team_id'] = team_id
             if user_ids:
-                value['user_id'] = user_ids[index]
+                if lead.user_id.id != user_ids[index]:
+                    value['user_id'] = user_ids[index]
                 # Cycle through user_ids
                 index = (index + 1) % len(user_ids)
             if value:
