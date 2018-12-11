@@ -3,6 +3,7 @@ odoo.define('mail.composer.Chatter', function (require) {
 
 var BasicComposer = require('mail.composer.Basic');
 var mailUtils = require('mail.utils');
+var session = require('web.session');
 
 var core = require('web.core');
 var viewDialogs = require('web.view_dialogs');
@@ -195,7 +196,7 @@ var ChatterComposer = BasicComposer.extend({
             message = _.extend(message, {
                 subtype: 'mail.mt_comment',
                 message_type: 'comment',
-                context: self.context,
+                context: _.defaults({}, self.context, session.user_context),
             });
 
             // Subtype
