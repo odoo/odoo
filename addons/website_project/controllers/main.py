@@ -115,7 +115,7 @@ class WebsiteAccount(website_account):
             step=self._items_per_page
         )
         # content according to pager and archive selected
-        tasks = request.env['project.task'].search(domain, order=order, limit=self._items_per_page, offset=pager['offset'])
+        tasks = request.env['project.task'].search(domain, order=order, limit=self._items_per_page, offset=(page - 1) * self._items_per_page)
 
         values.update({
             'date': date_begin,
