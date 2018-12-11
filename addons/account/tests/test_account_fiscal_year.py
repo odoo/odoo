@@ -72,8 +72,15 @@ class TestFiscalPosition(AccountingTestCase):
 
         self.check_compute_fiscal_year(
             company,
-            '2016-03-01',
             '2016-02-29',
+            '2015-03-01',
+            '2016-02-29',
+        )
+
+        self.check_compute_fiscal_year(
+            company,
+            '2016-03-01',
+            '2016-03-01',
             '2017-02-28',
         )
 
