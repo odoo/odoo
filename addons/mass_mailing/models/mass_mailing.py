@@ -713,7 +713,7 @@ class MassMailing(models.Model):
             if utm_mixin.medium_id:
                 vals['medium_id'] = utm_mixin.medium_id.id
 
-            res[mass_mailing.id] = self.env['link.tracker'].convert_links(html, vals, blacklist=['/unsubscribe_from_list'])
+            res[mass_mailing.id] = self.env['link.tracker'].convert_links(html, vals, blacklist=['/unsubscribe_from_list', '${'])
 
         return res
 
