@@ -26,13 +26,20 @@ var FormView = BasicView.extend({
      * @override
      */
     init: function (viewInfo, params) {
+        var hasSidebar = params.hasSidebar;
         this._super.apply(this, arguments);
 
         var mode = params.mode || (params.currentId ? 'readonly' : 'edit');
         this.loadParams.type = 'record';
 
+        // this is kind of strange, but the param object is modified by
+        // AbstractView, so we only need to use its hasSidebar value if it was
+        // not already present in the beginning of this method
+        if (hasSidebar === undefined) {
+            hasSidebar = params.hasSidebar;
+        }
+        this.controllerParams.hasSidebar = hasSidebar;
         this.controllerParams.disableAutofocus = params.disable_autofocus;
-        this.controllerParams.hasSidebar = params.hasSidebar;
         this.controllerParams.toolbarActions = viewInfo.toolbar;
         this.controllerParams.footerToButtons = params.footerToButtons;
 
@@ -63,7 +70,6 @@ var FormView = BasicView.extend({
 
     /**
      * @override
-     * @param {string} [action.target]
      */
     _extractParamsFromAction: function (action) {
         var params = this._super.apply(this, arguments);
@@ -73,6 +79,7 @@ var FormView = BasicView.extend({
         params.withControlPanel = !(inDialog || inline);
         params.footerToButtons = inDialog;
         params.hasSearchView = inDialog ? false : params.hasSearchView;
+        params.hasSidebar = !inDialog && !inline;
         params.searchMenuTypes = inDialog ? [] : params.searchMenuTypes;
         if (inDialog || inline || fullscreen) {
             params.mode = 'edit';

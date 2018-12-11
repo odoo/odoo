@@ -105,7 +105,7 @@ var AbstractView = Factory.extend({
         this.arch = this.fieldsView.arch;
         this.fields = this.fieldsView.viewFields;
         this.userContext = params.userContext || {};
-        this.withControlPanel = params.withControlPanel;
+        this.withControlPanel = this.withControlPanel && params.withControlPanel;
 
         // the boolean parameter 'isEmbedded' determines if the view should be
         // considered as a subview. For now this is only used by the graph

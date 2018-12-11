@@ -465,7 +465,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('quick create record with quick_create_view', function (assert) {
-        assert.expect(17);
+        assert.expect(19);
 
         var kanban = createView({
             View: KanbanView,
@@ -497,6 +497,7 @@ QUnit.module('Views', {
             },
         });
 
+        assert.containsOnce(kanban, '.o_cp_controller', 'should have one control panel');
         assert.containsOnce(kanban, '.o_kanban_group:first .o_kanban_record',
             "first column should contain one record");
 
@@ -508,6 +509,7 @@ QUnit.module('Views', {
             "should have a quick create element in the first column");
         assert.strictEqual($quickCreate.find('.o_form_view.o_xxs_form_view').length, 1,
             "should have rendered an XXS form view");
+        assert.containsOnce(kanban, '.o_cp_controller', 'should not have instantiated an extra control panel');
         assert.strictEqual($quickCreate.find('input').length, 2,
             "should have two inputs");
         assert.strictEqual($quickCreate.find('.o_field_widget').length, 3,
