@@ -126,8 +126,6 @@ return core.Class.extend({
     /**
      * Loads the filters of a given model and optional action id.
      *
-     * @param {Object} [dataset] the dataset for which the filters are loaded
-     * @param {int} [action_id] the id of the action (optional)
      * @param {Object} params
      * @param {string} params.modelName
      * @param {Object} params.context
@@ -176,7 +174,7 @@ return core.Class.extend({
     /**
      * Calls 'unlink' on 'ir_filters'.
      *
-     * @param {integer} filterId, Id of the filter to remove
+     * @param {integer} filterId Id of the filter to remove
      * @return {Deferred}
      */
     delete_filter: function (filterId) {
