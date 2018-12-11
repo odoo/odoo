@@ -369,7 +369,7 @@
             <field name="name">mail.mass_mailing.list.kanban</field>
             <field name="model">mail.mass_mailing.list</field>
             <field name="arch" type="xml">
-                <kanban class="o_kanban_mobile" on_create="mass_mailing.open_create_mass_mailing_list">
+                <kanban js_class="mass_mailing_list_kanban" class="o_kanban_mobile" on_create="mass_mailing.open_create_mass_mailing_list">
                     <field name="name"/>
                     <field name="contact_nbr"/>
                     <field name="active"/>
@@ -613,7 +613,7 @@
                         </group>
                         <notebook>
                             <page string="Mail Body">
-                                <field name="body_html" class="o_mail_body" widget="html_frame" options="{'editor_url': '/mass_mailing/field/email_template'}"/>
+                                <field name="body_html" class="o_mail_body" widget="mass_mailing_html_frame" options="{'editor_url': '/mass_mailing/field/email_template'}"/>
                             </page>
                             <page string="Options">
                                 <group>
@@ -669,12 +669,13 @@
             <field name="model">mail.mass_mailing</field>
             <field name="arch" type="xml">
                 <kanban default_group_by="state">
+                    <field name='state' readonly="1"/>
+                    <field name='email_from' readonly="1"/>
                     <field name='color'/>
                     <field name='expected'/>
                     <field name='failed'/>
                     <field name='sent_date'/>
                     <field name='active'/>
-                    <field name='state'/>
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click oe_kanban_mass_mailing">
@@ -1024,7 +1025,7 @@
             <field name="name">mail.mass_mailing.campaign.kanban</field>
             <field name="model">mail.mass_mailing.campaign</field>
             <field name="arch" type="xml">
-                <kanban default_group_by='stage_id'>
+                <kanban js_class="mass_mailing_campaign_kanban" default_group_by='stage_id'>
                     <field name='total'/>
                     <field name='color'/>
                     <field name='user_id'/>
