@@ -64,4 +64,8 @@ class PartnerBinding(models.TransientModel):
             partner = Partner.search([('name', 'ilike', '%' + lead.contact_name+'%')], limit=1)
             return partner.id
 
+        if lead.name: # to be aligned with _create_lead_partner, search on lead's name as last possibility
+            partner = Partner.search([('name', 'ilike', '%' + lead.name + '%')], limit=1)
+            return partner.id
+
         return False
