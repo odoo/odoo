@@ -93,7 +93,7 @@ ActionManager.include({
                 action = state.action;
                 options = _.extend(options, {
                     additional_context: context,
-                    resID: state.id,
+                    resID: state.id || undefined,  // empty string with bbq
                     viewType: state.view_type,
                 });
             }
