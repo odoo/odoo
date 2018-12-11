@@ -77,6 +77,7 @@ CREATE TABLE ir_module_module_dependency (
     write_uid integer, -- references res_users on delete set null,
     name character varying(128),
     module_id integer REFERENCES ir_module_module ON DELETE cascade,
+    auto_install_required boolean DEFAULT true,
     primary key(id)
 );
 
