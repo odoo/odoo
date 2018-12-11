@@ -2293,7 +2293,7 @@ class _RelationalMulti(_Relational):
         result = [(5,)]
         for record in value:
             if not record.id:
-                result.append((0, record.id.ref or 0, vals[record]))
+                result.append((0, 0, vals[record]))
             elif vals[record]:
                 result.append((1, record.id, vals[record]))
             else:
