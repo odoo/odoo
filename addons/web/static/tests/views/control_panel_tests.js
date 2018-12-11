@@ -330,5 +330,28 @@ QUnit.module('Views', {
             "there should be two groups of a single field"
         );
     });
+
+    QUnit.module('Control Panel Rendering');
+
+    QUnit.test('invisible filters are not rendered', async function (assert) {
+        assert.expect(2);
+        var controlPanel = await createControlPanel({
+            model: 'partner',
+            arch: "<search>" +
+                        "<filter name=\"filterA\" string=\"A\" domain=\"[]\"/>" +
+                        "<filter name=\"filterB\" string=\"B\" invisible=\"1\" domain=\"[]\"/>" +
+                    "</search>",
+            data: this.data,
+            searchMenuTypes: ['filter'],
+            context: {
+                search_disable_custom_filters: true,
+            },
+        });
+        testUtils.dom.click(controlPanel.$('.o_filters_menu_button'));
+        assert.containsOnce(controlPanel, '.o_menu_item a:contains("A")');
+        assert.containsNone(controlPanel, '.o_menu_item a:contains("B")');
+
+        controlPanel.destroy();
+    });
 });
 });
