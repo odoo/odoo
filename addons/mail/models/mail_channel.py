@@ -280,6 +280,7 @@ class Channel(models.Model):
         channel_partner = self.mapped('channel_last_seen_partner_ids').filtered(lambda cp: cp.partner_id == self.env.user.partner_id)
         if not channel_partner:
             return self.write({'channel_last_seen_partner_ids': [(0, 0, {'partner_id': self.env.user.partner_id.id})]})
+        return False
 
     @api.multi
     def action_unfollow(self):
@@ -798,12 +799,12 @@ class Channel(models.Model):
     @api.multi
     def channel_join_and_get_info(self):
         self.ensure_one()
-        if self.channel_type == 'channel' and not self.email_send:
+        added = self.action_follow()
+        if added and self.channel_type == 'channel' and not self.email_send:
             notification = _('<div class="o_mail_notification">joined <a href="#" class="o_channel_redirect" data-oe-id="%s">#%s</a></div>') % (self.id, self.name,)
             self.message_post(body=notification, message_type="notification", subtype="mail.mt_comment")
-        self.action_follow()
 
-        if self.moderation_guidelines:
+        if added and self.moderation_guidelines:
             self._send_guidelines(self.env.user.partner_id)
 
         channel_info = self.channel_info('join')[0]
