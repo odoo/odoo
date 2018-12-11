@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import ast
-import functools
+import collections
 import imp
 import importlib
 import inspect
@@ -341,9 +341,23 @@ def load_information_from_description_file(module, mod_path=None):
                 readme_text = tools.file_open(readme_path[0]).read()
                 info['description'] = readme_text
 
-        if 'active' in info:
-            # 'active' has been renamed 'auto_install'
-            info['auto_install'] = info['active']
+        # auto_install is set to `False` if disabled, and a set of
+        # auto_install dependencies otherwise. That way, we can set
+        # auto_install: [] to always auto_install a module regardless of its
+        # dependencies
+        auto_install = info.get('auto_install', info.get('active', False))
+        if isinstance(auto_install, collections.Iterable):
+            info['auto_install'] = set(auto_install)
+            non_dependencies = info['auto_install'].difference(info['depends'])
+            assert not non_dependencies,\
+                "auto_install triggers must be dependencies, found " \
+                "non-dependencies [%s] for module %s" % (
+                    ', '.join(non_dependencies), module
+                )
+        elif auto_install:
+            info['auto_install'] = set(info['depends'])
+        else:
+            info['auto_install'] = False
 
         info['version'] = adapt_version(info['version'])
         return info
