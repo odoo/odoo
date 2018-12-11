@@ -209,6 +209,8 @@ QUnit.module('Search View', {
             ['&', ["date_field", ">=", "2017-02-20"],["date_field", "<", "2017-03-22"]],
             // last 365 days
             ['&', ["date_field", ">=", "2016-03-22"],["date_field", "<", "2017-03-22"]],
+            // last 5 years
+            ['&', ["date_field", ">=", "2012-03-22"],["date_field", "<", "2017-03-22"]],
             // today
             ['&', ["date_field", ">=", "2017-03-22"],["date_field", "<", "2017-03-23"]],
             // this week
@@ -239,6 +241,8 @@ QUnit.module('Search View', {
             ['&', ["date_field", ">=", "2017-01-21"],["date_field", "<", "2017-02-20"]],
             // last 365 days
             ['&', ["date_field", ">=", "2015-03-23"],["date_field", "<", "2016-03-22"]],
+            // last 5 years
+            ['&', ["date_field", ">=", "2007-03-22"],["date_field", "<", "2012-03-22"]],
             // today - 1 day
             ['&', ["date_field", ">=", "2017-03-21"],["date_field", "<", "2017-03-22"]],
             // this week - 1 week
@@ -637,7 +641,7 @@ QUnit.module('Search View', {
     });
 
     QUnit.test('filter by a date field using period works', function (assert) {
-        assert.expect(14);
+        assert.expect(15);
 
         var self = this;
 
@@ -678,14 +682,13 @@ QUnit.module('Search View', {
             return $(this).data('option_id');
         }).toArray();
 
-
-
         assert.deepEqual(periodOptions, PERIOD_OPTIONS_IDS,
             "13 period options should be available:");
 
         testUtils.dom.click($('.o_menu_item .o_item_option[data-option_id="last_7_days"]'));
         testUtils.dom.click($('.o_menu_item .o_item_option[data-option_id="last_30_days"]'));
         testUtils.dom.click($('.o_menu_item .o_item_option[data-option_id="last_365_days"]'));
+        testUtils.dom.click($('.o_menu_item .o_item_option[data-option_id="last_5_years"]'));
         testUtils.dom.click($('.o_menu_item .o_item_option[data-option_id="today"]'));
         testUtils.dom.click($('.o_menu_item .o_item_option[data-option_id="this_week"]'));
         testUtils.dom.click($('.o_menu_item .o_item_option[data-option_id="this_month"]'));
@@ -1112,7 +1115,7 @@ QUnit.module('Search View', {
     });
 
     QUnit.test('time range menu in comparison mode', function (assert) {
-        assert.expect(43);
+        assert.expect(46);
 
         var self = this;
         var nbrReadGroup = 0;
