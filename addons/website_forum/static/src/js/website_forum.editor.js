@@ -2,10 +2,8 @@ odoo.define('website_forum.editor', function (require) {
 "use strict";
 
 var core = require('web.core');
-var Widget = require('web.Widget');
 var WebsiteNewMenu = require('website.newMenu');
 var wUtils = require('website.utils');
-var websiteRootData = require('website.WebsiteRoot');
 
 var _t = core._t;
 
@@ -62,5 +60,4 @@ WebsiteNewMenu.include({
         });
     },
 });
-
 });
