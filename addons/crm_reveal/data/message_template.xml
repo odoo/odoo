@@ -3,11 +3,11 @@
 <odoo>
     <template id="lead_message_template">
         <p>Opportunity created by Odoo Lead Generation</p>
-        <div style="width:80%;background-color:#ffffff;padding:15px;margin:16px 10%;">
+        <div style="background-color:#ffffff;padding:15px;">
             <table style="width:100%">
-                <tr>
+                <tr valign="top">
                     <td></td>
-                    <td style="padding: 25px;" rowspan="6">
+                    <td rowspan="3">
                         <img style="max-width: 80px;" t-attf-src="{{logo}}"/>
                     </td>
                 </tr>
@@ -59,7 +59,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td t-if="tech">
+                    <td t-if="tech" colspan="2">
                         <b><img src="/web_editor/font_to_img/61874/rgb(135,90,123)/16"/> Technology Used :</b>
                         <t t-foreach="tech" t-as="t">
                             <label style="font-weight:normal;padding: 2px 10px;background-color: #eeeeee;margin: 0 0 4px 2px;border-radius: 13px;">
