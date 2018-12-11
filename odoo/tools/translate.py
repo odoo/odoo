@@ -251,7 +251,10 @@ def translate_xml_node(node, callback, parse, serialize):
             # complete result and return it
             append_content(result, todo)
             result.tail = node.tail
-            has_text = todo_has_text or nonspace(result.text) or nonspace(result.tail)
+            has_text = (
+                todo_has_text or nonspace(result.text) or nonspace(result.tail)
+                or any(name in TRANSLATED_ATTRS for name in result.attrib)
+            )
             return (has_text, result)
 
         # translate the content of todo and append it to result
