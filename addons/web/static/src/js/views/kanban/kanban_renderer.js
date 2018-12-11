@@ -441,8 +441,9 @@ var KanbanRenderer = BasicRenderer.extend({
         this.state = state;
 
         var groupByField = state.groupedBy[0];
-        var groupByFieldAttrs = state.fields[groupByField];
-        var groupByFieldInfo = state.fieldsInfo.kanban[groupByField];
+        var cleanGroupByField = this._cleanGroupByField(groupByField);
+        var groupByFieldAttrs = state.fields[cleanGroupByField];
+        var groupByFieldInfo = state.fieldsInfo.kanban[cleanGroupByField];
         // Deactivate the drag'n'drop if the groupedBy field:
         // - is a date or datetime since we group by month or
         // - is readonly (on the field attrs or in the view)
@@ -471,6 +472,22 @@ var KanbanRenderer = BasicRenderer.extend({
             quick_create: this.quickCreateEnabled && viewUtils.isQuickCreateEnabled(state),
         });
         this.createColumnEnabled = this.groupedByM2O && this.columnOptions.group_creatable;
+    },
+    /**
+     * Remove date/datetime magic grouping info to get proper field attrs/info from state
+     * ex: sent_date:month will become sent_date
+     *
+     * @private
+     * @param {string} groupByField
+     * @returns {string}
+     */
+    _cleanGroupByField: function (groupByField) {
+        var cleanGroupByField = groupByField;
+        if (cleanGroupByField && cleanGroupByField.indexOf(':') > -1) {
+            cleanGroupByField = cleanGroupByField.substring(0, cleanGroupByField.indexOf(':'));
+        }
+
+        return cleanGroupByField;
     },
     /**
      * Moves the focus on the first card of the next column in a given direction
