@@ -218,10 +218,13 @@
                                                     <field name="product_qty"/>
                                                     <field name="product_uom" groups="uom.group_uom"/>
                                                 </div>
+                                                <field name="qty_received_method" invisible="1"/>
+                                                <field name="qty_received" string="Received Quantity" attrs="{'invisible': [('parent.state', 'not in', ('purchase', 'done'))], 'readonly': [('qty_received_method', '!=', 'manual')]}"/>
+                                                <field name="qty_invoiced" string="Billed Quantity" attrs="{'invisible': [('parent.state', 'not in', ('purchase', 'done'))]}"/>
                                                 <field name="price_unit"/>
+                                                <field name="taxes_id" widget="many2many_tags" domain="[('type_tax_use', '=', 'purchase')]" options="{'no_create': True}"/>
                                             </group>
                                             <group>
-                                                <field name="taxes_id" widget="many2many_tags" domain="[('type_tax_use', '=', 'purchase')]" options="{'no_create': True}"/>
                                                 <field name="date_planned" widget="date"/>
                                                 <field name="account_analytic_id" colspan="2" groups="analytic.group_analytic_accounting"/>
                                                 <field name="analytic_tag_ids" groups="analytic.group_analytic_accounting" widget="many2many_tags" options="{'color_field': 'color'}"/>
