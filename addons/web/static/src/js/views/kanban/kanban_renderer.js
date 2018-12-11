@@ -116,7 +116,7 @@ var KanbanRenderer = BasicRenderer.extend({
             qweb: this.qweb,
             viewType: 'kanban',
         });
-        this.columnOptions = _.extend({KanbanRecord: this.KanbanRecord}, params.column_options);
+        this.columnOptions = _.extend({KanbanRecord: this.config.KanbanRecord}, params.column_options);
         if (this.columnOptions.hasProgressBar) {
             this.columnOptions.progressBarStates = {};
         }
