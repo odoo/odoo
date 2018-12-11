@@ -114,6 +114,12 @@
                     If you try to write with a wide general audience in mind, your story will ring false and be bland.
                     No one will be interested. Write for one person. If it’s genuine for the one, it’s genuine for the rest.
                 </p>
+                <p style="margin: 32px 0px 32px 0px; text-align: center;">
+                    <a href="http://www.example.com"
+                        style="background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;">
+                        Click here for your special promotion !
+                    </a>
+                </p>
             </div>
         </td>
     </tr>
@@ -125,7 +131,7 @@
             <div style="color: #999999;">
                 <a href="/unsubscribe_from_list" style="text-decoration:none; color: #999999;">Unsubscribe</a>
                 |
-                <a href="/page/contactus" style="text-decoration:none; color: #999999;">Contact</a>
+                <a href="http://www.example.net/page/contactus" style="text-decoration:none; color: #999999;">Contact</a>
             </div>
         </td>
     </tr>
@@ -134,12 +140,14 @@
 </td></tr>
 <!-- POWERED BY -->
 <tr><td align="center" style="min-width: 590px;">
-        Powered by <a target="_blank" href="https://www.odoo.com?utm_source=db&amp;utm_medium=email" style="color: #875A7B;">Odoo</a>
+    Powered by <a target="_blank" href="https://www.odoo.com" style="color: #875A7B;">Odoo</a>
 </td></tr>
 </table>
 </field>
             <field name="attachment_ids" eval="[(4, ref('mass_mail_attach_1'))]"/>
         </record>
+        <!-- Generate link tracker information from it -->
+        <function model="mail.mass_mailing" name="convert_links" eval="[ref('mass_mailing.mass_mail_1')]"/>
 
         <record id="mass_mail_1_stat_0" model="mail.mail.statistics">
             <field name="mass_mailing_id" eval="ref('mass_mail_1')"/>
@@ -172,6 +180,7 @@
             <field name="message_id">1111003@odoo.com</field>
             <field name="model">res.partner</field>
             <field name="res_id" ref="base.res_partner_address_24"/>
+            <field name="sent" eval="(DateTime.today() - relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="opened" eval="(DateTime.today() - relativedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
         </record>
         <record id="mass_mail_1_stat_4" model="mail.mail.statistics">
@@ -187,7 +196,7 @@
             <field name="message_id">1111004@odoo.com</field>
             <field name="model">res.partner</field>
             <field name="res_id" ref="base.res_partner_address_33"/>
-            <field name="sent" eval="(DateTime.today() - relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="sent" eval="False"/>
             <field name="exception" eval="(DateTime.today() - relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
         </record>
         <record id="mass_mail_1_stat_6" model="mail.mail.statistics">
@@ -198,5 +207,53 @@
             <field name="sent" eval="(DateTime.today() - relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="bounced" eval="(DateTime.today() - relativedelta(days=3)).strftime('%Y-%m-%d %H:%M:%S')"/>
         </record>
+
+        <!-- Generate some clicks -->
+        <function model="link.tracker.click" name="add_click">
+            <!-- code, ip, country_code, stat_id -->
+            <value model="link.tracker.code"
+                search="[('link_id.url', '=', 'http://www.example.com')]"
+                use="code"/>
+            <value eval="'100.01.02.03'"/>
+            <value eval="'BE'"/>
+            <value eval="ref('mass_mail_1_stat_0')"/>
+        </function>
+        <function model="link.tracker.click" name="add_click">
+            <!-- code, ip, country_code, stat_id -->
+            <value model="link.tracker.code"
+                search="[('link_id.url', '=', 'http://www.example.net/page/contactus')]"
+                use="code"/>
+            <value eval="'100.01.02.03'"/>
+            <value eval="'BE'"/>
+            <value eval="ref('mass_mail_1_stat_0')"/>
+        </function>
+        <function model="link.tracker.click" name="add_click">
+            <!-- code, ip, country_code, stat_id -->
+            <value model="link.tracker.code"
+                search="[('link_id.url', '=', 'http://www.example.com')]"
+                use="code"/>
+            <value eval="'100.01.02.04'"/>
+            <value eval="'BE'"/>
+            <value eval="ref('mass_mail_1_stat_1')"/>
+        </function>
+        <function model="link.tracker.click" name="add_click">
+            <!-- code, ip, country_code, stat_id -->
+            <value model="link.tracker.code"
+                search="[('link_id.url', '=', 'http://www.example.net/page/contactus')]"
+                use="code"/>
+            <value eval="'100.01.02.04'"/>
+            <value eval="'BE'"/>
+            <value eval="ref('mass_mail_1_stat_0')"/>
+        </function>
+        <function model="link.tracker.click" name="add_click">
+            <!-- code, ip, country_code, stat_id -->
+            <value model="link.tracker.code"
+                search="[('link_id.url', '=', 'http://www.example.com')]"
+                use="code"/>
+            <value eval="'100.01.02.05'"/>
+            <value eval="'BE'"/>
+            <value eval="ref('mass_mail_1_stat_2')"/>
+        </function>
+
     </data>
 </odoo>
