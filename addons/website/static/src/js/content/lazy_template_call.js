@@ -2,7 +2,7 @@ odoo.define('website.content.lazy_template_call', function (require) {
 'use strict';
 
 var Widget = require('web.Widget');
-var websiteRootData = require('website.WebsiteRoot');
+var websiteRootData = require('website.root');
 
 var LazyTemplateRenderer = Widget.extend({
     /**
