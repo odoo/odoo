@@ -29,15 +29,15 @@ class MailActivity(models.Model):
         }
         return action
 
-    def action_feedback(self, feedback=False):
+    def _action_done(self, feedback=False):
         events = self.mapped('calendar_event_id')
-        res = super(MailActivity, self).action_feedback(feedback)
+        messages, activities = super(MailActivity, self)._action_done(feedback=feedback)
         if feedback:
             for event in events:
                 description = event.description
                 description = '%s\n%s%s' % (description or '', _("Feedback: "), feedback)
                 event.write({'description': description})
-        return res
+        return messages, activities
 
     def unlink_w_meeting(self):
         events = self.mapped('calendar_event_id')
