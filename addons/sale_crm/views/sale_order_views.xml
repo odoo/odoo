@@ -13,8 +13,14 @@
         <field name="name">Quotations</field>
         <field name="res_model">sale.order</field>
         <field name="search_view_id" ref="sale.sale_order_view_search_inherit_quotation"/>
+        <field name="view_id" ref="sale.view_quotation_tree"/>
         <field name="domain">[('opportunity_id', '=', active_id)]</field>
         <field name="context">{'search_default_opportunity_id': [active_id], 'default_opportunity_id': active_id}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new quotation
+            </p>
+        </field>
     </record>
 
     <record id="sale_action_orders" model="ir.actions.act_window">
