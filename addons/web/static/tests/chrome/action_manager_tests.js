@@ -2126,6 +2126,22 @@ QUnit.module('ActionManager', {
         actionManager.destroy();
     });
 
+    QUnit.test('sidebar is present in list view', function (assert) {
+        assert.expect(2);
+
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+        });
+        actionManager.doAction(3);
+
+        assert.isNotVisible(actionManager.$('.o_cp_sidebar button.o_dropdown_toggler_btn:contains("Action")'));
+        testUtils.dom.clickFirst(actionManager.$('input.custom-control-input'));
+        assert.isVisible(actionManager.$('.o_cp_sidebar button.o_dropdown_toggler_btn:contains("Action")'));
+        actionManager.destroy();
+    });
+
     QUnit.test('can switch between views', function (assert) {
         assert.expect(18);
 
