@@ -4,7 +4,15 @@
         <xpath expr="." position="inside">
             <link rel="stylesheet" type="text/scss" href="/mass_mailing/static/src/scss/mass_mailing.scss"/>
             <link rel="stylesheet" href="/mass_mailing/static/src/css/email_template.css"/>
-            <script type="text/javascript" src="/mass_mailing/static/src/js/mass_mailing.js"></script>
+        </xpath>
+        <xpath expr="//script[last()]" position="after">
+            <script type="text/javascript" src="/mass_mailing/static/src/js/mass_mailing_campaign_kanban_record.js"></script>
+            <script type="text/javascript" src="/mass_mailing/static/src/js/mass_mailing_campaign_kanban_renderer.js"></script>
+            <script type="text/javascript" src="/mass_mailing/static/src/js/mass_mailing_campaign_kanban_view.js"></script>
+            <script type="text/javascript" src="/mass_mailing/static/src/js/mass_mailing_list_kanban_record.js"></script>
+            <script type="text/javascript" src="/mass_mailing/static/src/js/mass_mailing_list_kanban_renderer.js"></script>
+            <script type="text/javascript" src="/mass_mailing/static/src/js/mass_mailing_list_kanban_view.js"></script>
+            <script type="text/javascript" src="/mass_mailing/static/src/js/mass_mailing_field_text_html.js"></script>
             <script type="text/javascript" src="/mass_mailing/static/src/js/unsubscribe.js"></script>
         </xpath>
     </template>
