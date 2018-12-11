@@ -197,6 +197,9 @@ var ControlPanelView = Factory.extend({
         var groupNumber = 1;
 
         _.each(preFilters, function (preFilter) {
+            if (preFilter.attrs && preFilter.attrs.invisible) {
+                return;
+            }
             if (preFilter.tag !== currentTag || _.contains(['separator', 'field'], preFilter.tag)) {
                 if (currentGroup.length) {
                     if (currentTag === 'groupBy') {
