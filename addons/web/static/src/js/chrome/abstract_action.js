@@ -31,7 +31,7 @@ var AbstractAction = Widget.extend(ActionMixin, {
      * to do that, it also needs a specific modelName.
      *
      * For example, the Discuss application adds the following line in its
-     * constructor:
+     * constructor::
      *
      *      this.controlPanelParams.modelName = 'mail.message';
      *

@@ -102,14 +102,17 @@ var ActionMixin = {
      * This function is called when the current state of the action
      * should be known. For instance, if the action is a view controller,
      * this may be useful to reinstantiate a view in the same state.
+     *
      * Typically the state can (and should) be encoded in a query object of
-     * the form
-     * {
-     *      context: {...},
-     *      groupBy: [...],
-     *      domain = [...],
-     *      orderedBy = [...],
-     * }
+     * the form::
+     *
+     *     {
+     *          context: {...},
+     *          groupBy: [...],
+     *          domain = [...],
+     *          orderedBy = [...],
+     *     }
+     *
      * where the context key can contain many information.
      * This method is mainly called during the creation of a custom filter.
      *
