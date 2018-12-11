@@ -56,7 +56,7 @@ QUnit.module('Views', {
     QUnit.module('KanbanView Mobile');
 
     QUnit.test('mobile grouped rendering', function (assert) {
-        assert.expect(9);
+        assert.expect(11);
 
         var kanban = createView({
             View: KanbanView,
@@ -75,6 +75,8 @@ QUnit.module('Views', {
         assert.containsN(kanban, '.o_kanban_group', 2, "should have 2 columns" );
         assert.hasClass(kanban.$('.o_kanban_mobile_tab:first'),'o_current',
             "first tab is the active tab with class 'o_current'");
+        assert.hasClass(kanban.$('.o_kanban_group:first'),'o_current',
+            "first column is the active column with class 'o_current'");
         assert.containsN(kanban, '.o_kanban_group:first > div.o_kanban_record', 2,
             "there are 2 records in active tab");
         assert.strictEqual(kanban.$('.o_kanban_group:nth(1) > div.o_kanban_record').length, 0,
@@ -89,6 +91,8 @@ QUnit.module('Views', {
         kanban.$('.o_kanban_mobile_tab:nth(1)').trigger('click');
         assert.hasClass(kanban.$('.o_kanban_mobile_tab:nth(1)'),'o_current',
             "second tab is now active with class 'o_current'");
+        assert.hasClass(kanban.$('.o_kanban_group:nth(1)'),'o_current',
+            "second column is now active with class 'o_current'");
         assert.strictEqual(kanban.$('.o_kanban_group:nth(1) > div.o_kanban_record').length, 2,
             "the 2 records of the second group have now been loaded");
 
