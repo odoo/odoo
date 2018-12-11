@@ -43,8 +43,6 @@ var ControlPanelView = Factory.extend({
      *   breadcrumbs won't be rendered
      * @param {boolean} [params.withSearchBar=true] if set to false, no default
      *   search bar will be rendered
-     * @param {boolean} [activateDefaultFavorite=false] determine if the default
-     *   custom filters can be activated
      */
     init: function (params) {
         var self = this;
