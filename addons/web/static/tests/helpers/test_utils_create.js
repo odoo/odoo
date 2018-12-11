@@ -135,6 +135,7 @@ function createAsyncView(params) {
         currentId: 'res_id' in params ? params.res_id : undefined,
         domain: params.domain || [],
         context: params.context || {},
+        hasSidebar: false,
     });
     // patch the View to handle the groupBy given in params, as we can't give it
     // in init (unlike the domain and context which can be set in the action)
