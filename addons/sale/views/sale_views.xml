@@ -337,6 +337,8 @@
                                                 <field name="qty_invoiced" attrs="{'invisible': [('parent.state', 'not in', ['sale', 'done'])]}"/>
                                             </div>
                                             <field name="price_unit"/>
+                                            <field name="tax_id" widget="many2many_tags" options="{'no_create': True}" context="{'search_view_ref': 'account.account_tax_view_search'}" domain="[('type_tax_use','=','sale'),('company_id','=',parent.company_id)]"
+                                                attrs="{'readonly': [('qty_invoiced', '&gt;', 0)]}"/>
                                             <label for="discount" groups="sale.group_discount_per_so_line"/>
                                             <div name="discount" groups="sale.group_discount_per_so_line">
                                                 <field name="discount" class="oe_inline"/> %%
@@ -350,16 +352,11 @@
                                             <field name="sequence" invisible="1"/>
                                         </group>
                                         <group attrs="{'invisible': [('display_type', '!=', False)]}">
-                                            <field name="tax_id" widget="many2many_tags" options="{'no_create': True}" context="{'search_view_ref': 'account.account_tax_view_search'}" domain="[('type_tax_use','=','sale'),('company_id','=',parent.company_id)]"
-                                                attrs="{'readonly': [('qty_invoiced', '&gt;', 0)]}"/>
                                             <label for="customer_lead"/>
                                             <div>
                                                 <field name="customer_lead" class="oe_inline"/> days
                                             </div>
-                                            <label for="analytic_tag_ids" groups="analytic.group_analytic_tags"/>
-                                            <div>
-                                                <field name="analytic_tag_ids" widget="many2many_tags" groups="analytic.group_analytic_tags" options="{'color_field': 'color'}"/>
-                                            </div>
+                                            <field name="analytic_tag_ids" widget="many2many_tags" groups="analytic.group_analytic_tags" options="{'color_field': 'color'}"/>
                                         </group>
                                     </group>
                                     <label for="name" string="Description" attrs="{'invisible': [('display_type', '!=', False)]}"/>
@@ -407,6 +404,11 @@
                                     />
                                     <field name="name" widget="section_and_note_text"/>
                                     <field
+                                        name="analytic_tag_ids"
+                                        groups="analytic.group_analytic_tags"
+                                        widget="many2many_tags"
+                                    />
+                                    <field
                                         name="product_uom_qty"
                                         context="{
                                             'partner_id': parent.partner_id,
@@ -445,11 +447,6 @@
                                         options='{"no_open": True}'
                                     />
                                     <field name="customer_lead" />
-                                    <field
-                                        name="analytic_tag_ids"
-                                        groups="analytic.group_analytic_tags"
-                                        widget="many2many_tags"
-                                    />
                                     <field
                                         name="price_unit"
                                         attrs="{'readonly': [('qty_invoiced', '&gt;', 0)]}"
