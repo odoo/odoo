@@ -145,6 +145,7 @@ QUnit.module('Views', {
             res_id: 2,
         });
 
+        throw new Error('nope');
 
         assert.containsOnce(form, 'div.test');
         assert.strictEqual(form.$('div.test').css('opacity'), '0.5',
