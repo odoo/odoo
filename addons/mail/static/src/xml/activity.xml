@@ -42,12 +42,12 @@
                                     <dd class="mb8">
                                         <t t-esc="activity.create_date.format(datetimeFormat)"/>
                                         by
-                                        <img t-attf-src="/web/image#{activity.create_user_id[0] >= 0 ? ('/res.users/' + activity.create_user_id[0] + '/image_small') : ''}"
+                                        <img t-attf-src="/web/image#{activity.create_uid[0] >= 0 ? ('/res.users/' + activity.create_uid[0] + '/image_small') : ''}"
                                             height="18" width="18"
                                             class="rounded-circle mr4"
-                                            t-att-title="activity.create_user_id[1]"
-                                            t-att-alt="activity.create_user_id[1]"/>
-                                        <b><t t-esc="activity.create_user_id[1]"/></b>
+                                            t-att-title="activity.create_uid[1]"
+                                            t-att-alt="activity.create_uid[1]"/>
+                                        <b><t t-esc="activity.create_uid[1]"/></b>
                                     </dd>
                                     <dt>Assigned to</dt>
                                     <dd class="mb8">
@@ -74,7 +74,7 @@
                                 </t>
                             </div>
                         </t>
-                        <div class="o_thread_message_tools btn-group">
+                        <div t-if="activity.can_write" class="o_thread_message_tools btn-group">
                             <span class="o_mark_as_done" data-toggle="popover" t-att-data-activity-id="activity.id" t-att-data-force-next-activity="activity.force_next" t-att-data-previous-activity-type-id="activity.activity_type_id[0]">
                                 <a role="button" href="#" class="btn btn-link btn-success text-muted o_activity_link mr8">
                                 <i class="fa fa-check"/> Mark Done </a>
