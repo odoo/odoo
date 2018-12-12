@@ -841,7 +841,7 @@ class Task(models.Model):
 
         task = super(Task, self.with_context(create_context)).message_new(msg, custom_values=defaults)
         email_list = task.email_split(msg)
-        partner_ids = [p for p in task._find_partner_from_emails(email_list, force_create=False) if p]
+        partner_ids = [p.id for p in self.env['mail.thread']._mail_find_partner_from_emails(email_list, records=task, force_create=False) if p]
         task.message_subscribe(partner_ids)
         return task
 
@@ -849,7 +849,7 @@ class Task(models.Model):
     def message_update(self, msg, update_vals=None):
         """ Override to update the task according to the email. """
         email_list = self.email_split(msg)
-        partner_ids = [p for p in self._find_partner_from_emails(email_list, force_create=False) if p]
+        partner_ids = [p.id for p in self.env['mail.thread']._mail_find_partner_from_emails(email_list, records=self, force_create=False) if p]
         self.message_subscribe(partner_ids)
         return super(Task, self).message_update(msg, update_vals=update_vals)
 
