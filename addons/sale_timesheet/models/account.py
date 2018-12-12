@@ -37,7 +37,7 @@ class AccountAnalyticLine(models.Model):
                         invoice_type = 'billable_fixed'
                 timesheet.timesheet_invoice_type = invoice_type
 
-    @api.onchange('employee_id')
+    @api.onchange('task_id', 'employee_id')
     def _onchange_task_id_employee_id(self):
         if self.project_id:  # timesheet only
             if self.task_id.billable_type == 'task_rate':
