@@ -34,8 +34,12 @@ class Partner(models.Model):
         return recipients
 
     @api.multi
-    def message_get_default_recipients(self):
-        return dict((res_id, {'partner_ids': [res_id], 'email_to': False, 'email_cc': False}) for res_id in self.ids)
+    def _message_get_default_recipients(self):
+        return {r.id: {
+            'partner_ids': [r.id],
+            'email_to': False,
+            'email_cc': False}
+            for r in self}
 
     @api.model
     def _notify_prepare_template_context(self, message, record, model_description=False, mail_auto_delete=True):

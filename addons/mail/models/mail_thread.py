@@ -1688,28 +1688,28 @@ class MailThread(models.AbstractModel):
     # Recipient management
     # ------------------------------------------------------
 
-    @api.multi
-    def message_get_default_recipients(self, res_model=None, res_ids=None):
-        if res_model and res_ids:
-            if hasattr(self.env[res_model], 'message_get_default_recipients'):
-                return self.env[res_model].browse(res_ids).message_get_default_recipients()
-            records = self.env[res_model].sudo().browse(res_ids)
-        else:
-            records = self.sudo()
+    @api.model
+    def _message_get_default_recipients_on_records(self, records):
+        """ Generic implementation for finding default recipient to mail on
+        a recordset. ``_message_get_default_recipients`` may be defined to
+        implement custom behavior. """
+        if hasattr(records, '_message_get_default_recipients'):
+            return records._message_get_default_recipients()
+
         res = {}
         for record in records:
-            recipient_ids, email_to, email_cc = set(), False, False
-            if 'partner_id' in self._fields and record.partner_id:
-                recipient_ids.add(record.partner_id.id)
-            elif 'email_normalized' in self._fields and record.email_normalized:
+            recipient_ids, email_to, email_cc = [], False, False
+            if 'partner_id' in record and record.partner_id:
+                recipient_ids.append(record.partner_id.id)
+            elif 'email_normalized' in record and record.email_normalized:
                 email_to = record.email_normalized
-            elif 'email_from' in self._fields and record.email_from:
+            elif 'email_from' in record and record.email_from:
                 email_to = record.email_from
-            elif 'partner_email' in self._fields and record.partner_email:
+            elif 'partner_email' in record and record.partner_email:
                 email_to = record.partner_email
-            elif 'email' in self._fields:
+            elif 'email' in record and record.email:
                 email_to = record.email
-            res[record.id] = {'partner_ids': list(recipient_ids), 'email_to': email_to, 'email_cc': email_cc}
+            res[record.id] = {'partner_ids': recipient_ids, 'email_to': email_to, 'email_cc': email_cc}
         return res
 
     @api.multi
