@@ -1178,7 +1178,7 @@ class MailThread(models.AbstractModel):
                     if partner_address:
                         partners = partners.sudo().search([('email', '=', partner_address)])
                         for partner in partners:
-                            partner.message_receive_bounce(partner_address, partner, mail_id=bounced_mail_id)
+                            partner._message_receive_bounce(partner_address, partner, mail_id=bounced_mail_id)
 
                 mail_message = self.env['mail.message']
                 if email_part:
@@ -1194,8 +1194,8 @@ class MailThread(models.AbstractModel):
                         'email_status': 'bounce'
                     })
 
-                if bounced_model in self.env and hasattr(self.env[bounced_model], 'message_receive_bounce') and bounced_thread_id:
-                    self.env[bounced_model].browse(int(bounced_thread_id)).message_receive_bounce(partner_address, partners, mail_id=bounced_mail_id)
+                if bounced_model in self.env and hasattr(self.env[bounced_model], '_message_receive_bounce') and bounced_thread_id:
+                    self.env[bounced_model].browse(int(bounced_thread_id))._message_receive_bounce(partner_address, partners, mail_id=bounced_mail_id)
 
                 _logger.info('Routing mail from %s to %s with Message-Id %s: bounced mail from mail %s, model: %s, thread_id: %s: dest %s (partner %s)',
                              email_from, email_to, message_id, bounced_mail_id, bounced_model, bounced_thread_id, partner_address, partners)
@@ -1469,7 +1469,7 @@ class MailThread(models.AbstractModel):
         return True
 
     @api.multi
-    def message_receive_bounce(self, email, partner, mail_id=None):
+    def _message_receive_bounce(self, email, partner, mail_id=None):
         """Called by ``message_process`` when a bounce email (such as Undelivered
         Mail Returned to Sender) is received for an existing thread. The default
         behavior is to check is an integer  ``message_bounce`` column exists.
