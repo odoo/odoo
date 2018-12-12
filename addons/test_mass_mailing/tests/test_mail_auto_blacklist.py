@@ -22,28 +22,28 @@ class TestAutoBlacklist(common.TransactionCase):
             'bounced': datetime.datetime.now() - datetime.timedelta(weeks=2),
             'email': self.mailing_contact_1.email
         })
-        self.mailing_contact_1.message_receive_bounce(self.mailing_contact_1.email, self.mailing_contact_1)
+        self.mailing_contact_1._message_receive_bounce(self.mailing_contact_1.email, self.mailing_contact_1)
         mail_statistics.create({
             'model': 'mail.mass_mailing.contact',
             'res_id': self.mailing_contact_1.id,
             'bounced': datetime.datetime.now() - datetime.timedelta(weeks=3),
             'email': self.mailing_contact_1.email
         })
-        self.mailing_contact_1.message_receive_bounce(self.mailing_contact_1.email, self.mailing_contact_1)
+        self.mailing_contact_1._message_receive_bounce(self.mailing_contact_1.email, self.mailing_contact_1)
         mail_statistics.create({
             'model': 'mail.mass_mailing.contact',
             'res_id': self.mailing_contact_1.id,
             'bounced': datetime.datetime.now() - datetime.timedelta(weeks=4),
             'email': self.mailing_contact_1.email
         })
-        self.mailing_contact_1.message_receive_bounce(self.mailing_contact_1.email, self.mailing_contact_1)
+        self.mailing_contact_1._message_receive_bounce(self.mailing_contact_1.email, self.mailing_contact_1)
         mail_statistics.create({
             'model': 'mail.mass_mailing.contact',
             'res_id': self.mailing_contact_1.id,
             'bounced': datetime.datetime.now() - datetime.timedelta(weeks=5),
             'email': self.mailing_contact_1.email
         })
-        self.mailing_contact_1.message_receive_bounce(self.mailing_contact_1.email, self.mailing_contact_1)
+        self.mailing_contact_1._message_receive_bounce(self.mailing_contact_1.email, self.mailing_contact_1)
 
 
         # create mass mailing record
@@ -77,7 +77,7 @@ class TestAutoBlacklist(common.TransactionCase):
             'email': self.mailing_contact_1.email
         })
         # call bounced
-        self.mailing_contact_1.message_receive_bounce(self.mailing_contact_1.email, self.mailing_contact_1)
+        self.mailing_contact_1._message_receive_bounce(self.mailing_contact_1.email, self.mailing_contact_1)
 
         # check blacklist
         blacklist_record = mail_blacklist.search([('email', '=', self.mailing_contact_1.email)])
