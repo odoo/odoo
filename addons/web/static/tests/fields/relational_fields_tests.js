@@ -11779,6 +11779,53 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('widget many2many_tags in one2many with display_name', function (assert) {
+        assert.expect(4);
+        this.data.turtle.records[0].partner_ids = [2];
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<field name="turtles">' +
+                            '<tree>' +
+                                '<field name="partner_ids" widget="many2many_tags"/>' +  // will use display_name
+                            '</tree>' +
+                            '<form>' +
+                                '<sheet>' +
+                                    '<field name="partner_ids"/>' +
+                                '</sheet>' +
+                            '</form>' +
+                        '</field>' +
+                    '</sheet>' +
+                '</form>',
+            archs: {
+                'partner,false,list': '<tree><field name="foo"/></tree>',
+            },
+            res_id: 1,
+        });
+
+        assert.strictEqual(form.$('.o_field_one2many[name="turtles"] .o_list_view .o_field_many2manytags[name="partner_ids"]').text().replace(/\s/g, ''),
+            "secondrecordaaa", "the tags should be correctly rendered");
+
+        // open the x2m form view
+        testUtils.dom.click(form.$('.o_field_one2many[name="turtles"] .o_list_view td.o_data_cell:first'));
+        assert.strictEqual($('.modal .o_form_view .o_field_many2many[name="partner_ids"] .o_list_view .o_data_cell').text(),
+            "blipMy little Foo Value", "the list view should be correctly rendered with foo");
+
+        testUtils.dom.click($('.modal button.o_form_button_cancel'));
+        assert.strictEqual(form.$('.o_field_one2many[name="turtles"] .o_list_view .o_field_many2manytags[name="partner_ids"]').text().replace(/\s/g, ''),
+            "secondrecordaaa", "the tags should still be correctly rendered");
+
+        testUtils.form.clickEdit(form);
+        assert.strictEqual(form.$('.o_field_one2many[name="turtles"] .o_list_view .o_field_many2manytags[name="partner_ids"]').text().replace(/\s/g, ''),
+            "secondrecordaaa", "the tags should still be correctly rendered");
+
+        form.destroy();
+    });
+
     QUnit.module('FieldStatus');
 
     QUnit.test('static statusbar widget on many2one field', function (assert) {
