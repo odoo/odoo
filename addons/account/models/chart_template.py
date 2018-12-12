@@ -4,6 +4,7 @@ from odoo.exceptions import AccessError
 from odoo import api, fields, models, _
 from odoo import SUPERUSER_ID
 from odoo.exceptions import UserError
+from odoo.http import request
 
 import logging
 
@@ -163,7 +164,13 @@ class AccountChartTemplate(models.Model):
         of accounts had been created for it yet.
         """
         self.ensure_one()
-        company = self.env.user.company_id
+        if request:
+            company_id = request.env.user.company_id.id
+            company = self.env['res.company'].browse(company_id)
+        else:
+            # fallback to company of current user, most likely __system__
+            # (won't work well for multi-company)
+            company = self.env.user.company_id
         # If we don't have any chart of account on this company, install this chart of account
         if not company.chart_template_id:
             self.load_for_current_company(15.0, 15.0)
@@ -177,7 +184,13 @@ class AccountChartTemplate(models.Model):
         rights.
         """
         self.ensure_one()
-        company = self.env.user.company_id
+        if request:
+            company_id = request.env.user.company_id.id
+            company = self.env['res.company'].browse(company_id)
+        else:
+            # fallback to company of current user, most likely __system__
+            # (won't work well for multi-company)
+            company = self.env.user.company_id
         # Ensure everything is translated to the company's language, not the user's one.
         self = self.with_context(lang=company.partner_id.lang)
         if not self.env.user._is_admin():
