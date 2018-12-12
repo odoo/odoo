@@ -40,7 +40,7 @@
                             <div t-attf-class="o_activity_title_entry {{! log.force_next ? 'align-items-center' : 'mb-1'}}">
                                 <span t-attf-class="fa #{log.icon ? log.icon : 'fa-bell' } fa-fw mr-2 text-center text-muted" role="img" aria-label="Log" title="Log"/>
                                 <strong class="text-dark"><t t-esc="log.title_action or log.activity_type_id[1]"/></strong>
-                                <button t-if="! log.force_next" class="btn btn-sm btn-link py-0 o_edit_button"><i class="fa fa-pencil"/></button>
+                                <button t-if="! log.force_next and log.can_write" class="btn btn-sm btn-link py-0 o_edit_button"><i class="fa fa-pencil"/></button>
                             </div>
                             <div class="o_activity_title_entry mt-1" t-if="log.state != 'today'">
                                 <span class="fa fa-clock-o fa-fw mr-2 text-center text-muted" role="img" aria-label="Deadline" title="Deadline"/>
@@ -62,7 +62,7 @@
                                 <span><t t-esc="log.user_id[1]" /></span>
                             </div>
                         </div>
-                        <div class="flex-grow-1 text-right">
+                        <div t-if="log.can_write" class="flex-grow-1 text-right">
                         <a  t-att-data-force-next-activity="log.force_next"
                             t-att-data-previous-activity-type-id="log.activity_type_id[0]"
                             t-att-data-activity-id="log.id"
