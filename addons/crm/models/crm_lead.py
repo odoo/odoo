@@ -667,31 +667,36 @@ class Lead(models.Model):
         data['type'] = self._merge_get_result_type()
         return data
 
-    @api.one
     def _mail_body(self, fields):
         """ generate the message body with the changed values
             :param fields : list of fields to track
-            :returns the body of the message for the current crm.lead
+            :returns a list of message bodies for the corresponding leads
         """
-        title = "%s : %s\n" % (_('Merged opportunity') if self.type == 'opportunity' else _('Merged lead'), self.name)
-        body = [title]
-        fields = self.env['ir.model.fields'].search([('name', 'in', fields or []), ('model_id.model', '=', self._name)])
-        for field in fields:
-            value = getattr(self, field.name, False)
-            if field.ttype == 'selection':
-                selections = self.fields_get()[field.name]['selection']
-                value = next((v[1] for v in selections if v[0] == value), value)
-            elif field.ttype == 'many2one':
-                if value:
-                    value = value.sudo().display_name
-            elif field.ttype == 'many2many':
-                if value:
-                    value = ','.join(
-                        val.display_name
-                        for val in value.sudo()
-                    )
-            body.append("%s: %s" % (field.field_description, value or ''))
-        return "<br/>".join(body + ['<br/>'])
+        bodies = []
+        for lead in self:
+            title = "%s : %s\n" % (_('Merged opportunity') if lead.type == 'opportunity' else _('Merged lead'), lead.name)
+            body = [title]
+            _fields = self.env['ir.model.fields'].search([
+                    ('name', 'in', fields or []),
+                    ('model_id.model', '=', lead._name),
+                ])
+            for field in _fields:
+                value = getattr(lead, field.name, False)
+                if field.ttype == 'selection':
+                    selections = lead.fields_get()[field.name]['selection']
+                    value = next((v[1] for v in selections if v[0] == value), value)
+                elif field.ttype == 'many2one':
+                    if value:
+                        value = value.sudo().display_name
+                elif field.ttype == 'many2many':
+                    if value:
+                        value = ','.join(
+                            val.display_name
+                            for val in value.sudo()
+                        )
+                body.append("%s: %s" % (field.field_description, value or ''))
+            bodies.append("<br/>".join(body + ['<br/>']))
+        return bodies
 
     @api.multi
     def _merge_notify(self, opportunities):

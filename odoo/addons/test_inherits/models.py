@@ -12,10 +12,10 @@ class Unit(models.Model):
     state = fields.Selection([('a', 'A'), ('b', 'B')], string='State')
     surname = fields.Char(compute='_compute_surname')
 
-    @api.one
     @api.depends('name')
     def _compute_surname(self):
-        self.surname = self.name or ''
+        for unit in self:
+            unit.surname = unit.name or ''
 
 
 # We want to _inherits from the parent model and we add some fields

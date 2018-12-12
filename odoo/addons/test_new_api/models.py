@@ -24,13 +24,13 @@ class Category(models.Model):
     discussions = fields.Many2many('test_new_api.discussion', 'test_new_api_discussion_category',
                                    'category', 'discussion')
 
-    @api.one
     @api.depends('name', 'parent.display_name')     # this definition is recursive
     def _compute_display_name(self):
-        if self.parent:
-            self.display_name = self.parent.display_name + ' / ' + self.name
-        else:
-            self.display_name = self.name
+        for cat in self:
+            if cat.parent:
+                cat.display_name = cat.parent.display_name + ' / ' + cat.name
+            else:
+                cat.display_name = cat.name
 
     @api.depends('parent')
     def _compute_root_categ(self):
@@ -40,21 +40,21 @@ class Category(models.Model):
                 current = current.parent
             cat.root_categ = current
 
-    @api.one
     def _inverse_display_name(self):
-        names = self.display_name.split('/')
-        # determine sequence of categories
-        categories = []
-        for name in names[:-1]:
-            category = self.search([('name', 'ilike', name.strip())])
-            categories.append(category[0])
-        categories.append(self)
-        # assign parents following sequence
-        for parent, child in zip(categories, categories[1:]):
-            if parent and child:
-                child.parent = parent
-        # assign name of last category, and reassign display_name (to normalize it)
-        self.name = names[-1].strip()
+        for cat in self:
+            names = cat.display_name.split('/')
+            # determine sequence of categories
+            categories = []
+            for name in names[:-1]:
+                category = self.search([('name', 'ilike', name.strip())])
+                categories.append(category[0])
+            categories.append(cat)
+            # assign parents following sequence
+            for parent, child in zip(categories, categories[1:]):
+                if parent and child:
+                    child.parent = parent
+            # assign name of last category, and reassign display_name (to normalize it)
+            cat.name = names[-1].strip()
 
     @api.multi
     def read(self, fields=None, load='_classic_read'):
@@ -130,31 +130,28 @@ class Message(models.Model):
     label = fields.Char(translate=True)
     priority = fields.Integer()
 
-    @api.one
     @api.constrains('author', 'discussion')
     def _check_author(self):
-        if self.discussion and self.author not in self.discussion.participants:
-            raise ValidationError(_("Author must be among the discussion participants."))
+        for message in self:
+            if message.discussion and message.author not in message.discussion.participants:
+                raise ValidationError(_("Author must be among the discussion participants."))
 
-    @api.one
     @api.depends('author.name', 'discussion.name')
     def _compute_name(self):
-        # one may force the value through the context
-        self.name = (
-            self._context.get('compute_name') or
-            "[%s] %s" % (self.discussion.name or '', self.author.name or '')
-        )
+        for message in self:
+            message.name = self._context.get('compute_name',
+                "[%s] %s" % (message.discussion.name or '', message.author.name or ''))
 
-    @api.one
     @api.depends('author.name', 'discussion.name', 'body')
     def _compute_display_name(self):
-        stuff = "[%s] %s: %s" % (self.author.name, self.discussion.name or '', self.body or '')
-        self.display_name = stuff[:80]
+        for message in self:
+            stuff = "[%s] %s: %s" % (message.author.name, message.discussion.name or '', message.body or '')
+            message.display_name = stuff[:80]
 
-    @api.one
     @api.depends('body')
     def _compute_size(self):
-        self.size = len(self.body or '')
+        for message in self:
+            message.size = len(message.body or '')
 
     def _search_size(self, operator, value):
         if operator not in ('=', '!=', '<', '<=', '>', '>=', 'in', 'not in'):
@@ -166,22 +163,23 @@ class Message(models.Model):
         ids = [t[0] for t in self.env.cr.fetchall()]
         return [('id', 'in', ids)]
 
-    @api.one
     @api.depends('size')
     def _compute_double_size(self):
-        # This illustrates a subtle situation: self.double_size depends on
-        # self.size. When size is computed, self.size is assigned, which should
-        # normally invalidate self.double_size. However, this may not happen
-        # while self.double_size is being computed: the last statement below
-        # would fail, because self.double_size would be undefined.
-        self.double_size = 0
-        size = self.size
-        self.double_size = self.double_size + size
+        for message in self:
+            # This illustrates a subtle situation: message.double_size depends
+            # on message.size. When the latter is computed, message.size is
+            # assigned, which would normally invalidate message.double_size.
+            # However, this may not happen while message.double_size is being
+            # computed: the last statement below would fail, because
+            # message.double_size would be undefined.
+            message.double_size = 0
+            size = message.size
+            message.double_size = message.double_size + size
 
-    @api.one
     @api.depends('author', 'author.partner_id')
     def _compute_author_partner(self):
-        self.author_partner = self.author.partner_id
+        for message in self:
+            message.author_partner = message.author.partner_id
 
     @api.model
     def _search_author_partner(self, operator, value):
@@ -298,10 +296,10 @@ class MixedModel(models.Model):
     currency_id = fields.Many2one('res.currency', default=lambda self: self.env.ref('base.EUR'))
     amount = fields.Monetary()
 
-    @api.one
     def _compute_now(self):
         # this is a non-stored computed field without dependencies
-        self.now = fields.Datetime.now()
+        for message in self:
+            message.now = fields.Datetime.now()
 
     @api.model
     def _get_lang(self):

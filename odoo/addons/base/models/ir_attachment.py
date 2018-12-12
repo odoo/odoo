@@ -307,19 +307,19 @@ class IrAttachment(models.Model):
                            self._table, ['res_model', 'res_id'])
         return res
 
-    @api.one
     @api.constrains('type', 'url')
     def _check_serving_attachments(self):
-        # restrict writing on attachments that could be served by the
-        # ir.http's dispatch exception handling
-        # XDO note: this should be done in check(write), constraints for access rights?
-        # XDO note: if read on sudo, read twice, one for constraints, one for _inverse_datas as user
         if self.env.is_admin():
             return
-        if self.type == 'binary' and self.url:
-            has_group = self.env.user.has_group
-            if not any([has_group(g) for g in self.get_serving_groups()]):
-                raise ValidationError("Sorry, you are not allowed to write on this document")
+        for attachment in self:
+            # restrict writing on attachments that could be served by the
+            # ir.http's dispatch exception handling
+            # XDO note: this should be done in check(write), constraints for access rights?
+            # XDO note: if read on sudo, read twice, one for constraints, one for _inverse_datas as user
+            if attachment.type == 'binary' and attachment.url:
+                has_group = self.env.user.has_group
+                if not any([has_group(g) for g in attachment.get_serving_groups()]):
+                    raise ValidationError("Sorry, you are not allowed to write on this document")
 
     @api.model
     def check(self, mode, values=None):
@@ -511,13 +511,16 @@ class IrAttachment(models.Model):
     def _post_add_create(self):
         pass
 
-    @api.one
     def generate_access_token(self):
-        if self.access_token:
-            return self.access_token
-        access_token = self._generate_access_token()
-        self.write({'access_token': access_token})
-        return access_token
+        tokens = []
+        for attachment in self:
+            if attachment.access_token:
+                tokens.append(attachment.access_token)
+                continue
+            access_token = self._generate_access_token()
+            attachment.write({'access_token': access_token})
+            tokens.append(access_token)
+        return tokens
 
     def _generate_access_token(self):
         return str(uuid.uuid4())

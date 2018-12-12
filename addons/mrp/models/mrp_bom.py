@@ -268,31 +268,31 @@ class MrpBomLine(models.Model):
             'You should install the mrp_byproduct module if you want to manage extra products on BoMs !'),
     ]
 
-    @api.one
     @api.depends('product_id', 'bom_id')
     def _compute_child_bom_id(self):
-        if not self.product_id:
-            self.child_bom_id = False
-        else:
-            self.child_bom_id = self.env['mrp.bom']._bom_find(
-                product_tmpl=self.product_id.product_tmpl_id,
-                product=self.product_id,
-                picking_type=self.bom_id.picking_type_id)
+        for line in self:
+            if not line.product_id:
+                line.child_bom_id = False
+            else:
+                line.child_bom_id = self.env['mrp.bom']._bom_find(
+                    product_tmpl=line.product_id.product_tmpl_id,
+                    product=line.product_id,
+                    picking_type=line.bom_id.picking_type_id)
 
-    @api.one
     @api.depends('product_id')
     def _compute_attachments_count(self):
-        nbr_attach = self.env['mrp.document'].search_count([
-            '|',
-            '&', ('res_model', '=', 'product.product'), ('res_id', '=', self.product_id.id),
-            '&', ('res_model', '=', 'product.template'), ('res_id', '=', self.product_id.product_tmpl_id.id)])
-        self.attachments_count = nbr_attach
+        for line in self:
+            nbr_attach = self.env['mrp.document'].search_count([
+                '|',
+                '&', ('res_model', '=', 'product.product'), ('res_id', '=', line.product_id.id),
+                '&', ('res_model', '=', 'product.template'), ('res_id', '=', line.product_id.product_tmpl_id.id)])
+            line.attachments_count = nbr_attach
 
-    @api.one
     @api.depends('child_bom_id')
     def _compute_child_line_ids(self):
         """ If the BOM line refers to a BOM, return the ids of the child BOM lines """
-        self.child_line_ids = self.child_bom_id.bom_line_ids.ids
+        for line in self:
+            line.child_line_ids = line.child_bom_id.bom_line_ids.ids
 
     @api.onchange('product_uom_id')
     def onchange_product_uom_id(self):
