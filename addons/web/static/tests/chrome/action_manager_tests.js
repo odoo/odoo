@@ -2211,7 +2211,7 @@ QUnit.module('ActionManager', {
                                                 '<button name="8" string="Execute action" type="action"/>' +
                                             '</header>';
 
-        var searchReadCount = 0;
+        var searchReadCount = 1;
         var actionManager = createActionManager({
             actions: this.actions,
             archs: this.archs,
