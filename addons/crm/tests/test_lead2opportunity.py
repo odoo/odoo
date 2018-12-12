@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from .common import TestCrmCases
+from odoo.tests import tagged
 
 
+@tagged('dbetest')
 class TestLead2opportunity2win(TestCrmCases):
 
     def test_lead2opportunity2win(self):
@@ -139,7 +141,7 @@ class TestLead2opportunity2win(TestCrmCases):
             'user_ids': [(6, 0, salesmen_ids)],
             'team_id': self.env.ref("sales_team.team_sales_department").id,
             'deduplicate': False,
-            'force_assignation': True
+            'no_force_assignation': False
         })
         mass.with_user(self.crm_salesman).mass_convert()
 

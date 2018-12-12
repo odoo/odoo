@@ -759,7 +759,7 @@ class Lead(models.Model):
         self._merge_opportunity_history(opportunities)
         self._merge_opportunity_attachments(opportunities)
 
-    def merge_opportunity(self, user_id=False, team_id=False):
+    def merge_opportunity(self, user_id=False, team_id=False, destination_id=False):
         """ Merge opportunities in one. Different cases of merge:
                 - merge leads together = 1 new lead
                 - merge at least 1 opp with anything else (lead or opp) = 1 new opp
@@ -767,19 +767,30 @@ class Lead(models.Model):
             updated with values from other opportunities to merge.
             :param user_id : the id of the saleperson. If not given, will be determined by `_merge_data`.
             :param team : the id of the Sales Team. If not given, will be determined by `_merge_data`.
+            :param destination_id : the id of the opportunity to use as head
+                                    (into which the other opportunities will be merged with)
+                                    Must be one of the opportunity to merge.
             :return crm.lead record resulting of th merge
         """
         if len(self.ids) <= 1:
-            raise UserError(_('Please select more than one element (lead or opportunity) from the list view.'))
+            raise UserError(_('Please select at least one lead or opportunity to merge with.'))
 
-        # Sorting the leads/opps according to the confidence level of its stage, which relates to the progress rate (stage's sequence)
-        # The confidence level increases with the stage sequence
-        # An Opportunity always has higher confidence level than a lead
-        opportunities = self._sort_by_confidence_level(reverse=True)
-
-        # get SORTED recordset of head and tail, and complete list
-        opportunities_head = opportunities[0]
-        opportunities_tail = opportunities[1:]
+        if destination_id:
+            if destination_id in self.ids:
+                opportunities_head = self[self.ids.index(destination_id)]
+                opportunities_tail = self[:self.ids.index(destination_id)] | self[self.ids.index(destination_id)+1:]
+                opportunities = opportunities_head | opportunities_tail
+            else:
+                raise UserError(_('The destination opportunity must be one of the opportunity to merge.'))
+        else:
+            # If destination id is not set :
+            # get SORTED recordset of head and tail, and complete list
+            # Sorting the leads/opps according to the confidence level of its stage, which relates to the progress rate (stage's sequence)
+            # The confidence level increases with the stage sequence
+            # An Opportunity always has higher confidence level than a lead
+            opportunities = self._sort_by_confidence_level(reverse=True)
+            opportunities_head = opportunities[0]
+            opportunities_tail = opportunities[1:]
 
         # merge all the sorted opportunity. This means the value of
         # the first (head opp) will be a priority.
@@ -788,15 +799,13 @@ class Lead(models.Model):
         # force value for saleperson and Sales Team
         if user_id:
             merged_data['user_id'] = user_id
-        if team_id:
-            merged_data['team_id'] = team_id
 
         # merge other data (mail.message, attachments, ...) from tail into head
         opportunities_head.merge_dependences(opportunities_tail)
 
         # check if the stage is in the stages of the Sales Team. If not, assign the stage with the lowest sequence
-        if merged_data.get('team_id'):
-            team_stage_ids = self.env['crm.stage'].search(['|', ('team_id', '=', merged_data['team_id']), ('team_id', '=', False)], order='sequence')
+        if team_id:
+            team_stage_ids = self.env['crm.stage'].search(['|', ('team_id', '=', team_id), ('team_id', '=', False)], order='sequence')
             if merged_data.get('stage_id') not in team_stage_ids.ids:
                 merged_data['stage_id'] = team_stage_ids[0].id if team_stage_ids else False
 
@@ -916,7 +925,7 @@ class Lead(models.Model):
             'type': 'contact'
         }
 
-    def _create_lead_partner(self):
+    def _create_lead_partner(self, create_company=True):
         """ Create a partner from lead data
             :returns res.partner record
         """
@@ -925,7 +934,7 @@ class Lead(models.Model):
         if not contact_name:
             contact_name = Partner._parse_partner_name(self.email_from)[0] if self.email_from else False
 
-        if self.partner_name:
+        if self.partner_name and create_company:
             partner_company = Partner.create(self._create_lead_partner_data(self.partner_name, True))
         elif self.partner_id:
             partner_company = self.partner_id
@@ -933,13 +942,18 @@ class Lead(models.Model):
             partner_company = None
 
         if contact_name:
-            return Partner.create(self._create_lead_partner_data(contact_name, False, partner_company.id if partner_company else False))
-
-        if partner_company:
+            partner_values = self._create_lead_partner_data(contact_name, False, partner_company.id if partner_company else False)
+        elif partner_company:
             return partner_company
-        return Partner.create(self._create_lead_partner_data(self.name, False))
+        else:
+            partner_values = self._create_lead_partner_data(self.name, False)
 
-    def handle_partner_assignation(self,  action='create', partner_id=False):
+        if not create_company:
+            partner_values['company_name'] = self.partner_name
+
+        return Partner.create(partner_values)
+
+    def handle_partner_assignation(self,  action='create', partner_id=False, create_company=True):
         """ Handle partner assignation during a lead conversion.
             if action is 'create', create new partner with contact and assign lead to new partner_id.
             otherwise assign lead to the specified partner_id
@@ -955,7 +969,7 @@ class Lead(models.Model):
                 partner_ids[lead.id] = lead.partner_id.id
                 continue
             if action == 'create':
-                partner = lead._create_lead_partner()
+                partner = lead._create_lead_partner(create_company=create_company)
                 partner_id = partner.id
                 partner.team_id = lead.team_id
             if partner_id:
@@ -969,6 +983,12 @@ class Lead(models.Model):
             E.g.: 4 salesmen (S1, S2, S3, S4) for 6 leads (L1, L2, ... L6).  They
             will be assigned as followed: L1 - S1, L2 - S2, L3 - S3, L4 - S4,
             L5 - S1, L6 - S2.
+
+            For performance, if user_ids contains only one or no id,
+            no need to loop on every lead in self.
+
+            To avoid the team_id to be overridden after write by the compute method,
+            the user is wrote first, then the team_id.
 
             :param list ids: leads/opportunities ids to process
             :param list user_ids: salesmen to assign

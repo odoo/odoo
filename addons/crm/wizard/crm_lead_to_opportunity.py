@@ -10,7 +10,7 @@ class Lead2OpportunityPartner(models.TransientModel):
 
     _name = 'crm.lead2opportunity.partner'
     _description = 'Convert Lead to Opportunity (not in mass)'
-    _inherit = 'crm.partner.binding'
+    _inherit = ['crm.partner.binding', 'crm.common.merge.opportunity']
 
     @api.model
     def default_get(self, fields):
@@ -26,7 +26,7 @@ class Lead2OpportunityPartner(models.TransientModel):
             lead = self.env['crm.lead'].browse(self._context['active_id'])
             email = lead.partner_id.email if lead.partner_id else lead.email_from
 
-            tomerge.update(self._get_duplicated_leads(partner_id, email, include_lost=True).ids)
+            tomerge.update(self._get_duplicated_leads(partner_id, email, include_lost=True, company=lead.company_id).ids)
 
             if 'action' in fields and not result.get('action'):
                 result['action'] = 'exist' if partner_id else 'create'
@@ -48,9 +48,6 @@ class Lead2OpportunityPartner(models.TransientModel):
         ('convert', 'Convert to opportunity'),
         ('merge', 'Merge with existing opportunities')
     ], 'Conversion Action', required=True)
-    opportunity_ids = fields.Many2many('crm.lead', string='Opportunities')
-    user_id = fields.Many2one('res.users', 'Salesperson', index=True)
-    team_id = fields.Many2one('crm.team', 'Sales Team', index=True)
 
     @api.onchange('action')
     def onchange_action(self):
@@ -59,24 +56,10 @@ class Lead2OpportunityPartner(models.TransientModel):
         else:
             self.partner_id = False
 
-    @api.onchange('user_id')
-    def _onchange_user(self):
-        """ When changing the user, also set a team_id or restrict team id
-            to the ones user_id is member of.
-        """
-        if self.user_id:
-            if self.team_id:
-                user_in_team = self.env['crm.team'].search_count([('id', '=', self.team_id.id), '|', ('user_id', '=', self.user_id.id), ('member_ids', '=', self.user_id.id)])
-            else:
-                user_in_team = False
-            if not user_in_team:
-                values = self.env['crm.lead']._onchange_user_values(self.user_id.id if self.user_id else False)
-                self.team_id = values.get('team_id', False)
-
     @api.model
-    def _get_duplicated_leads(self, partner_id, email, include_lost=False):
+    def _get_duplicated_leads(self, partner_id, email, include_lost=False, company=False):
         """ Search for opportunities that have the same partner and that arent done or cancelled """
-        return self.env['crm.lead']._get_duplicated_leads_by_emails(partner_id, email, include_lost=include_lost)
+        return self.env['crm.lead']._get_duplicated_leads_by_emails(partner_id, email, include_lost=include_lost, company=company)
 
     # NOTE JEM : is it the good place to test this ?
     @api.model
@@ -99,13 +82,16 @@ class Lead2OpportunityPartner(models.TransientModel):
                 lead.id, self.action, vals.get('partner_id') or lead.partner_id.id)
             res = lead.convert_opportunity(partner_id, [], False)
         user_ids = vals.get('user_ids')
+        team_id = vals.get('team_id')
 
         leads_to_allocate = leads
-        if self._context.get('no_force_assignation'):
+        if self._context.get('no_force_assignation') and user_ids:
             leads_to_allocate = leads_to_allocate.filtered(lambda lead: not lead.user_id)
 
         if user_ids:
-            leads_to_allocate.allocate_salesman(user_ids, team_id=(vals.get('team_id')))
+            leads_to_allocate.allocate_salesman(user_ids, team_id=team_id)
+        elif team_id:
+            leads_to_allocate.allocate_salesman([], team_id=team_id)
 
         return res
 
@@ -114,6 +100,9 @@ class Lead2OpportunityPartner(models.TransientModel):
             the freshly created opportunity view.
         """
         self.ensure_one()
+        if self.opportunity_ids and self.lead_id not in self.opportunity_ids:
+            raise UserError(_('The current lead has been removed from the list of opportunities to merge. Please add it back to the list and try again'))
+
         values = {
             'team_id': self.team_id.id,
         }
@@ -122,7 +111,7 @@ class Lead2OpportunityPartner(models.TransientModel):
             values['partner_id'] = self.partner_id.id
 
         if self.name == 'merge':
-            leads = self.with_context(active_test=False).opportunity_ids.merge_opportunity()
+            leads = self.with_context(active_test=False).opportunity_ids.merge_opportunity(destination_id=self.merge_destination_opportunity_id.id)
             if not leads.active:
                 leads.write({'active': True, 'activity_type_id': False, 'lost_reason': False})
             if leads.type == "lead":
@@ -148,7 +137,7 @@ class Lead2OpportunityPartner(models.TransientModel):
         if action == 'each_exist_or_create':
             partner_id = self.with_context(active_id=lead_id)._find_matching_partner()
             action = 'create'
-        result = self.env['crm.lead'].browse(lead_id).handle_partner_assignation(action, partner_id)
+        result = self.env['crm.lead'].browse(lead_id).handle_partner_assignation(action, partner_id, create_company=False)
         return result.get(lead_id)
 
 
@@ -163,35 +152,27 @@ class Lead2OpportunityMassConvert(models.TransientModel):
         res = super(Lead2OpportunityMassConvert, self).default_get(fields)
         if 'partner_id' in fields:  # avoid forcing the partner of the first lead as default
             res['partner_id'] = False
-        if 'action' in fields:
-            res['action'] = 'each_exist_or_create'
         if 'name' in fields:
             res['name'] = 'convert'
         if 'opportunity_ids' in fields:
             res['opportunity_ids'] = False
         return res
 
-    user_ids = fields.Many2many('res.users', string='Salesmen')
-    team_id = fields.Many2one('crm.team', 'Sales Team', index=True)
-    deduplicate = fields.Boolean('Apply deduplication', default=True, help='Merge with existing leads/opportunities of each partner')
-    action = fields.Selection(selection_add=[
-        ('each_exist_or_create', 'Use existing partner or create'),
-        ('nothing', 'Do not link to a customer')
-    ], string='Related Customer', required=True)
-    force_assignation = fields.Boolean('Force assignation', help='If unchecked, this will leave the salesman of duplicated opportunities')
-
-    @api.onchange('action')
-    def _onchange_action(self):
-        if self.action != 'exist':
-            self.partner_id = False
+    user_ids = fields.Many2many('res.users', string='Salespersons',
+                                help="""These salesmen will be assigned in round-robin.
+                                        E.g.: 4 salesmen (S1, S2, S3, S4) for 6 leads (L1, L2, ... L6).
+                                        They will be assigned as followed: L1 - S1, L2 - S2, L3 - S3, L4 - S4,
+                                        L5 - S1, L6 - S2""")
+    deduplicate = fields.Boolean('Merge with Duplicates', default=True, help='Merge with existing leads/opportunities of each partner')
+    no_force_assignation = fields.Boolean('No Overwrite', help='If checked, do not overwrite the salesperson or team already set on the selected leads.')
 
     @api.onchange('deduplicate')
     def _onchange_deduplicate(self):
         active_leads = self.env['crm.lead'].browse(self._context['active_ids'])
-        partner_ids = [(lead.partner_id.id, lead.partner_id and lead.partner_id.email or lead.email_from) for lead in active_leads]
         partners_duplicated_leads = {}
-        for partner_id, email in partner_ids:
-            duplicated_leads = self._get_duplicated_leads(partner_id, email)
+        partner_ids = [(lead.partner_id.id, lead.partner_id and lead.partner_id.email or lead.email_from, lead.company_id) for lead in active_leads]
+        for partner_id, email, company in partner_ids:
+            duplicated_leads = self._get_duplicated_leads(partner_id, email, company=company)
             if len(duplicated_leads) > 1:
                 partners_duplicated_leads.setdefault((partner_id, email), []).extend(duplicated_leads)
 
@@ -225,7 +206,7 @@ class Lead2OpportunityMassConvert(models.TransientModel):
             for lead_id in lead_selected:
                 if lead_id not in merged_lead_ids:
                     lead = self.env['crm.lead'].browse(lead_id)
-                    duplicated_leads = self._get_duplicated_leads(lead.partner_id.id, lead.partner_id.email if lead.partner_id else lead.email_from)
+                    duplicated_leads = self._get_duplicated_leads(lead.partner_id.id, lead.partner_id.email if lead.partner_id else lead.email_from, company=lead.company_id)
                     if len(duplicated_leads) > 1:
                         lead = duplicated_leads.merge_opportunity()
                         merged_lead_ids.update(duplicated_leads.ids)
@@ -234,5 +215,4 @@ class Lead2OpportunityMassConvert(models.TransientModel):
             active_ids = (active_ids - merged_lead_ids) | remaining_lead_ids
 
             self = self.with_context(active_ids=list(active_ids))  # only update active_ids when there are set
-        no_force_assignation = self._context.get('no_force_assignation', not self.force_assignation)
-        return self.with_context(no_force_assignation=no_force_assignation).action_apply()
+        return self.with_context(no_force_assignation=self.no_force_assignation).action_apply()

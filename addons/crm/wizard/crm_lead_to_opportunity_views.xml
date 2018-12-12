@@ -8,31 +8,41 @@
                 <form string="Convert to Opportunity">
                     <group name="name">
                         <field name="name" widget="radio"/>
+                        <field name="company_id" invisible="1"/>
+                        <field name="lead_id" invisible="1"/>
                     </group>
-                    <group string="Assign this opportunity to">
-                        <field name="user_id" domain="[('share', '=', False)]"/>
-                        <field name="team_id" widget="selection"/>
-                    </group>
-                    <group string="Opportunities" attrs="{'invisible': [('name', '!=', 'merge')]}">
-                        <field name="opportunity_ids" nolabel="1">
+                    <group string="Opportunities to merge" attrs="{'invisible': [('name', '!=', 'merge')]}">
+                        <field name="opportunity_ids" nolabel="1" domain="[('company_id', '=', company_id)]">
                             <tree>
-                                <field name="create_date"/>
+                                <field name="id"/>
+                                <field name="create_date" widget="date"/>
                                 <field name="name"/>
-                                <field name="type"/>
-                                <field name="contact_name"/>
-                                <field name="country_id" invisible="context.get('invisible_country', True)"/>
+                                <field name="contact_name" string="Contact"/>
                                 <field name="email_from"/>
                                 <field name="phone"/>
+                                <field name="country_id" invisible="context.get('invisible_country', True)"/>
+                                <field name="type"/>
                                 <field name="stage_id"/>
                                 <field name="user_id"/>
                                 <field name="team_id" kanban_view_ref="%(sales_team.crm_team_view_kanban)s"/>
                             </tree>
                         </field>
+                        <group attrs="{'invisible': [('name', '!=', 'merge')]}">
+                            <field name="merge_destination_opportunity_id" domain="[('id', 'in', opportunity_ids)]" attrs="{'required': [('name', '=', 'merge')]}" options="{'no_create': True, 'no_open': True}"/>
+                        </group>
                     </group>
-                    <group name="action" attrs="{'invisible': [('name', '!=', 'convert')]}" string="Customer" col="1">
+                    <group name="action" attrs="{'invisible': [('name', '!=', 'convert')]}" string="Customer">
                         <field name="action" nolabel="1" widget="radio"/>
                         <group col="2">
-                            <field name="partner_id" widget="res_partner_many2one" context="{'res_partner_search_mode': 'customer', 'show_vat': True}" attrs="{'required': [('action', '=', 'exist')], 'invisible':[('action','!=','exist')]}"/>
+                            <field name="partner_id" widget="res_partner_many2one"
+                                   context="{'res_partner_search_mode': 'customer', 'show_vat': True}"
+                                   attrs="{'required': [('action', '=', 'exist')], 'invisible':[('action','!=','exist')]}" options="{'no_open':True,'no_create':True}"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Assign to">
+                            <field name="user_id" domain="[('share', '=', False)]" options="{'no_open':True,'no_create':True}"/>
+                            <field name="team_id" widget="selection"/>
                         </group>
                     </group>
                     <footer>
@@ -48,41 +58,39 @@
             <field name="model">crm.lead2opportunity.partner.mass</field>
             <field name="arch" type="xml">
                 <form string="Convert to Opportunity">
-                    <separator string="Conversion Options"/>
                     <group>
-                        <field name="name" class="oe_inline" widget="radio"/>
                         <field name="deduplicate" class="oe_inline"/>
                     </group>
-                    <group string="Assign these opportunities to">
-                        <field name="team_id" kanban_view_ref="%(sales_team.crm_team_view_kanban)s"/>
-                        <field name="user_ids" widget="many2many_tags" domain="[('share', '=', False)]"/>
-                         <field name="force_assignation"/>
-                    </group>
-                    <label for="opportunity_ids" string="Leads with existing duplicates (for information)" help="Leads that you selected that have duplicates. If the list is empty, it means that no duplicates were found" attrs="{'invisible': [('deduplicate', '=', False)]}"/>
-                    <group attrs="{'invisible': [('deduplicate', '=', False)]}">
+                    <div class="alert alert-info" role="alert" attrs="{'invisible': ['|', ('deduplicate', '=', False), ('opportunity_ids', '=', [])]}">
+                      Each of the selected leads will be merged with its duplicates if there are any.
+                    </div>
+
+                    <div class="alert alert-info" role="alert" attrs="{'invisible': ['|', (('deduplicate', '=', False)), ('opportunity_ids', '!=', [])]}">
+                      No duplicates found for the selected leads.
+                    </div>
+
+                    <label for="opportunity_ids" string="Selected Leads with Duplicates" help="Leads that you selected that have duplicates. If the list is empty, it means that no duplicates were found" attrs="{'invisible': ['|', ('opportunity_ids', '=', []), ('deduplicate', '=', False)]}"/>
+                    <group attrs="{'invisible': ['|', ('deduplicate', '=', False), ('opportunity_ids', '=', [])]}">
                         <field name="opportunity_ids" colspan="4" nolabel="1" readonly="1">
-                            <tree create="false" delete="false">
-                                <field name="create_date"/>
+                            <tree>
+                                <field name="create_date" widget="date"/>
                                 <field name="name"/>
-                                <field name="type"/>
-                                <field name="contact_name"/>
-                                <field name="country_id" invisible="context.get('invisible_country', True)"/>
+                                <field name="contact_name" string="Contact"/>
                                 <field name="email_from"/>
                                 <field name="phone"/>
+                                <field name="country_id" invisible="context.get('invisible_country', True)"/>
+                                <field name="type"/>
                                 <field name="stage_id"/>
                                 <field name="user_id"/>
                                 <field name="team_id"/>
                             </tree>
                         </field>
                     </group>
-                    <group attrs="{'invisible': [('name', '!=', 'convert')]}" string="Customers" col="1">
-                        <field name="action" class="oe_inline" widget="radio"/>
-                        <group col="2">
-                            <field name="partner_id"
-                                widget="res_partner_many2one"
-                                attrs="{'required': [('action', '=', 'exist')], 'invisible':[('action','!=','exist')]}"
-                                context="{'show_vat': True}"
-                                class="oe_inline"/>
+                    <group>
+                        <group string="Assign to">
+                            <field name="user_ids" widget="many2many_tags" domain="[('share', '=', False)]" options="{'no_create':True}" kanban_view_ref="%(sales_team.crm_team_view_kanban)s"/>
+                            <field name="team_id" options="{'no_open':True,'no_create':True}"/>
+                            <field name="no_force_assignation"/>
                         </group>
                     </group>
                     <footer>
@@ -99,6 +107,7 @@
             <field name="res_model">crm.lead2opportunity.partner</field>
             <field name="view_mode">form</field>
             <field name="view_id" ref="view_crm_lead2opportunity_partner"/>
+            <field name="context">{'merge_opportunity_name_get': True}</field>
             <field name="target">new</field>
         </record>
 
