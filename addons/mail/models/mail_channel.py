@@ -129,10 +129,10 @@ class Channel(models.Model):
     moderation_guidelines = fields.Boolean(string="Send guidelines to new subscribers", help="Newcomers on this moderated channel will automatically receive the guidelines.")
     moderation_guidelines_msg = fields.Text(string="Guidelines")
 
-    @api.one
     @api.depends('channel_partner_ids')
     def _compute_is_subscribed(self):
-        self.is_subscribed = self.env.user.partner_id in self.channel_partner_ids
+        for channel in self:
+            channel.is_subscribed = self.env.user.partner_id in channel.channel_partner_ids
 
     @api.multi
     @api.depends('moderator_ids')

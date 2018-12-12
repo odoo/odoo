@@ -140,11 +140,11 @@ def constrains(*args):
     """ Decorates a constraint checker. Each argument must be a field name
     used in the check::
 
-        @api.one
         @api.constrains('name', 'description')
         def _check_description(self):
-            if self.name == self.description:
-                raise ValidationError("Fields name and description must be different")
+            for record in self:
+                if record.name == record.description:
+                    raise ValidationError("Fields name and description must be different")
 
     Invoked on the records on which one of the named fields has been modified.
 
@@ -206,13 +206,13 @@ def depends(*args):
 
             pname = fields.Char(compute='_compute_pname')
 
-            @api.one
             @api.depends('partner_id.name', 'partner_id.is_company')
             def _compute_pname(self):
-                if self.partner_id.is_company:
-                    self.pname = (self.partner_id.name or "").upper()
-                else:
-                    self.pname = self.partner_id.name
+                for record in self:
+                    if record.partner_id.is_company:
+                        record.pname = (record.partner_id.name or "").upper()
+                    else:
+                        record.pname = record.partner_id.name
 
         One may also pass a single function as argument. In that case, the
         dependencies are given by calling the function with the field's model.

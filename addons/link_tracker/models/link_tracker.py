@@ -51,44 +51,42 @@ class LinkTracker(models.Model):
     link_click_ids = fields.One2many('link.tracker.click', 'link_id', string='Clicks')
     count = fields.Integer(string='Number of Clicks', compute='_compute_count', store=True)
 
-    @api.one
     @api.depends('link_click_ids.link_id')
     def _compute_count(self):
-        self.count = len(self.link_click_ids)
+        for tracker in self:
+            tracker.count = len(tracker.link_click_ids)
 
-    @api.one
     @api.depends('code')
     def _compute_short_url(self):
-        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-        self.short_url = urls.url_join(base_url, '/r/%(code)s' % {'code': self.code})
+        for tracker in self:
+            base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+            tracker.short_url = urls.url_join(base_url, '/r/%(code)s' % {'code': tracker.code})
 
-    @api.one
     def _compute_short_url_host(self):
-        self.short_url_host = self.env['ir.config_parameter'].sudo().get_param('web.base.url') + '/r/'
+        for tracker in self:
+            tracker.short_url_host = self.env['ir.config_parameter'].sudo().get_param('web.base.url') + '/r/'
 
-    @api.one
     def _compute_code(self):
-        record = self.env['link.tracker.code'].search([('link_id', '=', self.id)], limit=1, order='id DESC')
-        self.code = record.code
+        for tracker in self:
+            record = self.env['link.tracker.code'].search([('link_id', '=', tracker.id)], limit=1, order='id DESC')
+            tracker.code = record.code
 
-    @api.one
     @api.depends('favicon')
     def _compute_icon_src(self):
-        self.icon_src = 'data:image/png;base64,' + self.favicon
+        for tracker in self:
+            tracker.icon_src = 'data:image/png;base64,' + tracker.favicon
 
-    @api.one
     @api.depends('url')
     def _compute_redirected_url(self):
-        parsed = urls.url_parse(self.url)
-
-        utms = {}
-        for key, field, cook in self.env['utm.mixin'].tracking_fields():
-            attr = getattr(self, field).name
-            if attr:
-                utms[key] = attr
-        utms.update(parsed.decode_query())
-
-        self.redirected_url = parsed.replace(query=urls.url_encode(utms)).to_url()
+        for tracker in self:
+            parsed = urls.url_parse(tracker.url)
+            utms = {}
+            for key, field, cook in self.env['utm.mixin'].tracking_fields():
+                attr = getattr(tracker, field).name
+                if attr:
+                    utms[key] = attr
+            utms.update(parsed.decode_query())
+            tracker.redirected_url = parsed.replace(query=urls.url_encode(utms)).to_url()
 
     @api.model
     @api.depends('url')
@@ -102,16 +100,15 @@ class LinkTracker(models.Model):
 
         return title
 
-    @api.one
     @api.depends('url')
     def _compute_favicon(self):
-        try:
-            icon = requests.get('http://www.google.com/s2/favicons', params={'domain': self.url}, timeout=5).content
-            icon_base64 = base64.b64encode(icon).replace(b"\n", b"").decode('ascii')
-        except:
-            icon_base64 = 'iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAAsSAAALEgHS3X78AAACiElEQVQ4EaVTzU8TURCf2tJuS7tQtlRb6UKBIkQwkRRSEzkQgyEc6lkOKgcOph78Y+CgjXjDs2i44FXY9AMTlQRUELZapVlouy3d7kKtb0Zr0MSLTvL2zb75eL838xtTvV6H/xELBptMJojeXLCXyobnyog4YhzXYvmCFi6qVSfaeRdXdrfaU1areV5KykmX06rcvzumjY/1ggkR3Jh+bNf1mr8v1D5bLuvR3qDgFbvbBJYIrE1mCIoCrKxsHuzK+Rzvsi29+6DEbTZz9unijEYI8ObBgXOzlcrx9OAlXyDYKUCzwwrDQx1wVDGg089Dt+gR3mxmhcUnaWeoxwMbm/vzDFzmDEKMMNhquRqduT1KwXiGt0vre6iSeAUHNDE0d26NBtAXY9BACQyjFusKuL2Ry+IPb/Y9ZglwuVscdHaknUChqLF/O4jn3V5dP4mhgRJgwSYm+gV0Oi3XrvYB30yvhGa7BS70eGFHPoTJyQHhMK+F0ZesRVVznvXw5Ixv7/C10moEo6OZXbWvlFAF9FVZDOqEABUMRIkMd8GnLwVWg9/RkJF9sA4oDfYQAuzzjqzwvnaRUFxn/X2ZlmGLXAE7AL52B4xHgqAUqrC1nSNuoJkQtLkdqReszz/9aRvq90NOKdOS1nch8TpL555WDp49f3uAMXhACRjD5j4ykuCtf5PP7Fm1b0DIsl/VHGezzP1KwOiZQobFF9YyjSRYQETRENSlVzI8iK9mWlzckpSSCQHVALmN9Az1euDho9Xo8vKGd2rqooA8yBcrwHgCqYR0kMkWci08t/R+W4ljDCanWTg9TJGwGNaNk3vYZ7VUdeKsYJGFNkfSzjXNrSX20s4/h6kB81/271ghG17l+rPTAAAAAElFTkSuQmCC'
-
-        self.favicon = icon_base64
+        for tracker in self:
+            try:
+                icon = requests.get('http://www.google.com/s2/favicons', params={'domain': tracker.url}, timeout=5).content
+                icon_base64 = base64.b64encode(icon).replace(b"\n", b"").decode('ascii')
+            except:
+                icon_base64 = 'iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAAsSAAALEgHS3X78AAACiElEQVQ4EaVTzU8TURCf2tJuS7tQtlRb6UKBIkQwkRRSEzkQgyEc6lkOKgcOph78Y+CgjXjDs2i44FXY9AMTlQRUELZapVlouy3d7kKtb0Zr0MSLTvL2zb75eL838xtTvV6H/xELBptMJojeXLCXyobnyog4YhzXYvmCFi6qVSfaeRdXdrfaU1areV5KykmX06rcvzumjY/1ggkR3Jh+bNf1mr8v1D5bLuvR3qDgFbvbBJYIrE1mCIoCrKxsHuzK+Rzvsi29+6DEbTZz9unijEYI8ObBgXOzlcrx9OAlXyDYKUCzwwrDQx1wVDGg089Dt+gR3mxmhcUnaWeoxwMbm/vzDFzmDEKMMNhquRqduT1KwXiGt0vre6iSeAUHNDE0d26NBtAXY9BACQyjFusKuL2Ry+IPb/Y9ZglwuVscdHaknUChqLF/O4jn3V5dP4mhgRJgwSYm+gV0Oi3XrvYB30yvhGa7BS70eGFHPoTJyQHhMK+F0ZesRVVznvXw5Ixv7/C10moEo6OZXbWvlFAF9FVZDOqEABUMRIkMd8GnLwVWg9/RkJF9sA4oDfYQAuzzjqzwvnaRUFxn/X2ZlmGLXAE7AL52B4xHgqAUqrC1nSNuoJkQtLkdqReszz/9aRvq90NOKdOS1nch8TpL555WDp49f3uAMXhACRjD5j4ykuCtf5PP7Fm1b0DIsl/VHGezzP1KwOiZQobFF9YyjSRYQETRENSlVzI8iK9mWlzckpSSCQHVALmN9Az1euDho9Xo8vKGd2rqooA8yBcrwHgCqYR0kMkWci08t/R+W4ljDCanWTg9TJGwGNaNk3vYZ7VUdeKsYJGFNkfSzjXNrSX20s4/h6kB81/271ghG17l+rPTAAAAAElFTkSuQmCC'
+            tracker.favicon = icon_base64
 
     @api.model
     def create(self, vals):

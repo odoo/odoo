@@ -667,25 +667,25 @@ class AccountJournal(models.Model):
                 sequence = journal.refund_sequence_id._get_current_sequence()
                 sequence.number_next = journal.refund_sequence_number_next
 
-    @api.one
     @api.constrains('currency_id', 'default_credit_account_id', 'default_debit_account_id')
     def _check_currency(self):
-        if self.currency_id:
-            if self.default_credit_account_id and not self.default_credit_account_id.currency_id.id == self.currency_id.id:
-                raise ValidationError(_('The currency of the journal should be the same than the default credit account.'))
-            if self.default_debit_account_id and not self.default_debit_account_id.currency_id.id == self.currency_id.id:
-                raise ValidationError(_('The currency of the journal should be the same than the default debit account.'))
+        for journal in self:
+            if journal.currency_id:
+                if journal.default_credit_account_id and not journal.default_credit_account_id.currency_id.id == journal.currency_id.id:
+                    raise ValidationError(_('The currency of the journal should be the same than the default credit account.'))
+                if journal.default_debit_account_id and not journal.default_debit_account_id.currency_id.id == journal.currency_id.id:
+                    raise ValidationError(_('The currency of the journal should be the same than the default debit account.'))
 
-    @api.one
     @api.constrains('type', 'bank_account_id')
     def _check_bank_account(self):
-        if self.type == 'bank' and self.bank_account_id:
-            if self.bank_account_id.company_id != self.company_id:
-                raise ValidationError(_('The bank account of a bank journal must belong to the same company (%s).') % self.company_id.name)
-            # A bank account can belong to a customer/supplier, in which case their partner_id is the customer/supplier.
-            # Or they are part of a bank journal and their partner_id must be the company's partner_id.
-            if self.bank_account_id.partner_id != self.company_id.partner_id:
-                raise ValidationError(_('The holder of a journal\'s bank account must be the company (%s).') % self.company_id.name)
+        for journal in self:
+            if journal.type == 'bank' and journal.bank_account_id:
+                if journal.bank_account_id.company_id != journal.company_id:
+                    raise ValidationError(_('The bank account of a bank journal must belong to the same company (%s).') % journal.company_id.name)
+                # A bank account can belong to a customer/supplier, in which case their partner_id is the customer/supplier.
+                # Or they are part of a bank journal and their partner_id must be the company's partner_id.
+                if journal.bank_account_id.partner_id != journal.company_id.partner_id:
+                    raise ValidationError(_('The holder of a journal\'s bank account must be the company (%s).') % journal.company_id.name)
 
     @api.onchange('default_debit_account_id')
     def onchange_debit_account_id(self):
@@ -980,11 +980,11 @@ class ResPartnerBank(models.Model):
     journal_id = fields.One2many('account.journal', 'bank_account_id', domain=[('type', '=', 'bank')], string='Account Journal', readonly=True,
         help="The accounting journal corresponding to this bank account.")
 
-    @api.one
     @api.constrains('journal_id')
     def _check_journal_id(self):
-        if len(self.journal_id) > 1:
-            raise ValidationError(_('A bank account can belong to only one journal.'))
+        for bank in self:
+            if len(bank.journal_id) > 1:
+                raise ValidationError(_('A bank account can belong to only one journal.'))
 
 
 #----------------------------------------------------------
@@ -1111,13 +1111,13 @@ class AccountTax(models.Model):
                     raise ValidationError(_("Invoice and credit note repartitions should match (same percentages, in the same order)."))
                 index += 1
 
-    @api.one
     @api.constrains('children_tax_ids', 'type_tax_use')
     def _check_children_scope(self):
-        if not self._check_m2m_recursion('children_tax_ids'):
-            raise ValidationError(_("Recursion found for tax '%s'.") % (self.name,))
-        if not all(child.type_tax_use in ('none', self.type_tax_use) for child in self.children_tax_ids):
-            raise ValidationError(_('The application scope of taxes in a group must be either the same as the group or left empty.'))
+        for tax in self:
+            if not tax._check_m2m_recursion('children_tax_ids'):
+                raise ValidationError(_("Recursion found for tax '%s'.") % (tax.name,))
+            if not all(child.type_tax_use in ('none', tax.type_tax_use) for child in tax.children_tax_ids):
+                raise ValidationError(_('The application scope of taxes in a group must be either the same as the group or left empty.'))
 
     @api.multi
     @api.returns('self', lambda value: value.id)

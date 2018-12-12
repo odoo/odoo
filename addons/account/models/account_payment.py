@@ -361,27 +361,28 @@ class account_payment(models.Model):
             'context': action_context,
         }
 
-    @api.one
     @api.depends('invoice_ids', 'payment_type', 'partner_type', 'partner_id')
     def _compute_destination_account_id(self):
-        if self.invoice_ids:
-            self.destination_account_id = self.invoice_ids[0].mapped('line_ids.account_id')\
-                .filtered(lambda account: account.user_type_id.type in ('receivable', 'payable'))[0]
-        elif self.payment_type == 'transfer':
-            if not self.company_id.transfer_account_id.id:
-                raise UserError(_('There is no Transfer Account defined in the accounting settings. Please define one to be able to confirm this transfer.'))
-            self.destination_account_id = self.company_id.transfer_account_id.id
-        elif self.partner_id:
-            if self.partner_type == 'customer':
-                self.destination_account_id = self.partner_id.property_account_receivable_id.id
-            else:
-                self.destination_account_id = self.partner_id.property_account_payable_id.id
-        elif self.partner_type == 'customer':
-            default_account = self.env['ir.property'].get('property_account_receivable_id', 'res.partner')
-            self.destination_account_id = default_account.id
-        elif self.partner_type == 'supplier':
-            default_account = self.env['ir.property'].get('property_account_payable_id', 'res.partner')
-            self.destination_account_id = default_account.id
+        for payment in self:
+            if payment.invoice_ids:
+                payment.destination_account_id = payment.invoice_ids[0].mapped(
+                    'line_ids.account_id').filtered(
+                        lambda account: account.user_type_id.type in ('receivable', 'payable'))[0]
+            elif payment.payment_type == 'transfer':
+                if not payment.company_id.transfer_account_id.id:
+                    raise UserError(_('There is no Transfer Account defined in the accounting settings. Please define one to be able to confirm this transfer.'))
+                payment.destination_account_id = payment.company_id.transfer_account_id.id
+            elif payment.partner_id:
+                if payment.partner_type == 'customer':
+                    payment.destination_account_id = payment.partner_id.property_account_receivable_id.id
+                else:
+                    payment.destination_account_id = payment.partner_id.property_account_payable_id.id
+            elif payment.partner_type == 'customer':
+                default_account = self.env['ir.property'].get('property_account_receivable_id', 'res.partner')
+                payment.destination_account_id = default_account.id
+            elif payment.partner_type == 'supplier':
+                default_account = self.env['ir.property'].get('property_account_payable_id', 'res.partner')
+                payment.destination_account_id = default_account.id
 
     @api.depends('move_line_ids.matched_debit_ids', 'move_line_ids.matched_credit_ids')
     def _compute_reconciled_invoice_ids(self):

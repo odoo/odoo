@@ -22,18 +22,16 @@ class pos_cache(models.Model):
     def refresh_all_caches(self):
         self.env['pos.cache'].search([]).refresh_cache()
 
-    @api.one
     def refresh_cache(self):
-        Product = self.env['product.product'].with_user(self.compute_user_id)
-        products = Product.search(self.get_product_domain())
-        prod_ctx = products.with_context(pricelist=self.config_id.pricelist_id.id, display_default_code=False,
-                                         lang=self.compute_user_id.lang)
-        res = prod_ctx.read(self.get_product_fields())
-        datas = {
-            'cache': base64.encodestring(json.dumps(res).encode('utf-8')),
-        }
-
-        self.write(datas)
+        for cache in self:
+            Product = self.env['product.product'].with_user(cache.compute_user_id.id)
+            products = Product.search(cache.get_product_domain())
+            prod_ctx = products.with_context(pricelist=cache.config_id.pricelist_id.id,
+                display_default_code=False, lang=cache.compute_user_id.lang)
+            res = prod_ctx.read(cache.get_product_fields())
+            cache.write({
+                'cache': base64.encodestring(json.dumps(res).encode('utf-8')),
+            })
 
     @api.model
     def get_product_domain(self):
@@ -56,13 +54,12 @@ class pos_cache(models.Model):
 class pos_config(models.Model):
     _inherit = 'pos.config'
 
-    @api.one
     @api.depends('cache_ids')
     def _get_oldest_cache_time(self):
-        pos_cache = self.env['pos.cache']
-        oldest_cache = pos_cache.search([('config_id', '=', self.id)], order='write_date', limit=1)
-        if oldest_cache:
-            self.oldest_cache_time = oldest_cache.write_date
+        for cache in self:
+            pos_cache = self.env['pos.cache']
+            oldest_cache = pos_cache.search([('config_id', '=', cache.id)], order='write_date', limit=1)
+            cache.oldest_cache_time = oldest_cache.write_date
 
     # Use a related model to avoid the load of the cache when the pos load his config
     cache_ids = fields.One2many('pos.cache', 'config_id')
@@ -94,7 +91,6 @@ class pos_config(models.Model):
             new_cache = self._get_cache_for_user()
             return new_cache.get_cache(domain, fields)
 
-    @api.one
     def delete_cache(self):
         # throw away the old caches
         self.cache_ids.unlink()

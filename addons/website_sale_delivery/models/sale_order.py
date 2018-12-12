@@ -15,10 +15,10 @@ class SaleOrder(models.Model):
         string='Delivery Amount',
         help="The amount without tax.", store=True, tracking=True)
 
-    @api.one
     def _compute_website_order_line(self):
         super(SaleOrder, self)._compute_website_order_line()
-        self.website_order_line = self.website_order_line.filtered(lambda l: not l.is_delivery)
+        for order in self:
+            order.website_order_line = order.website_order_line.filtered(lambda l: not l.is_delivery)
 
     @api.depends('order_line.price_unit', 'order_line.tax_id', 'order_line.discount', 'order_line.product_uom_qty')
     def _compute_amount_delivery(self):

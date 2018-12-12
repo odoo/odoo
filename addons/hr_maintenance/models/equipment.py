@@ -15,14 +15,14 @@ class MaintenanceEquipment(models.Model):
         default='employee')
     owner_user_id = fields.Many2one(compute='_compute_owner', store=True)
 
-    @api.one
     @api.depends('employee_id', 'department_id', 'equipment_assign_to')
     def _compute_owner(self):
-        self.owner_user_id = self.env.user.id
-        if self.equipment_assign_to == 'employee':
-            self.owner_user_id = self.employee_id.user_id.id
-        elif self.equipment_assign_to == 'department':
-            self.owner_user_id = self.department_id.manager_id.user_id.id
+        for equipment in self:
+            equipment.owner_user_id = self.env.user.id
+            if equipment.equipment_assign_to == 'employee':
+                equipment.owner_user_id = equipment.employee_id.user_id.id
+            elif equipment.equipment_assign_to == 'department':
+                equipment.owner_user_id = equipment.department_id.manager_id.user_id.id
 
     @api.onchange('equipment_assign_to')
     def _onchange_equipment_assign_to(self):

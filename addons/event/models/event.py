@@ -215,21 +215,23 @@ class EventEvent(models.Model):
     def _tz_get(self):
         return [(x, x) for x in pytz.all_timezones]
 
-    @api.one
     @api.depends('date_tz', 'date_begin')
     def _compute_date_begin_tz(self):
-        if self.date_begin:
-            self.date_begin_located = format_datetime(self.env, self.date_begin, tz=self.date_tz, dt_format='medium')
-        else:
-            self.date_begin_located = False
+        for event in self:
+            if event.date_begin:
+                event.date_begin_located = format_datetime(
+                    self.env, event.date_begin, tz=event.date_tz, dt_format='medium')
+            else:
+                event.date_begin_located = False
 
-    @api.one
     @api.depends('date_tz', 'date_end')
     def _compute_date_end_tz(self):
-        if self.date_end:
-            self.date_end_located = format_datetime(self.env, self.date_end, tz=self.date_tz, dt_format='medium')
-        else:
-            self.date_end_located = False
+        for event in self:
+            if event.date_end:
+                event.date_end_located = format_datetime(
+                    self.env, event.date_end, tz=event.date_tz, dt_format='medium')
+            else:
+                event.date_end_located = False
 
     @api.onchange('is_online')
     def _onchange_is_online(self):
@@ -273,11 +275,11 @@ class EventEvent(models.Model):
         if any(event.seats_availability == 'limited' and event.seats_max and event.seats_available < 0 for event in self):
             raise ValidationError(_('No more available seats.'))
 
-    @api.one
     @api.constrains('date_begin', 'date_end')
     def _check_closing_date(self):
-        if self.date_end < self.date_begin:
-            raise ValidationError(_('The closing date cannot be earlier than the beginning date.'))
+        for event in self:
+            if event.date_end < event.date_begin:
+                raise ValidationError(_('The closing date cannot be earlier than the beginning date.'))
 
     @api.multi
     @api.depends('name', 'date_begin', 'date_end')
@@ -314,9 +316,8 @@ class EventEvent(models.Model):
         default = dict(default or {}, name=_("%s (copy)") % (self.name))
         return super(EventEvent, self).copy(default)
 
-    @api.one
     def button_draft(self):
-        self.state = 'draft'
+        self.write({'state': 'draft'})
 
     @api.multi
     def button_cancel(self):
@@ -325,18 +326,16 @@ class EventEvent(models.Model):
         self.registration_ids.write({'state': 'cancel'})
         self.state = 'cancel'
 
-    @api.one
     def button_done(self):
-        self.state = 'done'
+        self.write({'state': 'done'})
 
-    @api.one
     def button_confirm(self):
-        self.state = 'confirm'
+        self.write({'state': 'confirm'})
 
-    @api.one
     def mail_attendees(self, template_id, force_send=False, filter_func=lambda self: self.state != 'cancel'):
-        for attendee in self.registration_ids.filtered(filter_func):
-            self.env['mail.template'].browse(template_id).send_mail(attendee.id, force_send=force_send)
+        for event in self:
+            for attendee in event.registration_ids.filtered(filter_func):
+                self.env['mail.template'].browse(template_id).send_mail(attendee.id, force_send=force_send)
 
     @api.multi
     def _is_event_registrable(self):
@@ -396,11 +395,11 @@ class EventRegistration(models.Model):
     phone = fields.Char(string='Phone')
     name = fields.Char(string='Attendee Name', index=True)
 
-    @api.one
     @api.constrains('event_id', 'state')
     def _check_seats_limit(self):
-        if self.event_id.seats_availability == 'limited' and self.event_id.seats_max and self.event_id.seats_available < (1 if self.state == 'draft' else 0):
-            raise ValidationError(_('No more seats available for this event.'))
+        for registration in self:
+            if registration.event_id.seats_availability == 'limited' and registration.event_id.seats_max and registration.event_id.seats_available < (1 if registration.state == 'draft' else 0):
+                raise ValidationError(_('No more seats available for this event.'))
 
     @api.multi
     def _check_auto_confirmation(self):
@@ -437,33 +436,30 @@ class EventRegistration(models.Model):
         data.update({key: value for key, value in registration.items() if key in self._fields})
         return data
 
-    @api.one
     def do_draft(self):
-        self.state = 'draft'
+        self.write({'state': 'draft'})
 
-    @api.one
     def confirm_registration(self):
-        self.state = 'open'
+        self.write({'state': 'open'})
 
         # auto-trigger after_sub (on subscribe) mail schedulers, if needed
         onsubscribe_schedulers = self.event_id.event_mail_ids.filtered(
             lambda s: s.interval_type == 'after_sub')
         onsubscribe_schedulers.execute()
 
-    @api.one
     def button_reg_close(self):
         """ Close Registration """
-        today = fields.Datetime.now()
-        if self.event_id.date_begin <= today and self.event_id.state == 'confirm':
-            self.write({'state': 'done', 'date_closed': today})
-        elif self.event_id.state == 'draft':
-            raise UserError(_("You must wait the event confirmation before doing this action."))
-        else:
-            raise UserError(_("You must wait the event starting day before doing this action."))
+        for registration in self:
+            today = fields.Datetime.now()
+            if registration.event_id.date_begin <= today and registration.event_id.state == 'confirm':
+                registration.write({'state': 'done', 'date_closed': today})
+            elif registration.event_id.state == 'draft':
+                raise UserError(_("You must wait the event confirmation before doing this action."))
+            else:
+                raise UserError(_("You must wait the event starting day before doing this action."))
 
-    @api.one
     def button_reg_cancel(self):
-        self.state = 'cancel'
+        self.write({'state': 'cancel'})
 
     @api.onchange('partner_id')
     def _onchange_partner(self):

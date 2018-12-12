@@ -55,19 +55,19 @@ class StockMoveLine(models.Model):
     picking_type_entire_packs = fields.Boolean(related='picking_id.picking_type_id.show_entire_packs', readonly=True)
     description_picking = fields.Text(string="Description picking")
 
-    @api.one
     @api.depends('picking_id.picking_type_id', 'product_id.tracking')
     def _compute_lots_visible(self):
-        picking = self.picking_id
-        if picking.picking_type_id and self.product_id.tracking != 'none':  # TDE FIXME: not sure correctly migrated
-            self.lots_visible = picking.picking_type_id.use_existing_lots or picking.picking_type_id.use_create_lots
-        else:
-            self.lots_visible = self.product_id.tracking != 'none'
+        for line in self:
+            picking = line.picking_id
+            if picking.picking_type_id and line.product_id.tracking != 'none':  # TDE FIXME: not sure correctly migrated
+                line.lots_visible = picking.picking_type_id.use_existing_lots or picking.picking_type_id.use_create_lots
+            else:
+                line.lots_visible = line.product_id.tracking != 'none'
 
-    @api.one
     @api.depends('product_id', 'product_uom_id', 'product_uom_qty')
     def _compute_product_qty(self):
-        self.product_qty = self.product_uom_id._compute_quantity(self.product_uom_qty, self.product_id.uom_id, rounding_method='HALF-UP')
+        for line in self:
+            line.product_qty = line.product_uom_id._compute_quantity(line.product_uom_qty, line.product_id.uom_id, rounding_method='HALF-UP')
 
     @api.constrains('lot_id', 'product_id')
     def _check_lot_product(self):
@@ -75,7 +75,6 @@ class StockMoveLine(models.Model):
             if line.lot_id and line.product_id != line.lot_id.product_id:
                 raise ValidationError(_('This lot %s is incompatible with this product %s' % (line.lot_id.name, line.product_id.display_name)))
 
-    @api.one
     def _set_product_qty(self):
         """ The meaning of product_qty field changed lately and is now a functional field computing the quantity
         in the default product UoM. This code has been added to raise an error if a write is made given a value

@@ -17,11 +17,11 @@ class AccountCashboxLine(models.Model):
     _rec_name = 'coin_value'
     _order = 'coin_value'
 
-    @api.one
     @api.depends('coin_value', 'number')
     def _sub_total(self):
         """ Calculates Sub total"""
-        self.subtotal = self.coin_value * self.number
+        for line in self:
+            line.subtotal = line.coin_value * line.number
 
     coin_value = fields.Float(string='Coin/Bill Value', required=True, digits=0)
     number = fields.Integer(string='Number of Coins/Bills', help='Opening Unit Numbers')
@@ -71,27 +71,31 @@ class AccountBankStmtCloseCheck(models.TransientModel):
 
 class AccountBankStatement(models.Model):
 
-    @api.one
     @api.depends('line_ids', 'balance_start', 'line_ids.amount', 'balance_end_real')
     def _end_balance(self):
-        self.total_entry_encoding = sum([line.amount for line in self.line_ids])
-        self.balance_end = self.balance_start + self.total_entry_encoding
-        self.difference = self.balance_end_real - self.balance_end
+        for statement in self:
+            statement.total_entry_encoding = sum([line.amount for line in statement.line_ids])
+            statement.balance_end = statement.balance_start + statement.total_entry_encoding
+            statement.difference = statement.balance_end_real - statement.balance_end
 
     @api.multi
     def _is_difference_zero(self):
         for bank_stmt in self:
             bank_stmt.is_difference_zero = float_is_zero(bank_stmt.difference, precision_digits=bank_stmt.currency_id.decimal_places)
 
-    @api.one
     @api.depends('journal_id')
     def _compute_currency(self):
-        self.currency_id = self.journal_id.currency_id or self.company_id.currency_id
+        for statement in self:
+            statement.currency_id = statement.journal_id.currency_id or statement.company_id.currency_id
 
-    @api.one
     @api.depends('line_ids.journal_entry_ids')
     def _check_lines_reconciled(self):
-        self.all_lines_reconciled = all([line.journal_entry_ids.ids or line.account_id.id for line in self.line_ids if not self.currency_id.is_zero(line.amount)])
+        for statement in self:
+            statement.all_lines_reconciled = all(
+                line.journal_entry_ids.ids or line.account_id.id
+                for line in statement.line_ids
+                if not statement.currency_id.is_zero(line.amount)
+            )
 
     @api.depends('move_line_ids')
     def _get_move_line_count(self):
@@ -322,20 +326,20 @@ class AccountBankStatementLine(models.Model):
         default=False, copy=False,
         help="Technical field holding the number given to the journal entry, automatically set when the statement line is reconciled then stored to set the same number again if the line is cancelled, set to draft and re-processed again.")
 
-    @api.one
     @api.constrains('amount')
     def _check_amount(self):
-        # Allow to enter bank statement line with an amount of 0,
-        # so that user can enter/import the exact bank statement they have received from their bank in Odoo
-        currency = self.currency_id or self.journal_currency_id
-        if self.journal_id.type != 'bank' and currency.is_zero(self.amount):
-            raise ValidationError(_('The amount of a cash transaction cannot be 0.'))
+        for line in self:
+            # Allow to enter bank statement line with an amount of 0,
+            # so that user can enter/import the exact bank statement they have received from their bank in Odoo
+            currency = line.currency_id or line.journal_currency_id
+            if line.journal_id.type != 'bank' and currency.is_zero(line.amount):
+                raise ValidationError(_('The amount of a cash transaction cannot be 0.'))
 
-    @api.one
     @api.constrains('amount', 'amount_currency')
     def _check_amount_currency(self):
-        if self.amount_currency != 0 and self.amount == 0:
-            raise ValidationError(_('If "Amount Currency" is specified, then "Amount" must be as well.'))
+        for line in self:
+            if line.amount_currency != 0 and line.amount == 0:
+                raise ValidationError(_('If "Amount Currency" is specified, then "Amount" must be as well.'))
 
     @api.constrains('currency_id', 'journal_id')
     def _check_currency_id(self):

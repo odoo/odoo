@@ -43,14 +43,12 @@ class Website(models.Model):
     shop_ppg = fields.Integer(default=20, string="Number of products in the grid on the shop")
     shop_ppr = fields.Integer(default=4, string="Number of grid columns on the shop")
 
-    @api.one
     def _compute_pricelist_ids(self):
-        """ Return the pricelists that can be used directly or indirectly on
-        the website.
-        """
-        Pricelist = self.env["product.pricelist"]
-        domain = Pricelist._get_website_pricelists_domain(self.id)
-        self.pricelist_ids = Pricelist.search(domain)
+        Pricelist = self.env['product.pricelist']
+        for website in self:
+            website.pricelist_ids = Pricelist.search(
+                Pricelist._get_website_pricelists_domain(website.id)
+            )
 
     @api.multi
     def _compute_pricelist_id(self):

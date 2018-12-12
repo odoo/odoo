@@ -115,15 +115,15 @@ class Forum(models.Model):
     karma_post = fields.Integer(string='Ask questions without validation', default=100)
     karma_moderate = fields.Integer(string='Moderate posts', default=1000)
 
-    @api.one
     def _compute_count_posts_waiting_validation(self):
-        domain = [('forum_id', '=', self.id), ('state', '=', 'pending')]
-        self.count_posts_waiting_validation = self.env['forum.post'].search_count(domain)
+        for forum in self:
+            domain = [('forum_id', '=', forum.id), ('state', '=', 'pending')]
+            forum.count_posts_waiting_validation = self.env['forum.post'].search_count(domain)
 
-    @api.one
     def _compute_count_flagged_posts(self):
-        domain = [('forum_id', '=', self.id), ('state', '=', 'flagged')]
-        self.count_flagged_posts = self.env['forum.post'].search_count(domain)
+        for forum in self:
+            domain = [('forum_id', '=', forum.id), ('state', '=', 'flagged')]
+            forum.count_flagged_posts = self.env['forum.post'].search_count(domain)
 
     @api.model
     def create(self, values):
@@ -277,19 +277,19 @@ class Post(models.Model):
         # don't use param named because orm will add other param (test_active, ...)
         return [('id', op, (req, (user.id, user.karma, user.id, user.karma, user.id)))]
 
-    @api.one
     @api.depends('content')
     def _get_plain_content(self):
-        self.plain_content = tools.html2plaintext(self.content)[0:500] if self.content else False
+        for post in self:
+            post.plain_content = tools.html2plaintext(post.content)[0:500] if post.content else False
 
-    @api.one
     @api.depends('vote_count', 'forum_id.relevancy_post_vote', 'forum_id.relevancy_time_decay')
     def _compute_relevancy(self):
-        if self.create_date:
-            days = (datetime.today() - self.create_date).days
-            self.relevancy = math.copysign(1, self.vote_count) * (abs(self.vote_count - 1) ** self.forum_id.relevancy_post_vote / (days + 2) ** self.forum_id.relevancy_time_decay)
-        else:
-            self.relevancy = 0
+        for post in self:
+            if post.create_date:
+                days = (datetime.today() - post.create_date).days
+                post.relevancy = math.copysign(1, post.vote_count) * (abs(post.vote_count - 1) ** post.forum_id.relevancy_post_vote / (days + 2) ** post.forum_id.relevancy_time_decay)
+            else:
+                post.relevancy = 0
 
     @api.multi
     def _get_user_vote(self):
@@ -308,21 +308,20 @@ class Post(models.Model):
         for post in self:
             post.vote_count = result[post.id]
 
-    @api.one
     def _get_user_favourite(self):
-        self.user_favourite = self._uid in self.favourite_ids.ids
+        for post in self:
+            post.user_favourite = post._uid in post.favourite_ids.ids
 
-    @api.one
     @api.depends('favourite_ids')
     def _get_favorite_count(self):
-        self.favourite_count = len(self.favourite_ids)
+        for post in self:
+            post.favourite_count = len(post.favourite_ids)
 
-    @api.one
     @api.depends('create_uid', 'parent_id')
     def _is_self_reply(self):
-        self.self_reply = self.parent_id.create_uid.id == self._uid
+        for post in self:
+            post.self_reply = post.parent_id.create_uid.id == post._uid
 
-    @api.one
     @api.depends('child_ids.create_uid', 'website_message_ids')
     def _get_child_count(self):
         def process(node):
@@ -330,16 +329,18 @@ class Post(models.Model):
             for child in node.child_ids:
                 total += process(child)
             return total
-        self.child_count = process(self)
 
-    @api.one
+        for post in self:
+            post.child_count = process(post)
+
     def _get_uid_has_answered(self):
-        self.uid_has_answered = any(answer.create_uid.id == self._uid for answer in self.child_ids)
+        for post in self:
+            post.uid_has_answered = any(answer.create_uid.id == post._uid for answer in post.child_ids)
 
-    @api.one
     @api.depends('child_ids.is_correct')
     def _get_has_validated_answer(self):
-        self.has_validated_answer = any(answer.is_correct for answer in self.child_ids)
+        for post in self:
+            post.has_validated_answer = any(answer.is_correct for answer in post.child_ids)
 
     @api.multi
     def _get_post_karma_rights(self):
@@ -568,63 +569,65 @@ class Post(models.Model):
         })
         return True
 
-    @api.one
     def validate(self):
-        if not self.can_moderate:
-            raise KarmaError(_('%d karma required to validate a post.') % self.forum_id.karma_moderate)
-
-        # if state == pending, no karma previously added for the new question
-        if self.state == 'pending':
-            self.create_uid.sudo().add_karma(self.forum_id.karma_gen_question_new)
-
-        self.write({
-            'state': 'active',
-            'active': True,
-            'moderator_id': self.env.user.id,
-        })
-        self.post_notification()
-        return True
-
-    @api.one
-    def refuse(self):
-        if not self.can_moderate:
-            raise KarmaError(_('%d karma required to refuse a post.') % self.forum_id.karma_moderate)
-
-        self.moderator_id = self.env.user
-        return True
-
-    @api.one
-    def flag(self):
-        if not self.can_flag:
-            raise KarmaError(_('%d karma required to flag a post.') % self.forum_id.karma_flag)
-
-        if(self.state == 'flagged'):
-            return {'error': 'post_already_flagged'}
-        elif(self.state == 'active'):
-            self.write({
-                'state': 'flagged',
-                'flag_user_id': self.env.user.id,
+        for post in self:
+            if not post.can_moderate:
+                raise KarmaError(_('%d karma required to validate a post.') % post.forum_id.karma_moderate)
+            # if state == pending, no karma previously added for the new question
+            if post.state == 'pending':
+                post.create_uid.sudo().add_karma(post.forum_id.karma_gen_question_new)
+            post.write({
+                'state': 'active',
+                'active': True,
+                'moderator_id': self.env.user.id,
             })
-            return self.can_moderate and {'success': 'post_flagged_moderator'} or {'success': 'post_flagged_non_moderator'}
-        else:
-            return {'error': 'post_non_flaggable'}
+            post.post_notification()
+        return True
 
-    @api.one
+    def refuse(self):
+        for post in self:
+            if not post.can_moderate:
+                raise KarmaError(_('%d karma required to refuse a post.') % post.forum_id.karma_moderate)
+            post.moderator_id = self.env.user
+        return True
+
+    def flag(self):
+        res = []
+        for post in self:
+            if not post.can_flag:
+                raise KarmaError(_('%d karma required to flag a post.') % post.forum_id.karma_flag)
+            if post.state == 'flagged':
+               res.append({'error': 'post_already_flagged'})
+            elif post.state == 'active':
+                # TODO: potential performance bottleneck, can be batched
+                post.write({
+                    'state': 'flagged',
+                    'flag_user_id': self.env.user.id,
+                })
+                res.append(
+                    post.can_moderate and
+                    {'success': 'post_flagged_moderator'} or
+                    {'success': 'post_flagged_non_moderator'}
+                )
+            else:
+                res.append({'error': 'post_non_flaggable'})
+        return res
+
     def mark_as_offensive(self, reason_id):
-        if not self.can_moderate:
-            raise KarmaError(_('%d karma required to mark a post as offensive.') % self.forum_id.karma_moderate)
-
-        # remove some karma
-        _logger.info('Downvoting user <%s> for posting spam/offensive contents', self.create_uid)
-        self.create_uid.sudo().add_karma(self.forum_id.karma_gen_answer_flagged)
-
-        self.write({
-            'state': 'offensive',
-            'moderator_id': self.env.user.id,
-            'closed_date': datetime.today().strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT),
-            'closed_reason_id': reason_id,
-            'active': False,
-        })
+        for post in self:
+            if not post.can_moderate:
+                raise KarmaError(_('%d karma required to mark a post as offensive.') % post.forum_id.karma_moderate)
+            # remove some karma
+            _logger.info('Downvoting user <%s> for posting spam/offensive contents', post.create_uid)
+            post.create_uid.sudo().add_karma(post.forum_id.karma_gen_answer_flagged)
+            # TODO: potential bottleneck, could be done in batch
+            post.write({
+                'state': 'offensive',
+                'moderator_id': self.env.user.id,
+                'closed_date': fields.Datetime.now(),
+                'closed_reason_id': reason_id,
+                'active': False,
+            })
         return True
 
     @api.multi
@@ -756,18 +759,24 @@ class Post(models.Model):
 
         return new_post
 
-    @api.one
     def unlink_comment(self, message_id):
-        user = self.env.user
-        comment = self.env['mail.message'].sudo().browse(message_id)
-        if not comment.model == 'forum.post' or not comment.res_id == self.id:
-            return False
-        # karma-based action check: must check the message's author to know if own or all
-        karma_unlink = comment.author_id.id == user.partner_id.id and self.forum_id.karma_comment_unlink_own or self.forum_id.karma_comment_unlink_all
-        can_unlink = user.karma >= karma_unlink
-        if not can_unlink:
-            raise KarmaError(_('%d karma required to unlink a comment.') % karma_unlink)
-        return comment.unlink()
+        result = []
+        for post in self:
+            user = self.env.user
+            comment = self.env['mail.message'].sudo().browse(message_id)
+            if not comment.model == 'forum.post' or not comment.res_id == post.id:
+                result.append(False)
+                continue
+            # karma-based action check: must check the message's author to know if own or all
+            karma_unlink = (
+                comment.author_id.id == user.partner_id.id and
+                post.forum_id.karma_comment_unlink_own or post.forum_id.karma_comment_unlink_all
+            )
+            can_unlink = user.karma >= karma_unlink
+            if not can_unlink:
+                raise KarmaError(_('%d karma required to unlink a comment.') % karma_unlink)
+            result.append(comment.unlink())
+        return result
 
     @api.multi
     def set_viewed(self):

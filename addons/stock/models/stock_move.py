@@ -250,11 +250,12 @@ class StockMove(models.Model):
         for move in self:
             move.has_move_lines = bool(move.move_line_ids)
 
-    @api.one
     @api.depends('product_id', 'product_uom', 'product_uom_qty')
     def _compute_product_qty(self):
         rounding_method = self._context.get('rounding_method', 'UP')
-        self.product_qty = self.product_uom._compute_quantity(self.product_uom_qty, self.product_id.uom_id, rounding_method=rounding_method)
+        for move in self:
+            move.product_qty = move.product_uom._compute_quantity(
+                move.product_uom_qty, move.product_id.uom_id, rounding_method=rounding_method)
 
     @api.depends('move_line_ids.qty_done', 'move_line_ids.product_uom_id')
     def _quantity_done_compute(self):
@@ -305,18 +306,18 @@ class StockMove(models.Model):
         for rec in self:
             rec.reserved_availability = rec.product_id.uom_id._compute_quantity(result.get(rec.id, 0.0), rec.product_uom, rounding_method='HALF-UP')
 
-    @api.one
     @api.depends('state', 'product_id', 'product_qty', 'location_id')
     def _compute_product_availability(self):
         """ Fill the `availability` field on a stock move, which is the quantity to potentially
         reserve. When the move is done, `availability` is set to the quantity the move did actually
         move.
         """
-        if self.state == 'done':
-            self.availability = self.product_qty
-        else:
-            total_availability = self.env['stock.quant']._get_available_quantity(self.product_id, self.location_id)
-            self.availability = min(self.product_qty, total_availability)
+        for move in self:
+            if move.state == 'done':
+                move.availability = move.product_qty
+            else:
+                total_availability = self.env['stock.quant']._get_available_quantity(move.product_id, move.location_id)
+                move.availability = min(move.product_qty, total_availability)
 
     def _compute_string_qty_information(self):
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')

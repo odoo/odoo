@@ -471,25 +471,25 @@ class PricelistItem(models.Model):
             raise ValidationError(_('The minimum margin should be lower than the maximum margin.'))
         return True
 
-    @api.one
     @api.depends('categ_id', 'product_tmpl_id', 'product_id', 'compute_price', 'fixed_price', \
         'pricelist_id', 'percent_price', 'price_discount', 'price_surcharge')
     def _get_pricelist_item_name_price(self):
-        if self.categ_id:
-            self.name = _("Category: %s") % (self.categ_id.name)
-        elif self.product_tmpl_id:
-            self.name = self.product_tmpl_id.name
-        elif self.product_id:
-            self.name = self.product_id.display_name.replace('[%s]' % self.product_id.code, '')
-        else:
-            self.name = _("All Products")
+        for item in self:
+            if item.categ_id:
+                item.name = _("Category: %s") % (item.categ_id.name)
+            elif item.product_tmpl_id:
+                item.name = item.product_tmpl_id.name
+            elif item.product_id:
+                item.name = item.product_id.display_name.replace('[%s]' % item.product_id.code, '')
+            else:
+                item.name = _("All Products")
 
-        if self.compute_price == 'fixed':
-            self.price = ("%s %s") % (self.fixed_price, self.pricelist_id.currency_id.name)
-        elif self.compute_price == 'percentage':
-            self.price = _("%s %% discount") % (self.percent_price)
-        else:
-            self.price = _("%s %% discount and %s surcharge") % (self.price_discount, self.price_surcharge)
+            if item.compute_price == 'fixed':
+                item.price = ("%s %s") % (item.fixed_price, item.pricelist_id.currency_id.name)
+            elif item.compute_price == 'percentage':
+                item.price = _("%s %% discount") % (item.percent_price)
+            else:
+                item.price = _("%s %% discount and %s surcharge") % (item.price_discount, item.price_surcharge)
 
     @api.onchange('applied_on')
     def _onchange_applied_on(self):

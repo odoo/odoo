@@ -115,41 +115,41 @@ class Repair(models.Model):
     amount_total = fields.Float('Total', compute='_amount_total', store=True)
     tracking = fields.Selection('Product Tracking', related="product_id.tracking", readonly=False)
 
-    @api.one
     @api.depends('partner_id')
     def _compute_default_address_id(self):
-        if self.partner_id:
-            self.default_address_id = self.partner_id.address_get(['contact'])['contact']
+        for order in self:
+            if order.partner_id:
+                order.default_address_id = order.partner_id.address_get(['contact'])['contact']
 
-    @api.one
     @api.depends('operations.price_subtotal', 'invoice_method', 'fees_lines.price_subtotal', 'pricelist_id.currency_id')
     def _amount_untaxed(self):
-        total = sum(operation.price_subtotal for operation in self.operations)
-        total += sum(fee.price_subtotal for fee in self.fees_lines)
-        self.amount_untaxed = self.pricelist_id.currency_id.round(total)
+        for order in self:
+            total = sum(operation.price_subtotal for operation in order.operations)
+            total += sum(fee.price_subtotal for fee in order.fees_lines)
+            order.amount_untaxed = order.pricelist_id.currency_id.round(total)
 
-    @api.one
     @api.depends('operations.price_unit', 'operations.product_uom_qty', 'operations.product_id',
                  'fees_lines.price_unit', 'fees_lines.product_uom_qty', 'fees_lines.product_id',
                  'pricelist_id.currency_id', 'partner_id')
     def _amount_tax(self):
-        val = 0.0
-        for operation in self.operations:
-            if operation.tax_id:
-                tax_calculate = operation.tax_id.compute_all(operation.price_unit, self.pricelist_id.currency_id, operation.product_uom_qty, operation.product_id, self.partner_id)
-                for c in tax_calculate['taxes']:
-                    val += c['amount']
-        for fee in self.fees_lines:
-            if fee.tax_id:
-                tax_calculate = fee.tax_id.compute_all(fee.price_unit, self.pricelist_id.currency_id, fee.product_uom_qty, fee.product_id, self.partner_id)
-                for c in tax_calculate['taxes']:
-                    val += c['amount']
-        self.amount_tax = val
+        for order in self:
+            val = 0.0
+            for operation in order.operations:
+                if operation.tax_id:
+                    tax_calculate = operation.tax_id.compute_all(operation.price_unit, order.pricelist_id.currency_id, operation.product_uom_qty, operation.product_id, order.partner_id)
+                    for c in tax_calculate['taxes']:
+                        val += c['amount']
+            for fee in order.fees_lines:
+                if fee.tax_id:
+                    tax_calculate = fee.tax_id.compute_all(fee.price_unit, order.pricelist_id.currency_id, fee.product_uom_qty, fee.product_id, order.partner_id)
+                    for c in tax_calculate['taxes']:
+                        val += c['amount']
+            order.amount_tax = val
 
-    @api.one
     @api.depends('amount_untaxed', 'amount_tax')
     def _amount_total(self):
-        self.amount_total = self.pricelist_id.currency_id.round(self.amount_untaxed + self.amount_tax)
+        for order in self:
+            order.amount_total = order.pricelist_id.currency_id.round(order.amount_untaxed + order.amount_tax)
 
     _sql_constraints = [
         ('name', 'unique (name)', 'The name of the Repair Order must be unique!'),
@@ -596,11 +596,11 @@ class RepairLine(models.Model):
         for line in self.filtered(lambda x: x.product_id.tracking != 'none' and not x.lot_id):
             raise ValidationError(_("Serial number is required for operation line with product '%s'") % (line.product_id.name))
 
-    @api.one
     @api.depends('price_unit', 'repair_id', 'product_uom_qty', 'product_id', 'repair_id.invoice_method')
     def _compute_price_subtotal(self):
-        taxes = self.tax_id.compute_all(self.price_unit, self.repair_id.pricelist_id.currency_id, self.product_uom_qty, self.product_id, self.repair_id.partner_id)
-        self.price_subtotal = taxes['total_excluded']
+        for line in self:
+            taxes = line.tax_id.compute_all(line.price_unit, line.repair_id.pricelist_id.currency_id, line.product_uom_qty, line.product_id, line.repair_id.partner_id)
+            line.price_subtotal = taxes['total_excluded']
 
     @api.onchange('type', 'repair_id')
     def onchange_operation_type(self):
@@ -688,11 +688,11 @@ class RepairFee(models.Model):
     invoice_line_id = fields.Many2one('account.move.line', 'Invoice Line', copy=False, readonly=True)
     invoiced = fields.Boolean('Invoiced', copy=False, readonly=True)
 
-    @api.one
     @api.depends('price_unit', 'repair_id', 'product_uom_qty', 'product_id')
     def _compute_price_subtotal(self):
-        taxes = self.tax_id.compute_all(self.price_unit, self.repair_id.pricelist_id.currency_id, self.product_uom_qty, self.product_id, self.repair_id.partner_id)
-        self.price_subtotal = taxes['total_excluded']
+        for fee in self:
+            taxes = fee.tax_id.compute_all(fee.price_unit, fee.repair_id.pricelist_id.currency_id, fee.product_uom_qty, fee.product_id, fee.repair_id.partner_id)
+            fee.price_subtotal = taxes['total_excluded']
 
     @api.onchange('repair_id', 'product_id', 'product_uom_qty')
     def onchange_product_id(self):

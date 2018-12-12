@@ -301,24 +301,24 @@ class ProductProduct(models.Model):
                 list_price = product.list_price
             product.lst_price = list_price + product.price_extra
 
-    @api.one
     def _compute_product_code(self):
-        for supplier_info in self.seller_ids:
-            if supplier_info.name.id == self._context.get('partner_id'):
-                self.code = supplier_info.product_code or self.default_code
-                break
-        else:
-            self.code = self.default_code
+        for product in self:
+            for supplier_info in product.seller_ids:
+                if supplier_info.name.id == product._context.get('partner_id'):
+                    product.code = supplier_info.product_code or product.default_code
+                    break
+            else:
+                product.code = product.default_code
 
-    @api.one
     def _compute_partner_ref(self):
-        for supplier_info in self.seller_ids:
-            if supplier_info.name.id == self._context.get('partner_id'):
-                product_name = supplier_info.product_name or supplier_info.product_code or self.default_code or self.name
-                self.partner_ref = '%s%s' % (self.code and '[%s] ' % self.code or '', product_name)
-                break
-        else:
-            self.partner_ref = self.display_name
+        for product in self:
+            for supplier_info in product.seller_ids:
+                if supplier_info.name.id == product._context.get('partner_id'):
+                    product_name = supplier_info.product_name or product.default_code or product.name
+                    product.partner_ref = '%s%s' % (product.code and '[%s] ' % product.code or '', product_name)
+                    break
+            else:
+                product.partner_ref = product.display_name
 
     @api.depends('product_tmpl_id', 'attribute_value_ids')
     def _compute_product_template_attribute_value_ids(self):
@@ -344,12 +344,12 @@ class ProductProduct(models.Model):
                 else:
                     product.product_template_attribute_value_ids += values_per_template[product.product_tmpl_id.id][pav.id]
 
-    @api.one
     def _get_pricelist_items(self):
-        self.pricelist_item_ids = self.env['product.pricelist.item'].search([
-            '|',
-            ('product_id', '=', self.id),
-            ('product_tmpl_id', '=', self.product_tmpl_id.id)]).ids
+        for product in self:
+            product.pricelist_item_ids = self.env['product.pricelist.item'].search([
+                '|',
+                ('product_id', '=', product.id),
+                ('product_tmpl_id', '=', product.product_tmpl_id.id)]).ids
 
     @api.constrains('attribute_value_ids')
     def _check_attribute_value_ids(self):

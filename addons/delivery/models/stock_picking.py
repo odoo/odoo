@@ -11,18 +11,23 @@ from odoo.exceptions import UserError
 class StockQuantPackage(models.Model):
     _inherit = "stock.quant.package"
 
-    @api.one
     @api.depends('quant_ids')
     def _compute_weight(self):
-        weight = 0.0
-        if self.env.context.get('picking_id'):
-            current_picking_move_line_ids = self.env['stock.move.line'].search([('result_package_id', '=', self.id), ('picking_id', '=', self.env.context['picking_id'])])
-            for ml in current_picking_move_line_ids:
-                weight += ml.product_uom_id._compute_quantity(ml.qty_done,ml.product_id.uom_id) * ml.product_id.weight
-        else:
-            for quant in self.quant_ids:
-                weight += quant.quantity * quant.product_id.weight
-        self.weight = weight
+        for package in self:
+            weight = 0.0
+            if self.env.context.get('picking_id'):
+                # TODO: potential bottleneck: N packages = N queries, use groupby ?
+                current_picking_move_line_ids = self.env['stock.move.line'].search([
+                    ('result_package_id', '=', package.id),
+                    ('picking_id', '=', self.env.context['picking_id'])
+                ])
+                for ml in current_picking_move_line_ids:
+                    weight += ml.product_uom_id._compute_quantity(
+                        ml.qty_done, ml.product_id.uom_id) * ml.product_id.weight
+            else:
+                for quant in package.quant_ids:
+                    weight += quant.quantity * quant.product_id.weight
+            package.weight = weight
 
     def _get_default_weight_uom(self):
         return self.env['product.template']._get_weight_uom_name_from_ir_config_parameter()
@@ -40,29 +45,28 @@ class StockPicking(models.Model):
     _inherit = 'stock.picking'
 
 
-    @api.one
     @api.depends('move_line_ids', 'move_line_ids.result_package_id')
     def _compute_packages(self):
-        self.ensure_one()
-        packs = set()
-        for move_line in self.move_line_ids:
-            if move_line.result_package_id:
-                packs.add(move_line.result_package_id.id)
-        self.package_ids = list(packs)
+        for package in self:
+            packs = set()
+            for move_line in package.move_line_ids:
+                if move_line.result_package_id:
+                    packs.add(move_line.result_package_id.id)
+            package.package_ids = list(packs)
 
-    @api.one
     @api.depends('move_line_ids', 'move_line_ids.result_package_id', 'move_line_ids.product_uom_id', 'move_line_ids.qty_done')
     def _compute_bulk_weight(self):
-        weight = 0.0
-        for move_line in self.move_line_ids:
-            if move_line.product_id and not move_line.result_package_id:
-                weight += move_line.product_uom_id._compute_quantity(move_line.qty_done, move_line.product_id.uom_id) * move_line.product_id.weight
-        self.weight_bulk = weight
+        for picking in self:
+            weight = 0.0
+            for move_line in picking.move_line_ids:
+                if move_line.product_id and not move_line.result_package_id:
+                    weight += move_line.product_uom_id._compute_quantity(move_line.qty_done, move_line.product_id.uom_id) * move_line.product_id.weight
+            picking.weight_bulk = weight
 
-    @api.one
     @api.depends('package_ids', 'weight_bulk')
     def _compute_shipping_weight(self):
-        self.shipping_weight = self.weight_bulk + sum([pack.shipping_weight for pack in self.package_ids])
+        for picking in self:
+            picking.shipping_weight = picking.weight_bulk + sum([pack.shipping_weight for pack in picking.package_ids])
 
     def _get_default_weight_uom(self):
         return self.env['product.template']._get_weight_uom_name_from_ir_config_parameter()
@@ -231,12 +235,12 @@ class StockPicking(models.Model):
         }
         return client_action
 
-    @api.one
     def cancel_shipment(self):
-        self.carrier_id.cancel_shipment(self)
-        msg = "Shipment %s cancelled" % self.carrier_tracking_ref
-        self.message_post(body=msg)
-        self.carrier_tracking_ref = False
+        for picking in self:
+            picking.carrier_id.cancel_shipment(self)
+            msg = "Shipment %s cancelled" % picking.carrier_tracking_ref
+            picking.message_post(body=msg)
+            picking.carrier_tracking_ref = False
 
     @api.multi
     def check_packages_are_identical(self):

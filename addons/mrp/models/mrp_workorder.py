@@ -203,21 +203,21 @@ class MrpWorkorder(models.Model):
     def name_get(self):
         return [(wo.id, "%s - %s - %s" % (wo.production_id.name, wo.product_id.name, wo.name)) for wo in self]
 
-    @api.one
     @api.depends('production_id.product_qty', 'qty_produced')
     def _compute_is_produced(self):
-        rounding = self.production_id.product_uom_id.rounding
-        self.is_produced = float_compare(self.qty_produced, self.production_id.product_qty, precision_rounding=rounding) >= 0
+        for order in self:
+            rounding = order.production_id.product_uom_id.rounding
+            order.is_produced = float_compare(order.qty_produced, order.production_id.product_qty, precision_rounding=rounding) >= 0
 
-    @api.one
     @api.depends('time_ids.duration', 'qty_produced')
     def _compute_duration(self):
-        self.duration = sum(self.time_ids.mapped('duration'))
-        self.duration_unit = round(self.duration / max(self.qty_produced, 1), 2)  # rounding 2 because it is a time
-        if self.duration_expected:
-            self.duration_percent = 100 * (self.duration_expected - self.duration) / self.duration_expected
-        else:
-            self.duration_percent = 0
+        for order in self:
+            order.duration = sum(order.time_ids.mapped('duration'))
+            order.duration_unit = round(order.duration / max(order.qty_produced, 1), 2)  # rounding 2 because it is a time
+            if order.duration_expected:
+                order.duration_percent = 100 * (order.duration_expected - order.duration) / order.duration_expected
+            else:
+                order.duration_percent = 0
 
     def _compute_working_users(self):
         """ Checks whether the current user is working, all the users currently working and the last user that worked. """

@@ -84,12 +84,12 @@ class Menu(models.Model):
                                                                 ('id', '!=', menu.id)])
         return super(Menu, menus_to_remove).unlink()
 
-    @api.one
     def _compute_visible(self):
-        visible = True
-        if self.page_id and not self.page_id.sudo().is_visible and not self.user_has_groups('base.group_user'):
-            visible = False
-        self.is_visible = visible
+        for menu in self:
+            visible = True
+            if menu.page_id and not menu.page_id.sudo().is_visible and not menu.user_has_groups('base.group_user'):
+                visible = False
+            menu.is_visible = visible
 
     @api.model
     def clean_url(self):
