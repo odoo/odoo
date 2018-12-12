@@ -181,6 +181,28 @@ class MailActivity(models.Model):
                     _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') %
                     (self._description, operation))
 
+    @api.multi
+    def _check_access_assignation(self):
+        """ Check assigned user (user_id field) has access to the document. Purpose
+        is to allow assigned user to handle their activities. For that purpose
+        assigned user should be able to at least read the document. We therefore
+        raise an UserError if the assigned user has no access to the document. """
+        for activity in self:
+            model = self.env[activity.res_model].sudo(activity.user_id.id)
+            try:
+                model.check_access_rights('read')
+            except exceptions.AccessError:
+                raise exceptions.UserError(
+                    _('Assigned user %s has no access to the document and is not able to handle this activity.') %
+                    activity.user_id.display_name)
+            else:
+                try:
+                    model.browse(activity.res_id).check_access_rule('read')
+                except exceptions.AccessError:
+                    raise exceptions.UserError(
+                        _('Assigned user %s has no access to the document and is not able to handle this activity.') %
+                        activity.user_id.display_name)
+
     @api.model
     def create(self, values):
         # already compute default values to be sure those are computed using the current user
@@ -191,6 +213,8 @@ class MailActivity(models.Model):
         activity = super(MailActivity, self.sudo()).create(values_w_defaults)
         activity_user = activity.sudo(self.env.user)
         activity_user._check_access('create')
+        if activity_user.user_id != self.env.user:
+            activity_user._check_access_assignation()
         self.env[activity_user.res_model].browse(activity_user.res_id).message_subscribe(partner_ids=[activity_user.user_id.partner_id.id])
         if activity.date_deadline <= fields.Date.today():
             self.env['bus.bus'].sendone(
