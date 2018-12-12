@@ -27,8 +27,9 @@ class ProductTemplate(models.Model):
 
         if combination_info['product_id']:
             product = self.env['product.product'].sudo().browse(combination_info['product_id'])
+            website = self.env['website'].get_current_website()
             combination_info.update({
-                'virtual_available': product.virtual_available,
+                'virtual_available': product.with_context(warehouse=website.warehouse_id.id).virtual_available,
                 'product_type': product.type,
                 'inventory_availability': product.inventory_availability,
                 'available_threshold': product.available_threshold,
