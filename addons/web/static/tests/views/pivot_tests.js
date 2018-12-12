@@ -149,6 +149,23 @@ QUnit.module('Views', {
         pivot.destroy();
     });
 
+    QUnit.test('pivot rendering with string attribute on non stored field', function (assert) {
+        assert.expect(1);
+
+        this.data.partner.fields.fubar = {string: "Fubar", type: "integer", store:false};
+
+        var pivot = createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: '<pivot string="Partners">' +
+                        '<field name="fubar" string="fubar" type="measure"/>' +
+                '</pivot>',
+        });
+        assert.ok(pivot.$el.hasClass('o_pivot'),'Non stored fields can have a string attribute');
+        pivot.destroy();
+    });
+
     QUnit.test('pivot rendering with invisible attribute on field', function (assert) {
         assert.expect(2);
         // when invisible, a field should neither be an active measure,

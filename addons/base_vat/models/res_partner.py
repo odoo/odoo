@@ -356,3 +356,10 @@ class ResPartner(models.Model):
             return int(vat[9]) == c1 and int(vat[10]) == c2
 
         return False
+
+    def check_vat_al(self, vat):
+        try:
+            import stdnum.al
+            return stdnum.al.vat.is_valid(vat)
+        except ImportError:
+            return True
