@@ -600,7 +600,7 @@ class Users(models.Model):
         if not passwd:
             # empty passwords disallowed for obvious security reasons
             raise AccessDenied()
-        db = cls.pool.db_name
+        db = db or cls.pool.db_name
         if cls.__uid_cache[db].get(uid) == passwd:
             return
         cr = cls.pool.cursor()
