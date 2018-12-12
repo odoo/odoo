@@ -287,8 +287,12 @@ class MassMailingContact(models.Model):
         return contact.name_get()[0]
 
     @api.multi
-    def message_get_default_recipients(self):
-        return dict((record.id, {'partner_ids': [], 'email_to': record.email_normalized, 'email_cc': False}) for record in self)
+    def _message_get_default_recipients(self):
+        return {r.id: {
+            'partner_ids': [],
+            'email_to': r.email_normalized,
+            'email_cc': False}
+            for r in self}
 
 
 class MassMailingStage(models.Model):
