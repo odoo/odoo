@@ -3407,7 +3407,6 @@ class AccountMoveLine(models.Model):
             values_list = lines_to_create_analytic_entries._prepare_analytic_line()
             self.env['account.analytic.line'].create(values_list)
 
-    @api.multi
     def _prepare_analytic_line(self):
         """ Prepare the values used to create() an account.analytic.line upon validation of an account.move.line having
             an analytic account. This method is intended to be extended in other modules.

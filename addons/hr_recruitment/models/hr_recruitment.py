@@ -167,18 +167,17 @@ class Applicant(models.Model):
 
 
     @api.depends('date_open', 'date_closed')
-    @api.one
     def _compute_day(self):
-        if self.date_open:
-            date_create = self.create_date
-            date_open = self.date_open
-            self.day_open = (date_open - date_create).total_seconds() / (24.0 * 3600)
-
-        if self.date_closed:
-            date_create = self.create_date
-            date_closed = self.date_closed
-            self.day_close = (date_closed - date_create).total_seconds() / (24.0 * 3600)
-            self.delay_close = self.day_close - self.day_open
+        for applicant in self:
+            if applicant.date_open:
+                date_create = applicant.create_date
+                date_open = applicant.date_open
+                applicant.day_open = (date_open - date_create).total_seconds() / (24.0 * 3600)
+            if applicant.date_closed:
+                date_create = applicant.create_date
+                date_closed = applicant.date_closed
+                applicant.day_close = (date_closed - date_create).total_seconds() / (24.0 * 3600)
+                applicant.delay_close = applicant.day_close - applicant.day_open
 
     @api.depends('email_from')
     def _compute_application_count(self):

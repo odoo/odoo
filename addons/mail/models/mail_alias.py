@@ -79,13 +79,13 @@ class Alias(models.Model):
         for record in self:
             record.alias_domain = alias_domain
 
-    @api.one
     @api.constrains('alias_defaults')
     def _check_alias_defaults(self):
-        try:
-            dict(safe_eval(self.alias_defaults))
-        except Exception:
-            raise ValidationError(_('Invalid expression, it must be a literal python dictionary definition e.g. "{\'field\': \'value\'}"'))
+        for alias in self:
+            try:
+                dict(safe_eval(alias.alias_defaults))
+            except Exception:
+                raise ValidationError(_('Invalid expression, it must be a literal python dictionary definition e.g. "{\'field\': \'value\'}"'))
 
     @api.model
     def create(self, vals):

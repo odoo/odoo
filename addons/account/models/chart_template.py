@@ -161,7 +161,6 @@ class AccountChartTemplate(models.Model):
             'chart_template_id': self.id,
         }
 
-    @api.one
     def try_loading_for_current_company(self):
         """ Installs this chart of accounts for the current company if not chart
         of accounts had been created for it yet.

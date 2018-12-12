@@ -442,15 +442,15 @@ class IrModelFields(models.Model):
             model = model[name]
         return field
 
-    @api.one
     @api.constrains('related')
     def _check_related(self):
-        if self.state == 'manual' and self.related:
-            field = self._related_field()
-            if field.type != self.ttype:
-                raise ValidationError(_("Related field '%s' does not have type '%s'") % (self.related, self.ttype))
-            if field.relational and field.comodel_name != self.relation:
-                raise ValidationError(_("Related field '%s' does not have comodel '%s'") % (self.related, self.relation))
+        for rec in self:
+            if rec.state == 'manual' and rec.related:
+                field = rec._related_field()
+                if field.type != rec.ttype:
+                    raise ValidationError(_("Related field '%s' does not have type '%s'") % (rec.related, rec.ttype))
+                if field.relational and field.comodel_name != rec.relation:
+                    raise ValidationError(_("Related field '%s' does not have comodel '%s'") % (rec.related, rec.relation))
 
     @api.onchange('related')
     def _onchange_related(self):
@@ -490,11 +490,11 @@ class IrModelFields(models.Model):
             self.readonly = True
             self.copied = False
 
-    @api.one
     @api.constrains('relation_table')
     def _check_relation_table(self):
-        if self.relation_table:
-            models.check_pg_name(self.relation_table)
+        for rec in self:
+            if rec.relation_table:
+                models.check_pg_name(rec.relation_table)
 
     @api.model
     def _custom_many2many_names(self, model_name, comodel_name):

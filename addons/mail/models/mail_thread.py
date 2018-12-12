@@ -114,11 +114,11 @@ class MailThread(models.AbstractModel):
     message_attachment_count = fields.Integer('Attachment Count', compute='_compute_message_attachment_count', groups="base.group_user")
     message_main_attachment_id = fields.Many2one(string="Main Attachment", comodel_name='ir.attachment', index=True, copy=False)
 
-    @api.one
     @api.depends('message_follower_ids')
     def _get_followers(self):
-        self.message_partner_ids = self.message_follower_ids.mapped('partner_id')
-        self.message_channel_ids = self.message_follower_ids.mapped('channel_id')
+        for thread in self:
+            thread.message_partner_ids = thread.message_follower_ids.mapped('partner_id')
+            thread.message_channel_ids = thread.message_follower_ids.mapped('channel_id')
 
     @api.model
     def _search_follower_partners(self, operator, operand):

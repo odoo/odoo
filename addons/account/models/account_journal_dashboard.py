@@ -15,16 +15,16 @@ import ast
 class account_journal(models.Model):
     _inherit = "account.journal"
 
-    @api.one
     def _kanban_dashboard(self):
-        self.kanban_dashboard = json.dumps(self.get_journal_dashboard_datas())
+        for journal in self:
+            journal.kanban_dashboard = json.dumps(journal.get_journal_dashboard_datas())
 
-    @api.one
     def _kanban_dashboard_graph(self):
-        if (self.type in ['sale', 'purchase']):
-            self.kanban_dashboard_graph = json.dumps(self.get_bar_graph_datas())
-        elif (self.type in ['cash', 'bank']):
-            self.kanban_dashboard_graph = json.dumps(self.get_line_graph_datas())
+        for journal in self:
+            if (journal.type in ['sale', 'purchase']):
+                journal.kanban_dashboard_graph = json.dumps(journal.get_bar_graph_datas())
+            elif (journal.type in ['cash', 'bank']):
+                journal.kanban_dashboard_graph = json.dumps(journal.get_line_graph_datas())
 
     def _get_json_activity_data(self):
         for journal in self:

@@ -97,15 +97,15 @@ class Partner(models.Model):
                 state = 'free'
             partner.membership_state = state
 
-    @api.one
     @api.constrains('associate_member')
     def _check_recursion_associate_member(self):
-        level = 100
-        while self:
-            self = self.associate_member
-            if not level:
-                raise ValidationError(_('You cannot create recursive associated members.'))
-            level -= 1
+        for partner in self:
+            level = 100
+            while partner:
+                partner = partner.associate_member
+                if not level:
+                    raise ValidationError(_('You cannot create recursive associated members.'))
+                level -= 1
 
     @api.model
     def _cron_update_membership(self):

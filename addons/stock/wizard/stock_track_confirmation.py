@@ -11,9 +11,11 @@ class StockTrackConfirmation(models.TransientModel):
     tracking_line_ids = fields.One2many('stock.track.line', 'wizard_id')
     inventory_id = fields.Many2one('stock.inventory', 'Inventory')
 
-    @api.one
     def action_confirm(self):
-        return self.inventory_id._action_done()
+        res = []
+        for confirmation in self:
+            res.append(confirmation.inventory_id._action_done())
+        return res
 
 class StockTrackingLines(models.TransientModel):
     _name = 'stock.track.line'
