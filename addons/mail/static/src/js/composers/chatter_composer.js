@@ -88,11 +88,14 @@ var ChatterComposer = BasicComposer.extend({
             //      partner_id
             var def;
             if (namesToFind.length > 0) {
-                def = self._rpc({
+                def = this._rpc({
+                    route: '/mail/get_partner_info',
+                    params: {
                         model: self._model,
-                        method: 'message_partner_info_from_emails',
-                        args: [[self.context.default_res_id], namesToFind],
-                    });
+                        res_ids: [self.context.default_res_id],
+                        emails: namesToFind,
+                    },
+                });
             }
 
             // for unknown names + incomplete partners
@@ -143,10 +146,14 @@ var ChatterComposer = BasicComposer.extend({
                     var def;
                     if (newNamesToFind.length > 0) {
                         def = self._rpc({
+                            route: '/mail/get_partner_info',
+                            params: {
                                 model: self._model,
-                                method: 'message_partner_info_from_emails',
-                                args: [[self.context.default_res_id], newNamesToFind, true],
-                            });
+                                res_ids: [self.context.default_res_id],
+                                emails: namesToFind,
+                                link_mail: true,
+                            },
+                        });
                     }
                     Promise.resolve(def).then(function (result) {
                         result = result || [];

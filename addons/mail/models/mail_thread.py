@@ -26,6 +26,7 @@ from werkzeug import url_encode
 from werkzeug import urls
 
 from odoo import _, api, exceptions, fields, models, tools
+from odoo.osv import expression
 from odoo.tools import pycompat, ustr
 from odoo.tools.misc import clean_context
 from odoo.tools.safe_eval import safe_eval
@@ -937,13 +938,6 @@ class MailThread(models.AbstractModel):
     # Mail gateway
     # ------------------------------------------------------
 
-    def _message_find_partners(self, message, header_fields=['From']):
-        """ Find partners related to some header fields of the message.
-
-            :param string message: an email.message instance """
-        s = ', '.join([tools.decode_smtp_header(message.get(h)) for h in header_fields if message.get(h)])
-        return [x for x in self._find_partner_from_emails(tools.email_split(s)) if x]
-
     def _routing_warn(self, error_message, warn_suffix, message_id, route, raise_exception):
         """ Tools method used in message_route_verify: whether to log a warning or raise an error """
         short_message = _("Mailbox unavailable - %s") % error_message
@@ -1063,9 +1057,9 @@ class MailThread(models.AbstractModel):
 
         # Update message author if asked. We do it now because we need it for aliases (contact settings)
         if not author_id and update_author:
-            author_ids = self.env['mail.thread']._find_partner_from_emails([email_from], res_model=model, res_id=thread_id)
-            if author_ids:
-                message_dict['author_id'] = author_ids[0]
+            authors = self._mail_find_partner_from_emails([email_from], records=record_set)
+            if authors:
+                message_dict['author_id'] = authors[0].id
 
         # Alias: check alias_contact settings
         if alias:
@@ -1652,7 +1646,8 @@ class MailThread(models.AbstractModel):
         msg_dict['to'] = tools.decode_smtp_header(message.get('to'))
         msg_dict['cc'] = tools.decode_smtp_header(message.get('cc'))
         msg_dict['email_from'] = tools.decode_smtp_header(message.get('from'))
-        partner_ids = self._message_find_partners(message, ['To', 'Cc'])
+        recipient_emails = ', '.join([tools.decode_smtp_header(message.get(h)) for h in ['To', 'Cc'] if message.get(h)])
+        partner_ids = [x.id for x in self._mail_find_partner_from_emails(tools.email_split(recipient_emails), records=self) if x]
         msg_dict['partner_ids'] = [(4, partner_id) for partner_id in partner_ids]
 
         if message.get('Date'):
@@ -1725,7 +1720,7 @@ class MailThread(models.AbstractModel):
         self.ensure_one()
         if email and not partner:
             # get partner info from email
-            partner_info = self.message_partner_info_from_emails([email])[0]
+            partner_info = self._message_partner_info_from_emails([email])[0]
             if partner_info.get('partner_id'):
                 partner = self.env['res.partner'].sudo().browse([partner_info['partner_id']])[0]
         if email and email in [val[1] for val in result[self.ids[0]]]:  # already existing email -> skip
@@ -1754,84 +1749,79 @@ class MailThread(models.AbstractModel):
                 obj._message_add_suggested_recipient(result, partner=obj.user_id.partner_id, reason=self._fields['user_id'].string)
         return result
 
-    def _search_on_user(self, email_address, extra_domain=[]):
+    def _mail_search_on_user(self, normalized_emails, extra_domain=False):
+        """ Find partners linked to users, given an email address that will
+        be normalized. Search is done as sudo on res.users model to avoid domain
+        on partner like ('user_ids', '!=', False) that would not be efficient. """
+        domain = [('email_normalized', 'in', normalized_emails)]
+        if extra_domain:
+            domain = expression.AND(domain, extra_domain)
         Users = self.env['res.users'].sudo()
-        # exact, case-insensitive match
-        partners = Users.search([('email', '=ilike', email_address)], limit=1).mapped('partner_id')
-        if not partners:
-            # if no match with addr-spec, attempt substring match within name-addr pair
-            email_brackets = "<%s>" % email_address
-            partners = Users.search([('email', 'ilike', email_brackets)], limit=1).mapped('partner_id')
-        return partners.id
+        partners = Users.search(domain).mapped('partner_id')
+        # return a search on partner to filter results current user should not see (multi company for example)
+        return self.env['res.partner'].search([('id', 'in', partners.ids)])
 
-    def _search_on_partner(self, email_address, extra_domain=[]):
-        Partner = self.env['res.partner'].sudo()
-        # exact, case-insensitive match
-        partners = Partner.search([('email', '=ilike', email_address)] + extra_domain, limit=1)
-        if not partners:
-            # if no match with addr-spec, attempt substring match within name-addr pair
-            email_brackets = "<%s>" % email_address
-            partners = Partner.search([('email', 'ilike', email_brackets)] + extra_domain, limit=1)
-        return partners.id
+    def _mail_search_on_partner(self, normalized_emails, extra_domain=False):
+        domain = [('email_normalized', 'in', normalized_emails)]
+        if extra_domain:
+            domain = expression.AND(domain, extra_domain)
+        return self.env['res.partner'].search(domain)
 
-    @api.multi
-    def _find_partner_from_emails(self, emails, res_model=None, res_id=None, check_followers=True, force_create=False, exclude_aliases=True):
-        """ Utility method to find partners from email addresses. The rules are :
-            1 - check in document (model | self, id) followers
-            2 - try to find a matching partner that is also an user
-            3 - try to find a matching partner
-            4 - create a new one if force_create = True
+    @api.model
+    def _mail_find_partner_from_emails(self, emails, records=None, force_create=False):
+        """ Utility method to find partners from email addresses. If no partner is
+        found, create new partners if force_create is enabled. Search heuristics
 
-            :param list emails: list of email addresses
-            :param string model: model to fetch related record; by default self
-                is used.
-            :param boolean check_followers: check in document followers
-            :param boolean force_create: create a new partner if not found
-            :param boolean exclude_aliases: do not try to find a partner that could match an alias. Normally aliases
-                                            should not be used as partner emails but it could be the case due to some
-                                            strange manipulation
+          * 1: check in records (record set) followers if records is mail.thread
+               enabled and if check_followers parameter is enabled;
+          * 2: search for partners with user;
+          * 3: search for partners;
+
+        :param records: record set on which to check followers;
+        :param list emails: list of email addresses for finding partner;
+        :param boolean force_create: create a new partner if not found
+
+        :return list partners: a list of partner records ordered as given emails.
+          If no partner has been found and/or created for a given emails its
+          matching partner is an empty record.
         """
-        if res_model is None:
-            res_model = self._name
-        if res_id is None and self.ids:
-            res_id = self.ids[0]
-        followers = self.env['res.partner']
-        if res_model and res_id:
-            record = self.env[res_model].browse(res_id)
-            if hasattr(record, 'message_partner_ids'):
-                followers = record.message_partner_ids
+        if records and issubclass(type(records), self.pool['mail.thread']):
+            followers = records.mapped('message_partner_ids')
+        else:
+            followers = self.env['res.partner']
+        catchall_domain = self.env['ir.config_parameter'].sudo().get_param("mail.catchall.domain")
 
-        partner_ids = []
+        # first, build a normalized email list and remove those linked to aliases to avoid adding aliases as partners
+        normalized_emails = [tools.email_normalize(contact) for contact in emails if tools.email_normalize(contact)]
+        if catchall_domain:
+            domain_left_parts = [email.split('@')[0] for email in normalized_emails if email and email.split('@')[1] == catchall_domain.lower()]
+            if domain_left_parts:
+                found_alias_names = self.env['mail.alias'].sudo().search([('alias_name', 'in', domain_left_parts)]).mapped('alias_name')
+                normalized_emails = [email for email in normalized_emails if email.split('@')[0] not in found_alias_names]
 
+        done_partners = [follower for follower in followers if follower.email_normalized in normalized_emails]
+        remaining = [email for email in normalized_emails if email not in [partner.email_normalized for partner in done_partners]]
+
+        user_partners = self._mail_search_on_user(remaining)
+        done_partners += [user_partner for user_partner in user_partners]
+        remaining = [email for email in normalized_emails if email not in [partner.email_normalized for partner in done_partners]]
+
+        partners = self._mail_search_on_partner(remaining)
+        done_partners += [partner for partner in partners]
+        remaining = [email for email in normalized_emails if email not in [partner.email_normalized for partner in done_partners]]
+
+        # iterate and keep ordering
+        partners = []
         for contact in emails:
-            partner_id = False
-            email_address = tools.email_split(contact)
-            if not email_address:
-                partner_ids.append(partner_id)
-                continue
-            if exclude_aliases and self.env['mail.alias'].search([('alias_name', 'ilike', email_address)], limit=1):
-                partner_ids.append(partner_id)
-                continue
-
-            email_address = email_address[0]
-            # Escape special SQL characters in email_address to avoid invalid matches
-            email_address = tools.email_escape_char(email_address)
-
-            # first try: check in document's followers
-            partner_id = next((partner.id for partner in followers if partner.email == email_address), False)
-            # second try: check in partners that are also users
-            if not partner_id:
-                partner_id = self._search_on_user(email_address)
-            # third try: check in partners
-            if not partner_id:
-                partner_id = self._search_on_partner(email_address)
-            if not partner_id and force_create:
-                partner_id = self.env['res.partner'].name_create(contact)[0]
-            partner_ids.append(partner_id)
-        return partner_ids
+            normalized_email = tools.email_normalize(contact)
+            partner = next((partner for partner in done_partners if partner.email_normalized == normalized_email), self.env['res.partner'])
+            if not partner and force_create and normalized_email in normalized_emails:
+                partner = self.env['res.partner'].name_create(contact)[0]
+            partners.append(partner)
+        return partners
 
     @api.multi
-    def message_partner_info_from_emails(self, emails, link_mail=False):
+    def _message_partner_info_from_emails(self, emails, link_mail=False):
         """ Convert a list of emails into a list partner_ids and a list
             new_partner_ids. The return value is non conventional because
             it is meant to be used by the mail widget.
@@ -1839,24 +1829,18 @@ class MailThread(models.AbstractModel):
             :return dict: partner_ids and new_partner_ids """
         self.ensure_one()
         MailMessage = self.env['mail.message'].sudo()
-        partner_ids = self._find_partner_from_emails(emails)
+        partners = self._mail_find_partner_from_emails(emails, records=self)
         result = list()
-        for idx in range(len(emails)):
-            email_address = emails[idx]
-            partner_id = partner_ids[idx]
-            partner_info = {'full_name': email_address, 'partner_id': partner_id}
+        for idx, contact in enumerate(emails):
+            partner = partners[idx]
+            partner_info = {'full_name': partner.email_formatted if partner else contact, 'partner_id': partner.id}
             result.append(partner_info)
             # link mail with this from mail to the new partner id
-            if link_mail and partner_info['partner_id']:
-                # Escape special SQL characters in email_address to avoid invalid matches
-                email_address = (email_address.replace('\\', '\\\\').replace('%', '\\%').replace('_', '\\_'))
-                email_brackets = "<%s>" % email_address
+            if link_mail and partner:
                 MailMessage.search([
-                    '|',
-                    ('email_from', '=ilike', email_address),
-                    ('email_from', 'ilike', email_brackets),
+                    ('email_from', '=ilike', partner.email_normalized),
                     ('author_id', '=', False)
-                ]).write({'author_id': partner_info['partner_id']})
+                ]).write({'author_id': partner.id})
         return result
 
     # ------------------------------------------------------

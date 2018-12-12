@@ -1229,8 +1229,8 @@ class Lead(models.Model):
         return super(Lead, self)._message_post_after_hook(message, *args, **kwargs)
 
     @api.multi
-    def message_partner_info_from_emails(self, emails, link_mail=False):
-        result = super(Lead, self).message_partner_info_from_emails(emails, link_mail=link_mail)
+    def _message_partner_info_from_emails(self, emails, link_mail=False):
+        result = super(Lead, self)._message_partner_info_from_emails(emails, link_mail=link_mail)
         for partner_info in result:
             if not partner_info.get('partner_id') and (self.partner_name or self.contact_name):
                 emails = email_re.findall(partner_info['full_name'] or '')
