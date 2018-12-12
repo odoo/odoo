@@ -1562,12 +1562,6 @@ QUnit.module('Views', {
                 '</form>',
             viewOptions: {hasSidebar: true},
             res_id: 1,
-            mockRPC: function (route, args) {
-                if (args.method === 'search_read' && args.model === 'ir.attachment') {
-                    return $.when([]);
-                }
-                return this._super.apply(this, arguments);
-            },
         });
 
         assert.isVisible(form.sidebar);
@@ -1710,12 +1704,6 @@ QUnit.module('Views', {
                 '</form>',
             res_id: 1,
             viewOptions: {hasSidebar: true},
-            mockRPC: function (route, args) {
-                if (args.method === 'search_read' && args.model === 'ir.attachment') {
-                    return $.when([]);
-                }
-                return this._super.apply(this, arguments);
-            },
         });
 
         assert.strictEqual(form.$('.o_control_panel .breadcrumb').text(), 'first record',
@@ -1750,9 +1738,6 @@ QUnit.module('Views', {
                     assert.strictEqual(args.kwargs.context.hey, 'hoy',
                         "should have send the correct context");
                 }
-                if (args.method === 'search_read' && args.model === 'ir.attachment') {
-                    return $.when([]);
-                }
                 return this._super.apply(this, arguments);
             },
         });
@@ -1775,12 +1760,6 @@ QUnit.module('Views', {
                 '</form>',
             res_id: 1,
             viewOptions: {hasSidebar: true},
-            mockRPC: function (route, args) {
-                if (args.method === 'search_read' && args.model === 'ir.attachment') {
-                    return $.when([]);
-                }
-                return this._super.apply(this, arguments);
-            },
         });
 
         assert.strictEqual(form.$('.o_control_panel .breadcrumb').text(), 'first record',
@@ -2322,12 +2301,6 @@ QUnit.module('Views', {
             arch: '<form string="Partners"><field name="foo"></field></form>',
             res_id: 1,
             viewOptions: {hasSidebar: true},
-            mockRPC: function (route, args) {
-                if (args.method === 'search_read' && args.model === 'ir.attachment') {
-                    return $.when([]);
-                }
-                return this._super.apply(this, arguments);
-            },
         });
         testUtils.form.clickEdit(form);
         testUtils.fields.editInput(form.$('input[name=foo]'), 'tralala');
@@ -2664,12 +2637,6 @@ QUnit.module('Views', {
                 hasSidebar: true,
             },
             res_id: 1,
-            mockRPC: function (route, args) {
-                if (args.method === 'search_read' && args.model === 'ir.attachment') {
-                    return $.when([]);
-                }
-                return this._super.apply(this, arguments);
-            },
         });
 
         assert.strictEqual(form.pager.$('.o_pager_value').text(), "1", 'pager value should be 1');
@@ -2709,9 +2676,6 @@ QUnit.module('Views', {
             },
             res_id: 1,
             mockRPC: function (route, args) {
-                if (args.method === 'search_read' && args.model === 'ir.attachment') {
-                    return $.when([]);
-                }
                 assert.step(args.method);
                 return this._super.apply(this, arguments);
             }
@@ -4873,9 +4837,6 @@ QUnit.module('Views', {
                         "the active_ids should be an array with 1 inside.");
                     return $.when({});
                 }
-                if (args.method === 'search_read' && args.model === 'ir.attachment') {
-                    return $.when([]);
-                }
                 return this._super.apply(this, arguments);
             },
         });
@@ -6152,9 +6113,6 @@ QUnit.module('Views', {
             res_id: 1,
             viewOptions: {hasSidebar: true},
             mockRPC: function (route, args) {
-                if (args.method === 'search_read' && args.model === 'ir.attachment') {
-                    return $.when([]);
-                }
                 var result = this._super.apply(this, arguments);
                 if (args.method === 'copy') {
                     return result.then(function (id) {
@@ -6805,9 +6763,6 @@ QUnit.module('Views', {
             mockRPC: function (route, args) {
                 if (args.method === 'unlink') {
                     assert.step('unlink');
-                }
-                if (args.method === 'search_read' && args.model === 'ir.attachment') {
-                    return $.when([]);
                 }
                 return this._super.apply(this, arguments);
             },
