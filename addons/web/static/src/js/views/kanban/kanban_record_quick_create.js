@@ -72,6 +72,7 @@ var RecordQuickCreate = Widget.extend({
                 context: self.context,
                 modelName: self.model,
                 userContext: self.getSession().user_context,
+                withControlPanel: false,
             });
             return formView.getController(self).then(function (controller) {
                 self.controller = controller;
