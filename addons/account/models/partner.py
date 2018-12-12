@@ -34,16 +34,15 @@ class AccountFiscalPosition(models.Model):
     # To be used in hiding the 'Federal States' field('attrs' in view side) when selected 'Country' has 0 states.
     states_count = fields.Integer(compute='_compute_states_count')
 
-    @api.one
     def _compute_states_count(self):
-        self.states_count = len(self.country_id.state_ids)
+        for position in self:
+            position.states_count = len(position.country_id.state_ids)
 
-    @api.one
     @api.constrains('zip_from', 'zip_to')
     def _check_zip(self):
-        if self.zip_from and self.zip_to and self.zip_from > self.zip_to:
-            raise ValidationError(_('Invalid "Zip Range", please configure it properly.'))
-        return True
+        for position in self:
+            if self.zip_from and self.zip_to and position.zip_from > position.zip_to:
+                raise ValidationError(_('Invalid "Zip Range", please configure it properly.'))
 
     @api.model     # noqa
     def map_tax(self, taxes, product=None, partner=None):
@@ -346,53 +345,53 @@ class ResPartner(models.Model):
             domain += overdue_domain
         return domain
 
-    @api.one
     def _compute_has_unreconciled_entries(self):
-        # Avoid useless work if has_unreconciled_entries is not relevant for this partner
-        if not self.active or not self.is_company and self.parent_id:
-            return
-        self.env.cr.execute(
-            """ SELECT 1 FROM(
-                    SELECT
-                        p.last_time_entries_checked AS last_time_entries_checked,
-                        MAX(l.write_date) AS max_date
-                    FROM
-                        account_move_line l
-                        RIGHT JOIN account_account a ON (a.id = l.account_id)
-                        RIGHT JOIN res_partner p ON (l.partner_id = p.id)
-                    WHERE
-                        p.id = %s
-                        AND EXISTS (
-                            SELECT 1
-                            FROM account_move_line l
-                            WHERE l.account_id = a.id
-                            AND l.partner_id = p.id
-                            AND l.amount_residual > 0
-                        )
-                        AND EXISTS (
-                            SELECT 1
-                            FROM account_move_line l
-                            WHERE l.account_id = a.id
-                            AND l.partner_id = p.id
-                            AND l.amount_residual < 0
-                        )
-                    GROUP BY p.last_time_entries_checked
-                ) as s
-                WHERE (last_time_entries_checked IS NULL OR max_date > last_time_entries_checked)
-            """, (self.id,))
-        self.has_unreconciled_entries = self.env.cr.rowcount == 1
+        for partner in self:
+            # Avoid useless work if has_unreconciled_entries is not relevant for this partner
+            if not partner.active or not partner.is_company and partner.parent_id:
+                continue
+            self.env.cr.execute(
+                """ SELECT 1 FROM(
+                        SELECT
+                            p.last_time_entries_checked AS last_time_entries_checked,
+                            MAX(l.write_date) AS max_date
+                        FROM
+                            account_move_line l
+                            RIGHT JOIN account_account a ON (a.id = l.account_id)
+                            RIGHT JOIN res_partner p ON (l.partner_id = p.id)
+                        WHERE
+                            p.id = %s
+                            AND EXISTS (
+                                SELECT 1
+                                FROM account_move_line l
+                                WHERE l.account_id = a.id
+                                AND l.partner_id = p.id
+                                AND l.amount_residual > 0
+                            )
+                            AND EXISTS (
+                                SELECT 1
+                                FROM account_move_line l
+                                WHERE l.account_id = a.id
+                                AND l.partner_id = p.id
+                                AND l.amount_residual < 0
+                            )
+                        GROUP BY p.last_time_entries_checked
+                    ) as s
+                    WHERE (last_time_entries_checked IS NULL OR max_date > last_time_entries_checked)
+                """, (partner.id,))
+            partner.has_unreconciled_entries = self.env.cr.rowcount == 1
 
     @api.multi
     def mark_as_reconciled(self):
         self.env['account.partial.reconcile'].check_access_rights('write')
         return self.sudo().with_context(company_id=self.env.company.id).write({'last_time_entries_checked': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
 
-    @api.one
     def _get_company_currency(self):
-        if self.company_id:
-            self.currency_id = self.sudo().company_id.currency_id
-        else:
-            self.currency_id = self.env.company.currency_id
+        for partner in self:
+            if partner.company_id:
+                partner.currency_id = partner.sudo().company_id.currency_id
+            else:
+                partner.currency_id = self.env.company.currency_id
 
     credit = fields.Monetary(compute='_credit_debit_get', search=_credit_search,
         string='Total Receivable', help="Total amount this customer owes you.")

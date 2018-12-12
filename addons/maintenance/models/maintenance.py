@@ -25,10 +25,10 @@ class MaintenanceEquipmentCategory(models.Model):
     _inherit = ['mail.alias.mixin', 'mail.thread']
     _description = 'Maintenance Equipment Category'
 
-    @api.one
     @api.depends('equipment_ids')
     def _compute_fold(self):
-        self.fold = False if self.equipment_count else True
+        for category in self:
+            category.fold = False if category.equipment_count else True
 
     name = fields.Char('Category Name', required=True, translate=True)
     company_id = fields.Many2one('res.company', string='Company',
@@ -190,11 +190,11 @@ class MaintenanceEquipment(models.Model):
                 next_date = self.effective_date + timedelta(days=equipment.period)
             equipment.next_action_date = next_date
 
-    @api.one
     @api.depends('maintenance_ids.stage_id.done')
     def _compute_maintenance_count(self):
-        self.maintenance_count = len(self.maintenance_ids)
-        self.maintenance_open_count = len(self.maintenance_ids.filtered(lambda x: not x.stage_id.done))
+        for equipment in self:
+            equipment.maintenance_count = len(equipment.maintenance_ids)
+            equipment.maintenance_open_count = len(equipment.maintenance_ids.filtered(lambda x: not x.stage_id.done))
 
     @api.onchange('category_id')
     def _onchange_category_id(self):
@@ -418,17 +418,17 @@ class MaintenanceTeam(models.Model):
     todo_request_count_block = fields.Integer(string="Number of Requests Blocked", compute='_compute_todo_requests')
     todo_request_count_unscheduled = fields.Integer(string="Number of Requests Unscheduled", compute='_compute_todo_requests')
 
-    @api.one
     @api.depends('request_ids.stage_id.done')
     def _compute_todo_requests(self):
-        self.todo_request_ids = self.request_ids.filtered(lambda e: e.stage_id.done==False)
-        self.todo_request_count = len(self.todo_request_ids)
-        self.todo_request_count_date = len(self.todo_request_ids.filtered(lambda e: e.schedule_date != False))
-        self.todo_request_count_high_priority = len(self.todo_request_ids.filtered(lambda e: e.priority == '3'))
-        self.todo_request_count_block = len(self.todo_request_ids.filtered(lambda e: e.kanban_state == 'blocked'))
-        self.todo_request_count_unscheduled = len(self.todo_request_ids.filtered(lambda e: not e.schedule_date))
+        for team in self:
+            team.todo_request_ids = team.request_ids.filtered(lambda e: e.stage_id.done==False)
+            team.todo_request_count = len(team.todo_request_ids)
+            team.todo_request_count_date = len(team.todo_request_ids.filtered(lambda e: e.schedule_date != False))
+            team.todo_request_count_high_priority = len(team.todo_request_ids.filtered(lambda e: e.priority == '3'))
+            team.todo_request_count_block = len(team.todo_request_ids.filtered(lambda e: e.kanban_state == 'blocked'))
+            team.todo_request_count_unscheduled = len(team.todo_request_ids.filtered(lambda e: not e.schedule_date))
 
-    @api.one
     @api.depends('equipment_ids')
     def _compute_equipment(self):
-        self.equipment_count = len(self.equipment_ids)
+        for team in self:
+            team.equipment_count = len(team.equipment_ids)

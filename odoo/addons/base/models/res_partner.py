@@ -279,9 +279,9 @@ class Partner(models.Model):
         for partner in self:
             partner.contact_address = partner._display_address()
 
-    @api.one
     def _compute_get_ids(self):
-        self.self = self.id
+        for partner in self:
+            partner.self = partner.id
 
     @api.depends('is_company', 'parent_id.commercial_partner_id')
     def _compute_commercial_partner(self):

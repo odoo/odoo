@@ -87,11 +87,11 @@ class ResPartnerBank(models.Model):
                 pass
         return super(ResPartnerBank, self).write(vals)
 
-    @api.one
     @api.constrains('acc_number')
     def _check_iban(self):
-        if self.acc_type == 'iban':
-            validate_iban(self.acc_number)
+        for bank in self:
+            if bank.acc_type == 'iban':
+                validate_iban(bank.acc_number)
 
 
 # Map ISO 3166-1 -> IBAN template, as described here :

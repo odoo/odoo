@@ -66,18 +66,17 @@ class PickingType(models.Model):
     barcode = fields.Char('Barcode', copy=False)
     company_id = fields.Many2one('res.company', 'Company', related='warehouse_id.company_id', store=True)
 
-    @api.one
     def _compute_last_done_picking(self):
-        # TDE TODO: true multi
-        tristates = []
-        for picking in self.env['stock.picking'].search([('picking_type_id', '=', self.id), ('state', '=', 'done')], order='date_done desc', limit=10):
-            if picking.date_done > picking.date:
-                tristates.insert(0, {'tooltip': picking.name or '' + ": " + _('Late'), 'value': -1})
-            elif picking.backorder_id:
-                tristates.insert(0, {'tooltip': picking.name or '' + ": " + _('Backorder exists'), 'value': 0})
-            else:
-                tristates.insert(0, {'tooltip': picking.name or '' + ": " + _('OK'), 'value': 1})
-        self.last_done_picking = json.dumps(tristates)
+        for type in self:
+            tristates = []
+            for picking in self.env['stock.picking'].search([('picking_type_id', '=', type.id), ('state', '=', 'done')], order='date_done desc', limit=10):
+                if picking.date_done > picking.date:
+                    tristates.insert(0, {'tooltip': picking.name or '' + ": " + _('Late'), 'value': -1})
+                elif picking.backorder_id:
+                    tristates.insert(0, {'tooltip': picking.name or '' + ": " + _('Backorder exists'), 'value': 0})
+                else:
+                    tristates.insert(0, {'tooltip': picking.name or '' + ": " + _('OK'), 'value': 1})
+            type.last_done_picking = json.dumps(tristates)
 
     def _compute_picking_count(self):
         # TDE TODO count picking can be done using previous two
@@ -343,7 +342,6 @@ class Picking(models.Model):
                 picking.show_lots_text = False
 
     @api.depends('move_type', 'move_lines.state', 'move_lines.picking_id')
-    @api.one
     def _compute_state(self):
         ''' State of a picking depends on the state of its related stock.move
         - Draft: only used for "planned pickings"
@@ -357,58 +355,59 @@ class Picking(models.Model):
         - Done: if the picking is done.
         - Cancelled: if the picking is cancelled
         '''
-        if not self.move_lines:
-            self.state = 'draft'
-        elif any(move.state == 'draft' for move in self.move_lines):  # TDE FIXME: should be all ?
-            self.state = 'draft'
-        elif all(move.state == 'cancel' for move in self.move_lines):
-            self.state = 'cancel'
-        elif all(move.state in ['cancel', 'done'] for move in self.move_lines):
-            self.state = 'done'
-        else:
-            relevant_move_state = self.move_lines._get_relevant_state_among_moves()
-            if relevant_move_state == 'partially_available':
-                self.state = 'assigned'
+        for picking in self:
+            if not picking.move_lines:
+                picking.state = 'draft'
+            elif any(move.state == 'draft' for move in picking.move_lines):  # TDE FIXME: should be all ?
+                picking.state = 'draft'
+            elif all(move.state == 'cancel' for move in picking.move_lines):
+                picking.state = 'cancel'
+            elif all(move.state in ['cancel', 'done'] for move in picking.move_lines):
+                picking.state = 'done'
             else:
-                self.state = relevant_move_state
+                relevant_move_state = picking.move_lines._get_relevant_state_among_moves()
+                if relevant_move_state == 'partially_available':
+                    picking.state = 'assigned'
+                else:
+                    picking.state = relevant_move_state
 
-    @api.one
     @api.depends('move_lines.priority')
     def _compute_priority(self):
-        if self.mapped('move_lines'):
-            priorities = [priority for priority in self.mapped('move_lines.priority') if priority] or ['1']
-            self.priority = max(priorities)
-        else:
-            self.priority = '1'
+        for picking in self:
+            if picking.mapped('move_lines'):
+                priorities = [priority for priority in picking.mapped('move_lines.priority') if priority] or ['1']
+                picking.priority = max(priorities)
+            else:
+                picking.priority = '1'
 
-    @api.one
     def _set_priority(self):
-        self.move_lines.write({'priority': self.priority})
+        for picking in self:
+            picking.move_lines.write({'priority': picking.priority})
 
-    @api.one
     @api.depends('move_lines.date_expected')
     def _compute_scheduled_date(self):
-        if self.move_type == 'direct':
-            self.scheduled_date = min(self.move_lines.mapped('date_expected') or [fields.Datetime.now()])
-        else:
-            self.scheduled_date = max(self.move_lines.mapped('date_expected') or [fields.Datetime.now()])
+        for picking in self:
+            if picking.move_type == 'direct':
+                picking.scheduled_date = min(picking.move_lines.mapped('date_expected') or [fields.Datetime.now()])
+            else:
+                picking.scheduled_date = max(picking.move_lines.mapped('date_expected') or [fields.Datetime.now()])
 
-    @api.one
     def _set_scheduled_date(self):
-        self.move_lines.write({'date_expected': self.scheduled_date})
+        for picking in self:
+            picking.move_lines.write({'date_expected': picking.scheduled_date})
 
-    @api.one
     def _has_scrap_move(self):
-        # TDE FIXME: better implementation
-        self.has_scrap_move = bool(self.env['stock.move'].search_count([('picking_id', '=', self.id), ('scrapped', '=', True)]))
+        for picking in self:
+            # TDE FIXME: better implementation
+            picking.has_scrap_move = bool(self.env['stock.move'].search_count([('picking_id', '=', picking.id), ('scrapped', '=', True)]))
 
-    @api.one
     def _compute_move_line_exist(self):
-        self.move_line_exist = bool(self.move_line_ids)
+        for picking in self:
+            picking.move_line_exist = bool(picking.move_line_ids)
 
-    @api.one
     def _compute_has_packages(self):
-        self.has_packages = self.move_line_ids.filtered(lambda ml: ml.result_package_id)
+        for picking in self:
+            picking.has_packages = picking.move_line_ids.filtered(lambda ml: ml.result_package_id)
 
     def _compute_show_check_availability(self):
         """ According to `picking.show_check_availability`, the "check availability" button will be
@@ -539,9 +538,9 @@ class Picking(models.Model):
     # Actions
     # ----------------------------------------
 
-    @api.one
     def action_assign_owner(self):
-        self.move_line_ids.write({'owner_id': self.owner_id.id})
+        for picking in self:
+            picking.move_line_ids.write({'owner_id': picking.owner_id.id})
 
     def action_assign_partner(self):
         for picking in self:

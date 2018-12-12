@@ -237,12 +237,13 @@ class AccountMove(models.Model):
                 self._create_invoice_from_attachment(attachment)
         return res
 
-    @api.one
     def _create_invoice_from_attachment(self, attachment):
         if 'pdf' in attachment.mimetype:
-            self._create_invoice_from_pdf(attachment)
+            for move in self:
+                move._create_invoice_from_pdf(attachment)
         if 'xml' in attachment.mimetype:
-            self._create_invoice_from_xml(attachment)
+            for move in self:
+                move._create_invoice_from_xml(attachment)
 
     def _create_invoice_from_pdf(self, attachment):
         def _get_attachment_filename(attachment):

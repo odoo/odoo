@@ -215,10 +215,10 @@ class ProductTemplate(models.Model):
         for template in (self - unique_variants):
             template.standard_price = 0.0
 
-    @api.one
     def _set_standard_price(self):
-        if len(self.product_variant_ids) == 1:
-            self.product_variant_ids.standard_price = self.standard_price
+        for template in self:
+            if len(template.product_variant_ids) == 1:
+                template.product_variant_ids.standard_price = template.standard_price
 
     def _search_standard_price(self, operator, value):
         products = self.env['product.product'].search([('standard_price', operator, value)], limit=None)
@@ -232,10 +232,10 @@ class ProductTemplate(models.Model):
         for template in (self - unique_variants):
             template.volume = 0.0
 
-    @api.one
     def _set_volume(self):
-        if len(self.product_variant_ids) == 1:
-            self.product_variant_ids.volume = self.volume
+        for template in self:
+            if len(template.product_variant_ids) == 1:
+                template.product_variant_ids.volume = template.volume
 
     @api.depends('product_variant_ids', 'product_variant_ids.weight')
     def _compute_weight(self):
@@ -285,16 +285,16 @@ class ProductTemplate(models.Model):
         for template in self:
             template.volume_uom_name = self._get_volume_uom_name_from_ir_config_parameter()
 
-    @api.one
     def _set_weight(self):
-        if len(self.product_variant_ids) == 1:
-            self.product_variant_ids.weight = self.weight
+        for template in self:
+            if len(template.product_variant_ids) == 1:
+                template.product_variant_ids.weight = template.weight
 
-    @api.one
     @api.depends('product_variant_ids.product_tmpl_id')
     def _compute_product_variant_count(self):
-        # do not pollute variants to be prefetched when counting variants
-        self.product_variant_count = len(self.with_prefetch().product_variant_ids)
+        for template in self:
+            # do not pollute variants to be prefetched when counting variants
+            template.product_variant_count = len(template.with_prefetch().product_variant_ids)
 
     @api.depends('product_variant_ids', 'product_variant_ids.default_code')
     def _compute_default_code(self):
@@ -304,10 +304,10 @@ class ProductTemplate(models.Model):
         for template in (self - unique_variants):
             template.default_code = ''
 
-    @api.one
     def _set_default_code(self):
-        if len(self.product_variant_ids) == 1:
-            self.product_variant_ids.default_code = self.default_code
+        for template in self:
+            if len(template.product_variant_ids) == 1:
+                template.product_variant_ids.default_code = template.default_code
 
     @api.depends('product_variant_ids', 'product_variant_ids.packaging_ids')
     def _compute_packaging_ids(self):
