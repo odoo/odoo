@@ -37,37 +37,37 @@
                 <span t-field="doc.name"/>
             </h2>
 
-            <div class="row col mt32 mb32" id="informations">
-                <div t-if="doc.client_order_ref" class="mr32">
+            <div class="row mt32 mb32" id="informations">
+                <div t-if="doc.client_order_ref" class="col-auto mw-100 mb-2">
                     <strong>Your Reference:</strong>
-                    <p t-field="doc.client_order_ref"/>
+                    <p class="m-0" t-field="doc.client_order_ref"/>
                 </div>
-                <div t-if="doc.confirmation_date and doc.state not in ['draft','sent']" class="mr32">
+                <div t-if="doc.confirmation_date and doc.state not in ['draft','sent']" class="col-auto mw-100 mb-2">
                     <strong>Date Ordered:</strong>
-                    <p t-field="doc.confirmation_date"/>
+                    <p class="m-0" t-field="doc.confirmation_date"/>
                 </div>
-                <div t-if="doc.date_order and doc.state in ['draft','sent']" class="mr32">
+                <div t-if="doc.date_order and doc.state in ['draft','sent']" class="col-auto mw-100 mb-2">
                     <strong>Quotation Date:</strong>
-                    <p t-field="doc.date_order"/>
+                    <p class="m-0" t-field="doc.date_order"/>
                 </div>
-                <div t-if="doc.user_id.name" class="mr32">
+                <div t-if="doc.user_id.name" class="col-auto mw-100 mb-2">
                     <strong>Salesperson:</strong>
-                    <p t-field="doc.user_id"/>
+                    <p class="m-0" t-field="doc.user_id"/>
                 </div>
-                <div name="payment_term" t-if="doc.payment_term_id" class="mr32">
+                <div name="payment_term" t-if="doc.payment_term_id" class="col-auto mw-100 mb-2">
                     <strong>Payment Terms:</strong>
-                    <p t-field="doc.payment_term_id"/>
+                    <p class="m-0" t-field="doc.payment_term_id"/>
                 </div>
-                <div t-if="doc.validity_date and doc.state in ['draft', 'sent']" class="mr32">
+                <div t-if="doc.validity_date and doc.state in ['draft', 'sent']" class="col-auto mw-100 mb-2">
                     <strong>Expiration Date:</strong>
-                    <p t-field="doc.validity_date"/>
+                    <p class="m-0" t-field="doc.validity_date"/>
                 </div>
             </div>
 
             <!-- Is there a discount on at least one line? -->
             <t t-set="display_discount" t-value="any([l.discount for l in doc.order_line])"/>
 
-            <table class="table table-sm">
+            <table class="table table-sm o_main_table">
                 <thead>
                     <tr>
                         <t t-set="colspan" t-value="5"/>
@@ -94,7 +94,7 @@
                         <t t-set="current_subtotal" t-value="current_subtotal + line.price_subtotal" groups="account.group_show_line_subtotals_tax_excluded"/>
                         <t t-set="current_subtotal" t-value="current_subtotal + line.price_total" groups="account.group_show_line_subtotals_tax_included"/>
 
-                        <tr t-att-class="'bg-200 font-weight-bold' if line.display_type == 'line_section' else 'font-italic' if line.display_type == 'line_note' else ''">
+                        <tr t-att-class="'bg-200 font-weight-bold o_line_section' if line.display_type == 'line_section' else 'font-italic o_line_note' if line.display_type == 'line_note' else ''">
                             <t t-if="not line.display_type">
                                 <td><span t-field="line.name"/></td>
                                 <td class="text-right">
@@ -110,7 +110,7 @@
                                 <td class="text-right">
                                     <span t-esc="', '.join(map(lambda x: (x.description or x.name), line.tax_id))"/>
                                 </td>
-                                <td class="text-right">
+                                <td class="text-right o_price_total">
                                     <span t-field="line.price_subtotal" groups="account.group_show_line_subtotals_tax_excluded"/>
                                     <span t-field="line.price_total" groups="account.group_show_line_subtotals_tax_included"/>
                                 </td>
@@ -145,23 +145,23 @@
             </table>
 
             <div class="clearfix">
-                <div class="row" name="total">
+                <div id="total" class="row" name="total">
                     <div t-attf-class="#{'col-4' if report_type != 'html' else 'col-sm-7 col-md-5'} ml-auto">
                         <table class="table table-sm">
-                            <tr class="border-black" style="border-bottom:1px solid #dddddd;">
+                            <tr class="border-black o_subtotal" style="">
                                 <td><strong>Subtotal</strong></td>
                                 <td class="text-right">
                                     <span t-field="doc.amount_untaxed"/>
                                 </td>
                             </tr>
                             <t t-foreach="doc.amount_by_group" t-as="amount_by_group">
-                                <tr style="border-bottom:1px solid #dddddd;">
+                                <tr style="">
                                     <t t-if="amount_by_group[3] == 1 and doc.amount_untaxed == amount_by_group[2]">
                                         <td>
                                             <span t-esc="amount_by_group[0]"/>
                                             <span>&amp;nbsp;<span>on</span>&amp;nbsp;<t t-esc="amount_by_group[2]" t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'/></span>
                                         </td>
-                                        <td class="text-right">
+                                        <td class="text-right o_price_total">
                                             <span t-esc="amount_by_group[1]"
                                                 t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'/>
                                         </td>
@@ -170,14 +170,14 @@
                                         <td>
                                             <span t-esc="amount_by_group[0]"/>
                                         </td>
-                                        <td class="text-right">
+                                        <td class="text-right o_price_total">
                                             <span t-esc="amount_by_group[1]"
                                                 t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'/>
                                         </td>
                                     </t>
                                 </tr>
                             </t>
-                            <tr class="border-black">
+                            <tr class="border-black o_total">
                                 <td><strong>Total</strong></td>
                                 <td class="text-right">
                                     <span t-field="doc.amount_total"/>

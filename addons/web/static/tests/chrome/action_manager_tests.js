@@ -2156,6 +2156,62 @@ QUnit.module('ActionManager', {
         actionManager.destroy();
     });
 
+    QUnit.test('orderedBy in context is not propagated when executing another action', function (assert) {
+        assert.expect(6);
+
+        this.data.partner.fields.foo.sortable = true,
+
+        this.archs['partner,false,form'] = '<header>' +
+                                                '<button name="8" string="Execute action" type="action"/>' +
+                                            '</header>';
+
+        var searchReadCount = 0;
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/search_read') {
+                    if (searchReadCount === 1) {
+                        assert.strictEqual(args.model, 'partner');
+                        assert.notOk(args.sort);
+                    }
+                    if (searchReadCount === 2) {
+                        assert.strictEqual(args.model, 'partner');
+                        assert.strictEqual(args.sort, "foo ASC");
+                    }
+                    if (searchReadCount === 3) {
+                        assert.strictEqual(args.model, 'pony');
+                        assert.notOk(args.sort);
+                    }
+                    searchReadCount += 1;
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+        actionManager.doAction(3);
+
+        // Simulate the activation of a filter
+        var searchData = {
+            domains: [[["foo", "=", "yop"]]],
+            contexts: [{
+                orderedBy: [],
+            }],
+        };
+        actionManager.trigger_up('search', searchData);
+
+        // Sort records
+        actionManager.$('.o_list_view th.o_column_sortable').click();
+
+        // get to the form view of the model, on the first record
+        actionManager.$('.o_data_cell:first').click();
+
+        // Change model by clicking on the button within the form
+        actionManager.$('.o_form_view button').click();
+
+        actionManager.destroy();
+    });
+
     QUnit.test('breadcrumbs are updated when switching between views', function (assert) {
         assert.expect(10);
 

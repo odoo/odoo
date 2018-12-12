@@ -504,6 +504,9 @@ class AccountInvoice(models.Model):
 
     @api.model
     def create(self, vals):
+        if not vals.get('journal_id') and vals.get('type'):
+            vals['journal_id'] = self.with_context(type=vals.get('type'))._default_journal().id
+
         onchanges = {
             '_onchange_partner_id': ['account_id', 'payment_term_id', 'fiscal_position_id', 'partner_bank_id'],
             '_onchange_journal_id': ['currency_id'],
@@ -1290,6 +1293,11 @@ class AccountInvoice(models.Model):
             # Auto-compute reference, if not already existing and if configured on company
             if not invoice.reference and invoice.type == 'out_invoice':
                 invoice.reference = invoice._get_computed_reference()
+
+            # DO NOT FORWARD-PORT.
+            # The reference is copied after the move creation because we need the move to get the invoice number but
+            # we need the invoice number to get the reference.
+            invoice.move_id.ref = invoice.reference
         self._check_duplicate_supplier_reference()
 
         return self.write({'state': 'open'})

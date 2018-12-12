@@ -2347,18 +2347,20 @@ class MailThread(models.AbstractModel):
         view = self.env['ir.ui.view'].browse(self.env['ir.model.data'].xmlid_to_res_id(template))
 
         for record in self:
+            model_description = self.env['ir.model']._get(record._name).display_name
             values = {
                 'object': record,
+                'model_description': model_description,
             }
             assignation_msg = view.render(values, engine='ir.qweb', minimal_qcontext=True)
             assignation_msg = self.env['mail.thread']._replace_local_links(assignation_msg)
             record.message_notify(
-                subject='You have been assigned to %s' % record.display_name,
+                subject=_('You have been assigned to %s') % record.display_name,
                 body=assignation_msg,
                 partner_ids=[(4, pid) for pid in partner_ids],
                 record_name=record.display_name,
                 notif_layout='mail.mail_notification_light',
-                model_description=record._description.lower()
+                model_description=model_description,
             )
 
     @api.multi

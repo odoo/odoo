@@ -2582,6 +2582,8 @@ class Many2many(_RelationalMulti):
                     self.column2 = '%s_id' % comodel._table
             # check validity of table name
             check_pg_name(self.relation)
+        else:
+            self.relation = self.column1 = self.column2 = None
 
     def _setup_regular_full(self, model):
         super(Many2many, self)._setup_regular_full(model)

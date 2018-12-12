@@ -333,7 +333,7 @@ class MailActivity(models.Model):
     def action_notify(self):
         body_template = self.env.ref('mail.message_activity_assigned')
         for activity in self:
-            model_description = self.env[activity.res_model]._description.lower()
+            model_description = self.env['ir.model']._get(activity.res_model).display_name
             body = body_template.render(
                 dict(activity=activity, model_description=model_description),
                 engine='ir.qweb',

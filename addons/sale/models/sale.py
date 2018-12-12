@@ -395,7 +395,7 @@ class SaleOrder(models.Model):
         if 'invoice_status' in values:
             self.activity_unlink(['sale.mail_act_sale_upsell'])
             if values['invoice_status'] == 'upselling':
-                for order in self:
+                for order in self.filtered('user_id'):
                     order.activity_schedule(
                         'sale.mail_act_sale_upsell',
                         user_id=order.user_id.id,
