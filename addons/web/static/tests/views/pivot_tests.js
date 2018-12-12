@@ -162,7 +162,7 @@ QUnit.module('Views', {
                         '<field name="fubar" string="fubar" type="measure"/>' +
                 '</pivot>',
         });
-        assert.ok(pivot.$el.hasClass('o_pivot'),'Non stored fields can have a string attribute');
+        assert.containsOnce(pivot, '.o_pivot', 'Non stored fields can have a string attribute');
         pivot.destroy();
     });
 
