@@ -143,7 +143,7 @@ class TestLeaveRequests(TestHrHolidaysBase):
         """  Employee ask leav during a not valid validity time """
         with self.assertRaises(ValidationError):
             self.env['hr.leave'].sudo(self.user_employee_id).create({
-                'name': 'Sick Leave',
+                'name': 'Sick Time Off',
                 'employee_id': self.employee_emp_id,
                 'holiday_status_id': self.holidays_type_3.id,
                 'date_from': fields.Datetime.from_string('2017-07-03 06:00:00'),

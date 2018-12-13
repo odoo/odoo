@@ -5,22 +5,22 @@
         <field name="name">hr.holidays.filter</field>
         <field name="model">hr.leave.report</field>
         <field name="arch" type="xml">
-            <search string="Search Leave">
+            <search string="Search Time Off">
                 <field name="name"/>
                 <filter domain="[('state','in',('confirm','validate1'))]" string="To Approve" name="approve"/>
                 <filter string="Approved Requests" domain="[('state', '=', 'validate')]" name="validated"/>
                 <separator/>
-                <filter name="active_types" string="Active Types" domain="[('holiday_status_id.active', '=', True)]" help="Filters only on requests that belong to an leave type that is 'active' (active field is True)"/>
+                <filter name="active_types" string="Active Types" domain="[('holiday_status_id.active', '=', True)]" help="Filters only on requests that belong to an time off type that is 'active' (active field is True)"/>
                 <separator/>
-                <filter string="My Department Leaves" name="department" domain="[('department_id.manager_id.user_id', '=', uid)]" help="My Department Leaves"/>
-                <filter name="my_team_leaves" string="My Team Leaves" domain="[('employee_id.parent_id.user_id', '=', uid)]" groups="hr_holidays.group_hr_holidays_manager" help="Leaves of Your Team Member"/>
+                <filter string="My Department Time Off" name="department" domain="[('department_id.manager_id.user_id', '=', uid)]" help="My Department Time Off"/>
+                <filter name="my_team_leaves" string="My Team Time Off" domain="[('employee_id.parent_id.user_id', '=', uid)]" groups="hr_holidays.group_hr_holidays_manager" help="Time Off of Your Team Member"/>
                 <separator/>
                 <filter string="To Report in Payslip" name="gray" domain="[('payslip_status', '=', False)]" groups="hr_holidays.group_hr_holidays_manager"/>
                 <separator/>
                 <filter string="To Do" name="todo" domain="[('payslip_status', '=', False), ('holiday_status_id.active', '=', True)]"/>
                 <separator/>
                 <filter name="year" string="Current Year"
-                    domain="[('holiday_status_id.active', '=', True)]" help="Active Leaves"/>
+                    domain="[('holiday_status_id.active', '=', True)]" help="Active Time Off"/>
                 <separator/>
                 <filter string="My Requests" name="my_leaves" domain="[('employee_id.user_id', '=', uid)]"/>
                 <separator/>
@@ -110,29 +110,8 @@
         </field>
     </record>
 
-    <record id="open_company_allocation" model="ir.actions.act_window">
-        <field name="name">Leaves Summary</field>
-        <field name="res_model">hr.leave.report</field>
-        <field name="src_model">hr.employee</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">tree,kanban,form</field>
-        <field name="view_id" eval="hr_leave_report_tree"/>
-        <field name="context">{
-            'search_default_group_type': 1,
-            'search_default_year': 1 ,
-            'search_default_my_leaves': 1,
-        }</field>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
-                Create a new leave request
-            </p>
-        </field>
-        <field name="domain">[('holiday_type','=','employee')]</field>
-        <field name="search_view_id" ref="view_hr_holidays_filter_report"/>
-    </record>
-
     <record id="act_hr_employee_holiday_request" model="ir.actions.act_window">
-        <field name="name">Leaves</field>
+        <field name="name">Time Off</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">hr.leave.report</field>
         <field name="src_model">hr.employee</field>
@@ -146,12 +125,5 @@
         <field name="domain">[('holiday_type','=','employee')]</field>
         <field name="search_view_id" ref="view_hr_holidays_filter_report"/>
     </record>
-
-    <menuitem
-        id="menu_open_company_allocation"
-        name="Summary"
-        parent="menu_hr_holidays_my_leaves"
-        action="open_company_allocation"
-        sequence="21"/>
 
 </odoo>

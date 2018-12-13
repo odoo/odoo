@@ -86,7 +86,7 @@
         <field name="name">resource.calendar.leaves.search</field>
         <field name="model">resource.calendar.leaves</field>
         <field name="arch" type="xml">
-            <search string="Search Working Period Leaves">
+            <search string="Search Working Period Time Off">
                 <field name="name"/>
                 <field name="resource_id"/>
                 <field name="company_id" groups="base.group_multi_company"/>
@@ -147,14 +147,14 @@
     </record>
 
     <record id="action_resource_calendar_leave_tree" model="ir.actions.act_window">
-        <field name="name">Resource Leaves</field>
+        <field name="name">Resource Time Off</field>
         <field name="res_model">resource.calendar.leaves</field>
         <field name="view_mode">tree,form,calendar</field>
         <field name="search_view_id" ref="view_resource_calendar_leaves_search"/>
     </record>
 
     <record id="resource_calendar_leaves_action_from_calendar" model="ir.actions.act_window">
-        <field name="name">Resource Leaves</field>
+        <field name="name">Resource Time Off</field>
         <field name="res_model">resource.calendar.leaves</field>
         <field name="view_mode">tree,form,calendar</field>
         <field name="context">{
@@ -174,7 +174,7 @@
 
     <act_window
         id="resource_calendar_resources_leaves"
-        name="Resources Leaves"
+        name="Resources Time Off"
         res_model="resource.calendar.leaves"
         src_model="resource.calendar"
         view_mode="calendar,tree,form"
@@ -239,7 +239,7 @@
                 <sheet string="Working Time">
                     <div class="oe_button_box" name="button_box">
                         <button name="%(resource_calendar_leaves_action_from_calendar)d" type="action"
-                                string="Leaves" icon="fa-calendar-times-o"
+                                string="Time Off" icon="fa-calendar-times-o"
                                 class="oe_stat_button"
                                 groups="base.group_no_one"/>
                         <button name="%(resource_resource_action_from_calendar)d" type="action"
@@ -261,7 +261,7 @@
                         <page string="Working Hours" name="working_hours">
                             <field name="attendance_ids"/>
                         </page>
-                        <page string="Global Leaves" name="global_leaves">
+                        <page string="Global Time Off" name="global_leaves">
                             <field name="global_leave_ids">
                                 <tree editable="top">
                                     <field name="name"/>

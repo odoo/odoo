@@ -35,7 +35,7 @@ class TestBenefit(TestPayslipBase):
             'code': 'LEAVE100'
         })
         self.leave_type = self.env['hr.leave.type'].create({
-            'name': 'Legal Leaves',
+            'name': 'Paid Time Off',
             'time_type': 'leave',
             'allocation_type': 'no',
             'benefit_type_id': self.benefit_type_leave.id
