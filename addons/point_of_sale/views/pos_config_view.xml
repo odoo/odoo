@@ -207,14 +207,14 @@
                     </div>
                     <h2>Taxes</h2>
                     <div class="row mt16 o_settings_container">
-                        <div class="col-12 col-lg-6 o_setting_box" title="Choose a specific tax regime at the order depending on the kind of customer (tax exempt, onsite vs. takeaway, etc.).">
+                        <div class="col-12 col-lg-6 o_setting_box" title="Choose a specific fiscal position at the order depending on the kind of customer (tax exempt, onsite vs. takeaway, etc.).">
                             <div class="o_setting_left_pane">
                                 <field name="tax_regime_selection"/>
                             </div>
                             <div class="o_setting_right_pane">
                                 <label for="tax_regime_selection" string="Fiscal Position per Order"/>
                                 <div class="text-muted">
-                                    Choose among several tax regimes when processing an order
+                                    Choose among fiscal positions when processing an order
                                 </div>
                                 <div class="content-group" attrs="{'invisible': [('tax_regime_selection', '=', False)]}">
                                     <div class="mt16">
