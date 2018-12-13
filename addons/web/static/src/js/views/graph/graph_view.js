@@ -100,6 +100,13 @@ var GraphView = AbstractView.extend({
         this.loadParams.fields = this.fields;
         this.loadParams.comparisonDomain = params.comparisonDomain;
     },
+    _updateMVCParams: function (searchQuery) {
+        this._super.apply(this, arguments);
+
+        if (searchQuery.viewGroupBys) {
+            this.loadParams.groupedBy = searchQuery.viewGroupBys.graphGroupBy;
+        }
+    },
 });
 
 return GraphView;

@@ -138,6 +138,13 @@ var PivotView = AbstractView.extend({
             return [view ? view.viewID : false, viewType];
         }
     },
+    _updateMVCParams: function (searchQuery) {
+        this._super.apply(this, arguments);
+
+        if (searchQuery.viewGroupBys) {
+            this.loadParams.groupedBy = searchQuery.viewGroupBys.pivotRowGroupBy;
+        }
+    },
 });
 
 return PivotView;

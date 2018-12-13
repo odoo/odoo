@@ -295,11 +295,14 @@ var ControlPanelModel = mvc.Model.extend({
 
         context = _.omit(results.context, 'time_ranges');
 
+        var viewGroupBys = this.prepareViewGroupby(groupBy);
+
         return {
             context: context,
             domain: results.domain,
             groupBy: groupBy,
             orderedBy: this._getOrderedBy(),
+            viewGroupBys: viewGroupBys,
         };
     },
     /**
@@ -360,6 +363,32 @@ var ControlPanelModel = mvc.Model.extend({
                 });
             });
         }
+    },
+    /**
+     * evaluates groupbys and separate group_by, pivot_row_groupby and graph_groupbys for view dependent groupby
+     *
+     * @param {Array} groupbys list of group by
+     * @return {object}
+     */
+    prepareViewGroupby: function (groupbys) {
+        var self = this;
+        var pivotRowGroupBy = [];
+        var graphGroupBy = [];
+        _.each(groupbys, function (group) {
+            if (_.isString(group)) {
+                group = pyUtils.py_eval(group, session.user_context);
+            }
+            // Prepare group by for pivot view if pivot_row_groupby and group_by both are given on faceet
+            // For pivot view pivot_row_groupby key have highest priority and graph_groupbys key have highest priority in graph view
+            // if pivot_row_groupby/graph_groupbys is not given then apply group_by for all view
+            // To maintain sequence of applied group by fields add group_by if pivot_row_groupby/graph_groupbys are not given
+            pivotRowGroupBy.push(group.pivot_row_groupby || group.group_by);
+            graphGroupBy.push(group.graph_groupbys || group.group_by);
+        });
+        return {
+            pivotRowGroupBy: _.flatten(pivotRowGroupBy),
+            graphGroupBy: _.flatten(graphGroupBy),
+        };
     },
     /**
      * Toggle a filter with given id in a way appropriate to its type.
@@ -1050,6 +1079,13 @@ var ControlPanelModel = mvc.Model.extend({
         var groupBys = this._getGroupBy();
         if (groupBys.length) {
             context.group_by = groupBys;
+        }
+        var viewGroupBys = this.prepareViewGroupby(groupBys);
+        if (viewGroupBys.pivotRowGroupBy.length) {
+            context.pivot_row_groupby = viewGroupBys.pivotRowGroupBy;
+        }
+        if (viewGroupBys.graphGroupBy.length) {
+            context.graph_groupbys = viewGroupBys.graphGroupBy;
         }
         var domain = this._getDomain();
         var userId = favorite.isShared ? false : session.uid;
