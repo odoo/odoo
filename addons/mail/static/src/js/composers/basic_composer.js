@@ -816,16 +816,17 @@ var BasicComposer = Widget.extend({
     },
     /**
      * @private
-     * @param {integer|string} threadID
+     * @param {OdooEvent} ev
+     * @param {integer|string} ev.data.threadID
      */
-    _onUpdateTypingPartners: function (threadID) {
+    _onUpdateTypingPartners: function (ev) {
         if (!this.options.showTyping) {
             return;
         }
         if (!this.options.thread) {
             return;
         }
-        if (this.options.thread.getID() !== threadID) {
+        if (this.options.thread.getID() !== ev.data.threadID) {
             return;
         }
         this.$('.o_composer_thread_typing').html(QWeb.render('mail.Composer.ThreadTyping', {
