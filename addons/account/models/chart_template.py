@@ -165,7 +165,7 @@ class AccountChartTemplate(models.Model):
         of accounts had been created for it yet.
         """
         self.ensure_one()
-        if request:
+        if request and request.db:
             company_id = request.env.user.company_id.id
             company = self.env['res.company'].browse(company_id)
         else:
@@ -185,7 +185,7 @@ class AccountChartTemplate(models.Model):
         rights.
         """
         self.ensure_one()
-        if request:
+        if request and request.db:
             company_id = request.env.user.company_id.id
             company = self.env['res.company'].browse(company_id)
         else:

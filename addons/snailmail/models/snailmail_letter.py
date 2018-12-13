@@ -321,7 +321,7 @@ class SnailmailLetter(models.Model):
 
     @api.model
     def _snailmail_cron(self):
-        letters_send = self.search([('state', 'in', ['pending', 'error'])])
+        letters_send = self.search([('state', '=', 'pending')])
         if letters_send:
             letters_send._snailmail_print()
         limit_date = datetime.datetime.utcnow() - datetime.timedelta(days=1)
