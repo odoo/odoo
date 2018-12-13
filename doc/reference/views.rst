@@ -1168,8 +1168,6 @@ calendar view are:
     same color segment are allocated the same highlight color in the calendar,
     colors are allocated semi-randomly.
     Displayed the display_name/avatar of the visible record in the sidebar
-``readonly_form_view_id``
-    view to open in readonly mode
 ``form_view_id``
     view to open when the user create or edit an event. Note that if this attribute
     is not set, the calendar view will fall back to the id of the form view in the
