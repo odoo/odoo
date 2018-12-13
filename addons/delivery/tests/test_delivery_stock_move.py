@@ -47,7 +47,7 @@ class StockMoveInvoice(AccountingTestCase):
 
         # I confirm the SO.
         self.sale_prepaid.action_confirm()
-        self.sale_prepaid.action_invoice_create()
+        self.sale_prepaid._create_invoices()
 
         # I check that the invoice was created
         self.assertEqual(len(self.sale_prepaid.invoice_ids), 1, "Invoice not created.")

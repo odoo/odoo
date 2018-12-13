@@ -515,7 +515,7 @@ class TestSaleMrpFlow(common.TransactionCase):
 
         # invoice in on delivery, nothing should be invoiced
         with self.assertRaises(UserError):
-            so.action_invoice_create()
+            so._create_invoices()
         self.assertEqual(so.invoice_status, 'no', 'Sale MRP: so invoice_status should be "nothing to invoice" after invoicing')
 
         # deliver partially (1 of each instead of 5), check the so's invoice_status and delivered quantities
@@ -636,7 +636,7 @@ class TestSaleMrpFlow(common.TransactionCase):
         wiz = self.env[wiz_act['res_model']].browse(wiz_act['res_id'])
         wiz.process()
         # Create the invoice
-        self.so.action_invoice_create()
+        self.so._create_invoices()
         self.invoice = self.so.invoice_ids
         # Changed the invoiced quantity of the finished product to 2
         self.invoice.invoice_line_ids.write({'quantity': 2.0})
