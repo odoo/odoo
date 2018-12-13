@@ -590,3 +590,34 @@ class TestCowViewSaving(common.TransactionCase):
         self.assertEqual(view.active, True, "filter_duplicate should return the generic one")
         view = View.with_context(active_test=False, website_id=1).search([('key', '=', self.inherit_view.key)]).filter_duplicate()
         self.assertEqual(view.active, False, "filter_duplicate should return the specific one")
+
+    def test_get_related_views_tree(self):
+        View = self.env['ir.ui.view']
+
+        self.base_view.write({'name': 'B', 'key': 'B'})
+        self.inherit_view.write({'name': 'I', 'key': 'I'})
+        View.create({
+            'name': 'II',
+            'mode': 'extension',
+            'inherit_id': self.inherit_view.id,
+            'arch': '<div position="inside">, sub ext</div>',
+            'key': 'II',
+        })
+        self.inherit_view.with_context(website_id=1).write({'name': 'Extension'})  # Trigger cow on hierarchy
+        View.create({
+            'name': 'II2',
+            'mode': 'extension',
+            'inherit_id': self.inherit_view.id,
+            'arch': '<div position="inside">, sub sibling specific</div>',
+            'key': 'II2',
+        })
+
+        #       B
+        #      / \
+        #     /   \
+        #    I     I'
+        #   / \     |
+        # II  II2   II'
+
+        views = View.with_context(website_id=1).get_related_views('B')
+        self.assertEqual(views.mapped('key'), ['B', 'I', 'II'], "Should only return the specific tree")
