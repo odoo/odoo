@@ -176,7 +176,7 @@ class TestSaleStock(TestSale):
         self.assertAlmostEqual(self.so.order_line[0].qty_delivered, 3.0, msg='Sale Stock: delivered quantity should be 3.0 instead of "%s" after picking return' % self.so.order_line[0].qty_delivered)
         # let's do an invoice with refunds
         adv_wiz = self.env['sale.advance.payment.inv'].with_context(active_ids=[self.so.id]).create({
-            'advance_payment_method': 'all',
+            'advance_payment_method': 'delivered',
         })
         adv_wiz.with_context(open_invoices=True).create_invoices()
         self.inv_2 = self.so.invoice_ids.filtered(lambda r: r.state == 'draft')
