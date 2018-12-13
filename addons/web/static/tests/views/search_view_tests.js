@@ -2,6 +2,7 @@ odoo.define('web.search_view_tests', function (require) {
 "use strict";
 
 var FormView = require('web.FormView');
+var ListView = require('web.ListView');
 var testUtils = require('web.test_utils');
 
 var createActionManager = testUtils.createActionManager;
@@ -692,6 +693,39 @@ QUnit.module('Search View', {
 
         actionManager.destroy();
         window.Date = RealDate;
+    });
+
+    QUnit.test('`context` key in <filter> is used', function (assert) {
+        assert.expect(3);
+
+        this.archs['partner,4,search'] = '<search>'+
+            '<filter string="AAA" name="some_filter" context="{\'coucou_1\': 1}"></filter>' +
+        '</search>';
+
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/search_read') {
+                    assert.step(JSON.stringify(args.context));
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        actionManager.doAction(5);
+
+        // select filter
+        testUtils.dom.click($('.o_search_options .fa-filter'));
+        testUtils.dom.click($('.o_menu_item:contains(AAA)'));
+
+        assert.verifySteps([
+            "{}",
+            "{\"coucou_1\":1}",
+        ]);
+
+        actionManager.destroy();
     });
 
     QUnit.module('Favorites Menu');

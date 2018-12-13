@@ -645,10 +645,7 @@ var ControlPanelModel = mvc.Model.extend({
      * @returns {Object} context
      */
     _getFilterContext: function (filter) {
-        var context = {};
-        if (filter.type === 'favorite') {
-            _.extend(context, filter.context);
-        }
+        var context = filter.context || {};
         // the following code aims to restore this:
         // https://github.com/odoo/odoo/blob/master/addons/web/static/src/js/views/search/search_inputs.js#L498
         // this is required for the helpdesk tour to pass
