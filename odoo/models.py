@@ -1560,6 +1560,17 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
     @api.depends(lambda self: (self._rec_name,) if self._rec_name else ())
     def _compute_display_name(self):
+        """Compute the value of the `display_name` field.
+
+        In general `display_name` is equal to calling `name_get()[0][1]`.
+
+        In that case, it is recommended to use `display_name` to uniformize the
+        code and to potentially take advantage of prefetch when applicable.
+
+        However some models might override this method. For them, the behavior
+        might differ, and it is important to select which of `display_name` or
+        `name_get()[0][1]` to call depending on the desired result.
+        """
         names = dict(self.name_get())
         for record in self:
             record.display_name = names.get(record.id, False)
