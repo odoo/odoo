@@ -149,16 +149,14 @@ var ActivityRenderer = AbstractRenderer.extend({
             var widget = new KanbanActivity(self, "activity_ids", record, {});
             widget.appendTo($td).then(function() {
                 // replace clock by closest deadline
-                var $date = $('<div>');
-                var formated_date = moment(activity_group.o_closest_deadline).format('ll');
-                var current_year = (new Date()).getFullYear();
-                if (formated_date.endsWith(current_year)) { // Dummy logic to remove year (only if current year), we will maybe need to improve it
-                    formated_date = formated_date.slice(0, -4);
-                    formated_date = formated_date.replace(/( |,)*$/g, "");
+                var $date = $('<div class="o_closest_deadline">');
+                var date = new Date(activity_group.o_closest_deadline);
+                // To remove year only if current year
+                if (moment().year() === moment(date).year()) {
+                    $date.text(date.toLocaleDateString(moment().locale(), { day: 'numeric', month: 'short' }));
+                } else {
+                    $date.text(moment(date).format('ll'));
                 }
-                $date
-                    .text(formated_date)
-                    .addClass('o_closest_deadline');
                 $td.find('a')
                     .empty()
                     .append($date);
