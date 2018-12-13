@@ -89,13 +89,15 @@ def load_demo(cr, package, idref, mode, report=None):
             "Module %s demo data failed to install, installed without demo data",
             package.name, exc_info=True)
 
-        env = api.Environment(cr, SUPERUSER_ID, {})
-        todo = env.ref('base.demo_failure_todo', raise_if_not_found=False)
-        Failure = env.get('ir.demo_failure')
-        if todo and Failure is not None:
-            todo.state = 'open'
-            Failure.create({'module_id': package.id, 'error': str(e)})
-        return False
+        registry = odoo.registry(cr.dbname)
+        with registry.cursor() as cr:
+            env = api.Environment(cr, SUPERUSER_ID, {})
+            todo = env.ref('base.demo_failure_todo', raise_if_not_found=False)
+            Failure = env.get('ir.demo_failure')
+            if todo and Failure is not None:
+                todo.state = 'open'
+                Failure.create({'module_id': package.id, 'error': str(e)})
+            return False
 
 
 def force_demo(cr):
