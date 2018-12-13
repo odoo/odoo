@@ -4289,9 +4289,12 @@ var BasicModel = AbstractModel.extend({
                     }
                     return list;
                 }).then(function () {
-                    self._fetchX2ManysSingleBatch(list);
-                    self._fetchReferencesSingleBatch(list);
-                    return list;
+                    var fetchingDefs = [];
+                    fetchingDefs.push(self._fetchX2ManysSingleBatch(list));
+                    fetchingDefs.push(self._fetchReferencesSingleBatch(list));
+                    return $.when.apply($, fetchingDefs).then(function () {
+                        return list;
+                    });
                 });
             });
     },
