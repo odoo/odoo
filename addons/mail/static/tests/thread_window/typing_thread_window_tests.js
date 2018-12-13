@@ -47,12 +47,11 @@ QUnit.module('Typing', {
                 is_typing: params.isTyping,
             };
             var notification = [[false, 'mail.channel', params.channelID], typingData];
-            params.widget.call('bus_service', 'trigger', 'notification', [notification]);
+            params.widget.call('bus_service', 'trigger', 'notification', {notifications: [notification]});
         };
 
         this.createParent = function (params) {
             var widget = new Widget();
-
             // in non-debug mode, append thread windows in qunit-fixture
             // note that it does not hide thread window because it uses fixed
             // position, and qunit-fixture uses absolute...
@@ -89,7 +88,6 @@ QUnit.test('receive typing notification', function (assert) {
             return this._super.apply(this, arguments);
         },
     });
-
     // detach channel 1, so that it opens corresponding thread window.
     parent.call('mail_service', 'getChannel', 1).detach();
 

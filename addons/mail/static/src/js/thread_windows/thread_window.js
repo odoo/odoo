@@ -363,13 +363,14 @@ var ThreadWindow = AbstractThreadWindow.extend({
     },
     /**
      * @private
-     * @param {integer|string} threadID
+     * @param {OdooEvent} ev
+     * @param {integer|string} ev.data.threadID
      */
-    _onUpdateTypingPartners: function (threadID) {
+    _onUpdateTypingPartners: function (ev) {
         if (!this.hasThread()) {
             return;
         }
-        if (this._thread.getID() !== threadID) {
+        if (this._thread.getID() !== ev.data.threadID) {
             return;
         }
         this.renderHeader();
