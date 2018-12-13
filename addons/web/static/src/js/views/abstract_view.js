@@ -137,7 +137,7 @@ var AbstractView = Factory.extend({
         };
 
         var controllerState = params.controllerState || {};
-        var currentId = controllerState.currentId || params.currentId;
+        var currentId = controllerState.currentId || params.currentId || undefined;
         this.loadParams = {
             context: params.context,
             count: params.count || ((this.controllerParams.ids !== undefined) &&
