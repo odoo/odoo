@@ -29,7 +29,6 @@ var CalendarController = AbstractController.extend({
         openEvent: '_onOpenEvent',
         prev: '_onPrev',
         quickCreate: '_onQuickCreate',
-        toggleFullWidth: '_onToggleFullWidth',
         updateRecord: '_onUpdateRecord',
         viewUpdated: '_onViewUpdated',
     }),
@@ -191,6 +190,7 @@ var CalendarController = AbstractController.extend({
      * @param {OdooEvent} event
      */
     _onChangeFilter: function (event) {
+        this.$el.find('.fc-event').add('.o_calendar_filter_item').popover('dispose');
         if (this.model.changeFilter(event.data) && !event.data.no_reload) {
             this.reload();
         }
@@ -400,15 +400,6 @@ var CalendarController = AbstractController.extend({
             .always(function () {
                 self.quickCreating = false;
             });
-    },
-    /**
-     * Called when we want to open or close the sidebar.
-     *
-     * @private
-     */
-    _onToggleFullWidth: function () {
-        this.model.toggleFullWidth();
-        this.reload();
     },
     /**
      * @private
