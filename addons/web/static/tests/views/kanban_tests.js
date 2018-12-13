@@ -2378,6 +2378,51 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('wait x2manys batch fetches to re-render', function (assert) {
+        assert.expect(4);
+        var done = assert.async();
+
+        var def;
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test">' +
+                        '<field name="product_id"/>' +
+                        '<templates><t t-name="kanban-box">' +
+                            '<div>' +
+                                '<field name="category_ids" widget="many2many_tags"/>' +
+                            '</div>' +
+                        '</t></templates>' +
+                    '</kanban>',
+            groupBy: ['product_id'],
+            mockRPC: function (route, args) {
+                var result = this._super(route, args);
+                if (args.method === 'read') {
+                    return $.when(def).then(function() {
+                        return result;
+                    });
+                }
+                return result;
+            },
+        });
+
+        def = $.Deferred();
+        assert.containsN(kanban, '.o_tag', 2);
+        kanban.update({groupBy: ['state']});
+
+        def.resolve().then(function () {
+            assert.containsN(kanban, '.o_tag', 2,
+                'Should display 2 tags after update');
+            assert.strictEqual(kanban.$('.o_kanban_group:eq(1) .o_tag').text(),
+                'gold', 'First category should be \'gold\'');
+            assert.strictEqual(kanban.$('.o_kanban_group:eq(2) .o_tag').text(),
+                'silver', 'Second category should be \'silver\'');
+            kanban.destroy();
+            done();
+        });
+    });
+
     QUnit.test('can drag and drop a record from one column to the next', function (assert) {
         assert.expect(9);
 
