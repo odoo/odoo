@@ -130,20 +130,7 @@ class View(models.Model):
         # method should never be called in a generic context, even for
         # tests)
         self = self.with_context(website_id=self.env['website'].get_current_website().id)
-        views = super(View, self).get_related_views(key, bundles=bundles)
-        current_website_id = self._context.get('website_id')
-        most_specific_views = self.env['ir.ui.view']
-
-        if not current_website_id:
-            return views
-
-        for view in views:
-            if view.website_id and view.website_id.id == current_website_id:
-                most_specific_views |= view
-            elif not view.website_id and not any(view.key == view2.key and view2.website_id and view2.website_id.id == current_website_id for view2 in views):
-                most_specific_views |= view
-
-        return most_specific_views
+        return super(View, self).get_related_views(key, bundles=bundles)
 
     @api.multi
     def _sort_suitability_key(self):
@@ -166,6 +153,11 @@ class View(models.Model):
         for dummy, group in groupby(view_with_key.sorted('key'), key=lambda record: record.key):
             filtered += sorted(group, key=lambda record: record._sort_suitability_key())[0]
         return (filtered + view_without_key).sorted(key=lambda view: (view.priority, view.id))
+
+    @api.model
+    def _view_get_inherited_children(self, view, options):
+        extensions = super(View, self)._view_get_inherited_children(view, options)
+        return extensions.filter_duplicate()
 
     @api.model
     def _view_obj(self, view_id):
