@@ -2434,7 +2434,7 @@ var BasicModel = AbstractModel.extend({
         }
 
         var def;
-        var fieldNames = _.keys(fieldInfo.relatedFields);
+        var fieldNames = _.keys(fieldInfo.relatedFields || (fieldInfo.views && fieldInfo.views[fieldInfo.mode] && fieldInfo.views[fieldInfo.mode].viewFields));
         if (fieldNames.length) {
             var field = list.fields[fieldName];
             def = this._rpc({
