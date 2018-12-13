@@ -124,6 +124,9 @@ class AccountChartTemplate(models.Model):
     property_stock_account_input_categ_id = fields.Many2one('account.account.template', string="Input Account for Stock Valuation", oldname="property_stock_account_input_categ")
     property_stock_account_output_categ_id = fields.Many2one('account.account.template', string="Output Account for Stock Valuation", oldname="property_stock_account_output_categ")
     property_stock_valuation_account_id = fields.Many2one('account.account.template', string="Account Template for Stock Valuation")
+    property_tax_payable_account_id = fields.Many2one('account.account.template', string="Tax payable account")
+    property_tax_receivable_account_id = fields.Many2one('account.account.template', string="Tax receivable account")
+    property_advance_tax_payment_account_id = fields.Many2one('account.account.template', string="Advance tax payment account")
 
     @api.model
     def _prepare_transfer_account_template(self):
@@ -419,7 +422,7 @@ class AccountChartTemplate(models.Model):
 
         journals = [{'name': _('Customer Invoices'), 'type': 'sale', 'code': _('INV'), 'favorite': True, 'color': 11, 'sequence': 5},
                     {'name': _('Vendor Bills'), 'type': 'purchase', 'code': _('BILL'), 'favorite': True, 'color': 11, 'sequence': 6},
-                    {'name': _('Miscellaneous Operations'), 'type': 'general', 'code': _('MISC'), 'favorite': False, 'sequence': 7},
+                    {'name': _('Miscellaneous Operations'), 'type': 'general', 'code': _('MISC'), 'favorite': True, 'sequence': 7},
                     {'name': _('Exchange Difference'), 'type': 'general', 'code': _('EXCH'), 'favorite': False, 'sequence': 9},
                     {'name': _('Cash Basis Taxes'), 'type': 'general', 'code': _('CABA'), 'favorite': False, 'sequence': 10}]
         if journals_dict != None:
@@ -460,6 +463,9 @@ class AccountChartTemplate(models.Model):
             ('property_account_income_categ_id', 'product.category', 'account.account'),
             ('property_account_expense_id', 'product.template', 'account.account'),
             ('property_account_income_id', 'product.template', 'account.account'),
+            ('property_tax_payable_account_id', 'account.tax.group', 'account.account'),
+            ('property_tax_receivable_account_id', 'account.tax.group', 'account.account'),
+            ('property_advance_tax_payment_account_id', 'account.tax.group', 'account.account'),
         ]
         for record in todo_list:
             account = getattr(self, record[0])

@@ -2,11 +2,10 @@ import json
 from datetime import datetime, timedelta
 
 from babel.dates import format_datetime, format_date
-
 from odoo import models, api, _, fields
 from odoo.release import version
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DF, safe_eval
-from odoo.tools.misc import formatLang
+from odoo.tools.misc import formatLang, format_date as odoo_format_date
 import random
 
 class account_journal(models.Model):
@@ -23,8 +22,22 @@ class account_journal(models.Model):
         elif (self.type in ['cash', 'bank']):
             self.kanban_dashboard_graph = json.dumps(self.get_line_graph_datas())
 
+    def _get_json_activity_data(self):
+        for journal in self:
+            activities = []
+            for activity in journal.activity_ids:
+                activities.append({
+                    'id': activity.id,
+                    'name': activity.summary or activity.activity_type_id.name,
+                    'state': activity.state,
+                    'activity_category': activity.activity_category,
+                    'date': odoo_format_date(self.env, activity.date_deadline)
+                })
+            journal.json_activity_data = json.dumps({'activities': activities})
+
     kanban_dashboard = fields.Text(compute='_kanban_dashboard')
     kanban_dashboard_graph = fields.Text(compute='_kanban_dashboard_graph')
+    json_activity_data = fields.Text(compute='_get_json_activity_data')
     show_on_dashboard = fields.Boolean(string='Show journal on dashboard', help="Whether this journal should be displayed on the dashboard or not", default=True)
     color = fields.Integer("Color Index", default=0)
 
