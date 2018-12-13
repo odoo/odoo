@@ -13,12 +13,12 @@
                 <filter string="Approved Allocations" domain="[('state', '=', 'validate')]" name="validated"/>
                 <filter string="Accrual Allocations" domain="[('accrual', '=', True)]" name="accrual_allocation"/>
                 <separator/>
-                <filter name="active_types" string="Active Types" domain="[('holiday_status_id.active', '=', True)]" help="Filters only on allocations that belong to an leave type that is 'active' (active field is True)"/>
+                <filter name="active_types" string="Active Types" domain="[('holiday_status_id.active', '=', True)]" help="Filters only on allocations that belong to an time off type that is 'active' (active field is True)"/>
                 <separator/>
                 <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                 <separator/>
-                <filter string="My Department Leaves" name="department" domain="[('department_id.member_ids.user_id', '=', uid)]" help="My Department Leaves"/>
-                <filter string="My Team Leaves" name="my_team_leaves" domain="[('employee_id.parent_id.user_id', '=', uid)]" groups="hr_holidays.group_hr_holidays_manager" help="Leaves of Your Team Member"/>
+                <filter string="My Department Time Off" name="department" domain="[('department_id.member_ids.user_id', '=', uid)]" help="My Department Time Off"/>
+                <filter string="My Team Time Off" name="my_team_leaves" domain="[('employee_id.parent_id.user_id', '=', uid)]" groups="hr_holidays.group_hr_holidays_manager" help="Time Off of Your Team Member"/>
                 <separator/>
                 <filter name="year" string="Current Year"
                     domain="[('holiday_status_id.active', '=', True)]" help="Active Allocations"/>
@@ -68,7 +68,7 @@
                             <field name="type_request_unit" invisible="1"/>
                             <field name="name" attrs="{'readonly': [('state', 'not in', ('draft', 'confirm'))]}"/>
                             <field name="holiday_status_id" context="{'employee_id':employee_id}"
-                                domain="[('valid', '=', True), ('allocation_type', 'in', ['fixed_allocation', 'no'])]"/>
+                                domain="[('valid', '=', True), ('allocation_type', '=', 'fixed_allocation')]"/>
 
                             <field name="number_of_days" invisible="1"/>
                             <label for="number_of_days" string="Duration"/>
@@ -153,7 +153,7 @@
                             attrs="{'required': [('accrual', '=', True)]}"/>
                         <field name="unit_per_interval"
                             attrs="{'required': [('accrual', '=', True)]}"/>
-                        <span class="ml8">of leaves every</span>
+                        <span class="ml8">of time off every</span>
                         <field name="interval_number" class="ml8"
                             attrs="{'required': [('accrual', '=', True)]}"/>
                         <field name="interval_unit"
@@ -276,7 +276,10 @@
         <field name="view_mode">tree,kanban,form,activity</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                Create a new leave allocation request
+                Create a new time off allocation request
+            </p><p>
+                Time Off Officers allocate time off days to employees (e.g. paid time off).<br/>
+                Employees request allocations to Time Off Officers (e.g. recuperation days).
             </p>
         </field>
         <field name="context">{}</field>
@@ -304,7 +307,10 @@
         <field name="domain">[]</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                Create a new leave allocation request
+                Create a new time off allocation request
+            </p><p>
+                Time Off Officers allocate time off days to employees (e.g. paid time off).<br/>
+                Employees request allocations to Time Off Officers (e.g. recuperation days).
             </p>
         </field>
     </record>
@@ -318,14 +324,17 @@
         <field name="domain">[]</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                Create a new leave allocation
+                Create a new time off allocation
+            </p><p>
+                Time Off Officers allocate time off days to employees (e.g. paid time off).<br/>
+                Employees request allocations to Time Off Officers (e.g. recuperation days).
             </p>
         </field>
     </record>
 
     <menuitem
         id="menu_open_allocation"
-        name="Allocations Requests"
+        name="Allocation Requests"
         parent="menu_hr_holidays_my_leaves"
         action="hr_leave_allocation_action_my"
         sequence="6"/>

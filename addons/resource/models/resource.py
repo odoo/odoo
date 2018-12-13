@@ -174,9 +174,9 @@ class ResourceCalendar(models.Model):
         'resource.calendar.attendance', 'calendar_id', 'Working Time',
         copy=True, default=_get_default_attendance_ids)
     leave_ids = fields.One2many(
-        'resource.calendar.leaves', 'calendar_id', 'Leaves')
+        'resource.calendar.leaves', 'calendar_id', 'Time Off')
     global_leave_ids = fields.One2many(
-        'resource.calendar.leaves', 'calendar_id', 'Global Leaves',
+        'resource.calendar.leaves', 'calendar_id', 'Global Time Off',
         domain=[('resource_id', '=', False)]
         )
     hours_per_day = fields.Float("Average Hour per Day", default=HOURS_PER_DAY,
@@ -506,7 +506,7 @@ class ResourceResource(models.Model):
 
 class ResourceCalendarLeaves(models.Model):
     _name = "resource.calendar.leaves"
-    _description = "Resource Leaves Detail"
+    _description = "Resource Time Off Detail"
 
     name = fields.Char('Reason')
     company_id = fields.Many2one(
@@ -517,14 +517,14 @@ class ResourceCalendarLeaves(models.Model):
     date_to = fields.Datetime('End Date', required=True)
     resource_id = fields.Many2one(
         "resource.resource", 'Resource',
-        help="If empty, this is a generic holiday for the company. If a resource is set, the holiday/leave is only for this resource")
-    time_type = fields.Selection([('leave', 'Leave'), ('other', 'Other')], default='leave',
-                                 help="Whether this should be computed as a holiday or as work time (eg: formation)")
+        help="If empty, this is a generic time off for the company. If a resource is set, the time off is only for this resource")
+    time_type = fields.Selection([('leave', 'Time Off'), ('other', 'Other')], default='leave',
+                                 help="Whether this should be computed as a time off or as work time (eg: formation)")
 
     @api.constrains('date_from', 'date_to')
     def check_dates(self):
         if self.filtered(lambda leave: leave.date_from > leave.date_to):
-            raise ValidationError(_('The start date of the leave must be earlier end date.'))
+            raise ValidationError(_('The start date of the time off must be earlier end date.'))
 
     @api.onchange('resource_id')
     def onchange_resource(self):

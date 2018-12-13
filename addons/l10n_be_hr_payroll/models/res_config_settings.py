@@ -6,7 +6,7 @@ from odoo import api, fields, models, _
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
-    default_holidays = fields.Float(string="Legal Leaves", default_model="hr.contract")
+    default_holidays = fields.Float(string="Paid Time Off", default_model="hr.contract")
     default_commission_on_target = fields.Float(string="Commission on Target", default_model="hr.contract")
     default_fuel_card = fields.Float(string="Fuel Card", default_model="hr.contract")
     default_representation_fees = fields.Float(string="Representation Fees", default_model="hr.contract")

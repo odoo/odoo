@@ -11,19 +11,10 @@
     </record>
 
     <record id="hr_holiday_status_dv" model="hr.leave.type">
-        <field name="name">Parental Leaves</field>
+        <field name="name">Parental Time Off</field>
         <field name="allocation_type">fixed</field>
         <field name="color_name">brown</field>
         <field name="validation_type">both</field>
-    </record>
-
-    <record id="hr_holiday_status_tb" model="hr.leave.type">
-        <field name="name">Team Building</field>
-        <field name="allocation_type">no</field>
-        <field name="color_name">lightblue</field>
-        <field name="validation_type">manager</field>
-        <field name="validity_start" eval="time.strftime('%Y-%m-27')"/>
-        <field name="validity_stop" eval="time.strftime('%Y-%m-27')"/>
     </record>
 
     <record id="holiday_status_cla" model="hr.leave.type">
@@ -34,30 +25,10 @@
         <field name="validity_stop" eval="time.strftime('%Y-12-31')"/>
     </record>
 
-    <!-- ++++++++++++++++++++++  All Company  ++++++++++++++++++++++ -->
-
-    <record id="hr_holidays_team_building" model="hr.leave">
-        <field name="name" eval="'Team Building ' + time.strftime('%Y-%m')"/>
-        <field name="holiday_status_id" ref="hr_holiday_status_tb"/>
-        <field eval="time.strftime('%Y-%m-27 9:00:00')" name="date_from"/>
-        <field eval="time.strftime('%Y-%m-27 18:00:00')" name="date_to"/>
-        <field name="number_of_days">1</field>
-        <field name="holiday_type">company</field>
-        <field name ="mode_company_id"  ref="base.main_company"/>
-        <field name ="department_id"  ref="hr.dep_management"/>
-    </record>
-
-    <function model="hr.leave" name="action_approve">
-        <value model="hr.leave" search="[
-            ('state', '=', 'confirm'),
-            ('id', 'in', [ref('hr_holidays.hr_holidays_team_building')])
-        ]"/>
-    </function>
-
     <!-- ++++++++++++++++++++++  Mitchell Admin  ++++++++++++++++++++++ -->
 
     <record id="hr_holidays_allocation_cl" model="hr.leave.allocation">
-        <field name="name">Legal Leaves for Mitchell Admin</field>
+        <field name="name">Paid Time Off for Mitchell Admin</field>
         <field name="holiday_status_id" ref="holiday_status_cl"/>
         <field name="number_of_days">20</field>
         <field name="employee_id" ref="hr.employee_admin"/>
@@ -137,7 +108,7 @@
     <!-- ++++++++++++++++++++++  Ronnie Hart  ++++++++++++++++++++++ -->
 
     <record id="hr_holidays_allocation_cl_al" model="hr.leave.allocation">
-        <field name="name">Legal Leaves for Ronnie Hart</field>
+        <field name="name">Paid Time Off for Ronnie Hart</field>
         <field name="holiday_status_id" ref="holiday_status_cl"/>
         <field name="number_of_days">20</field>
         <field name="employee_id" ref="hr.employee_al"/>
@@ -145,7 +116,7 @@
     </record>
 
     <record id="hr_holidays_allocation_pl_al" model="hr.leave.allocation">
-        <field name="name">Parental Leaves</field>
+        <field name="name">Parental Time Off</field>
         <field name="holiday_status_id" ref="hr_holiday_status_dv"/>
         <field name="number_of_days">10</field>
         <field name="employee_id" ref="hr.employee_al"/>
@@ -216,7 +187,7 @@
     <!-- ++++++++++++++++++++++  Anita Oliver  ++++++++++++++++++++++ -->
 
     <record id="hr_holidays_allocation_cl_mit" model="hr.leave.allocation">
-        <field name="name">Legal Leaves for Anita Oliver</field>
+        <field name="name">Paid Time Off for Anita Oliver</field>
         <field name="holiday_status_id" ref="holiday_status_cl"/>
         <field name="number_of_days">20</field>
         <field name="employee_id" ref="hr.employee_mit"/>
@@ -297,7 +268,7 @@
     <!-- ++++++++++++++++++++++  Gilles Gravie  ++++++++++++++++++++++ -->
 
     <record id="hr_holidays_allocation_cl_qdp" model="hr.leave.allocation">
-        <field name="name">Legal Leaves for Gilles Gravie</field>
+        <field name="name">Paid Time Off for Gilles Gravie</field>
         <field name="holiday_status_id" ref="holiday_status_cl"/>
         <field name="number_of_days">20</field>
         <field name="employee_id" ref="hr.employee_qdp"/>
@@ -370,7 +341,7 @@
     <!-- ++++++++++++++++++++++  Audrey Peterson  ++++++++++++++++++++++ -->
 
     <record id="hr_holidays_allocation_cl_fpi" model="hr.leave.allocation">
-        <field name="name">Legal Leaves for Audrey Peterson</field>
+        <field name="name">Paid Time Off for Audrey Peterson</field>
         <field name="holiday_status_id" ref="holiday_status_cl"/>
         <field name="number_of_days">20</field>
         <field name="employee_id" ref="hr.employee_fpi"/>
@@ -473,7 +444,7 @@
     <!-- ++++++++++++++++++++++   Olivia  ++++++++++++++++++++++ -->
 
     <record id="hr_holidays_allocation_cl_vad" model="hr.leave.allocation">
-        <field name="name">Legal Leaves for Olivia</field>
+        <field name="name">Paid Time Off for Olivia</field>
         <field name="holiday_status_id" ref="holiday_status_cl"/>
         <field name="number_of_days">20</field>
         <field name="employee_id" ref="hr.employee_niv"/>
@@ -547,7 +518,7 @@
     <!-- ++++++++++++++++++++++   Kim  ++++++++++++++++++++++ -->
 
     <record id="hr_holidays_allocation_cl_kim" model="hr.leave.allocation">
-        <field name="name">Legal Leaves for Kim</field>
+        <field name="name">Paid Time Off for Kim</field>
         <field name="holiday_status_id" ref="holiday_status_cl"/>
         <field name="number_of_days">20</field>
         <field name="employee_id" ref="hr.employee_jve"/>
