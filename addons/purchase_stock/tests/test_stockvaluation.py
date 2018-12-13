@@ -467,3 +467,42 @@ class TestStockValuationWithCOA(AccountingTestCase):
         self.assertEquals(len(input_aml), 2, "Only two lines should have been generated in stock input account: one when receiving the product, one when making the invoice.")
         self.assertAlmostEquals(sum(input_aml.mapped('debit')), 10, "Total debit value on stock input account should be equal to the original PO price of the product.")
         self.assertAlmostEquals(sum(input_aml.mapped('credit')), 10, "Total credit value on stock input account should be equal to the original PO price of the product.")
+
+    def test_valuation_from_increasing_tax(self):
+        """ Check that a tax without account will increment the stock value.
+        """
+
+        tax_with_no_account = self.env['account.tax'].create({
+            'name': "Tax with no account",
+            'amount_type': 'fixed',
+            'amount': 5,
+            'sequence': 8,
+        })
+
+        self.product1.product_tmpl_id.cost_method = 'fifo'
+        self.product1.product_tmpl_id.valuation = 'real_time'
+
+
+        # Receive 10@10 ; create the vendor bill
+        po1 = self.env['purchase.order'].create({
+            'partner_id': self.partner_id.id,
+            'order_line': [
+                (0, 0, {
+                    'name': self.product1.name,
+                    'product_id': self.product1.id,
+                    'taxes_id': [(4, tax_with_no_account.id)],
+                    'product_qty': 10.0,
+                    'product_uom': self.product1.uom_po_id.id,
+                    'price_unit': 10.0,
+                    'date_planned': datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+                }),
+            ],
+        })
+        po1.button_confirm()
+        receipt_po1 = po1.picking_ids[0]
+        receipt_po1.move_lines.quantity_done = 10
+        receipt_po1.button_validate()
+
+        # valuation of product1 should be 15 as the tax with no account set
+        # has gone to the stock account, and must be reflected in inventory valuation
+        self.assertEqual(self.product1.stock_value, 150)
