@@ -120,6 +120,7 @@ QUnit.module('Views', {
         assert.deepEqual(
             controlPanelFactory.loadParams.groups,
             [[{
+                context: {},
                 description: "Hello",
                 groupNumber: 2,
                 domain: "[]",
@@ -198,6 +199,7 @@ QUnit.module('Views', {
             controlPanelFactory.loadParams.groups,
             [[
                 {
+                  "context": {},
                   "description": "Hello One",
                   "domain": "[]",
                   "groupNumber": 2,
@@ -205,6 +207,7 @@ QUnit.module('Views', {
                   "type": "filter"
                 },
                 {
+                  "context": {},
                   "description": "Hello Two",
                   "domain": "[('bar', '=', 3)]",
                   "groupNumber": 2,
@@ -233,6 +236,7 @@ QUnit.module('Views', {
             [
                 [
                     {
+                      context: {},
                       description: "Hello One",
                       domain: "[]",
                       groupNumber: 2,
@@ -242,6 +246,7 @@ QUnit.module('Views', {
                 ],
                 [
                     {
+                      context: {},
                       description: "Hello Two",
                       domain: "[('bar', '=', 3)]",
                       groupNumber: 4,
@@ -267,6 +272,7 @@ QUnit.module('Views', {
             [
                 [
                     {
+                        context: {},
                         description: "Hello",
                         domain: "[]",
                         groupNumber: 2,
