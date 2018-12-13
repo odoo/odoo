@@ -27,7 +27,7 @@ class TestSaleStock(TestSale):
         self.so.action_confirm()
         self.assertTrue(self.so.picking_ids, 'Sale Stock: no picking created for "invoice on delivery" storable products')
         # invoice on order
-        self.so.action_invoice_create()
+        self.so._create_invoices()
 
         # deliver partially, check the so's invoice_status and delivered quantities
         self.assertEqual(self.so.invoice_status, 'no', 'Sale Stock: so invoice_status should be "nothing to invoice" after invoicing')
@@ -41,7 +41,7 @@ class TestSaleStock(TestSale):
         del_qties_truth = [1.0 if sol.product_id.type in ['product', 'consu'] else 0.0 for sol in self.so.order_line]
         self.assertEqual(del_qties, del_qties_truth, 'Sale Stock: delivered quantities are wrong after partial delivery')
         # invoice on delivery: only storable products
-        inv_id = self.so.action_invoice_create()
+        inv_id = self.so._create_invoices()
         inv_1 = inv_obj.browse(inv_id)
         self.assertTrue(all([il.product_id.invoice_policy == 'delivery' for il in inv_1.invoice_line_ids]),
                         'Sale Stock: invoice should only contain "invoice on delivery" products')
@@ -59,7 +59,7 @@ class TestSaleStock(TestSale):
         self.assertEqual(del_qties, del_qties_truth, 'Sale Stock: delivered quantities are wrong after complete delivery')
         # Without timesheet, we manually set the delivered qty for the product serv_del
         self.so.order_line[1]['qty_delivered'] = 2.0
-        inv_id = self.so.action_invoice_create()
+        inv_id = self.so._create_invoices()
         self.assertEqual(self.so.invoice_status, 'invoiced',
                          'Sale Stock: so invoice_status should be "fully invoiced" after complete delivery and invoicing')
 
@@ -97,7 +97,7 @@ class TestSaleStock(TestSale):
         self.assertEqual(inv.amount_untaxed, self.so.amount_untaxed * 5.0 / 100.0, 'Sale Stock: deposit invoice is wrong')
         self.assertEqual(self.so.invoice_status, 'to invoice', 'Sale Stock: so should be to invoice after invoicing deposit')
         # invoice on order: everything should be invoiced
-        self.so.action_invoice_create(final=True)
+        self.so._create_invoices(final=True)
         self.assertEqual(self.so.invoice_status, 'invoiced', 'Sale Stock: so should be fully invoiced after second invoice')
 
         # deliver, check the delivered quantities
@@ -109,7 +109,7 @@ class TestSaleStock(TestSale):
         self.assertEqual(del_qties, del_qties_truth, 'Sale Stock: delivered quantities are wrong after partial delivery')
         # invoice on delivery: nothing to invoice
         with self.assertRaises(UserError):
-            self.so.action_invoice_create()
+            self.so._create_invoices()
 
     def test_02_sale_stock_return(self):
         """
@@ -151,7 +151,7 @@ class TestSaleStock(TestSale):
 
         # Check invoice
         self.assertEqual(self.so.invoice_status, 'to invoice', 'Sale Stock: so invoice_status should be "to invoice" instead of "%s" before invoicing' % self.so.invoice_status)
-        inv_1_id = self.so.action_invoice_create()
+        inv_1_id = self.so._create_invoices()
         self.assertEqual(self.so.invoice_status, 'invoiced', 'Sale Stock: so invoice_status should be "invoiced" instead of "%s" after invoicing' % self.so.invoice_status)
         self.assertEqual(len(inv_1_id), 1, 'Sale Stock: only one invoice instead of "%s" should be created' % len(inv_1_id))
         self.inv_1 = self.env['account.invoice'].browse(inv_1_id)
@@ -225,7 +225,7 @@ class TestSaleStock(TestSale):
 
         # Check invoice
         self.assertEqual(self.so.invoice_status, 'to invoice', 'Sale Stock: so invoice_status should be "to invoice" before invoicing')
-        inv_1_id = self.so.action_invoice_create()
+        inv_1_id = self.so._create_invoices()
         self.assertEqual(self.so.invoice_status, 'no', 'Sale Stock: so invoice_status should be "no" after invoicing')
         self.assertEqual(len(inv_1_id), 1, 'Sale Stock: only one invoice should be created')
         self.inv_1 = self.env['account.invoice'].browse(inv_1_id)

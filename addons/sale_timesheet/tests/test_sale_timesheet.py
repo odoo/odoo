@@ -64,7 +64,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheetNoChart):
         self.assertEqual(sale_order.analytic_account_id, project_serv1.analytic_account_id, "The created project should be linked to the analytic account of the SO")
 
         # create invoice
-        invoice_id1 = sale_order.action_invoice_create()[0]
+        invoice_id1 = sale_order._create_invoices()[0]
         invoice1 = self.env['account.invoice'].browse(invoice_id1)
 
         # let's log some timesheets (on the project created by so_line_ordered_project_only)
@@ -138,7 +138,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheetNoChart):
         self.assertEqual(so_line_ordered_global_project.product_uom_qty, invoice_line_1.quantity, "The invoice (ordered) quantity should not change when modifying timesheet")
 
         # create second invoice
-        invoice_id2 = sale_order.action_invoice_create()[0]
+        invoice_id2 = sale_order._create_invoices()[0]
         invoice2 = self.env['account.invoice'].browse(invoice_id2)
 
         self.assertEqual(len(sale_order.invoice_ids), 2, "A second invoice should have been created from the SO")
@@ -226,7 +226,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheetNoChart):
         self.assertFalse(timesheet1.timesheet_invoice_id, "The timesheet1 should not be linked to the invoice yet")
 
         # invoice SO
-        invoice_id1 = sale_order.action_invoice_create()
+        invoice_id1 = sale_order._create_invoices()
         invoice1 = self.env['account.invoice'].browse(invoice_id1)
         self.assertTrue(float_is_zero(invoice1.amount_total - so_line_deliver_global_project.price_unit * 10.5, precision_digits=2), 'Sale: invoice generation on timesheets product is wrong')
         self.assertEqual(timesheet1.timesheet_invoice_id, invoice1, "The timesheet1 should not be linked to the invoice 1, as we are in delivered quantity (even if invoice is in draft")
@@ -248,7 +248,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheetNoChart):
         self.assertFalse(timesheet2.timesheet_invoice_id, "The timesheet2 should not be linked to the invoice yet")
 
         # create a second invoice
-        invoice_id2 = sale_order.action_invoice_create()[0]
+        invoice_id2 = sale_order._create_invoices()[0]
         invoice2 = self.env['account.invoice'].browse(invoice_id2)
         self.assertEqual(len(sale_order.invoice_ids), 2, "A second invoice should have been created from the SO")
         self.assertEqual(so_line_deliver_global_project.invoice_status, 'invoiced', 'Sale Timesheet: "invoice on delivery" timesheets should set the so line in "to invoice" status when logged')
@@ -370,7 +370,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheetNoChart):
 
         # invoice SO
         sale_order.order_line.write({'qty_delivered': 5})
-        invoice_id1 = sale_order.action_invoice_create()
+        invoice_id1 = sale_order._create_invoices()
         invoice1 = self.env['account.invoice'].browse(invoice_id1)
 
         for invoice_line in invoice1.invoice_line_ids:
