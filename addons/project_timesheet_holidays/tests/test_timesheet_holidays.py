@@ -7,7 +7,7 @@ from dateutil.relativedelta import relativedelta
 from odoo import fields
 
 from odoo.tests import common
-from odoo.addons.hr_timesheet.tests.test_timesheet import TestTimesheet
+from odoo.addons.hr_timesheet.tests.test_timesheet import TestCommonTimesheet
 
 
 class TestTimesheetHolidaysCreate(common.TransactionCase):
@@ -24,7 +24,7 @@ class TestTimesheetHolidaysCreate(common.TransactionCase):
         self.assertEqual(status.timesheet_task_id, company.leave_timesheet_task_id, 'The default task linked to the status should be the same as the company')
 
 
-class TestTimesheetHolidays(TestTimesheet):
+class TestTimesheetHolidays(TestCommonTimesheet):
 
     def setUp(self):
         super(TestTimesheetHolidays, self).setUp()
