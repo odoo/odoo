@@ -5,8 +5,8 @@
         <field name="name">hr.leave.type.filter</field>
         <field name="model">hr.leave.type</field>
         <field name="arch" type="xml">
-            <search string="Search Leave Type">
-                <field name="name" string="Leave Types"/>
+            <search string="Search Time Off Type">
+                <field name="name" string="Time Off Types"/>
                 <field name="code"/>
                 <field name="categ_id"/>
             </search>
@@ -17,7 +17,7 @@
         <field name="name">hr.leave.type.form</field>
         <field name="model">hr.leave.type</field>
         <field name="arch" type="xml">
-            <form string="Leave Type">
+            <form string="Time Off Type">
                 <sheet>
                     <div class="oe_button_box" name="button_box">
                         <button class="oe_stat_button" type="object" name="action_see_days_allocated" icon="fa-archive">
@@ -29,7 +29,7 @@
                         <button class="oe_stat_button" type="object" name="action_see_group_leaves" icon="fa-archive">
                             <div class="o_stat_info">
                                 <field name="group_days_leave"/>
-                                <span class="o_stat_text">Group Leaves</span>
+                                <span class="o_stat_text">Group Time Off</span>
                             </div>
                         </button>
                         <button class="oe_stat_button" type="object" name="toggle_active" icon="fa-archive">
@@ -43,10 +43,8 @@
                     <group>
                         <group name="description" string="Options">
                             <field name="code"/>
-                            <field name="unpaid"/>
                             <field name="request_unit" widget="radio"/>
                             <field name="sequence" groups="base.group_no_one"/>
-                            <field name="time_type" groups="base.group_no_one"/>
                         </group>
                         <group name="validation" string="Validation">
                             <field name="validation_type" widget="radio"/>
@@ -58,7 +56,7 @@
                             <field name="validity_start"/>
                             <field name="validity_stop"/>
                         </group>
-                        <group name="notification" string="Notification" colspan="2">
+                        <group name="notification" string="Notification" colspan="2" groups="base.group_no_one">
                             <group>
                                 <field name="leave_notif_subtype_id"
                                        domain="[('res_model','=','hr.leave')]"
@@ -91,8 +89,8 @@
                                 <strong><field name="name"/></strong>
                             </div>
                             <div>
-                                <span>Max Leaves: <field name="max_leaves"/></span>
-                                <span class="float-right">Leaves Taken: <field name="leaves_taken"/></span>
+                                <span>Max Time Off: <field name="max_leaves"/></span>
+                                <span class="float-right">Time Off Taken: <field name="leaves_taken"/></span>
                             </div>
                         </div>
                     </t>
@@ -105,7 +103,7 @@
         <field name="name">hr.leave.type.normal.tree</field>
         <field name="model">hr.leave.type</field>
         <field name="arch" type="xml">
-            <tree string="Leave Type">
+            <tree string="Time Off Type">
                 <field name="sequence" widget="handle"/>
                 <field name="display_name"/>
                 <field name="code"/>
@@ -118,7 +116,7 @@
     </record>
 
     <record id="open_view_holiday_status" model="ir.actions.act_window">
-        <field name="name">Leave Types</field>
+        <field name="name">Time Off Types</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">hr.leave.type</field>
         <field name="view_type">form</field>
@@ -134,7 +132,7 @@
     <menuitem
         id="hr_holidays_status_menu_configuration"
         action="open_view_holiday_status"
-        name="Leave Types"
+        name="Time Off Types"
         parent="menu_hr_holidays_configuration"
         groups="hr_holidays.group_hr_holidays_user"
         sequence="1"/>

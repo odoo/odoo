@@ -3,7 +3,7 @@
     <data noupdate="1">
         <!-- Casual leave -->
         <record id="holiday_status_cl" model="hr.leave.type">
-            <field name="name" eval="'Legal Leaves '+time.strftime('%Y')"/>
+            <field name="name" eval="'Paid Time Off '+time.strftime('%Y')"/>
             <field name="allocation_type">fixed</field>
             <field name="color_name">black</field>
             <field name="validity_start" eval="time.strftime('%Y-01-01')"/>
@@ -21,7 +21,7 @@
 
         <!-- Sick leave -->
         <record id="holiday_status_sl" model="hr.leave.type">
-            <field name="name">Sick Leaves</field>
+            <field name="name">Sick Time Off</field>
             <field name="allocation_type">no</field>
             <field name="color_name">red</field>
             <field name="validity_start" eval="time.strftime('%Y-01-01')"/>

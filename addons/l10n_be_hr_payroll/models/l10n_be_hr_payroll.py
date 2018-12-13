@@ -61,7 +61,7 @@ class HrContract(models.Model):
     meal_voucher_amount = fields.Monetary(string="Meal Vouchers",
         tracking=True,
         help="Amount the employee receives in the form of meal vouchers per worked day.")
-    holidays = fields.Float(string='Legal Leaves',
+    holidays = fields.Float(string='Paid Time Off',
         help="Number of days of paid leaves the employee gets per year.")
     holidays_editable = fields.Boolean(string="Editable Leaves", default=True)
     holidays_compensation = fields.Monetary(compute='_compute_holidays_compensation', string="Holidays Compensation")

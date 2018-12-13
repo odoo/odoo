@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates id="template" xml:space="preserve">
+    <t t-name="hr_holidays.dashboard.calendar.header">
+        <tr id="header_calendar_leaves">
+            <th colspan="7">
+                <button class="btn o_header_calendar_button_prev float-left" type="button">
+                    <span class="fa fa-arrow-left"/>
+                </button>
+                <button class="btn o_header_calendar_button_next float-right" type="button">
+                    <span class="fa fa-arrow-right"/>
+                </button>
+                <h2 class="o_header_calendar_month"><t t-esc="current_month"/></h2>
+            </th>
+        </tr>
+    </t>
+
+    <t t-name="hr_holidays.dashboard.calendar.button">
+        <button class="btn btn-primary btn-time-off" type="button">
+            <t t-esc="time_off"/>
+        </button>
+        <button class="btn btn-secondary btn-allocation" type="button">
+            <t t-esc="request"/>
+        </button>
+    </t>
+</templates>

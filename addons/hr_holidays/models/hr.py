@@ -16,7 +16,7 @@ class Department(models.Model):
     absence_of_today = fields.Integer(
         compute='_compute_leave_count', string='Absence by Today')
     leave_to_approve_count = fields.Integer(
-        compute='_compute_leave_count', string='Leave to Approve')
+        compute='_compute_leave_count', string='Time Off to Approve')
     allocation_to_approve_count = fields.Integer(
         compute='_compute_leave_count', string='Allocation to Approve')
     total_employee = fields.Integer(
@@ -64,14 +64,14 @@ class Employee(models.Model):
     _inherit = "hr.employee"
 
     leave_manager_id = fields.Many2one(
-        'res.users', string='Leave Responsible',
+        'res.users', string='Time Off Responsible',
         domain=lambda self: [('groups_id', 'in', self.env.ref('hr_holidays.group_hr_holidays_team_leader').id)],
-        help="User responsible of leaves approval. Should be Team Leader or Department Manager.")
+        help="User responsible of time off approval. Should be Team Leader or Department Manager.")
     remaining_leaves = fields.Float(
-        compute='_compute_remaining_leaves', string='Remaining Legal Leaves',
-        help='Total number of legal leaves allocated to this employee, change this value to create allocation/leave request. '
-             'Total based on all the leave types without overriding limit.')
-    current_leave_state = fields.Selection(compute='_compute_leave_status', string="Current Leave Status",
+        compute='_compute_remaining_leaves', string='Remaining Paid Time Off',
+        help='Total number of paid time off allocated to this employee, change this value to create allocation/time off request. '
+             'Total based on all the time off types without overriding limit.')
+    current_leave_state = fields.Selection(compute='_compute_leave_status', string="Current Time Off Status",
         selection=[
             ('draft', 'New'),
             ('confirm', 'Waiting Approval'),
@@ -80,11 +80,11 @@ class Employee(models.Model):
             ('validate', 'Approved'),
             ('cancel', 'Cancelled')
         ])
-    current_leave_id = fields.Many2one('hr.leave.type', compute='_compute_leave_status', string="Current Leave Type")
+    current_leave_id = fields.Many2one('hr.leave.type', compute='_compute_leave_status', string="Current Time Off Type")
     leave_date_from = fields.Date('From Date', compute='_compute_leave_status')
     leave_date_to = fields.Date('To Date', compute='_compute_leave_status')
-    leaves_count = fields.Float('Number of Leaves', compute='_compute_remaining_leaves')
-    show_leaves = fields.Boolean('Able to see Remaining Leaves', compute='_compute_show_leaves')
+    leaves_count = fields.Float('Number of Time Off', compute='_compute_remaining_leaves')
+    show_leaves = fields.Boolean('Able to see Remaining Time Off', compute='_compute_show_leaves')
     is_absent_totay = fields.Boolean('Absent Today', compute='_compute_absent_employee', search='_search_absent_employee')
 
     def _get_remaining_leaves(self):

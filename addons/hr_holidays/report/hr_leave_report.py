@@ -6,7 +6,7 @@ from odoo import api, fields, models, tools
 
 class LeaveReport(models.Model):
     _name = "hr.leave.report"
-    _description = 'Leave Summary / Report'
+    _description = 'Time Off Summary / Report'
     _auto = False
     _order = "date_from DESC, employee_id"
 
@@ -15,7 +15,7 @@ class LeaveReport(models.Model):
     number_of_days = fields.Float('Number of Days', readonly=True)
     leave_type = fields.Selection([
         ('allocation', 'Allocation Request'),
-        ('request', 'Leave Request')
+        ('request', 'Time Off Request')
         ], string='Request Type', readonly=True, oldname='type')
     department_id = fields.Many2one('hr.department', string='Department', readonly=True)
     category_id = fields.Many2one('hr.employee.category', string='Employee Tag', readonly=True)
