@@ -69,16 +69,6 @@ var CalendarView = AbstractView.extend({
                 displayFields[fieldName] = child.attrs;
 
                 if (params.sidebar === false) return; // if we have not sidebar, (eg: Dashboard), we don't use the filter "coworkers"
-
-                if (child.attrs.avatar_field) {
-                    filters[fieldName] = filters[fieldName] || {
-                        'title': fields[fieldName].string,
-                        'fieldName': fieldName,
-                        'filters': [],
-                    };
-                    filters[fieldName].avatar_field = child.attrs.avatar_field;
-                    filters[fieldName].avatar_model = fields[fieldName].relation;
-                }
                 if (child.attrs.write_model) {
                     filters[fieldName] = filters[fieldName] || {
                         'title': fields[fieldName].string,
@@ -87,6 +77,11 @@ var CalendarView = AbstractView.extend({
                     };
                     filters[fieldName].write_model = child.attrs.write_model;
                     filters[fieldName].write_field = child.attrs.write_field; // can't use a x2many fields
+
+                    if (child.attrs.avatar_field) {
+                        filters[fieldName].avatar_field = child.attrs.avatar_field;
+                        filters[fieldName].avatar_model = fields[fieldName].relation;
+                    }
 
                     modelFilters.push(fields[fieldName].relation);
                 }
@@ -102,10 +97,15 @@ var CalendarView = AbstractView.extend({
                 'filters': [],
             };
             if (fields[fieldName].relation) {
-                if (['res.users', 'res.partner'].indexOf(fields[fieldName].relation) !== -1) {
+                if (['res.users', 'res.partner', 'hr.employee'].indexOf(fields[fieldName].relation) !== -1) {
                     filters[fieldName].avatar_field = 'image_small';
                 }
                 filters[fieldName].avatar_model = fields[fieldName].relation;
+            }
+            // If the 'color' field is included into the popover content, add the
+            // 'isCalendarField' flag to style it properly
+            if (displayFields[fieldName]) {
+                displayFields[fieldName].isCalendarField = true;
             }
         }
 

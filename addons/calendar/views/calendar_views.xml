@@ -273,8 +273,9 @@
                 event_open_popup="true"
                 event_limit="3"
                 color="partner_id">
-                <field name="name"/>
+                <field name="partner_id"/>
                 <field name="partner_ids" write_model="calendar.contacts" write_field="partner_id" avatar_field="image_small"/>
+                <field name="description"/>
                 <field name="is_highlighted" invisible="1"/>
             </calendar>
         </field>
