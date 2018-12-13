@@ -10,7 +10,6 @@ from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError
 from odoo.osv import expression
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools.float_utils import float_compare, float_round, float_is_zero
 
 PROCUREMENT_PRIORITIES = [('0', 'Not urgent'), ('1', 'Normal'), ('2', 'Urgent'), ('3', 'Very Urgent')]
@@ -128,6 +127,10 @@ class StockMove(models.Model):
     propagate = fields.Boolean(
         'Propagate cancel and split', default=True,
         help='If checked, when this move is cancelled, cancel the linked move too')
+    propagate_date = fields.Boolean(string="Propagate Rescheduling",
+        help='The rescheduling is propagated to the next move.')
+    propagate_date_minimum_delta = fields.Integer(string='Reschedule if Higher Than',
+        help='The change must be higher than this value to be propagated')
     picking_type_id = fields.Many2one('stock.picking.type', 'Operation Type')
     inventory_id = fields.Many2one('stock.inventory', 'Inventory')
     move_line_ids = fields.One2many('stock.move.line', 'move_id')
@@ -403,7 +406,6 @@ class StockMove(models.Model):
         # TDE CLEANME: it is a gros bordel + tracking
         Picking = self.env['stock.picking']
 
-        propagated_changes_dict = {}
         #propagation of expected date:
         propagated_date_field = False
         if vals.get('date_expected'):
@@ -413,24 +415,17 @@ class StockMove(models.Model):
             #propagate also any delta observed when setting the move as done
             propagated_date_field = 'date'
 
-        if not self._context.get('do_not_propagate', False) and (propagated_date_field or propagated_changes_dict):
+        if propagated_date_field:
             #any propagation is (maybe) needed
             for move in self:
-                if move.move_dest_ids and move.propagate:
-                    if 'date_expected' in propagated_changes_dict:
-                        propagated_changes_dict.pop('date_expected')
-                    if propagated_date_field:
-                        current_date = move.date_expected
-                        new_date = fields.Datetime.from_string(vals.get(propagated_date_field))
-                        delta_days = (new_date - current_date).total_seconds() / 86400
-                        if abs(delta_days) >= move.company_id.propagation_minimum_delta:
-                            old_move_date = move.move_dest_ids[0].date_expected
-                            new_move_date = (old_move_date + relativedelta.relativedelta(days=delta_days or 0)).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
-                            propagated_changes_dict['date_expected'] = new_move_date
-                    #For pushed moves as well as for pulled moves, propagate by recursive call of write().
-                    #Note that, for pulled moves we intentionally don't propagate on the procurement.
-                    if propagated_changes_dict:
-                        move.move_dest_ids.filtered(lambda m: m.state not in ('done', 'cancel')).write(propagated_changes_dict)
+                if move.move_dest_ids and move.propagate_date:
+                    new_date = vals.get(propagated_date_field)
+                    delta_days = (new_date - move.date_expected).total_seconds() / 86400
+                    if abs(delta_days) < move.propagate_date_minimum_delta:
+                        continue
+                    for move_dest in move.move_dest_ids:
+                        if move_dest.state not in ('done', 'cancel'):
+                            move_dest.date_expected += relativedelta.relativedelta(days=delta_days)
         track_pickings = not self._context.get('mail_notrack') and any(field in vals for field in ['state', 'picking_id', 'partially_available'])
         if track_pickings:
             to_track_picking_ids = set([move.picking_id.id for move in self if move.picking_id])
@@ -1217,7 +1212,7 @@ class StockMove(models.Model):
         # compatible with the move's UOM.
         new_product_qty = self.product_id.uom_id._compute_quantity(self.product_qty - qty, self.product_uom, round=False)
         new_product_qty = float_round(new_product_qty, precision_digits=self.env['decimal.precision'].precision_get('Product Unit of Measure'))
-        self.with_context(do_not_propagate=True, do_not_unreserve=True, rounding_method='HALF-UP').write({'product_uom_qty': new_product_qty})
+        self.with_context(do_not_unreserve=True, rounding_method='HALF-UP').write({'product_uom_qty': new_product_qty})
         new_move = new_move._action_confirm(merge=False)
         return new_move.id
 
