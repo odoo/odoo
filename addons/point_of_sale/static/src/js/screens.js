@@ -2170,7 +2170,7 @@ var set_fiscal_position_button = ActionButtonWidget.extend({
 
         var selection_list = no_fiscal_position.concat(fiscal_positions);
         self.gui.show_popup('selection',{
-            title: _t('Select tax'),
+            title: _t('Select Fiscal Position'),
             list: selection_list,
             confirm: function (fiscal_position) {
                 var order = self.pos.get_order();
