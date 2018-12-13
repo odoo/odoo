@@ -217,7 +217,7 @@ var ChannelSeenMixin = {
             seenInfo.fetched_message_id = data.last_message_id;
             seenInfo.seen_message_id = data.last_message_id;
         }
-        this.call('mail_service', 'getMailBus').trigger('update_channel', this.getID());
+        this.call('mail_service', 'getMailBus').trigger('update_channel', {channelID: this.getID()});
     },
 
     //--------------------------------------------------------------------------

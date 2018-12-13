@@ -1580,8 +1580,8 @@ var Discuss = AbstractAction.extend({
      * @private
      * @param {integer} channelID
      */
-    _onUpdateChannel: function (channelID) {
-        if (this._thread.getID() !== channelID) {
+    _onUpdateChannel: function (ev) {
+        if (this._thread.getID() !== ev.data.channelID) {
             return;
         }
         this._fetchAndRenderThread();

@@ -71,7 +71,7 @@ QUnit.module('Discuss (Seen Indicator)', {
                 partner_id: params.partnerID,
             };
             var notification = [[false, 'mail.channel', params.channelID], data];
-            params.widget.call('bus_service', 'trigger', 'notification', [notification]);
+            params.widget.call('bus_service', 'trigger', 'notification', {notifications: [notification]});
         };
     },
 });
