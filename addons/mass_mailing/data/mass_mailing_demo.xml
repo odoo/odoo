@@ -57,7 +57,7 @@
             <field name="color" eval="1"/>
         </record>
         <record id="utm_source_0" model="utm.source">
-            <field name="name">Newsleter</field>
+            <field name="name">Newsletter 1</field>
         </record>
         <record id="mass_mail_campaign_1" model="mail.mass_mailing.campaign">
             <field name="name">Newsletter</field>
@@ -70,7 +70,8 @@
         </record>
 
         <record id="mass_mail_1" model="mail.mass_mailing">
-            <field name="name">First Newsletter</field>
+            <field name="name">Newsletter 1</field>
+            <field name="subject" eval="'%s Newsletter' % (DateTime.today().strftime('%B'))"/>
             <field name="state">done</field>
             <field name="user_id" eval="ref('base.user_admin')"/>
             <field name="email_from">info@yourcompany.example.com</field>

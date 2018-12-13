@@ -2,7 +2,8 @@
 <odoo>
     <data noupdate="1">
     <record id="mass_mail_lead_0" model="mail.mass_mailing">
-        <field name="name">Lead Newsletter</field>
+        <field name="name">Lead Recall</field>
+        <field name="subject">We want to hear form you !</field>
         <field name="state">in_queue</field>
         <field name="user_id" ref="base.user_admin"/>
         <field name="schedule_date" eval="(DateTime.today() + relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
