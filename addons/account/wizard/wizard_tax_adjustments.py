@@ -25,25 +25,37 @@ class TaxAdjustments(models.TransientModel):
     @api.multi
     def _create_move(self):
         adjustment_type = self.env.context.get('adjustment_type', (self.amount > 0.0 and 'debit' or 'credit'))
-        debit_vals = {
+        move_line_vals = []
+
+        is_debit = adjustment_type == 'debit'
+        for tax_vals in self.tax_id.compute_all(abs(self.amount))['taxes']:
+            repartition_line = self.env['account.tax.repartition.line'].browse(tax_vals['tax_repartition_line_id'])
+            # Vals for the amls corresponding to the tax
+            move_line_vals.append((0, 0, {
+                'name': self.reason,
+                'debit': is_debit and abs(self.amount) or 0,
+                'credit': not is_debit and abs(self.amount) or 0,
+                'account_id': is_debit and self.debit_account_id.id or self.credit_account_id.id,
+                'tax_line_id': tax_vals['id'],
+                'tax_repartition_line_id': repartition_line.id,
+                'tag_ids': [(6, False, repartition_line.tag_ids.ids)],
+            }))
+
+        # Vals for the counterpart line
+        move_line_vals.append((0, 0, {
             'name': self.reason,
-            'debit': abs(self.amount),
-            'credit': 0.0,
-            'account_id': self.debit_account_id.id,
-            'tax_line_id': adjustment_type == 'debit' and self.tax_id.id or False,
-        }
-        credit_vals = {
-            'name': self.reason,
-            'debit': 0.0,
-            'credit': abs(self.amount),
-            'account_id': self.credit_account_id.id,
-            'tax_line_id': adjustment_type == 'credit' and self.tax_id.id or False,
-        }
+            'debit': not is_debit and abs(self.amount) or 0,
+            'credit': is_debit and abs(self.amount) or 0,
+            'account_id': is_debit and self.credit_account_id.id or self.debit_account_id.id,
+            'tax_line_id': False,
+        }))
+
+        # Create the move
         vals = {
             'journal_id': self.journal_id.id,
             'date': self.date,
             'state': 'draft',
-            'line_ids': [(0, 0, debit_vals), (0, 0, credit_vals)]
+            'line_ids': move_line_vals,
         }
         move = self.env['account.move'].create(vals)
         move.post()

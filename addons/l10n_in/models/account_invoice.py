@@ -50,7 +50,7 @@ class AccountInvoice(models.Model):
         TAX = self.env['account.tax']
         for line in self.mapped('invoice_line_ids'):
             price_unit = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
-            tax_lines = line.invoice_line_tax_ids.compute_all(price_unit, line.invoice_id.currency_id, line.quantity, line.product_id, line.invoice_id.partner_id)['taxes']
+            tax_lines = line.invoice_line_tax_ids.compute_all(price_unit, line.invoice_id.currency_id, line.quantity, line.product_id, line.invoice_id.partner_id, self.type in ('in_refund', 'out_refund'))['taxes']
             for tax_line in tax_lines:
                 tax_line['tag_ids'] = TAX.browse(tax_line['id']).tag_ids.ids
             tax_datas[line.id] = tax_lines

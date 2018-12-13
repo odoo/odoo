@@ -109,10 +109,10 @@ class TestInvoiceTaxes(AccountingTestCase):
             (100, self.percent_tax_2),
         ])
         invoice.action_invoice_open()
-        self.assertRecordValues(invoice.tax_line_ids, [
-            {'name': self.percent_tax_1_incl.name,      'base': 100, 'amount': 21,      'tax_ids': []},
+        self.assertRecordValues(invoice.tax_line_ids.sorted(lambda x: x.amount), [
             {'name': self.percent_tax_2.name,           'base': 100, 'amount': 12,      'tax_ids': []},
             {'name': self.percent_tax_2.name,           'base': 121, 'amount': 14.52,   'tax_ids': [self.percent_tax_1_incl.id]},
+            {'name': self.percent_tax_1_incl.name,      'base': 100, 'amount': 21,      'tax_ids': []},
         ])
 
     def test_group_of_taxes(self):
@@ -134,8 +134,8 @@ class TestInvoiceTaxes(AccountingTestCase):
             (100, self.percent_tax_2),
         ])
         invoice.action_invoice_open()
-        self.assertRecordValues(invoice.tax_line_ids, [
-            {'name': self.percent_tax_1_incl.name,      'base': 100, 'amount': 21,      'tax_ids': []},
+        self.assertRecordValues(invoice.tax_line_ids.sorted(lambda x: x.amount), [
             {'name': self.percent_tax_2.name,           'base': 100, 'amount': 12,      'tax_ids': []},
             {'name': self.percent_tax_2.name,           'base': 121, 'amount': 14.52,   'tax_ids': [self.percent_tax_1_incl.id]},
+            {'name': self.percent_tax_1_incl.name,      'base': 100, 'amount': 21,      'tax_ids': []},
         ])

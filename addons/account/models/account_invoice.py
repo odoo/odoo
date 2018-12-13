@@ -800,6 +800,7 @@ class AccountInvoice(models.Model):
         taxes_grouped = self.get_taxes_values()
         tax_lines = self.tax_line_ids.filtered('manual')
         for tax in taxes_grouped.values():
+            # ATTENTION: due to this, fields in tax have to be in the view (possibly invisible), as they won't be saved otherwise (when hitting "save")
             tax_lines += tax_lines.new(tax)
         self.tax_line_ids = tax_lines
         return
@@ -1029,9 +1030,10 @@ class AccountInvoice(models.Model):
             'manual': False,
             'sequence': tax['sequence'],
             'account_analytic_id': tax['analytic'] and line.account_analytic_id.id or False,
-            'account_id': self.type in ('out_invoice', 'in_invoice') and (tax['account_id'] or line.account_id.id) or (tax['refund_account_id'] or line.account_id.id),
+            'account_id': tax['account_id'] or line.account_id.id,
             'analytic_tag_ids': tax['analytic'] and line.analytic_tag_ids.ids or False,
             'tax_ids': tax_ids and [(6, None, tax_ids)] or False,
+            'tax_repartition_line_id': tax.get('tax_repartition_line_id'), # For base amount, we let this field empty
         }
 
         # If the taxes generate moves on the same financial account as the invoice line,
@@ -1059,7 +1061,7 @@ class AccountInvoice(models.Model):
                 continue
 
             price_unit = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
-            taxes = line.invoice_line_tax_ids.compute_all(price_unit, self.currency_id, line.quantity, line.product_id, self.partner_id)['taxes']
+            taxes = line.invoice_line_tax_ids.compute_all(price_unit, self.currency_id, line.quantity, line.product_id, self.partner_id, is_refund=self.type in ('in_refund', 'out_refund'))['taxes']
 
             affecting_base_tax_ids = []
             for tax_vals in taxes:
@@ -1072,6 +1074,7 @@ class AccountInvoice(models.Model):
                 val = self._prepare_tax_line_vals(line, tax_vals, affecting_base_tax_ids)
                 key = tax.get_grouping_key({
                     'tax_id': val['tax_id'],
+                    'tax_repartition_line_id': val['tax_repartition_line_id'],
                     'account_id': val['account_id'],
                     'account_analytic_id': val['account_analytic_id'],
                     'analytic_tag_ids': val['analytic_tag_ids'],
@@ -1089,6 +1092,7 @@ class AccountInvoice(models.Model):
                     affecting_base_tax_ids += tax.children_tax_ids.filtered(lambda t: is_tax_affecting_base_amount(t)).ids
                 elif is_tax_affecting_base_amount(tax):
                     affecting_base_tax_ids.append(tax.id)
+
         return tax_grouped
 
     @api.multi
@@ -1164,13 +1168,19 @@ class AccountInvoice(models.Model):
                 continue
             if line.quantity==0:
                 continue
-            tax_ids = []
-            for tax in line.invoice_line_tax_ids:
-                tax_ids.append((4, tax.id, None))
-                for child in tax.children_tax_ids:
-                    tax_ids.append((4, child.id, None))
+
+            taxes_to_flatten = line.invoice_line_tax_ids
+            flattened_taxes = self.env['account.tax']
+            while taxes_to_flatten:
+                tax = taxes_to_flatten[0]
+                taxes_to_flatten -= tax
+                flattened_taxes += tax
+                taxes_to_flatten += tax.children_tax_ids
+
             analytic_tag_ids = [(4, analytic_tag.id, None) for analytic_tag in line.analytic_tag_ids]
 
+            tax_repartition_field_name = 'invoice_repartition_line_ids' if line.invoice_type in ('in_invoice', 'out_invoice') else 'refund_repartition_line_ids'
+            tag_ids = flattened_taxes.mapped(tax_repartition_field_name).filtered(lambda x: x.repartition_type == 'base').mapped('tag_ids.id')
             move_line_dict = {
                 'invl_id': line.id,
                 'type': 'src',
@@ -1183,13 +1193,13 @@ class AccountInvoice(models.Model):
                 'uom_id': line.uom_id.id,
                 'account_analytic_id': line.account_analytic_id.id,
                 'analytic_tag_ids': analytic_tag_ids,
-                'tax_ids': tax_ids,
+                'tax_ids': [(6, 0, flattened_taxes.ids)],
                 'invoice_id': self.id,
+                'tag_ids': [(6, 0, tag_ids)],
             }
             res.append(move_line_dict)
         return res
 
-    @api.multi
     def tax_line_move_line_get(self):
         self.ensure_one()
 
@@ -1210,7 +1220,9 @@ class AccountInvoice(models.Model):
                     'account_analytic_id': tax_line.account_analytic_id.id,
                     'analytic_tag_ids': analytic_tag_ids,
                     'invoice_id': self.id,
-                    'tax_ids': [(6, 0, tax_line.tax_ids.ids)],
+                    'tax_ids': tax_line.tax_ids and [(6, 0, tax_line.tax_ids.ids)] or False, # We don't pass an empty recordset here, as it would reset the tax_exibility of the line, due to the condition in account.move.line's create
+                    'tax_repartition_line_id': tax_line.tax_repartition_line_id.id,
+                    'tag_ids': [(6, 0, tax_line.tax_repartition_line_id.tag_ids.ids)],
                 })
         return res
 
@@ -1688,7 +1700,7 @@ class AccountInvoiceLine(models.Model):
         price = self.price_unit * (1 - (self.discount or 0.0) / 100.0)
         taxes = False
         if self.invoice_line_tax_ids:
-            taxes = self.invoice_line_tax_ids.compute_all(price, currency, self.quantity, product=self.product_id, partner=self.invoice_id.partner_id)
+            taxes = self.invoice_line_tax_ids.compute_all(price, currency, self.quantity, product=self.product_id, partner=self.invoice_id.partner_id, is_refund=self.invoice_id.type in ('in_refund', 'out_refund'))
         self.price_subtotal = price_subtotal_signed = taxes['total_excluded'] if taxes else self.quantity * price
         self.price_total = taxes['total_included'] if taxes else self.price_subtotal
         if self.invoice_id.currency_id and self.invoice_id.currency_id != self.invoice_id.company_id.currency_id:
@@ -1986,23 +1998,10 @@ class AccountInvoiceTax(models.Model):
             'tax_ids': self.tax_ids and tax.tax_ids.ids,
         }
 
-    @api.depends('invoice_id.invoice_line_ids')
-    def _compute_base_amount(self):
-        tax_grouped = {}
-        for invoice in self.mapped('invoice_id'):
-            tax_grouped[invoice.id] = invoice.get_taxes_values()
-        for tax in self:
-            tax.base = 0.0
-            if tax.tax_id:
-                key = tax.tax_id.get_grouping_key(tax._prepare_invoice_tax_val())
-                if tax.invoice_id and key in tax_grouped[tax.invoice_id.id]:
-                    tax.base = tax_grouped[tax.invoice_id.id][key]['base']
-                else:
-                    _logger.warning('Tax Base Amount not computable probably due to a change in an underlying tax (%s).', tax.tax_id.name)
-
     invoice_id = fields.Many2one('account.invoice', string='Invoice', ondelete='cascade', index=True)
     name = fields.Char(string='Tax Description', required=True)
     tax_id = fields.Many2one('account.tax', string='Tax', ondelete='restrict')
+    tax_repartition_line_id = fields.Many2one(string="Originating Repartition Line", comodel_name='account.tax.repartition.line')
     account_id = fields.Many2one('account.account', string='Tax Account', required=True, domain=[('deprecated', '=', False)])
     account_analytic_id = fields.Many2one('account.analytic.account', string='Analytic account')
     analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags')
@@ -2013,7 +2012,7 @@ class AccountInvoiceTax(models.Model):
     sequence = fields.Integer(help="Gives the sequence order when displaying a list of invoice tax.")
     company_id = fields.Many2one('res.company', string='Company', related='account_id.company_id', store=True, readonly=True)
     currency_id = fields.Many2one('res.currency', related='invoice_id.currency_id', store=True, readonly=True)
-    base = fields.Monetary(string='Base', compute='_compute_base_amount', store=True)
+    base = fields.Monetary(string='Base')
     tax_ids = fields.Many2many('account.tax', string='Affecting Base Taxes',
         help='Taxes affecting the tax base amount applied before this one.')
 

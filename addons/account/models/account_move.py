@@ -183,22 +183,15 @@ class AccountMove(models.Model):
                 'analytic_account_id': analytic_account_str and int(analytic_account_str) or False,
             }
 
-        def _find_existing_tax_line(line_ids, tax, tag_ids, analytic_account_id):
+        def _find_existing_tax_line(line_ids, tax_repartition_line_id, analytic_tag_ids, analytic_account_id):
             if tax.analytic:
-                return line_ids.filtered(lambda x: x.tax_line_id == tax and x.analytic_tag_ids.ids == tag_ids and x.analytic_account_id.id == analytic_account_id)
-            return line_ids.filtered(lambda x: x.tax_line_id == tax)
+                return line_ids.filtered(lambda x: x.tax_repartition_line_id.id == tax_reparition_line_id and x.analytic_tag_ids.ids == analytic_tag_ids and x.analytic_account_id.id == analytic_account_id)
+            return line_ids.filtered(lambda x: x.tax_repartition_line_id.id == tax_repartition_line_id)
 
         def _get_lines_to_sum(line_ids, tax, tag_ids, analytic_account_id):
             if tax.analytic:
                 return line_ids.filtered(lambda x: tax in x.tax_ids and x.analytic_tag_ids.ids == tag_ids and x.analytic_account_id.id == analytic_account_id)
             return line_ids.filtered(lambda x: tax in x.tax_ids)
-
-        def _get_tax_account(tax, amount):
-            if tax.tax_exigibility == 'on_payment' and tax.cash_basis_account_id:
-                return tax.cash_basis_account_id
-            if tax.type_tax_use == 'purchase':
-                return tax.refund_account_id if amount < 0 else tax.account_id
-            return tax.refund_account_id if amount >= 0 else tax.account_id
 
         # Cache the already computed tax to avoid useless recalculation.
         processed_taxes = self.env['account.tax']
@@ -228,7 +221,6 @@ class AccountMove(models.Model):
 
             # Process taxes.
             for tax in to_process_taxes:
-                tax_line = _find_existing_tax_line(self.line_ids, tax, parsed_key['tag_ids'], parsed_key['analytic_account_id'])
                 lines_to_sum = _get_lines_to_sum(self.line_ids, tax, parsed_key['tag_ids'], parsed_key['analytic_account_id'])
 
                 if not lines_to_sum:
@@ -240,47 +232,45 @@ class AccountMove(models.Model):
 
                 # Compute the tax amount one by one.
                 quantity = len(lines_to_sum) if tax.amount_type == 'fixed' else 1
-                taxes_vals = tax.compute_all(balance,
-                    quantity=quantity, currency=line.currency_id, product=line.product_id, partner=line.partner_id)
+                taxes_vals = tax.compute_all(balance, quantity=quantity, currency=line.currency_id, product=line.product_id, partner=line.partner_id)
 
-                if tax_line:
-                    # Update the existing tax_line.
-                    if balance:
-                        # Update the debit/credit amount according to the new balance.
-                        if taxes_vals.get('taxes'):
-                            amount = taxes_vals['taxes'][0]['amount']
-                            account = _get_tax_account(tax, amount) or line.account_id
-                            tax_line.debit = amount > 0 and amount or 0.0
-                            tax_line.credit = amount < 0 and -amount or 0.0
-                            tax_line.account_id = account
-                    else:
-                        # Reset debit/credit in case of the originator line is temporary set to 0 in both debit/credit.
-                        tax_line.debit = tax_line.credit = 0.0
-                elif taxes_vals.get('taxes'):
-                    # Create a new tax_line.
+                if taxes_vals.get('taxes'):
+                    for line_vals in taxes_vals['taxes']:
+                        tax_line = _find_existing_tax_line(self.line_ids, line_vals['tax_repartition_line_id'], parsed_key['tag_ids'], parsed_key['analytic_account_id'])
+                        if tax_line:
+                            # Update the existing tax_line.
+                            if balance:
+                                # Update the debit/credit amount according to the new balance.
+                                amount = line_vals['amount']
+                                account = line_vals['account_id'] or line.account_id
+                                tax_line.debit = amount > 0 and amount or 0.0
+                                tax_line.credit = amount < 0 and -amount or 0.0
+                                tax_line.account_id = account
+                            else:
+                                # Reset debit/credit in case of the originator line is temporary set to 0 in both debit/credit.
+                                tax_line.debit = tax_line.credit = 0.0
+                        else:
+                             # Create a new tax_line.
 
-                    amount = taxes_vals['taxes'][0]['amount']
-                    account = _get_tax_account(tax, amount) or line.account_id
-                    tax_vals = taxes_vals['taxes'][0]
-
-                    name = tax_vals['name']
-                    line_vals = {
-                        'account_id': account.id,
-                        'name': name,
-                        'tax_line_id': tax_vals['id'],
-                        'partner_id': line.partner_id.id,
-                        'debit': amount > 0 and amount or 0.0,
-                        'credit': amount < 0 and -amount or 0.0,
-                        'analytic_account_id': line.analytic_account_id.id if tax.analytic else False,
-                        'analytic_tag_ids': line.analytic_tag_ids.ids if tax.analytic else False,
-                        'move_id': self.id,
-                        'tax_exigible': tax.tax_exigibility == 'on_invoice',
-                        'company_id': self.company_id.id,
-                        'company_currency_id': self.company_id.currency_id.id,
-                    }
-                    # N.B. currency_id/amount_currency are not set because if we have two lines with the same tax
-                    # and different currencies, we have no idea which currency set on this line.
-                    self.env['account.move.line'].new(line_vals)
+                            amount = line_vals['amount']
+                            to_create_vals = {
+                                'account_id': line_vals['account_id'] or line.account_id.id,
+                                'name': line_vals['name'],
+                                'tax_line_id': line_vals['id'],
+                                'partner_id': line.partner_id.id,
+                                'debit': amount > 0 and amount or 0.0,
+                                'credit': amount < 0 and -amount or 0.0,
+                                'analytic_account_id': line.analytic_account_id.id if tax.analytic else False,
+                                'analytic_tag_ids': line.analytic_tag_ids.ids if tax.analytic else False,
+                                'move_id': self.id,
+                                'tax_exigible': tax.tax_exigibility == 'on_invoice',
+                                'company_id': self.company_id.id,
+                                'company_currency_id': self.company_id.currency_id.id,
+                                'tax_repartition_line_id': line_vals['tax_repartition_line_id'],
+                            }
+                            # N.B. currency_id/amount_currency are not set because if we have two lines with the same tax
+                            # and different currencies, we have no idea which currency set on this line.
+                            self.env['account.move.line'].new(to_create_vals)
 
             # Keep record of the values used as taxes the last time this method has been run.
             line.tax_line_grouping_key = _build_grouping_key(line)
@@ -671,6 +661,7 @@ class AccountMoveLine(models.Model):
     analytic_line_ids = fields.One2many('account.analytic.line', 'move_id', string='Analytic lines', oldname="analytic_lines")
     tax_ids = fields.Many2many('account.tax', string='Taxes', domain=['|', ('active', '=', False), ('active', '=', True)])
     tax_line_id = fields.Many2one('account.tax', string='Originator tax', ondelete='restrict')
+    tax_repartition_line_id = fields.Many2one(comodel_name='account.tax.repartition.line', string="Originator Tax Repartition Line", ondelete='restrict', help="Tax repartition line that caused the creation of this move line, if any") #TODO OCO: tax_line_id pourrait être calculé depuis ceci (mais doit de toute façon être stored)
     analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', index=True)
     analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags')
     company_id = fields.Many2one('res.company', related='account_id.company_id', string='Company', store=True, readonly=True)
@@ -685,6 +676,8 @@ class AccountMoveLine(models.Model):
 
     recompute_tax_line = fields.Boolean(store=False, help="Technical field used to know if the tax_ids field has been modified in the UI.")
     tax_line_grouping_key = fields.Char(store=False, string='Old Taxes', help="Technical field used to store the old values of fields used to compute tax lines (in account.move form view) between the moment the user changed it and the moment the ORM reflects that change in its one2many")
+    tag_ids = fields.Many2many(string="Tags", comodel_name='account.account.tag', ondelete='restrict', help="Tags assigned to this line by the tax creating it, if any. It determines its impact on financial reports.")
+    tax_audit_str = fields.Char(string="Tax Audit String", compute="_compute_tax_audit_str", store=True, help="Computed field, listing the tax grids impacted by this line, and the amount it applies to each of them.")
 
     _sql_constraints = [
         ('credit_debit1', 'CHECK (credit*debit=0)', 'Wrong credit or debit value in accounting entry !'),
@@ -759,6 +752,17 @@ class AccountMoveLine(models.Model):
         for record in self:
             unaffected_earnings_type = self.env.ref("account.data_unaffected_earnings")
             record.is_unaffected_earnings_line = unaffected_earnings_type == record.account_id.user_type_id
+
+    @api.depends('tag_ids')
+    def _compute_tax_audit_str(self):
+        for record in self:
+            audit_str = ''
+            for tag in record.tag_ids.filtered(lambda x: x.tax_tag_template_id).sorted(lambda x: x.tax_tag_template_id.id):
+                audit_str += ', ' if audit_str else ''
+                tag_amount = (tag.tax_negate and -1 or 1) * record.balance
+                audit_str += tag.tax_tag_template_id.name + ': ' + str(tag_amount)
+
+            record.tax_audit_str = audit_str
 
     @api.onchange('amount_currency', 'currency_id', 'account_id')
     def _onchange_amount_currency(self):
@@ -1643,7 +1647,7 @@ class AccountPartialReconcile(models.Model):
                                 'name': line.name,
                                 'debit': rounded_amt if rounded_amt > 0 else 0.0,
                                 'credit': abs(rounded_amt) if rounded_amt < 0 else 0.0,
-                                'account_id': line.tax_line_id.cash_basis_account_id.id,
+                                'account_id': line.tax_repartition_line_id.account_id.id,
                                 'analytic_account_id': line.analytic_account_id.id,
                                 'analytic_tag_ids': line.analytic_tag_ids.ids,
                                 'tax_line_id': line.tax_line_id.id,
@@ -1652,6 +1656,8 @@ class AccountPartialReconcile(models.Model):
                                 'currency_id': line.currency_id.id,
                                 'move_id': newly_created_move.id,
                                 'partner_id': line.partner_id.id,
+                                'tax_repartition_line_id': line.tax_repartition_line_id.id,
+                                'tag_ids': [(6, 0, line.tag_ids.ids)],
                             })
                             if line.account_id.reconcile:
                                 #setting the account to allow reconciliation will help to fix rounding errors
@@ -1675,6 +1681,8 @@ class AccountPartialReconcile(models.Model):
                                     'currency_id': line.currency_id.id,
                                     'amount_currency': self.amount_currency and line.currency_id.round(line.amount_currency * amount / line.balance) or 0.0,
                                     'partner_id': line.partner_id.id,
+                                    'tax_repartition_line_id': line.tax_repartition_line_id.id,
+                                    'tag_ids': [(6, 0, line.tag_ids.ids)],
                                 })
                                 self.env['account.move.line'].with_context(check_move_validity=False).create({
                                     'name': line.name,

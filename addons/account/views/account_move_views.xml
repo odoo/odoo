@@ -356,6 +356,7 @@
                                     <field name="date_maturity" required="0" invisible="context.get('view_no_maturity', False)"/>
                                     <field name="recompute_tax_line" invisible="1" readonly="1"/>
                                     <field name="tax_line_grouping_key" invisible="1" readonly="1"/>
+                                    <field name="tax_repartition_line_id" invisible="1"/> <!--Not to be removed, we need it so that the call to new() takes it into account when autocompleting the lines of a tax-->
                                 </tree>
                             </field>
                             <field name="narration" colspan="4" placeholder="Add an internal note..." nolabel="1" height="50"/>

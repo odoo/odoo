@@ -1068,6 +1068,20 @@
             </field>
         </record>
 
+        <record id="tax_repartition_line_tree" model="ir.ui.view">
+            <field name="name">account.tax.repartition.line.tree</field>
+            <field name="model">account.tax.repartition.line</field>
+            <field name="arch" type="xml">
+                <tree editable="bottom" create="1" delete="1">
+                    <field name="factor_percent" attrs="{'invisible': [('repartition_type', '=', 'base')]}"/>
+                    <field name="repartition_type"/>
+                    <field name="account_id" attrs="{'invisible': [('repartition_type', '=', 'base')]}" options="{'no_create': True}"/>
+                    <field name="tag_ids" widget="many2many_tags" options="{'no_create': True}" domain="[('applicability', '=', 'taxes'), ('country_id', '=', country_id)]"/>
+                    <field name="country_id" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
         <record id="account_tax_view_tree" model="ir.ui.view">
             <field name="name">account.invoice.line.tax.search</field>
             <field name="model">account.tax</field>
@@ -1156,17 +1170,20 @@
                         <page string="Definition">
                             <group>
                                 <group>
+                                    <field name="id" invisible="1"/> <!--To trigger the call to onchange('id'), initializing the repartition lines-->
                                     <field name="amount_type" />
                                     <label for="amount" attrs="{'invisible':[('amount_type','not in', ('fixed', 'percent', 'division'))]}"/>
+                                </group>
+                                <group>
                                     <div attrs="{'invisible':[('amount_type','not in', ('fixed', 'percent', 'division'))]}">
                                         <field name="amount" class="oe_inline" />
                                         <span class="o_form_label oe_inline" attrs="{'invisible':[('amount_type','=','fixed')]}">%</span>
                                     </div>
                                 </group>
-                                <group attrs="{'invisible':[('amount_type','=', 'group')]}" groups="account.group_account_user">
-                                    <field name="account_id" options="{'no_create': True}"/>
-                                    <field name="refund_account_id" options="{'no_create': True}"/>
-                                </group>
+                            </group>
+                            <group attrs="{'invisible': [('amount_type', '=', 'group')]}">
+                                <field name="invoice_repartition_line_ids"/>
+                                <field name="refund_repartition_line_ids"/>
                             </group>
                             <field name="children_tax_ids"
                                 attrs="{'invisible':['|', ('amount_type','!=','group'), ('type_tax_use','=','none')]}"
@@ -1184,7 +1201,6 @@
                                 <group>
                                     <field name="description" attrs="{'invisible':[('amount_type','=', 'group')]}"/>
                                     <field name="tax_group_id"/>
-                                    <field name="tag_ids" domain="[('applicability', '!=', 'accounts')]" widget="many2many_tags" context="{'default_applicability': 'taxes'}"/>
                                     <field name="analytic" attrs="{'invisible':[('amount_type','=', 'group')]}" groups="analytic.group_analytic_accounting" />
                                     <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                                 </group>
@@ -1193,8 +1209,8 @@
                                     <field name="include_base_amount" attrs="{'invisible':[('amount_type','=', 'group')]}" />
                                     <field name="hide_tax_exigibility" invisible="1"/>
                                     <field name="tax_exigibility" widget="radio" attrs="{'invisible':['|', ('amount_type','=', 'group'), ('hide_tax_exigibility', '=', False)]}" groups="account.group_account_user"/>
-                                    <field name="cash_basis_account_id" options="{'no_create': True}" attrs="{'invisible': [('tax_exigibility', '=', 'on_invoice')], 'required': [('tax_exigibility', '=', 'on_payment')]}" groups="account.group_account_user"/>
                                     <field name="cash_basis_base_account_id" options="{'no_create': True}" attrs="{'invisible': [('tax_exigibility', '=', 'on_invoice')], 'required': [('tax_exigibility', '=', 'on_payment')]}" groups="account.group_account_user"/>
+                                    <field name="cash_basis_transition_account_id" options="{'no_create': True}" attrs="{'invisible': [('tax_exigibility', '=', 'on_invoice')], 'required': [('tax_exigibility', '=', 'on_payment')]}" groups="account.group_account_user"/>
                                 </group>
                             </group>
                         </page>
@@ -1517,10 +1533,6 @@
                                         <span class="o_form_label oe_inline" attrs="{'invisible':[('amount_type','=','fixed')]}">%</span>
                                     </div>
                                 </group>
-                                <group attrs="{'invisible':[('amount_type','=', 'group')]}">
-                                    <field name="account_id" options="{'no_create': True}"/>
-                                    <field name="refund_account_id" options="{'no_create': True}"/>
-                                </group>
                             </group>
                             <field name="children_tax_ids"
                                 attrs="{'invisible':['|', ('amount_type','!=','group'), ('type_tax_use','=','none')]}"
@@ -1544,10 +1556,10 @@
                                     <field name="include_base_amount" attrs="{'invisible':[('amount_type','=', 'group')]}" />
                                 </group>
                                 <group>
-                                    <field name="tag_ids" domain="[('applicability', '!=', 'accounts')]" widget="many2many_tags" context="{'default_applicability': 'taxes'}"/>
                                     <field name="active" groups="base.group_no_one"/>
                                     <field name="tax_exigibility" widget="radio" attrs="{'invisible':[('amount_type','=', 'group')]}"/>
-                                    <field name="cash_basis_account_id" options="{'no_create': True}" attrs="{'invisible': [('tax_exigibility', '=', 'on_invoice')], 'required': [('tax_exigibility', '=', 'on_payment')]}"/>
+                                    <field name="cash_basis_base_account_id" attrs="{'invisible': [('tax_exigibility', '=', 'on_invoice')], 'required': [('tax_exigibility', '=', 'on_payment')]}"/>
+                                    <field name="cash_basis_transition_account_id" attrs="{'invisible': [('tax_exigibility', '=', 'on_invoice')], 'required': [('tax_exigibility', '=', 'on_payment')]}"/>
                                 </group>
                             </group>
                         </page>

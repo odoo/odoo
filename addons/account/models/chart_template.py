@@ -553,13 +553,18 @@ class AccountChartTemplate(models.Model):
         account_ref.update(account_template_ref)
 
         # writing account values after creation of accounts
-        for key, value in generated_tax_res['account_dict'].items():
-            if value['refund_account_id'] or value['account_id'] or value['cash_basis_account_id'] or value['cash_basis_base_account_id']:
+        for key, value in generated_tax_res['account_dict']['account.tax'].items():
+            if value['cash_basis_transition_account_id'] or value['cash_basis_base_account_id']:
                 AccountTaxObj.browse(key).write({
-                    'refund_account_id': account_ref.get(value['refund_account_id'], False),
-                    'account_id': account_ref.get(value['account_id'], False),
-                    'cash_basis_account_id': account_ref.get(value['cash_basis_account_id'], False),
+                    'cash_basis_transition_account_id': account_ref.get(value['cash_basis_transition_account_id'], False),
                     'cash_basis_base_account_id': account_ref.get(value['cash_basis_base_account_id'], False),
+                })
+
+        AccountTaxRepartitionLineObj = self.env['account.tax.repartition.line']
+        for key, value in generated_tax_res['account_dict']['account.tax.repartition.line'].items():
+            if value['account_id']:
+                AccountTaxRepartitionLineObj.browse(key).write({
+                    'account_id': account_ref.get(value['account_id']),
                 })
 
         # Create Journals - Only done for root chart template
@@ -802,17 +807,14 @@ class AccountTaxTemplate(models.Model):
     sequence = fields.Integer(required=True, default=1,
         help="The sequence field is used to define order in which the tax lines are applied.")
     amount = fields.Float(required=True, digits=(16, 4))
-    account_id = fields.Many2one('account.account.template', string='Tax Account', ondelete='restrict',
-        help="Account that will be set on invoice tax lines for invoices. Leave empty to use the expense account.", oldname='account_collected_id')
-    refund_account_id = fields.Many2one('account.account.template', string='Tax Account on Refunds', ondelete='restrict',
-        help="Account that will be set on invoice tax lines for refunds. Leave empty to use the expense account.", oldname='account_paid_id')
     description = fields.Char(string='Display on Invoices')
     price_include = fields.Boolean(string='Included in Price', default=False,
         help="Check this if the price you use on the product and invoices includes this tax.")
     include_base_amount = fields.Boolean(string='Affect Subsequent Taxes', default=False,
         help="If set, taxes which are computed after this one will be computed based on the price tax included.")
     analytic = fields.Boolean(string="Analytic Cost", help="If set, the amount computed by this tax will be assigned to the same analytic account as the invoice line (if any)")
-    tag_ids = fields.Many2many('account.account.tag', string='Account tag', help="Optional tags you may want to assign for custom reporting")
+    invoice_repartition_line_ids = fields.One2many(string="Repartition for Invoices", comodel_name="account.tax.repartition.line.template", inverse_name="invoice_tax_template_id", copy=True, help="Repartition when the tax is used on an invoice")
+    refund_repartition_line_ids = fields.One2many(string="Repartition for Refund Invoices", comodel_name="account.tax.repartition.line.template", inverse_name="refund_tax_template_id", copy=True, help="Repartition when the tax is used on a refund")
     tax_group_id = fields.Many2one('account.tax.group', string="Tax Group")
     tax_exigibility = fields.Selection(
         [('on_invoice', 'Based on Invoice'),
@@ -821,12 +823,11 @@ class AccountTaxTemplate(models.Model):
         oldname='use_cash_basis',
         help="Based on Invoice: the tax is due as soon as the invoice is validated.\n"
         "Based on Payment: the tax is due as soon as the payment of the invoice is received.")
-    cash_basis_account_id = fields.Many2one(
-        'account.account.template',
-        string='Tax Received Account',
+    cash_basis_transition_account_id = fields.Many2one(
+        comodel_name='account.account.template',
+        string="Cash Basis Transition Account",
         domain=[('deprecated', '=', False)],
-        oldname='cash_basis_account',
-        help='Account used as counterpart for the journal entry, for taxes eligible based on payments.')
+        help="Account used to transition the tax amount for cash basis taxes. It will contain the tax amount as long as the original invoice has not been reconciled ; at reconciliation, this amount cancelled on this account and put on the regular tax account.")
     cash_basis_base_account_id = fields.Many2one(
         'account.account.template',
         domain=[('deprecated', '=', False)],
@@ -867,10 +868,16 @@ class AccountTaxTemplate(models.Model):
             'price_include': self.price_include,
             'include_base_amount': self.include_base_amount,
             'analytic': self.analytic,
-            'tag_ids': [(6, 0, [t.id for t in self.tag_ids])],
             'children_tax_ids': [(6, 0, children_ids)],
             'tax_exigibility': self.tax_exigibility,
         }
+
+        # We add repartition lines if there are some, so that if there are none,
+        # default_get is called and creates the default ones properly.
+        if self.invoice_repartition_line_ids:
+            val['invoice_repartition_line_ids'] = self.invoice_repartition_line_ids.get_repartition_line_create_vals()
+        if self.refund_repartition_line_ids:
+            val['refund_repartition_line_ids'] = self.refund_repartition_line_ids.get_repartition_line_create_vals()
 
         if self.tax_group_id:
             val['tax_group_id'] = self.tax_group_id.id
@@ -887,7 +894,7 @@ class AccountTaxTemplate(models.Model):
             }
         """
         ChartTemplate = self.env['account.chart.template']
-        todo_dict = {}
+        todo_dict = {'account.tax': {}, 'account.tax.repartition.line': {}}
         tax_template_to_tax = {}
 
         templates_todo = list(self)
@@ -896,26 +903,31 @@ class AccountTaxTemplate(models.Model):
             templates_todo = []
 
             # create taxes in batch
-            template_vals = []
+            tax_template_vals = []
             for template in templates:
                 if all(child.id in tax_template_to_tax for child in template.children_tax_ids):
                     vals = template._get_tax_vals(company, tax_template_to_tax)
-                    template_vals.append((template, vals))
+                    tax_template_vals.append((template, vals))
                 else:
                     # defer the creation of this tax to the next batch
                     templates_todo.append(template)
-            taxes = ChartTemplate._create_records_with_xmlid('account.tax', template_vals, company)
+            taxes = ChartTemplate._create_records_with_xmlid('account.tax', tax_template_vals, company)
 
             # fill in tax_template_to_tax and todo_dict
-            for tax, (template, vals) in zip(taxes, template_vals):
+            for tax, (template, vals) in zip(taxes, tax_template_vals):
                 tax_template_to_tax[template.id] = tax.id
                 # Since the accounts have not been created yet, we have to wait before filling these fields
-                todo_dict[tax.id] = {
-                    'account_id': template.account_id.id,
-                    'refund_account_id': template.refund_account_id.id,
-                    'cash_basis_account_id': template.cash_basis_account_id.id,
+                todo_dict['account.tax'][tax.id] = {
+                    'cash_basis_transition_account_id': template.cash_basis_transition_account_id.id,
                     'cash_basis_base_account_id': template.cash_basis_base_account_id.id,
                 }
+
+                # We also have to delay the assignation of accounts to repartition lines
+                for repartition_line in (tax.invoice_repartition_line_ids + tax.refund_repartition_line_ids).filtered(lambda x: x.template_id.account_id):
+                    template_account = repartition_line.template_id.account_id
+                    todo_dict['account.tax.repartition.line'][repartition_line.id] = {
+                        'account_id': template_account.id,
+                    }
 
         if any(template.tax_exigibility == 'on_payment' for template in self):
             # When a CoA is being installed automatically and if it is creating account tax(es) whose field `Use Cash Basis`(tax_exigibility) is set to True by default
@@ -926,6 +938,63 @@ class AccountTaxTemplate(models.Model):
             'tax_template_to_tax': tax_template_to_tax,
             'account_dict': todo_dict
         }
+
+# Tax Repartition Line Template
+
+class AccountTaxRepartitionLineTemplate(models.Model):
+    _name = "account.tax.repartition.line.template"
+    _description = "Tax Repartition Line Template"
+
+    factor_percent = fields.Float(string="%", required=True, help="Factor to apply on the account move lines generated from this repartition line, in percents")
+    repartition_type = fields.Selection(string="Based On", selection=[('base', 'Base'), ('tax', 'of tax')], required=True, default='tax', help="Base on which the factor will be applied.")
+    account_id = fields.Many2one(string="Account", comodel_name='account.account.template', help="Account on which to post the tax amount")
+    plus_tag_ids = fields.Many2many(string="Plus Tax Grids", relation='account_tax_repatition_plus_tags', comodel_name='account.tax.tag.template', copy=True, help="Tag template whose '+' child will be assigned to move lines by this repartition line")
+    minus_tag_ids = fields.Many2many(string="Minus Tax Grids", relation='account_tax_repatition_minus_tags', comodel_name='account.tax.tag.template', copy=True, help="Tag template whose '-' child will be assigned to move lines by this repartition line")
+    invoice_tax_template_id = fields.Many2one(comodel_name='account.tax.template', help="The tax set to apply this repartition on invoices. Mutually exclusive with refund_tax_template_id")
+    refund_tax_template_id = fields.Many2one(comodel_name='account.tax.template', help="The tax set to apply this repartition on refund invoices. Mutually exclusive with invoice_tax_template_id")
+
+    @api.model
+    def create(self, vals):
+        if vals.get('plus_tag_ids'):
+            vals['plus_tag_ids'] =  self._convert_tag_syntax_to_orm(vals['plus_tag_ids'])
+
+        if vals.get('minus_tag_ids'):
+            vals['minus_tag_ids'] = self._convert_tag_syntax_to_orm(vals['minus_tag_ids'])
+
+        return super(AccountTaxRepartitionLineTemplate, self).create(vals)
+
+    @api.model
+    def _convert_tag_syntax_to_orm(self, tags_list):
+        """ Repartition lines give the possibility to directly give
+        a list of ids to create for tags instead of a list of ORM commands.
+
+        This function checks that tags_list uses this syntactic sugar and returns
+        an ORM-compliant version of it if it does.
+        """
+        if tags_list and all(isinstance(elem, int) for elem in tags_list):
+            return [(6, False, tags_list)]
+        return tags_list
+
+    @api.constrains('invoice_tax_template_id', 'refund_tax_template_id')
+    def validate_tax_template_link(self):
+        for record in self:
+            if record.invoice_tax_template_id and record.refund_tax_template_id:
+                raise ValidationError(_("Tax repartition line templates should apply to either invoices or refunds, not both at the same time. invoice_tax_template_id and refund_tax_template_id should not be set together."))
+
+    def get_repartition_line_create_vals(self):
+        rslt = [(5, 0, 0)]
+        for record in self:
+            tags_to_add = self.env['account.account.tag']
+            tags_to_add += record.plus_tag_ids.mapped('children_tag_ids').filtered(lambda x: not x.tax_negate)
+            tags_to_add += record.minus_tag_ids.mapped('children_tag_ids').filtered(lambda x: x.tax_negate)
+
+            rslt.append((0, 0, {
+                'factor_percent': record.factor_percent,
+                'repartition_type': record.repartition_type,
+                'tag_ids': [(6, 0, tags_to_add.ids)],
+                'template_id': record.id,
+            }))
+        return rslt
 
 # Fiscal Position Templates
 
