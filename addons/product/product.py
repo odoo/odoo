@@ -973,10 +973,15 @@ class product_product(osv.osv):
         image = tools.image_resize_image_big(value)
 
         product = self.browse(cr, uid, id, context=context)
-        if product.product_tmpl_id.image:
-            product.image_variant = image
-        else:
+        if not product.product_tmpl_id.image:
+            # Template has no image → add the new one
             product.product_tmpl_id.image = image
+        else:
+            # Template has already an image → change variant..
+            product.image_variant = image
+            if image == False:
+                # .. and erase template image to not have image on variant
+                product.product_tmpl_id.image = False
 
     def _get_price_extra(self, cr, uid, ids, name, args, context=None):
         result = dict.fromkeys(ids, False)
