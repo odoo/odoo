@@ -9,6 +9,7 @@ from odoo import api, fields, models, tools, SUPERUSER_ID
 from odoo.tools.translate import _
 from odoo.tools import email_re, email_split
 from odoo.exceptions import UserError, AccessError
+from werkzeug import urls
 
 from . import crm_stage
 
@@ -228,6 +229,14 @@ class Lead(models.Model):
             }
         return {}
 
+    def _clean_website(self, website):
+        url = urls.url_parse(website)
+        if not url.scheme:
+            if not url.netloc:
+                url = url.replace(netloc=url.path, path='')
+            website = url.replace(scheme='http').to_url()
+        return website
+
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
         values = self._onchange_partner_id_values(self.partner_id.id if self.partner_id else False)
@@ -282,6 +291,8 @@ class Lead(models.Model):
         # set up context used to find the lead's sales channel which is needed
         # to correctly set the default stage_id
         context = dict(self._context or {})
+        if vals.get('website'):
+            vals['website'] = self._clean_website(vals['website'])
         if vals.get('type') and not self._context.get('default_type'):
             context['default_type'] = vals.get('type')
         if vals.get('team_id') and not self._context.get('default_team_id'):
@@ -300,6 +311,8 @@ class Lead(models.Model):
     @api.multi
     def write(self, vals):
         # stage change: update date_last_stage_update
+        if vals.get('website'):
+            vals['website'] = self._clean_website(vals['website'])
         if 'stage_id' in vals:
             vals['date_last_stage_update'] = fields.Datetime.now()
         if vals.get('user_id') and 'date_open' not in vals:
