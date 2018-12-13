@@ -49,11 +49,11 @@ var GroupByMenu = DropdownMenu.extend({
         this.generatorMenuIsOpen = false;
         // determines list of options used by groupbys of type 'date'
         this.intervalOptions = [
-            {description: 'Day', optionId: 'day', groupId: 1},
-            {description: 'Week', optionId: 'week', groupId: 1},
-            {description: 'Month', optionId: 'month', groupId: 1},
-            {description: 'Quarter', optionId: 'quarter', groupId: 1},
-            {description: 'Year', optionId: 'year', groupId: 1},
+            {description: _t('Day'), optionId: 'day', groupId: 1},
+            {description: _t('Week'), optionId: 'week', groupId: 1},
+            {description: _t('Month'), optionId: 'month', groupId: 1},
+            {description: _t('Quarter'), optionId: 'quarter', groupId: 1},
+            {description: _t('Year'), optionId: 'year', groupId: 1},
         ];
         this.defaultOptionId = DEFAULT_INTERVAL;
         this.groupableFields = [];
