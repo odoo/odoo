@@ -274,7 +274,7 @@ class Repair(models.Model):
 
     def action_repair_invoice_create(self):
         for repair in self:
-            repair.action_invoice_create()
+            repair._create_invoices()
             if repair.invoice_method == 'b4repair':
                 repair.action_repair_ready()
             elif repair.invoice_method == 'after_repair':
@@ -282,7 +282,7 @@ class Repair(models.Model):
         return True
 
     @api.multi
-    def action_invoice_create(self, group=False):
+    def _create_invoices(self, group=False):
         """ Creates invoice(s) for repair order.
         @param group: It is set to true when group invoice is to be generated.
         @return: Invoice Ids.

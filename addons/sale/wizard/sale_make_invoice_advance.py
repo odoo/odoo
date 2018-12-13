@@ -132,9 +132,9 @@ class SaleAdvancePaymentInv(models.TransientModel):
         sale_orders = self.env['sale.order'].browse(self._context.get('active_ids', []))
 
         if self.advance_payment_method == 'delivered':
-            sale_orders.action_invoice_create()
+            sale_orders._create_invoices()
         elif self.advance_payment_method == 'all':
-            sale_orders.action_invoice_create(final=True)
+            sale_orders._create_invoices(final=True)
         else:
             # Create deposit product if necessary
             if not self.product_id:

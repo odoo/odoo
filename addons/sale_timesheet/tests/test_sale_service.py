@@ -58,7 +58,7 @@ class TestSaleService(TestCommonSaleTimesheetNoChart):
             'employee_id': self.employee_manager.id,
         })
         self.assertEqual(self.sale_order.invoice_status, 'to invoice', 'Sale Service: there should be sale_ordermething to invoice after registering timesheets')
-        self.sale_order.action_invoice_create()
+        self.sale_order._create_invoices()
 
         self.assertTrue(sale_order_line.product_uom_qty == sale_order_line.qty_delivered == sale_order_line.qty_invoiced, 'Sale Service: line should be invoiced completely')
         self.assertEqual(self.sale_order.invoice_status, 'invoiced', 'Sale Service: SO should be invoiced')
@@ -126,7 +126,7 @@ class TestSaleService(TestCommonSaleTimesheetNoChart):
             'unit_amount': 24,
             'employee_id': self.employee_user.id,
         })
-        self.sale_order.action_invoice_create()
+        self.sale_order._create_invoices()
         self.assertEqual(self.sale_order.invoice_status, 'invoiced', 'Sale Timesheet: "invoice on delivery" timesheets should not modify the invoice_status of the so')
 
     def test_task_so_line_assignation(self):
@@ -168,7 +168,7 @@ class TestSaleService(TestCommonSaleTimesheetNoChart):
         self.assertEqual(task_serv2.timesheet_ids.mapped('so_line'), so_line_deliver_global_project, "Old timesheet are not modified when changing the task SO line")
 
         # invoice SO, and validate invoice
-        invoice_id = self.sale_order.action_invoice_create()[0]
+        invoice_id = self.sale_order._create_invoices()[0]
         invoice = self.env['account.invoice'].browse(invoice_id)
         invoice.action_invoice_open()
 

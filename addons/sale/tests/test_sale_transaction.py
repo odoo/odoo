@@ -38,7 +38,7 @@ class TestSaleTransaction(AccountingTestCase):
         self.assertTrue(transaction.payment_id)
         self.assertEqual(transaction.payment_id.state, 'posted')
 
-        invoice_ids = order.action_invoice_create()
+        invoice_ids = order._create_invoices()
         invoice = self.env['account.invoice'].browse(invoice_ids)
         invoice.action_invoice_open()
 
