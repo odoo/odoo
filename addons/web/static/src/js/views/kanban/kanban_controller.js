@@ -23,6 +23,7 @@ var KanbanController = BasicController.extend({
         quick_create_record: '_onQuickCreateRecord',
         resequence_columns: '_onResequenceColumn',
         button_clicked: '_onButtonClicked',
+        open_one2many_record: '_onOpenOne2ManyRecord',
         kanban_record_delete: '_onRecordDelete',
         kanban_record_update: '_onUpdateRecord',
         kanban_column_delete: '_onDeleteColumn',
@@ -413,6 +414,31 @@ var KanbanController = BasicController.extend({
                     },
                 }).open().opened(onFailure);
             });
+    },
+    _onOpenOne2ManyRecord: function (ev) {
+        ev.stopPropagation();
+        var data = ev.data;
+        var record;
+        if (data.id) {
+            record = this.model.get(data.id, {raw: true});
+        }
+
+        new view_dialogs.FormViewDialog(this, {
+            context: data.context,
+            domain: data.domain,
+            fields_view: data.fields_view,
+            model: this.model,
+            on_saved: data.on_saved,
+            on_remove: data.on_remove,
+            parentID: data.parentID,
+            readonly: data.readonly,
+            deletable: data.deletable,
+            recordID: record && record.id,
+            res_id: record && record.res_id,
+            res_model: data.field.relation,
+            shouldSaveLocally: true,
+            title: (record ? _t("Open: ") : _t("Create ")) + (ev.target.string || data.field.string),
+        }).open();
     },
     /**
      * @private
