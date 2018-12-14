@@ -313,3 +313,41 @@ class TestCreatePicking(common.TestProductCommon):
         purchase_order_2.picking_ids.button_validate()
 
         self.assertEqual(sum(customer_picking.move_lines.mapped('reserved_availability')), 100.0, 'The total quantity for the customer move should be available and reserved.')
+
+    def test_05_create_picking_diff_location(self):
+        """ Test purchase order should create multiple incoming shipment when location destination is different. """
+        stock_location = self.env['ir.model.data'].xmlid_to_object('stock.stock_location_stock')
+        input_location = self.env['ir.model.data'].xmlid_to_object('stock.stock_location_company')
+
+        po_vals = {
+            'partner_id': self.partner_id.id,
+            'order_line': [
+                (0, 0, {
+                    'name': self.product_id_1.name,
+                    'product_id': self.product_id_1.id,
+                    'product_qty': 5.0,
+                    'product_uom': self.product_id_1.uom_po_id.id,
+                    'price_unit': 500.0,
+                    'location_dest_id': stock_location.id,
+                    'date_planned': datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+                }),
+                (0, 0, {
+                    'name': self.product_id_2.name,
+                    'product_id': self.product_id_2.id,
+                    'product_qty': 5.0,
+                    'product_uom': self.product_id_2.uom_po_id.id,
+                    'price_unit': 250.0,
+                    'location_dest_id': input_location.id,
+                    'date_planned': datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+                })],
+        }
+
+        # Draft purchase order created
+        purchase_order = self.env['purchase.order'].create(po_vals)
+        self.assertTrue(purchase_order, 'Purchase order should be created !')
+
+        # Purchase order confirm
+        purchase_order.button_confirm()
+
+        self.assertEqual(purchase_order.state, 'purchase', "Purchase order status should be 'purchase'")
+        self.assertEqual(purchase_order.picking_count, 2, 'Two picking should be generated.')
