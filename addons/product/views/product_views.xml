@@ -71,15 +71,65 @@
                                 <group groups="product.group_product_pricelist" name="pricelists">
                                     <div name="pricelist_item" groups="product.group_product_pricelist">
                                         <separator string="Pricing"/>
-                                        <field name="item_ids" nolabel="1" context="{'default_base':'list_price', 'default_applied_on' :'1_product'}">
+                                        <field name="item_ids" nolabel="1" mode="tree,kanban" context="{'default_base':'list_price', 'default_applied_on' :'1_product'}">
                                             <tree string="Pricelist Items" editable="bottom">
                                                 <field name="pricelist_id" string="Pricelist" required='1'/>
-                                                <field name="fixed_price" string="Price" required='1'/>
+                                                <field name="currency_id" invisible="1"/>
+                                                <field name="fixed_price" string="Price" required='1' widget='monetary' options="{'currency_field': 'currency_id'}"/>
                                                 <field name="min_quantity"/>
                                                 <field name="date_start"/>
                                                 <field name="date_end"/>
                                                 <field name="applied_on" invisible="1"/>
                                             </tree>
+                                            <kanban string="Pricelist Items" class="o_kanban_mobile">
+                                               <field name="pricelist_id"/>
+                                               <field name="currency_id"/>
+                                               <field name="fixed_price"/>
+                                               <field name="min_quantity"/>
+                                               <field name="date_start"/>
+                                               <field name="date_end"/>
+                                               <templates>
+                                                   <t t-name="kanban-box">
+                                                       <div t-attf-class="oe_kanban_global_click">
+                                                           <div class="row">
+                                                               <div class="col-12">
+                                                                   <strong>
+                                                                       <field name='pricelist_id'/>: <field name="fixed_price" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                                                                   </strong>
+                                                               </div>
+                                                           </div>
+                                                           <div class="row">
+                                                               <div class="col-12">
+                                                                   <span><t t-esc='record.min_quantity.string'/>: <t t-esc='record.min_quantity.value'/></span>
+                                                               </div>
+                                                           </div>
+                                                           <span t-if='record.date_start.value || record.date_end.value'>
+                                                            <div class="row">
+                                                                <div class="col-12">
+                                                                    Valid <span t-if='record.date_start.value'> from <t t-esc='record.date_start.value'/></span><span t-if='record.date_end.value'> until <t t-esc='record.date_end.value'/></span>
+                                                                </div>
+                                                            </div>
+                                                           </span>
+                                                       </div>
+                                                   </t>
+                                               </templates>
+                                           </kanban>
+                                           <form string="Pricelist Items">
+                                               <h1><field name="name"/></h1>
+                                               <group>
+                                                   <group>
+                                                       <field name="applied_on" invisible="1"/>
+                                                       <field name="pricelist_id" string="Pricelist" required='1'/>
+                                                       <field name="currency_id" invisible="1"/>
+                                                       <field name="fixed_price" string="Price" required='1' widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                                                   </group>
+                                                   <group>
+                                                       <field name="min_quantity"/>
+                                                       <field name="date_start"/>
+                                                       <field name="date_end"/>
+                                                   </group>
+                                               </group>
+                                           </form>
                                         </field>
                                     </div>
                                 </group>
