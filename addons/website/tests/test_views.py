@@ -10,7 +10,7 @@ import unittest
 from lxml import etree as ET, html
 from lxml.html import builder as h
 
-from odoo.tests import common
+from odoo.tests import common, HttpCase
 
 
 def attrs(**kwargs):
@@ -621,3 +621,175 @@ class TestCowViewSaving(common.TransactionCase):
 
         views = View.with_context(website_id=1).get_related_views('B')
         self.assertEqual(views.mapped('key'), ['B', 'I', 'II'], "Should only return the specific tree")
+
+
+class Crawler(HttpCase):
+    def setUp(self):
+        super(Crawler, self).setUp()
+        View = self.env['ir.ui.view']
+
+        self.base_view = View.create({
+            'name': 'Base',
+            'type': 'qweb',
+            'arch': '<div>base content</div>',
+            'key': 'website.base_view',
+        }).with_context(load_all_views=True)
+
+        self.inherit_view = View.create({
+            'name': 'Extension',
+            'mode': 'extension',
+            'inherit_id': self.base_view.id,
+            'arch': '<div position="inside">, extended content</div>',
+            'key': 'website.extension_view',
+        })
+
+    def test_get_switchable_related_views(self):
+        View = self.env['ir.ui.view']
+        Website = self.env['website']
+
+        # Set up
+        website_1 = Website.create({'name': 'Website 1'})  # will have specific views
+        website_2 = Website.create({'name': 'Website 2'})  # will use generic views
+
+        self.base_view.write({'name': 'Main Frontend Layout', 'key': '_portal.frontend_layout'})
+        event_main_view = self.base_view.copy({
+            'name': 'Events',
+            'key': '_website_event.index',
+            'arch': '<t t-call="_website.layout"><div>Arch is not important in this test</div></t>',
+        })
+        self.inherit_view.write({'name': 'Main layout', 'key': '_website.layout'})
+
+        self.inherit_view.copy({'name': 'Show Sign In', 'customize_show': True, 'key': '_portal.portal_show_sign_in'})
+        view_logo = self.inherit_view.copy({
+            'name': 'Show Logo',
+            'inherit_id': self.inherit_view.id,
+            'customize_show': True,
+            'key': '_website.layout_logo_show',
+        })
+        view_logo.copy({'name': 'Affix Top Menu', 'key': '_website.affix_top_menu'})
+
+        event_child_view = self.inherit_view.copy({
+            'name': 'Filters',
+            'customize_show': True,
+            'inherit_id': event_main_view.id,
+            'key': '_website_event.event_left_column',
+            'priority': 30,
+        })
+        view_photos = event_child_view.copy({'name': 'Photos', 'key': '_website_event.event_right_photos'})
+        event_child_view.copy({'name': 'Quotes', 'key': '_website_event.event_right_quotes', 'priority': 30})
+
+        event_child_view.copy({'name': 'Filter by Category', 'inherit_id': event_child_view.id, 'key': '_website_event.event_category'})
+        event_child_view.copy({'name': 'Filter by Country', 'inherit_id': event_child_view.id, 'key': '_website_event.event_location'})
+
+        # Customize
+        #   | Main Frontend Layout
+        #       | Show Sign In
+        #   | Main Layout
+        #       | Affix Top Menu
+        #       | Show Logo
+        #   | Events
+        #       | Filters
+        #       | Photos
+        #       | Quotes
+        #   | Filters
+        #       | Filter By Category
+        #       | Filter By Country
+
+        self.authenticate("admin", "admin")
+        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+
+        # Simulate website 2 (that use only generic views)
+        url = base_url + '/website/force_website'
+        json = {'params': {'website_id': website_2.id}}
+        self.opener.post(url=url, json=json)
+
+        # Test controller
+        url = base_url + '/website/get_switchable_related_views'
+        json = {'params': {'key': '_website_event.index'}}
+        response = self.opener.post(url=url, json=json)
+        res = response.json()['result']
+
+        self.assertEqual(
+            [v['name'] for v in res],
+            ['Show Sign In', 'Affix Top Menu', 'Show Logo', 'Filters', 'Photos', 'Quotes', 'Filter by Category', 'Filter by Country'],
+            "Sequence should not be taken into account for customize menu",
+        )
+        self.assertEqual(
+            [v['inherit_id'][1] for v in res],
+            ['Main Frontend Layout', 'Main layout', 'Main layout', 'Events', 'Events', 'Events', 'Filters', 'Filters'],
+            "Sequence should not be taken into account for customize menu (Checking Customize headers)",
+        )
+
+        # Trigger COW
+        view_logo.with_context(website_id=website_1.id).write({'arch': '<div position="inside">, trigger COW, arch is not relevant in this test</div>'})
+        # This would wrongly become:
+
+        # Customize
+        #   | Main Frontend Layout
+        #       | Show Sign In
+        #   | Main Layout
+        #       | Affix Top Menu
+        #       | Show Logo <==== Was above "Affix Top Menu"
+        #   | Events
+        #       | Filters
+        #       | Photos
+        #       | Quotes
+        #   | Filters
+        #       | Filter By Category
+        #       | Filter By Country
+
+        # Simulate website 1 (that has specific views)
+        url = base_url + '/website/force_website'
+        json = {'params': {'website_id': website_1.id}}
+        self.opener.post(url=url, json=json)
+
+        # Test controller
+        url = base_url + '/website/get_switchable_related_views'
+        json = {'params': {'key': '_website_event.index'}}
+        response = self.opener.post(url=url, json=json)
+        res = response.json()['result']
+        self.assertEqual(
+            [v['name'] for v in res],
+            ['Show Sign In', 'Affix Top Menu', 'Show Logo', 'Filters', 'Photos', 'Quotes', 'Filter by Category', 'Filter by Country'],
+            "multi-website COW should not impact customize views order (COW view will have a bigger ID and should not be last)",
+        )
+        self.assertEqual(
+            [v['inherit_id'][1] for v in res],
+            ['Main Frontend Layout', 'Main layout', 'Main layout', 'Events', 'Events', 'Events', 'Filters', 'Filters'],
+            "multi-website COW should not impact customize views menu header position or split (COW view will have a bigger ID and should not be last)",
+        )
+
+        # Trigger COW
+        view_photos.with_context(website_id=website_1.id).write({'arch': '<div position="inside">, trigger COW, arch is not relevant in this test</div>'})
+        # This would wrongly become:
+
+        # Customize
+        #   | Main Frontend Layout
+        #       | Show Sign In
+        #   | Main Layout
+        #       | Affix Top Menu
+        #       | Show Logo
+        #   | Events
+        #       | Filters
+        #       | Quotes
+        #   | Filters
+        #       | Filter By Category
+        #       | Filter By Country
+        #   | Events     <==== JS code creates a new Events header as the Event's children views are not one after the other anymore..
+        #       | Photos <==== .. since Photos got duplicated and now have a bigger ID that others
+
+        # Test controller
+        url = base_url + '/website/get_switchable_related_views'
+        json = {'params': {'key': '_website_event.index'}}
+        response = self.opener.post(url=url, json=json)
+        res = response.json()['result']
+        self.assertEqual(
+            [v['name'] for v in res],
+            ['Show Sign In', 'Affix Top Menu', 'Show Logo', 'Filters', 'Photos', 'Quotes', 'Filter by Category', 'Filter by Country'],
+            "multi-website COW should not impact customize views order (COW view will have a bigger ID and should not be last) (2)",
+        )
+        self.assertEqual(
+            [v['inherit_id'][1] for v in res],
+            ['Main Frontend Layout', 'Main layout', 'Main layout', 'Events', 'Events', 'Events', 'Filters', 'Filters'],
+            "multi-website COW should not impact customize views menu header position or split (COW view will have a bigger ID and should not be last) (2)",
+        )
