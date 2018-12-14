@@ -63,8 +63,7 @@
                                     <tr class="border-black">
                                         <td><strong>Total</strong></td>
                                         <td class="text-right">
-                                            <span t-esc="sum([line.price for line in docs]) or 0.0"/>
-                                            <span t-field="user.company_id.currency_id.symbol"/>
+                                            <span t-esc="sum([line.price for line in docs]) or 0.0" t-options="{'widget': 'monetary', 'display_currency': user.company_id.currency_id}"/>
                                         </td>
                                     </tr>
                                 </table>
