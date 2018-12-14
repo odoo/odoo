@@ -365,6 +365,10 @@ DebugManager.include({
             views: [[false, 'list'], [false, 'form']],
             type: 'ir.actions.act_window',
             domain: [['res_model', '=', this._action.res_model], ['res_id', '=', selectedIDs[0]]],
+            context: {
+                default_res_id: selectedIDs[0],
+                default_res_model: this._action.res_model,
+            },
         });
     },
     get_metadata: function() {
