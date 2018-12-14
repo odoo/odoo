@@ -56,7 +56,7 @@ class GoogleDrive(models.Model):
         if not google_drive_refresh_token:
             if user_is_admin:
                 dummy, action_id = self.env['ir.model.data'].get_object_reference('base_setup', 'action_general_configuration')
-                msg = _("You haven't configured 'Authorization Code' generated from google, Please generate and configure it .")
+                msg = _("There is no refresh code set for Google Drive. You can set it up from the configuration panel.")
                 raise RedirectWarning(msg, action_id, _('Go to the configuration panel'))
             else:
                 raise UserError(_("Google Drive is not yet configured. Please contact your administrator."))
