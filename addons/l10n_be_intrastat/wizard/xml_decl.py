@@ -155,8 +155,8 @@ class XmlDeclaration(models.TransientModel):
                      OR (res_country.code is NULL AND countrypartner.code IS NOT NULL
                      AND not countrypartner.code=%s))
                 AND inv.type IN (%s, %s)
-                AND to_char(inv.date_invoice, 'YYYY')=%s
-                AND to_char(inv.date_invoice, 'MM')=%s
+                AND to_char(COALESCE(inv.date, inv.date_invoice), 'YYYY')=%s
+                AND to_char(COALESCE(inv.date, inv.date_invoice), 'MM')=%s
             """
 
         self.env.cr.execute(query, (company.id, company.partner_id.country_id.code,

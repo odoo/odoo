@@ -34,7 +34,7 @@
             },
             commentEdition : function(){
                 var positionComment = ($('#comments').position()).top-50;
-                $(".o_website_chatter_form textarea").val('"' + selected_text + '" ').focus();
+                $(".o_portal_chatter_composer_form textarea").val('"' + selected_text + '" ').focus();
                 $('html, body').stop().animate({
                     'scrollTop': positionComment
                 }, 500, 'swing', function () {
