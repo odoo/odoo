@@ -271,7 +271,7 @@
             <field eval="'%(street)s\n%(street2)s\n%(city)s %(state_code)s %(zip)s\n%(country_name)s'" name="address_format" />
             <field name="currency_id" ref="CAD" />
             <field eval="1" name="phone_code" />
-            <field name="vat_label">HST</field>            
+            <field name="vat_label">HST</field>
         </record>
         <record id="cc" model="res.country">
             <field name="name">Cocos (Keeling) Islands</field>
@@ -348,6 +348,7 @@
         <record id="co" model="res.country">
             <field name="name">Colombia</field>
             <field name="code">co</field>
+            <field name="vat_label">NIT</field>
             <field file="base/static/img/country_flags/co.png" name="image" type="base64" />
             <field eval="'%(street)s\n%(street2)s\n%(city)s %(state_name)s %(zip)s\n%(country_name)s'" name="address_format" />
             <field name="currency_id" ref="COP" />
