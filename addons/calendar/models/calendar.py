@@ -1541,7 +1541,7 @@ class Meeting(models.Model):
             tz = pytz.timezone(tz)
         TIME_FIELDS_IN_EVENT = ['start', 'stop', 'start_datetime', 'stop_datetime']
         for record in result:
-            if not record.get('allday') and isinstance(record['id'], (basestring)) and tz:
+            if not record.get('allday') and isinstance(record['id'], (basestring)) and tz and is_calendar_id(record['id']):
                 delta = self.get_time_dst_delta(int(record['id'].split('-')[0]), tz, record)
                 if delta:
                     for field in TIME_FIELDS_IN_EVENT:
