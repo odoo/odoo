@@ -3,23 +3,24 @@
 # * stock
 # 
 # Translators:
-# Arma Gedonsky <armagedonsky@hot.ee>, 2017
-# Martin Aavastik <martin@avalah.ee>, 2017
-# Egon Raamat <egon@avalah.ee>, 2017
-# Martin Trigaux, 2017
-# Eneli Õigus <enelioigus@gmail.com>, 2017
-# Rivo Zängov <eraser@eraser.ee>, 2017
-# Marek Pontus, 2017
-# Gert Valdek <gert@airobot.ee>, 2017
 # Wanradt Koell <wanradt@gmail.com>, 2017
+# Gert Valdek <gert@airobot.ee>, 2017
+# Arma Gedonsky <armagedonsky@hot.ee>, 2017
+# Martin Trigaux, 2017
+# Marek Pontus, 2018
 # Ants Peetsalu <ants@avalah.ee>, 2018
+# Egon Raamat <egon@avalah.ee>, 2018
+# Rivo Zängov <eraser@eraser.ee>, 2018
+# Eneli Õigus <enelioigus@gmail.com>, 2018
+# Martin Aavastik <martin@avalah.ee>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-07-27 11:55+0000\n"
-"PO-Revision-Date: 2018-07-27 11:55+0000\n"
-"Last-Translator: Ants Peetsalu <ants@avalah.ee>, 2018\n"
+"PO-Revision-Date: 2017-09-20 10:24+0000\n"
+"Last-Translator: Martin Aavastik <martin@avalah.ee>, 2018\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -837,7 +838,7 @@ msgstr "Kõik"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_type_list
 msgid "All Operations"
-msgstr "Kõik tegevused"
+msgstr "Operatsioonide tüübid"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.stock_picking_action_picking_type
@@ -1034,7 +1035,7 @@ msgstr "Järelsaatelehed"
 #: model:ir.model.fields,field_description:stock.field_stock_location_barcode
 #: model:ir.ui.view,arch_db:stock.report_picking
 msgid "Barcode"
-msgstr "Ribakood"
+msgstr "Triipkood"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_barcode_nomenclature_id
@@ -1111,7 +1112,7 @@ msgid ""
 "Odoo will not automatically generate a back order."
 msgstr ""
 "Muutes kogust siin, nõustute uue kogusega: Odoo ei loo automaatselt "
-"järeltellimust."
+"järelsaatelehte."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -2154,7 +2155,7 @@ msgstr "Detailsed tegevused"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_location_path_form
 msgid "Details"
-msgstr "Üksikasjad"
+msgstr "Detailid"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_show_details_visible
@@ -2992,7 +2993,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_exhausted
 msgid "Include Exhausted Products"
-msgstr "Sisaldab kasutatud tooteid"
+msgstr "Lisage laost otsas tooted"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product_incoming_qty
@@ -3114,7 +3115,7 @@ msgstr "Sisemise siirde asukoht"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_int_type_id
 msgid "Internal Type"
-msgstr "Sisemine laosiire"
+msgstr "Sisemine liik"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_production_lot_ref
@@ -3450,7 +3451,7 @@ msgstr "Viimased 10 Tehtud noppet"
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty___last_update
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_scrap___last_update
 msgid "Last Modified on"
-msgstr "Viimati muudetud"
+msgstr "Viimati muudetud (millal)"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_group_write_uid
@@ -3944,7 +3945,7 @@ msgstr "Hiir, juhtmevaba"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking_line_move_id
 msgid "Move"
-msgstr "Suuna"
+msgstr "Siirda"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_stock_move_operations
@@ -4583,7 +4584,7 @@ msgstr "Pakendi tüüp:"
 #: model:ir.ui.menu,name:stock.menu_package
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Packages"
-msgstr "Pakendid"
+msgstr "Pakid"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_package_view
@@ -4760,7 +4761,7 @@ msgstr "Noppeleht"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.procurement_group_form_view
 msgid "Pickings"
-msgstr "Nopped"
+msgstr "Toodete vastuvõtmised"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -5004,7 +5005,7 @@ msgstr "Toote siire"
 #: model:ir.ui.view,arch_db:stock.product_form_view_procurement_button
 #: model:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
 msgid "Product Moves"
-msgstr "Toote liikumised"
+msgstr "Toote siirded"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line_product_name
@@ -5759,8 +5760,8 @@ msgid ""
 "Scrapping a product will remove it from your stock. The product will\n"
 "                end up in a scrap location that can be used for reporting purpose."
 msgstr ""
-"Scrapping a product will remove it from your stock. The product will\n"
-"                end up in a scrap location that can be used for reporting purpose."
+"Toote praagiks muutumisel eemaldatakse see laoseisust. Toode läheb "
+"praagilattu ja aruandlust on võimalik teha."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
@@ -6070,7 +6071,7 @@ msgstr "Alusdokument"
 #: model:ir.model.fields,field_description:stock.field_stock_move_location_id
 #: model:ir.model.fields,field_description:stock.field_stock_picking_location_id
 msgid "Source Location"
-msgstr "Lähtekoht"
+msgstr "Lähteasukoht"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.message_body
@@ -6856,7 +6857,7 @@ msgstr "Tegevuste vaates on näha kogu pakendi sisu"
 #: model:ir.ui.view,arch_db:stock.view_move_tree
 #: model:ir.ui.view,arch_db:stock.view_quant_package_picking_tree
 msgid "To"
-msgstr "Saaja"
+msgstr "Kuni"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_ready
@@ -6874,7 +6875,7 @@ msgstr "Asukohta"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "To Receive"
-msgstr "Vastuvõtmiseks"
+msgstr "Tegemiseks"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -7967,7 +7968,7 @@ msgstr "seadistuste menüü"
 #: model:ir.ui.view,arch_db:stock.view_procurement_rule_form
 #: model:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "days"
-msgstr "päeva pärast"
+msgstr "päev(a)"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
