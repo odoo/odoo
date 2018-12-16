@@ -5209,7 +5209,7 @@ msgid ""
 msgstr ""
 "Het model waar deze alias bijhoort. Iedere inkomende e-mail dat niet bij een"
 " bestaande regel hoort zal leiden tot het aanmaken van een nieuwe regel in "
-"dit model (Bijv. een project taak)."
+"dit model (Bijv. een projecttaak)."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_name
@@ -5926,6 +5926,12 @@ msgid ""
 msgstr ""
 "U kunt deze groep niet verwijderen omdat deze groep nodig is voor andere "
 "modules."
+
+#. module: mail
+#: code:addons/mail/models/mail_thread.py:2358
+#, python-format
+msgid "You have been assigned to %s"
+msgstr "U bent toegewezen aan %s"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_user_assigned

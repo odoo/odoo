@@ -8,7 +8,6 @@
 # Jesper Carstensen <jc@danodoo.dk>, 2018
 # peso <peer.sommerlund@gmail.com>, 2018
 # Jonathan Stein <cgs@image.dk>, 2018
-# JonathanStein <jstein@image.dk>, 2018
 # Jesper Carstensen <info@danodoo.dk>, 2018
 # Pernille Kristensen <pernillekristensen1994@gmail.com>, 2018
 # Martin Trigaux, 2018
@@ -267,7 +266,7 @@ msgid ""
 "<span class=\"\">Process Checkout</span>\n"
 "                                        <span class=\"fa fa-chevron-right\"/>"
 msgstr ""
-"<span class=\"\">Fortsæt til checkout</span>\n"
+"<span class=\"\">Fortsæt til betaling</span>\n"
 "                                        <span class=\"fa fa-chevron-right\"/>"
 
 #. module: website_sale
@@ -276,7 +275,7 @@ msgid ""
 "<span class=\"\">Process Checkout</span>\n"
 "                                    <span class=\"fa fa-chevron-right\"/>"
 msgstr ""
-"<span class=\"\">Gennemfør checkout</span>\n"
+"<span class=\"\">Fortsæt til betaling</span>\n"
 "                                    <span class=\"fa fa-chevron-right\"/>"
 
 #. module: website_sale
@@ -354,7 +353,7 @@ msgstr "<span>Ordre</span>"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.short_cart_summary
 msgid "<span>Process Checkout</span>"
-msgstr "<span>Gennemfør checkout</span>"
+msgstr "<span>Fortsæt til betaling</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sort
@@ -614,6 +613,11 @@ msgid "Bank Name"
 msgstr "Banknavn"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address
+msgid "Be aware!"
+msgstr ""
+
+#. module: website_sale
 #: model:res.country.group,name:website_sale.benelux
 msgid "BeNeLux"
 msgstr "BeNeLux"
@@ -746,7 +750,7 @@ msgstr "Underkategorier"
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.action_open_website_sale_onboarding_payment_acquirer_wizard
 msgid "Choose a payment method"
-msgstr ""
+msgstr "Vælg betalingsmetode"
 
 #. module: website_sale
 #: model:product.pricelist,name:website_sale.list_christmas
@@ -1000,7 +1004,7 @@ msgstr "Afgør visningsrækkefølgen i webshopmodulet"
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_digest_digest
 msgid "Digest"
-msgstr "Digest"
+msgstr "Opsamling"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__module_website_sale_digital
@@ -1020,7 +1024,7 @@ msgstr "Vis navn"
 #, python-format
 msgid "Do not have access, skip this data for user's digest email"
 msgstr ""
-"Har ikke adgang, spring over disse data til brugerens opsummerings e-mail"
+"Har ikke adgang, spring over disse data til brugerens opsamlings e-mail"
 
 #. module: website_sale
 #: selection:res.company,website_sale_onboarding_payment_acquirer_state:0
@@ -1091,7 +1095,7 @@ msgstr "E-mail skabelon"
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_mail_compose_message
 msgid "Email composition wizard"
-msgstr "Wizard til at oprette Email"
+msgstr "Guide til at oprette e-mail"
 
 #. module: website_sale
 #. openerp-web
@@ -1277,7 +1281,7 @@ msgstr ""
 #. module: website_sale
 #: selection:res.company,website_sale_onboarding_payment_acquirer_state:0
 msgid "Just done"
-msgstr ""
+msgstr "Udført"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_digest_digest__kpi_website_sale_total_value
@@ -1420,7 +1424,7 @@ msgstr "Navn - Z til A"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order_line__name_short
 msgid "Name Short"
-msgstr ""
+msgstr "Kort navn"
 
 #. module: website_sale
 #. openerp-web
@@ -1449,7 +1453,7 @@ msgstr "Ingen vare defineret."
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "No results found for \""
-msgstr ""
+msgstr "Ingen resultater fundet for \""
 
 #. module: website_sale
 #: selection:res.config.settings,sale_delivery_settings:0
@@ -1589,7 +1593,7 @@ msgstr "Ordrer"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Orders Followup"
-msgstr ""
+msgstr "Ordreopfølgning"
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.sale_order_action_to_invoice
@@ -1942,7 +1946,7 @@ msgstr "Rapportering"
 #: model:ir.model.fields,help:website_sale.field_product_product__website_id
 #: model:ir.model.fields,help:website_sale.field_product_public_category__website_id
 msgid "Restrict publishing to this website."
-msgstr ""
+msgstr "Begræns udgivelse til denne hjemmeside."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.404
@@ -1957,7 +1961,7 @@ msgstr "Gennemse ordre"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__is_seo_optimized
 msgid "SEO optimized"
-msgstr ""
+msgstr "SEO-optimering"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products_item
@@ -2153,7 +2157,7 @@ msgstr "Shop - Bekræftet"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment
 msgid "Shop - Select Payment Acquirer"
-msgstr ""
+msgstr "Shop - Vælg indløser"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products_add_to_cart
@@ -2291,7 +2295,7 @@ msgstr "Foreslåede tilbehør:"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_b2b
 msgid "TIN / VAT"
-msgstr "MOMS"
+msgstr "CVR (Format: DKxxxxxxxx)"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.total
@@ -2438,7 +2442,7 @@ msgstr "Ubetalte ordrer"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products_item
 msgid "Unpublished"
-msgstr "Ikke offentliggjort"
+msgstr "Ikke udgivet"
 
 #. module: website_sale
 #. openerp-web
@@ -2580,6 +2584,13 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address
+msgid ""
+"You are editing your <b>billing and shipping</b> addresses at the same time!<br/>\n"
+"                                            If you want to modify your shipping address, create a"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.sale_report_action_carts
 #: model_terms:ir.actions.act_window,help:website_sale.sale_report_action_dashboard
 msgid "You don't have any order from the website"
@@ -2713,6 +2724,11 @@ msgstr "kg"
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "ml-2"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address
+msgid "new address"
 msgstr ""
 
 #. module: website_sale
