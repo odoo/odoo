@@ -160,9 +160,9 @@ var ControlPanelController = mvc.Controller.extend({
      */
     _onFacetRemoved: function (ev) {
         ev.stopPropagation();
-        var group = ev.data.group;
+        var group = ev.data.group || this.renderer.getLastFacet();
         if (!group) {
-            group = this.renderer.getLastFacet();
+            return;
         }
         this.model.deactivateGroup(group.id);
         this._reportNewQueryAndRender();
