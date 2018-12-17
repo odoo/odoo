@@ -8,7 +8,6 @@
             <field name="arch" type="xml">
                 <xpath expr="//div[@name='option_email']" position='before'>
                     <div name="option_letter">
-                        <field name="letter_ids" invisible="1"/>
                         <field name="invalid_addresses" invisible="1"/>
                         <div name="option" class="text-left d-inline-block">
                             <field name="snailmail_is_letter" />
@@ -34,16 +33,17 @@
                                 <span attrs="{'invisible': [('invalid_addresses', '=', 0)]}">
                                     <div class="text-right d-inline-block" attrs="{'invisible': [('composition_mode', '=', 'mass_mail')]}">
                                         <span class="text-danger">
-                                            Incomplete customer address
+                                            The customer address is not complete.
                                         </span>
                                     </div>
                                 </span>
                             </span>
                             <span attrs="{'invisible': [('composition_mode', '!=', 'mass_mail')]}">
-                                <span attrs="{'invisible': [('snailmail_cost', '=', 0)]}">
-                                    <span class="text-danger" attrs="{'invisible': [('invalid_addresses', '=', 0)]}">
-                                        <field name="invalid_addresses" readonly="1" options="{'digits':[0,0]}"/>  invoice(s) do not have a complete customer address
+                                <span attrs="{'invisible': [('invalid_addresses', '=', 0)]}">
+                                    <span class="text-danger">
+                                        Some customer addresses are not complete.
                                     </span>
+                                    <button type="object" name="invalid_addresses_action" class="btn btn-link" role="button"><field name="invalid_addresses" readonly="1" options="{'digits':[0,0]}"/> invoices</button>
                                 </span>
                             </span>
                         </span>
