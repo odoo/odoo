@@ -47,7 +47,7 @@ var OptionalProductsModal = Dialog.extend(ServicesMixin, ProductConfiguratorMixi
     init: function (parent, params) {
         var self = this;
 
-        this._super(parent, {
+        var options = _.extend({
             size: 'large',
             buttons: [{
                 text: params.okButtonText,
@@ -57,8 +57,10 @@ var OptionalProductsModal = Dialog.extend(ServicesMixin, ProductConfiguratorMixi
                 text: params.cancelButtonText,
                 click: this._onCancelButtonClick
             }],
-            title: params.title
-        });
+            technical: !params.isWebsite,
+        }, params || {});
+
+        this._super(parent, options);
 
         this.rootProduct = params.rootProduct;
         this.container = parent;
