@@ -149,7 +149,7 @@ class ImLivechatChannel(models.Model):
             return False
         # choose the res.users operator and get its partner id
         operator = random.choice(operators)
-        operator_partner_id = random.choice(operators).partner_id.id
+        operator_partner_id = operator.partner_id.id
         # partner to add to the mail.channel
         channel_partner_to_add = [(4, operator_partner_id)]
         if self.env.user and self.env.user.active:  # valid session user (not public)
