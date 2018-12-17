@@ -200,17 +200,29 @@ sAnimations.registry.WebsiteSale = sAnimations.Class.extend(ProductConfiguratorM
                     if (!_.str.endsWith(el.src, el.dataset.zoomImage) || // if zoom-img != img
                         el.naturalWidth >= $(attach).width() * factorZoom || el.naturalHeight >= $(attach).height() * factorZoom) {
                         $img.zoomOdoo({event: autoZoom ? 'mouseenter' : 'click', attach: attach});
+                        $img.attr('data-zoom', 1); // add cursor (if previously removed)
                     } else {
-                        $img.removeAttr('data-zoom');  // remove cursor
+                        $img.removeAttr('data-zoom'); // remove cursor
+                        // remove zooming but keep the attribute because
+                        // it can potentially be set back
+                        $img.attr('data-zoom-image', '');
                     }
                 });
             });
         }
 
         function onImageLoaded(img, callback) {
-            $(img).on('load', function () { callback(); });
+            // On Chrome the load event already happened at this point so we
+            // have to rely on complete. On Firefox it seems that the event is
+            // always triggered after this so we can rely on it.
+            //
+            // However on the "complete" case we still want to keep listening to
+            // the event because if the image is changed later (eg. product
+            // configurator) a new load event will be triggered (both browsers).
+            $(img).on('load', function () {
+                callback();
+            });
             if (img.complete) {
-                $(img).off('load');
                 callback();
             }
         }
