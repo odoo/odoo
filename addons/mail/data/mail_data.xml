@@ -313,15 +313,15 @@
         <template id="message_activity_done">
 <div>
     <p>
-        <strong><span t-attf-class="fa #{activity.activity_type_id.icon}"/></strong> <span t-field="activity.activity_type_id.name"/> done
-        by <span t-field="activity.user_id.name"/><span t-if="activity.summary">:</span>
-        <span t-if="activity.summary" t-field="activity.summary"/>
+        <span t-attf-class="fa #{activity.activity_type_id.icon} fa-fw"/><span t-field="activity.activity_type_id.name"/> done
+        <t t-if="display_assignee"> (originally assigned to <span t-field="activity.user_id.name"/>)</t>
+        <span t-if="activity.summary">: </span><span t-if="activity.summary" t-field="activity.summary"/>
     </p>
-    <div t-field="activity.note" style="margin-left: 8px;"/>
-    <div t-if="activity.feedback" style="margin-top: 8px;">
-        <strong> Feedback</strong>
-    <div t-field="activity.feedback" style="margin-left: 8px;"></div>
-    </div>
+    <div t-if="feedback" t-esc="feedback"/>
+    <t t-if="activity.note != '&lt;p&gt;&lt;br&gt;&lt;/p&gt;'"><!-- <p></br></p> -->
+        <div class="o_mail_note_title"><strong>Original note:</strong></div>
+        <div t-field="activity.note"/>
+    </t>
 </div>
         </template>
 
