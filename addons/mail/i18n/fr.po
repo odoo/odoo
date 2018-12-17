@@ -8,6 +8,7 @@
 # Xavier Symons <xsy@openerp.com>, 2018
 # Xavier Belmere <Info@cartmeleon.com>, 2018
 # Olivier Lenoir <olivier.lenoir@free.fr>, 2018
+# Moka Tourisme <hello@mokatourisme.fr>, 2018
 # Christophe CHAUVET <christophe.chauvet@gmail.com>, 2018
 # Eloïse Stilmant <est@odoo.com>, 2018
 # Laura Piraux <lap@odoo.com>, 2018
@@ -155,10 +156,10 @@ msgid ""
 "            Type <b>:shortcut</b> to insert canned responses in your message.<br>"
 msgstr ""
 "<br><br>\n"
-"            Tappez <b>@nomutilisateur</b> pour mentionner quelqu'un et attirer son attention.<br>\n"
-"            Tappez<b>#canal</b> pour mentionner un canal.<br>\n"
-"            Tappez <b>/commande</b> pour exécuter une commande.<br>\n"
-"            Tappez <b>:raccourci</b> pour insérer une réponse automatique à votre message.<br>"
+"            Tapez <b>@nomutilisateur</b> pour mentionner quelqu'un et attirer son attention.<br>\n"
+"            Tapez <b>#canal</b> pour mentionner un canal.<br>\n"
+"            Tapez <b>/commande</b> pour exécuter une commande.<br>\n"
+"            Tapez <b>:raccourci</b> pour insérer une réponse automatique à votre message.<br>"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:721
@@ -5922,6 +5923,12 @@ msgid ""
 msgstr ""
 "Impossible de supprimer ces groupes, car le groupe \"Toute la société\" est "
 "nécessaire pour d'autres modules."
+
+#. module: mail
+#: code:addons/mail/models/mail_thread.py:2358
+#, python-format
+msgid "You have been assigned to %s"
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_user_assigned

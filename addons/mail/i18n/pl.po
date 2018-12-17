@@ -4793,7 +4793,8 @@ msgstr "Wysyła wiadomości mailem"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:397
+#: code:addons/mail/static/src/xml/thread.xml:390
+#: model_terms:ir.ui.view,arch_db:mail.message_notification_email
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
 #: selection:mail.mail,state:0 selection:mail.notification,email_status:0
 #, python-format
@@ -5786,6 +5787,12 @@ msgstr ""
 "Nie możesz usunąć tej grupy, ponieważ jest ona wymagana przez inne moduły."
 
 #. module: mail
+#: code:addons/mail/models/mail_thread.py:2358
+#, python-format
+msgid "You have been assigned to %s"
+msgstr ""
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_user_assigned
 msgid "You have been assigned to the"
 msgstr ""
@@ -5916,6 +5923,7 @@ msgstr ""
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/activity.xml:43
+#: model_terms:ir.ui.view,arch_db:mail.message_notification_email
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 #, python-format
 msgid "by"

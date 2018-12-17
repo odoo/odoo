@@ -507,7 +507,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:payment.action_open_payment_onboarding_payment_acquirer_wizard
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
 msgid "Choose a payment method"
-msgstr ""
+msgstr "Vælg betalingsmetode"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_city
@@ -900,7 +900,7 @@ msgstr "Fakturaer"
 #. module: payment
 #: selection:res.company,payment_acquirer_onboarding_state:0
 msgid "Just done"
-msgstr ""
+msgstr "Udført"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_lang
@@ -952,7 +952,7 @@ msgstr "Gør denne betalingskunde tilgængelig (Kundefakturaer osv.)"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay_methods
 msgid "Manage your Payment Methods"
-msgstr "Administrér dine Betalingsmetoder"
+msgstr "Administrér dine btalingsmetoder"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay_meth_link
@@ -1522,7 +1522,7 @@ msgstr "Gem mine betalingsoplysninger"
 #: model:ir.actions.act_window,name:payment.payment_token_action
 #: model:ir.ui.menu,name:payment.payment_token_menu
 msgid "Saved Payment Data"
-msgstr "Gemte betalingsdata"
+msgstr "Gemte betalingsoplysninger"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_payment__payment_token_id
@@ -1611,7 +1611,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__specific_countries
 msgid "Specific Countries"
-msgstr "Specifikke Lande"
+msgstr "Specifikke lande"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_company__payment_acquirer_onboarding_state
@@ -1643,7 +1643,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__payment_icon_ids
 msgid "Supported Payment Icons"
-msgstr "Understøttede Betalingsikoner"
+msgstr "Understøttede betalingsikoner"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__registration_view_template_id
@@ -1923,6 +1923,12 @@ msgid "You can click here to be redirected to the confirmation page."
 msgstr ""
 
 #. module: payment
+#: code:addons/payment/wizards/payment_acquirer_onboarding_wizard.py:135
+#, python-format
+msgid "You have to set a journal for your payment acquirer %s."
+msgstr ""
+
+#. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_processing.xml:131
 #, python-format
@@ -2046,7 +2052,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_form
 msgid "ZIP"
-msgstr "post nr."
+msgstr "Post nr."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_zip
