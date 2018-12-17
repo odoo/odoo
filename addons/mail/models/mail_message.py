@@ -487,14 +487,7 @@ class Message(models.Model):
                     'moderation_status': 'pending_moderation'
                 }
         """
-        message_values = self.read([
-            'id', 'body', 'date', 'author_id', 'email_from',  # base message fields
-            'message_type', 'subtype_id', 'subject',  # message specific
-            'model', 'res_id', 'record_name',  # document related
-            'channel_ids', 'partner_ids',  # recipients
-            'starred_partner_ids',  # list of partner ids for whom the message is starred
-            'moderation_status',
-        ])
+        message_values = self.read(self._get_message_format_fields())
         message_tree = dict((m.id, m) for m in self.sudo())
         self._message_read_dict_postprocess(message_values, message_tree)
 
@@ -525,6 +518,17 @@ class Message(models.Model):
             if message['model'] and self.env[message['model']]._original_module:
                 message['module_icon'] = modules.module.get_module_icon(self.env[message['model']]._original_module)
         return message_values
+
+    @api.multi
+    def _get_message_format_fields(self):
+        return [
+            'id', 'body', 'date', 'author_id', 'email_from',  # base message fields
+            'message_type', 'subtype_id', 'subject',  # message specific
+            'model', 'res_id', 'record_name',  # document related
+            'channel_ids', 'partner_ids',  # recipients
+            'starred_partner_ids',  # list of partner ids for whom the message is starred
+            'moderation_status',
+        ]
 
     @api.multi
     def _format_mail_failures(self):
