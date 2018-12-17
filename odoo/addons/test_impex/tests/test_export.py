@@ -20,11 +20,11 @@ class CreatorCase(common.TransactionCase):
         super(CreatorCase, self).setUp()
         self.model = self.env[self.model_name]
 
-    def make(self, value):
-        return self.model.create({'value': value})
+    def make(self, value, context=None):
+        return self.model.with_context(**(context or {})).create({'value': value})
 
     def export(self, value, fields=('value',), context=None):
-        record = self.make(value)
+        record = self.make(value, context=context)
         record.invalidate_cache()
         return record._export_rows([f.split('/') for f in fields])
 
@@ -291,7 +291,7 @@ class test_selection(CreatorCase):
             })
         self.assertEqual(
             self.export(2, context={'lang': 'fr_FR'}),
-            [[u'Bar']])
+            [[u'titi']])
 
 
 class test_selection_function(CreatorCase):
