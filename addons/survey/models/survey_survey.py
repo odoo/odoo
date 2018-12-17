@@ -341,7 +341,7 @@ class Survey(models.Model):
         if self.stage_id.closed:
             raise UserError(_("You cannot send invitations for closed surveys."))
 
-        template = self.env.ref('survey.email_template_survey', raise_if_not_found=False)
+        template = self.env.ref('survey.mail_template_user_input_invite', raise_if_not_found=False)
 
         local_context = dict(
             self.env.context,

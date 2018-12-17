@@ -36,7 +36,7 @@ class SurveyInvite(models.TransientModel):
         string='Attachments')
     template_id = fields.Many2one(
         'mail.template', 'Use template', index=True,
-        domain="[('model', '=', 'survey.survey')]")
+        domain="[('model', '=', 'survey.user_input')]")
     # origin
     email_from = fields.Char('From', default=_get_default_from, help="Email address of the sender.")
     author_id = fields.Many2one(
@@ -108,48 +108,22 @@ class SurveyInvite(models.TransientModel):
                         _('The following recipients have no user account: %s. You should create user accounts for them or allow external signup in configuration.' %
                             (','.join(invalid_partners.mapped('name')))))
 
-    @api.onchange('template_id', 'survey_id')
+    @api.onchange('template_id')
     def _onchange_template_id(self):
         """ UPDATE ME """
-        to_render_fields = [
-            'subject', 'body_html',
-            'email_from', 'reply_to',
-            'partner_to', 'email_to', 'email_cc',
-            'attachment_ids',
-            'mail_server_id'
-        ]
-        returned_fields = to_render_fields + ['partner_ids', 'attachments']
-        for wizard in self:
-            if wizard.template_id:
-                values = {}
+        if self.template_id:
+            self.subject = self.template_id.subject
+            self.body = self.template_id.body_html
 
-                template_values = wizard.template_id.generate_email([wizard.survey_id.id], fields=to_render_fields)[wizard.survey_id.id]
-                values = dict((field, template_values[field]) for field in returned_fields if template_values.get(field))
-                values['body'] = values.pop('body_html', '')
-
-                # transform attachments into attachment_ids; not attached to the document because this will
-                # be done further in the posting process, allowing to clean database if email not send
-                Attachment = self.env['ir.attachment']
-                for attach_fname, attach_datas in values.pop('attachments', []):
-                    data_attach = {
-                        'name': attach_fname,
-                        'datas': attach_datas,
-                        'datas_fname': attach_fname,
-                        'res_model': 'mail.compose.message',  # TDE CHECKME
-                        'res_id': 0,
-                        'type': 'binary',  # override default_type from context, possibly meant for another model!
-                    }
-                    values.setdefault('attachment_ids', list()).append(Attachment.create(data_attach).id)
-            else:
-                default_values = self.default_get(returned_fields)
-                values = dict((key, default_values[key]) for key in returned_fields if key in default_values)
-
-            # This onchange should return command instead of ids for x2many field.
-            # ORM handle the assignation of command list on new onchange (api.v8),
-            # this force the complete replacement of x2many field with
-            # command and is compatible with onchange api.v7
-            values = self._convert_to_write(values)
-            wizard.update(values)
+    @api.model
+    def create(self, values):
+        if values.get('template_id') and not (values.get('body') or values.get('subject')):
+            template = self.env['mail.template'].browse(values['template_id'])
+            if not values.get('subject'):
+                values['subject'] = template.subject
+            if not values.get('body'):
+                values['body'] = template.body_html
+        return super(SurveyInvite, self).create(values)
 
     #------------------------------------------------------
     # Wizard validation and send
@@ -182,24 +156,29 @@ class SurveyInvite(models.TransientModel):
                 answers |= existing_answers
 
         for new_partner in partners - partners_done:
-            answers |= self.survey_id._create_answer(partner=new_partner, deadline=self.deadline)
+            answers |= self.survey_id._create_answer(partner=new_partner, **self._get_answers_values())
         for new_email in [email for email in emails if email not in emails_done]:
-            answers |= self.survey_id._create_answer(email=new_email, deadline=self.deadline)
+            answers |= self.survey_id._create_answer(email=new_email, **self._get_answers_values())
 
         return answers
 
+    def _get_answers_values(self):
+        return {
+            'deadline': self.deadline,
+        }
+
     def _send_mail(self, answer):
         """ Create mail specific for recipient containing notably its access token """
-        url = '%s?token=%s' % (self.survey_id.public_url, answer.token)
-
+        subject = self.env['mail.template']._render_template(self.subject, 'survey.user_input', answer.id, post_process=True)
+        body = self.env['mail.template']._render_template(self.body, 'survey.user_input', answer.id, post_process=True)
         # post the message
         mail_values = {
             'email_from': self.email_from,
             'author_id': self.author_id.id,
             'model': None,
             'res_id': None,
-            'subject': self.subject,
-            'body_html': self.body.replace("__URL__", url),
+            'subject': subject,
+            'body_html': body,
             'attachment_ids': [(4, att.id) for att in self.attachment_ids],
             'auto_delete': True,
         }
@@ -232,11 +211,6 @@ class SurveyInvite(models.TransientModel):
             email(s), rendering any template patterns on the fly if needed """
         self.ensure_one()
         Partner = self.env['res.partner']
-
-        # check if __URL__ is in the text
-        if self.body.find("__URL__") < 0:
-            raise UserError(_("The content of the text don't contain '__URL__'. \
-                __URL__ is automaticaly converted into the special url of the survey."))
 
         # compute partners and emails, try to find partners for given emails
         valid_partners = self.partner_ids
