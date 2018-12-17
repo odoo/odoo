@@ -145,6 +145,7 @@ var SearchBar = Widget.extend({
             source: this._getAutoCompleteSources.bind(this),
             select: this._onAutoCompleteSelected.bind(this),
             get_search_string: function () {
+                // console.log(">>>>>>>>>>>>>>>>>>>>>>>>>## ",self.$input.val().trim());
                 return self.$input.val().trim();
             },
         });

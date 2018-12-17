@@ -9,6 +9,8 @@ var mixins = require('web.mixins');
 var pyUtils = require('web.py_utils');
 var ServicesMixin = require('web.ServicesMixin');
 var time = require('web.time');
+var AutoComplete = require('web.AutoComplete');
+
 
 var _t = core._t;
 var _lt = core._lt;

@@ -112,6 +112,7 @@ return Widget.extend({
         this.current_search = query;
         this.source({term:query}, function (results) {
             if (results.length) {
+                // console.log(results);
                 self.render_search_results(results);
                 self.focus_element(self.$('li:first-child'));
             } else {
@@ -141,6 +142,14 @@ return Widget.extend({
             })
             .data('result', result);
         if (result.expand) {
+            // console.log(this.get_search_string());
+            // console.log("result.facet.values[0].value");
+            result.expand(this.get_search_string()).then(function (results) {
+                if (results){
+                    console.log(" >>> " + results.length);
+                }
+            });
+            // debugger;
             var $expand = $('<a class="o-expand" href="#">').appendTo($li);
             $expand.mousedown(function (ev) {
                 ev.stopPropagation();
@@ -162,7 +171,9 @@ return Widget.extend({
     },
     expand: function () {
         var self = this;
+        // debugger;
         var current_result = this.current_result;
+        // var abc = this.get_search_string();
         current_result.expand(this.get_search_string()).then(function (results) {
             (results || [{label: '(no result)'}]).reverse().forEach(function (result) {
                 result.indent = true;
