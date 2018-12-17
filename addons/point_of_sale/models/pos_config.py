@@ -81,17 +81,17 @@ class PosConfig(models.Model):
     use_existing_lots = fields.Boolean(related='picking_type_id.use_existing_lots', readonly=False)
     stock_location_id = fields.Many2one(
         'stock.location', string='Stock Location',
-        domain=[('usage', '=', 'internal')], required=True, default=_get_default_location)
+        domain=[('usage', '=', 'internal')], required=True, default=lambda self: self._get_default_location)
     journal_id = fields.Many2one(
         'account.journal', string='Sales Journal',
         domain=[('type', '=', 'sale')],
         help="Accounting journal used to post sales entries.",
-        default=_default_sale_journal)
+        default=lambda self: self._default_sale_journal)
     invoice_journal_id = fields.Many2one(
         'account.journal', string='Invoice Journal',
         domain=[('type', '=', 'sale')],
         help="Accounting journal used to create invoices.",
-        default=_default_invoice_journal)
+        default=lambda self: self._default_invoice_journal)
     currency_id = fields.Many2one('res.currency', compute='_compute_currency', string="Currency")
     iface_cashdrawer = fields.Boolean(string='Cashdrawer', help="Automatically open the cashdrawer.")
     iface_payment_terminal = fields.Boolean(string='Payment Terminal', help="Enables Payment Terminal integration.")
@@ -142,17 +142,17 @@ class PosConfig(models.Model):
     pos_session_duration = fields.Char(compute='_compute_current_session_user')
     group_by = fields.Boolean(string='Group Journal Items', default=True,
         help="Check this if you want to group the Journal Items by Product while closing a Session.")
-    pricelist_id = fields.Many2one('product.pricelist', string='Default Pricelist', required=True, default=_default_pricelist,
+    pricelist_id = fields.Many2one('product.pricelist', string='Default Pricelist', required=True, default=lambda self: self._default_pricelist,
         help="The pricelist used if no customer is selected or if the customer has no Sale Pricelist configured.")
-    available_pricelist_ids = fields.Many2many('product.pricelist', string='Available Pricelists', default=_default_pricelist,
+    available_pricelist_ids = fields.Many2many('product.pricelist', string='Available Pricelists', default=lambda self: self._default_pricelist,
         help="Make several pricelists available in the Point of Sale. You can also apply a pricelist to specific customers from their contact form (in Sales tab). To be valid, this pricelist must be listed here as an available pricelist. Otherwise the default pricelist will apply.")
     company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.user.company_id)
     barcode_nomenclature_id = fields.Many2one('barcode.nomenclature', string='Barcode Nomenclature',
         help='Defines what kind of barcodes are available and how they are assigned to products, customers and cashiers.',
         default=lambda self: self.env.user.company_id.nomenclature_id, required=True)
-    group_pos_manager_id = fields.Many2one('res.groups', string='Point of Sale Manager Group', default=_get_group_pos_manager,
+    group_pos_manager_id = fields.Many2one('res.groups', string='Point of Sale Manager Group', default=lambda self: self._get_group_pos_manager,
         help='This field is there to pass the id of the pos manager group to the point of sale client.')
-    group_pos_user_id = fields.Many2one('res.groups', string='Point of Sale User Group', default=_get_group_pos_user,
+    group_pos_user_id = fields.Many2one('res.groups', string='Point of Sale User Group', default=lambda self: self._get_group_pos_user,
         help='This field is there to pass the id of the pos user group to the point of sale client.')
     iface_tipproduct = fields.Boolean(string="Product tips")
     tip_product_id = fields.Many2one('product.product', string='Tip Product',
@@ -160,7 +160,7 @@ class PosConfig(models.Model):
     fiscal_position_ids = fields.Many2many('account.fiscal.position', string='Fiscal Positions', help='This is useful for restaurants with onsite and take-away services that imply specific tax rates.')
     default_fiscal_position_id = fields.Many2one('account.fiscal.position', string='Default Fiscal Position')
     default_cashbox_lines_ids = fields.One2many('account.cashbox.line', 'default_pos_id', string='Default Balance')
-    customer_facing_display_html = fields.Html(string='Customer facing display content', translate=True, default=_compute_default_customer_html)
+    customer_facing_display_html = fields.Html(string='Customer facing display content', translate=True, default=lambda self: self._compute_default_customer_html)
     use_pricelist = fields.Boolean("Use a pricelist.")
     tax_regime = fields.Boolean("Tax Regime")
     tax_regime_selection = fields.Boolean("Tax Regime Selection value")
