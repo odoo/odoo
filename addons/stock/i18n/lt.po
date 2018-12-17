@@ -987,7 +987,7 @@ msgstr "Automatinis perkėlimas"
 #. module: stock
 #: selection:stock.location.path,auto:0
 msgid "Automatic No Step Added"
-msgstr "Tiesioginis"
+msgstr "Automatinis be pridedamų žingsnių"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_string_availability_info
@@ -1008,12 +1008,12 @@ msgstr "Pasiekiami produktai"
 #: model:ir.model.fields,field_description:stock.field_stock_move_backorder_id
 #: model:ir.model.fields,field_description:stock.field_stock_picking_backorder_id
 msgid "Back Order of"
-msgstr "Pradinis užsakymas"
+msgstr "Atidėtas užsakymas"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "Back Orders"
-msgstr "Pradiniai užsakymai"
+msgstr "Atidėti užsakymai"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_backorder_confirmation.py:20
@@ -1125,8 +1125,8 @@ msgid ""
 "By changing this quantity here, you accept the new quantity as complete: "
 "Odoo will not automatically generate a back order."
 msgstr ""
-"Čia pakeisdami šį kiekį jūs priimate naują kiekį kaip baigtą: Odoo "
-"automatiškai nesugeneruos grąžinimo užsakymo."
+"Čia pakeisdami šį kiekį jūs priimate naują kiekį kaip baigtą: \"Odoo\" "
+"automatiškai nesugeneruos atidėto užsakymo."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -1169,22 +1169,22 @@ msgstr ""
 #. module: stock
 #: model:stock.incoterms,name:stock.incoterm_CIP
 msgid "CARRIAGE AND INSURANCE PAID TO"
-msgstr ""
+msgstr "PERVEŽIMAS IR DRAUDIMAS SUMOKĖTAS"
 
 #. module: stock
 #: model:stock.incoterms,name:stock.incoterm_CPT
 msgid "CARRIAGE PAID TO"
-msgstr ""
+msgstr "PERVEŽIMAS SUMOKĖTAS"
 
 #. module: stock
 #: model:stock.incoterms,name:stock.incoterm_CFR
 msgid "COST AND FREIGHT"
-msgstr ""
+msgstr "KAŠTAI IR KROVINYS"
 
 #. module: stock
 #: model:stock.incoterms,name:stock.incoterm_CIF
 msgid "COST, INSURANCE AND FREIGHT"
-msgstr ""
+msgstr "KAŠTAI, DRAUDIMAS IR KROVINYS"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_picking_calendar
@@ -1495,7 +1495,7 @@ msgstr "Siuntinys"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line_consume_line_ids
 msgid "Consume Line"
-msgstr ""
+msgstr "Sunaudoti eilutė"
 
 #. module: stock
 #: model:ir.model,name:stock.model_res_partner
@@ -1535,7 +1535,7 @@ msgstr "Paėmimų skaičius"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_count_picking_backorders
 msgid "Count Picking Backorders"
-msgstr ""
+msgstr "Atidėtų paėmimo užsakymų skaičius"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_count_picking_draft
@@ -1560,7 +1560,7 @@ msgstr "Laukiančių paėmimų skaičius"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "Counterpart Locations"
-msgstr ""
+msgstr "Partnerinės vietos"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_backorder_confirmation
@@ -2282,7 +2282,7 @@ msgstr "Atsisiųsti"
 #: code:addons/stock/static/src/xml/stock_traceability_report_line.xml:78
 #, python-format
 msgid "Downstream Traceability"
-msgstr ""
+msgstr "Pasrovinis atsekamumas"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -2389,12 +2389,12 @@ msgstr "FIFO, LIFO..."
 #. module: stock
 #: model:stock.incoterms,name:stock.incoterm_FAS
 msgid "FREE ALONGSIDE SHIP"
-msgstr ""
+msgstr "NEMOKAMAS SIUNTIMAS KARTU"
 
 #. module: stock
 #: model:stock.incoterms,name:stock.incoterm_FCA
 msgid "FREE CARRIER"
-msgstr ""
+msgstr "NEMOKAMAS SIUNTĖJAS"
 
 #. module: stock
 #: model:stock.incoterms,name:stock.incoterm_FOB
@@ -2508,7 +2508,7 @@ msgstr "Ateities pristatymai"
 #: code:addons/stock/models/product.py:337
 #, python-format
 msgid "Future P&L"
-msgstr "Future P&L"
+msgstr "Ateities P&L"
 
 #. module: stock
 #: code:addons/stock/models/product.py:347
@@ -3154,19 +3154,19 @@ msgstr ""
 #: code:addons/stock/models/product.py:253
 #, python-format
 msgid "Invalid domain left operand %s"
-msgstr ""
+msgstr "Netinkamas kairys domeno argumentas %s"
 
 #. module: stock
 #: code:addons/stock/models/product.py:255
 #, python-format
 msgid "Invalid domain operator %s"
-msgstr ""
+msgstr "Netinkamas domeno operacijos ženklas %s"
 
 #. module: stock
 #: code:addons/stock/models/product.py:257
 #, python-format
 msgid "Invalid domain right operand %s"
-msgstr ""
+msgstr "Netinkamas dešinys domeno argumentas %s"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_category_id
@@ -3431,7 +3431,7 @@ msgstr "PARTIJOS/SERIJINIS NUMERIS"
 #. module: stock
 #: model:stock.inventory.line,product_name:stock.stock_inventory_line_13
 msgid "Laptop Customized"
-msgstr "Laptop Customized"
+msgstr "Pritaikyta nešiojamajam kompiuteriui"
 
 #. module: stock
 #: model:stock.inventory.line,product_name:stock.stock_inventory_line_14
@@ -3592,7 +3592,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_parent_left
 msgid "Left Parent"
-msgstr "Kairė"
+msgstr "Kairinis tėvinis"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_company_id
@@ -4107,7 +4107,7 @@ msgstr "Žinučių nėra"
 #: model:ir.model.fields,field_description:stock.field_res_config_settings_propagation_minimum_delta
 #: model:ir.model.fields,field_description:stock.field_res_config_settings_use_propagation_minimum_delta
 msgid "No Rescheduling Propagation"
-msgstr ""
+msgstr "Nėra pakartotinio planavimo užpildymo"
 
 #. module: stock
 #: selection:product.template,tracking:0
@@ -4471,7 +4471,7 @@ msgstr "Išvykstantys pristatymai"
 #: model:stock.location,name:stock.stock_location_output
 #, python-format
 msgid "Output"
-msgstr "Išvežimas"
+msgstr "Išėjimas"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_wh_output_stock_loc_id
@@ -4514,13 +4514,13 @@ msgstr "Vietos savininkas, jei ne vidinis"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_line_owner_id
 msgid "Owner of the quants"
-msgstr ""
+msgstr "Kiekių grupių savininkas"
 
 #. module: stock
 #: code:addons/stock/models/product.py:339
 #, python-format
 msgid "P&L Qty"
-msgstr "Kiekis"
+msgstr "P&L kiekis"
 
 #. module: stock
 #. openerp-web
@@ -4736,19 +4736,19 @@ msgstr "Fizinės pakuotės"
 #: model:ir.model.fields,field_description:stock.field_stock_immediate_transfer_pick_ids
 #, python-format
 msgid "Pick"
-msgstr "Rezervuoti"
+msgstr "Paėmimas"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:439
 #, python-format
 msgid "Pick + Pack + Ship"
-msgstr "Rezervuoti + Supakuoti + Išsiųsti"
+msgstr "Paimti + Supakuoti + Išsiųsti"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:438
 #, python-format
 msgid "Pick + Ship"
-msgstr "Rezervuoti + Išsiųsti"
+msgstr "Paimti + Išsiųsti"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_pick_type_id
@@ -4923,7 +4923,7 @@ msgstr "Planinių užsakymų vieta"
 #. module: stock
 #: model:ir.model,name:stock.model_procurement_group
 msgid "Procurement Requisition"
-msgstr "Užsakymo paraiška"
+msgstr "Planinio užsakymo paraiška"
 
 #. module: stock
 #: model:ir.model,name:stock.model_procurement_rule
@@ -4959,7 +4959,7 @@ msgstr "Planiniai užsakymai"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line_produce_line_ids
 msgid "Produce Line"
-msgstr ""
+msgstr "Gaminti eilutę"
 
 #. module: stock
 #: code:addons/stock/models/product.py:349
@@ -5205,12 +5205,12 @@ msgstr "KIEKIS"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint_qty_multiple
 msgid "Qty Multiple"
-msgstr ""
+msgstr "Daugybinis kiek."
 
 #. module: stock
 #: sql_constraint:stock.warehouse.orderpoint:0
 msgid "Qty Multiple must be greater than or equal to zero."
-msgstr ""
+msgstr "Daugybinis kiek. turi būti didesnis arba lygus 0."
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:98
@@ -5230,7 +5230,7 @@ msgstr "Kokybės kontrolės vieta"
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_scrap_quant_ids
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_unbuild_quant_ids
 msgid "Quant"
-msgstr ""
+msgstr "Kiekių grupė"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_report_stock_forecast_quantity
@@ -5330,6 +5330,7 @@ msgid ""
 "Quantity of products in this quant, in the default unit of measure of the "
 "product"
 msgstr ""
+"Produktų kiekis šioje kiekių grupėje, numatytuoju produkto matavimo vienetu"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant_reserved_quantity
@@ -5337,6 +5338,8 @@ msgid ""
 "Quantity of reserved products in this quant, in the default unit of measure "
 "of the product"
 msgstr ""
+"Rezervuotų produktų kiekis šioje produktų kiekių grupėje, numatytuoju "
+"produkto matavimo vienetu"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_reserved_availability
@@ -5349,13 +5352,14 @@ msgstr "Kiekis, kuris jau buvo rezervuotas šiam perkėlimui"
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot_quant_ids
 #: model:ir.ui.view,arch_db:stock.quant_search_view
 msgid "Quants"
-msgstr "Kiekiai"
+msgstr "Kiekių grupės"
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:74
 #, python-format
 msgid "Quants cannot be created for consumables or services."
 msgstr ""
+"Kiekių grupės negali būti sukuriamos vartojamiems produktams ar paslaugoms."
 
 #. module: stock
 #: model:stock.inventory.line,product_name:stock.stock_inventory_line_12
@@ -5365,12 +5369,12 @@ msgstr "RAM SR5"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_rate_picking_backorders
 msgid "Rate Picking Backorders"
-msgstr ""
+msgstr "Vertinti atidėtus paėmimo užsakymus"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_rate_picking_late
 msgid "Rate Picking Late"
-msgstr ""
+msgstr "Vertinti vėluojančius paėmimus"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_picking_type_kanban
@@ -5395,7 +5399,7 @@ msgstr "Realus rezervuotas kiekis"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_reception_route_id
 msgid "Receipt Route"
-msgstr ""
+msgstr "Kvito maršrutas"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:436
@@ -5652,7 +5656,7 @@ msgstr "Atvirkštinis perkėlimas"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_parent_right
 msgid "Right Parent"
-msgstr "Dešinė"
+msgstr "Dešinys tėvinis"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_rule_route_id
@@ -5890,7 +5894,7 @@ msgstr "Pakavimo seka"
 #: code:addons/stock/models/stock_warehouse.py:714
 #, python-format
 msgid "Sequence picking"
-msgstr ""
+msgstr "Sekos paėmimas"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line_prodlot_name
@@ -6281,7 +6285,7 @@ msgstr "Atsargų paėmimas"
 #: model:ir.model.fields,field_description:stock.field_product_product_stock_quant_ids
 #: model:ir.ui.view,arch_db:stock.stock_quant_view_graph
 msgid "Stock Quant"
-msgstr "Atsargų kiekis"
+msgstr "Atsargų kiekio grupė"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_quantity_history
@@ -6402,6 +6406,8 @@ msgid ""
 "Technical field used to depict a restriction on the ownership of quants to "
 "consider when marking this move as 'done'"
 msgstr ""
+"Techninis laukas, naudojamas atvaizduoti kiekių grupės savininkui prieš "
+"pažymint šį perkėlimą, kaip atliktą"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_price_unit
@@ -6448,11 +6454,16 @@ msgid ""
 " With 'Automatic No Step Added', the location is replaced in the original "
 "move."
 msgstr ""
+"\"Rankinės operacijos\" reikšmė sukurs atsargų perkėlimą po esamojo. Su "
+"\"automatiniu be papildomų žingsnių\", vieta yra pakeičiama pradiniame "
+"perkėlime."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "The RFQ becomes a Purchase Order and a Transfer Order is created"
 msgstr ""
+"Pirkimo užklausa tampa pirkimo užsakymu ir yra sukuriamas perkėlimo "
+"užsakymas"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product_sale_delay
@@ -6572,7 +6583,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant_package_id
 msgid "The package containing this quant"
-msgstr ""
+msgstr "Pakuotė, turinti šią kiekių grupę"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_location_id
@@ -6907,7 +6918,7 @@ msgstr "Čia yra visos paėmimo pakuotės, rodomos operacijų lange"
 #: model:ir.ui.view,arch_db:stock.view_move_tree
 #: model:ir.ui.view,arch_db:stock.view_quant_package_picking_tree
 msgid "To"
-msgstr "Iki"
+msgstr " "
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_ready
@@ -7158,7 +7169,7 @@ msgstr ""
 #. module: stock
 #: selection:stock.warehouse,reception_steps:0
 msgid "Unload in input location then go to stock (2 steps)"
-msgstr ""
+msgstr "Iškrauti įėjimo vietoje, tada eiti į atsargas (2 žingsniai)"
 
 #. module: stock
 #: selection:stock.warehouse,reception_steps:0
@@ -7166,6 +7177,8 @@ msgid ""
 "Unload in input location, go through a quality control before being admitted"
 " in stock (3 steps)"
 msgstr ""
+"Iškrauti įėjimo vietoje, prieš patenkant į atsargas, pereiti kokybės "
+"kontrolę (3 žingsniai)"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
@@ -7204,7 +7217,7 @@ msgstr "Matavimo vienetų kategorijos"
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 #: model:ir.ui.view,arch_db:stock.view_production_lot_form
 msgid "Up/Down Traceability"
-msgstr ""
+msgstr "Atsekamumas į viršų/apačią"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_view_change_product_quantity
@@ -7226,7 +7239,7 @@ msgstr "Atnaujinti turimą kiekį"
 #: model:ir.ui.view,arch_db:stock.report_stock_inventory
 #, python-format
 msgid "Upstream Traceability"
-msgstr ""
+msgstr "Atvirkštinis atsekamumas"
 
 #. module: stock
 #: selection:stock.move,priority:0 selection:stock.picking,priority:0
@@ -7480,6 +7493,11 @@ msgid ""
 "finished product manual manufacturing order. In other cases, it is important"
 " to use pull rules where you know where you are going based on a demand."
 msgstr ""
+"Kai prognozuojamas perkėlimas į vietą, pastūmimo taisyklė automatiškai "
+"vėliau sukurs perkėlimą į kitą vietą. Tai dažniausiai reikalinga sukuriant "
+"rankines operacijas, pvz., 2/3 žingsnių rankinį pirkimo užsakymą arba 2/3 "
+"žingsnių baigtinio produkto rankinį gamybos užsakymą. Kitais atvejais, "
+"svarbu naudoti traukimo taisykles, kur žinote, kur einate, pagal poreikį."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_route_warehouse_selectable
@@ -7831,6 +7849,8 @@ msgid ""
 "You cannot take products from or deliver products to a location of type "
 "\"view\"."
 msgstr ""
+"Negalite imti produktu arba jų pristatyti į vietą, kurios tipas yra "
+"\"peržiūra\"."
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:127
@@ -8142,6 +8162,8 @@ msgid ""
 "on the purchase order form or click on <i>Receive Products</i> to see the "
 "Transfer Order"
 msgstr ""
+"pirkimo užsakymo formoje arba paspauskite <i>\"Gauti produktus\"</i>, kad "
+"pamatytumėte perkėlimo užsakymą"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
