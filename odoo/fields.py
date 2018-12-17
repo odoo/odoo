@@ -1726,6 +1726,7 @@ class Datetime(Field):
     def convert_to_export(self, value, record):
         if not value:
             return ''
+        value = self.convert_to_display_name(value, record)
         return self.from_string(value) if record._context.get('export_raw_data') else ustr(value)
 
     def convert_to_display_name(self, value, record):
