@@ -56,6 +56,7 @@ return MessagingMenu.include({
      * @param {string} value
      */
     _handleResponseNotificationPermission: function (value) {
+        this.call('mailbot_service', 'removeRequest');
         if (value !== 'granted') {
             this.call('bus_service', 'sendNotification', _t('Permission denied'),
                 _t('Odoo will not have the permission to send native notifications on this device.'));
