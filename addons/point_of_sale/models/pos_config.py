@@ -40,18 +40,34 @@ class PosConfig(models.Model):
     _description = 'Point of Sale Configuration'
 
     def _default_sale_journal(self):
+        return default_sale_journal()
+
+    def default_sale_journal(self):
+        # overidable method
         journal = self.env.ref('point_of_sale.pos_sale_journal', raise_if_not_found=False)
         if journal and journal.sudo().company_id == self.env.user.company_id:
             return journal
         return self._default_invoice_journal()
 
     def _default_invoice_journal(self):
+        return default_invoice_journal()
+
+    def default_invoice_journal(self):
+        # overidable method
         return self.env['account.journal'].search([('type', '=', 'sale'), ('company_id', '=', self.env.user.company_id.id)], limit=1)
 
     def _default_pricelist(self):
+        return default_pricelist()
+
+    def default_pricelist(self):
+        # overidable method
         return self.env['product.pricelist'].search([('currency_id', '=', self.env.user.company_id.currency_id.id)], limit=1)
 
     def _get_default_location(self):
+        return get_default_location()
+
+    def get_default_location(self):
+        # overidable method
         return self.env['stock.warehouse'].search([('company_id', '=', self.env.user.company_id.id)], limit=1).lot_stock_id
 
     def _get_group_pos_manager(self):
