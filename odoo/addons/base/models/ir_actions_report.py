@@ -612,7 +612,7 @@ class IrActionsReport(models.Model):
 
         # In case of test environment without enough workers to perform calls to wkhtmltopdf,
         # fallback to render_html.
-        if tools.config['test_enable']:
+        if tools.config['test_enable'] or tools.config['test_file']:
             return self.render_qweb_html(res_ids, data=data)
 
         # As the assets are generated during the same transaction as the rendering of the
