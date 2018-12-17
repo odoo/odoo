@@ -1,22 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="1">
-        <record id="email_template_survey" model="mail.template">
+        <record id="mail_template_user_input_invite" model="mail.template">
             <field name="name">Survey: Send by email</field>
-            <field name="model_id" ref="model_survey_survey" />
-            <field name="subject">${object.title}: Survey</field>
+            <field name="model_id" ref="model_survey_user_input" />
+            <field name="subject">Participate to ${object.survey_id.title} survey</field>
             <field name="body_html" type="html">
 <div style="margin: 0px; padding: 0px; font-size: 13px;">
     <p style="margin: 0px; padding: 0px; font-size: 13px;">
-        Hello<br /><br />
-        We are conducting a survey, and your response would be appreciated.
+        Dear ${object.partner_id.name or 'participant'}<br/><br/>
+        We are conducting a survey and your response would be appreciated.
         <div style="margin: 16px 0px 16px 0px;">
-            <a href="__URL__"
+            <a href="${('%s?token=%s' % (object.survey_id.public_url, object.token)) | safe}"
                 style="background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;">
                 Start Survey
             </a>
         </div>
-        Thanks for your participation!
+        Please answer the appraisal for ${format_date(object.deadline)}.<br/><br/>
+        Thank you for your participation.
     </p>
 </div>
             </field>
