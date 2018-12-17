@@ -69,7 +69,7 @@ else:
         else:
             wkhtmltopdf_state = 'ok'
         if LooseVersion(version) >= LooseVersion('0.12.2'):
-            wkhtmltopdf_dpi_zoom_ratio = True
+            wkhtmltopdf_dpi_zoom_ratio = os.environ.get("ODOO_WKHTMLTOPDF_DPI_ZOOM_PATCH", "1") == "1"
 
         if config['workers'] == 1:
             _logger.info('You need to start Odoo with at least two workers to print a pdf version of the reports.')
