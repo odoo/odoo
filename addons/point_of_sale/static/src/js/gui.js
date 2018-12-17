@@ -193,7 +193,7 @@ var Gui = core.Class.extend({
         localStorage['message'] = '';
         localStorage['message'] = JSON.stringify({
             'message':'close_tabs',
-            'session': this.pos.pos_session.id,
+            'config': this.pos.config.id,
             'window_uid': now,
         });
 
@@ -210,7 +210,7 @@ var Gui = core.Class.extend({
 
                 var msg = JSON.parse(event.newValue);
                 if ( msg.message  === 'close_tabs' &&
-                     msg.session  ==  self.pos.pos_session.id &&
+                     msg.config  ==  self.pos.config.id &&
                      msg.window_uid != now) {
 
                     console.info('POS / Session opened in another window. EXITING POS');
