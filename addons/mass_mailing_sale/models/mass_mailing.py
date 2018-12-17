@@ -9,8 +9,8 @@ class MassMailing(models.Model):
     _name = 'mail.mass_mailing'
     _inherit = 'mail.mass_mailing'
 
-    sale_quotation_count = fields.Integer('Quotation Count', compute='_compute_sale_quotation_count')
-    sale_invoiced_amount = fields.Integer('Invoiced Amount', compute='_compute_sale_invoiced_amount')
+    sale_quotation_count = fields.Integer('Quotation Count', groups='sales_team.group_sale_salesman', compute='_compute_sale_quotation_count')
+    sale_invoiced_amount = fields.Integer('Invoiced Amount', groups='sales_team.group_sale_salesman', compute='_compute_sale_invoiced_amount')
 
     @api.depends('mailing_domain')
     def _compute_sale_quotation_count(self):
@@ -25,7 +25,10 @@ class MassMailing(models.Model):
         for mass_mailing in self:
             if has_so_access and has_invoice_report_access:
                 invoices = self.env['sale.order'].search(self._get_sale_utm_domain()).mapped('invoice_ids')
-                res = self.env['account.invoice.report'].search_read([('invoice_id', 'in', invoices.ids)], ['user_currency_price_total'])
+                res = self.env['account.invoice.report'].search_read(
+                    [('invoice_id', 'in', invoices.ids), ('state', 'not in', ['draft', 'cancel'])],
+                    ['user_currency_price_total']
+                )
                 mass_mailing.sale_invoiced_amount = sum(r['user_currency_price_total'] for r in res)
             else:
                 mass_mailing.sale_invoiced_amount = 0
@@ -43,7 +46,6 @@ class MassMailing(models.Model):
         invoices = self.env['sale.order'].search(self._get_sale_utm_domain()).mapped('invoice_ids')
         action['domain'] = [
             ('id', 'in', invoices.ids),
-            ('type', 'in', ['out_invoice', 'out_refund']),
             ('state', 'not in', ['draft', 'cancel'])
         ]
         return action
