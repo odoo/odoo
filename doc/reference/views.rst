@@ -1666,6 +1666,10 @@ Possible children elements of the search view are:
 
     ``string`` (required)
         the label of the filter
+    ``name`` (required)
+        logical name for the filter, can be used to :ref:`enable it by default
+        <reference/views/search/defaults>`, can also be used as
+        :ref:`inheritance hook <reference/views/inheritance>`
     ``domain`` (optional)
         an Odoo :ref:`domain <reference/orm/domains>`, will be appended to the
         action's domain as part of the search domain.
@@ -1749,10 +1753,6 @@ Possible children elements of the search view are:
 
           <filter name="groupby_create_date" string="Creation Date" context = {'group_by': 'create_date:week'}/>
 
-    ``name``
-        logical name for the filter, can be used to :ref:`enable it by default
-        <reference/views/search/defaults>`, can also be used as
-        :ref:`inheritance hook <reference/views/inheritance>`
     ``help``
         a longer explanatory text for the filter, may be displayed as a
         tooltip
