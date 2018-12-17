@@ -31,13 +31,13 @@ class CashBox(models.TransientModel):
         return {}
 
     def _create_bank_statement_line(self, record):
-        valses = []
+        ids = []
         for box in self:
             if record.state == 'confirm':
                 raise UserError(_("You cannot put/take money in/out for a bank statement which is closed."))
             values = box._calculate_values_for_statement_line(record)
-            valses.append(record.write({'line_ids': [(0, False, values)]}))
-        return valses
+            ids.append(record.write({'line_ids': [(0, False, values)]}))
+        return ids
 
 
 class CashBoxIn(CashBox):

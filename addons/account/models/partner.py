@@ -40,9 +40,12 @@ class AccountFiscalPosition(models.Model):
 
     @api.constrains('zip_from', 'zip_to')
     def _check_zip(self):
+        result = []
         for position in self:
             if position.zip_from > position.zip_to:
                 raise ValidationError(_('Invalid "Zip Range", please configure it properly.'))
+            result.append(True)
+        return result
 
     @api.model     # noqa
     def map_tax(self, taxes, product=None, partner=None):
