@@ -613,11 +613,20 @@ exports.PosModel = Backbone.Model.extend({
 
         for (var i = 0; i < jsons.length; i++) {
             var json = jsons[i];
-            if (json.pos_session_id === this.pos_session.id) {
-                orders.push(new exports.Order({},{
-                    pos:  this,
-                    json: json,
-                }));
+            if (json.config_id === this.pos_session.config_id[0]) {
+                if (json.pos_session_id === this.pos_session.id){
+                    this.pos_session.sequence_number = Math.max(json.sequence_number+1, this.pos_session.sequence_number+1);
+                    orders.push(new exports.Order({},{
+                        pos:  this,
+                        json: json,
+                    }));
+                } else if (json.lines.length > 0) {
+                    json.sequence_number = this.pos_session.sequence_number++;
+                    orders.push(new exports.Order({},{
+                        pos:  this,
+                        json: json,
+                    }));
+                }
             } else {
                 not_loaded_count += 1;
             }
@@ -1787,6 +1796,7 @@ exports.Order = Backbone.Model.extend({
             lines: orderLines,
             statement_ids: paymentLines,
             pos_session_id: this.pos_session_id,
+            config_id: this.pos.pos_session.config_id[0],
             partner_id: this.get_client() ? this.get_client().id : false,
             user_id: this.pos.cashier ? this.pos.cashier.id : this.pos.user.id,
             uid: this.uid,
