@@ -37,7 +37,7 @@
                             </button>
                         </div>
                     </div>
-                    <p class="css_not_available_msg bg-danger" style="padding: 15px;">This combination does not exist.</p>
+                    <p class="css_not_available_msg alert alert-warning">This combination does not exist.</p>
                 </div>
             </div>
         </div>
@@ -155,7 +155,7 @@
                 "display_currency": to_currency
           }'/>
         <span class="js_raw_price d-none" t-esc="product.price" />
-        <p class="css_not_available_msg bg-danger" style="padding: 5px;">Option not available</p>
+        <p class="css_not_available_msg alert alert-warning">Option not available</p>
 
         <input type="hidden" class="js_optional_same_quantity" t-attf-name="optional-add-#{product.id}" value="0"/>
         <a role="button" href="#" class="js_add"><i class="fa fa-shopping-cart add-optionnal-item"></i></a>
