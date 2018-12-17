@@ -174,12 +174,12 @@ return AbstractRenderer.extend({
             values = {};
             for (var i = 0; i < this.state.data.length; i++) {
                 label = this.state.data[i].labels[0];
-                serie = this.state.data[i].labels[1];
+                serie = this.state.data[i].labels.slice(1).join("/");
                 value = this.state.data[i].value;
                 if ((!xlabels.length) || (xlabels[xlabels.length-1] !== label)) {
                     xlabels.push(label);
                 }
-                series.push(this.state.data[i].labels[1]);
+                series.push(serie);
                 if (!(serie in values)) {values[serie] = {};}
                 values[serie][label] = this.state.data[i].value;
             }
@@ -403,7 +403,7 @@ return AbstractRenderer.extend({
                     ticksLabels.push(tickLabel);
                     tick++;
                 }
-                serie = graphData[i].labels[1];
+                serie = graphData[i].labels.slice(1).join("/");
                 if (!data_dict[serie]) {
                     data_dict[serie] = {
                         values: [],
