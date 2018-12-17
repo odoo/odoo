@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="crm_iap_lead_request_form" model="ir.ui.view">
+        <field name="name">crm.iap.lead.request.form</field>
+        <field name="model">crm.iap.lead.request</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_submit" type="object"
+                            string="Submit" states="draft"
+                            class="oe_highlight"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_get_opportunity_tree_view" class="oe_stat_button" type="object" icon="fa-handshake-o"
+                                attrs="{'invisible': ['|', '|', ('lead_type', '!=', 'opportunity'), ('opportunity_count', '=' , 0), ('state', '!=' , 'done')]}">
+                            <div class="o_stat_info">
+                                <field name="opportunity_count"/>
+                                <span class="o_stat_text">Opportunities</span>
+                            </div>
+                        </button>
+                        <button name="action_get_lead_tree_view" class="oe_stat_button" type="object" icon="fa-handshake-o" groups="crm.group_use_lead"
+                                attrs="{'invisible': ['|', '|', ('lead_type', '!=', 'lead'), ('leads_count', '=' , 0), ('state', '!=' , 'done')]}">
+                            <div class="o_stat_info">
+                                <field name="leads_count"/>
+                                <span class="o_stat_text">Leads</span>
+                            </div>
+                        </button>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="oe_title">
+                                <h1>
+                                    <field name="name"/>
+                                </h1>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="alert alert-info pull-right" role="alert">
+                                Up to
+                                <field name="lead_number" readonly="1" class="mb0"/>
+                                credits will be consumed to find
+                                <field name="lead_number" readonly="1" class="mb0"/>
+                                companies.
+                                <br/>
+                                <span attrs="{'invisible': [('search_type', '!=', 'people')]}">
+                                    Up to
+                                    <field name="contact_number" readonly="1" class="mb0"/>
+                                    additional credits will be consumed by company to identify contacts.
+                                    (<field name="contact_total_credit" readonly="1" class="mb0"/>)
+                                    <br/>
+                                </span>
+                            </div>
+                            <div class="alert alert-info pull-right" role="alert"
+                                 attrs="{'invisible': [('search_type', '!=', 'people')]}">
+                                Make sure you know if you have to be GDPR compliant for storing personal data.
+                            </div>
+                        </div>
+                    </div>
+                    <group>
+                        <group string="Request">
+                            <field name="lead_number"/>
+                            <field name="search_type" widget="radio"/>
+                        </group>
+                        <group string="Lead Information" attrs="{'invisible': [('lead_type', '!=', 'lead')]}">
+                            <field name="lead_type" groups="crm.group_use_lead"/>
+                            <field name="team_id"/>
+                            <field name="user_id"/>
+                            <field name="tag_ids" widget="many2many_tags"/>
+                        </group>
+                        <group string="Opportunity Information" attrs="{'invisible': [('lead_type', '!=', 'opportunity')]}">
+                            <field name="lead_type" groups="crm.group_use_lead"/>
+                            <field name="team_id"/>
+                            <field name="user_id"/>
+                            <field name="tag_ids" widget="many2many_tags"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Companies">
+                            <field name="filter_on_size"/>
+                            <label for="company_size_min" attrs="{'invisible': [('filter_on_size', '=', False)]}"/>
+                            <div attrs="{'invisible': [('filter_on_size', '=', False)]}">
+                                From
+                                <field name="company_size_min" class="oe_inline col-sm-3" attrs="{'required': [('filter_on_size', '=', True)]}"/>
+                                to
+                                <field name="company_size_max" class="oe_inline col-sm-3" attrs="{'required': [('filter_on_size', '=', True)]}"/>
+                                employees
+                            </div>
+                            <field name="country_ids" widget="many2many_tags"/>
+                            <field name="state_ids" widget="many2many_tags" attrs="{'invisible': [('country_ids', '=', [])]}" domain="[('country_id', 'in', country_ids)]"/>
+                            <field name="technology_ids" widget="many2many_tags"/>
+                        </group>
+                        <group string="Contacts" attrs="{'invisible': [('search_type', '!=', 'people')]}">
+                            <field name="contact_number"/>
+                            <field name="contact_filter_type" widget="radio"/>
+                            <field name="preferred_role_id"
+                                   options="{'no_create_edit': True, 'no_quick_create': True}"
+                                   attrs="{'invisible': [('contact_filter_type','!=', 'role')], 'required': [('search_type', '=', 'people'), ('contact_filter_type', '=', 'role')]}"/>
+                            <field name="role_ids" widget="many2many_tags"
+                                   options="{'color_field': 'color', 'no_create_edit': True, 'no_quick_create': True}"
+                                   attrs="{'invisible': ['|', ('preferred_role_id','=', False), ('contact_filter_type','!=', 'role')]}"/>
+                            <field name="seniority_id" options="{'no_create_edit': True, 'no_quick_create': True}"
+                                   attrs="{'invisible': [('contact_filter_type', '!=', 'seniority')], 'required': [('search_type', '=', 'people'), ('contact_filter_type', '=', 'seniority')]}"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="crm_iap_lead_request_tree" model="ir.ui.view">
+        <field name="name">crm.iap.lead.request.tree</field>
+        <field name="model">crm.iap.lead.request</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="lead_number"/>
+                <field name="search_type"/>
+                <field name="lead_type"/>
+                <field name="country_ids" widget="many2many_tags"/>
+                <field name="team_id"/>
+                <field name="tag_ids" widget="many2many_tags"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="crm_iap_lead_request_action" model="ir.actions.act_window">
+        <field name="name">Lead Mining Requests</field>
+        <field name="res_model">crm.iap.lead.request</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_type">form</field>
+        <field name="view_id" ref="crm_iap_lead_request_tree"/>
+    </record>
+
+    <record id="crm_iap_lead_request_action_tree" model="ir.actions.act_window.view">
+        <field eval="0" name="sequence"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="crm_iap_lead_request_tree"/>
+        <field name="act_window_id" ref="crm_iap_lead_request_action"/>
+    </record>
+
+    <record id="crm_iap_lead_request_action_form" model="ir.actions.act_window.view">
+        <field eval="1" name="sequence"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="crm_iap_lead_request_form"/>
+        <field name="act_window_id" ref="crm_iap_lead_request_action"/>
+    </record>
+
+    <!-- This menu is display in CRM app when crm_iap_lead is installed-->
+    <menuitem
+        id="crm_iap_lead_request_menu_action"
+        action="crm_iap_lead_request_action"
+        parent="crm.crm_menu_leads"
+        groups="crm.group_use_lead"/>
+
+</odoo>

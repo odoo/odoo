@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates>
+    <t t-name="Request.generate_leads_button">
+        <button type="button" class="btn btn-secondary o_button_generate_leads">
+            Generate Leads
+        </button>
+    </t>
+
+    <t t-extend="ListView.buttons" t-name="RequestListView.buttons">
+        <t t-jquery="button.o_list_button_add" t-operation="after">
+            <t t-call="Request.generate_leads_button"/>
+            <t t-js="ctx">
+                if (window.odoo._modules.indexOf("base_import") >= 0) {
+                    r.push(context.engine.tools.call(context, 'ImportView.import_button', dict));
+                };
+            </t>
+        </t>
+    </t>
+
+    <t t-extend="KanbanView.buttons"> <!-- giving a t-name makes the button disappear -->
+        <t t-jquery="button" t-operation="after">
+            <t t-call="Request.generate_leads_button"/>
+        </t>
+    </t>
+</templates>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="crm_generate_leads_form" model="ir.ui.view">
+        <field name="name">crm.generate.leads.form</field>
+        <field name="model">crm.iap.lead.request</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="oe_title">
+                                <h2>
+                                    How many leads do you want ?
+                                    <br/>
+                                    <field name="lead_number" class="oe_inline col-sm-2"/>
+                                    leads
+                                </h2>
+                            </div>
+                            <group>
+                                <field name="search_type" widget="radio"/>
+                            </group>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="alert alert-info pull-right" role="alert">
+                                Up to
+                                <field name="lead_number" readonly="1" class="mb0"/>
+                                credits will be consumed to find
+                                <field name="lead_number" readonly="1" class="mb0"/>
+                                companies.
+                                <br/>
+                                <span attrs="{'invisible': [('search_type', '!=', 'people')]}">
+                                    Up to
+                                    <field name="contact_number" readonly="1" class="mb0"/>
+                                    additional credits will be consumed by company to identify contacts.
+                                    (<field name="contact_total_credit" readonly="1" class="mb0"/>)
+                                    <br/>
+                                </span>
+                            </div>
+                            <div class="alert alert-info pull-right" role="alert"
+                                 attrs="{'invisible': [('search_type', '!=', 'people')]}">
+                                Make sure you know if you have to be GDPR compliant for storing personal data.
+                            </div>
+                        </div>
+                    </div>
+                    <group string="Companies">
+                        <field name="filter_on_size"/>
+                        <label for="company_size_min" attrs="{'invisible': [('filter_on_size', '=', False)]}"/>
+                        <div attrs="{'invisible': [('filter_on_size', '=', False)]}">
+                            From
+                            <field name="company_size_min" class="oe_inline col-sm-2" attrs="{'required': [('filter_on_size', '=', True)]}"/>
+                            to
+                            <field name="company_size_max" class="oe_inline col-sm-2" attrs="{'required': [('filter_on_size', '=', True)]}"/>
+                            employees
+                        </div>
+                        <field name="country_ids" widget="many2many_tags"/>
+                        <field name="state_ids" widget="many2many_tags" attrs="{'invisible': [('country_ids', '=', [])]}" domain="[('country_id', 'in', country_ids)]"/>
+                        <field name="technology_ids" widget="many2many_tags"/>
+                    </group>
+                    <group string="Contacts" attrs="{'invisible': [('search_type', '!=', 'people')]}">
+                        <field name="contact_number"/>
+                        <field name="contact_filter_type" widget="radio"/>
+                        <field name="preferred_role_id"
+                               options="{'no_create_edit': True, 'no_quick_create': True}"
+                               attrs="{'invisible': [('contact_filter_type','!=', 'role')], 'required': [('search_type', '=', 'people'), ('contact_filter_type', '=', 'role')]}"/>
+                        <field name="role_ids" widget="many2many_tags"
+                               options="{'color_field': 'color', 'no_create_edit': True, 'no_quick_create': True}"
+                               attrs="{'invisible': ['|', ('preferred_role_id','=', False), ('contact_filter_type','!=', 'role')]}"/>
+                        <field name="seniority_id" options="{'no_create_edit': True, 'no_quick_create': True}"
+                               attrs="{'invisible': [('contact_filter_type', '!=', 'seniority')], 'required': [('search_type', '=', 'people'), ('contact_filter_type', '=', 'seniority')]}"/>
+                    </group>
+                    <group string="Lead Information" attrs="{'invisible': [('lead_type', '!=', 'lead')]}">
+                        <field name="lead_type" groups="crm.group_use_lead"/>
+                        <field name="team_id"/>
+                        <field name="user_id"/>
+                        <field name="tag_ids" widget="many2many_tags"/>
+                    </group>
+                    <group string="Opportunity Information" attrs="{'invisible': [('lead_type', '!=', 'opportunity')]}">
+                        <field name="lead_type" groups="crm.group_use_lead"/>
+                        <field name="team_id"/>
+                        <field name="user_id"/>
+                        <field name="tag_ids" widget="many2many_tags"/>
+                    </group>
+                    <footer>
+                        <button string="Generate Leads" name="action_submit" type="object" default_focus="1" class="btn-primary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>
