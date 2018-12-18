@@ -35,11 +35,6 @@
         <field name="implied_ids" eval="[(4, ref('sale.group_show_price_subtotal'))]"/>
     </record>
 
-    <record id="group_discount_per_so_line" model="res.groups">
-        <field name="name">Discount on lines</field>
-        <field name="category_id" ref="base.module_category_hidden"/>
-    </record>
-
     <record id="group_warning_sale" model="res.groups">
         <field name="name">A warning can be set on a product or a customer (Sale)</field>
         <field name="category_id" ref="base.module_category_hidden"/>

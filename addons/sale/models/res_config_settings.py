@@ -13,7 +13,6 @@ class ResConfigSettings(models.TransientModel):
     use_sale_note = fields.Boolean(
         string='Default Terms & Conditions',
         oldname='default_use_sale_note')
-    group_discount_per_so_line = fields.Boolean("Discounts", implied_group='sale.group_discount_per_so_line')
     module_sale_margin = fields.Boolean("Margins")
     group_sale_layout = fields.Boolean("Sections on Sales Orders", implied_group='sale.group_sale_layout')
     group_warning_sale = fields.Boolean("Warnings", implied_group='sale.group_warning_sale')
