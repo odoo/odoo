@@ -426,7 +426,7 @@ class Field(MetaField('DummyField', (object,), {})):
             attrs['copy'] = attrs.get('copy', False)
             attrs['readonly'] = attrs.get('readonly', True)
         if attrs.get('company_dependent'):
-            # by default, company-dependent fields are not stored and not copied
+            # company-dependent fields are never stored and, by default, not copied
             attrs['store'] = False
             attrs['copy'] = attrs.get('copy', False)
             attrs['default'] = self._default_company_dependent
