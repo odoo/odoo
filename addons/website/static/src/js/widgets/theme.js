@@ -3,9 +3,9 @@ odoo.define('website.theme', function (require) {
 
 var config = require('web.config');
 var core = require('web.core');
-var ColorpickerDialog = require('wysiwyg.widgets.ColorpickerDialog');
 var Dialog = require('web.Dialog');
 var weWidgets = require('wysiwyg.widgets');
+var ColorpickerDialog = require('wysiwyg.widgets.ColorpickerDialog');
 var websiteNavbarData = require('website.navbar');
 
 var _t = core._t;
@@ -19,9 +19,10 @@ var ThemeCustomizeDialog = Dialog.extend({
     template: 'website.theme_customize',
     events: {
         'change .o_theme_customize_option_input': '_onChange',
-        'click .o_theme_customize_option_input[type="radio"]:checked': '_onChange',
-        'click .o_theme_customize_color': '_onColorClick',
+        'click .checked .o_theme_customize_option_input[type="radio"]': '_onChange',
     },
+
+    CUSTOM_BODY_IMAGE_XML_ID: 'option_custom_body_image',
 
     /**
      * @constructor
@@ -76,21 +77,31 @@ var ThemeCustomizeDialog = Dialog.extend({
         this.opened().then(function () {
             $tabs.eq(self.defaultTab).tab('show');
 
-            var $colorPreview = self.$('.o_theme_customize_color_previews:visible');
-            var $primary = $colorPreview.find('.o_theme_customize_color[data-color="primary"]');
-            var $alpha = $colorPreview.find('.o_theme_customize_color[data-color="alpha"]');
-            var $secondary = $colorPreview.find('.o_theme_customize_color[data-color="secondary"]');
-            var $beta = $colorPreview.find('.o_theme_customize_color[data-color="beta"]');
-            var sameAlphaPrimary = $primary.find('.o_color_preview').css('background-color') === $alpha.find('.o_color_preview').css('background-color');
-            var sameBetaSecondary = $secondary.find('.o_color_preview').css('background-color') === $beta.find('.o_color_preview').css('background-color');
+            // Hack to hide primary/secondary if they are equal to alpha/beta
+            // (this is the case with default values but not in some themes).
+            var $primary = self.$('.o_theme_customize_color[data-color="primary"]');
+            var $alpha = self.$('.o_theme_customize_color[data-color="alpha"]');
+            var $secondary = self.$('.o_theme_customize_color[data-color="secondary"]');
+            var $beta = self.$('.o_theme_customize_color[data-color="beta"]');
+
+            var sameAlphaPrimary = $primary.css('background-color') === $alpha.css('background-color');
+            var sameBetaSecondary = $secondary.css('background-color') === $beta.css('background-color');
+
             if (!sameAlphaPrimary) {
-                $alpha.find('.o_color_name').text(_t("Extra Color"));
-                $primary.removeClass('d-none').addClass('d-flex');
+                $alpha.prev().text(_t("Extra Color"));
             }
             if (!sameBetaSecondary) {
-                $beta.find('.o_color_name').text(_t("Extra Color"));
-                $secondary.removeClass('d-none').addClass('d-flex');
+                $beta.prev().text(_t("Extra Color"));
             }
+
+            $primary = $primary.closest('.o_theme_customize_option');
+            $alpha = $alpha.closest('.o_theme_customize_option');
+            $secondary = $secondary.closest('.o_theme_customize_option');
+            $beta = $beta.closest('.o_theme_customize_option');
+
+            $primary.toggleClass('d-none', sameAlphaPrimary);
+            $secondary.toggleClass('d-none', sameBetaSecondary);
+
             if (!sameAlphaPrimary && sameBetaSecondary) {
                 $beta.insertBefore($alpha);
             } else if (sameAlphaPrimary && !sameBetaSecondary) {
@@ -105,6 +116,44 @@ var ThemeCustomizeDialog = Dialog.extend({
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * @private
+     */
+    _chooseBodyCustomImage: function () {
+        var self = this;
+        var def = $.Deferred();
+        var $image = $('<img/>');
+        var editor = new weWidgets.MediaDialog(this, {
+            onlyImages: true,
+            firstFilters: ['background'],
+        }, $image[0]);
+
+        editor.on('save', this, function (media) { // TODO use scss customization instead (like for user colors)
+            var src = $(media).attr('src');
+            self._rpc({
+                model: 'ir.model.data',
+                method: 'get_object_reference',
+                args: ['website', this.CUSTOM_BODY_IMAGE_XML_ID],
+            }).then(function (data) {
+                return self._rpc({
+                    model: 'ir.ui.view',
+                    method: 'save',
+                    args: [
+                        data[1],
+                        '#wrapwrap { background-image: url("' + src + '"); }',
+                        '//style',
+                    ],
+                });
+            }).always(def.resolve.bind(def));
+        });
+        editor.on('cancel', this, function () {
+            def.resolve();
+        });
+
+        editor.open();
+
+        return def;
+    },
     /**
      * @private
      * @param {Object} data - @see this._loadViews
@@ -150,7 +199,7 @@ var ThemeCustomizeDialog = Dialog.extend({
 
         this.$('[title]').tooltip();
 
-        this.$inputs = self.$('[data-xmlid], [data-enable], [data-disable]');
+        this.$inputs = self.$('.o_theme_customize_option_input');
         // Enable data-xmlid="" inputs if none of their neighbors were enabled
         _.each(this.$inputs.filter('[data-xmlid=""]'), function (input) {
             var $input = $(input);
@@ -175,19 +224,20 @@ var ThemeCustomizeDialog = Dialog.extend({
 
                         var xmlid = $item.data('xmlid');
 
-                        // Build the options template
-                        var $option = $(core.qweb.render('website.theme_customize_modal_option', {
-                            alone: alone,
-                            name: optionsName,
-                            id: $item.attr('id') || _.uniqueId('o_theme_customize_input_id_'),
-                            checked: xmlid && (!_.difference(self._getXMLIDs($item), data.enabled).length),
-
+                        var renderingOptions = _.extend({
                             string: $item.attr('string') || data.names[xmlid.split(',')[0].trim()],
                             icon: $item.data('icon'),
                             font: $item.data('font'),
+                        }, $item.data());
 
+                        // Build the options template
+                        var $option = $(core.qweb.render('website.theme_customize_modal_option', _.extend({
+                            alone: alone,
+                            name: xmlid === undefined ? _.uniqueId('option-') : optionsName,
+                            id: $item.attr('id') || _.uniqueId('o_theme_customize_input_id_'),
+                            checked: xmlid === undefined || xmlid && (!_.difference(self._getXMLIDs($item), data.enabled).length),
                             widget: widgetName,
-                        }));
+                        }, renderingOptions)));
                         $option.find('input')
                             .addClass('o_theme_customize_option_input')
                             .attr({
@@ -198,8 +248,8 @@ var ThemeCustomizeDialog = Dialog.extend({
                             });
 
                         if (widgetName) {
-                            var $widget = $(core.qweb.render('website.theme_customize_' + widgetName));
-                            $option.append($widget);
+                            var $widget = $(core.qweb.render('website.theme_customize_widget_' + widgetName, renderingOptions));
+                            $option.find('label').append($widget);
                         }
 
                         if ($container.hasClass('form-row')) {
@@ -267,50 +317,112 @@ var ThemeCustomizeDialog = Dialog.extend({
     /**
      * @private
      */
-    _processChange: function ($inputs) {
+    _makeSCSSCusto: function (url, values) {
         var self = this;
-        this.$modal.addClass('o_theme_customize_loading');
+        return this._rpc({ // TODO improve to be more efficient
+            route: '/web_editor/get_assets_editor_resources',
+            params: {
+                'key': 'website.layout',
+                'get_views': false,
+                'get_scss': true,
+                'get_js': false,
+                'bundles': false,
+                'bundles_restriction': [],
+                'only_user_custom_files': false,
+            },
+        }).then(function (data) {
+            var file = _.find(data.scss[0][1], function (file) {
+                return file.url === url;
+            });
 
-        var bodyCustomImageXMLID = 'option_custom_body_image';
-        var $inputBodyCustomImage = $inputs.filter('[data-xmlid*="website.' + bodyCustomImageXMLID + '"]:checked');
-        if (!$inputBodyCustomImage.length) {
-            return $.when();
-        }
+            var updatedFileContent = file.arch;
+            _.each(values, function (value, name) {
+                var pattern = _.str.sprintf("'%s': %%s,\n", name);
+                var regex = new RegExp(_.str.sprintf(pattern, ".+"));
+                var replacement = _.str.sprintf(pattern, value);
+                if (regex.test(updatedFileContent)) {
+                    updatedFileContent = updatedFileContent
+                        .replace(regex, replacement);
+                } else {
+                    updatedFileContent = updatedFileContent
+                        .replace(/( *)(.*hook.*)/, _.str.sprintf('$1%s$1$2', replacement));
+                }
+            });
 
-        var def = $.Deferred();
-        var $image = $('<img/>');
-        var editor = new weWidgets.MediaDialog(this, {
-            onlyImages: true,
-            firstFilters: ['background'],
-        }, $image[0]);
-
-        editor.on('save', this, function (media) { // TODO use scss customization instead (like for user colors)
-            var src = $(media).attr('src');
-            self._rpc({
-                model: 'ir.model.data',
-                method: 'get_object_reference',
-                args: ['website', bodyCustomImageXMLID],
-            }).then(function (data) {
-                return self._rpc({
-                    model: 'ir.ui.view',
-                    method: 'save',
-                    args: [
-                        data[1],
-                        '#wrapwrap { background-image: url("' + src + '"); }',
-                        '//style',
-                    ],
-                });
-            }).then(function () {
-                def.resolve();
+            return self._rpc({
+                route: '/web_editor/save_scss_or_js',
+                params: {
+                    'url': file.url,
+                    'bundle_xmlid': 'web.assets_common',
+                    'content': updatedFileContent,
+                    'file_type': 'scss',
+                },
             });
         });
-        editor.on('cancel', this, function () {
-            def.resolve();
-        });
+    },
+    /**
+     * @private
+     */
+    _pickColor: function (colorElement) {
+        var self = this;
+        var $color = $(colorElement);
+        var colorName = $color.data('color');
+        var colorType = $color.data('colorType');
 
-        editor.open();
+        var def = $.Deferred();
+
+        var colorpicker = new ColorpickerDialog(this, {
+            defaultColor: $color.css('background-color'),
+        });
+        var chosenColor = undefined;
+        colorpicker.on('colorpicker:saved', this, function (ev) {
+            ev.stopPropagation();
+            chosenColor = ev.data.cssColor;
+        });
+        colorpicker.on('closed', this, function (ev) {
+            if (chosenColor === undefined) {
+                def.resolve();
+                return;
+            }
+
+            var baseURL = '/website/static/src/scss/options/colors/';
+            var url = _.str.sprintf('%suser_%scolor_palette.scss', baseURL, (colorType ? (colorType + '_') : ''));
+
+            var colors = {};
+            colors[colorName] = chosenColor;
+            if (colorName === 'alpha') {
+                colors['beta'] = 'null';
+                colors['gamma'] = 'null';
+                colors['delta'] = 'null';
+                colors['epsilon'] = 'null';
+            }
+
+            self._makeSCSSCusto(url, colors).always(def.resolve.bind(def));
+        });
+        colorpicker.open();
 
         return def;
+    },
+    /**
+     * @private
+     */
+    _processChange: function ($inputs) {
+        var self = this;
+        var defs = [];
+
+        // Handle body image changes
+        var $bodyImageInputs = $inputs.filter('[data-xmlid*="website.' + this.CUSTOM_BODY_IMAGE_XML_ID + '"]:checked');
+        defs = defs.concat(_.map($bodyImageInputs, function () {
+            return self._chooseBodyCustomImage();
+        }));
+
+        // Handle color changes
+        var $colors = $inputs.closest('.o_theme_customize_option').find('.o_theme_customize_color');
+        defs = defs.concat(_.map($colors, function (colorElement) {
+            return self._pickColor($(colorElement));
+        }));
+
+        return $.when.apply($, defs);
     },
     /**
      * @private
@@ -319,7 +431,7 @@ var ThemeCustomizeDialog = Dialog.extend({
         var self = this;
 
         // Look at all options to see if they are enabled or disabled
-        var $enable = this.$inputs.filter('[data-xmlid]:checked');
+        var $enable = this.$inputs.filter(':checked');
 
         // Mark the labels as checked accordingly
         this.$('label').removeClass('checked');
@@ -362,7 +474,6 @@ var ThemeCustomizeDialog = Dialog.extend({
             return $.Deferred();
         }
 
-        var self = this;
         return this._rpc({
             route: '/website/theme_customize',
             params: {
@@ -394,9 +505,7 @@ var ThemeCustomizeDialog = Dialog.extend({
                 });
             });
 
-            return $.when.apply($, defs).then(function () {
-                self.$modal.removeClass('o_theme_customize_loading');
-            });
+            return $.when.apply($, defs);
         });
     },
 
@@ -443,86 +552,16 @@ var ThemeCustomizeDialog = Dialog.extend({
         this._setActive();
 
         // Update the style according to the whole set of options
+        this.$modal.addClass('o_theme_customize_loading');
         self._processChange($options).then(function () {
-            self._updateStyle(
+            return self._updateStyle(
                 self._getXMLIDs($enable),
                 self._getXMLIDs($disable),
                 $option.data('reload') && window.location.href.match(new RegExp($option.data('reload')))
             );
+        }).always(function () {
+            self.$modal.removeClass('o_theme_customize_loading');
         });
-    },
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onColorClick: function (ev) {
-        var self = this;
-        var $color = $(ev.currentTarget);
-        var colorName = $color.data('color');
-        var colorType = $color.data('colorType');
-
-        var colorpicker = new ColorpickerDialog(this, {
-            defaultColor: $color.find('.o_color_preview').css('background-color'),
-        });
-        colorpicker.on('colorpicker:saved', this, function (ev) {
-            ev.stopPropagation();
-
-            // TODO improve to be more efficient
-            self._rpc({
-                route: '/web_editor/get_assets_editor_resources',
-                params: {
-                    'key': 'website.layout',
-                    'get_views': false,
-                    'get_scss': true,
-                    'get_js': false,
-                    'bundles': false,
-                    'bundles_restriction': [],
-                    'only_user_custom_files': false,
-                },
-            }).then(function (data) {
-                var files = data.scss[0][1];
-                var file = _.find(files, function (file) {
-                    var baseURL = '/website/static/src/scss/options/colors/';
-                    return file.url === _.str.sprintf('%suser_%scolor_palette.scss', baseURL, (colorType ? (colorType + '_') : ''));
-                });
-
-                var colors = {};
-                colors[colorName] = ev.data.cssColor;
-                if (colorName === 'alpha') {
-                    colors['beta'] = 'null';
-                    colors['gamma'] = 'null';
-                    colors['delta'] = 'null';
-                    colors['epsilon'] = 'null';
-                }
-
-                var updatedFileContent = file.arch;
-                _.each(colors, function (colorValue, colorName) {
-                    var pattern = _.str.sprintf("'%s': %%s,\n", colorName);
-                    var regex = new RegExp(_.str.sprintf(pattern, ".+"));
-                    var replacement = _.str.sprintf(pattern, colorValue);
-                    if (regex.test(updatedFileContent)) {
-                        updatedFileContent = updatedFileContent
-                            .replace(regex, replacement);
-                    } else {
-                        updatedFileContent = updatedFileContent
-                            .replace(/( *)(.*hook.*)/, _.str.sprintf('$1%s$1$2', replacement));
-                    }
-                });
-
-                return self._rpc({
-                    route: '/web_editor/save_scss_or_js',
-                    params: {
-                        'url': file.url,
-                        'bundle_xmlid': 'web.assets_common',
-                        'content': updatedFileContent,
-                        'file_type': 'scss',
-                    },
-                });
-            }).then(function () {
-                return self._updateStyle();
-            });
-        });
-        colorpicker.open();
     },
 });
 
