@@ -985,6 +985,5 @@ class Orderpoint(models.Model):
             'date_planned': date or self._get_date_planned(product_qty, datetime.today()),
             'warehouse_id': self.warehouse_id,
             'orderpoint_id': self,
-            'company_id': self.company_id,
             'group_id': group or self.group_id,
         }

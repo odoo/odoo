@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo.addons.stock.tests.common import TestStockCommon
+from odoo.tests import Form
 from odoo.tools import mute_logger, float_round
 from odoo.exceptions import UserError
 
@@ -1841,5 +1842,163 @@ class TestStockFlow(TestStockCommon):
         # Checking that the canceled move is in the original picking
         self.assertIn(move_canceled.id, picking.move_lines.mapped('id'))
 
+    def test_transit_multi_companies(self):
+        """ Ensure that inter company rules set the correct company on picking
+        and their moves.
+        """
+        grp_multi_loc = self.env.ref('stock.group_stock_multi_locations')
+        grp_multi_routes = self.env.ref('stock.group_adv_location')
+        grp_multi_companies = self.env.ref('base.group_multi_company')
+        self.env.user.write({'groups_id': [(4, grp_multi_loc.id)]})
+        self.env.user.write({'groups_id': [(4, grp_multi_routes.id)]})
+        self.env.user.write({'groups_id': [(4, grp_multi_companies.id)]})
 
+        company_2 = self.env.ref('stock.res_company_1')
+        # Need to add a new company on user.
+        self.env.user.write({'company_ids': [(4, company_2.id)]})
 
+        warehouse_company_1 = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.company_id.id)], limit=1)
+
+        f = Form(self.env['stock.location.route'])
+        f.name = 'From Company 1 to InterCompany'
+        f.company_id = self.env.user.company_id
+        with f.rule_ids.new() as rule:
+            rule.name = 'From Company 1 to InterCompany'
+            rule.action = 'pull'
+            rule.picking_type_id = warehouse_company_1.in_type_id
+            rule.location_src_id = self.env.ref('stock.stock_location_inter_wh')
+            rule.procure_method = 'make_to_order'
+        route_a = f.save()
+        warehouse_company_2 = self.env['stock.warehouse'].search([('company_id', '=', company_2.id)], limit=1)
+        f = Form(self.env['stock.location.route'])
+        f.name = 'From InterCompany to Company 2'
+        f.company_id = company_2
+        with f.rule_ids.new() as rule:
+            rule.name = 'From InterCompany to Company 2'
+            rule.action = 'pull'
+            rule.picking_type_id = warehouse_company_2.out_type_id
+            rule.location_id = self.env.ref('stock.stock_location_inter_wh')
+            rule.procure_method = 'make_to_stock'
+        route_b = f.save()
+
+        product = self.env['product.product'].create({
+            'name': 'The product from the other company that I absolutely want',
+            'type': 'product',
+            'route_ids': [(4, route_a.id), (4, route_b.id)]
+        })
+
+        replenish_wizard = self.env['product.replenish'].create({
+            'product_id': product.id,
+            'product_tmpl_id': product.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'quantity': '5',
+            'warehouse_id': warehouse_company_1.id,
+        })
+        replenish_wizard.launch_replenishment()
+        incoming_picking = self.env['stock.picking'].search([('product_id', '=', product.id), ('picking_type_id', '=', warehouse_company_1.in_type_id.id)])
+        outgoing_picking = self.env['stock.picking'].search([('product_id', '=', product.id), ('picking_type_id', '=', warehouse_company_2.out_type_id.id)])
+
+        self.assertEqual(incoming_picking.company_id, self.env.user.company_id)
+        self.assertEqual(incoming_picking.move_lines.company_id, self.env.user.company_id)
+        self.assertEqual(outgoing_picking.company_id, company_2)
+        self.assertEqual(outgoing_picking.move_lines.company_id, company_2)
+
+    def test_transit_multi_companies_ultimate(self):
+        """ Ensure that inter company rules set the correct company on picking
+        and their moves. This test validate a picking with make_to_order moves.
+        Moves are created in batch with a force_company. This test should create
+        moves for company_2 and company_3 at the same time. Ensure they are not
+        create in the same batch.
+        """
+        grp_multi_loc = self.env.ref('stock.group_stock_multi_locations')
+        grp_multi_routes = self.env.ref('stock.group_adv_location')
+        grp_multi_companies = self.env.ref('base.group_multi_company')
+        self.env.user.write({'groups_id': [(4, grp_multi_loc.id)]})
+        self.env.user.write({'groups_id': [(4, grp_multi_routes.id)]})
+        self.env.user.write({'groups_id': [(4, grp_multi_companies.id)]})
+
+        company_2 = self.env.ref('stock.res_company_1')
+        # Need to add a new company on user.
+        self.env.user.write({'company_ids': [(4, company_2.id)]})
+
+        warehouse_company_1 = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.company_id.id)], limit=1)
+
+        f = Form(self.env['stock.location.route'])
+        f.name = 'From Company 1 to InterCompany'
+        f.company_id = self.env.user.company_id
+        with f.rule_ids.new() as rule:
+            rule.name = 'From Company 1 to InterCompany'
+            rule.action = 'pull'
+            rule.picking_type_id = warehouse_company_1.in_type_id
+            rule.location_src_id = self.env.ref('stock.stock_location_inter_wh')
+            rule.procure_method = 'make_to_order'
+        route_a = f.save()
+
+        warehouse_company_2 = self.env['stock.warehouse'].search([('company_id', '=', company_2.id)], limit=1)
+        f = Form(self.env['stock.location.route'])
+        f.name = 'From InterCompany to Company 2'
+        f.company_id = company_2
+        with f.rule_ids.new() as rule:
+            rule.name = 'From InterCompany to Company 2'
+            rule.action = 'pull'
+            rule.picking_type_id = warehouse_company_2.out_type_id
+            rule.location_id = self.env.ref('stock.stock_location_inter_wh')
+            rule.procure_method = 'make_to_stock'
+        route_b = f.save()
+
+        company_3 = self.env['res.company'].create({
+            'name': 'Alaska Company'
+        })
+
+        warehouse_company_3 = self.env['stock.warehouse'].search([('company_id', '=', company_3.id)], limit=1)
+        f = Form(self.env['stock.location.route'])
+        f.name = 'From InterCompany to Company 3'
+        f.company_id = company_3
+        with f.rule_ids.new() as rule:
+            rule.name = 'From InterCompany to Company 3'
+            rule.action = 'pull'
+            rule.picking_type_id = warehouse_company_3.out_type_id
+            rule.location_id = self.env.ref('stock.stock_location_inter_wh')
+            rule.procure_method = 'make_to_stock'
+        route_c = f.save()
+
+        product_from_company_2 = self.env['product.product'].create({
+            'name': 'The product from the other company that I absolutely want',
+            'type': 'product',
+            'route_ids': [(4, route_a.id), (4, route_b.id)]
+        })
+
+        product_from_company_3 = self.env['product.product'].create({
+            'name': 'Ice',
+            'type': 'product',
+            'route_ids': [(4, route_a.id), (4, route_c.id)]
+        })
+
+        f = Form(self.env['stock.picking'], view='stock.view_picking_form')
+        f.picking_type_id = warehouse_company_1.out_type_id
+        with f.move_ids_without_package.new() as move:
+            move.product_id = product_from_company_2
+            move.product_uom_qty = 5
+        with f.move_ids_without_package.new() as move:
+            move.product_id = product_from_company_3
+            move.product_uom_qty = 5
+        picking = f.save()
+
+        picking.move_ids_without_package.write({'procure_method': 'make_to_order'})
+        picking.action_confirm()
+
+        incoming_picking = self.env['stock.picking'].search([('product_id', '=', product_from_company_2.id), ('picking_type_id', '=', warehouse_company_1.in_type_id.id)])
+        outgoing_picking = self.env['stock.picking'].search([('product_id', '=', product_from_company_2.id), ('picking_type_id', '=', warehouse_company_2.out_type_id.id)])
+
+        self.assertEqual(incoming_picking.company_id, self.env.user.company_id)
+        self.assertEqual(incoming_picking.move_lines.mapped('company_id'), self.env.user.company_id)
+        self.assertEqual(outgoing_picking.company_id, company_2)
+        self.assertEqual(outgoing_picking.move_lines.company_id, company_2)
+
+        incoming_picking = self.env['stock.picking'].search([('product_id', '=', product_from_company_3.id), ('picking_type_id', '=', warehouse_company_1.in_type_id.id)])
+        outgoing_picking = self.env['stock.picking'].search([('product_id', '=', product_from_company_3.id), ('picking_type_id', '=', warehouse_company_3.out_type_id.id)])
+
+        self.assertEqual(incoming_picking.company_id, self.env.user.company_id)
+        self.assertEqual(incoming_picking.move_lines.mapped('company_id'), self.env.user.company_id)
+        self.assertEqual(outgoing_picking.company_id, company_3)
+        self.assertEqual(outgoing_picking.move_lines.company_id, company_3)

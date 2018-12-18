@@ -1,6 +1,8 @@
 # -*- encoding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
+
 from odoo import api, fields, models
 
 
@@ -15,25 +17,32 @@ class ProcurementGroup(models.Model):
 class StockRule(models.Model):
     _inherit = 'stock.rule'
 
-    @api.multi
-    def _run_buy(self, product_id, product_qty, product_uom, location_id, name, origin, values):
-        if product_id.purchase_requisition != 'tenders':
-            return super(StockRule, self)._run_buy(product_id, product_qty, product_uom, location_id, name, origin, values)
-        values = self.env['purchase.requisition']._prepare_tender_values(product_id, product_qty, product_uom, location_id, name, origin, values)
-        values['picking_type_id'] = self.picking_type_id.id
-        self.env['purchase.requisition'].create(values)
-        return True
+    @api.model
+    def _run_buy(self, procurements):
+        requisitions_values_by_company = defaultdict(list)
+        other_procurements = []
+        for procurement, rule in procurements:
+            if procurement.product_id.purchase_requisition == 'tenders':
+                values = self.env['purchase.requisition']._prepare_tender_values(*procurement)
+                values['picking_type_id'] = rule.picking_type_id.id
+                requisitions_values_by_company[procurement.company_id.id].append(values)
+            else:
+                other_procurements.append((procurement, rule))
+        for company_id, requisitions_values in requisitions_values_by_company.items():
+            self.env['purchase.requisition'].sudo().with_context(force_company=company_id).create(requisitions_values)
+        return super(StockRule, self)._run_buy(other_procurements)
 
-    def _prepare_purchase_order(self, product_id, product_qty, product_uom, origin, values, partner):
-        res = super(StockRule, self)._prepare_purchase_order(product_id, product_qty, product_uom, origin, values, partner)
+    def _prepare_purchase_order(self, company_id, origins, values):
+        res = super(StockRule, self)._prepare_purchase_order(company_id, origins, values)
+        values = values[0]
         res['partner_ref'] = values['supplier'].purchase_requisition_id.name
         res['requisition_id'] = values['supplier'].purchase_requisition_id.id
         if values['supplier'].purchase_requisition_id.currency_id:
             res['currency_id'] = values['supplier'].purchase_requisition_id.currency_id.id
         return res
 
-    def _make_po_get_domain(self, values, partner):
-        domain = super(StockRule, self)._make_po_get_domain(values, partner)
+    def _make_po_get_domain(self, company_id, values, partner):
+        domain = super(StockRule, self)._make_po_get_domain(company_id, values, partner)
         if 'supplier' in values and values['supplier'].purchase_requisition_id:
             domain += (
                 ('requisition_id', '=', values['supplier'].purchase_requisition_id.id),
