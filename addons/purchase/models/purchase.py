@@ -930,11 +930,13 @@ class ProcurementRule(models.Model):
             if line.product_id == product_id and line.product_uom == product_id.uom_po_id:
                 if line._merge_in_existing_line(product_id, product_qty, product_uom, location_id, name, origin, values):
                     vals = self._update_purchase_order_line(product_id, product_qty, product_uom, values, line, partner)
-                    po_line = line.write(vals)
+                    line.write(vals)
+                    po_line = line
                     break
         if not po_line:
             vals = self._prepare_purchase_order_line(product_id, product_qty, product_uom, values, po, supplier)
-            self.env['purchase.order.line'].sudo().create(vals)
+            po_line = self.env['purchase.order.line'].sudo().create(vals)
+        return po_line
 
     def _get_purchase_schedule_date(self, values):
         """Return the datetime value to use as Schedule Date (``date_planned``) for the

@@ -323,7 +323,6 @@ class TestSaleStock(TestSale):
         wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id'))
         wizard.process()
         self.assertEquals(self.so.picking_ids[0].state, "done")
-
         # update the two original sale order lines
         self.so.write({
             'order_line': [

@@ -335,8 +335,7 @@ class ProcurementRule(models.Model):
             return super(ProcurementRule, self)._run_buy(product_id, product_qty, product_uom, location_id, name, origin, values)
         values = self.env['purchase.requisition']._prepare_tender_values(product_id, product_qty, product_uom, location_id, name, origin, values)
         values['picking_type_id'] = self.picking_type_id.id
-        self.env['purchase.requisition'].create(values)
-        return True
+        return self.env['purchase.requisition'].create(values)
 
 class Orderpoint(models.Model):
     _inherit = "stock.warehouse.orderpoint"

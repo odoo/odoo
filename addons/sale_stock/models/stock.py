@@ -45,11 +45,13 @@ class StockMove(models.Model):
 
     def _assign_picking_post_process(self, new=False):
         super(StockMove, self)._assign_picking_post_process(new=new)
-        if new and self.sale_line_id and self.sale_line_id.order_id:
-            self.picking_id.message_post_with_view(
-                'mail.message_origin_link',
-                values={'self': self.picking_id, 'origin': self.sale_line_id.order_id},
-                subtype_id=self.env.ref('mail.mt_note').id)
+        if new:
+            for move in self:
+                if move.sale_line_id and move.sale_line_id.order_id:
+                    move.picking_id.message_post_with_view(
+                        'mail.message_origin_link',
+                        values={'self': move.picking_id, 'origin': move.sale_line_id.order_id},
+                        subtype_id=self.env.ref('mail.mt_note').id)
 
 
 class ProcurementGroup(models.Model):

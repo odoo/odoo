@@ -77,9 +77,7 @@ class ProcurementRule(models.Model):
 
         data = self._get_stock_move_values(product_id, product_qty, product_uom, location_id, name, origin, values, group_id)
         # Since action_confirm launch following procurement_group we should activate it.
-        move = self.env['stock.move'].sudo().with_context(force_company=data.get('company_id', False)).create(data)
-        move._action_confirm()
-        return True
+        return self.env['stock.move'].sudo().with_context(force_company=data.get('company_id', False)).create(data)
 
     def _get_stock_move_values(self, product_id, product_qty, product_uom, location_id, name, origin, values, group_id):
         ''' Returns a dictionary of values that will be used to create a stock move from a procurement.
@@ -183,8 +181,7 @@ class ProcurementGroup(models.Model):
         if not rule:
             raise UserError(_('No procurement rule found. Please verify the configuration of your routes'))
 
-        getattr(rule, '_run_%s' % rule.action)(product_id, product_qty, product_uom, location_id, name, origin, values)
-        return True
+        return getattr(rule, '_run_%s' % rule.action)(product_id, product_qty, product_uom, location_id, name, origin, values)
 
     @api.model
     def _search_rule(self, product_id, values, domain):

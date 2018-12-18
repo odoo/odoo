@@ -247,12 +247,14 @@ class SaleOrderLine(models.Model):
         depending on the sale order line product rule.
         """
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        move_ids = self.env['stock.move']
         errors = []
         procurement_quantities = self._get_qty_procurement()
         for line in self:
             if line.state != 'sale' or line.product_id.type not in ('consu', 'product'):
                 continue
             qty = procurement_quantities.get(line.id, 0.0)
+            qty = line.product_id.uom_id._compute_quantity(qty, line.product_uom, rounding_method='HALF-UP')
             if float_compare(qty, line.product_uom_qty, precision_digits=precision) >= 0:
                 continue
 
@@ -286,11 +288,14 @@ class SaleOrderLine(models.Model):
                 procurement_uom = quant_uom
 
             try:
-                self.env['procurement.group'].run(line.product_id, product_qty, procurement_uom, line.order_id.partner_shipping_id.property_stock_customer, line.name, line.order_id.name, values)
+                move = self.env['procurement.group'].run(line.product_id, product_qty, procurement_uom, line.order_id.partner_shipping_id.property_stock_customer, line.name, line.order_id.name, values)
+                if move._name == 'stock.move':
+                    move_ids |= move
             except UserError as error:
                 errors.append(error.name)
         if errors:
             raise UserError('\n'.join(errors))
+        move_ids._action_confirm()
         return True
 
     @api.multi

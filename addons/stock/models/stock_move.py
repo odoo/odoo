@@ -683,8 +683,12 @@ class StockMove(models.Model):
         type (moves should already have them identical). Otherwise, create a new
         picking to assign them to. """
         Picking = self.env['stock.picking']
-        for move in self:
-            recompute = False
+        groupby = ['group_id', 'location_id', 'location_dest_id', 'picking_type_id']
+        grouped_moves = self.env['stock.move'].read_group([('id', 'in', self.ids)], groupby, groupby)
+        for group in grouped_moves:
+            moves = self.env['stock.move'].search(group['__domain'])
+            move = moves[0]
+            new_picking = False
             picking = Picking.search([
                 ('group_id', '=', move.group_id.id),
                 ('location_id', '=', move.location_id.id),
@@ -693,7 +697,8 @@ class StockMove(models.Model):
                 ('printed', '=', False),
                 ('state', 'in', ['draft', 'confirmed', 'waiting', 'partially_available', 'assigned'])], limit=1)
             if picking:
-                if picking.partner_id.id != move.partner_id.id or picking.origin != move.origin:
+                if any(picking.partner_id.id != m.partner_id.id or
+                        picking.origin != m.origin for m in moves):
                     # If a picking is found, we'll append `move` to its move list and thus its
                     # `partner_id` and `ref` field will refer to multiple records. In this
                     # case, we chose to  wipe them.
@@ -702,17 +707,19 @@ class StockMove(models.Model):
                         'origin': False,
                     })
             else:
-                recompute = True
+                new_picking = True
                 picking = Picking.create(move._get_new_picking_values())
-            move.write({'picking_id': picking.id})
-            move._assign_picking_post_process(new=recompute)
-            # If this method is called in batch by a write on a one2many and
-            # at some point had to create a picking, some next iterations could
-            # try to find back the created picking. As we look for it by searching
-            # on some computed fields, we have to force a recompute, else the
-            # record won't be found.
-            if recompute:
-                move.recompute()
+
+            moves.write({'picking_id': picking.id})
+            moves[0]._assign_picking_post_process(new=new_picking)
+            moves[1:]._assign_picking_post_process()
+            if new_picking:
+                # If this method is called in batch by a write on a one2many and
+                # at some point had to create a picking, some next iterations could
+                # try to find back the created picking. As we look for it by searching
+                # on some computed fields, we have to force a recompute, else the
+                # record won't be found.
+                moves.recompute()
         return True
 
     def _assign_picking_post_process(self, new=False):
@@ -757,11 +764,16 @@ class StockMove(models.Model):
                 to_assign[key] |= move
 
         # create procurements for make to order moves
+        created_moves = self.env['stock.move']
         for move in move_create_proc:
             values = move._prepare_procurement_values()
             origin = (move.group_id and move.group_id.name or (move.rule_id and move.rule_id.name or move.origin or move.picking_id.name or "/"))
-            self.env['procurement.group'].run(move.product_id, move.product_uom_qty, move.product_uom, move.location_id, move.rule_id and move.rule_id.name or "/", origin,
+            move = self.env['procurement.group'].run(move.product_id, move.product_uom_qty, move.product_uom, move.location_id, move.rule_id and move.rule_id.name or "/", origin,
                                               values)
+            if move._name == 'stock.move':
+                created_moves |= move
+        if created_moves:
+            created_moves._action_confirm()
 
         move_to_confirm.write({'state': 'confirmed'})
         (move_waiting | move_create_proc).write({'state': 'waiting'})

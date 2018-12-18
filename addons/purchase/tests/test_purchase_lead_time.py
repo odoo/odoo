@@ -94,7 +94,6 @@ class TestPurchaseLeadTime(TestPurchase):
     def test_02_product_route_level_delays(self):
         """ In order to check dates, set product's Delivery Lead Time
             and warehouse route's delay."""
-
         # Update warehouse_1 with Incoming Shipments 3 steps
         self.warehouse_1.write({'reception_steps': 'three_steps'})
 
@@ -104,14 +103,14 @@ class TestPurchaseLeadTime(TestPurchase):
 
         date_planned = fields.Datetime.to_string(fields.datetime.now() + timedelta(days=10))
         # Create procurement order of product_1
-        self.env['procurement.group'].run(self.product_1, 5.000, self.uom_unit, self.warehouse_1.lot_stock_id, 'Test scheduler for RFQ', '/', {
+        move = self.env['procurement.group'].run(self.product_1, 5.000, self.uom_unit, self.warehouse_1.lot_stock_id, 'Test scheduler for RFQ', '/', {
             'warehouse_id': self.warehouse_1,
             'date_planned': date_planned,  # 10 days added to current date of procurement to get future schedule date and order date of purchase order.
             'rule_id': self.warehouse_1.buy_pull_id,
             'group_id': False,
             'route_ids': [],
         })
-
+        move._action_confirm()
         # Confirm purchase order
 
         purchase = self.env['purchase.order.line'].search([('product_id', '=', self.product_1.id)], limit=1).order_id

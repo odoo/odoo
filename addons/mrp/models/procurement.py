@@ -32,7 +32,7 @@ class ProcurementRule(models.Model):
             production.message_post_with_view('mail.message_origin_link',
                                               values={'self': production, 'origin': origin_production},
                                               subtype_id=self.env.ref('mail.mt_note').id)
-        return True
+        return production
 
     @api.multi
     def _get_matching_bom(self, product_id, values):
