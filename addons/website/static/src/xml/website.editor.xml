@@ -22,9 +22,9 @@
     <!-- Custom checkbox (material-design-like toggle) -->
     <t t-name="website.components.switch">
         <label class="o_switch" t-att-for="id">
-            <input type="checkbox" t-att-id="id"/>
+            <input type="checkbox" t-att-id="id" t-att-checked="checked ? 'checked' : undefined"/>
             <span/>
-            <t t-if="label"><t t-esc="label"/></t>
+            <div t-if="label"><t t-esc="label"/></div>
         </label>
     </t>
 
@@ -39,9 +39,13 @@
     <t t-name="website.theme_customize_modal_option">
         <div t-attf-class="o_theme_customize_option my-1 flex-grow-0 #{font ? 'o_theme_customize_option_font_' + font : ''}">
             <img t-if="icon" t-att-src="icon"/>
-            <label t-attf-class="#{widget ? 'd-none' : 'd-flex'} align-items-center justify-content-center text-center">
-                <input t-att-id="id" t-att-name="name" type="radio" class="o_theme_customize_option_input" t-att-data-xmlid="xmlid" t-att-data-enable="enable" t-att-data-disable="disable" t-att-data-reload="reload"/>
-                <span><t t-esc="string"/></span>
+
+            <t t-set="label" t-value="font ? '' : string"/>
+            <t t-set="_classes" t-value="widget ? 'd-none' : 'd-flex'"/>
+            <t t-if="alone and !widget" t-call="website.components.switch"/>
+            <label t-else="" t-attf-class="#{_classes} align-items-center justify-content-center text-center">
+                <input t-att-id="id" t-att-name="name" type="radio" t-att-checked="checked ? 'checked' : undefined"/>
+                <span><t t-esc="label"/></span>
             </label>
         </div>
     </t>

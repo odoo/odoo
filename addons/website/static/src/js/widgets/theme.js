@@ -18,8 +18,8 @@ var ThemeCustomizeDialog = Dialog.extend({
 
     template: 'website.theme_customize',
     events: {
-        'change [data-xmlid], [data-enable], [data-disable]': '_onChange',
-        'click .checked [data-xmlid], .checked [data-enable], .checked [data-disable]': '_onChange',
+        'change .o_theme_customize_option_input': '_onChange',
+        'click .o_theme_customize_option_input[type="radio"]:checked': '_onChange',
         'click .o_theme_customize_color': '_onColorClick',
     },
 
@@ -58,11 +58,21 @@ var ThemeCustomizeDialog = Dialog.extend({
      */
     start: function () {
         var self = this;
-        this._generateDialogHTML();
+
         this.$modal.addClass('o_theme_customize_modal');
 
+        var $tabs;
+        var loadDef = this._loadViews().then(function (data) {
+            self._generateDialogHTML(data);
+            $tabs = self.$('[data-toggle="tab"]');
+
+            // Hide the tab navigation if only one tab
+            if ($tabs.length <= 1) {
+                $tabs.closest('.nav').addClass('d-none');
+            }
+        });
+
         // Enable the first option tab or the given default tab
-        var $tabs = this.$('[data-toggle="tab"]');
         this.opened().then(function () {
             $tabs.eq(self.defaultTab).tab('show');
 
@@ -88,17 +98,7 @@ var ThemeCustomizeDialog = Dialog.extend({
             }
         });
 
-        // Hide the tab navigation if only one tab
-        if ($tabs.length <= 1) {
-            $tabs.closest('.nav').addClass('d-none');
-        }
-
-        this.$inputs = this.$('[data-xmlid], [data-enable], [data-disable]');
-
-        return $.when(
-            this._super.apply(this, arguments),
-            this._loadViews()
-        );
+        return $.when(this._super.apply(this, arguments), loadDef);
     },
 
     //--------------------------------------------------------------------------
@@ -107,8 +107,10 @@ var ThemeCustomizeDialog = Dialog.extend({
 
     /**
      * @private
+     * @param {Object} data - @see this._loadViews
      */
-    _generateDialogHTML: function () {
+    _generateDialogHTML: function (data) {
+        var self = this;
         var $contents = this.$el.children('content');
         if ($contents.length === 0) {
             return;
@@ -148,8 +150,20 @@ var ThemeCustomizeDialog = Dialog.extend({
 
         this.$('[title]').tooltip();
 
+        this.$inputs = self.$('[data-xmlid], [data-enable], [data-disable]');
+        // Enable data-xmlid="" inputs if none of their neighbors were enabled
+        _.each(this.$inputs.filter('[data-xmlid=""]'), function (input) {
+            var $input = $(input);
+            var $neighbors = self.$inputs.filter('[name="' + $input.attr('name') + '"]').not($input);
+            if ($neighbors.length && !$neighbors.filter(':checked').length) {
+                $input.prop('checked', true);
+            }
+        });
+        this._setActive();
+
         function _processItems($items, $container) {
             var optionsName = _.uniqueId('option-');
+            var alone = ($items.length === 1);
 
             _.each($items, function (item) {
                 var $item = $(item);
@@ -159,22 +173,29 @@ var ThemeCustomizeDialog = Dialog.extend({
                     case 'OPT':
                         var widgetName = $item.data('widget');
 
+                        var xmlid = $item.data('xmlid');
+
                         // Build the options template
                         var $option = $(core.qweb.render('website.theme_customize_modal_option', {
+                            alone: alone,
                             name: optionsName,
                             id: $item.attr('id') || _.uniqueId('o_theme_customize_input_id_'),
+                            checked: xmlid && (!_.difference(self._getXMLIDs($item), data.enabled).length),
 
-                            string: $item.attr('string'),
+                            string: $item.attr('string') || data.names[xmlid.split(',')[0].trim()],
                             icon: $item.data('icon'),
                             font: $item.data('font'),
 
-                            xmlid: $item.data('xmlid'),
-                            enable: $item.data('enable'),
-                            disable: $item.data('disable'),
-                            reload: $item.data('reload'),
-
                             widget: widgetName,
                         }));
+                        $option.find('input')
+                            .addClass('o_theme_customize_option_input')
+                            .attr({
+                                'data-xmlid': xmlid,
+                                'data-enable': $item.data('enable'),
+                                'data-disable': $item.data('disable'),
+                                'data-reload': $item.data('reload'),
+                            });
 
                         if (widgetName) {
                             var $widget = $(core.qweb.render('website.theme_customize_' + widgetName));
@@ -201,6 +222,10 @@ var ThemeCustomizeDialog = Dialog.extend({
                         $container.append($col);
                         _processItems($item.children(), $listContainer);
                         break;
+
+                    default:
+                        _processItems($item.children(), $container);
+                        break;
                 }
             });
         }
@@ -209,29 +234,11 @@ var ThemeCustomizeDialog = Dialog.extend({
      * @private
      */
     _loadViews: function () {
-        var self = this;
         return this._rpc({
             route: '/website/theme_customize_get',
             params: {
-                xml_ids: this._getXMLIDs(this.$inputs),
+                'xml_ids': this._getXMLIDs(this.$inputs || this.$('[data-xmlid]')),
             },
-        }).done(function (data) {
-            self.$inputs.prop('checked', false);
-            _.each(self.$inputs.filter('[data-xmlid]:not([data-xmlid=""])'), function (input) {
-                var $input = $(input);
-                if (!_.difference(self._getXMLIDs($input), data[0]).length) {
-                    $input.prop('checked', true);
-                }
-            });
-            _.each(self.$inputs.filter('[data-xmlid=""]'), function (input) {
-                var $input = $(input);
-                if (!self.$inputs.filter('[name="' + $input.attr('name') + '"]:checked').length) {
-                    $input.prop('checked', true);
-                }
-            });
-            self._setActive();
-        }).fail(function (d, error) {
-            Dialog.alert(this, error.data.message);
         });
     },
     /**
@@ -316,7 +323,7 @@ var ThemeCustomizeDialog = Dialog.extend({
 
         // Mark the labels as checked accordingly
         this.$('label').removeClass('checked');
-        $enable.closest('label').addClass('checked');
+        $enable.closest('label:not(.o_switch)').addClass('checked');
 
         // Mark the option sets as checked if all their option are checked/unchecked
         var $sets = this.$inputs.filter('[data-enable], [data-disable]').not('[data-xmlid]');
@@ -329,7 +336,7 @@ var ThemeCustomizeDialog = Dialog.extend({
             if (self._getInputs($set.data('disable')).filter(':checked').length) {
                 checked = false;
             }
-            $set.prop('checked', checked).closest('label').toggleClass('checked', checked);
+            $set.prop('checked', checked).closest('label:not(.o_switch)').toggleClass('checked', checked);
         });
 
         // Make the hidden sections visible if their dependencies are met
@@ -359,9 +366,9 @@ var ThemeCustomizeDialog = Dialog.extend({
         return this._rpc({
             route: '/website/theme_customize',
             params: {
-                enable: enable,
-                disable: disable,
-                get_bundle: true,
+                'enable': enable,
+                'disable': disable,
+                'get_bundle': true,
             },
         }).then(function (bundles) {
             var defs = _.map(bundles, function (bundleContent, bundleName) {
@@ -464,13 +471,13 @@ var ThemeCustomizeDialog = Dialog.extend({
             self._rpc({
                 route: '/web_editor/get_assets_editor_resources',
                 params: {
-                    key: 'website.layout',
-                    get_views: false,
-                    get_scss: true,
-                    get_js: false,
-                    bundles: false,
-                    bundles_restriction: [],
-                    only_user_custom_files: false,
+                    'key': 'website.layout',
+                    'get_views': false,
+                    'get_scss': true,
+                    'get_js': false,
+                    'bundles': false,
+                    'bundles_restriction': [],
+                    'only_user_custom_files': false,
                 },
             }).then(function (data) {
                 var files = data.scss[0][1];
@@ -505,10 +512,10 @@ var ThemeCustomizeDialog = Dialog.extend({
                 return self._rpc({
                     route: '/web_editor/save_scss_or_js',
                     params: {
-                        url: file.url,
-                        bundle_xmlid: 'web.assets_common',
-                        content: updatedFileContent,
-                        file_type: 'scss',
+                        'url': file.url,
+                        'bundle_xmlid': 'web.assets_common',
+                        'content': updatedFileContent,
+                        'file_type': 'scss',
                     },
                 });
             }).then(function () {
@@ -521,7 +528,7 @@ var ThemeCustomizeDialog = Dialog.extend({
 
 var ThemeCustomizeMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
     actions: _.extend({}, websiteNavbarData.WebsiteNavbarActionWidget.prototype.actions || {}, {
-        customize_theme: '_openThemeCustomizeDialog',
+        'customize_theme': '_openThemeCustomizeDialog',
     }),
 
     /**
