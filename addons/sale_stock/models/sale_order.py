@@ -188,7 +188,14 @@ class SaleOrderLine(models.Model):
 
     @api.onchange('product_uom_qty')
     def _onchange_product_uom_qty(self):
-        if self.state == 'sale' and self.product_id.type in ['product', 'consu'] and self.product_uom_qty < self._origin.product_uom_qty:
+        # When modifying a one2many, _origin doesn't guarantee that its values will be the ones 
+        # in database. Hence, we need to explicitly read them from there.
+        if self._origin:
+            product_uom_qty_origin = self._origin.read(["product_uom_qty"])[0]["product_uom_qty"]
+        else:
+            product_uom_qty_origin = 0
+
+        if self.state == 'sale' and self.product_id.type in ['product', 'consu'] and self.product_uom_qty < product_uom_qty_origin:
             # Do not display this warning if the new quantity is below the delivered
             # one; the `write` will raise an `UserError` anyway.
             if self.product_uom_qty < self.qty_delivered:
