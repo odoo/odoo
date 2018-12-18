@@ -16,7 +16,7 @@ if (!config.device.isMobile) {
  * Overrides Discuss module in mobile
  */
 Discuss.include({
-    template: 'mail.discuss_mobile',
+    contentTemplate: 'mail.discuss_mobile',
     events: _.extend(Discuss.prototype.events, {
         'click .o_mail_mobile_tab': '_onMobileTabClicked',
         'click .o_mailbox_inbox_item': '_onMobileInboxButtonClicked',
