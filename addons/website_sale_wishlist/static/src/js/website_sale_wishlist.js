@@ -34,10 +34,11 @@ sAnimations.registry.ProductWishlist = sAnimations.Class.extend(ProductConfigura
         }).then(function (res) {
             self.wishlistProductIDs = JSON.parse(res);
             self._updateWishlistView();
-            if ($('input.js_product_change').length) { // manage "List View of variants"
-                $('input.js_product_change:checked').first().trigger('change');
+            // trigger change on only one input
+            if (self.$('input.js_product_change').length) { // manage "List View of variants"
+                self.$('input.js_product_change:checked').first().trigger('change');
             } else {
-                $('input.js_variant_change').trigger('change');
+                self.$('input.js_variant_change:checked').first().trigger('change');
             }
         });
 
@@ -61,12 +62,17 @@ sAnimations.registry.ProductWishlist = sAnimations.Class.extend(ProductConfigura
             }
             productID = parseInt(productID, 10);
         }
-
+        var $form = $el.closest('form');
+        var templateId = $form.find('.product_template_id').val();
+        // when adding from /shop instead of the product page, need another selector
+        if (!templateId) {
+            templateId = $el.data('product-template-id');
+        }
         $el.prop("disabled", true).addClass('disabled');
         var productReady = this.selectOrCreateProduct(
             $el.closest('form'),
             productID,
-            $el.closest('form').find('.product_template_id').val(),
+            templateId,
             false
         );
 

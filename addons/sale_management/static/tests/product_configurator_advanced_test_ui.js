@@ -68,7 +68,7 @@ tour.register('sale_product_configurator_advanced_tour', {
     trigger: ".o_sale_product_configurator_add",
     run: 'click'
 }, {
-    trigger: '.main_product strong:contains("White, Custom, PAV9, PAV5, PAV1")',
+    trigger: '.main_product strong:contains("Custom, White, PAV9, PAV5, PAV1")',
     extra_trigger: '.oe_optional_products_modal',
     run: function () {} //check
 }, {
@@ -100,7 +100,7 @@ tour.register('sale_product_configurator_advanced_tour', {
     extra_trigger: '.oe_optional_products_modal',
     run: 'click'
 }, {
-    trigger: 'td.o_data_cell:contains("Customizable Desk (White, Custom, PAV9, PAV5, PAV1)")',
+    trigger: 'td.o_data_cell:contains("Customizable Desk (Custom, White, PAV9, PAV5, PAV1)")',
     extra_trigger: 'div[name="order_line"]',
     in_modal: false,
     run: function (){} //check

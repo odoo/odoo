@@ -34,14 +34,17 @@ class TestWebsiteSaleZoom(odoo.tests.HttpCase):
             'name': name_red,
             'attribute_id': product_attribute.id,
             'html_color': color_red,
+            'sequence': 1,
         }, {
             'name': name_green,
             'attribute_id': product_attribute.id,
             'html_color': color_green,
+            'sequence': 2,
         }, {
             'name': name_blue,
             'attribute_id': product_attribute.id,
             'html_color': color_blue,
+            'sequence': 3,
         }])
 
         # first image (blue) for the template

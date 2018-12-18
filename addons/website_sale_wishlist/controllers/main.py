@@ -10,9 +10,9 @@ class WebsiteSaleWishlist(WebsiteSale):
     @http.route(['/shop/wishlist/add'], type='json', auth="public", website=True)
     def add_to_wishlist(self, product_id, price=False, **kw):
         if not price:
-            compute_currency, pricelist_context, pl = self._get_compute_currency_and_context()
+            pricelist_context, pl = self._get_pricelist_context()
             p = request.env['product.product'].with_context(pricelist_context, display_default_code=False).browse(product_id)
-            price = p.website_price
+            price = p._get_combination_info_variant()['price']
 
         Wishlist = request.env['product.wishlist']
         if request.website.is_public_user():
