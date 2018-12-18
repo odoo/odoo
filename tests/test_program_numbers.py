@@ -10,11 +10,11 @@ class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
     def setUp(self):
         super(TestSaleCouponProgramNumbers, self).setUp()
 
-        self.iPadMini = self.env.ref('product.product_product_6').copy()
-        self.iPod = self.env.ref('product.product_product_11').copy()
-        self.wirelessKeyboard = self.env.ref('product.product_product_9').copy()
-        self.computerCase = self.env.ref('product.product_product_16').copy()
-        self.littleServer = self.env.ref('product.consu_delivery_02').copy()
+        self.iPadMini = self.env.ref('product.product_product_6')
+        self.iPod = self.env.ref('product.product_product_11')
+        self.wirelessKeyboard = self.env.ref('product.product_product_9')
+        self.computerCase = self.env.ref('product.product_product_16')
+        self.littleServer = self.env.ref('product.consu_delivery_02')
         self.steve = self.env['res.partner'].create({
             'name': 'Steve Bucknor',
             'customer': True,
