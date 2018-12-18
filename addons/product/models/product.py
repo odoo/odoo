@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import logging
 import re
 
 from odoo import api, fields, models, tools, _
@@ -10,6 +11,8 @@ from odoo.osv import expression
 from odoo.addons import decimal_precision as dp
 
 from odoo.tools import float_compare, pycompat
+
+_logger = logging.getLogger(__name__)
 
 
 class ProductCategory(models.Model):
@@ -83,13 +86,16 @@ class ProductProduct(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'default_code, name, id'
 
+    # price: total price, context dependent (partner, pricelist, quantity)
     price = fields.Float(
         'Price', compute='_compute_product_price',
         digits=dp.get_precision('Product Price'), inverse='_set_product_price')
+    # price_extra: catalog extra value only, sum of variant extra attributes
     price_extra = fields.Float(
         'Variant Price Extra', compute='_compute_product_price_extra',
         digits=dp.get_precision('Product Price'),
         help="This is the sum of the extra price of all attributes")
+    # lst_price: catalog value + extra, context dependent (uom)
     lst_price = fields.Float(
         'Sale Price', compute='_compute_product_lst_price',
         digits=dp.get_precision('Product Price'), inverse='_set_product_lst_price',
@@ -163,8 +169,8 @@ class ProductProduct(models.Model):
         pricelist_id_or_name = self._context.get('pricelist')
         if pricelist_id_or_name:
             pricelist = None
-            partner = self._context.get('partner', False)
-            quantity = self._context.get('quantity', 1.0)
+            partner = self.env.context.get('partner', False)
+            quantity = self.env.context.get('quantity', 1.0)
 
             # Support context pricelists specified as display_name or ID for compatibility
             if isinstance(pricelist_id_or_name, pycompat.string_types):
@@ -278,11 +284,29 @@ class ProductProduct(models.Model):
         else:
             self.product_tmpl_id.image = image
 
+    @api.depends('product_tmpl_id', 'attribute_value_ids')
     def _compute_product_template_attribute_value_ids(self):
+        # Fetch and pre-map the values first for performance. It assumes there
+        # won't be too many values, but there might be a lot of products.
+        values = self.env['product.template.attribute.value'].search([
+            ('product_tmpl_id', 'in', self.mapped('product_tmpl_id').ids),
+            ('product_attribute_value_id', 'in', self.mapped('attribute_value_ids').ids),
+        ])
+
+        values_per_template = {}
+        for ptav in values:
+            pt_id = ptav.product_tmpl_id.id
+            if pt_id not in values_per_template:
+                values_per_template[pt_id] = {}
+            values_per_template[pt_id][ptav.product_attribute_value_id.id] = ptav
+
         for product in self:
-            product.product_template_attribute_value_ids = self.env['product.template.attribute.value']._search([
-                ('product_tmpl_id', '=', product.product_tmpl_id.id),
-                ('product_attribute_value_id', 'in', product.attribute_value_ids.ids)])
+            product.product_template_attribute_value_ids = self.env['product.template.attribute.value']
+            for pav in product.attribute_value_ids:
+                if product.product_tmpl_id.id not in values_per_template or pav.id not in values_per_template[product.product_tmpl_id.id]:
+                    _logger.warning("A matching product.template.attribute.value was not found for the product.attribute.value #%s on the template #%s" % (pav.id, product.product_tmpl_id.id))
+                else:
+                    product.product_template_attribute_value_ids += values_per_template[product.product_tmpl_id.id][pav.id]
 
     @api.one
     def _get_pricelist_items(self):
@@ -390,7 +414,7 @@ class ProductProduct(models.Model):
         result = []
         for product in self.sudo():
             # display only the attributes with multiple possible values on the template
-            variable_attributes = product.attribute_line_ids.filtered(lambda l: len(l.value_ids) > 1).mapped('attribute_id')
+            variable_attributes = product.product_tmpl_id._get_valid_product_template_attribute_lines().filtered(lambda l: len(l.value_ids) > 1).mapped('attribute_id')
             variant = product.attribute_value_ids._variant_name(variable_attributes)
 
             name = variant and "%s (%s)" % (product.name, variant) or product.name
@@ -610,9 +634,34 @@ class ProductProduct(models.Model):
             :return: True if the attibutes and values are correct, False instead
         """
         self.ensure_one()
-        values = self.attribute_value_ids.filtered(lambda v: v.attribute_id.create_variant != 'no_variant')
+        values = self.attribute_value_ids
         attributes = values.mapped('attribute_id')
-        return attributes == valid_attributes and values <= valid_values
+        if attributes != valid_attributes:
+            return False
+        for value in values:
+            if value not in valid_values:
+                return False
+        return True
+
+    @api.multi
+    def _is_variant_possible(self, parent_combination=None):
+        """Return whether the variant is possible based on its own combination,
+        and optionally a parent combination.
+
+        See `_is_combination_possible` for more information.
+
+        This will always exclude variants for templates that have `no_variant`
+        attributes because the variant itself will not be the full combination.
+
+        :param parent_combination: combination from which `self` is an
+            optional or accessory product.
+        :type parent_combination: recordset `product.template.attribute.value`
+
+        :return: ẁhether the variant is possible based on its own combination
+        :rtype: bool
+        """
+        self.ensure_one()
+        return self.product_tmpl_id._is_combination_possible(self.product_template_attribute_value_ids, parent_combination=parent_combination)
 
 
 class ProductPackaging(models.Model):

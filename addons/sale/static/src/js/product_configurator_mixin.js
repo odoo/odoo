@@ -13,6 +13,7 @@ var ProductConfiguratorMixin = {
         'click button.js_add_cart_json': 'onClickAddCartJSON',
         'change [data-attribute_exclusions]': 'onChangeVariant'
     },
+    isSelectedVariantAllowed: true,
 
     //--------------------------------------------------------------------------
     // Public
@@ -22,7 +23,6 @@ var ProductConfiguratorMixin = {
      * When a product is added or when the quantity is changed,
      * we need to refresh the total price row
      * TODO awa: add a container context to avoid global selectors ?
-     *
      */
     computePriceTotal: function () {
         if ($('.js_price_total').length){
@@ -56,8 +56,10 @@ var ProductConfiguratorMixin = {
             $component = $(ev.currentTarget).closest('form');
         } else if ($(ev.currentTarget).closest('.oe_optional_products_modal').length > 0){
             $component = $(ev.currentTarget).closest('.oe_optional_products_modal');
-        } else {
+        } else if ($(ev.currentTarget).closest('.o_product_configurator').length > 0) {
             $component = $(ev.currentTarget).closest('.o_product_configurator');
+        } else {
+            $component = $(ev.currentTarget);
         }
         var qty = $component.find('input[name="add_qty"]').val();
 
@@ -68,10 +70,10 @@ var ProductConfiguratorMixin = {
 
         ajax.jsonRpc(this._getUri('/product_configurator/get_combination_info'), 'call', {
             product_template_id: parseInt($parent.find('.product_template_id').val()),
-            product_id: parseInt($parent.find('.product_id').val()),
+            product_id: this._getProductId($parent),
             combination: combination,
             add_qty: parseInt(qty),
-            pricelist_id: this.pricelistId
+            pricelist_id: this.pricelistId || false,
         }).then(function (combinationData) {
             self._onChangeCombination(ev, $parent, combinationData);
         });
@@ -291,23 +293,28 @@ var ProductConfiguratorMixin = {
      */
     selectOrCreateProduct: function ($container, productId, productTemplateId, useAjax) {
         var self = this;
+        productId = parseInt(productId);
+        productTemplateId = parseInt(productTemplateId);
         var productReady = $.Deferred();
-        if (productId && productId !== '0'){
+        if (productId) {
             productReady.resolve(productId);
         } else {
             var params = {
-                model: 'product.template',
-                method: 'create_product_variant',
-                args: [
-                    productTemplateId,
-                    JSON.stringify(self.getSelectedVariantValues($container))
-                ]
+                product_template_id: productTemplateId,
+                product_template_attribute_value_ids:
+                    JSON.stringify(self.getSelectedVariantValues($container)),
             };
 
+            // Note about 12.0 compatibility: this route will not exist if
+            // updating the code but not restarting the server. (404)
+            // We don't handle that compatibility because the previous code was
+            // not working either: it was making an RPC that failed with any
+            // non-admin user anyway. To use this feature, restart the server.
+            var route = '/product_configurator/create_product_variant';
             if (useAjax) {
-                productReady = ajax.jsonRpc('/web/dataset/call', 'call', params);
+                productReady = ajax.jsonRpc(route, 'call', params);
             } else {
-                productReady = this._rpc(params);
+                productReady = this._rpc({route: route, params: params});
             }
         }
 
@@ -335,6 +342,23 @@ var ProductConfiguratorMixin = {
      * @param {Array} combination the selected combination of product attribute values
      */
     _checkExclusions: function ($parent, combination) {
+
+        function areCombinationsEqual(c1, c2) {
+            return c1.length === c2.length && _.every(c1, function (ptav) {
+                return c2.indexOf(ptav) > -1;
+            });
+        }
+
+        function isCombinationInList(c1, list) {
+            return _.some(list, function (c2) {
+                return areCombinationsEqual(c1, c2);
+            });
+        }
+
+        function isPtavInCombination(ptav, combination) {
+            return combination.indexOf(ptav) > -1;
+        }
+
         var self = this;
         var combinationData = $parent
             .find('ul[data-attribute_exclusions]')
@@ -343,49 +367,77 @@ var ProductConfiguratorMixin = {
         $parent.find('option, input, label').removeClass('css_not_available');
 
         var disable = false;
+
+        // compatibility 12.0
+        var filteredCombination = combination;
+        if (combinationData.no_variant_product_template_attribute_value_ids !== undefined) {
+            var no_variants = combinationData.no_variant_product_template_attribute_value_ids;
+            filteredCombination = _.filter(combination, function (ptav) {
+                return !isPtavInCombination(ptav, no_variants);
+            });
+        }
+
+        // exclusion rules: array of ptav
+        // for each of them, contains array with the other ptav they exclude
         if (combinationData.exclusions) {
-            _.each(combination, function (combinationValue){
-                if (combinationData.exclusions &&
-                    combinationData.exclusions.hasOwnProperty(combinationValue)){
-                    // check that the selected combination is in the exclusions
-                    _.each(combinationData.exclusions[combinationValue], function (exclusion) {
-                        if (!disable && combination.indexOf(exclusion) > -1) {
+            // browse all the currently selected attributes
+            _.each(combination, function (current_ptav) {
+                if (combinationData.exclusions.hasOwnProperty(current_ptav)) {
+                    // for each exclusion of the current attribute:
+                    _.each(combinationData.exclusions[current_ptav], function (excluded_ptav) {
+                        // disable if it excludes any other attribute already in the combination
+                        if (isPtavInCombination(excluded_ptav, combination)) {
                             disable = true;
                         }
 
-                        self._disableInput($parent, exclusion);
+                        // disable the excluded input (even when not already selected)
+                        // to give a visual feedback before click
+                        self._disableInput($parent, excluded_ptav);
                     });
                 }
             });
         }
 
-        if (combinationData.parent_exclusions){
-            _.each(combinationData.parent_exclusions, function (exclusion){
-                if (!disable && combination.indexOf(exclusion) > -1) {
-                    disable = true;
-                }
-                self._disableInput($parent, exclusion);
-            });
+        // parent exclusions (tell which attributes are excluded from parent)
+        _.each(combinationData.parent_exclusions, function (ptav) {
+            if (isPtavInCombination(ptav, combination)) {
+                disable = true;
+            }
+            // disable the excluded input (even when not already selected)
+            // to give a visual feedback before click
+            self._disableInput($parent, ptav);
+        });
+
+        // archived variants
+        if (isCombinationInList(filteredCombination, combinationData.archived_combinations)) {
+            disable = true;
         }
 
-        if (combinationData.archived_combinations){
-            _.each(combinationData.archived_combinations, function (archived_combination){
-                if (disable) {
-                    return;
-                }
-
-                disable = _.every(archived_combination, function (attribute_value){
-                    return combination.indexOf(attribute_value) > -1;
-                });
-            });
+        // if not using dynamic attributes, exclude variants that are deleted
+        if (filteredCombination.length && // compatibility 12.0 list view of variants
+            combinationData.has_dynamic_attributes === false &&
+            combinationData.existing_combinations !== undefined &&
+            !isCombinationInList(filteredCombination, combinationData.existing_combinations)
+        ) {
+            disable = true;
         }
 
+        this.isSelectedVariantAllowed = !disable;
         $parent.toggleClass('css_not_available', disable);
         $parent.find("#add_to_cart").toggleClass('disabled', disable);
         $parent
             .parents('.modal')
             .find('.o_sale_product_configurator_add')
             .toggleClass('disabled', disable);
+    },
+
+    /**
+     * Extracted to a method to be extendable by other modules
+     *
+     * @param {$.Element} $parent
+     */
+    _getProductId: function ($parent) {
+        return parseInt($parent.find('.product_id').val());
     },
 
     /**
@@ -418,7 +470,11 @@ var ProductConfiguratorMixin = {
         var $optional_price = $parent.find(".oe_optional:first .oe_currency_value");
         $price.html(self._priceToStr(combination.price));
         $default_price.html(self._priceToStr(combination.list_price));
-        if (combination.list_price - combination.price >= 0.01) {
+
+        // compatibility_check to remove in master
+        // needed for fix in 12.0 in the case of git pull and no server restart
+        var compatibility_check = combination.list_price - combination.price >= 0.01;
+        if (combination.has_discounted_price !== undefined ? combination.has_discounted_price : compatibility_check) {
             $default_price
                 .closest('.oe_website_sale')
                 .addClass("discount");
@@ -428,6 +484,9 @@ var ProductConfiguratorMixin = {
                 .css('text-decoration', 'line-through');
             $default_price.parent().removeClass('d-none');
         } else {
+            $default_price
+                .closest('.oe_website_sale')
+                .removeClass("discount");
             $optional_price.closest('.oe_optional').addClass('d-none');
             $default_price.parent().addClass('d-none');
         }
@@ -438,11 +497,16 @@ var ProductConfiguratorMixin = {
             '.o_product_configurator'
         ];
 
-        self._updateProductImage(
-            $parent.closest(rootComponentSelectors.join(', ')),
-            combination.product_id,
-            combination.product_template_id
-        );
+        // update images only when changing product
+        if (combination.product_id !== this.last_product_id) {
+            this.last_product_id = combination.product_id;
+            self._updateProductImage(
+                $parent.closest(rootComponentSelectors.join(', ')),
+                combination.product_id,
+                combination.product_template_id,
+                combination.carousel
+            );
+        }
 
         $parent
             .find('.product_id')
@@ -492,47 +556,20 @@ var ProductConfiguratorMixin = {
      * @param {integer} productTemplateId
      */
     _updateProductImage: function ($productContainer, productId, productTemplateId) {
-        var $img;
         var model = productId ? 'product.product' : 'product.template';
         var modelId = productId || productTemplateId;
-        var imageSrc = '/web/image?model={0}&id={1}&field=image'
+        var imageSrc = '/web/image/{0}/{1}/image'
             .replace("{0}", model)
             .replace("{1}", modelId);
 
-        if ($productContainer.find('#o-carousel-product').length) {
-            $img = $productContainer.find('img.js_variant_img');
-            $img.attr("src", imageSrc);
-            $img.parent().attr('data-oe-model', model).attr('data-oe-id', modelId)
-                .data('oe-model', model).data('oe-id', modelId);
+        var imagesSelectors = [
+            'span[data-oe-model^="product."][data-oe-type="image"] img:first',
+            'img.product_detail_img',
+            'span.variant_image img'
+        ];
 
-            var $thumbnail = $productContainer.find('img.js_variant_img_small');
-            if ($thumbnail.length !== 0) { // if only one, thumbnails are not displayed
-                $thumbnail.attr("src", "/web/image/{0}/{1}/image/90x90"
-                    .replace('{0}', model)
-                    .replace('{1}', modelId));
-                $('.carousel').carousel(0);
-            }
-        }
-        else {
-            var imagesSelectors = [
-                'span[data-oe-model^="product."][data-oe-type="image"] img:first',
-                'img.product_detail_img',
-                'span.variant_image img'
-            ];
-
-            $img = $productContainer.find(imagesSelectors.join(', '));
-            $img.attr('src', imageSrc);
-            $img.parent()
-                .attr('data-oe-model', model)
-                .attr('data-oe-id', modelId)
-                .data('oe-model', model)
-                .data('oe-id', modelId);
-        }
-        // reset zooming constructs
-        $img.filter('[data-zoom-image]').attr('data-zoom-image', $img.attr('src'));
-        if ($img.data('zoomOdoo') !== undefined) {
-            $img.data('zoomOdoo').isReady = false;
-        }
+        var $img = $productContainer.find(imagesSelectors.join(', '));
+        $img.attr('src', imageSrc);
     },
 
     /**
@@ -553,11 +590,13 @@ var ProductConfiguratorMixin = {
      * Website behavior is slightly different from backend so we append
      * "_website" to URLs to lead to a different route
      *
+     * TODO this should be overriden in website_sale instead.
+     *
      * @private
      * @param {string} uri The uri to adapt
      */
     _getUri: function (uri) {
-        if (this.isWebsite){
+        if (this.isWebsite) {
             return uri + '_website';
         } else {
             return uri;

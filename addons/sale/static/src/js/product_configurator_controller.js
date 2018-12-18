@@ -48,21 +48,27 @@ var ProductConfiguratorFormController = FormController.extend({
      * @override
      */
     _onFieldChanged: function (event) {
+        this._super.apply(this, arguments);
+
         var self = this;
+        var product_id = event.data.changes.product_template_id.id;
+
+        // check to prevent traceback when emptying the field
+        if (!product_id) {
+            return;
+        }
 
         this.$el.parents('.modal').find('.o_sale_product_configurator_add').removeClass('disabled');
 
         this._rpc({
             route: '/product_configurator/configure',
             params: {
-                product_id: event.data.changes.product_template_id.id,
+                product_id: product_id,
                 pricelist_id: this.renderer.pricelistId
             }
         }).then(function (configurator) {
             self.renderer.renderConfigurator(configurator);
         });
-
-        this._super.apply(this, arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -94,7 +100,7 @@ var ProductConfiguratorFormController = FormController.extend({
             false
         );
 
-        productReady.done(function (productId){
+        productReady.done(function (productId) {
             $modal.find(productSelector.join(', ')).val(productId);
 
             var variantValues = self

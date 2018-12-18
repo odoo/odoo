@@ -1120,9 +1120,16 @@ class SaleOrderLine(models.Model):
     product_uom_qty = fields.Float(string='Ordered Quantity', digits=dp.get_precision('Product Unit of Measure'), required=True, default=1.0)
     product_uom = fields.Many2one('uom.uom', string='Unit of Measure')
     product_custom_attribute_value_ids = fields.One2many('product.attribute.custom.value', 'sale_order_line_id', string='User entered custom product attribute values')
+
     # M2M holding the values of product.attribute with create_variant field set to 'no_variant'
     # It allows keeping track of the extra_price associated to those attribute values and add them to the SO line description
+    # Note: If the attributes are changed on the template, some or all records
+    # in `product_no_variant_attribute_value_ids` will be removed here, even
+    # from existing or locked sales order lines. Thus this field can only be
+    # relied on initially, but it cannot be used to recompute anything later
+    # because the result might be different then.
     product_no_variant_attribute_value_ids = fields.Many2many('product.template.attribute.value', string='Product attribute values that do not create variants')
+
     # Non-stored related field to allow portal user to see the image of the product he has ordered
     product_image = fields.Binary('Product Image', related="product_id.image", store=False, readonly=False)
 
@@ -1372,11 +1379,20 @@ class SaleOrderLine(models.Model):
         # TO DO: move me in master/saas-16 on sale.order
         # awa: don't know if it's still the case since we need the "product_no_variant_attribute_value_ids" field now
         # to be able to compute the full price
-        if self.product_no_variant_attribute_value_ids:
-            product = product.with_context(no_variant_attributes_price_extra=[
-                no_variant_attribute_value.price_extra or 0
-                for no_variant_attribute_value in self.product_no_variant_attribute_value_ids
-            ])
+
+        # it is possible that a no_variant attribute is still in a variant if
+        # the type of the attribute has been changed after creation.
+        no_variant_attributes_price_extra = [
+            ptav.price_extra for ptav in self.product_no_variant_attribute_value_ids.filtered(
+                lambda ptav:
+                    ptav.price_extra and
+                    ptav not in product.product_template_attribute_value_ids
+            )
+        ]
+        if no_variant_attributes_price_extra:
+            product = product.with_context(
+                no_variant_attributes_price_extra=no_variant_attributes_price_extra
+            )
 
         if self.order_id.pricelist_id.discount_policy == 'with_discount':
             return product.with_context(pricelist=self.order_id.pricelist_id.id).price
@@ -1397,6 +1413,16 @@ class SaleOrderLine(models.Model):
         if not self.product_id:
             return {'domain': {'product_uom': []}}
 
+        # remove the is_custom values that don't belong to this template
+        for pacv in self.product_custom_attribute_value_ids:
+            if pacv.attribute_value_id not in self.product_id.product_tmpl_id._get_valid_product_attribute_values():
+                self.product_custom_attribute_value_ids -= pacv
+
+        # remove the no_variant attributes that don't belong to this template
+        for ptav in self.product_no_variant_attribute_value_ids:
+            if ptav.product_attribute_value_id not in self.product_id.product_tmpl_id._get_valid_product_attribute_values():
+                self.product_no_variant_attribute_value_ids -= ptav
+
         vals = {}
         domain = {'product_uom': [('category_id', '=', self.product_id.uom_id.category_id.id)]}
         if not self.product_uom or (self.product_id.uom_id.id != self.product_uom.id):
@@ -1405,7 +1431,7 @@ class SaleOrderLine(models.Model):
 
         product = self.product_id.with_context(
             lang=self.order_id.partner_id.lang,
-            partner=self.order_id.partner_id.id,
+            partner=self.order_id.partner_id,
             quantity=vals.get('product_uom_qty') or self.product_uom_qty,
             date=self.order_id.date_order,
             pricelist=self.order_id.pricelist_id.id,
@@ -1429,20 +1455,6 @@ class SaleOrderLine(models.Model):
 
         name = self.get_sale_order_line_multiline_description_sale(product)
 
-        if self.product_custom_attribute_value_ids or self.product_no_variant_attribute_value_ids:
-            name += '\n'
-
-        if self.product_custom_attribute_value_ids:
-            for product_custom_attribute_value in self.product_custom_attribute_value_ids:
-                if product_custom_attribute_value.custom_value and product_custom_attribute_value.custom_value.strip():
-                    name += '\n' + product_custom_attribute_value.attribute_value_id.name + ': ' + product_custom_attribute_value.custom_value.strip()
-
-        if self.product_no_variant_attribute_value_ids:
-            for no_variant_attribute_value in self.product_no_variant_attribute_value_ids.filtered(
-                lambda product_attribute_value: not product_attribute_value.is_custom
-            ):
-                name += '\n' + no_variant_attribute_value.attribute_id.name + ': ' + no_variant_attribute_value.name
-
         vals.update(name=name)
 
         self._compute_tax_id()
@@ -1461,7 +1473,7 @@ class SaleOrderLine(models.Model):
         if self.order_id.pricelist_id and self.order_id.partner_id:
             product = self.product_id.with_context(
                 lang=self.order_id.partner_id.lang,
-                partner=self.order_id.partner_id.id,
+                partner=self.order_id.partner_id,
                 quantity=self.product_uom_qty,
                 date=self.order_id.date_order,
                 pricelist=self.order_id.pricelist_id.id,
@@ -1557,7 +1569,7 @@ class SaleOrderLine(models.Model):
         self.discount = 0.0
         product = self.product_id.with_context(
             lang=self.order_id.partner_id.lang,
-            partner=self.order_id.partner_id.id,
+            partner=self.order_id.partner_id,
             quantity=self.product_uom_qty,
             date=self.order_id.date_order,
             pricelist=self.order_id.pricelist_id.id,
@@ -1591,4 +1603,38 @@ class SaleOrderLine(models.Model):
         BUT in event_sale we need to know specifically the sales order line as well as the product to generate the name:
             the product is not sufficient because we also need to know the event_id and the event_ticket_id (both which belong to the sale order line).
         """
-        return product.get_product_multiline_description_sale()
+        return product.get_product_multiline_description_sale() + self._get_sale_order_line_multiline_description_variants()
+
+    def _get_sale_order_line_multiline_description_variants(self):
+        """When using no_variant attributes or is_custom values, the product
+        itself is not sufficient to create the description: we need to add
+        information about those special attributes and values.
+
+        See note about `product_no_variant_attribute_value_ids` above the field
+        definition: this method is not reliable to recompute the description at
+        a later time, it should only be used initially.
+
+        :return: the description related to special variant attributes/values
+        :rtype: string
+        """
+        if not self.product_custom_attribute_value_ids and not self.product_no_variant_attribute_value_ids:
+            return ""
+
+        name = "\n"
+
+        product_attribute_with_is_custom = self.product_custom_attribute_value_ids.mapped('attribute_value_id.attribute_id')
+
+        # display the no_variant attributes, except those that are also
+        # displayed by a custom (avoid duplicate)
+        for no_variant_attribute_value in self.product_no_variant_attribute_value_ids.filtered(
+            lambda ptav: ptav.attribute_id not in product_attribute_with_is_custom
+        ):
+            name += "\n" + no_variant_attribute_value.attribute_id.name + ': ' + no_variant_attribute_value.name
+
+        # display the is_custom values
+        for pacv in self.product_custom_attribute_value_ids:
+            name += "\n" + pacv.attribute_value_id.attribute_id.name + \
+                ': ' + pacv.attribute_value_id.name + \
+                ': ' + (pacv.custom_value or '').strip()
+
+        return name

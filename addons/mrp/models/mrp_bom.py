@@ -291,7 +291,7 @@ class MrpBomLine(models.Model):
     @api.onchange('parent_product_tmpl_id')
     def onchange_parent_product(self):
         return {'domain': {'attribute_value_ids': [
-            ('id', 'in', self.parent_product_tmpl_id.mapped('attribute_line_ids.value_ids.id')),
+            ('id', 'in', self.parent_product_tmpl_id._get_valid_product_attribute_values().ids),
             ('attribute_id.create_variant', '!=', 'no_variant')
         ]}}
 

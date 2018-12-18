@@ -9,7 +9,7 @@ odoo.define("website_sale.tour_shop_custom_attribute_value", function (require) 
         test: true,
         wait_for: base.ready()
     }, [{
-        trigger: 'img[src*="/product.template/9"]',
+        trigger: 'img[src*="/product.product/10"]',
         run: 'click'
     }, {
         trigger: 'li.js_attribute_value span:contains(Custom)',
@@ -39,7 +39,7 @@ odoo.define("website_sale.tour_shop_custom_attribute_value", function (require) 
         extra_trigger: '.oe_optional_products_modal',
         run: 'click'
     }, {
-        trigger: '.oe_price span:contains(22.9)',
+        trigger: '.oe_price span:contains(22.90)',
         run: function (){}, // check
     }, {
         trigger: '.oe_optional_products_modal .js_product:has(strong:contains(Conference Chair)) .js_add',
