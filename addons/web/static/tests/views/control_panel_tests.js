@@ -359,5 +359,38 @@ QUnit.module('Views', {
 
         controlPanel.destroy();
     });
+
+    QUnit.module('Control Panel behaviour');
+
+    QUnit.test('remove a facet with backspace', async function (assert) {
+        assert.expect(2);
+
+        var controlPanel = await createControlPanel({
+            model: 'partner',
+            arch: "<search><filter name=\"filterA\" string=\"A\" domain=\"[]\"/></search>",
+            data: this.data,
+            searchMenuTypes: ['filter'],
+        });
+        testUtils.dom.click(controlPanel.$('.o_filters_menu_button'));
+        testUtils.dom.click($('.o_menu_item a'));
+        assert.strictEqual($('.o_searchview .o_searchview_facet .o_facet_values span').text().trim(), 'A',
+            'should have a facet with A');
+
+        // delete a facet
+        controlPanel.$('input.o_searchview_input').trigger($.Event('keydown', {
+            which: $.ui.keyCode.BACKSPACE,
+            keyCode: $.ui.keyCode.BACKSPACE,
+        }));
+        assert.strictEqual($('.o_searchview .o_searchview_facet .o_facet_values span').length, 0,
+            'there should be no facet');
+
+        // delete nothing (should not crash)
+        controlPanel.$('input.o_searchview_input').trigger($.Event('keydown', {
+            which: $.ui.keyCode.BACKSPACE,
+            keyCode: $.ui.keyCode.BACKSPACE,
+        }));
+
+        controlPanel.destroy();
+    });
 });
 });
