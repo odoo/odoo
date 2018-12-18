@@ -11,7 +11,6 @@ Allows users to send documents by post
     'data': [
         'data/snailmail_data.xml',
         'views/report_assets.xml',
-        'views/res_config_settings_views.xml',
         'views/snailmail_views.xml',
         'security/ir.model.access.csv',
     ],
