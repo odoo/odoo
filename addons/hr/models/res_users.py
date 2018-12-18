@@ -48,6 +48,16 @@ class User(models.Model):
     additional_note = fields.Text(related='employee_id.additional_note', readonly=False, related_sudo=False)
     barcode = fields.Char(related='employee_id.barcode', readonly=False, related_sudo=False)
     pin = fields.Char(related='employee_id.pin', readonly=False, related_sudo=False)
+    employee_warning = fields.Char("Missing employee warning", compute='_compute_employee_warning')
+
+    @api.depends('groups_id', 'employee_ids', 'active')
+    def _compute_employee_warning(self):
+        """ Fill warning only for active internal user (employee) not linked to hr.employee """
+        for user in self:
+            if not user.employee_ids and not user.share and user.active:
+                user.employee_warning = _("Don't forget to create the linked employee.")
+            else:
+                user.employee_warning = False
 
     def __init__(self, pool, cr):
         """ Override of __init__ to add access rights.
@@ -163,3 +173,16 @@ class User(models.Model):
     def _compute_company_employee(self):
         for user in self:
             user.employee_id = self.env['hr.employee'].search([('id', 'in', user.employee_ids.ids), ('company_id', '=', user.company_id.id)], limit=1)
+
+    @api.multi
+    def action_create_employee(self):
+        self.ensure_one()
+        form_view = self.env.ref('hr.view_employee_form')
+        return {
+            'name': _('Create Employee'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'hr.employee',
+            'views': [(form_view.id, 'form')],
+            'target': 'new',
+            'context': {'default_user_id': self.id}
+        }
