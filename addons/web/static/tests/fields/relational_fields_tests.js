@@ -3357,6 +3357,46 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('widget many2many_checkboxes in a subview', function (assert) {
+        assert.expect(2);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<sheet>' +
+                        '<notebook>' +
+                            '<page string="Turtles">' +
+                                '<field name="turtles" mode="tree">' +
+                                    '<tree>' +
+                                        '<field name="id"/>' +
+                                    '</tree>' +
+                                '</field>' +
+                            '</page>' +
+                        '</notebook>' +
+                    '</sheet>' +
+            '</form>',
+            archs: {
+                'turtle,false,form': '<form>' +
+                    '<field name="partner_ids" widget="many2many_checkboxes"/>' +
+                '</form>',
+            },
+            res_id: 1,
+        });
+
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$('.o_data_cell').click();
+        // edit the partner_ids field by (un)checking boxes on the widget
+        var $firstCheckbox = $('.modal .custom-control-input').first();
+        $firstCheckbox.click();
+        assert.ok($firstCheckbox.prop('checked'), "the checkbox should be ticked");
+        var $secondCheckbox = $('.modal .custom-control-input').eq(1);
+        $secondCheckbox.click();
+        assert.notOk($secondCheckbox.prop('checked'), "the checkbox should be unticked");
+        form.destroy();
+    });
+
     QUnit.test('embedded one2many with widget', function (assert) {
         assert.expect(1);
 
