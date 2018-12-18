@@ -19,7 +19,7 @@ PROCUREMENT_PRIORITIES = [('0', 'Not urgent'), ('1', 'Normal'), ('2', 'Urgent'),
 class StockMove(models.Model):
     _name = "stock.move"
     _description = "Stock Move"
-    _order = 'picking_id, sequence, id'
+    _order = 'sequence, id'
 
     def _default_group_id(self):
         if self.env.context.get('default_picking_id'):
