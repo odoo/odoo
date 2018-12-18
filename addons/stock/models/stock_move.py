@@ -707,6 +707,7 @@ class StockMove(models.Model):
             else:
                 recompute = True
                 picking = Picking.create(move._get_new_picking_values())
+
             move.write({'picking_id': picking.id})
             move._assign_picking_post_process(new=recompute)
             # If this method is called in batch by a write on a one2many and
@@ -764,11 +765,15 @@ class StockMove(models.Model):
                 to_assign[key] |= move
 
         # create procurements for make to order moves
+        procurement_requests = []
         for move in move_create_proc:
             values = move._prepare_procurement_values()
             origin = (move.group_id and move.group_id.name or (move.origin or move.picking_id.name or "/"))
-            self.env['procurement.group'].run(move.product_id, move.product_uom_qty, move.product_uom, move.location_id, move.rule_id and move.rule_id.name or "/", origin,
-                                              values)
+            procurement_requests.append(self.env['procurement.group'].Procurement(
+                move.product_id, move.product_uom_qty, move.product_uom,
+                move.location_id, move.rule_id and move.rule_id.name or "/",
+                origin, move.company_id, values))
+        self.env['procurement.group'].run(procurement_requests)
 
         move_to_confirm.write({'state': 'confirmed'})
         (move_waiting | move_create_proc).write({'state': 'waiting'})
@@ -794,7 +799,6 @@ class StockMove(models.Model):
             elif self.rule_id.group_propagation_option == 'none':
                 group_id = False
         return {
-            'company_id': self.company_id,
             'date_planned': self.date_expected,
             'move_dest_ids': self,
             'group_id': group_id,

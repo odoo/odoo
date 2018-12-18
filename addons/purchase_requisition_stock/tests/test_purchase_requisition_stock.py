@@ -12,11 +12,19 @@ class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
     def test_01_purchase_requisition_stock(self):
         date_planned = fields.Datetime.now()
         warehouse = self.env['stock.warehouse'].browse(self.ref('stock.warehouse0'))
-        self.env['procurement.group'].run(self.product_13, 14, self.env['uom.uom'].browse(self.ref('uom.product_uom_unit')), warehouse.lot_stock_id, '/', '/',
-                                          {
-                                            'warehouse_id': warehouse,
-                                            'date_planned': date_planned,
-                                          })
+        self.env['procurement.group'].run([self.env['procurement.group'].Procurement(
+            self.product_13,
+            14,
+            self.env['uom.uom'].browse(self.ref('uom.product_uom_unit')),
+            warehouse.lot_stock_id,
+            '/',
+            '/',
+            self.env.user.company_id,
+            {
+                'warehouse_id': warehouse,
+                'date_planned': date_planned,
+            }
+        )])
         # Check requisition details which created after run procurement.
         line = self.env['purchase.requisition.line'].search([('product_id', '=', self.product_13.id), ('product_qty', '=', 14.0)])
         requisition = line[0].requisition_id
