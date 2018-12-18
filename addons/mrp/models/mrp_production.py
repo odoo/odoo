@@ -863,6 +863,8 @@ class MrpProduction(models.Model):
         self.post_inventory()
         moves_to_cancel = (self.move_raw_ids | self.move_finished_ids).filtered(lambda x: x.state not in ('done', 'cancel'))
         moves_to_cancel._action_cancel()
+        for move in self.move_finished_ids.filtered(lambda x: x.state != 'cancel'):
+            move._split_mts()
         self.write({'date_finished': fields.Datetime.now()})
         return True
 
