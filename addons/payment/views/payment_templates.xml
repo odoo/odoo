@@ -44,7 +44,7 @@
                 <t t-set="pms_count" t-value="len(pms) if pms else 0"/>
                 <t t-set="MAX_BRAND_LINE" t-value="3"/>
                 <t t-foreach="acquirers" t-as="acq">
-                    <div class="card-body">
+                    <div class="card-body o_payment_acquirer_select">
                         <label>
                             <t t-if="acq.payment_flow == 'form'">
                                 <input type="radio" t-att-data-acquirer-id="acq.id"
@@ -103,7 +103,7 @@
                     </t>
                 </t>
                 <t t-foreach="pms" t-as="pm">
-                    <div class="card-body">
+                    <div class="card-body o_payment_acquirer_select">
                         <label>
                             <input t-if="mode == 'payment'" type="radio" name="pm_id" t-att-value="pm.id" t-att-checked="checked_pm_id == pm.id"/>
                             <span class="payment_option_name" t-esc="pm.name"/>
