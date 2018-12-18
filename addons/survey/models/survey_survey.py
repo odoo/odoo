@@ -30,7 +30,7 @@ class Survey(models.Model):
     active = fields.Boolean("Active", default=True)
     stage_id = fields.Many2one('survey.stage', string="Stage", default=_default_stage,
                                ondelete="restrict", copy=False, group_expand='_read_group_stage_ids')
-    is_closed = fields.Boolean("Is closed", related='stage_id.closed', readonly=False)
+    is_closed = fields.Boolean("Is closed", related='stage_id.closed', readonly=True)
     # content
     page_ids = fields.One2many('survey.page', 'survey_id', string='Pages', copy=True)
     user_input_ids = fields.One2many('survey.user_input', 'survey_id', string='User responses', readonly=True, groups='survey.group_survey_user')
