@@ -10,10 +10,19 @@
 
 <template id="report_location_barcode">
     <t t-call="web.html_container">
-        <div t-foreach="[docs[x:x+4] for x in xrange(0, len(docs), 4)]" t-as="page_docs" class="page article page_stock_location_barcodes">
+        <t t-set="docs_barcode" t-value="[doc for doc in docs if doc.barcode]"/>
+        <div t-foreach="[docs_barcode[x:x+4] for x in xrange(0, len(docs_barcode), 4)]" t-as="page_docs" class="page article page_stock_location_barcodes">
             <t t-foreach="page_docs" t-as="o">
-                <t t-if="o.barcode"><t t-set="content" t-value="o.barcode"/></t>
-                <t t-if="not o.barcode"><t t-set="content" t-value="o.name"/></t>
+                <t t-set="content" t-value="o.barcode"/>
+                <img class="barcode" t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s&amp;humanreadable=1' % ('Code128', content, 600, 100)" alt="Barcode"/>
+            </t>
+        </div>
+
+        <t t-set="docs_no_barcode" t-value="[doc for doc in docs if not doc.barcode]"/>
+        <div t-foreach="[docs_no_barcode[x:x+8] for x in xrange(0, len(docs_no_barcode), 8)]" t-as="page_docs_2" class="page article page_stock_location_barcodes">
+            <t t-set="content" t-value="len(docs_no_barcode)"/>
+            <t t-foreach="page_docs_2" t-as="o">
+                <t t-set="content" t-value="o.name"/>
                 <img class="barcode" t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s&amp;humanreadable=1' % ('Code128', content, 600, 100)" alt="Barcode"/>
             </t>
         </div>
