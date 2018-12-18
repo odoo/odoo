@@ -81,6 +81,12 @@ var CustomizeMenu = Widget.extend({
             },
         }).then(function (result) {
             var currentGroup = '';
+            if (result.length) {
+                $menu.append($('<div/>', {
+                    class: 'dropdown-divider',
+                    role: 'separator',
+                }));
+            }
             _.each(result, function (item) {
                 if (currentGroup !== item.inherit_id[1]) {
                     currentGroup = item.inherit_id[1];
