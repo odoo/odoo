@@ -222,13 +222,21 @@ class SaleOrderLine(models.Model):
         return values
 
     def _get_qty_procurement(self):
-        self.ensure_one()
-        qty = 0.0
-        for move in self.move_ids.filtered(lambda r: r.state != 'cancel'):
-            if move.picking_code == 'outgoing':
-                qty += move.product_uom._compute_quantity(move.product_uom_qty, self.product_uom, rounding_method='HALF-UP')
-            elif move.picking_code == 'incoming':
-                qty -= move.product_uom._compute_quantity(move.product_uom_qty, self.product_uom, rounding_method='HALF-UP')
+        domain = [('sale_line_id', 'in', self.ids), ('state', '!=', 'cancel'), ('scrapped', '=', False)]
+        fields = ['sale_line_id', 'product_qty']
+        outgoing_moves = self.env['stock.move'].read_group(domain + [('location_dest_id.usage', '=', 'customer')], fields, ['sale_line_id'])
+        incoming_moves = self.env['stock.move'].read_group(domain + [('location_dest_id.usage', '!=', 'customer')], fields, ['sale_line_id'])
+        qty = {}
+        for move in outgoing_moves:
+            if move['sale_line_id'] in qty:
+                qty[move['sale_line_id'][0]] += move['product_qty']
+            else:
+                qty[move['sale_line_id'][0]] = move['product_qty']
+        for move in incoming_moves:
+            if move['sale_line_id'] in qty:
+                qty[move['sale_line_id'][0]] -= move['product_qty']
+            else:
+                qty[move['sale_line_id'][0]] = -move['product_qty']
         return qty
 
     @api.multi
@@ -240,10 +248,11 @@ class SaleOrderLine(models.Model):
         """
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         errors = []
+        procurement_quantities = self._get_qty_procurement()
         for line in self:
-            if line.state != 'sale' or not line.product_id.type in ('consu','product'):
+            if line.state != 'sale' or line.product_id.type not in ('consu', 'product'):
                 continue
-            qty = line._get_qty_procurement()
+            qty = procurement_quantities.get(line.id, 0.0)
             if float_compare(qty, line.product_uom_qty, precision_digits=precision) >= 0:
                 continue
 
