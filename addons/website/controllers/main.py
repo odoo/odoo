@@ -331,45 +331,27 @@ class Website(Home):
     # Themes
     # ------------------------------------------------------
 
-    def get_view_ids(self, xml_ids):
-        ids = []
+    def _get_customize_views(self, xml_ids):
         View = request.env["ir.ui.view"].with_context(active_test=False)
-        for xml_id in xml_ids:
-            if "." in xml_id:
-                # Get website-specific view if possible
-                record_id = View.search([
-                    ("website_id", "=", request.website.id),
-                    ("key", "=", xml_id),
-                ], limit=1).id or request.env.ref(xml_id).id
-            else:
-                record_id = int(xml_id)
-            ids.append(record_id)
-        return ids
+        if not xml_ids:
+            return View
+        domain = [("key", "in", xml_ids)] + request.website.website_domain()
+        return View.search(domain).filter_duplicate()
 
     @http.route(['/website/theme_customize_get'], type='json', auth="public", website=True)
     def theme_customize_get(self, xml_ids):
-        enable = []
-        disable = []
-        ids = self.get_view_ids(xml_ids)
-        for view in request.env['ir.ui.view'].browse(ids):
-            if view.active:
-                enable.append(view.key)
-            else:
-                disable.append(view.key)
-        return [enable, disable]
+        views = self._get_customize_views(xml_ids)
+        return {
+            'enabled': views.filtered('active').mapped('key'),
+            'names': {view.key: view.name for view in views},
+        }
 
     @http.route(['/website/theme_customize'], type='json', auth="public", website=True)
     def theme_customize(self, enable=None, disable=None, get_bundle=False):
         """ enable or Disable lists of ``xml_id`` of the inherit templates """
-        def set_active(xml_ids, active):
-            if xml_ids:
-                real_ids = self.get_view_ids(xml_ids)
-                request.env['ir.ui.view'].browse(real_ids).write({'active': active})
 
-        if disable:
-            set_active(disable, False)
-        if enable:
-            set_active(enable, True)
+        self._get_customize_views(disable).write({'active': False})
+        self._get_customize_views(enable).write({'active': True})
 
         if get_bundle:
             context = dict(request.context)

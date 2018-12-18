@@ -448,7 +448,7 @@
         -> string = tab's nav text
         -> title = tab's heading
 
-    Allowed tags in the <content/> elements:
+    In the <content/> elements:
 
     <opt>: Declares a new toggle option
         -> id (optional) = an ID to associate to the option
@@ -476,6 +476,14 @@
     <list>: Declares a subset of options showed as a list
         -> string = list's title
         -> data-col (optional, default 6) = bootstrap column size for the list
+
+    Other elements will be ignored and their children will be processed as if
+    that element was omitted, except that those children will be considered as
+    in a new set of option. That allows to wrap an option in a fake element to
+    indicate it is a standalone option for example.
+
+    Note: if an option is the only one of its group, a toggle element will be
+    rendered.
 -->
 <template id="theme_customize">
     <div>
