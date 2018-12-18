@@ -8,7 +8,7 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
 
     def setUp(self):
         super(TestSaleCouponProgramRules, self).setUp()
-        self.iPadMini = self.env.ref('product.product_product_6').copy()
+        self.iPadMini = self.env.ref('product.product_product_6')
 
     # Test a free shipping reward + some expected behavior
     # (automatic line addition or removal)
