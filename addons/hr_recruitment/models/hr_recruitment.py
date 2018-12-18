@@ -118,7 +118,7 @@ class Applicant(models.Model):
     name = fields.Char("Subject / Application Name", required=True)
     active = fields.Boolean("Active", default=True, help="If the active field is set to false, it will allow you to hide the case without removing it.")
     description = fields.Text("Description")
-    email_from = fields.Char("Email", size=128, help="These people will receive email.")
+    email_from = fields.Char("Email", size=128, help="Applicant email")
     email_cc = fields.Text("Watchers Emails", size=252,
                            help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma")
     probability = fields.Float("Probability")
@@ -167,7 +167,8 @@ class Applicant(models.Model):
     legend_blocked = fields.Char(related='stage_id.legend_blocked', string='Kanban Blocked', readonly=False)
     legend_done = fields.Char(related='stage_id.legend_done', string='Kanban Valid', readonly=False)
     legend_normal = fields.Char(related='stage_id.legend_normal', string='Kanban Ongoing', readonly=False)
-    
+    application_count = fields.Integer(compute='_compute_application_count', help='Applications with the same email')
+
 
     @api.depends('date_open', 'date_closed')
     @api.one
@@ -182,6 +183,14 @@ class Applicant(models.Model):
             date_closed = self.date_closed
             self.day_close = (date_closed - date_create).total_seconds() / (24.0 * 3600)
             self.delay_close = self.day_close - self.day_open
+
+    @api.depends('email_from')
+    def _compute_application_count(self):
+        application_data = self.env['hr.applicant'].read_group([
+            ('email_from', 'in', list(set(self.mapped('email_from'))))], ['email_from'], ['email_from'])
+        application_data_mapped = dict((data['email_from'], data['email_from_count']) for data in application_data)
+        for applicant in self.filtered(lambda applicant: applicant.email_from):
+            applicant.application_count = application_data_mapped.get(applicant.email_from, 0)
 
     @api.multi
     def _get_attachment_number(self):
@@ -328,6 +337,17 @@ class Applicant(models.Model):
         action['domain'] = str(['&', ('res_model', '=', self._name), ('res_id', 'in', self.ids)])
         action['search_view_id'] = (self.env.ref('hr_recruitment.ir_attachment_view_search_inherit_hr_recruitment').id, )
         return action
+
+    @api.multi
+    def action_applications_email(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Applications'),
+            'res_model': self._name,
+            'view_type': 'kanban',
+            'view_mode': 'kanban,tree,form,pivot,graph,calendar,activity',
+            'domain': [('email_from', 'in', self.mapped('email_from'))],
+        }
 
     @api.multi
     def _track_template(self, tracking):
