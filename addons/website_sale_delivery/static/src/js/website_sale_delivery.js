@@ -10,7 +10,7 @@ sAnimations.registry.websiteSaleDelivery = sAnimations.Class.extend({
     selector: '.oe_website_sale',
     read_events: {
         'change select[name="shipping_id"]': '_onSetAddress',
-        'click #delivery_carrier input[name="delivery_type"]': '_onCarrierClick',
+        'click #delivery_carrier .o_delivery_carrier_select': '_onCarrierClick',
     },
 
     /**
@@ -82,11 +82,13 @@ sAnimations.registry.websiteSaleDelivery = sAnimations.Class.extend({
      * @param {Event} ev
      */
     _onCarrierClick: function (ev) {
+        var $radio = $(ev.currentTarget).find('input[type="radio"]');
+        $radio.prop("checked", true);
         $('#o_payment_form_pay').prop('disabled', true);
         this._rpc({
             route: '/shop/update_carrier',
             params: {
-                carrier_id: $(ev.currentTarget).val(),
+                carrier_id: $radio.val(),
             },
         }).then(this._handleCarrierUpdateResult.bind(this));
     },
