@@ -1,6 +1,6 @@
 odoo.define('website_sale.tour_shop_customize', function (require) {
     'use strict';
-    
+
     var tour = require("web_tour.tour");
     var base = require("web_editor.base");
 
@@ -19,7 +19,7 @@ odoo.define('website_sale.tour_shop_customize', function (require) {
                 trigger: "#customize-menu a:contains(Product Attribute's Filters)",
             },
             {
-                content: "select product attribute memory Steel",
+                content: "select product attribute Steel",
                 extra_trigger: 'body:not(:has(#customize-menu:visible .dropdown-menu:visible))',
                 trigger: 'form.js_attributes label:contains(Steel) input:not(:checked)',
             },
@@ -30,8 +30,8 @@ odoo.define('website_sale.tour_shop_customize', function (require) {
             },
             {
                 content: "select product",
-                extra_trigger: 'body:not(:has(.oe_website_sale .oe_product_cart:eq(2)))',
-                trigger: '.oe_product_cart a:contains("Customizable Desk")',
+                extra_trigger: 'body:not(:has(.oe_website_sale .oe_product_cart:eq(3)))',
+                trigger: '.oe_product_cart a:contains("Test Product")',
             },
             {
                 content: "open customize menu",
@@ -79,24 +79,18 @@ odoo.define('website_sale.tour_shop_customize', function (require) {
                 run: function () {}, // it's a check
             },
             {
-                content: "check price is 750 and set quantity to 2",
-                trigger: ".js_product:first input.quantity:propValue(1)",
-                extra_trigger: ".product_price .oe_price .oe_currency_value:containsExact(750.00)",
-                run: "text 2",
+                content: "check price is 750",
+                trigger: ".product_price .oe_price .oe_currency_value:containsExact(750.00)",
+                run: function () {},
             },
             {
-                content: "verify pricelist based on quantity has effect",
-                trigger: ".product_price .oe_price .oe_currency_value:containsExact(600.00)",
-                run: function () {}, // it's a check
-            },
-            {
-                content: "check pricelit has been applied and switch to Aluminium variant",
+                content: "switch to another variant",
                 trigger: ".js_product label:contains('Aluminium')",
             },
             {
                 content: "verify that price has changed when changing variant",
-                trigger: ".product_price .oe_price .oe_currency_value:not(:containsExact(600.00))",
-                run: function () {}, // it's a check
+                trigger: ".product_price .oe_price .oe_currency_value:containsExact(800.40)",
+                run: function () {},
             },
             {
                 content: "open customize menu",
@@ -112,23 +106,17 @@ odoo.define('website_sale.tour_shop_customize', function (require) {
                 run: function () {}, // it's a check
             },
             {
-                content: "check price is 750 and set quantity to 2",
-                trigger: ".js_product:first input.quantity:propValue(1)",
-                extra_trigger: ".product_price .oe_price .oe_currency_value:containsExact(750.00)",
-                run: "text 2",
-            },
-            {
-                content: "verify pricelist based on quantity has effect",
-                trigger: ".product_price .oe_price .oe_currency_value:containsExact(600.00)",
-                run: function () {}, // it's a check
+                content: "check price is 750",
+                trigger: ".product_price .oe_price .oe_currency_value:containsExact(750.00)",
+                run: function () {},
             },
             {
                 content: "switch to Aluminium variant",
-                trigger: ".js_product label:contains('Aluminium')",
+                trigger: '.js_product input[data-value_name="Aluminium"]',
             },
             {
                 content: "verify that price has changed when changing variant",
-                trigger: ".product_price .oe_price .oe_currency_value:not(:containsExact(600.00))",
+                trigger: ".product_price .oe_price .oe_currency_value:containsExact(800.40)",
                 run: function () {}, // it's a check
             },
             {
@@ -136,57 +124,17 @@ odoo.define('website_sale.tour_shop_customize', function (require) {
                 trigger: ".js_product label:contains('Steel')",
             },
             {
+                content: "check price is 750",
+                trigger: ".product_price .oe_price .oe_currency_value:containsExact(750.00)",
+                run: function () {},
+            },
+            {
                 content: "click on 'Add to Cart' button",
                 trigger: "a:contains(Add to Cart)",
             },
             {
-                content: "price is lowered by pricelist and not multiplied by quantity",
-                trigger: "#product_confirmation .oe_price .oe_currency_value:containsExact(600.00)",
-                extra_trigger: "#product_confirmation input.quantity:propValue(2)",
-                run: function () {}, // it's a check
-            },
-            {
-                content: "set quantity to 1",
-                trigger: "#product_confirmation .js_add_cart_json .fa-minus",
-            },
-            {
-                content: "check that product page has been updated",
-                trigger: ".js_product:first input.quantity:propValue(1)",
-                extra_trigger: ".product_price .oe_price .oe_currency_value:containsExact(750.00)",
-                run: function () {}, // it's a check
-            },
-            {
-                content: "check that add to cart modal has been updated",
-                trigger: "#product_confirmation .oe_price .oe_currency_value:containsExact(750.00)",
-                extra_trigger: "#product_confirmation input.quantity:propValue(1)",
-                run: function () {}, // it's a check
-            },
-            {
-                content: "add an optional Warranty",
-                trigger: ".js_product:contains(Warranty) a:contains(Add to Cart)",
-            },
-            {
-                content: "click in modal on 'Proceed to checkout' button",
-                extra_trigger: 'body:has(.js_product:contains(Warranty) a:contains(Add to Cart):hidden)',
-                trigger: '.modal-footer a:contains("Proceed to Checkout")',
-            },
-            {
                 content: "check quantity",
-                trigger: '.my_cart_quantity:containsExact(2),.o_extra_menu_items .fa-plus',
-                run: function () {}, // it's a check
-            },
-            {
-                content: "check optional product",
-                trigger: '.optional_product',
-                run: function () {}, // it's a check
-            },
-            {
-                content: "remove large cabinet from cart",
-                trigger: '#cart_products a.js_add_cart_json:first',
-            },
-            {
-                content: "check optional product is removed",
-                trigger: '#wrap:not(:has(.optional_product))',
+                trigger: '.my_cart_quantity:containsExact(1),.o_extra_menu_items .fa-plus',
                 run: function () {}, // it's a check
             },
             {
@@ -211,6 +159,5 @@ odoo.define('website_sale.tour_shop_customize', function (require) {
             },
         ]
     );
-    
+
     });
-    

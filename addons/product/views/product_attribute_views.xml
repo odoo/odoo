@@ -27,7 +27,7 @@
                 <group name="values_ids">
                     <label for="value_ids" string="Attribute Values"/>
                     <field name="value_ids" widget="one2many_list" nolabel="1">
-                        <tree string="Values" editable="top">
+                        <tree string="Values" editable="bottom">
                             <field name="sequence" widget="handle"/>
                             <field name="name"/>
                         </tree>
@@ -49,7 +49,7 @@
         <field name="name">product.attribute.value.tree</field>
         <field name="model">product.attribute.value</field>
         <field name="arch" type="xml">
-            <tree string="Variant Values" editable="top">
+            <tree string="Variant Values" editable="bottom">
                 <field name="sequence" widget="handle"/>
                 <field name="attribute_id"/>
                 <field name="name"/>

@@ -46,7 +46,7 @@ tour.register('sale_tour', {
     content: _t("Select a product, or create a new one on the fly."),
     position: "right",
     run: function (actions) {
-        actions.text("DESK0001", this.$anchor.find("input"));
+        actions.text("Chair", this.$anchor.find("input"));
     },
 }, {
     trigger: ".ui-menu-item > a",

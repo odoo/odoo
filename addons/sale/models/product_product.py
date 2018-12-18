@@ -53,6 +53,14 @@ class ProductProduct(models.Model):
     def _get_invoice_policy(self):
         return self.invoice_policy
 
+    @api.multi
+    def _get_combination_info_variant(self, add_qty=1, pricelist=False, parent_combination=False):
+        """Return the variant info based on its combination.
+        See `_get_combination_info` for more information.
+        """
+        self.ensure_one()
+        return self.product_tmpl_id._get_combination_info(self.product_template_attribute_value_ids, self.id, add_qty, pricelist, parent_combination)
+
 
 class ProductAttribute(models.Model):
     _inherit = "product.attribute"

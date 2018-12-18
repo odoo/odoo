@@ -25,4 +25,18 @@ odoo.define("sale_stock.tour", function (require) {
             }
         },
     });
+
+    // Check if sale_management is installed since sale_stock is adding an extra
+    // step to add to SO (not enough inventory)
+    if ('sale.product_configurator_pricelist_tour' in odoo.__DEBUG__.services) {
+        var steps = tour.tours.sale_product_configurator_pricelist_tour.steps;
+        for (var k=0; k<steps.length; k++) {
+            if (steps[k].content === "add to SO") {
+                steps.splice(k+1, 0, {
+                    content: "click in modal on ok button",
+                    trigger: '.modal-footer button:contains("Ok")',
+                });
+            }
+        }
+    }
 });

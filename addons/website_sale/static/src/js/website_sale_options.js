@@ -24,6 +24,7 @@ sAnimations.registry.WebsiteSaleOptions = sAnimations.Class.extend(ProductConfig
         this.isWebsite = true;
 
         delete this.events['change [data-attribute_exclusions]'];
+        delete this.events['click input.js_product_change'];
         delete this.events['change input.js_quantity'];
         delete this.events['click button.js_add_cart_json'];
     },
@@ -68,7 +69,7 @@ sAnimations.registry.WebsiteSaleOptions = sAnimations.Class.extend(ProductConfig
             false
         );
 
-        return productReady.done(function (productId){
+        return productReady.done(function (productId) {
             $form.find(productSelector.join(', ')).val(productId);
 
             self.rootProduct = {
