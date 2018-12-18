@@ -485,7 +485,35 @@
     <div>
         <!-- Color options -->
         <content id="theme_customize_content_colors" string="Colors" title="Choose the theme colors">
-            <opt data-widget="color_palette" data-col="12"/>
+            <list string="Main colors">
+                <opt data-widget="color" data-color-type="theme" data-color="primary" string="Primary"/>
+                <opt data-widget="color" data-color-type="theme" data-color="secondary" string="Secondary"/>
+                <opt data-widget="color" data-color-type="theme" data-color="alpha" string="Primary"/>
+                <opt data-widget="color" data-color-type="theme" data-color="beta" string="Secondary"/>
+                <opt data-widget="color" data-color-type="theme" data-color="gamma" string="Extra Color"/>
+                <opt data-widget="color" data-color-type="theme" data-color="delta" string="Extra Color"/>
+                <opt data-widget="color" data-color-type="theme" data-color="epsilon" string="Extra Color"/>
+            </list>
+            <list string="Status colors">
+                <opt data-widget="color" data-color-type="theme" data-color="success" string="Success"/>
+                <opt data-widget="color" data-color-type="theme" data-color="info" string="Info"/>
+                <opt data-widget="color" data-color-type="theme" data-color="warning" string="Warning"/>
+                <opt data-widget="color" data-color-type="theme" data-color="danger" string="Error"/>
+            </list>
+            <list string="Text colors">
+                <opt data-widget="color" data-color="text" string="Text"/>
+                <opt data-widget="color" data-color="h1" string="Headings 1"/>
+                <opt data-widget="color" data-color="h2" string="Headings 2"/>
+                <opt data-widget="color" data-color="h3" string="Headings 3"/>
+                <opt data-widget="color" data-color="h4" string="Headings 4"/>
+                <opt data-widget="color" data-color="h5" string="Headings 5"/>
+                <opt data-widget="color" data-color="h6" string="Headings 6"/>
+            </list>
+            <list string="Background colors">
+                <opt data-widget="color" data-color="body" string="Body"/>
+                <opt data-widget="color" data-color="menu" string="Menus"/>
+                <opt data-widget="color" data-color="footer" string="Footer"/>
+            </list>
         </content>
 
         <!-- Menu options -->
