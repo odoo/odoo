@@ -15,8 +15,3 @@ class StockMove(models.Model):
     def _cal_move_weight(self):
         for move in self.filtered(lambda moves: moves.product_id.weight > 0.00):
             move.weight = (move.product_qty * move.product_id.weight)
-
-    def _get_new_picking_values(self):
-        vals = super(StockMove, self)._get_new_picking_values()
-        vals['carrier_id'] = self.sale_line_id.order_id.carrier_id.id
-        return vals

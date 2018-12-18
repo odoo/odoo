@@ -17,7 +17,10 @@ class TestPurchase(TestStockCommon):
             'date_planned': date_planned or fields.Datetime.to_string(fields.datetime.now() + timedelta(days=10)),  # 10 days added to current date of procurement to get future schedule date and order date of purchase order.
             'group_id': self.env['procurement.group'],
         }
-        return ProcurementGroup.run(product, product_qty, self.uom_unit, self.warehouse_1.lot_stock_id, product.name, '/', order_values)
+        return ProcurementGroup.run([self.env['procurement.group'].Procurement(
+            product, product_qty, self.uom_unit, self.warehouse_1.lot_stock_id,
+            product.name, '/', self.env.user.company_id, order_values)
+        ])
 
     def _load(self, module, *args):
         tools.convert_file(self.cr, 'purchase',

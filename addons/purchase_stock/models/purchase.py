@@ -377,8 +377,9 @@ class PurchaseOrderLine(models.Model):
                 done += moves.create(val)
         return done
 
-    def _merge_in_existing_line(self, product_id, product_qty, product_uom, location_id, name, origin, values):
-        """ This function purpose is to be override with the purpose to forbide _run_buy  method
-        to merge a new po line in an existing one.
+    def _find_candidate(self, product_id, product_qty, product_uom, location_id, name, origin, company_id, values):
+        """ Return the record in self where the procument with values passed as
+        args can be merged. If it returns an empty record then a new line will
+        be created.
         """
-        return True
+        return self and self[0] or self.env['purchase.order.line']
