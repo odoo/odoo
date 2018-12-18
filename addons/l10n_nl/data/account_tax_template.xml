@@ -19,9 +19,21 @@
         <record id="btw_6" model="account.tax.template">
             <field name="sequence">10</field>
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
-            <field name="name">Verkopen/omzet laag</field>
+            <field name="name">Verkopen/omzet laag 6%</field>
             <field name="description">6% BTW</field>
             <field eval="6" name="amount"/>
+            <field name="amount_type">percent</field>
+            <field name="refund_account_id" ref="vat_payable_l"/>
+            <field name="account_id" ref="vat_payable_l"/>
+            <field name="type_tax_use">sale</field>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_nl_05'),ref('tag_nl_22')])]"/>
+        </record>
+        <record id="btw_9" model="account.tax.template">
+            <field name="sequence">10</field>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="name">Verkopen/omzet laag 9%</field>
+            <field name="description">9% BTW</field>
+            <field eval="9" name="amount"/>
             <field name="amount_type">percent</field>
             <field name="refund_account_id" ref="vat_payable_l"/>
             <field name="account_id" ref="vat_payable_l"/>
@@ -68,9 +80,21 @@
         <record id="btw_6_d" model="account.tax.template">
             <field name="sequence">10</field>
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
-            <field name="name">Verkopen/omzet laag diensten</field>
+            <field name="name">Verkopen/omzet laag diensten 6%</field>
             <field name="description">6% BTW diensten</field>
             <field eval="6" name="amount"/>
+            <field name="amount_type">percent</field>
+            <field name="refund_account_id" ref="vat_payable_l_d"/>
+            <field name="account_id" ref="vat_payable_l_d"/>
+            <field name="type_tax_use">sale</field>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_nl_05'),ref('tag_nl_22')])]"/>
+        </record>
+        <record id="btw_9_d" model="account.tax.template">
+            <field name="sequence">10</field>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="name">Verkopen/omzet laag diensten 9%</field>
+            <field name="description">9% BTW diensten</field>
+            <field eval="9" name="amount"/>
             <field name="amount_type">percent</field>
             <field name="refund_account_id" ref="vat_payable_l_d"/>
             <field name="account_id" ref="vat_payable_l_d"/>
@@ -105,7 +129,7 @@
         <record id="btw_6_buy" model="account.tax.template">
             <field name="sequence">10</field>
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
-            <field name="name">BTW te vorderen laag (inkopen)</field>
+            <field name="name">BTW te vorderen laag (inkopen) 6%</field>
             <field name="description">6% BTW</field>
             <field eval="6" name="amount"/>
             <field name="amount_type">percent</field>
@@ -114,12 +138,38 @@
             <field name="type_tax_use">purchase</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_nl_33')])]"/>
         </record>
+        <record id="btw_9_buy" model="account.tax.template">
+            <field name="sequence">10</field>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="name">BTW te vorderen laag (inkopen) 9%</field>
+            <field name="description">9% BTW</field>
+            <field eval="9" name="amount"/>
+            <field name="amount_type">percent</field>
+            <field name="refund_account_id" ref="vat_refund_l"/>
+            <field name="account_id" ref="vat_refund_l"/>
+            <field name="type_tax_use">purchase</field>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_nl_33')])]"/>
+        </record>
+
         <record id="btw_6_buy_incl" model="account.tax.template">
             <field name="sequence">10</field>
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
-            <field name="name">BTW te vorderen laag (inkopen incl. BTW)</field>
+            <field name="name">BTW te vorderen laag (inkopen incl. BTW) 6%</field>
             <field name="description">6% BTW Incl.</field>
             <field eval="6" name="amount"/>
+            <field name="amount_type">percent</field>
+            <field name="price_include">True</field>
+            <field name="refund_account_id" ref="vat_refund_l"/>
+            <field name="account_id" ref="vat_refund_l"/>
+            <field name="type_tax_use">purchase</field>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_nl_33')])]"/>
+        </record>
+        <record id="btw_9_buy_incl" model="account.tax.template">
+            <field name="sequence">10</field>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="name">BTW te vorderen laag (inkopen incl. BTW) 9%</field>
+            <field name="description">9% BTW Incl.</field>
+            <field eval="9" name="amount"/>
             <field name="amount_type">percent</field>
             <field name="price_include">True</field>
             <field name="refund_account_id" ref="vat_refund_l"/>
@@ -168,9 +218,21 @@
         <record id="btw_6_buy_d" model="account.tax.template">
             <field name="sequence">10</field>
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
-            <field name="name">BTW te vorderen laag (inkopen) diensten</field>
+            <field name="name">BTW te vorderen laag (inkopen) diensten 6%</field>
             <field name="description">6% BTW diensten</field>
             <field eval="6" name="amount"/>
+            <field name="amount_type">percent</field>
+            <field name="refund_account_id" ref="vat_refund_l_d"/>
+            <field name="account_id" ref="vat_refund_l_d"/>
+            <field name="type_tax_use">purchase</field>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_nl_33')])]"/>
+        </record>
+        <record id="btw_9_buy_d" model="account.tax.template">
+            <field name="sequence">10</field>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="name">BTW te vorderen laag (inkopen) diensten 9%</field>
+            <field name="description">9% BTW diensten</field>
+            <field eval="9" name="amount"/>
             <field name="amount_type">percent</field>
             <field name="refund_account_id" ref="vat_refund_l_d"/>
             <field name="account_id" ref="vat_refund_l_d"/>
@@ -214,7 +276,7 @@
             <field name="type_tax_use">sale</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_nl_08')])]"/>
         </record>
-       <record id="btw_ink_0_1" model="account.tax.template">
+        <record id="btw_ink_0_1" model="account.tax.template">
             <field name="sequence">98</field>
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
             <field name="name">BTW te vorderen verlegd (inkopen1)</field>
@@ -256,9 +318,21 @@
         <record id="btw_I_6_1" model="account.tax.template">
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
             <field name="sequence">21</field>
-            <field name="name">Inkopen import binnen EU laag(1)</field>
+            <field name="name">Inkopen import binnen EU laag(1) 6%</field>
             <field name="description">Inkopen import binnen EU laag(1)</field>
             <field eval="-6" name="amount"/>
+            <field name="amount_type">percent</field>
+            <field name="refund_account_id" ref="vat_payable_l_eu"/>
+            <field name="account_id" ref="vat_payable_l_eu"/>
+            <field name="type_tax_use">none</field>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_nl_30')])]"/>
+        </record>
+        <record id="btw_I_9_1" model="account.tax.template">
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="sequence">21</field>
+            <field name="name">Inkopen import binnen EU laag(1) 9%</field>
+            <field name="description">Inkopen import binnen EU laag(1)</field>
+            <field eval="-9" name="amount"/>
             <field name="amount_type">percent</field>
             <field name="refund_account_id" ref="vat_payable_l_eu"/>
             <field name="account_id" ref="vat_payable_l_eu"/>
@@ -268,9 +342,21 @@
         <record id="btw_I_6_2" model="account.tax.template">
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
             <field name="sequence">22</field>
-            <field name="name">Inkopen import binnen EU laag(2)</field>
+            <field name="name">Inkopen import binnen EU laag(2) 6%</field>
             <field name="description">Inkopen import binnen EU laag(2)</field>
             <field eval="6" name="amount"/>
+            <field name="amount_type">percent</field>
+            <field name="refund_account_id" ref="vat_refund_l_eu"/>
+            <field name="account_id" ref="vat_refund_l_eu"/>
+            <field name="type_tax_use">none</field>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_nl_33')])]"/>
+        </record>
+        <record id="btw_I_9_2" model="account.tax.template">
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="sequence">22</field>
+            <field name="name">Inkopen import binnen EU laag(2) 9%</field>
+            <field name="description">Inkopen import binnen EU laag(2)</field>
+            <field eval="9" name="amount"/>
             <field name="amount_type">percent</field>
             <field name="refund_account_id" ref="vat_refund_l_eu"/>
             <field name="account_id" ref="vat_refund_l_eu"/>
@@ -280,13 +366,24 @@
         <record id="btw_I_6" model="account.tax.template">
             <field name="sequence">20</field>
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
-            <field name="name">Inkopen import binnen EU laag</field>
+            <field name="name">Inkopen import binnen EU laag 6%</field>
             <field name="description">6% BTW import binnen EU</field>
             <field eval="6" name="amount"/>
             <field name="amount_type">group</field>
             <field name="type_tax_use">purchase</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_nl_17')])]"/>
             <field name="children_tax_ids" eval="[(6, 0, [ref('btw_I_6_1'), ref('btw_I_6_2')])]"/>
+        </record>
+        <record id="btw_I_9" model="account.tax.template">
+            <field name="sequence">20</field>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="name">Inkopen import binnen EU laag 9%</field>
+            <field name="description">9% BTW import binnen EU</field>
+            <field eval="9" name="amount"/>
+            <field name="amount_type">group</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_nl_17')])]"/>
+            <field name="children_tax_ids" eval="[(6, 0, [ref('btw_I_9_1'), ref('btw_I_9_2')])]"/>
         </record>
         <record id="btw_I_21_1" model="account.tax.template">
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
@@ -387,9 +484,21 @@
         <record id="btw_I_6_d_1" model="account.tax.template">
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
             <field name="sequence">21</field>
-            <field name="name">Inkopen import binnen EU laag(1) diensten</field>
+            <field name="name">Inkopen import binnen EU laag(1) diensten 6%</field>
             <field name="description">Inkopen import binnen EU laag(1) diensten</field>
             <field eval="-6" name="amount"/>
+            <field name="amount_type">percent</field>
+            <field name="refund_account_id" ref="vat_payable_l_d_eu"/>
+            <field name="account_id" ref="vat_payable_l_d_eu"/>
+            <field name="type_tax_use">none</field>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_nl_30')])]"/>
+        </record>
+        <record id="btw_I_9_d_1" model="account.tax.template">
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="sequence">21</field>
+            <field name="name">Inkopen import binnen EU laag(1) diensten 9%</field>
+            <field name="description">Inkopen import binnen EU laag(1) diensten</field>
+            <field eval="-9" name="amount"/>
             <field name="amount_type">percent</field>
             <field name="refund_account_id" ref="vat_payable_l_d_eu"/>
             <field name="account_id" ref="vat_payable_l_d_eu"/>
@@ -399,9 +508,21 @@
         <record id="btw_I_6_d_2" model="account.tax.template">
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
             <field name="sequence">22</field>
-            <field name="name">Inkopen import binnen EU laag(2) diensten</field>
+            <field name="name">Inkopen import binnen EU laag(2) diensten 6%</field>
             <field name="description">Inkopen import binnen EU laag(2) diensten</field>
             <field eval="6" name="amount"/>
+            <field name="amount_type">percent</field>
+            <field name="refund_account_id" ref="vat_refund_l_d_eu"/>
+            <field name="account_id" ref="vat_refund_l_d_eu"/>
+            <field name="type_tax_use">none</field>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_nl_33')])]"/>
+        </record>
+        <record id="btw_I_9_d_2" model="account.tax.template">
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="sequence">22</field>
+            <field name="name">Inkopen import binnen EU laag(2) diensten 9%</field>
+            <field name="description">Inkopen import binnen EU laag(2) diensten</field>
+            <field eval="9" name="amount"/>
             <field name="amount_type">percent</field>
             <field name="refund_account_id" ref="vat_refund_l_d_eu"/>
             <field name="account_id" ref="vat_refund_l_d_eu"/>
@@ -411,13 +532,24 @@
         <record id="btw_I_6_d" model="account.tax.template">
             <field name="sequence">20</field>
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
-            <field name="name">Inkopen import binnen EU laag diensten</field>
+            <field name="name">Inkopen import binnen EU laag diensten 6%</field>
             <field name="description">6% BTW import binnen EU diensten</field>
             <field eval="6" name="amount"/>
             <field name="amount_type">group</field>
             <field name="type_tax_use">purchase</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_nl_17')])]"/>
             <field name="children_tax_ids" eval="[(6, 0, [ref('btw_I_6_d_1'), ref('btw_I_6_d_2')])]"/>
+        </record>
+        <record id="btw_I_9_d" model="account.tax.template">
+            <field name="sequence">20</field>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="name">Inkopen import binnen EU laag diensten 9%</field>
+            <field name="description">9% BTW import binnen EU diensten</field>
+            <field eval="9" name="amount"/>
+            <field name="amount_type">group</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_nl_17')])]"/>
+            <field name="children_tax_ids" eval="[(6, 0, [ref('btw_I_9_d_1'), ref('btw_I_9_d_2')])]"/>
         </record>
         <record id="btw_I_21_d_1" model="account.tax.template">
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
@@ -494,7 +626,7 @@
 <!-- BTW inkoop -->
         <record id="btw_E1_1" model="account.tax.template">
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
-            <field name="name">Inkopen import buiten EU laag(1)</field>
+            <field name="name">Inkopen import buiten EU laag(1) 6%</field>
             <field name="description">Inkopen import buiten EU laag(1)</field>
             <field eval="-6" name="amount"/>
             <field name="amount_type">percent</field>
@@ -504,11 +636,35 @@
             <field name="type_tax_use">none</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_nl_29')])]"/>
         </record>
+        <record id="btw_E1_1_9" model="account.tax.template">
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="name">Inkopen import buiten EU laag(1) 9%</field>
+            <field name="description">Inkopen import buiten EU laag(1)</field>
+            <field eval="-9" name="amount"/>
+            <field name="amount_type">percent</field>
+            <field name="refund_account_id" ref="vat_payable_l_non_eu"/>
+            <field name="account_id" ref="vat_payable_l_non_eu"/>
+            <field name="sequence">21</field>
+            <field name="type_tax_use">none</field>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_nl_29')])]"/>
+        </record>
         <record id="btw_E1_2" model="account.tax.template">
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
-            <field name="name">Inkopen import buiten EU laag(2)</field>
+            <field name="name">Inkopen import buiten EU laag(2) 6%</field>
             <field name="description">Inkopen import buiten EU laag(2)</field>
             <field eval="6" name="amount"/>
+            <field name="amount_type">percent</field>
+            <field name="refund_account_id" ref="vat_refund_l_non_eu"/>
+            <field name="account_id" ref="vat_refund_l_non_eu"/>
+            <field name="sequence">22</field>
+            <field name="type_tax_use">none</field>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_nl_33')])]"/>
+        </record>
+        <record id="btw_E1_2_9" model="account.tax.template">
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="name">Inkopen import buiten EU laag(2) 9%</field>
+            <field name="description">Inkopen import buiten EU laag(2)</field>
+            <field eval="9" name="amount"/>
             <field name="amount_type">percent</field>
             <field name="refund_account_id" ref="vat_refund_l_non_eu"/>
             <field name="account_id" ref="vat_refund_l_non_eu"/>
@@ -519,13 +675,24 @@
         <record id="btw_E1" model="account.tax.template">
             <field name="sequence">20</field>
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
-            <field name="name">Inkopen import buiten EU laag</field>
+            <field name="name">Inkopen import buiten EU laag 6%</field>
             <field name="description">BTW import buiten EU laag inkopen</field>
             <field eval="6" name="amount"/>
             <field name="amount_type">group</field>
             <field name="type_tax_use">purchase</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_nl_16')])]"/>
             <field name="children_tax_ids" eval="[(6, 0, [ref('btw_E1_1'), ref('btw_E1_2')])]"/>
+        </record>
+        <record id="btw_E1_9" model="account.tax.template">
+            <field name="sequence">20</field>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="name">Inkopen import buiten EU laag 9%</field>
+            <field name="description">BTW import buiten EU laag inkopen</field>
+            <field eval="9" name="amount"/>
+            <field name="amount_type">group</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_nl_16')])]"/>
+            <field name="children_tax_ids" eval="[(6, 0, [ref('btw_E1_1_9'), ref('btw_E1_2_9')])]"/>
         </record>
         <record id="btw_E2_1" model="account.tax.template">
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
@@ -625,7 +792,7 @@
 <!-- BTW inkoop diensten -->
         <record id="btw_E1_d_1" model="account.tax.template">
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
-            <field name="name">Inkopen import buiten EU laag(1) diensten</field>
+            <field name="name">Inkopen import buiten EU laag(1) diensten 6%</field>
             <field name="description">Inkopen import buiten EU laag(1) diensten</field>
             <field eval="-6" name="amount"/>
             <field name="amount_type">percent</field>
@@ -635,11 +802,35 @@
             <field name="type_tax_use">none</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_nl_29')])]"/>
         </record>
+        <record id="btw_E1_d_1_9" model="account.tax.template">
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="name">Inkopen import buiten EU laag(1) diensten 9%</field>
+            <field name="description">Inkopen import buiten EU laag(1) diensten</field>
+            <field eval="-9" name="amount"/>
+            <field name="amount_type">percent</field>
+            <field name="refund_account_id" ref="vat_payable_l_d_non_eu"/>
+            <field name="account_id" ref="vat_payable_l_d_non_eu"/>
+            <field name="sequence">21</field>
+            <field name="type_tax_use">none</field>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_nl_29')])]"/>
+        </record>
         <record id="btw_E1_d_2" model="account.tax.template">
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
-            <field name="name">Inkopen import buiten EU laag(2) diensten</field>
+            <field name="name">Inkopen import buiten EU laag(2) diensten 6%</field>
             <field name="description">Inkopen import buiten EU laag(2) diensten</field>
             <field eval="6" name="amount"/>
+            <field name="amount_type">percent</field>
+            <field name="refund_account_id" ref="vat_refund_l_d_non_eu"/>
+            <field name="account_id" ref="vat_refund_l_d_non_eu"/>
+            <field name="sequence">22</field>
+            <field name="type_tax_use">none</field>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_nl_33')])]"/>
+        </record>
+        <record id="btw_E1_d_2_9" model="account.tax.template">
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="name">Inkopen import buiten EU laag(2) diensten 9%</field>
+            <field name="description">Inkopen import buiten EU laag(2) diensten</field>
+            <field eval="9" name="amount"/>
             <field name="amount_type">percent</field>
             <field name="refund_account_id" ref="vat_refund_l_d_non_eu"/>
             <field name="account_id" ref="vat_refund_l_d_non_eu"/>
@@ -650,13 +841,24 @@
         <record id="btw_E1_d" model="account.tax.template">
             <field name="sequence">20</field>
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
-            <field name="name">Inkopen import buiten EU laag diensten</field>
+            <field name="name">Inkopen import buiten EU laag diensten 6%</field>
             <field name="description">BTW import buiten EU laag inkopen diensten</field>
             <field eval="6" name="amount"/>
             <field name="amount_type">group</field>
             <field name="type_tax_use">purchase</field>
             <field name="tag_ids" eval="[(6,0,[ref('tag_nl_16')])]"/>
             <field name="children_tax_ids" eval="[(6, 0, [ref('btw_E1_d_1'), ref('btw_E1_d_2')])]"/>
+        </record>
+        <record id="btw_E1_d_9" model="account.tax.template">
+            <field name="sequence">20</field>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="name">Inkopen import buiten EU laag diensten 9%</field>
+            <field name="description">BTW import buiten EU laag inkopen diensten</field>
+            <field eval="9" name="amount"/>
+            <field name="amount_type">group</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_nl_16')])]"/>
+            <field name="children_tax_ids" eval="[(6, 0, [ref('btw_E1_d_1_9'), ref('btw_E1_d_2_9')])]"/>
         </record>
         <record id="btw_E2_d_1" model="account.tax.template">
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
