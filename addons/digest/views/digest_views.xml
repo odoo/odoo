@@ -45,7 +45,6 @@
                     <group>
                         <group>
                             <field name="periodicity" widget="radio" options="{'horizontal': true}"/>
-                            <field name="user_ids" widget="many2many_tags" options="{'no_create': True}" groups="base.group_system"/>
                             <field name="template_id" groups="base.group_no_one"/>
                             <field name="next_run_date" groups="base.group_system"/>
                             <field name="company_id" options="{'no_create': True}" invisible="1"/>
@@ -60,6 +59,16 @@
                                     <field name="kpi_mail_message_total"/>
                                 </group>
                                 <group name="kpi_sales"/>
+                            </group>
+                        </page>
+                        <page name="recipients" string="Recipients" groups="base.group_system">
+                            <group>
+                                <field name="user_ids" options="{'no_create': True}">
+                                    <tree string="Recipients">
+                                        <field name="name"/>
+                                        <field name="email"/>
+                                    </tree>
+                                </field>
                             </group>
                         </page>
                         <page name="how_to" string="How to customize your digest?" groups="base.group_no_one">
