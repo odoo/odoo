@@ -24,7 +24,7 @@
 
     <template id="payment_delivery_methods">
         <input t-att-value="delivery.id" t-att-id="'delivery_%i' % delivery.id" type="radio" name="delivery_type" t-att-checked="order.carrier_id and order.carrier_id.id == delivery.id and 'checked' or False" t-att-class="'d-none' if delivery_nb == 1 else ''"/>
-        <label class="label-optional" t-field="delivery.name" t-att-for="'delivery_%i' % delivery.id"/>
+        <label class="label-optional" t-field="delivery.name"/>
         <t t-set='badge_class' t-value="(delivery_nb != 1 and 'float-right ' or '') + 'badge badge-secondary'" />
         <t t-if="delivery.delivery_type == 'fixed'">
             <span t-if="delivery.fixed_price > 0.0" t-att-class="badge_class" t-field="delivery.fixed_price" t-options='{"widget": "monetary", "from_currency": delivery.product_id.company_id.currency_id, "display_currency": website_sale_order.currency_id}'/>
@@ -56,7 +56,7 @@
                 <div t-if="delivery_nb &gt; 1" class="card border-0" id="delivery_method">
                     <ul class="list-group">
                     <t t-foreach="deliveries" t-as="delivery">
-                        <li class="list-group-item">
+                        <li class="list-group-item o_delivery_carrier_select">
                             <t t-call="website_sale_delivery.payment_delivery_methods"/>
                         </li>
                     </t>
