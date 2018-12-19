@@ -44,6 +44,7 @@ var ActivityController = BasicController.extend({
             res_model: state.model,
             domain: this.model.originalDomain,
             title: _.str.sprintf(_t("Search: %s"), this.renderer.arch.attrs.string),
+            no_create: !this.activeActions.create,
             disable_multiple_selection: true,
             on_selected: function (record) {
                 var fakeRecord = self.renderer.getKanbanActivityData({}, record[0]);
