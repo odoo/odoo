@@ -14,6 +14,7 @@
         'security/hr_recruitment_survey_security.xml',
         'views/hr_job_views.xml',
         'views/hr_applicant_views.xml',
+        'views/survey_survey_views.xml',
         'views/res_config_setting_views.xml',
     ],
     'demo': [
