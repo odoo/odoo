@@ -132,27 +132,24 @@ class View(models.Model):
         self = self.with_context(website_id=self.env['website'].get_current_website().id)
         return super(View, self).get_related_views(key, bundles=bundles)
 
-    @api.multi
-    def _sort_suitability_key(self):
-        """ Key function to sort views by descending suitability
-            Suitability of a view is defined as follow:
-                * if the view and request website_id are matched
-                * then if the view has no set website
-        """
-        self.ensure_one()
-        context_website_id = self.env.context.get('website_id', None)
-        website_id = self.website_id.id or 0
-        different_website = context_website_id != website_id
-        return (different_website, website_id)
-
     def filter_duplicate(self):
-        """ Filter current recordset only keeping the most suitable view per distinct key """
-        view_with_key = self.filtered('key')
-        view_without_key = self - view_with_key
-        filtered = self.env['ir.ui.view']
-        for dummy, group in groupby(view_with_key.sorted('key'), key=lambda record: record.key):
-            filtered += sorted(group, key=lambda record: record._sort_suitability_key())[0]
-        return (filtered + view_without_key).sorted(key=lambda view: (view.priority, view.id))
+        """ Filter current recordset only keeping the most suitable view per distinct key.
+            Every non-accessible view will be removed from the set:
+              * In non website context, every view with a website will be removed
+              * In a website context, every view from another website
+        """
+        current_website_id = self._context.get('website_id')
+        most_specific_views = self.env['ir.ui.view']
+        if not current_website_id:
+            return self.filtered(lambda view: not view.website_id)
+
+        for view in self:
+            if view.website_id and view.website_id.id == current_website_id:
+                most_specific_views |= view
+            elif not view.website_id and not any(view.key == view2.key and view2.website_id and view2.website_id.id == current_website_id for view2 in self):
+                most_specific_views |= view
+
+        return most_specific_views
 
     @api.model
     def _view_get_inherited_children(self, view, options):
