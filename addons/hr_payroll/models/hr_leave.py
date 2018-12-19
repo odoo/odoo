@@ -1,8 +1,12 @@
 # -*- coding:utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import math
 from dateutil.relativedelta import relativedelta
+from datetime import datetime, date
 from odoo import api, fields, models, _
+from odoo.exceptions import ValidationError
 from odoo.addons.resource.models.resource import Intervals
+from odoo.addons.resource.models.resource import HOURS_PER_DAY
 
 class HrLeaveType(models.Model):
     _inherit = 'hr.leave.type'
@@ -16,23 +20,87 @@ class HrLeave(models.Model):
     @api.multi
     def copy_to_benefits(self):
         for leave in self:
+            contract = leave.employee_id._get_contracts(leave.date_from, leave.date_to, states=['open', 'pending', 'close'])
+            start = max(leave.date_from, datetime.combine(contract.date_start, datetime.min.time()))
+            end = min(leave.date_to, datetime.combine(contract.date_end or date.max, datetime.max.time()))
             benefit_type = leave.holiday_status_id.benefit_type_id
             self.env['hr.benefit'].safe_duplicate_create({
                 'name': "%s%s" % (benefit_type.name + ": " if benefit_type else "", leave.employee_id.name),
-                'date_start': leave.date_from,
-                'date_stop': leave.date_to,
+                'date_start': start,
+                'date_stop': end,
                 'benefit_type_id': benefit_type.id,
                 'employee_id': leave.employee_id.id,
-                'leave_id': self.id,
+                'leave_id': leave.id,
                 'state': 'confirmed',
+                'contract_id': contract.id,
             })
 
     @api.multi
+    def _create_resource_leave(self):
+        """
+        Add a resource leave in calendars of contracts running at the same period.
+        This is needed in order to compute the correct number of hours/days of the leave
+        according to the contract's calender.
+        """
+        super(HrLeave, self)._create_resource_leave()
+        resource_leave_values = []
+
+        for leave in self.filtered(lambda l: l.employee_id):
+
+            contract = leave.employee_id._get_contracts(leave.date_from, leave.date_to, states=['open', 'pending', 'close'])
+            if contract and contract.resource_calendar_id != leave.employee_id.resource_calendar_id:
+                resource_leave_values += [{
+                    'name': leave.name,
+                    'holiday_id': leave.id,
+                    'resource_id': leave.employee_id.resource_id.id,
+                    'benefit_type_id': leave.holiday_status_id.benefit_type_id.id,
+                    'time_type': leave.holiday_status_id.time_type,
+                    'date_from': max(leave.date_from, datetime.combine(contract.date_start, datetime.min.time())),
+                    'date_to': min(leave.date_to, datetime.combine(contract.date_end or date.max, datetime.max.time())),
+                    'calendar_id': contract.resource_calendar_id.id,
+                }]
+
+        self.env['resource.calendar.leaves'].create(resource_leave_values)
+        return True
+
+    @api.constrains('date_from', 'date_to')
+    def _check_contracts(self):
+        """
+            A leave cannot be set across multiple contracts.
+            Note: a leave can be across multiple contracts despite this constraint.
+            It happens if a leave is correctly created (not accross multiple contracts) but
+            contracts are later modifed/created in the middle of the leave.
+        """
+        for holiday in self:
+            domain = [
+                ('employee_id', '=', holiday.employee_id.id),
+                ('date_start', '<=', holiday.date_to),
+                ('state', 'not in', ['draft', 'cancel']),
+                '|',
+                    ('date_end', '>=', holiday.date_from),
+                    ('date_end', '=', False),
+            ]
+            nbr_contracts = self.env['hr.contract'].sudo().search_count(domain)
+            if nbr_contracts > 1:
+                raise ValidationError(_('A leave cannot be set across multiple contracts.'))
+
+    @api.multi
     def _cancel_benefit_conflict(self):
+        """
+        Unlink any benefit linked to a leave in self.
+        Re-create new benefits where the leaves do not cover the full range of the deleted benefits.
+        Create a leave benefit for each leave in self.
+        Return True if one or more benefits are unlinked.
+        e.g.:
+            |---------------- benefit ----------------|
+                    |------ leave ------|
+                            ||
+                            vv
+            |-benef-|---benefit leave---|----benefit---|
+        """
         benefits = self.env['hr.benefit'].search([('leave_id', 'in', self.ids)])
         if benefits:
             self.copy_to_benefits()
-
             # create new benefits where the leave does not cover the full benefit
             benefits_intervals = Intervals(intervals=[(b.date_start, b.date_stop, b) for b in benefits])
             leave_intervals = Intervals(intervals=[(l.date_from, l.date_to, l) for l in self])
@@ -52,17 +120,18 @@ class HrLeave(models.Model):
                     'date_start': benefit_start,
                     'date_stop': benefit_stop,
                     'benefit_type_id': benefit_type.id,
+                    'contract_id': benefit.contract_id.id,
                     'employee_id': employee.id,
                     'state': 'confirmed',
                 })
             benefits.unlink()
+            return True
+        return False
 
     @api.multi
     def action_validate(self):
         super(HrLeave, self).action_validate()
-        self._cancel_benefit_conflict()
-        calendar_leaves = self.env['resource.calendar.leaves'].search([('holiday_id', 'in', self.ids)])
-        calendar_leaves.write({'benefit_type_id': self.holiday_status_id.benefit_type_id.id})
+        self._cancel_benefit_conflict() # delete preexisting conflicting benefits
         return True
 
     @api.multi
@@ -71,3 +140,32 @@ class HrLeave(models.Model):
         benefits = self.env['hr.benefit'].search([('leave_id', 'in', self.ids)])
         benefits.write({'display_warning': False, 'active': False})
         return True
+
+    def _get_number_of_days(self, date_from, date_to, employee_id):
+        """ If an employee is currently working full time but requests a leave next month
+            where he has a new contract working only 3 days/week. This should be taken into
+            account when computing the number of days for the leave (2 weeks leave = 6 days).
+            Override this method to get number of days according to the contract's calendar
+            at the time of the leave.
+        """
+        days = super(HrLeave, self)._get_number_of_days(date_from, date_to, employee_id)
+        if employee_id:
+            employee = self.env['hr.employee'].browse(employee_id)
+            # Use sudo otherwise base users can't compute number of days
+            contracts = employee.sudo()._get_contracts(date_from, date_to, states=['incoming', 'open', 'pending'])
+            calendar = contracts[:1].resource_calendar_id if contracts else None # Note: if len(contracts)>1, the leave creation will crash because of unicity constaint
+            return employee.get_work_days_data(date_from, date_to, calendar=calendar)['days']
+
+        return days
+
+    @api.multi
+    @api.depends('number_of_days')
+    def _compute_number_of_hours_display(self):
+        """ Override for the same reason as _get_number_of_days()"""
+        super(HrLeave, self)._compute_number_of_hours_display()
+        for holiday in self:
+            if holiday.date_from and holiday.date_to:
+                contracts = holiday.employee_id.sudo()._get_contracts(holiday.date_from, holiday.date_to, states=['incoming', 'open', 'pending'])
+                contract_calendar = contracts[:1].resource_calendar_id if contracts else None
+                calendar = contract_calendar or holiday.employee_id.resource_calendar_id or self.env.user.company_id.resource_calendar_id
+                holiday.number_of_hours_display = holiday.number_of_days * (calendar.hours_per_day or HOURS_PER_DAY)

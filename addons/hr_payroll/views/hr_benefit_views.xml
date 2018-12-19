@@ -82,6 +82,7 @@
                     <group>
                         <group>
                             <field name="employee_id" attrs="{'readonly': [('state', '!=', 'draft')]}" />
+                            <field name="contract_id" readonly="1"/>
                             <field name="benefit_type_id" attrs="{'readonly': [('state', '=', 'validated')]}" options="{'no_create': True, 'no_open': True}"/>
                             <field name="leave_id" attrs="{'invisible': [('leave_id', '=', False)]}"/>
                         </group>

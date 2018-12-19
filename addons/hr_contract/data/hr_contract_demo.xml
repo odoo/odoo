@@ -11,7 +11,7 @@
         <field name="department_id" model="hr.department"
             eval="obj().env.ref('hr.employee_admin').department_id.id"/>
         <field eval="7540.0" name="wage"/>
-        <field name="state">open</field>
+        <field name="state">draft</field>
     </record>
 
     <record id="hr_contract_al" model="hr.contract">
@@ -64,7 +64,7 @@
         <field name="department_id" model="hr.department"
             eval="obj().env.ref('hr.employee_qdp').department_id.id"/>
         <field eval="3750.0" name="wage"/>
-        <field name="state">open</field>
+        <field name="state">draft</field>
     </record>
 
     <record id="hr_contract_han" model="hr.contract">
