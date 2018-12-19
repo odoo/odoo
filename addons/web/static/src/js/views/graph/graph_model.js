@@ -61,6 +61,7 @@ return AbstractModel.extend({
         this.chart = {
             compare: params.compare,
             comparisonTimeRange: params.comparisonTimeRange,
+            comparisonTimeRangeDescription: params.comparisonTimeRangeDescription,
             data: [],
             groupedBy: params.groupedBy.length ? params.groupedBy : groupBys,
             // this parameter is not used anywhere for now.
@@ -72,6 +73,7 @@ return AbstractModel.extend({
             measure: params.context.graph_measure || params.measure,
             mode: params.context.graph_mode || params.mode,
             timeRange: params.timeRange,
+            timeRangeDescription: params.timeRangeDescription,
             domain: params.domain,
             context: params.context,
         };
@@ -100,14 +102,18 @@ return AbstractModel.extend({
             this.chart.mode = params.context.graph_mode || this.chart.mode;
             var timeRangeMenuData = params.context.timeRangeMenuData;
             if (timeRangeMenuData) {
-                this.chart.timeRange = timeRangeMenuData.timeRange || [];
                 this.chart.comparisonTimeRange = timeRangeMenuData.comparisonTimeRange || [];
                 this.chart.compare = this.chart.comparisonTimeRange.length > 0;
+                this.chart.timeRange = timeRangeMenuData.timeRange || [];
+                this.chart.comparisonTimeRangeDescription = timeRangeMenuData.comparisonTimeRangeDescription;
+                this.chart.timeRangeDescription = timeRangeMenuData.timeRangeDescription;
             } else {
-                this.chart.timeRange = [];
+                this.chart = _.omit(this.chart, 'comparisonData');
                 this.chart.comparisonTimeRange = [];
                 this.chart.compare = false;
-                this.chart = _.omit(this.chart, 'comparisonData');
+                this.chart.timeRange = [];
+                this.chart.comparisonTimeRangeDescription = undefined;
+                this.chart.timeRangeDescription = undefined;
             }
         }
         if ('domain' in params) {
