@@ -192,7 +192,8 @@ class ResourceCalendar(models.Model):
         hour_count = 0.0
         for attendance in attendances:
             hour_count += attendance.hour_to - attendance.hour_from
-        self.hours_per_day = float_round(hour_count / float(len(set(attendances.mapped('dayofweek')))), precision_digits=2)
+        if attendances:
+            self.hours_per_day = float_round(hour_count / float(len(set(attendances.mapped('dayofweek')))), precision_digits=2)
 
     # --------------------------------------------------
     # Computation API
