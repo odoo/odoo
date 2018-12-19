@@ -12,7 +12,7 @@ class ResConfigSettings(models.TransientModel):
         string='Default Terms & Conditions',
         oldname='default_use_sale_note',
         config_parameter='sale.use_sale_note')
-    group_discount_per_so_line = fields.Boolean("Discounts", implied_group='sale.group_discount_per_so_line')
+    group_discount_per_so_line = fields.Boolean("Discounts", implied_group='account.group_discount_per_so_line')
     module_sale_margin = fields.Boolean("Margins")
     quotation_validity_days = fields.Integer(related='company_id.quotation_validity_days', string="Default Quotation Validity (Days)", readonly=False)
     use_quotation_validity_days = fields.Boolean("Default Quotation Validity", config_parameter='sale.use_quotation_validity_days')
