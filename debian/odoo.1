@@ -1,0 +1,291 @@
+.TH ODOO "1" "December 2018" "Odoo Server 12.0" "User Commands"
+.SH NAME
+Odoo \- Starts Odoo management software Server 12.0 from the command line.
+.SH SYNOPSIS
+.B odoo
+[\fI\,options\/\fR]
+.SH OPTIONS
+.TP
+\fB\-\-version\fR
+show program's version number and exit
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+show this help message and exit
+.IP
+Common options:
+.TP
+\fB\-c\fR CONFIG, \fB\-\-config\fR=\fI\,CONFIG\/\fR
+specify alternate config file
+.TP
+\fB\-s\fR, \fB\-\-save\fR
+save configuration to ~/.odoorc (or to
+~/.openerp_serverrc if it exists)
+.TP
+\fB\-i\fR INIT, \fB\-\-init\fR=\fI\,INIT\/\fR
+install one or more modules (comma\-separated list, use
+"all" for all modules), requires \fB\-d\fR
+.TP
+\fB\-u\fR UPDATE, \fB\-\-update\fR=\fI\,UPDATE\/\fR
+update one or more modules (comma\-separated list, use
+"all" for all modules). Requires \fB\-d\fR.
+.TP
+\fB\-\-without\-demo\fR=\fI\,WITHOUT_DEMO\/\fR
+disable loading demo data for modules to be installed
+(comma\-separated, use "all" for all modules). Requires
+\fB\-d\fR and \fB\-i\fR. Default is none
+.TP
+\fB\-P\fR IMPORT_PARTIAL, \fB\-\-import\-partial\fR=\fI\,IMPORT_PARTIAL\/\fR
+Use this for big data importation, if it crashes you
+will be able to continue at the current state. Provide
+a filename to store intermediate importation states.
+.TP
+\fB\-\-pidfile\fR=\fI\,PIDFILE\/\fR
+file where the server pid will be stored
+.TP
+\fB\-\-addons\-path\fR=\fI\,ADDONS_PATH\/\fR
+specify additional addons paths (separated by commas).
+.TP
+\fB\-\-load\fR=\fI\,SERVER_WIDE_MODULES\/\fR
+Comma\-separated list of server\-wide modules.
+.TP
+\fB\-D\fR DATA_DIR, \fB\-\-data\-dir\fR=\fI\,DATA_DIR\/\fR
+Directory where to store Odoo data
+.IP
+HTTP Service Configuration:
+.TP
+\fB\-\-http\-interface\fR=\fI\,HTTP_INTERFACE\/\fR
+Listen interface address for HTTP services. Keep empty
+to listen on all interfaces (0.0.0.0)
+.TP
+\fB\-p\fR PORT, \fB\-\-http\-port\fR=\fI\,PORT\/\fR
+Listen port for the main HTTP service
+.TP
+\fB\-\-longpolling\-port\fR=\fI\,PORT\/\fR
+Listen port for the longpolling HTTP service
+.TP
+\fB\-\-no\-http\fR
+Disable the HTTP and Longpolling services entirely
+.TP
+\fB\-\-proxy\-mode\fR
+Activate reverse proxy WSGI wrappers (headers
+rewriting) Only enable this when running behind a
+trusted web proxy!
+.IP
+Web interface Configuration:
+.TP
+\fB\-\-db\-filter\fR=\fI\,REGEXP\/\fR
+Regular expressions for filtering available databases
+for Web UI. The expression can use %d (domain) and %h
+(host) placeholders.
+.IP
+Testing Configuration:
+.TP
+\fB\-\-test\-file\fR=\fI\,TEST_FILE\/\fR
+Launch a python test file.
+.TP
+\fB\-\-test\-enable\fR
+Enable unit tests.
+.TP
+\fB\-\-test\-tags\fR=\fI\,TEST_TAGS\/\fR
+Comma separated list of tags to filter which tests to
+execute. Enable unit tests if set.
+.IP
+Logging Configuration:
+.TP
+\fB\-\-logfile\fR=\fI\,LOGFILE\/\fR
+file where the server log will be stored
+.TP
+\fB\-\-logrotate\fR
+enable logfile rotation
+.TP
+\fB\-\-syslog\fR
+Send the log to the syslog server
+.TP
+\fB\-\-log\-handler\fR=\fI\,PREFIX\/\fR:LEVEL
+setup a handler at LEVEL for a given PREFIX. An empty
+PREFIX indicates the root logger. This option can be
+repeated. Example: "odoo.orm:DEBUG" or
+"werkzeug:CRITICAL" (default: ":INFO")
+.TP
+\fB\-\-log\-request\fR
+shortcut for \fB\-\-log\-handler\fR=\fI\,odoo\/\fR.http.rpc.request:DEBUG
+.TP
+\fB\-\-log\-response\fR
+shortcut for \fB\-\-loghandler\fR=\fI\,odoo\/\fR.http.rpc.response:DEBUG
+.TP
+\fB\-\-log\-web\fR
+shortcut for \fB\-\-log\-handler\fR=\fI\,odoo\/\fR.http:DEBUG
+.TP
+\fB\-\-log\-sql\fR
+shortcut for \fB\-\-log\-handler\fR=\fI\,odoo\/\fR.sql_db:DEBUG
+.TP
+\fB\-\-log\-db\fR=\fI\,LOG_DB\/\fR
+Logging database
+.TP
+\fB\-\-log\-db\-level\fR=\fI\,LOG_DB_LEVEL\/\fR
+Logging database level
+.TP
+\fB\-\-log\-level\fR=\fI\,LOG_LEVEL\/\fR
+specify the level of the logging. Accepted values:
+['info', 'debug_rpc', 'warn', 'test', 'critical',
+\&'debug_sql', 'error', 'debug', 'debug_rpc_answer',
+\&'notset'].
+.IP
+SMTP Configuration:
+.TP
+\fB\-\-email\-from\fR=\fI\,EMAIL_FROM\/\fR
+specify the SMTP email address for sending email
+.TP
+\fB\-\-smtp\fR=\fI\,SMTP_SERVER\/\fR
+specify the SMTP server for sending email
+.TP
+\fB\-\-smtp\-port\fR=\fI\,SMTP_PORT\/\fR
+specify the SMTP port
+.TP
+\fB\-\-smtp\-ssl\fR
+if passed, SMTP connections will be encrypted with SSL
+(STARTTLS)
+.TP
+\fB\-\-smtp\-user\fR=\fI\,SMTP_USER\/\fR
+specify the SMTP username for sending email
+.TP
+\fB\-\-smtp\-password\fR=\fI\,SMTP_PASSWORD\/\fR
+specify the SMTP password for sending email
+.IP
+Database related options:
+.TP
+\fB\-d\fR DB_NAME, \fB\-\-database\fR=\fI\,DB_NAME\/\fR
+specify the database name
+.TP
+\fB\-r\fR DB_USER, \fB\-\-db_user\fR=\fI\,DB_USER\/\fR
+specify the database user name
+.TP
+\fB\-w\fR DB_PASSWORD, \fB\-\-db_password\fR=\fI\,DB_PASSWORD\/\fR
+specify the database password
+.TP
+\fB\-\-pg_path\fR=\fI\,PG_PATH\/\fR
+specify the pg executable path
+.TP
+\fB\-\-db_host\fR=\fI\,DB_HOST\/\fR
+specify the database host
+.TP
+\fB\-\-db_port\fR=\fI\,DB_PORT\/\fR
+specify the database port
+.TP
+\fB\-\-db_sslmode\fR=\fI\,DB_SSLMODE\/\fR
+specify the database ssl connection mode (see
+PostgreSQL documentation)
+.TP
+\fB\-\-db_maxconn\fR=\fI\,DB_MAXCONN\/\fR
+specify the the maximum number of physical connections
+to PostgreSQL
+.TP
+\fB\-\-db\-template\fR=\fI\,DB_TEMPLATE\/\fR
+specify a custom database template to create a new
+database
+.IP
+Internationalisation options. :
+.IP
+Use these options to translate Odoo to another language. See i18n
+section of the user manual. Option '\-d' is mandatory. Option '\-l' is
+mandatory in case of importation
+.TP
+\fB\-\-load\-language\fR=\fI\,LOAD_LANGUAGE\/\fR
+specifies the languages for the translations you want
+to be loaded
+.TP
+\fB\-l\fR LANGUAGE, \fB\-\-language\fR=\fI\,LANGUAGE\/\fR
+specify the language of the translation file. Use it
+with \fB\-\-i18n\-export\fR or \fB\-\-i18n\-import\fR
+.TP
+\fB\-\-i18n\-export\fR=\fI\,TRANSLATE_OUT\/\fR
+export all sentences to be translated to a CSV file, a
+PO file or a TGZ archive and exit
+.TP
+\fB\-\-i18n\-import\fR=\fI\,TRANSLATE_IN\/\fR
+import a CSV or a PO file with translations and exit.
+The '\-l' option is required.
+.TP
+\fB\-\-i18n\-overwrite\fR
+overwrites existing translation terms on updating a
+module or importing a CSV or a PO file.
+.TP
+\fB\-\-modules\fR=\fI\,TRANSLATE_MODULES\/\fR
+specify modules to export. Use in combination with
+\fB\-\-i18n\-export\fR
+.IP
+Security\-related options:
+.TP
+\fB\-\-no\-database\-list\fR
+Disable the ability to obtain or view the list of
+databases. Also disable access to the database manager
+and selector, so be sure to set a proper \fB\-\-database\fR
+parameter first
+.IP
+Advanced options:
+.TP
+\fB\-\-dev\fR=\fI\,DEV_MODE\/\fR
+Enable developer mode. Param: List of options
+separated by comma. Options : all,
+[pudb|wdb|ipdb|pdb], reload, qweb, werkzeug, xml
+.TP
+\fB\-\-shell\-interface\fR=\fI\,SHELL_INTERFACE\/\fR
+Specify a preferred REPL to use in shell mode.
+Supported REPLs are: [ipython|ptpython|bpython|python]
+.TP
+\fB\-\-stop\-after\-init\fR
+stop the server after its initialization
+.TP
+\fB\-\-osv\-memory\-count\-limit\fR=\fI\,OSV_MEMORY_COUNT_LIMIT\/\fR
+Force a limit on the maximum number of records kept in
+the virtual osv_memory tables. The default is False,
+which means no count\-based limit.
+.TP
+\fB\-\-osv\-memory\-age\-limit\fR=\fI\,OSV_MEMORY_AGE_LIMIT\/\fR
+Force a limit on the maximum age of records kept in
+the virtual osv_memory tables. This is a decimal value
+expressed in hours, and the default is 1 hour.
+.TP
+\fB\-\-max\-cron\-threads\fR=\fI\,MAX_CRON_THREADS\/\fR
+Maximum number of threads processing concurrently cron
+jobs (default 2).
+.TP
+\fB\-\-unaccent\fR
+Use the unaccent function provided by the database
+when available.
+.TP
+\fB\-\-geoip\-db\fR=\fI\,GEOIP_DATABASE\/\fR
+Absolute path to the GeoIP database file.
+.IP
+Multiprocessing options:
+.TP
+\fB\-\-workers\fR=\fI\,WORKERS\/\fR
+Specify the number of workers, 0 disable prefork mode.
+.TP
+\fB\-\-limit\-memory\-soft\fR=\fI\,LIMIT_MEMORY_SOFT\/\fR
+Maximum allowed virtual memory per worker, when
+reached the worker be reset after the current request
+(default 2048MiB).
+.TP
+\fB\-\-limit\-memory\-hard\fR=\fI\,LIMIT_MEMORY_HARD\/\fR
+Maximum allowed virtual memory per worker, when
+reached, any memory allocation will fail (default
+2560MiB).
+.TP
+\fB\-\-limit\-time\-cpu\fR=\fI\,LIMIT_TIME_CPU\/\fR
+Maximum allowed CPU time per request (default 60).
+.TP
+\fB\-\-limit\-time\-real\fR=\fI\,LIMIT_TIME_REAL\/\fR
+Maximum allowed Real time per request (default 120).
+.TP
+\fB\-\-limit\-time\-real\-cron\fR=\fI\,LIMIT_TIME_REAL_CRON\/\fR
+Maximum allowed Real time per cron job. (default:
+\fB\-\-limit\-time\-real\fR). Set to 0 for no limit.
+.TP
+\fB\-\-limit\-request\fR=\fI\,LIMIT_REQUEST\/\fR
+Maximum number of request to be processed per worker
+(default 8192).
+.SH "SEE ALSO"
+The full documentation for
+.B Odoo
+is available online here: <https://www.odoo.com/page/docs>

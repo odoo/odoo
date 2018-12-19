@@ -96,6 +96,9 @@ def _rpc_count_modules(addr='http://127.0.0.1', port=8069, dbname='mycompany'):
         raise Exception("Installation of package failed")
 
 def publish(o, type, extensions):
+    if o.pub is None:
+        logging.warning("No pub dir, won't release")
+        return None
     def _publish(o, release):
         arch = ''
         filename = release.split(os.path.sep)[-1]
@@ -120,8 +123,8 @@ def publish(o, type, extensions):
     published = []
     for extension in extensions:
         release = glob("%s/odoo_*.%s" % (o.build_dir, extension))
-        if release:
-            published.append(_publish(o, release[0]))
+        for r in release:
+            published.append(_publish(o, r))
     return published
 
 class OdooDocker(object):
@@ -278,10 +281,21 @@ def build_tgz(o):
 
 def build_deb(o):
     # Append timestamp to version for the .dsc to refer the right .tar.gz
-    cmd=['sed', '-i', '1s/^.*$/odoo (%s.%s) stable; urgency=low/'%(version,timestamp), 'debian/changelog']
+    cmd=['sed', '-i', '1s/^.*$/odoo (%s.%s-1) stable; urgency=low/'%(version,timestamp), 'debian/changelog']
     subprocess.call(cmd, cwd=o.build_dir)
+    # Create upstream tarball necessary for quilt format
+    dist_dir = os.path.join(o.build_dir, 'dist')
+    debuild_dir = os.path.join(dist_dir, 'odoo-%s' % version)
+    tarball_name = 'odoo_%s.%s.orig.tar.xz' % (version, timestamp)
+    logging.debug('Creating upstream tarball %s', tarball_name)
+    system(['python3', 'setup.py', 'sdist', '--quiet', '--formats=xztar'], o.build_dir)
+    system(['mv', glob('%s/odoo-*.tar.xz' % dist_dir)[0], '%s/%s' % (dist_dir, tarball_name)])
+    logging.debug('Extracting upstream tarball %s/dist/%s', o.build_dir, tarball_name)
+    system(['tar', 'xf', tarball_name], chdir=dist_dir)
+    system(['cp', '-ra', 'debian', debuild_dir], chdir=o.build_dir)
+    logging.debug('Building deb')
     if not o.no_debsign:
-        deb = pexpect.spawn('dpkg-buildpackage -rfakeroot -k%s' % GPGID, cwd=o.build_dir)
+        deb = pexpect.spawn('dpkg-buildpackage -rfakeroot -k%s' % GPGID, cwd=debuild_dir)
         deb.logfile = stdout.buffer
         if GPGPASSPHRASE:
             deb.expect_exact('Enter passphrase: ', timeout=1200)
@@ -290,11 +304,9 @@ def build_deb(o):
             deb.send(GPGPASSPHRASE + '\r\n')
         deb.expect(pexpect.EOF, timeout=1200)
     else:
-        subprocess.call(['dpkg-buildpackage', '-rfakeroot', '-uc', '-us'], cwd=o.build_dir)
-    # As the packages are built in the parent of the buildir, we move them back to build_dir
-    build_dir_parent = '{}/../'.format(o.build_dir)
-    wildcards = ['odoo_{}'.format(wc) for wc in ('*.deb', '*.dsc', '*_amd64.changes', '*.tar.gz', '*.tar.xz')]
-    move_glob(build_dir_parent, wildcards, o.build_dir)
+        subprocess.call(['dpkg-buildpackage', '-rfakeroot', '-uc', '-us'], cwd=debuild_dir)
+    wildcards = ['odoo_{}'.format(wc) for wc in ('*.deb', '*.dsc', '*_amd64.changes', '*.tar.xz')]
+    move_glob(dist_dir, wildcards, o.build_dir)
 
 def build_rpm(o):
     system(['python3', 'setup.py', '--quiet', 'bdist_rpm'], o.build_dir)
@@ -495,7 +507,8 @@ def main():
                 if not o.no_testing:
                     test_deb(o)
                 published_files = publish(o, 'debian', ['deb', 'dsc', 'changes', 'tar.xz'])
-                gen_deb_package(o, published_files)
+                if o.pub is not None:
+                    gen_deb_package(o, published_files)
             except Exception as e:
                 logging.error("Won't publish the deb release.\n Exception: %s" % str(e))
                 traceback.print_exc()

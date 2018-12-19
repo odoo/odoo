@@ -1,0 +1,35 @@
+# Odoo needs version 3.51.0 while Debian Stretch provides 3.09
+odoo: embedded-javascript-library usr/lib/python3/dist-packages/odoo/addons/web/static/lib/jquery.form/jquery.form.js please use libjs-jquery-form
+# Odoo needs version 1.11 while Debian Stretch provides 3.1.1
+odoo: embedded-javascript-library usr/lib/python3/dist-packages/odoo/addons/web/static/lib/jquery/jquery.js please use libjs-jquery
+# Not underscore.js but an Odoo patch
+odoo: embedded-javascript-library usr/lib/python3/dist-packages/odoo/addons/web/static/src/js/libs/underscore.js please use libjs-underscore
+# Not jquery.js but an Odoo extension
+odoo: embedded-javascript-library usr/lib/python3/dist-packages/odoo/addons/web/static/src/js/libs/jquery.js please use libjs-jquery
+# Debian provides 1.12.1 (with new theme that could visualy break Odoo) while Odoo needs 1.11.4
+odoo: embedded-javascript-library usr/lib/python3/dist-packages/odoo/addons/web/static/lib/jquery.ui/jquery-ui.css please use libjs-jquery-ui
+odoo: embedded-javascript-library usr/lib/python3/dist-packages/odoo/addons/web/static/lib/jquery.ui/jquery-ui.js please use libjs-jquery-ui
+# Debian Stretch provides 3.1.13 while Odoo needs 3.0.6
+odoo: embedded-javascript-library usr/lib/python3/dist-packages/odoo/addons/web_diagram/static/lib/js/jquery.mousewheel.js please use libjs-jquery-mousewheel
+# Debian Stretch provides 2.1.0 but Odoo needs 2.0.2
+odoo: embedded-javascript-library usr/lib/python3/dist-packages/odoo/addons/web_diagram/static/lib/js/raphael.js please use libjs-raphael
+# Debian Stretch provides a too old version 1.2.2 while Odoo needs 3.1.4
+odoo: embedded-javascript-library usr/lib/python3/dist-packages/odoo/addons/web_editor/static/lib/cropper/css/cropper.css please use libjs-cropper
+odoo: embedded-javascript-library usr/lib/python3/dist-packages/odoo/addons/web_editor/static/lib/cropper/js/cropper.js please use libjs-cropper
+# Not libjs-async but a part of Odoo
+odoo: embedded-javascript-library usr/lib/python3/dist-packages/odoo/addons/web_editor/static/lib/summernote/src/js/core/async.js please use libjs-async
+# Fake urls used in tests
+odoo: privacy-breach-generic usr/lib/python3/dist-packages/odoo/addons/test_assetsbundle/views/views.xml [<link rel="stylesheet" href="http://test.external.link/style1.css"/>] (http://test.external.link/style1.css)
+odoo: privacy-breach-generic usr/lib/python3/dist-packages/odoo/addons/test_assetsbundle/views/views.xml [<link rel="stylesheet" href="http://test.external.link/style2.css"/>] (http://test.external.link/style2.css)
+odoo: privacy-breach-generic usr/lib/python3/dist-packages/odoo/addons/test_assetsbundle/views/views.xml [<script type="text/javascript" src="http://test.external.link/javascript1.js">] (http://test.external.link/javascript1.js)
+odoo: privacy-breach-generic usr/lib/python3/dist-packages/odoo/addons/test_assetsbundle/views/views.xml [<script type="text/javascript" src="http://test.external.link/javascript2.js">] (http://test.external.link/javascript2.js)
+odoo: privacy-breach-generic usr/lib/python3/dist-packages/odoo/addons/website/tests/template_qweb_test.xml [<img src="http://test.external.link/img.png"/>] (http://test.external.link/img.png)
+odoo: privacy-breach-generic usr/lib/python3/dist-packages/odoo/addons/website/tests/template_qweb_test.xml [<link rel="stylesheet" href="http://test.external.link/style1.css"/>] (http://test.external.link/style1.css)
+odoo: privacy-breach-generic usr/lib/python3/dist-packages/odoo/addons/website/tests/template_qweb_test.xml [<link rel="stylesheet" href="http://test.external.link/style2.css"/>] (http://test.external.link/style2.css)
+odoo: privacy-breach-generic usr/lib/python3/dist-packages/odoo/addons/website/tests/template_qweb_test.xml [<script type="text/javascript" src="http://test.external.link/javascript1.js">] (http://test.external.link/javascript1.js)
+odoo: privacy-breach-generic usr/lib/python3/dist-packages/odoo/addons/website/tests/template_qweb_test.xml [<script type="text/javascript" src="http://test.external.link/javascript2.js">] (http://test.external.link/javascript2.js)
+# External services used in Odoo
+odoo: privacy-breach-generic usr/lib/python3/dist-packages/odoo/addons/event/data/email_template_data.xml [<img src="http://maps.googleapis.com/maps/api/staticmap?autoscale=1&amp;size=598x200&amp;maptype=roadmap&amp;format=png&amp;visual_refresh=true&amp;markers=size:mid%7ccolor:0xa5117d%7clabel:%7c${location}" style="vertical-align:bottom; width: 100%;" alt="google maps"/>] (http://maps.googleapis.com/maps/api/staticmap?autoscale=1&amp;size=598x200&amp;maptype=roadmap&amp;format=png&amp;visual_refresh=true&amp;markers=size:mid%7ccolor:0xa5117d%7clabel:%7c${location})
+odoo: privacy-breach-generic usr/lib/python3/dist-packages/odoo/addons/hr_recruitment/data/hr_recruitment_data.xml [<img src="http://maps.googleapis.com/maps/api/staticmap?autoscale=1&amp;size=598x200&amp;maptype=roadmap&amp;format=png&amp;visual_refresh=true&amp;markers=size:mid%7ccolor:0xa5117d%7clabel:%7c${location}" style="vertical-align:bottom;"/>] (http://maps.googleapis.com/maps/api/staticmap?autoscale=1&amp;size=598x200&amp;maptype=roadmap&amp;format=png&amp;visual_refresh=true&amp;markers=size:mid%7ccolor:0xa5117d%7clabel:%7c${location})
+odoo: privacy-breach-generic usr/lib/python3/dist-packages/odoo/addons/website_blog/data/website_blog_demo.xml [<iframe width="100%" height="250" src="http://www.youtube.com/embed/ekbbfmiwote" frameborder="0" allowfullscreen>] (http://www.youtube.com/embed/ekbbfmiwote)
+odoo: privacy-breach-generic usr/lib/python3/dist-packages/odoo/addons/website_google_map/views/google_map_templates.xml [<script src="//maps.google.com/maps/api/js">] (//maps.google.com/maps/api/js)

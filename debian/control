@@ -2,11 +2,12 @@ Source: odoo
 Section: net
 Priority: optional
 Maintainer: Odoo S.A. <info@odoo.com>
-Uploaders: Aaron Bohy <aab@odoo.com>, Simon Lejeune <sle@odoo.com>
-Build-Depends: debhelper (>= 9.2), dh-python, python3, rsync, python3-setuptools
-Standards-Version: 3.9.8
+Uploaders: Christophe Monniez <moc@odoo.com>
+Build-Depends: debhelper (>= 9.2), dh-systemd, dh-python, python3, rsync, python3-setuptools
+Standards-Version: 4.3.0
 Homepage: http://www.odoo.com/
-Vcs-Git: https://github.com/odoo/odoo
+Vcs-Git: https://github.com/odoo/odoo.git
+Vcs-Browser: https://github.com/odoo/odoo
 
 Package: odoo
 Architecture: all
@@ -14,6 +15,9 @@ Depends:
  ${misc:Depends},
  ${python3:Depends},
  adduser,
+ fonts-font-awesome,
+ fonts-inconsolata,
+ libjs-underscore,
  lsb-base,
  postgresql-client,
  python3-babel,
@@ -42,8 +46,8 @@ Depends:
  python3-vatnumber,
  python3-werkzeug,
  python3-xlsxwriter,
-Conflicts: tinyerp-server, openerp-server, openerp-web, openerp
-Replaces: tinyerp-server, openerp-server, openerp-web, openerp
+Conflicts: tinyerp-server, openerp-server, openerp-web, openerp, oca-core
+Replaces: tinyerp-server, openerp-server, openerp-web, openerp, oca-core
 Recommends:
  ${python3:Recommends},
  postgresql,
