@@ -115,9 +115,29 @@ return Widget.extend({
                 // console.log(results);
                 self.render_search_results(results);
                 self.focus_element(self.$('li:first-child'));
+                self.render_expand_count(results);
             } else {
                 self.close();
             }
+        });
+    },
+    render_expand_count: function(results) {
+        var self = this;
+        var term = self.search_string;
+        var defs = [];
+        var countFacet = _.filter(results, function(result) {return result.expand;});
+        _.each(countFacet, function(f) {
+            defs.push(f.expand(term));
+        });
+        $.when.apply($, defs).then(function() {
+            _.each(arguments, function(args, index) {
+                var counter = args && args.length ? args.length : 0;
+                if (counter) {
+                    countFacet[index].$el.find("strong").append(" (" + counter   + ")");
+                } else {
+                    countFacet[index].$el.hide();
+                }
+            });
         });
     },
     render_search_results: function (results) {
@@ -142,14 +162,6 @@ return Widget.extend({
             })
             .data('result', result);
         if (result.expand) {
-            // console.log(this.get_search_string());
-            // console.log("result.facet.values[0].value");
-            result.expand(this.get_search_string()).then(function (results) {
-                if (results){
-                    console.log(" >>> " + results.length);
-                }
-            });
-            // debugger;
             var $expand = $('<a class="o-expand" href="#">').appendTo($li);
             $expand.mousedown(function (ev) {
                 ev.stopPropagation();
@@ -171,9 +183,7 @@ return Widget.extend({
     },
     expand: function () {
         var self = this;
-        // debugger;
         var current_result = this.current_result;
-        // var abc = this.get_search_string();
         current_result.expand(this.get_search_string()).then(function (results) {
             (results || [{label: '(no result)'}]).reverse().forEach(function (result) {
                 result.indent = true;
