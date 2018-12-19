@@ -21,6 +21,10 @@ class HrPayrollStructure(models.Model):
     def _get_parent(self):
         return self.env.ref('hr_payroll.structure_base', False)
 
+    @api.model
+    def _get_default_report_id(self):
+        return self.env.ref('hr_payroll.action_report_payslip', False)
+
     name = fields.Char(required=True)
     code = fields.Char(string='Reference', required=True)
     company_id = fields.Many2one('res.company', string='Company', required=True,
@@ -29,6 +33,8 @@ class HrPayrollStructure(models.Model):
     parent_id = fields.Many2one('hr.payroll.structure', string='Parent', default=_get_parent)
     children_ids = fields.One2many('hr.payroll.structure', 'parent_id', string='Children', copy=True)
     rule_ids = fields.Many2many('hr.salary.rule', 'hr_structure_salary_rule_rel', 'struct_id', 'rule_id', string='Salary Rules')
+    report_id = fields.Many2one('ir.actions.report',
+        string="Report", required=True, domain="[('model','=','hr.payslip'),('report_type','=','qweb-pdf')]", default=_get_default_report_id)
 
     @api.constrains('parent_id')
     def _check_parent_id(self):
