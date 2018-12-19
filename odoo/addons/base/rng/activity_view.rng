@@ -8,6 +8,7 @@
     <define name="activity">
         <element name="activity">
             <attribute name="string"/>
+            <optional><attribute name="create"/></optional>
             <interleave>
                 <zeroOrMore><ref name="field"/></zeroOrMore>
                 <optional>
