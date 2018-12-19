@@ -15,7 +15,7 @@ var qweb = core.qweb;
 
 var PieChart = Widget.extend({
     className: 'o_pie_chart',
-    xmlDependencies: ['/web/static/src/xml/pie_chart.xml'],
+    xmlDependencies: ['/web/static/src/xml/chart.xml'],
 
     /**
      * @override
