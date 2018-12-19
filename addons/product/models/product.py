@@ -398,9 +398,9 @@ class ProductProduct(models.Model):
 
         # Prefetch the fields used by the `name_get`, so `browse` doesn't fetch other fields
         # Use `load=False` to not call `name_get` for the `product_tmpl_id`
-        self.sudo().read(['name', 'default_code', 'product_tmpl_id', 'attribute_value_ids'], load=False)
+        products = self.sudo().read(['name', 'default_code', 'product_tmpl_id', 'attribute_value_ids'], load=False)
 
-        product_template_ids = [product.product_tmpl_id.id for product in self]
+        product_template_ids = list(set(product['product_tmpl_id'] for product in products))
 
         if partner_ids:
             supplier_info = self.env['product.supplierinfo'].sudo().search([
