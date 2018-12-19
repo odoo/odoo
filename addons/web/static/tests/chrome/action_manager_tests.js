@@ -2127,18 +2127,35 @@ QUnit.module('ActionManager', {
     });
 
     QUnit.test('sidebar is present in list view', function (assert) {
-        assert.expect(2);
+        assert.expect(5);
 
         var actionManager = createActionManager({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            mockRPC: function (route, args) {
+                var res = this._super.apply(this, arguments);
+                if (args.method === 'load_views') {
+                    assert.strictEqual(args.kwargs.options.toolbar, true,
+                        "should ask for toolbar information");
+                    return res.then(function (fieldsViews) {
+                        fieldsViews.list.toolbar = {
+                            print: [{name: "Print that record"}],
+                        };
+                        return fieldsViews;
+                    });
+                }
+                return res;
+            },
         });
         actionManager.doAction(3);
 
+        assert.isNotVisible(actionManager.$('.o_cp_sidebar button.o_dropdown_toggler_btn:contains("Print")'));
         assert.isNotVisible(actionManager.$('.o_cp_sidebar button.o_dropdown_toggler_btn:contains("Action")'));
         testUtils.dom.clickFirst(actionManager.$('input.custom-control-input'));
+        assert.isVisible(actionManager.$('.o_cp_sidebar button.o_dropdown_toggler_btn:contains("Print")'));
         assert.isVisible(actionManager.$('.o_cp_sidebar button.o_dropdown_toggler_btn:contains("Action")'));
+
         actionManager.destroy();
     });
 
