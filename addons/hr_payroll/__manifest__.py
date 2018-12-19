@@ -35,4 +35,7 @@
         'wizard/hr_benefit_employee_views.xml',
     ],
     'demo': ['data/hr_payroll_demo.xml'],
+    'qweb': [
+        "static/src/xml/payslip_tree_views.xml",
+    ],
 }
