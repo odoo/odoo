@@ -18,7 +18,7 @@ class TestBenefit(TestPayslipBase):
         self.start = datetime.strptime('2015-11-01 01:00:00', '%Y-%m-%d %H:%M:%S').replace(tzinfo=self.tz)
         self.end = datetime.strptime('2015-11-30 23:59:59', '%Y-%m-%d %H:%M:%S').replace(tzinfo=self.tz)
         self.resource_calendar_id = self.env['resource.calendar'].create({'name': 'Zboub'})
-        self.env['hr.contract'].create({
+        contract = self.env['hr.contract'].create({
             'date_start': self.start - relativedelta(days=5),
             'name': 'dodo',
             'resource_calendar_id': self.resource_calendar_id.id,
@@ -28,18 +28,7 @@ class TestBenefit(TestPayslipBase):
             'state': 'open',
         })
         self.richard_emp.resource_calendar_id = self.resource_calendar_id
-
-        self.benefit_type_leave = self.env['hr.benefit.type'].create({
-            'name': 'Leave',
-            'is_leave': True,
-            'code': 'LEAVE100'
-        })
-        self.leave_type = self.env['hr.leave.type'].create({
-            'name': 'Paid Time Off',
-            'time_type': 'leave',
-            'allocation_type': 'no',
-            'benefit_type_id': self.benefit_type_leave.id
-        })
+        self.richard_emp.contract_id = contract
         self.benefit_type = self.env['hr.benefit.type'].create({
             'name': 'Extra attendance',
             'is_leave': False,
@@ -69,6 +58,7 @@ class TestBenefit(TestPayslipBase):
         benefit = self.env['hr.benefit'].create({
             'name': '1',
             'employee_id': self.richard_emp.id,
+            'contract_id': self.richard_emp.contract_id.id,
             'date_start': start,
             'date_stop': end,
         })
@@ -91,6 +81,7 @@ class TestBenefit(TestPayslipBase):
         benefit = self.env['hr.benefit'].create({
             'name': '1',
             'employee_id': self.richard_emp.id,
+            'contract_id': self.richard_emp.contract_id.id,
             'date_start': start,
             'date_stop': end,
         })
@@ -114,6 +105,7 @@ class TestBenefit(TestPayslipBase):
         benefit = self.env['hr.benefit'].create({
             'name': '1',
             'employee_id': self.richard_emp.id,
+            'contract_id': self.richard_emp.contract_id.id,
             'date_start': start,
             'date_stop': end,
             'benefit_type_id': self.benefit_type.id,
@@ -131,6 +123,7 @@ class TestBenefit(TestPayslipBase):
             'name': '1',
             'employee_id': self.richard_emp.id,
             'benefit_type_id': self.env.ref('hr_payroll.benefit_type_attendance').id,
+            'contract_id': self.richard_emp.contract_id.id,
             'date_start': start,
             'date_stop': end,
         })
@@ -150,6 +143,7 @@ class TestBenefit(TestPayslipBase):
             'name': '1',
             'employee_id': self.richard_emp.id,
             'benefit_type_id': self.benefit_type.id,
+            'contract_id': self.richard_emp.contract_id.id,
             'date_start': start,
             'date_stop': end,
         })
@@ -186,6 +180,7 @@ class TestBenefit(TestPayslipBase):
             'name': 'Richard leave from benef',
             'employee_id': self.richard_emp.id,
             'benefit_type_id': self.benefit_type_leave.id,
+            'contract_id': self.richard_emp.contract_id.id,
             'date_start': start,
             'date_stop': end,
         })
@@ -201,6 +196,7 @@ class TestBenefit(TestPayslipBase):
             'name': '1',
             'employee_id': self.richard_emp.id,
             'benefit_type_id': self.env.ref('hr_payroll.benefit_type_attendance').id,
+            'contract_id': self.richard_emp.contract_id.id,
             'date_start': start,
             'date_stop': end + relativedelta(hours=5),
         })
@@ -208,6 +204,7 @@ class TestBenefit(TestPayslipBase):
             'name': '2',
             'employee_id': self.richard_emp.id,
             'benefit_type_id': self.env.ref('hr_payroll.benefit_type_attendance').id,
+            'contract_id': self.richard_emp.contract_id.id,
             'date_start': start + relativedelta(hours=3),
             'date_stop': end,
         })
@@ -220,6 +217,7 @@ class TestBenefit(TestPayslipBase):
             'name': '1',
             'employee_id': self.richard_emp.id,
             'benefit_type_id': self.benefit_type_leave.id,
+            'contract_id': self.richard_emp.contract_id.id,
             'date_start': self.start,
             'date_stop': self.end,
         })
@@ -238,6 +236,7 @@ class TestBenefit(TestPayslipBase):
         benef1 = self.env['hr.benefit'].create({
             'name': '1',
             'employee_id': self.richard_emp.id,
+            'contract_id': self.richard_emp.contract_id.id,
             'date_start': self.start,
             'date_stop': self.end,
         })
@@ -257,10 +256,11 @@ class TestBenefit(TestPayslipBase):
         benef = self.env['hr.benefit'].create({
             'name': '1',
             'employee_id': self.richard_emp.id,
+            'contract_id': self.richard_emp.contract_id.id,
             'benefit_type_id': self.benefit_type.id,
             'date_start': start,
             'date_stop': end,
-            'leave_id': leave.id
+            'leave_id': leave.id, # benefit conflicts with this leave
         })
         leave.action_approve()
 
@@ -295,6 +295,7 @@ class TestBenefit(TestPayslipBase):
         benef = self.env['hr.benefit'].create({
             'name': '1',
             'employee_id': self.richard_emp.id,
+            'contract_id': self.richard_emp.contract_id.id,
             'benefit_type_id': self.benefit_type.id,
             'date_start': start,
             'date_stop': end,
@@ -316,6 +317,7 @@ class TestBenefit(TestPayslipBase):
         benef = self.env['hr.benefit'].create({
             'name': '1',
             'employee_id': self.richard_emp.id,
+            'contract_id': self.richard_emp.contract_id.id,
             'benefit_type_id': self.benefit_type.id,
             'date_start': start,
             'date_stop': end,
@@ -331,6 +333,7 @@ class TestBenefit(TestPayslipBase):
         leave_benef = self.env['hr.benefit'].create({
             'name': '1leave',
             'employee_id': self.richard_emp.id,
+            'contract_id': self.richard_emp.contract_id.id,
             'benefit_type_id': self.benefit_type_leave.id,
             'date_start': start,
             'date_stop': end,
@@ -346,6 +349,7 @@ class TestBenefit(TestPayslipBase):
         leave_benef = self.env['hr.benefit'].create({
             'name': '1leave',
             'employee_id': self.richard_emp.id,
+            'contract_id': self.richard_emp.contract_id.id,
             'benefit_type_id': self.benefit_type_leave.id,
             'date_start': start,
             'date_stop': end,
@@ -361,6 +365,7 @@ class TestBenefit(TestPayslipBase):
         leave_benef = self.env['hr.benefit'].create({
             'name': '1leave',
             'employee_id': self.richard_emp.id,
+            'contract_id': self.richard_emp.contract_id.id,
             'benefit_type_id': self.benefit_type_leave.id,
             'date_start': start,
             'date_stop': end,
@@ -384,6 +389,7 @@ class TestBenefit(TestPayslipBase):
         benef = self.env['hr.benefit'].create({
             'name': 'Extra',
             'employee_id': self.richard_emp.id,
+            'contract_id': self.richard_emp.contract_id.id,
             'benefit_type_id': self.benefit_type.id,
             'date_start': start,
             'date_stop': end,

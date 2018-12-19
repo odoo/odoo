@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
-
+from datetime import date
 
 class HrContract(models.Model):
     _inherit = 'hr.contract'
@@ -24,6 +24,18 @@ class HrContract(models.Model):
     hours_per_week = fields.Float(related='resource_calendar_id.hours_per_week')
     full_time_required_hours = fields.Float(related='resource_calendar_id.full_time_required_hours')
     is_fulltime = fields.Boolean(related='resource_calendar_id.is_fulltime')
+
+    @api.constrains('date_start', 'date_end', 'state')
+    def _check_contracts(self):
+        self._get_leaves()._check_contracts()
+
+    @api.multi
+    def _get_leaves(self):
+        return self.env['hr.leave'].search([
+            ('employee_id', 'in', self.mapped('employee_id.id')),
+            ('date_from', '<=', max([end or date.max for end in self.mapped('date_end')])),
+            ('date_to', '>=', min(self.mapped('date_start'))),
+        ])
 
     @api.multi
     def get_all_structures(self):
