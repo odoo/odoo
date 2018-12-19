@@ -31,6 +31,10 @@ class Survey(models.Model):
     stage_id = fields.Many2one('survey.stage', string="Stage", default=_default_stage,
                                ondelete="restrict", copy=False, group_expand='_read_group_stage_ids')
     is_closed = fields.Boolean("Is closed", related='stage_id.closed', readonly=True)
+    category = fields.Selection([
+        ('default', 'Generic Survey')], string='Category',
+        default='default', required=True,
+        help='Category is used to know in which context the survey is used. Various apps may define their own categories when they use survey like jobs recruitment or employee appraisal surveys.')
     # content
     page_ids = fields.One2many('survey.page', 'survey_id', string='Pages', copy=True)
     user_input_ids = fields.One2many('survey.user_input', 'survey_id', string='User responses', readonly=True, groups='survey.group_survey_user')
