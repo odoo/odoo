@@ -9,9 +9,6 @@ class Project(models.Model):
     _inherit = "project.project"
 
     allow_timesheets = fields.Boolean("Allow timesheets", default=True, help="Enable timesheeting on the project.")
-    analytic_account_id = fields.Many2one('account.analytic.account', string="Analytic Account", copy=False, ondelete='set null',
-        help="Analytic account to which this project is linked for financial management."
-             "Use an analytic account to record cost and revenue on your project.")
 
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
@@ -47,12 +44,7 @@ class Project(models.Model):
         """
         allow_timesheets = values['allow_timesheets'] if 'allow_timesheets' in values else self.default_get(['allow_timesheets'])['allow_timesheets']
         if allow_timesheets and not values.get('analytic_account_id'):
-            analytic_account = self.env['account.analytic.account'].create({
-                'name': values.get('name', _('Unknown Analytic Account')),
-                'company_id': values.get('company_id', self.env.company_id.id),
-                'partner_id': values.get('partner_id'),
-                'active': True,
-            })
+            analytic_account = self._create_analytic_account_from_values(values)
             values['analytic_account_id'] = analytic_account.id
         return super(Project, self).create(values)
 
@@ -66,30 +58,13 @@ class Project(models.Model):
         result = super(Project, self).write(values)
         return result
 
-    @api.multi
-    def unlink(self):
-        """ Delete the empty related analytic account """
-        analytic_accounts_to_delete = self.env['account.analytic.account']
-        for project in self:
-            if project.analytic_account_id and not project.analytic_account_id.line_ids:
-                analytic_accounts_to_delete |= project.analytic_account_id
-        result = super(Project, self).unlink()
-        analytic_accounts_to_delete.unlink()
-        return result
+    # ---------------------------------------------------
+    #  Business Methods
+    # ---------------------------------------------------
 
     @api.model
     def _init_data_analytic_account(self):
         self.search([('analytic_account_id', '=', False), ('allow_timesheets', '=', True)])._create_analytic_account()
-
-    def _create_analytic_account(self):
-        for project in self:
-            analytic_account = self.env['account.analytic.account'].create({
-                'name': project.name,
-                'company_id': project.company_id.id,
-                'partner_id': project.partner_id.id,
-                'active': True,
-            })
-            project.write({'analytic_account_id': analytic_account.id})
 
 
 class Task(models.Model):

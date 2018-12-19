@@ -80,13 +80,6 @@ class Project(models.Model):
         values['alias_defaults'] = {'project_id': self.id}
         return values
 
-    @api.multi
-    def unlink(self):
-        for project in self:
-            if project.tasks:
-                raise UserError(_('You cannot delete a project containing tasks. You can either archive it or first delete all of its tasks.'))
-        return super(Project, self).unlink()
-
     def _compute_attached_docs_count(self):
         Attachment = self.env['ir.attachment']
         for project in self:
@@ -180,6 +173,9 @@ class Project(models.Model):
     partner_id = fields.Many2one('res.partner', string='Customer', auto_join=True, tracking=True)
     company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.company_id)
     currency_id = fields.Many2one('res.currency', related="company_id.currency_id", string="Currency", readonly=True)
+    analytic_account_id = fields.Many2one('account.analytic.account', string="Analytic Account", copy=False, ondelete='set null',
+        help="Analytic account to which this project is linked for financial management."
+             "Use an analytic account to record cost and revenue on your project.")
 
     favorite_user_ids = fields.Many2many(
         'res.users', 'project_favorite_user_rel', 'project_id', 'user_id',
@@ -325,6 +321,21 @@ class Project(models.Model):
         return res
 
     @api.multi
+    def unlink(self):
+        # Check project is empty
+        for project in self:
+            if project.tasks:
+                raise UserError(_('You cannot delete a project containing tasks. You can either archive it or first delete all of its tasks.'))
+        # Delete the empty related analytic account
+        analytic_accounts_to_delete = self.env['account.analytic.account']
+        for project in self:
+            if project.analytic_account_id and not project.analytic_account_id.line_ids:
+                analytic_accounts_to_delete |= project.analytic_account_id
+        result = super(Project, self).unlink()
+        analytic_accounts_to_delete.unlink()
+        return result
+
+    @api.multi
     def message_subscribe(self, partner_ids=None, channel_ids=None, subtype_ids=None):
         """ Subscribe to all existing active tasks when subscribing to a project """
         res = super(Project, self).message_subscribe(partner_ids=partner_ids, channel_ids=channel_ids, subtype_ids=subtype_ids)
@@ -382,6 +393,31 @@ class Project(models.Model):
         action_context['search_default_parent_res_name'] = self.name
         action_context.pop('group_by', None)
         return dict(action, context=action_context)
+
+    # ---------------------------------------------------
+    #  Business Methods
+    # ---------------------------------------------------
+
+    @api.model
+    def _create_analytic_account_from_values(self, values):
+        analytic_account = self.env['account.analytic.account'].create({
+            'name': values.get('name', _('Unknown Analytic Account')),
+            'company_id': values.get('company_id', self.env.user.company_id.id),
+            'partner_id': values.get('partner_id'),
+            'active': True,
+        })
+        return analytic_account
+
+    @api.multi
+    def _create_analytic_account(self):
+        for project in self:
+            analytic_account = self.env['account.analytic.account'].create({
+                'name': project.name,
+                'company_id': project.company_id.id,
+                'partner_id': project.partner_id.id,
+                'active': True,
+            })
+            project.write({'analytic_account_id': analytic_account.id})
 
     # ---------------------------------------------------
     # Rating business
