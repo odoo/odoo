@@ -16,6 +16,7 @@ var core = require('web.core');
 var dom = require('web.dom');
 var MockServer = require('web.MockServer');
 var session = require('web.session');
+var SystrayMenu = require('web.SystrayMenu');
 
 var DebouncedField = basic_fields.DebouncedField;
 
@@ -116,6 +117,10 @@ function removeSrcAttribute(el, widget) {
  * @param {Object} [params.services={}] list of services to load in
  *   addition to the ajax service. For instance, if a test needs the local
  *   storage service in order to work, it can provide a mock version of it.
+ * @param {Object} [params.systrayMenuItems] list of menu items to load
+ *   in SystrayMenu.Items. Usefull when you need to control the SystrayMenu
+ *   content and prevent loading unwanted items (for example mail's MessagingMenu
+ *   which could trigger unnecessary RPC requests).
  * @param {boolean} [debounce=true] set to false to completely remove the
  *   debouncing, forcing the handler to be called directly (not on the next
  *   execution stack, like it does with delay=0).
@@ -157,7 +162,8 @@ function addMockEnvironment(widget, params) {
     DebouncedField.prototype.DEBOUNCE = params.fieldDebounce || 0;
     var initialDOMDebounceValue = dom.DEBOUNCE;
     dom.DEBOUNCE = 0;
-    var initialSession, initialConfig, initialParameters, initialDebounce, initialThrottle;
+    var initialSession, initialConfig, initialParameters,
+        initialDebounce, initialThrottle, initialSystrayMenuItems;
     initialSession = _.extend({}, session);
     session.getTZOffset = function () {
         return 0; // by default, but may be overriden in specific tests
@@ -190,6 +196,10 @@ function addMockEnvironment(widget, params) {
         _.throttle = function (func) {
             return func;
         };
+    }
+    if ('systrayMenuItems' in params) {
+        initialSystrayMenuItems = _.clone(SystrayMenu.Items);
+        SystrayMenu.Items = params.systrayMenuItems;
     }
 
     var widgetDestroy = widget.destroy;
@@ -225,6 +235,9 @@ function addMockEnvironment(widget, params) {
                 delete core._t.database.parameters[key];
             }
             _.extend(core._t.database.parameters, initialParameters);
+        }
+        if ('systrayMenuItems' in params) {
+            SystrayMenu.Items = initialSystrayMenuItems;
         }
 
         $('body').off('DOMNodeInserted.removeSRC');
