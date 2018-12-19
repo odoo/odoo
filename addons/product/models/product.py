@@ -400,7 +400,7 @@ class ProductProduct(models.Model):
         # Use `load=False` to not call `name_get` for the `product_tmpl_id`
         self.sudo().read(['name', 'default_code', 'product_tmpl_id', 'attribute_value_ids'], load=False)
 
-        product_template_ids = [product.product_tmpl_id.id for product in self]
+        product_template_ids = self.sudo().mapped('product_tmpl_id').ids
 
         if partner_ids:
             supplier_info = self.env['product.supplierinfo'].sudo().search([
