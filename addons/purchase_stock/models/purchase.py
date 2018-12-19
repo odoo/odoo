@@ -359,14 +359,11 @@ class PurchaseOrderLine(models.Model):
         }
         diff_quantity = self.product_qty - qty
         if float_compare(diff_quantity, 0.0,  precision_rounding=self.product_uom.rounding) > 0:
+            po_line_uom = self.product_uom
             quant_uom = self.product_id.uom_id
-            get_param = self.env['ir.config_parameter'].sudo().get_param
-            if self.product_uom.id != quant_uom.id and get_param('stock.propagate_uom') != '1':
-                product_qty = self.product_uom._compute_quantity(diff_quantity, quant_uom, rounding_method='HALF-UP')
-                template['product_uom'] = quant_uom.id
-                template['product_uom_qty'] = product_qty
-            else:
-                template['product_uom_qty'] = diff_quantity
+            product_uom_qty, product_uom = po_line_uom._adjust_uom_quantities(diff_quantity, quant_uom)
+            template['product_uom_qty'] = product_uom_qty
+            template['product_uom'] = product_uom.id
             res.append(template)
         return res
 
