@@ -3,7 +3,7 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from datetime import datetime
+from datetime import datetime, date
 
 
 class HrPayslipEmployees(models.TransientModel):
@@ -43,17 +43,20 @@ class HrPayslipEmployees(models.TransientModel):
             values = Payslip.default_get(Payslip.fields_get())
             values.update({
                 'employee_id': employee.id,
-                'date_from': payslip_run.date_start,
-                'date_to': payslip_run.date_end,
                 'credit_note': payslip_run.credit_note,
                 'payslip_run_id': payslip_run.id,
+                'date_from': payslip_run.date_start,
+                'date_to': payslip_run.date_end,
             })
-            payslip = self.env['hr.payslip'].new(values)
-            payslip.onchange_employee()
-            payslip.onchange_contract()
-            payslip._onchange_struct_id()
-            values = payslip._convert_to_write(payslip._cache)
-            payslips += Payslip.create(values)
+            for contract in employee._get_contracts(payslip_run.date_start, payslip_run.date_end, states=['open', 'pending', 'close']):
+                values.update({
+                    'contract_id': contract.id,
+                })
+                payslip = self.env['hr.payslip'].new(values)
+                payslip.onchange_employee()
+                payslip._onchange_struct_id()
+                values = payslip._convert_to_write(payslip._cache)
+                payslips += Payslip.create(values)
         payslips.compute_sheet()
         payslip_run.state = 'verify'
 
