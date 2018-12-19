@@ -529,7 +529,7 @@
     </div>
 </div>
 
-<div t-name="PivotView" class="o_pivot">
+<div t-name="PivotView" t-attf-class="o_pivot #{widget.enableLinking ? 'o_enable_linking' : ''}">
     <div class="o_field_selection"/>
 </div>
 <t t-name="PivotView.buttons">
