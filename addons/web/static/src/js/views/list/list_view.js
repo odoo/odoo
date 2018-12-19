@@ -69,6 +69,9 @@ var ListView = BasicView.extend({
         params.hasSidebar = !inDialog && !inline;
         return params;
     },
+    /**
+     * @override
+     */
     _updateMVCParams: function () {
         this._super.apply(this, arguments);
         this.controllerParams.noLeaf = !!this.loadParams.context.group_by_no_leaf;

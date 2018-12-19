@@ -396,7 +396,7 @@ ActionManager.include({
         var inline = action.target === 'inline';
         var options = {
             action_id: action.id,
-            toolbar: inDialog && inline,
+            toolbar: !inDialog && !inline,
         };
         var views = action.views.slice();
         if (!inline && !(inDialog && action.views[0][1] === 'form')) {
