@@ -105,13 +105,9 @@ class ProcurementGroup(models.Model):
             qty_to_produce = ( order_qty / bom_kit.product_qty)
             boms, bom_sub_lines = bom_kit.explode(product_id, qty_to_produce)
             for bom_line, bom_line_data in bom_sub_lines:
-                procurement_uom = bom_line.product_uom_id
-                quant_uom = bom_line.product_id.uom_id
-                component_qty = bom_line_data['qty']
-                get_param = self.env['ir.config_parameter'].sudo().get_param
-                if procurement_uom.id != quant_uom.id and get_param('stock.propagate_uom') != '1':
-                    component_qty = bom_line.product_uom_id._compute_quantity(bom_line_data['qty'], quant_uom, rounding_method='HALF-UP')
-                    procurement_uom = quant_uom
+                bom_line_uom = bom_line.product_uom_id
+                quant_uom =  bom_line.product_id.uom_id
+                component_qty, procurement_uom = bom_line_uom._adjust_uom_quantities(bom_line_data['qty'], quant_uom)
                 super(ProcurementGroup, self).run(bom_line.product_id, component_qty, procurement_uom, location_id, name, origin, values)
             return True
         else:
