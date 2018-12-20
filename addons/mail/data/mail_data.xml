@@ -314,7 +314,7 @@
 <div>
     <p>
         <strong><span t-attf-class="fa #{activity.activity_type_id.icon}"/></strong> <span t-field="activity.activity_type_id.name"/> done
-        by <span t-field="activity.user_id.name"/><span t-if="activity.summary">:</span>
+        by <span t-field="activity.env.user.name"/><span t-if="activity.summary">:</span>
         <span t-if="activity.summary" t-field="activity.summary"/>
     </p>
     <div t-field="activity.note" style="margin-left: 8px;"/>
