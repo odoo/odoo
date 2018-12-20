@@ -70,6 +70,7 @@ tour.register('sale_product_configurator_tour', {
 }, {
     trigger: 'button span:contains(Confirm)',
     extra_trigger: '.oe_optional_products_modal',
+    id: "quotation_product_selected",
     run: 'click'
 },
 // check that 3 products were added to the SO
