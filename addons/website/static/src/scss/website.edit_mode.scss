@@ -6,17 +6,6 @@
 }
 
 .modal.o_theme_customize_modal {
-
-    &.o_theme_customize_loading {
-        pointer-events: none;
-
-        &::after {
-            content: "";
-            @include o-position-absolute(0, 0, 0, 0);
-            background-color: rgba(0, 0, 0, 0.2);
-        }
-    }
-
     .modal-dialog {
         @include o-position-absolute(0, 2%);
         width: 96%;

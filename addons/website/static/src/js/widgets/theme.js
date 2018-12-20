@@ -464,6 +464,9 @@ var ThemeCustomizeDialog = Dialog.extend({
      * @private
      */
     _updateStyle: function (enable, disable, reload) {
+        var $loading = $('<i/>', {class: 'fa fa-refresh fa-spin'});
+        this.$modal.find('.modal-title').append($loading);
+
         if (reload || config.debug === 'assets') {
             window.location.href = $.param.querystring('/website/theme_customize_reload', {
                 href: window.location.href,
@@ -482,9 +485,11 @@ var ThemeCustomizeDialog = Dialog.extend({
                 'get_bundle': true,
             },
         }).then(function (bundles) {
+            var $allLinks = $();
             var defs = _.map(bundles, function (bundleContent, bundleName) {
                 var linkSelector = 'link[href*="' + bundleName + '"]';
                 var $links = $(linkSelector);
+                $allLinks = $allLinks.add($links);
                 var $newLinks = $(bundleContent).filter(linkSelector);
 
                 var linksLoaded = $.Deferred();
@@ -500,12 +505,13 @@ var ThemeCustomizeDialog = Dialog.extend({
                     window.location.reload();
                 });
                 $links.last().after($newLinks);
-                return linksLoaded.then(function () {
-                    $links.remove();
-                });
+                return linksLoaded;
             });
 
-            return $.when.apply($, defs);
+            return $.when.apply($, defs).always(function () {
+                $loading.remove();
+                $allLinks.remove();
+            });
         });
     },
 
@@ -522,6 +528,11 @@ var ThemeCustomizeDialog = Dialog.extend({
 
         // Checkout the option that changed
         var $option = $(ev.currentTarget);
+        if ($option.is(':disabled')) {
+            return;
+        }
+        this.$inputs.prop('disabled', true);
+
         var $options = $option;
         var checked = $option.is(':checked');
 
@@ -552,15 +563,14 @@ var ThemeCustomizeDialog = Dialog.extend({
         this._setActive();
 
         // Update the style according to the whole set of options
-        this.$modal.addClass('o_theme_customize_loading');
         self._processChange($options).then(function () {
             return self._updateStyle(
                 self._getXMLIDs($enable),
                 self._getXMLIDs($disable),
                 $option.data('reload') && window.location.href.match(new RegExp($option.data('reload')))
             );
-        }).always(function () {
-            self.$modal.removeClass('o_theme_customize_loading');
+        }).then(function () {
+            self.$inputs.prop('disabled', false);
         });
     },
 });
