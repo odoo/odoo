@@ -3999,6 +3999,50 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('delete a record while adding another one in a multipage', function (assert) {
+        // in a many2one with at least 2 pages, add a new line. Delete the line above it.
+        // (the onchange makes it so that the virtualID is inserted in the middle of the currentResIDs.)
+        // it should load the next line to display it on the page.
+        assert.expect(2);
+
+        this.data.partner.records[0].turtles = [2, 3];
+        this.data.partner.onchanges.turtles = function (obj) {
+           obj.turtles = [[5]].concat(obj.turtles);
+        };
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field name="turtles">' +
+                                '<tree editable="bottom" limit="1" decoration-muted="turtle_bar == False">' +
+                                    '<field name="turtle_foo"/>' +
+                                    '<field name="turtle_bar"/>' +
+                                '</tree>' +
+                            '</field>' +
+                        '</group>' +
+                    '</sheet>' +
+                 '</form>',
+            res_id: 1,
+        });
+
+        form.$buttons.find('.o_form_button_edit').click();
+        // add a line (virtual record)
+        form.$('.o_field_x2many_list_row_add a').click();
+        form.$('.o_input').val('pi').trigger('input');
+        // delete the line above it
+        form.$('.o_list_record_delete').first().click();
+        // the next line should be displayed below the newly added one
+        assert.strictEqual(form.$('.o_data_row').length, 2, "should have 2 records");
+        assert.strictEqual(form.$('.o_data_row').text(), 'pikawa',
+            "should display the correct records on page 1");
+
+        form.destroy();
+    });
+
     QUnit.test('onchange returning a command 6 for an x2many', function (assert) {
         assert.expect(2);
 
@@ -6231,7 +6275,7 @@ QUnit.module('relational_fields', {
                 '</form>',
             res_id: 1,
             mockRPC: function (route, args) {
-                assert.step(args.method + ' ' + args.model)
+                assert.step(args.method + ' ' + args.model);
                 return this._super(route, args);
             },
             viewOptions: {
