@@ -18,7 +18,7 @@ class StockInventory(models.Model):
         'Accounting Date',
         help="Date at which the accounting entries will be created"
              " in case of automated inventory valuation."
-             " If empty, the inventoy date will be used.")
+             " If empty, the inventory date will be used.")
 
     @api.multi
     def post_inventory(self):
