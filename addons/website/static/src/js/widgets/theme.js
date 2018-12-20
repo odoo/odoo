@@ -252,15 +252,17 @@ var ThemeCustomizeDialog = Dialog.extend({
                             $option.find('label').append($widget);
                         }
 
+                        var $final;
                         if ($container.hasClass('form-row')) {
-                            $col = $('<div/>', {
+                            $final = $('<div/>', {
                                 class: _.str.sprintf('col-%s', $item.data('col') || 6),
                             });
-                            $col.append($option);
-                            $container.append($col);
+                            $final.append($option);
                         } else {
-                            $container.append($option);
+                            $final = $option;
                         }
+                        $final.attr('data-depends', $item.data('depends'));
+                        $container.append($final);
                         break;
 
                     case 'LIST':
