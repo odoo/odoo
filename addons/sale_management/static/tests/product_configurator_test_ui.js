@@ -74,7 +74,8 @@ tour.register('sale_product_configurator_tour', {
 }, {
     trigger: 'button span:contains(Confirm)',
     extra_trigger: '.oe_optional_products_modal',
-    run: 'click'
+    run: 'click',
+    id: "quotation_product_selected",
 },
 // check that 3 products were added to the SO
 {
@@ -91,16 +92,6 @@ tour.register('sale_product_configurator_tour', {
     trigger: 'td.o_data_cell:contains("Chair floor protection")',
     extra_trigger: 'div[name="order_line"]',
     in_modal: false,
-    run: function (){}
-}, {
-    trigger: '.o_readonly_modifier[name=amount_total]:contains("835")',
-    in_modal: false,
-    edition: 'community',
-    run: function (){}
-}, {
-    trigger: '.o_readonly_modifier[name=amount_total]:contains("837")',
-    in_modal: false,
-    edition: 'enterprise',
     run: function (){}
 }]);
 
