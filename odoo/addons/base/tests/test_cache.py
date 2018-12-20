@@ -120,7 +120,7 @@ class TestRecordCache(TransactionCase):
     def test_memory(self):
         """ Check memory consumption of the cache. """
         NB_RECORDS = 100000
-        MAX_MEMORY = 500
+        MAX_MEMORY = 100
 
         cache = self.env.cache
         model = self.env['res.partner']
