@@ -465,7 +465,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('quick create record with quick_create_view', function (assert) {
-        assert.expect(17);
+        assert.expect(18);
 
         var kanban = createView({
             View: KanbanView,
@@ -504,6 +504,8 @@ QUnit.module('Views', {
         testUtils.kanban.clickCreate(kanban);
         var $quickCreate = kanban.$('.o_kanban_group:first .o_kanban_quick_create');
 
+        assert.containsNone($quickCreate, '.o_cp_controller',
+            "should not have control panel quick create form(withControlPanel: false)");
         assert.strictEqual($quickCreate.length, 1,
             "should have a quick create element in the first column");
         assert.strictEqual($quickCreate.find('.o_form_view.o_xxs_form_view').length, 1,

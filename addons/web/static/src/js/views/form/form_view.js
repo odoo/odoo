@@ -70,7 +70,7 @@ var FormView = BasicView.extend({
         var inDialog = action.target === 'new';
         var inline = action.target === 'inline';
         var fullscreen = action.target === 'fullscreen';
-        params.withControlPanel = !(inDialog || inline);
+        params.withControlPanel = params.withControlPanel && !(inDialog || inline);
         params.footerToButtons = inDialog;
         params.hasSearchView = inDialog ? false : params.hasSearchView;
         params.searchMenuTypes = inDialog ? [] : params.searchMenuTypes;

@@ -82,6 +82,7 @@ var QuickCreateFormController = FormController.extend({
 });
 
 var QuickCreateFormView = FormView.extend({
+    withControlPanel: false,
     config: _.extend({}, FormView.prototype.config, {
         Model: QuickCreateFormModel,
         Renderer: QuickCreateFormRenderer,
