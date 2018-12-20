@@ -46,7 +46,7 @@ var ListController = BasicController.extend({
      */
     init: function (parent, model, renderer, params) {
         this._super.apply(this, arguments);
-        this.hasSidebar = params.hasSidebar;
+        this.hasSidebar = true;
         this.toolbarActions = params.toolbarActions || {};
         this.editable = params.editable;
         this.noLeaf = params.noLeaf;
@@ -588,7 +588,7 @@ var ListController = BasicController.extend({
      */
     _onSelectionChanged: function (ev) {
         this.selectedRecords = ev.data.selection;
-        this.allSelected = event.data.allSelected;
+        this.allSelected = ev.data.allSelected;
         this._toggleSidebar();
     },
     /**
