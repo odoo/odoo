@@ -19,7 +19,6 @@ class ResPartner(models.Model):
             if request and hasattr(request, 'website') and not is_public:
                 partner.last_website_so_id = SaleOrder.search([
                     ('partner_id', '=', partner.id),
-                    ('team_id.team_type', '=', 'website'),
                     ('website_id', '=', request.website.id),
                     ('state', '=', 'draft'),
                 ], order='write_date desc', limit=1)
