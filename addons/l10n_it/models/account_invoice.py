@@ -6,12 +6,12 @@ import zipfile
 import io
 import logging
 
+from datetime import date, datetime
+
 from odoo import api, fields, models, _
 from odoo.tools import float_repr
 from odoo.exceptions import UserError, ValidationError
 from odoo.addons.base.models.ir_mail_server import MailDeliveryException
-
-from datetime import date, datetime
 
 _logger = logging.getLogger(__name__)
 
@@ -62,26 +62,13 @@ class AccountInvoice(models.Model):
 
     stamp_duty = fields.Float(default=0, string="Dati Bollo", size=15, readonly=True, states={'draft': [('readonly', False)]})
 
-    transport_document_number = fields.Char(string="Numero DDT", size=20, readonly=True, states={'draft': [('readonly', False)]}, help="Transport document number")
-    transport_document_date = fields.Date(string="Data DDT", readonly=True, states={'draft': [('readonly', False)]}, help="Transport document date")
-
     document_order_data_line_ids = fields.One2many('document.order.data', 'invoice_id', string='Document order',
                                                    readonly=True, states={'draft': [('readonly', False)]}, copy=True)
 
-    ddt_id = fields.Many2one('l10n.it.ddt', string='DDT', copy=True)
-
-    ddt_ids = fields.Many2many('l10n.it.ddt', string='DDT', compute='_compute_ddt_ids')
+    ddt_id = fields.Many2one('l10n.it.ddt', string='DDT', readonly=True, states={'draft': [('readonly', False)]})
 
     document_unique_seq = fields.Char(help="Unique sequence use to send this document to government", readonly=True)
     doc_unique_name = fields.Char(readonly=True)
-
-    @api.depends('invoice_line_ids.ddt_line_ids')
-    def _compute_ddt_ids(self):
-        for invoice in self:
-            for line in invoice.invoice_line_ids:
-                for ddt in line.ddt_line_ids:
-                    invoice.ddt_ids |= ddt
-
 
     @api.onchange('ddt_id')
     def onchange_ddt_id(self):
@@ -191,10 +178,6 @@ class AccountInvoice(models.Model):
         if not buyer.country_id:
             raise UserError(_("%s must have a country.") % (buyer.display_name))
 
-        # <2.1.8>
-        if self.transport_document_number and not self.transport_document_date:
-            raise UserError(_("You indicate a transport document number, you must also indicate a transport document date."))
-
         # <2.2.1>
         for record in self.invoice_line_ids:
             if len(record.invoice_line_tax_ids) != 1:
@@ -287,19 +270,16 @@ class AccountInvoice(models.Model):
             payment_method = False
 
         ddt_dict = {}
-        if self.ddt_id:
-            ddt_dict[self.ddt_id] = []
-        else:
-            line_count = 1
-            for line in self.invoice_line_ids.filtered(lambda l: not l.display_type):
-                for ddt in line.ddt_line_ids:
-                    if ddt not in ddt_dict:
-                        ddt_dict[ddt] = []
-                    ddt_dict[ddt].append(line_count)
-                line_count += 1
-            for ddt in ddt_dict:
-                if len(ddt_dict[ddt]) == line_count-1:
+        line_count = 1
+        for line in self.invoice_line_ids.filtered(lambda l: not l.display_type):
+            for ddt in line.ddt_line_ids:
+                if ddt not in ddt_dict:
                     ddt_dict[ddt] = []
+                ddt_dict[ddt].append(line_count)
+            line_count += 1
+        for ddt in ddt_dict:
+            if len(ddt_dict[ddt]) == line_count-1:
+                ddt_dict[ddt] = []
 
         # Create file content.
         template_values = {
@@ -381,7 +361,13 @@ class AccountInvoiceLine(models.Model):
     _inherit = 'account.invoice.line'
     _name = 'account.invoice.line'
 
-    ddt_line_ids = fields.Many2many('l10n.it.ddt', string='DDT', copy=True)
+    ddt_line_ids = fields.Many2many('l10n.it.ddt', string='DDT', compute='_compute_ddt_ids')
+
+    @api.depends('invoice_id.ddt_id')
+    def _compute_ddt_ids(self):
+        for line in self:
+            line.ddt_line_ids = line.invoice_id.ddt_id
+
 
 class AccountTax(models.Model):
     _name = "account.tax"
