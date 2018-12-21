@@ -7,27 +7,25 @@
 // depending on its contrast. Themes should be careful if they decide to
 // override those values. This would be simplified by giving the user the choice
 // for its dark *and* light text colors.
-$-light: if($white != null, $white, #FFFFFF);
-$-dark: if($gray-900 != null, $gray-900, #212529);
-$-text: if(color('text') != null, color('text'), $-dark);
-$-is-light: (o-get-most-contrast($-text, $-light, $-dark, color('body'), $cross-mix: false) == $-dark);
-$yiq-text-light: if($-is-light, color('text'), null);
-$yiq-text-dark: if($-is-light, null, color('text'));
+$-light: if(palette-gray('white') != null, palette-gray('white'), #FFFFFF);
+$-dark: if(palette-gray('900') != null, palette-gray('900'), #212529);
+$-text: if(palette-color('text') != null, palette-color('text'), $-dark);
+$-is-light: (o-get-most-contrast($-text, $-light, $-dark, palette-color('body'), $cross-mix: false) == $-dark);
+$yiq-text-light: if($-is-light, palette-color('text'), null) !default;
+$yiq-text-dark: if($-is-light, null, palette-color('text')) !default;
 
 // Body
 //
 // Settings for the `<body>` element.
 
-@if color('body') { // Do not default to bootstrap but to the portal value
-    $body-bg: color('body');
-}
-$body-color: color('text');
+$body-bg: palette-color('body') !default;
+$body-color: palette-color('text') !default;
 
 // Fonts
 //
 // Font, line-height, and color for body text, headings, and more.
 
-$font-family-sans-serif: nth($o-theme-fonts, $o-theme-font-number);
+$font-family-sans-serif: nth($o-theme-fonts, $o-theme-font-number) !default;
 
-$headings-font-family: nth($o-theme-fonts, $o-theme-headings-font-number);
-$headings-color: color('h1');
+$headings-font-family: nth($o-theme-fonts, $o-theme-headings-font-number) !default;
+$headings-color: palette-color('h1') !default;

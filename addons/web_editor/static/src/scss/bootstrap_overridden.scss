@@ -2,29 +2,14 @@
 $-is-backend: variable-exists('primary');
 
 // Use auto threshold for yiq colors
-$yiq-contrasted-threshold: false;
+$yiq-contrasted-threshold: false !default;
 
 // Automatically update bootstrap colors map (unused by BS itself)
-$-palette: nth($o-color-palettes, $o-color-palette-number);
 $colors: () !default;
-$colors: map-merge($-palette, $colors);
+$colors: map-merge($o-color-palette, $colors);
 
 // Automatically extend bootstrap to create theme background/text/button classes
-$-palette: nth($o-theme-color-palettes, $o-theme-color-palette-number);
-$-main-color: map-get($-palette, 'alpha');
-$-main-color-lightness: lightness($-main-color);
-$-palette: map-merge((
-    // alpha and beta colors are used to override primary and secondary BS4
-    // colors by default, so that theme colors affect the default Odoo layouts
-    'primary': $-main-color,
-    'secondary': map-get($-palette, 'beta'),
-
-    // BS light and dark colors are not used for any BS component, just
-    // for color utilities. By default, we set them to a very light and
-    // very dark version of a desaturate version of the main color
-    'light': lighten(desaturate($-main-color, 80%), min(70%, max(0%, 97% - $-main-color-lightness))), // Does not increase over 97% lightness
-    'dark': darken(desaturate($-main-color, 80%), min(70%, max(0%, $-main-color-lightness - 10%))), // Does not lower under 10% lightness
-), o-map-omit($-palette));
+$-palette: $o-theme-color-palette;
 @if $-is-backend {
     $-palette: map-remove($-palette, 'primary', 'secondary', 'success', 'info', 'warning', 'danger', 'light', 'dark');
 }
@@ -34,8 +19,7 @@ $theme-colors: map-merge($-palette, $theme-colors);
 // Extend grays with transparent ones (for some reason, BS4 create black-50 and
 // white-50 but does not allow overridding that with variables), also use the
 // theme gray palette (which is supposed to at least declare white and black).
-$-palette: nth($o-gray-color-palettes, $o-gray-color-palette-number);
-$-palette: map-merge($o-transparent-grays, $-palette);
+$-palette: $o-gray-color-palette;
 @if $-is-backend {
     $-palette: map-remove($-palette, '100', '200', '300', '400', '500', '600', '700', '800', '900');
 }

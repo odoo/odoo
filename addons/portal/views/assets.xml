@@ -5,13 +5,13 @@
             <link rel="stylesheet" type="text/scss" href="/portal/static/src/scss/primary_variables.scss"/>
         </xpath>
     </template>
-    <template id="_assets_frontend_helpers" inherit_id="web._assets_frontend_helpers">
-        <xpath expr="//link[last()]" position="after">
+    <template id="_assets_frontend_helpers" inherit_id="web_editor._assets_frontend_helpers">
+        <xpath expr="//link" position="before">
             <link rel="stylesheet" type="text/scss" href="/portal/static/src/scss/bootstrap_overridden.scss"/>
         </xpath>
     </template>
 
-    <template id="assets_frontend" inherit_id="web.assets_frontend" name="Portal Assets" priority="15">
+    <template id="assets_frontend" inherit_id="web_editor.assets_frontend" name="Portal Assets" priority="15">
         <xpath expr="//link[last()]" position="after">
             <link rel="stylesheet" type="text/scss" href="/portal/static/src/scss/bootstrap.extend.scss"/>
             <link rel="stylesheet" type="text/scss" href="/portal/static/src/scss/portal.scss"/>
