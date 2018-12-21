@@ -265,7 +265,7 @@ class PurchaseRequisitionLine(models.Model):
     @api.onchange('product_id')
     def _onchange_product_id(self):
         if self.product_id:
-            self.product_uom_id = self.product_id.uom_id
+            self.product_uom_id = self.product_id.uom_po_id
             self.product_qty = 1.0
         if not self.schedule_date:
             self.schedule_date = self.requisition_id.schedule_date
