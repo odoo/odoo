@@ -19,6 +19,41 @@ $-font-numbers: (
     }
 }
 
+:root {
+    // The theme customize modal JS will need to know the value of some scss
+    // variables used to render the user website, and those may have been
+    // customized by themes, the user or anything else (so there is no file to
+    // parse to get them). Those will be printed here as CSS variables.
+
+    // 1) The values in the $theme-colors map are already printed by Bootstrap.
+
+    // 2) The values in the $colors map are also printed by Bootstrap.
+
+    // 3) The Odoo values map, $o-website-values, must be printed.
+    @each $key, $value in $o-website-values {
+        --#{$key}: #{$value};
+    }
+
+    // Handle keys which can be null but default to other values
+    $-h1-color: if($headings-color == inherit, $body-color, $headings-color);
+    $-h2-color: if(color('h2'), color('h2'), $-h1-color);
+    $-h3-color: if(color('h3'), color('h3'), $-h2-color);
+    $-h4-color: if(color('h4'), color('h4'), $-h3-color);
+    $-h5-color: if(color('h5'), color('h5'), $-h4-color);
+    $-h6-color: if(color('h6'), color('h6'), $-h5-color);
+
+    --body: #{$body-bg};
+    --text: #{$body-color};
+    --h1: #{$-h1-color};
+    --h2: #{$-h2-color};
+    --h3: #{$-h3-color};
+    --h4: #{$-h4-color};
+    --h5: #{$-h5-color};
+    --h6: #{$-h6-color};
+
+    --logo-height: #{$o-theme-navbar-logo-height};
+}
+
 #wrapwrap {
     background-size: cover;
     background-repeat: no-repeat;
@@ -61,6 +96,17 @@ $-font-numbers: (
         @if (color-yiq(color('menu')) != $yiq-text-dark) {
             @extend .navbar-dark;
         }
+    }
+}
+
+@if $o-theme-navbar-logo-height {
+    // With default values, this makes it slightly bigger than standard
+    // navbar-brand, which is what we want
+    header .navbar-brand {
+        font-size: $o-theme-navbar-logo-height / $line-height-base;
+        $-logo-padding-y: max(0, $nav-link-height - $o-theme-navbar-logo-height) / 2;
+        padding-top: $-logo-padding-y;
+        padding-bottom: $-logo-padding-y;
     }
 }
 

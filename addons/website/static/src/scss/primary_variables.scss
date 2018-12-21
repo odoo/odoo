@@ -41,6 +41,21 @@ $o-social-colors: (
 $o-theme-figcaption-opacity: 0.6;
 
 //------------------------------------------------------------------------------
+// Website customizations
+//------------------------------------------------------------------------------
+
+$o-website-values-palettes: (
+    (
+        'logo-height': null, // Default to navbar height (see portal)
+    ),
+) !default;
+$o-website-values-palette-number: 1 !default;
+
+// By default, all user website values are null. Each null value is
+// automatically replaced with corresponsing value of chosen values palette.
+$o-user-website-values: () !default;
+
+//------------------------------------------------------------------------------
 // Fonts
 //------------------------------------------------------------------------------
 
