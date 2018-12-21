@@ -509,6 +509,7 @@ class MrpProduction(models.Model):
         data = {
             'sequence': bom_line.sequence,
             'name': self.name,
+            'reference': self.name,
             'date': self.date_planned_start,
             'date_expected': self.date_planned_start,
             'bom_line_id': bom_line.id,
@@ -715,6 +716,7 @@ class MrpProduction(models.Model):
                 'name': operation.name,
                 'production_id': self.id,
                 'workcenter_id': operation.workcenter_id.id,
+                'product_uom_id': self.product_uom_id.id,
                 'operation_id': operation.id,
                 'duration_expected': duration_expected,
                 'state': len(workorders) == 0 and 'ready' or 'pending',
@@ -733,7 +735,7 @@ class MrpProduction(models.Model):
             moves_raw.mapped('move_line_ids').write({'workorder_id': workorder.id})
             (moves_finished + moves_raw).write({'workorder_id': workorder.id})
 
-            workorder._generate_lot_ids()
+            workorder.generate_wo_lines()
         return workorders
 
     def _check_lots(self):
