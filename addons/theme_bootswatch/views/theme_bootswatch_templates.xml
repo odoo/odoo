@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <!-- Remove Odoo bootstrap overridde -->
-    <template id="_assets_frontend_helpers" inherit_id="web._assets_frontend_helpers">
+    <template id="_assets_frontend_helpers" inherit_id="website._assets_frontend_helpers">
         <xpath expr="//link[@href='/web_editor/static/src/scss/bootstrap_overridden.scss']" position="replace"/>
         <xpath expr="//link[@href='/website/static/src/scss/bootstrap_overridden.scss']" position="replace"/>
     </template>
@@ -25,8 +25,8 @@
         </xpath>
     </template>
 
-    <template id="theme_cerulean_bs_variables" name="Cerulean" inherit_id="web._assets_frontend_helpers" active="False">
-        <xpath expr="//link[last()]" position="after">
+    <template id="theme_cerulean_bs_variables" name="Cerulean" inherit_id="website._assets_frontend_helpers" active="False">
+        <xpath expr="//link" position="before">
             <link rel="stylesheet" type="text/scss" href="/theme_bootswatch/static/lib/bootswatch/cerulean/_variables.scss"/>
         </xpath>
     </template>
@@ -37,8 +37,8 @@
         </xpath>
     </template>
 
-    <template id="theme_cosmo_bs_variables" name="Cosmo" inherit_id="web._assets_frontend_helpers" active="False">
-        <xpath expr="//link[last()]" position="after">
+    <template id="theme_cosmo_bs_variables" name="Cosmo" inherit_id="website._assets_frontend_helpers" active="False">
+        <xpath expr="//link" position="before">
             <link rel="stylesheet" type="text/scss" href="/theme_bootswatch/static/lib/bootswatch/cosmo/_variables.scss"/>
         </xpath>
     </template>
@@ -49,8 +49,8 @@
         </xpath>
     </template>
 
-    <template id="theme_cyborg_bs_variables" name="Cyborg" inherit_id="web._assets_frontend_helpers" active="False">
-        <xpath expr="//link[last()]" position="after">
+    <template id="theme_cyborg_bs_variables" name="Cyborg" inherit_id="website._assets_frontend_helpers" active="False">
+        <xpath expr="//link" position="before">
             <link rel="stylesheet" type="text/scss" href="/theme_bootswatch/static/lib/bootswatch/cyborg/_variables.scss"/>
         </xpath>
     </template>
@@ -61,8 +61,8 @@
         </xpath>
     </template>
 
-    <template id="theme_flatly_bs_variables" name="Flatly" inherit_id="web._assets_frontend_helpers" active="False">
-        <xpath expr="//link[last()]" position="after">
+    <template id="theme_flatly_bs_variables" name="Flatly" inherit_id="website._assets_frontend_helpers" active="False">
+        <xpath expr="//link" position="before">
             <link rel="stylesheet" type="text/scss" href="/theme_bootswatch/static/lib/bootswatch/flatly/_variables.scss"/>
         </xpath>
     </template>
@@ -73,8 +73,8 @@
         </xpath>
     </template>
 
-    <template id="theme_journal_bs_variables" name="Journal" inherit_id="web._assets_frontend_helpers" active="False">
-        <xpath expr="//link[last()]" position="after">
+    <template id="theme_journal_bs_variables" name="Journal" inherit_id="website._assets_frontend_helpers" active="False">
+        <xpath expr="//link" position="before">
             <link rel="stylesheet" type="text/scss" href="/theme_bootswatch/static/lib/bootswatch/journal/_variables.scss"/>
         </xpath>
     </template>
@@ -85,8 +85,8 @@
         </xpath>
     </template>
 
-    <template id="theme_simplex_bs_variables" name="Simplex" inherit_id="web._assets_frontend_helpers" active="False">
-        <xpath expr="//link[last()]" position="after">
+    <template id="theme_simplex_bs_variables" name="Simplex" inherit_id="website._assets_frontend_helpers" active="False">
+        <xpath expr="//link" position="before">
             <link rel="stylesheet" type="text/scss" href="/theme_bootswatch/static/lib/bootswatch/simplex/_variables.scss"/>
         </xpath>
     </template>
@@ -97,8 +97,8 @@
         </xpath>
     </template>
 
-    <template id="theme_slate_bs_variables" name="Slate" inherit_id="web._assets_frontend_helpers" active="False">
-        <xpath expr="//link[last()]" position="after">
+    <template id="theme_slate_bs_variables" name="Slate" inherit_id="website._assets_frontend_helpers" active="False">
+        <xpath expr="//link" position="before">
             <link rel="stylesheet" type="text/scss" href="/theme_bootswatch/static/lib/bootswatch/slate/_variables.scss"/>
         </xpath>
     </template>
@@ -109,8 +109,8 @@
         </xpath>
     </template>
 
-    <template id="theme_spacelab_bs_variables" name="Spacelab" inherit_id="web._assets_frontend_helpers" active="False">
-        <xpath expr="//link[last()]" position="after">
+    <template id="theme_spacelab_bs_variables" name="Spacelab" inherit_id="website._assets_frontend_helpers" active="False">
+        <xpath expr="//link" position="before">
             <link rel="stylesheet" type="text/scss" href="/theme_bootswatch/static/lib/bootswatch/spacelab/_variables.scss"/>
         </xpath>
     </template>
@@ -121,8 +121,8 @@
         </xpath>
     </template>
 
-    <template id="theme_united_bs_variables" name="United" inherit_id="web._assets_frontend_helpers" active="False">
-        <xpath expr="//link[last()]" position="after">
+    <template id="theme_united_bs_variables" name="United" inherit_id="website._assets_frontend_helpers" active="False">
+        <xpath expr="//link" position="before">
             <link rel="stylesheet" type="text/scss" href="/theme_bootswatch/static/lib/bootswatch/united/_variables.scss"/>
         </xpath>
     </template>

@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 <!-- Assets -->
-<template id="_assets_primary_variables" inherit_id="web._assets_primary_variables">
+<template id="_assets_primary_variables" inherit_id="portal._assets_primary_variables">
     <xpath expr="//link[last()]" position="after">
         <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/primary_variables.scss"/>
         <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/options/colors/user_color_palette.scss"/>
         <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/options/colors/user_theme_color_palette.scss"/>
     </xpath>
 </template>
-<template id="_assets_secondary_variables" inherit_id="web._assets_secondary_variables">
-    <xpath expr="//link[last()]" position="after">
+<template id="_assets_secondary_variables" inherit_id="web_editor._assets_secondary_variables">
+    <xpath expr="//link" position="before">
         <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/secondary_variables.scss"/>
     </xpath>
 </template>
@@ -31,13 +31,13 @@
     </xpath>
 </template>
 
-<template id="_assets_frontend_helpers" inherit_id="web._assets_frontend_helpers">
-    <xpath expr="//link[last()]" position="after">
+<template id="_assets_frontend_helpers" inherit_id="portal._assets_frontend_helpers">
+    <xpath expr="//link" position="before">
         <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/bootstrap_overridden.scss"/>
     </xpath>
 </template>
 
-<template id="assets_frontend" inherit_id="web.assets_frontend" name="Website Assets">
+<template id="assets_frontend" inherit_id="portal.assets_frontend" name="Website Assets">
     <xpath expr="//link[last()]" position="after">
         <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/website.scss"/>
         <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/website.ui.scss"/>
