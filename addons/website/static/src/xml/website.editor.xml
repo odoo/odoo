@@ -49,9 +49,27 @@
         </div>
     </t>
     <t t-name="website.theme_customize_widget_color">
-        <div t-attf-class="bg-#{color} o_theme_customize_color o_theme_customize_color_#{color}"
+        <div t-attf-class="o_theme_customize_color o_theme_customize_color_#{color}"
             t-att-data-color="color"
             t-att-data-color-type="colorType"/>
+    </t>
+    <t t-name="website.theme_customize_widget_input">
+        <div t-attf-class="o_theme_customize_input o_theme_customize_input_#{value}"
+            t-att-data-value="value"
+            t-att-data-unit="unit">
+            <i class="fa fa-edit"/>
+            <span/>
+        </div>
+    </t>
+    <t t-name="website.theme_customize_active_input">
+        <div class="input-group input-group-sm align-items-center o_theme_customize_active_input">
+            <input type="text" class="form-control" t-att-value="widget.value"/>
+            <div class="input-group-append">
+                <div t-if="widget.unit" class="input-group-text"><t t-esc="widget.unit"/></div>
+                <button type="button" class="btn btn-primary fa fa-check" title="Save"/>
+                <button type="button" class="btn btn-secondary fa fa-undo" title="Reset"/>
+            </div>
+        </div>
     </t>
 
     <t t-extend="wysiwyg.widgets.link">

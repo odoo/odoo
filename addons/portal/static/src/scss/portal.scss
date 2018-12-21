@@ -5,6 +5,7 @@
 
 // ======  Variables =========
 $-navbar-height: $nav-link-height !default;
+$o-theme-navbar-logo-height: $-navbar-height !default;
 
 // Portal toolbar (filters, search bar)
 $o-portal-mobile-toolbar: true; // Enable/Disable custom design
@@ -42,15 +43,23 @@ $o-portal-use-default-colors: $body-bg == $o-portal-default-body-bg;
 header {
     .navbar-brand {
         flex: 0 0 auto;
+        max-width: 75%;
 
         &.logo {
             padding-top: 0;
             padding-bottom: 0;
 
             img {
+                // object-fit does not work on IE but is only used as a fallback
+                object-fit: contain;
+                display: block;
                 width: auto;
-                height: $-navbar-height;
-                max-width: none;
+                height: $o-theme-navbar-logo-height;
+
+                @include media-breakpoint-down(sm) {
+                    height: auto;
+                    max-height: min($o-theme-navbar-logo-height, 5rem);
+                }
             }
         }
     }

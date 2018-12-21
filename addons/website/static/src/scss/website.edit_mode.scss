@@ -138,28 +138,37 @@
         &::after {
             background-color: inherit;
         }
+    }
 
-        $palette: nth($o-color-palettes, $o-color-palette-number);
-        $-text-color: if(map-get($palette, 'text'), map-get($palette, 'text'), #212529); // BS default as fallback (TODO find real value)
-        $-h1-color: if(map-get($palette, 'h1'), map-get($palette, 'h1'), $-text-color);
-        $-h2-color: if(map-get($palette, 'h2'), map-get($palette, 'h2'), $-h1-color);
-        $-h3-color: if(map-get($palette, 'h3'), map-get($palette, 'h3'), $-h2-color);
-        $-h4-color: if(map-get($palette, 'h4'), map-get($palette, 'h4'), $-h3-color);
-        $-h5-color: if(map-get($palette, 'h5'), map-get($palette, 'h5'), $-h4-color);
-        $-h6-color: if(map-get($palette, 'h6'), map-get($palette, 'h6'), $-h5-color);
-        $-defaults: (
-            'body': white, // BS default as fallback (TODO find real value)
-            'text': $-text-color,
-            'h1': $-h1-color,
-            'h2': $-h2-color,
-            'h3': $-h3-color,
-            'h4': $-h4-color,
-            'h5': $-h5-color,
-            'h6': $-h6-color,
-        );
-        @each $name, $value in map-merge($-defaults, o-map-omit($palette)) {
-            &.o_theme_customize_color_#{$name} {
-                background-color: $value;
+    .o_theme_customize_input {
+        flex: 1 1 auto;
+        text-align: right;
+
+        .fa-edit {
+            visibility: hidden;
+            color: $o-brand-primary;
+        }
+    }
+    .o_theme_customize_option:hover .o_theme_customize_input .fa-edit {
+        visibility: visible;
+    }
+
+    .o_theme_customize_active_input {
+        @include o-position-absolute(0, 0, 0, 0);
+        width: auto;
+        padding: 3px;
+
+        > * {
+            height: 100% !important;
+
+            &.form-control {
+                background: white !important;
+            }
+
+            &.form-control, .btn {
+                padding: 2px 8px !important;
+                text-align: right !important;
+                font-size: $font-size-sm !important;
             }
         }
     }
