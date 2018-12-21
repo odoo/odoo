@@ -292,7 +292,7 @@ QUnit.test('Activity Done keep feedback on blur', function (assert) {
 });
 
 QUnit.test('attachmentBox basic rendering', function (assert) {
-    assert.expect(11);
+    assert.expect(19);
     this.data.partner.records.push({
         id: 7,
         display_name: "attachment_test",
@@ -334,6 +334,19 @@ QUnit.test('attachmentBox basic rendering', function (assert) {
     assert.containsOnce(form, '.o_attachment_image', "there should be an image preview");
     assert.containsOnce(form, '.o_attachments_previews', "there should be a list of previews");
     assert.containsOnce(form, '.o_attachments_list', "there should be a list of non previewable attachments");
+    assert.containsOnce(form, '.o_upload_attachments_button', "there should be an 'Add Attachments' button");
+    assert.containsOnce(form, '.o_form_binary_form', "there should be a binary form");
+
+    assert.containsOnce(form, 'input[name="model"]', "there should be an model input");
+    var $modelInput = form.$('input[name="model"]');
+    assert.hasAttrValue($modelInput, 'value', 'partner');
+    assert.hasAttrValue($modelInput, 'type', 'hidden');
+
+    assert.containsOnce(form, 'input[name="model"]', "there should be an id input");
+    var $resIdInput = form.$('input[name="id"]');
+    assert.hasAttrValue($resIdInput, 'value', '7');
+    assert.hasAttrValue($resIdInput, 'type', 'hidden');
+
     assert.strictEqual(form.$('.o_attachment_title').text(), 'name1',
         "the image name should be correct");
     // since there are two elements "Download name2"; one "name" and the other "txt" as text content, the following test
