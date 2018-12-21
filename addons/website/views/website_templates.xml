@@ -4,6 +4,9 @@
 <template id="_assets_primary_variables" inherit_id="portal._assets_primary_variables">
     <xpath expr="//link[last()]" position="after">
         <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/primary_variables.scss"/>
+
+        <!-- Those files will be automatically edited by users -->
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/options/user_values.scss"/>
         <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/options/colors/user_color_palette.scss"/>
         <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/options/colors/user_theme_color_palette.scss"/>
     </xpath>
@@ -524,6 +527,7 @@
             </list>
             <list string="Logo">
                 <checkbox><opt data-xmlid="website.layout_logo_show" data-reload="/"/></checkbox>
+                <opt data-widget="input" data-unit="rem" data-value="logo-height" string="Logo Height"/>
             </list>
         </content>
 

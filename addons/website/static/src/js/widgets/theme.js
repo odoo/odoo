@@ -4,6 +4,7 @@ odoo.define('website.theme', function (require) {
 var config = require('web.config');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
+var Widget = require('web.Widget');
 var weWidgets = require('wysiwyg.widgets');
 var ColorpickerDialog = require('wysiwyg.widgets.ColorpickerDialog');
 var websiteNavbarData = require('website.navbar');
@@ -11,6 +12,96 @@ var websiteNavbarData = require('website.navbar');
 var _t = core._t;
 
 var templateDef = null;
+
+var QuickEdit = Widget.extend({
+    xmlDependencies: ['/website/static/src/xml/website.editor.xml'],
+    template: 'website.theme_customize_active_input',
+    events: {
+        'keydown input': '_onInputKeydown',
+        'click .btn-primary': '_onSaveClick',
+        'click .btn-secondary': '_onResetClick',
+    },
+
+    /**
+     * @constructor
+     */
+    init: function (parent, value, unit) {
+        this._super.apply(this, arguments);
+        this.value = value;
+        this.unit = unit;
+    },
+    /**
+     * @override
+     */
+    start: function () {
+        this.$input = this.$('input');
+        this.$input.select();
+        return this._super.apply(this, arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {string} [value]
+     */
+    _save: function (value) {
+        if (value === undefined) {
+            value = parseFloat(this.$input.val());
+            value = isNaN(value) ? 'null' : (value + this.unit);
+        }
+        this.trigger_up('QuickEdit:save', {
+            value: value,
+        });
+        this.destroy();
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onInputKeydown: function (ev) {
+        var inputValue = this.$input.val();
+        var value = 0;
+        if (inputValue !== '') {
+            value = parseFloat(this.$input.val());
+            if (isNaN(value)) {
+                return;
+            }
+        }
+        switch (ev.which) {
+            case $.ui.keyCode.UP:
+                this.$input.val(value + 1);
+                break;
+            case $.ui.keyCode.DOWN:
+                this.$input.val(value - 1);
+                break;
+            case $.ui.keyCode.ENTER:
+                // Do not listen to change events, we want the user to be able
+                // to confirm in all cases.
+                this._save();
+                break;
+        }
+    },
+    /**
+     * @private
+     */
+    _onSaveClick: function () {
+        this._save();
+    },
+    /**
+     * @private
+     */
+    _onResetClick: function () {
+        this._save('null');
+    },
+});
 
 var ThemeCustomizeDialog = Dialog.extend({
     xmlDependencies: (Dialog.prototype.xmlDependencies || [])
@@ -60,7 +151,11 @@ var ThemeCustomizeDialog = Dialog.extend({
     start: function () {
         var self = this;
 
+        this.PX_BY_REM = parseFloat($(document.documentElement).css('font-size'));
+
         this.$modal.addClass('o_theme_customize_modal');
+
+        this.style = window.getComputedStyle(document.documentElement);
 
         var $tabs;
         var loadDef = this._loadViews().then(function (data) {
@@ -209,6 +304,7 @@ var ThemeCustomizeDialog = Dialog.extend({
             }
         });
         this._setActive();
+        this._updateValues();
 
         function _processItems($items, $container) {
             var optionsName = _.uniqueId('option-');
@@ -412,6 +508,8 @@ var ThemeCustomizeDialog = Dialog.extend({
         var self = this;
         var defs = [];
 
+        var $options = $inputs.closest('.o_theme_customize_option');
+
         // Handle body image changes
         var $bodyImageInputs = $inputs.filter('[data-xmlid*="website.' + this.CUSTOM_BODY_IMAGE_XML_ID + '"]:checked');
         defs = defs.concat(_.map($bodyImageInputs, function () {
@@ -419,12 +517,45 @@ var ThemeCustomizeDialog = Dialog.extend({
         }));
 
         // Handle color changes
-        var $colors = $inputs.closest('.o_theme_customize_option').find('.o_theme_customize_color');
+        var $colors = $options.find('.o_theme_customize_color');
         defs = defs.concat(_.map($colors, function (colorElement) {
             return self._pickColor($(colorElement));
         }));
 
+        // Handle input changes
+        var $inputsData = $options.find('.o_theme_customize_input');
+        defs = defs.concat(_.map($inputsData, function (inputData, i) {
+            return self._quickEdit($(inputData));
+        }));
+
         return $.when.apply($, defs);
+    },
+    /**
+     * @private
+     */
+    _quickEdit: function ($inputData) {
+        var text = $inputData.text().trim();
+        var value = parseFloat(text) || '';
+        var unit = text.match(/([^\s\d]+)$/)[1];
+
+        var def = $.Deferred();
+        var qEdit = new QuickEdit(this, value, unit);
+        qEdit.on('QuickEdit:save', this, function (ev) {
+            ev.stopPropagation();
+
+            var value = ev.data.value;
+            // Convert back to rem if needed
+            if ($inputData.data('unit') === 'rem' && unit === 'px' && value !== 'null') {
+                value = parseFloat(value) / this.PX_BY_REM + 'rem';
+            }
+
+            var values = {};
+            values[$inputData.data('value')] = value;
+            this._makeSCSSCusto('/website/static/src/scss/options/user_values.scss', values)
+                .always(def.resolve.bind(def));
+        });
+        qEdit.appendTo($inputData.closest('.o_theme_customize_option'));
+        return def;
     },
     /**
      * @private
@@ -466,6 +597,8 @@ var ThemeCustomizeDialog = Dialog.extend({
      * @private
      */
     _updateStyle: function (enable, disable, reload) {
+        var self = this;
+
         var $loading = $('<i/>', {class: 'fa fa-refresh fa-spin'});
         this.$modal.find('.modal-title').append($loading);
 
@@ -509,11 +642,49 @@ var ThemeCustomizeDialog = Dialog.extend({
                 $links.last().after($newLinks);
                 return linksLoaded;
             });
-
             return $.when.apply($, defs).always(function () {
                 $loading.remove();
                 $allLinks.remove();
             });
+        }).then(function () {
+            // Some animations may depend on the variables that were
+            // customized, so we have to restart them.
+            self.trigger_up('animation_start_demand');
+        });
+    },
+    /**
+     * @private
+     */
+    _updateValues: function () {
+        var self = this;
+        // Put user values
+        _.each(this.$('.o_theme_customize_color'), function (el) {
+            var $el = $(el);
+            var value = self.style.getPropertyValue('--' + $el.data('color')).trim();
+            $el.css('background-color', value);
+        });
+        _.each(this.$('.o_theme_customize_input'), function (el) {
+            var $el = $(el);
+            var value = self.style.getPropertyValue('--' + $el.data('value')).trim();
+
+            // Convert rem values to px values
+            if (_.str.endsWith(value, 'rem')) {
+                value = parseFloat(value) * self.PX_BY_REM + 'px';
+            }
+
+            var $span = $el.find('span');
+            $span.removeClass().text('');
+            switch (value) {
+                case '':
+                case 'false':
+                case 'true':
+                    // When null or a boolean value, shows an icon which tells
+                    // the user that there is no numeric/text value
+                    $span.addClass('fa fa-ban text-danger');
+                    break;
+                default:
+                    $span.text(value);
+            }
         });
     },
 
@@ -572,6 +743,7 @@ var ThemeCustomizeDialog = Dialog.extend({
                 $option.data('reload') && window.location.href.match(new RegExp($option.data('reload')))
             );
         }).then(function () {
+            self._updateValues();
             self.$inputs.prop('disabled', false);
         });
     },
