@@ -177,6 +177,7 @@ var GroupByMenu = DropdownMenu.extend({
     _toggleCustomGroupMenu: function () {
         this.generatorMenuIsOpen = !this.generatorMenuIsOpen;
         this._renderGeneratorMenu();
+        this.$addCustomGroup.attr('aria-expanded', this.generatorMenuIsOpen);
         if (this.generatorMenuIsOpen) {
             this.$groupSelector.focus();
         }
