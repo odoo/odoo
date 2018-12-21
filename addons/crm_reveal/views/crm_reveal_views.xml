@@ -102,14 +102,14 @@
     </record>
 
     <record id="crm_reveal_rule_action" model="ir.actions.act_window">
-        <field name="name">Lead Generation Rules</field>
+        <field name="name">Visits to Leads Rules</field>
         <field name="res_model">crm.reveal.rule</field>
         <field name="view_mode">tree,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                No rule found
+                Create a conversion rule
             </p><p>
-                Create rules to generate B2B leads/opportunities by tracking data of your website visitors.
+                Create rules to generate B2B leads/opportunities from your website visitors.
             </p>
         </field>
     </record>
@@ -157,7 +157,7 @@
     <menuitem
         id="crm_reveal_rule_menu_action"
         action="crm_reveal_rule_action"
-        parent="crm.crm_menu_config"/>
+        parent="crm.crm_menu_config" name="Visits to Leads"/>
 
     <menuitem
         id="crm_reveal_view_menu_action"
