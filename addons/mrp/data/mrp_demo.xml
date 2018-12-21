@@ -683,13 +683,13 @@
             <value model="mrp.product.produce" eval="dict(
                 obj().with_context(active_id=ref('mrp.mrp_production_laptop_cust')).default_get(list(obj().fields_get())),
                 **{
-                    'product_qty': obj().env.ref('mrp.mrp_production_laptop_cust').product_qty,
-                    'lot_id': ref('mrp.lot_product_27_0'),
+                    'qty_producing': obj().env.ref('mrp.mrp_production_laptop_cust').product_qty,
+                    'final_lot_id': ref('mrp.lot_product_27_0'),
                 }
             )"/>
         </function>
 
-        <function model="mrp.product.produce" name="_onchange_product_qty">
+        <function model="mrp.product.produce" name="_update_workorder_lines">
             <value model="mrp.product.produce" search="[('production_id', '=', obj().env.ref('mrp.mrp_production_laptop_cust').id)]"/>
         </function>
 

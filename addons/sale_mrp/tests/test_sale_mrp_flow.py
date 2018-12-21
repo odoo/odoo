@@ -423,7 +423,7 @@ class TestSaleMrpFlow(common.TransactionCase):
             'active_id': mnf_product_d.id,
             'active_ids': [mnf_product_d.id],
         }))
-        produce_form.product_qty = 20
+        produce_form.qty_producing = 20
         produce_d = produce_form.save()
         # produce_d.on_change_qty()
         produce_d.do_produce()
