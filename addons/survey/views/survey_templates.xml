@@ -34,13 +34,13 @@
     </template>
 
     <!-- Message when the survey is not open  -->
-    <template id="notopen" name="Survey not open">
+    <template id="survey_expired" name="Survey Expired">
         <t t-call="survey.layout">
             <div class="wrap">
                 <div class="container">
                     <div class="jumbotron mt32">
-                        <h1>Not open</h1>
-                        <p>This survey is not open. Thank you for your interest!</p>
+                        <h1><span t-field="survey.title"/> survey expired</h1>
+                        <p>This survey is now closed. Thank you for your interest !</p>
                     </div>
                 </div>
             </div>
@@ -64,14 +64,18 @@
     </template>
 
     <!-- Message when the survey has no pages  -->
-    <template id="nopages" name="Survey has no pages">
+    <template id="survey_void" name="Survey has no pages">
         <t t-call="survey.layout">
             <div class="wrap">
                 <div class="container">
                     <t t-call="survey.back" />
                     <div class="jumbotron mt32">
-                        <h1>Not ready</h1>
-                        <p>This survey has no pages by now!</p>
+                        <h1><span t-field="survey.title"/> survey is void</h1>
+                        <p>This survey has no question defined currently.<br />
+                            <a t-att-href="'/web#view_type=form&amp;model=survey.survey&amp;id=%s&amp;action=survey.action_survey_form' % survey.id"
+                                class="btn btn-secondary"
+                                groups="survey.group_survey_manager">Edit in backend</a>
+                        </p>
                     </div>
                 </div>
             </div>
