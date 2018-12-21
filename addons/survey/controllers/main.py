@@ -117,13 +117,13 @@ class Survey(http.Controller):
         answer_sudo = access_data['answer_sudo']
 
         if error_key == 'survey_void' and access_data['can_answer']:
-            return request.render("survey.nopages", {'survey': survey_sudo})
+            return request.render("survey.survey_void", {'survey': survey_sudo})
         elif error_key == 'survey_closed' and access_data['can_answer']:
-            return request.render("survey.notopen")
+            return request.render("survey.survey_expired", {'survey': survey_sudo})
         elif error_key == 'survey_auth' and answer_sudo.token:
             return request.render("survey.auth_required", {'survey': survey_sudo, 'token': answer_sudo.token})
         elif error_key == 'answer_deadline' and answer_sudo.token:
-            return request.render("survey.notopen")
+            return request.render("survey.survey_expired", {'survey': survey_sudo})
 
         return werkzeug.utils.redirect("/")
 
