@@ -72,7 +72,7 @@ class TestMrpByProduct(common.TransactionCase):
         # I consume and produce the production of products.
         # I create record for selecting mode and quantity of products to produce.
         produce_form = Form(self.env['mrp.product.produce'].with_context(context))
-        produce_form.product_qty = 2.00
+        produce_form.qty_producing = 2.00
         product_consume = produce_form.save()
         # I finish the production order.
         self.assertEqual(len(mnf_product_a.move_raw_ids), 1, "Wrong consume move on production order.")
