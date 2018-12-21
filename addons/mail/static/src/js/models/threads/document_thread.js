@@ -157,6 +157,14 @@ var DocumentThread = Thread.extend({
         return true;
     },
     /**
+     * @param {integer[]} attachmentIDs
+     */
+    removeAttachmentsFromMessages: function (attachmentIDs) {
+        _.each(this.getMessages(), function (message) {
+            message.removeAttachments(attachmentIDs);
+        });
+    },
+    /**
      * Set list of message IDs of this document thread
      *
      * Useful in order to handle message history of the document thread,

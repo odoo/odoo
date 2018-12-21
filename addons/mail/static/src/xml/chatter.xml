@@ -20,6 +20,16 @@
                     <t t-call="mail.Attachment"/>
                 </t>
             </div>
+            <div class="o_chatter_attachment_form">
+                <t t-call="HiddenInputFile">
+                    <t t-set="fileupload_id" t-value="widget.fileuploadId"/>
+                    <t t-set="fileupload_action" t-translation="off">/web/binary/upload_attachment</t>
+                    <t t-set="multi_upload" t-value="true"/>
+                    <input type="hidden" name="model" t-att-value="widget.currentResModel"/>
+                    <input type="hidden" name="id" t-att-value="widget.currentResID"/>
+                    <center><span class="btn btn-link o_upload_attachments_button"><span class="fa fa-plus-square"/> Add Attachments</span></center>
+                </t>
+            </div>
         </div>
     </div>
 
@@ -96,11 +106,11 @@
     </t>
 
     <t t-name="mail.chatter.Attachment.Button">
-        <button t-attf-class="btn btn-sm btn-link o_chatter_button_attachment #{!count and 'o_hidden' or ''}" title="View all the attachments of the current record">
+        <button class="btn btn-link o_chatter_button_attachment" title="View all the attachments of the current record">
             <span>
                 <i class="fa fa-paperclip"/>
                 <span class="o_chatter_attachment_button_count">
-                    <t t-esc="' ('+count+')'"/>
+                    <t t-esc="count"/>
                 </span>
             </span>
         </button>

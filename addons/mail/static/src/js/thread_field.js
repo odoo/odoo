@@ -71,6 +71,12 @@ var ThreadField = AbstractField.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * @param {integer[]} attachmentIDs
+     */
+    removeAttachments: function (attachmentIDs) {
+        this._documentThread.removeAttachmentsFromMessages(attachmentIDs);
+    },
+    /**
      * @override
      * @return {boolean}
      */
