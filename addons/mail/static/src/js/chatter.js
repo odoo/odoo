@@ -4,6 +4,7 @@ odoo.define('mail.Chatter', function (require) {
 var Activity = require('mail.Activity');
 var AttachmentBox = require('mail.AttachmentBox');
 var ChatterComposer = require('mail.composer.Chatter');
+var Dialog = require('web.Dialog');
 var Followers = require('mail.Followers');
 var ThreadField = require('mail.ThreadField');
 var mailUtils = require('mail.utils');
@@ -13,25 +14,28 @@ var config = require('web.config');
 var core = require('web.core');
 var Widget = require('web.Widget');
 
+var _t = core._t;
 var QWeb = core.qweb;
 
 // The purpose of this widget is to display the chatter area below the form view
 //
-// It instanciates the optional mail_thread, mail_activity and mail_followers widgets.
+// It instantiates the optional mail_thread, mail_activity and mail_followers widgets.
 // It Ensures that those widgets are appended at the right place, and allows them to communicate
 // with each other.
-// It synchronizes the rendering of those widgets (as they may be asynchronous), to limitate
+// It synchronizes the rendering of those widgets (as they may be asynchronous), to mitigate
 // the flickering when switching between records
 var Chatter = Widget.extend({
     template: 'mail.Chatter',
     custom_events: {
+        delete_attachment: '_onDeleteAttachment',
         discard_record_changes: '_onDiscardRecordChanges',
+        reload_attachment_box: '_onReloadAttachmentBox',
         reload_mail_fields: '_onReloadMailFields',
     },
     events: {
         'click .o_chatter_button_new_message': '_onOpenComposerMessage',
         'click .o_chatter_button_log_note': '_onOpenComposerNote',
-        'click .o_chatter_button_attachment': '_onOpenAttachments',
+        'click .o_chatter_button_attachment': '_onClickAttachmentButton',
         'click .o_chatter_button_schedule_activity': '_onScheduleActivity',
     },
     supportedFieldTypes: ['one2many'],
@@ -52,15 +56,19 @@ var Chatter = Widget.extend({
         this._super.apply(this, arguments);
         this._setState(record);
 
-        this._dp = new concurrency.DropPrevious();
+        this.attachments = {};
+        this.fields = {};
 
+        this._areAttachmentsLoaded = false;
+        this._disableAttachmentBox = !!options.disable_attachment_box;
+        this._dp = new concurrency.DropPrevious();
+        this._isAttachmentBoxOpen = false;
         // mention: get the prefetched partners and use them as mention suggestions
         // if there is a follower widget, the followers will be added to the
         // suggestions as well once fetched
         this._mentionPartnerSuggestions = this.call('mail_service', 'getMentionPartnerSuggestions');
         this._mentionSuggestions = this._mentionPartnerSuggestions;
 
-        this.fields = {};
         if (mailFields.mail_activity) {
             this.fields.activity = new Activity(this, mailFields.mail_activity, record, options);
         }
@@ -74,16 +82,17 @@ var Chatter = Widget.extend({
             this.hasLogButton = options.display_log_button || nodeOptions.display_log_button;
             this.postRefresh = nodeOptions.post_refresh || 'never';
         }
-        this.attachmentBoxOpened = false;
     },
     /**
      * @override
      */
     start: function () {
         this._$topbar = this.$('.o_chatter_topbar');
-        this.$('.o_topbar_right_area').append(QWeb.render('mail.chatter.Attachment.Button', {
-            count: this.record.data.message_attachment_count || 0,
-        }));
+        if(!this._disableAttachmentBox) {
+            this.$('.o_topbar_right_area').append(QWeb.render('mail.chatter.Attachment.Button', {
+                count: this.record.data.message_attachment_count || 0,
+            }));
+        }
         // render and append the buttons
         this._$topbar.prepend(QWeb.render('mail.chatter.Buttons', {
             newMessageButton: !!this.fields.thread,
@@ -115,6 +124,8 @@ var Chatter = Widget.extend({
         if (this.record.res_id !== record.res_id) {
             this._closeComposer(true);
             this._closeAttachments();
+            this._areAttachmentsLoaded = false;
+            this.attachments = {};
         }
 
         // update the state
@@ -155,13 +166,12 @@ var Chatter = Widget.extend({
 
     /**
      * @private
-     * @param {boolean} force
      */
     _closeAttachments: function () {
         if (this.fields.attachments) {
             this.$('.o_chatter_button_attachment').removeClass('o_active_attach');
             this.fields.attachments.destroy();
-            this.attachmentBoxOpened = false;
+            this._isAttachmentBoxOpen = false;
         }
     },
     /**
@@ -231,22 +241,46 @@ var Chatter = Widget.extend({
     _enableComposer: function () {
         this.$(".o_composer_button_send").prop('disabled', false);
     },
+    /*
+    * @private
+    * @return {Deferred}
+    */
+    _fetchAttachments: function () {
+        var self = this;
+        var domain = [
+            ['res_id', '=', this.record.res_id],
+            ['res_model', '=', this.record.model],
+        ];
+        return this._rpc({
+            model: 'ir.attachment',
+            method: 'search_read',
+            domain: domain,
+            fields: ['id', 'name', 'datas_fname', 'mimetype'],
+        }).then(function (result) {
+            self._areAttachmentsLoaded = true;
+            self.attachments = result;
+        });
+
+    },
     /**
      * @private
      */
-    _openAttachments: function () {
-        var self = this;
-        this.fields.attachments = new AttachmentBox(this, this.record);
-
+    _openAttachmentBox: function () {
+        if (this.fields.attachments) {
+            this._closeAttachments();
+        }
+        this.fields.attachments = new AttachmentBox(this, this.record, this.attachments);
         var $anchor = this.$('.o_chatter_topbar');
         if (this._composer) {
-            $anchor = this.$('.o_thread_composer');
+            var $anchor = this.$('.o_thread_composer');
+        } else {
+            var $anchor = this.$('.o_chatter_topbar');
         }
-        this.fields.attachments.insertAfter($anchor).then(function () {
-            self.$el.addClass('o_chatter_composer_active');
-            self.$('.o_chatter_button_attachment').addClass('o_active_attach');
-        });
-        this.attachmentBoxOpened = true;
+        this.fields.attachments.insertAfter($anchor);
+        this.$el.addClass('o_chatter_composer_active');
+        this.$('.o_chatter_button_attachment').addClass('o_active_attach');
+
+        this._isAttachmentBoxOpen = true;
     },
     /**
      * @private
@@ -286,6 +320,7 @@ var Chatter = Widget.extend({
                         if (self._reloadAfterPost(messageData)) {
                             self.trigger_up('reload');
                         } else if (messageData.attachment_ids.length) {
+                            self._reloadAttachmentBox();
                             self.trigger_up('reload', {fieldNames: ['message_attachment_count']});
                         }
                     }).fail(function () {
@@ -322,6 +357,16 @@ var Chatter = Widget.extend({
     },
     /**
      * @private
+     */
+    _reloadAttachmentBox: function () {
+        this._areAttachmentsLoaded = false;
+        if (this._isAttachmentBoxOpen) {
+            this._fetchAttachments().then(this._openAttachmentBox.bind(this));
+        }
+        this.trigger_up('reload', { fieldNames: ['message_attachment_count'] });
+    },
+    /**
+     * @private
      * @param {Deferred} def
      * @returns {Deferred}
      */
@@ -344,7 +389,11 @@ var Chatter = Widget.extend({
                 self.fields.activity.$el.appendTo(self.$el);
             }
             if (self.fields.followers) {
-                self.fields.followers.$el.insertBefore(self.$('.o_chatter_button_attachment'));
+                if (self._disableAttachmentBox) {
+                    self.fields.followers.$el.appendTo(self.$('.o_topbar_right_area'));
+                } else {
+                    self.fields.followers.$el.insertBefore(self.$('.o_chatter_button_attachment'));
+                }
             }
             if (self.fields.thread) {
                 self.fields.thread.$el.appendTo(self.$el);
@@ -383,8 +432,7 @@ var Chatter = Widget.extend({
      */
      _updateAttachmentCounter: function () {
         var count = this.record.data.message_attachment_count || 0;
-        this.$('.o_chatter_attachment_button_count').html(' ('+ count +')');
-        this.$('.o_chatter_button_attachment').toggleClass('o_hidden', !count);
+        this.$('.o_chatter_attachment_button_count').html(count);
      },
     /**
      * @private
@@ -427,12 +475,45 @@ var Chatter = Widget.extend({
 
     /**
      * @private
+     * @param {OdooEvent} ev
+     * @param {integer} ev.data.attachmentId
+     * @param {String} ev.data.attachmentName
      */
-    _onOpenAttachments: function () {
-        if (this.attachmentBoxOpened) {
+    _onDeleteAttachment: function (ev) {
+        ev.stopPropagation();
+        var self = this;
+        var options = {
+            confirm_callback: function () {
+                self._rpc({
+                    model: 'ir.attachment',
+                    method: 'unlink',
+                    args: [parseInt(ev.data.attachmentId, 10)],
+                })
+                .then(function () {
+                    self._reloadAttachmentBox();
+                    self.fields.thread.removeAttachments([ev.data.attachmentId]);
+                    self.trigger_up('reload');
+                });
+            }
+        };
+        var promptText = _.str.sprintf(_t("Do you really want to delete %s?"), _.escape(ev.data.attachmentName));
+        Dialog.confirm(this, promptText, options);
+    },
+    /**
+     * @private
+     */
+    _onClickAttachmentButton: function () {
+        if(this._disableAttachmentBox) {
+            return;
+        }
+        if (this._isAttachmentBoxOpen) {
             this._closeAttachments();
         } else {
-            this._openAttachments();
+            var def;
+            if (!this._areAttachmentsLoaded) {
+                def = this._fetchAttachments();
+            }
+            $.when(def).then(this._openAttachmentBox.bind(this));
         }
     },
     /**
@@ -482,6 +563,12 @@ var Chatter = Widget.extend({
      */
     _onOpenComposerNote: function () {
         this._openComposer({ isLog: true });
+    },
+    /**
+     * @private
+     */
+    _onReloadAttachmentBox: function () {
+        this._reloadAttachmentBox();
     },
     /**
      * @private
