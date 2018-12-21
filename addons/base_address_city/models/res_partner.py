@@ -32,12 +32,14 @@ class Partner(models.Model):
             <div>
                 <field name="country_enforce_cities" invisible="1"/>
                 <field name='city' placeholder="%(placeholder)s" class="o_address_city"
+                    class="o_address_city"
                     attrs="{
                         'invisible': [('country_enforce_cities', '=', True), ('city_id', '!=', False)],
                         'readonly': [('type', '=', 'contact')%(parent_condition)s]
                     }"
                 />
                 <field name='city_id' placeholder="%(placeholder)s" string="%(placeholder)s" class="o_address_city"
+                    class="o_address_city"
                     context="{'default_country_id': country_id,
                               'default_name': city,
                               'default_zipcode': zip,
