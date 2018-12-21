@@ -112,30 +112,28 @@ return Widget.extend({
         this.current_search = query;
         this.source({term:query}, function (results) {
             if (results.length) {
-                // console.log(results);
                 self.render_search_results(results);
                 self.focus_element(self.$('li:first-child'));
-                self.render_expand_count(results);
+                self.render_search_count(results);
             } else {
                 self.close();
             }
         });
     },
-    render_expand_count: function(results) {
+    render_search_count: function (results) {
         var self = this;
-        var term = self.search_string;
         var defs = [];
-        var countFacet = _.filter(results, function(result) {return result.expand;});
-        _.each(countFacet, function(f) {
-            defs.push(f.expand(term));
+        var expandResult = _.filter(results, function (result) {return result.expand;});
+        _.each(expandResult, function (f) {
+            defs.push(f.expand(self.search_string));
         });
-        $.when.apply($, defs).then(function() {
-            _.each(arguments, function(args, index) {
-                var counter = args && args.length ? args.length : 0;
+        $.when.apply($, defs).then(function () {
+            _.each(arguments, function (args, index) {
+                var counter = args && args.length;
                 if (counter) {
-                    countFacet[index].$el.find("strong").append(" (" + counter   + ")");
+                    expandResult[index].$el.find("strong").append(" (" + counter + ")");
                 } else {
-                    countFacet[index].$el.hide();
+                    expandResult[index].$el.remove();
                 }
             });
         });
@@ -185,7 +183,7 @@ return Widget.extend({
         var self = this;
         var current_result = this.current_result;
         current_result.expand(this.get_search_string()).then(function (results) {
-            (results || [{label: '(no result)'}]).reverse().forEach(function (result) {
+            (results).reverse().forEach(function (result) {
                 result.indent = true;
                 var $li = self.make_list_item(result);
                 current_result.$el.after($li);
