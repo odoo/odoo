@@ -171,7 +171,7 @@
         <field name="arch" type="xml">
             <form string="Contract logs">
                 <header>
-                    <button name="contract_close" states="open,expired,future" type="object" class="oe_highlight" string="Close Contract" groups="fleet.fleet_group_manager"/>
+                    <button name="contract_close" states="open,diesoon,expired,future" type="object" class="oe_highlight" string="Close Contract" groups="fleet.fleet_group_manager"/>
                     <button name="contract_open" states="closed" type="object" class="oe_highlight" string="Set Contract In Progress" groups="fleet.fleet_group_manager"/>
                     <button class="oe_highlight" name="act_renew_contract" type="object" string="Renew Contract" attrs="{'invisible': [('state', '=', 'open')]}" help="Create a new contract automatically with all the same informations except for the date that will start at the end of current contract" groups="fleet.fleet_group_manager"/>
                     <field name="state" widget="statusbar" />
@@ -270,7 +270,7 @@
         <field name="name">fleet.vehicle.log.contract.tree</field>
         <field name="model">fleet.vehicle.log.contract</field>
         <field name="arch" type="xml">
-            <tree string="Contract logs" decoration-warning="days_left>0 and days_left&lt;15" decoration-danger="days_left==0" decoration-muted="state=='closed'">
+            <tree string="Contract logs" decoration-warning="state=='diesoon'" decoration-danger="days_left==0" decoration-muted="state=='closed'">
                 <field name="active" invisible="1"/>
                 <field name="start_date" />
                 <field name="expiration_date" />
@@ -338,7 +338,7 @@
                 <field name="insurer_id" string="Vendor" filter_domain="[('insurer_id','child_of', self)]"/>
                 <field name="cost_subtype_id" string="Service Type" filter_domain="[('cost_ids.cost_subtype_id', 'ilike', self)]"/>
                 <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
-                <filter string="In Progress" name="open" domain="[('state', '=', 'open')]"/>
+                <filter string="In Progress" name="open" domain="[('state', 'in', ['open','diesoon'])]"/>
                 <filter string="Expired" name="expired" domain="[('state', '=', 'expired')]"/>
                 <filter string="Expiring Soon" name="expire_soon" domain="[('state', '=', 'diesoon')]"/>
                 <separator/>
