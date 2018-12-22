@@ -1004,12 +1004,18 @@
             <line>
                 <left>Taxes:</left>
             </line>
-            <line t-foreach='taxes' t-as='taxe'>
-                <left><t t-esc='taxe.name' /></left>
-                <right>
-                    <t t-esc='widget.format_currency_no_symbol(taxe.tax_amount)'/>
-                </right>
-            </line>
+
+            <t t-foreach='taxes' t-as='taxe'>
+                <line>
+                    <left><t t-esc='taxe.name' /></left>
+                </line>
+                <line indent="1">
+                    <left> based on <t t-esc='widget.format_currency_no_symbol(taxe.base_amount)'/></left>
+                    <right>
+                        <t t-esc='widget.format_currency_no_symbol(taxe.tax_amount)'/>
+                    </right>
+                </line>
+            </t>
 
             <br/>
             <line><left>------------------------</left></line>
