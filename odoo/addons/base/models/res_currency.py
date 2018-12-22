@@ -180,6 +180,7 @@ class Currency(models.Model):
         return tools.float_is_zero(amount, precision_rounding=self.rounding)
 
     @api.model
+    @tools.ormcache('from_currency.id', 'to_currency.id', 'company.id', 'date')
     def _get_conversion_rate(self, from_currency, to_currency, company, date):
         currency_rates = (from_currency + to_currency)._get_rates(company, date)
         res = currency_rates.get(to_currency.id) / currency_rates.get(from_currency.id)
@@ -274,3 +275,21 @@ class CurrencyRate(models.Model):
                 name = ''
                 operator = 'ilike'
         return super(CurrencyRate, self)._name_search(name, args=args, operator=operator, limit=limit, name_get_uid=name_get_uid)
+
+    @api.model
+    def create(self, vals):
+        currency_rate = super(CurrencyRate, self).create(vals)
+        self.env['res.currency'].clear_caches()
+        return currency_rate
+
+    @api.multi
+    def write(self, vals):
+        currency_rate = super(CurrencyRate, self).write(vals)
+        self.env['res.currency'].clear_caches()
+        return currency_rate
+
+    @api.multi
+    def unlink(self):
+        currency_rate = super(CurrencyRate, self).unlink()
+        self.env['res.currency'].clear_caches()
+        return currency_rate
