@@ -126,8 +126,8 @@ class Website(Website):
         views = super(Website, self).get_switchable_related_views(key)
         if key == 'website_sale.product':
             if not request.env.user.has_group('product.group_product_variant'):
-                view_product_variants = request.env.ref('website_sale.product_variants')
-                views[:] = [v for v in views if v['id'] != view_product_variants.id]
+                view_product_variants = request.website.viewref('website_sale.product_variants')
+                views = [v for v in views if v['id'] != view_product_variants.id]
         return views
 
 
@@ -741,7 +741,7 @@ class WebsiteSale(ProductConfiguratorController):
         order.order_line._compute_tax_id()
         request.session['sale_last_order_id'] = order.id
         request.website.sale_get_order(update_pricelist=True)
-        extra_step = request.env['ir.ui.view']._view_obj('website_sale.extra_info_option')
+        extra_step = request.website.viewref('website_sale.extra_info_option')
         if extra_step.active:
             return request.redirect("/shop/extra_info")
 
@@ -753,7 +753,7 @@ class WebsiteSale(ProductConfiguratorController):
     @http.route(['/shop/extra_info'], type='http', auth="public", website=True)
     def extra_info(self, **post):
         # Check that this option is activated
-        extra_step = request.env['ir.ui.view']._view_obj('website_sale.extra_info_option')  # ref but specific
+        extra_step = request.website.viewref('website_sale.extra_info_option')
         if not extra_step.active:
             return request.redirect("/shop/payment")
 
