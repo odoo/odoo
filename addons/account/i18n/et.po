@@ -2514,7 +2514,7 @@ msgstr "Pangakannete sobitamise eelsäte"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company_account_setup_bank_data_done
 msgid "Bank Setup Marked As Done"
-msgstr "Panga seadistused, mis märgitud tehtuks"
+msgstr "Panga seadistused, mis märgitud lõpetatuks"
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement
@@ -2566,7 +2566,7 @@ msgstr "Panga sobitamine"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_account_setup_bank_data_done
 msgid "Bank setup marked as done"
-msgstr "Panga seadistused märgitud tehtuks"
+msgstr "Panga seadistused märgitud lõpetatuks"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_statement_line_id
@@ -3350,7 +3350,7 @@ msgstr "Ettevõtete andmed"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company_account_setup_company_data_done
 msgid "Company Setup Marked As Done"
-msgstr "Ettevõtte seadistused, mis on märgitud tehtuks"
+msgstr "Ettevõtte seadistused, mis on märgitud lõpetatuks"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings_has_chart_of_accounts
@@ -4089,8 +4089,7 @@ msgid "Deactivate setup bar on the dashboard"
 msgstr "Deaktiveeri seadistusriba töölaual"
 
 #. module: account
-#: code:addons/account/models/company.py:45
-#, python-format
+#: model:res.company,overdue_msg:base.main_company
 msgid ""
 "Dear Sir/Madam,\n"
 "\n"
@@ -4828,7 +4827,7 @@ msgstr "Finantsaruanded"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company_account_setup_fy_data_done
 msgid "Financial Year Setup Marked As Done"
-msgstr "Majandusaasta seadistus on märgitud tehtuks"
+msgstr "Majandusaasta seadistus on märgitud lõpetatuks"
 
 #. module: account
 #: model:ir.actions.report,name:account.action_report_financial
@@ -4838,7 +4837,7 @@ msgstr "Finantsaruanne"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_year_op_account_setup_fy_data_done
 msgid "Financial year setup marked as done"
-msgstr "Majandusaasta seadistus on märgitud tehtuks"
+msgstr "Majandusaasta seadistus on märgitud lõpetatuks"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -6559,7 +6558,7 @@ msgid ""
 msgstr ""
 "Viimane arvete ja maksete sobitamise aeg selle partneriga. See on määratud "
 "siis kui, ei ole mittesobitatud deebet- ja kreeditkandeid või kui vajutad "
-"\"Tehtud\" nuppu."
+"\"Lõpetatud\" nuppu."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_last_time_entries_checked
@@ -6570,7 +6569,7 @@ msgid ""
 msgstr ""
 "Viimane arvete ja maksete sobitamise aeg selle partneriga. See on määratud "
 "siis kui, ei ole mittesobitatud deebet- ja kreeditkandeid või kui vajutad "
-"\"Tehtud\" nuppu."
+"\"lõpetatud\" nuppu."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -6836,7 +6835,7 @@ msgstr "Kasumlikkuse analüüs"
 #: model:ir.ui.view,arch_db:account.setup_financial_year_opening_form
 #: model:ir.ui.view,arch_db:account.setup_view_company_form
 msgid "Mark as done"
-msgstr "Märgi tehtuks"
+msgstr "Märgi lõpetatuks"
 
 #. module: account
 #: selection:account.payment,payment_difference_handling:0
@@ -10506,7 +10505,7 @@ msgid ""
 "This guide will help you get started with Odoo Accounting.\n"
 "                        Once you're done, you'll benefit from:"
 msgstr ""
-"See õpetus aitab tutvuda Odoo  raamatupidamisega.\n"
+"See õpetus aitab tutvuda Odoo raamatupidamisega.\n"
 "                          Kui see on tehtud, siis saate kasu:"
 
 #. module: account
@@ -10980,7 +10979,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.setup_financial_year_opening_form
 #: model:ir.ui.view,arch_db:account.setup_view_company_form
 msgid "Unmark as done"
-msgstr "Tühista märgistus \"Tehtud\""
+msgstr "Tühista märgistus \"lõpetatud\""
 
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_journal_2_account_invoice_opened
