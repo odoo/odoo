@@ -174,7 +174,6 @@ class Website(models.Model):
         default_menu = self.env.ref('website.main_menu')
         self.copy_menu_hierarchy(default_menu)
 
-    @api.model
     def copy_menu_hierarchy(self, top_menu):
         def copy_menu(menu, t_menu):
             new_menu = menu.copy({
