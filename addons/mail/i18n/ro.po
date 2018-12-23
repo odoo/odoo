@@ -3,17 +3,18 @@
 # * mail
 # 
 # Translators:
-# Cozmin Candea <office@terrabit.ro>, 2017
-# Martin Trigaux, 2017
-# Dorin Hongu <dhongu@gmail.com>, 2017
 # Iulian Cutui <iulian.cutui@gmail.com>, 2017
+# Martin Trigaux, 2017
+# Cozmin Candea <office@terrabit.ro>, 2017
+# Dorin Hongu <dhongu@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-07-27 11:55+0000\n"
-"PO-Revision-Date: 2018-07-27 11:55+0000\n"
-"Last-Translator: Iulian Cutui <iulian.cutui@gmail.com>, 2017\n"
+"PO-Revision-Date: 2017-09-20 10:19+0000\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2018\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -249,6 +250,9 @@ msgid ""
 "href=\"#\" class=\"o_channel_redirect\" data-oe-"
 "id=\"%(channel_id)s\">#%(channel_name)s</a></div>"
 msgstr ""
+"<div class=\"o_mail_notification\">%(author)s a invitat%(new_partner)s la<a "
+"href=\"#\" class=\"o_channel_redirect\" data-oe-"
+"id=\"%(channel_id)s\">#%(channel_name)s</a></div>"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:592
@@ -405,7 +409,7 @@ msgstr ""
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 msgid "<strong>Recommended Activities</strong>"
-msgstr ""
+msgstr "<strong>Activități recomandate:</strong>"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_alias_defaults
@@ -2103,12 +2107,12 @@ msgstr "Grupuri"
 #. module: mail
 #: selection:res.users,notification_type:0
 msgid "Handle by Emails"
-msgstr ""
+msgstr "Gestionat prin Email"
 
 #. module: mail
 #: selection:res.users,notification_type:0
 msgid "Handle in Odoo"
-msgstr ""
+msgstr "Gestionat în Odoo"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_message_search
@@ -3258,7 +3262,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/client_action.xml:138
 #, python-format
 msgid "New Channel"
-msgstr ""
+msgstr "Canal nou"
 
 #. module: mail
 #. openerp-web
@@ -3326,7 +3330,7 @@ msgstr "Mesajele noi vor apărea aici."
 #: code:addons/mail/static/src/js/client_action.js:97
 #, python-format
 msgid "New people"
-msgstr ""
+msgstr "Persoană nouă"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_activity_view_tree
@@ -3482,7 +3486,7 @@ msgstr "Notificare"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users_notification_type
 msgid "Notification Management"
-msgstr ""
+msgstr "Gestionare notificări"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_notification_ids
@@ -5312,7 +5316,7 @@ msgstr "Operator"
 #: code:addons/mail/static/src/xml/extended_chat_window.xml:8
 #, python-format
 msgid "User name"
-msgstr ""
+msgstr "Utilizator"
 
 #. module: mail
 #: model:ir.model,name:mail.model_res_users
@@ -5344,7 +5348,7 @@ msgstr "Vizualizare"
 #: code:addons/mail/models/mail_thread.py:673
 #, python-format
 msgid "View %s"
-msgstr ""
+msgstr "Vizualizare%s"
 
 #. module: mail
 #. openerp-web
@@ -5447,7 +5451,7 @@ msgstr ""
 #: code:addons/mail/models/mail_channel.py:680
 #, python-format
 msgid "You are in channel <b>#%s</b>."
-msgstr ""
+msgstr "Sunteți în canal  <b>#%s</b>."
 
 #. module: mail
 #. openerp-web
@@ -5492,7 +5496,7 @@ msgstr "Ați fost asignat la "
 #: code:addons/mail/static/src/js/chat_manager.js:588
 #, python-format
 msgid "You have been invited to: "
-msgstr ""
+msgstr "Ați fost invitat la:"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_attachment_ids
@@ -5734,7 +5738,7 @@ msgstr "înregistrare:"
 #: code:addons/mail/models/mail_thread.py:940
 #, python-format
 msgid "reply to missing document (%s,%s)"
-msgstr ""
+msgstr "răspundeți la documentul lipsă (%s, %s)"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:933

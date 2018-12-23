@@ -405,10 +405,10 @@ msgstr ""
 "% if object.number:\n"
 "<strong>factura ${object.number}</strong>\n"
 "% else:\n"
-"invoice\n"
+"factura\n"
 "% endif\n"
 "% if object.origin:\n"
-"(with reference: ${object.origin})\n"
+"(con referencia: ${object.origin})\n"
 "% endif\n"
 "por un importe de <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
 "efectuado por ${object.company_id.name}.\n"
@@ -4142,8 +4142,7 @@ msgid "Deactivate setup bar on the dashboard"
 msgstr "Desactivar la barra de configuración en el panel"
 
 #. module: account
-#: code:addons/account/models/company.py:45
-#, python-format
+#: model:res.company,overdue_msg:base.main_company
 msgid ""
 "Dear Sir/Madam,\n"
 "\n"

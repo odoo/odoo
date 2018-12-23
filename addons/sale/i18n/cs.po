@@ -114,6 +114,8 @@ msgid ""
 "${object.company_id.name} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 msgstr ""
+"${object.company_id.name} ${object.state in ('draft', 'sent') a 'Nabídka' "
+"nebo 'Objednávka'} (Ref ${object.name or 'n/a' })"
 
 #. module: sale
 #: model:mail.template,subject:sale.mail_template_data_notification_email_sale_order
@@ -621,6 +623,9 @@ msgid ""
 "confirming orders straight away. This will add specific action buttons to "
 "your dashboard."
 msgstr ""
+"Toto políčko zaškrtněte, pokud odesíláte objednávky svým zákazníkům, než aby"
+" jste okamžitě potvrdili objednávky. Tím se na hlavním panelu přidáte "
+"konkrétní tlačítka akcí."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_crm_team_use_invoices
@@ -880,7 +885,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings_module_website_sale_digital
 msgid "Digital Content"
-msgstr ""
+msgstr "Digitální zboží"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_invoice_layouted
@@ -1345,7 +1350,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings_auto_done_setting
 msgid "Lock Confirmed Orders"
-msgstr ""
+msgstr "Uzamknout potvrzené objednávky"
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -1941,7 +1946,7 @@ msgstr "Nabídky"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Quotations &amp; Orders"
-msgstr ""
+msgstr "Nabídky &amp; Objednávky"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_quotation_salesteam
@@ -2495,7 +2500,7 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_my_quotations
 msgid "There are currently no quotations for your account."
-msgstr ""
+msgstr "V současné době neexistují žádné nebídky pro váš účet."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2559,6 +2564,11 @@ msgid ""
 "invoiced yet. If you want to analyse your turnover, you should use the "
 "Invoice Analysis report in the Accounting application."
 msgstr ""
+"Tento přehled provádí analýzu vašich nabídek. Analýza zkontrolujte příjmy z "
+"prodeje a seřadí je podle různých skupinových kritérií (prodavač, partner, "
+"produkt atd.). Tuto zprávu použijte k analýze prodeje, která ještě nebyla "
+"fakturována. Pokud chcete analyzovat svůj obrat, měli byste použít přehled "
+"Analýza faktur v aplikaci Účtování."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_report_so_salesteam
