@@ -31,7 +31,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 06:49+0000\n"
+"POT-Creation-Date: 2018-12-19 08:20+0000\n"
 "PO-Revision-Date: 2018-08-24 09:20+0000\n"
 "Last-Translator: liAnGjiA <liangjia@qq.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
@@ -42,10 +42,22 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:921
+#: code:addons/mail/models/mail_channel.py:922
 #, python-format
 msgid " This channel is private. People must be invited to join it."
 msgstr " This channel is private. People must be invited to join it."
+
+#. module: mail
+#: code:addons/mail/wizard/invite.py:29
+#, python-format
+msgid "%(user_name)s invited you to follow %(document)s document: %(title)s"
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/wizard/invite.py:31
+#, python-format
+msgid "%(user_name)s invited you to follow a new document."
+msgstr ""
 
 #. module: mail
 #. openerp-web
@@ -171,7 +183,7 @@ msgstr ""
 " 您可以通过键入 <b>:快捷方式</b>在您的消息中插入预设回复。<br>"
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:721
+#: code:addons/mail/models/mail_channel.py:722
 #, python-format
 msgid ""
 "<div class=\"o_mail_notification\">%(author)s invited %(new_partner)s to <a "
@@ -183,7 +195,7 @@ msgstr ""
 "id=\"%(channel_id)s\">#%(channel_name)s</a></div>"
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:828
+#: code:addons/mail/models/mail_channel.py:829
 #, python-format
 msgid ""
 "<div class=\"o_mail_notification\">created <a href=\"#\" "
@@ -193,8 +205,8 @@ msgstr ""
 "class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:728
-#: code:addons/mail/models/mail_channel.py:802
+#: code:addons/mail/models/mail_channel.py:729
+#: code:addons/mail/models/mail_channel.py:804
 #, python-format
 msgid ""
 "<div class=\"o_mail_notification\">joined <a href=\"#\" "
@@ -204,7 +216,7 @@ msgstr ""
 "class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:294
+#: code:addons/mail/models/mail_channel.py:295
 #, python-format
 msgid ""
 "<div class=\"o_mail_notification\">left <a href=\"#\" "
@@ -214,22 +226,8 @@ msgstr ""
 "class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
 
 #. module: mail
-#: code:addons/mail/wizard/invite.py:23
-#, python-format
-msgid ""
-"<div><p>Hello,</p><p>%s invited you to follow %s document: %s.</p></div>"
-msgstr "<div><p>您好,</p><p>%s 邀请您关注%s单据: %s.</p></div>"
-
-#. module: mail
-#: code:addons/mail/wizard/invite.py:26
-#, python-format
-msgid ""
-"<div><p>Hello,</p><p>%s invited you to follow a new document.</p></div>"
-msgstr "<div><p>您好，</p><p>%s 邀请您关注新单据。</p></div>"
-
-#. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/tour.js:28
+#: code:addons/mail/static/src/js/tour.js:60
 #, python-format
 msgid ""
 "<p><b>Chat with coworkers</b> in real-time using direct "
@@ -239,7 +237,7 @@ msgstr "<p>使用私信实时<b>与同事聊天</b>。</p><p><i>您可能需要�
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/tour.js:15
+#: code:addons/mail/static/src/js/tour.js:39
 #, python-format
 msgid ""
 "<p><b>Write a message</b> to the members of the channel here.</p> <p>You can"
@@ -251,7 +249,7 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/tour.js:11
+#: code:addons/mail/static/src/js/tour.js:23
 #, python-format
 msgid ""
 "<p>Channels make it easy to organize information across different topics and"
@@ -259,6 +257,13 @@ msgid ""
 "marketing, product XYZ, after work party, etc).</p>"
 msgstr ""
 "<p>通过渠道可以轻松跨越不同主题和组织信息。</p><p>尝试<b>创建您的第一个渠道</b>（例如，销售、营销、产品矩阵、工作之余的聚会等）。</p>"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/js/tour.js:27
+#, python-format
+msgid "<p>Create a channel here.</p>"
+msgstr ""
 
 #. module: mail
 #. openerp-web
@@ -1384,7 +1389,7 @@ msgstr "创建新活动"
 #: code:addons/mail/models/mail_thread.py:400
 #, python-format
 msgid "Create a new %(document)s"
-msgstr "创建新文档"
+msgstr ""
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:392
@@ -2008,7 +2013,15 @@ msgid "Error during communication with the publisher warranty server."
 msgstr "当与保障服务器通信时发生错误。"
 
 #. module: mail
-#: code:addons/mail/models/mail_mail.py:317
+#: code:addons/mail/models/mail_mail.py:340
+#, python-format
+msgid ""
+"Error without exception. Probably due do concurrent access update of "
+"notification records. Please see with an administrator."
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/models/mail_mail.py:329
 #, python-format
 msgid ""
 "Error without exception. Probably due do sending an email without computed "
@@ -2369,6 +2382,12 @@ msgstr "标题"
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_send_guidelines
 msgid "Hello"
 msgstr "您好"
+
+#. module: mail
+#: code:addons/mail/wizard/invite.py:35
+#, python-format
+msgid "Hello,"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_cancel__help_message
@@ -3862,6 +3881,13 @@ msgid "Open"
 msgstr "打开"
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/xml/thread.xml:409
+#, python-format
+msgid "Open Channel in Discuss to moderate"
+msgstr ""
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_alias_form
 msgid "Open Document"
 msgstr "打开单据"
@@ -4195,6 +4221,13 @@ msgstr ""
 "- 每一个人: 任何人都可以提交\n"
 "- 合作伙伴: 只有认证过的合作伙伴\n"
 "- 关注者: 只有相关文件或下列频道成员的跟随者\n"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/js/tour.js:48
+#, python-format
+msgid "Post your message on the thread"
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_borders
@@ -4771,11 +4804,6 @@ msgstr "以邮件形式发送"
 #, python-format
 msgid "Sent"
 msgstr "已发送"
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.message_notification_email
-msgid "Sent by"
-msgstr "发送者"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_notification__is_email
@@ -5426,7 +5454,7 @@ msgstr "退订"
 #: code:addons/mail/models/mail_template.py:473
 #, python-format
 msgid "Unsupported report type %s found."
-msgstr "发现不支持的报告类型 %。"
+msgstr "发现不支持的报告类型 %s。"
 
 #. module: mail
 #: code:addons/mail/models/mail_message.py:188
@@ -5570,10 +5598,20 @@ msgstr "查看当前记录的所有附件"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:57
+#: code:addons/mail/static/src/xml/thread.xml:58
 #, python-format
 msgid "Viewer"
 msgstr "查看者"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/js/tour.js:13
+#: code:addons/mail/static/src/js/tour.js:18
+#, python-format
+msgid ""
+"Want to <b>get in touch</b> with your contacts? <i>Discuss with them "
+"here.</i>"
+msgstr ""
 
 #. module: mail
 #. openerp-web
@@ -5983,7 +6021,7 @@ msgstr "错误地别名配置（未知参考记录）"
 #: code:addons/mail/models/mail_thread.py:1051
 #, python-format
 msgid "model %s does not accept document creation"
-msgstr "模型 % 不接受文档创建"
+msgstr "模型 %s 不接受文档创建"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:1046
@@ -5996,7 +6034,7 @@ msgstr "模型 % 不接受文档更新"
 #, python-format
 msgid ""
 "model %s does not accept document update, fall back on document creation"
-msgstr "模型 % 不接受文档更新，将在文档创建中退回"
+msgstr "模型 %s 不接受文档更新，回退到文档创建"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_origin_link
@@ -6043,7 +6081,7 @@ msgstr "或"
 msgid ""
 "posting a message without model should be with a null res_id (private "
 "message), received %s"
-msgstr "发布无模型消息应使用无效 res_id（私人消息），收到 %"
+msgstr "发布无模型消息应使用无效 res_id（私人信息），收到%s"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:1025
@@ -6080,13 +6118,13 @@ msgstr "记录："
 #: code:addons/mail/models/mail_thread.py:1043
 #, python-format
 msgid "reply to missing document (%s,%s)"
-msgstr "对缺失文档的回复 (%,%)"
+msgstr "对缺失文档的回复 (%s,%s)"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:1036
 #, python-format
 msgid "reply to missing document (%s,%s), fall back on new document creation"
-msgstr "对丢失文档的回复 (%,%)，在新文档创建中退回"
+msgstr "对丢失文档的回复 (%s,%s)，在新文档创建中退回"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:1021

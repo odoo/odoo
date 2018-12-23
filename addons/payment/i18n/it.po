@@ -78,7 +78,7 @@ msgstr "Paga"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
 msgid "<i class=\"fa fa-plus-circle\"> Add new card</i>"
-msgstr "Aggiungi nuova carta"
+msgstr "<i class=\"fa fa-plus-circle\"> Aggiungi nuova carta</i>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
@@ -129,12 +129,12 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
 msgid "<span class=\"fa fa-arrow-right\"> Create a PayPal account</span>"
-msgstr ""
+msgstr "<span class=\"fa fa-arrow-right\"> Crea un account PayPal</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
 msgid "<span class=\"fa fa-arrow-right\"> Get my Stripe keys</span>"
-msgstr ""
+msgstr "<span class=\"fa fa-arrow-right\"> Ottieni le chiavi Stripe</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.view_partners_form_payment_defaultcreditcard
@@ -289,7 +289,7 @@ msgstr ""
 #: code:addons/payment/wizards/payment_acquirer_onboarding_wizard.py:34
 #, python-format
 msgid "Account"
-msgstr "Conto"
+msgstr "conto"
 
 #. module: payment
 #: model:ir.model,name:payment.model_account_chart_template
@@ -417,7 +417,7 @@ msgstr "Transazioni autorizzate"
 #: code:addons/payment/wizards/payment_acquirer_onboarding_wizard.py:34
 #, python-format
 msgid "Bank"
-msgstr "Banca"
+msgstr "banca"
 
 #. module: payment
 #: model_terms:payment.acquirer,post_msg:payment.payment_acquirer_custom
@@ -428,7 +428,7 @@ msgstr "Conto bancario"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__journal_name
 msgid "Bank Name"
-msgstr "Nome Banca"
+msgstr "Nome banca"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_buckaroo
@@ -513,13 +513,13 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
 msgid "Check here"
-msgstr ""
+msgstr "Fai clic qui"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_open_payment_onboarding_payment_acquirer_wizard
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
 msgid "Choose a payment method"
-msgstr "Scegli un metodo di pagamento"
+msgstr "Scegliere un metodo di pagamento"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_city
@@ -1082,6 +1082,14 @@ msgid "Never"
 msgstr "Mai"
 
 #. module: payment
+#: code:addons/payment/wizards/payment_acquirer_onboarding_wizard.py:127
+#, python-format
+msgid ""
+"No manual payment method could be found for this company. Please create one "
+"from the Payment Acquirer menu."
+msgstr ""
+
+#. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
 msgid "No payment acquirer found."
 msgstr "Nessun sistema di pagamento trovato."
@@ -1199,17 +1207,17 @@ msgstr "Nome Partner"
 #. module: payment
 #: selection:payment.acquirer.onboarding.wizard,payment_method:0
 msgid "Pay with PayPal"
-msgstr "Paga con PayPal"
+msgstr "Pagamento con PayPal"
 
 #. module: payment
 #: selection:payment.acquirer.onboarding.wizard,payment_method:0
 msgid "Pay with another payment acquirer"
-msgstr "Paga con un altro metodo di pagamento"
+msgstr "Pagare con altro sistema di pagamento"
 
 #. module: payment
 #: selection:payment.acquirer.onboarding.wizard,payment_method:0
 msgid "Pay with credit card (via Stripe)"
-msgstr "Paga con una carta di credito (con Stripe)"
+msgstr "Pagamento con carta di credito (via Stripe)"
 
 #. module: payment
 #: selection:res.company,payment_onboarding_payment_method:0
@@ -1329,7 +1337,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.onboarding_payment_acquirer_step
 msgid "Payment method set!"
-msgstr ""
+msgstr "Metodo di pagamento impostato!"
 
 #. module: payment
 #: code:addons/payment/controllers/portal.py:252
@@ -1413,6 +1421,8 @@ msgid ""
 "Please make a payment to <ul><li>Bank: %s</li><li>Account Number: "
 "%s</li><li>Account Holder: %s</li></ul>"
 msgstr ""
+"Effettuare il pagamento a <ul><li>Banca: %s</li><li>Numero conto: "
+"%s</li><li>Titolare conto: %s</li></ul>"
 
 #. module: payment
 #. openerp-web
@@ -1932,7 +1942,7 @@ msgstr ""
 #: code:addons/payment/wizards/payment_acquirer_onboarding_wizard.py:135
 #, python-format
 msgid "You have to set a journal for your payment acquirer %s."
-msgstr ""
+msgstr "È necessario impostare un registro per il sistema di pagamento %s."
 
 #. module: payment
 #. openerp-web
@@ -2105,7 +2115,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
 msgid "to choose another payment method."
-msgstr ""
+msgstr "per scegliere un altro sistema di pagamento."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form

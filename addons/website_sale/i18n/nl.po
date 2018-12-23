@@ -728,7 +728,7 @@ msgstr "Naam bank"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Be aware!"
-msgstr ""
+msgstr "Wees voorzichtig!"
 
 #. module: website_sale
 #: model:res.country.group,name:website_sale.benelux
@@ -1395,6 +1395,19 @@ msgid "It is forbidden to modify a sales order which is not in draft status."
 msgstr ""
 "Het is verboden om een verkooporder te wijzigen die zich niet in de concept "
 "fase bevind."
+
+#. module: website_sale
+#: codeaddons/website_sale/models/sale_order.py
+#, python-format
+msgid "The given product does not exist therefore it cannot be added to cart."
+msgstr ""
+
+#. module: website_sale
+#: codeaddons/website_sale/models/sale_order.py
+#, python-format
+msgid ""
+"The given combination does not exist therefore it cannot be added to cart."
+msgstr ""
 
 #. module: website_sale
 #: selection:res.company,website_sale_onboarding_payment_acquirer_state:0
@@ -2735,6 +2748,8 @@ msgid ""
 "You are editing your <b>billing and shipping</b> addresses at the same time!<br/>\n"
 "                                            If you want to modify your shipping address, create a"
 msgstr ""
+"U past u <b>factuur en aflever</b> adres tegelijk aan!<br/>\n"
+"                                            Als u alleen uw afleveradres wilt aanpassen, maak dan een"
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.sale_report_action_carts
@@ -2880,7 +2895,7 @@ msgstr "ml-2"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "new address"
-msgstr ""
+msgstr "nieuw adres"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products

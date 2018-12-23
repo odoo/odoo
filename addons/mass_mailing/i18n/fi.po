@@ -4,25 +4,26 @@
 # 
 # Translators:
 # Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2018
-# Martin Trigaux, 2018
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2018
-# Svante Suominen <svante.suominen@web-veistamo.fi>, 2018
+# Miku Laitinen <miku.laitinen@gmail.com>, 2018
+# Jussi Lehto <jussi@gulfeo.com>, 2018
+# Kari Lindgren <karisatu@gmail.com>, 2018
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2018
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2018
 # Veikko Väätäjä <veikko.vaataja@gmail.com>, 2018
-# Miku Laitinen <miku.laitinen@gmail.com>, 2018
-# Jussi Lehto <jussi@gulfeo.com>, 2018
-# Mikko Salmela <salmemik@gmail.com>, 2018
-# Kari Lindgren <karisatu@gmail.com>, 2018
 # Timo Koukkari <ti.ko@netikka.fi>, 2018
+# Mikko Salmela <salmemik@gmail.com>, 2018
 # Pekko Tuomisto <pekko.tuomisto@web-veistamo.fi>, 2018
+# Svante Suominen <svante.suominen@web-veistamo.fi>, 2018
+# Martin Trigaux, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 06:49+0000\n"
-"PO-Revision-Date: 2018-10-08 06:49+0000\n"
-"Last-Translator: Pekko Tuomisto <pekko.tuomisto@web-veistamo.fi>, 2018\n"
+"POT-Creation-Date: 2018-12-19 08:21+0000\n"
+"PO-Revision-Date: 2018-08-24 09:20+0000\n"
+"Last-Translator: Martin Trigaux, 2018\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -858,6 +859,7 @@ msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mail_mass_mailing_list_contact_view_search
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_contact_search
 msgid "Exclude Opt Out"
 msgstr "Älä sisällytä massapostituksesta kieltäytyneitä"
 
@@ -1614,9 +1616,17 @@ msgid "Opened Ratio"
 msgstr "Avattujen suhde"
 
 #. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact__opt_out
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_list_contact_rel__opt_out
 msgid "Opt Out"
 msgstr "Markkinointikielto"
+
+#. module: mass_mailing
+#: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_contact__opt_out
+msgid ""
+"Opt out flag for a specific mailing list.This field should not be used in a "
+"view without a unique and active mailing list context."
+msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -2260,6 +2270,7 @@ msgstr "Käyttäjä"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mail_mass_mailing_list_contact_view_search
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_contact_search
 msgid "Valid Recipients"
 msgstr ""
 

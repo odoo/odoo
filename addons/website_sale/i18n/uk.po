@@ -168,7 +168,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment_confirmation_status
 msgid "<b>Communication: </b>"
-msgstr ""
+msgstr "<b>Зв'язок: </b>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
@@ -384,9 +384,9 @@ msgid ""
 " agreeing (or disagreeing) with the Terms and Conditions or Privacy Policies"
 " of these third parties."
 msgstr ""
-"Публікація <b>Посилання на інші веб-сайти</b> повідомить користувачів про "
-"те, що ви не несете відповідальності за будь-які сторонні веб-сайти, з якими"
-" ви зв'язуєтеся. Зазвичай така стаття інформує користувачів про те, що вони "
+"<b>Посилання на інші веб-сайти</b> повідомить користувачів про те, що ви не "
+"несете відповідальності за будь-які сторонні веб-сайти, з якими ви "
+"зв'язуєтеся. Зазвичай така стаття інформує користувачів про те, що вони "
 "несуть відповідальність за читання та узгодження (або незгоду) із Загальними"
 " положеннями умов та політики конфіденційності цих третіх сторін."
 
@@ -398,10 +398,10 @@ msgid ""
 "have an account with you) can be terminated in case of abuses or at your "
 "sole discretion."
 msgstr ""
-"Публікація <b>Припинення</b> повідомлятиме, що облікові записи користувачів "
-"на вашому веб-сайті та мобільних додатках або доступу користувачів до вашого"
-" веб-сайту та мобільних пристроїв (якщо користувачі не можуть мати обліковий"
-" запис із вами) може бути припинено у разі порушення або на свій розсуд. "
+"<b>Припинення</b> повідомлятиме, що облікові записи користувачів на вашому "
+"веб-сайті та мобільних додатках або доступу користувачів до вашого веб-сайту"
+" та мобільних пристроїв (якщо користувачі не можуть мати обліковий запис із "
+"вами) може бути припинено у разі порушення або на свій розсуд. "
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
@@ -931,12 +931,12 @@ msgstr "DHL"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__currency_id
 msgid "Default Currency"
-msgstr "Типова валюта"
+msgstr "Валюта за замовчуванням"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__pricelist_id
 msgid "Default Pricelist"
-msgstr "Типовий прайслист"
+msgstr "Прайслист за замовчуванням"
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.product_public_category_action
@@ -964,7 +964,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_template__website_description
 msgid "Description for the website"
-msgstr "Опис для вебсайту"
+msgstr "Опис для веб-сайту"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_desks
@@ -1255,6 +1255,19 @@ msgstr "Виставлення рахунків клієнтам"
 #: code:addons/website_sale/models/sale_order.py:166
 #, python-format
 msgid "It is forbidden to modify a sales order which is not in draft status."
+msgstr ""
+
+#. module: website_sale
+#: codeaddons/website_sale/models/sale_order.py
+#, python-format
+msgid "The given product does not exist therefore it cannot be added to cart."
+msgstr ""
+
+#. module: website_sale
+#: codeaddons/website_sale/models/sale_order.py
+#, python-format
+msgid ""
+"The given combination does not exist therefore it cannot be added to cart."
 msgstr ""
 
 #. module: website_sale
@@ -2417,7 +2430,7 @@ msgstr "USPS"
 #: model:product.product,uom_name:website_sale.product_product_1
 #: model:product.template,uom_name:website_sale.product_product_1_product_template
 msgid "Unit(s)"
-msgstr "шт"
+msgstr "Штука(и)"
 
 #. module: website_sale
 #. openerp-web
@@ -2501,7 +2514,7 @@ msgstr "Послідовність веб-сайту"
 #. module: website_sale
 #: model:ir.actions.act_url,name:website_sale.action_open_website
 msgid "Website Shop"
-msgstr "Магазин вебсайту"
+msgstr "Магазин веб-сайту"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__website_meta_description
@@ -2632,7 +2645,7 @@ msgstr "Ваша довідка"
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_popover
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_summary
 msgid "Your cart is empty!"
-msgstr "Ваша кошик пустий!"
+msgstr "Ваш кошик пустий!"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment_confirmation_status
@@ -2708,7 +2721,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_popover
 msgid "items)"
-msgstr "шт)"
+msgstr "штук)"
 
 #. module: website_sale
 #: model:product.product,weight_uom_name:website_sale.product_product_1
@@ -2745,7 +2758,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_pricelist__website_id
 msgid "website"
-msgstr "вебсайт"
+msgstr "веб-сайт"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_website_sale_payment_acquirer_onboarding_wizard
