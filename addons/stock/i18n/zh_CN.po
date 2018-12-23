@@ -21,24 +21,23 @@
 # 老窦 北京 <2662059195@qq.com>, 2018
 # Felix Yuen <fyu@odoo.com>, 2018
 # Shane Tsoi <sso@odoo.com>, 2018
-# Jackie Zhang <jzh@odoo.com>, 2018
+# JZH-Odoo <jzh@odoo.com>, 2018
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
 # bower Guo <124358678@qq.com>, 2018
 # inspur qiuguodong <qiuguodong@inspur.com>, 2018
 # roye w <159820@qq.com>, 2018
 # snow wang <147156565@qq.com>, 2018
 # Martin Trigaux, 2018
-# liAnGjiA <liangjia@qq.com>, 2018
-# neter ji <jifuyi@qq.com>, 2018
 # 广州救火 <7017511@qq.com>, 2018
+# liAnGjiA <liangjia@qq.com>, 2018
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-24 09:34+0000\n"
+"POT-Creation-Date: 2018-12-19 08:20+0000\n"
 "PO-Revision-Date: 2018-08-24 09:25+0000\n"
-"Last-Translator: 广州救火 <7017511@qq.com>, 2018\n"
+"Last-Translator: liAnGjiA <liangjia@qq.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1082,6 +1081,7 @@ msgstr "内容"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_replenish__product_uom_category_id
+#: model:ir.model.fields,help:stock.field_stock_inventory_line__product_uom_category_id
 msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
@@ -1381,8 +1381,8 @@ msgstr "客户"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_dhl
-msgid "DHL USA"
-msgstr "DHL USA"
+msgid "DHL Connector"
+msgstr "DHL 接口"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_report_stock_forecast__date
@@ -1829,8 +1829,8 @@ msgstr "草稿移动"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_easypost
-msgid "Easypost"
-msgstr "Easypost"
+msgid "Easypost Connector"
+msgstr "Easypost 接口"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -1900,8 +1900,8 @@ msgstr "FIFO, LIFO..."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_fedex
-msgid "FedEx"
-msgstr "FedEx"
+msgid "FedEx Connector"
+msgstr "FedEx 接口"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_destination__filtered_location
@@ -6116,13 +6116,13 @@ msgstr "作业的类型"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_ups
-msgid "UPS"
-msgstr "UPS"
+msgid "UPS Connector"
+msgstr "UPS 接口"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_usps
-msgid "USPS"
-msgstr "USPS"
+msgid "USPS Connector"
+msgstr "USPS 接口"
 
 #. module: stock
 #. openerp-web
@@ -6250,6 +6250,11 @@ msgstr "计量单位"
 #: model:ir.ui.menu,name:stock.menu_stock_uom_categ_form_action
 msgid "UoM Categories"
 msgstr "测量单位类别"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_inventory_line__product_uom_category_id
+msgid "Uom category"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_change_product_quantity
@@ -6929,8 +6934,8 @@ msgstr "_取消"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_bpost
-msgid "bpost"
-msgstr "bpost"
+msgid "bpost Connector"
+msgstr "bpost 接口"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form

@@ -1,20 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * website_customer
-#
+# 
 # Translators:
+# Martin Trigaux, 2018
+# Muḥend Belqasem <belkacem77@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2015-09-08 10:10+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Kabyle (http://www.transifex.com/odoo/odoo-9/language/kab/)\n"
-"Language: kab\n"
+"POT-Creation-Date: 2018-09-21 13:18+0000\n"
+"PO-Revision-Date: 2018-08-24 09:34+0000\n"
+"Last-Translator: Muḥend Belqasem <belkacem77@gmail.com>, 2018\n"
+"Language-Team: Kabyle (https://www.transifex.com/odoo/teams/41243/kab/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: kab\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_customer
@@ -23,53 +26,69 @@ msgid "<span class=\"fa fa-1x fa-tags\"/> All"
 msgstr ""
 
 #. module: website_customer
-#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_active
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__active
 msgid "Active"
 msgstr "Urmid"
 
 #. module: website_customer
-#: code:addons/website_customer/controllers/main.py:68
+#: code:addons/website_customer/controllers/main.py:100
 #, python-format
 msgid "All Countries"
 msgstr "Timura imaṛṛa"
 
 #. module: website_customer
-#: model:ir.model.fields,help:website_customer.field_res_partner_tag_classname
+#: code:addons/website_customer/controllers/main.py:81
+#, python-format
+msgid "All Sectors of Activity"
+msgstr ""
+
+#. module: website_customer
+#: model:ir.model.fields,help:website_customer.field_res_partner_tag__classname
 msgid "Bootstrap class to customize the color"
 msgstr ""
 
 #. module: website_customer
-#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_name
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__name
 msgid "Category Name"
 msgstr "Isem n teggayt"
 
 #. module: website_customer
-#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_classname
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__classname
 msgid "Class"
 msgstr ""
 
 #. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.opt_country
+msgid "Close"
+msgstr "Mdel"
+
+#. module: website_customer
+#: model:ir.model,name:website_customer.model_res_partner
+msgid "Contact"
+msgstr "Anermis"
+
+#. module: website_customer
 #: model_terms:ir.actions.act_window,help:website_customer.action_partner_tag_form
-msgid "Click to create a new partner tag."
+msgid "Create a new contact tag"
 msgstr ""
 
 #. module: website_customer
-#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_create_uid
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__create_uid
 msgid "Created by"
 msgstr "Yerna-t"
 
 #. module: website_customer
-#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_create_date
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__create_date
 msgid "Created on"
 msgstr "Yerna di"
 
 #. module: website_customer
-#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_display_name
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__display_name
 msgid "Display Name"
 msgstr ""
 
 #. module: website_customer
-#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_id
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__id
 msgid "ID"
 msgstr "Asulay"
 
@@ -79,26 +98,30 @@ msgid "Implemented By"
 msgstr ""
 
 #. module: website_customer
-#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag___last_update
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__is_published
+msgid "Is published"
+msgstr ""
+
+#. module: website_customer
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag____last_update
 msgid "Last Modified on"
 msgstr "Aleqqem aneggaru di"
 
 #. module: website_customer
-#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_write_uid
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__write_uid
 msgid "Last Updated by"
 msgstr "Aleqqem aneggaru sɣuṛ"
 
 #. module: website_customer
-#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_write_date
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__write_date
 msgid "Last Updated on"
 msgstr "Aleqqem aneggaru di"
 
 #. module: website_customer
 #: model_terms:ir.actions.act_window,help:website_customer.action_partner_tag_form
 msgid ""
-"Manage the partner tags to better classify them on your website.\n"
-"                    You can add the filter by tag on your website in the "
-"\"Customize\" menu."
+"Manage contact tags to better classify them for tracking and analysis "
+"purposes."
 msgstr ""
 
 #. module: website_customer
@@ -108,15 +131,9 @@ msgstr "Ulac agmuḍ"
 
 #. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.details
-#: model_terms:ir.ui.view,arch_db:website_customer.footer_custom
 #: model_terms:ir.ui.view,arch_db:website_customer.index
 msgid "Our References"
 msgstr "Timsisɣal-neɣ"
-
-#. module: website_customer
-#: model:ir.model,name:website_customer.model_res_partner
-msgid "Partner"
-msgstr "Amendid"
 
 #. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.view_partner_tag_form
@@ -127,16 +144,17 @@ msgstr "Tabzimt n Umendid"
 #: model:ir.model,name:website_customer.model_res_partner_tag
 msgid ""
 "Partner Tags - These tags can be used on website to find customers by "
-"sector, or ... "
+"sector, or ..."
 msgstr ""
 
 #. module: website_customer
-#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_partner_ids
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__partner_ids
 msgid "Partners"
 msgstr "Imendiden"
 
 #. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.references_block
+#: model:website.menu,name:website_customer.menu_customers
 msgid "References"
 msgstr "Timsisɣal"
 
@@ -144,6 +162,11 @@ msgstr "Timsisɣal"
 #: model_terms:ir.ui.view,arch_db:website_customer.opt_country_list
 msgid "References by Country"
 msgstr "Timsisɣal s tmurt"
+
+#. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.opt_industry_list
+msgid "References by Sectors of Activity"
+msgstr ""
 
 #. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.opt_tag_list
@@ -156,8 +179,18 @@ msgid "Search"
 msgstr "Nadi"
 
 #. module: website_customer
+#: model:ir.model.fields,help:website_customer.field_res_partner_tag__website_url
+msgid "The full URL to access the document through the website."
+msgstr ""
+
+#. module: website_customer
 #: model_terms:ir.ui.view,arch_db:website_customer.index
 msgid "Trusted by millions worldwide"
+msgstr ""
+
+#. module: website_customer
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__website_published
+msgid "Visible on current website"
 msgstr ""
 
 #. module: website_customer
@@ -169,7 +202,13 @@ msgid "Website Tags"
 msgstr ""
 
 #. module: website_customer
-#: model:ir.model.fields,field_description:website_customer.field_res_partner_website_tag_ids
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__website_url
+msgid "Website URL"
+msgstr "URL n usmel WEB"
+
+#. module: website_customer
+#: model:ir.model.fields,field_description:website_customer.field_res_partner__website_tag_ids
+#: model:ir.model.fields,field_description:website_customer.field_res_users__website_tag_ids
 msgid "Website tags"
 msgstr ""
 
@@ -182,12 +221,3 @@ msgstr "Takarḍa n umaḍal"
 #: model_terms:ir.ui.view,arch_db:website_customer.implemented_by_block
 msgid "reference(s))"
 msgstr "Tamsisɣelt(Timsisɣal))"
-
-#~ msgid "Partner Tags"
-#~ msgstr "Tibzimin n umendid"
-
-#~ msgid "Tags"
-#~ msgstr "Tibzimin"
-
-#~ msgid "Website URL"
-#~ msgstr "URL n usmel WEB"

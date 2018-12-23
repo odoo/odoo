@@ -3,19 +3,19 @@
 # * sale_quotation_builder
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2018
 # Cas Vissers <casvissers@brahoo.nl>, 2018
 # Thomas Pot <thomas@open2bizz.nl>, 2018
+# Martin Trigaux, 2018
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2018
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2018
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"POT-Creation-Date: 2018-12-19 08:21+0000\n"
 "PO-Revision-Date: 2018-08-24 09:24+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2018\n"
+"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2018\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,6 +27,15 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.so_template
 msgid "&amp;times;"
 msgstr "&amp;times;"
+
+#. module: sale_quotation_builder
+#: model_terms:ir.ui.view,arch_db:sale_quotation_builder.brand_promotion
+msgid ""
+",\n"
+"                an awesome"
+msgstr ""
+",\n"
+"                een geweldige"
 
 #. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.so_template
@@ -126,6 +135,16 @@ msgstr ""
 "het aangepaste sjabloon gebruiken."
 
 #. module: sale_quotation_builder
+#: model_terms:ir.ui.view,arch_db:sale_quotation_builder.brand_promotion
+msgid "Odoo"
+msgstr "Odoo"
+
+#. module: sale_quotation_builder
+#: model_terms:ir.ui.view,arch_db:sale_quotation_builder.brand_promotion
+msgid "Open Source CRM"
+msgstr "Open Source CRM"
+
+#. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.so_template
 msgid "Optional Product:"
 msgstr "Optioneel product:"
@@ -144,6 +163,11 @@ msgstr "Onze kwaliteit"
 #: model_terms:sale.order.template,website_description:sale_quotation_builder.sale_order_template_default
 msgid "Our Service"
 msgstr "Onze diensten"
+
+#. module: sale_quotation_builder
+#: model_terms:ir.ui.view,arch_db:sale_quotation_builder.brand_promotion
+msgid "Powered by"
+msgstr "Aangeboden door"
 
 #. module: sale_quotation_builder
 #: model_terms:sale.order.template,website_description:sale_quotation_builder.sale_order_template_default
@@ -172,13 +196,11 @@ msgid "Product:"
 msgstr "Product:"
 
 #. module: sale_quotation_builder
-#: model:ir.model.fields,field_description:sale_quotation_builder.field_product_product__quotation_description
 #: model:ir.model.fields,field_description:sale_quotation_builder.field_product_template__quotation_description
 msgid "Quotation Description"
 msgstr "Offerteomschrijving"
 
 #. module: sale_quotation_builder
-#: model:ir.model.fields,field_description:sale_quotation_builder.field_product_product__quotation_only_description
 #: model:ir.model.fields,field_description:sale_quotation_builder.field_product_template__quotation_only_description
 msgid "Quotation Only Description"
 msgstr "Omschrijving voor alleen de offerte"
@@ -219,14 +241,12 @@ msgid "Terms &amp; Conditions"
 msgstr "Algemene Voorwaarden"
 
 #. module: sale_quotation_builder
-#: model:ir.model.fields,help:sale_quotation_builder.field_product_product__quotation_only_description
 #: model:ir.model.fields,help:sale_quotation_builder.field_product_template__quotation_only_description
 #: model:ir.model.fields,help:sale_quotation_builder.field_sale_order_template_line__website_description
 msgid "The quotation description (not used on eCommerce)"
 msgstr "De offerte omschrijving (niet gebruikt voor eCommerce)"
 
 #. module: sale_quotation_builder
-#: model:ir.model.fields,help:sale_quotation_builder.field_product_product__quotation_description
 #: model:ir.model.fields,help:sale_quotation_builder.field_product_template__quotation_description
 msgid ""
 "This field uses the Quotation Only Description if it is defined, otherwise "

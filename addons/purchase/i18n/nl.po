@@ -1629,8 +1629,11 @@ msgid "Reporting"
 msgstr "Rapportages"
 
 #. module: purchase
+#: code:addons/purchase/models/purchase.py:276
 #: model:ir.actions.report,name:purchase.report_purchase_quotation
+#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchasequotation_document
+#, python-format
 msgid "Request for Quotation"
 msgstr "Offerte-aanvraag"
 
@@ -1883,7 +1886,7 @@ msgstr "Deze leveranciersfactuur is aangemaakt van: %s"
 #: code:addons/purchase/models/account_invoice.py:170
 #, python-format
 msgid "This vendor bill has been modified from: %s"
-msgstr "Deze leveranciersfactuur is aangepast van:"
+msgstr "Deze leveranciersfactuur is aangepast van: %s"
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order

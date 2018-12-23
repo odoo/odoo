@@ -3,14 +3,16 @@
 # * account_voucher
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2018
+# Muḥend Belqasem <belkacem77@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:52+0000\n"
-"PO-Revision-Date: 2017-09-20 09:52+0000\n"
-"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-08-24 09:15+0000\n"
+"Last-Translator: Muḥend Belqasem <belkacem77@gmail.com>, 2018\n"
 "Language-Team: Kabyle (https://www.transifex.com/odoo/teams/41243/kab/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,7 +21,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: account_voucher
-#: model:ir.model.fields,help:account_voucher.field_account_voucher_state
+#: model:ir.model.fields,help:account_voucher.field_account_voucher__state
 msgid ""
 " * The 'Draft' status is used when a user is encoding a new and unconfirmed Voucher.\n"
 " * The 'Pro-forma' status is used when the voucher does not have a voucher number.\n"
@@ -28,10 +30,10 @@ msgid ""
 msgstr ""
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_account_id
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_account_id
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__account_id
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__account_id
 msgid "Account"
-msgstr ""
+msgstr "Amiḍan"
 
 #. module: account_voucher
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
@@ -39,7 +41,7 @@ msgid "Account Date"
 msgstr ""
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_account_date
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__account_date
 msgid "Accounting Date"
 msgstr ""
 
@@ -49,14 +51,29 @@ msgid "Accounting Voucher"
 msgstr ""
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_price_subtotal
-msgid "Amount"
+#: model:ir.model,name:account_voucher.model_account_voucher_line
+msgid "Accounting Voucher Line"
 msgstr ""
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_account_analytic_id
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__message_needaction
+msgid "Action Needed"
+msgstr ""
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__price_subtotal
+msgid "Amount"
+msgstr "Azal"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__account_analytic_id
 msgid "Analytic Account"
 msgstr "Amiḍan n tusliṭ"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__analytic_tag_ids
+msgid "Analytic Tags"
+msgstr ""
 
 #. module: account_voucher
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
@@ -65,19 +82,24 @@ msgid "Are you sure you want to cancel this receipt?"
 msgstr ""
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_date
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__message_attachment_count
+msgid "Attachment Count"
+msgstr ""
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__date
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Bill Date"
-msgstr ""
+msgstr "Azemz n ufeter"
 
 #. module: account_voucher
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 msgid "Bill Information"
-msgstr ""
+msgstr "Talɣut n ufeter"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_reference
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__reference
 msgid "Bill Reference"
 msgstr ""
 
@@ -89,7 +111,7 @@ msgstr "Sefsex"
 #. module: account_voucher
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
 msgid "Cancel Receipt"
-msgstr ""
+msgstr "Sefsex Tanfult"
 
 #. module: account_voucher
 #: selection:account.voucher,state:0
@@ -97,48 +119,43 @@ msgid "Cancelled"
 msgstr "Ifsax"
 
 #. module: account_voucher
-#: code:addons/account_voucher/models/account_voucher.py:159
+#: code:addons/account_voucher/models/account_voucher.py:172
 #, python-format
 msgid "Cannot delete voucher(s) which are already opened or paid."
 msgstr ""
 
 #. module: account_voucher
-#: model_terms:ir.actions.act_window,help:account_voucher.action_sale_receipt
-msgid "Click to create a sale receipt."
-msgstr ""
-
-#. module: account_voucher
-#: model_terms:ir.actions.act_window,help:account_voucher.action_purchase_receipt
-msgid "Click to register a purchase receipt."
-msgstr ""
-
-#. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_company_id
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_company_id
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__company_id
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__company_id
 msgid "Company"
 msgstr "Takebbwanit"
 
 #. module: account_voucher
-#: model:ir.model.fields,help:account_voucher.field_account_voucher_company_id
-#: model:ir.model.fields,help:account_voucher.field_account_voucher_line_company_id
+#: model:ir.model.fields,help:account_voucher.field_account_voucher__company_id
+#: model:ir.model.fields,help:account_voucher.field_account_voucher_line__company_id
 msgid "Company related to this journal"
+msgstr "Société associée à ce journal"
+
+#. module: account_voucher
+#: model_terms:ir.actions.act_window,help:account_voucher.action_sale_receipt
+msgid "Create a new sale receipt"
 msgstr ""
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_create_uid
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_create_uid
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__create_uid
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__create_uid
 msgid "Created by"
 msgstr "Yerna-t"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_create_date
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_create_date
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__create_date
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__create_date
 msgid "Created on"
 msgstr "Yerna di"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_currency_id
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_currency_id
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__currency_id
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__currency_id
 msgid "Currency"
 msgstr "Tanfalit"
 
@@ -152,16 +169,16 @@ msgstr "Amsaɣ"
 #. module: account_voucher
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter
 msgid "Date"
-msgstr ""
+msgstr "Azemz"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_name
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__name
 msgid "Description"
 msgstr "Aglam"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_display_name
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_display_name
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__display_name
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__display_name
 msgid "Display Name"
 msgstr ""
 
@@ -171,7 +188,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Draft"
-msgstr ""
+msgstr "Arewway"
 
 #. module: account_voucher
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter
@@ -181,17 +198,32 @@ msgid "Draft Vouchers"
 msgstr ""
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_date_due
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__date_due
 msgid "Due Date"
-msgstr ""
+msgstr "Azemz n tagara"
 
 #. module: account_voucher
-#: model:ir.model.fields,help:account_voucher.field_account_voucher_account_date
+#: model:ir.model.fields,help:account_voucher.field_account_voucher__account_date
 msgid "Effective date for accounting entries"
 msgstr ""
 
 #. module: account_voucher
-#: model:ir.model.fields,help:account_voucher.field_account_voucher_line_sequence
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__message_follower_ids
+msgid "Followers"
+msgstr "Imeltaɣen"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__message_channel_ids
+msgid "Followers (Channels)"
+msgstr ""
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__message_partner_ids
+msgid "Followers (Partners)"
+msgstr ""
+
+#. module: account_voucher
+#: model:ir.model.fields,help:account_voucher.field_account_voucher_line__sequence
 msgid "Gives the sequence of this line when displaying the voucher."
 msgstr ""
 
@@ -203,13 +235,28 @@ msgid "Group By"
 msgstr "Sdukel s"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_id
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_id
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__id
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__id
 msgid "ID"
 msgstr "Asulay"
 
 #. module: account_voucher
-#: model:ir.model.fields,help:account_voucher.field_account_voucher_tax_correction
+#: model:ir.model.fields,help:account_voucher.field_account_voucher__message_unread
+msgid "If checked new messages require your attention."
+msgstr "Ma yeṛcem, iznan imaynuten suturen tamuɣli leqqayen."
+
+#. module: account_voucher
+#: model:ir.model.fields,help:account_voucher.field_account_voucher__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr ""
+
+#. module: account_voucher
+#: model:ir.model.fields,help:account_voucher.field_account_voucher__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr ""
+
+#. module: account_voucher
+#: model:ir.model.fields,help:account_voucher.field_account_voucher__tax_correction
 msgid ""
 "In case we have a rounding problem in the tax, use this field to correct it"
 msgstr ""
@@ -218,67 +265,124 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
 msgid "Internal Notes"
+msgstr "Iwenniten igensanen"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__message_is_follower
+msgid "Is Follower"
 msgstr ""
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_journal_id
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__journal_id
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Journal"
-msgstr ""
+msgstr "Aɣemis"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_move_id
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__move_id
 msgid "Journal Entry"
-msgstr ""
+msgstr "Taceqquft n tsiḍent"
 
 #. module: account_voucher
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
 msgid "Journal Items"
-msgstr ""
+msgstr "tira n tsiḍent"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher___last_update
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line___last_update
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher____last_update
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line____last_update
 msgid "Last Modified on"
 msgstr "Aleqqem aneggaru di"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_write_uid
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_write_uid
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__write_uid
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__write_uid
 msgid "Last Updated by"
 msgstr "Aleqqem aneggaru sɣuṛ"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_write_date
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_write_date
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__write_date
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__write_date
 msgid "Last Updated on"
 msgstr "Aleqqem aneggaru di"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_narration
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__message_main_attachment_id
+msgid "Main Attachment"
+msgstr ""
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__message_has_error
+msgid "Message Delivery error"
+msgstr ""
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__message_ids
+msgid "Messages"
+msgstr "Iznan"
+
+#. module: account_voucher
+#: code:addons/account_voucher/models/account_voucher.py:109
+#, python-format
+msgid "Missing Company"
+msgstr ""
+
+#. module: account_voucher
+#: code:addons/account_voucher/models/account_voucher.py:111
+#, python-format
+msgid "Missing Currency"
+msgstr ""
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__narration
 msgid "Notes"
-msgstr ""
+msgstr "Iwenniten"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_number
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__number
 msgid "Number"
+msgstr "Uṭṭun"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__message_needaction_counter
+msgid "Number of Actions"
 msgstr ""
 
 #. module: account_voucher
-#: model:ir.model.fields,help:account_voucher.field_account_voucher_line_tax_ids
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__message_has_error_counter
+msgid "Number of error"
+msgstr ""
+
+#. module: account_voucher
+#: model:ir.model.fields,help:account_voucher.field_account_voucher__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr ""
+
+#. module: account_voucher
+#: model:ir.model.fields,help:account_voucher.field_account_voucher__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr ""
+
+#. module: account_voucher
+#: model:ir.model.fields,help:account_voucher.field_account_voucher__message_unread_counter
+msgid "Number of unread messages"
+msgstr ""
+
+#. module: account_voucher
+#: model:ir.model.fields,help:account_voucher.field_account_voucher_line__tax_ids
 msgid "Only for tax excluded from price"
 msgstr ""
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_paid
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__paid
 msgid "Paid"
-msgstr ""
+msgstr "Ifra"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_partner_id
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__partner_id
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter
 msgid "Partner"
 msgstr "Amendid"
@@ -294,26 +398,31 @@ msgid "Pay Later"
 msgstr ""
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_pay_now
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__pay_now
 msgid "Payment"
+msgstr "Afru"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__name
+msgid "Payment Memo"
 msgstr ""
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_name
-msgid "Payment Reference"
-msgstr ""
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__payment_journal_id
+msgid "Payment Method"
+msgstr "Tarrayt n ufru"
 
 #. module: account_voucher
-#: code:addons/account_voucher/models/account_voucher.py:195
+#: code:addons/account_voucher/models/account_voucher.py:208
 #, python-format
 msgid "Please activate the sequence of selected journal !"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/models/account_voucher.py:198
+#: code:addons/account_voucher/models/account_voucher.py:211
 #, python-format
 msgid "Please define a sequence on the journal."
-msgstr ""
+msgstr "Ma ulac aɣilif, mudded-ed agzum i uɣemis agi."
 
 #. module: account_voucher
 #: selection:account.voucher,state:0
@@ -321,7 +430,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Posted"
-msgstr ""
+msgstr "Iɣbel"
 
 #. module: account_voucher
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter
@@ -333,27 +442,21 @@ msgstr ""
 #. module: account_voucher
 #: selection:account.voucher,state:0
 msgid "Pro-forma"
-msgstr ""
+msgstr "Pro-forma"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_product_id
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__product_id
 msgid "Product"
 msgstr "Afaris"
 
 #. module: account_voucher
 #: selection:account.voucher,voucher_type:0
 msgid "Purchase"
-msgstr ""
+msgstr "Tiɣin"
 
 #. module: account_voucher
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 msgid "Purchase Receipt"
-msgstr ""
-
-#. module: account_voucher
-#: model:ir.actions.act_window,name:account_voucher.action_purchase_receipt
-#: model:ir.ui.menu,name:account_voucher.menu_action_purchase_receipt
-msgid "Purchase Receipts"
 msgstr ""
 
 #. module: account_voucher
@@ -362,14 +465,27 @@ msgid "Purchase Voucher"
 msgstr ""
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_quantity
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__quantity
 msgid "Quantity"
 msgstr "Tanecta"
 
 #. module: account_voucher
+#: model:ir.actions.act_window,name:account_voucher.action_purchase_receipt
+#: model:ir.actions.act_window,name:account_voucher.action_sale_receipt
+#: model:ir.ui.menu,name:account_voucher.menu_action_purchase_receipt
+#: model:ir.ui.menu,name:account_voucher.menu_action_sale_receipt
+msgid "Receipts"
+msgstr "Irmasen"
+
+#. module: account_voucher
+#: model_terms:ir.actions.act_window,help:account_voucher.action_purchase_receipt
+msgid "Register a new purchase receipt"
+msgstr ""
+
+#. module: account_voucher
 #: selection:account.voucher,voucher_type:0
 msgid "Sale"
-msgstr ""
+msgstr "Aznuzu"
 
 #. module: account_voucher
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
@@ -379,13 +495,7 @@ msgstr "Talɣut n uznuzu"
 #. module: account_voucher
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
 msgid "Sales Receipt"
-msgstr ""
-
-#. module: account_voucher
-#: model:ir.actions.act_window,name:account_voucher.action_sale_receipt
-#: model:ir.ui.menu,name:account_voucher.menu_action_sale_receipt
-msgid "Sales Receipts"
-msgstr ""
+msgstr "Armis n tiɣin"
 
 #. module: account_voucher
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter
@@ -395,7 +505,7 @@ msgid "Search Vouchers"
 msgstr ""
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_sequence
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__sequence
 msgid "Sequence"
 msgstr "Agzum"
 
@@ -403,10 +513,10 @@ msgstr "Agzum"
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
 msgid "Set to Draft"
-msgstr ""
+msgstr "Rrit d arewway"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_state
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__state
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
@@ -424,42 +534,42 @@ msgid "Status changed"
 msgstr ""
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_tax_ids
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__tax_ids
 msgid "Tax"
-msgstr ""
+msgstr "Taẓeṭṭaṭ"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_tax_amount
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__tax_amount
 msgid "Tax Amount"
-msgstr ""
+msgstr "Azal n tẓeṭṭaṭ"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_tax_correction
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__tax_correction
 msgid "Tax Correction"
 msgstr ""
 
 #. module: account_voucher
-#: model:ir.model.fields,help:account_voucher.field_account_voucher_paid
+#: model:ir.model.fields,help:account_voucher.field_account_voucher__paid
 msgid "The Voucher has been totally paid."
 msgstr ""
 
 #. module: account_voucher
-#: model:ir.model.fields,help:account_voucher.field_account_voucher_line_account_id
+#: model:ir.model.fields,help:account_voucher.field_account_voucher_line__account_id
 msgid "The income or expense account related to the selected product."
-msgstr ""
+msgstr "Le compte de revenu ou de dépense associé à l'article sélectionné."
 
 #. module: account_voucher
-#: model:ir.model.fields,help:account_voucher.field_account_voucher_reference
+#: model:ir.model.fields,help:account_voucher.field_account_voucher__reference
 msgid "The partner reference of this document."
 msgstr ""
 
 #. module: account_voucher
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter
 msgid "To Review"
-msgstr ""
+msgstr "À vérifier"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_amount
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__amount
 msgid "Total"
 msgstr "Asemday"
 
@@ -467,23 +577,33 @@ msgstr "Asemday"
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_tree
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_tree_purchase
 msgid "Total Amount"
-msgstr ""
+msgstr "Azal asemday"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_voucher_type
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__voucher_type
 msgid "Type"
-msgstr ""
+msgstr "Tawsit"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_price_unit
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__price_unit
 msgid "Unit Price"
 msgstr "ssuma n yiwen"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__message_unread
+msgid "Unread Messages"
+msgstr "Iznan ur neţwaɣer-ara"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr ""
 
 #. module: account_voucher
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
 msgid "Validate"
-msgstr ""
+msgstr "Seɣbel"
 
 #. module: account_voucher
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
@@ -498,8 +618,8 @@ msgid "Vendor Voucher"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/models/account_voucher.py:97
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_voucher_id
+#: code:addons/account_voucher/models/account_voucher.py:116
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line__voucher_id
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
@@ -515,8 +635,7 @@ msgid "Voucher Entries"
 msgstr ""
 
 #. module: account_voucher
-#: model:ir.model,name:account_voucher.model_account_voucher_line
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_ids
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__line_ids
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
 #: model_terms:ir.ui.view,arch_db:account_voucher.view_voucher_line_form
@@ -535,6 +654,16 @@ msgid "Vouchers Entries"
 msgstr ""
 
 #. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher__website_message_ids
+msgid "Website Messages"
+msgstr "Iznan n n usmel  Web"
+
+#. module: account_voucher
+#: model:ir.model.fields,help:account_voucher.field_account_voucher__website_message_ids
+msgid "Website communication history"
+msgstr "Amazray n Taywalt n usmel  Web"
+
+#. module: account_voucher
 #: model_terms:ir.actions.act_window,help:account_voucher.action_purchase_receipt
 msgid ""
 "When the purchase receipt is confirmed, you can record the\n"
@@ -549,7 +678,7 @@ msgid ""
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/models/account_voucher.py:377
+#: code:addons/account_voucher/models/account_voucher.py:457
 #, python-format
-msgid "You must first select a partner!"
+msgid "You must first select a partner."
 msgstr ""

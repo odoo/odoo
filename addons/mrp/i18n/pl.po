@@ -14,23 +14,23 @@
 # Piotr Cierkosz <piotr.w.cierkosz@gmail.com>, 2018
 # Radosław Biegalski <radoslaw.biegalski@openglobe.pl>, 2018
 # Maja Stawicka <mjstwck@wp.pl>, 2018
-# zbik2607 <darek@krokus.com.pl>, 2018
 # Tomasz Leppich <t.leppich@gmail.com>, 2018
 # Zdzisław Krajewski <zdzichucb@gmail.com>, 2018
 # Marcin Młynarczyk <mlynarczyk@gmail.com>, 2018
 # Piotr Szlązak <szlazakpiotr@gmail.com>, 2018
 # Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2018
 # Martin Trigaux, 2018
-# Paweł Wodyński <pw@myodoo.pl>, 2018
 # Maksym <ms@myodoo.pl>, 2018
+# Paweł Wodyński <pw@myodoo.pl>, 2018
+# zbik2607 <darek@krokus.com.pl>, 2018
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-24 09:34+0000\n"
+"POT-Creation-Date: 2018-12-19 08:20+0000\n"
 "PO-Revision-Date: 2018-08-24 09:21+0000\n"
-"Last-Translator: Maksym <ms@myodoo.pl>, 2018\n"
+"Last-Translator: zbik2607 <darek@krokus.com.pl>, 2018\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2255,7 +2255,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:mrp.mrp_workcenter_productivity_report_oee
 #: model:ir.ui.menu,name:mrp.menu_mrp_workcenter_productivity_report
 msgid "Overall Equipment Effectiveness"
-msgstr ""
+msgstr "Ogólna Efektywność Sprzętowa"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__oee
@@ -2585,6 +2585,7 @@ msgid "Product to Track"
 msgstr ""
 
 #. module: mrp
+#: model:ir.model,name:mrp.model_mrp_production
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce__production_id
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
@@ -2610,7 +2611,6 @@ msgstr "Strefa dla produkcji"
 
 #. module: mrp
 #: model:ir.actions.report,name:mrp.action_report_production_order
-#: model:ir.model,name:mrp.model_mrp_production
 #: model:ir.model.fields,field_description:mrp.field_stock_move_line__production_id
 #: model_terms:ir.ui.view,arch_db:mrp.stock_production_type_kanban
 msgid "Production Order"
@@ -2667,7 +2667,7 @@ msgstr "Produktywność"
 #: model:ir.actions.act_window,name:mrp.mrp_workcenter_productivity_report_blocked
 #: model:ir.ui.menu,name:mrp.menu_mrp_workcenter_productivity_loss
 msgid "Productivity Losses"
-msgstr ""
+msgstr "Straty produktywności"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.product_template_action
@@ -3460,14 +3460,6 @@ msgid "There's no product move yet"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_bom.py:78
-#, python-format
-msgid ""
-"This BoM is used in some Manufacturing Orders that are still open. You "
-"should rather archive this BoM and create a new one."
-msgstr ""
-
-#. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__tz
 msgid ""
 "This field is used in order to define in which timezone the resources will "
@@ -3672,6 +3664,11 @@ msgstr "Raport śledzenia"
 #: model:ir.model.fields,field_description:mrp.field_stock_move__needs_lots
 msgid "Tracking"
 msgstr "Śledzenie"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_stock_picking
+msgid "Transfer"
+msgstr "Pobierz"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__type
@@ -4155,7 +4152,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_workcenter_productivity_loss
 msgid "Workcenter Productivity Losses"
-msgstr ""
+msgstr "Straty produktywności Centrum roboczego"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__working_state
@@ -4176,7 +4173,7 @@ msgstr "Godziny pracy"
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_view_resource_calendar_search_mrp
 msgid "Working Times"
-msgstr ""
+msgstr "Czas pracy"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__working_user_ids
@@ -4400,8 +4397,8 @@ msgid "minute(s)"
 msgstr "minut"
 
 #. module: mrp
-#: code:addons/mrp/report/mrp_report_bom_structure.py:224
 #: code:addons/mrp/report/mrp_report_bom_structure.py:234
+#: code:addons/mrp/report/mrp_report_bom_structure.py:244
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view

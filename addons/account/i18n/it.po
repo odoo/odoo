@@ -21,19 +21,19 @@
 # Federico Castellano <castellano.federico@outlook.com>, 2018
 # Paolo Valier, 2018
 # David Minneci <david@numeko.it>, 2018
-# Martin Trigaux, 2018
 # efraimbiffi <eab@odoo.com>, 2018
 # Léonie Bouchat <lbo@odoo.com>, 2018
-# Sergio Zanchetta <primes2h@gmail.com>, 2018
 # Lorenzo Battistini <lorenzo.battistini@agilebg.com>, 2018
+# Martin Trigaux, 2018
+# Sergio Zanchetta <primes2h@gmail.com>, 2018
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 06:48+0000\n"
+"POT-Creation-Date: 2018-12-19 08:20+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
-"Last-Translator: Lorenzo Battistini <lorenzo.battistini@agilebg.com>, 2018\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2018\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -120,16 +120,6 @@ msgstr "→ Riconcilia"
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
 msgid "-> View partially reconciled entries"
 msgstr "→ Registrazioni parzialmente riconciliate "
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.account_dashboard_onboarding_panel
-msgid "/account/static/src/img/account_dashboard_onboarding_bg.jpg"
-msgstr "/account/static/src/img/account_dashboard_onboarding_bg.jpg"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.account_invoice_onboarding_panel
-msgid "/account/static/src/img/account_invoice_onboarding_bg.jpg"
-msgstr "/account/static/src/img/account_invoice_onboarding_bg.jpg"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_15days
@@ -825,10 +815,8 @@ msgstr ""
 
 #. module: account
 #: sql_constraint:account.fiscal.position.tax:0
-msgid "A tax fiscal position could be defined only once time on same taxes."
+msgid "A tax fiscal position could be defined only one time on same taxes."
 msgstr ""
-"Una posizione fiscale può essere definita una sola volta sulla stessa "
-"imposta."
 
 #. module: account
 #: model:res.groups,name:account.group_warning_account
@@ -865,7 +853,7 @@ msgid "Account"
 msgstr "Conto"
 
 #. module: account
-#: code:addons/account/models/account_move.py:913
+#: code:addons/account/models/account_move.py:914
 #, python-format
 msgid ""
 "Account %s (%s) does not allow reconciliation. First change the "
@@ -882,7 +870,7 @@ msgstr "Scheda Contabile"
 #. module: account
 #: model:ir.model,name:account.model_account_cash_rounding
 msgid "Account Cash Rounding"
-msgstr ""
+msgstr "Arrotondamento di cassa del conto"
 
 #. module: account
 #: model:ir.model,name:account.model_account_chart_template
@@ -1377,9 +1365,9 @@ msgid ""
 " with their mobile banking application. EPC QR codes are used by many "
 "European banks to process SEPA payments."
 msgstr ""
-"Aggiungi un EPC QR codice alla tua fattura in modo che i tuoi clienti "
-"possano pagare instantaneamente con le loro applicazioni di mobile banking. "
-"I codici EPC QR sono usati da molte banche Europee per i pagamenti SEPA."
+"Aggiungere un codice QR EPC alle fatture per permettere ai clienti di pagare"
+" in modo istantaneo dalle applicazioni per \"mobile banking\". I codici QR "
+"EPC sono usati da molte banche europee per elaborare i pagamenti SEPA."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -1732,9 +1720,8 @@ msgstr "Importo:"
 #. module: account
 #: sql_constraint:account.fiscal.position.account:0
 msgid ""
-"An account fiscal position could be defined only once time on same accounts."
+"An account fiscal position could be defined only one time on same accounts."
 msgstr ""
-"Una posizione fiscale può essere definita una sola volta sullo stesso conto."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_form
@@ -2119,11 +2106,6 @@ msgstr "Saldo"
 #: model:ir.model.fields,field_description:account.field_account_move_line__balance_cash_basis
 msgid "Balance Cash Basis"
 msgstr "Saldo Finanziario"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_form
-msgid "Balance Sheet"
-msgstr "Stato patrimoniale"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__balance_end
@@ -2794,7 +2776,7 @@ msgstr "Modello del piano"
 #. module: account
 #: model:ir.actions.act_window,name:account.open_account_charts_modules
 msgid "Chart Templates"
-msgstr "Modelli del piano"
+msgstr "Modelli piano"
 
 #. module: account
 #: code:addons/account/models/company.py:320
@@ -2814,7 +2796,7 @@ msgstr "Modello del piano dei conti"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_chart_template_form
 msgid "Chart of Accounts Templates"
-msgstr "Modelli del piano dei conti"
+msgstr "Modelli piano dei conti"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_chart_of_account_step
@@ -3060,7 +3042,7 @@ msgstr "Rendiconto ordinario"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__invoice_reference_type
 msgid "Communication"
-msgstr "Comunicazione"
+msgstr "Informazione"
 
 #. module: account
 #: model:ir.model,name:account.model_res_company
@@ -3317,6 +3299,11 @@ msgid "Counterpart Account"
 msgstr "Conto di Contropartita"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
+msgid "Counterpart Values"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__country_id
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_template__country_id
 msgid "Country"
@@ -3353,12 +3340,12 @@ msgstr "Creare un conto bancario"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_invoice_out_refund
 msgid "Create a credit note"
-msgstr "Creare una nota di credito"
+msgstr "Crea una nota di credito"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_invoice_tree1
 msgid "Create a customer invoice"
-msgstr "Creare una fattura cliente"
+msgstr "Crea una fattura cliente"
 
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
@@ -3384,7 +3371,7 @@ msgstr "Crea un nuovo cash log"
 #: model_terms:ir.actions.act_window,help:account.action_account_fiscal_position_form
 #: model_terms:ir.actions.act_window,help:account.action_account_fiscal_position_template_form
 msgid "Create a new fiscal position"
-msgstr "Creare una nuova posizione fiscale"
+msgstr "Crea una nuova posizione fiscale"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_incoterms_tree
@@ -3409,12 +3396,12 @@ msgstr "Crea un nuovo prodotto vendibile"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_tax_form
 msgid "Create a new tax"
-msgstr "Creare una nuova imposta"
+msgstr "Crea una nuova imposta"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_invoice_in_refund
 msgid "Create a vendor credit note"
-msgstr "Creare una nota di credito fornitore"
+msgstr "Crea una nota di credito fornitore"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.tax_adjustments_wizard
@@ -3690,15 +3677,14 @@ msgid "Currency Rate"
 msgstr "Tasso di cambio"
 
 #. module: account
-#: code:addons/account/models/account_move.py:1429
-#: code:addons/account/models/account_move.py:1441
+#: code:addons/account/models/account_move.py:1428
+#: code:addons/account/models/account_move.py:1440
 #, python-format
 msgid "Currency exchange rate difference"
 msgstr "Differenza cambio valuta"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_current_assets
-#: model_terms:ir.ui.view,arch_db:account.view_account_form
 msgid "Current Assets"
 msgstr "Attività correnti"
 
@@ -3967,7 +3953,7 @@ msgstr "Sequenza dedicata per note di credito"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__invoice_reference_type
 msgid "Default Communication Type"
-msgstr "Tipo di comunicazione predefinito"
+msgstr "Tipo di informazione predefinito"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__default_credit_account_id
@@ -3988,7 +3974,7 @@ msgstr "Imposta predefinita su acquisti"
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__invoice_reference_type
 msgid "Default Reference Type on Invoices."
-msgstr "Tipo di Referenza sulla fattura"
+msgstr "Tipo di riferimento predefinito sulle fatture."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_sale_tax_id
@@ -4017,7 +4003,7 @@ msgstr "Incoterm predefinito"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Default payment communication on customer invoices"
-msgstr "Metodo di comunicazione preimpostato per le fatture clienti"
+msgstr "Informazione di pagamento preimpostata per le fatture cliente"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -4101,7 +4087,6 @@ msgstr "Disattivato"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_depreciation
-#: model_terms:ir.ui.view,arch_db:account.view_account_form
 msgid "Depreciation"
 msgstr "Ammortamenti"
 
@@ -4525,7 +4510,6 @@ msgstr "Righe registrazione"
 #. module: account
 #: selection:account.account.type,internal_group:0
 #: model:account.account.type,name:account.data_account_type_equity
-#: model_terms:ir.ui.view,arch_db:account.view_account_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
 msgid "Equity"
 msgstr "Patrimonio netto"
@@ -4577,7 +4561,6 @@ msgstr "Conto di costo nello schema di prodotto"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_expenses
-#: model_terms:ir.ui.view,arch_db:account.view_account_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
 msgid "Expenses"
 msgstr "Costi"
@@ -4722,6 +4705,16 @@ msgstr "Anno fiscale 2018"
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_fiscal_year
 msgid "Fiscal Years"
 msgstr "Anni fiscali"
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_financial_year_op__fiscalyear_last_day
+msgid "Fiscal year last day."
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_financial_year_op__fiscalyear_last_month
+msgid "Fiscal year last month."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_year_op__fiscalyear_last_day
@@ -4909,11 +4902,6 @@ msgstr "Future"
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Future Activities"
 msgstr "Attività future"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_form
-msgid "GROSS PROFIT"
-msgstr "UTILE LORDO"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__income_currency_exchange_account_id
@@ -5104,11 +5092,6 @@ msgstr "Nascondere l'opzione per cassa"
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_chatter
 msgid "History"
 msgstr "Cronologia"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_form
-msgid "How do account types affect your reports?"
-msgstr "Come i tipi di conto influenzano i rendiconti"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -5500,7 +5483,6 @@ msgstr "Compreso nel prezzo"
 #. module: account
 #: selection:account.account.type,internal_group:0
 #: model:account.account.type,name:account.data_account_type_revenue
-#: model_terms:ir.ui.view,arch_db:account.view_account_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
 msgid "Income"
 msgstr "Ricavi"
@@ -5666,7 +5648,13 @@ msgid "Invalid \"Zip Range\", please configure it properly."
 msgstr "Intervallo CAP non valido, configurarlo correttamente."
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1314
+#: code:addons/account/models/company.py:106
+#, python-format
+msgid "Invalid fiscal year last day"
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_invoice.py:1334
 #: model:ir.model,name:account.model_account_invoice
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__invoice_id
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax__invoice_id
@@ -6106,7 +6094,6 @@ msgstr "Etichetta movimento contabile"
 #: model:ir.actions.act_window,name:account.action_move_line_select
 #: model:ir.actions.act_window,name:account.action_move_line_select_by_partner
 #: model:ir.actions.act_window,name:account.action_move_line_select_by_type
-#: model:ir.actions.act_window,name:account.action_move_line_select_tax_audit
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__journal_entry_ids
 #: model:ir.model.fields,field_description:account.field_account_move__line_ids
 #: model:ir.model.fields,field_description:account.field_res_partner__journal_item_count
@@ -6119,6 +6106,11 @@ msgstr "Etichetta movimento contabile"
 #, python-format
 msgid "Journal Items"
 msgstr "Movimenti contabili"
+
+#. module: account
+#: model:ir.actions.act_window,name:account.action_move_line_select_tax_audit
+msgid "Journal Items for Tax Audit"
+msgstr ""
 
 #. module: account
 #. openerp-web
@@ -6604,7 +6596,7 @@ msgstr "Registra una nota interna"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_invoice_layout_step
 msgid "Looks great!"
-msgstr "Sembra Perfetto!"
+msgstr "Sembra perfetto!"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:175
@@ -6870,36 +6862,6 @@ msgid "Messages"
 msgstr "Messaggi"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_form
-msgid "Minus Cost of Revenue"
-msgstr "- costo del venduto"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_form
-msgid "Minus Credit Card Accounts"
-msgstr "- conti carta di credito"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_form
-msgid "Minus Current Liabilities"
-msgstr "- passività correnti"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_form
-msgid "Minus Expenses"
-msgstr "- spese"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_form
-msgid "Minus Non-Current Liabilities"
-msgstr "- passività non correnti"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_form
-msgid "Minus Payable Accounts"
-msgstr "- debiti verso fornitori"
-
-#. module: account
 #: selection:account.journal,type:0
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_search
 msgid "Miscellaneous"
@@ -7003,16 +6965,6 @@ msgid "My Invoices"
 msgstr "Fatture"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_form
-msgid "NET ASSETS"
-msgstr "ATTIVO NETTO"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_form
-msgid "NET PROFIT"
-msgstr "UTILE NETTO"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__name
 #: model:ir.model.fields,field_description:account.field_account_account_tag__name
 #: model:ir.model.fields,field_description:account.field_account_account_template__name
@@ -7090,7 +7042,7 @@ msgstr "Nuovo termine di pagamento atteso:"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr "Scadenza Prossima Attività"
+msgstr "Scadenza prossima attività"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice__activity_summary
@@ -7681,7 +7633,7 @@ msgstr "Percorso"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__parent_state
 msgid "Parent State"
-msgstr ""
+msgstr "Stato controparte"
 
 #. module: account
 #: model:ir.model,name:account.model_account_partial_reconcile
@@ -8112,31 +8064,6 @@ msgid "Please use the following communication for your payment :"
 msgstr "Usare la seguente causale per il pagamento:"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_form
-msgid "Plus Bank"
-msgstr "+ banca"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_form
-msgid "Plus Fixed Assets"
-msgstr "+ attività immobilizzate"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_form
-msgid "Plus Net Profit"
-msgstr "+ utile netto"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_form
-msgid "Plus Non-Current Assets"
-msgstr "+ attività non correnti"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_form
-msgid "Plus Other Income"
-msgstr "+ altri ricavi"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice__access_url
 msgid "Portal Access URL"
 msgstr "URL di accesso al portale"
@@ -8214,7 +8141,6 @@ msgstr ""
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_prepayments
-#: model_terms:ir.ui.view,arch_db:account.view_account_form
 msgid "Prepayments"
 msgstr "Risconti attivi"
 
@@ -8318,11 +8244,6 @@ msgid "Profit"
 msgstr "utili"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_form
-msgid "Profit &amp; Loss"
-msgstr "Conto economico"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__profit_account_id
 msgid "Profit Account"
 msgstr "Conto utili"
@@ -8351,6 +8272,8 @@ msgstr ""
 msgid ""
 "Programming error: wizard action executed without active_ids in context."
 msgstr ""
+"Errore di programmazione: wizard action executed without active_ids in "
+"context."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_chart_template_form
@@ -8441,7 +8364,6 @@ msgid "Receivable Account"
 msgstr "Crediti verso clienti"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
 msgid "Receivable Accounts"
 msgstr "Crediti verso clienti"
@@ -8756,7 +8678,7 @@ msgstr "Responsabile"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice__activity_user_id
 msgid "Responsible User"
-msgstr "Utente Responsabile"
+msgstr "Utente responsabile"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_partner_category_ids
@@ -8918,7 +8840,7 @@ msgstr "Vendite"
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_onboarding_sale_tax_form
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Sales Tax"
-msgstr "Imposta su vendita"
+msgstr "Imposta su vendite"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_open_account_onboarding_sale_tax
@@ -9125,10 +9047,10 @@ msgid ""
 "Select 'Cash' or 'Bank' for journals that are used in customer or vendor payments.\n"
 "Select 'General' for miscellaneous operations journals."
 msgstr ""
-"Selezionare 'Vendita' per registri fatture clienti.\n"
-"Selezionare 'Acquisto' per registri fatture fornitori.\n"
-"Selezionare 'Cassa' o 'Banca' per registri da usare per pagamenti da clienti o a fornitori.\n"
-"Selezionare 'Generale' per registri di operazioni varie."
+"Selezionare \"Vendita\" per registri fatture clienti.\n"
+"Selezionare \"Acquisto\" per registri fatture fornitori.\n"
+"Selezionare \"Cassa\" o \"Banca\" per registri da usare per pagamenti clienti o fornitori.\n"
+"Selezionare \"Generale\" per registri operazioni varie."
 
 #. module: account
 #. openerp-web
@@ -9146,8 +9068,8 @@ msgstr "Selezionare una fattura fornitore precedente"
 #: model:ir.model.fields,help:account.field_account_payment_term_line__value
 msgid "Select here the kind of valuation related to this payment terms line."
 msgstr ""
-"Selezionare qui il tipo di valutaizone relativo a questa riga di termine di "
-"pagaemnto"
+"Selezionare il tipo di valutazione relativo a questa riga di termine di "
+"pagamento."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -9631,10 +9553,15 @@ msgid "Subtype"
 msgstr "Sottotipo"
 
 #. module: account
-#: selection:account.reconcile.model,rule_type:0
 #: selection:account.reconcile.model.template,rule_type:0
-#: code:addons/account/models/account_reconcile_model.py:20
 #: code:addons/account/models/chart_template.py:933
+#, python-format
+msgid "Suggest a write-off."
+msgstr ""
+
+#. module: account
+#: selection:account.reconcile.model,rule_type:0
+#: code:addons/account/models/account_reconcile_model.py:20
 #, python-format
 msgid "Suggest counterpart values."
 msgstr ""
@@ -9643,16 +9570,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Supplier Payments"
 msgstr "Pagamenti fornitore"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_form
-msgid "TOTAL ASSETS"
-msgstr "TOTALE ATTIVO"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_form
-msgid "TOTAL EQUITY"
-msgstr "TOTALE PATRIMONIO NETTO"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__tag_ids
@@ -10363,7 +10280,15 @@ msgstr ""
 "fattura"
 
 #. module: account
-#: code:addons/account/models/account.py:542
+#: code:addons/account/models/account_bank_statement.py:335
+#, python-format
+msgid ""
+"The currency of the bank statement line must be different than the statement"
+" currency."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account.py:551
 #, python-format
 msgid ""
 "The currency of the journal should be the same than the default credit "
@@ -10373,7 +10298,7 @@ msgstr ""
 "predefinito."
 
 #. module: account
-#: code:addons/account/models/account.py:544
+#: code:addons/account/models/account.py:553
 #, python-format
 msgid ""
 "The currency of the journal should be the same than the default debit "
@@ -10467,15 +10392,7 @@ msgstr ""
 "dell'azienda."
 
 #. module: account
-#: model:ir.model.fields,help:account.field_account_financial_year_op__fiscalyear_last_day
-#: model:ir.model.fields,help:account.field_account_financial_year_op__fiscalyear_last_month
-msgid ""
-"The last day of the month will be taken if the chosen day doesn't exist."
-msgstr ""
-"Se il giorno scelto non esiste verrà considerato l'ultimo giorno del mese."
-
-#. module: account
-#: code:addons/account/models/account_invoice.py:1892
+#: code:addons/account/models/account_invoice.py:1913
 #, python-format
 msgid "The last line of a Payment Term should have the Balance type."
 msgstr ""
@@ -10593,8 +10510,8 @@ msgid ""
 "The payment communication that will be automatically populated once the "
 "invoice validation. You can also write a free communication."
 msgstr ""
-"La comunicazione di pagamento che verrà generata automaticamente al momento "
-"della convalida della fattura. Puoi anche scrivere una comunicazione libera."
+"L'informazione di pagamento che verrà generata automaticamente dopo la "
+"validazione della fattura. È possibile anche scrivere un testo libero."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -11255,7 +11172,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__tracking_value_ids
 msgid "Tracking values"
-msgstr "Valori Tracciamento"
+msgstr "Tracciamento valori"
 
 #. module: account
 #. openerp-web
@@ -11302,6 +11219,7 @@ msgstr "Trasferimenti"
 #: model:ir.model.fields,field_description:account.field_account_account_type__type
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__journal_type
 #: model:ir.model.fields,field_description:account.field_account_invoice__type
+#: model:ir.model.fields,field_description:account.field_account_invoice_line__invoice_type
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__type
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__message_type
 #: model:ir.model.fields,field_description:account.field_account_journal__type
@@ -11871,17 +11789,12 @@ msgid "Write-off Amount"
 msgstr ""
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
-msgid "Counterpart Values"
-msgstr ""
-
-#. module: account
 #: sql_constraint:account.move.line:0
 msgid "Wrong credit or debit value in accounting entry !"
 msgstr "Valore avere o dare errato nella registrazione contabile."
 
 #. module: account
-#: code:addons/account/models/account_move.py:907
+#: code:addons/account/models/account_move.py:908
 #, python-format
 msgid "You are trying to reconcile some entries that are already reconciled."
 msgstr ""
@@ -11909,6 +11822,8 @@ msgid ""
 "You can not delete payment terms as other records still reference it. "
 "However, you can archive it."
 msgstr ""
+"Impossibile eliminare il termine di pagamento, è referenziato da altri "
+"record. Può essere comunque archiviato."
 
 #. module: account
 #: code:addons/account/models/account_fiscal_year.py:55
@@ -11941,7 +11856,7 @@ msgid ""
 "invoices, once validated, to help the customer to refer to that particular "
 "invoice when making the payment."
 msgstr ""
-"Qui è possibile inserire la comunicazione predefinita che comparirà nelle "
+"Qui è possibile impostare l'informazione predefinita che comparirà nelle "
 "fatture dopo la validazione, per fornire al cliente un riferimento a una "
 "specifica fattura al momento del pagamento."
 
@@ -12312,16 +12227,6 @@ msgid "Zip Range To"
 msgstr "Intervallo CAP a"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.account_dashboard_onboarding_panel
-msgid "action_close_account_dashboard_onboarding"
-msgstr "action_close_account_dashboard_onboarding"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.account_invoice_onboarding_panel
-msgid "action_close_account_invoice_onboarding"
-msgstr "action_close_account_invoice_onboarding"
-
-#. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_payment.xml:17
 #, python-format
@@ -12396,16 +12301,6 @@ msgid "o_manual_statement"
 msgstr "o_manual_statement"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.account_invoice_onboarding_panel
-msgid "o_onboarding_blue"
-msgstr "o_onboarding_blue"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.account_dashboard_onboarding_panel
-msgid "o_onboarding_orange"
-msgstr "o_onboarding_orange"
-
-#. module: account
 #: selection:account.payment.term.line,option:0
 msgid "of the current month"
 msgstr "del mese in corso"
@@ -12438,12 +12333,6 @@ msgstr "modelli di riconciliazione"
 #, python-format
 msgid "remaining)"
 msgstr "rimasti)"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.account_dashboard_onboarding_panel
-#: model_terms:ir.ui.view,arch_db:account.account_invoice_onboarding_panel
-msgid "res.company"
-msgstr "res.company"
 
 #. module: account
 #. openerp-web

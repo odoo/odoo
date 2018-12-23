@@ -49,6 +49,8 @@ msgid ""
 "${object.company_id.name} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 msgstr ""
+"${object.company_id.name} ${object.state in ('draft', 'sent') a 'Nabídka' "
+"nebo 'Objednávka'} (Ref ${object.name or 'n/a' })"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -265,7 +267,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<span>Discount</span>"
-msgstr ""
+msgstr "<span>Sleva</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -743,6 +745,9 @@ msgid ""
 "confirming orders straight away. This will add specific action buttons to "
 "your dashboard."
 msgstr ""
+"Toto políčko zaškrtněte, pokud odesíláte objednávky svým zákazníkům, než aby"
+" jste okamžitě potvrdili objednávky. Tím se na hlavním panelu přidáte "
+"konkrétní tlačítka akcí."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_crm_team__use_invoices
@@ -759,7 +764,7 @@ msgstr ""
 #: code:addons/sale/static/src/js/tour.js:41
 #, python-format
 msgid "Click here to add some products or services to your quotation."
-msgstr ""
+msgstr "Klikněte zde pro přidání některých produktů nebo služeb do nabídky."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
@@ -1091,7 +1096,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__use_quotation_validity_days
 msgid "Default Quotation Validity"
-msgstr ""
+msgstr "Výchozí platnost nabídky"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__quotation_validity_days
@@ -1196,7 +1201,7 @@ msgstr "Podrobnosti"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_website_sale_digital
 msgid "Digital Content"
-msgstr ""
+msgstr "Digitální zboží"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__discount
@@ -1717,7 +1722,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "je Sledující"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__is_downpayment
@@ -2733,7 +2738,7 @@ msgstr "Nabídka odeslána"
 #: code:addons/sale/controllers/portal.py:159
 #, python-format
 msgid "Quotation viewed by customer"
-msgstr ""
+msgstr "Nabídka viditelná zákazníkem"
 
 #. module: sale
 #: code:addons/sale/models/sales_team.py:101
@@ -2755,7 +2760,7 @@ msgstr "Nabídky"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Quotations &amp; Orders"
-msgstr ""
+msgstr "Nabídky &amp; Objednávky"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_quotation_salesteam
@@ -2792,7 +2797,7 @@ msgstr "Odkaz na dokument, který generoval tento požadavek zakázky."
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Reject This Quotation"
-msgstr ""
+msgstr "Odmítnout tuto nabídku"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__remaining_validity_days
@@ -3083,7 +3088,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_sample_quotation_step
 msgid "Sample Quotation"
-msgstr ""
+msgstr "Ukázka nabídky"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -3191,7 +3196,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Set a default validity on your quotations"
-msgstr ""
+msgstr "Nastavte výchozí platnost vašich nabidek"
 
 #. module: sale
 #. openerp-web
@@ -3422,6 +3427,7 @@ msgid ""
 "Tell us why you are refusing this quotation, this will help us improve our "
 "services."
 msgstr ""
+"Řekněte nám, proč odmítáte tuto nabídku, to nám pomůže zlepšit naše služby."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__sale_note
@@ -3553,7 +3559,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
 msgid "There are currently no quotations for your account."
-msgstr ""
+msgstr "V současné době neexistují žádné nebídky pro váš účet."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3637,6 +3643,11 @@ msgid ""
 "invoiced yet. If you want to analyse your turnover, you should use the "
 "Invoice Analysis report in the Accounting application."
 msgstr ""
+"Tento přehled provádí analýzu vašich nabídek. Analýza zkontrolujte příjmy z "
+"prodeje a seřadí je podle různých skupinových kritérií (prodavač, partner, "
+"produkt atd.). Tuto zprávu použijte k analýze prodeje, která ještě nebyla "
+"fakturována. Pokud chcete analyzovat svůj obrat, měli byste použít přehled "
+"Analýza faktur v aplikaci Účtování."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_order_report_so_salesteam
@@ -3872,7 +3883,7 @@ msgstr ""
 #: code:addons/sale/static/src/js/tour.js:79
 #, python-format
 msgid "Use this menu to access quotations, sales orders and customers."
-msgstr ""
+msgstr "Toto menu použijte pro přístup k nabídkám, objednávkám a zákazníkům."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_custom_attribute_value_ids
@@ -3900,6 +3911,8 @@ msgid ""
 "Validity date of the quotation, after this date, the customer won't be able "
 "to validate the quotation online."
 msgstr ""
+"Datum platnosti nabídky po tomto datu, zákazník nebude moci potvrdit nabídku"
+" online."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3983,6 +3996,8 @@ msgid ""
 "You can not delete a sent quotation or a confirmed sales order. You must "
 "first cancel it."
 msgstr ""
+"Smazanou nabídku nebo potvrzenou objednávku nelze smazat. Nejprve je musíte "
+"zrušit."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:1491
