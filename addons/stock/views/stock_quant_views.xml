@@ -21,8 +21,8 @@
                     <filter name="reserved" string="Reservations" domain="[('reserved_quantity', '&gt;', 0.0)]"/>
                 </group>
                 <group expand='0' string='Group by...'>
-                    <filter string='Location' name="locationgroup" domain="[]" context="{'group_by': 'location_id'}"/>
                     <filter string='Product' name="productgroup" context="{'group_by': 'product_id'}"/>
+                    <filter string='Location' name="locationgroup" domain="[]" context="{'group_by': 'location_id'}"/>
                     <filter string='Owner' name="owner" context="{'group_by': 'owner_id'}" groups="stock.group_tracking_owner"/>
                     <filter string='Lot/Serial Number' name="Lot_Serial_number" context="{'group_by': 'lot_id'}" groups="stock.group_production_lot"/>
                     <filter string='Package' name="package" domain="[]" context="{'group_by': 'package_id'}" groups="stock.group_tracking_lot"/>
@@ -117,7 +117,11 @@
         <field name="res_model">stock.quant</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form,pivot,graph</field>
-        <field name="context">{'search_default_internal_loc': 1, 'group_by': ['product_id', 'location_id']}</field>
+        <field name="context">{
+            'search_default_internal_loc': 1,
+            'search_default_productgroup': 1,
+            'search_default_locationgroup': 1
+        }</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_empty_folder">
                 No inventory found
