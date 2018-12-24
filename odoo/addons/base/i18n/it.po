@@ -6,11 +6,11 @@
 # Davide Corio <enlightx@gmail.com>, 2018
 # Alessandro Camilli <alessandrocamilli@openforce.it>, 2018
 # mymage <stefano.consolaro@mymage.it>, 2018
+# Alex Siviero <dolanblu@gmail.com>, 2018
 # Luca Tralli, 2018
 # Niccolò Lubello <nlubello@gmail.com>, 2018
 # Maurizio Delmonte <maurizio.delmonte@gmail.com>, 2018
 # Giovanni Casalini <casalini.g@gmail.com>, 2018
-# Alex Siviero <dolanblu@gmail.com>, 2018
 # Cesare Cugnasco <cesare.cugnasco@gmail.com>, 2018
 # Marius Marolla <mariusmarolla@entersys.it>, 2018
 # Matteo Boscolo <matteo.boscolo.76@gmail.com>, 2018
@@ -24,25 +24,25 @@
 # Sebastiano Pistore <SebastianoPistore.info@protonmail.ch>, 2018
 # p_amoruso <p.amoruso@elvenstudio.it>, 2018
 # Francesco Garganese <francesco.garganese@aeromnia.aero>, 2018
-# Martin Trigaux, 2018
-# Lorenzo Battistini <lorenzo.battistini@agilebg.com>, 2018
 # David Minneci <david@numeko.it>, 2018
 # Luigi Di Naro <gigidn@gmail.com>, 2018
 # Petra <bop@odoo.com>, 2018
 # efraimbiffi <eab@odoo.com>, 2018
 # Mirto Bonan <mbo@odoo.com>, 2018
 # Simone Bernini <simone@aperturelabs.it>, 2018
+# Léonie Bouchat <lbo@odoo.com>, 2018
+# Lorenzo Battistini <lorenzo.battistini@agilebg.com>, 2018
+# Martin Trigaux, 2018
 # Paolo Valier, 2018
 # Sergio Zanchetta <primes2h@gmail.com>, 2018
-# Léonie Bouchat <lbo@odoo.com>, 2018
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-29 10:24+0000\n"
+"POT-Creation-Date: 2018-12-19 08:47+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
-"Last-Translator: Léonie Bouchat <lbo@odoo.com>, 2018\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2018\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -79,17 +79,18 @@ msgid ""
 "\n"
 "\n"
 "Add Structured Communication to customer invoices.\n"
-"---------------------------------------------------------------------------------------------------------------------\n"
+"--------------------------------------------------\n"
 "\n"
-"Using BBA structured communication simplifies the reconciliation between invoices and payments.        \n"
+"Using BBA structured communication simplifies the reconciliation between invoices and payments.\n"
 "You can select the structured communication as payment communication in Invoicing/Accounting settings.\n"
 "Three algorithms are suggested:\n"
+"\n"
 "    1) Random : +++RRR/RRRR/RRRDD+++\n"
 "        **R..R =** Random Digits, **DD =** Check Digits\n"
 "    2) Date : +++DOY/YEAR/SSSDD+++\n"
 "        **DOY =** Day of the Year, **SSS =** Sequence Number, **DD =** Check Digits\n"
 "    3) Customer Reference +++RRR/RRRR/SSSDDD+++\n"
-"        **R..R =** Customer Reference without non-numeric characters, **SSS =** Sequence Number, **DD =** Check Digits  \n"
+"        **R..R =** Customer Reference without non-numeric characters, **SSS =** Sequence Number, **DD =** Check Digits\n"
 "    "
 msgstr ""
 
@@ -413,7 +414,7 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"[oggetto con referenza: %s - %s]"
+"[oggetto con riferimento: %s - %s]"
 
 #. module: base
 #: model:ir.module.module,description:base.module_helpdesk_timesheet
@@ -652,6 +653,14 @@ msgid ""
 msgstr ""
 "\n"
 "        Connettore tra i moduli dipendenti e manutenzione."
+
+#. module: base
+#: model:ir.module.module,description:base.module_sale_intrastat
+msgid ""
+"\n"
+"        Bridge module between sale and intrastat.\n"
+"    "
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_taxcloud
@@ -1144,6 +1153,15 @@ msgstr ""
 "\n"
 "    Gateway di pagamento PayUMoney che accetta solo la valuta INR.\n"
 "    "
+
+#. module: base
+#: model:ir.module.module,summary:base.module_l10n_mx_tax_cash_basis
+msgid ""
+"\n"
+"    Properly create the Journal Entries on Tax Cash basis when using foreign\n"
+"    currencies the Tax must be set at date of payment\n"
+"    "
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_forecast
@@ -1666,6 +1684,14 @@ msgstr ""
 "\n"
 "Consente all'azienda di personalizzare il pad che sarà usato per collegare nuovi pad (per impostazione predefinita, http://etherpad.com/).\n"
 "    "
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_be_intrastat_2019
+msgid ""
+"\n"
+"Adds the possibility to specify the origin country of goods and the partner VAT in the Intrastat XML report.\n"
+"    "
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_calendar
@@ -2223,7 +2249,8 @@ msgid ""
 "Legal\n"
 "-----\n"
 "**The use of pos_blackbox_be sources is only certified on odoo.com SaaS platform\n"
-"for version 9.0.**\n"
+"for version 11.0.** Contact Odoo SA before installing pos_blackbox_be module.\n"
+"\n"
 "An obfuscated and certified version of the pos_blackbox_be may be provided on\n"
 "requests for on-premise installations.\n"
 "No modified version is certified and supported by Odoo SA.\n"
@@ -2796,6 +2823,16 @@ msgstr ""
 "\n"
 "Questo modulo consente la creazione di documenti EDI e la comunicazione con i prestatori di servizi di certificazione messicani (PAC) per firmarli/annullarli.\n"
 "    "
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_mx_edi_payment_bank
+msgid ""
+"\n"
+"EDI Mexican Localization\n"
+"========================\n"
+"Allow the user to select the bank account that was used the customer to paid the invoices.\n"
+"    "
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_hw_escpos
@@ -4955,6 +4992,15 @@ msgstr ""
 "    "
 
 #. module: base
+#: model:ir.module.module,description:base.module_delivery_hs_code
+msgid ""
+"\n"
+"Set back field hs_code on pruduct template.\n"
+"==============================================================\n"
+"\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_account_analytic_default
 msgid ""
 "\n"
@@ -6115,8 +6161,12 @@ msgid ""
 "-----------------\n"
 "This module supports the three most common check formats and will work out of the box with the linked checks from checkdepot.net.\n"
 "\n"
-"- Check on top: Quicken / QuickBooks standard (https://www.checkdepot.net/checks/checkorder/59209.htm)\n"
-"- Check on middle: Peachtree standard (https://www.checkdepot.net/checks/checkorder/513791.htm)\n"
+"View all checks at: https://www.checkdepot.net/checks/laser/Odoo.htm\n"
+"\n"
+"You can choose between:\n"
+"\n"
+"- Check on top: Quicken / QuickBooks standard (https://www.checkdepot.net/checks/checkorder/laser_topcheck.htm)\n"
+"- Check on middle: Peachtree standard (https://www.checkdepot.net/checks/checkorder/laser_middlecheck.htm)\n"
 "- Check on bottom: ADP standard (https://www.checkdepot.net/checks/checkorder/laser_bottomcheck.htm)\n"
 "    "
 msgstr ""
@@ -7115,19 +7165,19 @@ msgstr "'%s' non sempre essere un numero valido per il campo '%%(field)s'"
 #: code:addons/base/models/ir_fields.py:208
 #, python-format
 msgid "'%s' does not seem to be a valid date for field '%%(field)s'"
-msgstr "'%s' non sembra essere una data valida per il campo '%%(field)s'"
+msgstr "\"%s\" non sembra essere una data valida per il campo \"%%(field)s\""
 
 #. module: base
 #: code:addons/base/models/ir_fields.py:240
 #, python-format
 msgid "'%s' does not seem to be a valid datetime for field '%%(field)s'"
-msgstr "'%s' non sembra essere una data valida per il campo '%%(field)s'"
+msgstr "\"%s\" non sembra essere una data/ora valida per il campo \"%%(field)s\""
 
 #. module: base
 #: code:addons/base/models/ir_fields.py:177
 #, python-format
 msgid "'%s' does not seem to be an integer for field '%%(field)s'"
-msgstr "'%s' non sembra un campo intero '%%(field)s'"
+msgstr "\"%s\" non sembra essere un campo intero \"%%(field)s\""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.wizard_lang_export
@@ -7357,7 +7407,7 @@ msgid ""
 "<span class=\"o_form_label\">Click on Update below to start the "
 "process...</span>"
 msgstr ""
-"<span class=\"o_form_label\">Fare clic su Aggiorna per iniziare il "
+"<span class=\"o_form_label\">Fare clic su «Aggiorna» per iniziare il "
 "processo...</span>"
 
 #. module: base
@@ -8117,7 +8167,7 @@ msgstr "Numero del Conto"
 #. module: base
 #: sql_constraint:res.partner.bank:0
 msgid "Account Number must be unique"
-msgstr "Il Numero di Conto deve essere unico"
+msgstr "Il numero conto deve essere univoco"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_taxcloud
@@ -8325,10 +8375,21 @@ msgid "Active"
 msgstr "Attivo"
 
 #. module: base
+#: selection:ir.actions.act_window.view,view_mode:0
+#: selection:ir.ui.view,type:0
+msgid "Activity"
+msgstr "Attività"
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence__number_next_actual
 #: model:ir.model.fields,field_description:base.field_ir_sequence_date_range__number_next_actual
 msgid "Actual Next Number"
 msgstr ""
+
+#. module: base
+#: selection:ir.actions.server,state:0
+msgid "Add Followers"
+msgstr "Aggiungi Followers"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mail_bot
@@ -8343,7 +8404,7 @@ msgstr "Aggiunge un link per modificare una traduzione in Transifex"
 #. module: base
 #: model:ir.module.module,summary:base.module_base_address_city
 msgid "Add a many2one field city on addresses"
-msgstr "Aggiunta di un campo città many2one agli indirizzi"
+msgstr "Aggiunta di un campo città \"molti a uno\" agli indirizzi"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_form_project
@@ -8617,13 +8678,13 @@ msgid ""
 "All contacts must have the same email. Only the Administrator can merge "
 "contacts with different emails."
 msgstr ""
-"Tutti i contatti devono avere la stessa email. Solo l’amministratore può "
-"fondere contatti con emails differenti."
+"I contatti devono avere tutti la stessa email. Solo l’amministratore può "
+"unire contatti con email diverse."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_step
 msgid "All done!"
-msgstr ""
+msgstr "Fatto!"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner__lang
@@ -8632,6 +8693,8 @@ msgid ""
 "All the emails and documents sent to this contact will be translated in this"
 " language."
 msgstr ""
+"Tutte le email e i documenti inviati a questo contatto verranno tradotti in "
+"questa lingua."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_holidays
@@ -8691,16 +8754,9 @@ msgid ""
 "Allows you to create your invoices and track the payments. It is an easier "
 "version of the accounting module for managers who are not accountants."
 msgstr ""
-"Ti consente di creare fatture e di tracciare i pagamenti. Si tratta di una "
-"versione più semplice del modulo di contabilità per i manager che non sono "
+"Consente di creare fatture e tenere traccia dei pagamenti. È una versione "
+"semplificata del modulo di contabilità per i responsabili che non sono "
 "contabili."
-
-#. module: base
-#: model_terms:ir.actions.act_window,help:base.action_attachment
-msgid ""
-"Also you will find here all the related documents and download it by "
-"clicking on any individual document."
-msgstr ""
 
 #. module: base
 #: code:addons/base/models/ir_fields.py:394
@@ -8709,8 +8765,8 @@ msgid ""
 "Ambiguous specification for field '%(field)s', only provide one of name, "
 "external id or database id"
 msgstr ""
-"Specificazione ambigua per il campo '%(field)s'. Si prega di specificare "
-"solo il nome, l'ID esterno o l'ID"
+"Descrizione ambigua per il campo \"%(field)s\", fornire solo uno tra nome, "
+"ID esterno o ID database"
 
 #. module: base
 #: model:res.country,name:base.as
@@ -8976,6 +9032,11 @@ msgid "At least one language must be active."
 msgstr "Almeno una lingua deve essere attiva."
 
 #. module: base
+#: model_terms:ir.actions.act_window,help:base.action_attachment
+msgid "Attach a new document"
+msgstr ""
+
+#. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_search
 msgid "Attached Document Name"
 msgstr "Nome del Documento in Allegato"
@@ -8986,7 +9047,6 @@ msgid "Attached To"
 msgstr "Allegato a"
 
 #. module: base
-#: model:ir.model,name:base.model_ir_attachment
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_search
 msgid "Attachment"
 msgstr "Allegato"
@@ -9074,6 +9134,11 @@ msgid "Auto Search"
 msgstr "Auto ricerca"
 
 #. module: base
+#: selection:ir.actions.server,usage:0
+msgid "Automated Action"
+msgstr "Azione automatica"
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_base_automation
 msgid "Automated Action Rules"
 msgstr "Regole Azione Automatiche"
@@ -9108,7 +9173,7 @@ msgstr "Pulizia automatica"
 #, python-format
 msgid "Automatic install of downloaded Apps is currently disabled."
 msgstr ""
-"L'installazione automatica delle App scaricate è attualmente disabilitata."
+"L'installazione automatica delle app scaricate è al momento disabilitata."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_translation__state
@@ -9205,7 +9270,7 @@ msgstr "B9 23 33 x 62 mm"
 #: code:addons/translate.py:1076
 #, python-format
 msgid "Bad file format: %s"
-msgstr "Formato di file sbagliato: %s"
+msgstr "Formato file errato: %s"
 
 #. module: base
 #: model:res.country,name:base.bs
@@ -9248,12 +9313,22 @@ msgstr "Codice BIC SWIFT"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_bank_search
 msgid "Bank Name"
-msgstr "Nome Banca"
+msgstr "Nome banca"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_bank_form
 msgid "Bank account"
 msgstr "Conto bancario"
+
+#. module: base
+#: model:ir.module.module,summary:base.module_l10n_mx_edi_payment_bank
+msgid "Bank account in the payments"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_mx_edi_payment_bank
+msgid "Bank account payment to Mexico"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner_bank__acc_type
@@ -9331,7 +9406,7 @@ msgstr "Base"
 #. module: base
 #: selection:ir.model.fields,state:0
 msgid "Base Field"
-msgstr "Campo Base"
+msgstr "Campo base"
 
 #. module: base
 #: code:addons/base/models/res_lang.py:240
@@ -9342,7 +9417,7 @@ msgstr ""
 #. module: base
 #: selection:ir.model,state:0
 msgid "Base Object"
-msgstr "Oggetto Base"
+msgstr "Oggetto base"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_form
@@ -9435,6 +9510,11 @@ msgstr "Bielorussia"
 #: model:ir.module.module,shortdesc:base.module_l10n_be_intrastat
 msgid "Belgian Intrastat Declaration"
 msgstr "Dichiarazione Intrastat Belgha"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_be_intrastat_2019
+msgid "Belgian Intrastat Declaration - Complement for 2019"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_blackbox_be
@@ -9771,7 +9851,7 @@ msgstr "Impossibile eseguire l'avanzamento. Il modulo \"%s\" non è installato."
 #: code:addons/base/models/ir_model.py:718
 #, python-format
 msgid "Can only rename one field at a time!"
-msgstr "Puoi solo rinominare un campo alla volta!"
+msgstr "È possibile rinominare un solo campo alla volta."
 
 #. module: base
 #: model:res.country,name:base.ca
@@ -9852,7 +9932,7 @@ msgstr "Impossibile duplicare la configurazione!"
 #: code:addons/base/models/ir_model.py:618
 #, python-format
 msgid "Cannot rename/delete fields that are still present in views:"
-msgstr "Impossibile rinominare/cancellare i campi usati nelle viste:"
+msgstr "Impossibile rinominare/eliminare campi ancora presenti nelle viste:"
 
 #. module: base
 #: model:res.country,name:base.cv
@@ -9862,7 +9942,7 @@ msgstr "Capo Verde"
 #. module: base
 #: selection:ir.model.fields,on_delete:0
 msgid "Cascade"
-msgstr "A Cascata"
+msgstr "A cascata"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__category_id
@@ -10014,7 +10094,7 @@ msgstr "Seleziona questa casella se il contatto è un Dipendente."
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment__checksum
 msgid "Checksum/SHA1"
-msgstr "Somma di controllo/SHA1"
+msgstr "Checksum/SHA1"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__child_ids
@@ -10099,7 +10179,7 @@ msgstr ""
 #: code:addons/base/models/ir_actions_report.py:740
 #, python-format
 msgid "Choose Your Document Layout"
-msgstr "Scegli il Layout del Tuo Documento"
+msgstr "Scegliere la struttura del documento"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_country_form
@@ -10373,7 +10453,7 @@ msgstr "Proprietà azienda"
 #. module: base
 #: model:ir.model,name:base.model_ir_property
 msgid "Company Property"
-msgstr ""
+msgstr "Proprietà azienda"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__company_registry
@@ -10805,12 +10885,17 @@ msgstr "Crea lead/opportunità dal traffico del tuo sito Web"
 #: model:ir.actions.act_window,name:base.act_menu_create
 #: model_terms:ir.ui.view,arch_db:base.view_model_menu_create
 msgid "Create Menu"
-msgstr "Crea Menu"
+msgstr "Crea menù"
 
 #. module: base
 #: model:ir.model,name:base.model_wizard_ir_model_menu_create
 msgid "Create Menu Wizard"
 msgstr ""
+
+#. module: base
+#: selection:ir.actions.server,state:0
+msgid "Create Next Activity"
+msgstr "Creare attività successiva"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_crm_project
@@ -10820,12 +10905,12 @@ msgstr "Crea Compiti dai Lead"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_menu_create
 msgid "Create _Menu"
-msgstr "Crea _Menu"
+msgstr "Crea _menù"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_form
 msgid "Create a Menu"
-msgstr "Crea Menu"
+msgstr "Crea un menù"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_res_partner_bank_account_form
@@ -10861,11 +10946,6 @@ msgstr "Crea un nuovo tag di contatto"
 #: model_terms:ir.actions.act_window,help:base.action_partner_customer_form
 #: model_terms:ir.actions.act_window,help:base.action_partner_form
 msgid "Create a new customer in your address book"
-msgstr ""
-
-#. module: base
-#: model_terms:ir.actions.act_window,help:base.action_attachment
-msgid "Create a new document"
 msgstr ""
 
 #. module: base
@@ -10930,7 +11010,7 @@ msgstr "Modello obiettivo di creazione/salvataggio"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_form
 msgid "Created Menus"
-msgstr "Menu creati"
+msgstr "Menù creati"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_form
@@ -11167,7 +11247,7 @@ msgstr "Codice valuta (ISO 4217)"
 #: model:ir.model,name:base.model_res_currency_rate
 #: model_terms:ir.ui.view,arch_db:base.view_currency_rate_form
 msgid "Currency Rate"
-msgstr "Valore Valuta"
+msgstr "Tasso di cambio"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.act_view_currency_rates
@@ -11323,8 +11403,8 @@ msgstr "D FORNITURA DI ELETTRICITÀ, GAS, VAPORE E ARIA CONDIZIONATA"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_dhl
-msgid "DHL Shipping"
-msgstr "Spedizione con DHL"
+msgid "DHL Express Shipping"
+msgstr ""
 
 #. module: base
 #: selection:report.paperformat,format:0
@@ -11362,7 +11442,7 @@ msgstr "Database"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment__db_datas
 msgid "Database Data"
-msgstr "Dati Database"
+msgstr "Dati database"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_act_window__res_id
@@ -11462,6 +11542,27 @@ msgid "Days"
 msgstr "Giorni"
 
 #. module: base
+#: model:res.company,overdue_msg:base.main_company
+msgid ""
+"Dear Sir/Madam,\n"
+"\n"
+"Our records indicate that some payments on your account are still due. Please find details below.\n"
+"If the amount has already been paid, please disregard this notice. Otherwise, please forward us the total amount stated below.\n"
+"If you have any queries regarding your account, Please contact us.\n"
+"\n"
+"Thank you in advance for your cooperation.\n"
+"Best Regards,"
+msgstr ""
+"Gentile Sig./Sig.ra, \n"
+"\n"
+"Dalle nostre registrazioni contabili risultano ancora alcuni pagamenti in sospeso, di seguito i relativi dettagli.\n"
+"Se l'importo è già stato pagato, ignorate questo avviso. In caso contrario, Vi chiediamo gentilmente di corrispondere l'importo indicato di seguito.\n"
+"Per qualsiasi dubbio o richiesta a riguardo, non esitate a contattarci.\n"
+"\n"
+"Ringraziamo in anticipo per la Vostra collaborazione.\n"
+"Distinti saluti,"
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server__smtp_debug
 msgid "Debugging"
 msgstr "Debugging"
@@ -11554,7 +11655,7 @@ msgstr "Definizione"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_access__perm_unlink
 msgid "Delete Access"
-msgstr "Cancellazione"
+msgstr "Eliminazione"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_search
@@ -11576,6 +11677,11 @@ msgstr "Lettura di Codici a Barre per la Consegna"
 #: model:ir.module.module,shortdesc:base.module_delivery
 msgid "Delivery Costs"
 msgstr "Costi di Consegna"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_delivery_hs_code
+msgid "Delivery HS Code"
+msgstr ""
 
 #. module: base
 #: model:ir.model,name:base.model_ir_demo
@@ -11988,6 +12094,7 @@ msgid "Doctor"
 msgstr "Dottore"
 
 #. module: base
+#: model:ir.model,name:base.model_ir_attachment
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_uninstall
 msgid "Document"
 msgstr "Documento"
@@ -12329,7 +12436,12 @@ msgid "Employees"
 msgstr "Dipendenti"
 
 #. module: base
-#: code:addons/base/models/ir_model.py:462
+#: selection:ir.attachment,type:0
+msgid "Empty"
+msgstr ""
+
+#. module: base
+#: code:addons/base/models/ir_model.py:466
 #, python-format
 msgid "Empty dependency in %r"
 msgstr ""
@@ -12411,7 +12523,7 @@ msgstr "Errore durante la validazione del vincolo"
 #: code:addons/base/models/ir_ui_menu.py:76
 #, python-format
 msgid "Error! You cannot create recursive menus."
-msgstr "Errore ! Non puoi creare menu ricorsivi."
+msgstr "Errore, impossibile creare menù ricorsivi."
 
 #. module: base
 #: model:res.country,name:base.ee
@@ -12720,10 +12832,6 @@ msgid ""
 "    changed here if is one exception. If this field is actived, then will be\n"
 "    showed the next fields:\n"
 "\n"
-"  - **Incoterm**: It is used for the attribute *incoterm* in the External Trade\n"
-"    node, is required, and must contain a value from the SAT catalog_ to\n"
-"    incoterms.\n"
-"\n"
 "  - **Certificate Source**: If the document to be generated is a\n"
 "    Certificate of Origin, must be registered the certificate of\n"
 "    origin folio or the fiscal folio in CFDI with which the issuance of the\n"
@@ -12796,12 +12904,8 @@ msgid ""
 "\n"
 "- In the partner:\n"
 "\n"
-"  - **CURP**: It is used to store the unique Key of the Register of\n"
-"    Population (CURP) of the issuer of the CFDI. When it is a natural\n"
-"    person, it must contain 18 characters.\n"
-"\n"
 "  - **Need external trade?**: Field used to indicate if the customer needs\n"
-"    their invoices with external complement. If the field is equal to True,\n"
+"    his/her invoices with external complement. If the field is equal to True,\n"
 "    then the add-on is added to the CFDIs for this client.\n"
 "\n"
 "\n"
@@ -12839,7 +12943,6 @@ msgid ""
 "in this version, since it needs fields that depend on the stock module.\n"
 "They will be added in a later version.\n"
 "\n"
-".. _catalog: http://www.sat.gob.mx/informacion_fiscal/factura_electronica/Documents/c_INCOTERM.xls\n"
 ".. _c_FraccionArancelaria: http://www.sat.gob.mx/informacion_fiscal/factura_electronica/Documents/c_FraccionArancelaria.xls \n"
 ".. _Link: http://www.sat.gob.mx/informacion_fiscal/factura_electronica/Documents/c_UnidadMedidaAduana.xls\n"
 ".. _c_colonia: http://www.sat.gob.mx/informacion_fiscal/factura_electronica/Documents/c_Colonia.xls\n"
@@ -13154,7 +13257,7 @@ msgstr "Nome File"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment__file_size
 msgid "File Size"
-msgstr "Dimensione File"
+msgstr "Dimensione file"
 
 #. module: base
 #: code:addons/base/wizard/base_import_language.py:44
@@ -13228,7 +13331,7 @@ msgstr "Finanza/Assicurazione"
 #. module: base
 #: model:ir.module.module,summary:base.module_web_unsplash
 msgid "Find free high-resolution images from Unsplash"
-msgstr ""
+msgstr "Trova immagini gratuite in alta risoluzione su Unsplash"
 
 #. module: base
 #: selection:base.partner.merge.automatic.wizard,state:0
@@ -13273,12 +13376,12 @@ msgstr "Alimentazione"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_company_document_template_form
 msgid "Footer"
-msgstr "Piede"
+msgstr "Piè di pagina"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_company__report_footer
 msgid "Footer text displayed at the bottom of all reports."
-msgstr "Pié di pagina visualizzato nella parte inferiore di tutti i report."
+msgstr "Piè di pagina visualizzato in fondo a tutti i documenti."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_report__report_name
@@ -13303,8 +13406,8 @@ msgid ""
 "For one2many fields, the field on the target model that implement the "
 "opposite many2one relationship"
 msgstr ""
-"Per i campi one2many, il campo del modello di destinazione che implementa la"
-" relazione many2one contrapposta"
+"Per i campi \"uno a molti\", il campo del modello di destinazione che "
+"implementa la relazione \"molti a uno\" contrapposta"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields__relation
@@ -14220,8 +14323,8 @@ msgid ""
 "Helps you manage your mass mailing for design\n"
 "                professional emails and reuse templates."
 msgstr ""
-"Aiuta a gestire i mailing di massa per\n"
-"                e-mail redatte in modo professionale e a riutilizzare i modelli."
+"Aiuta a gestire le email massive per progettare\n"
+"                email professionali e riutilizzare i modelli."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_hr_payroll
@@ -14496,6 +14599,11 @@ msgstr "Conti bancari IBAN"
 #: model:ir.model.fields,field_description:base.field_wizard_ir_model_menu_create__id
 msgid "ID"
 msgstr "ID"
+
+#. module: base
+#: model:ir.model.fields,help:base.field_ir_actions_server__xml_id
+msgid "ID of the action if defined in a XML file"
+msgstr "ID dell'azione se definito in un file XML"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_data__res_id
@@ -14826,7 +14934,7 @@ msgstr "Importa tassi di cambio da Internet.\n"
 #: model:ir.model.fields,field_description:base.field_ir_model__modules
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__modules
 msgid "In Apps"
-msgstr "In App"
+msgstr "Applicazioni"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_iap
@@ -14853,7 +14961,7 @@ msgstr "Indicizzato"
 #: model:ir.model.fields,field_description:base.field_ir_attachment__index_content
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_form
 msgid "Indexed Content"
-msgstr "Contenuto Indicizzato"
+msgstr "Contenuto indicizzato"
 
 #. module: base
 #: model:res.country,name:base.in
@@ -15902,7 +16010,7 @@ msgstr "Dai Lead ai Compiti"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_view_kanban
 msgid "Learn More"
-msgstr ""
+msgstr "Scopri di più"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_hr_holidays
@@ -16496,7 +16604,7 @@ msgstr "Molti a uno"
 #: code:addons/base/models/ir_model.py:672
 #, python-format
 msgid "Many2one %s on model %s does not exist!"
-msgstr "Il Many2one %s sul modello %s non esiste!"
+msgstr "Il \"molti a uno\" %s sul modello %s non esiste!"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_model_relation
@@ -16912,7 +17020,7 @@ msgstr "Dati modello"
 #: model_terms:ir.ui.view,arch_db:base.view_model_search
 #: model_terms:ir.ui.view,arch_db:base.view_model_tree
 msgid "Model Description"
-msgstr "Descrizione Modello"
+msgstr "Descrizione modello"
 
 #. module: base
 #: selection:ir.translation,type:0
@@ -16993,7 +17101,7 @@ msgstr "Categoria Modulo"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_view_kanban
 msgid "Module Info"
-msgstr ""
+msgstr "Info modulo"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__shortdesc
@@ -17285,7 +17393,7 @@ msgstr "Data Prossima Esecuzione"
 #: model_terms:ir.ui.view,arch_db:base.sequence_view
 #: model_terms:ir.ui.view,arch_db:base.sequence_view_tree
 msgid "Next Number"
-msgstr "Prossimo Numero"
+msgstr "Numero successivo"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_sequence__number_next
@@ -17300,8 +17408,8 @@ msgid ""
 "Next number that will be used. This number can be incremented frequently so "
 "the displayed value might already be obsolete"
 msgstr ""
-"Prossimo numero che verrà usato. Questo numero può incrementare "
-"frequentemente, quindi il valore visualizzato potrebbe essere già obsoleto."
+"Il numero che verrà usato come successivo. Il valore visualizzato potrebbe "
+"essere già obsoleto dato che può essere incrementato in modo frequente"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_cron__nextcall
@@ -17347,7 +17455,7 @@ msgstr "Impossibile trovare una vista predefinita di tipo  \"%s\"."
 #. module: base
 #: selection:ir.sequence,implementation:0
 msgid "No gap"
-msgstr "Nessun gap"
+msgstr "Senza spazi vuoti"
 
 #. module: base
 #: code:addons/fields.py:2372
@@ -19213,9 +19321,8 @@ msgid ""
 "Odoo will automatically adds some '0' on the left of the 'Next Number' to "
 "get the required padding size."
 msgstr ""
-"Odoo aggiungerà automaticamente alcuni '0' sulla parte a sinistra del "
-"'Prossimo numero' per raggiungere la corretta lunghezza del formato "
-"numerico."
+"Odoo aggiungerà automaticamente alcuni \"0\" a sinistra di \"Numero "
+"successivo\" per raggiungere la corretta lunghezza del formato numerico."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mail_bot
@@ -19291,8 +19398,8 @@ msgid ""
 "One2Many fields cannot be synchronized as part of `commercial_fields` or "
 "`address fields`"
 msgstr ""
-"I campi One2Many non possono essere sincronizzati come elementi di "
-"\"commercial fields\" o \"address fields\""
+"Impossibile sincronizzare i campi \"uno a molti\" come elementi di "
+"\"commercial_fields\" o \"address fields\""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_hr
@@ -20815,7 +20922,7 @@ msgstr "Domande Relative agli Eventi"
 #. module: base
 #: model:ir.module.module,summary:base.module_web_settings_dashboard
 msgid "Quick actions for installing new app, adding users, etc."
-msgstr ""
+msgstr "Azioni rapide per installare nuove app, aggiungere utenti, etc."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_quotation_builder
@@ -20995,7 +21102,6 @@ msgid "Record ID"
 msgstr "Record ID"
 
 #. module: base
-#: model:ir.model,name:base.model_ir_rule
 #: model_terms:ir.ui.view,arch_db:base.view_rule_search
 msgid "Record Rule"
 msgstr "Regola record"
@@ -21009,7 +21115,7 @@ msgstr "Regola record"
 #: model_terms:ir.ui.view,arch_db:base.view_rule_search
 #: model_terms:ir.ui.view,arch_db:base.view_rule_tree
 msgid "Record Rules"
-msgstr "Regole di accesso"
+msgstr "Regole su record"
 
 #. module: base
 #: code:addons/base/models/ir_cron.py:283
@@ -21215,7 +21321,7 @@ msgstr "File report"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__report_footer
 msgid "Report Footer"
-msgstr "Piè di pagina resoconto"
+msgstr "Piè di pagina documento"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_search_view
@@ -21362,6 +21468,11 @@ msgstr ""
 #, python-format
 msgid "Rounding unit"
 msgstr ""
+
+#. module: base
+#: model:ir.model,name:base.model_ir_rule
+msgid "Rule"
+msgstr "Regola"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_form
@@ -21524,6 +21635,11 @@ msgstr "Coupon di Vendita"
 #: model:ir.module.module,shortdesc:base.module_sale_coupon_delivery
 msgid "Sale Coupon Delivery"
 msgstr "Distribuzione di Coupon di Vendita"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_sale_intrastat
+msgid "Sale Intrastat"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_purchase
@@ -21864,6 +21980,11 @@ msgid "Sell your products online"
 msgstr "Vendita di prodotti in rete"
 
 #. module: base
+#: selection:ir.actions.server,state:0
+msgid "Send Email"
+msgstr "Inviare email"
+
+#. module: base
 #: model:ir.module.module,summary:base.module_sign
 msgid "Send documents to sign online and handle filled copies"
 msgstr ""
@@ -21974,6 +22095,7 @@ msgstr "Server"
 
 #. module: base
 #: selection:ir.actions.server,usage:0
+#: model:ir.model,name:base.model_ir_actions_server
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_search
 msgid "Server Action"
@@ -21986,7 +22108,6 @@ msgstr ""
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_server_action
-#: model:ir.model,name:base.model_ir_actions_server
 #: model:ir.ui.menu,name:base.menu_server_action
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_search
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_tree
@@ -22396,7 +22517,7 @@ msgstr "Sri Lanka"
 #. module: base
 #: selection:ir.sequence,implementation:0
 msgid "Standard"
-msgstr "Standard"
+msgstr "Normale"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_upgrade_install
@@ -22473,6 +22594,11 @@ msgid "Sticky memos, Collaborative"
 msgstr "Post-it, Condivise"
 
 #. module: base
+#: model:ir.module.category,name:base.module_category_stock
+msgid "Stock"
+msgstr "Stock"
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_barcode_mobile
 msgid "Stock Barcode in Mobile"
 msgstr ""
@@ -22506,7 +22632,7 @@ msgstr "Registrato nel database"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment__store_fname
 msgid "Stored Filename"
-msgstr "Nome del File Registrato"
+msgstr "Nome file memorizzato"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_bank__street
@@ -22792,6 +22918,573 @@ msgid "Task Logs"
 msgstr "Registri attività"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_mx_tax_cash_basis
+msgid "Tax Cash Basis Entries at Payment Date"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_mx_tax_cash_basis
+msgid ""
+"Tax Cash Basis Entries at Payment Date\n"
+"======================================\n"
+"\n"
+"Allow to create the Journal Entries for Taxes at date of payment.\n"
+"The following tests cases pretend to enlight you on what is expected of each\n"
+"one according to Mexican requirements.\n"
+"\n"
+"Case Multi-currency (both invoice & payment) Payment before Invoice\n"
+"-------------------------------------------------------------------\n"
+"\n"
+"        Test to validate tax effectively receivable\n"
+"\n"
+"        My company currency is MXN.\n"
+"\n"
+"        Invoice issued yesterday in USD at a rate => 1MXN = 1 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Receivable          1160                1160    USD\n"
+"                Revenue                 1000       -1000    USD\n"
+"                Taxes to Collect         160        -160    USD\n"
+"\n"
+"        Payment issued two days ago in USD at a rate => 1MXN = 0.80 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Bank                1450                1160    USD\n"
+"                Receivable              1450       -1160    USD\n"
+"\n"
+"        This Generates a Exchange Rate Difference.\n"
+"        Booked like:\n"
+"\n"
+"            Receivable           290                   0    USD\n"
+"                Gain Exchange rate       290           0    USD\n"
+"\n"
+"        And a Tax Cash Basis Entry is generated.\n"
+"        Booked like:\n"
+"\n"
+"            Tax Base Account    1250                1000    USD\n"
+"                Tax Base Account        1250       -1000    USD\n"
+"            Taxes to Collect     200                 160    USD\n"
+"                Taxes to Paid            200        -160    USD\n"
+"\n"
+"        What I expect from here:\n"
+"            - Base to report to DIOT if it would be the case (not in this case): \n"
+"              * Tax Base Account MXN 1250.00\n"
+"            - Paid to SAT MXN 200.00\n"
+"            - Have a difference of MXN 40.00 for Taxes to Collect that I would\n"
+"              later have to issue as a Loss in Exchange Rate Difference\n"
+"\n"
+"            Loss Exchange rate    40                   0    USD\n"
+"                Taxes to Collect          40           0    USD\n"
+"\n"
+"\n"
+"Case Multi-currency (both invoice & payment) Payment after Invoice\n"
+"------------------------------------------------------------------\n"
+"\n"
+"        Test to validate tax effectively receivable\n"
+"\n"
+"        My company currency is MXN.\n"
+"\n"
+"        Invoice issued two days ago in USD at a rate => 1MXN = 0.80 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Receivable          1450                1160    USD\n"
+"                Revenue                 1250       -1000    USD\n"
+"                Taxes to Collect         200        -160    USD\n"
+"\n"
+"        Payment issued today in USD at a rate => 1 MXN = 1.25 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Bank                 928                1160    USD\n"
+"                Receivable               928       -1160    USD\n"
+"\n"
+"        This Generates a Exchange Rate Difference.\n"
+"        Booked like:\n"
+"\n"
+"            Loss Exchange rate   522                   0    USD\n"
+"                Receivable               522           0    USD\n"
+"\n"
+"        And a Tax Cash Basis Entry is generated.\n"
+"        Booked like:\n"
+"\n"
+"            Tax Base Account     800                1000    USD\n"
+"                Tax Base Account         800       -1000    USD\n"
+"            Taxes to Collect     128                 160    USD\n"
+"                Taxes to Paid            128        -160    USD\n"
+"\n"
+"        What I expect from here:\n"
+"            - Base to report to DIOT if it would be the case (not in this case): \n"
+"              * Tax Base Account MXN 800.00\n"
+"            - Paid to SAT MXN 128.00\n"
+"            - Have a difference of MXN -72.00 for Taxes to Collect that I would\n"
+"              later have to issue as a Gain in Exchange Rate Difference\n"
+"\n"
+"            Taxes to Collect      72                   0    USD\n"
+"                Gain Exchange rate        72           0    USD\n"
+"\n"
+"\n"
+"Case Multi-currency (both invoice & payment) Payment same day than Invoice\n"
+"--------------------------------------------------------------------------\n"
+"\n"
+"        Test to validate tax effectively receivable\n"
+"\n"
+"        My company currency is MXN.\n"
+"\n"
+"        Invoice issued two days ago in USD at a rate => 1MXN = 0.8 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Receivable          1450                1160    USD\n"
+"                Revenue                 1250       -1000    USD\n"
+"                Taxes to Collect         200        -160    USD\n"
+"\n"
+"        Payment issued two days ago in USD at a rate => 1 MXN = 0.8 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Bank                1450                1160    USD\n"
+"                Receivable              1450       -1160    USD\n"
+"\n"
+"        This does not generates any Exchange Rate Difference.\n"
+"\n"
+"        But a Tax Cash Basis Entry is generated.\n"
+"        Booked like:\n"
+"\n"
+"            Tax Base Account    1250                1000    USD\n"
+"                Tax Base Account        1250       -1000    USD\n"
+"            Taxes to Collect     200                 160    USD\n"
+"                Taxes to Paid            200        -160    USD\n"
+"\n"
+"        What I expect from here:\n"
+"            - Base to report to DIOT if it would be the case (not in this case): \n"
+"              * Tax Base Account MXN 1250.00\n"
+"            - Paid to SAT MXN 200.00\n"
+"            - Have no difference for Taxes to Collect\n"
+"\n"
+"\n"
+"Case Invoiced Yesterday (MXN) Payment Two Days Ago (USD)\n"
+"--------------------------------------------------------\n"
+"\n"
+"        Test to validate tax effectively receivable\n"
+"\n"
+"        My company currency is MXN.\n"
+"\n"
+"        Invoice issued yesterday in MXN at a rate => 1MXN = 1 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Receivable          1160                   -      -\n"
+"                Revenue                 1000           -      -\n"
+"                Taxes to Collect         160           -      -\n"
+"\n"
+"        Payment issued two days ago in USD at a rate => 1 MXN = 0.80 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Bank                1160                 928    USD\n"
+"                Receivable              1160        -928    USD\n"
+"\n"
+"        This does not generates any Exchange Rate Difference.\n"
+"\n"
+"        But a Tax Cash Basis Entry is generated.\n"
+"        Booked like:\n"
+"\n"
+"            Tax Base Account    1000                   0      -\n"
+"                Tax Base Account        1000           0      -\n"
+"            Taxes to Collect     160                   0      -\n"
+"                Taxes to Paid            160           0      -\n"
+"\n"
+"        What I expect from here:\n"
+"            - Base to report to DIOT if it would be the case (not in this case):\n"
+"              * Tax Base Account MXN 1000.00\n"
+"            - Paid to SAT MXN 160.00\n"
+"            - Have no difference for Taxes to Collect\n"
+"\n"
+"\n"
+"Case Invoiced Yesterday (USD) Payment Today (MXN)\n"
+"-------------------------------------------------\n"
+"\n"
+"        Test to validate tax effectively receivable\n"
+"\n"
+"        My company currency is MXN.\n"
+"\n"
+"        Invoice issued yesterday in USD at a rate => 1MXN = 1 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Receivable          1160                1160    USD\n"
+"                Revenue                 1000       -1000    USD\n"
+"                Taxes to Collect         160        -160    USD\n"
+"\n"
+"        Payment issued today in MXN at a rate => 1 MXN = 1.25 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Bank                 928                   -      -\n"
+"                Receivable               928           -      -\n"
+"\n"
+"        This Generates a Exchange Rate Difference.\n"
+"        Booked like:\n"
+"\n"
+"            Loss Exchange rate   232                 232    USD\n"
+"                Receivable               232        -232    USD\n"
+"\n"
+"        And a Tax Cash Basis Entry is generated.\n"
+"        Booked like:\n"
+"\n"
+"            Tax Base Account     800                   0    USD\n"
+"                Tax Base Account         800           0    USD\n"
+"            Taxes to Collect     128                   0    USD  # (I'd expect the same value as in the invoice for amount_currency in tax: 160 USD) \n"
+"                Taxes to Paid            128           0    USD\n"
+"\n"
+"        What I expect from here:\n"
+"            - Base to report to DIOT if it would be the case (not in this case): \n"
+"              * Tax Base Account MXN 800.00\n"
+"            - Paid to SAT MXN 128.00\n"
+"            - Have a difference of MXN -32.00 for Taxes to Collect that I would\n"
+"              later have to issue as a Gain in Exchange Rate Difference\n"
+"\n"
+"            Taxes to Collect      32                   0    USD\n"
+"                Gain Exchange rate        32           0    USD\n"
+"\n"
+"\n"
+"Case Invoiced Yesterday (MXN) Payment Today (MXN)\n"
+"-------------------------------------------------\n"
+"\n"
+"        Test to validate tax effectively receivable\n"
+"\n"
+"        My company currency is MXN.\n"
+"\n"
+"        Invoice issued yesterday in MXN at a rate => 1MXN = 1 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Receivable          1160                   -      -\n"
+"                Revenue                 1000           -      -\n"
+"                Taxes to Collect         160           -      -\n"
+"\n"
+"        Payment issued today in MXN at a rate => 1 MXN = 1.25 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Bank                1160                   -      -\n"
+"                Receivable              1160           -      -\n"
+"\n"
+"        This does not generates any Exchange Rate Difference.\n"
+"\n"
+"        But a Tax Cash Basis Entry is generated.\n"
+"        Booked like:\n"
+"\n"
+"            Tax Base Account    1000                   -      -\n"
+"                Tax Base Account        1000           -      -\n"
+"            Taxes to Collect     160                   -      -\n"
+"                Taxes to Paid            160           -      -\n"
+"\n"
+"        What I expect from here:\n"
+"            - Base to report to DIOT if it would be the case (not in this case): \n"
+"              * Tax Base Account MXN 1000.00\n"
+"            - Paid to SAT MXN 160.00\n"
+"            - Have no difference for Taxes to Collect\n"
+"\n"
+"\n"
+"Case Multi-currency (both invoice & payment) Payment before Invoice (Supplier)\n"
+"------------------------------------------------------------------------------\n"
+"\n"
+"        Test to validate tax effectively Payable\n"
+"\n"
+"        My company currency is MXN.\n"
+"\n"
+"        Invoice issued yesterday in USD at a rate => 1MXN = 1 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Expenses            1000                1000    USD\n"
+"            Unpaid Taxes         160                 160    USD\n"
+"\n"
+"                Payable                 1160       -1160    USD\n"
+"\n"
+"        Payment issued two days ago in USD at a rate => 1MXN = 0.80 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Payable             1450                1160    USD\n"
+"                Bank                    1450       -1160    USD\n"
+"\n"
+"        This Generates a Exchange Rate Difference.\n"
+"        Booked like:\n"
+"\n"
+"            Loss Exchange rate   290                   0    USD\n"
+"                Payable                  290           0    USD\n"
+"\n"
+"        And a Tax Cash Basis Entry is generated.\n"
+"        Booked like:\n"
+"\n"
+"            Tax Base Account    1250                1000    USD\n"
+"                Tax Base Account        1250       -1000    USD\n"
+"            Creditable Tax       200                 160    USD\n"
+"                Unpaid Taxes             200        -160    USD\n"
+"\n"
+"        What I expect from here:\n"
+"            - Base to report to DIOT: Tax Base Account MXN 1250.00\n"
+"            - Creditable Tax MXN 200.00\n"
+"            - Have a difference of MXN -40.00 for Unpaid Taxes that I would\n"
+"              later have to issue as a Loss in Exchange Rate Difference\n"
+"\n"
+"            Unpaid Taxes          40                   0    USD\n"
+"                Gain Exchange rate        40           0    USD\n"
+"\n"
+"\n"
+"Case Multi-currency (both invoice & payment) Payment after Invoice (Supplier)\n"
+"-----------------------------------------------------------------------------\n"
+"\n"
+"        Test to validate tax effectively Payable\n"
+"\n"
+"        My company currency is MXN.\n"
+"\n"
+"        Invoice issued two days ago in USD at a rate => 1MXN = 0.80 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Expenses            1250                1000    USD\n"
+"            Unpaid Taxes         200                 160    USD\n"
+"\n"
+"                Payable                 1450       -1160    USD\n"
+"\n"
+"        Payment issued today in USD at a rate => 1 MXN = 1.25 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Payable              928                1160    USD\n"
+"                Bank                     928       -1160    USD\n"
+"\n"
+"        This Generates a Exchange Rate Difference.\n"
+"        Booked like:\n"
+"\n"
+"            Payable              522                   0    USD\n"
+"                Gain Exchange rate       522           0    USD\n"
+"\n"
+"        And a Tax Cash Basis Entry is generated.\n"
+"        Booked like:\n"
+"\n"
+"            Tax Base Account     800                1000    USD\n"
+"                Tax Base Account         800       -1000    USD\n"
+"            Creditable Tax       128                 160    USD\n"
+"                Unpaid Taxes             128        -160    USD\n"
+"\n"
+"        What I expect from here:\n"
+"            - Base to report to DIOT: Tax Base Account MXN 800.00\n"
+"            - Creditable Tax MXN 128.00\n"
+"            - Have a difference of MXN 72.00 for Unpaid Taxes that I would\n"
+"              later have to issue as a Loss in Exchange Rate Difference\n"
+"\n"
+"            Loss Exchange rate    72                   0    USD\n"
+"                Unpaid Taxes              72           0    USD\n"
+"\n"
+"\n"
+"Case Multi-currency (both invoice & payment) Payment same day than Invoice (Supplier)\n"
+"-------------------------------------------------------------------------------------\n"
+"\n"
+"        Test to validate tax effectively Payable\n"
+"\n"
+"        My company currency is MXN.\n"
+"\n"
+"        Invoice issued two days ago in USD at a rate => 1MXN = 0.8 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Expenses            1250                1000    USD\n"
+"            Unpaid Taxes         200                 160    USD\n"
+"\n"
+"                Payable                 1450       -1160    USD\n"
+"\n"
+"        Payment issued two days ago in USD at a rate => 1 MXN = 0.8 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Payable             1450                1160    USD\n"
+"                Bank                    1450       -1160    USD\n"
+"\n"
+"        This does not generates any Exchange Rate Difference.\n"
+"\n"
+"        But a Tax Cash Basis Entry is generated.\n"
+"        Booked like:\n"
+"\n"
+"            Tax Base Account    1250                1000    USD\n"
+"                Tax Base Account        1250       -1000    USD\n"
+"            Creditable Tax       200                 160    USD\n"
+"                Unpaid Taxes             200        -160    USD\n"
+"\n"
+"        What I expect from here:\n"
+"            - Base to report to DIOT: Tax Base Account MXN 1250.00\n"
+"            - Creditable Tax MXN 200.00\n"
+"            - Have no difference for Unpaid Taxes\n"
+"\n"
+"\n"
+"Case Invoiced Yesterday (MXN) Payment Two Days Ago (USD) (Supplier)\n"
+"-------------------------------------------------------------------\n"
+"\n"
+"        Test to validate tax effectively Payable\n"
+"\n"
+"        My company currency is MXN.\n"
+"\n"
+"        Invoice issued yesterday in MXN at a rate => 1MXN = 1 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Expenses            1000                   -      -\n"
+"            Unpaid Taxes         160                   -      -\n"
+"\n"
+"                Payable                 1160           -      -\n"
+"\n"
+"        Payment issued two days ago in USD at a rate => 1 MXN = 0.80 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Payable             1160                 928    USD\n"
+"                Bank                    1160        -928    USD\n"
+"\n"
+"        This does not generates any Exchange Rate Difference.\n"
+"\n"
+"        But a Tax Cash Basis Entry is generated.\n"
+"        Booked like:\n"
+"\n"
+"            Tax Base Account    1000                   0      -\n"
+"                Tax Base Account        1000           0      -\n"
+"            Creditable Tax       160                   0      -\n"
+"                Unpaid Taxes             160           0      -\n"
+"\n"
+"        What I expect from here:\n"
+"            - Base to report to DIOT: Tax Base Account MXN 1000.00\n"
+"            - Creditable Tax MXN 160.00\n"
+"            - Have no difference for Unpaid Taxes\n"
+"\n"
+"\n"
+"Case Invoiced Yesterday (USD) Payment Today (MXN) (Supplier)\n"
+"------------------------------------------------------------\n"
+"\n"
+"        Test to validate tax effectively Payable\n"
+"\n"
+"        My company currency is MXN.\n"
+"\n"
+"        Invoice issued yesterday in USD at a rate => 1MXN = 1 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Expenses            1000                1000    USD\n"
+"            Unpaid Taxes         160                 160    USD\n"
+"\n"
+"                Payable                 1160       -1160    USD\n"
+"\n"
+"        Payment issued today in MXN at a rate => 1 MXN = 1.25 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Payable              928                   -      -\n"
+"                Bank                     928           -      -\n"
+"\n"
+"        This Generates a Exchange Rate Difference.\n"
+"        Booked like:\n"
+"\n"
+"            Payable              232                 232    USD\n"
+"                Gain Exchange rate       522        -232    USD\n"
+"\n"
+"        And a Tax Cash Basis Entry is generated.\n"
+"        Booked like:\n"
+"\n"
+"            Tax Base Account     800                   0    USD\n"
+"                Tax Base Account         800           0    USD\n"
+"            Creditable Tax       128                   0    USD  # (I'd expect the same value as in the invoice for amount_currency in tax: 160 USD) \n"
+"                Unpaid Taxes             128           0    USD\n"
+"\n"
+"        What I expect from here:\n"
+"            - Base to report to DIOT: Tax Base Account MXN 800.00\n"
+"            - Creditable Tax MXN 128.00\n"
+"            - Have a difference of MXN 32.00 for Unpaid Taxes that I would\n"
+"              later have to issue as a Loss in Exchange Rate Difference\n"
+"\n"
+"            Loss Exchange rate    32                   0    USD\n"
+"                Unpaid Taxes              32           0    USD\n"
+"\n"
+"\n"
+"Case Invoiced Yesterday (MXN) Payment Today (MXN) (Supplier)\n"
+"------------------------------------------------------------\n"
+"\n"
+"        Test to validate tax effectively Payable\n"
+"\n"
+"        My company currency is MXN.\n"
+"\n"
+"        Invoice issued yesterday in MXN at a rate => 1MXN = 1 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Expenses            1000                   -      -\n"
+"            Unpaid Taxes         160                   -      -\n"
+"\n"
+"                Payable                 1160           -      -\n"
+"\n"
+"        Payment issued today in MXN at a rate => 1 MXN = 1.25 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Payable             1160                   -      -\n"
+"                Bank                    1160           -      -\n"
+"\n"
+"        This does not generates any Exchange Rate Difference.\n"
+"\n"
+"        But a Tax Cash Basis Entry is generated.\n"
+"        Booked like:\n"
+"\n"
+"            Tax Base Account    1000                   -      -\n"
+"                Tax Base Account        1000           -      -\n"
+"            Creditable Tax       160                   -      -\n"
+"                Unpaid Taxes             160           -      -\n"
+"\n"
+"        What I expect from here:\n"
+"            - Base to report to DIOT: Tax Base Account MXN 1000.00\n"
+"            - Creditable Tax MXN 160.00\n"
+"            - Have no difference for Unpaid Taxes\n"
+"\n"
+"\n"
+"Case Invoiced Yesterday (MXN) Credit Note Today (MXN) (Customer)\n"
+"----------------------------------------------------------------\n"
+"        Test to validate tax effectively receivable\n"
+"\n"
+"        My company currency is MXN.\n"
+"\n"
+"        Invoice issued two days ago in USD at a rate => 1MXN = 0.80 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Receivable          1450                1160    USD\n"
+"                Revenue                 1250       -1000    USD\n"
+"                Taxes to Collect         200        -160    USD\n"
+"\n"
+"        Credit Note issued today in USD at a rate => 1 MXN = 1.25 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Revenue              800                1000    USD\n"
+"            Taxes to Collect     128                 160    USD\n"
+"\n"
+"                Receivable               928       -1160    USD\n"
+"\n"
+"        This Generates a Exchange Rate Difference.\n"
+"        Booked like:\n"
+"\n"
+"            Loss Exchange rate   522                   0    USD\n"
+"                Receivable               522           0    USD\n"
+"\n"
+"        And two Tax Cash Basis Entry are generated.\n"
+"        Booked like:\n"
+"\n"
+"            Tax Base Account     800                1000    USD\n"
+"                Tax Base Account         800       -1000    USD\n"
+"            Taxes to Collect     128                 160    USD\n"
+"                Taxes to Paid            128        -160    USD\n"
+"\n"
+"            Tax Base Account     800                1000    USD\n"
+"                Tax Base Account         800       -1000    USD\n"
+"            Taxes to Paid        128                 160    USD\n"
+"                Taxes to Collect         128        -160    USD\n"
+"\n"
+"        What I expect from here:\n"
+"            - Base to report to DIOT if it would be the case (not in this case): \n"
+"              * Tax Base Account MXN 800.00 and MXN -800.00\n"
+"            - Paid to SAT MXN 0.00\n"
+"            - Have a difference of MXN -72.00 for Taxes to Collect that I would\n"
+"              later have to issue as a Gain in Exchange Rate Difference\n"
+"\n"
+"            Taxes to Collect      72                   0    USD\n"
+"                Gain Exchange rate        72           0    USD\n"
+"\n"
+"Credits\n"
+"=======\n"
+"\n"
+"**Contributors**\n"
+"\n"
+"* Nhomar Hernandez <nhomar@vauxoo.com> (Planner/Auditor)\n"
+"* Luis Torres <luis_t@vauxoo.com> (Auditor)\n"
+"* Humberto Arocha <luis_t@vauxoo.com> (Planner/Developer)\n"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__vat
 #: model:ir.model.fields,field_description:base.field_res_partner__vat
 #: model:ir.model.fields,field_description:base.field_res_users__vat
@@ -22834,11 +23527,12 @@ msgstr "Nome tecnico"
 #. module: base
 #: model:ir.module.category,name:base.module_category_hidden
 #: model:ir.module.category,name:base.module_category_technical_settings
+#: model_terms:ir.ui.view,arch_db:base.user_groups_view
 msgid "Technical Settings"
 msgstr "Impostazioni tecniche"
 
 #. module: base
-#: code:addons/base/models/ir_translation.py:782
+#: code:addons/base/models/ir_translation.py:794
 #, python-format
 msgid "Technical Translations"
 msgstr "Traduzioni tecniche"
@@ -23071,7 +23765,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_attachment__res_model
 msgid "The database object this attachment will be attached to."
-msgstr "L'oggetto del database a cui verrà allegato questo allegato."
+msgstr "L'oggetto del database a cui verrà assegnato questo allegato."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_failures_dialog
@@ -23306,7 +24000,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency_rate__rate
 msgid "The rate of the currency to the currency of rate 1"
-msgstr "Il valore della valuta per la valuta di valore 1"
+msgstr "Il tasso di cambio per la valuta con cambio pari a 1"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency__rate
@@ -23805,7 +24499,7 @@ msgstr "Transitorio"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model__transient
 msgid "Transient Model"
-msgstr "Modello Transitorio"
+msgstr "Modello transitorio"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -24274,7 +24968,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_unsplash
 msgid "Unsplash Image Library"
-msgstr ""
+msgstr "Archivio immagini Unsplash"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_translation_search
@@ -24353,7 +25047,7 @@ msgstr "Aggiornamenti"
 #: model_terms:ir.ui.view,arch_db:base.module_form
 #: model_terms:ir.ui.view,arch_db:base.module_view_kanban
 msgid "Upgrade"
-msgstr "Avanza"
+msgstr "Aggiorna"
 
 #. module: base
 #: model:ir.model,name:base.model_base_module_upgrade
@@ -25112,8 +25806,8 @@ msgid ""
 "When subsequences per date range are used, you can prefix variables with 'range_'\n"
 "                                to use the beginning of the range instead of the current date, e.g. %(range_year)s instead of %(year)s."
 msgstr ""
-"Quando si usano sottosequenze con intervallo data, per usare l'inizio dell'intervallo al posto\n"
-"                                della data corrente basta aggiungere il prefisso \"range_\" alle variabili, es. %(range_year)s invece di %(year)s."
+"Se vengono utilizzate sottosequenze con un intervallo data, per usare l'inizio dell'intervallo\n"
+"                                al posto della data corrente aggiungere il prefisso \"range_\" alle variabili. Es. %(range_year)s invece di %(year)s."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields__copied
@@ -25494,7 +26188,7 @@ msgstr "Spedizione bpost"
 #. module: base
 #: selection:ir.model.fields,ttype:0
 msgid "char"
-msgstr "Carattere"
+msgstr "carattere"
 
 #. module: base
 #: selection:base.language.export,state:0
@@ -25660,7 +26354,7 @@ msgstr "init"
 #. module: base
 #: selection:ir.model.fields,ttype:0
 msgid "integer"
-msgstr "integer"
+msgstr "intero"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -25700,12 +26394,12 @@ msgstr "l10n_es_real_estates"
 #. module: base
 #: selection:ir.model.fields,ttype:0
 msgid "many2many"
-msgstr "many2many"
+msgstr "molti a molti"
 
 #. module: base
 #: selection:ir.model.fields,ttype:0
 msgid "many2one"
-msgstr "many2one"
+msgstr "molti a uno"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_failures_dialog
@@ -25748,7 +26442,7 @@ msgstr "il"
 #. module: base
 #: selection:ir.model.fields,ttype:0
 msgid "one2many"
-msgstr "one2many"
+msgstr "uno a molti"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_cache
@@ -25763,7 +26457,7 @@ msgstr "pos_sale"
 #. module: base
 #: selection:ir.model.fields,ttype:0
 msgid "reference"
-msgstr "referenza"
+msgstr "riferimento"
 
 #. module: base
 #: selection:ir.model.fields,ttype:0
@@ -25779,11 +26473,6 @@ msgstr "snailmail_account"
 #: model:ir.module.module,shortdesc:base.module_social_media
 msgid "social_media"
 msgstr "social_media"
-
-#. module: base
-#: model:ir.module.category,name:base.module_category_stock
-msgid "stock"
-msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_zebra

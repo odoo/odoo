@@ -3,26 +3,33 @@
 # * link_tracker
 # 
 # Translators:
-# digitouch UAB <digitouchagencyeur@gmail.com>, 2017
-# Audrius Palenskis <audrius.palenskis@gmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
-# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2017
+# Martin Trigaux, 2018
+# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2018
+# Silvija Butko <silvija.butko@gmail.com>, 2018
+# digitouch UAB <digitouchagencyeur@gmail.com>, 2018
+# Linas Versada <linaskrisiukenas@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: UAB \"Draugiški sprendimai\" <transifex@draugiskisprendimai.lt>, 2017\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-08-24 09:20+0000\n"
+"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2018\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: lt\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: link_tracker
-#: model:ir.model.fields,field_description:link_tracker.field_link_tracker_link_click_ids
+#: model:ir.model.fields,field_description:link_tracker.field_link_tracker__campaign_id
+msgid "Campaign"
+msgstr "Kampanija"
+
+#. module: link_tracker
+#: model:ir.model.fields,field_description:link_tracker.field_link_tracker__link_click_ids
 #: model_terms:ir.ui.view,arch_db:link_tracker.view_link_tracker_form
 msgid "Clicks"
 msgstr "Paspaudimai"
@@ -30,128 +37,154 @@ msgstr "Paspaudimai"
 #. module: link_tracker
 #: sql_constraint:link.tracker.code:0
 msgid "Code must be unique."
-msgstr ""
+msgstr "Kodas turi būti unikalus."
 
 #. module: link_tracker
-#: model:ir.model.fields,field_description:link_tracker.field_link_tracker_link_code_ids
+#: model:ir.model.fields,field_description:link_tracker.field_link_tracker__link_code_ids
 msgid "Codes"
 msgstr "Kodai"
 
 #. module: link_tracker
-#: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click_country_id
+#: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click__country_id
 msgid "Country"
-msgstr "Valstybė"
+msgstr "Šalis"
 
 #. module: link_tracker
-#: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click_click_date
+#: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click__click_date
 msgid "Create Date"
 msgstr "Sukūrimo data"
 
 #. module: link_tracker
-#: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click_create_uid
-#: model:ir.model.fields,field_description:link_tracker.field_link_tracker_code_create_uid
-#: model:ir.model.fields,field_description:link_tracker.field_link_tracker_create_uid
+#: model_terms:ir.actions.act_window,help:link_tracker.action_link_tracker
+msgid "Create a new link tracker"
+msgstr ""
+
+#. module: link_tracker
+#: model:ir.model.fields,field_description:link_tracker.field_link_tracker__create_uid
+#: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click__create_uid
+#: model:ir.model.fields,field_description:link_tracker.field_link_tracker_code__create_uid
 msgid "Created by"
 msgstr "Sukūrė"
 
 #. module: link_tracker
-#: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click_create_date
-#: model:ir.model.fields,field_description:link_tracker.field_link_tracker_code_create_date
-#: model:ir.model.fields,field_description:link_tracker.field_link_tracker_create_date
+#: model:ir.model.fields,field_description:link_tracker.field_link_tracker__create_date
+#: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click__create_date
+#: model:ir.model.fields,field_description:link_tracker.field_link_tracker_code__create_date
 msgid "Created on"
 msgstr "Sukurta"
 
 #. module: link_tracker
-#: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click_display_name
-#: model:ir.model.fields,field_description:link_tracker.field_link_tracker_code_display_name
-#: model:ir.model.fields,field_description:link_tracker.field_link_tracker_display_name
+#: model:ir.model.fields,field_description:link_tracker.field_link_tracker__display_name
+#: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click__display_name
+#: model:ir.model.fields,field_description:link_tracker.field_link_tracker_code__display_name
 msgid "Display Name"
-msgstr "Vaizduojamas pavadinimas"
+msgstr "Rodomas pavadinimas"
 
 #. module: link_tracker
-#: model:ir.model.fields,field_description:link_tracker.field_link_tracker_favicon
+#: model:ir.model.fields,field_description:link_tracker.field_link_tracker__favicon
 msgid "Favicon"
-msgstr ""
+msgstr "Favicon"
 
 #. module: link_tracker
-#: model:ir.model.fields,field_description:link_tracker.field_link_tracker_icon_src
+#: model:ir.model.fields,field_description:link_tracker.field_link_tracker__icon_src
 msgid "Favicon Source"
-msgstr ""
+msgstr "Favicon šaltinis"
 
 #. module: link_tracker
-#: model:ir.model.fields,field_description:link_tracker.field_link_tracker_short_url_host
+#: model:ir.model.fields,field_description:link_tracker.field_link_tracker__short_url_host
 msgid "Host of the short URL"
-msgstr ""
+msgstr "Trumpojo URL šeimininkas"
 
 #. module: link_tracker
-#: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click_id
-#: model:ir.model.fields,field_description:link_tracker.field_link_tracker_code_id
-#: model:ir.model.fields,field_description:link_tracker.field_link_tracker_id
+#: model:ir.model.fields,field_description:link_tracker.field_link_tracker__id
+#: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click__id
+#: model:ir.model.fields,field_description:link_tracker.field_link_tracker_code__id
 msgid "ID"
 msgstr "ID"
 
 #. module: link_tracker
-#: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click_ip
+#: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click__ip
 msgid "Internet Protocol"
-msgstr ""
+msgstr "Interneto protokolas"
 
 #. module: link_tracker
-#: model:ir.model.fields,field_description:link_tracker.field_link_tracker___last_update
-#: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click___last_update
-#: model:ir.model.fields,field_description:link_tracker.field_link_tracker_code___last_update
+#: model:ir.model.fields,field_description:link_tracker.field_link_tracker____last_update
+#: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click____last_update
+#: model:ir.model.fields,field_description:link_tracker.field_link_tracker_code____last_update
 msgid "Last Modified on"
 msgstr "Paskutinį kartą keista"
 
 #. module: link_tracker
-#: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click_write_uid
-#: model:ir.model.fields,field_description:link_tracker.field_link_tracker_code_write_uid
-#: model:ir.model.fields,field_description:link_tracker.field_link_tracker_write_uid
+#: model:ir.model.fields,field_description:link_tracker.field_link_tracker__write_uid
+#: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click__write_uid
+#: model:ir.model.fields,field_description:link_tracker.field_link_tracker_code__write_uid
 msgid "Last Updated by"
 msgstr "Paskutinį kartą atnaujino"
 
 #. module: link_tracker
-#: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click_write_date
-#: model:ir.model.fields,field_description:link_tracker.field_link_tracker_code_write_date
-#: model:ir.model.fields,field_description:link_tracker.field_link_tracker_write_date
+#: model:ir.model.fields,field_description:link_tracker.field_link_tracker__write_date
+#: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click__write_date
+#: model:ir.model.fields,field_description:link_tracker.field_link_tracker_code__write_date
 msgid "Last Updated on"
 msgstr "Paskutinį kartą atnaujinta"
 
 #. module: link_tracker
-#: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click_link_id
-#: model:ir.model.fields,field_description:link_tracker.field_link_tracker_code_link_id
+#: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click__link_id
+#: model:ir.model.fields,field_description:link_tracker.field_link_tracker_code__link_id
 msgid "Link"
 msgstr "Nuoroda"
 
 #. module: link_tracker
 #: model:ir.actions.act_window,name:link_tracker.action_link_tracker
+#: model:ir.model,name:link_tracker.model_link_tracker
 #: model:ir.ui.menu,name:link_tracker.menu_url_shortener_main
 msgid "Link Tracker"
-msgstr "Nuorodų sekėjas"
+msgstr "Nuorodų sekimas"
 
 #. module: link_tracker
-#: model:ir.model.fields,field_description:link_tracker.field_link_tracker_count
+#: model:ir.model,name:link_tracker.model_link_tracker_click
+msgid "Link Tracker Click"
+msgstr ""
+
+#. module: link_tracker
+#: model:ir.model,name:link_tracker.model_link_tracker_code
+msgid "Link Tracker Code"
+msgstr ""
+
+#. module: link_tracker
+#: model:ir.model.fields,field_description:link_tracker.field_link_tracker__medium_id
+msgid "Medium"
+msgstr "Kanalas"
+
+#. module: link_tracker
+#: model:ir.model.fields,field_description:link_tracker.field_link_tracker__count
 msgid "Number of Clicks"
 msgstr "Paspaudimų skaičius"
 
 #. module: link_tracker
-#: model:ir.model.fields,field_description:link_tracker.field_link_tracker_title
+#: model:ir.model.fields,field_description:link_tracker.field_link_tracker__title
 msgid "Page Title"
 msgstr "Puslapio pavadinimas"
 
 #. module: link_tracker
-#: model:ir.model.fields,field_description:link_tracker.field_link_tracker_redirected_url
+#: model:ir.model.fields,field_description:link_tracker.field_link_tracker__redirected_url
 msgid "Redirected URL"
-msgstr ""
+msgstr "Peradresuota nuoroda"
 
 #. module: link_tracker
-#: model:ir.model.fields,field_description:link_tracker.field_link_tracker_code_code
+#: model:ir.model.fields,field_description:link_tracker.field_link_tracker_code__code
 msgid "Short URL Code"
-msgstr ""
+msgstr "Trumpas URL kodas"
 
 #. module: link_tracker
-#: model:ir.model.fields,field_description:link_tracker.field_link_tracker_code
+#: model:ir.model.fields,field_description:link_tracker.field_link_tracker__code
 msgid "Short URL code"
-msgstr ""
+msgstr "Trumpas URL kodas"
+
+#. module: link_tracker
+#: model:ir.model.fields,field_description:link_tracker.field_link_tracker__source_id
+msgid "Source"
+msgstr "Šaltinis"
 
 #. module: link_tracker
 #: model:ir.actions.act_window,name:link_tracker.action_view_click_statistics
@@ -159,77 +192,87 @@ msgid "Statistics of Clicks"
 msgstr "Paspaudimų statistika"
 
 #. module: link_tracker
-#: model:ir.model.fields,field_description:link_tracker.field_link_tracker_url
+#: model:ir.model.fields,field_description:link_tracker.field_link_tracker__url
 msgid "Target URL"
+msgstr "Tikslo URL"
+
+#. module: link_tracker
+#: model:ir.model.fields,help:link_tracker.field_link_tracker__campaign_id
+msgid ""
+"This is a name that helps you keep track of your different campaign efforts,"
+" e.g. Fall_Drive, Christmas_Special"
 msgstr ""
+"Tai pavadinimas, kuris jums padeda sekti skirtingų kampanijų sėkmingumą, "
+"pvz., Rudens_akcija, Kaledinis_pasiulymas"
+
+#. module: link_tracker
+#: model:ir.model.fields,help:link_tracker.field_link_tracker__medium_id
+msgid "This is the method of delivery, e.g. Postcard, Email, or Banner Ad"
+msgstr ""
+"Tai yra pristatymo metodas, pvz., atvirukas, el. laiškas ar reklaminis "
+"skydelis"
+
+#. module: link_tracker
+#: model:ir.model.fields,help:link_tracker.field_link_tracker__source_id
+msgid ""
+"This is the source of the link, e.g. Search Engine, another domain, or name "
+"of email list"
+msgstr ""
+"Tai yra nuotraukos šaltinis, pvz., paieškos variklis, kitas adresas ar "
+"laiškų sąrašo pavadinimas"
 
 #. module: link_tracker
 #: model_terms:ir.ui.view,arch_db:link_tracker.view_link_tracker_filter
 msgid "Title and URL"
-msgstr ""
+msgstr "Pavadinimas ir URL"
 
 #. module: link_tracker
 #: model_terms:ir.ui.view,arch_db:link_tracker.view_link_tracker_filter
 msgid "Tracked Link"
-msgstr ""
+msgstr "Sekama nuoroda"
 
 #. module: link_tracker
-#: model:ir.model.fields,field_description:link_tracker.field_link_tracker_short_url
+#: model:ir.model.fields,field_description:link_tracker.field_link_tracker__short_url
 msgid "Tracked URL"
-msgstr ""
+msgstr "Sekamas URL"
 
 #. module: link_tracker
 #: model_terms:ir.ui.view,arch_db:link_tracker.view_link_tracker_form
 msgid "Visit Page"
-msgstr ""
+msgstr "Apsilankyti puslapyje"
 
 #. module: link_tracker
-#: code:addons/link_tracker/models/link_tracker.py:141
+#: code:addons/link_tracker/models/link_tracker.py:142
 #, python-format
 msgid "Visit Webpage"
-msgstr ""
+msgstr "Apsilankyti svetainėje"
 
 #. module: link_tracker
 #: model_terms:ir.ui.view,arch_db:link_tracker.view_link_tracker_form
 msgid "Website Link"
-msgstr ""
+msgstr "Svetainės nuoroda"
 
 #. module: link_tracker
 #: model_terms:ir.ui.view,arch_db:link_tracker.view_link_tracker_click_form
 #: model_terms:ir.ui.view,arch_db:link_tracker.view_link_tracker_click_graph
 msgid "Website Link Clicks"
-msgstr ""
+msgstr "Svetainės nuorodų paspaudimai"
 
 #. module: link_tracker
 #: model_terms:ir.ui.view,arch_db:link_tracker.view_link_tracker_form_stats
 msgid "Website Link Graph"
-msgstr ""
+msgstr "Svetainės nuorodų grafikas"
 
 #. module: link_tracker
 #: model_terms:ir.ui.view,arch_db:link_tracker.view_link_tracker_graph
 #: model_terms:ir.ui.view,arch_db:link_tracker.view_link_tracker_tree
 msgid "Website Links"
-msgstr ""
+msgstr "Svetainės nuorodos"
 
 #. module: link_tracker
 #: model_terms:ir.ui.view,arch_db:link_tracker.view_link_tracker_click_tree
 msgid "Website Links Clicks"
-msgstr ""
-
-#. module: link_tracker
-#: model:ir.model,name:link_tracker.model_link_tracker
-msgid "link.tracker"
-msgstr "link.tracker"
-
-#. module: link_tracker
-#: model:ir.model,name:link_tracker.model_link_tracker_click
-msgid "link.tracker.click"
-msgstr "link.tracker.click"
-
-#. module: link_tracker
-#: model:ir.model,name:link_tracker.model_link_tracker_code
-msgid "link.tracker.code"
-msgstr "link.tracker.code"
+msgstr "Svetainės nuorodų paspaudimai"
 
 #. module: link_tracker
 #: model:ir.actions.act_window,name:link_tracker.action_link_tracker_stats

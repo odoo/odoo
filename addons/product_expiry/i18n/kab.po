@@ -1,64 +1,75 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * product_expiry
-#
+# 
 # Translators:
+# Martin Trigaux, 2018
+# Muḥend Belqasem <belkacem77@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2015-09-08 07:20+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Kabyle (http://www.transifex.com/odoo/odoo-9/language/kab/)\n"
-"Language: kab\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-08-24 09:23+0000\n"
+"Last-Translator: Muḥend Belqasem <belkacem77@gmail.com>, 2018\n"
+"Language-Team: Kabyle (https://www.transifex.com/odoo/teams/41243/kab/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: kab\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: product_expiry
-#: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot_alert_date
+#: model_terms:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.view_move_form_expiry_simple
+msgid ""
+"<span class=\"badge badge-danger\" attrs=\"{'invisible': "
+"[('product_expiry_alert', '=', False)]}\">Expiration Alert</span>"
+msgstr ""
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.view_product_form_expiry
+msgid "<span>days</span>"
+msgstr ""
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__alert_date
 msgid "Alert Date"
 msgstr "Azem n welɣu"
 
 #. module: product_expiry
-#: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot_use_date
+#: model:mail.activity.type,name:product_expiry.mail_activity_type_alert_date_reached
+msgid "Alert Date Reached"
+msgstr ""
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__use_date
 msgid "Best before Date"
 msgstr "Yifit lmer send azemz"
 
 #. module: product_expiry
-#: model:product.product,name:product_expiry.product_product_pain
-#: model:product.template,name:product_expiry.product_product_pain_product_template
-msgid "Bread"
-msgstr "Aɣṛum"
-
-#. module: product_expiry
-#: model:product.product,name:product_expiry.product_product_lait
-#: model:product.template,name:product_expiry.product_product_lait_product_template
-msgid "Cow milk"
-msgstr "Ifki n funast"
+#: model:ir.model.fields,help:product_expiry.field_stock_production_lot__alert_date
+msgid ""
+"Date to determine the expired lots and serial numbers using the filter "
+"\"Expiration Alerts\"."
+msgstr ""
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.view_move_form_expiry_simple
+#: model_terms:ir.ui.view,arch_db:product_expiry.view_product_form_expiry
 msgid "Dates"
 msgstr "Izemzen"
 
 #. module: product_expiry
-#: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot_life_date
+#: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__life_date
 msgid "End of Life Date"
 msgstr "Azemz n tagara n tudert"
 
 #. module: product_expiry
-#: model:product.product,name:product_expiry.product_product_jambon
-#: model:product.template,name:product_expiry.product_product_jambon_product_template
-msgid "French cheese Camembert"
-msgstr "Kamembeṛ n fṛansa"
-
-#. module: product_expiry
-#: model:product.product,name:product_expiry.product_product_from
-#: model:product.template,name:product_expiry.product_product_from_product_template
-msgid "Ham"
+#: model_terms:ir.ui.view,arch_db:product_expiry.search_product_lot_filter_inherit_product_expiry
+msgid "Expiration Alerts"
 msgstr ""
 
 #. module: product_expiry
@@ -67,17 +78,61 @@ msgid "Lot/Serial"
 msgstr "Aqeţţun/Amazrar"
 
 #. module: product_expiry
-#: model:ir.model.fields,field_description:product_expiry.field_product_template_alert_time
+#: model:ir.model.fields,help:product_expiry.field_product_product__alert_time
+#: model:ir.model.fields,help:product_expiry.field_product_template__alert_time
+msgid ""
+"Number of days before an alert should be raised on the lot/serial number."
+msgstr ""
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_product_product__life_time
+#: model:ir.model.fields,help:product_expiry.field_product_template__life_time
+msgid ""
+"Number of days before the goods may become dangerous and must not be "
+"consumed. It will be computed on the lot/serial number."
+msgstr ""
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_product_product__removal_time
+#: model:ir.model.fields,help:product_expiry.field_product_template__removal_time
+msgid ""
+"Number of days before the goods should be removed from the stock. It will be"
+" computed on the lot/serial number."
+msgstr ""
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_product_product__use_time
+#: model:ir.model.fields,help:product_expiry.field_product_template__use_time
+msgid ""
+"Number of days before the goods starts deteriorating, without being "
+"dangerous yet. It will be computed using the lot/serial number."
+msgstr ""
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_procurement_group
+msgid "Procurement Group"
+msgstr ""
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_product_product__alert_time
+#: model:ir.model.fields,field_description:product_expiry.field_product_template__alert_time
 msgid "Product Alert Time"
 msgstr ""
 
 #. module: product_expiry
-#: model:ir.model.fields,field_description:product_expiry.field_product_template_life_time
+#: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__product_expiry_alert
+msgid "Product Expiry Alert"
+msgstr ""
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_product_product__life_time
+#: model:ir.model.fields,field_description:product_expiry.field_product_template__life_time
 msgid "Product Life Time"
 msgstr "Akuk n tudart n ufaris"
 
 #. module: product_expiry
-#: model:ir.model.fields,field_description:product_expiry.field_product_template_removal_time
+#: model:ir.model.fields,field_description:product_expiry.field_product_product__removal_time
+#: model:ir.model.fields,field_description:product_expiry.field_product_template__removal_time
 msgid "Product Removal Time"
 msgstr ""
 
@@ -87,7 +142,8 @@ msgid "Product Template"
 msgstr "Taneɣruft n ufaris"
 
 #. module: product_expiry
-#: model:ir.model.fields,field_description:product_expiry.field_product_template_use_time
+#: model:ir.model.fields,field_description:product_expiry.field_product_product__use_time
+#: model:ir.model.fields,field_description:product_expiry.field_product_template__use_time
 msgid "Product Use Time"
 msgstr "Akud n Useqdec n Ufaris"
 
@@ -97,27 +153,32 @@ msgid "Quants"
 msgstr "Tinectiwin"
 
 #. module: product_expiry
-#: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot_removal_date
-#: model:ir.model.fields,field_description:product_expiry.field_stock_quant_removal_date
+#: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__removal_date
+#: model:ir.model.fields,field_description:product_expiry.field_stock_quant__removal_date
 msgid "Removal Date"
 msgstr ""
 
 #. module: product_expiry
-#: model:ir.model.fields,help:product_expiry.field_stock_production_lot_alert_date
-msgid ""
-"This is the date on which an alert should be notified about the goods with "
-"this Serial Number."
+#: model:ir.model.fields,help:product_expiry.field_stock_production_lot__product_expiry_alert
+msgid "The Alert Date has been reached."
 msgstr ""
 
 #. module: product_expiry
-#: model:ir.model.fields,help:product_expiry.field_stock_production_lot_life_date
+#: code:addons/product_expiry/models/production_lot.py:84
+#, python-format
+msgid "The alert date has been reached for this lot/serial number"
+msgstr ""
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_stock_production_lot__life_date
 msgid ""
 "This is the date on which the goods with this Serial Number may become "
 "dangerous and must not be consumed."
 msgstr ""
 
 #. module: product_expiry
-#: model:ir.model.fields,help:product_expiry.field_stock_production_lot_removal_date
+#: model:ir.model.fields,help:product_expiry.field_stock_production_lot__removal_date
+#: model:ir.model.fields,help:product_expiry.field_stock_quant__removal_date
 msgid ""
 "This is the date on which the goods with this Serial Number should be "
 "removed from the stock."
@@ -126,38 +187,10 @@ msgstr ""
 "uselɣals"
 
 #. module: product_expiry
-#: model:ir.model.fields,help:product_expiry.field_stock_production_lot_use_date
+#: model:ir.model.fields,help:product_expiry.field_stock_production_lot__use_date
 msgid ""
 "This is the date on which the goods with this Serial Number start "
 "deteriorating, without being dangerous yet."
 msgstr ""
 "Azemz anda yessefk ad ţwakksen ifarisen s wuṭṭunen agi n umazrar ibeddun "
 "axeţren"
-
-#. module: product_expiry
-#: model:ir.model.fields,help:product_expiry.field_product_template_alert_time
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before an "
-"alert should be notified."
-msgstr ""
-
-#. module: product_expiry
-#: model:ir.model.fields,help:product_expiry.field_product_template_life_time
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before the "
-"goods may become dangerous and must not be consumed."
-msgstr ""
-
-#. module: product_expiry
-#: model:ir.model.fields,help:product_expiry.field_product_template_removal_time
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before the "
-"goods should be removed from the stock."
-msgstr ""
-
-#. module: product_expiry
-#: model:ir.model.fields,help:product_expiry.field_product_template_use_time
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before the "
-"goods starts deteriorating, without being dangerous yet."
-msgstr ""

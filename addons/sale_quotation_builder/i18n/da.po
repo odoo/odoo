@@ -3,20 +3,21 @@
 # * sale_quotation_builder
 # 
 # Translators:
-# Martin Trigaux, 2018
 # Per Rasmussen <perhgrasmussen@gmail.com>, 2018
 # Morten Schou <ms@msteknik.dk>, 2018
 # Ejner Sønniksen <ejner@vkdata.dk>, 2018
 # lhmflexerp <lhm@flexerp.dk>, 2018
 # Sanne Kristensen <sanne@vkdata.dk>, 2018
+# Martin Trigaux, 2018
+# Jonathan Stein <cgs@image.dk>, 2018
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"POT-Creation-Date: 2018-12-19 08:21+0000\n"
 "PO-Revision-Date: 2018-08-24 09:24+0000\n"
-"Last-Translator: Sanne Kristensen <sanne@vkdata.dk>, 2018\n"
+"Last-Translator: Jonathan Stein <cgs@image.dk>, 2018\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,6 +29,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.so_template
 msgid "&amp;times;"
 msgstr "&amp;times;"
+
+#. module: sale_quotation_builder
+#: model_terms:ir.ui.view,arch_db:sale_quotation_builder.brand_promotion
+msgid ""
+",\n"
+"                an awesome"
+msgstr ""
 
 #. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.so_template
@@ -84,7 +92,7 @@ msgstr "Konfigurer opsætning"
 #. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.sale_order_template_view_form_inherit_sale_quotation_builder
 msgid "Edit Template"
-msgstr "Redigér Skabelon"
+msgstr "Redigér skabelon"
 
 #. module: sale_quotation_builder
 #: model_terms:sale.order.template,website_description:sale_quotation_builder.sale_order_template_default
@@ -106,24 +114,39 @@ msgid ""
 msgstr ""
 
 #. module: sale_quotation_builder
+#: model_terms:ir.ui.view,arch_db:sale_quotation_builder.brand_promotion
+msgid "Odoo"
+msgstr "Odoo"
+
+#. module: sale_quotation_builder
+#: model_terms:ir.ui.view,arch_db:sale_quotation_builder.brand_promotion
+msgid "Open Source CRM"
+msgstr ""
+
+#. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.so_template
 msgid "Optional Product:"
-msgstr "Valgfrit Produkt:"
+msgstr "Valgfrit produkt:"
 
 #. module: sale_quotation_builder
 #: model_terms:sale.order.template,website_description:sale_quotation_builder.sale_order_template_default
 msgid "Our Offer"
-msgstr "Vores Tilbud"
+msgstr "Vores tilbud"
 
 #. module: sale_quotation_builder
 #: model_terms:sale.order.template,website_description:sale_quotation_builder.sale_order_template_default
 msgid "Our Quality"
-msgstr "Vores Kvalitet"
+msgstr "Vores kvalitet"
 
 #. module: sale_quotation_builder
 #: model_terms:sale.order.template,website_description:sale_quotation_builder.sale_order_template_default
 msgid "Our Service"
-msgstr "Vores Service"
+msgstr "Vores service"
+
+#. module: sale_quotation_builder
+#: model_terms:ir.ui.view,arch_db:sale_quotation_builder.brand_promotion
+msgid "Powered by"
+msgstr "Drevet af"
 
 #. module: sale_quotation_builder
 #: model_terms:sale.order.template,website_description:sale_quotation_builder.sale_order_template_default
@@ -149,13 +172,11 @@ msgid "Product:"
 msgstr "Produkt:"
 
 #. module: sale_quotation_builder
-#: model:ir.model.fields,field_description:sale_quotation_builder.field_product_product__quotation_description
 #: model:ir.model.fields,field_description:sale_quotation_builder.field_product_template__quotation_description
 msgid "Quotation Description"
 msgstr ""
 
 #. module: sale_quotation_builder
-#: model:ir.model.fields,field_description:sale_quotation_builder.field_product_product__quotation_only_description
 #: model:ir.model.fields,field_description:sale_quotation_builder.field_product_template__quotation_only_description
 msgid "Quotation Only Description"
 msgstr ""
@@ -183,7 +204,7 @@ msgstr ""
 #. module: sale_quotation_builder
 #: model:ir.model,name:sale_quotation_builder.model_sale_order
 msgid "Sale Order"
-msgstr "Salgs ordre"
+msgstr "Salgsordre"
 
 #. module: sale_quotation_builder
 #: model:ir.model,name:sale_quotation_builder.model_sale_order_line
@@ -193,17 +214,15 @@ msgstr "Salgsordrelinje"
 #. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.so_template
 msgid "Terms &amp; Conditions"
-msgstr "Vilkår &amp; betingelser"
+msgstr "Salgs- &amp; leveringsbetingelser"
 
 #. module: sale_quotation_builder
-#: model:ir.model.fields,help:sale_quotation_builder.field_product_product__quotation_only_description
 #: model:ir.model.fields,help:sale_quotation_builder.field_product_template__quotation_only_description
 #: model:ir.model.fields,help:sale_quotation_builder.field_sale_order_template_line__website_description
 msgid "The quotation description (not used on eCommerce)"
 msgstr ""
 
 #. module: sale_quotation_builder
-#: model:ir.model.fields,help:sale_quotation_builder.field_product_product__quotation_description
 #: model:ir.model.fields,help:sale_quotation_builder.field_product_template__quotation_description
 msgid ""
 "This field uses the Quotation Only Description if it is defined, otherwise "

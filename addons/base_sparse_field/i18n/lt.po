@@ -3,61 +3,68 @@
 # * base_sparse_field
 # 
 # Translators:
-# digitouch UAB <digitouchagencyeur@gmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
-# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2017
-# Monika Raciunaite <monika.raciunaite@gmail.com>, 2017
-# Audrius Palenskis <audrius.palenskis@gmail.com>, 2017
-# Anatolij <an@cq.lt>, 2017
+# Martin Trigaux, 2018
+# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2018
+# Anatolij, 2018
+# Silvija Butko <silvija.butko@gmail.com>, 2018
+# Monika Raciunaite <monika.raciunaite@gmail.com>, 2018
+# digitouch UAB <digitouchagencyeur@gmail.com>, 2018
+# Linas Versada <linaskrisiukenas@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Anatolij <an@cq.lt>, 2017\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-08-24 09:16+0000\n"
+"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2018\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: lt\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: base_sparse_field
-#: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test_boolean
+#: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__boolean
 msgid "Boolean"
 msgstr "Boolean"
 
 #. module: base_sparse_field
-#: code:addons/base_sparse_field/models/models.py:24
+#: code:addons/base_sparse_field/models/models.py:25
 #, python-format
 msgid "Changing the storing system for field \"%s\" is not allowed."
-msgstr "Keisti saugojimo sistemą laukui \"%s\" neleidžiama."
+msgstr "Keisti saugojimo sistemos laukui \"%s\" negalima."
 
 #. module: base_sparse_field
-#: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test_char
+#: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__char
 msgid "Char"
 msgstr "Simbolis"
 
 #. module: base_sparse_field
-#: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test_create_uid
+#: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__create_uid
 msgid "Created by"
 msgstr "Sukūrė"
 
 #. module: base_sparse_field
-#: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test_create_date
+#: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__create_date
 msgid "Created on"
 msgstr "Sukurta"
 
 #. module: base_sparse_field
-#: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test_data
+#: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__data
 msgid "Data"
-msgstr "Data"
+msgstr "Duomenys"
 
 #. module: base_sparse_field
-#: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test_display_name
+#: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__display_name
 msgid "Display Name"
-msgstr "Vaizduojamas pavadinimas"
+msgstr "Rodomas pavadinimas"
+
+#. module: base_sparse_field
+#: model:ir.model.fields,field_description:base_sparse_field.field_ir_model_fields__ttype
+msgid "Field Type"
+msgstr "Lauko tipas"
 
 #. module: base_sparse_field
 #: model:ir.model,name:base_sparse_field.model_ir_model_fields
@@ -65,81 +72,163 @@ msgid "Fields"
 msgstr "Laukai"
 
 #. module: base_sparse_field
-#: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test_float
+#: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__float
 msgid "Float"
-msgstr ""
+msgstr "Pozicija"
 
 #. module: base_sparse_field
-#: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test_id
+#: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__id
 msgid "ID"
 msgstr "ID"
 
 #. module: base_sparse_field
-#: model:ir.model.fields,help:base_sparse_field.field_ir_model_fields_serialization_field_id
+#: model:ir.model.fields,help:base_sparse_field.field_ir_model_fields__serialization_field_id
 msgid ""
 "If set, this field will be stored in the sparse structure of the "
 "serialization field, instead of having its own database column. This cannot "
 "be changed after creation."
 msgstr ""
+"Jei nustatyta, šis laukas bus laikomas retoje serijavimo lauko struktūroje, "
+"vietoje to, kad turėtų savo duomenų bazės stulpelį. "
 
 #. module: base_sparse_field
-#: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test_integer
+#: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__integer
 msgid "Integer"
 msgstr "Sveikasis skaičius"
 
 #. module: base_sparse_field
-#: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test___last_update
+#: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test____last_update
 msgid "Last Modified on"
 msgstr "Paskutinį kartą keista"
 
 #. module: base_sparse_field
-#: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test_write_uid
+#: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__write_uid
 msgid "Last Updated by"
 msgstr "Paskutinį kartą atnaujino"
 
 #. module: base_sparse_field
-#: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test_write_date
+#: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__write_date
 msgid "Last Updated on"
 msgstr "Paskutinį kartą atnaujinta"
 
 #. module: base_sparse_field
 #: selection:sparse_fields.test,selection:0
 msgid "One"
-msgstr ""
+msgstr "Vienas"
 
 #. module: base_sparse_field
-#: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test_partner
+#: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__partner
 msgid "Partner"
 msgstr "Partneris"
 
 #. module: base_sparse_field
-#: code:addons/base_sparse_field/models/models.py:26
+#: code:addons/base_sparse_field/models/models.py:27
 #, python-format
 msgid "Renaming sparse field \"%s\" is not allowed"
 msgstr "Reto lauko pervadinimas \"%s\" neleidžiamas"
 
 #. module: base_sparse_field
-#: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test_selection
+#: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__selection
 msgid "Selection"
 msgstr "Pasirinkimas"
 
 #. module: base_sparse_field
-#: model:ir.model.fields,field_description:base_sparse_field.field_ir_model_fields_serialization_field_id
+#: model:ir.model.fields,field_description:base_sparse_field.field_ir_model_fields__serialization_field_id
 msgid "Serialization Field"
-msgstr "Serializacijos laukas"
+msgstr "Serijos laukas"
 
 #. module: base_sparse_field
-#: code:addons/base_sparse_field/models/models.py:38
+#: code:addons/base_sparse_field/models/models.py:39
 #, python-format
 msgid "Serialization field `%s` not found for sparse field `%s`!"
+msgstr "Serijavimo laukas \"%s\" nerastas retame lauke \"%s\"!"
+
+#. module: base_sparse_field
+#: model:ir.model,name:base_sparse_field.model_sparse_fields_test
+msgid "Sparse fields Test"
 msgstr ""
 
 #. module: base_sparse_field
 #: selection:sparse_fields.test,selection:0
 msgid "Two"
+msgstr "Du"
+
+#. module: base_sparse_field
+#: selection:ir.model.fields,ttype:0
+msgid "binary"
+msgstr "binary"
+
+#. module: base_sparse_field
+#: selection:ir.model.fields,ttype:0
+msgid "boolean"
+msgstr "boolean"
+
+#. module: base_sparse_field
+#: selection:ir.model.fields,ttype:0
+msgid "char"
+msgstr "char"
+
+#. module: base_sparse_field
+#: selection:ir.model.fields,ttype:0
+msgid "date"
+msgstr "date"
+
+#. module: base_sparse_field
+#: selection:ir.model.fields,ttype:0
+msgid "datetime"
+msgstr "datetime"
+
+#. module: base_sparse_field
+#: selection:ir.model.fields,ttype:0
+msgid "float"
+msgstr "float"
+
+#. module: base_sparse_field
+#: selection:ir.model.fields,ttype:0
+msgid "html"
+msgstr "html"
+
+#. module: base_sparse_field
+#: selection:ir.model.fields,ttype:0
+msgid "integer"
+msgstr "integer"
+
+#. module: base_sparse_field
+#: selection:ir.model.fields,ttype:0
+msgid "many2many"
+msgstr "many2many"
+
+#. module: base_sparse_field
+#: selection:ir.model.fields,ttype:0
+msgid "many2one"
+msgstr "many2one"
+
+#. module: base_sparse_field
+#: selection:ir.model.fields,ttype:0
+msgid "monetary"
+msgstr "monetary"
+
+#. module: base_sparse_field
+#: selection:ir.model.fields,ttype:0
+msgid "one2many"
+msgstr "one2many"
+
+#. module: base_sparse_field
+#: selection:ir.model.fields,ttype:0
+msgid "reference"
+msgstr "reference"
+
+#. module: base_sparse_field
+#: selection:ir.model.fields,ttype:0
+msgid "selection"
+msgstr "selection"
+
+#. module: base_sparse_field
+#: selection:ir.model.fields,ttype:0
+msgid "serialized"
 msgstr ""
 
 #. module: base_sparse_field
-#: model:ir.model,name:base_sparse_field.model_sparse_fields_test
-msgid "sparse_fields.test"
-msgstr ""
+#: selection:ir.model.fields,ttype:0
+msgid "text"
+msgstr "text"

@@ -3,23 +3,25 @@
 # * bus
 # 
 # Translators:
-# Monika Raciunaite <monika.raciunaite@gmail.com>, 2017
-# Audrius Palenskis <audrius.palenskis@gmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
-# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2017
+# Martin Trigaux, 2018
+# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2018
+# Audrius Palenskis <audrius.palenskis@gmail.com>, 2018
+# Monika Raciunaite <monika.raciunaite@gmail.com>, 2018
+# Linas Versada <linaskrisiukenas@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: UAB \"Draugiški sprendimai\" <transifex@draugiskisprendimai.lt>, 2017\n"
+"POT-Creation-Date: 2018-12-19 08:20+0000\n"
+"PO-Revision-Date: 2018-08-24 09:17+0000\n"
+"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2018\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: lt\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: bus
 #: sql_constraint:bus.presence:0
@@ -27,102 +29,113 @@ msgid "A user can only have one IM status."
 msgstr "Vartotojas gali turėti tik vieną IM būseną."
 
 #. module: bus
-#: selection:bus.presence,status:0
-msgid "Away"
-msgstr "Nutolęs"
+#: model:ir.model,name:bus.model_ir_autovacuum
+msgid "Automatic Vacuum"
+msgstr ""
 
 #. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_bus_channel
+#: selection:bus.presence,status:0
+msgid "Away"
+msgstr "Išėjęs"
+
+#. module: bus
+#: model:ir.model.fields,field_description:bus.field_bus_bus__channel
 msgid "Channel"
 msgstr "Kanalas"
 
 #. module: bus
+#: model:ir.model,name:bus.model_bus_bus
+msgid "Communication Bus"
+msgstr ""
+
+#. module: bus
 #: model:ir.model,name:bus.model_res_partner
 msgid "Contact"
-msgstr "Kontaktas"
+msgstr "Kontaktai"
 
 #. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_bus_create_date
-msgid "Create date"
-msgstr "Sukūrimo data"
-
-#. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_bus_create_uid
+#: model:ir.model.fields,field_description:bus.field_bus_bus__create_uid
 msgid "Created by"
 msgstr "Sukūrė"
 
 #. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_bus_display_name
-#: model:ir.model.fields,field_description:bus.field_bus_presence_display_name
-msgid "Display Name"
-msgstr "Vaizduojamas pavadinimas"
+#: model:ir.model.fields,field_description:bus.field_bus_bus__create_date
+msgid "Created on"
+msgstr "Sukurta"
 
 #. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_bus_id
-#: model:ir.model.fields,field_description:bus.field_bus_presence_id
+#: model:ir.model.fields,field_description:bus.field_bus_bus__display_name
+#: model:ir.model.fields,field_description:bus.field_bus_presence__display_name
+msgid "Display Name"
+msgstr "Rodomas pavadinimas"
+
+#. module: bus
+#: model:ir.model.fields,field_description:bus.field_bus_bus__id
+#: model:ir.model.fields,field_description:bus.field_bus_presence__id
 msgid "ID"
 msgstr "ID"
 
 #. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_presence_status
-#: model:ir.model.fields,field_description:bus.field_res_partner_im_status
-#: model:ir.model.fields,field_description:bus.field_res_users_im_status
+#: model:ir.model.fields,field_description:bus.field_bus_presence__status
+#: model:ir.model.fields,field_description:bus.field_res_partner__im_status
+#: model:ir.model.fields,field_description:bus.field_res_users__im_status
 msgid "IM Status"
 msgstr "IM būsena"
 
 #. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_bus___last_update
-#: model:ir.model.fields,field_description:bus.field_bus_presence___last_update
+#: model:ir.model.fields,field_description:bus.field_bus_bus____last_update
+#: model:ir.model.fields,field_description:bus.field_bus_presence____last_update
 msgid "Last Modified on"
 msgstr "Paskutinį kartą keista"
 
 #. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_presence_last_poll
+#: model:ir.model.fields,field_description:bus.field_bus_presence__last_poll
 msgid "Last Poll"
 msgstr "Paskutinė apklausa"
 
 #. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_presence_last_presence
+#: model:ir.model.fields,field_description:bus.field_bus_presence__last_presence
 msgid "Last Presence"
-msgstr "Paskutinis buvimas"
+msgstr "Paskutinį kartą matytas"
 
 #. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_bus_write_uid
+#: model:ir.model.fields,field_description:bus.field_bus_bus__write_uid
 msgid "Last Updated by"
 msgstr "Paskutinį kartą atnaujino"
 
 #. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_bus_write_date
+#: model:ir.model.fields,field_description:bus.field_bus_bus__write_date
 msgid "Last Updated on"
 msgstr "Paskutinį kartą atnaujinta"
 
 #. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_bus_message
+#: model:ir.model.fields,field_description:bus.field_bus_bus__message
 msgid "Message"
 msgstr "Pranešimas"
 
 #. module: bus
 #: selection:bus.presence,status:0
 msgid "Offline"
-msgstr "Neprisijungta"
+msgstr "Atsijungęs"
 
 #. module: bus
 #: selection:bus.presence,status:0
 msgid "Online"
-msgstr "Prisijungta"
+msgstr "Prisijungęs"
 
 #. module: bus
 #: model:ir.model,name:bus.model_bus_presence
 msgid "User Presence"
-msgstr "Vartotojo buvimas"
+msgstr "Vartotojo aktyvumas"
 
 #. module: bus
 #: model:ir.model,name:bus.model_res_users
-#: model:ir.model.fields,field_description:bus.field_bus_presence_user_id
+#: model:ir.model.fields,field_description:bus.field_bus_presence__user_id
 msgid "Users"
 msgstr "Vartotojai"
 
 #. module: bus
-#: model:ir.model,name:bus.model_bus_bus
-msgid "bus.bus"
-msgstr "bus.bus"
+#: code:addons/bus/controllers/main.py:41
+#, python-format
+msgid "bus.Bus not available in test mode"
+msgstr ""
