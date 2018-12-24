@@ -383,7 +383,7 @@ class ThreadedServer(CommonServer):
             _logger.info("Initiating server reload")
         else:
             _logger.info("Initiating shutdown")
-            _logger.info("Hit CTRL-C again or send a second signal to force the shutdown.")
+            _logger.info("Hit CTRL+C again or send a second signal to force the shutdown.")
 
         stop_time = time.time()
 
