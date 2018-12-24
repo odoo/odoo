@@ -505,6 +505,7 @@ class AccountInvoice(models.Model):
     @api.multi
     def _get_computed_reference(self):
         self.ensure_one()
+<<<<<<< HEAD
         if self.journal_id.invoice_reference_type == 'none':
             return ''
         else:
@@ -513,6 +514,25 @@ class AccountInvoice(models.Model):
                 return ref_function()
             else:
                 raise UserError(_('The combination of reference model and reference type on the journal is not implemented'))
+=======
+        if self.company_id.invoice_reference_type == 'invoice_number':
+            seq_suffix = self.journal_id.sequence_id.suffix or ''
+            regex_number = '.*?([0-9]+)%s$' % seq_suffix
+            exact_match = re.match(regex_number, self.number)
+            if exact_match:
+                identification_number = int(exact_match.group(1))
+            else:
+                ran_num = str(uuid.uuid4().int)
+                identification_number = int(ran_num[:5] + ran_num[-5:])
+            prefix = self.number
+        elif self.company_id.invoice_reference_type == 'partner':
+            identification_number = self.partner_id.id
+            prefix = 'CUST'
+        else:
+            return ''
+
+        return '%s/%s' % (prefix, str(identification_number % 97).rjust(2, '0'))
+>>>>>>> e3378b431ee... temp
 
     # Load all Vendor Bill lines
     @api.onchange('vendor_bill_id')
