@@ -985,10 +985,10 @@ table.table_desc tr td {
     position: fixed;
     z-index: $zindex-modal - 20;
     background: $light;
-    margin-top: -200px;
+    margin-top: -999px;
     transition: margin-top 500ms ease 0s;
     &.affixed {
-        margin-top: 0px;
+        margin-top: 0px !important; // the default margin-top is adapted in JS
     }
 }
 #oe_main_menu_navbar + #wrapwrap .o_header_affix {
