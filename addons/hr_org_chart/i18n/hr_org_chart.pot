@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
+"POT-Creation-Date: 2018-12-24 10:58+0000\n"
+"PO-Revision-Date: 2018-12-24 10:58+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,15 +16,13 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: hr_org_chart
-#. openerp-web
-#: code:addons/hr_org_chart/static/src/js/hr_org_chart.js:137
-#, python-format
-msgid "Direct Subordinates of %s"
+#: model:ir.model.fields,help:hr_org_chart.field_hr_employee__subordinate_ids
+msgid "Direct and indirect subordinates"
 msgstr ""
 
 #. module: hr_org_chart
 #. openerp-web
-#: code:addons/hr_org_chart/static/src/xml/hr_org_chart.xml:126
+#: code:addons/hr_org_chart/static/src/xml/hr_org_chart.xml:125
 #, python-format
 msgid "Direct subordinates"
 msgstr ""
@@ -36,16 +34,9 @@ msgstr ""
 
 #. module: hr_org_chart
 #. openerp-web
-#: code:addons/hr_org_chart/static/src/xml/hr_org_chart.xml:89
+#: code:addons/hr_org_chart/static/src/xml/hr_org_chart.xml:88
 #, python-format
 msgid "In order to get an organigram, set a manager and save the record."
-msgstr ""
-
-#. module: hr_org_chart
-#. openerp-web
-#: code:addons/hr_org_chart/static/src/js/hr_org_chart.js:147
-#, python-format
-msgid "Indirect Subordinates of %s"
 msgstr ""
 
 #. module: hr_org_chart
@@ -55,21 +46,21 @@ msgstr ""
 
 #. module: hr_org_chart
 #. openerp-web
-#: code:addons/hr_org_chart/static/src/xml/hr_org_chart.xml:136
+#: code:addons/hr_org_chart/static/src/xml/hr_org_chart.xml:135
 #, python-format
 msgid "Indirect subordinates"
 msgstr ""
 
 #. module: hr_org_chart
 #. openerp-web
-#: code:addons/hr_org_chart/static/src/xml/hr_org_chart.xml:66
+#: code:addons/hr_org_chart/static/src/xml/hr_org_chart.xml:65
 #, python-format
 msgid "More managers"
 msgstr ""
 
 #. module: hr_org_chart
 #. openerp-web
-#: code:addons/hr_org_chart/static/src/xml/hr_org_chart.xml:87
+#: code:addons/hr_org_chart/static/src/xml/hr_org_chart.xml:86
 #, python-format
 msgid "No hierarchy position."
 msgstr ""
@@ -81,28 +72,26 @@ msgstr ""
 
 #. module: hr_org_chart
 #. openerp-web
-#: code:addons/hr_org_chart/static/src/xml/hr_org_chart.xml:155
+#: code:addons/hr_org_chart/static/src/xml/hr_org_chart.xml:154
 #, python-format
 msgid "Redirect"
 msgstr ""
 
 #. module: hr_org_chart
-#. openerp-web
-#: code:addons/hr_org_chart/static/src/js/hr_org_chart.js:140
-#, python-format
-msgid "Subordinates of %s"
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee__subordinate_ids
+msgid "Subordinates"
 msgstr ""
 
 #. module: hr_org_chart
 #. openerp-web
-#: code:addons/hr_org_chart/static/src/xml/hr_org_chart.xml:88
+#: code:addons/hr_org_chart/static/src/xml/hr_org_chart.xml:87
 #, python-format
 msgid "This employee has no manager or subordinate."
 msgstr ""
 
 #. module: hr_org_chart
 #. openerp-web
-#: code:addons/hr_org_chart/static/src/xml/hr_org_chart.xml:144
+#: code:addons/hr_org_chart/static/src/xml/hr_org_chart.xml:143
 #, python-format
 msgid "Total"
 msgstr ""

@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 12.0\n"
+"Project-Id-Version: Odoo Server saas~12.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 06:49+0000\n"
-"PO-Revision-Date: 2018-10-08 06:49+0000\n"
+"POT-Creation-Date: 2018-12-24 10:59+0000\n"
+"PO-Revision-Date: 2018-12-24 10:59+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -68,38 +68,38 @@ msgstr ""
 #. module: website_slides
 #: model:mail.template,body_html:website_slides.slide_template_shared
 msgid "<div style=\"margin: 0px; padding: 0px;\">\n"
-"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Hello<br/><br/>\n"
-"        ${user.name} shared the ${object.slide_type} <strong>${object.name}</strong> with you!\n"
-"        <div style=\"margin: 16px 8px 16px 8px; text-align: center;\">\n"
-"            <a href=\"${object.website_url}\">\n"
-"                <img alt=\"${object.name}\" src=\"${ctx['base_url']}/web/image/slide.slide/${object.id}/image\" style=\"height:auto; width:150px; margin: 16px;\"/>\n"
-"            </a>\n"
-"        </div>\n"
-"        <div style=\"margin: 16px 8px 16px 8px; text-align: center;\">\n"
-"            <a href=\"${object.website_url}\" style=\"background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">View <strong>${object.name}</strong></a>\n"
-"        </div>\n"
-"    </p>\n"
-"</div>\n"
+"                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                        Hello<br/><br/>\n"
+"                        ${user.name} shared the ${object.slide_type} <strong>${object.name}</strong> with you!\n"
+"                        <div style=\"margin: 16px 8px 16px 8px; text-align: center;\">\n"
+"                            <a href=\"${object.website_url}\">\n"
+"                                <img alt=\"${object.name}\" src=\"${ctx['base_url']}/web/image/slide.slide/${object.id}/image\" style=\"height:auto; width:150px; margin: 16px;\"/>\n"
+"                            </a>\n"
+"                        </div>\n"
+"                        <div style=\"margin: 16px 8px 16px 8px; text-align: center;\">\n"
+"                            <a href=\"${object.website_url}\" style=\"background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">View <strong>${object.name}</strong></a>\n"
+"                        </div>\n"
+"                    </p>\n"
+"                </div>\n"
 "            "
 msgstr ""
 
 #. module: website_slides
 #: model:mail.template,body_html:website_slides.slide_template_published
 msgid "<div style=\"margin: 0px; padding: 0px;\">\n"
-"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Hello<br/><br/>\n"
-"        A new ${object.slide_type} <strong>${object.name}</strong> has been published on ${object.channel_id.name} at ${format_tz(object.write_date, tz=user.tz)}\n"
-"        <div style=\"margin: 16px 8px 16px 8px; text-align: center;\">\n"
-"            <a href=\"${object.website_url}\">\n"
-"                <img alt=\"${object.name}\" src=\"${ctx['base_url']}/web/image/slide.slide/${object.id}/image\" style=\"height:auto; width:150px; margin: 16px;\"/>\n"
-"            </a>\n"
-"        </div>\n"
-"        <div style=\"margin: 16px 8px 16px 8px; text-align: center;\">\n"
-"            <a href=\"${object.website_url}\" style=\"background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">View <strong>${object.name}</strong></a>\n"
-"        </div>\n"
-"    </p>\n"
-"</div>\n"
+"                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                        Hello<br/><br/>\n"
+"                        A new ${object.slide_type} <strong>${object.name}</strong> has been published on ${object.channel_id.name} at ${format_tz(object.write_date, tz=user.tz)}\n"
+"                        <div style=\"margin: 16px 8px 16px 8px; text-align: center;\">\n"
+"                            <a href=\"${object.website_url}\">\n"
+"                                <img alt=\"${object.name}\" src=\"${ctx['base_url']}/web/image/slide.slide/${object.id}/image\" style=\"height:auto; width:150px; margin: 16px;\"/>\n"
+"                            </a>\n"
+"                        </div>\n"
+"                        <div style=\"margin: 16px 8px 16px 8px; text-align: center;\">\n"
+"                            <a href=\"${object.website_url}\" style=\"background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">View <strong>${object.name}</strong></a>\n"
+"                        </div>\n"
+"                    </p>\n"
+"                </div>\n"
 "            "
 msgstr ""
 
@@ -193,7 +193,7 @@ msgid "<i class=\"fa fa-thumbs-up\"/> Likes"
 msgstr ""
 
 #. module: website_slides
-#: code:addons/website_slides/models/slides.py:107
+#: code:addons/website_slides/models/slide_channel.py:93
 #, python-format
 msgid "<p>This channel is private and its content is restricted to some users.</p>"
 msgstr ""
@@ -346,7 +346,7 @@ msgstr ""
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides_upload.js:254
+#: code:addons/website_slides/static/src/js/slides_upload.js:149
 #: code:addons/website_slides/static/src/xml/website_slides.xml:54
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__category_id
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_search
@@ -385,7 +385,7 @@ msgstr ""
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides_upload.js:174
+#: code:addons/website_slides/static/src/js/slides_upload.js:405
 #, python-format
 msgid "Channel contains the given title, please change before Save or Publish."
 msgstr ""
@@ -438,7 +438,7 @@ msgid "Could not fetch data from url. Document or access right not available.\n"
 msgstr ""
 
 #. module: website_slides
-#: code:addons/website_slides/models/slides.py:330
+#: code:addons/website_slides/models/slide_slide.py:128
 #, python-format
 msgid "Could not fetch data from url. Document or access right not available:\n"
 "%s"
@@ -456,7 +456,7 @@ msgstr ""
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides_upload.js:223
+#: code:addons/website_slides/static/src/js/slides_upload.js:114
 #, python-format
 msgid "Create new tag '%s'"
 msgstr ""
@@ -661,7 +661,7 @@ msgstr ""
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/controllers/main.py:274
-#: code:addons/website_slides/static/src/js/slides_upload.js:91
+#: code:addons/website_slides/static/src/js/slides_upload.js:322
 #, python-format
 msgid "File is too big. File size cannot exceed 25MB"
 msgstr ""
@@ -776,7 +776,7 @@ msgstr ""
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides_upload.js:86
+#: code:addons/website_slides/static/src/js/slides_upload.js:317
 #, python-format
 msgid "Invalid file type. Please select pdf or image file"
 msgstr ""
@@ -1079,14 +1079,14 @@ msgstr ""
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides.js:56
+#: code:addons/website_slides/static/src/js/slides_like.js:32
 #, python-format
 msgid "Please <a href=\"/web?redirect=%s\">login</a> to vote this slide"
 msgstr ""
 
 #. module: website_slides
-#: code:addons/website_slides/models/slides.py:333
-#: code:addons/website_slides/models/slides.py:562
+#: code:addons/website_slides/models/slide_slide.py:131
+#: code:addons/website_slides/models/slide_slide.py:360
 #, python-format
 msgid "Please enter valid Youtube or Google Doc URL"
 msgstr ""
@@ -1361,7 +1361,7 @@ msgstr ""
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides_upload.js:277
+#: code:addons/website_slides/static/src/js/slides_upload.js:178
 #: code:addons/website_slides/static/src/xml/website_slides.xml:48
 #: model:ir.actions.act_window,name:website_slides.action_slide_tag
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__tag_ids
@@ -1463,7 +1463,7 @@ msgid "Uncategorized presentation"
 msgstr ""
 
 #. module: website_slides
-#: code:addons/website_slides/models/slides.py:551
+#: code:addons/website_slides/models/slide_slide.py:349
 #, python-format
 msgid "Unknown document"
 msgstr ""
@@ -1617,14 +1617,14 @@ msgstr ""
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides_upload.js:116
+#: code:addons/website_slides/static/src/js/slides_upload.js:347
 #, python-format
 msgid "You can not upload password protected file."
 msgstr ""
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides.js:65
+#: code:addons/website_slides/static/src/js/slides_like.js:46
 #, python-format
 msgid "You have already voted for this slide"
 msgstr ""

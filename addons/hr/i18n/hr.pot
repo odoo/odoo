@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 12.0\n"
+"Project-Id-Version: Odoo Server saas~12.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 06:48+0000\n"
-"PO-Revision-Date: 2018-10-08 06:48+0000\n"
+"POT-Creation-Date: 2018-12-24 10:57+0000\n"
+"PO-Revision-Date: 2018-12-24 10:57+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: hr
-#: code:addons/hr/models/hr.py:76
+#: code:addons/hr/models/hr.py:78
 #, python-format
 msgid "%s (copy)"
 msgstr ""
@@ -132,6 +132,21 @@ msgid "A good job in a young and dynamic team"
 msgstr ""
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_config_settings__hr_presence_control_ip
+msgid "According to the IP address"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_config_settings__hr_presence_control_email
+msgid "According to the amount of sent emails"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_config_settings__hr_presence_control_login
+msgid "According to the system login (User status on chat)"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_needaction
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_needaction
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_needaction
@@ -211,6 +226,11 @@ msgstr ""
 #. module: hr
 #: selection:hr.employee,certificate:0
 msgid "Bachelor"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__barcode
+msgid "Badge ID"
 msgstr ""
 
 #. module: hr
@@ -348,6 +368,11 @@ msgid "Contributions to open source projects"
 msgstr ""
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_config_settings__module_hr_presence
+msgid "Control presence of employees"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__country_of_birth
 msgid "Country of Birth"
 msgstr ""
@@ -422,6 +447,11 @@ msgid "Departments"
 msgstr ""
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__child_ids
+msgid "Direct subordinates"
+msgstr ""
+
+#. module: hr
 #: model:ir.model,name:hr.model_mail_channel
 msgid "Discussion channel"
 msgstr ""
@@ -466,6 +496,7 @@ msgstr ""
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_employee
+#: model:ir.ui.menu,name:hr.menu_human_resources_configuration_employee
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Employee"
 msgstr ""
@@ -487,7 +518,6 @@ msgstr ""
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_categ_form
-#: model:ir.ui.menu,name:hr.menu_view_employee_category_form
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_category_form
 msgid "Employee Tags"
 msgstr ""
@@ -600,6 +630,11 @@ msgid "Gender"
 msgstr ""
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Generate Badge ID"
+msgstr ""
+
+#. module: hr
 #: model_terms:hr.job,website_description:hr.job_developer
 msgid "Good knowledge of HTML and Javascript"
 msgstr ""
@@ -704,6 +739,11 @@ msgid "ID"
 msgstr ""
 
 #. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee__barcode
+msgid "ID used for employee identification."
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__identification_id
 msgid "Identification No"
 msgstr ""
@@ -735,7 +775,7 @@ msgid "If the active field is set to False, it will allow you to hide the resour
 msgstr ""
 
 #. module: hr
-#: code:addons/hr/models/hr.py:296
+#: code:addons/hr/models/hr.py:306
 #, python-format
 msgid "Import Template for Employees"
 msgstr ""
@@ -866,6 +906,11 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.action_hr_job
 msgid "Let's create a job position."
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Login Information"
 msgstr ""
 
 #. module: hr
@@ -1098,6 +1143,16 @@ msgstr ""
 #. module: hr
 #: selection:hr.employee,activity_state:0
 msgid "Overdue"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__pin
+msgid "PIN"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee__pin
+msgid "PIN used to Check In/Out in Kiosk Mode (if enabled in Configuration)."
 msgstr ""
 
 #. module: hr
@@ -1374,17 +1429,13 @@ msgid "Subordinate Hierarchy"
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee__child_ids
-msgid "Subordinates"
-msgstr ""
-
-#. module: hr
 #: sql_constraint:hr.employee.category:0
 msgid "Tag name already exists !"
 msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__category_ids
+#: model:ir.ui.menu,name:hr.menu_view_employee_category_form
 msgid "Tags"
 msgstr ""
 
@@ -1396,6 +1447,17 @@ msgstr ""
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_developer
 msgid "Team spirit and good communication"
+msgstr ""
+
+#. module: hr
+#: sql_constraint:hr.employee:0
+msgid "The Badge ID must be unique, this one is already assigned to another employee."
+msgstr ""
+
+#. module: hr
+#: code:addons/hr/models/hr.py:212
+#, python-format
+msgid "The PIN must be a sequence of digits."
 msgstr ""
 
 #. module: hr
@@ -1680,13 +1742,7 @@ msgid "You are ready to work in a dynamic company"
 msgstr ""
 
 #. module: hr
-#: code:addons/hr/models/hr.py:206
-#, python-format
-msgid "You cannot create a recursive hierarchy."
-msgstr ""
-
-#. module: hr
-#: code:addons/hr/models/hr.py:331
+#: code:addons/hr/models/hr.py:341
 #, python-format
 msgid "You cannot create recursive departments."
 msgstr ""

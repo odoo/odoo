@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 12.0\n"
+"Project-Id-Version: Odoo Server saas~12.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 06:49+0000\n"
-"PO-Revision-Date: 2018-10-08 06:49+0000\n"
+"POT-Creation-Date: 2018-12-24 10:59+0000\n"
+"PO-Revision-Date: 2018-12-24 10:59+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,13 +16,13 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: gamification
-#: code:addons/gamification/models/challenge.py:594
+#: code:addons/gamification/models/challenge.py:609
 #, python-format
 msgid "%s has joined the challenge"
 msgstr ""
 
 #. module: gamification
-#: code:addons/gamification/models/challenge.py:603
+#: code:addons/gamification/models/challenge.py:618
 #, python-format
 msgid "%s has refused the challenge"
 msgstr ""
@@ -132,25 +132,25 @@ msgid "<?xml version=\"1.0\"?>\n"
 msgstr ""
 
 #. module: gamification
-#: code:addons/gamification/models/challenge.py:660
+#: code:addons/gamification/models/challenge.py:675
 #, python-format
 msgid "<br/> %(rank)d. %(user_name)s - %(reward_name)s"
 msgstr ""
 
 #. module: gamification
-#: code:addons/gamification/models/challenge.py:657
+#: code:addons/gamification/models/challenge.py:672
 #, python-format
 msgid "<br/>Nobody has succeeded to reach every goal, no badge is rewarded for this challenge."
 msgstr ""
 
 #. module: gamification
-#: code:addons/gamification/models/challenge.py:655
+#: code:addons/gamification/models/challenge.py:670
 #, python-format
 msgid "<br/>Reward (badge %s) for every succeeding user was sent to %s."
 msgstr ""
 
 #. module: gamification
-#: code:addons/gamification/models/challenge.py:665
+#: code:addons/gamification/models/challenge.py:680
 #, python-format
 msgid "<br/>Special rewards were sent to the top competing users. The ranking for this challenge is :"
 msgstr ""
@@ -265,7 +265,7 @@ msgid "<table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\" style=\"backgro
 "                                        <tr><td style=\"padding:0 30px;\">\n"
 "                                            <table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\" style=\"table-layout: fixed;\">\n"
 "                                                <tr>\n"
-"                                                    % set top_goals = [line['goals'][1], line['goals'][0], line['goals'][2]]\n"
+"                                                    % set top_goals = line['goals'][:3]\n"
 "                                                    % for goal in top_goals:\n"
 "                                                        <td align=\"center\" style=\"width:32%;\">\n"
 "                                                            % if loop.index == 1:\n"
@@ -537,7 +537,7 @@ msgid "Can not grant"
 msgstr ""
 
 #. module: gamification
-#: code:addons/gamification/models/goal.py:413
+#: code:addons/gamification/models/goal.py:412
 #, python-format
 msgid "Can not modify the configuration of a started goal"
 msgstr ""
@@ -1371,7 +1371,7 @@ msgid "No one, assigned through challenges"
 msgstr ""
 
 #. module: gamification
-#: code:addons/gamification/models/challenge.py:672
+#: code:addons/gamification/models/challenge.py:687
 #, python-format
 msgid "Nobody reached the required conditions to receive special badges."
 msgstr ""
@@ -1762,7 +1762,7 @@ msgid "The action that will be called to update the goal value."
 msgstr ""
 
 #. module: gamification
-#: code:addons/gamification/models/challenge.py:651
+#: code:addons/gamification/models/challenge.py:666
 #, python-format
 msgid "The challenge %s is finished."
 msgstr ""
@@ -1790,7 +1790,7 @@ msgid "The day a new challenge will be automatically started. If no periodicity 
 msgstr ""
 
 #. module: gamification
-#: code:addons/gamification/models/goal.py:93
+#: code:addons/gamification/models/goal.py:92
 #, python-format
 msgid "The domain for the definition %s seems incorrect, please check it.\n"
 "\n"
@@ -1833,7 +1833,7 @@ msgid "The maximum number of time this badge can be sent per month per person."
 msgstr ""
 
 #. module: gamification
-#: code:addons/gamification/models/goal.py:110
+#: code:addons/gamification/models/goal.py:109
 #, python-format
 msgid "The model configuration for the definition %s seems incorrect, please check it.\n"
 "\n"
@@ -1841,7 +1841,7 @@ msgid "The model configuration for the definition %s seems incorrect, please che
 msgstr ""
 
 #. module: gamification
-#: code:addons/gamification/models/goal.py:107
+#: code:addons/gamification/models/goal.py:106
 #, python-format
 msgid "The model configuration for the definition %s seems incorrect, please check it.\n"
 "\n"
@@ -1990,7 +1990,7 @@ msgid "Update"
 msgstr ""
 
 #. module: gamification
-#: code:addons/gamification/models/goal.py:448
+#: code:addons/gamification/models/goal.py:447
 #, python-format
 msgid "Update %s"
 msgstr ""
