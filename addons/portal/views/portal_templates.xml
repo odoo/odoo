@@ -27,10 +27,10 @@
                 <header>
                     <nav class="navbar navbar-expand-md navbar-light bg-light">
                         <div class="container">
-                            <a href="/" class="navbar-brand logo">
+                            <a href="/" class="navbar-brand logo" id="navbar-brand">
                                 <span t-field="res_company.logo" t-options="{'widget': 'image'}" t-att-alt="'Logo of %s' % res_company.name" t-att-title="res_company.name"/>
                             </a>
-                            <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#top_menu_collapse">
+                            <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#top_menu_collapse" id="navbar-toggler">
                                 <span class="navbar-toggler-icon"/>
                             </button>
                             <div class="collapse navbar-collapse" id="top_menu_collapse">
