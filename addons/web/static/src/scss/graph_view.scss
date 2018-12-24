@@ -33,6 +33,27 @@
                     }
                 }
             }
+
+            /* Use less than 50% of the screen area for tooltip and show legends in 3 column of 33% each */
+            &.o_tooltip_split_in_columns .nvtooltip {
+                max-width: 48%;
+                tbody {
+                    display: flex;
+                    flex-flow: wrap;
+                    tr {
+                        width: 33%;
+                        td {
+                            display: inline-block;
+                            &.key {
+                                min-width: 160px;
+                                max-width: 70%;
+                                overflow-x: hidden;
+                                text-overflow: ellipsis;
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }

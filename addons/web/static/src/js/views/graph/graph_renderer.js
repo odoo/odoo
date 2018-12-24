@@ -21,6 +21,7 @@ var CHART_TYPES = ['pie', 'bar', 'line'];
 
 // hide top legend when too many items for device size
 var MAX_LEGEND_LENGTH = 25 * (Math.max(1, config.device.size_class));
+var SPLIT_THRESHOLD = config.device.isMobile ? Infinity : 20;
 
 return AbstractRenderer.extend({
     className: "o_graph_container",
@@ -412,7 +413,11 @@ return AbstractRenderer.extend({
             }
         }
 
-        var $svgContainer = $('<div/>', {class: 'o_graph_svg_container'});
+        var $svgContainer = $('<div/>', { class: 'o_graph_svg_container'});
+        // Split the tooltip into columns for large data because some portion goes out off the screen.
+        if (data.length >= SPLIT_THRESHOLD) {
+            $svgContainer.addClass('o_tooltip_split_in_columns');
+        }
         this.$el.append($svgContainer);
         var svg = d3.select($svgContainer[0]).append('svg');
         svg.datum(data);
