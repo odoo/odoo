@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
+"POT-Creation-Date: 2018-12-24 10:57+0000\n"
+"PO-Revision-Date: 2018-12-24 10:57+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -37,6 +37,16 @@ msgstr ""
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_needaction
 msgid "Action Needed"
+msgstr ""
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_ids
+msgid "Activities"
+msgstr ""
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_state
+msgid "Activity State"
 msgstr ""
 
 #. module: stock_landed_costs
@@ -182,7 +192,6 @@ msgid "Equal"
 msgstr ""
 
 #. module: stock_landed_costs
-#: model:ir.model.fields,help:stock_landed_costs.field_product_product__split_method
 #: model:ir.model.fields,help:stock_landed_costs.field_product_template__split_method
 msgid "Equal : Cost will be equally divided.\n"
 "By Quantity : Cost will be divided according to product's quantity.\n"
@@ -223,6 +232,11 @@ msgstr ""
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
+msgid "Future Activities"
+msgstr ""
+
+#. module: stock_landed_costs
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
 msgid "Group By"
 msgstr ""
 
@@ -249,7 +263,6 @@ msgid "If checked, some messages have a delivery error."
 msgstr ""
 
 #. module: stock_landed_costs
-#: model:ir.model.fields,help:stock_landed_costs.field_product_product__landed_cost_ok
 #: model:ir.model.fields,help:stock_landed_costs.field_product_template__landed_cost_ok
 msgid "Indicates whether the product is a landed cost."
 msgstr ""
@@ -270,7 +283,6 @@ msgid "Is Follower"
 msgstr ""
 
 #. module: stock_landed_costs
-#: model:ir.model.fields,field_description:stock_landed_costs.field_product_product__landed_cost_ok
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_template__landed_cost_ok
 msgid "Is a Landed Cost"
 msgstr ""
@@ -351,6 +363,11 @@ msgid "Last Updated on"
 msgstr ""
 
 #. module: stock_landed_costs
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
+msgid "Late Activities"
+msgstr ""
+
+#. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_main_attachment_id
 msgid "Main Attachment"
 msgstr ""
@@ -376,6 +393,21 @@ msgstr ""
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:64
 #, python-format
 msgid "New"
+msgstr ""
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr ""
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_summary
+msgid "Next Activity Summary"
+msgstr ""
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_type_id
+msgid "Next Activity Type"
 msgstr ""
 
 #. module: stock_landed_costs
@@ -416,6 +448,16 @@ msgid "Only draft landed costs can be validated"
 msgstr ""
 
 #. module: stock_landed_costs
+#: selection:stock.landed.cost,activity_state:0
+msgid "Overdue"
+msgstr ""
+
+#. module: stock_landed_costs
+#: selection:stock.landed.cost,activity_state:0
+msgid "Planned"
+msgstr ""
+
+#. module: stock_landed_costs
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:314
 #, python-format
 msgid "Please configure Stock Expense Account for product: %s."
@@ -453,7 +495,16 @@ msgid "Quantity"
 msgstr ""
 
 #. module: stock_landed_costs
-#: model:ir.model.fields,field_description:stock_landed_costs.field_product_product__split_method
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_user_id
+msgid "Responsible User"
+msgstr ""
+
+#. module: stock_landed_costs
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
+msgid "Show all records which has next action date is before today"
+msgstr ""
+
+#. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_template__split_method
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__split_method
 msgid "Split Method"
@@ -470,6 +521,14 @@ msgid "Status"
 msgstr ""
 
 #. module: stock_landed_costs
+#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__activity_state
+msgid "Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+
+#. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_stock_landed_cost
 msgid "Stock Landed Cost"
 msgstr ""
@@ -483,6 +542,16 @@ msgstr ""
 #: model:ir.model,name:stock_landed_costs.model_stock_move
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__move_id
 msgid "Stock Move"
+msgstr ""
+
+#. module: stock_landed_costs
+#: selection:stock.landed.cost,activity_state:0
+msgid "Today"
+msgstr ""
+
+#. module: stock_landed_costs
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
+msgid "Today Activities"
 msgstr ""
 
 #. module: stock_landed_costs
