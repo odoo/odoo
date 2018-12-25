@@ -54,8 +54,8 @@ return AbstractModel.extend({
      *   to keep track of various entities.
      */
     load: function (params) {
-        this.initialGroupBys = _.isString(params.groupBys) ? [params.groupBys] : params.groupBys;
-        var groupBys = _.isString(params.context.graph_groupbys) ? [params.context.graph_groupbys] : (params.context.graph_groupbys || this.initialGroupBys);
+        var groupBys = params.context.graph_groupbys || params.groupBys;
+        this.initialGroupBys = groupBys;
         this.fields = params.fields;
         this.modelName = params.modelName;
         this.chart = {
@@ -113,8 +113,8 @@ return AbstractModel.extend({
         if ('domain' in params) {
             this.chart.domain = params.domain;
         }
-        if ('viewGroupBys' in params) {
-            this.chart.groupedBy = params.viewGroupBys.graphGroupBy.length ? params.viewGroupBys.graphGroupBy : this.initialGroupBys;
+        if ('groupBy' in params) {
+            this.chart.groupedBy = params.groupBy.length ? params.groupBy : this.initialGroupBys;
         }
         if ('intervalMapping' in params) {
             this.chart.intervalMapping = params.intervalMapping;

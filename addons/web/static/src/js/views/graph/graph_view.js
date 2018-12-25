@@ -79,14 +79,6 @@ var GraphView = AbstractView.extend({
             }
         });
 
-        // give highest priority to graph_groupbys if given in action context
-        // then group_by key of action context then type='row/col' fields of graph view for groupBys
-        if (params.action && params.action.context && params.action.context.graph_groupbys && params.action.context.graph_groupbys.length) {
-            groupBys = params.action.context.graph_groupbys;
-        } else if (params.action && params.action.context && params.action.context.group_by && params.action.context.group_by.length) {
-            groupBys = params.action.context.group_by;
-        }
-
         this.controllerParams.measures = measures;
         this.controllerParams.groupableFields = groupableFields;
         this.rendererParams.stacked = this.arch.attrs.stacked !== "False";
@@ -94,18 +86,10 @@ var GraphView = AbstractView.extend({
 
         this.loadParams.mode = this.arch.attrs.type || 'bar';
         this.loadParams.measure = measure || '__count__';
-        this.loadParams.groupBys = groupBys;
-        this.loadParams.groupedBy = params.viewGroupBys ? params.viewGroupBys.graphGroupBy : this.loadParams.groupedBy;
+        this.loadParams.groupBys = groupBys || [];
         this.loadParams.intervalMapping = intervalMapping;
         this.loadParams.fields = this.fields;
         this.loadParams.comparisonDomain = params.comparisonDomain;
-    },
-    _updateMVCParams: function (searchQuery) {
-        this._super.apply(this, arguments);
-
-        if (searchQuery.viewGroupBys) {
-            this.loadParams.groupedBy = searchQuery.viewGroupBys.graphGroupBy;
-        }
     },
 });
 
