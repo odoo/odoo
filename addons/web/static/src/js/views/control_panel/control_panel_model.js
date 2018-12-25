@@ -11,6 +11,7 @@ var session = require('web.session');
 
 var _t = core._t;
 
+var DEFAULT_INTERVAL = controlPanelViewParameters.DEFAULT_INTERVAL;
 var DEFAULT_TIMERANGE = controlPanelViewParameters.DEFAULT_TIMERANGE;
 var TIME_RANGE_OPTIONS = controlPanelViewParameters.TIME_RANGE_OPTIONS;
 var COMPARISON_TIME_RANGE_OPTIONS = controlPanelViewParameters.COMPARISON_TIME_RANGE_OPTIONS;
@@ -288,6 +289,7 @@ var ControlPanelModel = mvc.Model.extend({
         }
 
         var groupBys = this._getGroupBy();
+        var viewGroupbys = this._getViewGroupBy();
         var groupBy = groupBys.length ?
                         groupBys :
                         (this.actionContext.group_by || []);
@@ -300,6 +302,7 @@ var ControlPanelModel = mvc.Model.extend({
             domain: results.domain,
             groupBy: groupBy,
             orderedBy: this._getOrderedBy(),
+            viewGroupbys: viewGroupbys,
         };
     },
     /**
@@ -897,6 +900,65 @@ var ControlPanelModel = mvc.Model.extend({
         }
         return context;
     },
+    _getViewGroupBy: function () {
+        var self = this;
+        var viewGroupBys = {'pivotRowGroupby': [], 'pivotColumnGroupby': [], 'graphGroupbys': []};
+        var groups = _.map(this.query, function (groupId) {
+                return self.groups[groupId];
+            });
+        var activeFilterIds = _.map(groups, function (group) {
+            return group.activeFilterIds;
+        });
+        var filters = _.map(_.flatten(activeFilterIds), function (filterId) {
+            return self.filters[filterId];
+        });
+        _.each(filters, function (filter) {
+            if (filter.type === 'groupBy') {
+                if (filter.pivotRowGroupby) {
+                    _.each(filter.pivotRowGroupby, function (pivotRowGroupby) {
+                        var groupBy = pivotRowGroupby.fieldName;
+                        var fieldType = self.fields[groupBy].type;
+                        if (_.contains(['date', 'datetime'], fieldType)) {
+                            groupBy = groupBy + ':' + (filter.currentOptionId || pivotRowGroupby.pivotRowGroupbyInterval || DEFAULT_INTERVAL);
+                        }
+                        viewGroupBys['pivotRowGroupby'].push(groupBy);
+                    });
+                }
+                if (filter.pivotColumnGroupby) {
+                    _.each(filter.pivotColumnGroupby, function (pivotColumnGroupby) {
+                        var groupBy = pivotColumnGroupby.fieldName;
+                        var fieldType = self.fields[groupBy].type;
+                        if (_.contains(['date', 'datetime'], fieldType)) {
+                            groupBy = groupBy + ':' + (filter.currentOptionId || pivotColumnGroupby.pivotColumnGroupbyInterval || DEFAULT_INTERVAL);
+                        }
+                        viewGroupBys['pivotColumnGroupby'].push(groupBy);
+                    });
+                }
+                if (filter.graphGroupbys) {
+                    _.each(filter.graphGroupbys, function (graphGroupby) {
+                        var groupBy = graphGroupby.fieldName;
+                        var fieldType = self.fields[groupBy].type;
+                        if (_.contains(['date', 'datetime'], fieldType)) {
+                            groupBy = groupBy + ':' + (filter.currentOptionId || graphGroupby.graphGroupbysInterval || DEFAULT_INTERVAL);
+                        }
+                        viewGroupBys['graphGroupbys'].push(groupBy);
+                    });
+                }
+            }
+            if (filter.type === 'favorite') {
+                if (filter.pivotRowGroupby) {
+                    viewGroupBys['pivotRowGroupby'].concat(filter.pivotRowGroupby);
+                }
+                if (filter.pivotColumnGroupby) {
+                    viewGroupBys['pivotColumnGroupby'].concat(filter.pivotColumnGroupby);
+                }
+                if (filter.graphGroupbys) {
+                    viewGroupBys['graphGroupbys'].concat(filter.graphGroupbys);
+                }
+            }
+        });
+        return viewGroupBys;
+    },
     /**
      * Load custom filters in db, then create a group of type 'favorite' and a
      * filter of type 'favorite' for each loaded custom filters.
@@ -1050,6 +1112,16 @@ var ControlPanelModel = mvc.Model.extend({
         var groupBys = this._getGroupBy();
         if (groupBys.length) {
             context.group_by = groupBys;
+        }
+        var viewGroupbys = this._getViewGroupBy();
+        if (viewGroupbys.pivotRowGroupby) {
+            context.pivot_row_groupby = viewGroupbys.pivotRowGroupby;
+        }
+        if (viewGroupbys.pivotColumnGroupby) {
+            context.pivot_column_groupby = viewGroupbys.pivotColumnGroupby;
+        }
+        if (viewGroupbys.graphGroupbys) {
+            context.graph_groupbys = viewGroupbys.graphGroupbys;
         }
         var domain = this._getDomain();
         var userId = favorite.isShared ? false : session.uid;

@@ -122,6 +122,39 @@ var ControlPanelView = Factory.extend({
                     child.tag = 'groupBy';
                     child.attrs.fieldName = context.group_by.split(':')[0];
                     child.attrs.defaultInterval = context.group_by.split(':')[1];
+
+                    // pivot_row_groupby, pivot_column_groupby and graph_groupbys
+                    if (context.pivot_row_groupby) {
+                        var pivotRowGroupbys = [];
+                        _.each(context.pivot_row_groupby, function(groupby_field) {
+                            pivotRowGroupbys.push({
+                                fieldName: groupby_field.split(':')[0],
+                                pivotRowGroupbyInterval: groupby_field.split(':')[1]
+                            });
+                        });
+                        child.attrs.pivotRowGroupby = pivotRowGroupbys;
+                    }
+                    if (context.pivot_column_groupby) {
+                        var pivotColumnGroupby = [];
+                        _.each(context.pivot_column_groupby, function(groupby_field) {
+                            pivotColumnGroupby.push({
+                                fieldName: groupby_field.split(':')[0],
+                                pivotColumnGroupbyInterval: groupby_field.split(':')[1]
+                            });
+                        });
+                        child.attrs.pivotColumnGroupby = pivotColumnGroupby;
+                    }
+                    if (context.graph_groupbys) {
+                        var graphGroupbys = [];
+                        _.each(context.graph_groupbys, function(groupby_field) {
+                            graphGroupbys.push({
+                                fieldName: groupby_field.split(':')[0],
+                                graphGroupbysInterval: groupby_field.split(':')[1]
+                            });
+                        });
+                        child.attrs.graphGroupbys = graphGroupbys;
+                    }
+
                 }
             } catch (e) {}
         }
@@ -153,6 +186,7 @@ var ControlPanelView = Factory.extend({
                 filter.currentOptionId = false;
             }
         } else if (filter.type === 'groupBy') {
+            filter.context = pyUtils.eval('context', attrs.context);
             filter.fieldName = attrs.fieldName;
             filter.fieldType = this.fields[attrs.fieldName].type;
             if (_.contains(['date', 'datetime'], filter.fieldType)) {
@@ -161,6 +195,15 @@ var ControlPanelView = Factory.extend({
                 filter.defaultOptionId = attrs.defaultInterval ||
                                             DEFAULT_INTERVAL;
                 filter.currentOptionId = false;
+                if (attrs.pivotRowGroupby) {
+                    filter.pivotRowGroupby = attrs.pivotRowGroupby;
+                }
+                if (attrs.pivotColumnGroupby) {
+                    filter.pivotColumnGroupby = attrs.pivotColumnGroupby;
+                }
+                if (attrs.graphGroupbys) {
+                    filter.graphGroupbys = attrs.graphGroupbys;
+                }
             }
         } else if (filter.type === 'field') {
             var field = this.fields[attrs.name];

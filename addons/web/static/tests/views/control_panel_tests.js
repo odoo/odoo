@@ -142,6 +142,9 @@ QUnit.module('Views', {
             controlPanelFactory.loadParams.groups,
             [[
                 {
+                    context: {
+                        group_by: "date_field:day"
+                    },
                     currentOptionId: false,
                     defaultOptionId: "day",
                     description: "Hi",

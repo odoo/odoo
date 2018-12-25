@@ -428,6 +428,14 @@ var PivotModel = AbstractModel.extend({
         if ('groupBy' in params) {
             this.data.groupedBy = params.groupBy.length ? params.groupBy : this.defaultGroupedBy;
         }
+        if ('viewGroupbys' in params) {
+            if (params.viewGroupbys.pivotRowGroupby) {
+                this.data.groupedBy = params.viewGroupbys.pivotRowGroupby;
+            }
+            if (params.viewGroupbys.pivotColumnGroupby) {
+                this.data.colGroupBys = params.viewGroupbys.pivotColumnGroupby;
+            }
+        }
         if (!this.data.has_data) {
             return this._loadData();
         }

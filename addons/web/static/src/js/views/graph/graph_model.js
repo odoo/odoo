@@ -116,6 +116,9 @@ return AbstractModel.extend({
         if ('groupBy' in params) {
             this.chart.groupedBy = params.groupBy.length ? params.groupBy : this.initialGroupBys;
         }
+        if ('viewGroupbys' in params && params.viewGroupbys.graphGroupbys) {
+            this.chart.groupedBy = params.viewGroupbys.graphGroupbys;
+        }
         if ('intervalMapping' in params) {
             this.chart.intervalMapping = params.intervalMapping;
         }
