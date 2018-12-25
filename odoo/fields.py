@@ -2567,7 +2567,7 @@ class Many2many(_RelationalMulti):
     def _setup_regular_base(self, model):
         super(Many2many, self)._setup_regular_base(model)
         if self.store:
-            if self.relation or self.column1 or self.column2:
+            if not(all[self.relation, self.column1, self.column2]):
                 # table name is based on the stable alphabetical order of tables
                 comodel = model.env[self.comodel_name]
                 if not self.relation:
