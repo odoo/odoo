@@ -46,6 +46,7 @@ tour.register('tour_shop_deleted_archived_variants', {
     {
         content: "check add to cart not possible",
         trigger: '#add_to_cart.disabled',
+        run: function () {},
     }
 ]);
 });
