@@ -41,8 +41,14 @@ class MrpAbstractWorkorder(models.AbstractModel):
 
             # Compute the new quantity for the current component
             rounding = move_raw.product_uom.rounding
-            new_qty = self.product_uom_id._compute_quantity(
+            new_qty = move_raw.product_uom._compute_quantity(
                 self.qty_producing * move_raw.unit_factor,
+                move_raw.product_id.uom_id,
+                round=False
+            )
+            # In case the production uom is different than the workorder uom
+            new_qty = self.product_uom_id._compute_quantity(
+                new_qty,
                 self.production_id.product_uom_id,
                 round=False
             )
