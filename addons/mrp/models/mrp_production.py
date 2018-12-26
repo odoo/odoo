@@ -712,11 +712,15 @@ class MrpProduction(models.Model):
             duration_expected = (operation.workcenter_id.time_start +
                                  operation.workcenter_id.time_stop +
                                  cycle_number * operation.time_cycle * 100.0 / operation.workcenter_id.time_efficiency)
+            if self.product_uom_id.uom_type != 'reference':
+                todo_uom = self.env['uom.uom'].search([('category_id', '=', self.product_uom_id.category_id.id), ('uom_type', '=', 'reference')]).id
+            else:
+                todo_uom = self.product_uom_id.id
             workorder = workorders.create({
                 'name': operation.name,
                 'production_id': self.id,
                 'workcenter_id': operation.workcenter_id.id,
-                'product_uom_id': self.product_uom_id.id,
+                'product_uom_id': todo_uom,
                 'operation_id': operation.id,
                 'duration_expected': duration_expected,
                 'state': len(workorders) == 0 and 'ready' or 'pending',
