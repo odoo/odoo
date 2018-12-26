@@ -29,6 +29,7 @@ You could use this simplified accounting in case you work with an (external) acc
         'wizard/account_move_reversal_view.xml',
         'views/account_move_views.xml',
         'wizard/setup_wizards_view.xml',
+        'wizard/chart_wizards_views.xml',
         'wizard/pos_box.xml',
         'views/partner_view.xml',
         'views/account_view.xml',
