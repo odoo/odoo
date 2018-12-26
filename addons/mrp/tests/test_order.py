@@ -719,3 +719,60 @@ class TestMrpOrder(TestMrpCommon):
         move_line_finished = mo.move_finished_ids.mapped('move_line_ids').filtered(lambda m: m.qty_done)
         self.assertEqual(move_line_finished.qty_done, 1)
         self.assertEqual(move_line_finished.product_uom_id, unit, 'Should be 1 unit since the tracking is serial.')
+
+    def test_product_produce_uom_2(self):
+        unit = self.env.ref("uom.product_uom_unit")
+        categ_unit_id = self.env.ref('uom.product_uom_categ_unit')
+        paire = self.env['uom.uom'].create({
+            'name': 'Paire',
+            'factor_inv': 2,
+            'uom_type': 'bigger',
+            'rounding': 0.001,
+            'category_id': categ_unit_id.id
+        })
+        binocular = self.env['product.product'].create({
+            'name': 'Binocular',
+            'type': 'product',
+            'uom_id': unit.id,
+            'uom_po_id': unit.id
+        })
+        nocular = self.env['product.product'].create({
+            'name': 'Nocular',
+            'type': 'product',
+            'tracking': 'serial',
+            'uom_id': unit.id,
+            'uom_po_id': unit.id
+        })
+        bom_binocular = self.env['mrp.bom'].create({
+            'product_tmpl_id': binocular.product_tmpl_id.id,
+            'product_qty': 1,
+            'product_uom_id': unit.id,
+            'bom_line_ids': [(0, 0, {
+                'product_id': nocular.id,
+                'product_qty': 1,
+                'product_uom_id': paire.id
+            })]
+        })
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = binocular
+        mo_form.bom_id = bom_binocular
+        mo_form.product_uom_id = unit
+        mo_form.product_qty = 1
+        mo = mo_form.save()
+
+        mo.action_confirm()
+        self.assertEqual(mo.move_raw_ids.product_uom_qty, 1, 'Quantity should be 1.')
+        self.assertEqual(mo.move_raw_ids.product_uom, paire, 'Move UoM should be "Paire".')
+
+        # produce product
+        produce_form = Form(self.env['mrp.product.produce'].with_context({
+            'active_id': mo.id,
+            'active_ids': [mo.id],
+        }))
+        product_produce = produce_form.save()
+        self.assertEqual(product_produce.qty_producing, 1)
+        self.assertEqual(len(product_produce.workorder_line_ids), 2, 'Should be 2 lines since the component tracking is serial and quantity 2.')
+        self.assertEqual(product_produce.workorder_line_ids[0].qty_to_consume, 1, 'Should be 1 unit since the tracking is serial and quantity 2.')
+        self.assertEqual(product_produce.workorder_line_ids[0].product_uom_id, unit, 'Should be the product uom so "unit"')
+        self.assertEqual(product_produce.workorder_line_ids[1].qty_to_consume, 1, 'Should be 1 unit since the tracking is serial and quantity 2.')
+        self.assertEqual(product_produce.workorder_line_ids[1].product_uom_id, unit, 'should be the product uom so "unit"')
