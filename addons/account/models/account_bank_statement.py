@@ -146,6 +146,8 @@ class AccountBankStatement(models.Model):
     journal_type = fields.Selection(related='journal_id.type', help="Technical field used for usability purposes", readonly=False)
     company_id = fields.Many2one('res.company', related='journal_id.company_id', string='Company', store=True, readonly=True,
         default=lambda self: self.env.company)
+    unit_id = fields.Many2one('res.partner', string="Operating Unit", ondelete="restrict",
+        default=lambda self: self.env.user._get_default_unit())
 
     total_entry_encoding = fields.Monetary('Transactions Subtotal', compute='_end_balance', store=True, help="Total of transaction lines.")
     balance_end = fields.Monetary('Computed Balance', compute='_end_balance', store=True, help='Balance as calculated based on Opening Balance and transaction lines')
@@ -164,6 +166,10 @@ class AccountBankStatement(models.Model):
     @api.onchange('journal_id')
     def onchange_journal_id(self):
         self._set_opening_balance(self.journal_id.id)
+
+    @api.onchange('company_id')
+    def _onchange_company_id(self):
+        self.unit_id = self.company_id.partner_id
 
     @api.multi
     def _balance_check(self):
@@ -280,7 +286,7 @@ class AccountBankStatement(models.Model):
                     st_number = SequenceObj.with_context(**context).next_by_code('account.bank.statement')
                 statement.name = st_number
             statement.state = 'open'
-            
+
     @api.multi
     def action_bank_reconcile_bank_statements(self):
         self.ensure_one()
@@ -437,6 +443,7 @@ class AccountBankStatementLine(models.Model):
             'journal_id': self.statement_id.journal_id.id,
             'date': self.statement_id.accounting_date or self.date,
             'ref': ref,
+            'unit_id': self.statement_id.unit_id.id
         }
         if self.move_name:
             data.update(name=self.move_name)

@@ -90,6 +90,7 @@ class ResConfigSettings(models.TransientModel):
         string='Default Terms & Conditions',
         oldname='default_use_sale_note',
         config_parameter='account.use_invoice_terms')
+    group_multi_operating_unit = fields.Boolean(string="Multi Operating Unit", implied_group='account.group_multi_operating_unit')
 
     @api.multi
     def set_values(self):
@@ -148,6 +149,16 @@ class ResConfigSettings(models.TransientModel):
                              'Modify your taxes first before disabling this setting.')
             }
         return res
+
+    @api.multi
+    def action_open_company(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'res.company',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_id': self.company_id.id,
+        }
 
     @api.model
     def create(self, values):

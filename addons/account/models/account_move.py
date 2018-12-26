@@ -150,6 +150,11 @@ class AccountMove(models.Model):
     currency_id = fields.Many2one('res.currency', compute='_amount_compute', store=True, string="Currency")
     narration = fields.Text(string='Internal Note')
     company_id = fields.Many2one('res.company', related='journal_id.company_id', string='Company', store=True, readonly=True)
+    unit_id = fields.Many2one(
+        'res.partner',
+        string="Operating Unit",
+        ondelete="restrict",
+        default=lambda self: self.env.user._get_default_unit())
     matched_percentage = fields.Float('Percentage Matched', compute='_compute_matched_percentage', digits=0, store=True, readonly=True, help="Technical field used in cash basis method")
     reconcile_model_id = fields.Many2many('account.reconcile.model', compute='_compute_reconcile_model', search='_search_reconcile_model', string="Reconciliation Model", readonly=True)
     # Dummy Account field to search on account.move by account_id
@@ -168,6 +173,10 @@ class AccountMove(models.Model):
     def _validate_move_modification(self):
         if 'posted' in self.mapped('line_ids.payment_id.state'):
             raise ValidationError(_("You cannot modify a journal entry linked to a posted payment."))
+
+    @api.onchange('company_id')
+    def _onchange_company_id(self):
+        self.unit_id = self.company_id.partner_id
 
     @api.onchange('journal_id')
     def _onchange_journal_id(self):
@@ -307,6 +316,13 @@ class AccountMove(models.Model):
 
     @api.model
     def create(self, vals):
+
+        if not vals.get('unit_id'):
+            if vals.get('journal_id'):
+                journal_id = self.env['account.journal'].browse(vals['journal_id'])
+                vals['unit_id'] = journal_id.unit_id and journal_id.unit_id.id or journal_id.company_id.partner_id.id
+            else:
+                vals['unit_id'] = self.env.user.company_id.partner_id.id
         move = super(AccountMove, self.with_context(mail_create_nolog=True, check_move_validity=False, partner_id=vals.get('partner_id'))).create(vals)
         move.assert_balanced()
         return move
@@ -396,6 +412,8 @@ class AccountMove(models.Model):
             if move.line_ids:
                 if not all([x.company_id.id == move.company_id.id for x in move.line_ids]):
                     raise UserError(_("Cannot create moves for different companies."))
+                if move.unit_id and move.journal_id.unit_id and move.unit_id != move.journal_id.unit_id:
+                    raise UserError(_("Cannot create moves for different unit."))
         self.assert_balanced()
         return self._check_lock_date()
 
@@ -1497,6 +1515,12 @@ class AccountMoveLine(models.Model):
         if 'company_ids' in context:
             domain += [('company_id', 'in', context['company_ids'])]
 
+        if context.get('unit_id'):
+            domain += [('move_id.unit_id', '=', context['unit_id'])]
+
+        if context.get('unit_ids'):
+            domain += [('move_id.unit_id', 'in', context['unit_ids'])]
+
         if context.get('reconcile_date'):
             domain += ['|', ('reconciled', '=', False), '|', ('matched_debit_ids.max_date', '>', context['reconcile_date']), ('matched_credit_ids.max_date', '>', context['reconcile_date'])]
 
@@ -1517,7 +1541,6 @@ class AccountMoveLine(models.Model):
 
         if context.get('partner_categories'):
             domain += [('partner_id.category_id', 'in', context['partner_categories'].ids)]
-
         where_clause = ""
         where_clause_params = []
         tables = ''

@@ -89,6 +89,7 @@
                     <filter string="Status" name="status" context="{'group_by':'state'}"/>
                     <filter string="Analytic Account" name="account_analytic_id" context="{'group_by':'account_analytic_id'}" groups="analytic.group_analytic_accounting" />
                     <filter string="Company" name="company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                    <filter string="Unit" name="company" context="{'group_by':'unit_id'}" groups="account.group_multi_operating_unit"/>
                     <separator orientation="vertical" />
                     <filter string="Date" name="date" context="{'group_by':'date'}"/>
                     <filter string="Due Date" name="duemonth" context="{'group_by':'date_due:month'}"/>

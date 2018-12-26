@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="external_layout_unit" inherit_id="web.external_layout">
+        <xpath expr="//t[@t-set='partner_header']" position="after">
+            <t t-if="o and 'unit_id' in o and o.unit_id">
+                <t t-set="partner_header" t-value="o.unit_id"/>
+            </t>
+        </xpath>
+    </template>
+</odoo>

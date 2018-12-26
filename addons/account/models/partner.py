@@ -416,6 +416,7 @@ class ResPartner(models.Model):
     trust = fields.Selection([('good', 'Good Debtor'), ('normal', 'Normal Debtor'), ('bad', 'Bad Debtor')], string='Degree of trust you have in this debtor', default='normal', company_dependent=True)
     invoice_warn = fields.Selection(WARNING_MESSAGE, 'Invoice', help=WARNING_HELP, default="no-message")
     invoice_warn_msg = fields.Text('Message for Invoice')
+    company_unit_id = fields.Many2one('res.company', string="Company of Current Unit", ondelete='cascade')
 
     @api.multi
     def _compute_bank_count(self):

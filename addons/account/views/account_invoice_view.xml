@@ -421,6 +421,7 @@
                                     <field name="payment_term_id" options="{'no_create': True}"/>
                                     <field name="move_id" groups="account.group_account_user" attrs="{'invisible': [('move_id', '=', False)]}"/>
                                     <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                                    <field name="unit_id" domain="[('company_unit_id', '=', company_id)]" options="{'no_create': True}" groups="account.group_multi_operating_unit"/>
                                 </group>
                             </group>
                         </page>
@@ -630,6 +631,7 @@
                                         name="account_id" groups="account.group_account_user"/>
                                     <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                                     <field name="move_id" groups="account.group_account_user" attrs="{'invisible': [('move_id', '=', False)]}"/>
+                                    <field name="unit_id" domain="[('company_unit_id', '=', company_id)]" options="{'no_create': True}" groups="account.group_multi_operating_unit"/>
                                 </group>
                                 <group>
                                     <field name="incoterm_id" options="{'no_create': True}"/>

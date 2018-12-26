@@ -77,6 +77,8 @@ class account_payment(models.Model):
     communication = fields.Char(string='Memo', readonly=True, states={'draft': [('readonly', False)]})
     journal_id = fields.Many2one('account.journal', string='Payment Journal', required=True, readonly=True, states={'draft': [('readonly', False)]}, tracking=True, domain=[('type', 'in', ('bank', 'cash'))])
     company_id = fields.Many2one('res.company', related='journal_id.company_id', string='Company', readonly=True)
+    unit_id = fields.Many2one('res.partner', string="Operating Unit", ondelete="restrict",
+        default=lambda self: self.env.user._get_default_unit())
 
     hide_payment_method = fields.Boolean(compute='_compute_hide_payment_method',
                                          help="Technical field used to hide the payment method if the"
@@ -92,6 +94,7 @@ class account_payment(models.Model):
     partner_bank_account_id = fields.Many2one('res.partner.bank', string="Recipient Bank Account", readonly=True, states={'draft': [('readonly', False)]})
     show_partner_bank_account = fields.Boolean(compute='_compute_show_partner_bank', help='Technical field used to know whether the field `partner_bank_account_id` needs to be displayed or not in the payments form views')
     require_partner_bank_account = fields.Boolean(compute='_compute_show_partner_bank', help='Technical field used to know whether the field `partner_bank_account_id` needs to be required or not in the payments form views')
+    show_unit_id_field = fields.Boolean(compute='_compute_show_unit_id_field')
 
     @api.model
     def default_get(self, fields):
@@ -153,6 +156,12 @@ class account_payment(models.Model):
             payment.show_partner_bank_account = payment.payment_method_code in self._get_method_codes_using_bank_account()
             payment.require_partner_bank_account = payment.payment_method_code in self._get_method_codes_needing_bank_account()
 
+    @api.depends('invoice_ids')
+    def _compute_show_unit_id_field(self):
+        for record in self:
+            if len(record.invoice_ids.mapped('unit_id')) > 1:
+                record.show_unit_id_field = True
+
     @api.multi
     @api.depends('payment_type', 'journal_id')
     def _compute_hide_payment_method(self):
@@ -173,6 +182,7 @@ class account_payment(models.Model):
 
     @api.onchange('journal_id')
     def _onchange_journal(self):
+        self.unit_id = self.journal_id.company_id.partner_id
         if self.journal_id:
             # Set default payment method (we consider the first to be the default one)
             payment_methods = self.payment_type == 'inbound' and self.journal_id.inbound_payment_method_ids or self.journal_id.outbound_payment_method_ids
@@ -601,6 +611,7 @@ class account_payment(models.Model):
             'date': self.payment_date,
             'ref': self.communication or '',
             'company_id': self.company_id.id,
+            'unit_id': self.unit_id.id,
             'journal_id': journal.id,
         }
         if self.move_name:

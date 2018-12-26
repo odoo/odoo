@@ -132,6 +132,7 @@
                     <field name="journal_group_ids" widget="many2many_tags"/>
                     <field name="belongs_to_company" invisible="1"/>
                     <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="unit_id" groups="account.group_multi_operating_unit"/>
                 </tree>
             </field>
         </record>
@@ -225,6 +226,7 @@
                             </group>
                             <group>
                                 <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                                <field name="unit_id" domain="[('company_unit_id', '=', company_id)]" options="{'no_create': True, 'no_open': True}" groups="account.group_multi_operating_unit"/>
                                 <field name="company_partner_id" invisible="1"/>
                             </group>
                         </group>
@@ -543,6 +545,7 @@ action = model.setting_init_bank_account_action()
                             <field name="date" options="{'datepicker': {'warn_future': true}}" />
                             <field name="accounting_date" groups="base.group_no_one"/>
                             <field name='company_id' options="{'no_create': True}" groups="base.group_multi_company" />
+                            <field name="unit_id" domain="[('company_unit_id', '=', company_id)]" options="{'no_create': True, 'no_open': True}" groups="account.group_multi_operating_unit"/>
                             <field name="currency_id" invisible="1"/>
                         </group><group>
                             <label for="balance_start"/>

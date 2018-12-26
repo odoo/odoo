@@ -576,6 +576,7 @@ class AccountJournal(models.Model):
     currency_id = fields.Many2one('res.currency', help='The currency used to enter statement', string="Currency", oldname='currency')
     company_id = fields.Many2one('res.company', string='Company', required=True, index=True, default=lambda self: self.env.company,
         help="Company related to this journal")
+    unit_id = fields.Many2one('res.partner', string="Operating Unit", ondelete="restrict", help="Unit related to this journal. If need the same journal for company all unit then keep this empty.")
 
     refund_sequence = fields.Boolean(string='Dedicated Credit Note Sequence', help="Check this box if you don't want to share the same sequence for invoices and credit notes made from this journal", default=False)
 
@@ -612,7 +613,7 @@ class AccountJournal(models.Model):
     journal_group_ids = fields.Many2many('account.journal.group', string="Journal Groups")
 
     _sql_constraints = [
-        ('code_company_uniq', 'unique (code, name, company_id)', 'The code and name of the journal must be unique per company !'),
+        ('code_company_uniq', 'unique (code, name, company_id, unit_id)', 'The code and name of the journal must be unique per company unit!'),
     ]
 
     @api.multi

@@ -8,6 +8,7 @@ class AccountCommonReport(models.TransientModel):
     _description = "Account Common Report"
 
     company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.company)
+    unit_id = fields.Many2one('res.partner', string='Unit')
     journal_ids = fields.Many2many('account.journal', string='Journals', required=True, default=lambda self: self.env['account.journal'].search([('company_id', '=', self.company_id.id)]))
     date_from = fields.Date(string='Start Date')
     date_to = fields.Date(string='End Date')
@@ -20,8 +21,11 @@ class AccountCommonReport(models.TransientModel):
         if self.company_id:
             self.journal_ids = self.env['account.journal'].search(
                 [('company_id', '=', self.company_id.id)])
+            if self.env.user.has_group('account.group_multi_operating_unit'):
+                self.unit_id = self.env.user.unit_id or self.company_id.partner_id
         else:
             self.journal_ids = self.env['account.journal'].search([])
+            self.unit_id = False
 
     def _build_contexts(self, data):
         result = {}
@@ -31,6 +35,8 @@ class AccountCommonReport(models.TransientModel):
         result['date_to'] = data['form']['date_to'] or False
         result['strict_range'] = True if result['date_from'] else False
         result['company_id'] = data['form']['company_id'][0] or False
+        result['unit_id'] = data['form']['unit_id'] and data['form']['unit_id'][0] or False
+        result['unit_name'] = data['form']['unit_id'] and data['form']['unit_id'][1] or False
         return result
 
     def _print_report(self, data):
@@ -42,7 +48,7 @@ class AccountCommonReport(models.TransientModel):
         data = {}
         data['ids'] = self.env.context.get('active_ids', [])
         data['model'] = self.env.context.get('active_model', 'ir.ui.menu')
-        data['form'] = self.read(['date_from', 'date_to', 'journal_ids', 'target_move', 'company_id'])[0]
+        data['form'] = self.read(['date_from', 'date_to', 'journal_ids', 'target_move', 'company_id', 'unit_id'])[0]
         used_context = self._build_contexts(data)
         data['form']['used_context'] = dict(used_context, lang=self.env.context.get('lang') or 'en_US')
         return self.with_context(discard_logo_check=True)._print_report(data)

@@ -15,6 +15,13 @@
                             <strong>Company:</strong>
                             <p t-esc="res_company.name"/>
                         </div>
+                        <t t-if="data['form']['used_context']['unit_name']">
+                            <div class="col-3">
+                                <strong>Unit:</strong>
+                                <p t-esc="data['form']['used_context']['unit_name']"/>
+                            </div>
+                        </t>
+
                         <div class="col-3">
                             <strong>Journal:</strong>
                             <p t-esc="o.name"/>

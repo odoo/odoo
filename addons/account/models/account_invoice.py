@@ -378,6 +378,9 @@ class AccountInvoice(models.Model):
     company_id = fields.Many2one('res.company', string='Company', change_default=True,
         required=True, readonly=True, states={'draft': [('readonly', False)]},
         default=lambda self: self.env.company)
+    unit_id = fields.Many2one('res.partner', string="Operating Unit",
+        ondelete="restrict", readonly=True, states={'draft': [('readonly', False)]},
+        default=lambda self: self.env.user._get_default_unit())
 
     reconciled = fields.Boolean(string='Paid/Reconciled', store=True, readonly=True, compute='_compute_residual',
         help="It indicates that the invoice has been paid and the journal entry of the invoice has been reconciled with one or several journal entries of payment.")
@@ -916,6 +919,7 @@ class AccountInvoice(models.Model):
         self.payment_term_id = payment_term_id
         self.date_due = False
         self.fiscal_position_id = fiscal_position
+        self.unit_id = self.company_id.partner_id
 
         if type in ('in_invoice', 'out_refund'):
             bank_ids = p.commercial_partner_id.bank_ids
@@ -1404,6 +1408,7 @@ class AccountInvoice(models.Model):
                 'date': date,
                 'narration': inv.comment,
                 'name': inv.number,
+                'unit_id': inv.unit_id.id,
             }
             move = account_move.create(move_vals)
             move.post()
@@ -1668,6 +1673,7 @@ class AccountInvoice(models.Model):
         values['origin'] = invoice.number
         values['payment_term_id'] = False
         values['refund_invoice_id'] = invoice.id
+        values['unit_id'] = invoice.unit_id.id
 
         if values['type'] == 'in_refund':
             partner_bank_result = self._get_partner_bank_id(values['company_id'])

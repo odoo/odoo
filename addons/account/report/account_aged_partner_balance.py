@@ -49,6 +49,7 @@ class ReportAgedPartnerBalance(models.AbstractModel):
         user_company = self.env.company
         user_currency = user_company.currency_id
         company_ids = self._context.get('company_ids') or [user_company.id]
+        unit_ids = self._context.get('unit_ids') or [user_company.partner_id.id]
         move_state = ['draft', 'posted']
         if target_move == 'posted':
             move_state = ['posted']
@@ -69,7 +70,7 @@ class ReportAgedPartnerBalance(models.AbstractModel):
             partner_clause += 'AND (l.partner_id IN %s)'
             partner_ids = self.env['res.partner'].search([('category_id', 'in', ctx['partner_categories'].ids)]).ids
             arg_list += (tuple(partner_ids or [0]),)
-        arg_list += (date_from, tuple(company_ids))
+        arg_list += (date_from, tuple(company_ids), tuple(unit_ids))
         query = '''
             SELECT DISTINCT l.partner_id, UPPER(res_partner.name)
             FROM account_move_line AS l left join res_partner on l.partner_id = res_partner.id, account_account, account_move am
@@ -80,6 +81,7 @@ class ReportAgedPartnerBalance(models.AbstractModel):
                 AND ''' + reconciliation_clause + partner_clause + '''
                 AND (l.date <= %s)
                 AND l.company_id IN %s
+                AND am.unit_id IN %s
             ORDER BY UPPER(res_partner.name)'''
         cr.execute(query, arg_list)
 
@@ -110,7 +112,7 @@ class ReportAgedPartnerBalance(models.AbstractModel):
             else:
                 dates_query += ' <= %s)'
                 args_list += (periods[str(i)]['stop'],)
-            args_list += (date_from, tuple(company_ids))
+            args_list += (date_from, tuple(company_ids), tuple(unit_ids))
 
             query = '''SELECT l.id
                     FROM account_move_line AS l, account_account, account_move am
@@ -121,6 +123,7 @@ class ReportAgedPartnerBalance(models.AbstractModel):
                         AND ''' + dates_query + '''
                     AND (l.date <= %s)
                     AND l.company_id IN %s
+                    AND am.unit_id IN %s
                     ORDER BY COALESCE(l.date_maturity, l.date)'''
             cr.execute(query, args_list)
             partners_amount = {}
@@ -161,8 +164,9 @@ class ReportAgedPartnerBalance(models.AbstractModel):
                     AND ((l.partner_id IN %s) OR (l.partner_id IS NULL))
                 AND (l.date <= %s)
                 AND l.company_id IN %s
+                AND am.unit_id IN %s
                 ORDER BY COALESCE(l.date_maturity, l.date)'''
-        cr.execute(query, (tuple(move_state), tuple(account_type), date_from, tuple(partner_ids), date_from, tuple(company_ids)))
+        cr.execute(query, (tuple(move_state), tuple(account_type), date_from, tuple(partner_ids), date_from, tuple(company_ids), tuple(unit_ids)))
         aml_ids = cr.fetchall()
         aml_ids = aml_ids and [x[0] for x in aml_ids] or []
         for line in self.env['account.move.line'].browse(aml_ids):

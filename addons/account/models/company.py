@@ -83,6 +83,8 @@ Best Regards,'''))
     invoice_is_email = fields.Boolean('Email by default', default=True)
     invoice_is_print = fields.Boolean('Print by default', default=True)
 
+    unit_ids = fields.One2many('res.partner', 'company_unit_id', string="Operating Units")
+
     #Fields of the setup step for opening move
     account_opening_move_id = fields.Many2one(string='Opening Journal Entry', comodel_name='account.move', help="The journal entry containing the initial balance of all this company's accounts.")
     account_opening_journal_id = fields.Many2one(string='Opening Journal', comodel_name='account.journal', related='account_opening_move_id.journal_id', help="Journal where the opening entry of this company's accounting has been posted.", readonly=False)
@@ -275,6 +277,16 @@ Best Regards,'''))
                 ('date', '<=', values['fiscalyear_lock_date'])])
             if nb_draft_entries:
                 raise ValidationError(_('There are still unposted entries in the period you want to lock. You should either post or delete them.'))
+
+    @api.model
+    def create(self, vals):
+        # company's partner will now act as it's unit
+        partner = self.env['res.partner']
+        if vals.get('partner_id'):
+            partner = partner.browse(vals['partner_id'])
+        company = super(ResCompany, self).create(vals)
+        (partner or company.partner_id).company_unit_id = company
+        return company
 
     @api.multi
     def write(self, values):
