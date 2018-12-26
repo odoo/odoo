@@ -157,7 +157,7 @@ class AccountMove(models.Model):
                 }
             invoice.l10n_it_einvoice_name = report_name
 
-            data = b"<?xml version='1.0' encoding='UTF-8'?>" + invoice._export_as_xml()
+            data = b"<?xml version='1.0' encoding='UTF-8'?>" + invoice._get_export_values()
             description = _('Italian invoice: %s') % invoice.type
             invoice.l10n_it_einvoice_id = self.env['ir.attachment'].create({
                 'name': report_name,
@@ -172,7 +172,7 @@ class AccountMove(models.Model):
                 body=(_("E-Invoice is generated on %s by %s") % (fields.Datetime.now(), self.env.user.display_name))
             )
 
-    def _export_as_xml(self):
+    def _get_export_values(self):
         ''' Create the xml file content.
         :return: The XML content as str.
         '''
@@ -251,6 +251,10 @@ class AccountMove(models.Model):
             'pdf': pdf,
             'pdf_name': pdf_name,
         }
+        content = self._export_as_xml(template_values)
+        return content
+
+    def _export_as_xml(self, template_values):
         content = self.env.ref('l10n_it_edi.account_invoice_it_FatturaPA_export').render(template_values)
         return content
 
