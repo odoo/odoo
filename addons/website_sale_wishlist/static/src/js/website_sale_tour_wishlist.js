@@ -61,13 +61,18 @@ tour.register('shop_wishlist', {
             trigger: '.oe_product_cart a:contains("Customizable Desk")',
         },
         {
-            content: "select desk cutomizable",
+            content: "check the first variant is already in wishlist",
+            trigger: '#product_detail .o_add_wishlist_dyn:disabled',
+            run: function () {},
+        },
+        {
+            content: "change variant",
             extra_trigger: '#product_detail label:contains(Aluminium) input',
             trigger: 'label:contains(Aluminium) input',
         },
         {
-            content: "Change variant, wait button enable and click on add to wishlist",
-            extra_trigger: '#product_detail .o_add_wishlist_dyn:not(".disabled")',
+            content: "wait button enable and click on add to wishlist",
+            extra_trigger: '#product_detail .o_add_wishlist_dyn:not(:disabled)',
             trigger: '#product_detail .o_add_wishlist_dyn',
         },
         {
