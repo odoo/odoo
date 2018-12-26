@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="report_ddt_view">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <div class="mt16"/>
+                        <div class="row">
+                            <div class="col-6">
+                               <span><strong>Warehouse Address:</strong></span>
+                                <div t-field="o.picking_type_id.warehouse_id.partner_id"
+                                    t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
+                            </div>
+                            <div class="col-5 offset-1">
+                                <div>
+                                    <span><strong>Customer Address:</strong></span>
+                                    <div t-field="o.partner_id"
+                                           t-options='{"widget": "contact", "fields": ["name", "phone"], "no_marker": True, "phone_icons": True}'/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt16"/>
+                        <div></div>
+                        <div class="clearfix"/>
+                        <div class="mb32"/>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th><strong>Type Of Document</strong></th>
+                                    <th><strong>Transportation Reason</strong></th>
+                                    <th><strong>Transportation Method</strong></th>
+                                    <th><strong>Carrier Condition</strong></th>
+                                    <th><strong>Parcels</strong></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <span>DDT</span><div class="mt16"/>
+                                    </td>
+                                    <td>
+                                        <span t-field="o.l10n_it_transport_reason_id"/>
+                                    </td>
+                                    <td>
+                                        <span t-field="o.l10n_it_transport_method_id"/>
+                                    </td>
+                                     <td>
+                                        <span t-field="o.sale_id.incoterm.name"/>
+                                    </td>
+                                    <td>
+                                        <span t-field="o.l10n_it_parcels"/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <thead>
+                                <tr>
+                                    <th>Carrier</th>
+                                    <th>Gross Weight</th>
+                                    <th><strong>Pick Up Time</strong></th>
+                                    <th><strong>Date</strong></th>
+                                    <th>Size</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <span t-field="o.carrier_id"/><div class="mt16"/>
+                                    </td>
+                                    <td>
+                                        <span t-field="o.shipping_weight"/><div class="mt16"/>
+                                    </td>
+                                    <td>
+                                        <span t-field="o.date_done"/><div class="mt16"/>
+                                    </td>
+                                    <td>
+                                        <span t-field="o.date"/><div class="mt16"/>
+                                    </td>
+                                    <td>
+                                        <span t-field="o.l10n_it_size"/><div class="mt16"/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="mt64"/>
+                        <div class="mt64"/>
+                        <table class="table table-sm" name="document_details">
+                            <thead>
+                                <tr>
+                                    <th><strong>Sale Order</strong></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <t t-set="orders" t-value="o.move_lines.mapped('sale_line_id.order_id')"/>
+                                        <span>
+                                            <t t-foreach="orders" t-as="order">
+                                                <span t-field="order.name"/>,<div class="mt16"/>
+                                            </t>
+                                        </span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="mt64"/>
+                        <div class="mt64"/>
+                        <table class="table table-sm" name="document_details">
+                            <thead>
+                                <tr>
+                                    <th><strong>Product</strong></th>
+                                    <th colspan="2"><strong>Quantity</strong></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="o.move_lines" t-as="move">
+                                    <tr>
+                                        <td>
+                                            <span t-field="move.product_id"/><div class="mt16"/>
+                                        </td>
+                                        <td>
+                                            <span t-field="move.product_uom_qty"/>
+                                            <span t-field="move.move_line_ids.product_uom_id" groups="uom.group_uom"/><div class="mt16"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                        <div class="mt64"/>
+                        <div class="mt64"/>
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th><div class="row"><span class="fa fa-pencil mt4"></span><div class="ml4"/><strong>Company Signature</strong></div></th>
+                                    <th><div class="row"><span class="fa fa-pencil mt4"></span><div class="ml4"/><strong>Carrier Signature</strong></div></th>
+                                    <th><div class="row"><span class="fa fa-pencil mt4"></span><div class="ml4"/><strong>Customer Signature</strong></div></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="col">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="col">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="col">
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+    <report
+        string="DDT report"
+        id="action_report_ddt"
+        model="stock.picking"
+        report_type="qweb-pdf"
+        name="l10n_it_ddt.report_ddt_view"
+        file="report_ddt"
+        print_report_name="'DDT'"
+    />
+</odoo>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+   <record id="view_picking_form_inherit_l10n_it_ddt" model="ir.ui.view">
+        <field name="name">stock.picking.form.l10n.it.ddt</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='carrier_id']" position="after">
+                <field name="l10n_it_transport_reason_id" string="Transport Reason"/>
+                <field name="l10n_it_transport_method_id" string="Transport Method"/>
+                <field name="l10n_it_volume" string="Volume"/>
+                <field name="l10n_it_parcels" string="parcels"/>
+                <field name="l10n_it_size" string="Size"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
