@@ -89,8 +89,6 @@ var FilterMenu = DropdownMenu.extend({
                 domain: Domain.prototype.arrayToString(preFilter.attrs.domain),
             };
         });
-        // TO DO intercepts 'new_filters' and decide what to do whith filters
-        //  rewrite web.search_filters?
         this.trigger_up('new_filters', {filters: filters});
         _.invoke(this.propositions, 'destroy');
         this.propositions = [];
