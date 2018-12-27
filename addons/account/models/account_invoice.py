@@ -1454,9 +1454,11 @@ class AccountInvoice(models.Model):
             values = self._prepare_refund(invoice, date_invoice=date_invoice, date=date,
                                     description=description, journal_id=journal_id)
             refund_invoice = self.create(values)
-            invoice_type = {'out_invoice': ('customer invoices credit note'),
-                'in_invoice': ('vendor bill credit note')}
-            message = _("This %s has been created from: <a href=# data-oe-model=account.invoice data-oe-id=%d>%s</a><br>Reason: %s") % (invoice_type[invoice.type], invoice.id, invoice.number, description)
+            if invoice.type == 'out_invoice':
+                message = _("This customer invoice credit note has been created from: <a href=# data-oe-model=account.invoice data-oe-id=%d>%s</a><br>Reason: %s") % (invoice.id, invoice.number, description)
+            else:
+                message = _("This vendor bill credit note has been created from: <a href=# data-oe-model=account.invoice data-oe-id=%d>%s</a><br>Reason: %s") % (invoice.id, invoice.number, description)
+
             refund_invoice.message_post(body=message)
             new_invoices += refund_invoice
         return new_invoices
