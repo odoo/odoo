@@ -326,7 +326,7 @@ var EventDispatcherMixin = _.extend({}, ParentedMixin, {
         });
     },
     trigger: function (name, info) {
-        // trigger will call _trigger_up,
+        // trigger will call _trigger,
         // function params will be OdooEvent Object
         // need to call ev.stopPropagation() to stop propagation of an event to parent widget
         var event = new OdooEvent(this, name, info);

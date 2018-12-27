@@ -91,7 +91,7 @@ var FavoriteMenu = DropdownMenu.extend({
         Dialog.confirm(self, message, {
             title: _t("Warning"),
             confirm_callback: function () {
-                self.trigger_up('item_trashed', {id: id});
+                self.trigger('item_trashed', {id: id});
             },
         });
 

@@ -183,7 +183,7 @@ ActionManager.include({
                 action: action,
                 breadcrumbs: this._getBreadcrumbs(this.controllerStack.slice(0, index)),
                 // pass the controllerID to the views as an hook for further
-                // communication with trigger_up
+                // communication with trigger
                 controllerID: controllerID,
             });
             var view = new viewDescr.Widget(viewDescr.fieldsView, viewOptions);

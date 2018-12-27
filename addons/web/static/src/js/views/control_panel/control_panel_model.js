@@ -1035,7 +1035,7 @@ var ControlPanelModel = mvc.Model.extend({
         var self = this;
         var userContext = session.user_context;
         var controllerQueryParams;
-        this.trigger_up('get_controller_query_params', {
+        this.trigger('get_controller_query_params', {
             callback: function (state) {
                 controllerQueryParams = state;
             },

@@ -91,7 +91,7 @@ var FilterMenu = DropdownMenu.extend({
         });
         // TO DO intercepts 'new_filters' and decide what to do whith filters
         //  rewrite web.search_filters?
-        this.trigger_up('new_filters', {filters: filters});
+        this.trigger('new_filters', {filters: filters});
         _.invoke(this.propositions, 'destroy');
         this.propositions = [];
         this._toggleCustomFilterMenu();

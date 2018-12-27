@@ -187,12 +187,12 @@ var SearchBar = Widget.extend({
         if (filter.type === 'field') {
             var values = filter.autoCompleteValues;
             values.push(ui.item.facet.values[0]);
-            this.trigger_up('autocompletion_filter', {
+            this.trigger('autocompletion_filter', {
                 filterId: filter.id,
                 autoCompleteValues: values,
             });
         } else {
-            this.trigger_up('autocompletion_filter', {
+            this.trigger('autocompletion_filter', {
                 filterId: filter.id,
             });
         }
@@ -213,7 +213,7 @@ var SearchBar = Widget.extend({
                 break;
             case $.ui.keyCode.BACKSPACE:
                 if (this.$input.val() === '') {
-                    this.trigger_up('facet_removed');
+                    this.trigger('facet_removed');
                 }
                 break;
         }

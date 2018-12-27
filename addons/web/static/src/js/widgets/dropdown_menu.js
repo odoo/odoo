@@ -103,7 +103,7 @@ var DropdownMenu = Widget.extend({
             this.openItems[id] = !this.openItems[id];
             this._renderMenuItems();
         } else {
-            this.trigger_up('menu_item_clicked', {id: id});
+            this.trigger('menu_item_clicked', {id: id});
         }
     },
     /**
@@ -115,7 +115,7 @@ var DropdownMenu = Widget.extend({
         event.stopPropagation();
         var optionId = $(event.currentTarget).data('option_id');
         var id = $(event.currentTarget).data('item_id');
-        this.trigger_up('item_option_clicked', {id: id, optionId: optionId});
+        this.trigger('item_option_clicked', {id: id, optionId: optionId});
     },
     /**
      * @private

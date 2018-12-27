@@ -167,7 +167,7 @@ var ServicesMixin = {
     },
     createFilter: function (filter) {
         var def = $.Deferred();
-        this.trigger_up('create_filter', {
+        this.trigger('create_filter', {
             filter: filter,
             on_success: def.resolve.bind(def),
         });
@@ -175,7 +175,7 @@ var ServicesMixin = {
     },
     deleteFilter: function (filterId) {
         var def = $.Deferred();
-        this.trigger_up('delete_filter', {
+        this.trigger('delete_filter', {
             filterId: filterId,
             on_success: def.resolve.bind(def),
         });

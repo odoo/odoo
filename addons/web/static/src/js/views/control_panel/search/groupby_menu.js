@@ -133,7 +133,7 @@ var GroupByMenu = DropdownMenu.extend({
             groupBy.defaultOptionId = DEFAULT_INTERVAL;
             groupBy.currentOptionId = false;
         }
-        this.trigger_up('new_groupBy', groupBy);
+        this.trigger('new_groupBy', groupBy);
     },
     /**
      * @private

@@ -81,7 +81,7 @@ ControlPanelRenderer.include({
      * @private
      */
     _onEmptyAll: function () {
-        this.trigger_up('search_bar_cleared');
+        this.trigger('search_bar_cleared');
     },
     /**
      * Opens the mobile search view screen.

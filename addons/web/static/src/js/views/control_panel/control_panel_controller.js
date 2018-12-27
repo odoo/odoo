@@ -123,7 +123,7 @@ var ControlPanelController = mvc.Controller.extend({
      * @returns {Deferred}
      */
     _reportNewQueryAndRender: function () {
-        this.trigger_up('search', this.model.getQuery());
+        this.trigger('search', this.model.getQuery());
         var state = this.model.get();
         return this.renderer.updateState(state);
     },

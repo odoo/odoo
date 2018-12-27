@@ -109,7 +109,7 @@ var SearchFacet = Widget.extend({
      * @private
      */
     _onFacetRemove: function () {
-        this.trigger_up('facet_removed', {group: this.facet});
+        this.trigger('facet_removed', {group: this.facet});
     },
     /**
      * @private
@@ -118,7 +118,7 @@ var SearchFacet = Widget.extend({
     _onKeydown: function (ev) {
         switch (ev.which) {
             case $.ui.keyCode.BACKSPACE:
-                this.trigger_up('facet_removed', {group: this.facet});
+                this.trigger('facet_removed', {group: this.facet});
                 break;
         }
     },

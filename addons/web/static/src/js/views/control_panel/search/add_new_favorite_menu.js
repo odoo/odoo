@@ -84,7 +84,7 @@ var AddNewFavoriteMenu = Widget.extend({
             $inputs[0].focus();
             return;
         }
-        this.trigger_up('new_favorite', {
+        this.trigger('new_favorite', {
             type: 'favorite',
             description: description,
             isDefault: isDefault,

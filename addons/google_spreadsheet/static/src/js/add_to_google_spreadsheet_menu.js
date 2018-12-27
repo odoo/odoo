@@ -42,7 +42,7 @@ var AddToGoogleSpreadsheetMenu = Widget.extend({
      * @private
      */
     _addToSpreadsheet: function () {
-        // AAB: trigger_up an event that will be intercepted by the controller,
+        // AAB: trigger an event that will be intercepted by the controller,
         // as soon as the controller is the parent of the control panel
         var actionManager = this.findAncestor(function (ancestor) {
             return ancestor instanceof ActionManager;
@@ -51,7 +51,7 @@ var AddToGoogleSpreadsheetMenu = Widget.extend({
         var searchQuery;
         // TO DO: for now the domains in query are evaluated.
         // This should be changed I think.
-        this.trigger_up('get_search_query', {
+        this.trigger('get_search_query', {
             callback: function (query) {
                 searchQuery = query;
             }

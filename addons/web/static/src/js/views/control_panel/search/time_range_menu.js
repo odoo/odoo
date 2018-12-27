@@ -83,7 +83,7 @@ var TimeRangeMenu = Widget.extend({
         if (this.configuration.comparisonIsSelected) {
             comparisonTimeRangeId = this.$('.o_comparison_time_range_selector').val();
         }
-        this.trigger_up('activate_time_range', {
+        this.trigger('activate_time_range', {
             id: id,
             timeRangeId: timeRangeId,
             comparisonTimeRangeId: comparisonTimeRangeId
