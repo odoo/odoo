@@ -97,8 +97,9 @@
             <field name="model">purchase.order</field>
             <field name="priority" eval="2"/>
             <field name="arch" type="xml">
-                <calendar string="Calendar View" date_start="date_planned" color="partner_id">
+                <calendar string="Calendar View" date_start="date_planned" color="partner_id" hide_time="true" event_limit="5">
                     <field name="name"/>
+                    <field name="partner_ref"/>
                     <field name="amount_total" widget="monetary"/>
                     <field name="partner_id"/>
                 </calendar>

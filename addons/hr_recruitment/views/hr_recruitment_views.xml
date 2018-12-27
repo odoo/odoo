@@ -247,9 +247,10 @@
         <field name="model">hr.applicant</field>
         <field name="priority" eval="2"/>
         <field name="arch" type="xml">
-            <calendar string="Applicants" date_start="activity_date_deadline" color="user_id">
-                <field name="name"/>
+            <calendar string="Applicants" mode="month" date_start="activity_date_deadline" color="user_id" event_limit="5" hide_time="true">
                 <field name="partner_name"/>
+                <field name="job_id"/>
+                <field name="priority" widget="priority"/>
                 <field name="activity_summary"/>
             </calendar>
         </field>

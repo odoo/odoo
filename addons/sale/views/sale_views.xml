@@ -105,9 +105,10 @@
             <field name="name">sale.order.calendar</field>
             <field name="model">sale.order</field>
             <field name="arch" type="xml">
-                <calendar string="Sales Orders" date_start="date_order" color="state">
-                    <field name="partner_id"/>
+                <calendar string="Sales Orders" date_start="date_order" color="state" hide_time="true" event_limit="5">
+                    <field name="partner_id" avatar_field="image_small"/>
                     <field name="amount_total" widget="monetary"/>
+                    <field name="payment_term_id"/>
                 </calendar>
             </field>
         </record>

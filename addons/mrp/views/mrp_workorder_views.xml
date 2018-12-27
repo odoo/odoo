@@ -288,9 +288,10 @@
         <field name="name">mrp.production.work.order.calendar</field>
         <field name="model">mrp.workorder</field>
         <field name="arch" type="xml">
-            <calendar date_stop="date_planned_finished" date_start="date_planned_start" string="Operations" color="workcenter_id">
+            <calendar date_stop="date_planned_finished" date_start="date_planned_start" string="Operations" color="workcenter_id" event_limit="5">
                 <field name="workcenter_id"/>
                 <field name="production_id"/>
+                <field name="state"/>
             </calendar>
         </field>
     </record>
