@@ -133,9 +133,9 @@
                         <ul class="list-group list-group-flush flex-wrap flex-row flex-lg-column">
                             <li class="list-group-item flex-grow-1">
                                 <a t-if="sale_order.has_to_be_signed(True)" role="button" class="btn btn-primary btn-block mb8" data-toggle="modal" data-target="#modalaccept" href="#">
-                                    <i class="fa fa-check"/> Accept &amp; Sign
+                                    <i class="fa fa-check"/><t t-if="sale_order.has_to_be_paid(True)"> Sign &amp; Pay</t><t t-else=""> Accept &amp; Sign</t>
                                 </a>
-                                <a t-elif="sale_order.has_to_be_paid(True)" role="button" class="btn btn-primary btn-block mb8" data-toggle="modal" data-target="#modalaccept" href="#">
+                                <a t-elif="sale_order.has_to_be_paid(True)" role="button" id="o_sale_portal_paynow" class="btn btn-primary btn-block mb8" data-toggle="modal" data-target="#modalaccept" href="#">
                                     <i class="fa fa-check"/> <t t-if="not sale_order.signature">Accept &amp; Pay</t><t t-else="">Pay now</t>
                                 </a>
                                 <div class="o_download_pdf btn-toolbar flex-sm-nowrap">
@@ -320,7 +320,7 @@
 
                         <t t-if="sale_order.has_to_be_signed(True)">
                             <div class="col-sm-auto mt8">
-                                <a role="button" class="btn btn-primary" data-toggle="modal" data-target="#modalaccept" href="#"><i class="fa fa-check"/> Accept &amp; Sign</a>
+                                <a role="button" class="btn btn-primary" data-toggle="modal" data-target="#modalaccept" href="#"><i class="fa fa-check"/><t t-if="sale_order.has_to_be_paid(True)"> Sign &amp; Pay</t><t t-else=""> Accept &amp; Sign</t></a>
                             </div>
                             <div class="col-sm-auto mt8">
                                 <a role="button" class="btn btn-secondary" href="#discussion"><i class="fa fa-comment"/> Feedback</a>
