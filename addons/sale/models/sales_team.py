@@ -17,8 +17,7 @@ class CrmTeam(models.Model):
                 "of the current and target revenue on the kanban view.")
     invoiced_target = fields.Integer(
         string='Invoicing Target',
-        help="Target of invoice revenue for the current month. This is the amount the sales "
-             "channel estimates to be able to invoice this month.")
+        help="Revenue target for the current month (untaxed total of confirmed invoices).")
     quotations_count = fields.Integer(
         compute='_compute_quotations_to_invoice',
         string='Number of quotations to invoice', readonly=True)
