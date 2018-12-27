@@ -15,7 +15,7 @@ class TestExpenseCommon(TestAccountNoChartCommon):
         # The user manager is only expense manager
         user_group_manager = cls.env.ref('hr_expense.group_hr_expense_manager')
         cls.user_manager.write({
-            'groups_id': [(6, 0, [user_group_manager.id])],
+            'groups_id': [(6, 0, [user_group_manager.id, cls.env.ref('base.group_user').id])],
         })
 
         # create employee

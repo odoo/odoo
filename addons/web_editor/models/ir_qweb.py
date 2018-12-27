@@ -93,6 +93,7 @@ class QWeb(models.AbstractModel):
 
 class Field(models.AbstractModel):
     _name = 'ir.qweb.field'
+    _description = 'Qweb Field'
     _inherit = 'ir.qweb.field'
 
     @api.model
@@ -122,6 +123,7 @@ class Field(models.AbstractModel):
 
 class Integer(models.AbstractModel):
     _name = 'ir.qweb.field.integer'
+    _description = 'Qweb Field Integer'
     _inherit = 'ir.qweb.field.integer'
 
     value_from_string = int
@@ -129,6 +131,7 @@ class Integer(models.AbstractModel):
 
 class Float(models.AbstractModel):
     _name = 'ir.qweb.field.float'
+    _description = 'Qweb Field Float'
     _inherit = 'ir.qweb.field.float'
 
     @api.model
@@ -141,15 +144,17 @@ class Float(models.AbstractModel):
 
 class ManyToOne(models.AbstractModel):
     _name = 'ir.qweb.field.many2one'
+    _description = 'Qweb Field Many to One'
     _inherit = 'ir.qweb.field.many2one'
 
     @api.model
     def attributes(self, record, field_name, options, values):
         attrs = super(ManyToOne, self).attributes(record, field_name, options, values)
-        many2one = getattr(record, field_name)
-        if many2one:
-            attrs['data-oe-many2one-id'] = many2one.id
-            attrs['data-oe-many2one-model'] = many2one._name
+        if options.get('inherit_branding'):
+            many2one = getattr(record, field_name)
+            if many2one:
+                attrs['data-oe-many2one-id'] = many2one.id
+                attrs['data-oe-many2one-model'] = many2one._name
         return attrs
 
     @api.model
@@ -170,13 +175,15 @@ class ManyToOne(models.AbstractModel):
 
 class Contact(models.AbstractModel):
     _name = 'ir.qweb.field.contact'
+    _description = 'Qweb Field Contact'
     _inherit = 'ir.qweb.field.contact'
 
     @api.model
     def attributes(self, record, field_name, options, values):
         attrs = super(Contact, self).attributes(record, field_name, options, values)
-        options.pop('template_options') # remove options not specific to this widget
-        attrs['data-oe-contact-options'] = json.dumps(options)
+        if options.get('inherit_branding'):
+            options.pop('template_options') # remove options not specific to this widget
+            attrs['data-oe-contact-options'] = json.dumps(options)
         return attrs
 
     # helper to call the rendering of contact field
@@ -187,12 +194,14 @@ class Contact(models.AbstractModel):
 
 class Date(models.AbstractModel):
     _name = 'ir.qweb.field.date'
+    _description = 'Qweb Field Date'
     _inherit = 'ir.qweb.field.date'
 
     @api.model
     def attributes(self, record, field_name, options, values):
         attrs = super(Date, self).attributes(record, field_name, options, values)
-        attrs['data-oe-original'] = record[field_name]
+        if options.get('inherit_branding'):
+            attrs['data-oe-original'] = record[field_name]
         return attrs
 
     @api.model
@@ -206,19 +215,21 @@ class Date(models.AbstractModel):
 
 class DateTime(models.AbstractModel):
     _name = 'ir.qweb.field.datetime'
+    _description = 'Qweb Field Datetime'
     _inherit = 'ir.qweb.field.datetime'
 
     @api.model
     def attributes(self, record, field_name, options, values):
         attrs = super(DateTime, self).attributes(record, field_name, options, values)
-        value = record[field_name]
-        if isinstance(value, pycompat.string_types):
-            value = fields.Datetime.from_string(value)
-        if value:
-            # convert from UTC (server timezone) to user timezone
-            value = fields.Datetime.context_timestamp(self, timestamp=value)
-            value = fields.Datetime.to_string(value)
-        attrs['data-oe-original'] = value
+        if options.get('inherit_branding'):
+            value = record[field_name]
+            if isinstance(value, str):
+                value = fields.Datetime.from_string(value)
+            if value:
+                # convert from UTC (server timezone) to user timezone
+                value = fields.Datetime.context_timestamp(self, timestamp=value)
+                value = fields.Datetime.to_string(value)
+            attrs['data-oe-original'] = value
         return attrs
 
     @api.model
@@ -251,6 +262,7 @@ class DateTime(models.AbstractModel):
 
 class Text(models.AbstractModel):
     _name = 'ir.qweb.field.text'
+    _description = 'Qweb Field Text'
     _inherit = 'ir.qweb.field.text'
 
     @api.model
@@ -260,6 +272,7 @@ class Text(models.AbstractModel):
 
 class Selection(models.AbstractModel):
     _name = 'ir.qweb.field.selection'
+    _description = 'Qweb Field Selection'
     _inherit = 'ir.qweb.field.selection'
 
     @api.model
@@ -278,6 +291,7 @@ class Selection(models.AbstractModel):
 
 class HTML(models.AbstractModel):
     _name = 'ir.qweb.field.html'
+    _description = 'Qweb Field HTML'
     _inherit = 'ir.qweb.field.html'
 
     @api.model
@@ -298,6 +312,7 @@ class Image(models.AbstractModel):
         set as attribute on the generated <img> tag
     """
     _name = 'ir.qweb.field.image'
+    _description = 'Qweb Field Image'
     _inherit = 'ir.qweb.field.image'
 
     local_url_re = re.compile(r'^/(?P<module>[^]]+)/static/(?P<rest>.+)$')
@@ -379,6 +394,7 @@ class Image(models.AbstractModel):
 
 class Monetary(models.AbstractModel):
     _name = 'ir.qweb.field.monetary'
+    _description = 'Qweb Field Monerary'
     _inherit = 'ir.qweb.field.monetary'
 
     @api.model
@@ -393,12 +409,14 @@ class Monetary(models.AbstractModel):
 
 class Duration(models.AbstractModel):
     _name = 'ir.qweb.field.duration'
+    _description = 'Qweb Field Duration'
     _inherit = 'ir.qweb.field.duration'
 
     @api.model
     def attributes(self, record, field_name, options, values):
         attrs = super(Duration, self).attributes(record, field_name, options, values)
-        attrs['data-oe-original'] = record[field_name]
+        if options.get('inherit_branding'):
+            attrs['data-oe-original'] = record[field_name]
         return attrs
 
     @api.model
@@ -411,6 +429,7 @@ class Duration(models.AbstractModel):
 
 class RelativeDatetime(models.AbstractModel):
     _name = 'ir.qweb.field.relative'
+    _description = 'Qweb Field Relative'
     _inherit = 'ir.qweb.field.relative'
 
     # get formatting from ir.qweb.field.relative but edition/save from datetime
@@ -418,6 +437,7 @@ class RelativeDatetime(models.AbstractModel):
 
 class QwebView(models.AbstractModel):
     _name = 'ir.qweb.field.qweb'
+    _description = 'Qweb Field qweb'
     _inherit = 'ir.qweb.field.qweb'
 
 

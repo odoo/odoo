@@ -12,10 +12,10 @@
 # Mario Jureša <mario.juresa@uvid.hr>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
+"POT-Creation-Date: 2018-08-02 09:55+0000\n"
+"PO-Revision-Date: 2018-08-02 09:55+0000\n"
 "Last-Translator: Mario Jureša <mario.juresa@uvid.hr>, 2017\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
@@ -81,6 +81,7 @@ msgid "Assigned to admin user"
 msgstr "Dodijeljeno admin korisniku"
 
 #. module: base_automation
+#: selection:ir.actions.server,usage:0
 #: model:ir.model,name:base_automation.model_base_automation
 msgid "Automated Action"
 msgstr "Automatska radnja"
@@ -92,7 +93,7 @@ msgid "Automated Actions"
 msgstr "Automatske akcije"
 
 #. module: base_automation
-#: model:ir.ui.view,arch_db:base_automation.view_base_automation_tree
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_tree
 msgid "Automation"
 msgstr "Automatizacija"
 
@@ -415,12 +416,12 @@ msgid "Python Code"
 msgstr "Python kod"
 
 #. module: base_automation
-#: model:ir.ui.view,arch_db:base_automation.view_base_automation_form
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Remove Action"
 msgstr ""
 
 #. module: base_automation
-#: model:ir.ui.view,arch_db:base_automation.view_base_automation_form
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Remove the contextual action related to this server action"
 msgstr ""
 
@@ -430,9 +431,19 @@ msgid "Responsible"
 msgstr "Odgovoran"
 
 #. module: base_automation
+#: selection:ir.actions.server,usage:0
+msgid "Scheduled Action"
+msgstr "Zakazane akcije"
+
+#. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__sequence
 msgid "Sequence"
 msgstr "Sekvenca"
+
+#. module: base_automation
+#: selection:ir.actions.server,usage:0
+msgid "Server Action"
+msgstr "Serverske radnje"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__action_server_id
@@ -447,7 +458,7 @@ msgid ""
 msgstr ""
 
 #. module: base_automation
-#: model:ir.actions.act_window,help:base_automation.base_automation_act
+#: model_terms:ir.actions.act_window,help:base_automation.base_automation_act
 msgid "Setup a new automated automation"
 msgstr ""
 
@@ -460,6 +471,14 @@ msgstr "Status"
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__name
 msgid "Subject"
 msgstr "Predmet"
+
+#. module: base_automation
+#: code:addons/base_automation/models/base_automation.py:87
+#, python-format
+msgid ""
+"The \"%(trigger_value)s\" %(trigger_label)s can only be used with the "
+"\"%(state_value)s\" action type"
+msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger
@@ -485,6 +504,7 @@ msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__usage
+#: model:ir.model.fields,field_description:base_automation.field_ir_actions_server__usage
 msgid "Usage"
 msgstr "Upotreba"
 
@@ -494,7 +514,7 @@ msgid "Use Calendar"
 msgstr "Koristi kalendar"
 
 #. module: base_automation
-#: model:ir.actions.act_window,help:base_automation.base_automation_act
+#: model_terms:ir.actions.act_window,help:base_automation.base_automation_act
 msgid ""
 "Use automated actions to automatically trigger actions for\n"
 "                various screens. Example: a lead created by a specific user may\n"
@@ -512,6 +532,12 @@ msgstr "Korisnik"
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__fields_lines
 msgid "Value Mapping"
 msgstr "Mapiranje vrijednosti"
+
+#. module: base_automation
+#: code:addons/base_automation/models/base_automation.py:86
+#, python-format
+msgid "Warning"
+msgstr "Upozorenje"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_calendar_id

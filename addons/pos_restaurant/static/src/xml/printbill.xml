@@ -54,7 +54,7 @@
                     <div>Tel:<t t-esc='receipt.company.phone' /></div>
                 </t>
                 <t t-if='receipt.company.vat'>
-                    <div><t t-esc="receipt.company.vat_label or 'TIN'"/>:<t t-esc='receipt.company.vat' /></div>
+                    <div><t t-esc="receipt.company.vat_label or 'Tax ID'"/>:<t t-esc='receipt.company.vat' /></div>
                 </t>
                 <t t-if='receipt.company.email'>
                     <div><t t-esc='receipt.company.email' /></div>

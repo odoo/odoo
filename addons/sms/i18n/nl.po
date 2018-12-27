@@ -3,19 +3,18 @@
 # * sms
 # 
 # Translators:
-# Pol Van Dingenen <pol.vandingenen@vanroey.be>, 2017
-# Cas Vissers <casvissers@brahoo.nl>, 2017
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2017
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2017
-# e2f_nl_c4 <e2f_nl_c4@hotmail.com>, 2017
-# Martin Trigaux, 2017
+# Martin Trigaux, 2018
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2018
+# Cas Vissers <casvissers@brahoo.nl>, 2018
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
-"Last-Translator: Martin Trigaux, 2017\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-08-24 09:25+0000\n"
+"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2018\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,7 +23,14 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sms
-#: model:ir.ui.view,arch_db:sms.send_sms_view_form
+#. openerp-web
+#: code:addons/sms/static/src/js/sms_widget.js:93
+#, python-format
+msgid "%s chars, fits in %s SMS (%s) "
+msgstr "%s karakters passen in %s SMS (%s) "
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.send_sms_view_form
 msgid "Cancel"
 msgstr "Annuleren"
 
@@ -47,7 +53,7 @@ msgstr "Aangemaakt op"
 #: model:ir.model.fields,field_description:sms.field_sms_api__display_name
 #: model:ir.model.fields,field_description:sms.field_sms_send_sms__display_name
 msgid "Display Name"
-msgstr "Weergavenaam"
+msgstr "Weergave naam"
 
 #. module: sms
 #: model:ir.model,name:sms.model_mail_thread
@@ -88,7 +94,7 @@ msgid "Message"
 msgstr "Bericht"
 
 #. module: sms
-#: code:addons/sms/wizard/send_sms.py:81
+#: code:addons/sms/wizard/send_sms.py:82
 #, python-format
 msgid "Missing mobile number for %s."
 msgstr "Mobiele nummer voor %s ontbreekt."
@@ -107,33 +113,37 @@ msgid "Recipients"
 msgstr "Ontvangers"
 
 #. module: sms
+#: model:ir.model,name:sms.model_sms_api
+msgid "SMS API"
+msgstr "SMS API"
+
+#. module: sms
+#. openerp-web
+#: code:addons/sms/static/src/xml/sms_widget.xml:4
+#, python-format
+msgid "SMS Pricing"
+msgstr "SMS prijzen"
+
+#. module: sms
 #: code:addons/sms/models/mail_thread.py:48
 #, python-format
 msgid "SMS message sent: %s"
 msgstr "SMS bericht verzonden: %s"
 
 #. module: sms
-#: model:ir.ui.view,arch_db:sms.send_sms_view_form
+#: model_terms:ir.ui.view,arch_db:sms.send_sms_view_form
 msgid "Send"
 msgstr "Verzenden"
 
 #. module: sms
 #: model:ir.actions.act_window,name:sms.send_sms_action
 #: model:ir.actions.act_window,name:sms.send_sms_form_action
+#: model:ir.model,name:sms.model_sms_send_sms
+#: model_terms:ir.ui.view,arch_db:sms.partner_form_send_sms_form_view
 msgid "Send SMS"
 msgstr "Verstuur SMS"
 
 #. module: sms
-#: model:ir.ui.view,arch_db:sms.send_sms_view_form
+#: model_terms:ir.ui.view,arch_db:sms.send_sms_view_form
 msgid "Send an SMS"
 msgstr "Verstuur een SMS"
-
-#. module: sms
-#: model:ir.model,name:sms.model_sms_api
-msgid "sms.api"
-msgstr "sms.api"
-
-#. module: sms
-#: model:ir.model,name:sms.model_sms_send_sms
-msgid "sms.send_sms"
-msgstr "sms.send_sms"

@@ -1,11 +1,13 @@
 #
 # test cases for new-style fields
 #
-from datetime import date, datetime
+from datetime import date, datetime, time
 
-from odoo.exceptions import AccessError, UserError, except_orm
+from odoo import fields
+from odoo.exceptions import AccessError, UserError
 from odoo.tests import common
-from odoo.tools import mute_logger, float_repr, pycompat
+from odoo.tools import mute_logger, float_repr
+from odoo.tools.date_utils import add, subtract, start_of, end_of
 
 
 class TestFields(common.TransactionCase):
@@ -16,8 +18,8 @@ class TestFields(common.TransactionCase):
         discussion = self.env.ref('test_new_api.discussion_0')
 
         # read field as a record attribute or as a record item
-        self.assertIsInstance(discussion.name, pycompat.string_types)
-        self.assertIsInstance(discussion['name'], pycompat.string_types)
+        self.assertIsInstance(discussion.name, str)
+        self.assertIsInstance(discussion['name'], str)
         self.assertEqual(discussion['name'], discussion.name)
 
         # read it with method read()
@@ -291,9 +293,12 @@ class TestFields(common.TransactionCase):
         self.assertEqual(ewan.parent, cath)
         self.assertEqual(ewan.name, "Erwan")
 
-        # write on non-stored inverse field on severals records
-        foo1 = Category.create({'name': 'Foo'})
-        foo2 = Category.create({'name': 'Foo'})
+        # check create/write with several records
+        vals = {'name': 'None', 'display_name': 'Foo'}
+        foo1, foo2 = Category.create([vals, vals])
+        self.assertEqual(foo1.name, 'Foo')
+        self.assertEqual(foo2.name, 'Foo')
+
         (foo1 + foo2).write({'display_name': 'Bar'})
         self.assertEqual(foo1.name, 'Bar')
         self.assertEqual(foo2.name, 'Bar')
@@ -481,19 +486,116 @@ class TestFields(common.TransactionCase):
         record.date = None
         self.assertFalse(record.date)
 
-        # one may assign date and datetime objects
+        # one may assign date but not datetime objects
         record.date = date(2012, 5, 1)
-        self.assertEqual(record.date, '2012-05-01')
+        self.assertEqual(record.date, date(2012, 5, 1))
 
-        record.date = datetime(2012, 5, 1, 10, 45, 00)
-        self.assertEqual(record.date, '2012-05-01')
+        with self.assertRaises(TypeError):
+            record.date = datetime(2012, 5, 1, 10, 45, 0)
 
-        # one may assign dates in the default format, and it must be checked
+        # one may assign dates and datetime in the default format, and it must be checked
         record.date = '2012-05-01'
-        self.assertEqual(record.date, '2012-05-01')
+        self.assertEqual(record.date, date(2012, 5, 1))
+
+        record.date = "2012-05-01 10:45:00"
+        self.assertEqual(record.date, date(2012, 5, 1))
 
         with self.assertRaises(ValueError):
             record.date = '12-5-1'
+
+        for i in range(0, 10):
+            self.assertEqual(fields.Datetime.now().microsecond, 0)
+
+    def test_21_date_datetime_helpers(self):
+        """ test date/datetime fields helpers """
+        _date = fields.Date.from_string("2077-10-23")
+        _datetime = fields.Datetime.from_string("2077-10-23 09:42:00")
+
+        # addition
+        self.assertEqual(add(_date, days=5), date(2077, 10, 28))
+        self.assertEqual(add(_datetime, seconds=10), datetime(2077, 10, 23, 9, 42, 10))
+
+        # subtraction
+        self.assertEqual(subtract(_date, months=1), date(2077, 9, 23))
+        self.assertEqual(subtract(_datetime, hours=2), datetime(2077, 10, 23, 7, 42, 0))
+
+        # start_of
+        # year
+        self.assertEqual(start_of(_date, 'year'), date(2077, 1, 1))
+        self.assertEqual(start_of(_datetime, 'year'), datetime(2077, 1, 1))
+
+        # quarter
+        q1 = date(2077, 1, 1)
+        q2 = date(2077, 4, 1)
+        q3 = date(2077, 7, 1)
+        q4 = date(2077, 10, 1)
+        self.assertEqual(start_of(_date.replace(month=3), 'quarter'), q1)
+        self.assertEqual(start_of(_date.replace(month=5), 'quarter'), q2)
+        self.assertEqual(start_of(_date.replace(month=7), 'quarter'), q3)
+        self.assertEqual(start_of(_date, 'quarter'), q4)
+        self.assertEqual(start_of(_datetime, 'quarter'), datetime.combine(q4, time.min))
+
+        # month
+        self.assertEqual(start_of(_date, 'month'), date(2077, 10, 1))
+        self.assertEqual(start_of(_datetime, 'month'), datetime(2077, 10, 1))
+
+        # week
+        self.assertEqual(start_of(_date, 'week'), date(2077, 10, 18))
+        self.assertEqual(start_of(_datetime, 'week'), datetime(2077, 10, 18))
+
+        # day
+        self.assertEqual(start_of(_date, 'day'), _date)
+        self.assertEqual(start_of(_datetime, 'day'), _datetime.replace(hour=0, minute=0, second=0))
+
+        # hour
+        with self.assertRaises(ValueError):
+            start_of(_date, 'hour')
+        self.assertEqual(start_of(_datetime, 'hour'), _datetime.replace(minute=0, second=0))
+
+        # invalid
+        with self.assertRaises(ValueError):
+            start_of(_datetime, 'poop')
+
+        # end_of
+        # year
+        self.assertEqual(end_of(_date, 'year'), _date.replace(month=12, day=31))
+        self.assertEqual(end_of(_datetime, 'year'),
+                         datetime.combine(_date.replace(month=12, day=31), time.max))
+
+        # quarter
+        q1 = date(2077, 3, 31)
+        q2 = date(2077, 6, 30)
+        q3 = date(2077, 9, 30)
+        q4 = date(2077, 12, 31)
+        self.assertEqual(end_of(_date.replace(month=2), 'quarter'), q1)
+        self.assertEqual(end_of(_date.replace(month=4), 'quarter'), q2)
+        self.assertEqual(end_of(_date.replace(month=9), 'quarter'), q3)
+        self.assertEqual(end_of(_date, 'quarter'), q4)
+        self.assertEqual(end_of(_datetime, 'quarter'), datetime.combine(q4, time.max))
+
+        # month
+        self.assertEqual(end_of(_date, 'month'), _date.replace(day=31))
+        self.assertEqual(end_of(_datetime, 'month'),
+                         datetime.combine(date(2077, 10, 31), time.max))
+
+        # week
+        self.assertEqual(end_of(_date, 'week'), date(2077, 10, 24))
+        self.assertEqual(end_of(_datetime, 'week'),
+                         datetime.combine(datetime(2077, 10, 24), time.max))
+
+        # day
+        self.assertEqual(end_of(_date, 'day'), _date)
+        self.assertEqual(end_of(_datetime, 'day'), datetime.combine(_datetime, time.max))
+
+        # hour
+        with self.assertRaises(ValueError):
+            end_of(_date, 'hour')
+        self.assertEqual(end_of(_datetime, 'hour'),
+                         datetime.combine(_datetime, time.max).replace(hour=_datetime.hour))
+
+        # invalid
+        with self.assertRaises(ValueError):
+            end_of(_datetime, 'crap')
 
     def test_22_selection(self):
         """ test selection fields """
@@ -647,6 +749,7 @@ class TestFields(common.TransactionCase):
         company0 = self.env.ref('base.main_company')
         company1 = self.env['res.company'].create({'name': 'A', 'parent_id': company0.id})
         company2 = self.env['res.company'].create({'name': 'B', 'parent_id': company1.id})
+
         # create one user per company
         user0 = self.env['res.users'].create({'name': 'Foo', 'login': 'foo',
                                               'company_id': company0.id, 'company_ids': []})
@@ -654,23 +757,71 @@ class TestFields(common.TransactionCase):
                                               'company_id': company1.id, 'company_ids': []})
         user2 = self.env['res.users'].create({'name': 'Baz', 'login': 'baz',
                                               'company_id': company2.id, 'company_ids': []})
-        # create a default value for the company-dependent field
-        field = self.env['ir.model.fields'].search([('model', '=', 'test_new_api.company'),
-                                                    ('name', '=', 'foo')])
-        self.env['ir.property'].create({'name': 'foo', 'fields_id': field.id,
+
+        # create values for many2one field
+        tag0 = self.env['test_new_api.multi.tag'].create({'name': 'Qux'})
+        tag1 = self.env['test_new_api.multi.tag'].create({'name': 'Quux'})
+        tag2 = self.env['test_new_api.multi.tag'].create({'name': 'Quuz'})
+
+        # create default values for the company-dependent fields
+        field_foo = self.env['ir.model.fields']._get('test_new_api.company', 'foo')
+        self.env['ir.property'].create({'name': 'foo', 'fields_id': field_foo.id,
                                         'value': 'default', 'type': 'char'})
+        field_tag_id = self.env['ir.model.fields']._get('test_new_api.company', 'tag_id')
+        self.env['ir.property'].create({'name': 'foo', 'fields_id': field_tag_id.id,
+                                        'value': tag0, 'type': 'many2one'})
 
         # create/modify a record, and check the value for each user
-        record = self.env['test_new_api.company'].create({'foo': 'main'})
+        record = self.env['test_new_api.company'].create({
+            'foo': 'main',
+            'date': '1932-11-09',
+            'moment': '1932-11-09 00:00:00',
+            'tag_id': tag1.id,
+        })
         record.invalidate_cache()
         self.assertEqual(record.sudo(user0).foo, 'main')
         self.assertEqual(record.sudo(user1).foo, 'default')
         self.assertEqual(record.sudo(user2).foo, 'default')
+        self.assertEqual(str(record.sudo(user0).date), '1932-11-09')
+        self.assertEqual(record.sudo(user1).date, False)
+        self.assertEqual(record.sudo(user2).date, False)
+        self.assertEqual(str(record.sudo(user0).moment), '1932-11-09 00:00:00')
+        self.assertEqual(record.sudo(user1).moment, False)
+        self.assertEqual(record.sudo(user2).moment, False)
+        self.assertEqual(record.sudo(user0).tag_id, tag1)
+        self.assertEqual(record.sudo(user1).tag_id, tag0)
+        self.assertEqual(record.sudo(user2).tag_id, tag0)
 
-        record.sudo(user1).foo = 'alpha'
+        record.sudo(user1).write({
+            'foo': 'alpha',
+            'date': '1932-12-10',
+            'moment': '1932-12-10 23:59:59',
+            'tag_id': tag2.id,
+        })
         record.invalidate_cache()
         self.assertEqual(record.sudo(user0).foo, 'main')
         self.assertEqual(record.sudo(user1).foo, 'alpha')
+        self.assertEqual(record.sudo(user2).foo, 'default')
+        self.assertEqual(str(record.sudo(user0).date), '1932-11-09')
+        self.assertEqual(str(record.sudo(user1).date), '1932-12-10')
+        self.assertEqual(record.sudo(user2).date, False)
+        self.assertEqual(str(record.sudo(user0).moment), '1932-11-09 00:00:00')
+        self.assertEqual(str(record.sudo(user1).moment), '1932-12-10 23:59:59')
+        self.assertEqual(record.sudo(user2).moment, False)
+        self.assertEqual(record.sudo(user0).tag_id, tag1)
+        self.assertEqual(record.sudo(user1).tag_id, tag2)
+        self.assertEqual(record.sudo(user2).tag_id, tag0)
+
+        # unlink value of a many2one (tag2), and check again
+        tag2.unlink()
+        self.assertEqual(record.sudo(user0).tag_id, tag1)
+        self.assertEqual(record.sudo(user1).tag_id, tag0.browse())
+        self.assertEqual(record.sudo(user2).tag_id, tag0)
+
+        record.sudo(user1).foo = False
+        record.invalidate_cache()
+        self.assertEqual(record.sudo(user0).foo, 'main')
+        self.assertEqual(record.sudo(user1).foo, False)
         self.assertEqual(record.sudo(user2).foo, 'default')
 
         # create company record and attribute
@@ -799,7 +950,7 @@ class TestFields(common.TransactionCase):
     def test_50_search_many2one(self):
         """ test search through a path of computed fields"""
         messages = self.env['test_new_api.message'].search(
-            [('author_partner.name', '=', 'Demo User')])
+            [('author_partner.name', '=', 'Marc Demo')])
         self.assertEqual(messages, self.env.ref('test_new_api.message_0_1'))
 
     def test_60_x2many_domain(self):
@@ -840,6 +991,116 @@ class TestFields(common.TransactionCase):
         self.assertEqual(len(discussion.messages), 5)
         self.assertEqual(len(discussion.important_messages), 2)
         self.assertEqual(len(discussion.very_important_messages), 2)
+
+    def test_80_copy(self):
+        Translations = self.env['ir.translation']
+        discussion = self.env.ref('test_new_api.discussion_0')
+        message = self.env.ref('test_new_api.message_0_0')
+        message1 = self.env.ref('test_new_api.message_0_1')
+
+        email = self.env.ref('test_new_api.emailmessage_0_0')
+        self.assertEqual(email.message, message)
+
+        french = self.env['res.lang']._lang_get('fr_FR')
+        french.active = True
+
+        def count(msg):
+            # return the number of translations of msg.label
+            return Translations.search_count([
+                ('name', '=', 'test_new_api.message,label'),
+                ('res_id', '=', msg.id),
+            ])
+
+        # set a translation for message.label
+        email.with_context(lang='fr_FR').label = "bonjour"
+        self.assertEqual(count(message), 1)
+        self.assertEqual(count(message1), 0)
+
+        # setting the parent record should not copy its translations
+        email.copy({'message': message1.id})
+        self.assertEqual(count(message), 1)
+        self.assertEqual(count(message1), 0)
+
+        # setting a one2many should not copy translations on the lines
+        discussion.copy({'messages': [(6, 0, message1.ids)]})
+        self.assertEqual(count(message), 1)
+        self.assertEqual(count(message1), 0)
+
+    def test_90_binary_svg(self):
+        from odoo.addons.base.tests.test_mimetypes import SVG
+        # This should work without problems
+        self.env['test_new_api.binary_svg'].create({
+            'name': 'Test without attachment',
+            'image_wo_attachment': SVG,
+        })
+        # And this gives error
+        with self.assertRaises(UserError):
+            self.env['test_new_api.binary_svg'].sudo(
+                self.env.ref('base.user_demo'),
+            ).create({
+                'name': 'Test without attachment',
+                'image_wo_attachment': SVG,
+            })
+
+    def test_91_binary_svg_attachment(self):
+        from odoo.addons.base.tests.test_mimetypes import SVG
+        # This doesn't neuter SVG with admin
+        record = self.env['test_new_api.binary_svg'].create({
+            'name': 'Test without attachment',
+            'image_attachment': SVG,
+        })
+        attachment = self.env['ir.attachment'].search([
+            ('res_model', '=', record._name),
+            ('res_field', '=', 'image_attachment'),
+            ('res_id', '=', record.id),
+        ])
+        self.assertEqual(attachment.mimetype, 'image/svg+xml')
+        # ...but this should be neutered with demo user
+        record = self.env['test_new_api.binary_svg'].sudo(
+            self.env.ref('base.user_demo'),
+        ).create({
+            'name': 'Test without attachment',
+            'image_attachment': SVG,
+        })
+        attachment = self.env['ir.attachment'].search([
+            ('res_model', '=', record._name),
+            ('res_field', '=', 'image_attachment'),
+            ('res_id', '=', record.id),
+        ])
+        self.assertEqual(attachment.mimetype, 'text/plain')
+
+    def test_92_binary_self_avatar_svg(self):
+        from odoo.addons.base.tests.test_mimetypes import SVG
+        demo_user = self.env.ref('base.user_demo')
+        # User demo changes his own avatar
+        demo_user.sudo(demo_user).image = SVG
+        # The SVG file should have been neutered
+        attachment = self.env['ir.attachment'].search([
+            ('res_model', '=', demo_user.partner_id._name),
+            ('res_field', '=', 'image'),
+            ('res_id', '=', demo_user.partner_id.id),
+        ])
+        self.assertEqual(attachment.mimetype, 'text/plain')
+
+    def test_93_monetary_related(self):
+        """ Check the currency field on related monetary fields. """
+        # check base field
+        field = self.env['test_new_api.monetary_base']._fields['amount']
+        self.assertEqual(field.currency_field, 'base_currency_id')
+
+        # related fields must use the field 'currency_id' or 'x_currency_id'
+        field = self.env['test_new_api.monetary_related']._fields['amount']
+        self.assertEqual(field.related, ('monetary_id', 'amount'))
+        self.assertEqual(field.currency_field, 'currency_id')
+
+        field = self.env['test_new_api.monetary_custom']._fields['x_amount']
+        self.assertEqual(field.related, ('monetary_id', 'amount'))
+        self.assertEqual(field.currency_field, 'x_currency_id')
+
+        # inherited field must use the same field as its parent field
+        field = self.env['test_new_api.monetary_inherits']._fields['amount']
+        self.assertEqual(field.related, ('monetary_id', 'amount'))
+        self.assertEqual(field.currency_field, 'base_currency_id')
 
 
 class TestX2many(common.TransactionCase):

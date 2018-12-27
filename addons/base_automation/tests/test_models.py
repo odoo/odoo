@@ -7,7 +7,7 @@ from odoo import fields, models, api
 
 class LeadTest(models.Model):
     _name = "base.automation.lead.test"
-    _description = "Action Rule Test"
+    _description = "Automated Rule Test"
 
     name = fields.Char(string='Subject', required=True, index=True)
     user_id = fields.Many2one('res.users', string='Responsible')
@@ -34,7 +34,7 @@ class LeadTest(models.Model):
 
 class LineTest(models.Model):
     _name = "base.automation.line.test"
-    _description = "Action Rule Line Test"
+    _description = "Automated Rule Line Test"
 
     name = fields.Char()
     lead_id = fields.Many2one('base.automation.lead.test', ondelete='cascade')

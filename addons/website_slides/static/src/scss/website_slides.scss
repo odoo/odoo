@@ -1,14 +1,13 @@
 // FIXME may be useless (check initial code here: https://github.com/odoo/odoo/blob/51be5bbfb38db784cb3406877cc0e8806b1bf55a/addons/website_slides/static/src/less/website_slides.less#L1)
 $nav-tabs-border-color: #dddddd !default;
-$brand-info: #dddddd !default;
+$info: #dddddd !default;
 $body-bg: #FFFFFF !default;
-$brand-primary: #428bca !default;
-$link-color: $brand-primary !default;
+$primary: #428bca !default;
+$link-color: theme-color('primary') !default;
 $panel-footer-bg: #f5f5f5 !default;
 $nav-link-hover-bg: #FFFFFF !default;
-$navbar-default-link-color: #777 !default;
 $navbar-default-link-hover-color: #333 !default;
-$navbar-default-bg: #f8f8f8 !default;
+$light: #f8f8f8 !default;
 $MAX-Z-INDEX : 2147483647 !default;
 
 @mixin top-covered-image {
@@ -16,12 +15,8 @@ $MAX-Z-INDEX : 2147483647 !default;
     object-position: top;
 }
 
-.oe_slides_panel_footer {
-    background-color: $navbar-default-bg;
-}
-
 .oe_slides_panel_footer .fa, .oe_slide_js_embed_option_link{
-    color : $brand-primary;
+    color : theme-color('primary');
     cursor: pointer;
 }
 
@@ -99,10 +94,6 @@ textarea.o_slides_comment {
 }
 
 // Thumbnails
-.oe_slides_thumbnail_container{
-    height: 300px
-}
-
 .oe_slides_grid_thumbnail {
     @include top-covered-image;
     height: 200px;
@@ -162,12 +153,6 @@ textarea.o_slides_comment {
     padding: 10px;
 }
 
-.oe_slides_panel{
-    padding-bottom: 50px;
-    height:100%;
-    margin-bottom:0px;
-}
-
 // PDF Viewer Share bar
 .oe_slides_share_bar{
     padding: 10px 0;
@@ -179,14 +164,4 @@ textarea.o_slides_comment {
 
 .oe_show_footer {
     z-index: $MAX-Z-INDEX; // Looks terrible but seems necessary due to fullscreen & canvas in PDFSlidesViewer
-}
-// Display Slide Navigation Footer bit clear on mobile preview
-@media screen and (max-width: 300px) {
-    .o_slide_navigation_buttons {
-        margin-left: 15px;
-        margin-right: -15px;
-        .col-xs-4 {
-            display: none;
-        }
-    }
 }

@@ -16,6 +16,7 @@ class Users(models.Model):
     """
     _name = 'res.users'
     _inherit = ['res.users']
+    _description = 'Users'
 
     alias_id = fields.Many2one('mail.alias', 'Alias', ondelete="set null", required=False,
             help="Email address internally associated with this user. Incoming "\
@@ -23,7 +24,7 @@ class Users(models.Model):
     alias_contact = fields.Selection([
         ('everyone', 'Everyone'),
         ('partners', 'Authenticated Partners'),
-        ('followers', 'Followers only')], string='Alias Contact Security', related='alias_id.alias_contact')
+        ('followers', 'Followers only')], string='Alias Contact Security', related='alias_id.alias_contact', readonly=False)
     notification_type = fields.Selection([
         ('email', 'Handle by Emails'),
         ('inbox', 'Handle in Odoo')],
@@ -128,17 +129,23 @@ GROUP BY channel_moderator.res_users_id""", [tuple(self.ids)])
         user_activities = {}
         for activity in activity_data:
             if not user_activities.get(activity['model']):
+                module = self.env[activity['model']]._original_module
+                icon = module and modules.module.get_module_icon(module)
                 user_activities[activity['model']] = {
                     'name': model_names[activity['id']],
                     'model': activity['model'],
                     'type': 'activity',
-                    'icon': modules.module.get_module_icon(self.env[activity['model']]._original_module),
+                    'icon': icon,
                     'total_count': 0, 'today_count': 0, 'overdue_count': 0, 'planned_count': 0,
                 }
             user_activities[activity['model']]['%s_count' % activity['states']] += activity['count']
             if activity['states'] in ('today', 'overdue'):
                 user_activities[activity['model']]['total_count'] += activity['count']
 
+            user_activities[activity['model']]['actions'] = [{
+                'icon': 'fa-clock-o',
+                'name': 'Summary',
+            }]
         return list(user_activities.values())
 
 
@@ -149,6 +156,7 @@ class res_groups_mail_channel(models.Model):
     """
     _name = 'res.groups'
     _inherit = 'res.groups'
+    _description = 'Access Groups'
 
     @api.multi
     def write(self, vals, context=None):

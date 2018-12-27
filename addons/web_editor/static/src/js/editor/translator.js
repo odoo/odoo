@@ -8,6 +8,7 @@ var Widget = require('web.Widget');
 var weContext = require('web_editor.context');
 var rte = require('web_editor.rte');
 var weWidgets = require('web_editor.widget');
+var Dialog = require('web.Dialog');
 
 var _t = core._t;
 
@@ -26,15 +27,18 @@ var RTETranslatorWidget = rte.Class.extend({
      * @override
      */
     _saveElement: function ($el, context, withLang) {
+        var self = this;
         if ($el.data('oe-translation-id')) {
             return this._rpc({
                 model: 'ir.translation',
                 method: 'save_html',
                 args: [
                     [+$el.data('oe-translation-id')],
-                    this._getEscapedElement($el).html(),
-                    context || weContext.get()
+                    this._getEscapedElement($el).html()
                 ],
+                context: context,
+            }).fail(function (error) {
+                Dialog.alert(null, error.data.message);
             });
         }
         return this._super($el, context, withLang === undefined ? true : withLang);
@@ -63,7 +67,7 @@ var AttributeTranslateDialog = weWidgets.Dialog.extend({
         var $group = $('<div/>', {class: 'form-group'}).appendTo(this.$el);
         _.each(this.translation, function (node, attr) {
             var $node = $(node);
-            var $label = $('<label class="control-label"></label>').text(attr);
+            var $label = $('<label class="col-form-label"></label>').text(attr);
             var $input = $('<input class="form-control"/>').val($node.html());
             $input.on('change keyup', function () {
                 var value = $input.val();
@@ -138,7 +142,7 @@ var TranslatorMenuBar = Widget.extend({
                 var translation = $node.data('translation') || {};
                 var trans = $node.attr(attr);
                 var match = trans.match(/<span [^>]*data-oe-translation-id="([0-9]+)"[^>]*>(.*)<\/span>/);
-                var $trans = $(trans).addClass('hidden o_editable o_editable_translatable_attribute').appendTo('body');
+                var $trans = $(trans).addClass('d-none o_editable o_editable_translatable_attribute').appendTo('body');
                 $trans.data('$node', $node).data('attribute', attr);
                 translation[attr] = $trans[0];
                 $node.attr(attr, match[2]);

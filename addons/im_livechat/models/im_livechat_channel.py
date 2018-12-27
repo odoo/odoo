@@ -3,9 +3,9 @@
 import base64
 import random
 import re
-from datetime import datetime, timedelta
 
 from odoo import api, fields, models, modules, tools
+
 
 class ImLivechatChannel(models.Model):
     """ Livechat Channel
@@ -15,7 +15,9 @@ class ImLivechatChannel(models.Model):
     """
 
     _name = 'im_livechat.channel'
+    _inherit = ['rating.parent.mixin']
     _description = 'Livechat Channel'
+    _rating_satisfaction_days = 7  # include only last 7 days to compute satisfaction
 
     def _default_image(self):
         image_path = modules.get_module_resource('im_livechat', 'static/src/img', 'default.png')
@@ -39,18 +41,15 @@ class ImLivechatChannel(models.Model):
         compute='_are_you_inside', store=False, readonly=True)
     script_external = fields.Text('Script (external)', compute='_compute_script_external', store=False, readonly=True)
     nbr_channel = fields.Integer('Number of conversation', compute='_compute_nbr_channel', store=False, readonly=True)
-    rating_percentage_satisfaction = fields.Integer(
-        '% Happy', compute='_compute_percentage_satisfaction', store=False, default=-1,
-        help="Percentage of happy ratings over the past 7 days")
 
     # images fields
-    image = fields.Binary('Image', default=_default_image, attachment=True,
+    image = fields.Binary('Image', default=_default_image,
         help="This field holds the image used as photo for the group, limited to 1024x1024px.")
-    image_medium = fields.Binary('Medium', attachment=True,
+    image_medium = fields.Binary('Medium',
         help="Medium-sized photo of the group. It is automatically "\
              "resized as a 128x128px image, with aspect ratio preserved. "\
              "Use this field in form views or some kanban views.")
-    image_small = fields.Binary('Thumbnail', attachment=True,
+    image_small = fields.Binary('Thumbnail',
         help="Small-sized photo of the group. It is automatically "\
              "resized as a 64x64px image, with aspect ratio preserved. "\
              "Use this field anywhere a small image is required.")
@@ -59,7 +58,6 @@ class ImLivechatChannel(models.Model):
     user_ids = fields.Many2many('res.users', 'im_livechat_channel_im_user', 'channel_id', 'user_id', string='Operators', default=_default_user_ids)
     channel_ids = fields.One2many('mail.channel', 'livechat_channel_id', 'Sessions')
     rule_ids = fields.One2many('im_livechat.channel.rule', 'channel_id', 'Rules')
-
 
     @api.one
     def _are_you_inside(self):
@@ -87,19 +85,6 @@ class ImLivechatChannel(models.Model):
     def _compute_nbr_channel(self):
         for record in self:
             record.nbr_channel = len(record.channel_ids)
-
-    @api.multi
-    @api.depends('channel_ids.rating_ids')
-    def _compute_percentage_satisfaction(self):
-        for record in self:
-            dt = fields.Datetime.to_string(datetime.utcnow() - timedelta(days=7))
-            repartition = record.channel_ids.rating_get_grades([('create_date', '>=', dt)])
-            total = sum(repartition.values())
-            if total > 0:
-                happy = repartition['great']
-                record.rating_percentage_satisfaction = ((happy*100) / total) if happy > 0 else 0
-            else:
-                record.rating_percentage_satisfaction = -1
 
     @api.model
     def create(self, vals):
@@ -147,22 +132,24 @@ class ImLivechatChannel(models.Model):
         return self.sudo().user_ids.filtered(lambda user: user.im_status == 'online')
 
     @api.model
-    def get_mail_channel(self, livechat_channel_id, anonymous_name):
+    def get_mail_channel(self, livechat_channel_id, anonymous_name, user_id=None, country_id=None):
         """ Return a mail.channel given a livechat channel. It creates one with a connected operator, or return false otherwise
             :param livechat_channel_id : the identifier if the im_livechat.channel
             :param anonymous_name : the name of the anonymous person of the channel
+            :param user_id : the id of the logged in visitor, if any
+            :param country_code : the country of the anonymous person of the channel
             :type livechat_channel_id : int
             :type anonymous_name : str
             :return : channel header
             :rtype : dict
         """
         # get the avalable user of the channel
-        users = self.sudo().browse(livechat_channel_id).get_available_users()
-        if len(users) == 0:
+        operators = self.sudo().browse(livechat_channel_id).get_available_users()
+        if len(operators) == 0:
             return False
         # choose the res.users operator and get its partner id
-        user = random.choice(users)
-        operator_partner_id = user.partner_id.id
+        operator = random.choice(operators)
+        operator_partner_id = random.choice(operators).partner_id.id
         # partner to add to the mail.channel
         channel_partner_to_add = [(4, operator_partner_id)]
         if self.env.user and self.env.user.active:  # valid session user (not public)
@@ -170,14 +157,16 @@ class ImLivechatChannel(models.Model):
         # create the session, and add the link with the given channel
         mail_channel = self.env["mail.channel"].with_context(mail_create_nosubscribe=False).sudo().create({
             'channel_partner_ids': channel_partner_to_add,
+            'livechat_operator_id': operator_partner_id,
             'livechat_channel_id': livechat_channel_id,
-            'anonymous_name': anonymous_name,
+            'anonymous_name': False if user_id else anonymous_name,
+            'country_id': country_id,
             'channel_type': 'livechat',
-            'name': ', '.join([anonymous_name, user.name]),
+            'name': ', '.join([self.env['res.users'].browse(user_id).name if user_id else anonymous_name, operator.livechat_username if operator.livechat_username else operator.name]),
             'public': 'private',
             'email_send': False,
         })
-        return mail_channel.sudo().with_context(im_livechat_operator_partner_id=operator_partner_id).channel_info()[0]
+        return mail_channel.sudo().channel_info()[0]
 
     @api.model
     def get_channel_infos(self, channel_id):
@@ -208,9 +197,8 @@ class ImLivechatChannelRule(models.Model):
     """
 
     _name = 'im_livechat.channel.rule'
-    _description = 'Channel Rules'
+    _description = 'Livechat Channel Rules'
     _order = 'sequence asc'
-
 
     regex_url = fields.Char('URL Regex',
         help="Regular expression specifying the web pages this rule will be applied on.")

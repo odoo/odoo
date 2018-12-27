@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <report id="label_product_template"
+            model="product.template"
+            string="Product Label (ZPL)"
+            name="stock_zebra.label_product_template_view"
+            file="stock_zebra.label_product_template_view"
+            report_type="qweb-text"
+        />
+        <report id="label_product_product"
+            model="product.product"
+            string="Product Label (ZPL)"
+            name="stock_zebra.label_product_product_view"
+            file="stock_zebra.label_product_product_view"
+            report_type="qweb-text"
+            />
+        <report id="label_barcode_product_template"
+            model="product.template"
+            string="Product Barcode (ZPL)"
+            name="stock_zebra.label_barcode_product_template_view"
+            file="stock_zebra.label_barcode_product_template_view"
+            report_type="qweb-text"
+        />
+        <report id="label_barcode_product_product"
+            model="product.product"
+            string="Product Barcode (ZPL)"
+            name="stock_zebra.label_barcode_product_product_view"
+            file="stock_zebra.label_barcode_product_product_view"
+            report_type="qweb-text"
+        />
+        <report id="label_lot_template"
+            model="stock.production.lot"
+            string="Lot/Serial Number (ZPL)"
+            name="stock_zebra.label_lot_template_view"
+            file="stock_zebra.label_lot_template_view"
+            report_type="qweb-text"
+        />
+        <report id="label_transfer_template"
+            model="stock.picking"
+            string="Barcodes (ZPL)"
+            name="stock_zebra.label_transfer_template_view"
+            file="stock_zebra.label_transfer_template_view"
+            report_type="qweb-text"
+        />
+        <report id="label_package_template"
+            model="stock.quant.package"
+            string="Package Barcode (ZPL)"
+            name="stock_zebra.label_package_template_view"
+            file="stock_zebra.label_package_template_view"
+            report_type="qweb-text"
+        />
+        <report id="label_product_packaging"
+            model="product.packaging"
+            string="Product Packaging (ZPL)"
+            name="stock_zebra.label_product_packaging_view"
+            file="stock_zebra.label_product_packaging_view"
+            report_type="qweb-text"
+        />
+        <report id="label_picking_type"
+            model="stock.picking.type"
+            string="Operation type (ZPL)"
+            name="stock_zebra.label_picking_type_view"
+            file="stock_zebra.label_picking_type_view"
+            report_type="qweb-text"
+        />
+    </data>
+</odoo>

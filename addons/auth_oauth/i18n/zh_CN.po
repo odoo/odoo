@@ -3,17 +3,16 @@
 # * auth_oauth
 # 
 # Translators:
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2016
-# Si Ling Lau <happy8645@hotmail.com>, 2017
-# 老窦 北京 <2662059195@qq.com>, 2017
-# e2f <projects@e2f.com>, 2018
+# Martin Trigaux, 2018
+# 珠海-杜哥 <liangjia@qq.com>, 2018
+# niulin lnc. <admin@niulin.net>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
-"Last-Translator: e2f <projects@e2f.com>, 2018\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-09-21 13:17+0000\n"
+"Last-Translator: niulin lnc. <admin@niulin.net>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,7 +21,12 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: auth_oauth
-#: model:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:auth_oauth.providers
+msgid "- or -"
+msgstr "- 或 -"
+
+#. module: auth_oauth
+#: model_terms:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
 msgid "<i class=\"fa fa-fw fa-arrow-right\"/>Tutorial"
 msgstr "<i class=\"fa fa-fw fa-arrow-right\"/>教程"
 
@@ -38,7 +42,7 @@ msgid "Allow users to sign in with Google"
 msgstr "允许用户通过google登录"
 
 #. module: auth_oauth
-#: model:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
 msgid "Allow users to sign in with their Google account"
 msgstr "允许用户使用其 Google 账户登录"
 
@@ -69,9 +73,14 @@ msgid "Client ID"
 msgstr "客户端 ID"
 
 #. module: auth_oauth
-#: model:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
 msgid "Client ID:"
 msgstr "客户端 ID："
+
+#. module: auth_oauth
+#: model:ir.model,name:auth_oauth.model_res_config_settings
+msgid "Config Settings"
+msgstr "配置设定"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__create_uid
@@ -94,7 +103,7 @@ msgid "Display Name"
 msgstr "显示名称"
 
 #. module: auth_oauth
-#: model:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
 msgid "Google Authentication"
 msgstr "Google 认证"
 
@@ -130,7 +139,7 @@ msgstr "OAuth 服务商"
 
 #. module: auth_oauth
 #: model:ir.ui.menu,name:auth_oauth.menu_oauth_providers
-#: model:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
 msgid "OAuth Providers"
 msgstr "OAuth服务商"
 
@@ -150,7 +159,7 @@ msgid "OAuth2 provider"
 msgstr "OAuth2服务商"
 
 #. module: auth_oauth
-#: model:ir.ui.view,arch_db:auth_oauth.view_users_form
+#: model_terms:ir.ui.view,arch_db:auth_oauth.view_users_form
 msgid "Oauth"
 msgstr "Oauth"
 
@@ -191,6 +200,11 @@ msgid "Sign up is not allowed on this database."
 msgstr "此数据库不允许注册"
 
 #. module: auth_oauth
+#: model:ir.model,name:auth_oauth.model_ir_config_parameter
+msgid "System Parameter"
+msgstr "系统参数"
+
+#. module: auth_oauth
 #: model:ir.model,name:auth_oauth.model_res_users
 msgid "Users"
 msgstr "用户"
@@ -210,22 +224,12 @@ msgid ""
 msgstr "您无权访问此数据库或者您的邀请已经过期.请申请一个新的邀请并在您的邀请邮件中确认。"
 
 #. module: auth_oauth
-#: model:ir.ui.view,arch_db:auth_oauth.view_oauth_provider_form
-#: model:ir.ui.view,arch_db:auth_oauth.view_oauth_provider_tree
+#: model_terms:ir.ui.view,arch_db:auth_oauth.view_oauth_provider_form
+#: model_terms:ir.ui.view,arch_db:auth_oauth.view_oauth_provider_tree
 msgid "arch"
 msgstr "arch"
 
 #. module: auth_oauth
-#: model:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
 msgid "e.g. 1234-xyz.apps.googleusercontent.com"
 msgstr "例如：1234-xyz.apps.googleusercontent.com"
-
-#. module: auth_oauth
-#: model:ir.model,name:auth_oauth.model_ir_config_parameter
-msgid "ir.config_parameter"
-msgstr "ir.config_parameter"
-
-#. module: auth_oauth
-#: model:ir.model,name:auth_oauth.model_res_config_settings
-msgid "res.config.settings"
-msgstr "设置-基础设置"

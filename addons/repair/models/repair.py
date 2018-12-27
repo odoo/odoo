@@ -46,7 +46,7 @@ class Repair(models.Model):
     partner_id = fields.Many2one(
         'res.partner', 'Customer',
         index=True, states={'confirmed': [('readonly', True)]},
-        help='Choose partner for whom the order will be invoiced and delivered.')
+        help='Choose partner for whom the order will be invoiced and delivered. You can find a partner by its Name, TIN, Email or Internal Reference.')
     address_id = fields.Many2one(
         'res.partner', 'Delivery Address',
         domain="[('parent_id','=',partner_id)]",
@@ -114,7 +114,7 @@ class Repair(models.Model):
     amount_untaxed = fields.Float('Untaxed Amount', compute='_amount_untaxed', store=True)
     amount_tax = fields.Float('Taxes', compute='_amount_tax', store=True)
     amount_total = fields.Float('Total', compute='_amount_total', store=True)
-    tracking = fields.Selection('Product Tracking', related="product_id.tracking")
+    tracking = fields.Selection('Product Tracking', related="product_id.tracking", readonly=False)
 
     @api.one
     @api.depends('partner_id')
@@ -256,7 +256,8 @@ class Repair(models.Model):
             'default_res_id': self.id,
             'default_use_template': bool(template_id),
             'default_template_id': template_id,
-            'default_composition_mode': 'comment'
+            'default_composition_mode': 'comment',
+            'custom_layout': 'mail.mail_notification_light',
         }
         return {
             'type': 'ir.actions.act_window',
@@ -496,9 +497,9 @@ class Repair(models.Model):
 
 class RepairLine(models.Model):
     _name = 'repair.line'
-    _description = 'Repair Line'
+    _description = 'Repair Line (parts)'
 
-    name = fields.Char('Description', required=True)
+    name = fields.Text('Description', required=True)
     repair_id = fields.Many2one(
         'repair.order', 'Repair Order Reference',
         index=True, ondelete='cascade')
@@ -585,6 +586,8 @@ class RepairLine(models.Model):
                 self.name = self.product_id.with_context(lang=partner.lang).display_name
             else:
                 self.name = self.product_id.display_name
+            if self.product_id.description_sale:
+                self.name += '\n' + self.product_id.description_sale
             self.product_uom = self.product_id.uom_id.id
         if self.type != 'remove':
             if partner and self.product_id:
@@ -610,12 +613,12 @@ class RepairLine(models.Model):
 
 class RepairFee(models.Model):
     _name = 'repair.fee'
-    _description = 'Repair Fees Line'
+    _description = 'Repair Fees'
 
     repair_id = fields.Many2one(
         'repair.order', 'Repair Order Reference',
         index=True, ondelete='cascade', required=True)
-    name = fields.Char('Description', index=True, required=True)
+    name = fields.Text('Description', index=True, required=True)
     product_id = fields.Many2one('product.product', 'Product')
     product_uom_qty = fields.Float('Quantity', digits=dp.get_precision('Product Unit of Measure'), required=True, default=1.0)
     price_unit = fields.Float('Unit Price', required=True)
@@ -646,6 +649,8 @@ class RepairFee(models.Model):
         if self.product_id:
             self.name = self.product_id.display_name
             self.product_uom = self.product_id.uom_id.id
+            if self.product_id.description_sale:
+                self.name += '\n' + self.product_id.description_sale
 
         warning = False
         if not pricelist:

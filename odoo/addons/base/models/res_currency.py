@@ -14,7 +14,7 @@ _logger = logging.getLogger(__name__)
 try:
     from num2words import num2words
 except ImportError:
-    _logger.warning("The num2words python library is not installed, l10n_mx_edi features won't be fully available.")
+    _logger.warning("The num2words python library is not installed, amount-to-text features won't be fully available.")
     num2words = None
 
 CURRENCY_DISPLAY_PATTERN = re.compile(r'(\w+)\s*(?:\((.*)\))?')
@@ -32,7 +32,7 @@ class Currency(models.Model):
                         help='The rate of the currency to the currency of rate 1.')
     rate_ids = fields.One2many('res.currency.rate', 'currency_id', string='Rates')
     rounding = fields.Float(string='Rounding Factor', digits=(12, 6), default=0.01)
-    decimal_places = fields.Integer(compute='_compute_decimal_places')
+    decimal_places = fields.Integer(compute='_compute_decimal_places', store=True)
     active = fields.Boolean(default=True)
     position = fields.Selection([('after', 'After Amount'), ('before', 'Before Amount')], default='after',
         string='Symbol Position', help="Determines where the currency symbol should be placed after or before the amount.")
@@ -46,11 +46,12 @@ class Currency(models.Model):
     ]
 
     def _get_rates(self, company, date):
-        query = """SELECT c.id, (SELECT r.rate FROM res_currency_rate r
+        query = """SELECT c.id,
+                          COALESCE((SELECT r.rate FROM res_currency_rate r
                                   WHERE r.currency_id = c.id AND r.name <= %s
                                     AND (r.company_id IS NULL OR r.company_id = %s)
                                ORDER BY r.company_id, r.name DESC
-                                  LIMIT 1) AS rate
+                                  LIMIT 1), 1.0) AS rate
                    FROM res_currency c
                    WHERE c.id IN %s"""
         self._cr.execute(query, (date, company.id, tuple(self.ids)))

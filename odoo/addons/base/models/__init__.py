@@ -27,6 +27,8 @@ from . import ir_http
 from . import ir_logging
 from . import ir_property
 from . import ir_module
+from . import ir_demo
+from . import ir_demo_failure
 from . import report_paperformat
 from . import res_country
 from . import res_lang

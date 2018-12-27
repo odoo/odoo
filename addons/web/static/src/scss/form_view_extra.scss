@@ -1,5 +1,5 @@
 .o_form_view {
-    $sheet-max-width: 860px;
+    $sheet-max-width: 1140px;
     $sheet-min-width: 650px;
     $sheet-padding: 16px;
 
@@ -33,6 +33,7 @@
         width: 400px;
         text-align: right;
         float: right;
+        margin-bottom: 4px;
 
         &, & + .oe_avatar {
             + .oe_title {
@@ -40,7 +41,14 @@
             }
         }
 
+        // TODO remove me in master (this rule is a copy of the one in the
+        // bootstrap_review.scss file)
+        + .alert {
+            clear: both;
+        }
+
         .oe_stat_button {
+            color: $o-main-text-color;
             text-align: left;
             width: 132px !important;
             height: 40px;
@@ -72,18 +80,16 @@
                 max-width: 70%;
                 line-height: 1.2;
 
-                .o_stat_value {
+                > .o_stat_value, > .o_stat_text {
                     @include o-text-overflow(block);
+                }
+
+                .o_stat_value {
                     font-weight: 700;
-                    color: $o-brand-primary;
+                    color: $o-brand-odoo;
                 }
                 .o_stat_text {
-                    @include o-text-overflow(block);
                     font-size: small;
-
-                    .o_stat_value {
-                        display: inline;
-                    }
                 }
             }
             > span {
@@ -144,7 +150,7 @@
 
     // Separators
     .o_horizontal_separator {
-        color: $o-brand-optional;
+        color: $o-brand-primary;
         font-weight: bold;
     }
 

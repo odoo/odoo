@@ -4,6 +4,7 @@ import logging
 
 import odoo.release
 import odoo.tools
+from odoo.exceptions import AccessDenied
 from odoo.tools.translate import _
 
 from . import security
@@ -27,7 +28,10 @@ def exp_login(db, login, password):
 
 def exp_authenticate(db, login, password, user_agent_env):
     res_users = odoo.registry(db)['res.users']
-    return res_users.authenticate(db, login, password, user_agent_env)
+    try:
+        return res_users.authenticate(db, login, password, user_agent_env)
+    except AccessDenied:
+        return False
 
 def exp_version():
     return RPC_VERSION_1

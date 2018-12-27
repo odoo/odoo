@@ -10,8 +10,8 @@
 <template id="index" inherit_id="website_event.index" name="Event's Ticket">
     <xpath expr="//li[@t-foreach='event_ids']/div/h4" position="before">
         <t t-if="event.state in ['draft', 'confirm'] and event.event_ticket_ids">
-            <span t-if="event.seats_availability == 'limited' and not event.seats_available" class="label label-danger pull-right">Sold Out</span>
-            <span t-if="event.seats_availability ==  'limited' and event.seats_available and event.seats_available &lt;= ((event.seats_max or 0) / 4)" class="label pull-right label-info">
+            <span t-if="event.seats_availability == 'limited' and not event.seats_available" class="badge badge-danger float-right">Sold Out</span>
+            <span t-if="event.seats_availability ==  'limited' and event.seats_available and event.seats_available &lt;= ((event.seats_max or 0) / 4)" class="badge float-right badge-info">
                 Only <t t-esc="event.seats_available"/> Remaining
             </span>
         </t>
@@ -50,18 +50,18 @@
                         <span t-field="ticket.price_reduce" t-options='{
                             "widget": "monetary",
                             "display_currency": website.pricelist_id.currency_id
-                        }' groups="sale.group_show_price_subtotal"/>
+                        }' groups="account.group_show_line_subtotals_tax_excluded"/>
                         <span t-field="ticket.price_reduce_taxinc" t-options='{
                             "widget": "monetary",
                             "display_currency": website.pricelist_id.currency_id
-                        }' groups="sale.group_show_price_total"/>
+                        }' groups="account.group_show_line_subtotals_tax_included"/>
                         <span itemprop="price" style="display:none;" t-esc="ticket.price"/>
                         <span itemprop="priceCurrency" style="display:none;" t-esc="website.pricelist_id.currency_id.name"/>
                     </t>
                     <t t-if="not ticket.price and not editable">
                         <span>Free</span>
                     </t>
-                    <span t-if="ticket.seats_max and ((ticket.seats_reserved or 0)*100 / ticket.seats_max)&gt;75" class="badge" itemprop="availability" content="http://schema.org/LimitedAvailability">
+                    <span t-if="ticket.seats_max and ((ticket.seats_reserved or 0)*100 / ticket.seats_max)&gt;75" class="badge badge-pill" itemprop="availability" content="http://schema.org/LimitedAvailability">
                         <t t-esc="ticket.seats_max - ticket.seats_reserved"/>
                         <span>left</span>
                     </span>
@@ -84,15 +84,54 @@
     </xpath>
 </template>
 
-<template id="cart" inherit_id="website_sale.cart_lines" name="Hide product reduction for event tickets">
-    <xpath expr="//td[hasclass('td-product_name')]/div/a" position="attributes">
+<!-- If the sale order line concerns an event, we want the "product" link to point to the event itself and not to the product on the ecommerce -->
+<template id="cart_line_product_link_inherit_website_event_sale" inherit_id="website_sale.cart_line_product_link" name="Event Shopping Cart Line Product Link">
+    <xpath expr="//a" position="attributes">
         <attribute name="t-attf-href"/>
         <attribute name="t-att-href">
             line.event_id and ('/event/%s/register' % slug(line.event_id)) or ('/shop/product/%s' % slug(line.product_id.product_tmpl_id))
         </attribute>
     </xpath>
-    <xpath expr="//del" position="attributes">
-        <attribute name="t-attf-class" separator=" " add="#{line.event_id and 'hidden' or ''}"/>
+</template>
+
+<!-- If the sale order line concerns an event, we want to show an additional line with the event name even on small screens -->
+<template id="cart_lines_inherit_website_event_sale" inherit_id="website_sale.cart_lines" name="Event Shopping Cart Lines">
+    <xpath expr="//t[@t-call='website_sale.cart_line_description_following_lines']/t[@t-set='div_class']" position="after">
+        <t t-if="line.event_id">
+            <t t-set="div_class" t-value="''"/>
+        </t>
     </xpath>
 </template>
+
+<!-- If the sale order line concerns an event, we want to show an additional line with the event name -->
+<template id="cart_popover_inherit_website_event_sale" inherit_id="website_sale.cart_popover" name="Event Cart Popover">
+    <xpath expr="//t[@t-call='website_sale.cart_line_product_link']" position="after">
+        <t t-if="line.event_id" t-call="website_sale.cart_line_description_following_lines"/>
+    </xpath>
+</template>
+
+<!-- If the sale order line concerns an event, we want to show an additional line with the event name -->
+<template id="cart_summary_inherit_website_event_sale" inherit_id="website_sale.cart_summary" name="Event Cart right column">
+    <xpath expr="//td[hasclass('td-product_name')]/div/strong" position="after">
+        <t t-if="line.event_id" t-call="website_sale.cart_line_description_following_lines"/>
+    </xpath>
+</template>
+
+<template id="cart_lines_inherit_website_event_sale" inherit_id="website_sale.cart_lines" name="Hide product reduction for event tickets">
+    <xpath expr="//del" position="attributes">
+        <attribute name="t-attf-class" separator=" " add="#{line.event_id and 'd-none' or ''}"/>
+    </xpath>
+</template>
+
+<!-- Add the ticket name on the registration complete page. -->
+<template id="registration_complete_inherit_website_event_sale" inherit_id="website_event.registration_complete" name="Sale Registration Completed">
+    <xpath expr="//thead/tr/th[1]" position="after">
+        <th>Ticket</th>
+    </xpath>
+    <xpath expr="//tbody/t/tr/td[1]" position="after">
+        <td><i class="fa fa-ticket"></i> <t t-if='attendee.event_ticket_id'><t t-esc="attendee.event_ticket_id.name"/></t><t t-if='not attendee.event_ticket_id'>N/A</t></td>
+    </xpath>
+</template>
+
 </odoo>
+

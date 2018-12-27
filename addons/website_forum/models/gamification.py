@@ -24,4 +24,4 @@ class UserBadge(models.Model):
          ('silver', 'silver'),
          ('gold', 'gold')],
         string='Forum Badge Level',
-        related="badge_id.level", store=True)
+        related="badge_id.level", store=True, readonly=False)

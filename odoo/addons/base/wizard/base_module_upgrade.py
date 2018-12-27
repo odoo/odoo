@@ -8,7 +8,7 @@ from odoo.exceptions import UserError
 
 class BaseModuleUpgrade(models.TransientModel):
     _name = "base.module.upgrade"
-    _description = "Module Upgrade"
+    _description = "Upgrade Module"
 
     @api.model
     @api.returns('ir.module.module')
@@ -36,7 +36,7 @@ class BaseModuleUpgrade(models.TransientModel):
                                 <separator string="Upgrade Completed" colspan="4"/>
                                 <footer>
                                     <button name="config" string="Start Configuration" type="object" class="btn-primary"/>
-                                    <button special="cancel" string="Close" class="btn-default"/>
+                                    <button special="cancel" string="Close" class="btn-secondary"/>
                                 </footer>
                              </form>'''
 

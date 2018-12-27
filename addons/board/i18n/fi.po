@@ -3,25 +3,33 @@
 # * board
 # 
 # Translators:
-# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
-# artol <arto.leskinen@tek.fi>, 2017
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2017
-# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2017
-# Kari Lindgren <kari.lindgren@emsystems.fi>, 2017
+# Martin Trigaux, 2018
+# Kari Lindgren <kari.lindgren@emsystems.fi>, 2018
+# artol <arto.leskinen@tek.fi>, 2018
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2018
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Kari Lindgren <kari.lindgren@emsystems.fi>, 2017\n"
+"POT-Creation-Date: 2018-08-24 09:04+0000\n"
+"PO-Revision-Date: 2018-08-24 09:04+0000\n"
+"Last-Translator: Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2018\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fi\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: board
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:53
+#, python-format
+msgid ""
+"\"Add to\n"
+"                Dashboard\""
+msgstr ""
 
 #. module: board
 #. openerp-web
@@ -32,39 +40,37 @@ msgstr "&nbsp;"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/js/favorite_menu.js:97
+#: code:addons/board/static/src/js/favorite_menu.js:103
 #, python-format
 msgid "'%s' added to dashboard"
 msgstr "'%s' lisätty työpöydällesi"
 
 #. module: board
-#: model:ir.actions.act_window,help:board.open_board_my_dash_action
-msgid "<b>Your personal dashboard is empty.</b>"
-msgstr "<b> Henkilökohtainen työpöytäsi on tyhjä.</b>"
-
-#. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:69
+#: code:addons/board/static/src/xml/board.xml:83
 #, python-format
 msgid "Add"
 msgstr "Lisää"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:63
+#: code:addons/board/static/src/xml/board.xml:78
 #, python-format
 msgid "Add to my Dashboard"
 msgstr "Lisää työpöydälleni"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/js/dashboard.js:335
+#: code:addons/board/static/src/js/board_view.js:362
 #, python-format
 msgid "Are you sure you want to remove this item?"
 msgstr ""
 
 #. module: board
+#. openerp-web
+#: code:addons/board/static/src/js/board_view.js:439
 #: model:ir.model,name:board.model_board_board
+#, python-format
 msgid "Board"
 msgstr "Työpöytä"
 
@@ -91,58 +97,85 @@ msgstr "Valitse työpöydän asettelu"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/js/favorite_menu.js:99
+#: code:addons/board/static/src/js/favorite_menu.js:107
 #, python-format
 msgid "Could not add filter to dashboard"
 msgstr "Suodatinta ei pystytty lisäämään työpöydälle"
 
 #. module: board
-#: model:ir.model.fields,field_description:board.field_board_board_display_name
+#: model:ir.model.fields,field_description:board.field_board_board__display_name
 msgid "Display Name"
 msgstr "Näyttönimi"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/js/dashboard.js:85
+#: code:addons/board/static/src/js/board_view.js:80
 #, python-format
 msgid "Edit Layout"
 msgstr "Muokkaa asettelua"
 
 #. module: board
-#: model:ir.model.fields,field_description:board.field_board_board_id
+#: model:ir.model.fields,field_description:board.field_board_board__id
 msgid "ID"
 msgstr "Tunniste (ID)"
 
 #. module: board
-#: model:ir.model.fields,field_description:board.field_board_board___last_update
+#: model:ir.model.fields,field_description:board.field_board_board____last_update
 msgid "Last Modified on"
 msgstr "Viimeksi muokattu"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/js/dashboard.js:48
+#: code:addons/board/static/src/xml/board.xml:41
+#, python-format
+msgid "Layout"
+msgstr ""
+
+#. module: board
+#. openerp-web
+#: code:addons/board/static/src/js/board_view.js:43
 #: model:ir.actions.act_window,name:board.open_board_my_dash_action
 #: model:ir.ui.menu,name:board.menu_board_my_dash
-#: model:ir.ui.view,arch_db:board.board_my_dash_view
+#: model_terms:ir.ui.view,arch_db:board.board_my_dash_view
 #, python-format
 msgid "My Dashboard"
 msgstr "Oma työpöytä"
 
 #. module: board
-#: model:ir.actions.act_window,help:board.open_board_my_dash_action
-msgid ""
-"To add your first report into this dashboard, go to any\n"
-"                    menu, switch to list or graph view, and click <i>'Add to\n"
-"                    Dashboard'</i> in the extended search options."
+#. openerp-web
+#: code:addons/board/static/src/js/favorite_menu.js:104
+#, python-format
+msgid "Please refresh your browser for the changes to take effect."
 msgstr ""
-"Lisätäksesi raportin työpöydällesi, mene valikkoon, vaihda graafinäkymään ja"
-" klikkaa <i>'Lisää työpöydälle'</i> laajennetun haun asetuksissa."
 
 #. module: board
-#: model:ir.actions.act_window,help:board.open_board_my_dash_action
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:51
+#, python-format
+msgid ""
+"To add your first report into this dashboard, go to any\n"
+"                menu, switch to list or graph view, and click"
+msgstr ""
+
+#. module: board
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:55
+#, python-format
 msgid ""
 "You can filter and group data before inserting into the\n"
-"                    dashboard using the search options."
+"                dashboard using the search options."
 msgstr ""
-"Voit suodattaa ja ryhmitellä tietoja ennen kuin lisäät ne työpöydälle haun "
-"asetuksissa."
+
+#. module: board
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:49
+#, python-format
+msgid "Your personal dashboard is empty"
+msgstr ""
+
+#. module: board
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:53
+#, python-format
+msgid "in the extended search options."
+msgstr ""

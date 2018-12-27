@@ -21,4 +21,15 @@
         <field name="search_view_id" ref="product.product_pricelist_view_search" />
         <field name="context">{"default_base":'list_price'}</field>
     </record>
+
+    <record id="account_invoice_view_form" model="ir.ui.view">
+        <field name="name">account.invoice.form</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="account.invoice_form"/>
+        <field name="arch" type="xml">
+            <field name="fiscal_position_id" position="after">
+                <field name="website_id" groups="website.group_multi_website"/>
+            </field>
+        </field>
+    </record>
 </odoo>

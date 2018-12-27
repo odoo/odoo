@@ -17,7 +17,7 @@
             <field name="inherit_id" ref="account.invoice_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//button[@name='action_invoice_draft']" position="before">
-                    <button name="action_invoice_cancel" type="object" states="draft,open,paid" string="Cancel Invoice" groups="account.group_account_invoice"/>
+                    <button name="action_invoice_cancel" type="object" states="draft,open,paid" string="Cancel" groups="account.group_account_invoice"/>
                 </xpath>
             </field>
         </record>
@@ -28,7 +28,7 @@
             <field name="inherit_id" ref="account.invoice_supplier_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//button[@name='action_invoice_draft']" position="before">
-                    <button name="action_invoice_cancel" type="object" states="draft,open,paid" string="Cancel Invoice" groups="account.group_account_invoice"/>
+                    <button name="action_invoice_cancel" type="object" states="draft,open,paid" string="Cancel" groups="account.group_account_invoice"/>
                 </xpath>
             </field>
         </record>
@@ -54,7 +54,7 @@
                 </field>
                 <xpath expr="//field[@name='bank_account_id']" position="after">
                     <field name="state" invisible="1"/>
-                    <button name="button_cancel_reconciliation" attrs="{'invisible': ['|',('journal_entry_ids', '=', []), ('state', '=', 'confirm')]}" string="Revert reconciliation" type="object" icon="fa fa-undo text-warning"/>
+                    <button name="button_cancel_reconciliation" attrs="{'invisible': ['|',('journal_entry_ids', '=', []), ('state', '=', 'confirm')]}" string="Revert reconciliation" type="object" icon="fa-undo"/>
                 </xpath>
             </field>
         </record>

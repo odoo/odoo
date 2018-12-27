@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import date
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 from . import membership
@@ -10,7 +11,7 @@ class Partner(models.Model):
     _inherit = 'res.partner'
 
     associate_member = fields.Many2one('res.partner', string='Associate Member',
-        help="A member with whom you want to associate your membership. "
+        help="A member with whom you want to associate your membership."
              "It will consider the membership state of the associated member.")
     member_lines = fields.One2many('membership.membership_line', 'partner', string='Membership')
     free_member = fields.Boolean(string='Free Member',
@@ -39,6 +40,8 @@ class Partner(models.Model):
     @api.depends('member_lines.account_invoice_line.invoice_id.state',
                  'member_lines.account_invoice_line.invoice_id.invoice_line_ids',
                  'member_lines.account_invoice_line.invoice_id.payment_ids',
+                 'member_lines.account_invoice_line.invoice_id.payment_move_line_ids',
+                 'member_lines.account_invoice_line.invoice_id.partner_id',
                  'free_member',
                  'member_lines.date_to', 'member_lines.date_from',
                  'associate_member.membership_state')
@@ -104,18 +107,22 @@ class Partner(models.Model):
             if partner.membership_stop and today > partner.membership_stop:
                 res[partner.id] = 'free' if partner.free_member else 'old'
                 continue
+            if partner.associate_member:
+                res_state = partner.associate_member._membership_state()
+                res[partner.id] = res_state[partner.associate_member.id]
+                continue
 
             s = 4
             if partner.member_lines:
                 for mline in partner.member_lines:
-                    if (mline.date_to or '0000-00-00') >= today and (mline.date_from or '0000-00-00') <= today:
-                        if mline.account_invoice_line.invoice_id:
+                    if (mline.date_to or date.min) >= today and (mline.date_from or date.min) <= today:
+                        if mline.account_invoice_line.invoice_id.partner_id == partner:
                             mstate = mline.account_invoice_line.invoice_id.state
                             if mstate == 'paid':
                                 s = 0
                                 inv = mline.account_invoice_line.invoice_id
-                                for payment in inv.payment_ids:
-                                    if any(payment.invoice_ids.filtered(lambda inv: inv.type == 'out_refund')):
+                                for ml in inv.payment_move_line_ids:
+                                    if any(ml.invoice_id.filtered(lambda inv: inv.type == 'out_refund')):
                                         s = 2
                                 break
                             elif mstate == 'open' and s != 0:
@@ -126,7 +133,7 @@ class Partner(models.Model):
                                 s = 3
                 if s == 4:
                     for mline in partner.member_lines:
-                        if (mline.date_from or '0000-00-00') < today and (mline.date_to or '0000-00-00') < today and (mline.date_from or '0000-00-00') <= (mline.date_to or '0000-00-00') and mline.account_invoice_line and mline.account_invoice_line.invoice_id.state == 'paid':
+                        if (mline.date_from or date.min) < today and (mline.date_to or date.min) < today and (mline.date_from or date.min) <= (mline.date_to or date.min) and mline.account_invoice_line and mline.account_invoice_line.invoice_id.state == 'paid':
                             s = 5
                         else:
                             s = 6
@@ -144,9 +151,6 @@ class Partner(models.Model):
                     res[partner.id] = 'none'
             if partner.free_member and s != 0:
                 res[partner.id] = 'free'
-            if partner.associate_member:
-                res_state = partner.associate_member._membership_state()
-                res[partner.id] = res_state[partner.associate_member.id]
         return res
 
     @api.one
@@ -161,8 +165,10 @@ class Partner(models.Model):
 
     @api.model
     def _cron_update_membership(self):
-        # used to recompute 'membership_state'; should no longer be necessary
-        pass
+        partners = self.search([('membership_state', 'in', ['invoiced', 'paid'])])
+        # mark the field to be recomputed, and recompute it
+        partners._recompute_todo(self._fields['membership_state'])
+        self.recompute()
 
     @api.multi
     def create_membership_invoice(self, product_id=None, datas=None):

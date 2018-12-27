@@ -48,7 +48,7 @@ class TestInventory(TransactionCase):
 
         # check
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location), 0.0)
-        self.assertEqual(len(self.env['stock.quant']._gather(self.product1, self.stock_location)), 0.0)
+        self.assertEqual(sum(self.env['stock.quant']._gather(self.product1, self.stock_location).mapped('quantity')), 0.0)
 
     def test_inventory_2(self):
         """ Check that adding a tracked product through an inventory adjustment work as expected.

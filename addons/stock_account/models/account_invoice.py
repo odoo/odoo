@@ -55,8 +55,8 @@ class AccountInvoice(models.Model):
             return product.product_tmpl_id._get_product_accounts()['stock_output']
         return product.product_tmpl_id.get_product_accounts()['stock_input']
 
-    def invoice_validate(self):
-        res = super(AccountInvoice, self).invoice_validate()
+    def action_move_create(self):
+        res = super(AccountInvoice, self).action_move_create()
         self.filtered(lambda i: i.company_id.anglo_saxon_accounting)._anglo_saxon_reconcile_valuation()
         return res
 

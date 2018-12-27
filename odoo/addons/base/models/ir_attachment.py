@@ -11,7 +11,7 @@ from collections import defaultdict
 import uuid
 
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, ValidationError
 from odoo.tools import config, human_size, ustr, html_escape
 from odoo.tools.mimetypes import guess_mimetype
 
@@ -33,6 +33,7 @@ class IrAttachment(models.Model):
     on the local filesystem using name based on their sha1 hash
     """
     _name = 'ir.attachment'
+    _description = 'Attachment'
     _order = 'id desc'
 
     @api.depends('res_model', 'res_id')
@@ -242,7 +243,8 @@ class IrAttachment(models.Model):
     def _check_contents(self, values):
         mimetype = values['mimetype'] = self._compute_mimetype(values)
         xml_like = 'ht' in mimetype or 'xml' in mimetype # hta, html, xhtml, etc.
-        force_text = (xml_like and (not self.env.user._is_admin() or
+        user = self.env.context.get('binary_field_real_user', self.env.user)
+        force_text = (xml_like and (not user._is_system() or
             self.env.context.get('attachments_mime_plainxml')))
         if force_text:
             values['mimetype'] = 'text/plain'
@@ -263,15 +265,22 @@ class IrAttachment(models.Model):
                 index_content = b"\n".join(words).decode('ascii')
         return index_content
 
-    name = fields.Char('Attachment Name', required=True)
-    datas_fname = fields.Char('File Name')
+    @api.model
+    def get_serving_groups(self):
+        """ An ir.attachment record may be used as a fallback in the
+        http dispatch if its type field is set to "binary" and its url
+        field is set as the request's url. Only the groups returned by
+        this method are allowed to create and write on such records.
+        """
+        return ['base.group_system']
+
+    name = fields.Char('Name', required=True)
+    datas_fname = fields.Char('Filename')
     description = fields.Text('Description')
     res_name = fields.Char('Resource Name', compute='_compute_res_name', store=True)
     res_model = fields.Char('Resource Model', readonly=True, help="The database object this attachment will be attached to.")
     res_field = fields.Char('Resource Field', readonly=True)
     res_id = fields.Integer('Resource ID', readonly=True, help="The record id this is attached to.")
-    create_date = fields.Datetime('Date Created', readonly=True)
-    create_uid = fields.Many2one('res.users', string='Owner', readonly=True)
     company_id = fields.Many2one('res.company', string='Company', change_default=True,
                                  default=lambda self: self.env['res.company']._company_default_get('ir.attachment'))
     type = fields.Selection([('url', 'URL'), ('binary', 'File')],
@@ -285,7 +294,7 @@ class IrAttachment(models.Model):
 
     # the field 'datas' is computed and may use the other fields below
     datas = fields.Binary(string='File Content', compute='_compute_datas', inverse='_inverse_datas')
-    db_datas = fields.Binary('Database Data')
+    db_datas = fields.Binary('Database Data', attachment=False)
     store_fname = fields.Char('Stored Filename')
     file_size = fields.Integer('File Size', readonly=True)
     checksum = fields.Char("Checksum/SHA1", size=40, index=True, readonly=True)
@@ -298,6 +307,18 @@ class IrAttachment(models.Model):
         tools.create_index(self._cr, 'ir_attachment_res_idx',
                            self._table, ['res_model', 'res_id'])
         return res
+
+    @api.one
+    @api.constrains('type', 'url')
+    def _check_serving_attachments(self):
+        # restrict writing on attachments that could be served by the
+        # ir.http's dispatch exception handling
+        if self.env.user._is_admin():
+            return
+        if self.type == 'binary' and self.url:
+            has_group = self.env.user.has_group
+            if not any([has_group(g) for g in self.get_serving_groups()]):
+                raise ValidationError("Sorry, you are not allowed to write on this document")
 
     @api.model
     def check(self, mode, values=None):
@@ -329,6 +350,11 @@ class IrAttachment(models.Model):
             if res_model not in self.env:
                 require_employee = True
                 continue
+            elif res_model == 'res.users' and len(res_ids) == 1 and self._uid == list(res_ids)[0]:
+                # by default a user cannot write on itself, despite the list of writeable fields
+                # e.g. in the case of a user inserting an image into his image signature
+                # we need to bypass this check which would needlessly throw us away
+                continue
             records = self.env[res_model].browse(res_ids).exists()
             if len(records) < len(res_ids):
                 require_employee = True
@@ -340,6 +366,15 @@ class IrAttachment(models.Model):
         if require_employee:
             if not (self.env.user._is_admin() or self.env.user.has_group('base.group_user')):
                 raise AccessError(_("Sorry, you are not allowed to access this document."))
+
+    @api.model
+    def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
+        """Override read_group to add res_field=False in domain if not present."""
+        if not any(item[0] in ('id', 'res_field') for item in domain):
+            domain.insert(0, ('res_field', '=', False))
+        return super(IrAttachment, self).read_group(domain, fields, groupby,
+                                                    offset=offset, limit=limit,
+                                                    orderby=orderby, lazy=lazy)
 
     @api.model
     def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
@@ -417,6 +452,8 @@ class IrAttachment(models.Model):
 
     @api.multi
     def unlink(self):
+        if not self:
+            return True
         self.check('unlink')
 
         # First delete in the database, *then* in the filesystem if the
@@ -430,14 +467,15 @@ class IrAttachment(models.Model):
 
         return res
 
-    @api.model
-    def create(self, values):
-        # remove computed field depending of datas
-        for field in ('file_size', 'checksum'):
-            values.pop(field, False)
-        values = self._check_contents(values)
-        self.browse().check('write', values=values)
-        return super(IrAttachment, self).create(values)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for values in vals_list:
+            # remove computed field depending of datas
+            for field in ('file_size', 'checksum'):
+                values.pop(field, False)
+            values = self._check_contents(values)
+            self.browse().check('write', values=values)
+        return super(IrAttachment, self).create(vals_list)
 
     @api.one
     def generate_access_token(self):
@@ -450,3 +488,14 @@ class IrAttachment(models.Model):
     @api.model
     def action_get(self):
         return self.env['ir.actions.act_window'].for_xml_id('base', 'action_attachment')
+
+    @api.model
+    def get_serve_attachment(self, url, extra_domain=None, extra_fields=None, order=None):
+        domain = [('type', '=', 'binary'), ('url', '=', url)] + (extra_domain or [])
+        fieldNames = ['__last_update', 'datas', 'mimetype'] + (extra_fields or [])
+        return self.search_read(domain, fieldNames, order=order, limit=1)
+
+    @api.model
+    def get_attachment_by_key(self, key, extra_domain=None, order=None):
+        domain = [('key', '=', key)] + (extra_domain or [])
+        return self.search(domain, order=order, limit=1)

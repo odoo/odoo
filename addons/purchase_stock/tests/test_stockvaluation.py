@@ -5,6 +5,7 @@ import time
 from datetime import datetime
 
 from odoo import fields
+from odoo.tests import Form
 from odoo.tests.common import TransactionCase, tagged
 from odoo.addons.account.tests.account_test_classes import AccountingTestCase
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
@@ -52,7 +53,7 @@ class TestStockValuation(TransactionCase):
         purchase order before validating the receipt, the value of the received goods should be set
         according to the last unit cost.
         """
-        self.product1.product_tmpl_id.cost_method = 'average'
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'average'
         po1 = self.env['purchase.order'].create({
             'partner_id': self.partner_id.id,
             'order_line': [
@@ -95,7 +96,7 @@ class TestStockValuation(TransactionCase):
         purchase order and the standard price of the product before validating the receipt, the
         value of the received goods should be set according to the last standard price.
         """
-        self.product1.product_tmpl_id.cost_method = 'standard'
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'standard'
 
         # set a standard price
         self.product1.product_tmpl_id.standard_price = 10
@@ -148,7 +149,7 @@ class TestStockValuation(TransactionCase):
 
         eur_currency = self.env.ref('base.EUR')
 
-        self.product1.product_tmpl_id.cost_method = 'average'
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'average'
 
         # default currency is USD, create a purchase order in EUR
         po1 = self.env['purchase.order'].create({
@@ -211,7 +212,7 @@ class TestStockValuation(TransactionCase):
         """ Check that the extra move when over processing a receipt is correctly merged back in
         the original move.
         """
-        self.product1.product_tmpl_id.cost_method = 'fifo'
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'fifo'
         po1 = self.env['purchase.order'].create({
             'partner_id': self.partner_id.id,
             'order_line': [
@@ -245,7 +246,7 @@ class TestStockValuation(TransactionCase):
         """ Check that the backordered move when under processing a receipt correctly keep the
         price unit of the original move.
         """
-        self.product1.product_tmpl_id.cost_method = 'fifo'
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'fifo'
         po1 = self.env['purchase.order'].create({
             'partner_id': self.partner_id.id,
             'order_line': [
@@ -320,8 +321,8 @@ class TestStockValuationWithCOA(AccountingTestCase):
 
     def test_fifo_anglosaxon_return(self):
         self.env.user.company_id.anglo_saxon_accounting = True
-        self.product1.product_tmpl_id.cost_method = 'fifo'
-        self.product1.product_tmpl_id.valuation = 'real_time'
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'fifo'
+        self.product1.product_tmpl_id.categ_id.property_valuation = 'real_time'
         self.product1.product_tmpl_id.invoice_policy = 'delivery'
         price_diff_account = self.env['account.account'].create({
             'name': 'price diff account',
@@ -417,3 +418,91 @@ class TestStockValuationWithCOA(AccountingTestCase):
         # check the anglo saxon entries
         price_diff_entry = self.env['account.move.line'].search([('account_id', '=', price_diff_account.id)])
         self.assertEqual(price_diff_entry.credit, 100)
+
+    def test_anglosaxon_valuation(self):
+        self.env.user.company_id.anglo_saxon_accounting = True
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'fifo'
+        self.product1.product_tmpl_id.categ_id.property_valuation = 'real_time'
+        self.product1.product_tmpl_id.invoice_policy = 'delivery'
+        price_diff_account = self.env['account.account'].create({
+            'name': 'price diff account',
+            'code': 'price diff account',
+            'user_type_id': self.env.ref('account.data_account_type_current_assets').id,
+        })
+        self.product1.property_account_creditor_price_difference = price_diff_account
+
+        # Create PO
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.partner_id
+        with po_form.order_line.new() as po_line:
+            po_line.product_id = self.product1
+            po_line.product_qty = 1
+            po_line.price_unit = 10.0
+        order = po_form.save()
+        order.button_confirm()
+
+        # Receive the goods
+        receipt = order.picking_ids[0]
+        receipt.move_lines.quantity_done = 1
+        receipt.button_validate()
+
+        # Create an invoice with a different price
+        invoice = self.env['account.invoice'].create({
+            'partner_id': order.partner_id.id,
+            'purchase_id': order.id,
+            'account_id': order.partner_id.property_account_payable_id.id,
+            'type': 'in_invoice',
+        })
+        invoice.purchase_order_change()
+        invoice.invoice_line_ids[0].price_unit = 15.0
+        invoice.action_invoice_open()
+
+        # Check what was posted in the price difference account
+        price_diff_aml = self.env['account.move.line'].search([('account_id','=',price_diff_account.id)])
+        self.assertEquals(len(price_diff_aml), 1, "Only one line should have been generated in the price difference account.")
+        self.assertAlmostEquals(price_diff_aml.debit, 5, "Price difference should be equal to 5 (15-10)")
+
+        # Check what was posted in stock input account
+        input_aml = self.env['account.move.line'].search([('account_id','=',self.stock_input_account.id)])
+        self.assertEquals(len(input_aml), 2, "Only two lines should have been generated in stock input account: one when receiving the product, one when making the invoice.")
+        self.assertAlmostEquals(sum(input_aml.mapped('debit')), 10, "Total debit value on stock input account should be equal to the original PO price of the product.")
+        self.assertAlmostEquals(sum(input_aml.mapped('credit')), 10, "Total credit value on stock input account should be equal to the original PO price of the product.")
+
+    def test_valuation_from_increasing_tax(self):
+        """ Check that a tax without account will increment the stock value.
+        """
+
+        tax_with_no_account = self.env['account.tax'].create({
+            'name': "Tax with no account",
+            'amount_type': 'fixed',
+            'amount': 5,
+            'sequence': 8,
+        })
+
+        self.product1.product_tmpl_id.cost_method = 'fifo'
+        self.product1.product_tmpl_id.valuation = 'real_time'
+
+
+        # Receive 10@10 ; create the vendor bill
+        po1 = self.env['purchase.order'].create({
+            'partner_id': self.partner_id.id,
+            'order_line': [
+                (0, 0, {
+                    'name': self.product1.name,
+                    'product_id': self.product1.id,
+                    'taxes_id': [(4, tax_with_no_account.id)],
+                    'product_qty': 10.0,
+                    'product_uom': self.product1.uom_po_id.id,
+                    'price_unit': 10.0,
+                    'date_planned': datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+                }),
+            ],
+        })
+        po1.button_confirm()
+        receipt_po1 = po1.picking_ids[0]
+        receipt_po1.move_lines.quantity_done = 10
+        receipt_po1.button_validate()
+
+        # valuation of product1 should be 15 as the tax with no account set
+        # has gone to the stock account, and must be reflected in inventory valuation
+        self.assertEqual(self.product1.stock_value, 150)

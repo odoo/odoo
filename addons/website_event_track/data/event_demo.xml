@@ -87,7 +87,7 @@
         <field name="name">Bruyère</field>
     </record>
     <record id="event_track1" model="event.track">
-        <field name="name">How to develop a website module.</field>
+        <field name="name">How to design a new piece of furniture</field>
         <field name="website_published" eval="True"/>
         <field name="event_id" ref="event.event_0"/>
         <field name="date" eval="time.strftime(str(DateTime.today().year) + '-06-04 06:00:00')"></field>
@@ -97,9 +97,10 @@
         <field name="color">3</field>
         <field name="stage_id" ref="event_track_stage0"/>
         <field name="kanban_state">blocked</field>
+        <field name="user_id" ref="base.user_admin"/>
     </record>
     <record id="event_track2" model="event.track">
-        <field name="name">How to integrate hardware materials with the Odoo point of sale.</field>
+        <field name="name">How to integrate hardware materials in your pieces of furniture</field>
         <field name="website_published" eval="True"/>
         <field name="event_id" ref="event.event_0"/>
         <field name="date" eval="time.strftime(str(DateTime.today().year) + '-06-04 8:30:00')"></field>
@@ -108,9 +109,10 @@
         <field name="partner_id" ref="base.res_partner_3"/>
         <field name="stage_id" ref="event_track_stage1"/>
         <field name="kanban_state">done</field>
+        <field name="user_id" ref="base.user_admin"/>
     </record>
     <record id="event_track3" model="event.track">
-        <field name="name">How to develop real time apps, the website live chat module explained.</field>
+        <field name="name">Portfolio presentation</field>
         <field name="website_published" eval="True"/>
         <field name="event_id" ref="event.event_0"/>
         <field name="date" eval="time.strftime(str(DateTime.today().year) + '-06-04 10:30:00')"></field>
@@ -118,9 +120,10 @@
         <field name="duration" eval="0.3"/>
         <field name="partner_id" ref="base.res_partner_4"/>
         <field name="stage_id" ref="event_track_stage1"/>
+        <field name="user_id" ref="base.user_admin"/>
     </record>
     <record id="event_track4" model="event.track">
-        <field name="name">How to develop automated tests in the Odoo web client.</field>
+        <field name="name">How to develop automated processes</field>
         <field name="website_published" eval="True"/>
         <field name="event_id" ref="event.event_0"/>
         <field name="date" eval="time.strftime(str(DateTime.today().year) + '-06-04 9:00:00')"></field>
@@ -128,9 +131,10 @@
         <field name="duration" eval="0.5"/>
         <field name="partner_id" ref="base.res_partner_2"/>
         <field name="stage_id" ref="event_track_stage3"/>
+        <field name="user_id" ref="base.user_admin"/>
     </record>
     <record id="event_track5" model="event.track">
-        <field name="name">The new way to promote your modules in the Apps platform and Odoo website.</field>
+        <field name="name">The new way to promote your creations</field>
         <field name="website_published" eval="True"/>
         <field name="event_id" ref="event.event_0"/>
         <field name="date" eval="time.strftime(str(DateTime.today().year) + '-06-04 6:00:00')"></field>
@@ -138,9 +142,10 @@
         <field name="duration" eval="0.5"/>
         <field name="partner_id" ref="base.res_partner_4"/>
         <field name="stage_id" ref="event_track_stage2"/>
+        <field name="user_id" ref="base.user_admin"/>
     </record>
     <record id="event_track6" model="event.track">
-        <field name="name">Detailed roadmap of accounting new modules and improvements for version 8.</field>
+        <field name="name">Detailed roadmap of our new products</field>
         <field name="website_published" eval="True"/>
         <field name="event_id" ref="event.event_0"/>
         <field name="date" eval="time.strftime(str(DateTime.today().year) + '-06-04 6:30:00')"></field>
@@ -148,9 +153,10 @@
         <field name="duration" eval="0.5"/>
         <field name="partner_id" ref="base.res_partner_3"/>
         <field name="stage_id" ref="event_track_stage2"/>
+        <field name="user_id" ref="base.user_admin"/>
     </record>
     <record id="event_track7" model="event.track">
-        <field name="name">A technical explanation of Odoo as a CMS and a eCommerce platform for version 8.</field>
+        <field name="name">A technical explanation of how to use computer design apps</field>
         <field name="website_published" eval="True"/>
         <field name="event_id" ref="event.event_0"/>
         <field name="date" eval="time.strftime(str(DateTime.today().year) + '-06-04 8:30:00')"></field>
@@ -158,9 +164,10 @@
         <field name="duration" eval="1"/>
         <field name="partner_id" ref="base.res_partner_1"/>
         <field name="stage_id" ref="event_track_stage3"/>
+        <field name="user_id" ref="base.user_admin"/>
     </record>
     <record id="event_track8" model="event.track">
-        <field name="name">Discover Odoo CRM: How to optimize your sales, from leads to sales orders.</field>
+        <field name="name">How to optimize your sales, from leads to sales orders</field>
         <field name="website_published" eval="True"/>
         <field name="event_id" ref="event.event_0"/>
         <field name="date" eval="time.strftime(str(DateTime.today().year) + '-06-04 6:00:00')"></field>
@@ -170,21 +177,23 @@
         <field name="partner_id" ref="base.res_partner_4"/>
         <field name="stage_id" ref="event_track_stage3"/>
         <field name="kanban_state">blocked</field>
+        <field name="user_id" ref="base.user_admin"/>
     </record>
     <record id="event_track9" model="event.track">
-        <field name="name">How to use Odoo for your HR process: recruitment, leaves management, appraisals, expenses, etc.</field>
+        <field name="name">How to improve your quality processes</field>
         <field name="website_published" eval="True"/>
         <field name="event_id" ref="event.event_0"/>
-        <field name="user_id" ref="base.user_root"/>
+        <field name="user_id" ref="base.user_admin"/>
         <field name="date" eval="time.strftime(str(DateTime.today().year) + '-06-04 8:30:00')"></field>
         <field name="location_id" ref="website_event_track.event_track_location7"/>
         <field name="duration" eval="1"/>
         <field name="color">2</field>
         <field name="partner_id" ref="base.res_partner_12"/>
         <field name="stage_id" ref="event_track_stage3"/>
+        <field name="user_id" ref="base.user_admin"/>
     </record>
     <record id="event_track10" model="event.track">
-        <field name="name">Raising qualitive insights with the survey app</field>
+        <field name="name">Raising qualitive insights from your customers</field>
         <field name="website_published" eval="True"/>
         <field name="event_id" ref="event.event_0"/>
         <field name="date" eval="time.strftime(str(DateTime.today().year) + '-06-04 6:30:00')"></field>
@@ -192,9 +201,10 @@
         <field name="duration" eval="0.5"/>
         <field name="color">5</field>
         <field name="stage_id" ref="event_track_stage0"/>
+        <field name="user_id" ref="base.user_admin"/>
     </record>
     <record id="event_track11" model="event.track">
-        <field name="name">Discover Odoo Point-of-Sale: Your shop ready to use in 30 minutes.</field>
+        <field name="name">Discover our new design team</field>
         <field name="website_published" eval="True"/>
         <field name="event_id" ref="event.event_0"/>
         <field name="date" eval="time.strftime(str(DateTime.today().year) + '-06-04 10:30:00')"></field>
@@ -202,9 +212,10 @@
         <field name="duration" eval="0.5"/>
         <field name="partner_id" ref="base.res_partner_4"/>
         <field name="stage_id" ref="event_track_stage1"/>
+        <field name="user_id" ref="base.user_admin"/>
     </record>
     <record id="event_track12" model="event.track">
-        <field name="name">Manage your events with Odoo, the new training modules.</field>
+        <field name="name">Latest trends</field>
         <field name="website_published" eval="True"/>
         <field name="event_id" ref="event.event_0"/>
         <field name="date" eval="time.strftime(str(DateTime.today().year) + '-06-04 11:00:00')"></field>
@@ -212,9 +223,10 @@
         <field name="duration" eval="0.5"/>
         <field name="partner_id" ref="base.res_partner_2"/>
         <field name="stage_id" ref="event_track_stage2"/>
+        <field name="user_id" ref="base.user_admin"/>
     </record>
     <record id="event_track13" model="event.track">
-        <field name="name">Advanced reporting with Google Spreadsheets integration.</field>
+        <field name="name">Advanced reporting</field>
         <field name="website_published" eval="True"/>
         <field name="event_id" ref="event.event_0"/>
         <field name="date" eval="time.strftime(str(DateTime.today().year) + '-06-04 6:30:00')"></field>
@@ -222,9 +234,10 @@
         <field name="duration" eval="0.25"/>
         <field name="partner_id" ref="base.res_partner_12"/>
         <field name="stage_id" ref="event_track_stage3"/>
+        <field name="user_id" ref="base.user_admin"/>
     </record>
     <record id="event_track14" model="event.track">
-        <field name="name">New Paypal modules (portal, handling, installments).</field>
+        <field name="name">Partnership programs</field>
         <field name="website_published" eval="True"/>
         <field name="event_id" ref="event.event_0"/>
         <field name="date" eval="time.strftime(str(DateTime.today().year) + '-06-04 7:00:00')"></field>
@@ -232,9 +245,10 @@
         <field name="duration" eval="0.5"/>
         <field name="partner_id" ref="base.res_partner_10"/>
         <field name="stage_id" ref="event_track_stage3"/>
+        <field name="user_id" ref="base.user_admin"/>
     </record>
     <record id="event_track15" model="event.track">
-        <field name="name">Odoo Mobile for Notes, Meetings and Messages.</field>
+        <field name="name">How to communicate with your community</field>
         <field name="website_published" eval="True"/>
         <field name="event_id" ref="event.event_0"/>
         <field name="date" eval="time.strftime(str(DateTime.today().year) + '-06-04 10:30:00')"></field>
@@ -242,9 +256,10 @@
         <field name="duration" eval="0.5"/>
         <field name="partner_id" ref="base.res_partner_3"/>
         <field name="stage_id" ref="event_track_stage3"/>
+        <field name="user_id" ref="base.user_admin"/>
     </record>
     <record id="event_track16" model="event.track">
-        <field name="name">Odoo as your Enterprise Social Network.</field>
+        <field name="name">How to follow us on the social media</field>
         <field name="website_published" eval="True"/>
         <field name="event_id" ref="event.event_0"/>
         <field name="date" eval="time.strftime(str(DateTime.today().year) + '-06-04 11:00:00')"></field>
@@ -252,9 +267,10 @@
         <field name="duration" eval="0.5"/>
         <field name="partner_id" ref="base.res_partner_12"/>
         <field name="stage_id" ref="event_track_stage0"/>
+        <field name="user_id" ref="base.user_admin"/>
     </record>
     <record id="event_track17" model="event.track">
-        <field name="name">The Art of Making an Odoo Demo.</field>
+        <field name="name">The new marketing strategy</field>
         <field name="website_published" eval="True"/>
         <field name="event_id" ref="event.event_0"/>
         <field name="date" eval="time.strftime(str(DateTime.today().year) + '-06-04 6:00:00')"></field>
@@ -262,9 +278,10 @@
         <field name="duration" eval="0.5"/>
         <field name="partner_id" ref="base.res_partner_10"/>
         <field name="stage_id" ref="event_track_stage0"/>
+        <field name="user_id" ref="base.user_admin"/>
     </record>
     <record id="event_track18" model="event.track">
-        <field name="name">How to build your marketing strategy for the purpose of generating leads with Odoo.</field>
+        <field name="name">How to build your marketing strategy within a competitive environment</field>
         <field name="website_published" eval="True"/>
         <field name="event_id" ref="event.event_0"/>
         <field name="date" eval="time.strftime(str(DateTime.today().year) + '-06-04 8:30:00')"></field>
@@ -273,9 +290,10 @@
         <field name="color">5</field>
         <field name="partner_id" ref="base.res_partner_2"/>
         <field name="stage_id" ref="event_track_stage1"/>
+        <field name="user_id" ref="base.user_admin"/>
     </record>
     <record id="event_track19" model="event.track">
-        <field name="name">Advanced lead management with Odoo: tips and tricks from the fields</field>
+        <field name="name">Advanced lead management : tips and tricks from the fields</field>
         <field name="website_published" eval="True"/>
         <field name="event_id" ref="event.event_0"/>
         <field name="date" eval="time.strftime(str(DateTime.today().year) + '-06-04 9:00:00')"></field>
@@ -284,9 +302,10 @@
         <field name="color">5</field>
         <field name="partner_id" ref="base.res_partner_4"/>
         <field name="stage_id" ref="event_track_stage1"/>
+        <field name="user_id" ref="base.user_admin"/>
     </record>
     <record id="event_track20" model="event.track">
-        <field name="name">New Certification Program (valid from Oct. 2013).</field>
+        <field name="name">New Certification Program</field>
         <field name="website_published" eval="True"/>
         <field name="event_id" ref="event.event_0"/>
         <field name="date" eval="time.strftime(str(DateTime.today().year) + '-06-04 10:00:00')"></field>
@@ -294,9 +313,10 @@
         <field name="duration" eval="0.5"/>
         <field name="partner_id" ref="base.res_partner_3"/>
         <field name="stage_id" ref="event_track_stage1"/>
+        <field name="user_id" ref="base.user_admin"/>
     </record>
     <record id="event_track21" model="event.track">
-        <field name="name">Recruiting high skilled talents with Odoo HR apps</field>
+        <field name="name">House of World Cultures</field>
         <field name="website_published" eval="True"/>
         <field name="event_id" ref="event.event_0"/>
         <field name="date" eval="time.strftime(str(DateTime.today().year) + '-06-04 10:30:00')"></field>
@@ -304,9 +324,10 @@
         <field name="duration" eval="0.5"/>
         <field name="color">7</field>
         <field name="stage_id" ref="event_track_stage1"/>
+        <field name="user_id" ref="base.user_admin"/>
     </record>
     <record id="event_track22" model="event.track">
-        <field name="name">Manage your KPIs (recomended to openERP partners).</field>
+        <field name="name">Minimal but efficient design</field>
         <field name="website_published" eval="True"/>
         <field name="event_id" ref="event.event_0"/>
         <field name="date" eval="time.strftime(str(DateTime.today().year) + '-06-04 11:00:00')"></field>
@@ -314,9 +335,10 @@
         <field name="duration" eval="0.5"/>
         <field name="partner_id" ref="base.res_partner_3"/>
         <field name="stage_id" ref="event_track_stage0"/>
+        <field name="user_id" ref="base.user_admin"/>
     </record>
     <record id="event_track23" model="event.track">
-        <field name="name">Key Success factors selling Odoo.</field>
+        <field name="name">Key Success factors selling our furniture</field>
         <field name="website_published" eval="True"/>
         <field name="event_id" ref="event.event_0"/>
         <field name="date" eval="time.strftime(str(DateTime.today().year) + '-06-04 7:00:00')"></field>
@@ -324,9 +346,10 @@
         <field name="duration" eval="0.5"/>
         <field name="partner_id" ref="base.res_partner_1"/>
         <field name="stage_id" ref="event_track_stage3"/>
+        <field name="user_id" ref="base.user_admin"/>
     </record>
     <record id="event_track24" model="event.track">
-        <field name="name">Merge proposals review, code sprint (entire day).</field>
+        <field name="name">Design contest (entire day)</field>
         <field name="website_published" eval="True"/>
         <field name="event_id" ref="event.event_0"/>
         <field name="date" eval="time.strftime(str(DateTime.today().year) + '-06-04 6:00:00')"></field>
@@ -334,9 +357,10 @@
         <field name="duration" eval="1.5"/>
         <field name="partner_id" ref="base.res_partner_18"/>
         <field name="stage_id" ref="event_track_stage3"/>
+        <field name="user_id" ref="base.user_admin"/>
     </record>
     <record id="event_track25" model="event.track">
-        <field name="name">Merge proposals review, code sprint (entire afternoon)</field>
+        <field name="name">Design contest (entire afternoon)</field>
         <field name="website_published" eval="True"/>
         <field name="event_id" ref="event.event_0"/>
         <field name="date" eval="time.strftime(str(DateTime.today().year) + '-06-04 8:30:00')"></field>
@@ -344,9 +368,10 @@
         <field name="duration" eval="2.5"/>
         <field name="partner_id" ref="base.res_partner_18"/>
         <field name="stage_id" ref="event_track_stage3"/>
+        <field name="user_id" ref="base.user_admin"/>
     </record>
     <record id="event_track27" model="event.track">
-        <field name="name">Odoo in 2014</field>
+        <field name="name">My Company global presentation</field>
         <field name="website_published" eval="True"/>
         <field name="event_id" ref="event.event_0"/>
         <field name="date" eval="time.strftime(str(DateTime.today().year) + '-06-04 04:00:00')"></field>
@@ -354,18 +379,20 @@
         <field name="partner_id" ref="base.res_partner_1"/>
         <field name="stage_id" ref="event_track_stage3"/>
         <field name="color">3</field>
+        <field name="user_id" ref="base.user_admin"/>
     </record>
     <record id="event_track28" model="event.track">
-        <field name="name">Odoo Status &amp; Strategy 2014</field>
+        <field name="name">Status &amp; Strategy</field>
         <field name="website_published" eval="True"/>
         <field name="event_id" ref="event.event_0"/>
         <field name="date" eval="time.strftime(str(DateTime.today().year) + '-06-04 5:00:00')"></field>
         <field name="duration" eval="0.5"/>
         <field name="partner_id" ref="base.res_partner_2"/>
         <field name="stage_id" ref="event_track_stage2"/>
+        <field name="user_id" ref="base.user_admin"/>
     </record>
     <record id="event_track29" model="event.track">
-        <field name="name">The new marketing strategy.</field>
+        <field name="name">The new marketing strategy</field>
         <field name="website_published" eval="True"/>
         <field name="event_id" ref="event.event_0"/>
         <field name="date" eval="time.strftime(str(DateTime.today().year) + '-06-04 5:30:00')"></field>
@@ -373,6 +400,7 @@
         <field name="partner_id" ref="base.res_partner_2"/>
         <field name="stage_id" ref="event_track_stage2"/>
         <field name="color">6</field>
+        <field name="user_id" ref="base.user_admin"/>
     </record>
     <record id="event_track30" model="event.track">
         <field name="name">Morning break</field>
@@ -381,6 +409,7 @@
         <field name="date" eval="time.strftime(str(DateTime.today().year) + '-06-04 5:45:00')"></field>
         <field name="duration" eval="0.25"/>
         <field name="stage_id" ref="event_track_stage1"/>
+        <field name="user_id" ref="base.user_admin"/>
     </record>
     <record id="event_track31" model="event.track">
         <field name="name">Lunch</field>
@@ -389,6 +418,7 @@
         <field name="date" eval="time.strftime(str(DateTime.today().year) + '-06-04 7:30:00')"></field>
         <field name="duration" eval="1"/>
         <field name="stage_id" ref="event_track_stage1"/>
+        <field name="user_id" ref="base.user_admin"/>
     </record>
 
 </odoo>

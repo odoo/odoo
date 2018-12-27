@@ -7,7 +7,7 @@ from odoo.exceptions import UserError
 
 class ProjectCreateInvoice(models.TransientModel):
     _name = 'project.create.invoice'
-    _description = "Create a Invoice from project"
+    _description = "Create Invoice from project"
 
     @api.model
     def default_get(self, fields):
@@ -24,7 +24,7 @@ class ProjectCreateInvoice(models.TransientModel):
 
     project_id = fields.Many2one('project.project', "Project", help="Project to make billable", required=True)
     sale_order_id = fields.Many2one('sale.order', string="Choose the Sales Order to invoice", required=True)
-    amount_to_invoice = fields.Monetary("Amount to invoice", compute='_compute_amount_to_invoice', currency_field='currency_id', help="Total amount to invoice on the sales order, including all items (services, stockables, expenses, ...)")
+    amount_to_invoice = fields.Monetary("Amount to invoice", compute='_compute_amount_to_invoice', currency_field='currency_id', help="Total amount to invoice on the sales order, including all items (services, storables, expenses, ...)")
     currency_id = fields.Many2one(related='sale_order_id.currency_id', readonly=True)
 
     @api.onchange('project_id')

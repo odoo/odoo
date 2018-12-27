@@ -10,6 +10,7 @@ import traceback
 from xml.etree import ElementTree as ET
 import zipfile
 
+from pytz import country_timezones
 from functools import wraps
 from contextlib import closing
 from decorator import decorator
@@ -24,7 +25,6 @@ import odoo.sql_db
 import odoo.tools
 from odoo.sql_db import db_connect
 from odoo.release import version_info
-from odoo.tools import pycompat
 
 _logger = logging.getLogger(__name__)
 
@@ -50,7 +50,7 @@ def check_super(passwd):
     raise odoo.exceptions.AccessDenied()
 
 # This should be moved to odoo.modules.db, along side initialize().
-def _initialize_db(id, db_name, demo, lang, user_password, login='admin', country_code=None):
+def _initialize_db(id, db_name, demo, lang, user_password, login='admin', country_code=None, phone=None):
     try:
         db = odoo.sql_db.db_connect(db_name)
         with closing(db.cursor()) as cr:
@@ -69,9 +69,15 @@ def _initialize_db(id, db_name, demo, lang, user_password, login='admin', countr
                 modules._update_translations(lang)
 
             if country_code:
-                countries = env['res.country'].search([('code', 'ilike', country_code)])
-                if countries:
-                    env['res.company'].browse(1).country_id = countries[0]
+                country = env['res.country'].search([('code', 'ilike', country_code)])[0]
+                env['res.company'].browse(1).write({'country_id': country_code and country.id, 'currency_id': country_code and country.currency_id.id})
+                if len(country_timezones.get(country_code, [])) == 1:
+                    users = env['res.users'].search([])
+                    users.write({'tz': country_timezones[country_code][0]})
+            if phone:
+                env['res.company'].browse(1).write({'phone': phone})
+            if '@' in login:
+                env['res.company'].browse(1).write({'email': login})
 
             # update admin's password and lang and login
             values = {'password': user_password, 'lang': lang}
@@ -80,7 +86,7 @@ def _initialize_db(id, db_name, demo, lang, user_password, login='admin', countr
                 emails = odoo.tools.email_split(login)
                 if emails:
                     values['email'] = emails[0]
-            env.user.write(values)
+            env.ref('base.user_admin').write(values)
 
             cr.execute('SELECT login, password FROM res_users ORDER BY login')
             cr.commit()
@@ -106,11 +112,11 @@ def _create_empty_database(name):
             )
 
 @check_db_management_enabled
-def exp_create_database(db_name, demo, lang, user_password='admin', login='admin', country_code=None):
+def exp_create_database(db_name, demo, lang, user_password='admin', login='admin', country_code=None, phone=None):
     """ Similar to exp_create but blocking."""
     _logger.info('Create database `%s`.', db_name)
     _create_empty_database(db_name)
-    _initialize_db(id, db_name, demo, lang, user_password, login, country_code)
+    _initialize_db(id, db_name, demo, lang, user_password, login, country_code, phone)
     return True
 
 @check_db_management_enabled
@@ -252,7 +258,7 @@ def exp_restore(db_name, data, copy=False):
 
 @check_db_management_enabled
 def restore_db(db, dump_file, copy=False):
-    assert isinstance(db, pycompat.string_types)
+    assert isinstance(db, str)
     if exp_db_exist(db):
         _logger.info('RESTORE DB: %s already exists', db)
         raise Exception("Database already exists")

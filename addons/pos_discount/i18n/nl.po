@@ -3,16 +3,15 @@
 # * pos_discount
 # 
 # Translators:
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
-# Martin Trigaux, 2016
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
+# Martin Trigaux, 2018
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:09+0000\n"
-"PO-Revision-Date: 2018-03-22 14:09+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2016\n"
+"POT-Creation-Date: 2018-09-21 13:16+0000\n"
+"PO-Revision-Date: 2018-09-21 13:16+0000\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2018\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,7 +32,7 @@ msgid "Discount"
 msgstr "Korting"
 
 #. module: pos_discount
-#: model:ir.ui.view,arch_db:pos_discount.pos_config_view_form_inherit_pos_discount
+#: model_terms:ir.ui.view,arch_db:pos_discount.pos_config_view_form_inherit_pos_discount
 msgid "Discount %"
 msgstr "Korting %"
 
@@ -47,21 +46,26 @@ msgstr "Kortingspercentage"
 
 #. module: pos_discount
 #: model:ir.model.fields,field_description:pos_discount.field_pos_config__discount_product_id
-#: model:ir.ui.view,arch_db:pos_discount.pos_config_view_form_inherit_pos_discount
+#: model_terms:ir.ui.view,arch_db:pos_discount.pos_config_view_form_inherit_pos_discount
 msgid "Discount Product"
-msgstr "Product korting"
+msgstr "Productkorting"
 
 #. module: pos_discount
 #. openerp-web
 #: code:addons/pos_discount/static/src/js/discount.js:28
 #, python-format
 msgid "No discount product found"
-msgstr ""
+msgstr "Geen kortingsproduct gevonden"
 
 #. module: pos_discount
 #: model:ir.model.fields,field_description:pos_discount.field_pos_config__iface_discount
 msgid "Order Discounts"
-msgstr "Order kortingen"
+msgstr "Orderkortingen"
+
+#. module: pos_discount
+#: model:ir.model,name:pos_discount.model_pos_config
+msgid "Point of Sale Configuration"
+msgstr "Kassa instellingen"
 
 #. module: pos_discount
 #: model:ir.model.fields,help:pos_discount.field_pos_config__discount_pc
@@ -76,13 +80,10 @@ msgid ""
 "The discount product seems misconfigured. Make sure it is flagged as 'Can be"
 " Sold' and 'Available in Point of Sale'."
 msgstr ""
+"Het kortingsproduct lijkt foutief geconfigureerd te zijn. Zorg ervoor dat "
+"het aangeduid is als 'Kan verkocht' worden en 'Beschikbaar in Kassa'."
 
 #. module: pos_discount
 #: model:ir.model.fields,help:pos_discount.field_pos_config__discount_product_id
 msgid "The product used to model the discount."
 msgstr "Het product gebruikt het model voor korting"
-
-#. module: pos_discount
-#: model:ir.model,name:pos_discount.model_pos_config
-msgid "pos.config"
-msgstr "pos.config"

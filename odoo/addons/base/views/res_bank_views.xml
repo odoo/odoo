@@ -60,6 +60,7 @@
         <record id="view_partner_bank_form" model="ir.ui.view">
             <field name="name">res.partner.bank.form</field>
             <field name="model">res.partner.bank</field>
+            <field name="priority">15</field>
             <field name="arch" type="xml">
                 <form string="Bank account">
                     <group>
@@ -72,7 +73,7 @@
                         <group>
                             <field name="bank_id"/>
                             <field name="currency_id" groups="base.group_multi_currency" options="{'no_create': True}"/>
-                            <field name="acc_holder_name" groups="base.group_no_one"/>
+                            <field name="acc_holder_name"/>
                         </group>
                     </group>
                 </form>
@@ -88,6 +89,7 @@
                     <field name="bank_name"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="partner_id"/>
+                    <field name="acc_holder_name" invisible="1"/>
                 </tree>
             </field>
         </record>

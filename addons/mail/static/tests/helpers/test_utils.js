@@ -1,13 +1,14 @@
 odoo.define('mail.testUtils', function (require) {
 "use strict";
 
+var BusService = require('bus.BusService');
+
 var Discuss = require('mail.Discuss');
 var MailService = require('mail.Service');
 
-var AbstractService = require('web.AbstractService');
 var AbstractStorageService = require('web.AbstractStorageService');
-var Bus = require('web.Bus');
-var ControlPanel = require('web.ControlPanel');
+var Class = require('web.Class');
+var ControlPanelView = require('web.ControlPanelView');
 var RamStorage = require('web.RamStorage');
 var testUtils = require('web.test_utils');
 var Widget = require('web.Widget');
@@ -21,6 +22,7 @@ var Widget = require('web.Widget');
 
 /**
  * Create asynchronously a discuss widget.
+ * This is async due to mail_manager/mail_service that needs to be ready.
  *
  * @param {Object} params
  * @return {$.Promise} resolved with the discuss widget
@@ -30,16 +32,12 @@ function createDiscuss(params) {
         do_push_state: function () {},
     });
     var parent = new Parent();
-    testUtils.addMockEnvironment(parent, _.extend(params, {
-        archs: {
-            'mail.message,false,search': '<search/>',
-        },
-    }));
+    params.archs = params.archs || {
+        'mail.message,false,search': '<search/>',
+    };
+    testUtils.mock.addMockEnvironment(parent, params);
     var discuss = new Discuss(parent, params);
-    discuss.set_cp_bus(new Widget());
     var selector = params.debug ? 'body' : '#qunit-fixture';
-    var controlPanel = new ControlPanel(parent);
-    controlPanel.appendTo($(selector));
 
     // override 'destroy' of discuss so that it calls 'destroy' on the parent
     // instead, which is the parent of discuss and the mockServer.
@@ -50,13 +48,36 @@ function createDiscuss(params) {
         parent.destroy();
     };
 
-    // link the view to the control panel
-    discuss.set_cp_bus(controlPanel.get_bus());
-
     return  discuss.appendTo($(selector)).then(function () {
         return discuss;
     });
 }
+
+
+var MockMailService = Class.extend({
+    bus_service: function () {
+        return BusService.extend({
+            _poll: function () {}, // Do nothing
+            isOdooFocused: function () { return true; },
+            updateOption: function () {},
+        });
+    },
+    mail_service: function () {
+        return MailService;
+    },
+    local_storage: function () {
+        return AbstractStorageService.extend({
+            storage: new RamStorage(),
+        });
+    },
+    getServices: function () {
+        return {
+            mail_service: this.mail_service(),
+            bus_service: this.bus_service(),
+            local_storage: this.local_storage(),
+        };
+    },
+});
 
 /**
  * Returns the list of mail services required by the mail components: a
@@ -66,36 +87,11 @@ function createDiscuss(params) {
  * and local_storage, in that order
  */
 function getMailServices() {
-    var MockBus = Bus.extend({
-        /**
-         * Do nothing
-         */
-        start_polling: function () {},
-        is_odoo_focused: function () { return true; },
-    });
-    var BusService =  AbstractService.extend({
-        name: 'bus_service',
-        bus: new MockBus(),
-
-        //--------------------------------------------------------------------------
-        // Public
-        //--------------------------------------------------------------------------
-
-        /**
-         * @returns {Bus}
-         */
-        getBus: function () {
-            return this.bus;
-        }
-    });
-    var LocalStorageService = AbstractStorageService.extend({
-        name: 'local_storage',
-        storage: new RamStorage(),
-    });
-    return [MailService, BusService, LocalStorageService];
+    return new MockMailService().getServices();
 }
 
 return {
+    MockMailService: MockMailService,
     createDiscuss: createDiscuss,
     getMailServices: getMailServices,
 };

@@ -1,13 +1,12 @@
 .oe_import {
     @include o-webclient-padding($top: 8px);
-    background-color: white;
     overflow: auto;
     position: absolute; // Needed for chrome
     top: 0;
     right: 0;
     bottom: 0;
     left: 0;
-    @media (max-width: $screen-xs-max) {
+    @include media-breakpoint-down(sm) {
         position: static;
     }
 
@@ -27,9 +26,9 @@
     }
 
     .oe_import_box {
-        padding: 16px;
+        padding: 8px;
         background: #F0EEEE;
-        border-radius: $border-radius-base;
+        border-radius: $border-radius;
         border: solid 1px #dddddd;
         label {
             font-weight: normal;
@@ -39,9 +38,6 @@
         }
     }
 
-    .oe_import_toggle {
-        margin-top: 8px;
-    }
     a.oe_import_toggle {
         display: block;
         &:before {
@@ -64,7 +60,6 @@
     .oe_import_toggled,
     .oe_import_grid,
     .oe_import_error_report,
-    .oe_import_with_file,
     .oe_import_noheaders,
     .oe_import_report_more {
         display: none;
@@ -78,7 +73,6 @@
         display: table;
     }
     &.oe_import_error .oe_import_error_report,
-    &.oe_import_with_file .oe_import_with_file,
     &.oe_import_noheaders .oe_import_noheaders,
     .oe_import_report_showmore .oe_import_report_more {
         display: block;
@@ -93,7 +87,13 @@
             padding: 4px;
             margin: 2px 0;
             list-style: none;
-            border-radius: $border-radius-base;
+            border-radius: $border-radius;
+            &.bg-error {
+                @extend .bg-danger;
+            }
+            &.text-error {
+                @extend .text-danger;
+            }
         }
     }
 
@@ -106,6 +106,7 @@
             }
             td {
                 padding: 4px;
+                vertical-align: top;
             }
         }
     }
@@ -120,7 +121,7 @@
 
 /* Field dropdown */
 .oe_import_selector {
-    font-size: $font-size-small;
+    font-size: $font-size-sm;
     ul, li {
         margin: 0; padding: 0;
     }

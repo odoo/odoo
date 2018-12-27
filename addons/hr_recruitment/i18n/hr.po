@@ -13,13 +13,15 @@
 # Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2017
 # Tina Milas, 2017
 # Marko Carević <marko.carevic@live.com>, 2017
+# Stjepan Lovasić <stjepan.lovasic@gmail.com>, 2018
+# Ivan Marijanović <ivanm101@yahoo.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
-"Last-Translator: Marko Carević <marko.carevic@live.com>, 2017\n"
+"POT-Creation-Date: 2018-08-02 09:12+0000\n"
+"PO-Revision-Date: 2018-08-02 09:12+0000\n"
+"Last-Translator: Ivan Marijanović <ivanm101@yahoo.com>, 2018\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -403,17 +405,17 @@ msgid ""
 msgstr ""
 
 #. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
 msgid "<span class=\"o_stat_text\">Meetings</span>"
 msgstr "<span class=\"o_stat_text\">Sastanci</span>"
 
 #. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
 msgid "<span class=\"o_stat_text\">Trackers</span>"
 msgstr "<span class=\"o_stat_text\">Trackers</span>"
 
 #. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_stage_kanban
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_stage_kanban
 msgid "<span>Folded in Recruitment Pipe: </span>"
 msgstr ""
 
@@ -427,23 +429,44 @@ msgstr ""
 " zapis za ovaj alias."
 
 #. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_needaction
+msgid "Action Needed"
+msgstr "Potrebna dodatna radnja"
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__active
 msgid "Active"
 msgstr "Aktivan"
 
 #. module: hr_recruitment
-#: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_no_employee
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__activity_ids
+msgid "Activities"
+msgstr "Aktivnosti"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__activity_state
+msgid "Activity State"
+msgstr "Status aktivnosti"
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,name:hr_recruitment.mail_activity_type_action_config_hr_applicant
+#: model:ir.ui.menu,name:hr_recruitment.hr_recruitment_menu_config_activity_type
+msgid "Activity Types"
+msgstr "Tipovi aktivnosti"
+
+#. module: hr_recruitment
+#: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_no_employee
 msgid "Add a new employee"
 msgstr ""
 
 #. module: hr_recruitment
-#: model:ir.actions.act_window,help:hr_recruitment.hr_job_stage_act
-#: model:ir.actions.act_window,help:hr_recruitment.hr_recruitment_stage_act
+#: model_terms:ir.actions.act_window,help:hr_recruitment.hr_job_stage_act
+#: model_terms:ir.actions.act_window,help:hr_recruitment.hr_recruitment_stage_act
 msgid "Add a new stage in the recruitment process"
 msgstr ""
 
 #. module: hr_recruitment
-#: model:ir.actions.act_window,help:hr_recruitment.hr_applicant_category_action
+#: model_terms:ir.actions.act_window,help:hr_recruitment.hr_applicant_category_action
 msgid "Add a new tag"
 msgstr "Dodaj novu oznaku"
 
@@ -520,13 +543,13 @@ msgid "Applicant's Name"
 msgstr "Ime kandidata"
 
 #. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.crm_case_tree_view_job
-#: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_calendar_view
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.crm_case_tree_view_job
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_calendar_view
 msgid "Applicants"
 msgstr "Kandidati"
 
 #. module: hr_recruitment
-#: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_applications
+#: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_applications
 msgid ""
 "Applicants and their attached CV are created automatically when an email is sent.\n"
 "                If you install the document management modules, all resumes are indexed automatically,\n"
@@ -536,7 +559,7 @@ msgstr ""
 "Ako instalirate module za upravljanje dokumentima svi rezimei se indeksiraju automatski tako da jednostavno možete pretraživati ​​njihov sadržaj."
 
 #. module: hr_recruitment
-#: model:ir.actions.act_window,help:hr_recruitment.crm_case_categ0_act_job
+#: model_terms:ir.actions.act_window,help:hr_recruitment.crm_case_categ0_act_job
 msgid ""
 "Applicants and their attached CV are created automatically when an email is sent.\n"
 "            If you install the document management modules, all resumes are indexed automatically,\n"
@@ -544,7 +567,7 @@ msgid ""
 msgstr ""
 
 #. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
 msgid ""
 "Applicants can send resume to this email address,<br/>it will create an "
 "application automatically"
@@ -556,17 +579,17 @@ msgid "Application Count"
 msgstr ""
 
 #. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
 msgid "Application Summary"
 msgstr "Sažetak prijave"
 
 #. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
 msgid "Application email"
 msgstr ""
 
 #. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Application(s)"
 msgstr "Prijava(e)"
 
@@ -575,7 +598,7 @@ msgstr "Prijava(e)"
 #: model:ir.actions.act_window,name:hr_recruitment.crm_case_categ0_act_job
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__application_ids
 #: model:ir.ui.menu,name:hr_recruitment.menu_crm_case_categ0_act_job
-#: model:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
 msgid "Applications"
 msgstr "Aplikacije"
 
@@ -590,7 +613,7 @@ msgid "Appreciation"
 msgstr "Aprecijacija"
 
 #. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
 msgid "Archived"
 msgstr "Arhivirano"
 
@@ -601,7 +624,7 @@ msgstr "Dodijeljeno"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__attachment_ids
-#: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
 msgid "Attachments"
 msgstr "Privitci"
 
@@ -621,6 +644,18 @@ msgid "Bachelor Degree"
 msgstr "Prvostupnik"
 
 #. module: hr_recruitment
+#: code:addons/hr_recruitment/models/hr_recruitment.py:67
+#: model:hr.recruitment.stage,legend_blocked:hr_recruitment.stage_job1
+#: model:hr.recruitment.stage,legend_blocked:hr_recruitment.stage_job2
+#: model:hr.recruitment.stage,legend_blocked:hr_recruitment.stage_job3
+#: model:hr.recruitment.stage,legend_blocked:hr_recruitment.stage_job4
+#: model:hr.recruitment.stage,legend_blocked:hr_recruitment.stage_job5
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
+#, python-format
+msgid "Blocked"
+msgstr "Blokirano"
+
+#. module: hr_recruitment
 #: model:ir.filters,name:hr_recruitment.hr_applicant_filter_department
 msgid "By Department"
 msgstr "Po odjelu"
@@ -636,7 +671,12 @@ msgid "By Recruiter"
 msgstr "Po regruteru"
 
 #. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.crm_case_graph_view_job
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__campaign_id
+msgid "Campaign"
+msgstr "Kampanja"
+
+#. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.crm_case_graph_view_job
 msgid "Cases By Stage and Estimates"
 msgstr "Slučajevi po fazi i procjenama"
 
@@ -666,7 +706,7 @@ msgstr "Indeks boje"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__company_id
-#: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
 msgid "Company"
 msgstr "Tvrtka"
 
@@ -676,25 +716,25 @@ msgid "Configuration"
 msgstr "Postava"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/models/hr_recruitment.py:350
+#: code:addons/hr_recruitment/models/hr_recruitment.py:370
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__partner_id
 #, python-format
 msgid "Contact"
 msgstr "Kontakt"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/models/hr_recruitment.py:352
+#: code:addons/hr_recruitment/models/hr_recruitment.py:372
 #, python-format
 msgid "Contact Email"
 msgstr "E-mail kontakta"
 
 #. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.ir_attachment_view_search_inherit_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.ir_attachment_view_search_inherit_hr_recruitment
 msgid "Content"
 msgstr "Sadržaj"
 
 #. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
 msgid "Contract"
 msgstr "Ugovor"
 
@@ -709,28 +749,28 @@ msgid "Contract Signed"
 msgstr "Ugovor potpisan"
 
 #. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
 msgid "Create"
 msgstr "Kreiraj"
 
 #. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
 msgid "Create Employee"
 msgstr "Kreiraj djelatnika"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.create_job_simple
-#: model:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
 msgid "Create a Job Position"
 msgstr ""
 
 #. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_source_tree
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_source_tree
 msgid "Create alias"
 msgstr "Kreiraj pseudonim"
 
 #. module: hr_recruitment
-#: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_sources
+#: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_sources
 msgid "Create some aliases to track where applicants come from"
 msgstr ""
 
@@ -753,14 +793,10 @@ msgstr "Datum kreiranja"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__create_date
-#: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
 msgid "Creation Date"
 msgstr "Datum kreiranja"
-
-#. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
-msgid "Creation Week"
-msgstr "Tjedan kreiranja"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__day_close
@@ -778,8 +814,8 @@ msgid "Default Values"
 msgstr "Zadane vrijednosti"
 
 #. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
-#: model:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
 msgid ""
 "Define a specific contact address for this job position. If you keep it "
 "empty, the default email address will be used which is in human resources "
@@ -790,7 +826,7 @@ msgstr ""
 "resursa"
 
 #. module: hr_recruitment
-#: model:ir.actions.act_window,help:hr_recruitment.hr_job_stage_act
+#: model_terms:ir.actions.act_window,help:hr_recruitment.hr_job_stage_act
 msgid ""
 "Define here your stages of the recruitment process, for example:\n"
 "            qualification call, first interview, second interview, refused,\n"
@@ -803,10 +839,10 @@ msgstr ""
 #: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_degree_action
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__type_id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_degree__name
-#: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
-#: model:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_degree_form
-#: model:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_degree_tree
-#: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_degree_form
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_degree_tree
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
 msgid "Degree"
 msgstr "Stupanj"
 
@@ -826,13 +862,13 @@ msgid "Delay to Close"
 msgstr "Odgoda do zatvaranja"
 
 #. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 msgid "Delete"
 msgstr "Obriši"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__department_id
-#: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
 msgid "Department"
 msgstr "Odjel"
 
@@ -853,7 +889,7 @@ msgid "Description"
 msgstr "Opis"
 
 #. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
 msgid "Discard"
 msgstr "Odbaci"
 
@@ -878,15 +914,14 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__document_ids
-#: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
-#: model:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
-#: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
-#: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 msgid "Documents"
 msgstr "Dokumenti"
 
 #. module: hr_recruitment
-#: model:ir.actions.act_window,help:hr_recruitment.hr_recruitment_stage_act
+#: model_terms:ir.actions.act_window,help:hr_recruitment.hr_recruitment_stage_act
 msgid ""
 "Don't forget to specify the department if your recruitment process\n"
 "            is different according to the job position."
@@ -895,7 +930,7 @@ msgstr ""
 " o radnom mjestu."
 
 #. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Edit"
 msgstr "Uredi"
 
@@ -906,13 +941,13 @@ msgid "Email"
 msgstr "E-pošta"
 
 #. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
-#: model:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
 msgid "Email Alias"
 msgstr "e-mail alias"
 
 #. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
 msgid "Email alias"
 msgstr "E-mail alias"
 
@@ -928,7 +963,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_employee
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__emp_id
-#: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
 msgid "Employee"
 msgstr "Zaposlenik"
 
@@ -944,7 +979,7 @@ msgstr "Djelatnik je vezan za podnositelja zamolbe."
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_job_no_employee
-#: model:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
 msgid "Employees"
 msgstr "Zaposlenici"
 
@@ -974,17 +1009,17 @@ msgid "Expected Salary Extra"
 msgstr "Očekivani bonus"
 
 #. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
 msgid "Extended Filters"
 msgstr "Prošireni filteri"
 
 #. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
 msgid "Extra advantages..."
 msgstr "Dodatne pogodnosti"
 
 #. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
 msgid "Feedback of interviews..."
 msgstr "Povratne informacije sa intervjua..."
 
@@ -999,9 +1034,24 @@ msgid "Folded in Recruitment Pipe"
 msgstr "Preklapljeno u u procesu zapošljavanja"
 
 #. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_follower_ids
+msgid "Followers"
+msgstr "Pratitelji"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_channel_ids
+msgid "Followers (Channels)"
+msgstr "Pratitelji (Kanali)"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Pratitelji (Partneri)"
+
+#. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
 msgid "Future Activities"
-msgstr ""
+msgstr "Buduće aktivnosti"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_degree__sequence
@@ -1024,8 +1074,28 @@ msgid "Graduate"
 msgstr "Apsolvent"
 
 #. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
-#: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
+#: selection:hr.applicant,kanban_state:0
+msgid "Green"
+msgstr "Zeleno"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__legend_done
+msgid "Green Kanban Label"
+msgstr ""
+
+#. module: hr_recruitment
+#: selection:hr.applicant,kanban_state:0
+msgid "Grey"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__legend_normal
+msgid "Grey Kanban Label"
+msgstr ""
+
+#. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
 msgid "Group By"
 msgstr "Grupiraj po"
 
@@ -1040,7 +1110,7 @@ msgid "HR Responsible"
 msgstr ""
 
 #. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Hired Employees"
 msgstr "Zaposleni djelatnici"
 
@@ -1063,6 +1133,21 @@ msgstr ""
 "pseudonim pod kojim djelatnik kreira zadatak)"
 
 #. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__message_unread
+msgid "If checked new messages require your attention."
+msgstr "Ako je odabrano, nove poruke zahtijevaju Vašu pažnju."
+
+#. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Ako je označeno, nove poruke zahtijevaju Vašu pažnju."
+
+#. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr ""
+
+#. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage__template_id
 msgid ""
 "If set, a message is posted on the applicant using the template when the "
@@ -1080,20 +1165,41 @@ msgstr ""
 "Ako je aktivno polje odznačeno, slučaj će biti skriven umjesto uklonjen."
 
 #. module: hr_recruitment
+#: code:addons/hr_recruitment/models/hr_recruitment.py:71
+#: model:hr.recruitment.stage,legend_normal:hr_recruitment.stage_job1
+#: model:hr.recruitment.stage,legend_normal:hr_recruitment.stage_job2
+#: model:hr.recruitment.stage,legend_normal:hr_recruitment.stage_job3
+#: model:hr.recruitment.stage,legend_normal:hr_recruitment.stage_job4
+#: model:hr.recruitment.stage,legend_normal:hr_recruitment.stage_job5
+#, python-format
+msgid "In Progress"
+msgstr "U tijeku"
+
+#. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
+msgid "In progress"
+msgstr "U tijeku"
+
+#. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job1
 msgid "Initial Qualification"
 msgstr "Inicijalna kvalifikacija"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_res_config_settings__module_hr_recruitment_survey
-#: model:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Interview Forms"
 msgstr ""
 
 #. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_is_follower
+msgid "Is Follower"
+msgstr "Je pratitelj"
+
+#. module: hr_recruitment
 #: code:addons/hr_recruitment/models/hr_job.py:94
-#: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
-#: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
 #, python-format
 msgid "Job"
 msgstr "Radno mjesto"
@@ -1104,7 +1210,7 @@ msgid "Job Application Confirmation: ${object.job_id.name | safe}"
 msgstr ""
 
 #. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.crm_case_pivot_view_job
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.crm_case_pivot_view_job
 msgid "Job Applications"
 msgstr ""
 
@@ -1147,7 +1253,7 @@ msgid "Job Positions"
 msgstr "Poslovne pozicije"
 
 #. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Job Posting"
 msgstr ""
 
@@ -1157,12 +1263,12 @@ msgid "Job Specific"
 msgstr ""
 
 #. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
 msgid "Jobs"
 msgstr "Radna mjesta"
 
 #. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
 msgid "Jobs - Recruitment Form"
 msgstr "Poslovi - obrazac za zapošljavanje"
 
@@ -1170,6 +1276,26 @@ msgstr "Poslovi - obrazac za zapošljavanje"
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_job_sources
 msgid "Jobs Sources"
 msgstr "Izvori poslova"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__legend_blocked
+msgid "Kanban Blocked"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__legend_normal
+msgid "Kanban Ongoing"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__kanban_state
+msgid "Kanban State"
+msgstr "Kanban stanje"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__legend_done
+msgid "Kanban Valid"
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant____last_update
@@ -1187,7 +1313,7 @@ msgstr "Posljednja faza"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__date_last_stage_update
-#: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
 msgid "Last Stage Update"
 msgstr "Posljednja faza ažuriranja"
 
@@ -1209,13 +1335,13 @@ msgid "Last Updated on"
 msgstr "Vrijeme promjene"
 
 #. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
 msgid "Late Activities"
 msgstr ""
 
 #. module: hr_recruitment
-#: model:ir.actions.act_window,help:hr_recruitment.action_hr_job
-#: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_config
+#: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job
+#: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_config
 msgid "Let's create a job position."
 msgstr ""
 
@@ -1238,17 +1364,32 @@ msgid "Master Degree"
 msgstr "Magistar"
 
 #. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__medium_id
+msgid "Medium"
+msgstr "Medij"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_has_error
+msgid "Message Delivery error"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_ids
+msgid "Messages"
+msgstr "Poruke"
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__partner_mobile
 msgid "Mobile"
 msgstr "Mobitel"
 
 #. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
 msgid "My Activities"
 msgstr "Moje aktivnosti"
 
 #. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
 msgid "My Applications"
 msgstr ""
 
@@ -1263,7 +1404,7 @@ msgid "Name"
 msgstr "Naziv"
 
 #. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
 msgid "New"
 msgstr "Novi"
 
@@ -1274,7 +1415,7 @@ msgid "New Applicant"
 msgstr "Novi kandidat"
 
 #. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.hr_department_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_department_view_kanban
 msgid "New Applicants"
 msgstr "Novi kandidati"
 
@@ -1289,13 +1430,13 @@ msgid "New Applications"
 msgstr "Nove aplikacije"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/models/hr_recruitment.py:426
+#: code:addons/hr_recruitment/models/hr_recruitment.py:446
 #, python-format
 msgid "New Employee %s Hired"
 msgstr "Novi djelatnik %s mogućnosti zaposlenja"
 
 #. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.hr_employee_view_search
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_employee_view_search
 msgid "New Hired"
 msgstr "Novo zaposleni"
 
@@ -1316,29 +1457,44 @@ msgstr "Novozaposlenog djelatnika"
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.hr_applicant_nmenu_activity
-#: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_tree_activity
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_tree_activity
 msgid "Next Activities"
 msgstr "Sljedeće aktivnosti"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/models/hr_recruitment.py:368
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__activity_summary
+msgid "Next Activity Summary"
+msgstr "Sažetak sljedeće aktivnosti"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__activity_type_id
+msgid "Next Activity Type"
+msgstr ""
+
+#. module: hr_recruitment
+#: code:addons/hr_recruitment/models/hr_recruitment.py:388
 #, python-format
 msgid "No Subject"
 msgstr "Bez naslova"
 
 #. module: hr_recruitment
-#: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_applications
-#: model:ir.actions.act_window,help:hr_recruitment.crm_case_categ0_act_job
+#: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_applications
+#: model_terms:ir.actions.act_window,help:hr_recruitment.crm_case_categ0_act_job
 msgid "No applications yet"
 msgstr ""
 
 #. module: hr_recruitment
-#: model:ir.actions.act_window,help:hr_recruitment.hr_applicant_resumes
+#: model_terms:ir.actions.act_window,help:hr_recruitment.hr_applicant_resumes
 msgid "No document yet"
 msgstr ""
 
 #. module: hr_recruitment
-#: model:ir.actions.act_window,help:hr_recruitment.hr_applicant_action_activity
+#: model_terms:ir.actions.act_window,help:hr_recruitment.hr_applicant_action_activity
 msgid "No scheduled activities for the moment"
 msgstr ""
 
@@ -1346,6 +1502,11 @@ msgstr ""
 #: selection:hr.applicant,priority:0
 msgid "Normal"
 msgstr "Normalan"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Broj akcija"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__attachment_number
@@ -1358,7 +1519,27 @@ msgid "Number of days to close"
 msgstr ""
 
 #. module: hr_recruitment
-#: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_applications
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_has_error_counter
+msgid "Number of error"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "Broj poruka koje zahtijevaju aktivnost"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__message_unread_counter
+msgid "Number of unread messages"
+msgstr "Broj nepročitanih poruka"
+
+#. module: hr_recruitment
+#: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_applications
 msgid ""
 "Odoo helps you track applicants in the recruitment\n"
 "                process and follow up all operations: meetings, interviews, etc."
@@ -1367,7 +1548,7 @@ msgstr ""
 "obraditi i pratiti sve aktivnosti: sastanci, razgovori, itd."
 
 #. module: hr_recruitment
-#: model:ir.actions.act_window,help:hr_recruitment.crm_case_categ0_act_job
+#: model_terms:ir.actions.act_window,help:hr_recruitment.crm_case_categ0_act_job
 msgid ""
 "Odoo helps you track applicants in the recruitment\n"
 "            process and follow up all operations: meetings, interviews, etc."
@@ -1376,7 +1557,7 @@ msgstr ""
 "obraditi i pratiti sve aktivnosti: sastanci, razgovori, itd."
 
 #. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
 msgid "Offer"
 msgstr ""
 
@@ -1386,13 +1567,13 @@ msgid "Officer"
 msgstr "Službenik"
 
 #. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
 msgid "Ongoing"
 msgstr "U tijeku"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_res_config_settings__module_website_hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Online Posting"
 msgstr ""
 
@@ -1406,6 +1587,11 @@ msgstr ""
 "Opcionalni ID zapisa na kojeg će biti povezane sve dolazne poruke, čak i ako"
 " oni nisu odgovorili na njega. Ako je postavljeno, to će onemogućiti "
 "stvaranje novih zapisa u potpunosti."
+
+#. module: hr_recruitment
+#: selection:hr.applicant,activity_state:0
+msgid "Overdue"
+msgstr "Dospjelo"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_user_id
@@ -1444,6 +1630,11 @@ msgid "Phone"
 msgstr "Telefon"
 
 #. module: hr_recruitment
+#: selection:hr.applicant,activity_state:0
+msgid "Planned"
+msgstr "Planirano"
+
+#. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_contact
 msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
@@ -1472,13 +1663,25 @@ msgid "Proposed Salary Extra"
 msgstr "Predložen bonus"
 
 #. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Publish available jobs on your website"
 msgstr ""
 
 #. module: hr_recruitment
-#: model:ir.actions.act_window,help:hr_recruitment.action_hr_job
-#: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_config
+#: code:addons/hr_recruitment/models/hr_recruitment.py:69
+#: model:hr.recruitment.stage,legend_done:hr_recruitment.stage_job1
+#: model:hr.recruitment.stage,legend_done:hr_recruitment.stage_job2
+#: model:hr.recruitment.stage,legend_done:hr_recruitment.stage_job3
+#: model:hr.recruitment.stage,legend_done:hr_recruitment.stage_job4
+#: model:hr.recruitment.stage,legend_done:hr_recruitment.stage_job5
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
+#, python-format
+msgid "Ready for Next Stage"
+msgstr ""
+
+#. module: hr_recruitment
+#: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job
+#: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_config
 msgid "Ready to recruit more efficiently?"
 msgstr ""
 
@@ -1488,8 +1691,9 @@ msgid "Record Thread ID"
 msgstr "ID niti zapisa"
 
 #. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_res_users__group_hr_recruitment_user
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_root
-#: model:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Recruitment"
 msgstr "Regrutiranje"
 
@@ -1502,19 +1706,19 @@ msgstr "Faze zapošljavanja / kandidata"
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_recruitment_report_filtered_department
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_recruitment_report_filtered_job
 #: model:ir.actions.act_window,name:hr_recruitment.hr_applicant_action_analysis
-#: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_graph
-#: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_pivot
-#: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_graph
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_pivot
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
 msgid "Recruitment Analysis"
 msgstr "Analiza zapošljavanja"
 
 #. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Recruitment Done"
 msgstr "Postupak zapošljavanja završen"
 
 #. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Recruitment Process"
 msgstr "Postupak zapošljavanja"
 
@@ -1524,9 +1728,19 @@ msgid "Recruitment Responsible"
 msgstr "Odgovoran za zapošljavanje"
 
 #. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.hr_department_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_department_view_kanban
 msgid "Recruitments"
 msgstr "Zapošljavanja"
+
+#. module: hr_recruitment
+#: selection:hr.applicant,kanban_state:0
+msgid "Red"
+msgstr "Crveno"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__legend_blocked
+msgid "Red Kanban Label"
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__reference
@@ -1534,17 +1748,17 @@ msgid "Referred By"
 msgstr "Upućen od strane"
 
 #. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
 msgid "Refuse"
 msgstr "Odbiti"
 
 #. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
 msgid "Refused"
 msgstr "Odbijen"
 
 #. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
 msgid "Reopen Application"
 msgstr ""
 
@@ -1555,16 +1769,21 @@ msgstr "Izvještaji"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__requirements
-#: model:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_form
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_form
 msgid "Requirements"
 msgstr "Preduvjeti"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__user_id
-#: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
-#: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
 msgid "Responsible"
 msgstr "Odgovoran"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__activity_user_id
+msgid "Responsible User"
+msgstr "Odgovorna osoba"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_applicant_resumes
@@ -1593,17 +1812,17 @@ msgid "Salary Proposed by the Organisation, extra advantages"
 msgstr "Plaća koju predlaže tvrtka, plus dodaci"
 
 #. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 msgid "Schedule Interview"
 msgstr "Zakaži razgovor"
 
 #. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
 msgid "Schedule interview with this applicant"
 msgstr "Zakaži razgovor sa ovim kandidatom"
 
 #. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
 msgid "Search Applicants"
 msgstr "Traži kandidate"
 
@@ -1625,11 +1844,12 @@ msgid "Settings"
 msgstr "Postave"
 
 #. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
 msgid "Show all records which has next action date is before today"
 msgstr ""
 
 #. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__source_id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source__source_id
 msgid "Source"
 msgstr "Izvor"
@@ -1647,7 +1867,7 @@ msgstr "Izvor kandidata"
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_source_action
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_source
-#: model:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_source_tree
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_source_tree
 msgid "Sources of Applicants"
 msgstr "Izvori kandidata za posao"
 
@@ -1658,9 +1878,9 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__stage_id
-#: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
-#: model:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_form
-#: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_form
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
 msgid "Stage"
 msgstr "Faza"
 
@@ -1670,7 +1890,7 @@ msgid "Stage Changed"
 msgstr "Promijenjen status"
 
 #. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_form
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_form
 msgid "Stage Definition"
 msgstr "Definicija faze"
 
@@ -1701,22 +1921,31 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_stage_act
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_stage
-#: model:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_tree
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_tree
 msgid "Stages"
 msgstr "Faze"
 
 #. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Start Recruitment"
 msgstr "Započni proces zapošljavanja"
 
 #. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Start recruitment"
 msgstr ""
 
 #. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
+#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+
+#. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
 msgid "Subject / Applicant"
 msgstr "Subjekt / kandidat"
 
@@ -1734,7 +1963,7 @@ msgstr "Naziv oznake već postoji !"
 #: model:ir.actions.act_window,name:hr_recruitment.hr_applicant_category_action
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__categ_ids
 #: model:ir.ui.menu,name:hr_recruitment.hr_applicant_category_menu
-#: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_category_view_form
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_category_view_form
 msgid "Tags"
 msgstr "Oznake"
 
@@ -1782,7 +2011,7 @@ msgstr ""
 "pronađe sistemskog korisnika za tu adresu."
 
 #. module: hr_recruitment
-#: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_sources
+#: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_sources
 msgid ""
 "These aliases can be emails or urls for every source. When the applicant "
 "arrives here through one of these you'll know where he came from."
@@ -1804,12 +2033,31 @@ msgid "These people will receive email."
 msgstr "Ove će osobe primiti email."
 
 #. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
 msgid "This Year"
 msgstr "Ova godina"
 
 #. module: hr_recruitment
-#: model:ir.actions.act_window,help:hr_recruitment.hr_applicant_resumes
+#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__campaign_id
+msgid ""
+"This is a name that helps you keep track of your different campaign efforts,"
+" e.g. Fall_Drive, Christmas_Special"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__medium_id
+msgid "This is the method of delivery, e.g. Postcard, Email, or Banner Ad"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__source_id
+msgid ""
+"This is the source of the link, e.g. Search Engine, another domain, or name "
+"of email list"
+msgstr ""
+
+#. module: hr_recruitment
+#: model_terms:ir.actions.act_window,help:hr_recruitment.hr_applicant_resumes
 msgid ""
 "This menu helps you search through resumes and motivation\n"
 "                letters. Odoo automatically indexes .PDF, .DOC, DOCX, .TXT\n"
@@ -1825,9 +2073,19 @@ msgid ""
 msgstr "Ova faza se preklapa u prikazu kanban kada nema zapisa za prikazati. "
 
 #. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
+#: selection:hr.applicant,activity_state:0
+msgid "Today"
+msgstr "Danas"
+
+#. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
 msgid "Today Activities"
 msgstr "Današnje aktivnosti"
+
+#. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_form
+msgid "Tooltips"
+msgstr ""
 
 #. module: hr_recruitment
 #. openerp-web
@@ -1839,17 +2097,23 @@ msgid ""
 msgstr ""
 
 #. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
-#: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
 msgid "Unassigned"
 msgstr "Nedodjeljen"
 
 #. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
-#: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
-#: model:ir.ui.view,arch_db:hr_recruitment.view_job_filter_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_unread
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.view_job_filter_recruitment
 msgid "Unread Messages"
 msgstr "Nepročitane poruke"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr "Brojač nepročitanih poruka"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__write_date
@@ -1857,12 +2121,12 @@ msgid "Update Date"
 msgstr "Datum ažuriranja"
 
 #. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Use interview forms during recruitment process"
 msgstr ""
 
 #. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid ""
 "Use interview forms tailored to each job position during the recruitment "
 "process. Select the form to use in the job position detail form. This relies"
@@ -1882,6 +2146,11 @@ msgid "User Email"
 msgstr "Korisnikov e-mail"
 
 #. module: hr_recruitment
+#: model:ir.model,name:hr_recruitment.model_res_users
+msgid "Users"
+msgstr "Korisnici"
+
+#. module: hr_recruitment
 #: selection:hr.applicant,priority:0
 msgid "Very Good"
 msgstr "Vrlo dobro"
@@ -1899,12 +2168,22 @@ msgid "Watchers Emails"
 msgstr "Emailovi promatrača"
 
 #. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__website_message_ids
+msgid "Website Messages"
+msgstr "Poruke webstranica"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__website_message_ids
+msgid "Website communication history"
+msgstr "Povijest komunikacije Web stranice"
+
+#. module: hr_recruitment
 #: model:mail.template,subject:hr_recruitment.email_template_data_applicant_employee
 msgid "Welcome ${object.name} "
 msgstr "Dobro došao ${object.name} "
 
 #. module: hr_recruitment
-#: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_no_employee
+#: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_no_employee
 msgid ""
 "With just a quick glance on the Odoo employee screen, you\n"
 "                can easily find all the information you need for each person;\n"
@@ -1914,7 +2193,14 @@ msgstr ""
 "kontakt podaci, radno mjesto, dostupnost, itd."
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/models/hr_recruitment.py:430
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_form
+msgid ""
+"You can define here the labels that will be displayed for the kanban state instead\n"
+"                        of the default labels."
+msgstr ""
+
+#. module: hr_recruitment
+#: code:addons/hr_recruitment/models/hr_recruitment.py:450
 #, python-format
 msgid "You must define an Applied Job and a Contact Name for this applicant."
 msgstr ""
@@ -1932,12 +2218,12 @@ msgid "Your Job Application: ${object.job_id.name | safe}"
 msgstr ""
 
 #. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
 msgid "e.g. Sales Manager"
 msgstr "npr. Voditelj prodaje"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/models/hr_recruitment.py:281
+#: code:addons/hr_recruitment/models/hr_recruitment.py:298
 #, python-format
 msgid "job applicant"
 msgstr ""

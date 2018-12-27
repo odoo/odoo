@@ -43,7 +43,7 @@ return Dialog.extend({
         var self = this;
         this.opened().then(function () {
             // this restores default modal height (bootstrap) and allows field selector to overflow
-            self.$el.css('overflow', 'visible').closest('[role="dialog"]').css('height', 'auto');
+            self.$el.css('overflow', 'visible').closest('.modal-dialog').css('height', 'auto');
         });
         return $.when(
             this._super.apply(this, arguments),

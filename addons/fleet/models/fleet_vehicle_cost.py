@@ -12,7 +12,7 @@ class FleetVehicleCost(models.Model):
     _description = 'Cost related to a vehicle'
     _order = 'date desc, vehicle_id asc'
 
-    name = fields.Char(related='vehicle_id.name', string='Name', store=True)
+    name = fields.Char(related='vehicle_id.name', string='Name', store=True, readonly=False)
     vehicle_id = fields.Many2one('fleet.vehicle', 'Vehicle', required=True, help='Vehicle concerned by this log')
     cost_subtype_id = fields.Many2one('fleet.service.type', 'Type', help='Cost type purchased with this cost')
     amount = fields.Float('Total Price')
@@ -49,25 +49,26 @@ class FleetVehicleCost(models.Model):
             })
             self.odometer_id = odometer
 
-    @api.model
-    def create(self, data):
-        # make sure that the data are consistent with values of parent and contract records given
-        if 'parent_id' in data and data['parent_id']:
-            parent = self.browse(data['parent_id'])
-            data['vehicle_id'] = parent.vehicle_id.id
-            data['date'] = parent.date
-            data['cost_type'] = parent.cost_type
-        if 'contract_id' in data and data['contract_id']:
-            contract = self.env['fleet.vehicle.log.contract'].browse(data['contract_id'])
-            data['vehicle_id'] = contract.vehicle_id.id
-            data['cost_subtype_id'] = contract.cost_subtype_id.id
-            data['cost_type'] = contract.cost_type
-        if 'odometer' in data and not data['odometer']:
-            # if received value for odometer is 0, then remove it from the
-            # data as it would result to the creation of a
-            # odometer log with 0, which is to be avoided
-            del data['odometer']
-        return super(FleetVehicleCost, self).create(data)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for data in vals_list:
+            # make sure that the data are consistent with values of parent and contract records given
+            if 'parent_id' in data and data['parent_id']:
+                parent = self.browse(data['parent_id'])
+                data['vehicle_id'] = parent.vehicle_id.id
+                data['date'] = parent.date
+                data['cost_type'] = parent.cost_type
+            if 'contract_id' in data and data['contract_id']:
+                contract = self.env['fleet.vehicle.log.contract'].browse(data['contract_id'])
+                data['vehicle_id'] = contract.vehicle_id.id
+                data['cost_subtype_id'] = contract.cost_subtype_id.id
+                data['cost_type'] = contract.cost_type
+            if 'odometer' in data and not data['odometer']:
+                # if received value for odometer is 0, then remove it from the
+                # data as it would result to the creation of a
+                # odometer log with 0, which is to be avoided
+                del data['odometer']
+        return super(FleetVehicleCost, self).create(vals_list)
 
 
 class FleetVehicleLogContract(models.Model):
@@ -109,8 +110,8 @@ class FleetVehicleLogContract(models.Model):
     state = fields.Selection([
         ('futur', 'Incoming'),
         ('open', 'In Progress'),
-        ('expired', 'Expired'),
         ('diesoon', 'Expiring Soon'),
+        ('expired', 'Expired'),
         ('closed', 'Closed')
         ], 'Status', default='open', readonly=True,
         help='Choose whether the contract is still valid or not',
@@ -133,7 +134,7 @@ class FleetVehicleLogContract(models.Model):
     # we need to keep this field as a related with store=True because the graph view doesn't support
     # (1) to address fields from inherited table
     # (2) fields that aren't stored in database
-    cost_amount = fields.Float(related='cost_id.amount', string='Amount', store=True)
+    cost_amount = fields.Float(related='cost_id.amount', string='Amount', store=True, readonly=False)
     odometer = fields.Float(string='Odometer at creation', 
         help='Odometer measure of the vehicle at the moment of the contract creation')
 
@@ -144,7 +145,7 @@ class FleetVehicleLogContract(models.Model):
             if record.cost_subtype_id.name:
                 name += ' / ' + record.cost_subtype_id.name
             if record.date:
-                name += ' / ' + record.date
+                name += ' / ' + str(record.date)
             record.name = name
 
     @api.depends('expiration_date', 'state')
@@ -172,6 +173,13 @@ class FleetVehicleLogContract(models.Model):
     def _onchange_vehicle(self):
         if self.vehicle_id:
             self.odometer_unit = self.vehicle_id.odometer_unit
+
+    @api.multi
+    def write(self, vals):
+        res = super(FleetVehicleLogContract, self).write(vals)
+        if vals.get('expiration_date') or vals.get('user_id'):
+            self.activity_reschedule(['fleet.mail_act_fleet_contract_to_renew'], date_deadline=vals.get('expiration_date'), new_user_id=vals.get('user_id'))
+        return res
 
     @api.multi
     def contract_close(self):
@@ -230,7 +238,7 @@ class FleetVehicleLogContract(models.Model):
             if not contract.start_date or contract.cost_frequency == 'no':
                 continue
             found = False
-            last_cost_date = contract.start_date
+            startdate = contract.start_date
             if contract.generated_cost_ids:
                 last_autogenerated_cost = VehicleCost.search([
                     ('contract_id', '=', contract.id),
@@ -238,12 +246,11 @@ class FleetVehicleLogContract(models.Model):
                 ], offset=0, limit=1, order='date desc')
                 if last_autogenerated_cost:
                     found = True
-                    last_cost_date = last_autogenerated_cost.date
-            startdate = fields.Date.from_string(last_cost_date)
+                    startdate = last_autogenerated_cost.date
             if found:
                 startdate += deltas.get(contract.cost_frequency)
-            today = fields.Date.from_string(fields.Date.context_today(self))
-            while (startdate <= today) & (startdate <= fields.Date.from_string(contract.expiration_date)):
+            today = fields.Date.context_today(self)
+            while (startdate <= today) & (startdate <= contract.expiration_date):
                 data = {
                     'amount': contract.cost_generated,
                     'date': fields.Date.context_today(self),
@@ -310,7 +317,7 @@ class FleetVehicleLogFuel(models.Model):
     # we need to keep this field as a related with store=True because the graph view doesn't support
     # (1) to address fields from inherited table
     # (2) fields that aren't stored in database
-    cost_amount = fields.Float(related='cost_id.amount', string='Amount', store=True)
+    cost_amount = fields.Float(related='cost_id.amount', string='Amount', store=True, readonly=False)
 
     @api.onchange('vehicle_id')
     def _onchange_vehicle(self):
@@ -359,7 +366,7 @@ class FleetVehicleLogServices(models.Model):
     vendor_id = fields.Many2one('res.partner', 'Vendor', domain="[('supplier','=',True)]")
     # we need to keep this field as a related with store=True because the graph view doesn't support
     # (1) to address fields from inherited table and (2) fields that aren't stored in database
-    cost_amount = fields.Float(related='cost_id.amount', string='Amount', store=True)
+    cost_amount = fields.Float(related='cost_id.amount', string='Amount', store=True, readonly=False)
     notes = fields.Text()
     cost_id = fields.Many2one('fleet.vehicle.cost', 'Cost', required=True, ondelete='cascade')
 

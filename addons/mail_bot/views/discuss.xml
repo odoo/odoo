@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-extend="mail.Preview">
+        <t t-jquery="div[t-attf-class*='o_mail_preview_image']" t-operation="append">
+            <i t-if="preview.status == 'bot'" class="o_mail_user_status o_user_online fa fa-heart" title="Bot" role="img" aria-label="User is a bot"/>
+        </t>
+    </t>
+    <t t-extend="mail.UserStatus">
+        <t t-jquery="i:last" t-operation="after">
+            <i t-if="status == 'bot'" class="o_mail_user_status o_user_online fa fa-heart" title="Bot" role="img" aria-label="User is a bot"/>
+        </t>
+    </t>
+</templates>

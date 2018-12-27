@@ -27,12 +27,9 @@ def initialize(cr):
         m = "File not found: 'base.sql' (provided by module 'base')."
         _logger.critical(m)
         raise IOError(m)
-    base_sql_file = odoo.tools.misc.file_open(f)
-    try:
+
+    with odoo.tools.misc.file_open(f) as base_sql_file:
         cr.execute(base_sql_file.read())
-        cr.commit()
-    finally:
-        base_sql_file.close()
 
     for i in odoo.modules.get_modules():
         mod_path = odoo.modules.get_module_path(i)
@@ -83,8 +80,6 @@ def initialize(cr):
         to_auto_install = [x[0] for x in cr.fetchall()]
         if not to_auto_install: break
         cr.execute("""UPDATE ir_module_module SET state='to install' WHERE name in %s""", (tuple(to_auto_install),))
-
-    cr.commit()
 
 def create_categories(cr, categories):
     """ Create the ir_module_category entries for some categories.

@@ -56,7 +56,7 @@ Running the server
         Maximum allowed virtual memory per worker. If the limit is exceeded,
         the worker is killed and recycled at the end of the current request.
 
-        Defaults to 2048MB.
+        Defaults to 2048MiB.
 
     .. option:: --limit-memory-hard <limit>
 
@@ -64,7 +64,7 @@ Running the server
         immediately killed without waiting for the end of the current request
         processing.
 
-        Defaults to 2560MB.
+        Defaults to 2560MiB.
 
     .. option:: --limit-time-cpu <limit>
 
@@ -112,6 +112,10 @@ Running the server
 .. option:: --test-enable
 
     runs tests after installing modules
+
+.. option:: --test-tags 'tag_1,tag_2,...,-tag_n'
+
+    select the tests to run by using tags.
 
 .. option:: --dev <feature,feature,...,feature>
 
@@ -305,6 +309,13 @@ customize the amount of logging output
     enables `log rotation <https://docs.python.org/2/library/logging.handlers.html#timedrotatingfilehandler>`_
     daily, keeping 30 backups. Log rotation frequency and number of backups is
     not configurable.
+    
+    .. danger:: 
+    
+        Built-in log rotation is not reliable in multi-workers scenarios
+        and may incur significant data loss. It is *strongly recommended* to 
+        use an external log rotation utility or use system loggers (--syslog) 
+        instead.
 
 .. option:: --syslog
 
@@ -383,13 +394,6 @@ customize the amount of logging output
 
         In case of conflict between :option:`--log-level` and
         :option:`--log-handler`, the latter is used
-
-translations
-------------
-
-.. option:: --i18n-import
-
-.. option:: --i18n-export
 
 emails
 ------

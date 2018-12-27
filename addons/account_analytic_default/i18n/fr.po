@@ -3,22 +3,15 @@
 # * account_analytic_default
 # 
 # Translators:
-# Xavier Belmere <Info@cartmeleon.com>, 2016
-# Martin Trigaux, 2016
-# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2016
-# Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2016
-# Fabien Pinckaers <fp@openerp.com>, 2016
-# lap.odoo <lap@odoo.com>, 2017
-# Florent de Labarre <florent@iguanayachts.com>, 2017
-# Foo Bar <mat+test@odoo.com>, 2017
-# Lucas Deliege <lud@odoo.com>, 2017
+# Martin Trigaux, 2018
+# Christophe CHAUVET <christophe.chauvet@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
-"Last-Translator: Lucas Deliege <lud@odoo.com>, 2017\n"
+"POT-Creation-Date: 2018-09-18 09:49+0000\n"
+"PO-Revision-Date: 2018-09-18 09:49+0000\n"
+"Last-Translator: Christophe CHAUVET <christophe.chauvet@gmail.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,22 +20,22 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: account_analytic_default
-#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_kanban
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_kanban
 msgid "<i class=\"fa fa-calendar\"/> From"
 msgstr "<i class=\"fa fa-calendar\"/> De"
 
 #. module: account_analytic_default
-#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_kanban
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_kanban
 msgid "<strong>Customer</strong>"
 msgstr "<strong>Client</strong>"
 
 #. module: account_analytic_default
-#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_kanban
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_kanban
 msgid "<strong>Product</strong>"
 msgstr "<strong>Article</strong>"
 
 #. module: account_analytic_default
-#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "Accounts"
 msgstr "Comptes"
 
@@ -53,18 +46,20 @@ msgid ""
 "An analytic default requires at least an analytic account or an analytic "
 "tag."
 msgstr ""
+"Une analyse par défaut requiert au moins un compte analytique ou une "
+"étiquette analytique."
 
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__analytic_id
-#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "Analytic Account"
 msgstr "Compte analytique"
 
 #. module: account_analytic_default
 #: model:ir.actions.act_window,name:account_analytic_default.action_analytic_default_list
 #: model:ir.ui.menu,name:account_analytic_default.menu_analytic_default_list
-#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form
-#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_tree
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_tree
 msgid "Analytic Defaults"
 msgstr "Analytique par défaut"
 
@@ -75,7 +70,6 @@ msgstr "Distribution Analytique"
 
 #. module: account_analytic_default
 #: model:ir.actions.act_window,name:account_analytic_default.action_product_default_list
-#: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_partner
 #: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_user
 msgid "Analytic Rules"
 msgstr "Règles analytiques"
@@ -87,12 +81,12 @@ msgstr "Étiquettes analytiques"
 
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__company_id
-#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "Company"
 msgstr "Société"
 
 #. module: account_analytic_default
-#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form
 msgid "Conditions"
 msgstr "Conditions"
 
@@ -107,7 +101,7 @@ msgid "Created on"
 msgstr "Créé le"
 
 #. module: account_analytic_default
-#: model:ir.ui.view,arch_db:account_analytic_default.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.res_config_settings_view_form
 msgid "Default Analytic Values"
 msgstr "Valeurs analytiques par défaut"
 
@@ -140,7 +134,7 @@ msgstr ""
 "analytique"
 
 #. module: account_analytic_default
-#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "Group By"
 msgstr "Regrouper par"
 
@@ -171,13 +165,13 @@ msgstr "Dernière mise à jour le"
 
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__partner_id
-#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "Partner"
 msgstr "Partenaire"
 
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__product_id
-#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "Product"
 msgstr "Article"
 
@@ -239,11 +233,11 @@ msgstr "Date de début"
 
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__user_id
-#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "User"
 msgstr "Utilisateur"
 
 #. module: account_analytic_default
-#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_kanban
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_kanban
 msgid "to"
 msgstr "au"

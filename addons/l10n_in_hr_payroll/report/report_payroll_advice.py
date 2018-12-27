@@ -2,13 +2,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import time
-from datetime import datetime
 
 from odoo import api, models
 
 
 class payroll_advice_report(models.AbstractModel):
     _name = 'report.l10n_in_hr_payroll.report_payrolladvice'
+    _description = "Indian Payroll Advice Report"
 
     def get_month(self, input_date):
         res = {
@@ -16,8 +16,8 @@ class payroll_advice_report(models.AbstractModel):
                }
         slip = self.env['hr.payslip'].search([('date_from', '<=', input_date), ('date_to', '>=', input_date)], limit=1)
         if slip:
-            from_date = datetime.strptime(slip.date_from, '%Y-%m-%d')
-            to_date = datetime.strptime(slip.date_to, '%Y-%m-%d')
+            from_date = slip.date_from
+            to_date = slip.date_to
             res['from_name'] = from_date.strftime('%d') + '-' + from_date.strftime('%B') + '-' + from_date.strftime('%Y')
             res['to_name'] = to_date.strftime('%d') + '-' + to_date.strftime('%B') + '-' + to_date.strftime('%Y')
         return res
@@ -42,7 +42,7 @@ class payroll_advice_report(models.AbstractModel):
         return result
 
     @api.model
-    def get_report_values(self, docids, data=None):
+    def _get_report_values(self, docids, data=None):
         advice = self.env['hr.payroll.advice'].browse(docids)
         return {
             'doc_ids': docids,

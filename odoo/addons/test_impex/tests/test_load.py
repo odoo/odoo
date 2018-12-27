@@ -5,6 +5,7 @@ import json
 import pkgutil
 import re
 
+from odoo import fields
 from odoo.tests import common
 from odoo.tools.misc import mute_logger
 
@@ -58,7 +59,7 @@ class ImporterCase(common.TransactionCase):
                 return '%s.%s' % (d['module'], d['name'])
             return d['name']
 
-        name = record.name_get()[0][1]
+        name = record.display_name
         # fix dotted name_get results, otherwise xid lookups blow up
         name = name.replace('.', '-')
         ModelData.create({
@@ -333,7 +334,6 @@ class test_float_field(ImporterCase):
         self.assertIs(result['ids'], False)
         self.assertEqual(result['messages'], [
             message(u"'foobar' does not seem to be a number for field 'Value'")])
-
 
 class test_string_field(ImporterCase):
     model_name = 'export.string.bounded'
@@ -675,6 +675,20 @@ class test_m2o(ImporterCase):
             u"name, external id or database id")])
         self.assertIs(result['ids'], False)
 
+    def test_name_create_enabled_m2o(self):
+        result = self.import_(['value'], [[101]])
+        self.assertEqual(result['messages'], [message(
+            u"No matching record found for name '101' "
+            u"in field 'Value'", moreinfo=moreaction(
+                res_model='export.integer'))])
+        self.assertIs(result['ids'], False)
+        context = {
+            'name_create_enabled_fields': {'value': True},
+        }
+        result = self.import_(['value'], [[101]], context=context)
+        self.assertFalse(result['messages'])
+        self.assertEqual(len(result['ids']), 1)
+
 
 class test_m2m(ImporterCase):
     model_name = 'export.many2many'
@@ -747,7 +761,7 @@ class test_m2m(ImporterCase):
         record2 = self.env['export.many2many.other'].create({'value': 84, 'str': 'record2'})
         record3 = self.env['export.many2many.other'].create({'value': 9, 'str': 'record3'})
 
-        name = lambda record: record.name_get()[0][1]
+        name = lambda record: record.display_name
 
         result = self.import_(['value'], [
             ['%s,%s' % (name(record1), name(record2))],
@@ -1065,7 +1079,7 @@ class test_datetime(ImporterCase):
             ['value'], [['2012-02-03 11:11:11']], {'tz': 'Pacific/Kiritimati'})
         self.assertFalse(result['messages'])
         self.assertEqual(
-            values(self.read(domain=[('id', 'in', result['ids'])])),
+            [fields.Datetime.to_string(value['value']) for value in self.read(domain=[('id', 'in', result['ids'])])],
             ['2012-02-02 21:11:11'])
 
         # UTC-0930
@@ -1073,7 +1087,7 @@ class test_datetime(ImporterCase):
             ['value'], [['2012-02-03 11:11:11']], {'tz': 'Pacific/Marquesas'})
         self.assertFalse(result['messages'])
         self.assertEqual(
-            values(self.read(domain=[('id', 'in', result['ids'])])),
+            [fields.Datetime.to_string(value['value']) for value in self.read(domain=[('id', 'in', result['ids'])])],
             ['2012-02-03 20:41:11'])
 
     def test_usertz(self):
@@ -1087,7 +1101,7 @@ class test_datetime(ImporterCase):
             ['value'], [['2012-02-03 11:11:11']])
         self.assertFalse(result['messages'])
         self.assertEqual(
-            values(self.read(domain=[('id', 'in', result['ids'])])),
+            [fields.Datetime.to_string(value['value']) for value in self.read(domain=[('id', 'in', result['ids'])])],
             ['2012-02-03 01:11:11'])
 
     def test_notz(self):
@@ -1099,7 +1113,7 @@ class test_datetime(ImporterCase):
         result = self.import_(['value'], [['2012-02-03 11:11:11']])
         self.assertFalse(result['messages'])
         self.assertEqual(
-            values(self.read(domain=[('id', 'in', result['ids'])])),
+            [fields.Datetime.to_string(value['value']) for value in self.read(domain=[('id', 'in', result['ids'])])],
             ['2012-02-03 11:11:11'])
 
 

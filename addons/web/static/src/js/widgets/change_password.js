@@ -28,7 +28,7 @@ var ChangePassword = AbstractAction.extend({
         var $button = self.$('.oe_form_button');
         $button.appendTo(this.getParent().$footer);
         $button.eq(1).click(function () {
-            self.$el.parents('[role="dialog"]').modal('hide');
+            self.$el.parents('.modal').modal('hide');
         });
         $button.eq(0).click(function () {
             self._rpc({

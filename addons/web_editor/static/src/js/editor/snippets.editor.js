@@ -76,7 +76,7 @@ var SnippetEditor = Widget.extend({
                     var $clone = $(this).clone().css({width: '24px', height: '24px', border: 0});
                     $clone.find('.oe_overlay_options >:not(:contains(.oe_snippet_move)), .o_handle').remove();
                     $clone.find(':not(.glyphicon)').css({position: 'absolute', top: 0, left: 0});
-                    $clone.appendTo('body').removeClass('hidden');
+                    $clone.appendTo('body').removeClass('d-none');
                     return $clone;
                 },
                 start: _.bind(self._onDragAndDropStart, self),
@@ -153,7 +153,7 @@ var SnippetEditor = Widget.extend({
         });
 
         var $parent = this.$target.parent();
-        this.$target.find('*').andSelf().tooltip('destroy');
+        this.$target.find('*').andSelf().tooltip('dispose');
         this.$target.remove();
         this.$el.remove();
 
@@ -199,7 +199,7 @@ var SnippetEditor = Widget.extend({
 
         // Attach own and parent options on the current overlay
         var $style_button = this.$el.find('.oe_options');
-        var $ul = $style_button.find('ul:first');
+        var $ul = $style_button.find('.dropdown-menu:first');
         var $headers = $ul.find('.dropdown-header:data(editor)');
         _.each($headers, (function (el) {
             var $el = $(el);
@@ -214,11 +214,11 @@ var SnippetEditor = Widget.extend({
                     count++;
                 }
             });
-            $el.toggleClass('hidden', count === 0);
+            $el.toggleClass('d-none', count === 0);
         }).bind(this));
 
         // Activate the overlay
-        $style_button.toggleClass('hidden', $ul.children(':not(.o_main_header):not(.divider):not(.hidden)').length === 0);
+        $style_button.toggleClass('d-none', $ul.children(':not(.o_main_header):not(.dropdown-divider):not(.d-none)').length === 0);
         this.cover();
         this.$el.toggleClass('oe_active', !!focus);
 
@@ -262,13 +262,13 @@ var SnippetEditor = Widget.extend({
     _initializeOptions: function () {
         var self = this;
         var $styles = this.$el.find('.oe_options');
-        var $ul = $styles.find('ul:first');
+        var $ul = $styles.find('.dropdown-menu:first');
         this.styles = {};
         this.selectorSiblings = [];
         this.selectorChildren = [];
 
         var i = 0;
-        $ul.append($('<li/>', {class: 'dropdown-header o_main_header', text: this._getName()}).data('editor', this));
+        $ul.append($('<div/>', {class: 'dropdown-header o_main_header', text: this._getName()}).data('editor', this));
         var defs = _.map(this.templateOptions, function (val, option_id) {
             if (!val.selector.is(self.$target)) {
                 return;
@@ -277,7 +277,7 @@ var SnippetEditor = Widget.extend({
             if (val['drop-in']) self.selectorChildren.push(val['drop-in']);
 
             var optionName = val.option;
-            var $el = val.$el.children('li').clone(true).addClass('snippet-option-' + optionName);
+            var $el = val.$el.children().clone(true).addClass('snippet-option-' + optionName);
             var option = new (options.registry[optionName] || options.Class)(
                 self,
                 val.base_target ? self.$target.find(val.base_target).eq(0) : self.$target,
@@ -288,7 +288,7 @@ var SnippetEditor = Widget.extend({
             option.__order = i++;
             return option.attachTo($el);
         });
-        $ul.append($('<li/>', {class: 'divider'}));
+        $ul.append($('<div/>', {class: 'dropdown-divider mt-2'}));
 
         var $parents = this.$target.parents();
         _.each($parents, function (parent) {
@@ -296,7 +296,7 @@ var SnippetEditor = Widget.extend({
             if (parentEditor) {
                 for (var styleName in parentEditor.styles) {
                     if (!parentEditor.styles[styleName].preventChildPropagation) {
-                        $ul.append($('<li/>', {class: 'dropdown-header o_parent_editor_header', text: parentEditor._getName()}).data('editor', parentEditor));
+                        $ul.append($('<div/>', {class: 'dropdown-header o_parent_editor_header', text: parentEditor._getName()}).data('editor', parentEditor));
                         break;
                     }
                 }
@@ -304,7 +304,7 @@ var SnippetEditor = Widget.extend({
         });
 
         if (!this.selectorSiblings.length && !this.selectorChildren.length) {
-            this.$el.find('.oe_snippet_move, .oe_snippet_clone').addClass('hidden');
+            this.$el.find('.oe_snippet_move, .oe_snippet_clone').addClass('d-none');
         }
 
         this.$el.find('[data-toggle="dropdown"]').dropdown();
@@ -339,6 +339,7 @@ var SnippetEditor = Widget.extend({
                 }
             },
         });
+        this.trigger_up('snippet_cloned', {$target: $clone});
     },
     /**
      * Called when the overlay dimensions/positions should be recomputed.
@@ -362,7 +363,7 @@ var SnippetEditor = Widget.extend({
         };
         self.$target.after('<div class="oe_drop_clone" style="display: none;"/>');
         self.$target.detach();
-        self.$el.addClass('hidden');
+        self.$el.addClass('d-none');
 
         var $selectorSiblings;
         for (var i = 0 ; i < self.selectorSiblings.length ; i++) {
@@ -419,7 +420,7 @@ var SnippetEditor = Widget.extend({
         }
         $clone.after(this.$target);
 
-        this.$el.removeClass('hidden');
+        this.$el.removeClass('d-none');
         $('body').removeClass('move-important');
         $clone.remove();
 
@@ -668,7 +669,10 @@ var SnippetsMenu = Widget.extend({
             $selectorChildren.each(function () {
                 var $zone = $(this);
                 var css = window.getComputedStyle(this);
+                var parentCss = window.getComputedStyle($zone.parent()[0]);
                 var float = css.float || css.cssFloat;
+                var parentDisplay = parentCss.display;
+                var parentFlex = parentCss.flexDirection;
                 var $drop = zone_template.clone();
 
                 $zone.append($drop);
@@ -680,7 +684,7 @@ var SnippetsMenu = Widget.extend({
                         float: 'none',
                         display: 'inline-block',
                     });
-                } else if (float === 'left' || float === 'right') {
+                } else if (float === 'left' || float === 'right' || (parentDisplay === 'flex' && parentFlex === 'row')) {
                     $drop.addClass('oe_vertical').css('height', Math.max(Math.min($zone.outerHeight(), $zone.children().last().outerHeight()), 30));
                 }
 
@@ -695,7 +699,7 @@ var SnippetsMenu = Widget.extend({
                         float: 'none',
                         display: 'inline-block'
                     });
-                } else if (float === 'left' || float === 'right') {
+                } else if (float === 'left' || float === 'right' || (parentDisplay === 'flex' && parentFlex === 'row')) {
                     $drop.addClass('oe_vertical').css('height', Math.max(Math.min($zone.outerHeight(), $zone.children().first().outerHeight()), 30));
                 }
                 if (test) {
@@ -712,18 +716,21 @@ var SnippetsMenu = Widget.extend({
                 var $zone = $(this);
                 var $drop;
                 var css = window.getComputedStyle(this);
+                var parentCss = window.getComputedStyle($zone.parent()[0]);
                 var float = css.float || css.cssFloat;
+                var parentDisplay = parentCss.display;
+                var parentFlex = parentCss.flexDirection;
 
                 if ($zone.prev('.oe_drop_zone:visible').length === 0) {
                     $drop = zone_template.clone();
-                    if (float === 'left' || float === 'right') {
+                    if (float === 'left' || float === 'right' || (parentDisplay === 'flex' && parentFlex === 'row')) {
                         $drop.addClass('oe_vertical').css('height', Math.max(Math.min($zone.outerHeight(), $zone.prev().outerHeight() || Infinity), 30));
                     }
                     $zone.before($drop);
                 }
                 if ($zone.next('.oe_drop_zone:visible').length === 0) {
                     $drop = zone_template.clone();
-                    if (float === 'left' || float === 'right') {
+                    if (float === 'left' || float === 'right' || (parentDisplay === 'flex' && parentFlex === 'row')) {
                         $drop.addClass('oe_vertical').css('height', Math.max(Math.min($zone.outerHeight(), $zone.next().outerHeight() || Infinity), 30));
                     }
                     $zone.after($drop);
@@ -776,7 +783,8 @@ var SnippetsMenu = Widget.extend({
      * @param {jQuery|false} $snippet
      *        The DOM element whose editor need to be enabled. Only disable the
      *        current one if false is given.
-     * @returns {Deferred} (might be async when an editor must be created)
+     * @returns {Deferred<SnippetEditor>}
+     *          (might be async when an editor must be created)
      */
     _activateSnippet: function ($snippet) {
         if ($snippet) {
@@ -784,25 +792,26 @@ var SnippetsMenu = Widget.extend({
                 $snippet = globalSelector.closest($snippet);
             }
             if (this.$activeSnippet && this.$activeSnippet[0] === $snippet[0]) {
-                return $.when();
+                return $.when($snippet.data('snippet-editor'));
             }
         }
+        var editor = null;
         if (this.$activeSnippet) {
-            if (this.$activeSnippet.data('snippet-editor')) {
-                this.$activeSnippet.data('snippet-editor').toggleFocus(false);
+            editor = this.$activeSnippet.data('snippet-editor');
+            if (editor) {
+                editor.toggleFocus(false);
             }
             this.$activeSnippet = false;
         }
         if ($snippet && $snippet.length) {
             var self = this;
-            return this._createSnippetEditor($snippet).then(function () {
+            return this._createSnippetEditor($snippet).then(function (editor) {
                 self.$activeSnippet = $snippet;
-                if (self.$activeSnippet.data('snippet-editor')) {
-                    self.$activeSnippet.data('snippet-editor').toggleFocus(true);
-                }
+                editor.toggleFocus(true);
+                return editor;
             });
         }
-        return $.when();
+        return $.when(editor);
     },
     /**
      * @private
@@ -987,7 +996,7 @@ var SnippetsMenu = Widget.extend({
             self.templateOptions.push(option);
             selectors.push(option.selector);
         });
-        $styles.addClass('hidden');
+        $styles.addClass('d-none');
 
         globalSelector.closest = function ($from) {
             var $temp;
@@ -1052,7 +1061,7 @@ var SnippetsMenu = Widget.extend({
                 if (moduleID) {
                     $snippet.addClass('o_snippet_install');
                     var $installBtn = $('<a/>', {
-                        class: 'btn btn-primary btn-sm o_install_btn',
+                        class: 'btn btn-primary o_install_btn',
                         target: '_blank',
                         href: '/web#id=' + moduleID + '&view_type=form&model=ir.module.module&action=base.open_module_tree',
                         text: _t("Install"),
@@ -1217,15 +1226,17 @@ var SnippetsMenu = Widget.extend({
 
                 $('.oe_drop_zone').droppable({
                     over: function () {
-                        dropped = true;
-                        $(this).first().after($toInsert).addClass('hidden');
+                        if (!dropped) {
+                            dropped = true;
+                            $(this).first().after($toInsert).addClass('d-none');
+                        }
                     },
                     out: function () {
                         var prev = $toInsert.prev();
                         if (this === prev[0]) {
                             dropped = false;
                             $toInsert.detach();
-                            $(this).removeClass('hidden');
+                            $(this).removeClass('d-none');
                         }
                     },
                 });
@@ -1233,10 +1244,10 @@ var SnippetsMenu = Widget.extend({
             stop: function (ev, ui) {
                 $toInsert.removeClass('oe_snippet_body');
 
-                if (! dropped && self.$editable.find('.oe_drop_zone') && ui.position.top > 3 && ui.position.left + 50 > self.$el.outerWidth()) {
-                    var el = self.$editable.find('.oe_drop_zone').nearest({x: ui.position.left, y: ui.position.top}).first();
-                    if (el.length) {
-                        el.after($toInsert);
+                if (!dropped && ui.position.top > 3 && ui.position.left + 50 > self.$el.outerWidth()) {
+                    var $el = $.nearest({x: ui.position.left, y: ui.position.top}, '.oe_drop_zone').first();
+                    if ($el.length) {
+                        $el.after($toInsert);
                         dropped = true;
                     }
                 }

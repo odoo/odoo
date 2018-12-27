@@ -16,11 +16,11 @@
         color: $o-main-color-muted;
         width: 100%;
         @include o-position-absolute($left: 0, $top: 12%);
-        @include o-flex-display;
-        @include o-justify-content(center);
+        display: flex;
+        justify-content: center;
     }
     .o_link_enable {
-        @media (min-width: $screen-md-min) {
+        @include media-breakpoint-up(lg) {
             border-right: 1px solid #ccc;
         }
         height: initial;
@@ -35,13 +35,13 @@
             background-color: $o-brand-lightsecondary;
         }
         .o_highlight {
-            color: $o-brand-optional;
+            color: $o-brand-primary;
             font-size: 20px;
             font-weight: bold;
         }
     }
     .o_link_disable {
-        @media (min-width: $screen-md-min) {
+        @include media-breakpoint-up(lg) {
             border-right: 1px solid #ccc;
         }
         height: initial;

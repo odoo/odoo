@@ -1,65 +1,62 @@
 # -*- coding: utf-8 -*-
-from json import dumps, loads
 
 import json
 
 from contextlib import contextmanager
 from email.utils import formataddr
+from functools import partial
 
 from odoo import api
 from odoo.addons.bus.models.bus import json_dump
-from odoo.tests import common, tagged
+from odoo.tests import common, tagged, new_test_user
+
+mail_new_test_user = partial(new_test_user, context={'mail_create_nolog': True, 'mail_create_nosubscribe': True, 'mail_notrack': True, 'no_reset_password': True})
 
 
 class BaseFunctionalTest(common.SavepointCase):
 
+    _test_context = {
+        'mail_create_nolog': True,
+        'mail_create_nosubscribe': True,
+        'mail_notrack': True,
+        'no_reset_password': True
+    }
+
     @classmethod
     def setUpClass(cls):
         super(BaseFunctionalTest, cls).setUpClass()
-        cls._quick_create_ctx = {
-            'mail_create_nolog': True,
-            'mail_create_nosubscribe': True,
-            'mail_notrack': True,
-        }
-        cls._quick_create_user_ctx = dict(cls._quick_create_ctx, no_reset_password=True)
 
-        user_group_employee = cls.env.ref('base.group_user')
-        cls.user_employee = cls.env['res.users'].with_context(cls._quick_create_user_ctx).create({
-            'name': 'Ernest Employee',
-            'login': 'ernest',
-            'email': 'e.e@example.com',
-            'signature': '--\nErnest',
-            'notification_type': 'email',
-            'groups_id': [(6, 0, [user_group_employee.id])]})
+        cls.user_employee = mail_new_test_user(cls.env, login='ernest', groups='base.group_user', signature='--\nErnest', name='Ernest Employee')
         cls.partner_employee = cls.user_employee.partner_id
-        cls.user_admin = cls.env.user
-        cls.partner_admin = cls.user_admin.partner_id
 
-        cls.channel_listen = cls.env['mail.channel'].with_context(cls._quick_create_ctx).create({'name': 'Listener'})
+        cls.user_admin = cls.env.ref('base.user_admin')
+        cls.partner_admin = cls.env.ref('base.partner_admin')
 
-        cls.test_record = cls.env['mail.test.simple'].with_context(cls._quick_create_ctx).create({'name': 'Test', 'email_from': 'ignasse@example.com'})
+        cls.channel_listen = cls.env['mail.channel'].with_context(cls._test_context).create({'name': 'Listener'})
+
+        cls.test_record = cls.env['mail.test.simple'].with_context(cls._test_context).create({'name': 'Test', 'email_from': 'ignasse@example.com'})
 
     @contextmanager
     def assertNotifications(self, **counters):
         """ Counters: 'partner_attribute': 'inbox' or 'email' """
         try:
-            init_messages = self.test_record.message_ids
             init = {}
             partners = self.env['res.partner']
             for partner_attribute in counters.keys():
-                partner = getattr(self, partner_attribute)
-                partners |= partner
+                partners |= getattr(self, partner_attribute)
+            init_notifs = self.env['mail.notification'].sudo().search([('res_partner_id', 'in', partners.ids)])
+            for partner in partners:
                 if partner.user_ids:
                     init[partner] = {
-                        'na_counter': self.test_record.sudo(partner.user_ids[0]).message_needaction_counter,
+                        'na_counter': len([n for n in init_notifs if n.res_partner_id == partner and not n.is_read]),
                     }
             yield
         finally:
-            new_messages = self.test_record.sudo().message_ids - init_messages
-            new_notifications = self.env['mail.notification'].search([
+            new_notifications = self.env['mail.notification'].sudo().search([
                 ('res_partner_id', 'in', partners.ids),
-                ('mail_message_id', 'in', new_messages.ids)
+                ('id', 'not in', init_notifs.ids)
             ])
+            new_messages = new_notifications.mapped('mail_message_id')
 
             for partner_attribute in counters.keys():
                 counter, notif_type, notif_read = counters[partner_attribute]
@@ -70,9 +67,12 @@ class BaseFunctionalTest(common.SavepointCase):
 
                 if partner.user_ids:
                     expected = init[partner]['na_counter'] + counter if notif_read == 'unread' else init[partner]['na_counter']
-                    self.assertEqual(expected, self.test_record.sudo(partner.user_ids[0]).message_needaction_counter,
-                                     'Invalid number of notification for %s: %s instead of %s' %
-                                     (partner.name, expected, self.test_record.sudo(partner.user_ids[0]).message_needaction_counter))
+                    real = self.env['mail.notification'].sudo().search_count([
+                        ('res_partner_id', '=', partner.id),
+                        ('is_read', '=', False)
+                    ])
+                    self.assertEqual(expected, real, 'Invalid number of notification for %s: %s instead of %s' %
+                                                     (partner.name, real, expected))
                 if partner_notif:
                     self.assertTrue(all(n.is_email == (notif_type == 'email') for n in partner_notif))
                     self.assertTrue(all(n.is_read == (notif_read == 'read') for n in partner_notif),
@@ -271,7 +271,6 @@ class Moderation(MockEmails, BaseFunctionalTest):
     def setUpClass(cls):
         super(Moderation, cls).setUpClass()
         Channel = cls.env['mail.channel']
-        Users = cls.env['res.users'].with_context(cls._quick_create_user_ctx)
 
         cls.channel_moderation_1 = Channel.create({
             'name': 'Moderation_1',
@@ -288,13 +287,7 @@ class Moderation(MockEmails, BaseFunctionalTest):
 
         cls.user_employee.write({'moderation_channel_ids': [(6, 0, [cls.channel_1.id])]})
 
-        cls.user_employee_2 = Users.create({
-            'name': 'Roboute',
-            'login': 'roboute',
-            'email': 'roboute@guilliman.com',
-            'groups_id': [(6, 0, [cls.env.ref('base.group_user').id])],
-            'moderation_channel_ids': [(6, 0, [cls.channel_2.id])]
-            })
+        cls.user_employee_2 = mail_new_test_user(cls.env, login='roboute', groups='base.group_user', moderation_channel_ids=[(6, 0, [cls.channel_2.id])])
         cls.partner_employee_2 = cls.user_employee_2.partner_id
 
         cls.channel_moderation_1.write({'channel_last_seen_partner_ids': [(0, 0, {'partner_id': cls.partner_employee.id})]})

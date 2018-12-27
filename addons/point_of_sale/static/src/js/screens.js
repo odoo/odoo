@@ -34,6 +34,7 @@ var core = require('web.core');
 var rpc = require('web.rpc');
 var utils = require('web.utils');
 var field_utils = require('web.field_utils');
+var BarcodeEvents = require('barcodes.BarcodeEvents').BarcodeEvents;
 
 var QWeb = core.qweb;
 var _t = core._t;
@@ -66,32 +67,6 @@ var ScreenWidget = PosBaseWidget.extend({
         } else {
             this.barcode_error_action(code);
         }
-    },
-
-    // what happens when a cashier id barcode is scanned.
-    // the default behavior is the following : 
-    // - if there's a user with a matching barcode, put it as the active 'cashier', go to cashier mode, and return true
-    // - else : do nothing and return false. You probably want to extend this to show and appropriate error popup... 
-    barcode_cashier_action: function(code){
-        var self = this;
-        var users = this.pos.users;
-        for(var i = 0, len = users.length; i < len; i++){
-            if(users[i].barcode === code.code){
-                if (users[i].id !== this.pos.get_cashier().id && users[i].pos_security_pin) {
-                    return this.gui.ask_password(users[i].pos_security_pin).then(function(){
-                        self.pos.set_cashier(users[i]);
-                        self.chrome.widget.username.renderElement();
-                        return true;
-                    });
-                } else {
-                    this.pos.set_cashier(users[i]);
-                    this.chrome.widget.username.renderElement();
-                    return true;
-                }
-            }
-        }
-        this.barcode_error_action(code);
-        return false;
     },
     
     // what happens when a client id barcode is scanned.
@@ -138,7 +113,6 @@ var ScreenWidget = PosBaseWidget.extend({
         }
 
         this.pos.barcode_reader.set_action_callback({
-            'cashier': _.bind(self.barcode_cashier_action, self),
             'product': _.bind(self.barcode_product_action, self),
             'weight': _.bind(self.barcode_product_action, self),
             'price': _.bind(self.barcode_product_action, self),
@@ -394,10 +368,14 @@ var NumpadWidget = PosBaseWidget.extend({
         this.$el.find('.mode-button').click(_.bind(this.clickChangeMode, this));
     },
     applyAccessRights: function() {
-        var has_price_control_rights = !this.pos.config.restrict_price_control || this.pos.get_cashier().role == 'manager';
+        var cashier = this.pos.get('cashier') || this.pos.get_cashier();
+        var has_price_control_rights = !this.pos.config.restrict_price_control || cashier.role == 'manager';
         this.$el.find('.mode-button[data-mode="price"]')
             .toggleClass('disabled-mode', !has_price_control_rights)
             .prop('disabled', !has_price_control_rights);
+        if (!has_price_control_rights && this.state.get('mode')=='price'){
+            this.state.changeMode('quantity');
+        }
     },
     clickDeleteLastChar: function() {
         return this.state.deleteLastChar();
@@ -837,7 +815,7 @@ var ProductListWidget = PosBaseWidget.extend({
         };
 
         this.keypress_product_handler = function(ev){
-            if (e.which != 13 && e.which != 32) {
+            if (ev.which != 13 && ev.which != 32) {
                 // Key is not space or enter
                 return;
             }
@@ -1284,6 +1262,9 @@ var ClientListScreenWidget = ScreenWidget.extend({
         } else {
             fields.property_product_pricelist = false;
         }
+        var contents = this.$(".client-details-contents");
+        contents.off("click", ".button.save");
+
 
         rpc.query({
                 model: 'res.partner',
@@ -1292,7 +1273,8 @@ var ClientListScreenWidget = ScreenWidget.extend({
             })
             .then(function(partner_id){
                 self.saved_client_details(partner_id);
-            },function(type,err){
+            },function(err,ev){
+                ev.preventDefault();
                 var error_body = _t('Your Internet connection is probably down.');
                 if (err.data) {
                     var except = err.data;
@@ -1302,6 +1284,7 @@ var ClientListScreenWidget = ScreenWidget.extend({
                     'title': _t('Error: Could not Save Changes'),
                     'body': error_body,
                 });
+                contents.on('click','.button.save',function(){ self.save_client_details(partner); });
             });
     },
     
@@ -1319,6 +1302,8 @@ var ClientListScreenWidget = ScreenWidget.extend({
                 // has created, and reload_partner() must have loaded the newly created partner. 
                 self.display_client_details('hide');
             }
+        }).always(function(){
+            $(".client-details-contents").on('click','.button.save',function(){ self.save_client_details(partner); });
         });
     },
 
@@ -1382,6 +1367,9 @@ var ClientListScreenWidget = ScreenWidget.extend({
     reload_partners: function(){
         var self = this;
         return this.pos.load_new_partners().then(function(){
+            // partners may have changed in the backend
+            self.partner_cache = new DomCache();
+
             self.render_list(self.pos.db.get_partners_sorted(1000));
             
             // update the currently assigned client if it has been changed in db.
@@ -1554,7 +1542,22 @@ var ReceiptScreenWidget = ScreenWidget.extend({
         };
     },
     print_web: function() {
-        window.print();
+        if ($.browser.safari) {
+            document.execCommand('print', false, null);
+        } else {
+            try {
+                window.print();
+            } catch(err) {
+                if (navigator.userAgent.toLowerCase().indexOf("android") > -1) {
+                    this.gui.show_popup('error',{
+                        'title':_t('Printing is not supported on some android browsers'),
+                        'body': _t('Printing is not supported on some android browsers due to no default printing protocol is available. It is possible to print your tickets by making use of an IoT Box.'),
+                    });
+                } else {
+                    throw err;
+                }
+            }
+        }
         this.pos.get_order()._printed = true;
     },
     print_xml: function() {
@@ -1676,6 +1679,13 @@ var PaymentScreenWidget = ScreenWidget.extend({
         // also called explicitly to handle some keydown events that
         // do not generate keypress events.
         this.keyboard_handler = function(event){
+            // On mobile Chrome BarcodeEvents relies on an invisible
+            // input being filled by a barcode device. Let events go
+            // through when this input is focused.
+            if (BarcodeEvents.$barcodeInput && BarcodeEvents.$barcodeInput.is(":focus")) {
+                return;
+            }
+
             var key = '';
 
             if (event.type === "keypress") {
@@ -2219,7 +2229,7 @@ define_action_button({
     'name': 'set_pricelist',
     'widget': set_pricelist_button,
     'condition': function(){
-        return this.pos.pricelists.length > 1;
+        return this.pos.config.use_pricelist && this.pos.pricelists.length > 1;
     },
 });
 

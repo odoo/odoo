@@ -19,7 +19,7 @@
 
         <!-- Drop Shipping-->
         <record id="route_drop_shipping" model='stock.location.route'>
-            <field name="name">Drop Shipping</field>
+            <field name="name">Dropship</field>
             <field name="sequence">3</field>
             <field name="company_id"></field>
             <field name="sale_selectable" eval="True"/>
@@ -27,8 +27,8 @@
             <field name="product_categ_selectable" eval="True"/>
         </record>
 
-        <record id="procurement_rule_drop_shipping" model="procurement.rule">
-            <field name="name">Vendor → Customer</field>
+        <record id="stock_rule_drop_shipping" model="stock.rule">
+            <field name="name">Vendor → Customer (Dropshipping)</field>
             <field name="action">buy</field>
             <field name="location_id" ref="stock.stock_location_customers"/>
             <field name="location_src_id" ref="stock.stock_location_suppliers"/>

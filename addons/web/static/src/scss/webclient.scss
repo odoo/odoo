@@ -1,7 +1,12 @@
+:root {
+    font-size: $o-root-font-size;
+}
+
 // ------------------------------------------------------------------
 //  General
 // ------------------------------------------------------------------
 .o_web_client {
+    direction: ltr;
     position: relative; // normally useless but required by bootstrap-datepicker
     background-color: $o-webclient-background-color;
 }
@@ -13,7 +18,7 @@
     width: 300px;
     max-width: 100%;
 
-    @include o-position-absolute($navbar-height, 0px);
+    @include o-position-absolute($nav-link-height, 0);
     z-index: 1100; // Bootstrap modal z-index is 1050
 
     .o_notification {
@@ -33,8 +38,8 @@
         }
 
         .o_notification_title {
-            @include o-flex-display;
-            @include o-align-items(center);
+            display: flex;
+            align-items: center;
 
             border-bottom: 1px solid rgba(0, 0, 0, 0.1);
             padding: 10px 10px 10px 20px;
@@ -68,59 +73,59 @@
 }
 
 // Boolean Toggle widget
-div.o_boolean_toggle {
-    position: relative;
+div.o_boolean_toggle.custom-control.custom-checkbox {
+    $line-height-computed: $line-height-base * $font-size-base;
+    $slider-width: $line-height-computed * 1.5;
+    $circle-width: $line-height-computed * 0.6;
+
     display: inline-block;
-    width: 32px !important;
-    height: 18px;
+    padding-left: $slider-width + 0.25rem;
 
-    > input {
-            display: none;
-        }
-
-    .slider {
-        position: absolute;
-        cursor: pointer;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: #a0a0a0;
-        border-radius: 24px;
-
-        &:before {
-            position: absolute;
+    > label.custom-control-label {
+        &::before, &::after {
             content: "";
-            height: 12px;
-            width: 12px;
-            left: 3px;
-            bottom: 3px;
-            background-color: white;
-            border-radius: 50%;
+            top: 0;
+            left: -($slider-width + 0.25rem);
+        }
+        &::before {
+            width: $slider-width;
+            height: 100%;
+            background-color: #a0a0a0 !important;
+            border-radius: 100px;
+            outline: none !important;
+        }
+        &::after {
+            transform: translate($line-height-computed * 0.2, $line-height-computed * 0.2);
+            width: ceil($circle-width / 1rem * $o-root-font-size);
+            height: ceil($circle-width / 1rem * $o-root-font-size);
+            border-radius: 100px;
+            background-color: $white;
+            cursor: pointer;
         }
     }
-
-    > input:checked + .slider {
-        background-color: $o-brand-optional;
-
-        &:before {
-            @include translate(14px, 0px);
+    > input.custom-control-input:checked + label.custom-control-label {
+        &::before {
+            background-color: $o-brand-primary !important;
+        }
+        &::after {
+            transform: translate($slider-width - $circle-width - $line-height-computed * 0.2, $line-height-computed * 0.2);
+            background-image: none;
         }
     }
 }
 
 // Full bg colors (bootstrap extension)
 .bg-success-full {
-    background-color: $brand-success;
+    background-color: theme-color('success');
 }
 .bg-warning-full {
-    background-color: $brand-warning;
+    background-color: theme-color('warning');
 }
 .bg-danger-full {
-    background-color: $brand-danger;
+    background-color: theme-color('danger');
 }
 .bg-info-full {
-    background-color: $brand-info;
+    background-color: theme-color('info');
 }
 
 .o_web_accesskey_overlay {
@@ -144,35 +149,30 @@ div.o_boolean_toggle {
 .text-it {
     font-style: italic;
 }
-.text-muted {
-    color: lighten($text-muted, 10%);
-}
 
 //== Badges
 .badge {
     margin: 1px 2px 1px 0;
-    padding-top: 0;
-    padding-bottom: 0;
 }
 
 // Btn-link variations
 .btn-link {
     font-weight: $btn-font-weight;
 
-    &.btn-default {
-        @include o-btn-link-variant($text-color, $headings-color);
+    &.btn-secondary {
+        @include o-btn-link-variant($body-color, $headings-color);
     }
     &.btn-success, &.text-success {
-        @include o-btn-link-variant($text-color, $brand-success);
+        @include o-btn-link-variant($body-color, theme-color('success'));
     }
     &.btn-warning, &.text-warning {
-        @include o-btn-link-variant($text-color, $brand-warning);
+        @include o-btn-link-variant($body-color, theme-color('warning'));
     }
     &.btn-danger, &.text-danger {
-        @include o-btn-link-variant($text-color, $brand-danger);
+        @include o-btn-link-variant($body-color, theme-color('danger'));
     }
     &.btn-info, &.text-info {
-        @include o-btn-link-variant($text-color, darken($brand-info, 20%));
+        @include o-btn-link-variant($body-color, darken(theme-color('info'), 20%));
     }
 }
 

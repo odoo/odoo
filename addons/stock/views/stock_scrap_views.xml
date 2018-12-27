@@ -82,20 +82,20 @@
                         <t t-name="kanban-box">
                             <div class="oe_kanban_global_click">
                                 <div class="row mb4">
-                                    <strong class="col-xs-6">
+                                    <strong class="col-6">
                                         <span t-esc="record.name.value"/>
                                     </strong>
-                                    <strong t-if="record.date_expected.value" class="col-xs-6 text-right">
+                                    <strong t-if="record.date_expected.value" class="col-6 text-right">
                                         <i class="fa fa-clock-o" role="img" aria-label="Expected date" title="Expected date"/><span t-esc="record.date_expected.value"/>
                                     </strong>
-                                    <div class="col-xs-12">
+                                    <div class="col-12">
                                         <span t-esc="record.product_id.value"/>
                                     </div>
-                                    <div class="col-xs-6">
+                                    <div class="col-6">
                                         <span t-esc="record.scrap_qty.value"/>
                                     </div>
-                                    <div class="col-xs-6">
-                                        <span class="pull-right label label-default">
+                                    <div class="col-6">
+                                        <span class="float-right badge badge-secondary">
                                             <field name="state"/>
                                         </span>
                                     </div>
@@ -167,7 +167,7 @@
                     </group>
                     <footer>
                         <button name="action_validate" string="Done" type="object" class="btn-primary"/>
-                        <button string="Cancel" class="btn-default" special="cancel" />
+                        <button string="Cancel" class="btn-secondary" special="cancel" />
                     </footer>
                 </form>
             </field>

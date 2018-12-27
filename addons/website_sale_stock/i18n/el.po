@@ -3,16 +3,16 @@
 # * website_sale_stock
 # 
 # Translators:
-# Kostas Goutoudis <goutoudis@gmail.com>, 2017
-# George Tarasidis <george_tarasidis@yahoo.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2018
+# Kostas Goutoudis <goutoudis@gmail.com>, 2018
+# George Tarasidis <george_tarasidis@yahoo.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:26+0000\n"
-"PO-Revision-Date: 2017-10-02 11:26+0000\n"
-"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
+"POT-Creation-Date: 2018-09-21 13:18+0000\n"
+"PO-Revision-Date: 2018-09-21 13:18+0000\n"
+"Last-Translator: George Tarasidis <george_tarasidis@yahoo.com>, 2018\n"
 "Language-Team: Greek (https://www.transifex.com/odoo/teams/41243/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,88 +21,61 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_sale_stock
-#: model:ir.ui.view,arch_db:website_sale_stock.portal_order_page_shipping
-msgid ""
-"<span class=\"label label-danger label-text-align\"><i class=\"fa fa-fw fa-"
-"times\"/> Cancelled</span>"
-msgstr ""
-
-#. module: website_sale_stock
-#: model:ir.ui.view,arch_db:website_sale_stock.portal_order_page_shipping
-msgid ""
-"<span class=\"label label-info label-text-align\"><i class=\"fa fa-fw fa-"
-"clock-o\"/> Preparation</span>"
-msgstr ""
-"<span class=\"label label-info label-text-align\"><i class=\"fa fa-fw fa-"
-"clock-o\"/> Προετοιμασία</span>"
-
-#. module: website_sale_stock
-#: model:ir.ui.view,arch_db:website_sale_stock.portal_order_page_shipping
-msgid ""
-"<span class=\"label label-success label-text-align\"><i class=\"fa fa-fw fa-"
-"truck\"/> Shipped</span>"
-msgstr ""
-"<span class=\"label label-success label-text-align\"><i class=\"fa fa-fw fa-"
-"truck\"/> Έχει Αποσταλεί</span>"
-
-#. module: website_sale_stock
-#: model:ir.ui.view,arch_db:website_sale_stock.portal_order_page_shipping
-msgid ""
-"<span class=\"label label-warning label-text-align\"><i class=\"fa fa-fw fa-"
-"clock-o\"/> Partially Available</span>"
-msgstr ""
-
-#. module: website_sale_stock
-#: model:ir.ui.view,arch_db:website_sale_stock.portal_order_page_shipping
-msgid "<strong>Delivery Orders</strong>"
-msgstr "<strong>Εντολές Παράδοσης</strong>"
-
-#. module: website_sale_stock
-#: model:ir.ui.view,arch_db:website_sale_stock.website_sale_stock_cart_lines
-#: model:ir.ui.view,arch_db:website_sale_stock.website_sale_stock_payment
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.website_sale_stock_cart_lines
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.website_sale_stock_payment
 msgid "<strong>Warning!</strong>"
 msgstr ""
 
 #. module: website_sale_stock
-#: model:ir.model.fields,help:website_sale_stock.field_product_product_inventory_availability
-#: model:ir.model.fields,help:website_sale_stock.field_product_template_inventory_availability
+#: model:ir.model.fields,help:website_sale_stock.field_product_product__inventory_availability
+#: model:ir.model.fields,help:website_sale_stock.field_product_template__inventory_availability
 msgid "Adds an inventory availability status on the web product page."
 msgstr ""
 "Προσθέτει μία κατάσταση διαθεσιμότητας αποθέματος στη σελίδα του είδους στον"
 " ιστότοπο."
 
 #. module: website_sale_stock
-#: model:ir.model.fields,field_description:website_sale_stock.field_product_product_available_threshold
-#: model:ir.model.fields,field_description:website_sale_stock.field_product_template_available_threshold
-#: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings_available_threshold
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
+msgid "Availability"
+msgstr "Διαθεσιμότητα"
+
+#. module: website_sale_stock
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_product__available_threshold
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_template__available_threshold
+#: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__available_threshold
 msgid "Availability Threshold"
 msgstr ""
 
 #. module: website_sale_stock
-#: model:ir.model.fields,field_description:website_sale_stock.field_product_product_cart_qty
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_product__cart_qty
 msgid "Cart Qty"
 msgstr ""
 
 #. module: website_sale_stock
-#: model:ir.model.fields,field_description:website_sale_stock.field_product_product_custom_message
-#: model:ir.model.fields,field_description:website_sale_stock.field_product_template_custom_message
+#: model:ir.model,name:website_sale_stock.model_res_config_settings
+msgid "Config Settings"
+msgstr ""
+
+#. module: website_sale_stock
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_product__custom_message
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_template__custom_message
 msgid "Custom Message"
 msgstr ""
 
 #. module: website_sale_stock
-#: model:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
-msgid "Default Availability Mode"
-msgstr "Προεπιλεγμένη Διαθεσιμότητα"
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
+msgid "Default Mode"
+msgstr ""
 
 #. module: website_sale_stock
-#: model:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid ""
-"Default availability mode set on newly created stockable products. This can "
+"Default availability mode set on newly created storable products. This can "
 "be changed at the product level."
 msgstr ""
 
 #. module: website_sale_stock
-#: model:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "Default threshold"
 msgstr ""
 
@@ -114,18 +87,19 @@ msgid "In stock"
 msgstr "Σε απόθεμα"
 
 #. module: website_sale_stock
-#: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings_inventory_availability
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "Inventory"
 msgstr "Αποθήκη"
 
 #. module: website_sale_stock
-#: model:ir.model.fields,field_description:website_sale_stock.field_product_product_inventory_availability
-#: model:ir.model.fields,field_description:website_sale_stock.field_product_template_inventory_availability
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_product__inventory_availability
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_template__inventory_availability
+#: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__inventory_availability
 msgid "Inventory Availability"
 msgstr "Διαθεσιμότητα Αποθέματος"
 
 #. module: website_sale_stock
-#: model:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid ""
 "Manage the inventory of your products and display their availability status "
 "on the website."
@@ -139,12 +113,12 @@ msgstr "Είδος"
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_product_template
 msgid "Product Template"
-msgstr "Πρότυπο Είδους"
+msgstr "Πρότυπο Είδους "
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_sale_order
-msgid "Quotation"
-msgstr "Προσφορά"
+msgid "Sale Order"
+msgstr "Παραγγελία"
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_sale_order_line
@@ -180,7 +154,7 @@ msgid "Show product-specific notifications"
 msgstr "Εμφάνιση ειδικών ειδοποιήσεων για το είδος"
 
 #. module: website_sale_stock
-#: code:addons/website_sale_stock/models/sale_order.py:28
+#: code:addons/website_sale_stock/models/sale_order.py:30
 #, python-format
 msgid ""
 "Some products became unavailable and your cart has been updated. We're sorry"
@@ -195,15 +169,32 @@ msgid "Temporarily out of stock"
 msgstr ""
 
 #. module: website_sale_stock
-#: model:ir.model.fields,field_description:website_sale_stock.field_sale_order_line_warning_stock
-#: model:ir.model.fields,field_description:website_sale_stock.field_sale_order_warning_stock
+#: model:ir.model,name:website_sale_stock.model_stock_picking
+msgid "Transfer"
+msgstr "Μεταφορά"
+
+#. module: website_sale_stock
+#. openerp-web
+#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:13
+#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:22
+#: model:ir.model.fields,field_description:website_sale_stock.field_sale_order__warning_stock
+#: model:ir.model.fields,field_description:website_sale_stock.field_sale_order_line__warning_stock
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.website_sale_stock_cart_lines
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.website_sale_stock_payment
+#, python-format
 msgid "Warning"
 msgstr "Προσοχή"
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_website
+#: model:ir.model.fields,field_description:website_sale_stock.field_stock_picking__website_id
 msgid "Website"
 msgstr "Ιστότοπος"
+
+#. module: website_sale_stock
+#: model:ir.model.fields,help:website_sale_stock.field_stock_picking__website_id
+msgid "Website this picking belongs to."
+msgstr ""
 
 #. module: website_sale_stock
 #. openerp-web
@@ -213,7 +204,7 @@ msgid "You already added"
 msgstr ""
 
 #. module: website_sale_stock
-#: code:addons/website_sale_stock/models/sale_order.py:26
+#: code:addons/website_sale_stock/models/sale_order.py:27
 #, python-format
 msgid "You ask for %s products but only %s is available"
 msgstr ""
@@ -239,8 +230,3 @@ msgstr ""
 #, python-format
 msgid "in your cart."
 msgstr ""
-
-#. module: website_sale_stock
-#: model:ir.model,name:website_sale_stock.model_res_config_settings
-msgid "res.config.settings"
-msgstr "res.config.settings"

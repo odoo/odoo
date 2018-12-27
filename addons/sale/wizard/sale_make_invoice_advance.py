@@ -21,11 +21,11 @@ class SaleAdvancePaymentInv(models.TransientModel):
         if self._count() == 1:
             sale_obj = self.env['sale.order']
             order = sale_obj.browse(self._context.get('active_ids'))[0]
-            if all([line.product_id.invoice_policy == 'order' for line in order.order_line]) or order.invoice_count:
+            if order.order_line.filtered(lambda dp: dp.is_downpayment) and order.invoice_ids.filtered(lambda invoice: invoice.state != 'cancel') or order.order_line.filtered(lambda l: l.qty_to_invoice < 0):
                 return 'all'
-        else:
-            return 'all'
-        return 'delivered'
+            else:
+                return 'delivered'
+        return 'all'
 
     @api.model
     def _default_product_id(self):
@@ -93,7 +93,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
             tax_ids = taxes.ids
 
         invoice = inv_obj.create({
-            'name': order.client_order_ref or order.name,
+            'name': order.client_order_ref,
             'origin': order.name,
             'type': 'out_invoice',
             'reference': False,
@@ -162,7 +162,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
                 for line in order.order_line:
                     analytic_tag_ids = [(4, analytic_tag.id, None) for analytic_tag in line.analytic_tag_ids]
                 so_line = sale_line_obj.create({
-                    'name': _('Advance: %s') % (time.strftime('%m %Y'),),
+                    'name': _('Down Payment: %s') % (time.strftime('%m %Y'),),
                     'price_unit': amount,
                     'product_uom_qty': 0.0,
                     'order_id': order.id,

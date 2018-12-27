@@ -7,6 +7,7 @@ odoo.define('web.KanbanModel', function (require) {
  */
 
 var BasicModel = require('web.BasicModel');
+var viewUtils = require('web.viewUtils');
 
 var KanbanModel = BasicModel.extend({
 
@@ -105,7 +106,8 @@ var KanbanModel = BasicModel.extend({
         var group = this.localData[groupID];
         var context = this._getContext(group);
         var parent = this.localData[group.parentID];
-        context['default_' + parent.groupedBy[0]] = group.res_id;
+        var groupedBy = parent.groupedBy;
+        context['default_' + groupedBy] = viewUtils.getGroupValue(group, groupedBy);
         var def;
         if (Object.keys(values).length === 1 && 'display_name' in values) {
             // only 'display_name is given, perform a 'name_create'
@@ -132,10 +134,10 @@ var KanbanModel = BasicModel.extend({
     },
     /**
      * Add the following (kanban specific) keys when performing a `get`:
-     * 
-     *  - tooltipData
-     *  - progressBarValues
-     *  - isGroupedByM2ONoColumn
+     *
+     * - tooltipData
+     * - progressBarValues
+     * - isGroupedByM2ONoColumn
      *
      * @override
      * @see _readTooltipFields
@@ -272,6 +274,9 @@ var KanbanModel = BasicModel.extend({
             options.groupBy = this.defaultGroupedBy;
         }
         var def = this._super(id, options);
+        if (options && options.loadMoreOffset) {
+            return def;
+        }
         return this._reloadProgressBarGroupFromRecord(id, def);
     },
     /**
@@ -300,7 +305,7 @@ var KanbanModel = BasicModel.extend({
      * @override
      */
     _load: function (dataPoint, options) {
-        if (dataPoint.progressBar) {
+        if (dataPoint.groupedBy.length && dataPoint.progressBar) {
             return this._readProgressBarGroup(dataPoint, options);
         }
         return this._super.apply(this, arguments);

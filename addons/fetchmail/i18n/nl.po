@@ -3,18 +3,14 @@
 # * fetchmail
 # 
 # Translators:
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
-# Stephan Van Dyck <stephan.vandyck@vanroey.be>, 2016
-# Martin Trigaux, 2016
-# Eric Geens <ericgeens@yahoo.com>, 2016
-# Cas Vissers <casvissers@brahoo.nl>, 2016
+# Martin Trigaux, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
-"Last-Translator: Cas Vissers <casvissers@brahoo.nl>, 2016\n"
+"POT-Creation-Date: 2018-09-18 09:49+0000\n"
+"PO-Revision-Date: 2018-09-18 09:49+0000\n"
+"Last-Translator: Martin Trigaux, 2018\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,7 +19,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Actions to Perform on Incoming Mails"
 msgstr "Uit te voeren acties op inkomende e-mails"
 
@@ -33,18 +29,18 @@ msgid "Active"
 msgstr "Actief"
 
 #. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Advanced"
 msgstr "Geavanceerd"
 
 #. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Advanced Options"
 msgstr "Geavanceerde opties"
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__configuration
-#: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Configuration"
 msgstr "Instellingen"
 
@@ -54,7 +50,7 @@ msgid "Confirmed"
 msgstr "Bevestigd"
 
 #. module: fetchmail
-#: code:addons/fetchmail/models/fetchmail.py:137
+#: code:addons/fetchmail/models/fetchmail.py:136
 #, python-format
 msgid "Connection test failed: %s"
 msgstr "Connectie test niet geslaagd: %s"
@@ -95,12 +91,12 @@ msgid "Display Name"
 msgstr "Schermnaam"
 
 #. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.view_email_server_tree
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_tree
 msgid "Email Count"
-msgstr ""
+msgstr "E-mail teller"
 
 #. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Fetch Now"
 msgstr "Nu ophalen"
 
@@ -115,7 +111,7 @@ msgid "ID"
 msgstr "ID"
 
 #. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_search
 msgid "IMAP"
 msgstr "IMAP"
 
@@ -125,7 +121,7 @@ msgid "IMAP Server"
 msgstr "IMAP server"
 
 #. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_search
 msgid "If SSL required."
 msgstr "Indien SSL verplicht."
 
@@ -135,13 +131,13 @@ msgid "Inbound Mail Server"
 msgstr "Inkomende mailserver"
 
 #. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:fetchmail.res_config_settings_view_form
 msgid "Incoming Email Servers"
 msgstr "Inkomende e-mailservers"
 
 #. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
-#: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_form
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_search
 msgid "Incoming Mail Server"
 msgstr "Inkomende mailserver"
 
@@ -187,7 +183,7 @@ msgid "Local Server"
 msgstr "Lokale server"
 
 #. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Login Information"
 msgstr "Login informatie"
 
@@ -215,16 +211,7 @@ msgid "Not Confirmed"
 msgstr "Niet bevestigd"
 
 #. module: fetchmail
-#: model:ir.model.fields,help:fetchmail.field_fetchmail_server__action_id
-msgid ""
-"Optional custom server action to trigger for each incoming mail, on the "
-"record that was created or updated by this mail"
-msgstr ""
-"Optioneel op maat gemaakte serveractie-trigger voor elke inkomende e-mail, "
-"op de regel welke is gemaakt of bijgewerkt door deze e-mail."
-
-#. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:fetchmail.res_config_settings_view_form
 msgid "Outgoing Email Servers"
 msgstr "Uitgaande e-mailservers"
 
@@ -234,7 +221,7 @@ msgid "Outgoing Mails"
 msgstr "Uitgaande e-mails"
 
 #. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_search
 msgid "POP"
 msgstr "POP"
 
@@ -249,7 +236,7 @@ msgid "POP/IMAP Server"
 msgstr "POP/IMAP Server"
 
 #. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.view_email_server_tree
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_tree
 msgid "POP/IMAP Servers"
 msgstr "POP/IMAP Servers"
 
@@ -276,12 +263,12 @@ msgstr ""
 "(documenten)."
 
 #. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Reset Confirmation"
 msgstr "Reset bevestiging"
 
 #. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_search
 msgid "SSL"
 msgstr "SSL"
 
@@ -296,22 +283,17 @@ msgid "Script"
 msgstr "Script"
 
 #. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_search
 msgid "Search Incoming Mail Servers"
 msgstr "Zoek inkomende mailservers"
 
 #. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Server & Login"
 msgstr "Server & Login"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__action_id
-msgid "Server Action"
-msgstr "Server-actie"
-
-#. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Server Information"
 msgstr "Serverinformatie"
 
@@ -331,12 +313,12 @@ msgid "Server Type"
 msgstr "Soort server"
 
 #. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_search
 msgid "Server type IMAP."
 msgstr "Server soort IMAP."
 
 #. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_search
 msgid "Server type POP."
 msgstr "Server soort POP."
 
@@ -346,7 +328,7 @@ msgid "Status"
 msgstr "Status"
 
 #. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Test & Confirm"
 msgstr "Test & Bevestig"
 

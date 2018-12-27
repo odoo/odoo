@@ -6,15 +6,18 @@ var tour = require('web_tour.tour');
 
 var _t = core._t;
 
-tour.register('hr_expense_tour' ,
-{
+tour.register('hr_expense_tour' , {
     url: "/web"
-},
-[tour.STEPS.MENU_MORE,
-{
-    trigger: '.o_app[data-menu-xmlid="hr_expense.menu_hr_expense_root"], .oe_menu_toggler[data-menu-xmlid="hr_expense.menu_hr_expense_root"]',
+}, [tour.STEPS.SHOW_APPS_MENU_ITEM, {
+    trigger: '.o_app[data-menu-xmlid="hr_expense.menu_hr_expense_root"]',
+    content: _t("Want to manage your expenses? It starts here."),
+    position: 'right',
+    edition: 'community'
+}, {
+    trigger: '.o_app[data-menu-xmlid="hr_expense.menu_hr_expense_root"]',
     content: _t("Want to manage your expenses? It starts here."),
     position: 'bottom',
+    edition: 'enterprise'
 }, {
     trigger: '.o_form_button_save',
     content: _t("<p>Once your <b> Expense </b> is ready, you can save it.</p>"),
@@ -29,7 +32,7 @@ tour.register('hr_expense_tour' ,
     content: _t('<p>Click on <b> Create Report </b> to create the report.</p>'),
     position: 'right',
 }, {
-    trigger: '.o_expense_tree .o_checkbox > input[type=checkbox]',
+    trigger: '.o_expense_tree input[type=checkbox]',
     content: _t('<p>Select expenses to submit them to your manager</p>'),
     position: 'bottom'
 }, {

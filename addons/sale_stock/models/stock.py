@@ -36,28 +36,34 @@ class StockMove(models.Model):
         #rslt += invoices.mapped('refund_invoice_ids')
         return rslt
 
+    def _assign_picking_post_process(self, new=False):
+        super(StockMove, self)._assign_picking_post_process(new=new)
+        if new and self.sale_line_id and self.sale_line_id.order_id:
+            self.picking_id.message_post_with_view(
+                'mail.message_origin_link',
+                values={'self': self.picking_id, 'origin': self.sale_line_id.order_id},
+                subtype_id=self.env.ref('mail.mt_note').id)
+
+
 class ProcurementGroup(models.Model):
     _inherit = 'procurement.group'
 
     sale_id = fields.Many2one('sale.order', 'Sale Order')
 
 
-class ProcurementRule(models.Model):
-    _inherit = 'procurement.rule'
+class StockRule(models.Model):
+    _inherit = 'stock.rule'
 
-    def _get_stock_move_values(self, product_id, product_qty, product_uom, location_id, name, origin, values, group_id):
-        result = super(ProcurementRule, self)._get_stock_move_values(product_id, product_qty, product_uom, location_id, name, origin, values, group_id)
-        if values.get('sale_line_id', False):
-            result['sale_line_id'] = values['sale_line_id']
-        if values.get('partner_dest_id'):
-            result['partner_id'] = values['partner_dest_id'].id
-        return result
+    def _get_custom_move_fields(self):
+        fields = super(StockRule, self)._get_custom_move_fields()
+        fields += ['sale_line_id', 'partner_id']
+        return fields
 
 
 class StockPicking(models.Model):
     _inherit = 'stock.picking'
 
-    sale_id = fields.Many2one(related="group_id.sale_id", string="Sales Order", store=True)
+    sale_id = fields.Many2one(related="group_id.sale_id", string="Sales Order", store=True, readonly=False)
 
 
     def _log_less_quantities_than_expected(self, moves):
@@ -101,3 +107,26 @@ class StockPicking(models.Model):
         self._log_activity(_render_note_exception_quantity, documents)
 
         return super(StockPicking, self)._log_less_quantities_than_expected(moves)
+
+class ProductionLot(models.Model):
+    _inherit = 'stock.production.lot'
+
+    sale_order_ids = fields.Many2many('sale.order', string="Sales Orders", compute='_compute_sale_order_ids')
+    sale_order_count = fields.Integer('Sale order count', compute='_compute_sale_order_ids')
+
+    @api.depends('name')
+    def _compute_sale_order_ids(self):
+        for lot in self:
+            stock_moves = self.env['stock.move.line'].search([
+                ('lot_id', '=', lot.id),
+                ('state', '=', 'done')
+            ]).mapped('move_id').filtered(
+                lambda move: move.picking_id.location_dest_id.usage == 'customer' and move.state == 'done')
+            lot.sale_order_ids = stock_moves.mapped('sale_line_id.order_id')
+            lot.sale_order_count = len(lot.sale_order_ids)
+
+    def action_view_so(self):
+        self.ensure_one()
+        action = self.env.ref('sale.action_orders').read()[0]
+        action['domain'] = [('id', 'in', self.mapped('sale_order_ids.id'))]
+        return action

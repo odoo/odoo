@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-09-21 13:17+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -26,20 +26,25 @@ msgid "Analytic Lines"
 msgstr ""
 
 #. module: project_timesheet_holidays
+#: code:addons/project_timesheet_holidays/models/hr_holidays.py:38
+#, python-format
+msgid "Both the internal project and task are required to generate timesheet for the leaves."
+msgstr ""
+
+#. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_res_company
 msgid "Companies"
+msgstr ""
+
+#. module: project_timesheet_holidays
+#: model:ir.model,name:project_timesheet_holidays.model_res_config_settings
+msgid "Config Settings"
 msgstr ""
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,help:project_timesheet_holidays.field_res_company__leave_timesheet_project_id
 #: model:ir.model.fields,help:project_timesheet_holidays.field_res_config_settings__leave_timesheet_project_id
 msgid "Default project value for timesheet generated from leave type."
-msgstr ""
-
-#. module: project_timesheet_holidays
-#: code:addons/project_timesheet_holidays/models/hr_holidays.py:38
-#, python-format
-msgid "For the leaves to generate timesheet, the internal project and task are requried."
 msgstr ""
 
 #. module: project_timesheet_holidays
@@ -94,12 +99,12 @@ msgid "Leaves"
 msgstr ""
 
 #. module: project_timesheet_holidays
-#: model:ir.ui.view,arch_db:project_timesheet_holidays.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:project_timesheet_holidays.res_config_settings_view_form
 msgid "Project"
 msgstr ""
 
 #. module: project_timesheet_holidays
-#: model:ir.ui.view,arch_db:project_timesheet_holidays.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:project_timesheet_holidays.res_config_settings_view_form
 msgid "Task"
 msgstr ""
 
@@ -109,18 +114,8 @@ msgid "The project will contain the timesheet generated when a leave is validate
 msgstr ""
 
 #. module: project_timesheet_holidays
-#: model:ir.ui.view,arch_db:project_timesheet_holidays.hr_holiday_status_view_form_inherit
-msgid "Timesheet"
-msgstr ""
-
-#. module: project_timesheet_holidays
 #: code:addons/project_timesheet_holidays/models/account_analytic.py:16
 #, python-format
 msgid "You cannot delete timesheet lines attached to a leaves. Please cancel the leaves instead."
-msgstr ""
-
-#. module: project_timesheet_holidays
-#: model:ir.model,name:project_timesheet_holidays.model_res_config_settings
-msgid "res.config.settings"
 msgstr ""
 

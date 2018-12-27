@@ -3,7 +3,7 @@
 
 #
 # Order Point Method:
-#    - Order if the virtual stock of today is bellow the min of the defined order point
+#    - Order if the virtual stock of today is below the min of the defined order point
 #
 
 from odoo import api, models, tools

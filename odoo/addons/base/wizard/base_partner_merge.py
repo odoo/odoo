@@ -17,6 +17,7 @@ _logger = logging.getLogger('base.partner.merge')
 class MergePartnerLine(models.TransientModel):
 
     _name = 'base.partner.merge.line'
+    _description = 'Merge Partner Line'
     _order = 'min_id asc'
 
     wizard_id = fields.Many2one('base.partner.merge.automatic.wizard', 'Wizard')
@@ -32,6 +33,7 @@ class MergePartnerAutomatic(models.TransientModel):
     """
 
     _name = 'base.partner.merge.automatic.wizard'
+    _description = 'Merge Partner Wizard'
 
     @api.model
     def default_get(self, fields):
@@ -256,7 +258,7 @@ class MergePartnerAutomatic(models.TransientModel):
             :param extra_checks: pass False to bypass extra sanity check (e.g. email address)
         """
         # super-admin can be used to bypass extra checks
-        if self.env.uid == SUPERUSER_ID:
+        if self.env.user._is_admin():
             extra_checks = False
 
         Partner = self.env['res.partner']

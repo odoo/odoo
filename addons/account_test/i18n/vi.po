@@ -3,19 +3,16 @@
 # * account_test
 # 
 # Translators:
-# lam nguyen <lamev.inc@gmail.com>, 2017
-# fanha99 <fanha99@hotmail.com>, 2017
-# son dang <son.dang@doda100.com>, 2017
-# Hoang Loc Le Huu <loclhh@gmail.com>, 2017
-# Phạm Lân <phamquanglan@gmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# thanh nguyen <thanhnguyen.icsc@gmail.com>, 2018
+# Martin Trigaux, 2018
+# fanha99 <fanha99@hotmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-09-21 13:17+0000\n"
+"Last-Translator: fanha99 <fanha99@hotmail.com>, 2018\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,15 +21,25 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: account_test
-#: model:ir.ui.view,arch_db:account_test.report_accounttest
+#: model_terms:ir.ui.view,arch_db:account_test.report_accounttest
 msgid ""
 "<br/>\n"
 "                        <strong>Description:</strong>"
 msgstr ""
 
 #. module: account_test
-#: model:ir.ui.view,arch_db:account_test.report_accounttest
+#: model_terms:ir.ui.view,arch_db:account_test.report_accounttest
 msgid "<strong>Name:</strong>"
+msgstr ""
+
+#. module: account_test
+#: model:ir.model,name:account_test.model_report_account_test_report_accounttest
+msgid "Account Test Report"
+msgstr ""
+
+#. module: account_test
+#: model:ir.model,name:account_test.model_accounting_assert_test
+msgid "Accounting Assert Test"
 msgstr ""
 
 #. module: account_test
@@ -43,12 +50,12 @@ msgid "Accounting Tests"
 msgstr ""
 
 #. module: account_test
-#: model:ir.ui.view,arch_db:account_test.report_accounttest
+#: model_terms:ir.ui.view,arch_db:account_test.report_accounttest
 msgid "Accouting tests on"
 msgstr ""
 
 #. module: account_test
-#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_active
+#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__active
 msgid "Active"
 msgstr "Có hiệu lực"
 
@@ -89,17 +96,12 @@ msgid "Check the balance: Debit sum = Credit sum"
 msgstr ""
 
 #. module: account_test
-#: model:ir.actions.act_window,help:account_test.action_accounting_assert
-msgid "Click to create Accounting Test."
-msgstr ""
-
-#. module: account_test
-#: model:ir.ui.view,arch_db:account_test.account_assert_form
+#: model_terms:ir.ui.view,arch_db:account_test.account_assert_form
 msgid "Code Help"
 msgstr ""
 
 #. module: account_test
-#: model:ir.ui.view,arch_db:account_test.account_assert_form
+#: model_terms:ir.ui.view,arch_db:account_test.account_assert_form
 msgid ""
 "Code should always set a variable named `result` with the result of your test, that can be a list or\n"
 "a dictionary. If `result` is an empty list, it means that the test was succesful. Otherwise it will\n"
@@ -124,65 +126,70 @@ msgid ""
 msgstr ""
 
 #. module: account_test
-#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_create_uid
+#: model_terms:ir.actions.act_window,help:account_test.action_accounting_assert
+msgid "Create a new accounting test"
+msgstr ""
+
+#. module: account_test
+#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__create_uid
 msgid "Created by"
 msgstr "Được tạo bởi"
 
 #. module: account_test
-#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_create_date
+#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__create_date
 msgid "Created on"
 msgstr "Thời điểm tạo"
 
 #. module: account_test
-#: model:ir.ui.view,arch_db:account_test.account_assert_form
+#: model_terms:ir.ui.view,arch_db:account_test.account_assert_form
 msgid "Description"
 msgstr "Miêu tả"
 
 #. module: account_test
-#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_display_name
-#: model:ir.model.fields,field_description:account_test.field_report_account_test_report_accounttest_display_name
+#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__display_name
+#: model:ir.model.fields,field_description:account_test.field_report_account_test_report_accounttest__display_name
 msgid "Display Name"
 msgstr "Tên hiển thị"
 
 #. module: account_test
-#: model:ir.ui.view,arch_db:account_test.account_assert_form
+#: model_terms:ir.ui.view,arch_db:account_test.account_assert_form
 msgid "Expression"
 msgstr "Biểu thức"
 
 #. module: account_test
-#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_id
-#: model:ir.model.fields,field_description:account_test.field_report_account_test_report_accounttest_id
+#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__id
+#: model:ir.model.fields,field_description:account_test.field_report_account_test_report_accounttest__id
 msgid "ID"
 msgstr "ID"
 
 #. module: account_test
-#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test___last_update
-#: model:ir.model.fields,field_description:account_test.field_report_account_test_report_accounttest___last_update
+#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test____last_update
+#: model:ir.model.fields,field_description:account_test.field_report_account_test_report_accounttest____last_update
 msgid "Last Modified on"
 msgstr "Sửa lần cuối vào"
 
 #. module: account_test
-#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_write_uid
+#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__write_uid
 msgid "Last Updated by"
 msgstr "Cập nhật lần cuối bởi"
 
 #. module: account_test
-#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_write_date
+#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__write_date
 msgid "Last Updated on"
 msgstr "Cập nhật lần cuối vào"
 
 #. module: account_test
-#: model:ir.ui.view,arch_db:account_test.account_assert_form
+#: model_terms:ir.ui.view,arch_db:account_test.account_assert_form
 msgid "Python Code"
 msgstr "Mã Python"
 
 #. module: account_test
-#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_code_exec
+#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__code_exec
 msgid "Python code"
 msgstr "Mã Python"
 
 #. module: account_test
-#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_sequence
+#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__sequence
 msgid "Sequence"
 msgstr "Trình tự"
 
@@ -218,33 +225,23 @@ msgid "Test 7 : Closing balance on bank statements"
 msgstr ""
 
 #. module: account_test
-#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_desc
+#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__desc
 msgid "Test Description"
 msgstr ""
 
 #. module: account_test
-#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_name
+#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__name
 msgid "Test Name"
 msgstr ""
 
 #. module: account_test
-#: model:ir.ui.view,arch_db:account_test.account_assert_form
-#: model:ir.ui.view,arch_db:account_test.account_assert_tree
+#: model_terms:ir.ui.view,arch_db:account_test.account_assert_form
+#: model_terms:ir.ui.view,arch_db:account_test.account_assert_tree
 msgid "Tests"
 msgstr "Tests"
 
 #. module: account_test
-#: code:addons/account_test/report/report_account_test.py:52
+#: code:addons/account_test/report/report_account_test.py:53
 #, python-format
 msgid "The test was passed successfully"
-msgstr ""
-
-#. module: account_test
-#: model:ir.model,name:account_test.model_accounting_assert_test
-msgid "accounting.assert.test"
-msgstr ""
-
-#. module: account_test
-#: model:ir.model,name:account_test.model_report_account_test_report_accounttest
-msgid "report.account_test.report_accounttest"
 msgstr ""

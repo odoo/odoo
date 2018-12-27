@@ -4,7 +4,6 @@
         <record id="demo_invoice_1" model="account.invoice">
             <field name="partner_id" ref="base.res_partner_12"/>
             <field name="user_id" ref="base.user_demo"/>
-            <field name="reference_type">none</field>
             <field name="payment_term_id" ref="account.account_payment_term"/>
             <field name="type">out_invoice</field>
             <field name="date_invoice" eval="time.strftime('%Y-%m')+'-01'"/>
@@ -86,7 +85,6 @@
         <record id="demo_invoice_followup" model="account.invoice">
             <field name="partner_id" ref="base.res_partner_2"/>
             <field name="user_id" ref="base.user_demo"/>
-            <field name="reference_type">none</field>
             <field name="payment_term_id" ref="account.account_payment_term_immediate"/>
             <field name="type">out_invoice</field>
             <field name="date_invoice" eval="(datetime.today() + timedelta(days=-15)).strftime('%Y-%m-%d')"/>
@@ -115,7 +113,6 @@
         <record id="demo_invoice_0" model="account.invoice">
             <field name="partner_id" ref="base.res_partner_12"/>
             <field name="user_id" ref="base.user_demo"/>
-            <field name="reference_type">none</field>
             <field name="payment_term_id" ref="account.account_payment_term"/>
             <field name="type">in_invoice</field>
             <field name="journal_id" search="[('type', '=', 'purchase')]"/>
@@ -136,6 +133,25 @@
             <field name="account_id" model="account.invoice.line" eval="obj().env.ref('product.product_order_01').categ_id.property_account_income_categ_id.id"/>
             <field name="price_unit">4.0</field>
             <field name="quantity">5.0</field>
+        </record>
+        <record id="demo_invoice_extract" model="account.invoice">
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="type">in_invoice</field>
+        </record>
+        <record id="ir_attachment_in_invoice_draft" model="ir.attachment">
+            <field name="name">in_invoice_pdf</field>
+            <field name="type">binary</field>
+            <field name="datas" type="base64" file="l10n_generic_coa/static/src/demo/in_invoice_yourcompany_demo.pdf"/>
+            <field name="datas_fname">in_invoice_yourcompany_demo.pdf</field>
+        </record>
+        <record id="mail_message_in_invoice_0" model="mail.message">
+            <field name="model">account.invoice</field>
+            <field name="res_id" ref="l10n_generic_coa.demo_invoice_extract"/>
+            <field name="body">Vendor Bill attachment</field>
+            <field name="message_type">comment</field>
+            <field name="author_id" ref="base.partner_demo"/>
+            <field name="date" eval="(DateTime.today() - timedelta(days=5)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="attachment_ids" eval="[(6, 0, [ref('ir_attachment_in_invoice_draft')])]"/>
         </record>
 
         <record id="demo_invoice_january_wages" model="account.invoice">
@@ -168,6 +184,7 @@
         <record id="coffee_machine_line" model="account.invoice.line">
             <field name="invoice_id" ref="demo_invoice_equipment_purchase"/>
             <field name="name">Coffee Machine with huge 'employee\'s performances boosting perk'</field>
+            <field name="product_id" ref="product.product_product_6"/>
             <field name="price_unit">4999.99</field>
             <field name="account_id" model="account.account"
                 search="['|', ('tag_ids', '=', ref('account.demo_coffee_machine_account')),

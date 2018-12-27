@@ -136,31 +136,11 @@ var BasicRenderer = AbstractRenderer.extend({
             dom.setSelectionRange(field.getFocusableElement().get(0), {start: offset, end: offset});
         }
     },
+
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
-    /**
-     * Add a tooltip on a $node, depending on a field description
-     *
-     * @param {FieldWidget} widget
-     * @param {$node} $node
-     */
-    _addFieldTooltip: function (widget, $node) {
-        // optional argument $node, the jQuery element on which the tooltip
-        // should be attached if not given, the tooltip is attached on the
-        // widget's $el
-        $node = $node.length ? $node : widget.$el;
-        $node.tooltip({
-            delay: { show: 1000, hide: 0 },
-            title: function () {
-                return qweb.render('WidgetLabel.tooltip', {
-                    debug: config.debug,
-                    widget: widget,
-                });
-            }
-        });
-    },
     /**
      * Activates the widget at the given index for the given record if possible
      * or the "next" possible one. Usually, a widget can be activated if it is
@@ -169,9 +149,10 @@ var BasicRenderer = AbstractRenderer.extend({
      * @private
      * @param {Object} record
      * @param {integer} currentIndex
-     * @param {Object} [options]
+     * @param {Object} [options={}]
      * @param {integer} [options.inc=1] - the increment to use when searching for the
      *   "next" possible one
+     * @param {boolean} [options.noAutomaticCreate=false]
      * @param {boolean} [options.wrap=false] if true, when we arrive at the end of the
      *   list of widget, we wrap around and try to activate widgets starting at
      *   the beginning. Otherwise, we just stop trying and return -1
@@ -185,7 +166,11 @@ var BasicRenderer = AbstractRenderer.extend({
 
         var recordWidgets = this.allFieldWidgets[record.id] || [];
         for (var i = 0 ; i < recordWidgets.length ; i++) {
-            var activated = recordWidgets[currentIndex].activate({event: options.event});
+            var activated = recordWidgets[currentIndex].activate(
+                {
+                    event: options.event,
+                    noAutomaticCreate: options.noAutomaticCreate || false
+                });
             if (activated) {
                 return currentIndex;
             }
@@ -214,11 +199,12 @@ var BasicRenderer = AbstractRenderer.extend({
      * @private
      * @param {Object} record
      * @param {integer} currentIndex
+     * @param {Object|undefined} options
      * @return {integer}
      */
-    _activateNextFieldWidget: function (record, currentIndex) {
+    _activateNextFieldWidget: function (record, currentIndex, options) {
         currentIndex = (currentIndex + 1) % (this.allFieldWidgets[record.id] || []).length;
-        return this._activateFieldWidget(record, currentIndex, {inc: 1});
+        return this._activateFieldWidget(record, currentIndex, _.extend({inc: 1}, options));
     },
     /**
      * This is a wrapper of the {@see _activateFieldWidget} function to select
@@ -232,6 +218,26 @@ var BasicRenderer = AbstractRenderer.extend({
     _activatePreviousFieldWidget: function (record, currentIndex) {
         currentIndex = currentIndex ? (currentIndex - 1) : ((this.allFieldWidgets[record.id] || []).length - 1);
         return this._activateFieldWidget(record, currentIndex, {inc:-1});
+    },
+    /**
+     * Add a tooltip on a $node, depending on a field description
+     *
+     * @param {FieldWidget} widget
+     * @param {$node} $node
+     */
+    _addFieldTooltip: function (widget, $node) {
+        // optional argument $node, the jQuery element on which the tooltip
+        // should be attached if not given, the tooltip is attached on the
+        // widget's $el
+        $node = $node.length ? $node : widget.$el;
+        $node.tooltip({
+            title: function () {
+                return qweb.render('WidgetLabel.tooltip', {
+                    debug: config.debug,
+                    widget: widget,
+                });
+            }
+        });
     },
     /**
      * Does the necessary DOM updates to match the given modifiers data. The
@@ -512,35 +518,6 @@ var BasicRenderer = AbstractRenderer.extend({
         });
     },
     /**
-     * Renders a button according to a given node element.
-     *
-     * @private
-     * @param {Object} node
-     * @param {Object} [options]
-     * @param {string} [options.extraClass]
-     * @param {boolean} [options.textAsTitle=false]
-     * @returns {jQuery}
-     */
-    _renderButtonFromNode: function (node, options) {
-        var btnOptions = {
-            attrs: _.omit(node.attrs, 'icon', 'string', 'type', 'attrs', 'modifiers', 'options'),
-            icon: node.attrs.icon,
-        };
-        if (options && options.extraClass) {
-            var classes = btnOptions.attrs.class ? btnOptions.attrs.class.split(' ') : [];
-            btnOptions.attrs.class = _.uniq(classes.concat(options.extraClass.split(' '))).join(' ');
-        }
-        var str = (node.attrs.string || '').replace(/_/g, '');
-        if (str) {
-            if (options && options.textAsTitle) {
-                btnOptions.attrs.title = str;
-            } else {
-                btnOptions.text = str;
-            }
-        }
-        return dom.renderButton(btnOptions);
-    },
-    /**
      * Instantiates the appropriate AbstractField specialization for the given
      * node and prepares its rendering and addition to the DOM. Indeed, the
      * rendering of the widget will be started and the associated deferred will
@@ -680,7 +657,6 @@ var BasicRenderer = AbstractRenderer.extend({
 
         return $el;
     },
-
     /**
      * Rerenders a given widget and make sure the associated data which
      * referenced the old one is updated.

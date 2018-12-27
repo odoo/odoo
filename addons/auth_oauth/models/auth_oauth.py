@@ -18,6 +18,6 @@ class AuthOAuthProvider(models.Model):
     validation_endpoint = fields.Char(string='Validation URL', required=True)  # OAuth provider URL to validate tokens
     data_endpoint = fields.Char(string='Data URL')
     enabled = fields.Boolean(string='Allowed')
-    css_class = fields.Char(string='CSS class', default='zocial')
+    css_class = fields.Char(string='CSS class', default='fa fa-fw fa-sign-in text-primary')
     body = fields.Char(required=True)
     sequence = fields.Integer()

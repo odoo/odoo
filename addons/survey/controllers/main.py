@@ -15,7 +15,6 @@ _logger = logging.getLogger(__name__)
 
 
 class Survey(http.Controller):
-    # HELPER METHODS #
 
     def _check_bad_cases(self, survey, token=None):
         # In case of bad survey, redirect to surveys list
@@ -49,22 +48,26 @@ class Survey(http.Controller):
                 return request.render("survey.notopen")
         return None
 
-    ## ROUTES HANDLERS ##
+    @http.route('/survey/test/<model("survey.survey"):survey>', type='http', auth='user', website=True)
+    def survey_test(self, survey, token=None):
+        """ Test mode for surveys: create a test answer, only for managers or officers
+        testing their surveys """
+        if request.env.user.has_group('survey.group_survey_manager') or \
+                request.env.user.has_group('survey.group_survey_user') and survey.create_uid == request.env.user:
+            user_input = request.env['survey.user_input'].create({
+                'survey_id': survey.id,
+                'test_entry': True
+            })
+            return request.redirect('/survey/start/%s/%s' % (survey.id, user_input.token))
+        return werkzeug.utils.redirect('/')
 
-    # Survey start
     @http.route(['/survey/start/<model("survey.survey"):survey>',
                  '/survey/start/<model("survey.survey"):survey>/<string:token>'],
                 type='http', auth='public', website=True)
-    def start_survey(self, survey, token=None, **post):
+    def survey_start(self, survey, token=None, **post):
+        """ Start a survey by providing a token linked to an answer or generate
+        a new token if access is allowed """
         UserInput = request.env['survey.user_input']
-
-        # Test mode
-        if token and token == "phantom":
-            _logger.info("[survey] Phantom mode")
-            user_input = UserInput.create({'survey_id': survey.id, 'test_entry': True})
-            data = {'survey': survey, 'page': None, 'token': user_input.token}
-            return request.render('survey.survey_init', data)
-        # END Test mode
 
         # Controls if the survey can be displayed
         errpage = self._check_bad_cases(survey, token=token)
@@ -166,16 +169,16 @@ class Survey(http.Controller):
                 answer_value = None
                 if answer.answer_type == 'free_text':
                     answer_value = answer.value_free_text
-                elif answer.answer_type == 'text' and answer.question_id.type == 'textbox':
+                elif answer.answer_type == 'text' and answer.question_id.question_type == 'textbox':
                     answer_value = answer.value_text
-                elif answer.answer_type == 'text' and answer.question_id.type != 'textbox':
+                elif answer.answer_type == 'text' and answer.question_id.question_type != 'textbox':
                     # here come comment answers for matrices, simple choice and multiple choice
                     answer_tag = "%s_%s" % (answer_tag, 'comment')
                     answer_value = answer.value_text
                 elif answer.answer_type == 'number':
                     answer_value = str(answer.value_number)
                 elif answer.answer_type == 'date':
-                    answer_value = answer.value_date
+                    answer_value = fields.Date.to_string(answer.value_date)
                 elif answer.answer_type == 'suggestion' and not answer.value_suggested_row:
                     answer_value = answer.value_suggested.id
                 elif answer.answer_type == 'suggestion' and answer.value_suggested_row:
@@ -185,7 +188,7 @@ class Survey(http.Controller):
                     ret.setdefault(answer_tag, []).append(answer_value)
                 else:
                     _logger.warning("[survey] No answer has been found for question %s marked as non skipped" % answer_tag)
-        return json.dumps(ret)
+        return json.dumps(ret, default=str)
 
     # AJAX scores loading for quiz correction mode
     @http.route(['/survey/scores/<model("survey.survey"):survey>/<string:token>'],
@@ -225,7 +228,7 @@ class Survey(http.Controller):
                 user_input = request.env['survey.user_input'].sudo().search([('token', '=', post['token'])], limit=1)
             except KeyError:  # Invalid token
                 return request.render("survey.403", {'survey': survey})
-            user_id = request.env.user.id if user_input.type != 'link' else SUPERUSER_ID
+            user_id = request.env.user.id if user_input.input_type != 'link' else SUPERUSER_ID
 
             for question in questions:
                 answer_tag = "%s_%s_%s" % (survey.id, page_id, question.id)
@@ -363,13 +366,13 @@ class Survey(http.Controller):
         current_filters = current_filters if current_filters else []
         Survey = request.env['survey.survey']
         result = []
-        if question.type == 'multiple_choice':
+        if question.question_type == 'multiple_choice':
             result.append({'key': ustr(question.question),
                            'values': Survey.prepare_result(question, current_filters)['answers']
                            })
-        if question.type == 'simple_choice':
+        if question.question_type == 'simple_choice':
             result = Survey.prepare_result(question, current_filters)['answers']
-        if question.type == 'matrix':
+        if question.question_type == 'matrix':
             data = Survey.prepare_result(question, current_filters)
             for answer in data['answers']:
                 values = []

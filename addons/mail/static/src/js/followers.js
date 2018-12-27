@@ -19,7 +19,7 @@ var Followers = AbstractField.extend({
         // click on '(Un)Follow' button, that toggles the follow for uid
         'click .o_followers_follow_button': '_onFollowButtonClicked',
         // click on a subtype, that (un)subscribes for this subtype
-        'click .o_subtypes_list input': '_onSubtypeClicked',
+        'click .o_subtypes_list .custom-checkbox': '_onSubtypeClicked',
         // click on 'invite' button, that opens the invite wizard
         'click .o_add_follower': '_onAddFollower',
         'click .o_add_follower_channel': '_onAddChannel',
@@ -28,7 +28,9 @@ var Followers = AbstractField.extend({
         'click .o_remove_follower': '_onRemoveFollower',
         'click .o_mail_redirect': '_onRedirect',
     },
-    supportedFieldTypes: ['one2many'],
+    // this widget only supports one2many but is not generic enough to claim
+    // that it supports all one2many fields
+    // supportedFieldTypes: ['one2many'],
 
     // inherited
     init: function (parent, name, record, options) {
@@ -93,6 +95,7 @@ var Followers = AbstractField.extend({
             this.$('.o_subtypes_list > .dropdown-toggle').attr('disabled', true);
             this.$('.o_followers_actions .dropdown-toggle').removeClass('o_followers_following');
         }
+        this.$('button.o_followers_follow_button').attr("aria-pressed", this.is_follower);
     },
     _displayGeneric: function () {
         // only display the number of followers (e.g. if read failed)
@@ -119,7 +122,7 @@ var Followers = AbstractField.extend({
             // On mouse-enter it will show the edit_subtype pencil.
             if (record.is_editable) {
                 $follower_li.on('mouseenter mouseleave', function (e) {
-                    $(e.currentTarget).find('.o_edit_subtype').toggleClass('hide', e.type === 'mouseleave');
+                    $(e.currentTarget).find('.o_edit_subtype').toggleClass('d-none', e.type === 'mouseleave');
                 });
             }
         });
@@ -135,9 +138,9 @@ var Followers = AbstractField.extend({
         var old_parent_model;
         var $list;
         if (dialog) {
-            $list = $('<ul>').appendTo(this.dialog.$el);
+            $list = $('<div>').appendTo(this.dialog.$el);
         } else {
-            $list = this.$('.o_subtypes_list ul');
+            $list = this.$('.o_subtypes_list .dropdown-menu');
         }
         $list.empty();
 
@@ -145,7 +148,7 @@ var Followers = AbstractField.extend({
 
         _.each(data, function (record) {
             if (old_parent_model !== record.parent_model && old_parent_model !== undefined) {
-                $list.append($('<li>').addClass('divider'));
+                $list.append($('<div>', {class: 'dropdown-divider'}));
             }
             old_parent_model = record.parent_model;
             record.followed = record.followed || undefined;
@@ -203,7 +206,9 @@ var Followers = AbstractField.extend({
         return $.when(def).then(function (results) {
             if (results) {
                 self.followers = _.uniq(results.followers.concat(self.followers), 'id');
-                self.subtypes = results.subtypes;
+                if (results.subtypes) { //read_followers will return False if current user is not in the list
+                    self.subtypes = results.subtypes;
+                }
             }
             // filter out previously fetched followers that are no longer following
             self.followers = _.filter(self.followers, function (follower) {
@@ -286,10 +291,19 @@ var Followers = AbstractField.extend({
         // If no more subtype followed, unsubscribe the follower
         if (!checklist.length) {
             this._unfollow(ids).fail(function () {
-                $(event.target).prop('checked', true);
+                $(event.currentTarget).find('input').addBack('input').prop('checked', true);
             });
         } else {
             var kwargs = _.extend({}, ids);
+            if (followerID === undefined || followerID === this.partnerID) {
+                //this.subtypes will only be updated if the current user
+                //just added himself to the followers. We need to update
+                //the subtypes manually when editing subtypes
+                //for current user
+                _.each(this.subtypes, function (subtype) {
+                    subtype.followed = checklist.indexOf(subtype.id) > -1;
+                });
+            }
             kwargs.subtype_ids = checklist;
             kwargs.context = {}; // FIXME
             this._rpc({
@@ -408,11 +422,11 @@ var Followers = AbstractField.extend({
         ev.stopPropagation();
         this._updateSubscription(ev);
         var $list = this.$('.o_subtypes_list');
-        if (!$list.hasClass('open')) {
-            $list.addClass('open');
+        if (!$list.hasClass('show')) {
+            $list.addClass('show');
         }
-        if (this.$('.o_subtypes_list ul')[0].children.length < 1) {
-            $list.removeClass('open');
+        if (this.$('.o_subtypes_list .dropdown-menu')[0].children.length < 1) {
+            $list.removeClass('show');
         }
     },
 });

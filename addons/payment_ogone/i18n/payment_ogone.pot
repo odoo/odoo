@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-09-21 13:17+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -38,38 +38,63 @@ msgid "API User Password"
 msgstr ""
 
 #. module: payment_ogone
+#: selection:payment.acquirer,provider:0
+msgid "Adyen"
+msgstr ""
+
+#. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer__ogone_alias_usage
 msgid "Alias Usage"
 msgstr ""
 
 #. module: payment_ogone
-#: model:ir.ui.view,arch_db:payment_ogone.ogone_s2s_form
+#: selection:payment.acquirer,provider:0
+msgid "Authorize.Net"
+msgstr ""
+
+#. module: payment_ogone
+#: selection:payment.acquirer,provider:0
+msgid "Buckaroo"
+msgstr ""
+
+#. module: payment_ogone
+#: model_terms:ir.ui.view,arch_db:payment_ogone.ogone_s2s_form
 msgid "CVC"
 msgstr ""
 
 #. module: payment_ogone
-#: model:ir.ui.view,arch_db:payment_ogone.ogone_s2s_form
+#: model_terms:ir.ui.view,arch_db:payment_ogone.ogone_s2s_form
 msgid "Card number"
 msgstr ""
 
 #. module: payment_ogone
-#: model:ir.ui.view,arch_db:payment_ogone.ogone_s2s_form
+#: model_terms:ir.ui.view,arch_db:payment_ogone.ogone_s2s_form
 msgid "Cardholder name"
 msgstr ""
 
 #. module: payment_ogone
-#: model:ir.ui.view,arch_db:payment_ogone.ogone_s2s_form
+#: model_terms:ir.ui.view,arch_db:payment_ogone.ogone_s2s_form
 msgid "Expires (MM / YY)"
 msgstr ""
 
 #. module: payment_ogone
-#: model:ir.ui.view,arch_db:payment_ogone.acquirer_form_ogone
+#: model_terms:ir.ui.view,arch_db:payment_ogone.acquirer_form_ogone
 msgid "How to configure your Ogone account?"
 msgstr ""
 
 #. module: payment_ogone
 #: model:ir.model.fields,help:payment_ogone.field_payment_acquirer__ogone_alias_usage
 msgid "If you want to use Ogone Aliases, this default Alias Usage will be presented to the customer as the reason you want to keep his payment data"
+msgstr ""
+
+#. module: payment_ogone
+#: selection:payment.acquirer,provider:0
+msgid "Manual Configuration"
+msgstr ""
+
+#. module: payment_ogone
+#: selection:payment.acquirer,provider:0
+msgid "Ogone"
 msgstr ""
 
 #. module: payment_ogone
@@ -96,13 +121,33 @@ msgid "PSPID"
 msgstr ""
 
 #. module: payment_ogone
+#: selection:payment.acquirer,provider:0
+msgid "PayUmoney"
+msgstr ""
+
+#. module: payment_ogone
 #: model:ir.model,name:payment_ogone.model_payment_acquirer
 msgid "Payment Acquirer"
 msgstr ""
 
 #. module: payment_ogone
+#: model:ir.model,name:payment_ogone.model_payment_token
+msgid "Payment Token"
+msgstr ""
+
+#. module: payment_ogone
 #: model:ir.model,name:payment_ogone.model_payment_transaction
 msgid "Payment Transaction"
+msgstr ""
+
+#. module: payment_ogone
+#: selection:payment.acquirer,provider:0
+msgid "Paypal"
+msgstr ""
+
+#. module: payment_ogone
+#: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer__provider
+msgid "Provider"
 msgstr ""
 
 #. module: payment_ogone
@@ -116,7 +161,17 @@ msgid "SHA Key OUT"
 msgstr ""
 
 #. module: payment_ogone
-#: model:ir.model,name:payment_ogone.model_payment_token
-msgid "payment.token"
+#: selection:payment.acquirer,provider:0
+msgid "Sips"
+msgstr ""
+
+#. module: payment_ogone
+#: selection:payment.acquirer,provider:0
+msgid "Stripe"
+msgstr ""
+
+#. module: payment_ogone
+#: selection:payment.acquirer,provider:0
+msgid "Wire Transfer"
 msgstr ""
 

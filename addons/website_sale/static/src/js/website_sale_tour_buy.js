@@ -36,7 +36,11 @@ tour.register('shop_buy_product', {
         {
             content: "click on add to cart",
             extra_trigger: 'label:contains(Steel) input:propChecked',
-            trigger: '#product_detail form[action^="/shop/cart/update"] .btn',
+            trigger: '#product_detail form[action^="/shop/cart/update"] .btn-primary',
+        },
+        {
+            content: "click in modal on 'Proceed to checkout' button",
+            trigger: 'button:contains("Proceed to Checkout")',
         },
         {
             content: "add suggested",
@@ -76,7 +80,7 @@ tour.register('shop_buy_product', {
         },
         {
             content: "finish",
-            trigger: '.oe_website_sale:contains("Thank you for your order")',
+            trigger: '.oe_website_sale:contains("Pending... The order will be validated after the payment.")',
             timeout: 30000,
         }
     ]

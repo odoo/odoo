@@ -1,14 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 from odoo.addons.stock.tests.common import TestStockCommon
-from odoo.exceptions import UserError
 
 
 class TestReplenishWizard(TestStockCommon):
     def setUp(self):
         super(TestReplenishWizard, self).setUp()
-        self.vendor = self.env['res.partner'].search([('supplier', '=', True)], limit=1)
+        self.vendor = self.env['res.partner'].create(dict(name='The Replenisher', supplier=True))
         self.product1_price = 500
 
         # Create a supplier info witch the previous vendor
@@ -31,7 +29,6 @@ class TestReplenishWizard(TestStockCommon):
         self.uom_unit = self.env.ref('uom.product_uom_unit')
         self.wh = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
 
-
     def test_replenish_buy_1(self):
         """ Set a quantity to replenish via the "Buy" route and check if
         a purchase order is created with the correct values
@@ -45,15 +42,13 @@ class TestReplenishWizard(TestStockCommon):
             'quantity': self.product_uom_qty,
             'warehouse_id': self.wh.id,
         })
-
         replenish_wizard.launch_replenishment()
         last_po_id = self.env['purchase.order'].search([
-            ('origin', '=', 'Manual Replenishment'),
-            ('partner_id','=', self.vendor.id)
-            ])[-1]
+            ('origin', 'ilike', '%Manual Replenishment%'),
+            ('partner_id', '=', self.vendor.id)
+        ])[-1]
         self.assertTrue(last_po_id, 'Purchase Order not found')
-        order_line = last_po_id.order_line.search([('product_id','=', self.product1.id)])
-        self.assertTrue(order_line,'The product is not in the Purchase Order')
+        order_line = last_po_id.order_line.search([('product_id', '=', self.product1.id)])
+        self.assertTrue(order_line, 'The product is not in the Purchase Order')
         self.assertEqual(order_line.product_qty, self.product_uom_qty, 'Quantities does not match')
         self.assertEqual(order_line.price_unit, self.product1_price, 'Prices does not match')
-

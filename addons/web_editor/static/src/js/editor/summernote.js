@@ -958,17 +958,60 @@ range.WrappedRange.prototype.isContentEditable = function () {
 
 renderer.tplButtonInfo.fontsize = function (lang, options) {
     var items = options.fontSizes.reduce(function (memo, v) {
-        return memo + '<li><a data-event="fontSize" href="#" data-value="' + v + '">' +
+        return memo + '<a data-event="fontSize" href="#" class="dropdown-item" data-value="' + v + '">' +
                   '<i class="fa fa-check"></i> ' + v +
-                '</a></li>';
+                '</a>';
     }, '');
 
     var sLabel = '<span class="note-current-fontsize">11</span>';
     return renderer.getTemplate().button(sLabel, {
         title: lang.font.size,
-        dropdown: '<ul class="dropdown-menu">' + items + '</ul>'
+        dropdown: '<div class="dropdown-menu">' + items + '</div>'
     });
 };
+
+renderer.tplButtonInfo.color = function (lang, options) {
+    var foreColorButtonLabel = '<i class="' + options.iconPrefix + options.icons.color.recent + '"></i>';
+    var backColorButtonLabel = '<i class="' + options.iconPrefix + 'paint-brush"></i>';
+    // TODO Remove recent color button if possible.
+    // It is still put to avoid JS errors when clicking other buttons as the
+    // editor still expects it to exist.
+    var recentColorButton = renderer.getTemplate().button(foreColorButtonLabel, {
+        className: 'note-recent-color d-none',
+        title: lang.color.foreground,
+        event: 'color',
+        value: '{"backColor":"#B35E9B"}'
+    });
+    var foreColorItems = [
+        '<li><div class="btn-group flex-column">',
+        '<div class="note-color-palette" data-target-event="foreColor"></div>',
+        '<h6 class="note-custom-color mt8" data-event="customColor" data-value="foreColor" title="' + lang.color.custom + '">',
+        lang.color.custom + '</h6>',
+        '<div class="note-custom-color-palette" data-target-event="foreColor"></div>',
+        '</div></li>',
+    ];
+    var backColorItems = [
+        '<li><div class="btn-group flex-column">',
+        '<div class="note-color-reset" data-event="backColor" data-value="inherit" title="' + lang.color.transparent + '">',
+        lang.color.setTransparent + '</div>',
+        '<div class="note-color-palette" data-target-event="backColor"></div>',
+        '<h6 class="note-custom-color mt8" data-event="customColor" data-value="backColor" title="' + lang.color.custom + '">',
+        lang.color.custom + '</h6>',
+        '<div class="note-custom-color-palette" data-target-event="backColor"></div>',
+        '</div></li>',
+    ];
+    var foreColorButton = renderer.getTemplate().button(foreColorButtonLabel, {
+        className: 'note-fore-color-preview mx-1',
+        title: lang.color.foreground,
+        dropdown: renderer.getTemplate().dropdown(foreColorItems)
+    });
+    var backColorButton = renderer.getTemplate().button(backColorButtonLabel, {
+        className: 'note-back-color-preview mx-1',
+        title: lang.color.background,
+        dropdown: renderer.getTemplate().dropdown(backColorItems)
+    });
+    return recentColorButton + foreColorButton + backColorButton;
+},
 
 //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
@@ -990,7 +1033,7 @@ options.keyMap.mac['ESCAPE'] = 'cancel';
 options.keyMap.mac['UP'] = 'up';
 options.keyMap.mac['DOWN'] = 'down';
 
-options.styleTags = ['p', 'pre', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'blockquote'];
+options.styleTags = ['p', 'pre', 'small', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'blockquote'];
 
 $.summernote.pluginEvents.insertTable = function (event, editor, layoutInfo, sDim) {
   var $editable = layoutInfo.editable();
@@ -1077,7 +1120,14 @@ $.summernote.pluginEvents.untab = function (event, editor, layoutInfo) {
 $.summernote.pluginEvents.up = function (event, editor, layoutInfo) {
     var r = range.create();
     var node = dom.firstChild(r.sc.childNodes[r.so] || r.sc);
-    if (!r.isOnCell() || (!dom.isCell(node) && dom.hasContentBefore(node) && (!dom.isBR(dom.hasContentBefore(node)) || !dom.isText(node) || dom.isVisibleText(node) || dom.hasContentBefore(dom.hasContentBefore(node))))) {
+    if (!r.isOnCell()) {
+        return;
+    }
+    // check if an ancestor between node and cell has content before
+    var ancestor = dom.ancestor(node, function (ancestorNode) {
+        return dom.hasContentBefore(ancestorNode) || dom.isCell(ancestorNode);
+    });
+    if (!dom.isCell(ancestor) && (!dom.isBR(dom.hasContentBefore(ancestor)) || !dom.isText(node) || dom.isVisibleText(node) || dom.hasContentBefore(dom.hasContentBefore(ancestor)))) {
         return;
     }
     event.preventDefault();
@@ -1094,7 +1144,14 @@ $.summernote.pluginEvents.up = function (event, editor, layoutInfo) {
 $.summernote.pluginEvents.down = function (event, editor, layoutInfo) {
     var r = range.create();
     var node = dom.firstChild(r.sc.childNodes[r.so] || r.sc);
-    if (!r.isOnCell() || (!dom.isCell(node) && dom.hasContentAfter(node) && (!dom.isBR(dom.hasContentAfter(node)) || !dom.isText(node) || dom.isVisibleText(node) || dom.hasContentAfter(dom.hasContentAfter(node))))) {
+    if (!r.isOnCell()) {
+        return;
+    }
+    // check if an ancestor between node and cell has content after
+    var ancestor = dom.ancestor(node, function (ancestorNode) {
+        return dom.hasContentAfter(ancestorNode) || dom.isCell(ancestorNode);
+    });
+    if (!dom.isCell(ancestor) && (!dom.isBR(dom.hasContentAfter(ancestor)) || !dom.isText(node) || dom.isVisibleText(node) || dom.hasContentAfter(dom.hasContentAfter(ancestor)))) {
         return;
     }
     event.preventDefault();
@@ -1879,6 +1936,15 @@ $.summernote.pluginEvents.formatBlock = function (event, editor, layoutInfo, sTa
     if (!r) {
         return;
     }
+    // select content since container (that firefox selects) may be removed
+    if (r.so === 0) {
+        r.sc = dom.firstChild(r.sc);
+    }
+    if (dom.nodeLength(r.ec) >= r.eo) {
+        r.ec = dom.lastChild(r.ec);
+        r.eo = dom.nodeLength(r.ec);
+    }
+    r = range.create(r.sc, r.so, r.ec, r.eo);
     r.reRange().select();
 
     if (sTagName === "blockquote" || sTagName === "pre") {
@@ -1892,6 +1958,10 @@ $.summernote.pluginEvents.formatBlock = function (event, editor, layoutInfo, sTa
     for (var i=0; i<nodes.length; i++) {
         if (dom.isBR(nodes[i]) || (dom.isText(nodes[i]) && dom.isVisibleText(nodes[i])) || dom.isB(nodes[i]) || dom.isU(nodes[i]) || dom.isS(nodes[i]) || dom.isI(nodes[i]) || dom.isFont(nodes[i])) {
             var ancestor = dom.ancestor(nodes[i], isFormatNode);
+            if ($(ancestor).parent().is('blockquote')) {
+                // firefox may wrap formatting block in blockquote
+                $(ancestor).unwrap();
+            }
             if (!ancestor) {
                 dom.wrap(nodes[i], sTagName);
             } else if (ancestor.tagName.toLowerCase() !== sTagName) {
@@ -1922,65 +1992,21 @@ $.summernote.pluginEvents.removeFormat = function (event, editor, layoutInfo, va
     event.preventDefault();
     return false;
 };
-var fn_boutton_updateRecentColor = eventHandler.modules.toolbar.button.updateRecentColor;
-eventHandler.modules.toolbar.button.updateRecentColor = function (elBtn, sEvent, sValue) {
-    fn_boutton_updateRecentColor.call(this, elBtn, sEvent, sValue);
-    var $recentcolor = $.find('.note-recent-color i');
-    var $recentcolorbtn = $.find('.note-recent-color');
-
-    //find last used color for fonts or for icons
-    //set this color into recentcolor button of both font and icon
-    for (var i in $recentcolor) {
-        var $font = $recentcolor[i];
-        var $button = $($recentcolorbtn[i]);
-        var className = $font.className.split(/\s+/);
-        var k;
-        if (sEvent === "foreColor") {
-            //set class for forecolor to recentcolor button font-icon
-            for (k=2; k<className.length; k++) {
-                if (className[k].length && className[k].slice(0,5) === "text-") {
-                  className.splice(k,1);
-                  k--;
-                }
-            }
-            if (sValue.indexOf('text-') !== -1) {
-                $font.className = className.join(' ') + ' ' + sValue;
-                $font.style.color = '';
-            } else {
-                $font.className = $font.className.replace(/(^|\s+)text-\S+/, '');
-                $font.style.color = sValue !== 'inherit' ? sValue : "";
-            }
-        } else {
-            //set class for backcolor to recentcolor button font-icon
-            for (k=2; k<className.length; k++) {
-                if (className[k].length && className[k].slice(0,3) === "bg-") {
-                  className.splice(k,1);
-                  k--;
-                }
-            }
-            if (sValue.indexOf('bg-') !== -1) {
-                $font.className =className.join(' ') + ' ' + sValue;
-                $font.style.backgroundColor = "";
-            } else {
-                $font.className = $font.className.replace(/(^|\s+)bg-\S+/, '');
-                $font.style.backgroundColor = sValue !== 'inherit' ? sValue : "";
-            }
-        }
-        if (sValue !== 'inherit') {
-            //set attribute for color to the recentcolor button
-            var colorInfo = JSON.parse($button.attr('data-value'));
-            colorInfo[sEvent] = sValue;
-            $button.attr('data-value', JSON.stringify(colorInfo));
-        }
-    }
-    return false;
-};
 
 eventHandler.modules.editor.undo = function ($popover) {
     if (!$popover.attr('disabled')) $popover.data('NoteHistory').undo();
 };
 eventHandler.modules.editor.redo = function ($popover) {
     if (!$popover.attr('disabled'))  $popover.data('NoteHistory').redo();
+};
+
+// Get color and background color of node to update recent color button
+var fn_from_node = eventHandler.modules.editor.style.fromNode;
+eventHandler.modules.editor.style.fromNode = function ($node) {
+    var styleInfo = fn_from_node.apply(this, arguments);
+    styleInfo['color'] = $node.css('color');
+    styleInfo['background-color'] = $node.css('background-color');
+    return styleInfo;
 };
 
 // use image toolbar if current range is on image
@@ -2259,7 +2285,8 @@ options.onCreateLink = function (sLinkUrl) {
       // pass
     } else if (sLinkUrl.indexOf('@') !== -1 && sLinkUrl.indexOf(':') === -1) {
       sLinkUrl =  'mailto:' + sLinkUrl;
-    } else if (sLinkUrl.indexOf('://') === -1 && sLinkUrl.indexOf('/') !== 0 && sLinkUrl.indexOf('#') !== 0) {
+    } else if (sLinkUrl.indexOf('://') === -1 && sLinkUrl[0] !== '/'
+               && sLinkUrl[0] !== '#' && sLinkUrl.slice(0, 2) !== '${') {
       sLinkUrl = 'http://' + sLinkUrl;
     }
     return sLinkUrl;

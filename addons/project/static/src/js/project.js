@@ -62,7 +62,7 @@ KanbanRecord.include({
             var $imgs = $content.find('.o_kanban_task_cover_image');
             var dialog = new Dialog(self, {
                 title: _t("Set a Cover Image"),
-                buttons: [{text: _t("Select"), classes: attachment_ids.length ? 'btn-primary' : 'hidden', close: true, disabled: !coverID, click: function () {
+                buttons: [{text: _t("Select"), classes: attachment_ids.length ? 'btn-primary' : 'd-none', close: true, disabled: !coverID, click: function () {
                     var $img = $imgs.filter('.o_selected').find('img');
                     var data = {
                         id: $img.data('id'),
@@ -71,7 +71,7 @@ KanbanRecord.include({
                     self._updateRecord({displayed_image_id: data});
                 }}, {text: _t('Upload and Set'), classes: attachment_ids.length ? '' : 'btn-primary', close: false, click: function () {
                     $content.find('input.o_input_file').click();
-                }}, {text: _t("Remove Cover Image"), classes: coverID ? '' : 'hidden', close: true, click: function () {
+                }}, {text: _t("Remove Cover Image"), classes: coverID ? '' : 'd-none', close: true, click: function () {
                     self._updateRecord({displayed_image_id: false});
                 }}, {text: _t("Discard"), close: true}],
                 $content: $content,

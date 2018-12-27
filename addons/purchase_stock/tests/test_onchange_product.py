@@ -2,6 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime
+
+from odoo import fields
 from odoo.tests.common import TransactionCase
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
@@ -71,3 +73,25 @@ class TestOnchangeProductId(TransactionCase):
         po_line = po.order_line[0]
         po_line.onchange_product_id()
         self.assertEquals(100, po_line.price_unit, "The included tax must be subtracted to the price")
+
+        supplierinfo.write({'min_qty': 24})
+        po_line.write({'product_qty': 20})
+        po_line._onchange_quantity()
+        self.assertEquals(0, po_line.price_unit, "Unit price should be reset to 0 since the supplier supplies minimum of 24 quantities")
+
+        po_line.write({'product_qty': 3, 'product_uom': self.ref("uom.product_uom_dozen")})
+        po_line._onchange_quantity()
+        self.assertEquals(1200, po_line.price_unit, "Unit price should be 1200 for one Dozen")
+
+        product_ipad = self.env.ref('product.product_product_4')
+        po_line2 = self.po_line_model.create({
+            'name': product_ipad.name,
+            'product_id': product_ipad.id,
+            'order_id': po.id,
+            'product_qty': 5,
+            'product_uom': uom_id.id,
+            'price_unit': 100.0,
+            'date_planned': fields.Date().today()
+        })
+        po_line2.onchange_product_id()
+        self.assertEquals(0, po_line2.price_unit, "No vendor supplies this product, hence unit price should be set to 0")

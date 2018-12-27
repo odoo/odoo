@@ -3,24 +3,15 @@
 # * event_sale
 # 
 # Translators:
-# Collex100, 2017
-# Максим Дронь <dronmax@gmail.com>, 2017
-# Viktor Pogrebniak <vp@aifil.ru>, 2017
-# Martin Trigaux, 2017
-# Sergey Vilizhanin <sv@grimmette.ru>, 2017
-# Артур Чеботарь <artcha.chebotar@gmail.com>, 2017
-# Denis Trepalin <zekarious@gmail.com>, 2017
-# Masha Koc <mariya.kos.ua@gmail.com>, 2017
-# Artur Komishenko <Archi1792@gmail.com>, 2017
-# Leonid Froenchenko <lfroen@gmail.com>, 2017
-# Yuriy Ney <k_wizard@mail.ru>, 2018
+# Martin Trigaux, 2018
+# Dmitry sky <d.v.selitsky@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
-"Last-Translator: Yuriy Ney <k_wizard@mail.ru>, 2018\n"
+"POT-Creation-Date: 2018-10-08 06:49+0000\n"
+"PO-Revision-Date: 2018-10-08 06:49+0000\n"
+"Last-Translator: Dmitry sky <d.v.selitsky@gmail.com>, 2018\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,14 +20,9 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: event_sale
-#: model:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
+#: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
 msgid "Apply"
 msgstr "Применить "
-
-#. module: event_sale
-#: model:ir.model,name:event_sale.model_event_registration
-msgid "Attendee"
-msgstr "Участник"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__seats_availability
@@ -49,7 +35,7 @@ msgid "Available Seats"
 msgstr "Доступные места"
 
 #. module: event_sale
-#: model:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
+#: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
 msgid "Before confirming"
 msgstr "До подтверждения"
 
@@ -95,22 +81,21 @@ msgstr ""
 "игнорировать это правило, установленное как неограниченное."
 
 #. module: event_sale
-#: model:ir.model.fields,help:event_sale.field_product_product__event_ok
-#: model:ir.model.fields,help:event_sale.field_product_template__event_ok
-#: model:ir.model.fields,help:event_sale.field_sale_order_line__event_ok
-msgid ""
-"Determine if a product needs to create automatically an event registration "
-"at the confirmation of a sales order line."
-msgstr ""
-"Определите, нужно ли автоматически создать регистрационную запись события "
-"для товара при подтверждении позиции заказа на продажу."
-
-#. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__display_name
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor__display_name
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__display_name
 msgid "Display Name"
 msgstr "Отображаемое Имя"
+
+#. module: event_sale
+#: model:ir.model,name:event_sale.model_registration_editor
+msgid "Edit Attendee Details on Sales Confirmation"
+msgstr ""
+
+#. module: event_sale
+#: model:ir.model,name:event_sale.model_registration_editor_line
+msgid "Edit Attendee Line on Sales Confirmation"
+msgstr ""
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__editor_id
@@ -137,11 +122,12 @@ msgid "Event Category"
 msgstr "Категория события"
 
 #. module: event_sale
-#: model:ir.ui.view,arch_db:event_sale.event_ticket_form_view
+#: model_terms:ir.ui.view,arch_db:event_sale.event_ticket_form_view
 msgid "Event Name"
 msgstr "Название события"
 
 #. module: event_sale
+#: model:ir.model,name:event_sale.model_event_registration
 #: model:product.product,name:event_sale.product_product_event
 #: model:product.template,name:event_sale.product_product_event_product_template
 msgid "Event Registration"
@@ -167,17 +153,18 @@ msgid "Event Tickets"
 msgstr "Билеты на событие"
 
 #. module: event_sale
-#: model:ir.ui.view,arch_db:event_sale.event_ticket_form_view
+#: model_terms:ir.ui.view,arch_db:event_sale.event_ticket_form_view
 msgid "Event's Ticket"
 msgstr "Билет на событие"
 
 #. module: event_sale
-#: model:ir.ui.view,arch_db:event_sale.event_sale_product_template_form
+#: model_terms:ir.ui.view,arch_db:event_sale.event_sale_product_template_form
+#: model:product.category,name:event_sale.product_category_events
 msgid "Events"
 msgstr "События"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:228
+#: code:addons/event_sale/models/event.py:254
 #, python-format
 msgid "Free"
 msgstr "Свободно"
@@ -190,6 +177,14 @@ msgid "ID"
 msgstr "Номер"
 
 #. module: event_sale
+#: model:ir.model.fields,help:event_sale.field_product_template__event_ok
+#: model:ir.model.fields,help:event_sale.field_sale_order_line__event_ok
+msgid ""
+"If checked this product automatically creates an event registration at the "
+"sales order confirmation."
+msgstr ""
+
+#. module: event_sale
 #: model:ir.model,name:event_sale.model_account_invoice
 msgid "Invoice"
 msgstr "Счёт"
@@ -200,7 +195,6 @@ msgid "Is Expired"
 msgstr "Истекает"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_product_product__event_ok
 #: model:ir.model.fields,field_description:event_sale.field_product_template__event_ok
 #: model:ir.model.fields,field_description:event_sale.field_sale_order_line__event_ok
 msgid "Is an Event Ticket"
@@ -238,7 +232,7 @@ msgid "Maximum Available Seats"
 msgstr "Максимальное количество доступных посадочных мест"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:223
+#: code:addons/event_sale/models/event.py:249
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__name
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__name
 #, python-format
@@ -246,25 +240,25 @@ msgid "Name"
 msgstr "Название"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:152
-#, python-format
-msgid "No more available seats for the ticket"
-msgstr "Нет больше доступных мест для этого билета"
-
-#. module: event_sale
-#: code:addons/event_sale/models/event.py:179
+#: code:addons/event_sale/models/event.py:205
 #, python-format
 msgid "No more available seats for this ticket"
 msgstr "Нет больше доступных мест для этого билета"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:224
+#: code:addons/event_sale/models/event.py:152
+#, python-format
+msgid "No more available seats for this ticket type."
+msgstr ""
+
+#. module: event_sale
+#: code:addons/event_sale/models/event.py:250
 #, python-format
 msgid "None"
 msgstr "Ничего"
 
 #. module: event_sale
-#: model:ir.ui.view,arch_db:event_sale.view_event_registration_ticket_form
+#: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_ticket_form
 msgid "Origin"
 msgstr "Источник"
 
@@ -274,13 +268,13 @@ msgid "Original Registration"
 msgstr "Оригинальная регистрация"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:233
+#: code:addons/event_sale/models/event.py:259
 #, python-format
 msgid "Paid"
 msgstr "Оплачено"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:234
+#: code:addons/event_sale/models/event.py:260
 #, python-format
 msgid "Payment"
 msgstr "Платеж"
@@ -317,14 +311,9 @@ msgid "Product Template"
 msgstr "Шаблон продукта"
 
 #. module: event_sale
-#: model:ir.model,name:event_sale.model_sale_order
-msgid "Quotation"
-msgstr "Предложение цен"
-
-#. module: event_sale
 #: code:addons/event_sale/models/event.py:20
 #: code:addons/event_sale/models/event.py:33
-#: model:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
+#: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
 #, python-format
 msgid "Registration"
 msgstr "Регистрация"
@@ -350,6 +339,11 @@ msgstr "Регистрация для редактирования"
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__seats_reserved
 msgid "Reserved Seats"
 msgstr "Забронированные посадочные места"
+
+#. module: event_sale
+#: model:ir.model,name:event_sale.model_sale_order
+msgid "Sale Order"
+msgstr "Заказ"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__deadline
@@ -379,7 +373,7 @@ msgid "Sell Online"
 msgstr ""
 
 #. module: event_sale
-#: model:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
+#: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
 msgid "Skip"
 msgstr "Пропустить"
 
@@ -389,27 +383,33 @@ msgid "Source Sales Order"
 msgstr ""
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:231
+#: model:event.event.ticket,name:event_sale.event_0_ticket_1
+#: model:event.event.ticket,name:event_sale.event_2_ticket_1
+msgid "Standard"
+msgstr "Стандарт"
+
+#. module: event_sale
+#: code:addons/event_sale/models/event.py:257
 #, python-format
 msgid "The registration must be paid"
 msgstr ""
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:224
+#: code:addons/event_sale/models/event.py:250
 #, python-format
 msgid "Ticket"
 msgstr "Запрос"
 
 #. module: event_sale
-#: model:ir.ui.view,arch_db:event_sale.event_event_report_template_badge
-#: model:ir.ui.view,arch_db:event_sale.view_event_registration_ticket_search
+#: model_terms:ir.ui.view,arch_db:event_sale.event_event_report_template_badge
+#: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_ticket_search
 msgid "Ticket Type"
 msgstr "Тип запроса"
 
 #. module: event_sale
 #: code:addons/event_sale/models/event.py:157
 #, python-format
-msgid "Ticket should belong to either event category or event but not both"
+msgid "Ticket cannot belong to both the event category and the event itself."
 msgstr ""
 
 #. module: event_sale
@@ -419,13 +419,13 @@ msgstr ""
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_type__event_ticket_ids
-#: model:ir.ui.view,arch_db:event_sale.event_type_view_form_inherit_sale
-#: model:ir.ui.view,arch_db:event_sale.view_event_form_inherit_ticket
+#: model_terms:ir.ui.view,arch_db:event_sale.event_type_view_form_inherit_sale
+#: model_terms:ir.ui.view,arch_db:event_sale.view_event_form_inherit_ticket
 msgid "Tickets"
 msgstr "Запросы"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:230
+#: code:addons/event_sale/models/event.py:256
 #, python-format
 msgid "To pay"
 msgstr "Оплатить"
@@ -436,9 +436,21 @@ msgid "Unconfirmed Seat Reservations"
 msgstr "Неподтвержденное бронирование посадочных мест"
 
 #. module: event_sale
+#: model:product.product,uom_name:event_sale.product_product_event
+#: model:product.template,uom_name:event_sale.product_product_event_product_template
+msgid "Unit(s)"
+msgstr "шт."
+
+#. module: event_sale
 #: selection:event.event.ticket,seats_availability:0
 msgid "Unlimited"
 msgstr "Неограничено"
+
+#. module: event_sale
+#: model:event.event.ticket,name:event_sale.event_0_ticket_2
+#: model:event.event.ticket,name:event_sale.event_2_ticket_2
+msgid "VIP"
+msgstr "VIP"
 
 #. module: event_sale
 #: model:product.product,weight_uom_name:event_sale.product_product_event
@@ -447,16 +459,16 @@ msgid "kg"
 msgstr "кг"
 
 #. module: event_sale
-#: model:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
+#: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
 msgid "please give details about the registrations"
 msgstr "пожалуйста сообщить подробности о регистрации"
 
 #. module: event_sale
-#: model:ir.model,name:event_sale.model_registration_editor
-msgid "registration.editor"
-msgstr "registration.editor"
+#: model_terms:ir.ui.view,arch_db:event_sale.view_event_form_inherit_ticket
+msgid "reserved +"
+msgstr ""
 
 #. module: event_sale
-#: model:ir.model,name:event_sale.model_registration_editor_line
-msgid "registration.editor.line"
-msgstr "registration.editor.line"
+#: model_terms:ir.ui.view,arch_db:event_sale.view_event_form_inherit_ticket
+msgid "unconfirmed"
+msgstr ""

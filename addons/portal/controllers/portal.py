@@ -2,18 +2,19 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import math
+import re
 
 from werkzeug import urls
 
 from odoo import fields as odoo_fields, tools, _
-from odoo.osv import expression
-from odoo.exceptions import ValidationError
-from odoo.http import Controller, request, route
-from odoo.addons.web.controllers.main import WebClient
+from odoo.exceptions import ValidationError, AccessError, MissingError, UserError
+from odoo.http import content_disposition, Controller, request, route
+from odoo.tools import consteq
 
 # --------------------------------------------------
 # Misc tools
 # --------------------------------------------------
+
 
 def pager(url, total, page=1, step=30, scope=5, url_args=None):
     """ Generate a dict with required value to render `website.pager` template. This method compute
@@ -75,8 +76,8 @@ def pager(url, total, page=1, step=30, scope=5, url_args=None):
 
 
 def get_records_pager(ids, current):
-    if current.id in ids and (hasattr(current, 'website_url') or hasattr(current, 'portal_url')):
-        attr_name = 'portal_url' if hasattr(current, 'portal_url') else 'website_url'
+    if current.id in ids and (hasattr(current, 'website_url') or hasattr(current, 'access_url')):
+        attr_name = 'access_url' if hasattr(current, 'access_url') else 'website_url'
         idx = ids.index(current.id)
         return {
             'prev_record': idx != 0 and getattr(current.browse(ids[idx - 1]), attr_name),
@@ -228,3 +229,60 @@ class CustomerPortal(Controller):
             error_message.append("Unknown field '%s'" % ','.join(unknown))
 
         return error, error_message
+
+    def _document_check_access(self, model_name, document_id, access_token=None):
+        document = request.env[model_name].browse([document_id])
+        document_sudo = document.sudo().exists()
+        if not document_sudo:
+            raise MissingError("This document does not exist.")
+        try:
+            document.check_access_rights('read')
+            document.check_access_rule('read')
+        except AccessError:
+            if not access_token or not consteq(document_sudo.access_token, access_token):
+                raise
+        return document_sudo
+
+    def _get_page_view_values(self, document, access_token, values, session_history, no_breadcrumbs, **kwargs):
+        if access_token:
+            # if no_breadcrumbs = False -> force breadcrumbs even if access_token to `invite` users to register if they click on it
+            values['no_breadcrumbs'] = no_breadcrumbs
+            values['access_token'] = access_token
+
+        # Those are used notably whenever the payment form is implied in the portal.
+        if kwargs.get('error'):
+            values['error'] = kwargs['error']
+        if kwargs.get('warning'):
+            values['warning'] = kwargs['warning']
+        if kwargs.get('success'):
+            values['success'] = kwargs['success']
+        # Email token for posting messages in portal view with identified author
+        if kwargs.get('pid'):
+            values['pid'] = kwargs['pid']
+        if kwargs.get('hash'):
+            values['hash'] = kwargs['hash']
+
+        history = request.session.get(session_history, [])
+        values.update(get_records_pager(history, document))
+
+        return values
+
+    def _show_report(self, model, report_type, report_ref, download=False):
+        if report_type not in ('html', 'pdf', 'text'):
+            raise UserError("Invalid report type: %s" % report_type)
+
+        report_sudo = request.env.ref(report_ref).sudo()
+
+        if not isinstance(report_sudo, type(request.env['ir.actions.report'])):
+            raise UserError("%s is not the reference of a report" % report_ref)
+
+        method_name = 'render_qweb_%s' % (report_type)
+        report = getattr(report_sudo, method_name)([model.id], data={'report_type': report_type})[0]
+        reporthttpheaders = [
+            ('Content-Type', 'application/pdf' if report_type == 'pdf' else 'text/html'),
+            ('Content-Length', len(report)),
+        ]
+        if report_type == 'pdf' and download:
+            filename = "%s.pdf" % (re.sub('\W+', '-', model._get_report_base_filename()))
+            reporthttpheaders.append(('Content-Disposition', content_disposition(filename)))
+        return request.make_response(report, headers=reporthttpheaders)

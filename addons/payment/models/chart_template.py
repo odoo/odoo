@@ -3,12 +3,12 @@
 from odoo import api, fields, models, _
 
 
-class WizardMultiChartsAccounts(models.TransientModel):
-    _inherit = 'wizard.multi.charts.accounts'
+class AccountChartTemplate(models.Model):
+    _inherit = 'account.chart.template'
 
     @api.multi
-    def _create_bank_journals_from_o2m(self, company, acc_template_ref):
-        res = super(WizardMultiChartsAccounts, self)._create_bank_journals_from_o2m(company, acc_template_ref)
+    def _create_bank_journals(self, company, acc_template_ref):
+        res = super(AccountChartTemplate, self)._create_bank_journals(company, acc_template_ref)
 
         # Try to generate the missing journals
         return res + self.env['payment.acquirer']._create_missing_journal_for_acquirers(company=company)

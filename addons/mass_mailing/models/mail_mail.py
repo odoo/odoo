@@ -95,8 +95,8 @@ class MailMail(models.Model):
         return res
 
     @api.multi
-    def _postprocess_sent_message(self, failure_type='NONE', **kwargs):
-        mail_sent = failure_type == 'NONE'  # we consider that a recipient error is a failure with mass mailling and show them as failed
+    def _postprocess_sent_message(self, failure_type=None, **kwargs):
+        mail_sent = not failure_type  # we consider that a recipient error is a failure with mass mailling and show them as failed
         for mail in self:
             if mail.mailing_id:
                 if mail_sent is True and mail.statistics_ids:

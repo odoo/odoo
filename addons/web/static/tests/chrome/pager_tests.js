@@ -3,6 +3,7 @@ odoo.define('web.pager_tests', function (require) {
 
 var Pager = require('web.Pager');
 var concurrency = require('web.concurrency');
+var testUtils = require('web.test_utils');
 
 QUnit.module('chrome', {}, function () {
 
@@ -18,7 +19,7 @@ QUnit.module('chrome', {}, function () {
             "current_min should be set to 1");
 
         // click on next
-        pager.$('.o_pager_next').click();
+        testUtils.dom.click(pager.$('.o_pager_next'));
         assert.strictEqual(pager.state.current_min, 5,
             "current_min should now be 5");
 
@@ -32,8 +33,8 @@ QUnit.module('chrome', {}, function () {
         pager.appendTo($('#qunit-fixture'));
 
         // enter edition
-        pager.$('.o_pager_value').click();
-        assert.strictEqual(pager.$('input').length, 1,
+        testUtils.dom.click(pager.$('.o_pager_value'));
+        assert.containsOnce(pager, 'input',
             "the pager should contain an input");
         assert.strictEqual(pager.$('input').val(), '1-4',
             "the input should have correct value");
@@ -62,16 +63,16 @@ QUnit.module('chrome', {}, function () {
         pager.disable();
 
         // try to go to the next or previous pages
-        pager.$('.o_pager_next').click();
+        testUtils.dom.click(pager.$('.o_pager_next'));
         assert.strictEqual(pager.state.current_min, 1,
             "current_min should still be 1");
-        pager.$('.o_pager_previous').click();
+        testUtils.dom.click(pager.$('.o_pager_previous'));
         assert.strictEqual(pager.state.current_min, 1,
             "current_min should still be 1");
 
         // try to change the limit
-        pager.$('.o_pager_value').click();
-        assert.strictEqual(pager.$('input').length, 0,
+        testUtils.dom.click(pager.$('.o_pager_value'));
+        assert.containsNone(pager, 'input',
             "the pager should not contain an input");
 
         // a common use is to disable the pager before reloading the data, and
@@ -86,7 +87,7 @@ QUnit.module('chrome', {}, function () {
             });
         });
         pager.enable();
-        pager.$('.o_pager_next').click();
+        testUtils.dom.click(pager.$('.o_pager_next'));
 
     });
 });

@@ -10,7 +10,6 @@ var core = require('web.core');
 var localStorage = require('web.local_storage');
 
 var LocalStorageService = AbstractStorageService.extend({
-    name: 'local_storage',
     storage: localStorage,
 });
 

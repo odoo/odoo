@@ -20,8 +20,16 @@ class StockQuantPackage(models.Model):
             weight += quant.quantity * quant.product_id.weight
         self.weight = weight
 
-    weight = fields.Float(compute='_compute_weight', help="Weight computed based on the sum of the weights of the products.")
-    shipping_weight = fields.Float(string='Shipping Weight', help="Weight used to compute the price of the delivery (if applicable).")
+    def _get_default_weight_uom(self):
+        return self.env['product.template']._get_weight_uom_name_from_ir_config_parameter()
+
+    def _compute_weight_uom_name(self):
+        for package in self:
+            package.weight_uom_name = self.env['product.template']._get_weight_uom_name_from_ir_config_parameter()
+
+    weight = fields.Float(compute='_compute_weight', help="Total weight of all the products contained in the package.")
+    weight_uom_name = fields.Char(string='Weight unit of measure label', compute='_compute_weight_uom_name', readonly=True, default=_get_default_weight_uom)
+    shipping_weight = fields.Float(string='Shipping Weight', help="Total weight of the package.")
 
 
 class StockMoveLine(models.Model):
@@ -74,27 +82,29 @@ class StockPicking(models.Model):
     def _compute_shipping_weight(self):
         self.shipping_weight = self.weight_bulk + sum([pack.shipping_weight for pack in self.package_ids])
 
+    def _get_default_weight_uom(self):
+        return self.env['product.template']._get_weight_uom_name_from_ir_config_parameter()
+
+    def _compute_weight_uom_name(self):
+        for package in self:
+            package.weight_uom_name = self.env['product.template']._get_weight_uom_name_from_ir_config_parameter()
+
     carrier_price = fields.Float(string="Shipping Cost")
     delivery_type = fields.Selection(related='carrier_id.delivery_type', readonly=True)
     carrier_id = fields.Many2one("delivery.carrier", string="Carrier")
     volume = fields.Float(copy=False)
-    weight = fields.Float(compute='_cal_weight', digits=dp.get_precision('Stock Weight'), store=True)
+    weight = fields.Float(compute='_cal_weight', digits=dp.get_precision('Stock Weight'), store=True, help="Total weight of the products in the picking.")
     carrier_tracking_ref = fields.Char(string='Tracking Reference', copy=False)
     carrier_tracking_url = fields.Char(string='Tracking URL', compute='_compute_carrier_tracking_url')
-    weight_uom_id = fields.Many2one('uom.uom', string='Unit of Measure', compute='_compute_weight_uom_id', help="Unit of measurement for Weight")
+    weight_uom_name = fields.Char(string='Weight unit of measure label', compute='_compute_weight_uom_name', readonly=True, default=_get_default_weight_uom)
     package_ids = fields.Many2many('stock.quant.package', compute='_compute_packages', string='Packages')
     weight_bulk = fields.Float('Bulk Weight', compute='_compute_bulk_weight')
-    shipping_weight = fields.Float("Weight for Shipping", compute='_compute_shipping_weight')
+    shipping_weight = fields.Float("Weight for Shipping", compute='_compute_shipping_weight', help="Total weight of the packages and products which are not in a package. That's the weight used to compute the cost of the shipping.")
 
     @api.depends('carrier_id', 'carrier_tracking_ref')
     def _compute_carrier_tracking_url(self):
         for picking in self:
             picking.carrier_tracking_url = picking.carrier_id.get_tracking_link(picking) if picking.carrier_id and picking.carrier_tracking_ref else False
-
-    def _compute_weight_uom_id(self):
-        weight_uom_id = self.env['product.template']._get_weight_uom_id_from_ir_config_parameter()
-        for picking in self:
-            picking.weight_uom_id = weight_uom_id
 
     @api.depends('move_lines')
     def _cal_weight(self):
@@ -113,6 +123,9 @@ class StockPicking(models.Model):
 
     @api.multi
     def put_in_pack(self):
+        res = super(StockPicking, self).put_in_pack()
+        if isinstance(res, dict) and res.get('type'):
+            return res
         if self.carrier_id and self.carrier_id.delivery_type not in ['base_on_rule', 'fixed']:
             view_id = self.env.ref('delivery.choose_delivery_package_view_form').id
             return {
@@ -123,12 +136,14 @@ class StockPicking(models.Model):
                 'view_id': view_id,
                 'views': [(view_id, 'form')],
                 'target': 'new',
-                'context': {
-                    'current_package_carrier_type': self.carrier_id.delivery_type,
-                }
+                'context': dict(
+                    self.env.context,
+                    current_package_carrier_type=self.carrier_id.delivery_type,
+                    default_stock_quant_package_id=res.id
+                ),
             }
         else:
-            return self._put_in_pack()
+            return res
 
     @api.multi
     def action_send_confirmation_email(self):
@@ -141,7 +156,7 @@ class StockPicking(models.Model):
             default_model='stock.picking',
             default_use_template=bool(delivery_template_id),
             default_template_id=delivery_template_id,
-            custom_layout='mail.mail_notification_borders'
+            custom_layout='mail.mail_notification_light'
         )
         return {
             'type': 'ir.actions.act_window',

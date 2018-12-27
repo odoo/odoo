@@ -8,7 +8,7 @@ class TestWiseOperator(TransactionCase):
 
     def test_wise_operator(self):
 
-        # Create a new stockable product
+        # Create a new storable product
         product_wise = self.env['product.product'].create({
             'name': 'Wise Unit',
             'type': 'product',
@@ -17,25 +17,25 @@ class TestWiseOperator(TransactionCase):
             'uom_po_id': self.ref('uom.product_uom_unit'),
         })
 
-        picking_default_vals = self.env['stock.picking'].default_get(list(self.env['stock.picking'].fields_get()))
-
         # Create an incoming picking for this product of 10 PCE from suppliers to stock
-        vals = dict(picking_default_vals, **{
+        vals = {
             'name': 'Incoming picking (wise unit)',
             'partner_id': self.ref('base.res_partner_2'),
             'picking_type_id': self.ref('stock.picking_type_in'),
+            'location_id': self.ref('stock.stock_location_suppliers'),
+            'location_dest_id': self.ref('stock.stock_location_stock'),
             'move_lines': [(0, 0, {
+                'name': '/',
                 'product_id': product_wise.id,
+                'product_uom': product_wise.uom_id.id,
                 'product_uom_qty': 10.00,
                 'location_id': self.ref('stock.stock_location_suppliers'),
                 'location_dest_id': self.ref('stock.stock_location_stock'),
             })],
-        })
-        pick1_wise = self.env['stock.picking'].new(vals)
+        }
+        pick1_wise = self.env['stock.picking'].create(vals)
         pick1_wise.onchange_picking_type()
         pick1_wise.move_lines.onchange_product_id()
-        vals = pick1_wise._convert_to_write(pick1_wise._cache)
-        pick1_wise = self.env['stock.picking'].create(vals)
 
         # Confirm and assign picking and prepare partial
         pick1_wise.action_confirm()
@@ -65,22 +65,24 @@ class TestWiseOperator(TransactionCase):
         self.assertEqual(len(records.ids), 3, "The number of quants created is not correct")
 
         # Make a delivery order of 5 pieces to the customer
-        vals = dict(picking_default_vals, **{
+        vals = {
             'name': 'outgoing picking 1 (wise unit)',
             'partner_id': self.ref('base.res_partner_4'),
             'picking_type_id': self.ref('stock.picking_type_out'),
+            'location_id': self.ref('stock.stock_location_stock'),
+            'location_dest_id': self.ref('stock.stock_location_customers'),
             'move_lines': [(0, 0, {
+                'name': '/',
                 'product_id': product_wise.id,
+                'product_uom': product_wise.uom_id.id,
                 'product_uom_qty': 5.0,
                 'location_id': self.ref('stock.stock_location_stock'),
                 'location_dest_id': self.ref('stock.stock_location_customers'),
             })],
-        })
-        delivery_order_wise1 = self.env['stock.picking'].new(vals)
+        }
+        delivery_order_wise1 = self.env['stock.picking'].create(vals)
         delivery_order_wise1.onchange_picking_type()
         delivery_order_wise1.move_lines.onchange_product_id()
-        vals = delivery_order_wise1._convert_to_write(delivery_order_wise1._cache)
-        delivery_order_wise1 = self.env['stock.picking'].create(vals)
 
         # Assign and confirm
         delivery_order_wise1.action_confirm()
@@ -88,22 +90,24 @@ class TestWiseOperator(TransactionCase):
         self.assertEqual(delivery_order_wise1.state, 'assigned')
 
         # Make a delivery order of 5 pieces to the customer
-        vals = dict(picking_default_vals, **{
+        vals = {
             'name': 'outgoing picking 2 (wise unit)',
             'partner_id': self.ref('base.res_partner_4'),
             'picking_type_id': self.ref('stock.picking_type_out'),
+            'location_id': self.ref('stock.stock_location_stock'),
+            'location_dest_id': self.ref('stock.stock_location_customers'),
             'move_lines': [(0, 0, {
+                'name': '/',
                 'product_id': product_wise.id,
+                'product_uom': product_wise.uom_id.id,
                 'product_uom_qty': 5.0,
                 'location_id': self.ref('stock.stock_location_stock'),
                 'location_dest_id': self.ref('stock.stock_location_customers'),
             })],
-        })
-        delivery_order_wise2 = self.env['stock.picking'].new(vals)
+        }
+        delivery_order_wise2 = self.env['stock.picking'].create(vals)
         delivery_order_wise2.onchange_picking_type()
         delivery_order_wise2.move_lines.onchange_product_id()
-        vals = delivery_order_wise2._convert_to_write(delivery_order_wise2._cache)
-        delivery_order_wise2 = self.env['stock.picking'].create(vals)
 
         # Assign and confirm
         delivery_order_wise2.action_confirm()
@@ -167,5 +171,6 @@ class TestWiseOperator(TransactionCase):
         records = self.env['stock.quant'].search([
             ('product_id', '=', product_wise.id),
             ('location_id', '!=', self.ref('stock.stock_location_suppliers'))])
-        self.assertTrue(all([x.location_id.id == self.ref('stock.stock_location_customers') and x.quantity > 0.0 for x in records]),
+        self.assertTrue(all([x.location_id.id == self.ref('stock.stock_location_customers') and x.quantity > 0.0 or
+                             x.location_id.id != self.ref('stock.stock_location_customers') and x.quantity == 0.0 for x in records]),
                         "Negative quant or wrong location detected")

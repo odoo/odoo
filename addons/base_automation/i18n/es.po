@@ -3,34 +3,15 @@
 # * base_automation
 # 
 # Translators:
-# Inigo Zuluaga <inigo_zuluaga@yahoo.es>, 2017
-# Leonardo Chianea <noamixcontenidos@gmail.com>, 2017
-# Martin Trigaux, 2017
-# Ana Juaristi <ajuaristio@gmail.com>, 2017
-# José Vicente <txusev@gmail.com>, 2017
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2017
-# Carles Antoli <carlesantoli@hotmail.com>, 2017
-# Antonio Trueba, 2017
-# Sergio Flores <vitavitae1@gmail.com>, 2017
-# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2017
-# Diego de la Torre <diego.delatorreh@gmail.com>, 2017
-# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2017
-# RGB Consulting <odoo@rgbconsulting.com>, 2017
-# oihane <oihanecruce@gmail.com>, 2017
-# Ivan Nieto <ivan.n.s@tuta.io>, 2017
-# Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2017
-# Gelo Joga Landoo <gj@landoo.es>, 2017
-# Lina Maria Avendaño Carvajal <lina8823@gmail.com>, 2017
-# Miguel Orueta <mo@landoo.es>, 2017
-# e2f <projects@e2f.com>, 2018
-# Nicolás Broggi <rnbroggi@gmail.com>, 2018
+# Martin Trigaux, 2018
+# e2f_EPV Translator <e2f_EPV@outlook.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
-"Last-Translator: Nicolás Broggi <rnbroggi@gmail.com>, 2018\n"
+"POT-Creation-Date: 2018-10-08 06:49+0000\n"
+"PO-Revision-Date: 2018-10-08 06:49+0000\n"
+"Last-Translator: e2f_EPV Translator <e2f_EPV@outlook.com>, 2018\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -49,16 +30,6 @@ msgid "Action Name"
 msgstr "Nombre de acción"
 
 #. module: base_automation
-#: model:ir.model,name:base_automation.model_base_automation_line_test
-msgid "Action Rule Line Test"
-msgstr "Prueba de Línea de Regla de Acción"
-
-#. module: base_automation
-#: model:ir.model,name:base_automation.model_base_automation_lead_test
-msgid "Action Rule Test"
-msgstr "Test de reglas de acción"
-
-#. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__state
 msgid "Action To Do"
 msgstr "Acción a realizar"
@@ -73,6 +44,16 @@ msgstr "Tipo de acción"
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__active
 msgid "Active"
 msgstr "Activo"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_type_id
+msgid "Activity"
+msgstr "Actividad"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_user_type
+msgid "Activity User Type"
+msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__channel_ids
@@ -95,6 +76,7 @@ msgid "Assigned to admin user"
 msgstr "Asignado al usuario administrador"
 
 #. module: base_automation
+#: selection:ir.actions.server,usage:0
 #: model:ir.model,name:base_automation.model_base_automation
 msgid "Automated Action"
 msgstr "Acción automatizada"
@@ -106,7 +88,17 @@ msgid "Automated Actions"
 msgstr "Acciones automáticas"
 
 #. module: base_automation
-#: model:ir.ui.view,arch_db:base_automation.view_base_automation_tree
+#: model:ir.model,name:base_automation.model_base_automation_line_test
+msgid "Automated Rule Line Test"
+msgstr ""
+
+#. module: base_automation
+#: model:ir.model,name:base_automation.model_base_automation_lead_test
+msgid "Automated Rule Test"
+msgstr ""
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_tree
 msgid "Automation"
 msgstr "Automatización"
 
@@ -116,6 +108,44 @@ msgstr "Automatización"
 #: model:ir.cron,name:base_automation.ir_cron_data_base_automation_check
 msgid "Base Action Rule: check and execute"
 msgstr "Norma de acción básica: revisar y ejecutar"
+
+#. module: base_automation
+#: model:base.automation,name:base_automation.test_rule_recursive
+#: model:ir.actions.server,name:base_automation.test_rule_recursive_ir_actions_server
+msgid "Base Automation: test recursive rule"
+msgstr "Automatización básica: regla recursiva de prueba"
+
+#. module: base_automation
+#: model:base.automation,name:base_automation.test_rule_on_create
+#: model:ir.actions.server,name:base_automation.test_rule_on_create_ir_actions_server
+msgid "Base Automation: test rule on create"
+msgstr "Automatización básica: regla de prueba para crear"
+
+#. module: base_automation
+#: model:base.automation,name:base_automation.test_rule_on_recompute
+#: model:ir.actions.server,name:base_automation.test_rule_on_recompute_ir_actions_server
+msgid "Base Automation: test rule on recompute"
+msgstr "Automatización básica: regla de prueba para recalcular"
+
+#. module: base_automation
+#: model:base.automation,name:base_automation.test_rule_on_line
+#: model:ir.actions.server,name:base_automation.test_rule_on_line_ir_actions_server
+msgid "Base Automation: test rule on secondary model"
+msgstr "Automatización básica: regla de prueba para el modelo secundario"
+
+#. module: base_automation
+#: model:base.automation,name:base_automation.test_rule_on_write
+#: model:ir.actions.server,name:base_automation.test_rule_on_write_ir_actions_server
+msgid "Base Automation: test rule on write"
+msgstr "Automatización básica: regla de prueba para la escritura"
+
+#. module: base_automation
+#: model:base.automation,name:base_automation.test_rule_on_write_check_context
+#: model:ir.actions.server,name:base_automation.test_rule_on_write_check_context_ir_actions_server
+msgid "Base Automation: test rule on write check context"
+msgstr ""
+"Automatización básica: regla de prueba para una escritura de revisión del "
+"contexto"
 
 #. module: base_automation
 #: selection:base.automation,trigger:0
@@ -149,8 +179,10 @@ msgstr "Cancelado"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation_lead_test__customer
-msgid "Check this box if this contact is a customer."
-msgstr "Click en esta casilla si el contacto es un cliente"
+msgid ""
+"Check this box if this contact is a customer. It can be selected in sales "
+"orders."
+msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__child_ids
@@ -232,6 +264,16 @@ msgstr "Tipo retraso"
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test__display_name
 msgid "Display Name"
 msgstr "Nombre mostrado"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_date_deadline_range
+msgid "Due Date In"
+msgstr ""
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_date_deadline_range_type
+msgid "Due type"
+msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__template_id
@@ -379,6 +421,11 @@ msgid "New"
 msgstr "Nuevo"
 
 #. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_note
+msgid "Note"
+msgstr "Nota"
+
+#. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__on_change_fields
 msgid "On Change Fields Trigger"
 msgstr "Activar Campos a modificar"
@@ -442,24 +489,36 @@ msgid "Python Code"
 msgstr "Código Python"
 
 #. module: base_automation
-#: model:ir.ui.view,arch_db:base_automation.view_base_automation_form
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Remove Action"
 msgstr "Eliminar acción"
 
 #. module: base_automation
-#: model:ir.ui.view,arch_db:base_automation.view_base_automation_form
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Remove the contextual action related to this server action"
 msgstr "Eliminar la acción contextual relacionada con esta acción de servidor"
 
 #. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_user_id
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__user_id
 msgid "Responsible"
 msgstr "Responsable"
 
 #. module: base_automation
+#: selection:ir.actions.server,usage:0
+msgid "Scheduled Action"
+msgstr "Acción planificada"
+
+#. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__sequence
 msgid "Sequence"
 msgstr "Secuencia"
+
+#. module: base_automation
+#: selection:ir.actions.server,usage:0
+#: model:ir.model,name:base_automation.model_ir_actions_server
+msgid "Server Action"
+msgstr "Acción del servidor"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__action_server_id
@@ -476,7 +535,7 @@ msgstr ""
 "lateral del modelo."
 
 #. module: base_automation
-#: model:ir.actions.act_window,help:base_automation.base_automation_act
+#: model_terms:ir.actions.act_window,help:base_automation.base_automation_act
 msgid "Setup a new automated automation"
 msgstr ""
 
@@ -489,6 +548,24 @@ msgstr "Estado"
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__name
 msgid "Subject"
 msgstr "Asunto"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_summary
+msgid "Summary"
+msgstr "Resumen"
+
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation__activity_user_field_name
+msgid "Technical name of the user on the record"
+msgstr ""
+
+#. module: base_automation
+#: code:addons/base_automation/models/base_automation.py:87
+#, python-format
+msgid ""
+"The \"%(trigger_value)s\" %(trigger_label)s can only be used with the "
+"\"%(state_value)s\" action type"
+msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger
@@ -521,8 +598,17 @@ msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__usage
+#: model:ir.model.fields,field_description:base_automation.field_ir_actions_server__usage
 msgid "Usage"
 msgstr "Uso"
+
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation__activity_user_type
+msgid ""
+"Use 'Specific User' to always assign the same user on the next activity. Use"
+" 'Generic User From Record' to specify the field name of the user to choose "
+"on the record."
+msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_calendar_id
@@ -530,19 +616,14 @@ msgid "Use Calendar"
 msgstr "Usar calendario"
 
 #. module: base_automation
-#: model:ir.actions.act_window,help:base_automation.base_automation_act
+#: model_terms:ir.actions.act_window,help:base_automation.base_automation_act
 msgid ""
 "Use automated actions to automatically trigger actions for\n"
 "                various screens. Example: a lead created by a specific user may\n"
-"                be automatically set to a specific sales channel, or an\n"
+"                be automatically set to a specific Sales Team, or an\n"
 "                opportunity which still has status pending after 14 days might\n"
 "                trigger an automatic reminder email."
 msgstr ""
-"Use acciones automatizadas para activar automáticamente acciones.\n"
-"Por ejemplo: una oportunidad creada por un determinado\n"
-"usuario podría ser asignada automáticamente a un equipo de ventas determinado,\n"
-"o una oportunidad que está en estado pendiente tras 14 días podría activar\n"
-"un recordatorio automático por e-mail."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test__user_id
@@ -550,9 +631,20 @@ msgid "User"
 msgstr "Usuario"
 
 #. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_user_field_name
+msgid "User field name"
+msgstr ""
+
+#. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__fields_lines
 msgid "Value Mapping"
 msgstr "Mapeo de valores"
+
+#. module: base_automation
+#: code:addons/base_automation/models/base_automation.py:86
+#, python-format
+msgid "Warning"
+msgstr "Alerta"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_calendar_id
@@ -590,13 +682,5 @@ msgstr "Si no está marcado, la regla está oculta y no se ejecutará."
 #: model:ir.model.fields,help:base_automation.field_base_automation__code
 msgid ""
 "Write Python code that the action will execute. Some variables are available"
-" for use; help about pyhon expression is given in the help tab."
+" for use; help about python expression is given in the help tab."
 msgstr ""
-"Escriba el código Python que ejecutará la acción. Algunas variables están "
-"disponibles para su uso; la ayuda sobre las expresiones Python se "
-"proporciona en la pestaña de ayuda."
-
-#. module: base_automation
-#: model:ir.model,name:base_automation.model_ir_actions_server
-msgid "ir.actions.server"
-msgstr "ir.actions.server"

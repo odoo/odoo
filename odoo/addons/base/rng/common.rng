@@ -259,6 +259,7 @@
             <rng:optional><rng:attribute name="avatar_field" /></rng:optional>
             <rng:optional><rng:attribute name="write_model" /></rng:optional>
             <rng:optional><rng:attribute name="write_field" /></rng:optional>
+            <rng:optional><rng:attribute name="text" /></rng:optional>
             <rng:optional>
                 <rng:attribute name="force_save">
                     <rng:choice>
@@ -386,6 +387,25 @@
                 </rng:choice>
             </rng:zeroOrMore>
 
+        </rng:element>
+    </rng:define>
+
+    <rng:define name="create">
+        <rng:element name="create">
+            <rng:ref name="overload"/>
+            <rng:attribute name="string"/>
+            <rng:attribute name="context"/>
+        </rng:element>
+    </rng:define>
+
+    <rng:define name="control">
+        <rng:element name="control">
+            <rng:ref name="overload"/>
+            <rng:oneOrMore>
+                <rng:choice>
+                    <rng:ref name="create"/>
+                </rng:choice>
+            </rng:oneOrMore>
         </rng:element>
     </rng:define>
 

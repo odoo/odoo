@@ -20,11 +20,11 @@ var MessagingMenu = Widget.extend({
     name: 'messaging_menu',
     template:'mail.systray.MessagingMenu',
     events: {
-        'click': '_onClick',
         'click .o_mail_preview': '_onClickPreview',
         'click .o_filter_button': '_onClickFilterButton',
         'click .o_new_message': '_onClickNewMessage',
         'click .o_mail_preview_mark_as_read': '_onClickPreviewMarkAsRead',
+        'show.bs.dropdown': '_onShowDropdown',
     },
     /**
      * @override
@@ -90,11 +90,40 @@ var MessagingMenu = Widget.extend({
         }
     },
     /**
+     * Compute the counter next to the systray messaging menu. This counter is
+     * the sum of unread messages in channels, the counter of the mailbox inbox,
+     * and the amount of mail failures.
+     *
      * @private
-     * @return {boolean} whether the messaging menu is open or not.
+     * @returns {integer}
      */
-    _isOpen: function () {
-        return this.$el.hasClass('open');
+    _computeCounter: function () {
+        var channels = this.call('mail_service', 'getChannels');
+        var channelUnreadCounters = _.map(channels, function (channel) {
+            return channel.getUnreadCounter();
+        });
+        var unreadChannelCounter = _.reduce(channelUnreadCounters, function (acc, c) {
+            return c > 0 ? acc + 1 : acc;
+        }, 0);
+        var inboxCounter = this.call('mail_service', 'getMailbox', 'inbox').getMailboxCounter();
+        var mailFailureCounter = this.call('mail_service', 'getMailFailures').length;
+
+        return unreadChannelCounter + inboxCounter + mailFailureCounter;
+    },
+    /**
+     * @private
+     * @returns {$.Promise<Object[]>} resolved with list of previews that are
+     *   compatible with the 'mail.Preview' template.
+     */
+    _getPreviews: function () {
+        return this.call('mail_service', 'getSystrayPreviews', this._filter);
+    },
+    /**
+     * @private
+     * @return {boolean} whether the messaging menu is shown or not.
+     */
+    _isShown: function () {
+        return this.$el.hasClass('show');
     },
     /**
      * Open discuss
@@ -111,7 +140,7 @@ var MessagingMenu = Widget.extend({
             discussOptions.active_id = channelID;
         }
 
-        this.do_action('mail.mail_channel_action_client_chat', discussOptions)
+        this.do_action('mail.action_discuss', discussOptions)
             .then(function () {
                 // we cannot 'go back to previous page' otherwise
                 self.trigger_up('hide_home_menu');
@@ -177,7 +206,7 @@ var MessagingMenu = Widget.extend({
     _updatePreviews: function () {
         // Display spinner while waiting for conversations preview
         this._$previews.html(QWeb.render('Spinner'));
-        this.call('mail_service', 'getSystrayPreviews', this._filter)
+        this._getPreviews()
             .then(this._renderPreviews.bind(this));
     },
     /**
@@ -199,22 +228,10 @@ var MessagingMenu = Widget.extend({
      * @private
      */
     _updateCounter: function () {
-        var counter;
-
-        var channels = this.call('mail_service', 'getChannels');
-        var channelUnreadCounters = _.map(channels, function (channel) {
-            return channel.getUnreadCounter();
-        });
-        var unreadChannelCounter = _.reduce(channelUnreadCounters, function (c1, c2) {
-            return c1 + c2;
-        }, 0);
-        var inboxCounter = this.call('mail_service', 'getMailbox', 'inbox').getMailboxCounter();
-        var mailFailureCounter = this.call('mail_service', 'getMailFailures').length;
-
-        counter = unreadChannelCounter + inboxCounter + mailFailureCounter;
+        var counter = this._computeCounter();
         this.$('.o_notification_counter').text(counter);
         this.$el.toggleClass('o_no_notification', !counter);
-        if (this._isOpen()) {
+        if (this._isShown()) {
             this._updatePreviews();
         }
     },
@@ -226,11 +243,8 @@ var MessagingMenu = Widget.extend({
     /**
      * @private
      */
-    _onClick: function () {
-        if (!this._isOpen()) {
-            // we are opening the dropdown so update its content
-            this._updatePreviews();
-        }
+    _onShowDropdown: function () {
+        this._updatePreviews();
     },
     /**
      * @private
@@ -268,7 +282,11 @@ var MessagingMenu = Widget.extend({
             // e.g. needaction message of channel
             var documentID = $target.data('document-id');
             var documentModel = $target.data('document-model');
-            this._openDocument(documentModel, documentID);
+            if (!documentModel) {
+                this._openDiscuss('mailbox_inbox');
+            } else {
+                this._openDocument(documentModel, documentID);
+            }
         } else {
             // preview of thread
             this.call('mail_service', 'openThread', previewID);
@@ -279,7 +297,7 @@ var MessagingMenu = Widget.extend({
      * as read
      *
      * @private
-     * @param {MouseEvent} event
+     * @param {MouseEvent} ev
      */
     _onClickPreviewMarkAsRead: function (ev) {
         ev.stopPropagation();
@@ -287,20 +305,17 @@ var MessagingMenu = Widget.extend({
         var $preview = $(ev.currentTarget).closest('.o_mail_preview');
         var previewID = $preview.data('preview-id');
         if (previewID === 'mailbox_inbox') {
-            var documentModel = $preview.data('document-model');
-            var documentID = $preview.data('document-id');
-            var inbox = this.call('mail_service', 'getMailbox', 'inbox');
-            var messages = inbox.getLocalMessages({
-                documentModel: documentModel,
-                documentID: documentID,
-            });
-            var messageIDs = _.map(messages, function (message) {
-                return message.getID();
-            });
+            var messageIDs = [].concat($preview.data('message-ids'));
             this.call('mail_service', 'markMessagesAsRead', messageIDs);
         } else if (previewID === 'mail_failure') {
-            // AKU: ignored for the moment, this should be fixed when task
-            // 1860054 is merged
+            var documentModel = $preview.data('document-model');
+            var unreadCounter = $preview.data('unread-counter');
+            this.do_action('mail.mail_resend_cancel_action', {
+                additional_context: {
+                    default_model: documentModel,
+                    unread_counter: unreadCounter
+                }
+            });
         } else {
             // this is mark as read on a thread
             thread = this.call('mail_service', 'getThread', previewID);

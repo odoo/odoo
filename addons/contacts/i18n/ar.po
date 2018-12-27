@@ -3,18 +3,19 @@
 # * contacts
 # 
 # Translators:
-# Yihya Hugirat <hugirat@gmail.com>, 2017
-# Mustafa Rawi <mustafa@cubexco.com>, 2017
-# amrnegm <amrnegm.01@gmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
-# Shaima Safar <shaima.safar@open-inside.com>, 2017
+# Mustafa Rawi <mustafa@cubexco.com>, 2018
+# amrnegm <amrnegm.01@gmail.com>, 2018
+# Martin Trigaux, 2018
+# Shaima Safar <shaima.safar@open-inside.com>, 2018
+# Akram Alfusayal <akram_ma@hotmail.com>, 2018
+# Abdulmajeed Alomar <majeeed87@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Shaima Safar <shaima.safar@open-inside.com>, 2017\n"
+"POT-Creation-Date: 2018-09-18 09:49+0000\n"
+"PO-Revision-Date: 2018-09-18 09:49+0000\n"
+"Last-Translator: Abdulmajeed Alomar <majeeed87@gmail.com>, 2018\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,11 +35,6 @@ msgid "Banks"
 msgstr "المصارف"
 
 #. module: contacts
-#: model:ir.actions.act_window,help:contacts.action_contacts
-msgid "Click to add a contact in your contacts directory."
-msgstr "انقر لإضافة جهة اتصال في دليل جهات الاتصال."
-
-#. module: contacts
 #: model:ir.ui.menu,name:contacts.res_partner_menu_config
 msgid "Configuration"
 msgstr "الإعدادات"
@@ -46,7 +42,7 @@ msgstr "الإعدادات"
 #. module: contacts
 #: model:ir.ui.menu,name:contacts.menu_partner_category_form
 msgid "Contact Tags"
-msgstr ""
+msgstr "علامات الاتصال"
 
 #. module: contacts
 #: model:ir.ui.menu,name:contacts.menu_partner_title_contact
@@ -55,6 +51,7 @@ msgstr "ألقاب جهات الاتصال"
 
 #. module: contacts
 #: model:ir.actions.act_window,name:contacts.action_contacts
+#: model:ir.actions.act_window,name:contacts.action_contacts_summary
 #: model:ir.ui.menu,name:contacts.menu_contacts
 #: model:ir.ui.menu,name:contacts.res_partner_menu_contacts
 msgid "Contacts"
@@ -71,6 +68,12 @@ msgid "Country Group"
 msgstr "مجموعة الدولة"
 
 #. module: contacts
+#: model_terms:ir.actions.act_window,help:contacts.action_contacts
+#: model_terms:ir.actions.act_window,help:contacts.action_contacts_summary
+msgid "Create a contact in your address book"
+msgstr ""
+
+#. module: contacts
 #: model:ir.ui.menu,name:contacts.menu_country_state_partner
 msgid "Fed. States"
 msgstr "Fed. States"
@@ -81,17 +84,17 @@ msgid "Localization"
 msgstr "التوطين"
 
 #. module: contacts
-#: model:ir.actions.act_window,help:contacts.action_contacts
-msgid ""
-"Odoo helps you easily track all activities related to\n"
-"            a customer: discussions, history of business opportunities,\n"
-"            documents, etc."
+#: model_terms:ir.actions.act_window,help:contacts.action_contacts
+#: model_terms:ir.actions.act_window,help:contacts.action_contacts_summary
+msgid "Odoo helps you to easily track all activities related to a customer."
 msgstr ""
-"أودو يساعدك على تتبع  جميع الأنشطة المتعلقة\n"
-" بعميل: مناقشات، تاريخ فرص الأعمال، \n"
-" وثائق، إلخ بسهولة."
 
 #. module: contacts
 #: model:ir.ui.menu,name:contacts.res_partner_industry_menu
 msgid "Sectors of Activity"
-msgstr ""
+msgstr "قطاعات النشاط"
+
+#. module: contacts
+#: model:ir.model,name:contacts.model_res_users
+msgid "Users"
+msgstr "المستخدمون"

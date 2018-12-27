@@ -15,8 +15,9 @@ var ActivityMenu = Widget.extend({
     name: 'activity_menu',
     template:'mail.systray.ActivityMenu',
     events: {
-        'click': '_onActivityMenuClick',
+        'click .o_mail_activity_action': '_onActivityActionClick',
         'click .o_mail_preview': '_onActivityFilterClick',
+        'show.bs.dropdown': '_onActivityMenuShow',
     },
     willStart: function () {
         return $.when(this.call('mail_service', 'isReady'));
@@ -62,14 +63,6 @@ var ActivityMenu = Widget.extend({
         });
     },
     /**
-     * Check wether activity systray dropdown is open or not
-     * @private
-     * @returns {boolean}
-     */
-    _isOpen: function () {
-        return this.$el.hasClass('open');
-    },
-    /**
      * Update(render) activity system tray view on activity updation.
      * @private
      */
@@ -107,6 +100,30 @@ var ActivityMenu = Widget.extend({
     //------------------------------------------------------------
 
     /**
+     * Redirect to specific action given its xml id or to the activity
+     * view of the current model if no xml id is provided
+     *
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onActivityActionClick: function (ev) {
+        ev.stopPropagation();
+        var targetAction = $(ev.currentTarget);
+        var actionXmlid = targetAction.data('action_xmlid');
+        if (actionXmlid) {
+            this.do_action(actionXmlid);
+        } else {
+            this.do_action({
+                type: 'ir.actions.act_window',
+                name: targetAction.data('model_name'),
+                views: [[false, 'activity'], [false, 'kanban'], [false, 'list']],
+                view_mode: 'activity',
+                res_model: targetAction.data('res_model')
+            });
+        }
+    },
+
+    /**
      * Redirect to particular model view
      * @private
      * @param {MouseEvent} event
@@ -132,14 +149,10 @@ var ActivityMenu = Widget.extend({
         });
     },
     /**
-     * When menu clicked update activity preview if counter updated
      * @private
-     * @param {MouseEvent} event
      */
-    _onActivityMenuClick: function () {
-        if (!this._isOpen()) {
-            this._updateActivityPreview();
-        }
+    _onActivityMenuShow: function () {
+         this._updateActivityPreview();
     },
 });
 

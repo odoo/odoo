@@ -14,7 +14,7 @@
         <record model="res.groups" id="group_system">
             <field name="name">Settings</field>
             <field name="implied_ids" eval="[(4, ref('group_erp_manager'))]"/>
-            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+            <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
         </record>
 
         <record model="res.groups" id="group_user">
@@ -38,11 +38,12 @@
         </record>
         <record model="res.groups" id="group_user">
             <field name="implied_ids" eval="[(4, ref('group_no_one'))]"/>
-            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+            <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
         </record>
 
         <record model="res.groups" id="group_partner_manager">
             <field name="name">Contact Creation</field>
+            <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
         </record>
 
         <record id="default_user" model="res.users">

@@ -7,6 +7,7 @@ from odoo import models, api
 class event_confirm(models.TransientModel):
     """Event Confirmation"""
     _name = "event.confirm"
+    _description = 'Event Confirmation'
 
     @api.multi
     def confirm(self):

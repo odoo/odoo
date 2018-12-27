@@ -110,7 +110,18 @@ var MockServer = Class.extend({
             console.log('%c[rpc] request ' + route, 'color: blue; font-weight: bold;', args);
             args = JSON.parse(JSON.stringify(args));
         }
-        return this._performRpc(route, args).then(function (result) {
+        var def = this._performRpc(route, args);
+
+        var abort = def.abort || def.reject;
+        if (abort) {
+            abort = abort.bind(def);
+        } else {
+            abort = function () {
+                throw new Error("Can't abort this request");
+            };
+        }
+
+        def = def.then(function (result) {
             var resultString = JSON.stringify(result || false);
             if (debug) {
                 console.log('%c[rpc] response' + route, 'color: blue; font-weight: bold;', JSON.parse(resultString));
@@ -123,6 +134,10 @@ var MockServer = Class.extend({
             }
             return $.Deferred().reject(errorString, event || $.Event());
         });
+
+        var promise = def.promise();
+        promise.abort = abort;
+        return promise;
     },
 
     //--------------------------------------------------------------------------
@@ -331,7 +346,7 @@ var MockServer = Class.extend({
                 activeInDomain = activeInDomain || subdomain[0] === 'active';
             });
             if (!activeInDomain) {
-                domain.unshift(['active', '=', true]);
+                domain = [['active', '=', true]].concat(domain);
             }
         }
 
@@ -878,6 +893,27 @@ var MockServer = Class.extend({
         return data;
     },
     /**
+     * Simulates a 'resequence' operation
+     *
+     * @private
+     * @param {string} model
+     * @param {string} field
+     * @param {Array} ids
+     */
+    _mockResequence: function (args) {
+        var offset = args.offset ? Number(args.offset) : 0;
+        var field = args.field ? args.field : 'sequence';
+        var records = this.data[args.model].records;
+        if (!(field in this.data[args.model].fields)) {
+            return false;
+        }
+        for (var i in args.ids) {
+            var record = _.findWhere(records, {id: args.ids[i]});
+            record[field] = Number(i) + offset;
+        }
+        return true;
+    },
+    /**
      * Simulate a 'search_count' operation
      *
      * @private
@@ -1036,7 +1072,7 @@ var MockServer = Class.extend({
                 return $.when(this._mockSearchReadController(args));
 
             case '/web/dataset/resequence':
-                return $.when();
+                return $.when(this._mockResequence(args));
         }
         if (route.indexOf('/web/image') >= 0 || _.contains(['.png', '.jpg'], route.substr(route.length - 4))) {
             return $.when();

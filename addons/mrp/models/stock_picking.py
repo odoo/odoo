@@ -20,8 +20,8 @@ class StockPickingType(models.Model):
         if not mrp_picking_types:
             return
         domains = {
-            'count_mo_waiting': [('availability', '=', 'waiting')],
-            'count_mo_todo': [('state', 'in', ('confirmed', 'planned', 'progress'))],
+            'count_mo_waiting': [('reservation_state', '=', 'waiting')],
+            'count_mo_todo': ['|', ('state', 'in', ('confirmed', 'draft', 'planned', 'progress'))],
             'count_mo_late': [('date_planned_start', '<', fields.Date.today()), ('state', '=', 'confirmed')],
         }
         for field in domains:

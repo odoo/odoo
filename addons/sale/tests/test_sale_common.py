@@ -17,7 +17,7 @@ class TestSale(AccountingTestCase):
             'email': 'a.m@example.com',
             'signature': '--\nAndreww',
             'notification_type': 'email',
-            'groups_id': [(6, 0, [group_manager.id])]
+            'groups_id': [(6, 0, [group_manager.id, self.env.ref('base.group_user').id])]
         })
         self.user = self.env['res.users'].create({
             'name': 'Mark User',

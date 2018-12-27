@@ -43,7 +43,7 @@ class GoogleMap(http.Controller):
             partner_data["partners"].append({
                 'id': partner.id,
                 'name': escape(partner.name),
-                'address': escape('\n'.join(partner.name_get()[0][1].split('\n')[1:])),
+                'address': escape('\n'.join(partner.display_name.split('\n')[1:])),
                 'latitude': escape(str(partner.partner_latitude)),
                 'longitude': escape(str(partner.partner_longitude)),
             })
@@ -52,7 +52,7 @@ class GoogleMap(http.Controller):
         else:
             partner_url = '/partners/'
 
-        google_maps_api_key = request.env['ir.config_parameter'].sudo().get_param('google_maps_api_key')
+        google_maps_api_key = request.website.google_maps_api_key
         values = {
             'partner_url': partner_url,
             'partner_data': json.dumps(partner_data),

@@ -32,8 +32,6 @@ Notes:
     ],
     'data': [
         # basic accounting data
-        'data/account_financial_report_data.xml',
-        'data/account_financial_report_abr_data.xml',
         'data/l10n_lu_chart_data.xml',
         'data/account.account.template-2011.csv',
         'data/account.account.tag.csv',

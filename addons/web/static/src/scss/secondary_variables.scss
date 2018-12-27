@@ -1,43 +1,34 @@
-// Define $gray-lighter-dark as a minor bootstrap $gray-lighter variation used
-// for design purposes only (e.g. cards' borders). We avoid to overwrite the
-// default $gray-light because it is deeply used by bootstrap to define muted
-// elements.
-$gray-lighter-dark: $o-color-silver-dark;
-$gray-lighter-darker: $o-color-silver-darker;
+$o-webclient-background-color: desaturate($o-gray-100, 100%) !default;
+$o-control-panel-background-color: $o-view-background-color !default;
 
-$o-webclient-background-color: $o-color-silver;
-$o-control-panel-background-color: $o-color-silver;
-
-$o-list-footer-color: $o-main-text-color;
-$o-list-group-header-color: lighten($o-brand-lightsecondary, 10%);
+$o-list-footer-color: $o-main-text-color !default;
+$o-list-group-header-color: lighten($o-brand-lightsecondary, 10%) !default;
 
 // UI custom colors for tags, kanban records' colors, ...)
-$o-colors: $o-color-gray-light, #F06050, #F4A460, #F7CD1F, #6CC1ED, #814968,
-              #EB7E7F, #2C8397, #475577, #D6145F, #30C381, #9365B8;
+// Note: the first value is the old BS3 gray-light value
+$o-colors: lighten(#000, 46.7%), #F06050, #F4A460, #F7CD1F, #6CC1ED, #814968,
+              #EB7E7F, #2C8397, #475577, #D6145F, #30C381, #9365B8 !default;
 
-$screen-xxs-max: ($screen-xs-min - 1);
-$screen-lg-max: ($screen-xl-min - 1);
+$o-sheet-cancel-hpadding: $o-horizontal-padding !default;
+$o-sheet-cancel-bpadding: $o-horizontal-padding !default;
 
-$o-sheet-cancel-hpadding: $o-horizontal-padding;
-$o-sheet-cancel-bpadding: $o-horizontal-padding;
+$o-statusbar-arrow-width: $o-statusbar-height / 3 !default;
+$o-statusbar-disabled-bg: lighten($o-brand-lightsecondary, 7%) !default;
 
-$o-statusbar-arrow-width: $o-statusbar-height / 3;
-$o-statusbar-disabled-bg: lighten($o-brand-lightsecondary, 7%);
+$o-navbar-inverse-link-hover-bg: darken($o-brand-odoo, 10%) !default;
 
-$o-navbar-inverse-link-hover-bg: darken($o-brand-primary, 10%);
-
-$o-datepicker-week-bg-color: lighten($o-datepicker-week-color, 30%);
+$o-datepicker-week-bg-color: lighten($o-datepicker-week-color, 30%) !default;
 
 // Kanban
 
-$o-kanban-record-margin: $o-horizontal-padding / 2;
-$o-kanban-group-padding: $o-horizontal-padding; // Cannot be higher than this
+$o-kanban-record-margin: $o-horizontal-padding / 2 !default;
+$o-kanban-group-padding: $o-horizontal-padding !default; // Cannot be higher than this
 
-$o-kanban-inside-hgutter-mobile: $o-horizontal-padding;
+$o-kanban-inside-hgutter-mobile: $o-horizontal-padding !default;
 
 // ------- Kanban dashboard variables -------
 
 // Since rows and containers are used inside cards, we're
 // forced to set the padding relative to the grid system.
-$o-kanban-dashboard-hpadding: $o-horizontal-padding;
-$o-kanban-dashboard-vpadding: $o-horizontal-padding / 2;
+$o-kanban-dashboard-hpadding: $o-horizontal-padding !default;
+$o-kanban-dashboard-vpadding: $o-horizontal-padding / 2 !default;

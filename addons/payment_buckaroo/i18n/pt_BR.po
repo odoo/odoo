@@ -7,13 +7,14 @@
 # Mateus Lopes <mateus1@gmail.com>, 2016
 # Luiz Carlos de Lima <luiz.carlos@akretion.com.br>, 2016
 # Martin Trigaux, 2016
+# Rodrigo de Almeida Sottomaior Macedo <rmsolucoeseminformatic4@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
-"Last-Translator: Martin Trigaux, 2016\n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
+"Last-Translator: Rodrigo de Almeida Sottomaior Macedo <rmsolucoeseminformatic4@gmail.com>, 2018\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,6 +33,21 @@ msgstr "; múltiplas ordens encontradas"
 #, python-format
 msgid "; no order found"
 msgstr "; nenhuma ordem encontrada"
+
+#. module: payment_buckaroo
+#: selection:payment.acquirer,provider:0
+msgid "Adyen"
+msgstr "Adyen"
+
+#. module: payment_buckaroo
+#: selection:payment.acquirer,provider:0
+msgid "Authorize.Net"
+msgstr "Authorize.Net"
+
+#. module: payment_buckaroo
+#: selection:payment.acquirer,provider:0
+msgid "Buckaroo"
+msgstr "Buckaroo"
 
 #. module: payment_buckaroo
 #: code:addons/payment_buckaroo/models/payment.py:148
@@ -56,6 +72,21 @@ msgstr ""
 "shasign (%s)"
 
 #. module: payment_buckaroo
+#: selection:payment.acquirer,provider:0
+msgid "Manual Configuration"
+msgstr ""
+
+#. module: payment_buckaroo
+#: selection:payment.acquirer,provider:0
+msgid "Ogone"
+msgstr "Ogone"
+
+#. module: payment_buckaroo
+#: selection:payment.acquirer,provider:0
+msgid "PayUmoney"
+msgstr "PayUmoney"
+
+#. module: payment_buckaroo
 #: model:ir.model,name:payment_buckaroo.model_payment_acquirer
 msgid "Payment Acquirer"
 msgstr "Método de Pagamento"
@@ -66,11 +97,36 @@ msgid "Payment Transaction"
 msgstr "Transação do Pagamento"
 
 #. module: payment_buckaroo
+#: selection:payment.acquirer,provider:0
+msgid "Paypal"
+msgstr "Paypal"
+
+#. module: payment_buckaroo
+#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_acquirer__provider
+msgid "Provider"
+msgstr "Fornecedor"
+
+#. module: payment_buckaroo
 #: model:ir.model.fields,field_description:payment_buckaroo.field_payment_acquirer__brq_secretkey
 msgid "SecretKey"
 msgstr "SecretKey"
 
 #. module: payment_buckaroo
+#: selection:payment.acquirer,provider:0
+msgid "Sips"
+msgstr "Sips"
+
+#. module: payment_buckaroo
+#: selection:payment.acquirer,provider:0
+msgid "Stripe"
+msgstr ""
+
+#. module: payment_buckaroo
 #: model:ir.model.fields,field_description:payment_buckaroo.field_payment_acquirer__brq_websitekey
 msgid "WebsiteKey"
 msgstr "WebsiteKey"
+
+#. module: payment_buckaroo
+#: selection:payment.acquirer,provider:0
+msgid "Wire Transfer"
+msgstr "Transferência Eletrônica"

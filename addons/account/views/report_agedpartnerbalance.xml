@@ -7,17 +7,17 @@
                 <h2>Aged Partner Balance</h2>
 
                 <div class="row mt32">
-                    <div class="col-xs-3">
+                    <div class="col-3">
                         <strong>Start Date:</strong>
                         <p t-esc="data['date_from']"/>
                     </div>
-                    <div class="col-xs-3">
+                    <div class="col-3">
                         <strong>Period Length (days)</strong>
                         <p t-esc="data['period_length']"/>
                     </div>
                 </div>
                 <div class="row mb32">
-                    <div class="col-xs-3">
+                    <div class="col-3">
                         <strong>Partner's:</strong>
                         <p>
                             <span t-if="data['result_selection'] == 'customer'">Receivable Accounts</span>
@@ -25,7 +25,7 @@
                             <span t-if="data['result_selection'] == 'customer_supplier'">Receivable and Payable Accounts</span>
                         </p>
                     </div>
-                    <div class="col-xs-3">
+                    <div class="col-3">
                         <strong>Target Moves:</strong>
                         <p>
                             <span t-if="data['target_move'] == 'all'">All Entries</span>
@@ -34,10 +34,10 @@
                     </div>
                 </div>
 
-                <table class="table table-condensed">
+                <table class="table table-sm">
                     <thead>
                         <tr>
-                            <th>Partners</th>
+                            <th><span>Partners</span></th>
                             <th class="text-right">
                                 <span>Not due</span>
                             </th>
@@ -46,7 +46,7 @@
                             <th class="text-right"><span t-esc="data['2']['name']"/></th>
                             <th class="text-right"><span t-esc="data['1']['name']"/></th>
                             <th class="text-right"><span t-esc="data['0']['name']"/></th>
-                            <th class="text-right">Total</th>
+                            <th class="text-right"><span>Total</span></th>
                         </tr>
                         <tr t-if="get_partner_lines">
                             <th>Account Total</th>

@@ -18,15 +18,15 @@ class TestTracking(common.BaseFunctionalTest, common.MockEmails):
             elif value_type in ('many2one'):
                 self.assertEqual(tracking.old_value_integer, old_value and old_value.id or False)
                 self.assertEqual(tracking.new_value_integer, new_value and new_value.id or False)
-                self.assertEqual(tracking.old_value_char, old_value and old_value.name_get()[0][1] or '')
-                self.assertEqual(tracking.new_value_char, new_value and new_value.name_get()[0][1] or '')
+                self.assertEqual(tracking.old_value_char, old_value and old_value.display_name or '')
+                self.assertEqual(tracking.new_value_char, new_value and new_value.display_name or '')
             else:
                 self.assertEqual(1, 0)
 
     def setUp(self):
         super(TestTracking, self).setUp()
 
-        record = self.env['mail.test.full'].sudo(self.user_employee).with_context(self._quick_create_ctx).create({
+        record = self.env['mail.test.full'].sudo(self.user_employee).with_context(common.BaseFunctionalTest._test_context).create({
             'name': 'Test',
         })
         self.record = record.with_context(mail_notrack=False)
@@ -116,3 +116,18 @@ class TestTracking(common.BaseFunctionalTest, common.MockEmails):
             self.record.message_ids[1],
             [('customer_id', 'many2one', False, self.user_admin.partner_id)  # onchange tracked field
              ])
+
+    def test_message_track_sequence(self):
+        """ Update some tracked fields and check that the mail.tracking.value are ordered according to their track_sequence"""
+        self.record.write({
+            'name': 'Zboub',
+            'customer_id': self.user_admin.partner_id.id,
+            'user_id': self.user_admin.id,
+            'umbrella_id': self.env['mail.test'].with_context(mail_create_nosubscribe=True).create({'name': 'Umbrella'}).id
+        })
+        self.assertEqual(len(self.record.message_ids), 1, 'should have 1 tracking message')
+
+        tracking_values = self.env['mail.tracking.value'].search([('mail_message_id', '=', self.record.message_ids.id)])
+        self.assertEqual(tracking_values[0].track_sequence, 1)
+        self.assertEqual(tracking_values[1].track_sequence, 2)
+        self.assertEqual(tracking_values[2].track_sequence, 100)

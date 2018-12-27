@@ -4,28 +4,21 @@
 # 
 # Translators:
 # Martin Trigaux, 2018
-# mrshelly <mrshelly@hotmail.com>, 2018
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
-# niulin lnc. <admin@niulin.net>, 2018
 # liAnGjiA <liangjia@qq.com>, 2018
-# Talway <9010446@qq.com>, 2018
-# 苏州远鼎 <tiexinliu@126.com>, 2018
-# waveyeung <waveyeung@qq.com>, 2018
-# liulixia <liu.lixia@elico-corp.com>, 2018
-# Gary Wei <Gary.wei@elico-corp.com>, 2018
-# zpq001 <zpq001@live.com>, 2018
-# fausthuang, 2018
-# 菜小蛇 <lttlsnk@gmail.com>, 2018
-# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2018
-# 老窦 北京 <2662059195@qq.com>, 2018
-# e2f_cn c7 <e2f_cn_c7@outlook.com>, 2018
+# ChinaMaker <liuct@chinamaker.net>, 2018
+# Jackie Zhang <jzh@odoo.com>, 2018
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
+# bower Guo <124358678@qq.com>, 2018
+# roye w <159820@qq.com>, 2018
+# snow wang <147156565@qq.com>, 2018
+# 广州救火 <7017511@qq.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:11+0000\n"
-"PO-Revision-Date: 2018-03-22 14:11+0000\n"
-"Last-Translator: e2f_cn c7 <e2f_cn_c7@outlook.com>, 2018\n"
+"POT-Creation-Date: 2018-09-21 13:18+0000\n"
+"PO-Revision-Date: 2018-09-21 13:18+0000\n"
+"Last-Translator: 广州救火 <7017511@qq.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -44,12 +37,12 @@ msgid "${object.partner_id.name} Repair Orders (Ref ${object.name or 'n/a' })"
 msgstr "${object.partner_id.name} 维修单 (Ref ${object.name or ’n/a’ })"
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.report_repairorder
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "(<i>Remove</i>)"
 msgstr "(<i>移除</i>)"
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "(update)"
 msgstr "（更新）"
 
@@ -74,70 +67,114 @@ msgstr ""
 #: model:mail.template,body_html:repair.mail_template_repair_quotation
 msgid ""
 "<?xml version=\"1.0\"?>\n"
-"<data><p>Dear ${object.partner_id.name}</p>\n"
-"                <p>\n"
-"                Here is your repair order ${doc_name} <strong>${object.name}</strong>\n"
-"                % if object.origin:\n"
-"                (with reference: ${object.origin} )\n"
-"                % endif\n"
-"                % if object.invoice_method != 'none':\n"
-"                amounting in <strong>${format_amount(object.amount_total, object.pricelist_id.currency_id)}.</strong>\n"
-"                % endif\n"
-"                </p>\n"
-"                <p>You can reply to this email if you have any questions.</p>\n"
-"                <p>Thank you,</p>\n"
-"            </data>"
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px;font-size: 13px;\">\n"
+"        Hello ${object.partner_id.name},<br/>\n"
+"        Here is your repair order ${doc_name} <strong>${object.name}</strong>\n"
+"        % if object.origin:\n"
+"            (with reference: ${object.origin} )\n"
+"        % endif\n"
+"        % if object.invoice_method != 'none':\n"
+"            amounting in <strong>${format_amount(object.amount_total, object.pricelist_id.currency_id)}.</strong><br/>\n"
+"        % else:\n"
+"            .<br/>\n"
+"        % endif\n"
+"        You can reply to this email if you have any questions.\n"
+"        <br/><br/>\n"
+"        Thank you,\n"
+"    </p>\n"
+"</div>"
 msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px;font-size: 13px;\">\n"
+"        尊敬的 ${object.partner_id.name},<br/>\n"
+"        Here is your repair order ${doc_name} <strong>${object.name}</strong>\n"
+"        % if object.origin:\n"
+"            (with reference: ${object.origin} )\n"
+"        % endif\n"
+"        % if object.invoice_method != 'none':\n"
+"            amounting in <strong>${format_amount(object.amount_total, object.pricelist_id.currency_id)}.</strong><br/>\n"
+"        % else:\n"
+"            .<br/>\n"
+"        % endif\n"
+"        You can reply to this email if you have any questions.\n"
+"        <br/><br/>\n"
+"        谢谢,\n"
+"    </p>\n"
+"</div>"
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.report_repairorder
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<i>(Add)</i>"
 msgstr "<i>(添加)</i>"
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.report_repairorder
+#: model_terms:ir.ui.view,arch_db:repair.view_cancel_repair
+msgid ""
+"<span class=\"o_form_label\">This operation will cancel the Repair process, "
+"but will not cancel it's Invoice. Do you want to continue?</span>"
+msgstr "<span class=\"o_form_label\">此操作将取消维修流程，但不会取消其发票。您要继续吗？</span>"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Lot/Serial Number:</strong>"
 msgstr "<strong>批次/序列号</strong>"
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.report_repairorder
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Operations</strong>"
 msgstr "<strong>操作</strong>"
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.report_repairorder
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Parts</strong>"
 msgstr "<strong>零件</strong>"
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.report_repairorder
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Printing Date:</strong>"
 msgstr "<strong>打印日期:</strong>"
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.report_repairorder
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Product to Repair:</strong>"
 msgstr "<strong>待维修产品:</strong>"
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.report_repairorder
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Shipping address :</strong>"
 msgstr "<strong>送货地址 :</strong>"
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.report_repairorder
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Total Without Taxes</strong>"
 msgstr "<strong>不含税总计</strong>"
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.report_repairorder
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Total</strong>"
 msgstr "<strong>合计</strong>"
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.report_repairorder
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Warranty:</strong>"
 msgstr "<strong>保证:</strong>"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__message_needaction
+msgid "Action Needed"
+msgstr "需要采取行动"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__activity_ids
+msgid "Activities"
+msgstr "活动"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__activity_state
+msgid "Activity State"
+msgstr "活动状态"
 
 #. module: repair
 #: selection:repair.line,type:0
@@ -145,12 +182,12 @@ msgid "Add"
 msgstr "添加"
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Add internal notes..."
 msgstr "添加内部备注..."
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Add quotation notes..."
 msgstr "添加报价单备注..."
 
@@ -160,31 +197,30 @@ msgid "After Repair"
 msgstr "维修后"
 
 #. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__message_attachment_count
+msgid "Attachment Count"
+msgstr "附件数量"
+
+#. module: repair
 #: selection:repair.order,invoice_method:0
 msgid "Before Repair"
 msgstr "维修前"
 
 #. module: repair
-#: code:addons/repair/models/repair.py:230
-#, python-format
-msgid "Can only confirm draft repairs."
-msgstr "只能确认草稿维修单。"
-
-#. module: repair
-#: model:ir.ui.view,arch_db:repair.view_cancel_repair
-#: model:ir.ui.view,arch_db:repair.view_make_invoice
+#: model_terms:ir.ui.view,arch_db:repair.view_cancel_repair
+#: model_terms:ir.ui.view,arch_db:repair.view_make_invoice
 msgid "Cancel"
 msgstr "取消"
 
 #. module: repair
 #: model:ir.model,name:repair.model_repair_cancel
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Cancel Repair"
 msgstr "取消维修"
 
 #. module: repair
 #: model:ir.actions.act_window,name:repair.action_cancel_repair
-#: model:ir.ui.view,arch_db:repair.view_cancel_repair
+#: model_terms:ir.ui.view,arch_db:repair.view_cancel_repair
 msgid "Cancel Repair Order"
 msgstr "取消维修单"
 
@@ -194,36 +230,38 @@ msgid "Cancelled"
 msgstr "已取消"
 
 #. module: repair
-#: code:addons/repair/models/repair.py:242
+#: code:addons/repair/models/repair.py:244
 #, python-format
 msgid "Cannot cancel completed repairs."
 msgstr "不能取消已完成的维修."
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__partner_id
-msgid "Choose partner for whom the order will be invoiced and delivered."
-msgstr "为将要开票或者发运的订单选择业务伙伴。"
+msgid ""
+"Choose partner for whom the order will be invoiced and delivered. You can "
+"find a partner by its Name, TIN, Email or Internal Reference."
+msgstr "选择将为其开具发票和交付订单的合作伙伴。您可以通过名称，TIN，电子邮件或内部参考找到合作伙伴。"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__company_id
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form_filter
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Company"
 msgstr "公司"
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Confirm Repair"
 msgstr "确认维修"
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form_filter
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 #: selection:repair.line,state:0 selection:repair.order,state:0
 msgid "Confirmed"
 msgstr "已确认"
 
 #. module: repair
-#: code:addons/repair/models/repair.py:593
-#: code:addons/repair/models/repair.py:651
+#: code:addons/repair/models/repair.py:607
+#: code:addons/repair/models/repair.py:667
 #, python-format
 msgid ""
 "Couldn't find a pricelist line matching this product and quantity.\n"
@@ -234,18 +272,23 @@ msgstr ""
 
 #. module: repair
 #: model:ir.actions.act_window,name:repair.act_repair_invoice
-#: model:ir.ui.view,arch_db:repair.view_make_invoice
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form
+#: model_terms:ir.ui.view,arch_db:repair.view_make_invoice
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Create Invoice"
 msgstr "创建发票"
 
 #. module: repair
-#: model:ir.actions.act_window,help:repair.action_repair_order_tree
+#: model:ir.model,name:repair.model_repair_order_make_invoice
+msgid "Create Mass Invoice (repair)"
+msgstr "创建批量发票 (修理)"
+
+#. module: repair
+#: model_terms:ir.actions.act_window,help:repair.action_repair_order_tree
 msgid "Create a new reparation order"
 msgstr "创建一张新的维修单"
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.view_make_invoice
+#: model_terms:ir.ui.view,arch_db:repair.view_make_invoice
 msgid "Create invoices"
 msgstr "创建发票"
 
@@ -287,7 +330,7 @@ msgstr "收货地址"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_fee__name
 #: model:ir.model.fields,field_description:repair.field_repair_line__name
-#: model:ir.ui.view,arch_db:repair.report_repairorder
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "Description"
 msgstr "描述"
 
@@ -307,7 +350,7 @@ msgid "Display Name"
 msgstr "显示名称"
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.view_make_invoice
+#: model_terms:ir.ui.view,arch_db:repair.view_make_invoice
 msgid "Do you really want to create the invoice(s)?"
 msgstr "你真的要创建发票吗 ？"
 
@@ -322,27 +365,47 @@ msgid "Draft"
 msgstr "草稿"
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "End Repair"
 msgstr "结束维修"
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form
+#: model:ir.model.fields,help:repair.field_repair_order__tracking
+msgid "Ensure the traceability of a storable product in your warehouse."
+msgstr "确保可以追溯你仓库中的产品。"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Extra Info"
 msgstr "额外信息"
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Fees"
 msgstr "费用"
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form_filter
+#: model:ir.model.fields,field_description:repair.field_repair_order__message_follower_ids
+msgid "Followers"
+msgstr "关注者"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__message_channel_ids
+msgid "Followers (Channels)"
+msgstr "关注者(渠道)"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "关注者(业务伙伴)"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Future Activities"
 msgstr "未来活动"
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form_filter
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Group By"
 msgstr "分组按"
 
@@ -352,17 +415,7 @@ msgid "Group by partner invoice address"
 msgstr "分组，按业务伙伴发票地址"
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form_filter
-msgid "Guarantee limit Month"
-msgstr "保修期月份"
-
-#. module: repair
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form_filter
-msgid "Guarantee limit by Month"
-msgstr "保修期限（月）"
-
-#. module: repair
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "History"
 msgstr "历史"
 
@@ -377,7 +430,22 @@ msgid "ID"
 msgstr "ID"
 
 #. module: repair
-#: model:ir.actions.act_window,help:repair.action_repair_order_tree
+#: model:ir.model.fields,help:repair.field_repair_order__message_unread
+msgid "If checked new messages require your attention."
+msgstr "查看是否有需要你留意的新信息。"
+
+#. module: repair
+#: model:ir.model.fields,help:repair.field_repair_order__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "如果勾选此项，有新消息会提醒你。"
+
+#. module: repair
+#: model:ir.model.fields,help:repair.field_repair_order__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr "如果勾选此项， 某些信息将会产生传递错误。"
+
+#. module: repair
+#: model_terms:ir.actions.act_window,help:repair.action_repair_order_tree
 msgid ""
 "In a repair order, you can detail the components you remove,\n"
 "                add or replace and record the time you spent on the different\n"
@@ -387,7 +455,7 @@ msgstr ""
 "并且可以记录你在不同操作上花费的时间"
 
 #. module: repair
-#: code:addons/repair/models/repair.py:208
+#: code:addons/repair/models/repair.py:210
 #, python-format
 msgid "Insufficient Quantity"
 msgstr "不充足的数量"
@@ -404,7 +472,7 @@ msgstr "库存移动"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__invoice_id
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Invoice"
 msgstr "发票"
 
@@ -425,17 +493,17 @@ msgid "Invoice Method"
 msgstr "开票方式"
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.report_repairorder
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "Invoice address:"
 msgstr "发票寄送地址:"
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.report_repairorder
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "Invoice and shipping address:"
 msgstr "发票和送货地址:"
 
 #. module: repair
-#: code:addons/repair/models/repair.py:382
+#: code:addons/repair/models/repair.py:385
 #, python-format
 msgid "Invoice created"
 msgstr "开票日期。"
@@ -444,7 +512,7 @@ msgstr "开票日期。"
 #: model:ir.model.fields,field_description:repair.field_repair_fee__invoiced
 #: model:ir.model.fields,field_description:repair.field_repair_line__invoiced
 #: model:ir.model.fields,field_description:repair.field_repair_order__invoiced
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form_filter
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Invoiced"
 msgstr "已开票"
 
@@ -452,6 +520,11 @@ msgstr "已开票"
 #: model:ir.model.fields,field_description:repair.field_repair_order__partner_invoice_id
 msgid "Invoicing Address"
 msgstr "开票地址"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__message_is_follower
+msgid "Is Follower"
+msgstr "是关注者"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_cancel____last_update
@@ -484,12 +557,13 @@ msgid "Last Updated on"
 msgstr "最后更新时间"
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form_filter
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Late Activities"
 msgstr "后期的活动"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__location_id
+#: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__location_id
 msgid "Location"
 msgstr "地点"
 
@@ -500,9 +574,19 @@ msgid "Lot/Serial"
 msgstr "批次/序列号"
 
 #. module: repair
-#: model:ir.model,name:repair.model_repair_order_make_invoice
-msgid "Make Invoice"
-msgstr "建立发票"
+#: model:ir.model.fields,field_description:repair.field_repair_order__message_main_attachment_id
+msgid "Main Attachment"
+msgstr "附件"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__message_has_error
+msgid "Message Delivery error"
+msgstr "消息递送错误"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__message_ids
+msgid "Messages"
+msgstr "消息"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__move_id
@@ -515,9 +599,24 @@ msgid "Move created by the repair order"
 msgstr "根据维修订单创建的库存移动"
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form_filter
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "My Activities"
 msgstr "我的活动"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "下一活动截止日期"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__activity_summary
+msgid "Next Activity Summary"
+msgstr "下一活动摘要"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__activity_type_id
+msgid "Next Activity Type"
+msgstr "下一活动类型"
 
 #. module: repair
 #: selection:repair.order,invoice_method:0
@@ -525,62 +624,103 @@ msgid "No Invoice"
 msgstr "不开票"
 
 #. module: repair
-#: code:addons/repair/models/repair.py:584
-#: code:addons/repair/models/repair.py:642
-#, python-format
-msgid "No Pricelist!"
-msgstr "无价格表！"
-
-#. module: repair
-#: code:addons/repair/models/repair.py:305
+#: code:addons/repair/models/repair.py:308
 #, python-format
 msgid "No account defined for partner \"%s\"."
 msgstr "业务伙伴 \"%s\" 没有指定应收账款科目"
 
 #. module: repair
-#: code:addons/repair/models/repair.py:331
-#: code:addons/repair/models/repair.py:359
+#: code:addons/repair/models/repair.py:334
+#: code:addons/repair/models/repair.py:362
 #, python-format
 msgid "No account defined for product \"%s\"."
 msgstr "产品 \"%s\" 没有指定科目"
 
 #. module: repair
-#: code:addons/repair/models/repair.py:352
+#: code:addons/repair/models/repair.py:598
+#: code:addons/repair/models/repair.py:658
 #, python-format
-msgid "No product defined on Fees!"
-msgstr "没有定义费用产品！"
+msgid "No pricelist found."
+msgstr "没有找到价格表."
 
 #. module: repair
-#: code:addons/repair/models/repair.py:591
-#: code:addons/repair/models/repair.py:649
+#: code:addons/repair/models/repair.py:355
 #, python-format
-msgid "No valid pricelist line found !"
-msgstr "无合法的价格表行！"
+msgid "No product defined on fees."
+msgstr "没有定义费用产品."
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form
+#: code:addons/repair/models/repair.py:605
+#: code:addons/repair/models/repair.py:665
+#, python-format
+msgid "No valid pricelist line found."
+msgstr "没有找到有效的价格表。"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Notes"
 msgstr "便签"
 
 #. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__message_needaction_counter
+msgid "Number of Actions"
+msgstr "行动数量"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__message_has_error_counter
+msgid "Number of error"
+msgstr "错误数"
+
+#. module: repair
+#: model:ir.model.fields,help:repair.field_repair_order__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "需要行动消息的数量"
+
+#. module: repair
+#: model:ir.model.fields,help:repair.field_repair_order__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "递送错误的消息数量"
+
+#. module: repair
+#: model:ir.model.fields,help:repair.field_repair_order__message_unread_counter
+msgid "Number of unread messages"
+msgstr "未读消息的数量"
+
+#. module: repair
+#: code:addons/repair/models/repair.py:232
+#, python-format
+msgid "Only draft repairs can be confirmed."
+msgstr "只能确认修理草案。"
+
+#. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__fees_lines
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Operations"
 msgstr "作业"
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form_filter
+#: selection:repair.order,activity_state:0
+msgid "Overdue"
+msgstr "逾期"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Partner"
 msgstr "合作伙伴"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__operations
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Parts"
 msgstr "零件"
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.report_repairorder
+#: selection:repair.order,activity_state:0
+msgid "Planned"
+msgstr "已安排"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "Price"
 msgstr "价格"
 
@@ -595,14 +735,15 @@ msgid "Pricelist of the selected partner."
 msgstr "所选伙伴的价格列表"
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Print Quotation"
 msgstr "打印报价单"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_fee__product_id
 #: model:ir.model.fields,field_description:repair.field_repair_line__product_id
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form_filter
+#: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__product_id
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Product"
 msgstr "产品"
 
@@ -629,10 +770,15 @@ msgid "Products repaired are all belonging to this lot"
 msgstr "维修的产品全属于此批次"
 
 #. module: repair
+#: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__quant_ids
+msgid "Quant"
+msgstr "份"
+
+#. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_fee__product_uom_qty
 #: model:ir.model.fields,field_description:repair.field_repair_line__product_uom_qty
-#: model:ir.ui.view,arch_db:repair.report_repairorder
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Quantity"
 msgstr "数量"
 
@@ -652,12 +798,12 @@ msgid "Quotation Notes"
 msgstr "报价单说明"
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form_filter
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Quotations"
 msgstr "报价单"
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form_filter
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Ready To Repair"
 msgstr "准备维修"
 
@@ -679,23 +825,27 @@ msgstr "维修"
 
 #. module: repair
 #: model:ir.model,name:repair.model_repair_fee
-msgid "Repair Fees Line"
-msgstr "维修费明细行"
+msgid "Repair Fees"
+msgstr "修理费"
 
 #. module: repair
-#: model:ir.model,name:repair.model_repair_line
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Repair Line"
 msgstr "维修明细"
 
 #. module: repair
+#: model:ir.model,name:repair.model_repair_line
+msgid "Repair Line (parts)"
+msgstr "修理明细行(零件)"
+
+#. module: repair
 #: model:ir.model,name:repair.model_repair_order
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Repair Order"
 msgstr "维修单"
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.report_repairorder
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "Repair Order #:"
 msgstr "维修订单行"
 
@@ -707,12 +857,12 @@ msgstr "维修单编＃"
 
 #. module: repair
 #: model:ir.actions.act_window,name:repair.action_repair_order_tree
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form_filter
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Repair Orders"
 msgstr "维修单"
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.report_repairorder
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "Repair Quotation #:"
 msgstr "维修报价单＃"
 
@@ -728,28 +878,22 @@ msgid "Repair must be canceled in order to reset it to draft."
 msgstr "必须取消维修单，以便将其重置为草稿。"
 
 #. module: repair
-#: code:addons/repair/models/repair.py:401
+#: code:addons/repair/models/repair.py:404
 #, python-format
 msgid "Repair must be confirmed before starting reparation."
 msgstr "维修单必须确认后才能进行维修。"
 
 #. module: repair
-#: code:addons/repair/models/repair.py:429
+#: code:addons/repair/models/repair.py:432
 #, python-format
 msgid "Repair must be repaired in order to make the product moves."
 msgstr "维修单必须维修后，才能移动"
 
 #. module: repair
-#: code:addons/repair/models/repair.py:412
+#: code:addons/repair/models/repair.py:415
 #, python-format
 msgid "Repair must be under repair in order to end reparation."
 msgstr "维修单必须维修，以便结束赔偿。"
-
-#. module: repair
-#: code:addons/repair/models/repair.py:244
-#, python-format
-msgid "Repair order is already invoiced."
-msgstr "维修单早已开票。"
 
 #. module: repair
 #: code:addons/repair/wizard/repair_cancel.py:20
@@ -769,13 +913,18 @@ msgid "Repairs"
 msgstr "维修"
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form
-#: model:ir.ui.view,arch_db:repair.view_repair_order_tree
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_tree
 msgid "Repairs order"
 msgstr "维修单"
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form_filter
+#: model:ir.model.fields,field_description:repair.field_repair_order__activity_user_id
+msgid "Responsible User"
+msgstr "责任用户"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Search Repair Orders"
 msgstr "搜索维修单"
 
@@ -788,23 +937,23 @@ msgid ""
 msgstr "选择“维修前”或“维修后”选项来确定在维修前后生产发票。“无发票”则代表此维修单无需生成发票。"
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Send Quotation"
 msgstr "发送报价单"
 
 #. module: repair
-#: code:addons/repair/models/repair.py:533
+#: code:addons/repair/models/repair.py:545
 #, python-format
 msgid "Serial number is required for operation line with product '%s'"
 msgstr "带有产品'%s'的作业行需要序列号"
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Set to Draft"
 msgstr "设为草稿"
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form_filter
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Show all records which has next action date is before today"
 msgstr "显示所有下一个活动日期在今天之前的记录"
 
@@ -814,16 +963,29 @@ msgid "Source Location"
 msgstr "源位置"
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Start Repair"
 msgstr "开始维修"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_line__state
 #: model:ir.model.fields,field_description:repair.field_repair_order__state
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form_filter
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Status"
 msgstr "状态"
+
+#. module: repair
+#: model:ir.model.fields,help:repair.field_repair_order__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"基于活动的状态 \n"
+" 逾期：已经超过截止日期 \n"
+" 现今：活动日期是当天 \n"
+" 计划：未来的活动。"
 
 #. module: repair
 #: model:ir.model,name:repair.model_stock_move
@@ -837,7 +999,7 @@ msgid "Subtotal"
 msgstr "小计"
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.report_repairorder
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "Tax"
 msgstr "税"
 
@@ -845,17 +1007,9 @@ msgstr "税"
 #: model:ir.model.fields,field_description:repair.field_repair_fee__tax_id
 #: model:ir.model.fields,field_description:repair.field_repair_line__tax_id
 #: model:ir.model.fields,field_description:repair.field_repair_order__amount_tax
-#: model:ir.ui.view,arch_db:repair.report_repairorder
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "Taxes"
 msgstr "税"
-
-#. module: repair
-#: code:addons/repair/models/repair.py:172
-#, python-format
-msgid ""
-"The Product Unit of Measure you chose has a different category than in the "
-"product form."
-msgstr "你选择的计量单位跟产品表单的计量单位在不同的类别。"
 
 #. module: repair
 #: sql_constraint:repair.order:0
@@ -863,7 +1017,21 @@ msgid "The name of the Repair Order must be unique!"
 msgstr "维修单的名必须唯一！"
 
 #. module: repair
-#: model:ir.actions.act_window,help:repair.action_repair_order_tree
+#: code:addons/repair/models/repair.py:172
+#, python-format
+msgid ""
+"The product unit of measure you chose has a different category than the "
+"product unit of measure."
+msgstr "你选择的产品计量单位跟产品的计量单位类别不同。"
+
+#. module: repair
+#: code:addons/repair/models/repair.py:246
+#, python-format
+msgid "The repair order is already invoiced."
+msgstr "修理单早已开票。"
+
+#. module: repair
+#: model_terms:ir.actions.act_window,help:repair.action_repair_order_tree
 msgid ""
 "The repair order uses the warranty date on the Serial Number in\n"
 "                order to know if whether the repair should be invoiced to the\n"
@@ -883,19 +1051,17 @@ msgid "This is the location where the product to repair is located."
 msgstr "这是待维修的产品存放的位置或库位"
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.view_cancel_repair
-msgid ""
-"This operation will cancel the Repair process, but will not cancel it's "
-"Invoice. Do you want to continue?"
-msgstr "将作废这张维修单，但对应的发票不会作废，继续么？"
-
-#. module: repair
 #: selection:repair.order,state:0
 msgid "To be Invoiced"
 msgstr "要开发票的"
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form_filter
+#: selection:repair.order,activity_state:0
+msgid "Today"
+msgstr "今日"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Today Activities"
 msgstr "今天的活动"
 
@@ -905,9 +1071,14 @@ msgid "Total"
 msgstr "合计"
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Total amount"
 msgstr "合计金额"
+
+#. module: repair
+#: model:ir.model,name:repair.model_stock_traceability_report
+msgid "Traceability Report"
+msgstr "追溯报告"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__tracking
@@ -927,14 +1098,24 @@ msgstr "维修中"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_fee__price_unit
 #: model:ir.model.fields,field_description:repair.field_repair_line__price_unit
-#: model:ir.ui.view,arch_db:repair.report_repairorder
+#: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "Unit Price"
 msgstr "单价"
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Unit of Measure"
 msgstr "量度单位"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__message_unread
+msgid "Unread Messages"
+msgstr "未读消息"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr "未读消息计数器"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__amount_untaxed
@@ -942,9 +1123,14 @@ msgid "Untaxed Amount"
 msgstr "未税金额"
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.view_repair_order_form
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Untaxed amount"
-msgstr "不含税金额"
+msgstr "未税金额"
+
+#. module: repair
+#: model:ir.model,name:repair.model_stock_warn_insufficient_qty_repair
+msgid "Warn Insufficient Repair Quantity"
+msgstr "警告维修数量不足"
 
 #. module: repair
 #: code:addons/repair/models/repair.py:172
@@ -954,23 +1140,28 @@ msgstr "警告"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__guarantee_limit
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Warranty Expiration"
 msgstr "质保到期"
 
 #. module: repair
-#: model:ir.ui.view,arch_db:repair.view_cancel_repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__website_message_ids
+msgid "Website Messages"
+msgstr "网站信息"
+
+#. module: repair
+#: model:ir.model.fields,help:repair.field_repair_order__website_message_ids
+msgid "Website communication history"
+msgstr "网站沟通记录"
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.view_cancel_repair
 msgid "Yes"
 msgstr "是"
 
 #. module: repair
-#: code:addons/repair/models/repair.py:293
-#, python-format
-msgid "You have to select a Partner Invoice Address in the repair form!"
-msgstr "你必须在维修单上选择业务伙伴的发票地址！"
-
-#. module: repair
-#: code:addons/repair/models/repair.py:586
-#: code:addons/repair/models/repair.py:644
+#: code:addons/repair/models/repair.py:600
+#: code:addons/repair/models/repair.py:660
 #, python-format
 msgid ""
 "You have to select a pricelist in the Repair form !\n"
@@ -978,11 +1169,7 @@ msgid ""
 msgstr "您必须在维修表单中选择一个价目表！ 在选择产品之前请设置一个。"
 
 #. module: repair
-#: model:ir.model,name:repair.model_stock_traceability_report
-msgid "stock.traceability.report"
-msgstr "stock.traceability.report"
-
-#. module: repair
-#: model:ir.model,name:repair.model_stock_warn_insufficient_qty_repair
-msgid "stock.warn.insufficient.qty.repair"
-msgstr "stock.warn.insufficient.qty.repair"
+#: code:addons/repair/models/repair.py:296
+#, python-format
+msgid "You have to select an invoice address in the repair form."
+msgstr "你必须在维修单上选择发票地址。"

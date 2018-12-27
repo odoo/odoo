@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
-    'name' : 'Fleet Management',
+    'name' : 'Fleet',
     'version' : '0.1',
     'sequence': 165,
     'category': 'Human Resources',
     'website' : 'https://www.odoo.com/page/fleet',
-    'summary' : 'Vehicle, leasing, insurances, costs',
+    'summary' : 'Manage your fleet and track car costs',
     'description' : """
 Vehicle, leasing, insurances, cost
 ==================================
@@ -36,7 +36,6 @@ Main Features
         'views/fleet_vehicle_cost_views.xml',
         'views/fleet_board_view.xml',
         'views/mail_activity_views.xml',
-        'views/res_users_views.xml',
         'data/fleet_cars_data.xml',
         'data/fleet_data.xml',
         'data/mail_data.xml',

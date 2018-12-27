@@ -9,7 +9,7 @@ from odoo.osv import expression
 
 from odoo.addons import decimal_precision as dp
 
-from odoo.tools import float_compare, pycompat
+from odoo.tools import float_compare
 
 
 class ProductCategory(models.Model):
@@ -64,6 +64,7 @@ class ProductPriceHistory(models.Model):
     _name = 'product.price.history'
     _rec_name = 'datetime'
     _order = 'datetime desc'
+    _description = 'Product Price List History'
 
     def _get_default_company_id(self):
         return self._context.get('force_company', self.env.user.company_id.id)
@@ -90,9 +91,9 @@ class ProductProduct(models.Model):
         digits=dp.get_precision('Product Price'),
         help="This is the sum of the extra price of all attributes")
     lst_price = fields.Float(
-        'Sale Price', compute='_compute_product_lst_price',
+        'Public Price', compute='_compute_product_lst_price',
         digits=dp.get_precision('Product Price'), inverse='_set_product_lst_price',
-        help="The sale price is managed from the product template. Click on the 'Variant Prices' button to set the extra attribute prices.")
+        help="The sale price is managed from the product template. Click on the 'Configure Variants' button to set the extra attribute prices.")
 
     default_code = fields.Char('Internal Reference', index=True)
     code = fields.Char('Reference', compute='_compute_product_code')
@@ -108,10 +109,12 @@ class ProductProduct(models.Model):
         'Barcode', copy=False, oldname='ean13',
         help="International Article Number used for product identification.")
     attribute_value_ids = fields.Many2many(
-        'product.attribute.value', string='Attributes', ondelete='restrict')
+        'product.attribute.value', string='Attribute Values', ondelete='restrict')
+    product_template_attribute_value_ids = fields.Many2many(
+        'product.template.attribute.value', string='Template Attribute Values', compute="_compute_product_template_attribute_value_ids")
     # image: all image fields are base64 encoded and PIL-supported
     image_variant = fields.Binary(
-        "Variant Image", attachment=True,
+        "Variant Image",
         help="This field holds the image used as image for the product variant, limited to 1024x1024px.")
     image = fields.Binary(
         "Big-sized image", compute='_compute_images', inverse='_set_image',
@@ -123,6 +126,7 @@ class ProductProduct(models.Model):
     image_medium = fields.Binary(
         "Medium-sized image", compute='_compute_images', inverse='_set_image_medium',
         help="Image of the product variant (Medium-sized image of product template if false).")
+    is_product_variant = fields.Boolean(compute='_compute_is_product_variant')
 
     standard_price = fields.Float(
         'Cost', company_dependent=True,
@@ -131,10 +135,8 @@ class ProductProduct(models.Model):
         help = "Cost used for stock valuation in standard price and as a first price to set in average/fifo. "
                "Also used as a base price for pricelists. "
                "Expressed in the default unit of measure of the product.")
-    volume = fields.Float('Volume', help="The volume in m3.")
-    weight = fields.Float(
-        'Weight', digits=dp.get_precision('Stock Weight'),
-        help="Weight of the product, packaging not included. The unit of measure can be changed in the general settings")
+    volume = fields.Float('Volume')
+    weight = fields.Float('Weight', digits=dp.get_precision('Stock Weight'))
 
     pricelist_item_ids = fields.Many2many(
         'product.pricelist.item', 'Pricelist Items', compute='_get_pricelist_items')
@@ -150,6 +152,10 @@ class ProductProduct(models.Model):
     def _get_invoice_policy(self):
         return False
 
+    def _compute_is_product_variant(self):
+        for product in self:
+            product.is_product_variant = True
+
     def _compute_product_price(self):
         prices = {}
         pricelist_id_or_name = self._context.get('pricelist')
@@ -159,11 +165,11 @@ class ProductProduct(models.Model):
             quantity = self._context.get('quantity', 1.0)
 
             # Support context pricelists specified as display_name or ID for compatibility
-            if isinstance(pricelist_id_or_name, pycompat.string_types):
+            if isinstance(pricelist_id_or_name, str):
                 pricelist_name_search = self.env['product.pricelist'].name_search(pricelist_id_or_name, operator='=', limit=1)
                 if pricelist_name_search:
                     pricelist = self.env['product.pricelist'].browse([pricelist_name_search[0][0]])
-            elif isinstance(pricelist_id_or_name, pycompat.integer_types):
+            elif isinstance(pricelist_id_or_name, int):
                 pricelist = self.env['product.pricelist'].browse(pricelist_id_or_name)
 
             if pricelist:
@@ -192,15 +198,10 @@ class ProductProduct(models.Model):
             value -= product.price_extra
             product.write({'list_price': value})
 
-    @api.depends('attribute_value_ids.price_ids.price_extra', 'attribute_value_ids.price_ids.product_tmpl_id')
+    @api.depends('product_template_attribute_value_ids.price_extra')
     def _compute_product_price_extra(self):
-        # TDE FIXME: do a real multi and optimize a bit ?
         for product in self:
-            price_extra = 0.0
-            for attribute_price in product.mapped('attribute_value_ids.price_ids'):
-                if attribute_price.product_tmpl_id == product.product_tmpl_id:
-                    price_extra += attribute_price.price_extra
-            product.price_extra = price_extra
+            product.price_extra = sum(product.mapped('product_template_attribute_value_ids.price_extra'))
 
     @api.depends('list_price', 'price_extra')
     def _compute_product_lst_price(self):
@@ -228,11 +229,11 @@ class ProductProduct(models.Model):
     def _compute_partner_ref(self):
         for supplier_info in self.seller_ids:
             if supplier_info.name.id == self._context.get('partner_id'):
-                product_name = supplier_info.product_name or self.default_code
+                product_name = supplier_info.product_name or self.default_code or self.name
                 self.partner_ref = '%s%s' % (self.code and '[%s] ' % self.code or '', product_name)
                 break
         else:
-            self.partner_ref = self.name_get()[0][1]
+            self.partner_ref = self.display_name
 
     @api.one
     @api.depends('image_variant', 'product_tmpl_id.image')
@@ -267,13 +268,19 @@ class ProductProduct(models.Model):
 
     @api.one
     def _set_image_value(self, value):
-        if isinstance(value, pycompat.text_type):
+        if isinstance(value, str):
             value = value.encode('ascii')
         image = tools.image_resize_image_big(value)
         if self.product_tmpl_id.image:
             self.image_variant = image
         else:
             self.product_tmpl_id.image = image
+
+    def _compute_product_template_attribute_value_ids(self):
+        for product in self:
+            product.product_template_attribute_value_ids = self.env['product.template.attribute.value']._search([
+                ('product_tmpl_id', '=', product.product_tmpl_id.id),
+                ('product_attribute_value_id', 'in', product.attribute_value_ids.ids)])
 
     @api.one
     def _get_pricelist_items(self):
@@ -289,7 +296,7 @@ class ProductProduct(models.Model):
             for value in product.attribute_value_ids:
                 if value.attribute_id in attributes:
                     raise ValidationError(_('Error! It is not allowed to choose more than one value for a given attribute.'))
-                if value.attribute_id.create_variant:
+                if value.attribute_id.create_variant == 'always':
                     attributes |= value.attribute_id
         return True
 
@@ -298,13 +305,14 @@ class ProductProduct(models.Model):
         if self.uom_id and self.uom_po_id and self.uom_id.category_id != self.uom_po_id.category_id:
             self.uom_po_id = self.uom_id
 
-    @api.model
-    def create(self, vals):
-        product = super(ProductProduct, self.with_context(create_product_product=True)).create(vals)
-        # When a unique variant is created from tmpl then the standard price is set by _set_standard_price
-        if not (self.env.context.get('create_from_tmpl') and len(product.product_tmpl_id.product_variant_ids) == 1):
-            product._set_standard_price(vals.get('standard_price') or 0.0)
-        return product
+    @api.model_create_multi
+    def create(self, vals_list):
+        products = super(ProductProduct, self.with_context(create_product_product=True)).create(vals_list)
+        for product, vals in zip(products, vals_list):
+            # When a unique variant is created from tmpl then the standard price is set by _set_standard_price
+            if not (self.env.context.get('create_from_tmpl') and len(product.product_tmpl_id.product_variant_ids) == 1):
+                product._set_standard_price(vals.get('standard_price') or 0.0)
+        return products
 
     @api.multi
     def write(self, values):
@@ -322,9 +330,10 @@ class ProductProduct(models.Model):
             # Check if product still exists, in case it has been unlinked by unlinking its template
             if not product.exists():
                 continue
-            # Check if the product is last product of this template
+            # Check if the product is last product of this template...
             other_products = self.search([('product_tmpl_id', '=', product.product_tmpl_id.id), ('id', '!=', product.id)])
-            if not other_products:
+            # ... and do not delete product template if it's configured to be created "on demand"
+            if not other_products and not product.product_tmpl_id.has_dynamic_attributes():
                 unlink_templates |= product.product_tmpl_id
             unlink_products |= product
         res = super(ProductProduct, unlink_products).unlink()
@@ -370,6 +379,7 @@ class ProductProduct(models.Model):
             partner_ids = [partner_id, self.env['res.partner'].browse(partner_id).commercial_partner_id.id]
         else:
             partner_ids = []
+        company_id = self.env.context.get('company_id')
 
         # all user don't have access to seller and partner
         # check access and use superuser
@@ -388,6 +398,11 @@ class ProductProduct(models.Model):
                 sellers = [x for x in product.seller_ids if (x.name.id in partner_ids) and (x.product_id == product)]
                 if not sellers:
                     sellers = [x for x in product.seller_ids if (x.name.id in partner_ids) and not x.product_id]
+                # Filter out sellers based on the company. This is done afterwards for a better
+                # code readability. At this point, only a few sellers should remain, so it should
+                # not be a performance issue.
+                if company_id:
+                    sellers = [x for x in sellers if x.company_id.id in [company_id, False]]
             if sellers:
                 for s in sellers:
                     seller_variant = s.product_name and (
@@ -527,6 +542,11 @@ class ProductProduct(models.Model):
             prices[product.id] = product[price_type] or 0.0
             if price_type == 'list_price':
                 prices[product.id] += product.price_extra
+                # we need to add the price from the attributes that do not generate variants
+                # (see field product.attribute create_variant)
+                if self._context.get('no_variant_attributes_price_extra'):
+                    # we have a list of price_extra that comes from the attribute values, we need to sum all that
+                    prices[product.id] += sum(self._context.get('no_variant_attributes_price_extra'))
 
             if uom:
                 prices[product.id] = product.uom_id._compute_price(prices[product.id], uom)
@@ -571,22 +591,58 @@ class ProductProduct(models.Model):
         )
         return super(ProductProduct, self).get_empty_list_help(help)
 
+    def get_product_multiline_description_sale(self):
+        """ Compute a multiline description of this product, in the context of sales
+                (do not use for purchases or other display reasons that don't intend to use "description_sale").
+            It will often be used as the default description of a sale order line referencing this product.
+        """
+        name = self.display_name
+        if self.description_sale:
+            name += '\n' + self.description_sale
+
+        return name
+
+    def _has_valid_attributes(self, valid_attributes, valid_values):
+        """ Check if a product has valid attributes. It is considered valid if:
+            - it uses ALL valid attributes
+            - it ONLY uses valid values
+            We must make sure that all attributes are used to take into account the case where
+            attributes would be added to the template.
+
+            :param valid_attributes: a recordset of product.attribute
+            :param valid_values: a recordset of product.attribute.value
+            :return: True if the attibutes and values are correct, False instead
+        """
+        self.ensure_one()
+        values = self.attribute_value_ids.filtered(lambda v: v.attribute_id.create_variant != 'no_variant')
+        attributes = values.mapped('attribute_id')
+        return attributes == valid_attributes and values <= valid_values
+
+    @api.multi
+    def toggle_active(self):
+        """ Archiving related product.template if there is only one active product.product """
+        with_one_active = self.filtered(lambda product: len(product.product_tmpl_id.product_variant_ids) == 1)
+        for product in with_one_active:
+            product.product_tmpl_id.toggle_active()
+        return super(ProductProduct, self - with_one_active).toggle_active()
+
 
 class ProductPackaging(models.Model):
     _name = "product.packaging"
-    _description = "Packaging"
+    _description = "Product Packaging"
     _order = 'sequence'
 
     name = fields.Char('Package Type', required=True)
     sequence = fields.Integer('Sequence', default=1, help="The first in the sequence is the default one.")
     product_id = fields.Many2one('product.product', string='Product')
-    qty = fields.Float('Contained Quantity', help="The total number of products you can have per pallet or box.")
+    qty = fields.Float('Contained Quantity', help="Quantity of products contained in the packaging.")
     barcode = fields.Char('Barcode', copy=False, help="Barcode used for packaging identification.")
+    product_uom_id = fields.Many2one('uom.uom', related='product_id.uom_id', readonly=True)
 
 
 class SupplierInfo(models.Model):
     _name = "product.supplierinfo"
-    _description = "Information about a product vendor"
+    _description = "Supplier Pricelist"
     _order = 'sequence, min_qty desc, price'
 
     name = fields.Many2one(
@@ -602,8 +658,8 @@ class SupplierInfo(models.Model):
     sequence = fields.Integer(
         'Sequence', default=1, help="Assigns the priority to the list of product vendor.")
     product_uom = fields.Many2one(
-        'uom.uom', 'Vendor Unit of Measure',
-        readonly="1", related='product_tmpl_id.uom_po_id',
+        'uom.uom', 'Unit of Measure',
+        related='product_tmpl_id.uom_po_id',
         help="This comes from the product form.")
     min_qty = fields.Float(
         'Minimal Quantity', default=0.0, required=True,
@@ -626,7 +682,14 @@ class SupplierInfo(models.Model):
     product_tmpl_id = fields.Many2one(
         'product.template', 'Product Template',
         index=True, ondelete='cascade', oldname='product_id')
-    product_variant_count = fields.Integer('Variant Count', related='product_tmpl_id.product_variant_count')
+    product_variant_count = fields.Integer('Variant Count', related='product_tmpl_id.product_variant_count', readonly=False)
     delay = fields.Integer(
         'Delivery Lead Time', default=1, required=True,
         help="Lead time in days between the confirmation of the purchase order and the receipt of the products in your warehouse. Used by the scheduler for automatic computation of the purchase order planning.")
+
+    @api.model
+    def get_import_templates(self):
+        return [{
+            'label': _('Import Template for Vendor Pricelists'),
+            'template': '/product/static/xls/product_supplierinfo.xls'
+        }]

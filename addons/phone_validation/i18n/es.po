@@ -3,19 +3,14 @@
 # * phone_validation
 # 
 # Translators:
-# José Matias Zuazo <jose.zuazo@tpsistemas.com.ar>, 2017
-# Eduardo Magdalena <emagdalena@close2circle.com>, 2017
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2017
-# Martin Trigaux, 2017
-# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2017
-# e2f <projects@e2f.com>, 2018
+# Martin Trigaux, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 11.0\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-24 09:00+0000\n"
-"PO-Revision-Date: 2017-10-24 09:00+0000\n"
-"Last-Translator: e2f <projects@e2f.com>, 2018\n"
+"POT-Creation-Date: 2018-09-21 13:18+0000\n"
+"PO-Revision-Date: 2018-09-21 13:18+0000\n"
+"Last-Translator: Martin Trigaux, 2018\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,7 +24,7 @@ msgid "Add international prefix"
 msgstr "Añadir prefijo internacional"
 
 #. module: phone_validation
-#: model:ir.model.fields,help:phone_validation.field_res_company_phone_international_format
+#: model:ir.model.fields,help:phone_validation.field_res_company__phone_international_format
 msgid ""
 "Always encode phone numbers using international format. Otherwise numbers "
 "coming from the company's country are nationaly formatted. International "
@@ -46,12 +41,12 @@ msgid "Companies"
 msgstr "Compañías"
 
 #. module: phone_validation
-#: model:ir.model.fields,field_description:phone_validation.field_phone_validation_mixin_display_name
+#: model:ir.model.fields,field_description:phone_validation.field_phone_validation_mixin__display_name
 msgid "Display Name"
 msgstr "Nombre a mostrar"
 
 #. module: phone_validation
-#: model:ir.model.fields,field_description:phone_validation.field_phone_validation_mixin_id
+#: model:ir.model.fields,field_description:phone_validation.field_phone_validation_mixin__id
 msgid "ID"
 msgstr "ID (identificación)"
 
@@ -68,12 +63,12 @@ msgid "Invalid number %s: probably incorrect prefix"
 msgstr "Número no válido:%s probablemente"
 
 #. module: phone_validation
-#: model:ir.model.fields,field_description:phone_validation.field_phone_validation_mixin___last_update
+#: model:ir.model.fields,field_description:phone_validation.field_phone_validation_mixin____last_update
 msgid "Last Modified on"
 msgstr "Última modificación en"
 
 #. module: phone_validation
-#: model:ir.model.fields,field_description:phone_validation.field_res_company_phone_international_format
+#: model:ir.model.fields,field_description:phone_validation.field_res_company__phone_international_format
 msgid "Local Numbers"
 msgstr "Números locales"
 
@@ -81,6 +76,11 @@ msgstr "Números locales"
 #: selection:res.company,phone_international_format:0
 msgid "No prefix"
 msgstr "Sin prefijo"
+
+#. module: phone_validation
+#: model:ir.model,name:phone_validation.model_phone_validation_mixin
+msgid "Phone Validation Mixin"
+msgstr ""
 
 #. module: phone_validation
 #: code:addons/phone_validation/tools/phone_validation.py:44
@@ -101,8 +101,3 @@ msgid ""
 msgstr ""
 "Imposibe de analizar %s:\n"
 "%s"
-
-#. module: phone_validation
-#: model:ir.model,name:phone_validation.model_phone_validation_mixin
-msgid "phone.validation.mixin"
-msgstr ""

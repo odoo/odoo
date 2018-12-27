@@ -19,7 +19,6 @@ Dashboard / Reports for Warehouse Management includes:
 ------------------------------------------------------
 * Stock Inventory Value at given date (support dates in the past)
     """,
-    'website': 'https://www.odoo.com/page/warehouse',
     'depends': ['stock', 'account'],
     'category': 'Hidden',
     'sequence': 16,

@@ -17,10 +17,11 @@ class ResConfigSettings(models.TransientModel):
             config.google_drive_uri = google_drive_uri
 
     def set_values(self):
-        super(ResConfigSettings, self).set_values()
         params = self.env['ir.config_parameter'].sudo()
+        authorization_code_before = params.get_param('google_drive_authorization_code')
+        super(ResConfigSettings, self).set_values()
         authorization_code = self.google_drive_authorization_code
         refresh_token = False
-        if authorization_code and authorization_code != params.get_param('google_drive_authorization_code'):
+        if authorization_code and authorization_code != authorization_code_before:
             refresh_token = self.env['google.service'].generate_refresh_token('drive', authorization_code)
         params.set_param('google_drive_refresh_token', refresh_token)

@@ -38,6 +38,7 @@ Here is how it works:
         'data/account_fiscal_position_data.xml',
         'data/account_chart_template_data.xml',
         'report/isr_report.xml',
+        'report/swissqr_report.xml',
         'views/res_bank_view.xml',
         'views/account_invoice_view.xml',
         'views/res_config_settings_views.xml',

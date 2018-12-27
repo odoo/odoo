@@ -6,13 +6,13 @@
     'category': 'Point of Sale',
     'sequence': 6,
     'summary': 'Hardware Driver for Barcode Scanners',
-    'website': 'https://www.odoo.com/page/point-of-sale',
+    'website': 'https://www.odoo.com/page/point-of-sale-hardware',
     'description': """
 Barcode Scanner Hardware Driver
 ================================
 
 This module allows the web client to access a remotely installed barcode
-scanner, and is used by the posbox to provide barcode scanner support to the
+scanner, and is used by the IoTBox to provide barcode scanner support to the
 point of sale module. 
 
 """,

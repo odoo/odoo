@@ -30,6 +30,7 @@ class HrPayrollAdvice(models.Model):
     Bank Advice
     '''
     _name = 'hr.payroll.advice'
+    _description = "Indian HR Payroll Advice"
 
     def _get_default_date(self):
         return fields.Date.from_string(fields.Date.today())
@@ -136,7 +137,7 @@ class HrPayslipRun(models.Model):
                         'company_id': company.id,
                         'name': run.name,
                         'date': run.date_end,
-                        'bank_id': company.partner_id.bank_ids and company.partner_id.bank_ids[0].id or False
+                        'bank_id': company.partner_id.bank_ids and company.partner_id.bank_ids[0].bank_id.id or False
                     })
             for slip in run.slip_ids:
                 # TODO is it necessary to interleave the calls ?
@@ -168,8 +169,8 @@ class HrPayrollAdviceLine(models.Model):
     employee_id = fields.Many2one('hr.employee', string='Employee', required=True)
     bysal = fields.Float(string='By Salary', digits=dp.get_precision('Payroll'))
     debit_credit = fields.Char(string='C/D', default='C')
-    company_id = fields.Many2one('res.company', related='advice_id.company_id', string='Company', store=True)
-    ifsc = fields.Boolean(related='advice_id.neft', string='IFSC')
+    company_id = fields.Many2one('res.company', related='advice_id.company_id', string='Company', store=True, readonly=False)
+    ifsc = fields.Boolean(related='advice_id.neft', string='IFSC', readonly=False)
 
     @api.onchange('employee_id')
     def onchange_employee_id(self):

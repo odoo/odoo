@@ -14,7 +14,8 @@ class ResPartner(models.Model):
                                               ('external_id', 'ID del Exterior'),
                                               ('diplomatic_card', 'Carné Diplomatico'),
                                               ('residence_document', 'Salvoconducto de Permanencia'),
-                                              ('civil_registration', 'Registro Civil')], string='Document Type',
+                                              ('civil_registration', 'Registro Civil'),
+                                              ('national_citizen_id', 'Cédula de ciudadanía')], string='Document Type',
                                              help='Indicates to what document the information in here belongs to.')
     l10n_co_verification_code = fields.Char(compute='_compute_verification_code', string='VC',  # todo remove this field in master
                                             help='Redundancy check to verify the vat number has been typed in correctly.')
@@ -45,7 +46,7 @@ class ResPartner(models.Model):
             except ValueError:
                 partner.l10n_co_verification_code = False
 
-    @api.constrains('vat', 'commercial_partner_country_id', 'l10n_co_document_type')
+    @api.constrains('vat', 'country_id', 'l10n_co_document_type')
     def check_vat(self):
         # check_vat is implemented by base_vat which this localization
         # doesn't directly depend on. It is however automatically

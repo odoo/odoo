@@ -31,10 +31,10 @@ class HrExpense(models.Model):
 
     @api.model
     def _get_employee_id_domain(self):
-        res = [(1, '=', 0)]
 
+        res= [('id', '=', 0)] # Nothing accepted by domain, by default
         if self.user_has_groups('hr_expense.group_hr_expense_manager') or self.user_has_groups('account.group_account_user'):
-            res = [(1, '=', 1)]
+            res = [] # Then, domain accepts everything
         elif self.user_has_groups('hr_expense.group_hr_expense_user') and self.env.user.employee_ids:
             employee = self.env.user.employee_ids[0]
             res = ['|', '|', ('department_id.manager_id.id', '=', employee.id),
@@ -42,12 +42,11 @@ class HrExpense(models.Model):
         elif self.env.user.employee_ids:
             employee = self.env.user.employee_ids[0]
             res = [('id', '=', employee.id)]
-
         return res
 
     name = fields.Char('Description', readonly=True, required=True, states={'draft': [('readonly', False)], 'reported': [('readonly', False)], 'refused': [('readonly', False)]})
     date = fields.Date(readonly=True, states={'draft': [('readonly', False)], 'reported': [('readonly', False)], 'refused': [('readonly', False)]}, default=fields.Date.context_today, string="Date")
-    employee_id = fields.Many2one('hr.employee', string="Employee", required=True, readonly=True, states={'draft': [('readonly', False)], 'reported': [('readonly', False)], 'refused': [('readonly', False)]}, default=_default_employee_id, domain=lambda self: self._get_employee_id_domain)
+    employee_id = fields.Many2one('hr.employee', string="Employee", required=True, readonly=True, states={'draft': [('readonly', False)], 'reported': [('readonly', False)], 'refused': [('readonly', False)]}, default=_default_employee_id, domain=lambda self: self._get_employee_id_domain())
     product_id = fields.Many2one('product.product', string='Product', readonly=True, states={'draft': [('readonly', False)], 'reported': [('readonly', False)], 'refused': [('readonly', False)]}, domain=[('can_be_expensed', '=', True)], required=True)
     product_uom_id = fields.Many2one('uom.uom', string='Unit of Measure', required=True, readonly=True, states={'draft': [('readonly', False)], 'refused': [('readonly', False)]}, default=_default_product_uom_id)
     unit_amount = fields.Float("Unit Price", readonly=True, required=True, states={'draft': [('readonly', False)], 'reported': [('readonly', False)], 'refused': [('readonly', False)]}, digits=dp.get_precision('Product Price'))
@@ -58,7 +57,7 @@ class HrExpense(models.Model):
     total_amount_company = fields.Monetary("Total (Company Currency)", compute='_compute_total_amount_company', store=True, currency_field='company_currency_id', digits=dp.get_precision('Account'))
     company_id = fields.Many2one('res.company', string='Company', readonly=True, states={'draft': [('readonly', False)], 'refused': [('readonly', False)]}, default=lambda self: self.env.user.company_id)
     currency_id = fields.Many2one('res.currency', string='Currency', readonly=True, states={'draft': [('readonly', False)], 'refused': [('readonly', False)]}, default=lambda self: self.env.user.company_id.currency_id)
-    company_currency_id = fields.Many2one('res.currency', string="Report Company Currency", related='sheet_id.currency_id', store=True)
+    company_currency_id = fields.Many2one('res.currency', string="Report Company Currency", related='sheet_id.currency_id', store=True, readonly=False)
     analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', states={'post': [('readonly', True)], 'done': [('readonly', True)]}, oldname='analytic_account')
     analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags', states={'post': [('readonly', True)], 'done': [('readonly', True)]})
     account_id = fields.Many2one('account.account', string='Account', states={'post': [('readonly', True)], 'done': [('readonly', True)]}, default=_default_account_id, help="An expense account is expected")
@@ -148,14 +147,14 @@ class HrExpense(models.Model):
 
     @api.model
     def get_empty_list_help(self, help_message):
-        if help_message:
+        if help_message and "oe_view_nocontent_smiling_face" not in help_message:
             use_mailgateway = self.env['ir.config_parameter'].sudo().get_param('hr_expense.use_mailgateway')
             alias_record = use_mailgateway and self.env.ref('hr_expense.mail_alias_expense') or False
             if alias_record and alias_record.alias_domain and alias_record.alias_name:
                 link = "<a id='o_mail_test' href='mailto:%(email)s?subject=Lunch%%20with%%20customer%%3A%%20%%2412.32'>%(email)s</a>" % {
                     'email': '%s@%s' % (alias_record.alias_name, alias_record.alias_domain)
                 }
-                return '<p class="oe_view_nocontent_smiling_face">%s</p><p>%s</p>' % (
+                return '<p class="oe_view_nocontent_smiling_face">%s</p><p class="oe_view_nocontent_alias">%s</p>' % (
                     _('Add a new expense,'),
                     _('or send receipts by email to %s.') % (link),)
         return super(HrExpense, self).get_empty_list_help(help_message)
@@ -181,6 +180,8 @@ class HrExpense(models.Model):
             raise UserError(_("You cannot report twice the same line!"))
         if len(self.mapped('employee_id')) != 1:
             raise UserError(_("You cannot report expenses for different employees in the same report."))
+
+        todo = self.filtered(lambda x: x.payment_mode=='own_account') or self.filtered(lambda x: x.payment_mode=='company_account')
         return {
             'name': _('New Expense Report'),
             'type': 'ir.actions.act_window',
@@ -188,9 +189,9 @@ class HrExpense(models.Model):
             'res_model': 'hr.expense.sheet',
             'target': 'current',
             'context': {
-                'default_expense_line_ids': [line.id for line in self],
+                'default_expense_line_ids': todo.ids,
                 'default_employee_id': self[0].employee_id.id,
-                'default_name': self[0].name if len(self.ids) == 1 else ''
+                'default_name': todo[0].name if len(todo) == 1 else ''
             }
         }
 
@@ -460,6 +461,7 @@ class HrExpense(models.Model):
             'employee_id': employee.id,
             'product_id': product.id,
             'product_uom_id': product.uom_id.id,
+            'tax_ids': [(4, tax.id, False) for tax in product.supplier_taxes_id],
             'quantity': 1,
             'unit_amount': price,
             'company_id': employee.company_id.id,
@@ -594,11 +596,11 @@ class HrExpenseSheet(models.Model):
     def _track_subtype(self, init_values):
         self.ensure_one()
         if 'state' in init_values and self.state == 'approve':
-            return 'hr_expense.mt_expense_approved'
+            return self.env.ref('hr_expense.mt_expense_approved')
         elif 'state' in init_values and self.state == 'cancel':
-            return 'hr_expense.mt_expense_refused'
+            return self.env.ref('hr_expense.mt_expense_refused')
         elif 'state' in init_values and self.state == 'done':
-            return 'hr_expense.mt_expense_paid'
+            return self.env.ref('hr_expense.mt_expense_paid')
         return super(HrExpenseSheet, self)._track_subtype(init_values)
 
     def _message_auto_subscribe_followers(self, updated_values, subtype_ids):
@@ -658,6 +660,7 @@ class HrExpenseSheet(models.Model):
     @api.multi
     def action_submit_sheet(self):
         self.write({'state': 'submit'})
+        self.activity_update()
 
     @api.multi
     def approve_expense_sheets(self):
@@ -719,7 +722,7 @@ class HrExpenseSheet(models.Model):
     def activity_update(self):
         for expense_report in self.filtered(lambda hol: hol.state == 'submit'):
             self.activity_schedule(
-                'hr_expense.mail_act_expense_approval', fields.Date.today(),
-                user_id=expense_report._get_responsible_for_approval().id)
+                'hr_expense.mail_act_expense_approval',
+                user_id=expense_report.sudo()._get_responsible_for_approval().id)
         self.filtered(lambda hol: hol.state == 'approve').activity_feedback(['hr_expense.mail_act_expense_approval'])
         self.filtered(lambda hol: hol.state == 'cancel').activity_unlink(['hr_expense.mail_act_expense_approval'])

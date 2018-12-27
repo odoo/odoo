@@ -10,6 +10,7 @@ DEFAULT_ENDPOINT = 'https://iap-sms.odoo.com'
 
 class SmsApi(models.AbstractModel):
     _name = 'sms.api'
+    _description = 'SMS API'
 
     @api.model
     def _send_sms(self, numbers, message):

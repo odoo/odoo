@@ -3,14 +3,17 @@
 # * account_analytic_default
 # 
 # Translators:
-# Quim - eccit <quim@eccit.com>, 2017
+# Martin Trigaux, 2018
+# Quim - eccit <quim@eccit.com>, 2018
+# Manel Fernandez <manelfera@outlook.com>, 2018
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Quim - eccit <quim@eccit.com>, 2017\n"
+"POT-Creation-Date: 2018-09-18 09:49+0000\n"
+"PO-Revision-Date: 2018-08-24 09:15+0000\n"
+"Last-Translator: Manel Fernandez <manelfera@outlook.com>, 2018\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,112 +22,126 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: account_analytic_default
-#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_kanban
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_kanban
 msgid "<i class=\"fa fa-calendar\"/> From"
 msgstr "<i class=\"fa fa-calendar\"/> De"
 
 #. module: account_analytic_default
-#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_kanban
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_kanban
 msgid "<strong>Customer</strong>"
-msgstr ""
+msgstr "<strong>Client</strong>"
 
 #. module: account_analytic_default
-#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_kanban
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_kanban
 msgid "<strong>Product</strong>"
 msgstr "<strong>Producte</strong>"
 
 #. module: account_analytic_default
-#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "Accounts"
+msgstr "Comptes"
+
+#. module: account_analytic_default
+#: code:addons/account_analytic_default/models/account_analytic_default.py:27
+#, python-format
+msgid ""
+"An analytic default requires at least an analytic account or an analytic "
+"tag."
 msgstr ""
 
 #. module: account_analytic_default
-#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_analytic_id
-#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__analytic_id
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "Analytic Account"
-msgstr ""
+msgstr "Compte analític"
 
 #. module: account_analytic_default
 #: model:ir.actions.act_window,name:account_analytic_default.action_analytic_default_list
 #: model:ir.ui.menu,name:account_analytic_default.menu_analytic_default_list
-#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form
-#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_tree
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_tree
 msgid "Analytic Defaults"
-msgstr ""
+msgstr "Anàlisi: Valors per defecte"
 
 #. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_account_analytic_default
 msgid "Analytic Distribution"
-msgstr ""
+msgstr "Distribució analítica"
 
 #. module: account_analytic_default
 #: model:ir.actions.act_window,name:account_analytic_default.action_product_default_list
-#: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_partner
 #: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_user
 msgid "Analytic Rules"
-msgstr ""
+msgstr "Regles analítiques"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_company_id
-#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__analytic_tag_ids
+msgid "Analytic Tags"
+msgstr "Etiquetes analítiques"
+
+#. module: account_analytic_default
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__company_id
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "Company"
-msgstr ""
+msgstr "Companyia"
 
 #. module: account_analytic_default
-#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form
 msgid "Conditions"
-msgstr ""
+msgstr "Condicions"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_create_uid
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__create_uid
 msgid "Created by"
 msgstr "Creat per"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_create_date
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__create_date
 msgid "Created on"
 msgstr "Creat el"
 
 #. module: account_analytic_default
-#: model:ir.ui.view,arch_db:account_analytic_default.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.res_config_settings_view_form
 msgid "Default Analytic Values"
-msgstr ""
+msgstr "Valors analítics per defecte"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_date_stop
+#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default__date_stop
 msgid "Default end date for this Analytic Account."
-msgstr ""
+msgstr "Data final per defecte d'aquest compte analític."
 
 #. module: account_analytic_default
-#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_date_start
+#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default__date_start
 msgid "Default start date for this Analytic Account."
-msgstr ""
+msgstr "Data inicial per defecte d'aquest compte analític."
 
 #. module: account_analytic_default
-#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_display_name
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__display_name
 msgid "Display Name"
 msgstr "Mostrar Nom"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_date_stop
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__date_stop
 msgid "End Date"
-msgstr ""
+msgstr "Data final"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_sequence
+#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default__sequence
 msgid ""
 "Gives the sequence order when displaying a list of analytic distribution"
 msgstr ""
+"Indica l'ordre de la seqüència quan es mostra una llista de distribució "
+"analítica."
 
 #. module: account_analytic_default
-#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "Group By"
-msgstr ""
+msgstr "Agrupar per"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_id
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_account_invoice_line
@@ -132,31 +149,31 @@ msgid "Invoice Line"
 msgstr "Línia de factura"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default___last_update
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default____last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Última modificació el "
 
 #. module: account_analytic_default
-#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_write_uid
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Última actualització per"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_write_date
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Última actualització el"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_partner_id
-#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__partner_id
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "Partner"
-msgstr ""
+msgstr "Empresa"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_product_id
-#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__product_id
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "Product"
-msgstr ""
+msgstr "Producte"
 
 #. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_sale_order_line
@@ -164,7 +181,7 @@ msgid "Sales Order Line"
 msgstr "Línia comanda de venda"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_company_id
+#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default__company_id
 msgid ""
 "Select a company which will use analytic account specified in analytic "
 "default (e.g. create new customer invoice or Sales order if we select this "
@@ -176,7 +193,7 @@ msgstr ""
 "agafarà com un compte analític)"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_partner_id
+#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default__partner_id
 msgid ""
 "Select a partner which will use analytic account specified in analytic "
 "default (e.g. create new customer invoice or Sales order if we select this "
@@ -188,7 +205,7 @@ msgstr ""
 "agafarà com un compte analític)"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_product_id
+#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default__product_id
 msgid ""
 "Select a product which will use analytic account specified in analytic "
 "default (e.g. create new customer invoice or Sales order if we select this "
@@ -200,28 +217,30 @@ msgstr ""
 "agafarà com un compte analític)"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_user_id
+#: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default__user_id
 msgid ""
 "Select a user which will use analytic account specified in analytic default."
 msgstr ""
+"Seleccioni un usuari que utilitzarà el compte analític especificat en "
+"l'analítica per defecte."
 
 #. module: account_analytic_default
-#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_sequence
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__sequence
 msgid "Sequence"
-msgstr ""
+msgstr "Seqüència"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_date_start
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__date_start
 msgid "Start Date"
-msgstr ""
+msgstr "Data inicial"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_user_id
-#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
+#: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__user_id
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "User"
-msgstr ""
+msgstr "Usuari"
 
 #. module: account_analytic_default
-#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_kanban
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_kanban
 msgid "to"
-msgstr ""
+msgstr "fins"

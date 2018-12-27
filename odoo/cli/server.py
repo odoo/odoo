@@ -36,8 +36,8 @@ _logger = logging.getLogger('odoo')
 def check_root_user():
     """Warn if the process's user is 'root' (on POSIX system)."""
     if os.name == 'posix':
-        import pwd
-        if pwd.getpwuid(os.getuid())[0] == 'root':
+        import getpass
+        if getpass.getuser() == 'root':
             sys.stderr.write("Running as user 'root' is a security risk.\n")
 
 def check_postgres_user():
@@ -138,6 +138,7 @@ def main(args):
         for db_name in preload:
             try:
                 odoo.service.db._create_empty_database(db_name)
+                config['init']['base'] = True
             except ProgrammingError as err:
                 if err.pgcode == errorcodes.INSUFFICIENT_PRIVILEGE:
                     # We use an INFO loglevel on purpose in order to avoid

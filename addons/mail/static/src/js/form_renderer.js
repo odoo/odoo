@@ -29,7 +29,8 @@ FormRenderer.include({
      */
     confirmChange: function (state, id, fields) {
         if (this.chatter) {
-            var updatedMailFields = _.intersection(fields, _.values(this.mailFields));
+            var chatterFields = ['message_attachment_count'].concat(_.values(this.mailFields));
+            var updatedMailFields = _.intersection(fields, chatterFields);
             if (updatedMailFields.length) {
                 this.chatter.update(state, updatedMailFields);
             }
@@ -53,6 +54,7 @@ FormRenderer.include({
             if (!this.chatter) {
                 this.chatter = new Chatter(this, this.state, this.mailFields, {
                     isEditable: this.activeActions.edit,
+                    viewType: 'form',
                 });
                 this.chatter.appendTo($('<div>'));
                 this._handleAttributes(this.chatter.$el, node);

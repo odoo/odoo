@@ -201,7 +201,7 @@
                 <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                 <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                 <field name="job_id"/>
-                <field name="department_id"/>
+                <field name="department_id" operator="child_of"/>
                 <field name="user_id"/>
                 <field name="stage_id" domain="[]"/>
                 <separator/>
@@ -290,14 +290,14 @@
                         <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click oe_applicant_kanban oe_semantic_html_override">
                             <div class="o_dropdown_kanban dropdown">
 
-                                <a class="dropdown-toggle btn" role="button" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
+                                <a class="dropdown-toggle o-no-caret btn" role="button" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
                                     <span class="fa fa-ellipsis-v"/>
                                 </a>
-                                <ul class="dropdown-menu" role="menu">
-                                    <t t-if="widget.deletable"><li><a role="menuitem" type="delete">Delete</a></li></t>
-                                    <li><a role="menuitem" name="action_makeMeeting" type="object">Schedule Interview</a></li>
-                                    <li role="menuitem" aira-haspopup="true"><ul role="menu" class="oe_kanban_colorpicker" data-field="color"/></li>
-                                </ul>
+                                <div class="dropdown-menu" role="menu">
+                                    <t t-if="widget.deletable"><a role="menuitem" type="delete" class="dropdown-item">Delete</a></t>
+                                    <a role="menuitem" name="action_makeMeeting" type="object" class="dropdown-item">Schedule Interview</a>
+                                    <ul class="oe_kanban_colorpicker" data-field="color"/>
+                                </div>
                             </div>
                             <div class="oe_kanban_content">
                                 <div class="o_kanban_record_top">
@@ -316,7 +316,7 @@
                                 <t t-if="record.partner_mobile.raw_value"><i class="fa fa-mobile mr4" role="img" aria-label="Mobile" title="Mobile"/><field name="partner_mobile"/><br/></t>
                                 <div class="o_kanban_record_bottom mt4">
                                     <div class="oe_kanban_bottom_left">
-                                        <div class="pull-left mr4" groups="base.group_user">
+                                        <div class="float-left mr4" groups="base.group_user">
                                             <field name="priority" widget="priority"/>
                                         </div>
                                         <div class="o_kanban_inline_block mr8">
@@ -340,7 +340,7 @@
                                         </div>
                                         <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" t-att-alt="record.user_id.value" width="30" height="30" class="oe_kanban_avatar"/>
                                     </div>
-                                    
+
                                 </div>
                             </div>
                             <div class="oe_clear"></div>
@@ -369,21 +369,6 @@
                 so that you can easily search through their content.
               </p>
          </field>
-    </record>
-
-    <record id="hr_applicant_action_activity" model="ir.actions.act_window">
-        <field name="name">My Next Activities</field>
-        <field name="res_model">hr.applicant</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">tree,form,kanban,calendar</field>
-        <field name="view_id" ref="hr_applicant_view_tree_activity"/>
-        <field name="context">{'search_default_activities_my': 1}</field>
-        <field name="domain">[('activity_date_deadline', '!=', False)]</field>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
-                No scheduled activities for the moment
-            </p>
-        </field>
     </record>
 
     <record model="ir.actions.act_window" id="action_hr_job_sources">
@@ -451,7 +436,7 @@
                     </group>
                     <footer>
                         <button string="Create" name="close_dialog" type="object" class="btn-primary"/>
-                        <button string="Discard" class="btn-default" special="cancel"/>
+                        <button string="Discard" class="btn-secondary" special="cancel"/>
                     </footer>
                 </sheet>
             </form>
@@ -543,7 +528,7 @@
     <record model="ir.actions.act_window" id="crm_case_categ0_act_job">
         <field name="name">Applications</field>
         <field name="res_model">hr.applicant</field>
-        <field name="view_mode">kanban,tree,form,pivot,graph,calendar</field>
+        <field name="view_mode">kanban,tree,form,pivot,graph,calendar,activity</field>
         <field name="view_id" eval="False"/>
         <field name="search_view_id" ref="view_crm_case_jobs_filter"/>
         <field name="context">{}</field>
@@ -617,12 +602,6 @@
         name="All Applications"
         parent="menu_crm_case_categ0_act_job"
         id="menu_crm_case_categ_all_app" action="crm_case_categ0_act_job" sequence="2"/>
-
-    <menuitem id="hr_applicant_nmenu_activity"
-        name="Next Activities"
-        parent="hr_recruitment.menu_crm_case_categ0_act_job"
-        action="hr_applicant_action_activity"
-        sequence="20"/>
 
     <!-- Resume and Letters -->
     <record id="ir_attachment_view_search_inherit_hr_recruitment" model="ir.ui.view">
@@ -711,18 +690,19 @@
         <field name="model">hr.recruitment.stage</field>
         <field name="arch" type="xml">
             <form string="Stage">
-                <group string="Stage Definition">
+            <sheet>
+                <group name="stage_definition" string="Stage Definition">
                     <group>
                         <field name="name"/>
                         <field name="sequence" groups="base.group_no_one"/>
                         <field name="job_id"/>
                     </group>
-                    <group>
-                         <field name="fold"/>
+                    <group name="stage_details">
+                        <field name="fold"/>
                         <field name="template_id" domain= "[('model_id.model', '=', 'hr.applicant')]"/>
                     </group>
                 </group>
-                <group string="Tooltips">
+                <group name="tooltips" string="Tooltips">
                     <p class="text-muted" colspan="2">
                         You can define here the labels that will be displayed for the kanban state instead
                         of the default labels.
@@ -736,6 +716,7 @@
                 </group>
                 <separator string="Requirements"/>
                 <field name="requirements"/>
+            </sheet>
             </form>
         </field>
     </record>
@@ -771,10 +752,12 @@
         <field name="model">hr.applicant.category</field>
         <field name="arch" type="xml">
             <form string="Tags">
+            <sheet>
                 <group>
                     <field name="name"/>
                     <field name="color"/>
                 </group>
+            </sheet>
             </form>
         </field>
     </record>
@@ -815,10 +798,12 @@
         <field name="model">hr.recruitment.degree</field>
         <field name="arch" type="xml">
             <form string="Degree">
+            <sheet>
                 <group>
                     <field name="name"/>
                     <field name="sequence" groups="base.group_no_one"/>
                 </group>
+            </sheet>
             </form>
         </field>
     </record>
@@ -881,7 +866,7 @@
         <field name="inherit_id" ref="hr.view_employee_filter"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='department_id']" position="after">
-                <filter name="newly_hired_employee" string="New Hired" domain="[('newly_hired_employee', '=', True)]"/>
+                <filter name="newly_hired_employee" string="Newly Hired" domain="[('newly_hired_employee', '=', True)]" groups="hr_recruitment.group_hr_recruitment_user"/>
             </xpath>
         </field>
     </record>
@@ -903,7 +888,7 @@
          <field name="name">hr.applicant.pivot</field>
          <field name="model">hr.applicant</field>
          <field name="arch" type="xml">
-             <pivot string="Recruitment Analysis" disable_linking="True">
+             <pivot string="Recruitment Analysis">
                  <field name="stage_id" type="row"/>
                  <field name="job_id" type="col"/>
              </pivot>
@@ -928,7 +913,7 @@
         <field name="arch" type="xml">
             <search string="Recruitment Analysis">
                 <field name="job_id"/>
-                <field name="department_id"/>
+                <field name="department_id" operator="child_of"/>
                 <field name="user_id"/>
                 <filter string="Creation Date" name="year" date="create_date" default_period="this_year"/>
                 <separator/>
@@ -971,7 +956,7 @@
             (0, 0, {'view_mode': 'graph', 'view_id': ref('hr_applicant_view_graph')})]"/>
         <field name="context">{}</field>  <!-- force empty -->
     </record>
-    <menuitem name="Reports" id="report_hr_recruitment" parent="menu_hr_recruitment_root" 
+    <menuitem name="Reports" id="report_hr_recruitment" parent="menu_hr_recruitment_root"
     sequence="99" action="hr_applicant_action_analysis"/>
     <record id="action_hr_recruitment_report_filtered_department" model="ir.actions.act_window">
         <field name="name">Recruitment Analysis</field>

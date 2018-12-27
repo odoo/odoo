@@ -164,8 +164,9 @@ class TestProjectFlow(TestProjectBase):
         self.assertEqual(rating_bad.rating_text, 'not_satisfied')
         self.assertEqual(first_task.rating_count, 1, "Task should have only one rating associated, since one is not consumed")
         self.assertEqual(rating_good.parent_res_id, self.project_pigs.id)
-        self.assertEqual(self.project_goats.percentage_satisfaction_task, -1)
-        self.assertEqual(self.project_pigs.percentage_satisfaction_task, -1)
+
+        self.assertEqual(self.project_goats.rating_percentage_satisfaction, -1)
+        self.assertEqual(self.project_pigs.rating_percentage_satisfaction, 0)  # There is a rating but not a "great" on, just an "okay".
 
         # Consuming rating_good
         first_task.rating_apply(10, rating_good.access_token)
@@ -176,8 +177,8 @@ class TestProjectFlow(TestProjectBase):
 
         self.assertEqual(first_task.rating_count, 2, "Task should have two ratings associated with it")
         self.assertEqual(rating_good.parent_res_id, self.project_pigs.id)
-        self.assertEqual(self.project_goats.percentage_satisfaction_task, -1)
-        self.assertEqual(self.project_pigs.percentage_satisfaction_task, 50)
+        self.assertEqual(self.project_goats.rating_percentage_satisfaction, -1)
+        self.assertEqual(self.project_pigs.rating_percentage_satisfaction, 50)
 
         # We change the task from project_pigs to project_goats, ratings should be associated with the new project
         first_task.project_id = self.project_goats.id
@@ -187,5 +188,5 @@ class TestProjectFlow(TestProjectBase):
         first_task.invalidate_cache()
 
         self.assertEqual(rating_good.parent_res_id, self.project_goats.id)
-        self.assertEqual(self.project_goats.percentage_satisfaction_task, 50)
-        self.assertEqual(self.project_pigs.percentage_satisfaction_task, -1)
+        self.assertEqual(self.project_goats.rating_percentage_satisfaction, 50)
+        self.assertEqual(self.project_pigs.rating_percentage_satisfaction, -1)

@@ -19,7 +19,7 @@ class TestPaymentAdviceBase(TransactionCase):
         self.bank_1 = self.env.ref('base.res_bank_1')
         self.in_country = self.env.ref('base.in')
         self.rd_dept = self.env.ref('hr.dep_rd')
-        self.employee_fp = self.env.ref('hr.employee_root')
+        self.employee_fp = self.env.ref('hr.employee_admin')
         self.employee_al = self.env.ref('hr.employee_al')
 
         # I create a new bank record

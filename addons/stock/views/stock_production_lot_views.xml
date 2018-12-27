@@ -14,7 +14,7 @@
             <form string="Lots/Serial Numbers">
                 <sheet>
                 <div class="oe_button_box" name="button_box">
-                        <button name="%(lot_open_quants)d" icon="fa-arrows" class="oe_stat_button" string="Locate" type="action"/>
+                        <button name="action_lot_open_quants" icon="fa-arrows" class="oe_stat_button" string="Locate" type="object"/>
                         <button name="%(action_stock_report)d" icon="fa-arrow-up" class="oe_stat_button" string="Traceability Report" type="action"/>
                 </div>
                 <div class="oe_title">
@@ -37,6 +37,7 @@
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
                     <field name="message_ids" widget="mail_thread"/>
                 </div>
             </form>
@@ -61,6 +62,11 @@
                         <field name="ref"/>
                     </group>
                 </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
             </form>
         </field>
     </record>

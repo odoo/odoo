@@ -11,13 +11,18 @@
                             <field name="serial" invisible="1"/>
                             <field name="production_id" invisible="1"/>
                             <field name="product_id" readonly="1"/>
+                            <field name="is_pending_production" invisible="1"/>
                             <label for="product_qty"/>
                             <div class="o_row">
                                 <field name="product_qty" attrs="{'readonly': [('serial', '=', True)]}"/>
                                 <field name="product_uom_id" readonly="1" groups="uom.group_uom"/>
                             </div>
                             <field name="product_tracking" invisible="1"/>
-                            <field name="lot_id" attrs="{'invisible': [('product_tracking', '=', 'none')], 'required': [('product_tracking', '!=', 'none')]}" domain="[('product_id', '=', product_id)]" context="{'default_product_id': product_id}"/>
+                            <label for="lot_id" attrs="{'invisible': [('product_tracking', '=', 'none')]}"/>
+                            <div class="o_row">
+                                <field name="lot_id" attrs="{'invisible': [('product_tracking', '=', 'none')], 'required': [('product_tracking', '!=', 'none'), ('lot_id', '!=', False)]}" domain="[('product_id', '=', product_id)]" context="{'default_product_id': product_id}"/>
+                                <button name="action_generate_serial" type="object" class="btn btn-primary fa fa-plus-square-o" aria-label="Creates a new serial/lot number" title="Creates a new serial/lot number" role="img" attrs="{'invisible': ['|', ('product_tracking', '=', 'none'), ('lot_id', '!=', False)]}"/>
+                            </div>
                         </group>
                     </group>
                     <group>
@@ -35,8 +40,10 @@
                         </field>
                     </group>
                     <footer>
-                        <button name="do_produce" type="object" string="Record Production" class="btn-primary"/>
-                        <button string="Cancel" class="btn-default" special="cancel" />
+                        <button name="continue_production" attrs="{'invisible':[('is_pending_production', '=', False)]}" type="object" string="Continue" class="btn-primary"/>
+                        <button name="do_produce" type="object" string="Save" class="btn-default btn-secondary" attrs="{'invisible':[('is_pending_production', '=', False)]}"/>
+                        <button name="do_produce" type="object" string="Save" class="btn-primary" attrs="{'invisible':[('is_pending_production', '=', True)]}"/>
+                        <button string="Discard" class="btn-default btn-secondary" special="cancel"/>
                     </footer>
                 </form>
             </field>

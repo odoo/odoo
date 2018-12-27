@@ -97,7 +97,7 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
      */
     getAvatarSource: function () {
         if (this._isOdoobotAuthor()) {
-            return '/mail/static/src/img/odoo_o.png';
+            return '/mail/static/src/img/odoobot.png';
         } else if (this.hasAuthor()) {
             return '/web/image/res.partner/' + this.getAuthorID() + '/image_small';
         } else if (this.getType() === 'email') {
@@ -132,7 +132,7 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
     /**
      * Get the text to display for the author of the message
      *
-     * Rule of precedence for the displayed author:
+     * Rule of precedence for the displayed author::
      *
      *      author name > sender email > "anonymous"
      *
@@ -262,6 +262,7 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
             documentID: this.getDocumentID(),
             id: id,
             imageSRC: this._getModuleIcon() || this.getAvatarSource(),
+            messageID: this.getID(),
             status: this.status,
             title: title,
         };
@@ -358,14 +359,6 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
         return !!(this._trackingValueIDs && (this._trackingValueIDs.length > 0));
     },
     /**
-     * State whether the current user is the author of this message
-     *
-     * @return {boolean}
-     */
-    isAuthor: function () {
-        return this._isAuthor();
-    },
-    /**
      * State whether this message is linked to a document thread (not channel)
      *
      * Usually, if this is true, then this message comes from a document thread,
@@ -380,6 +373,14 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
      */
     isLinkedToDocumentThread: function () {
         return !!(this._documentModel !== 'mail.channel' && this._documentID);
+    },
+    /**
+     * State whether the current user is the author of this message
+     *
+     * @return {boolean}
+     */
+    isMyselfAuthor: function () {
+        return this._isMyselfAuthor();
     },
     /**
      * States whether the current message needs moderation in general.
@@ -457,6 +458,9 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
      */
     setModerationStatus: function (newModerationStatus, options) {
         var self = this;
+        if (newModerationStatus === this._moderationStatus) {
+            return;
+        }
         this._moderationStatus = newModerationStatus;
         if (newModerationStatus === 'accepted' && options) {
             _.each(options.additionalThreadIDs, function (threadID) {
@@ -560,7 +564,7 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
      */
     _getAuthorName: function () {
         if (this._isOdoobotAuthor()) {
-            return "Odoobot";
+            return "OdooBot";
         }
         return this._super.apply(this, arguments);
     },
@@ -572,7 +576,7 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
         return this._moduleIcon;
     },
     /**
-     * State if the author of this message is Odoobot
+     * State if the author of this message is OdooBot
      * This is the default author for transient messages.
      *
      * @private

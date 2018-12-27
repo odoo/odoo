@@ -497,9 +497,6 @@
       <field name="amount_type">percent</field>
       <field name="refund_account_id" ref="pcg_445711"/>
       <field name="account_id" ref="pcg_445711"/>
-      <!-- use sequence="9" instead of sequence="10" to make it
-      the default tax in the wizard
-      "Set Your Accounting Options" (wizard.multi.charts.accounts) -->
       <field name="sequence" eval="9"/>
       <field name="type_tax_use">sale</field>
       <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tag_fr_02'),ref('l10n_fr.tag_fr_11')])]"/>
@@ -747,9 +744,6 @@
       <field name="amount_type">percent</field>
       <field name="refund_account_id" ref="pcg_44566"/>
       <field name="account_id" ref="pcg_44566"/>
-      <!-- use sequence="9" instead of sequence="10" to make it
-      the default tax in the wizard
-      "Set Your Accounting Options" (wizard.multi.charts.accounts) -->
       <field name="sequence" eval="9"/>
       <field name="type_tax_use">purchase</field>
       <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tag_fr_20'),ref('l10n_fr.tag_fr_30')])]"/>
@@ -763,7 +757,7 @@
       <field name="amount" eval="8.5"/>
       <field name="amount_type">percent</field>
       <field name="refund_account_id" ref="pcg_44566"/>
-      <field name="account_id" ref="pcg_44566"/> 
+      <field name="account_id" ref="pcg_44566"/>
       <field name="sequence" eval="10"/>
       <field name="type_tax_use">purchase</field>
       <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tag_fr_23'),ref('l10n_fr.tag_fr_32')])]"/>
@@ -837,7 +831,7 @@
       <field name="amount" eval="8.5"/>
       <field name="amount_type">percent</field>
       <field name="refund_account_id" ref="pcg_44566"/>
-      <field name="account_id" ref="pcg_44566"/> 
+      <field name="account_id" ref="pcg_44566"/>
       <field name="sequence" eval="10"/>
       <field name="type_tax_use">purchase</field>
       <field name="tag_ids" eval="[(6,0,[ref('l10n_fr.tag_fr_23'),ref('l10n_fr.tag_fr_32')])]"/>

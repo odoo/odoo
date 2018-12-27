@@ -6,23 +6,21 @@ odoo.define('im_support.SupportBus', function (require) {
  * to poll the Support server.
  */
 
+var BusService = require('bus.BusService');
 var supportSession = require('im_support.SupportSession');
+var core = require('web.core');
 
-var bus = require('bus.bus');
+var SupportBusService =  BusService.extend({
+    LOCAL_STORAGE_PREFIX: 'im_support',
+    POLL_ROUTE: '/longpolling/support_poll',
+    getSession: function () {
+        return supportSession;
+    },
+});
 
-var Bus;
-if(typeof Storage !== "undefined"){
-    Bus = bus.CrossTabBus;
-} else {
-    Bus = bus.Bus;
-}
+core.serviceRegistry.add('support_bus_service', SupportBusService);
 
-var params = {
-    session: supportSession,
-    pollRoute: '/longpolling/support_poll',
-};
-
-return new Bus(params);
+return SupportBusService;
 
 });
 

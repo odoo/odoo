@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="web.colorpicker">
+        <div class="o_colorpicker_widget">
+            <div class="row">
+                <div class="col-auto">
+                    <div class="o_color_pick_area d-inline-block border">
+                        <div class="o_picker_pointer rounded-circle"/>
+                    </div>
+                    <div class="o_color_slider d-inline-block ml-2 border">
+                        <div class="o_slider_pointer"/>
+                    </div>
+                    <div class="o_opacity_slider d-inline-block ml-2 border">
+                        <div class="o_opacity_pointer"/>
+                    </div>
+                </div>
+                <form class="col o_color_picker_inputs">
+                    <div class="input-group">
+                        <div class="input-group-prepend o_color_preview_parent">
+                            <span class="input-group-text rounded-0 o_color_preview"/>
+                        </div>
+                        <input type="text" class="form-control o_hex_input" data-color-method="hex"/>
+                    </div>
+                    <div class="form-row mt-2">
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="red">Red</label>
+                                <input type="text" class="form-control o_red_input" data-color-method="rgb" id="red"/>
+                            </div>
+                            <div class="form-group">
+                                <label for="green">Green</label>
+                                <input type="text" class="form-control o_green_input" data-color-method="rgb" id="green"/>
+                            </div>
+                            <div class="form-group">
+                                <label for="blue">Blue</label>
+                                <input type="text" class="form-control o_blue_input" data-color-method="rgb" id="blue"/>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="hue">Hue</label>
+                                <input type="text" class="form-control o_hue_input" data-color-method="hsl" id="hue"/>
+                            </div>
+                            <div class="form-group">
+                                <label for="saturation">Saturation %</label>
+                                <input type="text" class="form-control o_saturation_input" data-color-method="hsl" id="saturation"/>
+                            </div>
+                            <div class="form-group">
+                                <label for="lightness">Lightness %</label>
+                                <input type="text" class="form-control o_lightness_input" data-color-method="hsl" id="lightness"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="opacity">Opacity %</label>
+                        <input type="text" class="form-control o_opacity_input" data-color-method="opacity" id="opacity"/>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </t>
+</templates>

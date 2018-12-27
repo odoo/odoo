@@ -7,7 +7,7 @@
         <field name="model">maintenance.request</field>
         <field name="inherit_id" ref="maintenance.hr_equipment_request_view_search"/>
         <field name="arch" type="xml">
-            <xpath expr="field[@name='technician_user_id']" position="after">
+            <xpath expr="field[@name='user_id']" position="after">
                 <field name="employee_id"/>
             </xpath>
             <xpath expr="//filter[@name='my_requests']" position="replace">

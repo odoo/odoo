@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
-    'name': 'Mailing List Archive',
+    'name': 'Website Mail Channels',
     'category': 'Website',
+    'summary': 'Allow visitors to join public mail channels',
     'description': """
-Odoo Mail Group : Mailing List Archives
-==========================================
-
-        """,
+Visitors can join public mail channels managed in the Discuss app in order to get regular updates or reach out with your community.
+    """,
     'depends': ['website_mail'],
     'data': [
         'data/mail_template_data.xml',

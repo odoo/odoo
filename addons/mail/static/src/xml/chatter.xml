@@ -2,10 +2,33 @@
 <templates>
 
     <!--
+        Chatter attachment tab
+    -->
+
+    <div t-name="mail.chatter.AttachmentBox" class="o_mail_chatter_attachments">
+        <div class="o_chatter_attachment">
+            <div class="o_border_dashed">
+                <span class="o_attach_title">Attachments</span>
+            </div>
+            <div t-if="widget.imageList.length > 0" class="o_attachments_previews">
+                <t t-foreach="widget.imageList" t-as="attachment">
+                    <t t-call="mail.AttachmentPreview"/>
+                </t>
+            </div>
+            <div t-if="widget.otherList.length > 0" class="o_attachments_list">
+                <t t-foreach="widget.otherList" t-as="attachment">
+                    <t t-call="mail.Attachment"/>
+                </t>
+            </div>
+        </div>
+    </div>
+
+    <!--
         Chatter composer
 
         @param {mail.composer.Chatter} widget
     -->
+
     <t t-name="mail.chatter.Composer" t-extend="mail.Composer">
         <!-- Insert information before the composer -->
         <t t-jquery=".o_composer_container" t-operation="before">
@@ -25,17 +48,20 @@
                     </b>
                 </small>
                 <!-- List of followers -->
-                <div class="o_composer_suggestedPartners">
+                <div class="o_composer_suggested_partners">
                     <t t-foreach='widget.suggestedPartners' t-as='recipient'>
                         <div t-attf-title="Add as recipient and follower (reason: #{recipient.reason})">
-                            <div class="o_checkbox">
+                            <div class="custom-control custom-checkbox">
                                 <input type="checkbox"
+                                       class="custom-control-input"
+                                       t-attf-id="o_composer_suggested_partners_p#{recipient_index}"
                                        t-att-checked="recipient.checked ? 'checked' : undefined"
                                        t-att-data-fullname="recipient.full_name"/>
-                                <span/>
+                                <label t-attf-for="o_composer_suggested_partners_p#{recipient_index}" class="custom-control-label">
+                                    <t t-esc="recipient.name"/>
+                                    <t t-if="recipient.email_address">(<t t-esc="recipient.email_address"/>)</t>
+                                </label>
                             </div>
-                            <t t-esc="recipient.name"/>
-                            <t t-if="recipient.email_address">(<t t-esc="recipient.email_address"/>)</t>
                         </div>
                     </t>
                 </div>
@@ -44,26 +70,39 @@
 
         <!-- Add a button to open the full composer dialog -->
         <t t-jquery=".o_composer_button_add_attachment" t-operation="after">
-            <button tabindex="6" class="btn btn-sm btn-icon fa fa-expand o_composer_button_full_composer" type="button" title="Full composer" aria-label="Full composer"/>
+            <button tabindex="6" class="btn btn-secondary fa fa-expand o_composer_button_full_composer" type="button" title="Full composer" aria-label="Full composer"/>
         </t>
     </t>
 
     <!--
         Chatter (mail_thread widget) buttons
 
+        @param {boolean} [isMobile]
         @param {boolean} [logNoteButton]
         @param {boolean} [newMessageButton]
         @param {boolean} [scheduleActivityButton]
     -->
     <t t-name="mail.chatter.Buttons">
-        <button t-if="newMessageButton" type="button" class="btn btn-sm btn-link o_chatter_button_new_message" title="Send a message" disabled="disabled">
+        <button t-if="newMessageButton" type="button" class="btn btn-link o_chatter_button_new_message" title="Send a message" disabled="disabled">
             Send message
         </button>
-        <button t-if="logNoteButton" class="btn btn-sm btn-link o_chatter_button_log_note" title="Log a note. Followers will not be notified." disabled="disabled">
+        <button t-if="logNoteButton" class="btn btn-link o_chatter_button_log_note" title="Log a note. Followers will not be notified." disabled="disabled">
             Log note
         </button>
-        <button t-if="scheduleActivityButton" class="btn btn-sm btn-link o_chatter_button_schedule_activity" title="Log or schedule an activity" disabled="disabled">
+        <button t-if="scheduleActivityButton" class="btn btn-link o_chatter_button_schedule_activity" title="Log or schedule an activity" disabled="disabled">
             <i class="fa fa-clock-o" role="img" aria-label="Dates" title="Dates"/> <t t-if="isMobile">Activity</t><t t-else="">Schedule activity</t>
+        </button>
+
+    </t>
+
+    <t t-name="mail.chatter.Attachment.Button">
+        <button t-attf-class="btn btn-sm btn-link o_chatter_button_attachment #{!count and 'o_hidden' or ''}" title="View all the attachments of the current record">
+            <span>
+                <i class="fa fa-paperclip"/>
+                <span class="o_chatter_attachment_button_count">
+                    <t t-esc="' ('+count+')'"/>
+                </span>
+            </span>
         </button>
     </t>
 
@@ -72,7 +111,9 @@
     -->
     <t t-name="mail.Chatter">
         <aside class="o_chatter">
-            <div class="o_chatter_topbar"/>
+            <div class="o_chatter_topbar">
+                <div class="o_topbar_right_area"/>
+            </div>
         </aside>
     </t>
 

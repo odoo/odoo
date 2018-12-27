@@ -60,6 +60,13 @@ Discuss.include({
     //--------------------------------------------------------------------------
 
     /**
+     * @override
+     * @private
+     */
+    _initThreads: function () {
+        return this._updateThreads();
+    },
+    /**
      * @private
      * @returns {Boolean} true iff we currently are in the Inbox tab
      */
@@ -73,7 +80,7 @@ Discuss.include({
     _renderButtons: function () {
         var self = this;
         this._super.apply(this, arguments);
-        _.each(['dm', 'public', 'private'], function (type) {
+        _.each(['dm_chat', 'multi_user_channel'], function (type) {
             var selector = '.o_mail_discuss_button_' + type;
             self.$buttons.on('click', selector, self._onAddThread.bind(self));
         });
@@ -106,6 +113,7 @@ Discuss.include({
      */
     _setThread: function (threadID) {
         var thread = this.call('mail_service', 'getThread', threadID);
+        this._thread = thread;
         if (thread.getType() !== 'mailbox') {
             this.call('mail_service', 'openThreadWindow', threadID);
             return $.when();
@@ -148,7 +156,7 @@ Discuss.include({
      *
      * @private
      * @param {string} type the thread's type to display (e.g. 'mailbox_inbox',
-     *   'mailbox_starred', 'dm'...).
+     *   'mailbox_starred', 'dm_chat'...).
      */
     _updateContent: function (type) {
         var self = this;
@@ -193,13 +201,17 @@ Discuss.include({
 
             // update control panel
             self.$buttons.find('button')
-                         .addClass('o_hidden');
+                         .removeClass('d-block')
+                         .addClass('d-none');
             self.$buttons.find('.o_mail_discuss_button_' + type)
-                         .removeClass('o_hidden');
+                         .removeClass('d-none')
+                         .addClass('d-block');
             self.$buttons.find('.o_mail_discuss_button_mark_all_read')
-                         .toggleClass('o_hidden', type !== 'mailbox_inbox');
+                         .toggleClass('d-none', type !== 'mailbox_inbox')
+                         .toggleClass('d-block', type === 'mailbox_inbox');
             self.$buttons.find('.o_mail_discuss_button_unstar_all')
-                         .toggleClass('o_hidden', type !== 'mailbox_starred');
+                         .toggleClass('d-none', type !== 'mailbox_starred')
+                         .toggleClass('d-block', type === 'mailbox_starred');
 
             // update Mailbox page buttons
             if (inMailbox) {
@@ -207,9 +219,9 @@ Discuss.include({
                     .removeClass('o_hidden');
                 self.$('.o_mailbox_inbox_item')
                     .removeClass('btn-primary')
-                    .addClass('btn-default');
+                    .addClass('btn-secondary');
                 self.$('.o_mailbox_inbox_item[data-type=' + type + ']')
-                    .removeClass('btn-default')
+                    .removeClass('btn-secondary')
                     .addClass('btn-primary');
             } else {
                 self.$('.o_mail_discuss_mobile_mailboxes_buttons')

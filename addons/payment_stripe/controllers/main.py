@@ -5,6 +5,7 @@ import werkzeug
 
 from odoo import http
 from odoo.http import request
+from odoo.addons.payment.controllers.portal import PaymentProcessing
 
 _logger = logging.getLogger(__name__)
 
@@ -27,7 +28,7 @@ class StripeController(http.Controller):
         try:
             acquirer.s2s_process(post)
         except Exception as e:
-            error = e.message
+            error = str(e)
 
         return_url = post.get('return_url', '/')
         if error:
@@ -93,4 +94,6 @@ class StripeController(http.Controller):
         _logger.info('Stripe: entering form_feedback with post data %s', pprint.pformat(response))
         if response:
             request.env['payment.transaction'].sudo().with_context(lang=None).form_feedback(response, 'stripe')
-        return post.pop('return_url', '/')
+        # add the payment transaction into the session to let the page /payment/process to handle it
+        PaymentProcessing.add_payment_transaction(tx)
+        return "/payment/process"

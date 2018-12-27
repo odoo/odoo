@@ -1,5 +1,5 @@
 {
-    'name': 'Barcodes',
+    'name': 'Barcode',
     'version': '2.0',
     'category': 'Extra Tools',
     'summary': 'Barcodes Scanning and Parsing',
@@ -12,4 +12,5 @@
     ],
     'installable': True,
     'auto_install': False,
+    'post_init_hook': '_assign_default_nomeclature_id',
 }

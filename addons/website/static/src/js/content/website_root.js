@@ -40,10 +40,13 @@ var WebsiteRoot = BodyManager.extend({
         'click .js_publish_management .js_publish_btn': '_onPublishBtnClick',
         'submit .js_website_submit_form': '_onWebsiteFormSubmit',
         'click .js_disable_on_click': '_onDisableOnClick',
+        'click .js_multi_website_switch': '_multiWebsiteSwitch',
+        'click .js_multi_company_switch': '_multiCompanySwitch',
     }),
     custom_events: _.extend({}, BodyManager.prototype.custom_events || {}, {
         animation_start_demand: '_onAnimationStartDemand',
         animation_stop_demand: '_onAnimationStopDemand',
+        main_object_request: '_onMainObjectRequest',
         ready_to_clean_for_save: '_onAnimationStopDemand',
     }),
 
@@ -137,27 +140,22 @@ var WebsiteRoot = BodyManager.extend({
      */
     _startAnimations: function (editableMode, $from) {
         var self = this;
+
         editableMode = editableMode || false;
         if ($from === undefined) {
             $from = this.$('#wrapwrap');
         }
+
+        this._stopAnimations($from);
+
         var defs = _.map(sAnimation.registry, function (Animation, animationName) {
             var selector = Animation.prototype.selector || '';
             var $target = $from.find(selector).addBack(selector);
 
             var defs = _.map($target, function (el) {
-                var $snippet = $(el);
-                var animationIndex = _.findIndex(self.animations, function (animation) {
-                    return animation.__name === animationName && $snippet[0] === animation.el;
-                });
-                if (animationIndex >= 0) {
-                    self.animations[animationIndex].destroy();
-                    self.animations.splice(animationIndex, 1);
-                }
                 var animation = new Animation(self, editableMode);
-                animation.__name = animationName;
                 self.animations.push(animation);
-                return animation.attachTo($snippet);
+                return animation.attachTo($(el));
             });
             return $.when.apply($, defs);
         });
@@ -168,12 +166,15 @@ var WebsiteRoot = BodyManager.extend({
      * in edition mode for example.
      *
      * @private
-     * @param {jQuery} [$stopTarget]
-     *        only stop the animations linked to the given element(s)
+     * @param {jQuery} [$from]
+     *        only stop the animations linked to the given element(s) or one of
+     *        its descendants
      */
-    _stopAnimations: function ($stopTarget) {
+    _stopAnimations: function ($from) {
         var removedAnimations = _.map(this.animations, function (animation) {
-            if (!$stopTarget || $stopTarget.filter(animation.el).length) {
+            if (!$from
+             || $from.filter(animation.el).length
+             || $from.find(animation.el).length) {
                 animation.destroy();
                 return animation;
             }
@@ -223,6 +224,20 @@ var WebsiteRoot = BodyManager.extend({
             hash: encodeURIComponent(window.location.hash)
         };
         window.location.href = _.str.sprintf("/website/lang/%(lang)s?r=%(url)s%(hash)s", redirect);
+    },
+    /**
+     * Checks information about the page main object.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onMainObjectRequest: function (ev) {
+        var repr = $('html').data('main-object');
+        var m = repr.match(/(.+)\((\d+),(.*)\)/);
+        ev.data.callback({
+            model: m[1],
+            id: m[2] | 0,
+        });
     },
     /**
      * @todo review
@@ -280,6 +295,39 @@ var WebsiteRoot = BodyManager.extend({
      */
     _onDisableOnClick: function (ev) {
         $(ev.currentTarget).addClass('disabled');
+    },
+
+    /**
+     * Called when clicking on the multi-website switcher.
+     *
+     * @param {OdooEvent} ev
+     */
+    _multiWebsiteSwitch: function (ev) {
+        var website_id_to_switch_to = ev.currentTarget.getAttribute('website-id');
+
+        // need to force in each case, even if domain is set
+        // Website 1: localhost; Website 2: 0.0.0.0; website 3: -
+        // when you switch 3 <--> 1, you need to force the website
+
+        var website_domain = ev.currentTarget.getAttribute('domain');
+        var url = $.param.querystring(window.location.href, {'fw': website_id_to_switch_to});
+        if (website_domain && window.location.hostname !== website_domain) {
+            // if domain unchanged, this line will do a nop while we need to refresh
+            // the page to load the new forced website.
+            url = new URL(url);
+            url.hostname = website_domain;
+        }
+        window.location.href = url;
+    },
+
+    _multiCompanySwitch: function (ev) {
+        var company_id_to_switch_to = ev.currentTarget.getAttribute('company-id');
+        this._rpc({model: 'res.users',
+            method: 'write',
+            args: [odoo.session_info.user_id, {'company_id': parseInt(company_id_to_switch_to, 10)}],
+        }).then(function () {
+            window.location.reload(true);
+        });
     },
 });
 

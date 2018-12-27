@@ -143,6 +143,8 @@ var BarcodeEvents = core.Class.extend(mixins.PropertiesMixin, {
             e.key === "ArrowUp" || e.key === "ArrowDown" ||
             e.key === "Escape" || e.key === "Tab" ||
             e.key === "Backspace" || e.key === "Delete" ||
+            e.key === "Home" || e.key === "End" ||
+            e.key === "PageUp" || e.key === "PageDown" ||
             e.key === "Unidentified" || /F\d\d?/.test(e.key)) {
             return true;
         } else {
@@ -218,7 +220,7 @@ var BarcodeEvents = core.Class.extend(mixins.PropertiesMixin, {
      * @param  {jQuery.Event} e keydown event
      */
     _listenBarcodeScanner: function (e) {
-        if (!$('input:text:focus, textarea:focus, [contenteditable]:focus').length) {
+        if (!$('input:text:focus, input[type=number]:focus, textarea:focus, [contenteditable]:focus').length) {
             $('body').append(this.$barcodeInput);
             this.$barcodeInput.focus();
         }

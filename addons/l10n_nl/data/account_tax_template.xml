@@ -254,7 +254,7 @@
             <field name="refund_account_id" ref="vat_payable_v"/>
             <field name="account_id" ref="vat_payable_v"/>
             <field name="type_tax_use">none</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tag_nl_34')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_nl_33')])]"/>
             <field name="tax_group_id" ref="tax_group_0"/>
         </record>
         <record id="btw_ink_0" model="account.tax.template">
@@ -388,17 +388,30 @@
             <field name="tax_group_id" ref="tax_group_0_eu"/>
         </record>
 <!-- BTW verkoop -->
-        <record id="btw_X0" model="account.tax.template">
+        <record id="btw_X0_producten" model="account.tax.template">
             <field name="sequence">20</field>
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
-            <field name="name">Verkopen export binnen EU</field>
-            <field name="description">BTW export binnen EU</field>
+            <field name="name">Verkopen export binnen EU (producten)</field>
+            <field name="description">BTW export binnen EU (producten)</field>
             <field eval="0" name="amount"/>
             <field name="amount_type">percent</field>
             <field name="refund_account_id" ref="vat_payable_0_eu"/>
             <field name="account_id" ref="vat_payable_0_eu"/>
             <field name="type_tax_use">sale</field>
-            <field name="tag_ids" eval="[(6,0,[ref('tag_nl_13')])]"/>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_nl_40')])]"/>
+            <field name="tax_group_id" ref="tax_group_0_eu"/>
+        </record>
+        <record id="btw_X0_diensten" model="account.tax.template">
+            <field name="sequence">20</field>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="name">Verkopen export binnen EU (diensten)</field>
+            <field name="description">BTW export binnen EU (diensten)</field>
+            <field eval="0" name="amount"/>
+            <field name="amount_type">percent</field>
+            <field name="refund_account_id" ref="vat_payable_0_eu"/>
+            <field name="account_id" ref="vat_payable_0_eu"/>
+            <field name="type_tax_use">sale</field>
+            <field name="tag_ids" eval="[(6,0,[ref('tag_nl_41')])]"/>
             <field name="tax_group_id" ref="tax_group_0_eu"/>
         </record>
         <record id="btw_X2" model="account.tax.template">

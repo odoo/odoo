@@ -2,11 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'Employee Directory',
+    'name': 'Employees',
     'version': '1.1',
     'category': 'Human Resources',
     'sequence': 75,
-    'summary': 'Jobs, Departments, Employees Details',
+    'summary': 'Centralize employee information',
     'description': "",
     'website': 'https://www.odoo.com/page/employees',
     'images': [
@@ -24,10 +24,12 @@
     'data': [
         'security/hr_security.xml',
         'security/ir.model.access.csv',
+        'wizard/plan_wizard_views.xml',
+        'wizard/departure_wizard_views.xml',
         'views/hr_views.xml',
         'views/hr_templates.xml',
         'views/res_config_settings_views.xml',
-        'views/res_users_views.xml',
+        'views/mail_channel_views.xml',
         'data/hr_data.xml',
     ],
     'demo': [

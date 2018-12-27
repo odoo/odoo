@@ -13,7 +13,7 @@
             height: 46px;
             margin-bottom: 10px;
             width: 100%;
-            background-color: $o-brand-primary;
+            background-color: $o-brand-odoo;
             color: white;
             span:active {
                 background-color: darken($o-brand-primary, 10%);
@@ -48,12 +48,16 @@
             .o_dropdown {
                 width: 100%;
                 margin: 15px 5px 0px 5px;
-                border: solid 1px darken($gray-lighter, 20%);
+                border: solid 1px darken(gray('200'), 20%);
 
             }
             .o_dropdown_toggler_btn {
                 width: 100%;
                 text-align: left;
+
+                &:after {
+                    display: none;
+                }
             }
 
             // We disable the backdrop in this case because it prevents any
@@ -61,12 +65,15 @@
             .dropdown-backdrop {
                 z-index: -1;
             }
-            ul {
-                position: relative;
-                width: 100%;
+            .dropdown-menu {
+                // Here we use !important because of popper js adding custom style
+                // to element so to override it use !important
+                position: relative !important;
+                width: 100% !important;
+                transform: translate3d(0, 0, 0) !important;
                 box-shadow: none;
                 border: none;
-                color: $gray-light;
+                color: gray('600');
                 .divider {
                     margin: 0px;
                 }

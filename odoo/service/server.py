@@ -17,6 +17,7 @@ import threading
 import time
 import unittest
 
+import psutil
 import werkzeug.serving
 from werkzeug.debug import DebuggedApplication
 
@@ -24,7 +25,6 @@ if os.name == 'posix':
     # Unix only for workers
     import fcntl
     import resource
-    import psutil
 else:
     # Windows shim
     signal.SIGHUP = -1
@@ -36,7 +36,8 @@ except ImportError:
     setproctitle = lambda x: None
 
 import odoo
-from odoo.modules.module import run_unit_tests
+from odoo.modules import get_modules
+from odoo.modules.module import run_unit_tests, get_test_modules
 from odoo.modules.registry import Registry
 from odoo.release import nt_service_name
 from odoo.tools import config
@@ -54,10 +55,30 @@ except ImportError:
 SLEEP_INTERVAL = 60     # 1 min
 
 def memory_info(process):
-    """ psutil < 2.0 does not have memory_info, >= 3.0 does not have
-    get_memory_info """
+    """
+    :return: the relevant memory usage according to the OS in bytes.
+    """
+    # psutil < 2.0 does not have memory_info, >= 3.0 does not have get_memory_info
     pmem = (getattr(process, 'memory_info', None) or process.get_memory_info)()
-    return (pmem.rss, pmem.vms)
+    # MacOSX allocates very large vms to all processes so we only monitor the rss usage.
+    if platform.system() == 'Darwin':
+        return pmem.rss
+    return pmem.vms
+
+
+def set_limit_memory_hard():
+    if os.name == 'posix':
+        rlimit = resource.RLIMIT_RSS if platform.system() == 'Darwin' else resource.RLIMIT_AS
+        soft, hard = resource.getrlimit(rlimit)
+        resource.setrlimit(rlimit, (config['limit_memory_hard'], hard))
+
+def empty_pipe(fd):
+    try:
+        while os.read(fd, 1):
+            pass
+    except OSError as e:
+        if e.errno not in [errno.EAGAIN]:
+            raise
 
 #----------------------------------------------------------
 # Werkzeug WSGI servers patched
@@ -87,6 +108,9 @@ class BaseWSGIServerNoBind(LoggingBaseWSGIServerMixIn, werkzeug.serving.BaseWSGI
 
 class RequestHandler(werkzeug.serving.WSGIRequestHandler):
     def setup(self):
+        # timeout to avoid chrome headless preconnect during tests
+        if config['test_enable'] or config['test_file']:
+            self.timeout = 5
         # flag the current thread as handling a http request
         super(RequestHandler, self).setup()
         me = threading.currentThread()
@@ -101,6 +125,11 @@ class ThreadedWSGIServerReloadable(LoggingBaseWSGIServerMixIn, werkzeug.serving.
     def __init__(self, host, port, app):
         super(ThreadedWSGIServerReloadable, self).__init__(host, port, app,
                                                            handler=RequestHandler)
+
+        # See https://github.com/pallets/werkzeug/pull/770
+        # This allow the request threads to not be set as daemon
+        # so the server waits for them when shutting down gracefully.
+        self.daemon_threads = False
 
     def server_bind(self):
         SD_LISTEN_FDS_START = 3
@@ -117,6 +146,38 @@ class ThreadedWSGIServerReloadable(LoggingBaseWSGIServerMixIn, werkzeug.serving.
         if not self.reload_socket:
             super(ThreadedWSGIServerReloadable, self).server_activate()
 
+    def process_request(self, request, client_address):
+        """
+        Start a new thread to process the request.
+        Override the default method of class socketserver.ThreadingMixIn
+        to be able to get the thread object which is instantiated
+        and set its start time as an attribute
+        """
+        t = threading.Thread(target = self.process_request_thread,
+                             args = (request, client_address))
+        t.daemon = self.daemon_threads
+        t.type = 'http'
+        t.start_time = time.time()
+        t.start()
+
+    # TODO: Remove this method as soon as either of the revision
+    # - python/cpython@8b1f52b5a93403acd7d112cd1c1bc716b31a418a for Python 3.6,
+    # - python/cpython@908082451382b8b3ba09ebba638db660edbf5d8e for Python 3.7,
+    # is included in all Python 3 releases installed on all operating systems supported by Odoo.
+    # These revisions are included in Python from releases 3.6.8 and Python 3.7.2 respectively.
+    def _handle_request_noblock(self):
+        """
+        In the python module `socketserver` `process_request` loop,
+        the __shutdown_request flag is not checked between select and accept.
+        Thus when we set it to `True` thanks to the call `httpd.shutdown`,
+        a last request is accepted before exiting the loop.
+        We override this function to add an additional check before the accept().
+        """
+        if self._BaseServer__shutdown_request:
+            return
+        super(ThreadedWSGIServerReloadable, self)._handle_request_noblock()
+
+
 #----------------------------------------------------------
 # FileSystem Watcher for autoreload and cache invalidation
 #----------------------------------------------------------
@@ -131,10 +192,12 @@ class FSWatcher(object):
         if isinstance(event, (FileCreatedEvent, FileModifiedEvent, FileMovedEvent)):
             if not event.is_directory:
                 path = getattr(event, 'dest_path', event.src_path)
-                if path.endswith('.py'):
+                if path.endswith('.py') and not os.path.basename(path).startswith('.~'):
                     try:
                         source = open(path, 'rb').read() + b'\n'
                         compile(source, path, 'exec')
+                    except FileNotFoundError:
+                        _logger.error('autoreload: python code change detected, FileNotFound for %s', path)
                     except SyntaxError:
                         _logger.error('autoreload: python code change detected, SyntaxError in %s', path)
                     else:
@@ -194,6 +257,8 @@ class ThreadedServer(CommonServer):
 
         #self.socket = None
         self.httpd = None
+        self.limits_reached_threads = set()
+        self.limit_reached_time = None
 
     def signal_handler(self, sig, frame):
         if sig in [signal.SIGINT, signal.SIGTERM]:
@@ -207,6 +272,7 @@ class ThreadedServer(CommonServer):
             raise KeyboardInterrupt()
         elif sig == signal.SIGXCPU:
             sys.stderr.write("CPU time limit exceeded! Shutting down immediately\n")
+            sys.stderr.flush()
             os._exit(0)
         elif sig == signal.SIGHUP:
             # restart on kill -HUP
@@ -214,6 +280,38 @@ class ThreadedServer(CommonServer):
             self.quit_signals_received += 1
             # interrupt run() to start shutdown
             raise KeyboardInterrupt()
+
+    def process_limit(self):
+        memory = memory_info(psutil.Process(os.getpid()))
+        if config['limit_memory_soft'] and memory > config['limit_memory_soft']:
+            _logger.info('Server memory limit (%s) reached.', memory)
+            self.limits_reached_threads.add(threading.currentThread())
+
+        for thread in threading.enumerate():
+            if not thread.daemon or getattr(thread, 'type', None) == 'cron':
+                # We apply the limits on cron threads and HTTP requests,
+                # longpolling requests excluded.
+                if getattr(thread, 'start_time', None):
+                    thread_execution_time = time.time() - thread.start_time
+                    thread_limit_time_real = config['limit_time_real']
+                    if (getattr(thread, 'type', None) == 'cron' and
+                            config['limit_time_real_cron'] and config['limit_time_real_cron'] > 0):
+                        thread_limit_time_real = config['limit_time_real_cron']
+                    if thread_limit_time_real and thread_execution_time > thread_limit_time_real:
+                        _logger.info(
+                            'Thread %s virtual real time limit (%d/%ds) reached.',
+                            thread, thread_execution_time, thread_limit_time_real)
+                        self.limits_reached_threads.add(thread)
+        # Clean-up threads that are no longer alive
+        # e.g. threads that exceeded their real time,
+        # but which finished before the server could restart.
+        for thread in list(self.limits_reached_threads):
+            if not thread.isAlive():
+                self.limits_reached_threads.remove(thread)
+        if self.limits_reached_threads:
+            self.limit_reached_time = self.limit_reached_time or time.time()
+        else:
+            self.limit_reached_time = None
 
     def cron_thread(self, number):
         from odoo.addons.base.models.ir_cron import ir_cron
@@ -223,10 +321,13 @@ class ThreadedServer(CommonServer):
             _logger.debug('cron%d polling for jobs', number)
             for db_name, registry in registries.items():
                 if registry.ready:
+                    thread = threading.currentThread()
+                    thread.start_time = time.time()
                     try:
                         ir_cron._acquire_job(db_name)
                     except Exception:
                         _logger.warning('cron%d encountered an Exception:', number, exc_info=True)
+                    thread.start_time = None
 
     def cron_spawn(self):
         """ Start the above runner function in a daemon thread.
@@ -245,6 +346,7 @@ class ThreadedServer(CommonServer):
                 self.cron_thread(i)
             t = threading.Thread(target=target, name="odoo.service.cron.cron%d" % i)
             t.setDaemon(True)
+            t.type = 'cron'
             t.start()
             _logger.debug("cron%d started!" % i)
 
@@ -261,6 +363,7 @@ class ThreadedServer(CommonServer):
 
     def start(self, stop=False):
         _logger.debug("Setting signal handlers")
+        set_limit_memory_hard()
         if os.name == 'posix':
             signal.signal(signal.SIGINT, self.signal_handler)
             signal.signal(signal.SIGTERM, self.signal_handler)
@@ -281,12 +384,16 @@ class ThreadedServer(CommonServer):
     def stop(self):
         """ Shutdown the WSGI server. Wait for non deamon threads.
         """
-        _logger.info("Initiating shutdown")
-        _logger.info("Hit CTRL-C again or send a second signal to force the shutdown.")
+        if getattr(odoo, 'phoenix', None):
+            _logger.info("Initiating server reload")
+        else:
+            _logger.info("Initiating shutdown")
+            _logger.info("Hit CTRL-C again or send a second signal to force the shutdown.")
+
+        stop_time = time.time()
 
         if self.httpd:
             self.httpd.shutdown()
-            self.close_socket(self.httpd.socket)
 
         # Manually join() all threads before calling sys.exit() to allow a second signal
         # to trigger _force_quit() in case some non-daemon threads won't exit cleanly.
@@ -295,8 +402,10 @@ class ThreadedServer(CommonServer):
         _logger.debug('current thread: %r', me)
         for thread in threading.enumerate():
             _logger.debug('process %r (%r)', thread, thread.isDaemon())
-            if thread != me and not thread.isDaemon() and thread.ident != self.main_thread_id:
-                while thread.isAlive():
+            if (thread != me and not thread.isDaemon() and thread.ident != self.main_thread_id and
+                    thread not in self.limits_reached_threads):
+                while thread.isAlive() and (time.time() - stop_time) < 1:
+                    # We wait for requests to finish, up to 1 second.
                     _logger.debug('join and sleep')
                     # Need a busyloop here as thread.join() masks signals
                     # and would prevent the forced shutdown.
@@ -327,7 +436,28 @@ class ThreadedServer(CommonServer):
         # by the signal handler)
         try:
             while self.quit_signals_received == 0:
-                time.sleep(60)
+                self.process_limit()
+                if self.limit_reached_time:
+                    has_other_valid_requests = any(
+                        not t.daemon and
+                        t not in self.limits_reached_threads
+                        for t in threading.enumerate()
+                        if getattr(t, 'type', None) == 'http')
+                    if (not has_other_valid_requests or
+                            (time.time() - self.limit_reached_time) > SLEEP_INTERVAL):
+                        # We wait there is no processing requests
+                        # other than the ones exceeding the limits, up to 1 min,
+                        # before asking for a reload.
+                        self.reload()
+                        # `reload` increments `self.quit_signals_received`
+                        # and the loop will end after this iteration,
+                        # therefore leading to the server stop.
+                        # `reload` also sets the `phoenix` flag
+                        # to tell the server to restart the server after shutting down.
+                    else:
+                        time.sleep(1)
+                else:
+                    time.sleep(SLEEP_INTERVAL)
         except KeyboardInterrupt:
             pass
 
@@ -347,9 +477,9 @@ class GeventServer(CommonServer):
         if self.ppid != os.getppid():
             _logger.warning("LongPolling Parent changed", self.pid)
             restart = True
-        rss, vms = memory_info(psutil.Process(self.pid))
-        if vms > config['limit_memory_soft']:
-            _logger.warning('LongPolling virtual memory limit reached: %s', vms)
+        memory = memory_info(psutil.Process(self.pid))
+        if config['limit_memory_soft'] and memory > config['limit_memory_soft']:
+            _logger.warning('LongPolling virtual memory limit reached: %s', memory)
             restart = True
         if restart:
             # suicide !!
@@ -369,11 +499,9 @@ class GeventServer(CommonServer):
         except ImportError:
             from gevent.wsgi import WSGIServer
 
-
+        set_limit_memory_hard()
         if os.name == 'posix':
             # Set process memory limit as an extra safeguard
-            _, hard = resource.getrlimit(resource.RLIMIT_AS)
-            resource.setrlimit(resource.RLIMIT_AS, (config['limit_memory_hard'], hard))
             signal.signal(signal.SIGQUIT, dumpstacks)
             signal.signal(signal.SIGUSR1, log_ormcache_stats)
             gevent.spawn(self.watchdog)
@@ -557,13 +685,7 @@ class PreforkServer(CommonServer):
             for fd in ready[0]:
                 if fd in fds:
                     fds[fd].watchdog_time = time.time()
-                try:
-                    # empty pipe
-                    while os.read(fd, 1):
-                        pass
-                except OSError as e:
-                    if e.errno not in [errno.EAGAIN]:
-                        raise
+                empty_pipe(fd)
         except select.error as e:
             if e.args[0] not in [errno.EINTR]:
                 raise
@@ -654,6 +776,7 @@ class Worker(object):
         self.watchdog_time = time.time()
         self.watchdog_pipe = multi.pipe_new()
         self.eintr_pipe = multi.pipe_new()
+        self.wakeup_fd_r, self.wakeup_fd_w = self.eintr_pipe
         # Can be set to None if no watchdog is desired.
         self.watchdog_timeout = multi.timeout
         self.ppid = os.getpid()
@@ -677,8 +800,9 @@ class Worker(object):
 
     def sleep(self):
         try:
-            wakeup_fd = self.eintr_pipe[0]
-            select.select([self.multi.socket, wakeup_fd], [], [], self.multi.beat)
+            select.select([self.multi.socket, self.wakeup_fd_r], [], [], self.multi.beat)
+            # clear wakeup pipe if we were interrupted
+            empty_pipe(self.wakeup_fd_r)
         except select.error as e:
             if e.args[0] not in [errno.EINTR]:
                 raise
@@ -693,14 +817,12 @@ class Worker(object):
             _logger.info("Worker (%d) max request (%s) reached.", self.pid, self.request_count)
             self.alive = False
         # Reset the worker if it consumes too much memory (e.g. caused by a memory leak).
-        rss, vms = memory_info(psutil.Process(os.getpid()))
-        if vms > config['limit_memory_soft']:
-            _logger.info('Worker (%d) virtual memory limit (%s) reached.', self.pid, vms)
+        memory = memory_info(psutil.Process(os.getpid()))
+        if config['limit_memory_soft'] and memory > config['limit_memory_soft']:
+            _logger.info('Worker (%d) virtual memory limit (%s) reached.', self.pid, memory)
             self.alive = False      # Commit suicide after the request.
 
-        # VMS and RLIMIT_AS are the same thing: virtual memory, a.k.a. address space
-        soft, hard = resource.getrlimit(resource.RLIMIT_AS)
-        resource.setrlimit(resource.RLIMIT_AS, (config['limit_memory_hard'], hard))
+        set_limit_memory_hard()
 
         # SIGXCPU (exceeded CPU time) signal handler will raise an exception.
         r = resource.getrusage(resource.RUSAGE_SELF)
@@ -732,7 +854,7 @@ class Worker(object):
         signal.signal(signal.SIGINT, self.signal_handler)
         signal.signal(signal.SIGTERM, signal.SIG_DFL)
         signal.signal(signal.SIGCHLD, signal.SIG_DFL)
-        signal.set_wakeup_fd(self.eintr_pipe[1])
+        signal.set_wakeup_fd(self.wakeup_fd_w)
 
     def stop(self):
         pass
@@ -804,8 +926,9 @@ class WorkerCron(Worker):
 
             # simulate interruptible sleep with select(wakeup_fd, timeout)
             try:
-                wakeup_fd = self.eintr_pipe[0]
-                select.select([wakeup_fd], [], [], interval)
+                select.select([self.wakeup_fd_r], [], [], interval)
+                # clear wakeup pipe if we were interrupted
+                empty_pipe(self.wakeup_fd_r)
             except select.error as e:
                 if e.args[0] != errno.EINTR:
                     raise
@@ -828,7 +951,7 @@ class WorkerCron(Worker):
             self.setproctitle(db_name)
             if rpc_request_flag:
                 start_time = time.time()
-                start_rss, start_vms = memory_info(psutil.Process(os.getpid()))
+                start_memory = memory_info(psutil.Process(os.getpid()))
 
             from odoo.addons import base
             base.models.ir_cron.ir_cron._acquire_job(db_name)
@@ -838,10 +961,10 @@ class WorkerCron(Worker):
                 odoo.sql_db.close_db(db_name)
             if rpc_request_flag:
                 run_time = time.time() - start_time
-                end_rss, end_vms = memory_info(psutil.Process(os.getpid()))
-                vms_diff = (end_vms - start_vms) / 1024
+                end_memory = memory_info(psutil.Process(os.getpid()))
+                vms_diff = (end_memory - start_memory) / 1024
                 logline = '%s time:%.3fs mem: %sk -> %sk (diff: %sk)' % \
-                    (db_name, run_time, start_vms / 1024, end_vms / 1024, vms_diff)
+                    (db_name, run_time, start_memory / 1024, end_memory / 1024, vms_diff)
                 _logger.debug("WorkerCron (%s) %s", self.pid, logline)
 
             self.request_count += 1
@@ -891,23 +1014,27 @@ def _reexec(updated_modules=None):
     os.execve(sys.executable, args, os.environ)
 
 def load_test_file_py(registry, test_file):
-    # Locate python module based on its filename and run the tests
-    test_path, _ = os.path.splitext(os.path.abspath(test_file))
-    for mod_name, mod_mod in list(sys.modules.items()):
-        if mod_mod:
-            mod_path, _ = os.path.splitext(getattr(mod_mod, '__file__', ''))
-            if test_path == mod_path:
-                suite = unittest.TestSuite()
-                for t in unittest.TestLoader().loadTestsFromModule(mod_mod):
-                    suite.addTest(t)
-                _logger.log(logging.INFO, 'running tests %s.', mod_mod.__name__)
-                stream = odoo.modules.module.TestStream()
-                result = unittest.TextTestRunner(verbosity=2, stream=stream).run(suite)
-                success = result.wasSuccessful()
-                if hasattr(registry._assertion_report,'report_result'):
-                    registry._assertion_report.report_result(success)
-                if not success:
-                    _logger.error('%s: at least one error occurred in a test', test_file)
+    threading.currentThread().testing = True
+    try:
+        test_path, _ = os.path.splitext(os.path.abspath(test_file))
+        for mod in [m for m in get_modules() if '/%s/' % m in test_file]:
+            for mod_mod in get_test_modules(mod):
+                mod_path, _ = os.path.splitext(getattr(mod_mod, '__file__', ''))
+                if test_path == mod_path:
+                    suite = unittest.TestSuite()
+                    for t in unittest.TestLoader().loadTestsFromModule(mod_mod):
+                        suite.addTest(t)
+                    _logger.log(logging.INFO, 'running tests %s.', mod_mod.__name__)
+                    stream = odoo.modules.module.TestStream()
+                    result = unittest.TextTestRunner(verbosity=2, stream=stream).run(suite)
+                    success = result.wasSuccessful()
+                    if hasattr(registry._assertion_report,'report_result'):
+                        registry._assertion_report.report_result(success)
+                    if not success:
+                        _logger.error('%s: at least one error occurred in a test', test_file)
+                    return
+    finally:
+        threading.currentThread().testing = False
 
 def preload_registries(dbnames):
     """ Preload a registries, possibly run a test file."""

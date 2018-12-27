@@ -8,7 +8,7 @@ class TestPackingNeg(TransactionCase):
 
     def test_packing_neg(self):
 
-        # Create a new "negative" stockable product 
+        # Create a new "negative" storable product
         product_neg = self.env['product.product'].create({
             'name': 'Negative product',
             'type': 'product',
@@ -24,23 +24,24 @@ class TestPackingNeg(TransactionCase):
         })
 
         # Create an incoming picking for this product of 300 PCE from suppliers to stock
-        default_get_vals = self.env['stock.picking'].default_get(list(self.env['stock.picking'].fields_get()))
-        default_get_vals.update({
+        vals = {
             'name': 'Incoming picking (negative product)',
             'partner_id': self.ref('base.res_partner_2'),
             'picking_type_id': self.ref('stock.picking_type_in'),
+            'location_id': self.ref('stock.stock_location_suppliers'),
+            'location_dest_id': self.ref('stock.stock_location_stock'),
             'move_lines': [(0, 0, {
+                'name': 'NEG',
                 'product_id': product_neg.id,
+                'product_uom': product_neg.uom_id.id,
                 'product_uom_qty': 300.00,
                 'location_id': self.ref('stock.stock_location_suppliers'),
                 'location_dest_id': self.ref('stock.stock_location_stock'),
             })],
-        })
-        pick_neg = self.env['stock.picking'].new(default_get_vals)
+        }
+        pick_neg = self.env['stock.picking'].create(vals)
         pick_neg.onchange_picking_type()
         pick_neg.move_lines.onchange_product_id()
-        vals = pick_neg._convert_to_write(pick_neg._cache)
-        pick_neg = self.env['stock.picking'].create(vals)
 
         # Confirm and assign picking
         pick_neg.action_confirm()
@@ -80,23 +81,24 @@ class TestPackingNeg(TransactionCase):
         pick_neg.action_done()
 
         # Make a delivery order of 300 pieces to the customer
-        default_get_vals = self.env['stock.picking'].default_get(list(self.env['stock.picking'].fields_get()))
-        default_get_vals.update({
+        vals = {
             'name': 'outgoing picking (negative product)',
             'partner_id': self.ref('base.res_partner_4'),
             'picking_type_id': self.ref('stock.picking_type_out'),
+            'location_id': self.ref('stock.stock_location_stock'),
+            'location_dest_id': self.ref('stock.stock_location_customers'),
             'move_lines': [(0, 0, {
+                'name': 'NEG',
                 'product_id': product_neg.id,
+                'product_uom': product_neg.uom_id.id,
                 'product_uom_qty': 300.00,
                 'location_id': self.ref('stock.stock_location_stock'),
                 'location_dest_id': self.ref('stock.stock_location_customers'),
             })],
-        })
-        delivery_order_neg = self.env['stock.picking'].new(default_get_vals)
+        }
+        delivery_order_neg = self.env['stock.picking'].create(vals)
         delivery_order_neg.onchange_picking_type()
         delivery_order_neg.move_lines.onchange_product_id()
-        vals = delivery_order_neg._convert_to_write(delivery_order_neg._cache)
-        delivery_order_neg = self.env['stock.picking'].create(vals)
 
         # Assign and confirm
         delivery_order_neg.action_confirm()
@@ -123,7 +125,7 @@ class TestPackingNeg(TransactionCase):
 
         # Check the quants that you have -20 pieces pallet 2 in stock, and a total quantity
         # of 50 in stock from pallet 3 (should be 20+30, as it has been split by reservation)
-        records = self.env['stock.quant'].search([('product_id', '=', product_neg.id)])
+        records = self.env['stock.quant'].search([('product_id', '=', product_neg.id), ('quantity', '!=', '0')])
         pallet_3_stock_qty = 0
         for rec in records:
             if rec.package_id.name == 'Palneg 2' and rec.location_id.id == self.ref('stock.stock_location_stock'):
@@ -136,23 +138,24 @@ class TestPackingNeg(TransactionCase):
         self.assertEqual(pallet_3_stock_qty, 50, "Should have 50 pieces in stock on pallet 3")
 
         # Create a picking for reconciling the negative quant
-        default_get_vals = self.env['stock.picking'].default_get(list(self.env['stock.picking'].fields_get()))
-        default_get_vals.update({
+        vals = {
             'name': 'reconciling_delivery',
             'partner_id': self.ref('base.res_partner_4'),
             'picking_type_id': self.ref('stock.picking_type_in'),
+            'location_id': self.ref('stock.stock_location_suppliers'),
+            'location_dest_id': self.ref('stock.stock_location_stock'),
             'move_lines': [(0, 0, {
+                'name': 'NEG',
                 'product_id': product_neg.id,
+                'product_uom': product_neg.uom_id.id,
                 'product_uom_qty': 20.0,
                 'location_id': self.ref('stock.stock_location_suppliers'),
                 'location_dest_id': self.ref('stock.stock_location_stock'),
             })],
-        })
-        delivery_reconcile = self.env['stock.picking'].new(default_get_vals)
+        }
+        delivery_reconcile = self.env['stock.picking'].create(vals)
         delivery_reconcile.onchange_picking_type()
         delivery_reconcile.move_lines.onchange_product_id()
-        vals = delivery_reconcile._convert_to_write(delivery_reconcile._cache)
-        delivery_reconcile = self.env['stock.picking'].create(vals)
 
         # Receive 20 products with lot neg in stock with a new incoming shipment that should be on pallet 2
         delivery_reconcile.action_confirm()

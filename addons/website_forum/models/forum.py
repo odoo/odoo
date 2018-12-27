@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import itertools
 import logging
 import math
 import re
@@ -10,9 +9,9 @@ import uuid
 from datetime import datetime
 from werkzeug.exceptions import Forbidden
 
-from odoo import api, fields, models, modules, tools, SUPERUSER_ID, _
+from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import pycompat, misc
+from odoo.tools import misc
 
 _logger = logging.getLogger(__name__)
 
@@ -25,7 +24,7 @@ class KarmaError(Forbidden):
 class Forum(models.Model):
     _name = 'forum.forum'
     _description = 'Forum'
-    _inherit = ['mail.thread', 'website.seo.metadata']
+    _inherit = ['mail.thread', 'website.seo.metadata', 'website.multi.mixin']
 
     @api.model_cr
     def init(self):
@@ -44,7 +43,7 @@ class Forum(models.Model):
     # description and use
     name = fields.Char('Forum Name', required=True, translate=True)
     active = fields.Boolean(default=True)
-    faq = fields.Html('Guidelines', default=_get_default_faq, translate=True)
+    faq = fields.Html('Guidelines', default=_get_default_faq, translate=True, sanitize=False)
     description = fields.Text(
         'Description',
         translate=True,
@@ -53,14 +52,21 @@ class Forum(models.Model):
                             'build your professional profile and become a better marketer together.'))
     welcome_message = fields.Html(
         'Welcome Message',
-        default = """<section class="bg-info" style="height: 168px;"><div class="container">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <h1 class="text-center" style="text-align: left;">Welcome!</h1>
-                                <p class="text-muted text-center" style="text-align: left;">This community is for professionals and enthusiasts of our products and services. Share and discuss the best content and new marketing ideas, build your professional profile and become a better marketer together.</p>
-                            </div>
-                            <div class="col-md-12">
-                                <a href="#" class="js_close_intro">Hide Intro</a>    <a class="btn btn-primary forum_register_url" href="/web/login">Register</a> </div>
+        translate=True,
+        default="""<section class="bg-info shadow">
+                        <div class="container py-5">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <h1 class="text-center">Welcome!</h1>
+                                    <p class="text-400 text-center">
+                                        This community is for professionals and enthusiasts of our products and services.
+                                        <br/>Share and discuss the best content and new marketing ideas, build your professional profile and become a better marketer together.
+                                    </p>
+                                </div>
+                                <div class="col text-center mt-3">
+                                    <a href="#" class="js_close_intro btn btn-outline-light">Hide Intro</a>
+                                    <a class="btn btn-light forum_register_url" href="/web/login">Register</a>
+                                </div>
                             </div>
                         </div>
                     </section>""")
@@ -73,14 +79,6 @@ class Forum(models.Model):
         string='Default Order', required=True, default='write_date desc')
     relevancy_post_vote = fields.Float('First Relevance Parameter', default=0.8, help="This formula is used in order to sort by relevance. The variable 'votes' represents number of votes for a post, and 'days' is number of days since the post creation")
     relevancy_time_decay = fields.Float('Second Relevance Parameter', default=1.8)
-    default_post_type = fields.Selection([
-        ('question', 'Question'),
-        ('discussion', 'Discussion'),
-        ('link', 'Link')],
-        string='Default Post', required=True, default='question')
-    allow_question = fields.Boolean('Questions', help="Users can answer only once per question. Contributors can edit answers and mark the right ones.", default=True)
-    allow_discussion = fields.Boolean('Discussions', default=True)
-    allow_link = fields.Boolean('Links', help="When clicking on the post, it redirects to an external link", default=True)
     allow_bump = fields.Boolean('Allow Bump', default=True,
                                 help='Check this box to display a popup for posts older than 10 days '
                                      'without any given answer. The popup will offer to share it on social '
@@ -128,14 +126,6 @@ class Forum(models.Model):
     karma_user_bio = fields.Integer(string='Display detailed user biography', default=750)
     karma_post = fields.Integer(string='Ask questions without validation', default=100)
     karma_moderate = fields.Integer(string='Moderate posts', default=1000)
-
-    @api.one
-    @api.constrains('allow_question', 'allow_discussion', 'allow_link', 'default_post_type')
-    def _check_default_post_type(self):
-        if (self.default_post_type == 'question' and not self.allow_question) \
-                or (self.default_post_type == 'discussion' and not self.allow_discussion) \
-                or (self.default_post_type == 'link' and not self.allow_link):
-            raise ValidationError(_('You cannot choose %s as default post since the forum does not allow it.') % self.default_post_type)
 
     @api.one
     def _compute_count_posts_waiting_validation(self):
@@ -197,17 +187,12 @@ class Post(models.Model):
     forum_id = fields.Many2one('forum.forum', string='Forum', required=True)
     content = fields.Html('Content', strip_style=True)
     plain_content = fields.Text('Plain Content', compute='_get_plain_content', store=True)
-    content_link = fields.Char('URL', help="URL of Link Articles")
     tag_ids = fields.Many2many('forum.tag', 'forum_tag_rel', 'forum_id', 'forum_tag_id', string='Tags')
     state = fields.Selection([('active', 'Active'), ('pending', 'Waiting Validation'), ('close', 'Close'), ('offensive', 'Offensive'), ('flagged', 'Flagged')], string='Status', default='active')
     views = fields.Integer('Number of Views', default=0)
     active = fields.Boolean('Active', default=True)
-    post_type = fields.Selection([
-        ('question', 'Question'),
-        ('link', 'Article'),
-        ('discussion', 'Discussion')],
-        string='Type', default='question', required=True)
     website_message_ids = fields.One2many(domain=lambda self: [('model', '=', self._name), ('message_type', 'in', ['email', 'comment'])])
+    website_id = fields.Many2one(related='forum_id.website_id', readonly=True)
 
     # history
     create_date = fields.Datetime('Asked on', index=True, readonly=True)
@@ -312,7 +297,7 @@ class Post(models.Model):
     @api.depends('vote_count', 'forum_id.relevancy_post_vote', 'forum_id.relevancy_time_decay')
     def _compute_relevancy(self):
         if self.create_date:
-            days = (datetime.today() - datetime.strptime(self.create_date, tools.DEFAULT_SERVER_DATETIME_FORMAT)).days
+            days = (datetime.today() - self.create_date).days
             self.relevancy = math.copysign(1, self.vote_count) * (abs(self.vote_count - 1) ** self.forum_id.relevancy_post_vote / (days + 2) ** self.forum_id.relevancy_time_decay)
         else:
             self.relevancy = 0
@@ -367,14 +352,13 @@ class Post(models.Model):
     def _get_has_validated_answer(self):
         self.has_validated_answer = any(answer.is_correct for answer in self.child_ids)
 
-
     @api.multi
     def _get_post_karma_rights(self):
         user = self.env.user
         is_admin = user.id == SUPERUSER_ID
         # sudoed recordset instead of individual posts so values can be
         # prefetched in bulk
-        for post, post_sudo in pycompat.izip(self, self.sudo()):
+        for post, post_sudo in zip(self, self.sudo()):
             is_creator = post.create_uid == user
 
             post.karma_accept = post.forum_id.karma_answer_accept_own if post.parent_id.create_uid == user else post.forum_id.karma_answer_accept_all
@@ -400,14 +384,6 @@ class Post(models.Model):
             post.can_flag = is_admin or user.karma >= post.forum_id.karma_flag
             post.can_moderate = is_admin or user.karma >= post.forum_id.karma_moderate
 
-    @api.one
-    @api.constrains('post_type', 'forum_id')
-    def _check_post_type(self):
-        if (self.post_type == 'question' and not self.forum_id.allow_question) \
-                or (self.post_type == 'discussion' and not self.forum_id.allow_discussion) \
-                or (self.post_type == 'link' and not self.forum_id.allow_link):
-            raise ValidationError(_('This forum does not allow %s') % self.post_type)
-
     def _update_content(self, content, forum_id):
         forum = self.env['forum.forum'].browse(forum_id)
         if content and self.env.user.karma < forum.karma_dofollow:
@@ -421,6 +397,14 @@ class Post(models.Model):
             if content_match:
                 raise KarmaError('User karma not sufficient to post an image or link.')
         return content
+
+    def _default_website_meta(self):
+        res = super(Post, self)._default_website_meta()
+        res['default_opengraph']['og:title'] = res['default_twitter']['twitter:title'] = self.name
+        res['default_opengraph']['og:description'] = res['default_twitter']['twitter:description'] = self.plain_content
+        res['default_opengraph']['og:image'] = res['default_twitter']['twitter:image'] = "/forum/user/%s/avatar" % (self.create_uid.id)
+        res['default_twitter']['twitter:card'] = 'summary'
+        return res
 
     @api.constrains('parent_id')
     def _check_parent_id(self):
@@ -459,17 +443,6 @@ class Post(models.Model):
         return super(Post, self).check_mail_message_access(res_ids, operation, model_name=model_name)
 
     @api.multi
-    @api.depends('name', 'post_type')
-    def name_get(self):
-        result = []
-        for post in self:
-            if post.post_type == 'discussion' and post.parent_id and not post.name:
-                result.append((post.id, '%s (%s)' % (post.parent_id.name, post.id)))
-            else:
-                result.append((post.id, '%s' % (post.name)))
-        return result
-
-    @api.multi
     def write(self, vals):
         trusted_keys = ['active', 'is_correct', 'tag_ids']  # fields where security is checked manually
         if 'content' in vals:
@@ -497,7 +470,7 @@ class Post(models.Model):
                     self.env.user.sudo().add_karma(post.forum_id.karma_gen_answer_accept * mult)
         if 'tag_ids' in vals:
             tag_ids = set(tag.get('id') for tag in self.resolve_2many_commands('tag_ids', vals['tag_ids']))
-            if any(set(post.tag_ids) != tag_ids for post in self) and any(self.env.user.karma < post.forum_id.karma_edit_retag for post in self):
+            if any(set(post.tag_ids.ids) != tag_ids for post in self) and any(self.env.user.karma < post.forum_id.karma_edit_retag for post in self):
                 raise KarmaError(_('Not enough karma to retag.'))
         if any(key not in trusted_keys for key in vals) and any(not post.can_edit for post in self):
             raise KarmaError('Not enough karma to edit a post.')
@@ -662,6 +635,20 @@ class Post(models.Model):
         return True
 
     @api.multi
+    def mark_as_offensive_batch(self, key, values):
+        spams = self.browse()
+        if key == 'create_uid':
+            spams = self.filtered(lambda x: x.create_uid.id in values)
+        elif key == 'country_id':
+            spams = self.filtered(lambda x: x.create_uid.country_id.id in values)
+        elif key == 'post_id':
+            spams = self.filtered(lambda x: x.id in values)
+
+        reason_id = self.env.ref('website_forum.reason_8').id
+        _logger.info('User %s marked as spams (in batch): %s' % (self.env.uid, spams))
+        return spams.mark_as_offensive(reason_id)
+
+    @api.multi
     def unlink(self):
         if any(not post.can_unlink for post in self):
             raise KarmaError('Not enough karma to unlink a post')
@@ -809,7 +796,7 @@ class Post(models.Model):
         return groups
 
     @api.multi
-    @api.returns('self', lambda value: value.id)
+    @api.returns('mail.message', lambda value: value.id)
     def message_post(self, message_type='notification', **kwargs):
         question_followers = self.env['res.partner']
         if self.ids and message_type == 'comment':  # user comments have a restriction on karma
@@ -833,15 +820,13 @@ class Post(models.Model):
         return super(Post, self).message_post(message_type=message_type, **kwargs)
 
     @api.multi
-    def message_get_message_notify_values(self, message, message_values):
+    def _notify_customize_recipients(self, message, msg_vals, recipients_vals):
         """ Override to avoid keeping all notified recipients of a comment.
         We avoid tracking needaction on post comments. Only emails should be
         sufficient. """
-        if message.message_type == 'comment':
-            return {
-                'needaction_partner_ids': [],
-                'partner_ids': [],
-            }
+        msg_type = msg_vals.get('message_type') or message.message_type
+        if msg_type == 'comment':
+            return {'needaction_partner_ids': [], 'partner_ids': []}
         return {}
 
 
@@ -856,14 +841,14 @@ class PostReason(models.Model):
 
 class Vote(models.Model):
     _name = 'forum.post.vote'
-    _description = 'Vote'
+    _description = 'Post Vote'
 
     post_id = fields.Many2one('forum.post', string='Post', ondelete='cascade', required=True)
     user_id = fields.Many2one('res.users', string='User', required=True, default=lambda self: self._uid)
     vote = fields.Selection([('1', '1'), ('-1', '-1'), ('0', '0')], string='Vote', required=True, default='1')
     create_date = fields.Datetime('Create Date', index=True, readonly=True)
-    forum_id = fields.Many2one('forum.forum', string='Forum', related="post_id.forum_id", store=True)
-    recipient_id = fields.Many2one('res.users', string='To', related="post_id.create_uid", store=True)
+    forum_id = fields.Many2one('forum.forum', string='Forum', related="post_id.forum_id", store=True, readonly=False)
+    recipient_id = fields.Many2one('res.users', string='To', related="post_id.create_uid", store=True, readonly=False)
 
     def _get_karma_value(self, old_vote, new_vote, up_karma, down_karma):
         _karma_upd = {
@@ -922,7 +907,6 @@ class Tags(models.Model):
     _inherit = ['mail.thread', 'website.seo.metadata']
 
     name = fields.Char('Name', required=True)
-    create_uid = fields.Many2one('res.users', string='Created by', readonly=True)
     forum_id = fields.Many2one('forum.forum', string='Forum', required=True)
     post_ids = fields.Many2many(
         'forum.post', 'forum_tag_rel', 'forum_tag_id', 'forum_id',

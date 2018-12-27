@@ -6,8 +6,8 @@
 // Invalid
 .o_field_invalid {
     &.o_input, .o_input, &.o_form_label {
-        color: $brand-danger!important;
-        border-color: $brand-danger!important; // enterprise o_required_modifier rule overrides this without !important
+        color: theme-color('danger')!important;
+        border-color: theme-color('danger')!important; // enterprise o_required_modifier rule overrides this without !important
     }
 }
 
@@ -39,15 +39,15 @@
 
     // Flex fields (inline)
     &.o_field_many2one, &.o_field_radio, &.o_field_many2manytags, &.o_field_percent_pie, &.o_field_monetary, &.o_field_binary_file {
-        @include o-inline-flex-display;
+        display: inline-flex;
         > span, > button {
-            @include o-flex(0, 0, auto);
+            flex: 0 0 auto;
         }
     }
 
     // Dropdowns input (many2one, ...)
     .o_input_dropdown {
-        @include o-flex(1, 1, auto);
+        flex: 1 1 auto;
         position: relative;
         width: 100%;
 
@@ -75,83 +75,89 @@
     // Monetary
     &.o_field_monetary {
         &.o_input {
-            @include o-align-items(baseline);
+            align-items: baseline;
 
             > input {
                 width: 100px;
-                @include o-flex(1, 0, auto);
+                flex: 1 0 auto;
             }
         }
     }
 
     // Many2many tags
     &.o_field_many2manytags {
-        @include o-flex-flow(row, wrap);
-        @include o-align-items(baseline);
+        flex-flow: row wrap;
+        align-items: baseline;
 
         > .o_field_widget {
-            @include o-flex(1, 0, 100px);
+            flex: 1 0 100px;
             position: initial;
             max-width: 100%;
         }
 
-        > .badge {
-            @include o-flex(0, 0, auto);
+        .badge {
+            flex: 0 0 auto;
             border: 0;
             font-size: 12px;
-            color: white;
             cursor: pointer;
+            user-select: none;
 
-            > .o_badge_text {
+            a {
+                color: inherit;
+            }
+
+            .o_badge_text {
                 @include o-text-overflow(inline-block);
                 max-width: 200px;
-            }
-
-            // o-kanban-colorpicker without customizing
-            // '&:first-child > a::before' (transparent red-crossed colorpick)
-            @mixin o-tag-colorpicker {
-                $o-tag-colorpicker-padding-right: $o-dropdown-hpadding - 2 * 5px; // FIXME was $o-kanban-inner-hmargin before scss convertion
-
-                max-width: 100%;
-                padding: 3px $o-tag-colorpicker-padding-right 3px $o-dropdown-hpadding;
-
-                > li {
-                    display: inline-block;
-                    margin: 5px 5px 0 0; // FIXME was $o-kanban-inner-hmargin before scss convertion
-                    border: 1px solid white;
-                    box-shadow: 0 0 0 1px $gray-lighter-dark;
-
-                    > a {
-                        display: block;
-
-                        &::after {
-                            content: "";
-                            display: block;
-                            width: 20px;
-                            height: 15px;
-                        }
-                    }
-
-                    &:last-of-type {
-                        box-shadow: 0 0 0 0px white; // remove grey border on hide in kanban
-                        color: $o-main-text-color;
-                    }
-                }
-            }
-
-            > .tagcolor_dropdown_menu {
-                min-width: 150px; // down from 160px of .dropdown-menu
-                margin-right: 0px; // cancel right margin of .dropdown-menu
-            }
-
-            > .o_colorpicker > ul {
-                @include o-tag-colorpicker;
-                white-space: normal;
+                color: inherit;
             }
 
             .o_delete {
+                color: inherit;
                 cursor: pointer;
             }
+        }
+
+        // o-kanban-colorpicker without customizing
+        // '&:first-child > a::before' (transparent red-crossed colorpick)
+        @mixin o-tag-colorpicker {
+            $o-tag-colorpicker-padding-right: $o-dropdown-hpadding - 2 * 5px; // FIXME was $o-kanban-inner-hmargin before scss convertion
+
+            max-width: 100%;
+            padding: 3px $o-tag-colorpicker-padding-right 3px $o-dropdown-hpadding;
+
+            > li {
+                display: inline-block;
+                margin: 5px 5px 0 0; // FIXME was $o-kanban-inner-hmargin before scss convertion
+                border: 1px solid white;
+                box-shadow: 0 0 0 1px gray('300');
+
+                > a {
+                    display: block;
+
+                    &::after {
+                        content: "";
+                        display: block;
+                        width: 20px;
+                        height: 15px;
+                    }
+                }
+
+                &:last-of-type {
+                    box-shadow: 0 0 0 0px white; // remove grey border on hide in kanban
+                    color: $o-main-text-color;
+                }
+            }
+        }
+
+        .tagcolor_dropdown_menu {
+            min-width: 150px; // down from 160px of .dropdown-menu
+            margin-right: 0px; // cancel right margin of .dropdown-menu
+        }
+
+        .o_colorpicker > ul {
+            @include o-tag-colorpicker;
+            white-space: normal;
         }
 
         @for $size from 1 through length($o-colors) {
@@ -168,13 +174,15 @@
                 } @else {
                     &, &::after {
                         background-color: nth($o-colors, $size);
+                        color: $white;
                     }
                 }
             }
         }        
-        > .o_tag_error{ 
+        .o_tag_error {
             box-shadow: inset 0 0 0 2px #FF0000;
-            > .o_delete {
+
+            .o_delete {
                 color: #FF0000;
             }
         }
@@ -225,7 +233,7 @@
 
     // Specific success color for toggle_button widget
     .fa.o_toggle_button_success {
-        color: $brand-success;
+        color: theme-color('success');
     }
 
     // Handle widget
@@ -239,21 +247,21 @@
             margin: 0px 0px 4px 4px;
             padding: 1px 6px;
             color: $o-main-color-muted;
-            border: 1px solid $o-color-silver-dark;
+            border: 1px solid gray('300');
             cursor: pointer;
             &.active {
-                color: $o-brand-optional;
-                border-color: $o-brand-optional;
+                color: $o-brand-primary;
+                border-color: $o-brand-primary;
             }
             &:hover:not(.active) {
-                color: darken($o-color-silver-dark, 30%);
-                border-color: darken($o-color-silver-dark, 30%);
+                color: darken(gray('300'), 30%);
+                border-color: darken(gray('300'), 30%);
             }
         }
     }
     // Radio buttons
     &.o_field_radio {
-        @media (max-width: $screen-xs-max) {
+        @include media-breakpoint-down(sm) {
             display: inline-block;
         }
         .o_radio_input {
@@ -261,17 +269,7 @@
         }
 
         .o_radio_item {
-            @include o-flex(0, 0, auto);
-            @include o-flex-display;
-            @include o-align-items(center);
-
-            > input {
-                @include o-flex(0, 0, auto);
-                margin: 0 $o-form-spacing-unit 0 0;
-            }
-            > label {
-                margin: 0;
-            }
+            flex: 0 0 auto;
         }
 
         &.o_horizontal {
@@ -281,7 +279,7 @@
         }
 
         &.o_vertical {
-            @include o-flex-flow(column, nowrap);
+            flex-flow: column nowrap;
             .o_radio_item {
                 margin-bottom: $o-form-spacing-unit;
             }
@@ -290,7 +288,7 @@
 
     // Percent pie
     &.o_field_percent_pie {
-        @include o-align-items(center);
+        align-items: center;
 
         > .o_pie {
             position: relative;
@@ -299,7 +297,7 @@
             margin-right: 10px;
             border-radius: 100%;
             overflow: hidden;
-            background-color: $o-brand-optional;
+            background-color: $o-brand-primary;
 
             &:after { // Outside pie border to go over border-radius irregularities
                 content: " ";
@@ -311,7 +309,7 @@
 
             .o_mask {
                 @include o-position-absolute(0, 0);
-                @include o-transform-origin(0);
+                transform-origin: 0;
                 width: 50%;
                 height: 100%;
                 background-color: $o-view-background-color;
@@ -321,14 +319,14 @@
             }
 
             .o_pie_value {
-                @include o-flex-display;
-                @include o-justify-content(center);
-                @include o-align-items(center);
+                display: flex;
+                justify-content: center;
+                align-items: center;
 
                 border-radius: 100%;
 
                 font-weight: 700;
-                color: $o-brand-primary;
+                color: $o-brand-odoo;
             }
         }
     }
@@ -351,16 +349,21 @@
             width: 100%;
 
             color: white;
-            background-color: $o-brand-optional;
+            background-color: $o-brand-primary;
             opacity: 0;
             transition: opacity ease 400ms;
+
+            > button.fa {
+                border: none;
+                background-color: transparent;
+            }
 
             > .fa {
                 margin: 5px;
                 cursor: pointer;
             }
         }
-        @media (max-width: $screen-xs-min) {
+        @include media-breakpoint-down(xs, $o-extra-grid-breakpoints) {
             .o_form_image_controls{
                 position: initial;
                 opacity: 1;
@@ -370,10 +373,10 @@
                     margin: 0px;
                     text-align: center;
                     &.o_select_file_button{
-                        background: $o-brand-optional;
+                        background: $o-brand-primary;
                     }
                     &.o_clear_file_button{
-                        background: $brand-danger;
+                        background: theme-color('danger');
                     }
                 }
             }
@@ -384,7 +387,7 @@
         }
 
         &.o_field_invalid > img {
-            border: 1px solid $brand-danger;
+            border: 1px solid theme-color('danger');
         }
     }
 
@@ -408,16 +411,27 @@
         }
     }
 
+    // PDF Viewer
+    &.o_field_pdfviewer, .o_pdfview_iframe {
+        width: 100%;
+        height: 450px;
+        border: 0;
+        margin-top: 10px;
+    }
+
     // Copy to clipboard
     &.o_field_copy {
         position: relative;
+        width: 100% !important;
         border-radius: 5px;
-        border: 1px solid $btn-primary-border;
-        font-size: $font-size-small;
-        color: $o-brand-optional;
+        border: 1px solid $primary;
+        font-size: $font-size-sm;
+        color: $o-brand-primary;
         font-weight: $badge-font-weight;
         text-align: center;
+        padding-right: 100px;
         .o_clipboard_button {
+            @include o-position-absolute($top: 0, $right: 0);
             &.o_btn_text_copy {
                 position: absolute;
                 top: 0;
@@ -425,8 +439,19 @@
             }
             &.o_btn_char_copy {
                 padding-top: 2px;
+                height: 100%;
             }
         }
     }
 
+}
+
+button.o_field_float_toggle {
+    width: 100%;
+    text-align: center;
+}
+
+// Selection fields
+select.o_field_widget.o_input {
+    padding: 1px;  // Other inputs get a 1px padding automatically added by the browsers but selects do not
 }

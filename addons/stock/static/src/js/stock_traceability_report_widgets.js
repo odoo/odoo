@@ -24,6 +24,7 @@ var ReportWidget = Widget.extend({
         return this._super.apply(this, arguments);
     },
     boundLink: function(e) {
+        e.preventDefault();
         return this.do_action({
             type: 'ir.actions.act_window',
             res_model: $(e.target).data('res-model'),
@@ -33,6 +34,7 @@ var ReportWidget = Widget.extend({
         });
     },
     actionOpenLot: function(e) {
+        e.preventDefault();
         var $el = $(e.target).parents('tr');
         this.do_action({
             type: 'ir.actions.client',

@@ -19,14 +19,11 @@ class MrpProductProduce(models.TransientModel):
             production = self.env['mrp.production'].browse(self._context['active_id'])
             serial_finished = (production.product_id.tracking == 'serial')
             todo_uom = production.product_uom_id.id
+            todo_quantity = self._get_todo(production)
             if serial_finished:
                 todo_quantity = 1.0
                 if production.product_uom_id.uom_type != 'reference':
                     todo_uom = self.env['uom.uom'].search([('category_id', '=', production.product_uom_id.category_id.id), ('uom_type', '=', 'reference')]).id
-            else:
-                main_product_moves = production.move_finished_ids.filtered(lambda x: x.product_id.id == production.product_id.id)
-                todo_quantity = production.product_qty - sum(main_product_moves.mapped('quantity_done'))
-                todo_quantity = todo_quantity if (todo_quantity > 0) else 0
             if 'production_id' in fields:
                 res['production_id'] = production.id
             if 'product_id' in fields:
@@ -46,28 +43,49 @@ class MrpProductProduce(models.TransientModel):
     product_uom_id = fields.Many2one('uom.uom', 'Unit of Measure')
     lot_id = fields.Many2one('stock.production.lot', string='Lot/Serial Number')
     produce_line_ids = fields.One2many('mrp.product.produce.line', 'product_produce_id', string='Product to Track')
-    product_tracking = fields.Selection(related="product_id.tracking")
+    product_tracking = fields.Selection(related="product_id.tracking", readonly=False)
+    is_pending_production = fields.Boolean(compute='_compute_pending_production')
+
+    @api.depends('product_qty')
+    def _compute_pending_production(self):
+        """ Compute if it exits remaining quantity once the quantity on the
+        current wizard will be processed. The purpose is to display or not
+        button 'continue'.
+        """
+        for product_produce in self:
+            remaining_qty = product_produce._get_todo(product_produce.production_id)
+            product_produce.is_pending_production = remaining_qty - product_produce.product_qty > 0.0
+
+    def continue_production(self):
+        """ Save current wizard and directly opens a new. """
+        self.ensure_one()
+        self._record_production()
+        action = self.production_id.open_produce_product()
+        action['context'] = {'active_id': self.production_id.id}
+        return action
+
+    def action_generate_serial(self):
+        self.ensure_one()
+        product_produce_wiz = self.env.ref('mrp.view_mrp_product_produce_wizard', False)
+        self.lot_id = self.env['stock.production.lot'].create({
+            'product_id': self.product_id.id
+        })
+        return {
+            'name': _('Produce'),
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'mrp.product.produce',
+            'res_id': self.id,
+            'view_id': product_produce_wiz.id,
+            'target': 'new',
+        }
 
     @api.multi
     def do_produce(self):
-        # Nothing to do for lots since values are created using default data (stock.move.lots)
-        quantity = self.product_qty
-        if float_compare(quantity, 0, precision_rounding=self.product_uom_id.rounding) <= 0:
-            raise UserError(_("The production order for '%s' has no quantity specified.") % self.product_id.display_name)
-        for move in self.production_id.move_finished_ids:
-            if move.product_id.tracking == 'none' and move.state not in ('done', 'cancel'):
-                rounding = move.product_uom.rounding
-                if move.product_id.id == self.production_id.product_id.id:
-                    move.quantity_done += float_round(quantity, precision_rounding=rounding)
-                elif move.unit_factor:
-                    # byproducts handling
-                    move.quantity_done += float_round(quantity * move.unit_factor, precision_rounding=rounding)
-        self.check_finished_move_lots()
-        if self.production_id.state == 'confirmed':
-            self.production_id.write({
-                'state': 'progress',
-                'date_start': datetime.now(),
-            })
+        """ Save the current wizard and go back to the MO. """
+        self.ensure_one()
+        self._record_production()
         return {'type': 'ir.actions.act_window_close'}
 
     @api.multi
@@ -122,11 +140,37 @@ class MrpProductProduce(models.TransientModel):
                 pl.move_id._generate_consumed_move_line(pl.qty_done, self.lot_id, lot=pl.lot_id)
         return True
 
+    def _get_todo(self, production):
+        """ This method will return remaining todo quantity of production. """
+        main_product_moves = production.move_finished_ids.filtered(lambda x: x.product_id.id == production.product_id.id)
+        todo_quantity = production.product_qty - sum(main_product_moves.mapped('quantity_done'))
+        todo_quantity = todo_quantity if (todo_quantity > 0) else 0
+        return todo_quantity
+
+    def _record_production(self):
+        # Nothing to do for lots since values are created using default data (stock.move.lots)
+        quantity = self.product_qty
+        if float_compare(quantity, 0, precision_rounding=self.product_uom_id.rounding) <= 0:
+            raise UserError(_("The production order for '%s' has no quantity specified.") % self.product_id.display_name)
+        for move in self.production_id.move_finished_ids:
+            if move.product_id.tracking == 'none' and move.state not in ('done', 'cancel'):
+                rounding = move.product_uom.rounding
+                if move.product_id.id == self.production_id.product_id.id:
+                    move.quantity_done += float_round(quantity, precision_rounding=rounding)
+                elif move.unit_factor:
+                    # byproducts handling
+                    move.quantity_done += float_round(quantity * move.unit_factor, precision_rounding=rounding)
+        self.check_finished_move_lots()
+        if self.production_id.state == 'confirmed':
+            self.production_id.write({
+                'date_start': datetime.now(),
+            })
+
     @api.onchange('product_qty')
     def _onchange_product_qty(self):
         lines = []
         qty_todo = self.product_uom_id._compute_quantity(self.product_qty, self.production_id.product_uom_id, round=False)
-        for move in self.production_id.move_raw_ids.filtered(lambda m: m.state not in ('done', 'cancel') and m.bom_line_id):
+        for move in self.production_id.move_raw_ids.filtered(lambda m: m.state not in ('done', 'cancel') and (m.bom_line_id or m.product_uom_qty)):
             qty_to_consume = float_round(qty_todo * move.unit_factor, precision_rounding=move.product_uom.rounding)
             for move_line in move.move_line_ids:
                 if float_compare(qty_to_consume, 0.0, precision_rounding=move.product_uom.rounding) <= 0:
@@ -172,7 +216,7 @@ class MrpProductProduceLine(models.TransientModel):
 
     product_produce_id = fields.Many2one('mrp.product.produce')
     product_id = fields.Many2one('product.product', 'Product')
-    product_tracking = fields.Selection(related="product_id.tracking")
+    product_tracking = fields.Selection(related="product_id.tracking", readonly=False)
     lot_id = fields.Many2one('stock.production.lot', 'Lot/Serial Number')
     qty_to_consume = fields.Float('To Consume', digits=dp.get_precision('Product Unit of Measure'))
     product_uom_id = fields.Many2one('uom.uom', 'Unit of Measure')

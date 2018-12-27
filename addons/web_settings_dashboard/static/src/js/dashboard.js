@@ -2,6 +2,7 @@ odoo.define('web_settings_dashboard', function (require) {
 "use strict";
 
 var AbstractAction = require('web.AbstractAction');
+var config = require('web.config');
 var core = require('web.core');
 var framework = require('web.framework');
 var Widget = require('web.Widget');
@@ -10,7 +11,7 @@ var QWeb = core.qweb;
 var _t = core._t;
 
 var Dashboard = AbstractAction.extend({
-    template: 'DashboardMain',
+    contentTemplate: 'DashboardMain',
 
     init: function(){
         this.all_dashboards = ['apps', 'invitations', 'share', 'translations', 'company'];
@@ -18,7 +19,8 @@ var Dashboard = AbstractAction.extend({
     },
 
     start: function(){
-        return this.load(this.all_dashboards);
+        var superDef = this._super.apply(this, arguments);
+        return $.when(superDef, this.load(this.all_dashboards));
     },
 
     load: function(dashboards){
@@ -246,7 +248,7 @@ var DashboardApps = Widget.extend({
     template: 'DashboardApps',
 
     events: {
-        'click .o_browse_apps': 'on_new_apps',
+        'click .o_browse_apps': '_onClickBrowseApps',
         'click .o_confirm_upgrade': 'confirm_upgrade',
     },
 
@@ -263,7 +265,18 @@ var DashboardApps = Widget.extend({
         }
     },
 
-    on_new_apps: function(){
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Called when clicking on 'Browse Apps' button.
+     *
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onClickBrowseApps: function (ev) {
+        ev.preventDefault();
         this.do_action('base.open_module_tree');
     },
 
@@ -279,6 +292,7 @@ var DashboardShare = Widget.extend({
         'click .tw_share': 'share_twitter',
         'click .fb_share': 'share_facebook',
         'click .li_share': 'share_linkedin',
+        'click .o_web_settings_dashboard_force_demo': '_onClickForceDemo',
     },
 
     init: function (parent, data) {
@@ -286,6 +300,7 @@ var DashboardShare = Widget.extend({
         this.parent = parent;
         this.share_url = 'https://www.odoo.com';
         this.share_text = encodeURIComponent("I am using #Odoo - Awesome open source business apps.");
+        return this._super.apply(this, arguments);
     },
 
     /**
@@ -319,17 +334,45 @@ var DashboardShare = Widget.extend({
             popup_url,
             'Share Dialog',
             'width=600,height=400'); // We have to add a size otherwise the window pops in a new tab
-    }
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Forces demo data to be installed in a database without demo data installed.
+     *
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onClickForceDemo: function (ev) {
+        ev.preventDefault();
+        this.do_action('base.demo_force_install_action');
+        config.debug = false;
+    },
 });
 
 var DashboardTranslations = Widget.extend({
     template: 'DashboardTranslations',
 
     events: {
-        'click .o_load_translations': 'on_load_translations'
+        'click .o_load_translations': '_onLoadTranslations'
     },
 
-    on_load_translations: function () {
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Called when clicking on "Load a translation" button. It prompts a dialog
+     * to load a translation.
+     *
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onLoadTranslations: function (ev) {
+        ev.preventDefault();
         this.do_action('base.action_view_base_language_install');
     }
 
@@ -339,7 +382,7 @@ var DashboardCompany = Widget.extend({
     template: 'DashboardCompany',
 
     events: {
-        'click .o_setup_company': 'on_setup_company'
+        'click .o_setup_company': '_onSetupCompany'
     },
 
     init: function (parent, data) {
@@ -348,7 +391,16 @@ var DashboardCompany = Widget.extend({
         this._super.apply(this, arguments);
     },
 
-    on_setup_company: function () {
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onSetupCompany: function (ev) {
+        ev.preventDefault();
         var self = this;
         var action = {
             type: 'ir.actions.act_window',

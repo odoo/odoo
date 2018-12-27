@@ -3,20 +3,21 @@
 # * sale_stock
 # 
 # Translators:
-# Martin Trigaux, 2017
-# Murat Kaplan <muratk@projetgrup.com>, 2017
-# Ediz Duman <neps1192@gmail.com>, 2017
-# Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2017
-# Hüseyin Cem Aras <hcemaras@gmail.com>, 2017
+# Ediz Duman <neps1192@gmail.com>, 2018
 # Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2018
+# Martin Trigaux, 2018
+# Murat Kaplan <muratk@projetgrup.com>, 2018
+# Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2018
+# Hüseyin Cem Aras <hcemaras@gmail.com>, 2018
 # Umur Akın <umura@projetgrup.com>, 2018
+# Buket Şeker <buket_skr@hotmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
-"Last-Translator: Umur Akın <umura@projetgrup.com>, 2018\n"
+"POT-Creation-Date: 2018-10-24 09:34+0000\n"
+"PO-Revision-Date: 2018-10-24 09:34+0000\n"
+"Last-Translator: Buket Şeker <buket_skr@hotmail.com>, 2018\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,7 +26,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:247
+#: code:addons/sale_stock/models/sale_order.py:273
 #, python-format
 msgid ""
 "\n"
@@ -34,63 +35,75 @@ msgid ""
 msgstr ""
 
 #. module: sale_stock
-#: model:ir.ui.view,arch_db:sale_stock.exception_on_picking
+#: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
 msgid ""
 ".\n"
 "                Manual actions may be needed."
 msgstr ""
 
 #. module: sale_stock
-#: model:ir.ui.view,arch_db:sale_stock.portal_order_page_shipping
+#: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid ""
-"<span class=\"label label-danger label-text-align\"><i class=\"fa fa-fw fa-"
+"<span class=\"badge badge-danger label-text-align\"><i class=\"fa fa-fw fa-"
 "times\"/> Cancelled</span>"
 msgstr ""
-"<span class=\"label label-danger label-text-align\"><i class=\"fa fa-fw fa-"
-"times\"/> İptal Edildi</span>"
 
 #. module: sale_stock
-#: model:ir.ui.view,arch_db:sale_stock.portal_order_page_shipping
+#: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid ""
-"<span class=\"label label-info label-text-align\"><i class=\"fa fa-fw fa-"
+"<span class=\"badge badge-info label-text-align\"><i class=\"fa fa-fw fa-"
 "clock-o\"/> Preparation</span>"
 msgstr ""
-"<span class=\"label label-info label-text-align\"><i class=\"fa fa-fw fa-"
-"clock-o\"/> Hazırlık</span>"
 
 #. module: sale_stock
-#: model:ir.ui.view,arch_db:sale_stock.portal_order_page_shipping
+#: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid ""
-"<span class=\"label label-success label-text-align\"><i class=\"fa fa-fw fa-"
+"<span class=\"badge badge-success label-text-align\"><i class=\"fa fa-fw fa-"
 "truck\"/> Shipped</span>"
 msgstr ""
-"<span class=\"label label-success label-text-align\"><i class=\"fa fa-fw fa-"
-"truck\"/>Sevk Edildi</span>"
 
 #. module: sale_stock
-#: model:ir.ui.view,arch_db:sale_stock.portal_order_page_shipping
+#: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid ""
-"<span class=\"label label-warning label-text-align\"><i class=\"fa fa-fw fa-"
+"<span class=\"badge badge-warning label-text-align\"><i class=\"fa fa-fw fa-"
 "clock-o\"/> Partially Available</span>"
 msgstr ""
-"<span class=\"label label-warning label-text-align\"><i class=\"fa fa-fw fa-"
-"clock-o\"/> Kısmen Hazır</span>"
 
 #. module: sale_stock
-#: model:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.stock_production_lot_view_form
+msgid "<span class=\"o_stat_text\">Sale Orders</span>"
+msgstr ""
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.product_template_view_form_inherit_stock
+msgid "<span class=\"o_stat_text\">Sold</span>"
+msgstr "<span class=\"o_stat_text\">Satılan</span>"
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
 msgid "<strong>Customer Reference:</strong>"
 msgstr "<strong>Müşteri Referansı:</strong>"
 
 #. module: sale_stock
-#: model:ir.ui.view,arch_db:sale_stock.portal_order_page_shipping
+#: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid "<strong>Delivery Orders</strong>"
 msgstr "<strong>Teslimat Emirleri</strong>"
 
 #. module: sale_stock
-#: model:ir.ui.view,arch_db:sale_stock.report_invoice_document_inherit_sale_stock
-#: model:ir.ui.view,arch_db:sale_stock.report_saleorder_document_inherit_sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.report_invoice_document_inherit_sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.report_saleorder_document_inherit_sale_stock
 msgid "<strong>Incoterms:</strong>"
-msgstr "<strong>Teslim Şekilleri:</strong>"
+msgstr "<strong>Teslimat Koşulları:</strong>"
+
+#. module: sale_stock
+#: model:ir.model.fields,help:sale_stock.field_sale_order_line__qty_delivered_method
+msgid ""
+"According to product configuration, the delivered quantity can be automatically computed by mechanism :\n"
+"  - Manual: the quantity is set manually on the line\n"
+"  - Analytic From expenses: the quantity is the quantity sum from posted expenses\n"
+"  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
+"  - Stock Moves: the quantity comes from confirmed pickings\n"
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.ui.menu,name:sale_stock.menu_aftersale
@@ -98,26 +111,40 @@ msgid "After-Sale"
 msgstr "Satış Sonrası"
 
 #. module: sale_stock
-#: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
+#: selection:sale.order.line,qty_delivered_method:0
+msgid "Analytic From Expenses"
+msgstr ""
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
 msgid "Apply special routes from orders (e.g. dropshipping, MTO)"
 msgstr ""
 "Siparişlerde kalem bazında özel rotalar uygulayın (ör. Dropshipping, MTO)"
 
 #. module: sale_stock
-#: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
-msgid ""
-"By default Odoo computes the expected delivery date this way: order date + "
-"highest customer lead time of products. With this option, you can set a "
-"specific delivery date on orders rather than setting lead times on products."
+#: model:ir.model.fields,field_description:sale_stock.field_stock_rules_report__so_route_ids
+msgid "Apply specific rotues"
 msgstr ""
-"Varsayılan olarak, Odoo, beklenen teslimat tarihini şu şekilde hesaplar: \n"
-"sipariş tarihi + ürünlerin teslimat için güvenli tampon süreleri.\n"
-"Bu seçenekle, ürünler üzerinde güvenli teslimat tampon süreleri ayarlamak yerine siparişlerde net bir teslim tarihi belirleyebilirsiniz."
+
+#. module: sale_stock
+#: model:ir.model.fields,help:sale_stock.field_stock_rules_report__so_route_ids
+msgid "Choose to apply SO lines specific routes."
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_company
 msgid "Companies"
-msgstr "Firmalar"
+msgstr "Şirketler"
+
+#. module: sale_stock
+#: model:ir.model.fields,help:sale_stock.field_sale_order__effective_date
+msgid "Completion date of the first delivery order."
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_res_config_settings
+msgid "Config Settings"
+msgstr "Konfigürasyon Ayarları"
 
 #. module: sale_stock
 #: selection:sale.order,picking_policy:0
@@ -130,14 +157,9 @@ msgid "Deliver each product when available"
 msgstr "Her ürün hazır olduğunda teslim et"
 
 #. module: sale_stock
-#: model:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
 msgid "Delivery"
 msgstr "Teslimat"
-
-#. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__module_sale_order_dates
-msgid "Delivery Date"
-msgstr "Teslim Tarihi"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__delivery_count
@@ -152,10 +174,15 @@ msgstr ""
 "göster"
 
 #. module: sale_stock
-#: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
+#: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
 msgid "Display incoterms on orders &amp; invoices"
 msgstr ""
 "Sipariş ve Faturalarda Uluslararası Teslim Şekillerini (Incoterms) göster"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order__effective_date
+msgid "Effective Date"
+msgstr "Geçerlilik Tarihi"
 
 #. module: sale_stock
 #: model:res.groups,name:sale_stock.group_route_so_lines
@@ -163,23 +190,31 @@ msgid "Enable Route on Sales Order Line"
 msgstr "Satış Sipariş Satırında Özel Rota Seçimini Kullan"
 
 #. module: sale_stock
-#: model:ir.ui.view,arch_db:sale_stock.exception_on_picking
+#: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
 msgid "Exception(s) occurred on the picking:"
 msgstr ""
 
 #. module: sale_stock
-#: model:ir.ui.view,arch_db:sale_stock.exception_on_so
+#: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "Exception(s) occurred on the sale order(s):"
 msgstr ""
 
 #. module: sale_stock
-#: model:ir.ui.view,arch_db:sale_stock.exception_on_picking
-#: model:ir.ui.view,arch_db:sale_stock.exception_on_so
+#: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
+#: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "Exception(s):"
 msgstr ""
 
 #. module: sale_stock
-#: model:ir.ui.view,arch_db:sale_stock.exception_on_so
+#: model:ir.model.fields,help:sale_stock.field_sale_order__picking_policy
+msgid ""
+"If you deliver all products at once, the delivery order will be scheduled "
+"based on the greatest product lead time. Otherwise, it will be based on the "
+"shortest."
+msgstr ""
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "Impacted Transfer(s):"
 msgstr ""
 
@@ -187,9 +222,9 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_stock.field_account_invoice__incoterms_id
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__group_display_incoterm
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__incoterm
-#: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
+#: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
 msgid "Incoterms"
-msgstr "Teslim Şekilleri"
+msgstr "Teslimat Koşulları"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_account_invoice__incoterms_id
@@ -198,7 +233,7 @@ msgid ""
 "costs and responsibilities between buyer and seller and reflect state-of-"
 "the-art transportation practices."
 msgstr ""
-"Teslim şekilleri satış koşulları grubudur. İşlem maliyetlerini ve "
+"Teslimat Koşulları satış koşulları grubudur. İşlem maliyetlerini ve "
 "sorumluluklarını alıcı ve satıcı arasında paylaştırmak ve gelişmiş taşıma "
 "faaliyetlerini yansıtmak için kullanılırlar."
 
@@ -232,7 +267,23 @@ msgid "Invoicing"
 msgstr "Faturalama"
 
 #. module: sale_stock
-#: model:ir.ui.view,arch_db:sale_stock.exception_on_so
+#: model:ir.model,name:sale_stock.model_stock_production_lot
+msgid "Lot/Serial"
+msgstr "Lot/Seri"
+
+#. module: sale_stock
+#: code:addons/sale_stock/models/sale_order.py:418
+#, python-format
+msgid "Make To Order"
+msgstr "MTO"
+
+#. module: sale_stock
+#: selection:sale.order.line,qty_delivered_method:0
+msgid "Manual"
+msgstr "Manuel"
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "Manual actions may be needed."
 msgstr ""
 
@@ -250,7 +301,7 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_res_company__security_lead
 #: model:ir.model.fields,help:sale_stock.field_res_config_settings__security_lead
-#: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid ""
 "Margin of error for dates promised to customers. Products will be scheduled "
 "for procurement and delivery that many days earlier than the actual promised"
@@ -261,12 +312,17 @@ msgstr ""
 "gerçek söz verilen tarihlerden bir kaç gün erken planlanacaktır."
 
 #. module: sale_stock
-#: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_delivered_method
+msgid "Method to update delivered qty"
+msgstr ""
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "Move forward expected delivery dates by"
 msgstr "Beklenen teslim tarihlerini ileriye taşıyın : "
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:254
+#: code:addons/sale_stock/models/sale_order.py:280
 #, python-format
 msgid "Not enough inventory!"
 msgstr "Yeterli stok yok!"
@@ -277,7 +333,7 @@ msgid "Order-Specific Routes"
 msgstr "Siparişe Özel Rotalar"
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:268
+#: code:addons/sale_stock/models/sale_order.py:294
 #, python-format
 msgid "Ordered quantity decreased!"
 msgstr "Sipariş edilen miktar azaldı!"
@@ -298,19 +354,10 @@ msgid "Pickings"
 msgstr "Transfer Listeleri"
 
 #. module: sale_stock
+#: model:ir.model,name:sale_stock.model_procurement_group
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__procurement_group_id
 msgid "Procurement Group"
 msgstr "Tedarik Grubu"
-
-#. module: sale_stock
-#: model:ir.model,name:sale_stock.model_procurement_group
-msgid "Procurement Requisition"
-msgstr "Tedarik Talebi"
-
-#. module: sale_stock
-#: model:ir.model,name:sale_stock.model_procurement_rule
-msgid "Procurement Rule"
-msgstr "Tedarik Kuralı"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_product_template
@@ -318,12 +365,7 @@ msgid "Product Template"
 msgstr "Ürün Şablonu"
 
 #. module: sale_stock
-#: model:ir.model,name:sale_stock.model_sale_order
-msgid "Quotation"
-msgstr "Teklif"
-
-#. module: sale_stock
-#: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid ""
 "Reserving products manually in delivery orders or by running the scheduler "
 "is advised to better manage priorities in case of long customer lead times "
@@ -339,7 +381,7 @@ msgid "Route"
 msgstr "Rota"
 
 #. module: sale_stock
-#: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
+#: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
 msgid "Routes for Sales Order Lines"
 msgstr "Satış Siparişi Satırı Özel Rotaları"
 
@@ -349,14 +391,25 @@ msgid "Sale Line"
 msgstr "Satış Satırı"
 
 #. module: sale_stock
+#: model:ir.model,name:sale_stock.model_sale_order
 #: model:ir.model.fields,field_description:sale_stock.field_procurement_group__sale_id
 msgid "Sale Order"
 msgstr "Satış Siparişi"
 
 #. module: sale_stock
-#: model:ir.ui.view,arch_db:sale_stock.product_template_view_form_inherit_stock
-msgid "Sales"
-msgstr "Satış"
+#: model_terms:ir.ui.view,arch_db:sale_stock.stock_production_lot_view_form
+msgid "Sale Orders"
+msgstr "Satış Siparişleri"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_stock_production_lot__sale_order_count
+msgid "Sale order count"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_sale_report
+msgid "Sales Analysis Report"
+msgstr "Satış Analizi Raporu"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_picking__sale_id
@@ -369,14 +422,14 @@ msgid "Sales Order Line"
 msgstr "Satış Sipariş Satırı"
 
 #. module: sale_stock
-#: model:ir.ui.view,arch_db:sale_stock.stock_location_route_view_form_inherit_sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.stock_location_route_view_form_inherit_sale_stock
 msgid "Sales Order Lines"
 msgstr "Satış Siparişi Satırları"
 
 #. module: sale_stock
-#: model:ir.model,name:sale_stock.model_sale_report
-msgid "Sales Orders Statistics"
-msgstr "Satış Siparişi İstatistikleri"
+#: model:ir.model.fields,field_description:sale_stock.field_stock_production_lot__sale_order_ids
+msgid "Sales Orders"
+msgstr "Satış Siparişleri"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_company__security_lead
@@ -384,7 +437,7 @@ msgid "Sales Safety Days"
 msgstr "Satış Güvenlik Gün Süresi"
 
 #. module: sale_stock
-#: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "Schedule deliveries earlier to avoid delays"
 msgstr "Gecikmeleri önlemek için teslimatları daha erken planlayın"
 
@@ -404,11 +457,6 @@ msgid "Selectable on Sales Order Line"
 msgstr "Satış Sipariş Satır'dan Seçilebilir"
 
 #. module: sale_stock
-#: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
-msgid "Set a delivery date on orders"
-msgstr "Siparişlerde bir teslim tarihi belirle"
-
-#. module: sale_stock
 #: selection:res.config.settings,default_picking_policy:0
 msgid "Ship all products at once"
 msgstr "Tüm ürünleri tek seferde gönder"
@@ -419,14 +467,14 @@ msgid "Ship products as soon as available, with back orders"
 msgstr "Hazır olan ürünleri teslimatı bölerek hemen gönder"
 
 #. module: sale_stock
-#: model:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
-msgid "Shipping Information"
-msgstr "Sevkiyat Bilgileri"
-
-#. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__picking_policy
 msgid "Shipping Policy"
-msgstr "Sevkiyat Politikası"
+msgstr "Ürün Teslimat Politikası"
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.product_template_view_form_inherit_stock
+msgid "Sold in the last 365 days"
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_move
@@ -435,11 +483,27 @@ msgstr "Stok Hareketi"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__move_ids
+#: selection:sale.order.line,qty_delivered_method:0
 msgid "Stock Moves"
 msgstr "Stok Hareketleri"
 
 #. module: sale_stock
-#: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
+#: model:ir.model,name:sale_stock.model_stock_rule
+msgid "Stock Rule"
+msgstr "Stok Kuralı"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_stock_rules_report
+msgid "Stock Rules report"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_report_stock_report_stock_rule
+msgid "Stock rule report"
+msgstr ""
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
 msgid ""
 "This allows to apply a special route on sales order lines (e.g. "
 "dropshipping, make-to-order) in case of unusual order scenario. To be "
@@ -452,10 +516,15 @@ msgstr ""
 "'Satış Sipariş Satırları' seçeneğinin işaretli olması gerekir."
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:361
+#: code:addons/sale_stock/models/sale_order.py:397
 #, python-format
 msgid "This product is packaged by %.2f %s. You should sell %.2f %s."
 msgstr "Bu ürün% .2f%s tarafından paketlenmiştir. % .2f%s satmalısınız."
+
+#. module: sale_stock
+#: selection:sale.order.line,qty_delivered_method:0
+msgid "Timesheets"
+msgstr "Zaman Çizelgeleri"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking
@@ -469,23 +538,23 @@ msgid "Warehouse"
 msgstr "Depo"
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:360
+#: code:addons/sale_stock/models/sale_order.py:396
 #, python-format
 msgid "Warning"
 msgstr "Uyarı"
 
 #. module: sale_stock
-#: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "When to reserve sold products"
 msgstr "Satılan ürünlerin ne zaman rezerve edileceği"
 
 #. module: sale_stock
-#: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "When to start shipping"
 msgstr "Sevkıyatın ne zaman başlatılacağı"
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:269
+#: code:addons/sale_stock/models/sale_order.py:295
 #, python-format
 msgid ""
 "You are decreasing the ordered quantity! Do not forget to manually update "
@@ -495,7 +564,7 @@ msgstr ""
 "güncellemeyi unutmayın."
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:401
+#: code:addons/sale_stock/models/sale_order.py:437
 #, python-format
 msgid ""
 "You cannot decrease the ordered quantity below the delivered quantity.\n"
@@ -503,41 +572,35 @@ msgid ""
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:243
+#: code:addons/sale_stock/models/sale_order.py:269
 #, python-format
 msgid ""
-"You plan to sell %s %s but you only have %s %s available in %s warehouse."
+"You plan to sell %s %s of %s but you only have %s %s available in %s "
+"warehouse."
 msgstr ""
-"%s %s satmayı planlıyorsunuz ancak kullanılabilir yalnızca %s %s var! Stok "
-"miktarı %s %s."
 
 #. module: sale_stock
-#: model:ir.ui.view,arch_db:sale_stock.exception_on_so
+#: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "cancelled"
-msgstr ""
+msgstr "İptal Edildi"
 
 #. module: sale_stock
-#: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "days"
 msgstr "gün"
 
 #. module: sale_stock
-#: model:ir.ui.view,arch_db:sale_stock.exception_on_picking
-#: model:ir.ui.view,arch_db:sale_stock.exception_on_so
+#: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
+#: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "of"
 msgstr "ile ilgili"
 
 #. module: sale_stock
-#: model:ir.ui.view,arch_db:sale_stock.exception_on_so
+#: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "ordered instead of"
 msgstr ""
 
 #. module: sale_stock
-#: model:ir.ui.view,arch_db:sale_stock.exception_on_picking
+#: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
 msgid "processed instead of"
 msgstr ""
-
-#. module: sale_stock
-#: model:ir.model,name:sale_stock.model_res_config_settings
-msgid "res.config.settings"
-msgstr "res.config.settings"

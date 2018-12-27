@@ -3,8 +3,8 @@
 
 {
     'name': 'Belgium - Payroll',
-    'category': 'Localization',
-    'depends': ['hr_payroll'],
+    'category': 'Payroll Localization',
+    'depends': ['hr_payroll', 'l10n_be'],
     'description': """
 Belgian Payroll Rules.
 ======================
@@ -20,10 +20,10 @@ Belgian Payroll Rules.
     * Salary Maj, ONSS, Withholding Tax, Child Allowance, ...
     """,
 
-    'website': 'https://www.odoo.com/page/accounting',
     'data': [
         'views/l10n_be_hr_payroll_view.xml',
         'data/l10n_be_hr_payroll_data.xml',
-        'data/hr.salary.rule.csv',
+        'views/res_config_settings_views.xml',
     ],
+    'auto_install': True,
 }

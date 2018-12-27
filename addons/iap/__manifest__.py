@@ -16,6 +16,9 @@ This module provides standard tools (account model, context manager and helpers)
         'views/assets.xml',
         'views/iap_views.xml',
     ],
+    'images': [
+        'static/src/img/iap_logo.svg',
+    ],
     'qweb': [
         'static/src/xml/iap_templates.xml',
     ],

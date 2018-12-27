@@ -17,6 +17,7 @@ class AccountClosing(models.Model):
     """
     _name = 'account.sale.closing'
     _order = 'date_closing_stop desc, sequence_number desc'
+    _description = "Sale Closing"
 
     name = fields.Char(help="Frequency and unique sequence number", required=True)
     company_id = fields.Many2one('res.company', string='Company', readonly=True, required=True)

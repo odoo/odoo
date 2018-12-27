@@ -42,7 +42,7 @@ class HrPayslip(models.Model):
     @api.onchange('contract_id')
     def onchange_contract(self):
         super(HrPayslip, self).onchange_contract()
-        self.journal_id = self.contract_id.journal_id.id or (not self.contract_id and self.default_get(['journal_id'])['journal_id'])
+        self.journal_id = self.contract_id.journal_id.id or self.default_get(['journal_id'])['journal_id']
 
     @api.multi
     def action_payslip_cancel(self):
@@ -53,6 +53,7 @@ class HrPayslip(models.Model):
 
     @api.multi
     def action_payslip_done(self):
+        res = super(HrPayslip, self).action_payslip_done()
         precision = self.env['decimal.precision'].precision_get('Payroll')
 
         for slip in self:
@@ -68,7 +69,7 @@ class HrPayslip(models.Model):
                 'journal_id': slip.journal_id.id,
                 'date': date,
             }
-            for line in slip.details_by_salary_rule_category:
+            for line in slip.line_ids.filtered(lambda line: line.category_id):
                 amount = slip.credit_note and -line.total or line.total
                 if float_is_zero(amount, precision_digits=precision):
                     continue
@@ -138,7 +139,7 @@ class HrPayslip(models.Model):
             move = self.env['account.move'].create(move_dict)
             slip.write({'move_id': move.id, 'date': date})
             move.post()
-        return super(HrPayslip, self).action_payslip_done()
+        return res
 
 
 class HrSalaryRule(models.Model):
@@ -153,7 +154,6 @@ class HrContract(models.Model):
     _inherit = 'hr.contract'
     _description = 'Employee Contract'
 
-    analytic_account_id = fields.Many2one('account.analytic.account', 'Analytic Account')
     journal_id = fields.Many2one('account.journal', 'Salary Journal')
 
 class HrPayslipRun(models.Model):

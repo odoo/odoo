@@ -7,7 +7,7 @@
     'version': '2.0',
     'category': 'Human Resources',
     'sequence': 95,
-    'summary': 'Expenses Validation, Invoicing',
+    'summary': 'Submit, validate and reinvoice employee expenses',
     'description': """
 Manage expenses by Employees
 ============================
@@ -43,7 +43,6 @@ This module also uses analytic accounting and is compatible with the invoice on 
         'views/assets.xml',
         'views/res_config_settings_views.xml',
         'views/account_journal_dashboard.xml',
-        'views/res_users_views.xml',
     ],
     'demo': ['data/hr_expense_demo.xml'],
     'installable': True,

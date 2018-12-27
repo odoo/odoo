@@ -11,7 +11,6 @@ This module offers the basic functionalities to make payments by printing checks
 It must be used as a dependency for modules that provide country-specific check templates.
 The check settings are located in the accounting journals configuration page.
     """,
-    'website': 'https://www.odoo.com/page/accounting',
     'depends': ['account'],
     'data': [
         'data/account_check_printing_data.xml',

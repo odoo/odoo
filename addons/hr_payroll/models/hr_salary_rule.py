@@ -57,7 +57,7 @@ class HrPayrollStructure(models.Model):
         parent = self.mapped('parent_id')
         if parent:
             parent = parent._get_parent_structure()
-        return parent + self
+        return parent | self
 
 
 class HrContributionRegister(models.Model):
@@ -94,6 +94,8 @@ class HrSalaryRuleCategory(models.Model):
 
 class HrSalaryRule(models.Model):
     _name = 'hr.salary.rule'
+    _order = 'sequence, id'
+    _description = 'Salary Rule'
 
     name = fields.Char(required=True, translate=True)
     code = fields.Char(required=True,
@@ -133,7 +135,7 @@ class HrSalaryRule(models.Model):
                     # rules: object containing the rules code (previously computed)
                     # categories: object containing the computed salary rule categories (sum of amount of all rules belonging to that category).
                     # worked_days: object containing the computed worked days
-                    # inputs: object containing the computed inputs
+                    # inputs: object containing the computed inputs.
 
                     # Note: returned value have to be set in the variable 'result'
 
@@ -168,7 +170,6 @@ class HrSalaryRule(models.Model):
     child_ids = fields.One2many('hr.salary.rule', 'parent_rule_id', string='Child Salary Rule', copy=True)
     register_id = fields.Many2one('hr.contribution.register', string='Contribution Register',
         help="Eventual third party involved in the salary payment of the employees.")
-    input_ids = fields.One2many('hr.rule.input', 'input_id', string='Inputs', copy=True)
     note = fields.Text(string='Description')
 
     @api.constrains('parent_rule_id')
@@ -198,21 +199,21 @@ class HrSalaryRule(models.Model):
         if self.amount_select == 'fix':
             try:
                 return self.amount_fix, float(safe_eval(self.quantity, localdict)), 100.0
-            except:
-                raise UserError(_('Wrong quantity defined for salary rule %s (%s).') % (self.name, self.code))
+            except Exception as e:
+                raise UserError(_('Wrong quantity defined for salary rule %s (%s).\nError: %s') % (self.name, self.code, e))
         elif self.amount_select == 'percentage':
             try:
                 return (float(safe_eval(self.amount_percentage_base, localdict)),
                         float(safe_eval(self.quantity, localdict)),
                         self.amount_percentage)
-            except:
-                raise UserError(_('Wrong percentage base or quantity defined for salary rule %s (%s).') % (self.name, self.code))
+            except Exception as e:
+                raise UserError(_('Wrong percentage base or quantity defined for salary rule %s (%s).\nError: %s') % (self.name, self.code, e))
         else:
             try:
                 safe_eval(self.amount_python_compute, localdict, mode='exec', nocopy=True)
-                return float(localdict['result']), 'result_qty' in localdict and localdict['result_qty'] or 1.0, 'result_rate' in localdict and localdict['result_rate'] or 100.0
-            except:
-                raise UserError(_('Wrong python code defined for salary rule %s (%s).') % (self.name, self.code))
+                return float(localdict['result']), localdict.get('result_qty', 1.0), localdict.get('result_rate', 100.0)
+            except Exception as e:
+                raise UserError(_('Wrong python code defined for salary rule %s (%s).\nError: %s') % (self.name, self.code, e))
 
     @api.multi
     def _satisfy_condition(self, localdict):
@@ -233,15 +234,7 @@ class HrSalaryRule(models.Model):
         else:  # python code
             try:
                 safe_eval(self.condition_python, localdict, mode='exec', nocopy=True)
-                return 'result' in localdict and localdict['result'] or False
+                return  localdict.get('result', False)
             except:
                 raise UserError(_('Wrong python condition defined for salary rule %s (%s).') % (self.name, self.code))
 
-
-class HrRuleInput(models.Model):
-    _name = 'hr.rule.input'
-    _description = 'Salary Rule Input'
-
-    name = fields.Char(string='Description', required=True)
-    code = fields.Char(required=True, help="The code that can be used in the salary rules")
-    input_id = fields.Many2one('hr.salary.rule', string='Salary Rule Input', required=True)

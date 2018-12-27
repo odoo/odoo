@@ -4,6 +4,7 @@
 import logging
 
 from odoo import api, models
+from odoo.exceptions import AccessDenied
 
 _logger = logging.getLogger(__name__)
 
@@ -11,6 +12,7 @@ _logger = logging.getLogger(__name__)
 class AutoVacuum(models.AbstractModel):
     """ Expose the vacuum method to the cron jobs mechanism. """
     _name = 'ir.autovacuum'
+    _description = 'Automatic Vacuum'
 
     @api.model
     def _gc_transient_models(self):
@@ -36,6 +38,8 @@ class AutoVacuum(models.AbstractModel):
 
     @api.model
     def power_on(self, *args, **kwargs):
+        if not self.env.user._is_admin():
+            raise AccessDenied()
         self.env['ir.attachment']._file_gc()
         self._gc_transient_models()
         self._gc_user_logs()

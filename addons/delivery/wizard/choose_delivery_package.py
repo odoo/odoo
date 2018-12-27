@@ -55,10 +55,6 @@ class ChooseDeliveryPackage(models.TransientModel):
             return {'warning': warning_mess}
 
     def put_in_pack(self):
-        picking_id = self.env['stock.picking'].browse(self.env.context['active_id'])
-        if not self.stock_quant_package_id:
-            stock_quant_package = picking_id._put_in_pack()
-            self.stock_quant_package_id = stock_quant_package
         # write shipping weight and product_packaging on 'stock_quant_package' if needed
         if self.delivery_packaging_id:
             self.stock_quant_package_id.packaging_id = self.delivery_packaging_id

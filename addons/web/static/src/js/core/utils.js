@@ -427,13 +427,6 @@ var utils = {
                 return (strip_whitespace && node.data.trim() === '') ? undefined : node.data;
             case 1:
                 var attrs = $(node).getAttributes();
-                _.each(['domain', 'filter_domain', 'context', 'default_get'], function (key) {
-                    if (attrs[key]) {
-                        try {
-                            attrs[key] = JSON.parse(attrs[key]);
-                        } catch(e) { }
-                    }
-                });
                 return {
                     tag: node.tagName.toLowerCase(),
                     attrs: attrs,
@@ -509,6 +502,26 @@ var utils = {
           utils.deepFreeze(prop);
       });
       return Object.freeze(obj);
+    },
+
+    /**
+     * Find the closest value of the given one in the provided array
+     *
+     * @param {Number} num
+     * @param {Array} arr
+     * @returns {Number|undefined}
+     */
+    closestNumber: function (num, arr) {
+        var curr = arr[0];
+        var diff = Math.abs (num - curr);
+        for (var val = 0; val < arr.length; val++) {
+            var newdiff = Math.abs (num - arr[val]);
+            if (newdiff < diff) {
+                diff = newdiff;
+                curr = arr[val];
+            }
+        }
+        return curr;
     },
 
 };

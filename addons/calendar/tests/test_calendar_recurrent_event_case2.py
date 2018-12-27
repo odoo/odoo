@@ -85,14 +85,23 @@ class TestRecurrentEvent(common.TransactionCase):
         for meeting in meetings:
             self.assertEqual(meeting.name, 'Sprint Review for google modules', 'Name not changed for id: %s' % meeting.id)
 
+        # I detach first occurrence to check it is not modified by changing recurrent event.
+        min(meetings, key=lambda m: m.start).detach_recurring_event()
+
         # I change description of my weekly meeting Review code with programmer.
         idval = '%d-%s' % (self.calendar_event_sprint_review.id, '20110425124700')
         self.CalendarEvent.browse(idval).write({'description': 'Review code of the module: sync_google_calendar.'})
 
-        # I check whether that all the records of this recurrence has been edited.
-        meetings = self.CalendarEvent.search([('recurrent_id', '=', self.calendar_event_sprint_review.id)])
-        for meeting in meetings:
-            self.assertEqual(meeting.description, 'Review code of the module: sync_google_calendar.', 'Description not changed for id: %s' % meeting.id)
+        # I check that detached event has not been edited.
+        detached_meeting = self.CalendarEvent.search([('recurrent_id', '=', self.calendar_event_sprint_review.id)])
+        self.assertEqual(detached_meeting.description, False, 'Detached event description changed for id: %s' % meeting.id)
+
+        # I verify wether I find an event by date range when subsequent to a detached one.
+        last_meeting = max(meetings, key=lambda m: m.start)
+        meetings = self.CalendarEvent.with_context({'virtual_id': True}).search([
+            ('start', '<=', str(last_meeting.stop)), ('stop', '>=', str(last_meeting.start))
+        ])
+        self.assertEqual(meetings.id, last_meeting.id, 'Last event should be found searching it by date range')
 
         # I update the description of two meetings, and check that both have been updated
         self.calendar_event_sprint_review.write({'description': "Some description"})
@@ -169,3 +178,30 @@ class TestRecurrentEvent(common.TransactionCase):
 
         # virtual_dates are used by the calendar view and I check if the stop date for the first virtual event is correct.
         self.assertEqual(virutal_dates[2], '2012-04-13 12:00:00', "The virtual event doesn't have the correct stop date !")
+
+    def test_recurrent_meeting6(self):
+        ev = self.CalendarEvent.create({
+            'name': 'Rec1',
+            'start': '2018-06-28 11:00:00',
+            'stop': '2018-06-28 12:00:00',
+            'day': 0.0,
+            'duration': 1.0,
+            'count': ' 2',
+            'end_type': 'count',
+            'fr': True,
+            'recurrency': True,
+            'allday': False,
+            'rrule_type': 'weekly'
+        })
+        #event 2018-07-06 and 2018-06-29
+        meetings = self.CalendarEvent.with_context({'virtual_id': True}).search([
+            '|', '&', ('start', '>=', '2018-06-30 00:00:00'), ('start', '<=', '2018-06-30 23:59:59'), ('allday', '=', True)
+        ])
+        base_ids = [calendar_id2real_id(meeting.id, with_date=False) for meeting in meetings]
+        self.assertNotIn(ev.id, base_ids, "Event does not match the domain")
+
+        meetings = self.CalendarEvent.with_context({'virtual_id': True}).search([
+            '|', '&', ('start', '>=', '2018-06-29 00:00:00'), ('start', '<=', '2018-06-29 23:59:59'), ('allday', '=', True)
+        ])
+        base_ids = [calendar_id2real_id(meeting.id, with_date=False) for meeting in meetings]
+        self.assertIn(ev.id, base_ids, "Event does match the domain")

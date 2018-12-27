@@ -16,6 +16,8 @@ class ResConfigSettings(models.TransientModel):
         help="Track following dates on lots & serial numbers: best before, removal, end of life, alert. \n Such dates are set automatically at lot/serial number creation based on values set on the product (in days).")
     group_stock_production_lot = fields.Boolean("Lots & Serial Numbers",
         implied_group='stock.group_production_lot')
+    group_lot_on_delivery_slip = fields.Boolean("Display Lots & Serial Numbers",
+        implied_group='stock.group_lot_on_delivery_slip')
     group_stock_tracking_lot = fields.Boolean("Delivery Packages",
         implied_group='stock.group_tracking_lot')
     group_stock_tracking_owner = fields.Boolean("Consignment",
@@ -24,7 +26,7 @@ class ResConfigSettings(models.TransientModel):
         implied_group='stock.group_adv_location',
         help="Add and customize route operations to process product moves in your warehouse(s): e.g. unload > quality control > stock for incoming products, pick > pack > ship for outgoing products. \n You can also set putaway strategies on warehouse locations in order to send incoming products into specific child locations straight away (e.g. specific bins, racks).")
     group_warning_stock = fields.Boolean("Warnings for Stock", implied_group='stock.group_warning_stock')
-    propagation_minimum_delta = fields.Integer(related='company_id.propagation_minimum_delta', string="Minimum Delta for Propagation")
+    propagation_minimum_delta = fields.Integer(related='company_id.propagation_minimum_delta', string="Minimum Delta for Propagation", readonly=False)
     use_propagation_minimum_delta = fields.Boolean(
         string="No Rescheduling Propagation",
         oldname='default_new_propagation_minimum_delta',
@@ -57,6 +59,11 @@ class ResConfigSettings(models.TransientModel):
     def _onchange_group_stock_multi_warehouses(self):
         if self.group_stock_multi_warehouses:
             self.group_stock_multi_locations = True
+
+    @api.onchange('group_stock_production_lot')
+    def _onchange_group_stock_production_lot(self):
+        if not self.group_stock_production_lot:
+            self.group_lot_on_delivery_slip = False
 
     @api.onchange('group_stock_adv_location')
     def onchange_adv_location(self):

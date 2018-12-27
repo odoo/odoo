@@ -129,7 +129,7 @@ class AccountVoucher(models.Model):
             for line in voucher.line_ids:
                 tax_info = line.tax_ids.compute_all(line.price_unit, voucher.currency_id, line.quantity, line.product_id, voucher.partner_id)
                 total += tax_info.get('total_included', 0.0)
-                tax_amount += sum([t.get('amount',0.0) for t in tax_info.get('taxes', False)]) 
+                tax_amount += sum([t.get('amount',0.0) for t in tax_info.get('taxes', False)])
             voucher.amount = total + voucher.tax_correction
             voucher.tax_amount = tax_amount
 
@@ -288,10 +288,11 @@ class AccountVoucher(models.Model):
                 'name': line.name or '/',
                 'account_id': line.account_id.id,
                 'move_id': move_id,
+                'quantity': line.quantity,
+                'product_id': line.product_id.id,
                 'partner_id': self.partner_id.commercial_partner_id.id,
                 'analytic_account_id': line.account_analytic_id and line.account_analytic_id.id or False,
                 'analytic_tag_ids': [(6, 0, line.analytic_tag_ids.ids)],
-                'quantity': 1,
                 'credit': abs(amount) if self.voucher_type == 'sale' else 0.0,
                 'debit': abs(amount) if self.voucher_type == 'purchase' else 0.0,
                 'date': self.account_date,
@@ -317,8 +318,8 @@ class AccountVoucher(models.Model):
                             'move_id': move_id,
                             'date': self.account_date,
                             'partner_id': self.partner_id.id,
-                            'debit': tax_vals['amount'] > 0 and tax_vals['amount'] or 0.0,
-                            'credit': tax_vals['amount'] < 0 and -tax_vals['amount'] or 0.0,
+                            'debit': self.voucher_type != 'sale' and tax_vals['amount'] or 0.0,
+                            'credit': self.voucher_type == 'sale' and tax_vals['amount'] or 0.0,
                             'analytic_account_id': line.account_analytic_id and line.account_analytic_id.id or False,
                         }
                         if company_currency != current_currency:
@@ -389,13 +390,13 @@ class AccountVoucher(models.Model):
     @api.multi
     def _track_subtype(self, init_values):
         if 'state' in init_values:
-            return 'account_voucher.mt_voucher_state_change'
+            return self.env.ref('account_voucher.mt_voucher_state_change')
         return super(AccountVoucher, self)._track_subtype(init_values)
 
 
 class AccountVoucherLine(models.Model):
     _name = 'account.voucher.line'
-    _description = 'Voucher Lines'
+    _description = 'Accounting Voucher Line'
 
     name = fields.Text(string='Description', required=True)
     sequence = fields.Integer(default=10,
@@ -415,7 +416,7 @@ class AccountVoucherLine(models.Model):
     analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags')
     company_id = fields.Many2one('res.company', related='voucher_id.company_id', string='Company', store=True, readonly=True)
     tax_ids = fields.Many2many('account.tax', string='Tax', help="Only for tax excluded from price")
-    currency_id = fields.Many2one('res.currency', related='voucher_id.currency_id')
+    currency_id = fields.Many2one('res.currency', related='voucher_id.currency_id', readonly=False)
 
     @api.one
     @api.depends('price_unit', 'tax_ids', 'quantity', 'product_id', 'voucher_id.currency_id')

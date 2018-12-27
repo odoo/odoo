@@ -20,11 +20,11 @@ odoo.define("website_forum.tour_forum", function (require) {
         position: "right",
     }, {
         trigger: "button.btn-primary",
-        extra_trigger: '#editor_new_forum input[type=text]:not(:propValue(""))',
+        extra_trigger: '.modal #editor_new_forum input[type=text]:not(:propValue(""))',
         content: _t("Click <em>Continue</em> to create the forum."),
         position: "right",
     }, {
-        trigger: ".btn-block a:first",
+        trigger: ".btn-lg.btn-block",
         position: "left",
         content: _t("Ask the question in this forum by clicking on the button."),
     }, {
@@ -51,7 +51,8 @@ odoo.define("website_forum.tour_forum", function (require) {
         content: _t("Click to post your question."),
         position: "bottom",
     }, {
-        trigger: "header.modal-header button.close",
+        extra_trigger: 'div.modal.modal_shown',
+        trigger: ".modal-header button.close",
         auto: true,
     }, {
         trigger: ".note-editable p",
@@ -64,7 +65,8 @@ odoo.define("website_forum.tour_forum", function (require) {
         content: _t("Click to post your answer."),
         position: "bottom",
     }, {
-        trigger: "header.modal-header button.close",
+        extra_trigger: 'div.modal.modal_shown',
+        trigger: ".modal-header button.close",
         auto: true,
     }, {
         trigger: "a[data-karma=\"20\"]:first",

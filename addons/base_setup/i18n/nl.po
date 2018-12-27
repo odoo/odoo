@@ -3,19 +3,18 @@
 # * base_setup
 # 
 # Translators:
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
-# Martin Trigaux, 2016
-# Eric Geens <ericgeens@yahoo.com>, 2016
-# Cas Vissers <casvissers@brahoo.nl>, 2016
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
-# Melroy van den Berg <webmaster1989@gmail.com>, 2017
+# Martin Trigaux, 2018
+# Thomas Pot <thomas@open2bizz.nl>, 2018
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2018
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2018
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
-"Last-Translator: Melroy van den Berg <webmaster1989@gmail.com>, 2017\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-08-24 09:16+0000\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2018\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,7 +23,38 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid ""
+"<i class=\"fa fa-lg fa-building-o\"/>\n"
+"                                            <span class=\"text-muted\">\n"
+"                                                the creation of documents between your companies\n"
+"                                            </span>"
+msgstr ""
+"<i class=\"fa fa-lg fa-building-o\"/>\n"
+"                                            <span class=\"text-muted\">\n"
+"                                                het aanmaken van documenten tussen u bedrijven\n"
+"                                            </span>"
+
+#. module: base_setup
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid ""
+"<span class=\"o_form_label\">Document Template</span>\n"
+"                                        <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
+msgstr ""
+"<span class=\"o_form_label\">Document sjabloon </span>\n"
+"                                        <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
+
+#. module: base_setup
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid ""
+"<span class=\"o_form_label\">Format</span>\n"
+"                                        <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
+msgstr ""
+"<span class=\"o_form_label\">Formaat</span>\n"
+"                                        <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
+
+#. module: base_setup
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid ""
 "<strong>Save</strong> this page and come back here to set up the feature."
 msgstr ""
@@ -32,9 +62,14 @@ msgstr ""
 "optie op te zetten."
 
 #. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Access Rights"
 msgstr "Toegangsrechten"
+
+#. module: base_setup
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Add fun feedback and motivate your employees"
+msgstr "Voeg terug leuke feedback toe en motiveer uw werknemers"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_google_calendar
@@ -43,7 +78,7 @@ msgstr "Toestaan dat gebruikers hun agenda synchroniseren met Google Agenda"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_base_import
-#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Allow users to import data from CSV/XLS/XLSX/ODS files"
 msgstr ""
 "Sta gebruikers toe om data te importeren vanuit CSV/XLS/XLSX/ODS bestanden"
@@ -64,17 +99,22 @@ msgid "Attach Google documents to any record"
 msgstr "Voeg Google documenten toe aan ieder record"
 
 #. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid "Automate inter-company transactions"
-msgstr "Automatiseren van transacties tussen bedrijven"
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_partner_autocomplete
+msgid "Auto-populate company data"
+msgstr "Automatisch invullen bedrijfsgegevens"
 
 #. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Autocomplete company data (name, logo, address, etc.)"
+msgstr "Automatisch invullen bedrijfsgegevens (naam, logo, adres, etc.)"
+
+#. module: base_setup
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Business Documents"
 msgstr "Zakelijke documenten"
 
 #. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid ""
 "By default, new users get highest access rights for all installed apps."
 msgstr ""
@@ -82,20 +122,20 @@ msgstr ""
 "geïnstalleerde apps."
 
 #. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Change Document Template"
 msgstr "Wijzig documentsjabloon"
 
 #. module: base_setup
-#: code:addons/base_setup/models/res_config_settings.py:97
+#: code:addons/base_setup/models/res_config_settings.py:100
 #, python-format
 msgid "Choose Your Document Layout"
 msgstr "Kies uw document lay-out"
 
 #. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Choose your document's header and footer layout"
-msgstr "Toon uw document hoofding en voeter lay-out"
+msgstr "Toon uw document kop en voeter lay-out"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_pad
@@ -103,12 +143,12 @@ msgid "Collaborative Pads"
 msgstr "Pads voor samenwerking"
 
 #. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Common Contact Book"
 msgstr "Vaak voorkomende contact boek"
 
 #. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Companies"
 msgstr "Bedrijven"
 
@@ -118,7 +158,12 @@ msgid "Company"
 msgstr "Bedrijf"
 
 #. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+#: model:ir.model,name:base_setup.model_res_config_settings
+msgid "Config Settings"
+msgstr "Configuratie instellingen"
+
+#. module: base_setup
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid ""
 "Configure company rules to automatically create SO/PO when one of your "
 "company sells/buys to another of your company."
@@ -127,7 +172,7 @@ msgstr ""
 "een bedrijf van een ander bedrijf koopt/verkoopt."
 
 #. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Create and attach Google Drive documents to any record"
 msgstr "Maak en koppel Google Drive documenten aan elk record"
 
@@ -138,30 +183,34 @@ msgstr "Aangepaste voettekst"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__user_default_rights
-#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Default Access Rights"
 msgstr "Standaard toegangsrechten"
 
 #. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__external_report_layout
-#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__external_report_layout_id
 msgid "Document Template"
 msgstr "Documentsjabloon"
 
 #. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid "Edit Header"
-msgstr "Wijzig hoofding"
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Edit Layout"
+msgstr "Opmaak bewerken"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__external_email_server_default
 msgid "External Email Servers"
-msgstr "Externe email servers"
+msgstr "Externe e-mail servers"
 
 #. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Extract and analyze Odoo data from Google Spreadsheet"
-msgstr "Exporteer en analyseer Odoo data van Google Spreadsheets"
+msgstr "Exporteer en analyseer Odoo data in Google Spreadsheets"
+
+#. module: base_setup
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Find free high-resolution images from Unsplash"
+msgstr "Vind gratis hoge resolutie afbeeldingen van Unspalsh"
 
 #. module: base_setup
 #: model:ir.model.fields,help:base_setup.field_res_config_settings__report_footer
@@ -169,28 +218,28 @@ msgid "Footer text displayed at the bottom of all reports."
 msgstr "Voettekst, weergegeven aan de onderzijde van alle rapportages."
 
 #. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Format"
 msgstr "Formaat"
 
 #. module: base_setup
 #: model:ir.ui.menu,name:base_setup.menu_config
-#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "General Settings"
 msgstr "Algemene instellingen"
 
 #. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Gengo Translations"
 msgstr "Gengo vertalingen"
 
 #. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Google Calendar"
 msgstr "Google Agenda"
 
 #. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Google Drive"
 msgstr "Google Drive"
 
@@ -200,23 +249,28 @@ msgid "Google Spreadsheet"
 msgstr "Google Spreadsheet"
 
 #. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+#: model:ir.model,name:base_setup.model_ir_http
+msgid "HTTP Routing"
+msgstr "HTTP routing"
+
+#. module: base_setup
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Import & Export"
 msgstr "Importeer & Exporteer"
 
 #. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Integrations"
-msgstr "integraties"
+msgstr "Integraties"
 
 #. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid "Inter-Company Transactions"
-msgstr "Intercompany transacties"
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Inter Company Flows"
+msgstr "Inter-bedrijf flows"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_auth_ldap
-#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "LDAP Authentication"
 msgstr "LDAP Authenticatie"
 
@@ -231,7 +285,7 @@ msgid "Manage multiple companies"
 msgstr "Beheer meerdere bedrijven"
 
 #. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Manage multiple legal entities with separate accounting"
 msgstr "Beheer meerdere legale entiteiten met verschillende boekhoudingen"
 
@@ -241,12 +295,12 @@ msgid "Multi-Currencies"
 msgstr "Multi-valuta"
 
 #. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid "Multi-company"
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Multi-companies"
 msgstr "Multi-bedrijven"
 
 #. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "OAuth Authentication"
 msgstr "OAuth Authenticatie"
 
@@ -256,17 +310,17 @@ msgid "Paper format"
 msgstr "Papier formaat"
 
 #. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Preview Document"
 msgstr "Voorbeeld document"
 
 #. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Set custom access rights for new users"
 msgstr "Stel aangepaste toegangsrechten in voor nieuwe gebruikers"
 
 #. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Set the paper format of printed documents"
 msgstr "Stel het papierformaat van afgedrukte documenten in"
 
@@ -292,12 +346,17 @@ msgstr ""
 "* Uitgevinkt: Elk bedrijf kan elke zijn eigen relaties zien (relaties waar bedrijf is gedefinieerd). Relaties die niet gerelateerd zijn aan een bedrijf zijn zichtbaar voor alle bedrijven."
 
 #. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid "Synchronize your calendar with Google Calendar"
-msgstr "Synchroniseer uw calendar met Google kalender"
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__show_effect
+msgid "Show Effect"
+msgstr "Toon effect"
 
 #. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Synchronize your calendar with Google Calendar"
+msgstr "Synchroniseer uw agenda met Google kalender"
+
+#. module: base_setup
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Template"
 msgstr "Sjabloon"
 
@@ -307,17 +366,22 @@ msgid "Translate Your Website with Gengo"
 msgstr "Vertaal uw website met Gengo"
 
 #. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Translate your website with Gengo"
 msgstr "Vertaal uw website met Gengo"
 
 #. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_web_unsplash
+msgid "Unsplash Image Library"
+msgstr "Unsplash afbeeldingen bibliotheek"
+
+#. module: base_setup
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Use LDAP credentials to log in"
 msgstr "Gebruik LDAP authenticatie om aan te melden"
 
 #. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Use external accounts to log in (Google, Facebook, etc.)"
 msgstr "Gebruik externe accounts om aan te melden (Google, Facebook, enz.)"
 
@@ -327,16 +391,22 @@ msgid "Use external authentication providers (OAuth)"
 msgstr "Gebruik externe authenticatie providers (OAuth)"
 
 #. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Use external pads in Odoo Notes"
 msgstr "Gebruik externe paden in Odoo Notities"
 
 #. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Users"
 msgstr "Gebruikers"
 
 #. module: base_setup
-#: model:ir.model,name:base_setup.model_res_config_settings
-msgid "res.config.settings"
-msgstr "res.config.settings"
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid ""
+"When populating your address book, Odoo provides a list of matching "
+"companies. When selecting one item, the company data and logo are auto-"
+"filled."
+msgstr ""
+"Bij het automatisch invullen van uw adresboek, geeft Odoo een lijst van "
+"matchende bedrijven. Wanneer u er een selecteert, wordt de bedrijfsnaam, het"
+" logo automatisch ingevuld."

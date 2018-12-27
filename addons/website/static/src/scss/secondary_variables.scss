@@ -1,0 +1,39 @@
+
+//------------------------------------------------------------------------------
+// Colors
+//------------------------------------------------------------------------------
+
+// Color palette
+// -------------
+
+// By default, all user color palette values are null. Each null value is
+// automatically replaced with corresponsing colors in chosen default color
+// palette.
+$-palette-default: nth($o-color-palettes, $o-color-palette-number);
+$o-color-palettes: append($o-color-palettes, map-merge($-palette-default, o-map-omit($o-user-color-palette)));
+
+// Theme color palette
+// -------------------
+
+// Generate default theme color scheme if alpha is set
+$-alpha: map-get($o-user-theme-color-palette, 'alpha');
+@if ($-alpha) {
+    $o-user-theme-color-palette: map-merge((
+        beta: lighten(desaturate($-alpha, 60%), 30%),
+        gamma: desaturate(adjust-hue($-alpha, -45deg), 10%),
+        delta: desaturate(adjust-hue($-alpha, 45deg), 10%),
+        epsilon: desaturate(adjust-hue($-alpha, 180deg), 10%),
+    ), o-map-omit($o-user-theme-color-palette));
+}
+
+// By default, all user theme color palette values are null. Each null value is
+// automatically replaced with corresponsing colors in chosen default theme
+// color palette.
+$-palette-default: nth($o-theme-color-palettes, $o-theme-color-palette-number);
+$o-theme-color-palettes: append($o-theme-color-palettes, map-merge($-palette-default, o-map-omit($o-user-theme-color-palette)));
+
+
+// Enable last color and theme color palettes, which are now the user customized
+// color palettes
+$o-color-palette-number: length($o-color-palettes);
+$o-theme-color-palette-number: length($o-theme-color-palettes);

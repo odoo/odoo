@@ -13,12 +13,13 @@ class BarcodeRule(models.Model):
     _inherit = 'barcode.rule'
 
     type = fields.Selection(selection_add=[
-        ('credit', _('Credit Card'))
+        ('credit', 'Credit Card')
     ])
 
 
 class PosMercuryConfiguration(models.Model):
     _name = 'pos_mercury.configuration'
+    _description = 'Point of Sale Mercury Configuration'
 
     name = fields.Char(required=True, help='Name of this Mercury configuration')
     merchant_id = fields.Char(string='Merchant ID', required=True, help='ID of the merchant to authenticate him on the payment provider server')

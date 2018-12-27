@@ -39,7 +39,7 @@ class RatingProject(http.Controller):
                     AND rating IN (1,5,10)
             GROUP BY
                 rated_partner_id, rating, period
-        """ % (project_id))
+        """, (project_id, ))
 
         raw_data = request.env.cr.dictfetchall()
 

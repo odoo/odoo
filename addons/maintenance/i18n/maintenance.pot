@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:11+0000\n"
-"PO-Revision-Date: 2018-03-22 14:11+0000\n"
+"POT-Creation-Date: 2018-10-08 06:49+0000\n"
+"PO-Revision-Date: 2018-10-08 06:49+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,47 +16,52 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: maintenance
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_kanban
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_kanban
 msgid "<b>Category:</b>"
 msgstr ""
 
 #. module: maintenance
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_kanban
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_kanban
 msgid "<b>Model Number:</b>"
 msgstr ""
 
 #. module: maintenance
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_kanban
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_kanban
 msgid "<b>Request to:</b>"
 msgstr ""
 
 #. module: maintenance
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_kanban
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_kanban
 msgid "<b>Serial Number:</b>"
 msgstr ""
 
 #. module: maintenance
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
-msgid "<span class=\"label label-warning pull-right\">Canceled</span>"
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
+msgid "<span class=\"badge badge-warning float-right\">Canceled</span>"
 msgstr ""
 
 #. module: maintenance
-#: model:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
+msgid "<span class=\"ml8\">hours</span>"
+msgstr ""
+
+#. module: maintenance
+#: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
 msgid "<span>Reporting</span>"
 msgstr ""
 
 #. module: maintenance
-#: model:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
+#: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
 msgid "<span>View</span>"
 msgstr ""
 
 #. module: maintenance
-#: model:ir.ui.view,arch_db:maintenance.view_maintenance_equipment_category_kanban
+#: model_terms:ir.ui.view,arch_db:maintenance.view_maintenance_equipment_category_kanban
 msgid "<strong>Equipments:</strong>"
 msgstr ""
 
 #. module: maintenance
-#: model:ir.ui.view,arch_db:maintenance.view_maintenance_equipment_category_kanban
+#: model_terms:ir.ui.view,arch_db:maintenance.view_maintenance_equipment_category_kanban
 msgid "<strong>Maintenance:</strong>"
 msgstr ""
 
@@ -66,40 +71,71 @@ msgid "A Python dictionary that will be evaluated to provide default values when
 msgstr ""
 
 #. module: maintenance
+#: model:maintenance.equipment,name:maintenance.equipment_computer3
+#: model:maintenance.equipment,name:maintenance.equipment_computer5
+msgid "Acer Laptop"
+msgstr ""
+
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_needaction
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_needaction
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_needaction
+msgid "Action Needed"
+msgstr ""
+
+#. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__active
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team__active
 msgid "Active"
 msgstr ""
 
 #. module: maintenance
-#: model:ir.actions.act_window,help:maintenance.hr_equipment_action
-#: model:ir.actions.act_window,help:maintenance.hr_equipment_action_from_category_form
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__activity_ids
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_request__activity_ids
+msgid "Activities"
+msgstr ""
+
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__activity_state
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_request__activity_state
+msgid "Activity State"
+msgstr ""
+
+#. module: maintenance
+#: model:ir.actions.act_window,name:maintenance.mail_activity_type_action_config_maintenance
+#: model:ir.ui.menu,name:maintenance.maintenance_menu_config_activity_type
+msgid "Activity Types"
+msgstr ""
+
+#. module: maintenance
+#: model_terms:ir.actions.act_window,help:maintenance.hr_equipment_action
+#: model_terms:ir.actions.act_window,help:maintenance.hr_equipment_action_from_category_form
 msgid "Add a new equipment"
 msgstr ""
 
 #. module: maintenance
-#: model:ir.actions.act_window,help:maintenance.hr_equipment_category_action
+#: model_terms:ir.actions.act_window,help:maintenance.hr_equipment_category_action
 msgid "Add a new equipment category"
 msgstr ""
 
 #. module: maintenance
-#: model:ir.actions.act_window,help:maintenance.hr_equipment_request_action
-#: model:ir.actions.act_window,help:maintenance.hr_equipment_request_action_cal
-#: model:ir.actions.act_window,help:maintenance.hr_equipment_request_action_from_equipment
-#: model:ir.actions.act_window,help:maintenance.hr_equipment_request_action_link
-#: model:ir.actions.act_window,help:maintenance.hr_equipment_todo_request_action_from_dashboard
-#: model:ir.actions.act_window,help:maintenance.maintenance_request_action_reports
+#: model_terms:ir.actions.act_window,help:maintenance.hr_equipment_request_action
+#: model_terms:ir.actions.act_window,help:maintenance.hr_equipment_request_action_cal
+#: model_terms:ir.actions.act_window,help:maintenance.hr_equipment_request_action_from_equipment
+#: model_terms:ir.actions.act_window,help:maintenance.hr_equipment_request_action_link
+#: model_terms:ir.actions.act_window,help:maintenance.hr_equipment_todo_request_action_from_dashboard
+#: model_terms:ir.actions.act_window,help:maintenance.maintenance_request_action_reports
 msgid "Add a new maintenance request"
 msgstr ""
 
 #. module: maintenance
-#: model:ir.actions.act_window,help:maintenance.hr_equipment_stage_action
-#: model:ir.actions.act_window,help:maintenance.maintenance_dashboard_action
+#: model_terms:ir.actions.act_window,help:maintenance.hr_equipment_stage_action
+#: model_terms:ir.actions.act_window,help:maintenance.maintenance_dashboard_action
 msgid "Add a new stage in the maintenance request"
 msgstr ""
 
 #. module: maintenance
-#: model:ir.actions.act_window,help:maintenance.maintenance_team_action_settings
+#: model_terms:ir.actions.act_window,help:maintenance.maintenance_team_action_settings
 msgid "Add a team in the maintenance request"
 msgstr ""
 
@@ -129,7 +165,7 @@ msgid "Aliased Model"
 msgstr ""
 
 #. module: maintenance
-#: model:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
+#: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
 msgid "All"
 msgstr ""
 
@@ -144,26 +180,21 @@ msgid "Archive"
 msgstr ""
 
 #. module: maintenance
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
-#: model:ir.ui.view,arch_db:maintenance.maintenance_team_view_search
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
+#: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_view_search
 msgid "Archived"
 msgstr ""
 
 #. module: maintenance
-#: model:ir.model,name:maintenance.model_maintenance_equipment_category
-msgid "Asset Category"
-msgstr ""
-
-#. module: maintenance
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_tree
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_tree
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_tree
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_tree
 msgid "Assign To User"
 msgstr ""
 
 #. module: maintenance
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "Assigned"
 msgstr ""
 
@@ -173,33 +204,40 @@ msgid "Assigned Date"
 msgstr ""
 
 #. module: maintenance
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_attachment_count
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_attachment_count
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_attachment_count
+msgid "Attachment Count"
+msgstr ""
+
+#. module: maintenance
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "Available"
 msgstr ""
 
 #. module: maintenance
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
-#: model:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
+#: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
 #: selection:maintenance.request,kanban_state:0
 msgid "Blocked"
 msgstr ""
 
 #. module: maintenance
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
 msgid "Cancel"
 msgstr ""
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__category_id
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "Category"
 msgstr ""
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__name
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_form
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_search
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_form
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_search
 msgid "Category Name"
 msgstr ""
 
@@ -230,6 +268,11 @@ msgid "Company"
 msgstr ""
 
 #. module: maintenance
+#: model:maintenance.equipment.category,name:maintenance.equipment_computer
+msgid "Computers"
+msgstr ""
+
+#. module: maintenance
 #: model:ir.ui.menu,name:maintenance.menu_maintenance_configuration
 msgid "Configuration"
 msgstr ""
@@ -245,7 +288,7 @@ msgid "Cost"
 msgstr ""
 
 #. module: maintenance
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 msgid "Created By"
 msgstr ""
 
@@ -283,6 +326,11 @@ msgid "Dashboard"
 msgstr ""
 
 #. module: maintenance
+#: model:ir.model.fields,help:maintenance.field_maintenance_equipment__effective_date
+msgid "Date at which the equipment became effective. This date will be used to compute the Mean Time Between Failure."
+msgstr ""
+
+#. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__next_action_date
 msgid "Date of the next preventive maintenance"
 msgstr ""
@@ -313,14 +361,14 @@ msgid "Default Values"
 msgstr ""
 
 #. module: maintenance
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_kanban
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_kanban
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_kanban
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_kanban
 msgid "Delete"
 msgstr ""
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__description
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
 msgid "Description"
 msgstr ""
 
@@ -334,9 +382,15 @@ msgid "Display Name"
 msgstr ""
 
 #. module: maintenance
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
-#: model:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
+#: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
 msgid "Done"
+msgstr ""
+
+#. module: maintenance
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_kanban
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_kanban
+msgid "Dropdown menu"
 msgstr ""
 
 #. module: maintenance
@@ -350,13 +404,18 @@ msgid "Duration in minutes and seconds."
 msgstr ""
 
 #. module: maintenance
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_kanban
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_kanban
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_kanban
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_kanban
 msgid "Edit..."
 msgstr ""
 
 #. module: maintenance
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_form
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__effective_date
+msgid "Effective Date"
+msgstr ""
+
+#. module: maintenance
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_form
 msgid "Email Alias"
 msgstr ""
 
@@ -366,7 +425,6 @@ msgid "Email alias for this equipment category. New emails will automatically cr
 msgstr ""
 
 #. module: maintenance
-#: model:ir.model,name:maintenance.model_maintenance_equipment
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__equipment_count
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__equipment_id
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team__equipment_ids
@@ -383,7 +441,7 @@ msgstr ""
 #. module: maintenance
 #: model:ir.actions.act_window,name:maintenance.hr_equipment_category_action
 #: model:ir.ui.menu,name:maintenance.menu_maintenance_cat
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_form
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_form
 msgid "Equipment Categories"
 msgstr ""
 
@@ -399,7 +457,7 @@ msgstr ""
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__name
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
 msgid "Equipment Name"
 msgstr ""
 
@@ -408,8 +466,8 @@ msgstr ""
 #: model:ir.actions.act_window,name:maintenance.hr_equipment_action_from_category_form
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__equipment_ids
 #: model:ir.ui.menu,name:maintenance.menu_equipment_form
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_form
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_form
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
 msgid "Equipments"
 msgstr ""
 
@@ -420,26 +478,58 @@ msgid "Folded in Maintenance Pipe"
 msgstr ""
 
 #. module: maintenance
-#: model:ir.actions.act_window,help:maintenance.hr_equipment_request_action
-#: model:ir.actions.act_window,help:maintenance.hr_equipment_request_action_cal
-#: model:ir.actions.act_window,help:maintenance.hr_equipment_request_action_from_equipment
-#: model:ir.actions.act_window,help:maintenance.hr_equipment_request_action_link
-#: model:ir.actions.act_window,help:maintenance.hr_equipment_todo_request_action_from_dashboard
-#: model:ir.actions.act_window,help:maintenance.maintenance_request_action_reports
+#: model_terms:ir.actions.act_window,help:maintenance.hr_equipment_request_action
+#: model_terms:ir.actions.act_window,help:maintenance.hr_equipment_request_action_cal
+#: model_terms:ir.actions.act_window,help:maintenance.hr_equipment_request_action_from_equipment
+#: model_terms:ir.actions.act_window,help:maintenance.hr_equipment_request_action_link
+#: model_terms:ir.actions.act_window,help:maintenance.hr_equipment_todo_request_action_from_dashboard
+#: model_terms:ir.actions.act_window,help:maintenance.maintenance_request_action_reports
 msgid "Follow the process of the request and communicate with the collaborator."
 msgstr ""
 
 #. module: maintenance
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_follower_ids
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_follower_ids
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_follower_ids
+msgid "Followers"
+msgstr ""
+
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_channel_ids
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_channel_ids
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_channel_ids
+msgid "Followers (Channels)"
+msgstr ""
+
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_partner_ids
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_partner_ids
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_partner_ids
+msgid "Followers (Partners)"
+msgstr ""
+
+#. module: maintenance
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "Future Activities"
 msgstr ""
 
 #. module: maintenance
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_search
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_search
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "Group by..."
+msgstr ""
+
+#. module: maintenance
+#: model:maintenance.equipment,name:maintenance.equipment_printer1
+msgid "HP Inkjet printer"
+msgstr ""
+
+#. module: maintenance
+#: model:maintenance.equipment,name:maintenance.equipment_computer11
+#: model:maintenance.equipment,name:maintenance.equipment_computer9
+msgid "HP Laptop"
 msgstr ""
 
 #. module: maintenance
@@ -462,8 +552,29 @@ msgid "ID of the parent record holding the alias (example: project holding the t
 msgstr ""
 
 #. module: maintenance
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
-#: model:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
+#: model:ir.model.fields,help:maintenance.field_maintenance_equipment__message_unread
+#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__message_unread
+#: model:ir.model.fields,help:maintenance.field_maintenance_request__message_unread
+msgid "If checked new messages require your attention."
+msgstr ""
+
+#. module: maintenance
+#: model:ir.model.fields,help:maintenance.field_maintenance_equipment__message_needaction
+#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__message_needaction
+#: model:ir.model.fields,help:maintenance.field_maintenance_request__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr ""
+
+#. module: maintenance
+#: model:ir.model.fields,help:maintenance.field_maintenance_equipment__message_has_error
+#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__message_has_error
+#: model:ir.model.fields,help:maintenance.field_maintenance_request__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr ""
+
+#. module: maintenance
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
+#: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
 #: selection:maintenance.request,kanban_state:0
 #: model:maintenance.stage,name:maintenance.stage_1
 msgid "In Progress"
@@ -475,8 +586,15 @@ msgid "Internal Maintenance"
 msgstr ""
 
 #. module: maintenance
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
 msgid "Internal Note ......."
+msgstr ""
+
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_is_follower
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_is_follower
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_is_follower
+msgid "Is Follower"
 msgstr ""
 
 #. module: maintenance
@@ -512,8 +630,8 @@ msgid "Last Updated on"
 msgstr ""
 
 #. module: maintenance
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "Late Activities"
 msgstr ""
 
@@ -533,12 +651,19 @@ msgid "Low"
 msgstr ""
 
 #. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_main_attachment_id
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_main_attachment_id
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_main_attachment_id
+msgid "Main Attachment"
+msgstr ""
+
+#. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__maintenance_ids
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__maintenance_ids
 #: model:ir.ui.menu,name:maintenance.menu_m_request
 #: model:ir.ui.menu,name:maintenance.menu_maintenance_title
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_form
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_form
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
 msgid "Maintenance"
 msgstr ""
 
@@ -555,7 +680,7 @@ msgstr ""
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__maintenance_duration
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
 msgid "Maintenance Duration"
 msgstr ""
 
@@ -565,7 +690,19 @@ msgid "Maintenance Duration in hours."
 msgstr ""
 
 #. module: maintenance
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
+#: model:ir.model,name:maintenance.model_maintenance_equipment
+msgid "Maintenance Equipment"
+msgstr ""
+
+#. module: maintenance
+#: model:ir.model,name:maintenance.model_maintenance_equipment_category
+msgid "Maintenance Equipment Category"
+msgstr ""
+
+#. module: maintenance
+#: model:ir.model,name:maintenance.model_maintenance_request
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
+#: model:mail.activity.type,name:maintenance.mail_act_maintenance_request
 msgid "Maintenance Request"
 msgstr ""
 
@@ -575,12 +712,12 @@ msgid "Maintenance Request Created"
 msgstr ""
 
 #. module: maintenance
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_stage_view_tree
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_stage_view_tree
 msgid "Maintenance Request Stage"
 msgstr ""
 
 #. module: maintenance
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_stage_view_search
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_stage_view_search
 msgid "Maintenance Request Stages"
 msgstr ""
 
@@ -596,10 +733,9 @@ msgstr ""
 #: model:ir.actions.act_window,name:maintenance.hr_equipment_request_action_link
 #: model:ir.actions.act_window,name:maintenance.hr_equipment_todo_request_action_from_dashboard
 #: model:ir.actions.act_window,name:maintenance.maintenance_request_action_reports
-#: model:ir.model,name:maintenance.model_maintenance_request
 #: model:ir.ui.menu,name:maintenance.maintenance_request_reporting
 #: model:ir.ui.menu,name:maintenance.menu_m_request_form
-#: model:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
+#: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
 msgid "Maintenance Requests"
 msgstr ""
 
@@ -615,8 +751,8 @@ msgstr ""
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__maintenance_team_id
-#: model:ir.ui.view,arch_db:maintenance.maintenance_team_view_form
-#: model:ir.ui.view,arch_db:maintenance.maintenance_team_view_tree
+#: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_view_form
+#: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_view_tree
 msgid "Maintenance Team"
 msgstr ""
 
@@ -640,32 +776,56 @@ msgid "Maintenance: generate preventive maintenance requests"
 msgstr ""
 
 #. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_has_error
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_has_error
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_has_error
+msgid "Message Delivery error"
+msgstr ""
+
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_ids
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_ids
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_ids
+msgid "Messages"
+msgstr ""
+
+#. module: maintenance
+#: model:maintenance.team,name:maintenance.equipment_team_metrology
+msgid "Metrology"
+msgstr ""
+
+#. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__model
 msgid "Model"
 msgstr ""
 
 #. module: maintenance
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
+#: model:maintenance.equipment.category,name:maintenance.equipment_monitor
+msgid "Monitors"
+msgstr ""
+
+#. module: maintenance
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "My Activities"
 msgstr ""
 
 #. module: maintenance
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "My Equipments"
 msgstr ""
 
 #. module: maintenance
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 msgid "My Requests"
 msgstr ""
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_stage__name
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team__name
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_tree
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_tree
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
 msgid "Name"
 msgstr ""
 
@@ -675,7 +835,25 @@ msgid "New Request"
 msgstr ""
 
 #. module: maintenance
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__activity_date_deadline
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_request__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr ""
+
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__activity_summary
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_request__activity_summary
+msgid "Next Activity Summary"
+msgstr ""
+
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__activity_type_id
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_request__activity_type_id
+msgid "Next Activity Type"
+msgstr ""
+
+#. module: maintenance
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
 msgid "Next Preventive Maintenance"
 msgstr ""
 
@@ -687,6 +865,13 @@ msgstr ""
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__note
 msgid "Note"
+msgstr ""
+
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_needaction_counter
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_needaction_counter
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_needaction_counter
+msgid "Number of Actions"
 msgstr ""
 
 #. module: maintenance
@@ -715,6 +900,34 @@ msgid "Number of Requests in High Priority"
 msgstr ""
 
 #. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_has_error_counter
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_has_error_counter
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_has_error_counter
+msgid "Number of error"
+msgstr ""
+
+#. module: maintenance
+#: model:ir.model.fields,help:maintenance.field_maintenance_equipment__message_needaction_counter
+#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__message_needaction_counter
+#: model:ir.model.fields,help:maintenance.field_maintenance_request__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr ""
+
+#. module: maintenance
+#: model:ir.model.fields,help:maintenance.field_maintenance_equipment__message_has_error_counter
+#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__message_has_error_counter
+#: model:ir.model.fields,help:maintenance.field_maintenance_request__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr ""
+
+#. module: maintenance
+#: model:ir.model.fields,help:maintenance.field_maintenance_equipment__message_unread_counter
+#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__message_unread_counter
+#: model:ir.model.fields,help:maintenance.field_maintenance_request__message_unread_counter
+msgid "Number of unread messages"
+msgstr ""
+
+#. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__alias_force_thread_id
 msgid "Optional ID of a thread (record) to which all incoming messages will be attached, even if they did not reply to it. If set, this will disable the creation of new records completely."
 msgstr ""
@@ -725,12 +938,17 @@ msgid "Overall Equipment Effectiveness (OEE)"
 msgstr ""
 
 #. module: maintenance
+#: selection:maintenance.equipment,activity_state:0
+#: selection:maintenance.request,activity_state:0
+msgid "Overdue"
+msgstr ""
+
+#. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__owner_user_id
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__alias_user_id
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_request__technician_user_id
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_tree
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_tree
 msgid "Owner"
 msgstr ""
 
@@ -750,6 +968,17 @@ msgid "Parent model holding the alias. The model holding the alias reference is 
 msgstr ""
 
 #. module: maintenance
+#: model:maintenance.equipment.category,name:maintenance.equipment_phone
+msgid "Phones"
+msgstr ""
+
+#. module: maintenance
+#: selection:maintenance.equipment,activity_state:0
+#: selection:maintenance.request,activity_state:0
+msgid "Planned"
+msgstr ""
+
+#. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__alias_contact
 msgid "Policy to post a message on the document using the mailgateway.\n"
 "- everyone: everyone can post\n"
@@ -764,14 +993,19 @@ msgid "Preventive"
 msgstr ""
 
 #. module: maintenance
-#: code:addons/maintenance/models/maintenance.py:240
+#: code:addons/maintenance/models/maintenance.py:231
 #, python-format
 msgid "Preventive Maintenance - %s"
 msgstr ""
 
 #. module: maintenance
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
 msgid "Preventive Maintenance Frequency"
+msgstr ""
+
+#. module: maintenance
+#: model:maintenance.equipment.category,name:maintenance.equipment_printer
+msgid "Printers"
 msgstr ""
 
 #. module: maintenance
@@ -780,7 +1014,7 @@ msgid "Priority"
 msgstr ""
 
 #. module: maintenance
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
 msgid "Product Information"
 msgstr ""
 
@@ -790,7 +1024,7 @@ msgid "Ready for next stage"
 msgstr ""
 
 #. module: maintenance
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_kanban
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_kanban
 msgid "Record Colour"
 msgstr ""
 
@@ -800,7 +1034,7 @@ msgid "Record Thread ID"
 msgstr ""
 
 #. module: maintenance
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
 msgid "Reopen Request"
 msgstr ""
 
@@ -817,7 +1051,7 @@ msgstr ""
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team__request_ids
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_kanban
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_kanban
 msgid "Request"
 msgstr ""
 
@@ -837,12 +1071,18 @@ msgid "Request Done"
 msgstr ""
 
 #. module: maintenance
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
+#: code:addons/maintenance/models/maintenance.py:375
+#, python-format
+msgid "Request planned for <a href=\"#\" data-oe-model=\"%s\" data-oe-id=\"%s\">%s</a>"
+msgstr ""
+
+#. module: maintenance
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
 msgid "Requested By"
 msgstr ""
 
 #. module: maintenance
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_kanban
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_kanban
 msgid "Requested by :"
 msgstr ""
 
@@ -853,13 +1093,26 @@ msgstr ""
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__technician_user_id
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_search
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_search
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
 msgid "Responsible"
 msgstr ""
 
 #. module: maintenance
-#: model:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__activity_user_id
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_request__activity_user_id
+msgid "Responsible User"
+msgstr ""
+
+#. module: maintenance
+#: model:maintenance.equipment,name:maintenance.equipment_monitor1
+#: model:maintenance.equipment,name:maintenance.equipment_monitor4
+#: model:maintenance.equipment,name:maintenance.equipment_monitor6
+msgid "Samsung Monitor 15\""
+msgstr ""
+
+#. module: maintenance
+#: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
 msgid "Scheduled"
 msgstr ""
 
@@ -879,9 +1132,9 @@ msgid "Scrap Date"
 msgstr ""
 
 #. module: maintenance
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_search
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
-#: model:ir.ui.view,arch_db:maintenance.maintenance_team_view_search
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_search
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
+#: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_view_search
 msgid "Search"
 msgstr ""
 
@@ -901,14 +1154,19 @@ msgid "Set archive to true to hide the maintenance request without deleting it."
 msgstr ""
 
 #. module: maintenance
-#: model:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
+#: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
 msgid "Settings"
 msgstr ""
 
 #. module: maintenance
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "Show all records which has next action date is before today"
+msgstr ""
+
+#. module: maintenance
+#: model:maintenance.equipment.category,name:maintenance.equipment_software
+msgid "Software"
 msgstr ""
 
 #. module: maintenance
@@ -918,7 +1176,7 @@ msgstr ""
 
 #. module: maintenance
 #: model:ir.actions.act_window,name:maintenance.hr_equipment_stage_action
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 msgid "Stages"
 msgstr ""
 
@@ -928,8 +1186,22 @@ msgid "Status Changed"
 msgstr ""
 
 #. module: maintenance
+#: model:ir.model.fields,help:maintenance.field_maintenance_equipment__activity_state
+#: model:ir.model.fields,help:maintenance.field_maintenance_request__activity_state
+msgid "Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+
+#. module: maintenance
 #: model:mail.message.subtype,description:maintenance.mt_req_status
 msgid "Status changed"
+msgstr ""
+
+#. module: maintenance
+#: model:maintenance.team,name:maintenance.equipment_team_subcontractor
+msgid "Subcontractor"
 msgstr ""
 
 #. module: maintenance
@@ -948,7 +1220,7 @@ msgid "Team Members"
 msgstr ""
 
 #. module: maintenance
-#: model:ir.ui.view,arch_db:maintenance.maintenance_team_view_form
+#: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_view_form
 msgid "Team Name"
 msgstr ""
 
@@ -959,11 +1231,12 @@ msgstr ""
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__technician_user_id
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_request__user_id
 msgid "Technician"
 msgstr ""
 
 #. module: maintenance
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "Technicians"
 msgstr ""
 
@@ -988,64 +1261,80 @@ msgid "The user will be able to manage equipments."
 msgstr ""
 
 #. module: maintenance
-#: model:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
+#: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
 msgid "To Do"
 msgstr ""
 
 #. module: maintenance
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 msgid "To do"
 msgstr ""
 
 #. module: maintenance
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
+#: selection:maintenance.equipment,activity_state:0
+#: selection:maintenance.request,activity_state:0
+msgid "Today"
+msgstr ""
+
+#. module: maintenance
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "Today Activities"
 msgstr ""
 
 #. module: maintenance
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
-#: model:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
+#: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
 msgid "Top Priorities"
 msgstr ""
 
 #. module: maintenance
-#: model:ir.actions.act_window,help:maintenance.hr_equipment_action
-#: model:ir.actions.act_window,help:maintenance.hr_equipment_action_from_category_form
+#: model_terms:ir.actions.act_window,help:maintenance.hr_equipment_action
+#: model_terms:ir.actions.act_window,help:maintenance.hr_equipment_action_from_category_form
 msgid "Track equipments and link it to an employee or department.\n"
 "                You will be able to manage allocations, issues and maintenance of your equipment."
 msgstr ""
 
 #. module: maintenance
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "Under Maintenance"
 msgstr ""
 
 #. module: maintenance
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_kanban
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_unread
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_unread
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_unread
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_kanban
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "Unread Messages"
 msgstr ""
 
 #. module: maintenance
-#: model:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_unread_counter
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_unread_counter
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr ""
+
+#. module: maintenance
+#: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
 msgid "Unscheduled"
 msgstr ""
 
 #. module: maintenance
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 msgid "Unscheduled Maintenance"
 msgstr ""
 
 #. module: maintenance
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
 msgid "Used in location"
 msgstr ""
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__partner_id
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "Vendor"
 msgstr ""
 
@@ -1071,30 +1360,24 @@ msgid "You cannot delete an equipment category containing equipments or maintena
 msgstr ""
 
 #. module: maintenance
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
 msgid "days"
 msgstr ""
 
 #. module: maintenance
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
-msgid "for"
-msgstr ""
-
-#. module: maintenance
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
 msgid "hours"
 msgstr ""
 
 #. module: maintenance
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_graph
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_pivot
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_tree
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_graph
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_pivot
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_tree
 msgid "maintenance Request"
 msgstr ""
 
 #. module: maintenance
-#: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
+#: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 msgid "maintenance Request Search"
 msgstr ""
 

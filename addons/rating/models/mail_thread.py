@@ -8,7 +8,7 @@ class MailThread(models.AbstractModel):
     _inherit = 'mail.thread'
 
     @api.multi
-    @api.returns('self', lambda value: value.id)
+    @api.returns('mail.message', lambda value: value.id)
     def message_post(self, **kwargs):
         rating_value = kwargs.pop('rating_value', False)
         message = super(MailThread, self).message_post(**kwargs)

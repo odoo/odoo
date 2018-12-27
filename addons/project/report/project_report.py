@@ -6,7 +6,7 @@ from odoo import fields, models, tools
 
 class ReportProjectTaskUser(models.Model):
     _name = "report.project.task.user"
-    _description = "Tasks by user and project"
+    _description = "Tasks Analysis"
     _order = 'name desc, project_id'
     _auto = False
 

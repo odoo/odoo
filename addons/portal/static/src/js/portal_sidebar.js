@@ -15,10 +15,6 @@ var PortalSidebar = Widget.extend({
     start: function () {
         var self = this;
         this._super.apply(this, arguments);
-        // Window Handlers
-        $(window).on('resize', _.throttle(self._onUpdateSidebarPosition.bind(self), 200, {leading: false}));
-        this._onUpdateSidebarPosition();
-        this._setAffix();
         this._setDelayLabel();
     },
 
@@ -50,20 +46,6 @@ var PortalSidebar = Widget.extend({
         });
     },
     /**
-     * updates affix status of sidebar for window scrolle
-     *
-     * @private
-     */
-    _setAffix : function () {
-        var $bsSidebar = this.$el.find('.bs-sidebar');
-        $bsSidebar.affix({
-            offset: {
-                top: 0,
-                bottom: $('#wrapwrap').outerHeight() - $('main').height(),
-            },
-        });
-    },
-    /**
      * @private
      * @param {string} href
      */
@@ -83,23 +65,6 @@ var PortalSidebar = Widget.extend({
         } else {
             this.printContent.get(0).contentWindow.print();
         }
-    },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * Called when the window is resized or on loadoing widget
-     *
-     * @private
-     */
-    _onUpdateSidebarPosition: function () {
-        var $sidebar = this.$el.find('.bs-sidebar, .o_portal_brand');
-        $sidebar.css({
-            position: config.device.size_class >= config.device.SIZES.MD ? "fixed" : '',
-            width: config.device.size_class >= config.device.SIZES.MD ? $sidebar.outerWidth() : '',
-        });
     },
 });
 return PortalSidebar;

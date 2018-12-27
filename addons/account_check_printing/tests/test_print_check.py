@@ -32,7 +32,6 @@ class TestPrintCheck(AccountingTestCase):
     def create_invoice(self, amount=100, is_refund=False):
         invoice = self.invoice_model.create({
             'partner_id': self.partner_axelor.id,
-            'reference_type': 'none',
             'name': is_refund and "Supplier Refund" or "Supplier Invoice",
             'type': is_refund and "in_refund" or "in_invoice",
             'account_id': self.account_payable.id,

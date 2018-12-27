@@ -3,17 +3,20 @@
 # * crm
 # 
 # Translators:
-# Kovács Tibor <kovika@gmail.com>, 2016
-# krnkris, 2016
-# Martin Trigaux, 2016
-# gezza <geza.nagy@oregional.hu>, 2016
+# Kovács Tibor <kovika@gmail.com>, 2018
+# gezza <geza.nagy@oregional.hu>, 2018
+# Ákos Nagy <akos.nagy@oregional.hu>, 2018
+# Martin Trigaux, 2018
+# krnkris, 2018
+# Tibor Kőnig <konig.tibor@evitalit.hu>, 2018
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:09+0000\n"
-"PO-Revision-Date: 2018-03-22 14:09+0000\n"
-"Last-Translator: gezza <geza.nagy@oregional.hu>, 2016\n"
+"POT-Creation-Date: 2018-10-08 06:48+0000\n"
+"PO-Revision-Date: 2018-08-24 09:17+0000\n"
+"Last-Translator: Tibor Kőnig <konig.tibor@evitalit.hu>, 2018\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,143 +25,36 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: crm
-#: model:mail.template,body_html:crm.mail_template_data_module_install_crm
-msgid ""
-"\n"
-"\n"
-"            <div style=\"margin: 10px auto;\">\n"
-"            % set last_created_team = user.env['crm.team'].search([], order=\"create_date desc\")[0]\n"
-"            <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:100%;\">\n"
-"                <tbody>\n"
-"                    <tr>\n"
-"                        <td style=\"padding:2px;width:30%;\">\n"
-"                            <img src=\"web/static/src/img/logo.png\"/>\n"
-"                        </td>\n"
-"                        <td style=\"vertical-align: top; padding: 8px 10px;text-align: left;font-size: 14px;\">\n"
-"                            <a href=\"web/login\" style=\"float:right ;margin:15px auto;background: #875A7B;border-radius: 5px;color: #ffffff;font-size: 16px;padding: 10px 20px 10px 20px;text-decoration: none;\">Auto Login</a>\n"
-"                        </td>\n"
-"                    </tr>\n"
-"                </tbody>\n"
-"            </table>\n"
-"            <table style=\"width:100%;text-align:justify;margin:0 auto;border-collapse:collapse;border-top:1px solid lightgray\"\">\n"
-"                <tbody>\n"
-"                    <tr>\n"
-"                        <td style=\"padding:15px 10px;font-size:20px\">\n"
-"                            <p style=\"color:#875A7B;margin:0\" >Hooray!</p><br>\n"
-"                            <p dir=\"ltr\" style=\"font-size:15px;margin-top:0pt;margin-bottom:0pt;\">\n"
-"                                <span>Your Odoo CRM application is up and running.</span></p><br>\n"
-"                            <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
-"                                <span style=\"font-size:13px;font-weight:bold; \">What’s next?</span></p>\n"
-"                            <ul style=\"margin-top:0pt;margin-bottom:0pt;font-size:13px;list-style-type:disc;\">\n"
-"                                <li dir=\"ltr\">\n"
-"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
-"                                        <span>Try creating a lead by sending an email to </span>\n"
-"                                        <a href=\"mailto:${last_created_team.alias_id.name_get()[0][1] if last_created_team.alias_id.alias_domain else user.company_id.email}\">\n"
-"                                            <span style=\"font-weight:bold; text-decoration:underline;\">${last_created_team.alias_id.name_get()[0][1] if last_created_team.alias_id.alias_domain else user.company_id.email}</span>\n"
-"                                        </a>\n"
-"                                    </p>\n"
-"                                </li>\n"
-"                                <li dir=\"ltr\">\n"
-"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
-"                                        <span>Track your opportunities in your sale funnel by simply dragging and dropping the cards from one column to another</span>\n"
-"                                    </p>\n"
-"                                </li>\n"
-"                            </ul> <br>\n"
-"                            <ul style=\"margin-top:0pt;margin-bottom:0pt;font-size:13px;list-style-type:disc;\">\n"
-"                                <li dir=\"ltr\">\n"
-"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
-"                                        <span>Automatically assign your leads to your salesmen with the lead scoring, </span>\n"
-"                                    </p>\n"
-"                                </li>\n"
-"                                <li dir=\"ltr\">\n"
-"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
-"                                        <span>Keep in touch with your potential client with efficient email campaigns,</span>\n"
-"                                    </p>\n"
-"                                </li>\n"
-"                                <li dir=\"ltr\">\n"
-"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
-"                                        <span>Gain high quality insight from surveys,</span>\n"
-"                                    </p>\n"
-"                                </li>\n"
-"                                <li dir=\"ltr\">\n"
-"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
-"                                        <span>Get smart reporting and accurate dashboards,</span>\n"
-"                                    </p>\n"
-"                                </li>\n"
-"                                <li dir=\"ltr\">\n"
-"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
-"                                        <span>And much more...</span>\n"
-"                                    </p>\n"
-"                                </li>\n"
-"                            </ul>\n"
-"                            <br>\n"
-"                            <p dir=\"ltr\" style=\"font-size:13px;line-height:1.3;margin-top:0pt;margin-bottom:8pt;\">\n"
-"                                <span style=\"font-weight:bold;\">Need Help?</span>\n"
-"                                <span style=\"font-style:italic;\">You’re not alone</span>\n"
-"                            </p>\n"
-"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\">\n"
-"                                <span>We would be delighted to assist you along the way. Contact us through our\n"
-"                                <a href=\"https://www.odoo.com/help\">support form</a> if you have any question.\n"
-"                                You can also discover how to get the best out of Odoo CRM with our </span>\n"
-"                                <a target=\"_blank\" href=\"https://www.odoo.com/documentation/user/11.0/crm.html\">\n"
-"                                <span style=\"text-decoration:underline;\">User Documentation</span></a>\n"
-"                                </span><span> or with our </span>\n"
-"                                <a target=\"_blank\" href=\"https://www.odoo.com/documentation\">\n"
-"                                <span style=\"text-decoration:underline;\">API Documentation</span></a>\n"
-"                            </p>\n"
-"                            <br>\n"
-"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\"><span>Enjoy your Odoo experience,</span></p>\n"
-"                        </td>\n"
-"                    </tr>\n"
-"                </tbody>\n"
-"            </table>\n"
-"            <div dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;color:grey\">\n"
-"                <span><br/>-- <br/>The Odoo Team<br/>PS: People love Odoo, check </span><a target=\"_blank\" href=\"https://twitter.com/odoo/favorites\"><span style=\"text-decoration:underline;\">what they say about it.</span></a></span>\n"
-"            </div>\n"
-"        </div>"
-msgstr ""
-
-#. module: crm
-#: model:mail.template,body_html:crm.email_template_opportunity_reminder_mail
-msgid ""
-"\n"
-"<p>Hello ${object.user_id and object.user_id.name or ''},</p>\n"
-"<p>The opportunity <strong>${object.name}</strong> did not have any activity since at least 5 days.</p>\n"
-"%if object.description:\n"
-"<p>Here is the description about the opportunity : </p><p><i>${object.description}</i>\n"
-"%endif\n"
-"</p><p>Thank you!</p>\n"
-msgstr ""
-"\n"
-"<p>Tisztelt ${object.user_id and object.user_id.name or ''},</p>\n"
-"<p>Ez a lehetőség: <strong>${object.name}</strong> , az elmúlt 5 napja nem aktív.</p>\n"
-"%if object.description:\n"
-"<p>Itt van a lehetőség leírása : </p><p><i>${object.description}</i>\n"
-"%endif\n"
-"</p><p>Köszönöm!</p>\n"
-
-#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__meeting_count
 #: model:ir.model.fields,field_description:crm.field_res_partner__meeting_count
-#: model:ir.model.fields,field_description:crm.field_res_users__meeting_count
 msgid "# Meetings"
 msgstr "# Találkozók"
 
 #. module: crm
-#: model:ir.model.fields,field_description:crm.field_crm_opportunity_report__nbr_activities
-msgid "# of Activities"
-msgstr "# Tevékenységekből"
+#: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
+msgid "% endif"
+msgstr ""
 
 #. module: crm
-#. openerp-web
-#: code:addons/crm/static/src/js/tour.js:22
-#, python-format
-msgid "<b>Choose a name</b> for your opportunity."
+#: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
+msgid ""
+"% set email = object.env['crm.team'].search([('alias_name','!=', False)],limit=1).alias_id.display_name\n"
+"    % if email\n"
+"    <strong style=\"font-size: 16px;\">Try the mail gateway</strong>"
 msgstr ""
 
 #. module: crm
 #. openerp-web
-#: code:addons/crm/static/src/js/tour.js:30
+#: code:addons/crm/static/src/js/tour.js:28
+#, python-format
+msgid ""
+"<b>Choose a name</b> for your opportunity, example: <i>'Need a new "
+"website'</i>"
+msgstr ""
+
+#. module: crm
+#. openerp-web
+#: code:addons/crm/static/src/js/tour.js:36
 #, python-format
 msgid ""
 "<b>Drag &amp; drop opportunities</b> between columns as you progress in your"
@@ -169,27 +65,27 @@ msgstr ""
 
 #. module: crm
 #. openerp-web
-#: code:addons/crm/static/src/js/tour.js:75
+#: code:addons/crm/static/src/js/tour.js:86
 #, python-format
 msgid ""
 "<b>Invite coworkers</b> via email.<br/><i>Enter one email per line.</i>"
 msgstr ""
-"<b>Hívjon meg munkatársakat</b> e-mailen.<br/><i>Soronként egy e-mail címet "
-"adjon meg.</i>"
+"<b>Hívjon meg munkatársakat</b> e-mailen keresztül.<br/><i>Soronként egy "
+"e-mail címet adjon meg.</i>"
 
 #. module: crm
-#: code:addons/crm/models/crm_team.py:138
+#: code:addons/crm/models/crm_team.py:139
 #, python-format
 msgid ""
 "<p class='o_view_nocontent_smiling_face'>Add new opportunities</p><p>\n"
-"    Looks like you are not a member of a sales channel. You should add yourself\n"
-"    as a member of one of the sales channel.\n"
+"    Looks like you are not a member of a Sales Team. You should add yourself\n"
+"    as a member of one of the Sales Team.\n"
 "</p>"
 msgstr ""
 
 #. module: crm
 #. openerp-web
-#: code:addons/crm/static/src/js/tour.js:61
+#: code:addons/crm/static/src/js/tour.js:67
 #, python-format
 msgid ""
 "<p><b>Send messages</b> to your prospect and get replies automatically "
@@ -203,22 +99,17 @@ msgstr ""
 
 #. module: crm
 #. openerp-web
-#: code:addons/crm/static/src/js/tour.js:46
+#: code:addons/crm/static/src/js/tour.js:52
 #, python-format
 msgid ""
 "<p>You will be able to customize your followup activities. "
 "Examples:</p><ol><li>introductory email</li><li>call 10 days "
 "after</li><li>second call 3 days after, ...</li></ol><p "
-"class='mb0'><i>Select a standard activity for now on.</i></p>"
+"class='mb0'><i>Select a standard activity for now.</i></p>"
 msgstr ""
-"<p>Testre szabhatja a nyomon követés tevékenységét. "
-"Példák:</p><ol><li>Bemutatkozó email</li><li>10 nap után "
-"figyelemfelhívás</li><li>második figyelem felhívás újabb 3 nap után, "
-"...</li></ol><p class='mb0'><i>Válasszon egy alapértelmezett műveletet "
-"mostantól ehhez.</i></p>"
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
+#: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid ""
 "<span class=\"o_stat_text\" attrs=\"{'invisible': [('meeting_count', '&lt;', 2)]}\"> Meetings</span>\n"
 "                                    <span class=\"o_stat_text\" attrs=\"{'invisible': [('meeting_count', '&gt;', 1)]}\"> Meeting</span>"
@@ -227,33 +118,29 @@ msgstr ""
 "                                    <span class=\"o_stat_text\" attrs=\"{'invisible': [('meeting_count', '&gt;', 1)]}\"> Találkozó</span>"
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
+#: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "<span class=\"oe_grey\"> at </span>"
 msgstr "<span class=\"oe_grey\"> ekkor</span>"
 
 #. module: crm
-#: model:ir.model.fields,help:crm.field_crm_team__alias_defaults
-msgid ""
-"A Python dictionary that will be evaluated to provide default values when "
-"creating new records for this alias."
-msgstr ""
-"Egy Python szótár aminek a kiértékelésével alapértékeket biztosít, ha ehhez "
-"az álnévhez új feljegyzéseket hoz létre."
+#: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
+msgid "Accept Emails From"
+msgstr "E-mail elfogadása innen"
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
-msgid "Accept Emails From"
-msgstr "Email elfogadása innen"
+#: model:ir.model.fields,field_description:crm.field_crm_lead__message_needaction
+msgid "Action Needed"
+msgstr "Művelet szükséges"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__active
 #: model:ir.model.fields,field_description:crm.field_crm_lead__active
 #: model:ir.model.fields,field_description:crm.field_crm_lost_reason__active
-#: model:ir.model.fields,field_description:crm.field_crm_opportunity_report__active
 msgid "Active"
 msgstr "Aktív"
 
 #. module: crm
+#: model:ir.model.fields,field_description:crm.field_crm_lead__activity_ids
 #: model:ir.ui.menu,name:crm.crm_activity_report_menu
 msgid "Activities"
 msgstr "Tevékenységek"
@@ -261,10 +148,10 @@ msgstr "Tevékenységek"
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_activity_report_action
 #: model:ir.actions.act_window,name:crm.crm_activity_report_action_team
-#: model:ir.ui.view,arch_db:crm.crm_activity_report_view_graph
-#: model:ir.ui.view,arch_db:crm.crm_activity_report_view_pivot
-#: model:ir.ui.view,arch_db:crm.crm_activity_report_view_search
-#: model:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
+#: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_graph
+#: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_pivot
+#: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
+#: model_terms:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
 msgid "Activities Analysis"
 msgstr "Tevékenységek elemzése"
 
@@ -274,65 +161,50 @@ msgid "Activities Done Target"
 msgstr "Tevékenységek célja elvégezve"
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Activities Todo"
 msgstr ""
 
 #. module: crm
+#: model:ir.model.fields,field_description:crm.field_crm_lead__activity_state
+msgid "Activity State"
+msgstr "Tevékenység állapota"
+
+#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__mail_activity_type_id
 msgid "Activity Type"
-msgstr ""
+msgstr "Tevékenységtípus"
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.crm_team_menu_config_activity_types
 msgid "Activity Types"
-msgstr ""
+msgstr "Tevékenységtípusok"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:913
+#: code:addons/crm/models/crm_lead.py:933
 #, python-format
 msgid "Add a new lead"
 msgstr ""
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Add a qualification step before creating an opportunity"
 msgstr ""
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
-#: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
+#: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_leads
+#: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "Address"
 msgstr "Cím"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_id
-#: model:ir.ui.view,arch_db:crm.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Alias"
 msgstr "Álnév"
 
 #. module: crm
-#: model:ir.model.fields,field_description:crm.field_crm_team__alias_contact
-msgid "Alias Contact Security"
-msgstr "Álnév kapcsolat biztonság"
-
-#. module: crm
-#: model:ir.model.fields,field_description:crm.field_crm_team__alias_name
-msgid "Alias Name"
-msgstr "Álnév elnevezése"
-
-#. module: crm
-#: model:ir.model.fields,field_description:crm.field_crm_team__alias_domain
-msgid "Alias domain"
-msgstr "Álénév domain"
-
-#. module: crm
-#: model:ir.model.fields,field_description:crm.field_crm_team__alias_model_id
-msgid "Aliased Model"
-msgstr "Minta álnév"
-
-#. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
+#: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_leads
 msgid "Analysis"
 msgstr "Elemzés"
 
@@ -342,48 +214,42 @@ msgid "Apply deduplication"
 msgstr "Duplikáció alkalmazás"
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
-msgid "Archive"
-msgstr "Archívum"
-
-#. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
-#: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
-msgid "Archived"
-msgstr "Archivált"
-
-#. module: crm
-#: model:ir.ui.view,arch_db:crm.merge_opportunity_form
+#: model_terms:ir.ui.view,arch_db:crm.merge_opportunity_form
 msgid "Assign opportunities to"
 msgstr "Iktassa a lehetőséget neki"
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
 msgid "Assign these opportunities to"
 msgstr "Iktassa ezeket a lehetőséget neki"
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner
 msgid "Assign this opportunity to"
 msgstr "Iktassa hozzá ezeket a lehetőséget"
 
 #. module: crm
-#: model:ir.model.fields,field_description:crm.field_crm_opportunity_report__opening_date
+#: model:ir.model.fields,field_description:crm.field_crm_lead__date_open
 msgid "Assignation Date"
 msgstr "Hozzárendelés dátuma"
 
 #. module: crm
-#: model:ir.model.fields,field_description:crm.field_crm_lead__date_open
-msgid "Assigned"
-msgstr "Hozzárendelve"
+#: model:ir.model.fields,field_description:crm.field_crm_lead__message_attachment_count
+msgid "Attachment Count"
+msgstr "Mellékletek száma"
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_case_tree_view_oppor
+#: model_terms:ir.ui.view,arch_db:crm.crm_case_tree_view_oppor
 msgid "Avg. of Probability"
 msgstr "Átl. valószínűség"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:392
+#: model:ir.model.fields,field_description:crm.field_crm_lead__is_blacklisted
+msgid "Blacklist"
+msgstr "Tiltólista"
+
+#. module: crm
+#: code:addons/crm/models/crm_lead.py:400
 #, python-format
 msgid "Boom! Team record for the past 30 days."
 msgstr ""
@@ -395,7 +261,8 @@ msgstr "Ugrálás"
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.crm_menu_root
-#: model:ir.ui.view,arch_db:crm.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:crm.digest_digest_view_form
+#: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "CRM"
 msgstr "CRM"
 
@@ -405,34 +272,34 @@ msgid "CRM Activity Analysis"
 msgstr "CRM tevékenységek elemzése"
 
 #. module: crm
-#: model:ir.model,name:crm.model_crm_opportunity_report
-msgid "CRM Opportunity Analysis"
-msgstr "CRM lehetőség analízis"
+#: model:ir.model,name:crm.model_crm_stage
+msgid "CRM Stages"
+msgstr ""
 
 #. module: crm
-#: model:ir.model.fields,field_description:crm.field_crm_opportunity_report__campaign_id
-#: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
-#: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
+#: model:mail.activity.type,name:crm.mail_activity_demo_call_demo
+msgid "Call for Demo"
+msgstr "Felhívás demó bemutatóra"
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_crm_lead__campaign_id
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Campaign"
 msgstr "Kampány"
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_lead_lost_view_form
-#: model:ir.ui.view,arch_db:crm.merge_opportunity_form
-#: model:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner
-#: model:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
+#: model_terms:ir.ui.view,arch_db:crm.crm_lead_lost_view_form
+#: model_terms:ir.ui.view,arch_db:crm.merge_opportunity_form
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
 msgid "Cancel"
 msgstr "Mégse"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_team_act_tree
-msgid "Cases by Sales Channel"
-msgstr ""
-
-#. module: crm
-#: model:ir.model,name:crm.model_crm_lead_tag
-msgid "Category of lead"
-msgstr "Érdeklődések kategóriái"
+msgid "Cases by Sales Team"
+msgstr "Esetek értékesítési csapatonként"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage__on_change
@@ -440,7 +307,7 @@ msgid "Change Probability Automatically"
 msgstr "Valószínűség automatikus változtatása"
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_lost_reason_view_form
+#: model_terms:ir.ui.view,arch_db:crm.crm_lost_reason_view_form
 msgid "Channel"
 msgstr "Csatorna"
 
@@ -458,10 +325,11 @@ msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__city
-#: model:ir.model.fields,field_description:crm.field_crm_opportunity_report__city
-#: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
-#: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
-#: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
+#: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_leads
+#: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
+#: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "City"
 msgstr "Város"
 
@@ -476,14 +344,14 @@ msgstr ""
 
 #. module: crm
 #. openerp-web
-#: code:addons/crm/static/src/js/tour.js:26
+#: code:addons/crm/static/src/js/tour.js:32
 #, python-format
 msgid "Click here to <b>add your opportunity</b>."
 msgstr ""
 
 #. module: crm
 #. openerp-web
-#: code:addons/crm/static/src/js/tour.js:18
+#: code:addons/crm/static/src/js/tour.js:24
 #, python-format
 msgid ""
 "Click here to <b>create your first opportunity</b> and add it to your "
@@ -494,18 +362,16 @@ msgstr ""
 
 #. module: crm
 #. openerp-web
-#: code:addons/crm/static/src/js/tour.js:54
+#: code:addons/crm/static/src/js/tour.js:60
 #, python-format
 msgid "Click on the opportunity to zoom in."
 msgstr ""
 
 #. module: crm
-#: model:ir.model.fields,field_description:crm.field_crm_opportunity_report__date_closed
-msgid "Close Date"
-msgstr "Zárás dátuma"
-
-#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__date_closed
+#: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Closed Date"
 msgstr "Zárás dátuma"
 
@@ -519,44 +385,50 @@ msgstr "Lezárt/szunnyadó érdeklődéseket nem lehet lehetőséggé alakítani
 #: model:ir.model.fields,field_description:crm.field_crm_lead__color
 #: model:ir.model.fields,field_description:crm.field_crm_lead_tag__color
 msgid "Color Index"
-msgstr "Szín jegyzék"
+msgstr "Színjegyzék"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__company_id
 #: model:ir.model.fields,field_description:crm.field_crm_lead__company_id
-#: model:ir.model.fields,field_description:crm.field_crm_opportunity_report__company_id
-#: model:ir.ui.view,arch_db:crm.crm_activity_report_view_search
-#: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
-#: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
+#: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
+#: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Company"
 msgstr "Vállalat"
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
+#: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_leads
 msgid "Company Name"
 msgstr "Cég neve"
 
 #. module: crm
+#: model:ir.model,name:crm.model_res_config_settings
+msgid "Config Settings"
+msgstr "Konfigurációs beállítások"
+
+#. module: crm
 #: model:ir.ui.menu,name:crm.crm_menu_config
 msgid "Configuration"
-msgstr "Beállítások"
+msgstr "Konfiguráció"
 
 #. module: crm
 #. openerp-web
-#: code:addons/crm/static/src/js/tour.js:71
+#: code:addons/crm/static/src/js/tour.js:76
+#: code:addons/crm/static/src/js/tour.js:81
 #, python-format
 msgid "Configuration options are available in the Settings app."
-msgstr "Beállítási lehetőségeket a Beállítások alkalmazásban talál."
+msgstr "A konfigurációs lehetőségek a Beállítások alkalmazásban érhetőek el."
+
+#. module: crm
+#: model:crm.lead.tag,name:crm.categ_oppor7
+msgid "Consulting"
+msgstr "Tanácsadó"
 
 #. module: crm
 #: model:ir.model,name:crm.model_res_partner
 msgid "Contact"
-msgstr "Kapcsolat"
-
-#. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
-msgid "Contact Information"
-msgstr "Kapcsolat információ"
+msgstr "Kapcsolattartó"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__contact_name
@@ -564,9 +436,14 @@ msgid "Contact Name"
 msgstr "Kapcsolat neve"
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Contacts"
-msgstr "Kapcsolattartók"
+msgstr "Kapcsolatok"
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_crm_team__dashboard_graph_model
+msgid "Content"
+msgstr "Tartalom"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner__name
@@ -576,30 +453,41 @@ msgstr "Átalakítási művelet"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__date_conversion
-#: model:ir.model.fields,field_description:crm.field_crm_opportunity_report__date_conversion
-#: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
+#: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Conversion Date"
 msgstr "Átalakítás dátuma"
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
+#: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 msgid "Conversion Date from Lead to Opportunity"
 msgstr "Érdeklődés Lehetőséggé alakításának dátuma"
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
 msgid "Conversion Options"
 msgstr "Átalakítási lehetőségek"
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
+#: model:ir.model,name:crm.model_crm_lead2opportunity_partner_mass
+msgid "Convert Lead to Opportunity (in mass)"
+msgstr "Érdeklődés lehetőséggé alakítása (tömegesen)"
+
+#. module: crm
+#: model:ir.model,name:crm.model_crm_lead2opportunity_partner
+msgid "Convert Lead to Opportunity (not in mass)"
+msgstr "Érdeklődés lehetőséggé alakítása (egyenként)"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
 msgid "Convert to Opportunities"
 msgstr "Átalakít lehetőséggé"
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
-#: model:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner
-#: model:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
+#: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_leads
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
 msgid "Convert to Opportunity"
 msgstr "Átalakítás lehetőséggé"
 
@@ -609,13 +497,20 @@ msgid "Convert to opportunities"
 msgstr "Átalakít lehetőséggé"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:1096
+#: code:addons/crm/models/crm_lead.py:1116
 #: selection:crm.lead2opportunity.partner,name:0
 #: selection:crm.lead2opportunity.partner.mass,name:0
 #: model:ir.actions.act_window,name:crm.action_crm_lead2opportunity_partner
 #, python-format
 msgid "Convert to opportunity"
 msgstr "Lehetőséggé alakítás"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
+msgid ""
+"Convert visitors of your website into leads in the CRM. We do data "
+"enrichment based on their IP address."
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__message_bounce
@@ -625,72 +520,71 @@ msgstr "Visszadobott levél számláló ehhez a kapcsolathoz."
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__country_id
 #: model:ir.model.fields,field_description:crm.field_crm_lead__country_id
-#: model:ir.model.fields,field_description:crm.field_crm_opportunity_report__country_id
-#: model:ir.ui.view,arch_db:crm.crm_activity_report_view_search
-#: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
-#: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
-#: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
-#: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
+#: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
+#: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_leads
+#: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
+#: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Country"
 msgstr "Ország"
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.view_create_opportunity_simplified
+#: model_terms:ir.ui.view,arch_db:crm.view_create_opportunity_simplified
 msgid "Create"
 msgstr "Létrehozás"
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.view_create_opportunity_simplified
+#: model_terms:ir.ui.view,arch_db:crm.view_create_opportunity_simplified
 msgid "Create & Edit"
+msgstr "Létrehozás és szerkesztés"
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_res_config_settings__module_crm_reveal
+msgid "Create Leads/Opportunities from your website's traffic"
 msgstr ""
 
 #. module: crm
-#: model:ir.model.fields,field_description:crm.field_crm_lead__create_date
-msgid "Create Date"
-msgstr "Dátum létrehozás"
-
-#. module: crm
-#: model:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner
 msgid "Create Opportunity"
 msgstr "Lehetőség létrehozása"
 
 #. module: crm
-#: selection:crm.lead.convert2task,action:0
 #: selection:crm.lead2opportunity.partner,action:0
 #: selection:crm.partner.binding,action:0
 msgid "Create a new customer"
 msgstr "Új vevő létrehozása"
 
 #. module: crm
-#: model:ir.actions.act_window,help:crm.crm_case_form_view_salesteams_lead
-#: model:ir.actions.act_window,help:crm.crm_case_form_view_salesteams_opportunity
+#: model_terms:ir.actions.act_window,help:crm.crm_case_form_view_salesteams_lead
+#: model_terms:ir.actions.act_window,help:crm.crm_case_form_view_salesteams_opportunity
 msgid "Create a new lead"
-msgstr ""
+msgstr "Új érdeklődés létrehozása"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:915
-#, python-format
-msgid "Create a new opportunity to add it to your pipeline"
-msgstr ""
-
-#. module: crm
-#: model:ir.actions.act_window,help:crm.crm_lead_tag_action
+#: model_terms:ir.actions.act_window,help:crm.crm_lead_tag_action
 msgid "Create a new tag for your opportunities"
 msgstr ""
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.create_opportunity_simplified
-#: model:ir.ui.view,arch_db:crm.view_create_opportunity_simplified
+#: model_terms:ir.ui.view,arch_db:crm.view_create_opportunity_simplified
 msgid "Create an Opportunity"
-msgstr "Egy lehetőség létrehozása"
+msgstr "Lehetőség létrehozása"
 
 #. module: crm
-#: model:ir.actions.act_window,help:crm.relate_partner_opportunities
+#: model_terms:ir.actions.act_window,help:crm.relate_partner_opportunities
 msgid "Create an new opportunity related to this customer"
+msgstr "Új lehetőség létrehozása ehhez az ügyfélhez"
+
+#. module: crm
+#: code:addons/crm/models/crm_lead.py:935
+#, python-format
+msgid "Create an opportunity in your pipeline"
 msgstr ""
 
 #. module: crm
-#: model:ir.actions.act_window,help:crm.crm_lead_tag_action
+#: model_terms:ir.actions.act_window,help:crm.crm_lead_tag_action
 msgid ""
 "Create tags that fit your business (product structure, sales type, etc.) to "
 "better manage and tack your opportunities."
@@ -698,7 +592,7 @@ msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__author_id
-#: model:ir.ui.view,arch_db:crm.crm_activity_report_view_search
+#: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
 msgid "Created By"
 msgstr "Készítette"
 
@@ -713,11 +607,12 @@ msgstr "Készítette"
 #: model:ir.model.fields,field_description:crm.field_crm_partner_binding__create_uid
 #: model:ir.model.fields,field_description:crm.field_crm_stage__create_uid
 msgid "Created by"
-msgstr "Készítette"
+msgstr "Létrehozta"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner__create_date
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass__create_date
+#: model:ir.model.fields,field_description:crm.field_crm_lead__create_date
 #: model:ir.model.fields,field_description:crm.field_crm_lead_lost__create_date
 #: model:ir.model.fields,field_description:crm.field_crm_lead_tag__create_date
 #: model:ir.model.fields,field_description:crm.field_crm_lost_reason__create_date
@@ -725,19 +620,14 @@ msgstr "Készítette"
 #: model:ir.model.fields,field_description:crm.field_crm_partner_binding__create_date
 #: model:ir.model.fields,field_description:crm.field_crm_stage__create_date
 msgid "Created on"
-msgstr "Létrehozás dátuma"
+msgstr "Létrehozva"
 
 #. module: crm
-#: model:ir.model.fields,field_description:crm.field_crm_opportunity_report__create_date
+#: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Creation Date"
-msgstr "Létrehozás dátuma"
-
-#. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
-#: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
-#: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
-msgid "Creation Month"
-msgstr "Hónap létrehozás"
+msgstr "Létrehozva"
 
 #. module: crm
 #: model:ir.actions.server,name:crm.action_your_pipeline
@@ -750,102 +640,91 @@ msgid "Currency"
 msgstr "Pénznem"
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
-msgid "Current"
-msgstr "Jelenleg"
-
-#. module: crm
-#: code:addons/crm/models/crm_lead.py:1140
+#: code:addons/crm/models/crm_lead.py:1168
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner__partner_id
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass__partner_id
 #: model:ir.model.fields,field_description:crm.field_crm_lead__partner_id
-#: model:ir.model.fields,field_description:crm.field_crm_lead_convert2task__partner_id
-#: model:ir.model.fields,field_description:crm.field_crm_opportunity_report__partner_id
 #: model:ir.model.fields,field_description:crm.field_crm_partner_binding__partner_id
-#: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
-#: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
-#: model:ir.ui.view,arch_db:crm.crm_case_tree_view_oppor
-#: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
-#: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
+#: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_leads
+#: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
+#: model_terms:ir.ui.view,arch_db:crm.crm_case_tree_view_oppor
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 #, python-format
 msgid "Customer"
-msgstr "Vásárló"
+msgstr "Ügyfél"
 
 #. module: crm
-#: model:ir.model.fields,field_description:crm.field_res_config_settings__module_web_clearbit
-msgid "Customer Autocomplete"
-msgstr ""
-
-#. module: crm
-#: code:addons/crm/models/crm_lead.py:1142
+#: code:addons/crm/models/crm_lead.py:1170
 #, python-format
 msgid "Customer Email"
-msgstr "Vevői e-mail"
+msgstr "Ügyfél e-mailcíme"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__partner_name
 msgid "Customer Name"
-msgstr "Vásárló neve"
+msgstr "Ügyfél neve"
 
 #. module: crm
-#: model:ir.ui.menu,name:crm.res_partner_menu_crm
-#: model:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner
-#: model:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
+#: model:ir.ui.menu,name:crm.res_partner_menu_customer
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
 msgid "Customers"
-msgstr "Vásárlók"
-
-#. module: crm
-#: code:addons/crm/models/crm_team.py:121
-#, python-format
-msgid ""
-"Dashboard graph content cannot be Pipeline if the sales channel doesn't use "
-"it. (Pipeline is unchecked.)"
-msgstr ""
+msgstr "Ügyfelek"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__date
+#: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
 msgid "Date"
 msgstr "Dátum"
 
 #. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
+msgid "Date Closed"
+msgstr "Lezárás dátuma"
+
+#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__day_open
-#: model:ir.model.fields,field_description:crm.field_crm_opportunity_report__delay_open
 msgid "Days to Assign"
-msgstr "Napok száma a hozzárendelésig"
+msgstr "Hozzárendelésig hátralévő napok"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__day_close
-#: model:ir.model.fields,field_description:crm.field_crm_opportunity_report__delay_close
 msgid "Days to Close"
 msgstr "Lezárásig hátralévő napok"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__crm_alias_prefix
 msgid "Default Alias Name for Leads"
-msgstr "Éérdeklődések alapértelmezett álnevei"
+msgstr "Érdeklődések alapértelmezett álnevei"
 
 #. module: crm
-#: model:ir.model.fields,field_description:crm.field_crm_team__alias_defaults
-msgid "Default Values"
-msgstr "Alapértelmezett értékek"
-
-#. module: crm
-#: model:ir.actions.act_window,help:crm.crm_lost_reason_action
+#: model_terms:ir.actions.act_window,help:crm.crm_lost_reason_action
 msgid "Define a new lost reason"
 msgstr ""
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
+#: model_terms:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
 msgid "Delete"
 msgstr "Törlés"
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
+#: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_leads
 msgid "Describe the lead..."
 msgstr "Fejtse ki az Érdeklődést..."
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.view_create_opportunity_simplified
+#: model:crm.lead.tag,name:crm.categ_oppor5
+msgid "Design"
+msgstr "Terv"
+
+#. module: crm
+#: model:ir.model,name:crm.model_digest_digest
+msgid "Digest"
+msgstr ""
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.view_create_opportunity_simplified
 msgid "Discard"
 msgstr "Elvetés"
 
@@ -858,14 +737,18 @@ msgstr "Elvetés"
 #: model:ir.model.fields,field_description:crm.field_crm_lead_tag__display_name
 #: model:ir.model.fields,field_description:crm.field_crm_lost_reason__display_name
 #: model:ir.model.fields,field_description:crm.field_crm_merge_opportunity__display_name
-#: model:ir.model.fields,field_description:crm.field_crm_opportunity_report__display_name
 #: model:ir.model.fields,field_description:crm.field_crm_partner_binding__display_name
 #: model:ir.model.fields,field_description:crm.field_crm_stage__display_name
 msgid "Display Name"
 msgstr "Megjelenített név"
 
 #. module: crm
-#: selection:crm.lead.convert2task,action:0
+#: code:addons/crm/models/digest.py:18 code:addons/crm/models/digest.py:29
+#, python-format
+msgid "Do not have access, skip this data for user's digest email"
+msgstr ""
+
+#. module: crm
 #: selection:crm.lead2opportunity.partner,action:0
 #: selection:crm.lead2opportunity.partner.mass,action:0
 #: selection:crm.partner.binding,action:0
@@ -873,21 +756,26 @@ msgid "Do not link to a customer"
 msgstr "Ne kapcsolja ügyfélhez"
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
+#: model_terms:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
+msgid "Dropdown menu"
+msgstr "Legördülő menü"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
 msgid "Edit"
 msgstr "Szerkesztés"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__email_from
-#: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
-#: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
+#: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_leads
+#: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "Email"
 msgstr "E-mail"
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
+#: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
 msgid "Email Alias"
-msgstr "E-mail fedőnevek"
+msgstr "E-mail álnevek"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__email_from
@@ -895,12 +783,19 @@ msgid "Email address of the contact"
 msgstr "A kapcsolat email címei"
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.res_config_settings_view_form
+#: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
 msgid ""
-"Emails received to that address generate new leads not assigned to any sales"
-" channel yet. This can be made when converting them into opportunities. "
-"Incoming emails can be automatically assigned to specific sales channels. To"
-" do so, set an email alias on the sales channel."
+"Email sent to <strong>${email}</strong> generate opportunities in your "
+"pipeline.<br>"
+msgstr ""
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
+msgid ""
+"Emails received to that address generate new leads not assigned to any Sales"
+" Team yet. This can be made when converting them into opportunities. "
+"Incoming emails can be automatically assigned to specific Sales Teams. To do"
+" so, set an email alias on the Sales Team."
 msgstr ""
 
 #. module: crm
@@ -924,36 +819,32 @@ msgid "Event"
 msgstr "Esemény"
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
-msgid "Exclude Opt Out"
-msgstr "Kizárni a kiemelt termékek közül"
-
-#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__date_deadline
-#: model:ir.model.fields,field_description:crm.field_crm_opportunity_report__date_deadline
-#: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
+#: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Expected Closing"
 msgstr "Várható befejezés"
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Expected Closing Date"
 msgstr "Várható befejezés dátuma"
 
 #. module: crm
 #: selection:crm.team,dashboard_graph_group_pipeline:0
 msgid "Expected Closing Day"
-msgstr ""
+msgstr "Lezárás tervezett napja"
 
 #. module: crm
 #: selection:crm.team,dashboard_graph_group_pipeline:0
 msgid "Expected Closing Month"
-msgstr ""
+msgstr "Lezárás tervezett hónapja"
 
 #. module: crm
 #: selection:crm.team,dashboard_graph_group_pipeline:0
 msgid "Expected Closing Week"
-msgstr ""
+msgstr "Lezárás tervezett hete"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__planned_revenue
@@ -961,12 +852,7 @@ msgid "Expected Revenue"
 msgstr "Várható bevételek"
 
 #. module: crm
-#: model:ir.filters,name:crm.filter_opportunity_expected_revenue
-msgid "Expected Revenue by Channel"
-msgstr ""
-
-#. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_case_tree_view_oppor
+#: model_terms:ir.ui.view,arch_db:crm.crm_case_tree_view_oppor
 msgid "Expected Revenues"
 msgstr "Elvárt árbevételek"
 
@@ -976,26 +862,22 @@ msgid "Expected to Close"
 msgstr ""
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
-msgid "Expiration Closing Month"
-msgstr "Lejárati zárás hónapja"
-
-#. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage__legend_priority
 msgid ""
 "Explanation text to help users using the star and priority mechanism on "
 "stages or issues that are in this stage."
 msgstr ""
-"Magyarázó szöveg a felhasználóknak az ezen a szinten lévő lépés szintek vagy"
-" ügyek csillag és prioritás szerkezet használatának segítségére."
+"Magyarázó szöveg, amely segít a felhasználóknak a szakaszok vagy az ebben a "
+"szakaszban lévő feladatok csillag- és prioritásmechanizmusának "
+"használatában."
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
+#: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 msgid "Extended Filters"
 msgstr "Részletes szűrők"
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
+#: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_leads
 msgid "Extra Info"
 msgstr "Extra információ"
 
@@ -1005,41 +887,56 @@ msgid "Folded in Pipeline"
 msgstr "A folyamatban behajtott"
 
 #. module: crm
+#: model:mail.activity.type,name:crm.mail_activity_demo_followup_quote
+msgid "Follow-up Quote"
+msgstr "Árajánlat nyomon-követés"
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_crm_lead__message_follower_ids
+msgid "Followers"
+msgstr "Követők"
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_crm_lead__message_channel_ids
+msgid "Followers (Channels)"
+msgstr "Követők (Csatornák)"
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_crm_lead__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Követők (Partnerek)"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
+msgid "Followup"
+msgstr "Nyomon követés"
+
+#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass__force_assignation
 msgid "Force assignation"
 msgstr "Hozzárendelés eröltetése"
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Format phone numbers based on national conventions"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:588
+#: code:addons/crm/models/crm_lead.py:606
 #, python-format
 msgid "From %s : %s"
 msgstr "Ettől %s : %s"
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Future Activities"
 msgstr ""
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
-msgid "Future Activities (7 days)"
-msgstr ""
-
-#. module: crm
-#: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
-msgid "Future Activities (All)"
-msgstr ""
-
-#. module: crm
-#: model:ir.ui.view,arch_db:crm.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid ""
 "Generate leads from incoming emails and assign them\n"
-"                                    to a sales channel manually"
+"                                    to a Sales Team manually"
 msgstr ""
 
 #. module: crm
@@ -1048,7 +945,7 @@ msgid "Get Lost Reason"
 msgstr "Kapja meg az meghiúsulás okát"
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_stage_form
+#: model_terms:ir.ui.view,arch_db:crm.crm_stage_form
 msgid "Give your team the requirements to move an opportunity to this stage."
 msgstr ""
 
@@ -1058,25 +955,26 @@ msgid "Global CC"
 msgstr "Globális CC /másolat/"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:390
+#: code:addons/crm/models/crm_lead.py:398
 #, python-format
 msgid "Go, go, go! Congrats for your first deal."
 msgstr ""
 
 #. module: crm
 #. openerp-web
-#: code:addons/crm/static/src/js/tour.js:80
+#: code:addons/crm/static/src/js/tour.js:90
+#: code:addons/crm/static/src/js/tour.js:95
 #, python-format
-msgid "Good job! Your completed the tour of the CRM."
+msgid "Good job! You completed the tour of the CRM app."
 msgstr ""
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_activity_report_view_search
-#: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
-#: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
-#: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
+#: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
+#: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Group By"
-msgstr "Csoportosítás"
+msgstr "Csoportosítás ezzel"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__dashboard_graph_group_pipeline
@@ -1084,12 +982,7 @@ msgid "Grouping Method"
 msgstr ""
 
 #. module: crm
-#: model:ir.model,name:crm.model_crm_partner_binding
-msgid "Handle partner binding or generation in CRM wizards."
-msgstr "Partner kikötés vagy létrehozás a CMR varázslókban."
-
-#. module: crm
-#: model:ir.actions.act_window,help:crm.crm_lead_action_activities
+#: model_terms:ir.actions.act_window,help:crm.crm_lead_action_activities
 msgid ""
 "Here is the list of your next activities. Those are linked to your opportunities.\n"
 "                   To set a next activity, go on an opportunity and add one. It will then appear in this list."
@@ -1098,7 +991,7 @@ msgstr ""
 "               Következő tevékenység beállításához menjen az egyik lehetőséghez és adjon hozzá egyet. Ez a listában fel fog tűnni."
 
 #. module: crm
-#: selection:crm.lead,priority:0 selection:crm.opportunity.report,priority:0
+#: selection:crm.lead,priority:0
 msgid "High"
 msgstr "Magas"
 
@@ -1116,32 +1009,40 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm.field_crm_lead_tag__id
 #: model:ir.model.fields,field_description:crm.field_crm_lost_reason__id
 #: model:ir.model.fields,field_description:crm.field_crm_merge_opportunity__id
-#: model:ir.model.fields,field_description:crm.field_crm_opportunity_report__id
 #: model:ir.model.fields,field_description:crm.field_crm_partner_binding__id
 #: model:ir.model.fields,field_description:crm.field_crm_stage__id
 msgid "ID"
-msgstr "Azonosító ID"
+msgstr "Azonosító"
 
 #. module: crm
-#: model:ir.model.fields,help:crm.field_crm_team__alias_parent_thread_id
-msgid ""
-"ID of the parent record holding the alias (example: project holding the task"
-" creation alias)"
-msgstr ""
-"A szülő feljegyzés azonosító ID-je fogja az álneveket (például: projekt "
-"fogja a részfeladat létrehozó álnevet)"
+#: model:ir.model.fields,help:crm.field_crm_lead__message_unread
+msgid "If checked new messages require your attention."
+msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
 
 #. module: crm
-#: model:ir.model.fields,help:crm.field_crm_lead__opt_out
-msgid ""
-"If opt-out is checked, this contact has refused to receive emails for mass "
-"mailing and marketing campaign. Filter 'Available for Mass Mailing' allows "
-"users to filter the leads when performing mass mailing."
+#: model:ir.model.fields,help:crm.field_crm_lead__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
+
+#. module: crm
+#: model:ir.model.fields,help:crm.field_crm_lead__message_has_error
+msgid "If checked, some messages have a delivery error."
 msgstr ""
-"Ha az elutasítás ki van jelölve, akkor ez a kapcsolat nem fog e-mail kapni a"
-" tömeges e-mail küldésből és értékesítési kampányból. A 'Tömeges levelezésre"
-" elérhető' szűrővel a felhasználók szűrhetik az érdeklődőket a tömeges levél"
-" létrehozásakor."
+
+#. module: crm
+#: model:ir.model.fields,help:crm.field_res_partner__team_id
+msgid ""
+"If set, this Sales Team will be used for sales and assignations related to "
+"this partner"
+msgstr ""
+
+#. module: crm
+#: model:ir.model.fields,help:crm.field_crm_lead__is_blacklisted
+#: model:ir.model.fields,help:crm.field_crm_lead__partner_is_blacklisted
+msgid ""
+"If the email address is on the blacklist, the contact won't receive mass "
+"mailing anymore, from any list"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead2opportunity_partner_mass__force_assignation
@@ -1156,25 +1057,61 @@ msgid "Import & Synchronize"
 msgstr "Import & Szinkronizáció"
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_lost_reason_view_search
+#: code:addons/crm/models/crm_lead.py:1230
+#, python-format
+msgid "Import Template for Leads & Opportunities"
+msgstr ""
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_lost_reason_view_search
 msgid "Include archived"
 msgstr "Archiváltakat beleveszi"
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
-#: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
+#: model:crm.lead.tag,name:crm.categ_oppor4
+msgid "Information"
+msgstr "Információ"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
+msgid "Initial Contact Information"
+msgstr ""
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_leads
+#: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "Internal Notes"
 msgstr "Belső jegyzetek"
 
 #. module: crm
+#: selection:crm.team,dashboard_graph_model:0
+msgid "Invoices"
+msgstr "Számlák"
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_crm_lead__message_is_follower
+msgid "Is Follower"
+msgstr "Ő egy követő"
+
+#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__function
 msgid "Job Position"
-msgstr "Állás pozíció"
+msgstr "Beosztás"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__kanban_state
 msgid "Kanban State"
-msgstr "Kanban státusz"
+msgstr "Kanbanállapot"
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_digest_digest__kpi_crm_lead_created_value
+msgid "Kpi Crm Lead Created Value"
+msgstr ""
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_digest_digest__kpi_crm_opportunities_won_value
+msgid "Kpi Crm Opportunities Won Value"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__date_action_last
@@ -1190,23 +1127,15 @@ msgstr "Utolsó művelet"
 #: model:ir.model.fields,field_description:crm.field_crm_lead_tag____last_update
 #: model:ir.model.fields,field_description:crm.field_crm_lost_reason____last_update
 #: model:ir.model.fields,field_description:crm.field_crm_merge_opportunity____last_update
-#: model:ir.model.fields,field_description:crm.field_crm_opportunity_report____last_update
 #: model:ir.model.fields,field_description:crm.field_crm_partner_binding____last_update
 #: model:ir.model.fields,field_description:crm.field_crm_stage____last_update
 msgid "Last Modified on"
-msgstr "Utoljára frissítve ekkor"
-
-#. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_activity_report_view_search
-#: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
-msgid "Last Month"
-msgstr "Előző hónap"
+msgstr "Legutóbb frissítve"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__date_last_stage_update
-#: model:ir.model.fields,field_description:crm.field_crm_opportunity_report__date_last_stage_update
 msgid "Last Stage Update"
-msgstr "Utolsó szint frissítése"
+msgstr "Szakasz legutóbbi frissítése"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner__write_uid
@@ -1219,11 +1148,12 @@ msgstr "Utolsó szint frissítése"
 #: model:ir.model.fields,field_description:crm.field_crm_partner_binding__write_uid
 #: model:ir.model.fields,field_description:crm.field_crm_stage__write_uid
 msgid "Last Updated by"
-msgstr "Utoljára frissítette"
+msgstr "Legutóbb frissítette"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner__write_date
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass__write_date
+#: model:ir.model.fields,field_description:crm.field_crm_lead__write_date
 #: model:ir.model.fields,field_description:crm.field_crm_lead_lost__write_date
 #: model:ir.model.fields,field_description:crm.field_crm_lead_tag__write_date
 #: model:ir.model.fields,field_description:crm.field_crm_lost_reason__write_date
@@ -1231,46 +1161,34 @@ msgstr "Utoljára frissítette"
 #: model:ir.model.fields,field_description:crm.field_crm_partner_binding__write_date
 #: model:ir.model.fields,field_description:crm.field_crm_stage__write_date
 msgid "Last Updated on"
-msgstr "Utoljára frissítve "
+msgstr "Legutóbb frissítve "
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
-#: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Late Activities"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:893
+#: code:addons/crm/models/crm_lead.py:913
 #: selection:crm.activity.report,lead_type:0 selection:crm.lead,type:0
-#: selection:crm.opportunity.report,type:0
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__lead_id
-#: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
-#: model:ir.ui.view,arch_db:crm.crm_case_tree_view_leads
-#: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
+#: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_leads
+#: model_terms:ir.ui.view,arch_db:crm.crm_case_tree_view_leads
+#: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 #, python-format
 msgid "Lead"
 msgstr "Érdeklődő"
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
-msgid "Lead / Customer"
-msgstr "Érdeklődés / Vevő"
+#: model:ir.model,name:crm.model_crm_lead_tag
+msgid "Lead Tag"
+msgstr ""
 
 #. module: crm
-#: model:mail.message.subtype,name:crm.mt_salesteam_lead
-msgid "Lead Created"
-msgstr "Érdeklődés létrehozva"
-
-#. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_lead_tag_form
-#: model:ir.ui.view,arch_db:crm.crm_lead_tag_tree
+#: model_terms:ir.ui.view,arch_db:crm.crm_lead_tag_form
+#: model_terms:ir.ui.view,arch_db:crm.crm_lead_tag_tree
 msgid "Lead Tags"
 msgstr "Érdeklődés címkéi"
-
-#. module: crm
-#: model:ir.model,name:crm.model_crm_lead2opportunity_partner
-msgid "Lead To Opportunity Partner"
-msgstr "Érdeklődésből lehetőség partner"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead
@@ -1282,59 +1200,54 @@ msgstr "Érdeklődő/Lehetőség"
 #: model:ir.actions.act_window,name:crm.crm_lead_all_leads
 #: model:ir.model.fields,field_description:crm.field_crm_team__use_leads
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__group_use_lead
+#: model:ir.ui.menu,name:crm.crm_menu_leads
 #: model:ir.ui.menu,name:crm.crm_opportunity_report_menu_lead
 #: model:ir.ui.menu,name:crm.menu_crm_leads
-#: model:ir.ui.view,arch_db:crm.crm_activity_report_view_search
-#: model:ir.ui.view,arch_db:crm.crm_case_tree_view_leads
-#: model:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
-#: model:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
+#: model_terms:ir.ui.view,arch_db:crm.crm_case_tree_view_leads
+#: model_terms:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
+#: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 msgid "Leads"
 msgstr "Érdeklődések"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_report_crm_lead_salesteam
 #: model:ir.actions.act_window,name:crm.crm_opportunity_report_action_lead
-#: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_graph_lead
-#: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_pivot_lead
+#: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_graph_lead
+#: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_pivot_lead
 msgid "Leads Analysis"
 msgstr "Érdeklődők elemzése"
 
 #. module: crm
-#: model:ir.actions.act_window,help:crm.action_report_crm_lead_salesteam
+#: model_terms:ir.actions.act_window,help:crm.action_report_crm_lead_salesteam
 msgid ""
 "Leads Analysis allows you to check different CRM related information like "
 "the treatment delays or number of leads per state. You can sort out your "
 "leads analysis by different groups to get accurate grained analysis."
 msgstr ""
-"Érdeklődési elemzés lehetővé teszi a CRM ügyfélkapcsolat kezelő rendszerrel "
-"kapcsolatos információk ellenőrzését, mint eljárás késedelem vagy a "
-"szakaszonkénti érdeklődések száma. Kiválaszthatja az érdeklődések "
-"elemzéséből a különböző csoportokat a pontos részletezett elemzésekhez."
+"Az Érdeklődések elemzése lehetővé teszi a CRM alkalmazással kapcsolatos "
+"információk ellenőrzését, például késedelmek, szakaszonkénti érdeklődések "
+"száma, stb. Az érdeklődések elemzése során az adatokat különféle módokon "
+"csoportosíthatja, így részletesebb kimutatásokat kaphat."
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
+#: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_leads
 msgid "Leads Form"
 msgstr "Érdeklődők űrlapja"
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_case_calendar_view_leads
+#: model_terms:ir.ui.view,arch_db:crm.crm_case_calendar_view_leads
 msgid "Leads Generation"
 msgstr "Érdeklődés generálása"
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 msgid "Leads that are assigned to me"
 msgstr "Érdeklődés ami hozzám lett rendelve"
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
-msgid "Leads that did not ask not to be included in mass mailing campaigns"
-msgstr ""
-"Érdeklődések melyek nem lettek megkérdezve, hogy benne legyenek a tömeges "
-"levelezés kampányba"
-
-#. module: crm
-#: model:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
 msgid ""
 "Leads that you selected that have duplicates. If the list is empty, it means"
 " that no duplicates were found"
@@ -1343,7 +1256,7 @@ msgstr ""
 " hogy nem talált másolatokat"
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
 msgid "Leads with existing duplicates (for information)"
 msgstr "Érdeklődések meglévő másolatokkal (információként)"
 
@@ -1354,13 +1267,12 @@ msgstr "Érdeklődések/lehetőségek"
 
 #. module: crm
 #. openerp-web
-#: code:addons/crm/static/src/js/tour.js:41
+#: code:addons/crm/static/src/js/tour.js:47
 #, python-format
 msgid "Let's schedule an activity."
 msgstr ""
 
 #. module: crm
-#: selection:crm.lead.convert2task,action:0
 #: selection:crm.lead2opportunity.partner,action:0
 #: selection:crm.partner.binding,action:0
 msgid "Link to an existing customer"
@@ -1368,21 +1280,18 @@ msgstr "Összekapcsolás egy meglévő vevőhöz"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__partner_id
-msgid "Linked partner (optional). Usually created when converting the lead."
-msgstr ""
-"Kapcsolat partner (választható). Rendszerint az érdeklődő átalakításánál "
-"lesz létrehozva."
-
-#. module: crm
-#: model:ir.ui.view,arch_db:crm.res_config_settings_view_form
-msgid "Look up company information (name, logo, etc.)"
+msgid ""
+"Linked partner (optional). Usually created when converting the lead. You can"
+" find a partner by its Name, TIN, Email or Internal Reference."
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:1102
-#: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
-#: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
-#: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
+#: code:addons/crm/models/crm_lead.py:1122
+#: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_leads
+#: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
+#: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 #, python-format
 msgid "Lost"
 msgstr "Meghiúsult"
@@ -1391,10 +1300,10 @@ msgstr "Meghiúsult"
 #: model:ir.actions.act_window,name:crm.crm_lead_lost_action
 #: model:ir.model.fields,field_description:crm.field_crm_lead__lost_reason
 #: model:ir.model.fields,field_description:crm.field_crm_lead_lost__lost_reason_id
-#: model:ir.model.fields,field_description:crm.field_crm_opportunity_report__lost_reason
-#: model:ir.ui.view,arch_db:crm.crm_lead_lost_view_form
-#: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
-#: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
+#: model_terms:ir.ui.view,arch_db:crm.crm_lead_lost_view_form
+#: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Lost Reason"
 msgstr "Meghiúsulás oka"
 
@@ -1405,9 +1314,19 @@ msgid "Lost Reasons"
 msgstr "Meghiúsulás okai"
 
 #. module: crm
-#: selection:crm.lead,priority:0 selection:crm.opportunity.report,priority:0
+#: selection:crm.lead,priority:0
 msgid "Low"
 msgstr "Alacsony"
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_crm_lead__message_main_attachment_id
+msgid "Main Attachment"
+msgstr ""
+
+#. module: crm
+#: model:mail.activity.type,name:crm.mail_activity_demo_make_quote
+msgid "Make Quote"
+msgstr "Készítsen Árajánlatot"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__generate_lead_from_alias
@@ -1415,7 +1334,7 @@ msgid "Manual Assignation of Emails"
 msgstr ""
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Manual Assignation of Incoming Emails"
 msgstr ""
 
@@ -1430,14 +1349,19 @@ msgid "Mark Late Activities as Done"
 msgstr ""
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
+#: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "Mark Lost"
 msgstr "Meghiúsultnak jelölje"
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
+#: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "Mark Won"
 msgstr "Megnyertnek jelölve"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_leads
+msgid "Mark as Lost"
+msgstr ""
 
 #. module: crm
 #: model:ir.actions.server,name:crm.action_mark_as_lost
@@ -1445,24 +1369,20 @@ msgid "Mark as lost"
 msgstr "Elveszettnek jelölje"
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
+#: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "Marketing"
 msgstr "Marketing"
 
 #. module: crm
-#: model:ir.model,name:crm.model_crm_lead2opportunity_partner_mass
-msgid "Mass Lead To Opportunity Partner"
-msgstr "Tömeges érdeklődésből lehetőség partner"
-
-#. module: crm
-#: model:ir.model.fields,field_description:crm.field_crm_opportunity_report__medium_id
-#: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
-#: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
+#: selection:crm.lead,priority:0
+#: model:ir.model.fields,field_description:crm.field_crm_lead__medium_id
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Medium"
 msgstr "Közepes"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:938
+#: code:addons/crm/models/crm_lead.py:958
 #, python-format
 msgid "Meeting scheduled at '%s'<br> Subject: %s <br> Duration: %s hour(s)"
 msgstr ""
@@ -1472,31 +1392,30 @@ msgstr ""
 #: model:ir.actions.act_window,name:crm.act_crm_opportunity_calendar_event_new
 #: model:ir.actions.act_window,name:crm.calendar_event_partner
 #: model:ir.model.fields,field_description:crm.field_res_partner__meeting_ids
-#: model:ir.model.fields,field_description:crm.field_res_users__meeting_ids
-#: model:ir.ui.view,arch_db:crm.view_partners_form_crm1
+#: model_terms:ir.ui.view,arch_db:crm.view_partners_form_crm1
 msgid "Meetings"
 msgstr "Találkozók"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_merge_opportunities
-#: model:ir.ui.view,arch_db:crm.merge_opportunity_form
+#: model_terms:ir.ui.view,arch_db:crm.merge_opportunity_form
 msgid "Merge"
 msgstr "Összevonás"
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.merge_opportunity_form
+#: model_terms:ir.ui.view,arch_db:crm.merge_opportunity_form
 msgid "Merge Leads/Opportunities"
 msgstr "Érdeklődések/Lehetőségek  összefésülése"
+
+#. module: crm
+#: model:ir.model,name:crm.model_crm_merge_opportunity
+msgid "Merge Opportunities"
+msgstr ""
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.merge_opportunity_act
 msgid "Merge leads/opportunities"
 msgstr "Érdeklődés/Lehetőség eggyesítése"
-
-#. module: crm
-#: model:ir.model,name:crm.model_crm_merge_opportunity
-msgid "Merge opportunities"
-msgstr "Lehetőségek öszzefésülése"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead2opportunity_partner_mass__deduplicate
@@ -1511,31 +1430,41 @@ msgid "Merge with existing opportunities"
 msgstr "Egyesít meglévő lehetőséggel"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:539
+#: code:addons/crm/models/crm_lead.py:556
 #, python-format
 msgid "Merged lead"
 msgstr "Érdeklődés összefésülése"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:570
+#: code:addons/crm/models/crm_lead.py:588
 #, python-format
 msgid "Merged leads"
 msgstr "Össztefésült érdeklődések"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:570
+#: code:addons/crm/models/crm_lead.py:588
 #, python-format
 msgid "Merged opportunities"
 msgstr "Lehetőségek összefésülése"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:539
+#: code:addons/crm/models/crm_lead.py:556
 #, python-format
 msgid "Merged opportunity"
 msgstr "Egyesített lehetőség"
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
+#: model:ir.model.fields,field_description:crm.field_crm_lead__message_has_error
+msgid "Message Delivery error"
+msgstr ""
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_crm_lead__message_ids
+msgid "Messages"
+msgstr "Üzenetek"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "Misc"
 msgstr "Vegyes"
 
@@ -1545,28 +1474,23 @@ msgid "Mobile"
 msgstr "Mobilszám"
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_activity_report_view_search
-msgid "Month"
-msgstr "Hónap"
-
-#. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_activity_report_view_search
-#: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
+#: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
 msgid "My Activities"
 msgstr "Tevékenységeim"
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 msgid "My Leads"
 msgstr "Érdeklődéseim"
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
+#: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 msgid "My Opportunities"
 msgstr "Lehetőségeim"
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
+#: model:ir.ui.menu,name:crm.menu_crm_opportunities
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "My Pipeline"
 msgstr "Folyamatom"
 
@@ -1582,15 +1506,35 @@ msgid "New"
 msgstr "Új"
 
 #. module: crm
+#: model:ir.model.fields,field_description:crm.field_digest_digest__kpi_crm_lead_created
+msgid "New Leads/Opportunities"
+msgstr ""
+
+#. module: crm
 #: model:ir.actions.act_window,name:crm.action_opportunity_form
 msgid "New Opportunity"
 msgstr "Új lehetőség"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lead_action_activities
-#: model:ir.ui.view,arch_db:crm.crm_lead_view_tree_activity
+#: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_tree_activity
 msgid "Next Activities"
 msgstr "Következő tevékenységek"
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_crm_lead__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr ""
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_crm_lead__activity_summary
+msgid "Next Activity Summary"
+msgstr "Következő tevékenység összegzése"
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_crm_lead__activity_type_id
+msgid "Next Activity Type"
+msgstr ""
 
 #. module: crm
 #: selection:crm.lead,kanban_state:0
@@ -1603,13 +1547,13 @@ msgid "Next activity late"
 msgstr "Következő művelet késve"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:1162
+#: code:addons/crm/models/crm_lead.py:1190
 #, python-format
 msgid "No Subject"
 msgstr "Nincs tárgy"
 
 #. module: crm
-#: model:ir.actions.act_window,help:crm.crm_lead_action_activities
+#: model_terms:ir.actions.act_window,help:crm.crm_lead_action_activities
 msgid "No next activity"
 msgstr ""
 
@@ -1619,15 +1563,9 @@ msgid "No next activity planned"
 msgstr "Nincs következő művelet megtervezve"
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
-#: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "No salesperson"
 msgstr "Nincs értékesítő"
-
-#. module: crm
-#: selection:crm.lead,priority:0 selection:crm.opportunity.report,priority:0
-msgid "Normal"
-msgstr "Normál"
 
 #. module: crm
 #: model:crm.lost.reason,name:crm.lost_reason_3
@@ -1640,14 +1578,24 @@ msgid "Notes"
 msgstr "Megjegyzések"
 
 #. module: crm
-#: model:ir.model.fields,help:crm.field_crm_opportunity_report__delay_close
-msgid "Number of Days to close the case"
-msgstr "Napok száma az eset lezárásáig"
+#: model:ir.model.fields,field_description:crm.field_crm_lead__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Műveletek száma"
 
 #. module: crm
-#: model:ir.model.fields,help:crm.field_crm_opportunity_report__delay_open
-msgid "Number of Days to open the case"
-msgstr "Napok száma az eset megnyitásáig"
+#: model:ir.model.fields,field_description:crm.field_crm_lead__message_has_error_counter
+msgid "Number of error"
+msgstr ""
+
+#. module: crm
+#: model:ir.model.fields,help:crm.field_crm_lead__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "Üzenetek száma, melyek akciót igényelnek"
+
+#. module: crm
+#: model:ir.model.fields,help:crm.field_crm_lead__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__opportunities_count
@@ -1655,7 +1603,12 @@ msgid "Number of open opportunities"
 msgstr ""
 
 #. module: crm
-#: model:ir.actions.act_window,help:crm.crm_case_form_view_salesteams_opportunity
+#: model:ir.model.fields,help:crm.field_crm_lead__message_unread_counter
+msgid "Number of unread messages"
+msgstr "Olvasatlan üzenetek száma"
+
+#. module: crm
+#: model_terms:ir.actions.act_window,help:crm.crm_case_form_view_salesteams_opportunity
 msgid ""
 "Odoo helps you keep track of your sales pipeline to follow\n"
 "                    up potential sales and better forecast your future revenues."
@@ -1664,13 +1617,18 @@ msgstr ""
 "                    üzletek nyomon követésében és a jövőbeni bevételei jobb előrejelzésében."
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
+#: model_terms:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
 msgid "Open Opportunities"
 msgstr ""
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
+#: model_terms:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
 msgid "Open Opportunity"
+msgstr ""
+
+#. module: crm
+#: model:ir.model,name:crm.model_crm_lost_reason
+msgid "Opp. Lost Reason"
 msgstr ""
 
 #. module: crm
@@ -1680,26 +1638,25 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner__opportunity_ids
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass__opportunity_ids
 #: model:ir.model.fields,field_description:crm.field_res_partner__opportunity_ids
-#: model:ir.model.fields,field_description:crm.field_res_users__opportunity_ids
 #: model:ir.ui.menu,name:crm.menu_crm_config_opportunity
-#: model:ir.ui.view,arch_db:crm.crm_activity_report_view_search
-#: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
-#: model:ir.ui.view,arch_db:crm.crm_case_graph_view_leads
-#: model:ir.ui.view,arch_db:crm.crm_case_pivot_view_leads
-#: model:ir.ui.view,arch_db:crm.crm_case_tree_view_oppor
-#: model:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
-#: model:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner
-#: model:ir.ui.view,arch_db:crm.view_partners_form_crm1
+#: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
+#: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
+#: model_terms:ir.ui.view,arch_db:crm.crm_case_tree_view_oppor
+#: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_graph
+#: model_terms:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner
+#: model_terms:ir.ui.view,arch_db:crm.view_partners_form_crm1
 msgid "Opportunities"
 msgstr "Lehetőségek"
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
+#: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 msgid "Opportunities Analysis"
 msgstr "Lehetőségek elemzése"
 
 #. module: crm
-#: model:ir.actions.act_window,help:crm.action_report_crm_opportunity_salesteam
+#: model_terms:ir.actions.act_window,help:crm.action_report_crm_opportunity_salesteam
 msgid ""
 "Opportunities Analysis gives you an instant access to your opportunities "
 "with information such as the expected revenue, planned cost, missed "
@@ -1709,44 +1666,43 @@ msgid ""
 msgstr ""
 
 #. module: crm
-#: model:ir.filters,name:crm.filter_opportunity_opportunities_cohort
-msgid "Opportunities Cohort"
-msgstr "Lehetőség csoport"
-
-#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__opportunities_amount
 msgid "Opportunities Revenues"
 msgstr ""
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
+#: model:ir.model.fields,field_description:crm.field_digest_digest__kpi_crm_opportunities_won
+msgid "Opportunities Won"
+msgstr ""
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Opportunities that are assigned to me"
 msgstr "Hozzám iktatott lehetőségek"
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Opportunities with a date of Expected Closing which is in the past"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:438
-#: code:addons/crm/models/crm_lead.py:868
+#: code:addons/crm/models/crm_lead.py:446
+#: code:addons/crm/models/crm_lead.py:888
 #: selection:crm.activity.report,lead_type:0 selection:crm.lead,type:0
-#: selection:crm.opportunity.report,type:0
 #: model:ir.model.fields,field_description:crm.field_calendar_event__opportunity_id
 #: model:ir.model.fields,field_description:crm.field_crm_lead__name
 #: model:ir.model.fields,field_description:crm.field_res_partner__opportunity_count
-#: model:ir.model.fields,field_description:crm.field_res_users__opportunity_count
-#: model:ir.ui.view,arch_db:crm.crm_case_tree_view_oppor
-#: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
-#: model:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
-#: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
+#: model_terms:ir.ui.view,arch_db:crm.crm_case_tree_view_oppor
+#: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
+#: model_terms:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 #, python-format
 msgid "Opportunity"
 msgstr "Lehetőség"
 
 #. module: crm
 #: model:mail.message.subtype,name:crm.mt_lead_create
+#: model:mail.message.subtype,name:crm.mt_salesteam_lead
 msgid "Opportunity Created"
 msgstr ""
 
@@ -1762,7 +1718,7 @@ msgid "Opportunity Stage Changed"
 msgstr "Lehetőség szintje megváltozott"
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.view_create_opportunity_simplified
+#: model_terms:ir.ui.view,arch_db:crm.view_create_opportunity_simplified
 msgid "Opportunity Title"
 msgstr "Lehetőség címe"
 
@@ -1788,67 +1744,24 @@ msgid "Opportunity won"
 msgstr "Megnyert lehetőség"
 
 #. module: crm
-#: model:ir.model.fields,field_description:crm.field_crm_lead__opt_out
-msgid "Opt-Out"
-msgstr "Kilép"
+#: model:crm.lead.tag,name:crm.categ_oppor8
+msgid "Other"
+msgstr "Egyéb"
 
 #. module: crm
-#: model:ir.model.fields,help:crm.field_crm_team__alias_force_thread_id
-msgid ""
-"Optional ID of a thread (record) to which all incoming messages will be "
-"attached, even if they did not reply to it. If set, this will disable the "
-"creation of new records completely."
-msgstr ""
-"Az összefűzés (feljegyzés) választható ID azonosítója, amely minden "
-"beérkezett üzenethez hozzá lesz mellékleve, még akkor is ha nem válaszoltak "
-"rá. Ha beállított, akkor teljesen ki lesz kapcsolva az új feljegyzés "
-"létrehozása."
+#: selection:crm.lead,activity_state:0
+msgid "Overdue"
+msgstr "lejárt"
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Overdue Opportunities"
 msgstr ""
 
 #. module: crm
-#: model:ir.model.fields,field_description:crm.field_crm_opportunity_report__delay_expected
-msgid "Overpassed Deadline"
-msgstr "Túllépett határidő"
-
-#. module: crm
-#: model:ir.model.fields,field_description:crm.field_crm_team__alias_user_id
-msgid "Owner"
-msgstr "Tulajdonos"
-
-#. module: crm
-#: model:ir.model.fields,field_description:crm.field_crm_team__alias_parent_model_id
-msgid "Parent Model"
-msgstr "Forrásmodell"
-
-#. module: crm
-#: model:ir.model.fields,field_description:crm.field_crm_team__alias_parent_thread_id
-msgid "Parent Record Thread ID"
-msgstr "Szülő feljegyzés folyamat azonosító ID"
-
-#. module: crm
-#: model:ir.model.fields,help:crm.field_crm_team__alias_parent_model_id
-msgid ""
-"Parent model holding the alias. The model holding the alias reference is not"
-" necessarily the model given by alias_model_id (example: project "
-"(parent_model) and task (model))"
-msgstr ""
-"Szülő modell fogja az álnevet. Az álnév hivatkozást megfogó modell\n"
-"nem szükségszerűen megadott az alias_model_id -ben.\n"
-"(például: projekt (parent_model) és folyamat (model))"
-
-#. module: crm
-#: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
-msgid "Partner"
-msgstr "Partner"
-
-#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__partner_address_email
 msgid "Partner Contact Email"
-msgstr "Partner kapcsolati Email"
+msgstr "Partner kapcsolattartó e-mail"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__partner_address_name
@@ -1856,12 +1769,28 @@ msgid "Partner Contact Name"
 msgstr "Partner kapcsolattartó neve"
 
 #. module: crm
+#: model:ir.model.fields,field_description:crm.field_crm_lead__partner_address_phone
+msgid "Partner Contact Phone"
+msgstr ""
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_crm_lead__partner_is_blacklisted
+msgid "Partner is blacklisted"
+msgstr ""
+
+#. module: crm
+#: model:ir.model,name:crm.model_crm_partner_binding
+msgid "Partner linking/binding in CRM wizard"
+msgstr ""
+
+#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__partner_id
 msgid "Partner/Customer"
-msgstr "Partnerek/Vásárlók"
+msgstr "Partner/Ügyél"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__phone
+#: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "Phone"
 msgstr "Telefon"
 
@@ -1871,13 +1800,12 @@ msgid "Phone Formatting"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/models/crm_team.py:165
+#: code:addons/crm/models/crm_team.py:155
+#: selection:crm.team,dashboard_graph_model:0
 #: model:ir.actions.act_window,name:crm.crm_lead_opportunities_tree_view
 #: model:ir.model.fields,field_description:crm.field_crm_team__use_opportunities
-#: model:ir.ui.menu,name:crm.crm_menu_pipeline
 #: model:ir.ui.menu,name:crm.crm_opportunity_report_menu
 #: model:ir.ui.menu,name:crm.menu_crm_config_lead
-#: model:ir.ui.menu,name:crm.menu_crm_opportunities
 #, python-format
 msgid "Pipeline"
 msgstr "Folyamat"
@@ -1886,13 +1814,14 @@ msgstr "Folyamat"
 #: model:ir.actions.act_window,name:crm.action_report_crm_opportunity_salesteam
 #: model:ir.actions.act_window,name:crm.crm_opportunity_report_action
 #: model:ir.actions.act_window,name:crm.crm_opportunity_report_action_graph
-#: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_graph
-#: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_pivot
+#: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_pivot
+#: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_graph
+#: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_pivot
 msgid "Pipeline Analysis"
-msgstr "Folyamat elemzések"
+msgstr "Folyamatelemzés"
 
 #. module: crm
-#: model:ir.actions.act_window,help:crm.crm_opportunity_report_action
+#: model_terms:ir.actions.act_window,help:crm.crm_opportunity_report_action
 msgid ""
 "Pipeline Analysis gives you an instant access to\n"
 "your opportunities with information such as the expected revenue, planned cost,\n"
@@ -1907,23 +1836,28 @@ msgstr ""
 "csoportokkal történő időszaki árvizsgálatára."
 
 #. module: crm
-#: model:ir.actions.act_window,help:crm.crm_opportunity_report_action_graph
+#: model_terms:ir.actions.act_window,help:crm.crm_opportunity_report_action_graph
 msgid ""
 "Pipeline Analysis gives you an instant access to\n"
 "your opportunities with information such as the expected revenue, planned cost,\n"
 "missed deadlines or the number of interactions per opportunity. This report is\n"
 "mainly used by the sales manager in order to periodically review the pipeline\n"
-"with the the sales channel."
+"with the the Sales Team."
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/models/crm_team.py:234
+#: code:addons/crm/models/crm_team.py:224
 #, python-format
 msgid "Pipeline: Expected Revenue"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:642
+#: selection:crm.lead,activity_state:0
+msgid "Planned"
+msgstr ""
+
+#. module: crm
+#: code:addons/crm/models/crm_lead.py:660
 #, python-format
 msgid ""
 "Please select more than one element (lead or opportunity) from the list "
@@ -1933,33 +1867,18 @@ msgstr ""
 "lista nézetből."
 
 #. module: crm
-#: model:ir.model.fields,help:crm.field_crm_team__alias_contact
-msgid ""
-"Policy to post a message on the document using the mailgateway.\n"
-"- everyone: everyone can post\n"
-"- partners: only authenticated partners\n"
-"- followers: only followers of the related document or members of following channels\n"
-msgstr ""
-"Az üzenetátjáró használatának alapvető irányvonalai a dokumentumra vonatkozó üzenetek kiküldéséhez.\n"
-"- mindenki: mindenki tud üzenni\n"
-"- ügyfelek: csak a hitelesített partnerek\n"
-"- követők: csak az idevonatkozó dokumentum követői vagy a következő csatornák tagjai\n"
-
-#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__priority
-#: model:ir.model.fields,field_description:crm.field_crm_opportunity_report__priority
 msgid "Priority"
-msgstr "Elsőbbségi"
+msgstr "Prioritás"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage__legend_priority
 msgid "Priority Management Explanation"
-msgstr "Priorizálás kezelésének leírása"
+msgstr "A prioritáskezelés leírása"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__probability
 #: model:ir.model.fields,field_description:crm.field_crm_lead__probability
-#: model:ir.model.fields,field_description:crm.field_crm_opportunity_report__probability
 msgid "Probability"
 msgstr "Valószínűség"
 
@@ -1969,14 +1888,19 @@ msgid "Probability (%)"
 msgstr "Valószínűség (%)"
 
 #. module: crm
-#: model:ir.model.fields,field_description:crm.field_crm_opportunity_report__expected_revenue
-msgid "Probable Turnover"
-msgstr "Valószínű Tényleges árbevétel"
+#: model:crm.lead.tag,name:crm.categ_oppor1
+msgid "Product"
+msgstr "Termék"
 
 #. module: crm
 #: model:crm.stage,name:crm.stage_lead3
 msgid "Proposition"
 msgstr "Javaslat"
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_crm_lead__expected_revenue
+msgid "Prorated Revenue"
+msgstr ""
 
 #. module: crm
 #: model:crm.stage,name:crm.stage_lead2
@@ -1986,21 +1910,12 @@ msgstr "Minősített"
 #. module: crm
 #. openerp-web
 #: code:addons/crm/static/src/js/tour.js:13
+#: code:addons/crm/static/src/js/tour.js:18
 #, python-format
 msgid ""
-"Ready to boost your sales? Your <b>Pipeline</b> can be found here, under "
-"<b>CRM</b> app."
+"Ready to boost your sales? Your <b>Pipeline</b> can be found here, under the"
+" <b>CRM</b> app."
 msgstr ""
-
-#. module: crm
-#: model:ir.model,name:crm.model_crm_lost_reason
-msgid "Reason for loosing leads"
-msgstr "Érdeklődések meghiúsulásának oka"
-
-#. module: crm
-#: model:ir.model.fields,field_description:crm.field_crm_team__alias_force_thread_id
-msgid "Record Thread ID"
-msgstr "Feljegyzés összefűzési azonosító ID"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__referred
@@ -2010,61 +1925,72 @@ msgstr "Előterjesztette"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner__action
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass__action
-#: model:ir.model.fields,field_description:crm.field_crm_lead_convert2task__action
 #: model:ir.model.fields,field_description:crm.field_crm_partner_binding__action
 msgid "Related Customer"
 msgstr "Ide vonatkozó vevő"
 
 #. module: crm
-#: model:mail.template,subject:crm.email_template_opportunity_reminder_mail
-msgid ""
-"Reminder: Lead ${object.name} from ${object.partner_id != False and "
-"object.partner_id.name or object.contact_name}"
-msgstr ""
-"Emlékeztető: Lehetőség ${object.name} ettől ${object.partner_id != False and"
-" object.partner_id.name or object.contact_name}"
-
-#. module: crm
 #: model:ir.ui.menu,name:crm.crm_menu_report
 msgid "Reporting"
-msgstr "Riport készítés"
+msgstr "Riportkészítés"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage__requirements
-#: model:ir.ui.view,arch_db:crm.crm_stage_form
+#: model_terms:ir.ui.view,arch_db:crm.crm_stage_form
 msgid "Requirements"
 msgstr "Követelmények"
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
+#: model:ir.model.fields,field_description:crm.field_crm_lead__activity_user_id
+msgid "Responsible User"
+msgstr "Felelős felhasználó"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_leads
+#: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "Restore"
 msgstr "Visszaállít"
 
 #. module: crm
+#: selection:crm.team,dashboard_graph_model:0
+#: model:ir.ui.menu,name:crm.crm_menu_sales
+msgid "Sales"
+msgstr "Értékesítés"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
+msgid "Sales Channel"
+msgstr "Értékesítési csatorna"
+
+#. module: crm
 #: model:ir.model,name:crm.model_crm_team
+msgid "Sales Channels"
+msgstr ""
+
+#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__team_id
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner__team_id
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass__team_id
 #: model:ir.model.fields,field_description:crm.field_crm_lead__team_id
 #: model:ir.model.fields,field_description:crm.field_crm_merge_opportunity__team_id
-#: model:ir.model.fields,field_description:crm.field_crm_opportunity_report__team_id
 #: model:ir.model.fields,field_description:crm.field_crm_stage__team_id
-#: model:ir.ui.view,arch_db:crm.crm_activity_report_view_search
-#: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
-#: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
-#: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
-msgid "Sales Channel"
-msgstr "Értékesítési csatorna"
+#: model:ir.model.fields,field_description:crm.field_res_partner__team_id
+#: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
+#: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
+msgid "Sales Team"
+msgstr "Értékesítési csapat"
 
 #. module: crm
-#: model:ir.ui.menu,name:crm.sales_team_menu_report_crm
-msgid "Sales Channel Dashboard"
+#: code:addons/crm/models/crm_lead.py:1125
+#, python-format
+msgid "Sales Team Settings"
 msgstr ""
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.crm_team_config
-msgid "Sales Channels"
-msgstr ""
+msgid "Sales Teams"
+msgstr "Értékesítési csapatok"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass__user_ids
@@ -2078,26 +2004,25 @@ msgstr "Értékesítő"
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass__user_id
 #: model:ir.model.fields,field_description:crm.field_crm_lead__user_id
 #: model:ir.model.fields,field_description:crm.field_crm_merge_opportunity__user_id
-#: model:ir.model.fields,field_description:crm.field_crm_opportunity_report__user_id
-#: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
-#: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
-#: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
+#: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Salesperson"
 msgstr "Értékesítő"
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 msgid "Search Leads"
 msgstr "Potenciális ügyfelek közötti kezelés"
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_lost_reason_view_search
-#: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
+#: model_terms:ir.ui.view,arch_db:crm.crm_lost_reason_view_search
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Search Opportunities"
 msgstr "Lehetőségek keresése"
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.merge_opportunity_form
+#: model_terms:ir.ui.view,arch_db:crm.merge_opportunity_form
 msgid "Select Leads/Opportunities"
 msgstr "Érdeklődések/lehetőségek kiválasztása"
 
@@ -2112,7 +2037,12 @@ msgid "Sequence"
 msgstr "Sorszám"
 
 #. module: crm
-#: model:ir.actions.act_window,help:crm.crm_stage_action
+#: model:crm.lead.tag,name:crm.categ_oppor3
+msgid "Services"
+msgstr "Szolgáltatások"
+
+#. module: crm
+#: model_terms:ir.actions.act_window,help:crm.crm_stage_action
 msgid "Set a new stage in your opportunity pipeline"
 msgstr ""
 
@@ -2137,33 +2067,31 @@ msgid "Show Lead Menu"
 msgstr "Mutassa az érdeklődés menüt"
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Show all opportunities for which the next action date is before today"
 msgstr ""
 "Mutassa az összes lehetőséget melyre a következő műveleti dátum a mai nap "
 "előtti"
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
-msgid "Show all records which has next action date is before today"
-msgstr ""
-"Mutassa az összes rekordot melyre a következő műveleti dátum a mai nap "
-"előtti"
-
-#. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_activity_report_view_search
-#: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
+#: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
+#: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 msgid "Show only lead"
 msgstr "Csak az Érdeklődések mutatása"
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_activity_report_view_search
-#: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
+#: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
+#: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 msgid "Show only opportunity"
 msgstr "Csak lehetőségek mutatása"
 
 #. module: crm
-#: model:ir.actions.act_window,help:crm.crm_lost_reason_action
+#: model:crm.lead.tag,name:crm.categ_oppor2
+msgid "Software"
+msgstr "Szoftver"
+
+#. module: crm
+#: model_terms:ir.actions.act_window,help:crm.crm_lost_reason_action
 msgid ""
 "Some examples of lost reasons: \"We don't have people/skill\", \"Price too "
 "high\""
@@ -2172,9 +2100,9 @@ msgstr ""
 "magas ár\""
 
 #. module: crm
-#: model:ir.model.fields,field_description:crm.field_crm_opportunity_report__source_id
-#: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
-#: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
+#: model:ir.model.fields,field_description:crm.field_crm_lead__source_id
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Source"
 msgstr "Forrás"
 
@@ -2191,49 +2119,43 @@ msgstr ""
 #: selection:crm.team,dashboard_graph_group_pipeline:0
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__stage_id
 #: model:ir.model.fields,field_description:crm.field_crm_lead__stage_id
-#: model:ir.model.fields,field_description:crm.field_crm_opportunity_report__stage_id
-#: model:ir.ui.view,arch_db:crm.crm_activity_report_view_search
-#: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
-#: model:ir.ui.view,arch_db:crm.crm_stage_form
-#: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
+#: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
+#: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
+#: model_terms:ir.ui.view,arch_db:crm.crm_stage_form
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Stage"
-msgstr "Értékesítési szint"
+msgstr "Szakasz"
 
 #. module: crm
 #: model:mail.message.subtype,name:crm.mt_lead_stage
 msgid "Stage Changed"
-msgstr "Szint megváltoztatva"
+msgstr "Szakasz megváltoztatva"
 
 #. module: crm
-#: model:ir.model.fields,field_description:crm.field_crm_opportunity_report__stage_name
 #: model:ir.model.fields,field_description:crm.field_crm_stage__name
 msgid "Stage Name"
-msgstr "Értékesítési szint neve"
+msgstr "Szakasz neve"
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_lead_stage_search
+#: model_terms:ir.ui.view,arch_db:crm.crm_lead_stage_search
 msgid "Stage Search"
 msgstr "Értékesítési szint keresése"
 
 #. module: crm
 #: model:mail.message.subtype,description:crm.mt_lead_stage
 msgid "Stage changed"
-msgstr "Szint megváltoztatva"
-
-#. module: crm
-#: model:ir.model,name:crm.model_crm_stage
-msgid "Stage of case"
-msgstr "Eset szintje"
+msgstr "Szakasz megváltoztatva"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_stage_action
 #: model:ir.ui.menu,name:crm.menu_crm_lead_stage_act
-#: model:ir.ui.view,arch_db:crm.crm_stage_tree
+#: model_terms:ir.ui.view,arch_db:crm.crm_stage_tree
 msgid "Stages"
-msgstr "Szintek"
+msgstr "Szakaszok"
 
 #. module: crm
-#: model:ir.actions.act_window,help:crm.crm_stage_action
+#: model_terms:ir.actions.act_window,help:crm.crm_stage_action
 msgid ""
 "Stages allow salespersons to easily track how a specific opportunity\n"
 "            is positioned in the sales cycle."
@@ -2243,10 +2165,19 @@ msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__state_id
-#: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
-#: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
+#: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_leads
+#: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "State"
-msgstr "Állapot"
+msgstr "Állam / megye"
+
+#. module: crm
+#: model:ir.model.fields,help:crm.field_crm_lead__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__street
@@ -2254,14 +2185,14 @@ msgid "Street"
 msgstr "Utca"
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
-#: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
+#: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_leads
+#: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "Street 2..."
 msgstr "2. utca..."
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
-#: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
+#: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_leads
+#: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "Street..."
 msgstr "Utca..."
 
@@ -2271,7 +2202,7 @@ msgid "Street2"
 msgstr "Utca2"
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_lead_lost_view_form
+#: model_terms:ir.ui.view,arch_db:crm.crm_lead_lost_view_form
 msgid "Submit"
 msgstr "Beküldés"
 
@@ -2286,15 +2217,15 @@ msgid "Summary"
 msgstr "Összegzés"
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
-#: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Tag"
 msgstr "Címke"
 
 #. module: crm
 #: sql_constraint:crm.lead.tag:0
 msgid "Tag name already exists !"
-msgstr "Címke név már létezik!"
+msgstr "A címkenév már létezik!"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lead_tag_action
@@ -2304,6 +2235,11 @@ msgid "Tags"
 msgstr "Címkék"
 
 #. module: crm
+#: model:ir.ui.menu,name:crm.sales_team_menu_team_pipeline
+msgid "Team Pipelines"
+msgstr ""
+
+#. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_id
 msgid ""
 "The email address associated with this channel. New emails received will "
@@ -2311,24 +2247,9 @@ msgid ""
 msgstr ""
 
 #. module: crm
-#: model:ir.model.fields,help:crm.field_crm_team__alias_model_id
-msgid ""
-"The model (Odoo Document Kind) to which this alias corresponds. Any incoming"
-" email that does not reply to an existing record will cause the creation of "
-"a new record of this model (e.g. a Project Task)"
+#: model:ir.model.fields,help:crm.field_crm_team__dashboard_graph_model
+msgid "The graph this channel will display in the Dashboard.\n"
 msgstr ""
-"a modell (Odoo rendszer Dokumentum féle), amelyhez ez az álnév tartozik. "
-"Bármely bejövő email, mely nem válaszol egy meglévő feljegyzésre egy új "
-"feljegyzést fog létrehozni ehhez a modellhez (pl. egy projekt ügyet)"
-
-#. module: crm
-#: model:ir.model.fields,help:crm.field_crm_team__alias_name
-msgid ""
-"The name of the email alias, e.g. 'jobs' if you want to catch emails for "
-"<jobs@example.odoo.com>"
-msgstr ""
-"Az email álnév neve, pl. 'állások' ha erre az emailcímre szeretné kapni "
-"<allasok@pelda.odoo.com>"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__partner_name
@@ -2338,20 +2259,6 @@ msgid ""
 msgstr ""
 "A jövőben létrehozni kívánt partner vállalat neve ami akkor lesz létrehozva "
 "amikor az érdeklődő át lesz alakítva lehetőséggé"
-
-#. module: crm
-#: model:ir.model.fields,help:crm.field_crm_team__alias_user_id
-msgid ""
-"The owner of records created upon receiving emails on this alias. If this "
-"field is not set the system will attempt to find the right owner based on "
-"the sender (From) address, or will use the Administrator account if no "
-"system user is found for that address."
-msgstr ""
-"A feljegyzés tulajdonosa létrehozva amikor erre az álnévre e-mailek  "
-"érkeznek. Ha ez a mező nincs kialakítva akkor a rendszer megpróbálja "
-"megkeresni a jogos tulajdonost a elküldési (űrlap) címről, vagy az "
-"adminisztrátor felhasználót fogja használni ha nem talált rendszer "
-"felhasználót azzal a címmel."
 
 #. module: crm
 #: sql_constraint:crm.lead:0
@@ -2376,20 +2283,33 @@ msgstr ""
 "email felsorolását vesszővel elválasztva adja meg."
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_activity_report_view_search
-#: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
-msgid "This Month"
-msgstr "Ebben a hónapban"
-
-#. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
+#: model_terms:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
 msgid ""
 "This bar allows to filter the opportunities based on scheduled activities."
 msgstr ""
 
 #. module: crm
+#: model:ir.model.fields,help:crm.field_crm_lead__campaign_id
+msgid ""
+"This is a name that helps you keep track of your different campaign efforts,"
+" e.g. Fall_Drive, Christmas_Special"
+msgstr ""
+
+#. module: crm
+#: model:ir.model.fields,help:crm.field_crm_lead__medium_id
+msgid "This is the method of delivery, e.g. Postcard, Email, or Banner Ad"
+msgstr ""
+
+#. module: crm
+#: model:ir.model.fields,help:crm.field_crm_lead__source_id
+msgid ""
+"This is the source of the link, e.g. Search Engine, another domain, or name "
+"of email list"
+msgstr ""
+
+#. module: crm
 #. openerp-web
-#: code:addons/crm/static/src/js/tour.js:36
+#: code:addons/crm/static/src/js/tour.js:42
 #, python-format
 msgid "This opportunity has <b>no activity planned</b>."
 msgstr ""
@@ -2404,7 +2324,7 @@ msgstr ""
 "mennyire lesz sikeres az ezen a szinten lévő ügy"
 
 #. module: crm
-#: model:ir.actions.act_window,help:crm.crm_opportunity_report_action_lead
+#: model_terms:ir.actions.act_window,help:crm.crm_opportunity_report_action_lead
 msgid "This report analyses the source of your leads."
 msgstr ""
 
@@ -2414,40 +2334,29 @@ msgid ""
 "This stage is folded in the kanban view when there are no records in that "
 "stage to display."
 msgstr ""
-"Ez a szint behajtott a kanban nézetben, ha nincsenek benne megjeleníthető "
+"Ez a szakasz behajtott kanbannézetben, ha nincsenek benne megjeleníthető "
 "rekordok."
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:1068
+#: code:addons/crm/models/crm_lead.py:1088
 #, python-format
 msgid "This target does not exist."
 msgstr "Ez a cél nem létezik."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__title
-#: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
-#: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
+#: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_leads
+#: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "Title"
 msgstr "Megsz."
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
-msgid "To Close This Month"
-msgstr ""
+#: selection:crm.lead,activity_state:0
+msgid "Today"
+msgstr "Ma"
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
-msgid "To Close This Week"
-msgstr ""
-
-#. module: crm
-#: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
-msgid "To Close Today"
-msgstr ""
-
-#. module: crm
-#: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
-#: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Today Activities"
 msgstr "Mai napi tevékenységek"
 
@@ -2457,67 +2366,69 @@ msgid "Too expensive"
 msgstr "Nagyon drága"
 
 #. module: crm
-#: model:ir.model.fields,field_description:crm.field_crm_opportunity_report__total_revenue
-msgid "Total Revenue"
-msgstr "Jövedelem összesen"
-
-#. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
+#: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_leads
 msgid "Tracking"
 msgstr "Nyomonkövetés"
 
 #. module: crm
+#: model:crm.lead.tag,name:crm.categ_oppor6
+msgid "Training"
+msgstr "Képzés"
+
+#. module: crm
+#: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
+msgid "Try Now"
+msgstr ""
+
+#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__lead_type
 #: model:ir.model.fields,field_description:crm.field_crm_lead__type
-#: model:ir.model.fields,field_description:crm.field_crm_opportunity_report__type
 msgid "Type"
 msgstr "Típus"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_activity_report__lead_type
 #: model:ir.model.fields,help:crm.field_crm_lead__type
-#: model:ir.model.fields,help:crm.field_crm_opportunity_report__type
 msgid "Type is used to separate Leads and Opportunities"
 msgstr "A típust az érdeklődők és a lehetőségek szétválasztására használja"
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
-#: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Unassigned"
 msgstr "Nem hozzárendelt"
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
+#: model_terms:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
 msgid "Unassigned Lead"
 msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__unassigned_leads_count
-#: model:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
+#: model_terms:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
 msgid "Unassigned Leads"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/models/crm_team.py:211
+#: code:addons/crm/models/crm_team.py:201
 #, python-format
 msgid "Undefined"
 msgstr "Nincs meghatározva"
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
-#: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
-#: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
-#: model:ir.ui.view,arch_db:crm.view_crm_lead_kanban
+#: model:ir.model.fields,field_description:crm.field_crm_lead__message_unread
+#: model_terms:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_lead_kanban
 msgid "Unread Messages"
 msgstr "Olvasatlan üzenetek"
 
 #. module: crm
-#: model:ir.model.fields,field_description:crm.field_crm_lead__write_date
-msgid "Update Date"
-msgstr "Dátum frissítése"
+#: model:ir.model.fields,field_description:crm.field_crm_lead__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr "Olvasatlan üzenetek számlálója"
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Use an External Email Server"
 msgstr ""
 
@@ -2527,7 +2438,7 @@ msgid "Use existing partner or create"
 msgstr "Használja a meglévő kapcsolatot a létrehozáshoz"
 
 #. module: crm
-#: model:ir.actions.act_window,help:crm.crm_case_form_view_salesteams_lead
+#: model_terms:ir.actions.act_window,help:crm.crm_case_form_view_salesteams_lead
 msgid ""
 "Use leads if you need a qualification step before creating an\n"
 "                    opportunity or a customer. It can be a business card you received,\n"
@@ -2540,7 +2451,7 @@ msgstr ""
 "                    nem minősített beimportált prospektus fájl, stb."
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid ""
 "Use leads if you need a qualification step before creating an opportunity or"
 " a customer. It can be a business card you received, a contact form filled "
@@ -2550,13 +2461,13 @@ msgid ""
 msgstr ""
 
 #. module: crm
-#: model:ir.actions.act_window,help:crm.crm_lost_reason_action
+#: model_terms:ir.actions.act_window,help:crm.crm_lost_reason_action
 msgid "Use lost reasons to explain why an opportunity is lost."
 msgstr ""
 "Használjon meghiúsulási okokat a lehetőség elvesztésének magyarázatára."
 
 #. module: crm
-#: model:ir.actions.act_window,help:crm.relate_partner_opportunities
+#: model_terms:ir.actions.act_window,help:crm.relate_partner_opportunities
 msgid ""
 "Use opportunities to keep track of your sales pipeline, follow\n"
 "                up potential sales and better forecast your future revenues."
@@ -2566,7 +2477,7 @@ msgstr ""
 
 #. module: crm
 #. openerp-web
-#: code:addons/crm/static/src/js/tour.js:66
+#: code:addons/crm/static/src/js/tour.js:72
 #, python-format
 msgid "Use the breadcrumbs to <b>go back to your sales pipeline</b>."
 msgstr ""
@@ -2599,7 +2510,7 @@ msgid "Users"
 msgstr "Felhasználók"
 
 #. module: crm
-#: selection:crm.lead,priority:0 selection:crm.opportunity.report,priority:0
+#: selection:crm.lead,priority:0
 msgid "Very High"
 msgstr "Nagyon nagy"
 
@@ -2614,87 +2525,92 @@ msgid "Website"
 msgstr "Weboldal"
 
 #. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
+msgid "Website Lead Generation"
+msgstr ""
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_crm_lead__website_message_ids
+msgid "Website Messages"
+msgstr "Weboldal üzenetek"
+
+#. module: crm
+#: model:ir.model.fields,help:crm.field_crm_lead__website_message_ids
+msgid "Website communication history"
+msgstr "Weboldal  kommunikáció történet"
+
+#. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__website
 msgid "Website of the contact"
 msgstr ""
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.res_config_settings_view_form
-msgid ""
-"When populating your address book, Odoo relies on Clearbit’s API to provide "
-"you with a list of matching contacts or companies.When selecting one item, "
-"the partner name, logo and website get automatically set."
-msgstr ""
-
-#. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__team_id
 msgid ""
-"When sending mails, the default email address is taken from the sales "
-"channel."
+"When sending mails, the default email address is taken from the Sales Team."
 msgstr ""
 
 #. module: crm
 #: selection:crm.team,dashboard_graph_period_pipeline:0
 msgid "Within a Month"
-msgstr ""
+msgstr "Egy hónapon belül"
 
 #. module: crm
 #: selection:crm.team,dashboard_graph_period_pipeline:0
 msgid "Within a Week"
-msgstr ""
+msgstr "Egy héten belül"
 
 #. module: crm
 #: selection:crm.team,dashboard_graph_period_pipeline:0
 msgid "Within a Year"
-msgstr ""
+msgstr "Egy éven belül"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:1101
+#: code:addons/crm/models/crm_lead.py:1121
 #: model:crm.stage,name:crm.stage_lead4
-#: model:ir.ui.view,arch_db:crm.crm_activity_report_view_search
-#: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
-#: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
-#: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
-#: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
+#: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
+#: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_leads
+#: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
+#: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 #, python-format
 msgid "Won"
 msgstr "Megnyert"
 
 #. module: crm
-#: model:ir.filters,name:crm.filter_opportunity_opportunities_won_per_team
-msgid "Won by Channel"
-msgstr ""
-
-#. module: crm
-#: model:ir.filters,name:crm.filter_opportunity_country
-msgid "Won by Country"
-msgstr ""
-
-#. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_users__target_sales_won
 msgid "Won in Opportunities Target"
-msgstr "Nyereség a lehetőségek céljain"
+msgstr "Megnyert a lehetőség célból"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:394
+#: code:addons/crm/models/crm_lead.py:402
 #, python-format
 msgid "Yeah! Deal of the last 7 days for the team."
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:396
+#: code:addons/crm/models/crm_team.py:122
+#, python-format
+msgid ""
+"You have to enable the Pipeline on your Sales Team to be able to set it as a"
+" content for the graph"
+msgstr ""
+
+#. module: crm
+#: code:addons/crm/models/crm_lead.py:404
 #, python-format
 msgid "You just beat your personal record for the past 30 days."
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:398
+#: code:addons/crm/models/crm_lead.py:406
 #, python-format
 msgid "You just beat your personal record for the past 7 days."
 msgstr ""
 
 #. module: crm
-#: model:ir.actions.act_window,help:crm.relate_partner_opportunities
+#: model_terms:ir.actions.act_window,help:crm.relate_partner_opportunities
 msgid ""
 "You will be able to plan meetings and log activities from\n"
 "                opportunities, convert them into quotations, attach related\n"
@@ -2707,25 +2623,20 @@ msgstr ""
 "                    mindenre."
 
 #. module: crm
-#: model:ir.actions.act_window,help:crm.crm_case_form_view_salesteams_opportunity
+#: model_terms:ir.actions.act_window,help:crm.crm_case_form_view_salesteams_opportunity
 msgid ""
 "You will be able to plan meetings and phone calls from\n"
 "                    opportunities, convert them into quotations, attach related\n"
 "                    documents, track all discussions, and much more."
 msgstr ""
-"Képes lesz lehetőségekből találkozók és telefonálások tervezésére,\n"
-"                    árajánlatokká alakításra, ide vonatkozó dokumentumok\n"
+"Képes lesz a lehetőségekből találkozók és telefonálások tervezésére,\n"
+"                    árajánlatokká alakításra, kapcsolódó dokumentumok\n"
 "                    hozzáfűzésére, beszélgetések nyomon követésére, \n"
 "                    és még több mindenre."
 
 #. module: crm
-#: model:mail.template,subject:crm.mail_template_data_module_install_crm
-msgid "Your Odoo CRM application is running smoothly."
-msgstr "Az Odoo rendszer CMR  alkalmazása megfelelően fut."
-
-#. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
-#: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
+#: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_leads
+#: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "ZIP"
 msgstr "Irányítószám"
 
@@ -2735,31 +2646,26 @@ msgid "Zip"
 msgstr "Irsz."
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.view_create_opportunity_simplified
+#: model_terms:ir.ui.view,arch_db:crm.view_create_opportunity_simplified
 msgid "e.g. Customer Deal"
-msgstr "pl. Vásárlói egyezkedés"
+msgstr "pl. Ügyfél megállapodás"
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
+#: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "e.g. Product Pricing"
-msgstr "pl. Termék árrendszer"
+msgstr "pl. Termék árazás"
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
-#: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
+#: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_leads
+#: model_terms:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "e.g. www.odoo.com"
 msgstr "pl. www.odoo.com"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:926
+#: code:addons/crm/models/crm_lead.py:946
 #, python-format
 msgid "or send an email to %s"
 msgstr ""
-
-#. module: crm
-#: model:ir.model,name:crm.model_res_config_settings
-msgid "res.config.settings"
-msgstr "res.config.settings"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage__team_count
@@ -2767,7 +2673,7 @@ msgid "team_count"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:932
+#: code:addons/crm/models/crm_lead.py:952
 #, python-format
 msgid "unknown"
 msgstr "ismeretlen"

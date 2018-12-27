@@ -21,8 +21,9 @@ class TestSaleOrder(TestCommonSaleNoChart):
         cls.setUpUsers()
         group_salemanager = cls.env.ref('sales_team.group_sale_manager')
         group_salesman = cls.env.ref('sales_team.group_sale_salesman')
-        cls.user_manager.write({'groups_id': [(6, 0, [group_salemanager.id])]})
-        cls.user_employee.write({'groups_id': [(6, 0, [group_salesman.id])]})
+        group_employee = cls.env.ref('base.group_user')
+        cls.user_manager.write({'groups_id': [(6, 0, [group_salemanager.id, group_employee.id])]})
+        cls.user_employee.write({'groups_id': [(6, 0, [group_salesman.id, group_employee.id])]})
 
         # set up accounts and products and journals
         cls.setUpAdditionalAccounts()
@@ -229,7 +230,11 @@ class TestSaleOrder(TestCommonSaleNoChart):
         for line in self.sale_order.order_line:
             if line.tax_id.price_include:
                 price = line.price_unit * line.product_uom_qty - line.price_tax
-                self.assertEquals(float_compare(line.price_subtotal, price, precision_digits=2), 0, 'Tax should be included on an order line')
             else:
-                self.assertEquals(line.price_subtotal, line.price_unit * line.product_uom_qty, 'Tax should not be included on an order line')
-        self.assertEquals(self.sale_order.amount_total, self.sale_order.amount_untaxed + self.sale_order.amount_tax, 'Taxes should be applied')
+                price = line.price_unit * line.product_uom_qty
+
+            self.assertEquals(float_compare(line.price_subtotal, price, precision_digits=2), 0)
+
+        self.assertEquals(self.sale_order.amount_total,
+                          self.sale_order.amount_untaxed + self.sale_order.amount_tax,
+                          'Taxes should be applied')

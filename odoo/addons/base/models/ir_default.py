@@ -10,6 +10,7 @@ from odoo.exceptions import ValidationError
 class IrDefault(models.Model):
     """ User-defined default values for fields. """
     _name = 'ir.default'
+    _description = 'Default Values'
     _rec_name = 'field_id'
 
     field_id = fields.Many2one('ir.model.fields', string="Field", required=True,
@@ -21,10 +22,10 @@ class IrDefault(models.Model):
     condition = fields.Char('Condition', help="If set, applies the default upon condition.")
     json_value = fields.Char('Default Value (JSON format)', required=True)
 
-    @api.model
-    def create(self, vals):
+    @api.model_create_multi
+    def create(self, vals_list):
         self.clear_caches()
-        return super(IrDefault, self).create(vals)
+        return super(IrDefault, self).create(vals_list)
 
     @api.multi
     def write(self, vals):

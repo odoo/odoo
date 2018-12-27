@@ -18,17 +18,16 @@ def random_token():
     return ''.join(random.SystemRandom().choice(chars) for _ in range(20))
 
 def now(**kwargs):
-    dt = datetime.now() + timedelta(**kwargs)
-    return fields.Datetime.to_string(dt)
+    return datetime.now() + timedelta(**kwargs)
 
 
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
-    signup_token = fields.Char(copy=False)
-    signup_type = fields.Char(string='Signup Token Type', copy=False)
-    signup_expiration = fields.Datetime(copy=False)
-    signup_valid = fields.Boolean(compute='_compute_signup_valid', string='Signup Token is Valid')
+    signup_token = fields.Char(copy=False, groups="base.group_erp_manager")
+    signup_type = fields.Char(string='Signup Token Type', copy=False, groups="base.group_erp_manager")
+    signup_expiration = fields.Datetime(copy=False, groups="base.group_erp_manager")
+    signup_valid = fields.Boolean(compute='_compute_signup_valid', compute_sudo=True, string='Signup Token is Valid')
     signup_url = fields.Char(compute='_compute_signup_url', string='Signup URL')
 
     @api.multi
@@ -42,8 +41,10 @@ class ResPartner(models.Model):
     @api.multi
     def _compute_signup_url(self):
         """ proxy for function field towards actual implementation """
-        result = self._get_signup_url_for_action()
+        result = self.sudo()._get_signup_url_for_action()
         for partner in self:
+            if any(u.has_group('base.group_user') for u in partner.user_ids if u != self.env.user):
+                self.env['res.users'].check_access_rights('write')
             partner.signup_url = result.get(partner.id, False)
 
     @api.multi
@@ -56,17 +57,17 @@ class ResPartner(models.Model):
         for partner in self:
             # when required, make sure the partner has a valid signup token
             if self.env.context.get('signup_valid') and not partner.user_ids:
-                partner.signup_prepare()
+                partner.sudo().signup_prepare()
 
             route = 'login'
             # the parameters to encode for the query
             query = dict(db=self.env.cr.dbname)
-            signup_type = self.env.context.get('signup_force_type_in_url', partner.signup_type or '')
+            signup_type = self.env.context.get('signup_force_type_in_url', partner.sudo().signup_type or '')
             if signup_type:
                 route = 'reset_password' if signup_type == 'reset' else signup_type
 
-            if partner.signup_token and signup_type:
-                query['token'] = partner.signup_token
+            if partner.sudo().signup_token and signup_type:
+                query['token'] = partner.sudo().signup_token
             elif partner.user_ids:
                 query['login'] = partner.user_ids[0].login
             else:
@@ -103,9 +104,10 @@ class ResPartner(models.Model):
         """
         res = defaultdict(dict)
 
-        allow_signup = self.env['ir.config_parameter'].sudo().get_param('auth_signup.invitation_scope', 'b2b') == 'b2c'
+        allow_signup = self.env['res.users']._get_signup_invitation_scope() == 'b2c'
         for partner in self:
             if allow_signup and not partner.user_ids:
+                partner = partner.sudo()
                 partner.signup_prepare()
                 res[partner.id]['auth_signup_token'] = partner.signup_token
             elif partner.user_ids:

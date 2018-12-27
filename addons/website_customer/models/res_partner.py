@@ -14,7 +14,7 @@ class Partner(models.Model):
 class Tags(models.Model):
 
     _name = 'res.partner.tag'
-    _description = 'Partner Tags - These tags can be used on website to find customers by sector, or ... '
+    _description = 'Partner Tags - These tags can be used on website to find customers by sector, or ...'
     _inherit = 'website.published.mixin'
 
     @api.model

@@ -27,11 +27,8 @@
             <field name="html_class">oe_image_full</field>
         </record>
 
-        <record model="crm.team" id="sales_team.salesteam_website_sales">
+        <record id="sales_team.salesteam_website_sales" model="crm.team">
             <field name="active" eval="True"/>
-            <field name="dashboard_graph_model">sale.report</field>
-            <field name="dashboard_graph_period">week</field>
-            <field name="company_id" eval="False"/>
         </record>
 
         <record model="website" id="website.default_website">

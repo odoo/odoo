@@ -3,22 +3,22 @@
 # * base_gengo
 # 
 # Translators:
-# Martin Trigaux, 2017
-# Ediz Duman <neps1192@gmail.com>, 2017
-# gezgin biri <gezginbiri@hotmail.com>, 2017
-# gokhun lekesiz <gokhun.lekesiz@rammar.com.tr>, 2017
-# Murat Kaplan <muratk@projetgrup.com>, 2017
-# Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2017
-# Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2017
-# Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2017
+# Ediz Duman <neps1192@gmail.com>, 2018
+# Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2018
+# Martin Trigaux, 2018
+# Levent Karakaş <levent@mektup.at>, 2018
+# Murat Kaplan <muratk@projetgrup.com>, 2018
+# gokhun lekesiz <gokhun.lekesiz@rammar.com.tr>, 2018
+# Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2018
 # Umur Akın <umura@projetgrup.com>, 2018
+# Buket Şeker <buket_skr@hotmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
-"Last-Translator: Umur Akın <umura@projetgrup.com>, 2018\n"
+"POT-Creation-Date: 2018-10-02 10:05+0000\n"
+"PO-Revision-Date: 2018-10-02 10:05+0000\n"
+"Last-Translator: Buket Şeker <buket_skr@hotmail.com>, 2018\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,22 +27,38 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: base_gengo
-#: model:ir.ui.view,arch_db:base_gengo.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:base_gengo.base_gengo_translation_wizard_from
+msgid ""
+"<span class=\"o_form_label\">Gengo Public or Private keys are wrong or "
+"missing.</span>"
+msgstr ""
+
+#. module: base_gengo
+#: model_terms:ir.ui.view,arch_db:base_gengo.view_ir_translation_inherit_base_gengo_form
+msgid ""
+"<span class=\"o_form_label\">Note: If the translation state is 'In "
+"Progress', it means that the translation has to be approved to be uploaded "
+"in this system. You are supposed to do that directly by using your Gengo "
+"Account</span>"
+msgstr ""
+
+#. module: base_gengo
+#: model_terms:ir.ui.view,arch_db:base_gengo.res_config_settings_view_form
 msgid "Add Gengo login Private Key..."
 msgstr "Gengo girişi Özel Anahtarını ekle..."
 
 #. module: base_gengo
-#: model:ir.ui.view,arch_db:base_gengo.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:base_gengo.res_config_settings_view_form
 msgid "Add Gengo login Public Key..."
 msgstr "Gengo girişi Genel Anahtarını ekle..."
 
 #. module: base_gengo
-#: model:ir.ui.view,arch_db:base_gengo.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:base_gengo.res_config_settings_view_form
 msgid "Add your comments here for translator...."
 msgstr "Çevirmen için buraya yorum ekleyin...."
 
 #. module: base_gengo
-#: model:ir.ui.view,arch_db:base_gengo.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:base_gengo.res_config_settings_view_form
 msgid "Auto Approve Translation"
 msgstr "Çeviri Otomatik Onaylansın mı?"
 
@@ -58,7 +74,7 @@ msgid "Both"
 msgstr "İkisi de"
 
 #. module: base_gengo
-#: model:ir.ui.view,arch_db:base_gengo.base_gengo_translation_wizard_from
+#: model_terms:ir.ui.view,arch_db:base_gengo.base_gengo_translation_wizard_from
 msgid "Cancel"
 msgstr "İptal"
 
@@ -73,12 +89,12 @@ msgstr ""
 "amacıyla kullanılır."
 
 #. module: base_gengo
-#: model:ir.ui.view,arch_db:base_gengo.base_gengo_translation_wizard_from
+#: model_terms:ir.ui.view,arch_db:base_gengo.base_gengo_translation_wizard_from
 msgid "Click here to Configure Gengo Parameters"
 msgstr "Gengo Parametrelerini Konfigüre etmek için buraya tıklayın."
 
 #. module: base_gengo
-#: model:ir.ui.view,arch_db:base_gengo.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:base_gengo.res_config_settings_view_form
 msgid "Comment"
 msgstr "Yorum"
 
@@ -96,7 +112,12 @@ msgstr "Gengo'ya bağlı yorumlar ve aktiviteler"
 #. module: base_gengo
 #: model:ir.model,name:base_gengo.model_res_company
 msgid "Companies"
-msgstr "Firmalar"
+msgstr "Şirketler"
+
+#. module: base_gengo
+#: model:ir.model,name:base_gengo.model_res_config_settings
+msgid "Config Settings"
+msgstr "Konfigürasyon Ayarları"
 
 #. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_base_gengo_translations__create_uid
@@ -106,7 +127,7 @@ msgstr "Oluşturan"
 #. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_base_gengo_translations__create_date
 msgid "Created on"
-msgstr "Oluşturulma zamanı"
+msgstr "Oluşturulma"
 
 #. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_base_gengo_translations__display_name
@@ -114,7 +135,7 @@ msgid "Display Name"
 msgstr "Görünüm Adı"
 
 #. module: base_gengo
-#: model:ir.ui.view,arch_db:base_gengo.view_ir_translation_inherit_base_gengo_form
+#: model_terms:ir.ui.view,arch_db:base_gengo.view_ir_translation_inherit_base_gengo_form
 msgid "Gengo Comments & Activity..."
 msgstr "Gengo Açıklamaları & Etkinlikleri..."
 
@@ -136,17 +157,12 @@ msgid "Gengo Public Key"
 msgstr "Gengo Genel Anahtarı"
 
 #. module: base_gengo
-#: model:ir.ui.view,arch_db:base_gengo.base_gengo_translation_wizard_from
-msgid "Gengo Public or Private keys are wrong or missing."
-msgstr ""
-
-#. module: base_gengo
-#: model:ir.ui.view,arch_db:base_gengo.base_gengo_translation_wizard_from
+#: model_terms:ir.ui.view,arch_db:base_gengo.base_gengo_translation_wizard_from
 msgid "Gengo Request Form"
 msgstr "Gengo İstek Formu"
 
 #. module: base_gengo
-#: model:ir.ui.view,arch_db:base_gengo.view_ir_translation_inherit_base_gengo_form
+#: model_terms:ir.ui.view,arch_db:base_gengo.view_ir_translation_inherit_base_gengo_form
 msgid "Gengo Translation Service"
 msgstr "Gengo Çeviri Hizmeti"
 
@@ -163,7 +179,7 @@ msgid ""
 "authentication parameters under `Settings > Companies > Gengo Parameters`."
 msgstr ""
 "Gengo 'Genel Anahtar\" ya da 'Özel Anahtar' eksiktir. "
-"'Ayarlar>Firmalar>Gengo Parametreleri' menüsünden Gengo kimlik doğrulama "
+"'Ayarlar>Şirketler>Gengo Parametreleri' menüsünden Gengo kimlik doğrulama "
 "parametrelerinizi girin."
 
 #. module: base_gengo
@@ -187,14 +203,14 @@ msgstr "Gengo: Elle Çeviri İsteği"
 #: model:ir.cron,cron_name:base_gengo.gengo_sync_send_request_scheduler
 #: model:ir.cron,name:base_gengo.gengo_sync_send_request_scheduler
 msgid "Gengo: Sync translation (Request)"
-msgstr ""
+msgstr "Gengo: Senkronize çeviri (Gerekli)"
 
 #. module: base_gengo
 #: model:ir.actions.server,name:base_gengo.gengo_sync_receive_request_scheduler_ir_actions_server
 #: model:ir.cron,cron_name:base_gengo.gengo_sync_receive_request_scheduler
 #: model:ir.cron,name:base_gengo.gengo_sync_receive_request_scheduler
 msgid "Gengo: Sync translation (Response)"
-msgstr ""
+msgstr "Gengo: Senkronize çeviri (Yanıt)"
 
 #. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_base_gengo_translations__id
@@ -233,18 +249,7 @@ msgid "No. of terms to sync"
 msgstr "Eşlenecek terim sayısı"
 
 #. module: base_gengo
-#: model:ir.ui.view,arch_db:base_gengo.view_ir_translation_inherit_base_gengo_form
-msgid ""
-"Note: If the translation state is 'In Progress', it means that the "
-"translation has to be approved to be uploaded in this system. You are "
-"supposed to do that directly by using your Gengo Account"
-msgstr ""
-"Not: Çeviri durumu 'İşleniyor' durumundaysa, çevirinin sisteme "
-"yüklenebilmesi için onaylanması gerekiyor anlamındadır. Doğrudan Gengo "
-"Hesabınızı kullanarak bunu yapmanız gerekiyor."
-
-#. module: base_gengo
-#: model:ir.ui.view,arch_db:base_gengo.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:base_gengo.res_config_settings_view_form
 msgid "Private Key"
 msgstr "Özel Anahtar"
 
@@ -254,7 +259,7 @@ msgid "Pro"
 msgstr "Pro"
 
 #. module: base_gengo
-#: model:ir.ui.view,arch_db:base_gengo.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:base_gengo.res_config_settings_view_form
 msgid "Public Key"
 msgstr "Genel Anahtar"
 
@@ -266,12 +271,12 @@ msgstr "Çeviri Al"
 #. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_res_company__gengo_sandbox
 #: model:ir.model.fields,field_description:base_gengo.field_res_config_settings__gengo_sandbox
-#: model:ir.ui.view,arch_db:base_gengo.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:base_gengo.res_config_settings_view_form
 msgid "Sandbox Mode"
 msgstr "Sandbox Modu"
 
 #. module: base_gengo
-#: model:ir.ui.view,arch_db:base_gengo.base_gengo_translation_wizard_from
+#: model_terms:ir.ui.view,arch_db:base_gengo.base_gengo_translation_wizard_from
 msgid "Send"
 msgstr "Gönder"
 
@@ -303,7 +308,7 @@ msgstr ""
 #. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_base_gengo_translations__authorized_credentials
 msgid "The private and public keys are valid"
-msgstr ""
+msgstr "Özel ya da genel keyler doğrulandı."
 
 #. module: base_gengo
 #: model:ir.model.fields,help:base_gengo.field_res_company__gengo_comment
@@ -322,9 +327,14 @@ msgid "This language is not supported by the Gengo translation services."
 msgstr "Bu dil Gengo tercüme servisi tarafından desteklenmiyor."
 
 #. module: base_gengo
-#: model:ir.ui.view,arch_db:base_gengo.view_translation_search
+#: model_terms:ir.ui.view,arch_db:base_gengo.view_translation_search
 msgid "To Approve In Gengo"
 msgstr "Gengo'da Onaylanacak"
+
+#. module: base_gengo
+#: model:ir.model,name:base_gengo.model_ir_translation
+msgid "Translation"
+msgstr "Çeviri"
 
 #. module: base_gengo
 #: selection:ir.translation,gengo_translation:0
@@ -349,13 +359,3 @@ msgstr ""
 #: model:ir.model,name:base_gengo.model_base_gengo_translations
 msgid "base.gengo.translations"
 msgstr "base.gengo.translations"
-
-#. module: base_gengo
-#: model:ir.model,name:base_gengo.model_ir_translation
-msgid "ir.translation"
-msgstr "ir.translation"
-
-#. module: base_gengo
-#: model:ir.model,name:base_gengo.model_res_config_settings
-msgid "res.config.settings"
-msgstr "res.config.settings"

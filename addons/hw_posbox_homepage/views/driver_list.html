@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+{% from "loading.html" import loading_block_ui %}
+{% block head %}
+    <script>
+        $(document).ready(function () {
+            $('#load_driver_btn').on('click', function(e){
+                e.preventDefault();
+                $('.loading-block').removeClass('o_hide');
+                $.ajax({
+                    url: '/load_drivers',
+                }).done(function () {
+                    $('.message-status').html('Driver loaded successfully <br> Refreshing page');
+                    setTimeout(function () {
+                        location.reload(true);
+                    }, 20000);
+                }).fail(function () {
+                    setTimeout(function () {
+                        location.reload(true);
+                    }, 20000);
+                });
+            });
+        });
+    </script>
+{% endblock %}
+{% block content %}
+    <h2 class="text-center text-green">Drivers list</h2>
+    <table align="center" cellpadding="3">
+        {% for driver in drivers_list -%}
+            <tr><td>{{ driver }}</td></tr>
+        {%- endfor %}
+    </table>
+    <div style="margin-top: 20px;" class="text-center">
+        <a id="load_driver_btn" class="btn" href='/load_drivers'>Load drivers</a>
+    </div>
+    <div class="text-center font-small" style="margin: 10px auto;">
+        You can clear the drivers configuration
+        <form style="display: inline-block;margin-left: 4px;" action='/drivers_clear'>
+            <input class="btn btn-sm" type="submit" value="Clear"/>
+        </form>
+    </div>
+    {{ loading_block_ui('Loading Drivers') }}
+{% endblock %}

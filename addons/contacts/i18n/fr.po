@@ -3,19 +3,15 @@
 # * contacts
 # 
 # Translators:
-# Martin Trigaux, 2016
-# Eloïse Stilmant <est@odoo.com>, 2017
-# Olivier Lenoir <olivier.lenoir@free.fr>, 2017
-# Xavier Symons <xsy@openerp.com>, 2017
-# Richard Mathot <rim@odoo.com>, 2017
-# e2f <projects@e2f.com>, 2018
+# Martin Trigaux, 2018
+# Eloïse Stilmant <est@odoo.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
-"Last-Translator: e2f <projects@e2f.com>, 2018\n"
+"POT-Creation-Date: 2018-09-18 09:49+0000\n"
+"PO-Revision-Date: 2018-09-18 09:49+0000\n"
+"Last-Translator: Eloïse Stilmant <est@odoo.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -51,6 +47,7 @@ msgstr "Civilités"
 
 #. module: contacts
 #: model:ir.actions.act_window,name:contacts.action_contacts
+#: model:ir.actions.act_window,name:contacts.action_contacts_summary
 #: model:ir.ui.menu,name:contacts.menu_contacts
 #: model:ir.ui.menu,name:contacts.res_partner_menu_contacts
 msgid "Contacts"
@@ -67,9 +64,10 @@ msgid "Country Group"
 msgstr "Groupe de pays"
 
 #. module: contacts
-#: model:ir.actions.act_window,help:contacts.action_contacts
+#: model_terms:ir.actions.act_window,help:contacts.action_contacts
+#: model_terms:ir.actions.act_window,help:contacts.action_contacts_summary
 msgid "Create a contact in your address book"
-msgstr ""
+msgstr "Créez un contact dans votre carnet d'adresse"
 
 #. module: contacts
 #: model:ir.ui.menu,name:contacts.menu_country_state_partner
@@ -82,11 +80,18 @@ msgid "Localization"
 msgstr "Localisation"
 
 #. module: contacts
-#: model:ir.actions.act_window,help:contacts.action_contacts
+#: model_terms:ir.actions.act_window,help:contacts.action_contacts
+#: model_terms:ir.actions.act_window,help:contacts.action_contacts_summary
 msgid "Odoo helps you to easily track all activities related to a customer."
 msgstr ""
+"Odoo vous aide à facilement suivre toutes les activités liées à un vendeur."
 
 #. module: contacts
 #: model:ir.ui.menu,name:contacts.res_partner_industry_menu
 msgid "Sectors of Activity"
 msgstr "Secteurs d'activité"
+
+#. module: contacts
+#: model:ir.model,name:contacts.model_res_users
+msgid "Users"
+msgstr "Utilisateurs"

@@ -17,7 +17,14 @@
 
     <template id="qunit_suite" name="im_support_tests" inherit_id="web.qunit_suite">
       <xpath expr="//t[@t-set='head']" position="inside">
+        <script type="text/javascript" src="/im_support/static/tests/helpers/test_utils.js"></script>
         <script type="text/javascript" src="/im_support/static/tests/systray_no_support_tests.js"></script>
+      </xpath>
+    </template>
+
+    <template id="qunit_mobile_suite" name="im_support_mobile_tests" inherit_id="web.qunit_mobile_suite">
+      <xpath expr="//t[@t-set='head']" position="inside">
+        <script type="text/javascript" src="/im_support/static/tests/helpers/test_utils.js"></script>
       </xpath>
     </template>
 
@@ -35,7 +42,6 @@
           <t t-call="web.js_tests_assets"/>
 
           <script type="text/javascript" src="/im_support/static/tests/helpers/test_utils.js"></script>
-
           <script type="text/javascript" src="/im_support/static/tests/systray_tests.js"></script>
         </t>
 

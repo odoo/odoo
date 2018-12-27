@@ -9,6 +9,8 @@ from odoo import api, fields, models, tools
 class MailTracking(models.Model):
     _name = 'mail.tracking.value'
     _description = 'Mail Tracking Value'
+    _rec_name = 'field'
+    _order = 'track_sequence asc'
 
     # TDE CLEANME: why not a m2o to ir model field ?
     field = fields.Char('Changed Field', required=True, readonly=1)
@@ -31,10 +33,12 @@ class MailTracking(models.Model):
 
     mail_message_id = fields.Many2one('mail.message', 'Message ID', required=True, index=True, ondelete='cascade')
 
+    track_sequence = fields.Integer('Tracking field sequence', readonly=1, default=100)
+
     @api.model
-    def create_tracking_values(self, initial_value, new_value, col_name, col_info):
+    def create_tracking_values(self, initial_value, new_value, col_name, col_info, track_sequence):
         tracked = True
-        values = {'field': col_name, 'field_desc': col_info['string'], 'field_type': col_info['type']}
+        values = {'field': col_name, 'field_desc': col_info['string'], 'field_type': col_info['type'], 'track_sequence': track_sequence}
 
         if col_info['type'] in ['integer', 'float', 'char', 'text', 'datetime', 'monetary']:
             values.update({
@@ -43,8 +47,8 @@ class MailTracking(models.Model):
             })
         elif col_info['type'] == 'date':
             values.update({
-                'old_value_datetime': initial_value and datetime.strftime(datetime.combine(datetime.strptime(initial_value, tools.DEFAULT_SERVER_DATE_FORMAT), datetime.min.time()), tools.DEFAULT_SERVER_DATETIME_FORMAT) or False,
-                'new_value_datetime': new_value and datetime.strftime(datetime.combine(datetime.strptime(new_value, tools.DEFAULT_SERVER_DATE_FORMAT), datetime.min.time()), tools.DEFAULT_SERVER_DATETIME_FORMAT) or False,
+                'old_value_datetime': initial_value and fields.Datetime.to_string(datetime.combine(fields.Date.from_string(initial_value), datetime.min.time())) or False,
+                'new_value_datetime': new_value and fields.Datetime.to_string(datetime.combine(fields.Date.from_string(new_value), datetime.min.time())) or False,
             })
         elif col_info['type'] == 'boolean':
             values.update({
@@ -60,8 +64,8 @@ class MailTracking(models.Model):
             values.update({
                 'old_value_integer': initial_value and initial_value.id or 0,
                 'new_value_integer': new_value and new_value.id or 0,
-                'old_value_char': initial_value and initial_value.name_get()[0][1] or '',
-                'new_value_char': new_value and new_value.name_get()[0][1] or ''
+                'old_value_char': initial_value and initial_value.sudo().name_get()[0][1] or '',
+                'new_value_char': new_value and new_value.sudo().name_get()[0][1] or ''
             })
         else:
             tracked = False
@@ -85,8 +89,8 @@ class MailTracking(models.Model):
                     result.append(record['%s_value_datetime' % type])
             elif record.field_type == 'date':
                 if record['%s_value_datetime' % type]:
-                    new_date = datetime.strptime(record['%s_value_datetime' % type], tools.DEFAULT_SERVER_DATETIME_FORMAT).date()
-                    result.append(new_date.strftime(tools.DEFAULT_SERVER_DATE_FORMAT))
+                    new_date = record['%s_value_datetime' % type]
+                    result.append(fields.Date.to_string(new_date))
                 else:
                     result.append(record['%s_value_datetime' % type])
             elif record.field_type == 'boolean':

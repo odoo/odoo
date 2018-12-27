@@ -3,64 +3,88 @@
 /// rules.
 ///
 
-// Resize and vertically align navbar’s items relative to $navbar-height
-@mixin o-w-fill-navbar($ratio: 0.8) {
-    height: round($navbar-height * $ratio);
-    margin-top: round($navbar-height * (1 - $ratio) / 2);
-}
+// ======  Variables =========
+$-navbar-height: $nav-link-height !default;
+
+// Portal toolbar (filters, search bar)
+$o-portal-mobile-toolbar: true; // Enable/Disable custom design
+$o-portal-mobile-toolbar-border: $border-color;
+$o-portal-mobile-toolbar-bg: $gray-200;
+
+// Portal Tables
+$o-portal-table-th-pt: map-get($spacers, 2) !default; // bts4 pt-2
+$o-portal-table-th-pb: map-get($spacers, 2) !default; // bts4 pb-2
+$o-portal-table-td-pt: map-get($spacers, 1) !default; // bts4 pt-1
+$o-portal-table-td-pb: map-get($spacers, 1) !default; // bts4 pb-1
+
+// Portal custom bg color
+$o-portal-bg-color: desaturate($gray-200, 100%);
+
+// Check if portal uses default colors
+$o-portal-use-default-colors: $body-bg == $o-portal-default-body-bg;
 
 // Frontend general
 #wrapwrap {
     position: relative;
-    display: table;
-    table-layout: fixed;
+    display: flex;
+    flex-flow: column nowrap;
     width: 100%;
-    height: 100%;
+    min-height: 100%;
 
     > * {
-        display: table-row;
+        flex: 0 0 auto;
     }
     > main {
-        height: 100%;
+        flex: 1 0 auto;
     }
 }
 
 header {
-    a.navbar-brand.logo {
-        padding: 0 15px;
+    .navbar-brand {
+        flex: 0 0 auto;
 
-        img {
-            @include o-w-fill-navbar;
+        &.logo {
+            padding-top: 0;
+            padding-bottom: 0;
+
+            img {
+                width: auto;
+                height: $-navbar-height;
+                max-width: none;
+            }
         }
     }
+    .nav-link {
+        white-space: nowrap;
+    }
 }
-.navbar.navbar-static-top {
+.navbar {
     margin-bottom: 0;
+
     ul.nav > li {
         &.divider {
-            @include o-w-fill-navbar;
-            border-right: 1px solid $navbar-default-link-disabled-color;
-            @media (max-width: $screen-xs-max) {
-                display: none;
-            }
+            display: none;
+            height: $-navbar-height;
+            border-right: 1px solid $nav-divider-color;
         }
 
         &.active + .divider {
             visibility: hidden;
         }
     }
-    .nav.navbar-nav.pull-right {
-        @media (max-width: $screen-xs-max) {
+    .nav.navbar-nav.float-right {
+        @include media-breakpoint-down(sm) {
             float: none!important;
         }
     }
 }
-ul.nav-stacked > li > a {
-    padding: 2px 15px;
+@include media-breakpoint-up(md) {
+    .navbar-expand-md ul.nav > li.divider {
+        display: list-item;
+    }
 }
-
-footer {
-    background-color: #F8F8F8;
+ul.flex-column > li > a {
+    padding: 2px 15px;
 }
 
 // Odoo options classes
@@ -119,29 +143,56 @@ hr {
 }
 
 // Bootstrap hacks
-.container {
-    max-width: 100%;
-}
-.container .container {
-    padding-left: 0;
+%o-double-container-no-padding {
     padding-right: 0;
-    width: auto;
+    padding-left: 0;
 }
-[class^="col-md-"] {
+.container {
+    .container, .container-fluid {
+        @extend %o-double-container-no-padding;
+    }
+}
+.container-fluid .container-fluid {
+    @extend %o-double-container-no-padding;
+}
+[class^="col-lg-"] {
     min-height: 24px;
+}
+.input-group {
+    flex-flow: row nowrap;
+}
+.list-group-item:not([class*="list-group-item-"]) {
+    color: color-yiq($list-group-bg);
+}
+
+%o-portal-breadcrumbs {
+    background-color: inherit;
+}
+
+// Replaces old BS3 page-header class
+%o-page-header {
+    margin-bottom: $headings-margin-bottom * 2;
+    padding-bottom: $headings-margin-bottom;
+    border-bottom-width: $border-width;
+    border-bottom-style: solid;
+    border-bottom-color: $border-color;
+    line-height: 2.1rem;
+}
+.o_page_header {
+    @extend %o-page-header;
 }
 
 // Images spacing
 img, .media_iframe_video, .o_image {
-    &.pull-right {
+    &.float-right {
         margin-left: $grid-gutter-width / 2;
     }
-    &.pull-left {
+    &.float-left {
         margin-right: $grid-gutter-width / 2;
     }
 }
 img.o_we_custom_image {
-    // Images added with the editor are .img-responsive by default but should
+    // Images added with the editor are .img-fluid by default but should
     // still behave like inline content.
     display: inline-block;
 }
@@ -253,15 +304,17 @@ img.o_we_custom_image {
 }
 
 // Portal specific
+// ===  Page custom bg ===
+// To be applied to all portal pages if bg-color is white (default).
+@if ($o-portal-use-default-colors) {
+    #wrapwrap.o_portal {
+        @include o-bg-color($o-portal-bg-color);
+    }
+}
+
 .o_portal {
     .breadcrumb {
-        background-color: rgba(0, 0, 0, 0);
-        margin-bottom: 0px;
-        display: inline-block;
-    }
-
-    .record_pager {
-        padding: 8px 0px;
+        @extend %o-portal-breadcrumbs;
     }
 
     > tbody.o_portal_report_tbody {
@@ -270,83 +323,81 @@ img.o_we_custom_image {
 }
 
 .o_portal_wrap {
-    .o_portal_my_home > .page-header > a:hover {
+    .o_portal_my_home > .o_page_header > a:hover {
         text-decoration: none;
     }
 
-    .o_portal_my_doc_table {
-        td, th {
-            text-align: right;
+    .o_portal_navbar {
+        .breadcrumb {
+            padding-left: 0;
+            padding-right: 0;
+            @extend %o-portal-breadcrumbs;
         }
-        tr > :first-child {
-            text-align: left;
+
+        @if ($o-portal-use-default-colors) {
+            background-color: white!important;
         }
     }
 
-    .o_portal_navbar {
-        .navbar-brand {
-            margin: 0;
-
-            @media (min-width: $grid-float-breakpoint) {
-                padding: $navbar-padding-vertical $navbar-padding-horizontal 0 0;
-            }
+    .o_portal_my_doc_table {
+        th {
+            padding-top: $o-portal-table-th-pt;
+            padding-bottom: $o-portal-table-th-pb;
         }
 
-        // ===== Default portal navbar design =====
-        &.o_portal_navbar_default {
-            margin-bottom: 8px;
+        td {
+            padding-top: $o-portal-table-td-pt;
+            padding-bottom: $o-portal-table-td-pb;
 
-            .navbar-brand {
-                padding: $navbar-padding-vertical $navbar-padding-horizontal 0 0;
+        }
+
+        tr:last-child td {
+            padding-bottom: $o-portal-table-td-pb * 1.5;
+        }
+
+        td, th {
+            vertical-align: middle;
+            white-space: nowrap;
+        }
+    }
+
+    address {
+        span[itemprop="name"] {
+            margin-bottom: 0.3em;
+        }
+
+        div[itemprop="address"] > div {
+            position: relative;
+
+            span[itemprop="streetAddress"] {
+                line-height: 1.2;
+                margin-bottom: 0.3em;
             }
 
-            .navbar-header .dropdown-menu {
-                right: 0;
-                left: auto;
-            }
+            .fa {
+                @include o-position-absolute(0, $left: 0);
+                line-height: $line-height-base;
 
-            .navbar-toggle {
-                margin-right: 0;
-                margin-bottom: 0;
-                background-color: $table-bg-active;
-                padding: 6px 10px $navbar-padding-vertical;
-                border: 1px solid $btn-default-border;
-                border-width: 1px 1px 0 1px;
-                border-bottom-left-radius: 0;
-                border-bottom-right-radius: 0;
-                z-index: 1;
-
-                &.collapsed {
-                    padding:6px 10px;
-                    border-width: 1px;
-                    border-radius: $btn-border-radius-base;
-                    background-color: transparent;
+                + span {
+                    display: block;
+                    // FontAwesome '.fa-fw' fixed-with + margin
+                    padding-left: 1.28571429em + 0.5em;
                 }
             }
+        }
+    }
 
-            @media (max-width: $grid-float-breakpoint) {
-                .navbar-collapse {
-                    z-index: 0;
-                    box-shadow: inset 0 0 0 1px $btn-default-border;
-                    background-color: $table-bg-active;
-                    border-radius: $btn-border-radius-base;
-                    border-top-right-radius: 0;
-                    @include o-transform(translateY(-2px));
+    .o_my_sidebar div[itemprop="address"] > div {
+        margin-top: 0.5em;
+    }
 
-                    &.in {
-                        overflow: visible;
-                    }
-                }
-            }
-
-            @media (min-width: $grid-float-breakpoint) {
-                > .container-fluid {
-                    padding: 0;
-
-                    .navbar-form {
-                        padding-right: 0;
-                    }
-                }
+    @if ($o-portal-mobile-toolbar) {
+        #o_portal_navbar_content {
+            @include media-breakpoint-down(md) {
+                margin: $navbar-padding-y (-$navbar-padding-x) 0;
+                padding: $navbar-padding-y $navbar-padding-x ;
+                border-top: $border-width solid $o-portal-mobile-toolbar-border;
+                background-color: $o-portal-mobile-toolbar-bg;
             }
         }
     }
@@ -367,6 +418,7 @@ img.o_we_custom_image {
     .o_portal_chatter_avatar{
         width: 45px;
         height: 45px;
+        margin-right: 1rem;
     }
 
     .o_portal_chatter_header {
@@ -395,27 +447,57 @@ img.o_we_custom_image {
 }
 
 .o_portal_signature_form .o_portal_sign_error_msg {
-    color: $brand-danger;
+    color: $danger;
 }
 
-.label-optional {
-    font-weight: normal;
+form label {
+    font-weight: $font-weight-bold;
+    &.label-optional {
+        font-weight: $font-weight-normal;
+    }
+}
+
+.o_portal_contact_img {
+    width: 2.3em;
+    height: 2.3em;
 }
 
 .o_portal_sidebar {
-    .bs-sidebar {
-        position: relative;
+    #sidebar_content.card {
+        border-left: 0;
+        border-bottom: 0;
+
+        > div.card-body {
+            border-left: $border-width solid $border-color;
+        }
+
+        > ul > li {
+            border-left: $border-width solid $border-color;
+            margin-bottom: -1px;
+        }
+
+        > div.card-footer {
+            border-left: $border-width solid $border-color;
+            border-bottom: $border-width solid $border-color;
+        }
+    }
+
+    .o_portal_page_size {
         width: 100%;
-        border-radius: 5px;
-        background-color: $navbar-default-bg;
+        max-width: 210mm; // A4 page's width
     }
-    .o_portal_contact_img {
-        width: 3.7em;
-        height: 3.7em;
-    }
+
     .o_portal_html_view {
-        border: 1px solid $gray-lighter-dark;
-        border-radius: 5px;
-        padding-right: 1px;
+        overflow: hidden;
+        background: white;
+        position: relative;
+
+        .o_portal_html_loader {
+            @include o-position-absolute(45%, 0, auto, 0);
+        }
+
+        iframe {
+            position: relative;
+        }
     }
 }

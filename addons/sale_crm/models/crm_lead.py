@@ -38,7 +38,7 @@ class CrmLead(models.Model):
             'last_month': 0,
         }
         account_invoice_domain = [
-            ('state', 'in', ['open', 'paid']),
+            ('state', 'in', ['open', 'in_payment', 'paid']),
             ('user_id', '=', self.env.uid),
             ('date_invoice', '>=', date_today.replace(day=1) - relativedelta(months=+1)),
             ('type', 'in', ['out_invoice', 'out_refund'])

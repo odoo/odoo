@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from random import choice
+from string import digits
 import base64
 import logging
+from werkzeug import url_encode
 
 from odoo import api, fields, models
 from odoo import tools, _
@@ -107,9 +110,9 @@ class Employee(models.Model):
 
     # resource and user
     # required on the resource, make sure required="True" set in the view
-    name = fields.Char(related='resource_id.name', store=True, oldname='name_related')
-    user_id = fields.Many2one('res.users', 'User', related='resource_id.user_id', store=True)
-    active = fields.Boolean('Active', related='resource_id.active', default=True, store=True)
+    name = fields.Char(related='resource_id.name', store=True, oldname='name_related', readonly=False)
+    user_id = fields.Many2one('res.users', 'User', related='resource_id.user_id', store=True, readonly=False)
+    active = fields.Boolean('Active', related='resource_id.active', default=True, store=True, readonly=False)
     # private partner
     address_home_id = fields.Many2one(
         'res.partner', 'Private Address', help='Enter here the private address of the employee, not the one linked to your company.',
@@ -166,15 +169,15 @@ class Employee(models.Model):
 
     # image: all image fields are base64 encoded and PIL-supported
     image = fields.Binary(
-        "Photo", default=_default_image, attachment=True,
+        "Photo", default=_default_image,
         help="This field holds the image used as photo for the employee, limited to 1024x1024px.")
     image_medium = fields.Binary(
-        "Medium-sized photo", attachment=True,
+        "Medium-sized photo",
         help="Medium-sized photo of the employee. It is automatically "
              "resized as a 128x128px image, with aspect ratio preserved. "
              "Use this field in form views or some kanban views.")
     image_small = fields.Binary(
-        "Small-sized photo", attachment=True,
+        "Small-sized photo",
         help="Small-sized photo of the employee. It is automatically "
              "resized as a 64x64px image, with aspect ratio preserved. "
              "Use this field anywhere a small image is required.")
@@ -189,7 +192,7 @@ class Employee(models.Model):
     job_id = fields.Many2one('hr.job', 'Job Position')
     department_id = fields.Many2one('hr.department', 'Department')
     parent_id = fields.Many2one('hr.employee', 'Manager')
-    child_ids = fields.One2many('hr.employee', 'parent_id', string='Subordinates')
+    child_ids = fields.One2many('hr.employee', 'parent_id', string='Direct subordinates')
     coach_id = fields.Many2one('hr.employee', 'Coach')
     category_ids = fields.Many2many(
         'hr.employee.category', 'employee_category_rel',
@@ -198,12 +201,22 @@ class Employee(models.Model):
     # misc
     notes = fields.Text('Notes')
     color = fields.Integer('Color Index', default=0)
+    barcode = fields.Char(string="Badge ID", help="ID used for employee identification.", copy=False)
+    pin = fields.Char(string="PIN", help="PIN used to Check In/Out in Kiosk Mode (if enabled in Configuration).", copy=False)
+    departure_reason = fields.Selection([
+        ('fired', 'Fired'),
+        ('resigned', 'Resigned'),
+        ('retired', 'Retired')
+    ], string="Departure Reason")
+    departure_description = fields.Text(string="Additional Information")
 
-    @api.constrains('parent_id')
-    def _check_parent_id(self):
+    _sql_constraints = [('barcode_uniq', 'unique (barcode)', "The Badge ID must be unique, this one is already assigned to another employee.")]
+
+    @api.constrains('pin')
+    def _verify_pin(self):
         for employee in self:
-            if not employee._check_recursion():
-                raise ValidationError(_('You cannot create a recursive hierarchy.'))
+            if employee.pin and not employee.pin.isdigit():
+                raise ValidationError(_("The PIN must be a sequence of digits."))
 
     @api.onchange('job_id')
     def _onchange_job_id(self):
@@ -229,24 +242,34 @@ class Employee(models.Model):
         if self.user_id:
             self.update(self._sync_user(self.user_id))
 
-    @api.onchange('user_id', 'resource_calendar_id')
+    @api.onchange('resource_calendar_id')
     def _onchange_timezone(self):
-        if self.user_id or self.resource_calendar_id:
-            self.tz = self.user_id.tz or self.resource_calendar_id.tz
+        if self.resource_calendar_id and not self.tz:
+            self.tz = self.resource_calendar_id.tz
 
     def _sync_user(self, user):
-        return dict(
+        vals = dict(
             name=user.name,
             image=user.image,
             work_email=user.email,
         )
+        if user.tz:
+            vals['tz'] = user.tz
+        return vals
 
     @api.model
     def create(self, vals):
         if vals.get('user_id'):
             vals.update(self._sync_user(self.env['res.users'].browse(vals['user_id'])))
         tools.image_resize_images(vals)
-        return super(Employee, self).create(vals)
+        employee = super(Employee, self).create(vals)
+        url = '/web#%s' % url_encode({'action': 'hr.plan_wizard_action', 'active_id': employee.id, 'active_model': 'hr.employee'})
+        employee._message_log(_('<b>Congratulations !</b> May I recommand you to setup an <a href="%s">onboarding plan ?</a>') % (url))
+        if employee.department_id:
+            self.env['mail.channel'].sudo().search([
+                ('subscription_department_ids', 'in', employee.department_id.id)
+            ])._subscribe_users()
+        return employee
 
     @api.multi
     def write(self, vals):
@@ -254,14 +277,45 @@ class Employee(models.Model):
             account_id = vals.get('bank_account_id') or self.bank_account_id.id
             if account_id:
                 self.env['res.partner.bank'].browse(account_id).partner_id = vals['address_home_id']
+        if vals.get('user_id'):
+            vals.update(self._sync_user(self.env['res.users'].browse(vals['user_id'])))
         tools.image_resize_images(vals)
-        return super(Employee, self).write(vals)
+        res = super(Employee, self).write(vals)
+        if vals.get('department_id') or vals.get('user_id'):
+            department_id = vals['department_id'] if vals.get('department_id') else self[:1].department_id.id
+            # When added to a department or changing user, subscribe to the channels auto-subscribed by department
+            self.env['mail.channel'].sudo().search([
+                ('subscription_department_ids', 'in', department_id)
+            ])._subscribe_users()
+        return res
 
     @api.multi
     def unlink(self):
         resources = self.mapped('resource_id')
         super(Employee, self).unlink()
         return resources.unlink()
+
+    def toggle_active(self):
+        res = super(Employee, self).toggle_active()
+        self.filtered(lambda employee: employee.active).write({
+            'departure_reason': False,
+            'departure_description': False,
+        })
+        if len(self) == 1 and not self.active:
+            return {
+                'type': 'ir.actions.act_window',
+                'name': _('Register Departure'),
+                'res_model': 'hr.departure.wizard',
+                'view_type': 'form',
+                'view_mode': 'form',
+                'target': 'new',
+                'context': {'active_id': self.id},
+            }
+        return res
+
+    @api.multi
+    def generate_random_barcode(self):
+        for i in self: i.barcode = "".join(choice(digits) for i in range(8))
 
     @api.depends('address_home_id.parent_id')
     def _compute_is_address_home_a_company(self):
@@ -272,6 +326,13 @@ class Employee(models.Model):
                 employee.is_address_home_a_company = employee.address_home_id.parent_id.id is not False
             except AccessError:
                 employee.is_address_home_a_company = False
+
+    @api.model
+    def get_import_templates(self):
+        return [{
+            'label': _('Import Template for Employees'),
+            'template': '/hr/static/xls/hr_employee.xls'
+        }]
 
 
 class Department(models.Model):

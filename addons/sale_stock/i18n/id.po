@@ -33,13 +33,13 @@ msgstr ""
 "Tersedia %s %s di seluruh gudang."
 
 #. module: sale_stock
-#: model:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
 msgid "<strong>Customer Reference:</strong>"
 msgstr "<strong>Referensi Pelanggan:</strong>"
 
 #. module: sale_stock
-#: model:ir.ui.view,arch_db:sale_stock.report_invoice_document_inherit_sale_stock
-#: model:ir.ui.view,arch_db:sale_stock.report_saleorder_document_inherit_sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.report_invoice_document_inherit_sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.report_saleorder_document_inherit_sale_stock
 msgid "<strong>Incoterms:</strong>"
 msgstr "<strong>Incoterms:</strong>"
 
@@ -49,12 +49,12 @@ msgid "After-Sale"
 msgstr "Layanan Purna Jual"
 
 #. module: sale_stock
-#: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
+#: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
 msgid "Apply special routes from orders (e.g. dropshipping, MTO)"
 msgstr "Gunakan rute khusus dari order penjualan (mis: dropship, MTO)"
 
 #. module: sale_stock
-#: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
+#: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
 msgid ""
 "By default Odoo computes the expected delivery date this way: order date + "
 "highest customer lead time of products. With this option, you can set a "
@@ -81,7 +81,7 @@ msgid "Deliver each product when available"
 msgstr "Mengirim setiap produk ketika tersedia"
 
 #. module: sale_stock
-#: model:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
 msgid "Delivery"
 msgstr "Pengiriman"
 
@@ -101,7 +101,7 @@ msgid "Display incoterms on Sales Order and related invoices"
 msgstr "Tampilkan incoterm pada Order Penjualan dan faktur terkait"
 
 #. module: sale_stock
-#: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
+#: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
 msgid "Display incoterms on orders &amp; invoices"
 msgstr "Tampilkan incoterm pada order &amp; faktur"
 
@@ -114,7 +114,7 @@ msgstr "Aktifkan Rute pada Detail Order Penjualan"
 #: model:ir.model.fields,field_description:sale_stock.field_account_invoice_incoterms_id
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings_group_display_incoterm
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_incoterm
-#: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
+#: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
 msgid "Incoterms"
 msgstr "Incoterm"
 
@@ -173,7 +173,7 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_res_company_security_lead
 #: model:ir.model.fields,help:sale_stock.field_res_config_settings_security_lead
-#: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid ""
 "Margin of error for dates promised to customers. Products will be scheduled "
 "for procurement and delivery that many days earlier than the actual promised"
@@ -185,7 +185,7 @@ msgstr ""
 " pada rantai pemasokan."
 
 #. module: sale_stock
-#: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "Move forward expected delivery dates by"
 msgstr "Majukan jadwal pengiriman sebanyak"
 
@@ -237,7 +237,7 @@ msgid "Quotation"
 msgstr "Penawaran"
 
 #. module: sale_stock
-#: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid ""
 "Reserving products manually in delivery orders or by running the scheduler "
 "is advised to better manage priorities in case of long customer lead times "
@@ -255,7 +255,7 @@ msgid "Route"
 msgstr "Rute"
 
 #. module: sale_stock
-#: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
+#: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
 msgid "Routes for Sales Order Lines"
 msgstr "Rute untuk Detail Order Penjualan"
 
@@ -270,7 +270,7 @@ msgid "Sale Order"
 msgstr "Order Penjualan"
 
 #. module: sale_stock
-#: model:ir.ui.view,arch_db:sale_stock.product_template_view_form_inherit_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.product_template_view_form_inherit_stock
 msgid "Sales"
 msgstr "Penjualan"
 
@@ -285,7 +285,7 @@ msgid "Sales Order Line"
 msgstr "Detail Order Penjualan"
 
 #. module: sale_stock
-#: model:ir.ui.view,arch_db:sale_stock.stock_location_route_view_form_inherit_sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.stock_location_route_view_form_inherit_sale_stock
 msgid "Sales Order Lines"
 msgstr "Detail Order Penjualan"
 
@@ -300,7 +300,7 @@ msgid "Sales Safety Days"
 msgstr "Jangka Waktu Aman Penjualan"
 
 #. module: sale_stock
-#: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "Schedule deliveries earlier to avoid delays"
 msgstr "Jadwalkan pengiriman lebih awal untuk menghindari penundaan"
 
@@ -320,7 +320,7 @@ msgid "Selectable on Sales Order Line"
 msgstr "Dapat Dipilih pada Detail Order Penjualan"
 
 #. module: sale_stock
-#: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
+#: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
 msgid "Set a delivery date on orders"
 msgstr "Set tanggal pengiriman pada order"
 
@@ -335,7 +335,7 @@ msgid "Ship products as soon as available, with back orders"
 msgstr "Kirim produk sesegera mungkin, dengan backorder"
 
 #. module: sale_stock
-#: model:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
 msgid "Shipping Information"
 msgstr "Informasi Pengiriman"
 
@@ -360,7 +360,7 @@ msgid "Stock Moves"
 msgstr "Pergerakan Stok"
 
 #. module: sale_stock
-#: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
+#: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
 msgid ""
 "This allows to apply a special route on sales order lines (e.g. "
 "dropshipping, make-to-order) in case of unusual order scenario. To be "
@@ -396,12 +396,12 @@ msgid "Warning"
 msgstr "Peringatan"
 
 #. module: sale_stock
-#: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "When to reserve sold products"
 msgstr "Kapan mereservasi produk yang terjual"
 
 #. module: sale_stock
-#: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "When to start shipping"
 msgstr "Kapan memulai pengiriman"
 
@@ -425,7 +425,7 @@ msgstr ""
 "gudang %s."
 
 #. module: sale_stock
-#: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "days"
 msgstr "hari"
 

@@ -3,6 +3,7 @@ from email.utils import formataddr
 
 from odoo.tests import tagged
 from odoo.addons.test_mail.tests import common
+from odoo.addons.test_mail.tests.common import mail_new_test_user
 from odoo.exceptions import AccessError, except_orm, ValidationError, UserError
 from odoo.tools import mute_logger
 
@@ -12,19 +13,10 @@ class TestChannelAccessRights(common.BaseFunctionalTest, common.MockEmails):
     @classmethod
     def setUpClass(cls):
         super(TestChannelAccessRights, cls).setUpClass()
-        Channel = cls.env['mail.channel'].with_context(cls._quick_create_ctx)
+        Channel = cls.env['mail.channel'].with_context(common.BaseFunctionalTest._test_context)
 
-        Users = cls.env['res.users'].with_context(cls._quick_create_user_ctx)
-        cls.user_public = Users.create({
-            'name': 'Bert Tartignole',
-            'login': 'bert',
-            'email': 'b.t@example.com',
-            'groups_id': [(6, 0, [cls.env.ref('base.group_public').id])]})
-        cls.user_portal = Users.create({
-            'name': 'Chell Gladys',
-            'login': 'chell',
-            'email': 'chell@gladys.portal',
-            'groups_id': [(6, 0, [cls.env.ref('base.group_portal').id])]})
+        cls.user_public = mail_new_test_user(cls.env, login='bert', groups='base.group_public', name='Bert Tartignole')
+        cls.user_portal = mail_new_test_user(cls.env, login='chell', groups='base.group_portal', name='Chell Gladys')
 
         # Pigs: base group for tests
         cls.group_pigs = Channel.create({
@@ -118,13 +110,13 @@ class TestChannelFeatures(common.BaseFunctionalTest, common.MockEmails):
     @classmethod
     def setUpClass(cls):
         super(TestChannelFeatures, cls).setUpClass()
-        cls.test_channel = cls.env['mail.channel'].with_context(cls._quick_create_ctx).create({
+        cls.test_channel = cls.env['mail.channel'].with_context(common.BaseFunctionalTest._test_context).create({
             'name': 'Test',
             'description': 'Description',
             'alias_name': 'test',
             'public': 'public',
         })
-        cls.test_partner = cls.env['res.partner'].with_context(cls._quick_create_ctx).create({
+        cls.test_partner = cls.env['res.partner'].with_context(common.BaseFunctionalTest._test_context).create({
             'name': 'Test Partner',
             'email': 'test@example.com',
         })

@@ -44,8 +44,6 @@ var AbstractMessage =  Class.extend({
         this._id = data.id;
         this._isDiscussion = data.is_discussion;
         this._isNotification = data.is_notification;
-        // if set, the message should display the author of the message
-        this._displayAuthor = false;
         this._serverAuthorID = data.author_id;
         this._type = data.message_type || undefined;
 
@@ -56,14 +54,6 @@ var AbstractMessage =  Class.extend({
     // Public
     //--------------------------------------------------------------------------
 
-    /**
-     * Set whether the message should display the author or not
-     *
-     * @param {boolean} bool if set, display the author of this message
-     */
-    displayAuthor: function (bool) {
-        this._displayAuthor = bool;
-    },
     /**
      * Get the list of files attached to this message.
      * Note that attachments are stored with server-format
@@ -276,12 +266,12 @@ var AbstractMessage =  Class.extend({
         return this._isDiscussion;
     },
     /**
-     * State whether this message is linked to a document
-     * By default, messages are not linked to a document.
+     * State whether this message is linked to a document thread
+     * By default, messages are not linked to a document thread.
      *
      * @return {boolean}
      */
-    isLinkedToDocument: function () {
+    isLinkedToDocumentThread: function () {
         return false;
     },
     /**
@@ -346,14 +336,6 @@ var AbstractMessage =  Class.extend({
         return false;
     },
     /**
-     * State whether this message should display the author
-     *
-     * @return {boolean}
-     */
-    shouldDisplayAuthor: function () {
-        return this._displayAuthor;
-    },
-    /**
      * State whether this message should redirect to the author
      * when clicking on the author of this message.
      *
@@ -362,7 +344,7 @@ var AbstractMessage =  Class.extend({
      * @return {boolean}
      */
     shouldRedirectToAuthor: function () {
-        return !this._isAuthor();
+        return !this._isMyselfAuthor();
     },
 
     //--------------------------------------------------------------------------
@@ -388,7 +370,7 @@ var AbstractMessage =  Class.extend({
      * @private
      * @return {boolean}
      */
-    _isAuthor: function () {
+    _isMyselfAuthor: function () {
         return this.hasAuthor() && (this.getAuthorID() === session.partner_id);
     },
     /**

@@ -9,6 +9,7 @@ from odoo.tools import float_compare
 class StockScrap(models.Model):
     _name = 'stock.scrap'
     _order = 'id desc'
+    _description = 'Scrap'
 
     def _get_default_scrap_location_id(self):
         return self.env['stock.location'].search([('scrap_location', '=', True), ('company_id', 'in', [self.env.user.company_id.id, False])], limit=1).id
@@ -26,7 +27,7 @@ class StockScrap(models.Model):
         states={'done': [('readonly', True)]})
     origin = fields.Char(string='Source Document')
     product_id = fields.Many2one(
-        'product.product', 'Product',
+        'product.product', 'Product', domain=[('type', 'in', ['product', 'consu'])],
         required=True, states={'done': [('readonly', True)]})
     product_uom_id = fields.Many2one(
         'uom.uom', 'Unit of Measure',
@@ -121,6 +122,8 @@ class StockScrap(models.Model):
 
     def action_validate(self):
         self.ensure_one()
+        if self.product_id.type != 'product':
+            return self.do_scrap()
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         available_qty = sum(self.env['stock.quant']._gather(self.product_id,
                                                             self.location_id,

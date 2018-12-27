@@ -3,6 +3,7 @@
 
 from datetime import datetime
 import random
+import json
 
 import itertools
 
@@ -15,7 +16,7 @@ from odoo.tools import html2plaintext
 class Blog(models.Model):
     _name = 'blog.blog'
     _description = 'Blogs'
-    _inherit = ['mail.thread', 'website.seo.metadata']
+    _inherit = ['mail.thread', 'website.seo.metadata', 'website.multi.mixin']
     _order = 'name'
 
     name = fields.Char('Blog Name', required=True, translate=True)
@@ -35,7 +36,7 @@ class Blog(models.Model):
         return res
 
     @api.multi
-    @api.returns('self', lambda value: value.id)
+    @api.returns('mail.message', lambda value: value.id)
     def message_post(self, parent_id=False, subtype=None, **kwargs):
         """ Temporary workaround to avoid spam. If someone replies on a channel
         through the 'Presentation Published' email, it should be considered as a
@@ -108,7 +109,7 @@ class BlogTag(models.Model):
 class BlogPost(models.Model):
     _name = "blog.post"
     _description = "Blog Post"
-    _inherit = ['mail.thread', 'website.seo.metadata', 'website.published.mixin']
+    _inherit = ['mail.thread', 'website.seo.metadata', 'website.published.multi.mixin']
     _order = 'id DESC'
     _mail_post_access = 'read'
 
@@ -133,7 +134,7 @@ class BlogPost(models.Model):
             <section class="s_text_block">
                 <div class="container">
                     <div class="row">
-                        <div class="col-md-12 mb16 mt16">
+                        <div class="col-lg-12 mb16 mt16">
                             <p class="o_default_snippet_text">''' + _("Start writing here...") + '''</p>
                         </div>
                     </div>
@@ -164,9 +165,11 @@ class BlogPost(models.Model):
     create_uid = fields.Many2one('res.users', 'Created by', index=True, readonly=True)
     write_date = fields.Datetime('Last Updated on', index=True, readonly=True)
     write_uid = fields.Many2one('res.users', 'Last Contributor', index=True, readonly=True)
-    author_avatar = fields.Binary(related='author_id.image_small', string="Avatar")
+    author_avatar = fields.Binary(related='author_id.image_small', string="Avatar", readonly=False)
     visits = fields.Integer('No of Views', copy=False)
     ranking = fields.Float(compute='_compute_ranking', string='Ranking')
+
+    website_id = fields.Many2one(related='blog_id.website_id', readonly=True)
 
     @api.multi
     @api.depends('content', 'teaser_manual')
@@ -221,7 +224,8 @@ class BlogPost(models.Model):
         result = True
         for post in self:
             copy_vals = dict(vals)
-            if 'website_published' in vals and 'published_date' not in vals and (post.published_date or '') <= fields.Datetime.now():
+            if ('website_published' in vals and 'published_date' not in vals and
+                    (not post.published_date or post.published_date <= fields.Datetime.now())):
                 copy_vals['published_date'] = vals['website_published'] and fields.Datetime.now() or False
             result &= super(BlogPost, self).write(copy_vals)
         self._check_for_publication(vals)
@@ -237,7 +241,7 @@ class BlogPost(models.Model):
             return super(BlogPost, self).get_access_action(access_uid)
         return {
             'type': 'ir.actions.act_url',
-            'url': self.url,
+            'url': self.website_url,
             'target': 'self',
             'target_type': 'public',
             'res_id': self.id,
@@ -255,12 +259,19 @@ class BlogPost(models.Model):
         return groups
 
     @api.multi
-    def message_get_message_notify_values(self, message, message_values):
+    def _notify_customize_recipients(self, message, msg_vals, recipients_vals):
         """ Override to avoid keeping all notified recipients of a comment.
         We avoid tracking needaction on post comments. Only emails should be
         sufficient. """
-        if message.message_type == 'comment':
-            return {
-                'needaction_partner_ids': [],
-            }
+        msg_type = msg_vals.get('message_type') or message.message_type
+        if msg_type == 'comment':
+            return {'needaction_partner_ids': []}
         return {}
+
+    def _default_website_meta(self):
+        res = super(BlogPost, self)._default_website_meta()
+        res['default_opengraph']['og:description'] = res['default_twitter']['twitter:description'] = self.subtitle
+        blog_post_cover_properties = json.loads(self.cover_properties)
+        res['default_opengraph']['og:image'] = res['default_twitter']['twitter:image'] = blog_post_cover_properties.get('background-image', 'none')[4:-1]
+        res['default_opengraph']['og:title'] = res['default_twitter']['twitter:title'] = self.name
+        return res

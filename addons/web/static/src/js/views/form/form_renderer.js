@@ -5,6 +5,7 @@ var BasicRenderer = require('web.BasicRenderer');
 var config = require('web.config');
 var core = require('web.core');
 var dom = require('web.dom');
+var viewUtils = require('web.viewUtils');
 
 var _t = core._t;
 var qweb = core.qweb;
@@ -35,7 +36,7 @@ var FormRenderer = BasicRenderer.extend({
      * @override
      */
     start: function () {
-        if (config.device.size_class <= config.device.SIZES.XXS) {
+        if (config.device.size_class <= config.device.SIZES.XS) {
             this.$el.addClass('o_xxs_form_view');
         }
         return this._super.apply(this, arguments);
@@ -74,7 +75,7 @@ var FormRenderer = BasicRenderer.extend({
             }
         }
         if (focusWidget) {
-            return focusWidget.activate({noselect: true});
+            return focusWidget.activate({noselect: true, noAutomaticCreate: true});
         }
     },
     /**
@@ -86,7 +87,7 @@ var FormRenderer = BasicRenderer.extend({
      * @param {string} recordID
      * @returns {string[]}
      */
-    canBeSaved: function (recordID) {
+    canBeSaved: function () {
         var self = this;
         var fieldNames = this._super.apply(this, arguments);
 
@@ -130,7 +131,7 @@ var FormRenderer = BasicRenderer.extend({
      *
      * @override
      */
-    confirmChange: function (state, id, fields, e) {
+    confirmChange: function () {
         var self = this;
         return this._super.apply(this, arguments).then(function (resetWidgets) {
             _.each(resetWidgets, function (widget) {
@@ -159,13 +160,14 @@ var FormRenderer = BasicRenderer.extend({
             .removeAttr('disabled');
     },
     /**
-     * Put the focus on the last activated widget. 
+     * Put the focus on the last activated widget.
      * This function is used when closing a dialog to give the focus back to the
-     * form that has opened it and ensures that the focus is in the correct 
+     * form that has opened it and ensures that the focus is in the correct
      * field.
      */
     focusLastActivatedWidget: function () {
-        this._activateNextFieldWidget(this.state, this.lastActivatedFieldIndex - 1);
+        this._activateNextFieldWidget(this.state, this.lastActivatedFieldIndex - 1,
+            { noAutomaticCreate: true });
     },
     /**
      * returns the active tab pages for each notebook
@@ -181,7 +183,7 @@ var FormRenderer = BasicRenderer.extend({
             var $notebook = $(this);
             var name = $notebook.data('name');
             var index = -1;
-            $notebook.find('li').each(function (i) {
+            $notebook.find('.nav-link').each(function (i) {
                 if ($(this).hasClass('active')) {
                     index = i;
                 }
@@ -189,6 +191,19 @@ var FormRenderer = BasicRenderer.extend({
             state[name] = index;
         });
         return state;
+    },
+    /**
+     * Reset the tracking of the last activated field. The fast entry with
+     * keyboard navigation needs to track the last activated field in order to
+     * set the focus.
+     *
+     * In particular, when there are changes of mode (e.g. edit -> readonly ->
+     * edit), we do not want to auto-set the focus on the previously last
+     * activated field. To avoid this issue, this method should be called
+     * whenever there is a change of mode.
+     */
+    resetLastActivatedField: function () {
+        this.lastActivatedFieldIndex = -1;
     },
     /**
      * restore active tab pages for each notebook
@@ -208,6 +223,15 @@ var FormRenderer = BasicRenderer.extend({
                 }
             }
         });
+    },
+    /**
+     * Called each time the form view is attached into the DOM
+     */
+    on_attach_callback: function () {
+        _.forEach(this.allFieldWidgets, function (widgets){
+            _.invoke(widgets, 'on_attach_callback');
+        });
+        this._super.apply(this, arguments);
     },
     /**
      * @override method from AbstractRenderer
@@ -265,7 +289,6 @@ var FormRenderer = BasicRenderer.extend({
     _addButtonTooltip: function (node, $button) {
         var self = this;
         $button.tooltip({
-            delay: { show: 1000, hide: 0 },
             title: function () {
                 return qweb.render('WidgetButton.tooltip', {
                     debug: config.debug,
@@ -287,6 +310,30 @@ var FormRenderer = BasicRenderer.extend({
                 attrs: node.attrs,
                 record: self.state,
             });
+        });
+    },
+    /**
+     * Enable swipe event to allow navigating through records
+     *
+     * @private
+     */
+    _enableSwipe: function () {
+        var self = this;
+        this.$('.o_form_sheet').swipe({
+            swipeLeft: function () {
+                this.css({
+                    transform: 'translateX(-100%)',
+                    transition: '350ms'
+                });
+                self.trigger_up('swipe_left');
+            },
+            swipeRight: function () {
+                this.css({
+                    transform: 'translateX(100%)',
+                    transition: '350ms'
+                });
+                self.trigger_up('swipe_right');
+            },
         });
     },
     /**
@@ -364,11 +411,11 @@ var FormRenderer = BasicRenderer.extend({
                 text: _t("More"),
             }));
 
-            var $ul = $("<ul>", {'class': "dropdown-menu o_dropdown_more", role: "menu"});
+            var $dropdown = $("<div>", {'class': "dropdown-menu o_dropdown_more", role: "menu"});
             _.each(folded_buttons, function ($button) {
-                $('<li>').appendTo($ul).append($button);
+                $button.addClass('dropdown-item').appendTo($dropdown);
             });
-            $ul.appendTo($result);
+            $dropdown.appendTo($result);
         }
 
         this._handleAttributes($result, node);
@@ -393,16 +440,17 @@ var FormRenderer = BasicRenderer.extend({
      * @returns {jQueryElement}
      */
     _renderHeaderButton: function (node) {
-        var $button = this._renderButtonFromNode(node);
+        var $button = viewUtils.renderButtonFromNode(node);
 
         // Current API of odoo for rendering buttons is "if classes are given
         // use those on top of the 'btn' and 'btn-{size}' classes, otherwise act
-        // as if 'btn-default' class was given". The problem is that, for header
-        // buttons only, we allowed users to only indicate their custom classes
-        // without having to explicitely ask for the 'btn-default' class to be
-        // added. We force it so here when no bootstrap btn type class is found.
-        if ($button.not('.btn-primary, .btn-default, .btn-link, .btn-success, .btn-info, .btn-warning, .btn-danger').length) {
-            $button.addClass('btn-default');
+        // as if 'btn-secondary' class was given". The problem is that, for
+        // header buttons only, we allowed users to only indicate their custom
+        // classes without having to explicitely ask for the 'btn-secondary'
+        // class to be added. We force it so here when no bootstrap btn type
+        // class is found.
+        if ($button.not('.btn-primary, .btn-secondary, .btn-link, .btn-success, .btn-info, .btn-warning, .btn-danger').length) {
+            $button.addClass('btn-secondary');
         }
 
         this._addOnClickAction($button, node);
@@ -592,10 +640,13 @@ var FormRenderer = BasicRenderer.extend({
      * @returns {jQueryElement}
      */
     _renderStatButton: function (node) {
-        var $button = this._renderButtonFromNode(node, {
+        var $button = viewUtils.renderButtonFromNode(node, {
             extraClass: 'oe_stat_button',
         });
         $button.append(_.map(node.children, this._renderNode.bind(this)));
+        if (node.attrs.help) {
+            this._addButtonTooltip(node, $button);
+        }
         this._addOnClickAction($button, node);
         this._handleAttributes($button, node);
         this._registerModifiers(node, this.state, $button);
@@ -612,10 +663,11 @@ var FormRenderer = BasicRenderer.extend({
             'data-toggle': 'tab',
             disable_anchor: 'true',
             href: '#' + page_id,
+            class: 'nav-link',
             role: 'tab',
             text: page.attrs.string,
         });
-        return $('<li>').append($a);
+        return $('<li>', {class: 'nav-item'}).append($a);
     },
     /**
      * @private
@@ -634,7 +686,7 @@ var FormRenderer = BasicRenderer.extend({
      * @returns {jQueryElement}
      */
     _renderTagButton: function (node) {
-        var $button = this._renderButtonFromNode(node);
+        var $button = viewUtils.renderButtonFromNode(node);
         $button.append(_.map(node.children, this._renderNode.bind(this)));
         this._addOnClickAction($button, node);
         this._handleAttributes($button, node);
@@ -761,7 +813,7 @@ var FormRenderer = BasicRenderer.extend({
     _renderTagNotebook: function (node) {
         var self = this;
         var $headers = $('<ul class="nav nav-tabs">');
-        var $pages = $('<div class="tab-content nav nav-tabs">');
+        var $pages = $('<div class="tab-content">');
         var autofocusTab = -1;
         // renderedTabs is used to aggregate the generated $headers and $pages
         // alongside their node, so that their modifiers can be registered once
@@ -785,7 +837,7 @@ var FormRenderer = BasicRenderer.extend({
         });
         if (renderedTabs.length) {
             var tabToFocus = renderedTabs[Math.max(0, autofocusTab)];
-            tabToFocus.$header.addClass('active');
+            tabToFocus.$header.find('.nav-link').addClass('active');
             tabToFocus.$page.addClass('active');
         }
         // register the modifiers for each tab
@@ -793,12 +845,13 @@ var FormRenderer = BasicRenderer.extend({
             self._registerModifiers(tab.node, self.state, tab.$header, {
                 callback: function (element, modifiers) {
                     // if the active tab is invisible, activate the first visible tab instead
-                    if (modifiers.invisible && element.$el.hasClass('active')) {
-                        element.$el.removeClass('active');
+                    var $link = element.$el.find('.nav-link');
+                    if (modifiers.invisible && $link.hasClass('active')) {
+                        $link.removeClass('active');
                         tab.$page.removeClass('active');
-                        var $firstVisibleTab = $headers.find('li:not(.o_invisible_modifier):first()');
+                        var $firstVisibleTab = $headers.find('li:not(.o_invisible_modifier):first() > a');
                         $firstVisibleTab.addClass('active');
-                        $pages.find($firstVisibleTab.find('a').attr('href')).addClass('active');
+                        $pages.find($firstVisibleTab.attr('href')).addClass('active');
                     }
                 },
             });
@@ -828,7 +881,7 @@ var FormRenderer = BasicRenderer.extend({
      */
     _renderTagSheet: function (node) {
         this.has_sheet = true;
-        var $sheet = $('<div>').addClass('o_form_sheet');
+        var $sheet = $('<div>', {class: 'clearfix o_form_sheet'});
         $sheet.append(_.map(node.children, this._renderNode.bind(this)));
         return $sheet;
     },
@@ -859,7 +912,7 @@ var FormRenderer = BasicRenderer.extend({
         this.defs = defs;
         var $form = this._renderNode(this.arch).addClass(this.className);
         delete this.defs;
-        
+
         return $.when.apply($, defs).then(function () {
             self._updateView($form.contents());
         }, function () {
@@ -867,7 +920,7 @@ var FormRenderer = BasicRenderer.extend({
         }).then(function(){
             if (self.lastActivatedFieldIndex >= 0) {
                 self._activateNextFieldWidget(self.state, self.lastActivatedFieldIndex);
-            } 
+            }
         });
     },
     /**
@@ -890,6 +943,11 @@ var FormRenderer = BasicRenderer.extend({
         this.$el.toggleClass('o_form_editable', this.mode === 'edit');
         this.$el.toggleClass('o_form_readonly', this.mode === 'readonly');
 
+        // Enable swipe for mobile when formview is in readonly mode and there are multiple records
+        if (config.device.isMobile && this.mode === 'readonly' && this.state.count > 1) {
+            this._enableSwipe();
+        }
+
         // Attach the tooltips on the fields' label
         _.each(this.allFieldWidgets[this.state.id], function (widget) {
             var idForLabel = self.idsForLabels[widget.name];
@@ -900,7 +958,7 @@ var FormRenderer = BasicRenderer.extend({
             // enterprise label will be displayed as many times as the field
             // exists on settings.
             var $widgets = self.$('.o_field_widget[name=' + widget.name + ']');
-            var $label = idForLabel ? self.$('label[for=' + idForLabel + ']') : $();
+            var $label = idForLabel ? self.$('.o_form_label[for=' + idForLabel + ']') : $();
             $label = $label.eq($widgets.index(widget.$el));
             if (config.debug || widget.attrs.help || widget.field.help) {
                 self._addFieldTooltip(widget, $label);
@@ -920,15 +978,20 @@ var FormRenderer = BasicRenderer.extend({
      * @param {idForLabel} string
      */
     _setIDForLabel: function (widget, idForLabel) {
-        widget.getFocusableElement().attr('id', idForLabel);
+        widget.setIDForLabel(idForLabel);
     },
 
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
-    _onActivateNextWidget: function (e) {
-        e.stopPropagation();
-        var index = this.allFieldWidgets[this.state.id].indexOf(e.data.target);
+
+    /**
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onActivateNextWidget: function (ev) {
+        ev.stopPropagation();
+        var index = this.allFieldWidgets[this.state.id].indexOf(ev.data.target);
         this._activateNextFieldWidget(this.state, index);
     },
     /**
@@ -947,10 +1010,7 @@ var FormRenderer = BasicRenderer.extend({
      * @param {OdooEvent} ev
      */
     _onNavigationMove: function (ev) {
-        if (ev.data.direction !== "cancel") {
-            ev.stopPropagation();
-        }
-
+        ev.stopPropagation();
         var index;
         if (ev.data.direction === "next") {
             index = this.allFieldWidgets[this.state.id].indexOf(ev.data.target || ev.target);
@@ -966,9 +1026,9 @@ var FormRenderer = BasicRenderer.extend({
      * @private
      * @param {MouseEvent} ev
      */
-    _onTranslate: function (event) {
-        event.preventDefault();
-        this.trigger_up('translate', {fieldName: event.target.name, id: this.state.id});
+    _onTranslate: function (ev) {
+        ev.preventDefault();
+        this.trigger_up('translate', {fieldName: ev.target.name, id: this.state.id});
     },
 });
 

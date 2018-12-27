@@ -17,8 +17,8 @@
          <field name="name">sale.report.graph</field>
          <field name="model">sale.report</field>
          <field name="arch" type="xml">
-             <graph string="Sales Analysis">
-                 <field name="date" type="row" interval="day"/>
+             <graph string="Sales Analysis" type="line">
+                 <field name="confirmation_date" type="row" interval="day"/>
                  <field name="price_subtotal" type="measure"/>
              </graph>
          </field>
@@ -31,27 +31,31 @@
             <search string="Sales Analysis">
                 <field name="date"/>
                 <filter string="Date" name="year" invisible="1" date="date" default_period="this_year"/>
-                <filter name="Quotations" string="Quotations" domain="[('state','in', ('draft', 'sent'))]"/>
-                <filter name="Sales" string="Sales" domain="[('state','not in',('draft', 'cancel', 'sent'))]"/>
+                <filter name="Quotations" string="Quotations" domain="[('state','=', 'draft')]"/>
+                <filter name="Sales" string="Sales Orders" domain="[('state','not in',('draft', 'cancel', 'sent'))]"/>
                 <separator/>
-                <field name="partner_id"/>
-                <field name="product_id"/>
                 <field name="user_id"/>
+                <field name="team_id"/>
+                <field name="product_id"/>
+                <field name="categ_id"/>
+                <field name="partner_id"/>
+                <field name="country_id"/>
                 <group expand="0" string="Extended Filters">
                     <field name="categ_id" filter_domain="[('categ_id', 'child_of', self)]"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                 </group>
                 <group expand="1" string="Group By">
                     <filter string="Salesperson" name="User" context="{'group_by':'user_id'}"/>
-                    <filter string="Sales Channel" name="sales_channel" context="{'group_by':'team_id'}"/>
-                    <filter string="Customer Country" name="country_id" context="{'group_by':'country_id'}"/>
+                    <filter string="Sales Team" name="sales_channel" context="{'group_by':'team_id'}"/>
                     <filter string="Customer" name="Customer" context="{'group_by':'partner_id'}"/>
+                    <filter string="Customer Country" name="country_id" context="{'group_by':'country_id'}"/>
                     <filter string="Product" name="Product" context="{'group_by':'product_id'}"/>
                     <filter string="Product Category" name="Category" context="{'group_by':'categ_id'}"/>
                     <filter name="status" string="Status" context="{'group_by':'state'}"/>
                     <filter string="Company" name="company" groups="base.group_multi_company" context="{'group_by':'company_id'}"/>
                     <separator/>
-                    <filter string="Confirmation Date" name="order_month" context="{'group_by':'date:month'}" help="Ordered date of the sales order"/>
+                    <filter string="Order Date" name="date" context="{'group_by':'date'}"/>
+                    <filter string="Confirmation Date" name="confirm_month" context="{'group_by':'confirmation_date:month'}"/>
                 </group>
             </search>
         </field>

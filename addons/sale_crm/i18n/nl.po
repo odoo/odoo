@@ -3,17 +3,15 @@
 # * sale_crm
 # 
 # Translators:
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
-# Eric Geens <ericgeens@yahoo.com>, 2016
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
-# Martin Trigaux, 2016
+# Martin Trigaux, 2018
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
-"Last-Translator: Martin Trigaux, 2016\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-09-21 13:17+0000\n"
+"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2018\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,14 +20,20 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sale_crm
-#: model:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
+#: model_terms:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
 msgid "<span class=\"o_stat_text\"> Orders</span>"
 msgstr "<span class=\"o_stat_text\"> Orders</span>"
 
 #. module: sale_crm
-#: model:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
+#: model_terms:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
 msgid "<span class=\"o_stat_text\"> Quotation(s) </span>"
 msgstr "<span class=\"o_stat_text\"> Offerte(s) </span>"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_account_invoice__campaign_id
+#: model:ir.model.fields,field_description:sale_crm.field_sale_order__campaign_id
+msgid "Campaign"
+msgstr "Campagne"
 
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_account_invoice
@@ -47,17 +51,28 @@ msgid "Lead/Opportunity"
 msgstr "Lead/Prospect"
 
 #. module: sale_crm
-#: model:ir.ui.view,arch_db:sale_crm.sale_view_inherit123
+#: model_terms:ir.ui.view,arch_db:sale_crm.sale_view_inherit123
 msgid "Log in the chatter from which opportunity the order originates"
 msgstr "In de chat opslaan welke prospect aan de basis van de verkoop ligt"
 
 #. module: sale_crm
-#: model:ir.ui.view,arch_db:sale_crm.sale_view_inherit123
+#: model_terms:ir.ui.view,arch_db:sale_crm.sale_view_inherit123
 msgid "Marketing"
 msgstr "Marketing"
 
 #. module: sale_crm
-#: model:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
+#: model:ir.model.fields,field_description:sale_crm.field_account_invoice__medium_id
+#: model:ir.model.fields,field_description:sale_crm.field_sale_order__medium_id
+msgid "Medium"
+msgstr "Medium"
+
+#. module: sale_crm
+#: model:ir.ui.menu,name:sale_crm.sale_order_menu_quotations_crm
+msgid "My Quotations"
+msgstr "Mijn offertes"
+
+#. module: sale_crm
+#: model_terms:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
 msgid "New Quotation"
 msgstr "Nieuwe offerte"
 
@@ -84,15 +99,18 @@ msgstr "Pijplijn"
 
 #. module: sale_crm
 #: model:ir.actions.act_window,name:sale_crm.sale_action_quotations_new
-#: model:ir.model,name:sale_crm.model_sale_order
 msgid "Quotation"
 msgstr "Offerte"
 
 #. module: sale_crm
 #: model:ir.actions.act_window,name:sale_crm.sale_action_quotations
-#: model:ir.ui.menu,name:sale_crm.sale_order_menu_quotations_crm
 msgid "Quotations"
 msgstr "Offertes"
+
+#. module: sale_crm
+#: model:ir.model,name:sale_crm.model_sale_order
+msgid "Sale Order"
+msgstr "Verkooporder"
 
 #. module: sale_crm
 #: model:ir.actions.act_window,name:sale_crm.sale_action_orders
@@ -101,8 +119,14 @@ msgstr "Verkooporders"
 
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_crm_team
-msgid "Sales Channel"
-msgstr "Verkoopkanaal"
+msgid "Sales Channels"
+msgstr "Verkoopkanalen"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_account_invoice__source_id
+#: model:ir.model.fields,field_description:sale_crm.field_sale_order__source_id
+msgid "Source"
+msgstr "Bron"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_lead__sale_amount_total
@@ -113,6 +137,33 @@ msgstr "Totaal orders"
 #: model:ir.model.fields,field_description:sale_crm.field_sale_order__tag_ids
 msgid "Tags"
 msgstr "Labels"
+
+#. module: sale_crm
+#: model:ir.model.fields,help:sale_crm.field_account_invoice__campaign_id
+#: model:ir.model.fields,help:sale_crm.field_sale_order__campaign_id
+msgid ""
+"This is a name that helps you keep track of your different campaign efforts,"
+" e.g. Fall_Drive, Christmas_Special"
+msgstr ""
+"Dit is een naam die u helpt bij het volgen van uw verschillende campagne "
+"inspanningen, bijvoorbeeld Herfst_Rit, Kerstmis_Special"
+
+#. module: sale_crm
+#: model:ir.model.fields,help:sale_crm.field_account_invoice__medium_id
+#: model:ir.model.fields,help:sale_crm.field_sale_order__medium_id
+msgid "This is the method of delivery, e.g. Postcard, Email, or Banner Ad"
+msgstr ""
+"Dit een levermethode, bijv. ansichtkaart, e-mail of een banner advertentie"
+
+#. module: sale_crm
+#: model:ir.model.fields,help:sale_crm.field_account_invoice__source_id
+#: model:ir.model.fields,help:sale_crm.field_sale_order__source_id
+msgid ""
+"This is the source of the link, e.g. Search Engine, another domain, or name "
+"of email list"
+msgstr ""
+"Dit is de bron van de link, bijv, zoekmachine, een ander domein, of een naam"
+" of e-mail lijst"
 
 #. module: sale_crm
 #: model:ir.model.fields,help:sale_crm.field_crm_lead__sale_amount_total

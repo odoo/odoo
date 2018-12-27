@@ -7,7 +7,7 @@
     'version': '2.0',
     'category': 'Human Resources',
     'sequence': 81,
-    'summary': 'Manage employee attendances',
+    'summary': 'Track employee attendance',
     'description': """
 This module aims to manage employee's attendances.
 ==================================================
@@ -26,7 +26,6 @@ actions(Check in/Check out) performed by them.
         'views/hr_department_view.xml',
         'views/hr_employee_view.xml',
         'views/res_config_settings_views.xml',
-        'views/res_users_views.xml',
     ],
     'demo': [
         'data/hr_attendance_demo.xml'

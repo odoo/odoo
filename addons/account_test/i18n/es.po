@@ -3,23 +3,14 @@
 # * account_test
 # 
 # Translators:
-# Martin Trigaux, 2016
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2016
-# Leonardo Chianea <noamixcontenidos@gmail.com>, 2016
-# Ivan Nieto <ivan.n.s@tuta.io>, 2016
-# Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2016
-# Ana Juaristi <ajuaristio@gmail.com>, 2016
-# Antonio Trueba, 2016
-# José Vicente <txusev@gmail.com>, 2016
-# oihane <oihanecruce@gmail.com>, 2016
-# Carles Antoli <carlesantoli@hotmail.com>, 2016
+# Martin Trigaux, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
-"Last-Translator: Carles Antoli <carlesantoli@hotmail.com>, 2016\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-09-21 13:17+0000\n"
+"Last-Translator: Martin Trigaux, 2018\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,7 +19,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: account_test
-#: model:ir.ui.view,arch_db:account_test.report_accounttest
+#: model_terms:ir.ui.view,arch_db:account_test.report_accounttest
 msgid ""
 "<br/>\n"
 "                        <strong>Description:</strong>"
@@ -37,9 +28,19 @@ msgstr ""
 "<strong>Descripción:</strong>"
 
 #. module: account_test
-#: model:ir.ui.view,arch_db:account_test.report_accounttest
+#: model_terms:ir.ui.view,arch_db:account_test.report_accounttest
 msgid "<strong>Name:</strong>"
 msgstr "<strong>Nombre:</strong>"
+
+#. module: account_test
+#: model:ir.model,name:account_test.model_report_account_test_report_accounttest
+msgid "Account Test Report"
+msgstr ""
+
+#. module: account_test
+#: model:ir.model,name:account_test.model_accounting_assert_test
+msgid "Accounting Assert Test"
+msgstr ""
 
 #. module: account_test
 #: model:ir.actions.act_window,name:account_test.action_accounting_assert
@@ -49,7 +50,7 @@ msgid "Accounting Tests"
 msgstr "Pruebas contables"
 
 #. module: account_test
-#: model:ir.ui.view,arch_db:account_test.report_accounttest
+#: model_terms:ir.ui.view,arch_db:account_test.report_accounttest
 msgid "Accouting tests on"
 msgstr "Pruebas de contabilidad en"
 
@@ -104,12 +105,12 @@ msgid "Check the balance: Debit sum = Credit sum"
 msgstr "Comprobar el saldo: suma del debe = suma del haber"
 
 #. module: account_test
-#: model:ir.ui.view,arch_db:account_test.account_assert_form
+#: model_terms:ir.ui.view,arch_db:account_test.account_assert_form
 msgid "Code Help"
 msgstr "Ayuda del código"
 
 #. module: account_test
-#: model:ir.ui.view,arch_db:account_test.account_assert_form
+#: model_terms:ir.ui.view,arch_db:account_test.account_assert_form
 msgid ""
 "Code should always set a variable named `result` with the result of your test, that can be a list or\n"
 "a dictionary. If `result` is an empty list, it means that the test was succesful. Otherwise it will\n"
@@ -151,7 +152,7 @@ msgstr ""
 "    result = cr.dictfetchall()"
 
 #. module: account_test
-#: model:ir.actions.act_window,help:account_test.action_accounting_assert
+#: model_terms:ir.actions.act_window,help:account_test.action_accounting_assert
 msgid "Create a new accounting test"
 msgstr ""
 
@@ -166,7 +167,7 @@ msgid "Created on"
 msgstr "Creado el"
 
 #. module: account_test
-#: model:ir.ui.view,arch_db:account_test.account_assert_form
+#: model_terms:ir.ui.view,arch_db:account_test.account_assert_form
 msgid "Description"
 msgstr "Descripción"
 
@@ -177,7 +178,7 @@ msgid "Display Name"
 msgstr "Nombre a mostrar"
 
 #. module: account_test
-#: model:ir.ui.view,arch_db:account_test.account_assert_form
+#: model_terms:ir.ui.view,arch_db:account_test.account_assert_form
 msgid "Expression"
 msgstr "Expresión"
 
@@ -204,7 +205,7 @@ msgid "Last Updated on"
 msgstr "Última actualización el"
 
 #. module: account_test
-#: model:ir.ui.view,arch_db:account_test.account_assert_form
+#: model_terms:ir.ui.view,arch_db:account_test.account_assert_form
 msgid "Python Code"
 msgstr "Código Python"
 
@@ -262,23 +263,13 @@ msgid "Test Name"
 msgstr "Nombre de la prueba"
 
 #. module: account_test
-#: model:ir.ui.view,arch_db:account_test.account_assert_form
-#: model:ir.ui.view,arch_db:account_test.account_assert_tree
+#: model_terms:ir.ui.view,arch_db:account_test.account_assert_form
+#: model_terms:ir.ui.view,arch_db:account_test.account_assert_tree
 msgid "Tests"
 msgstr "Tests"
 
 #. module: account_test
-#: code:addons/account_test/report/report_account_test.py:52
+#: code:addons/account_test/report/report_account_test.py:53
 #, python-format
 msgid "The test was passed successfully"
 msgstr "La prueba fue superada satisfactoriamente"
-
-#. module: account_test
-#: model:ir.model,name:account_test.model_accounting_assert_test
-msgid "accounting.assert.test"
-msgstr "Prueba de contabilidad"
-
-#. module: account_test
-#: model:ir.model,name:account_test.model_report_account_test_report_accounttest
-msgid "report.account_test.report_accounttest"
-msgstr "report.account_test.report_accounttest"

@@ -170,17 +170,7 @@ a date or an e-mail address, add CC's addresses as followers, etc.).
         using the subtypes given in the parameters
     :return: Success/Failure
     :rtype: bool
-    
-.. method:: message_subscribe_users(user_ids=None, subtype_ids=None)
 
-    Wrapper on message_subscribe, using users instead of partners.
-    
-    :param list(int) user_ids: IDs of the users that will be subscribed
-        to the record; if ``None``, subscribe the current user instead.
-    :param list(int) subtype_ids: IDs of the subtypes that the channels/partners
-        will be subscribed to
-    :return: Success
-    :rtype: bool
 
 .. method:: message_unsubscribe(partner_ids=None, channel_ids=None)
 
@@ -331,7 +321,7 @@ can override the ``_track_subtype()`` function:
                 # in cache
                 self.ensure_one()
                 if 'state' in init_values and self.state == 'confirmed':
-                    return 'my_module.mt_state_change'  # Full external id
+                    return self.env.ref('my_module.mt_state_change')
                 return super(BusinessTrip, self)._track_subtype(init_values)
 
 
@@ -551,7 +541,7 @@ Alias support integration
 
 Aliases are usually configured on a parent model which will then create specific
 record when contacted by e-mail. For example, Project have aliases to create tasks
-or issues, Sales Channel have aliases to generate Leads.
+or issues, Sales Team have aliases to generate Leads.
 
 .. note:: The model that will be created by the alias **must** inherit the
           ``mail_thread`` model.
@@ -924,7 +914,7 @@ buttons to website visitors:
 
 .. code-block:: xml
 
-    <div id="website_published_button" class="pull-right"
+    <div id="website_published_button" class="float-right"
          groups="base.group_website_publisher"> <!-- or any other meaningful group -->
         <t t-call="website.publish_management">
           <t t-set="object" t-value="blog_post"/>

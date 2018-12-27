@@ -9,7 +9,7 @@ class MrpRouting(models.Model):
     _name = 'mrp.routing'
     _description = 'Routings'
 
-    name = fields.Char('Routing Name', required=True)
+    name = fields.Char('Routing', required=True)
     active = fields.Boolean(
         'Active', default=True,
         help="If the active field is set to False, it will allow you to hide the routing without removing it.")
@@ -59,7 +59,7 @@ class MrpRoutingWorkcenter(models.Model):
     time_mode = fields.Selection([
         ('auto', 'Compute based on real time'),
         ('manual', 'Set duration manually')], string='Duration Computation',
-        default='auto')
+        default='manual')
     time_mode_batch = fields.Integer('Based on', default=10)
     time_cycle_manual = fields.Float(
         'Manual Duration', default=60,

@@ -65,6 +65,18 @@ var KanbanRecord = Widget.extend({
     start: function () {
         return $.when(this._super.apply(this, arguments), this._render());
     },
+    /**
+     * Called each time the record is attached to the DOM.
+     */
+    on_attach_callback: function () {
+        _.invoke(this.subWidgets, 'on_attach_callback');
+    },
+    /**
+     * Called each time the record is detached from the DOM.
+     */
+    on_detach_callback: function () {
+        _.invoke(this.subWidgets, 'on_detach_callback');
+    },
 
     //--------------------------------------------------------------------------
     // Public
@@ -99,8 +111,7 @@ var KanbanRecord = Widget.extend({
             var tooltip = $el.attr('tooltip');
             if (tooltip) {
                 $el.tooltip({
-                    'html': true,
-                    'title': self.qweb.render(tooltip, self.qweb_context)
+                    title: self.qweb.render(tooltip, self.qweb_context)
                 });
             }
         });
@@ -155,6 +166,12 @@ var KanbanRecord = Widget.extend({
         var colorID = this._getColorID(variable);
         return KANBAN_RECORD_COLORS[colorID];
     },
+    file_type_magic_word: {
+        '/': 'jpg',
+        'R': 'gif',
+        'i': 'png',
+        'P': 'svg+xml',
+    },
     /**
      * @private
      * @param {string} model the name of the model
@@ -168,7 +185,8 @@ var KanbanRecord = Widget.extend({
         options = options || {};
         var url;
         if (this.record[field] && this.record[field].value && !utils.is_bin_size(this.record[field].value)) {
-            url = 'data:image/png;base64,' + this.record[field].value;
+            // Use magic-word technique for detecting image type
+            url = 'data:image/' + this.file_type_magic_word[this.record[field].value[0]] + ';base64,' + this.record[field].value;
         } else if (this.record[field] && ! this.record[field].value) {
             url = "/web/static/src/img/placeholder.png";
         } else {
@@ -350,7 +368,7 @@ var KanbanRecord = Widget.extend({
     _setFieldDisplay: function ($el, fieldName) {
         // attribute display
         if (this.fieldsInfo[fieldName].display === 'right') {
-            $el.addClass('pull-right');
+            $el.addClass('float-right');
         } else if (this.fieldsInfo[fieldName].display === 'full') {
             $el.addClass('o_text_block');
         }
@@ -490,11 +508,13 @@ var KanbanRecord = Widget.extend({
             if (elem === event.currentTarget) {
                 ischild = false;
             }
-            var test_event = events && events.click && (events.click.length > 1 || events.click[0].namespace !== "tooltip");
+            var test_event = events && events.click && (events.click.length > 1 || events.click[0].namespace !== 'bs.tooltip');
+            var testLinkWithHref = elem.nodeName.toLowerCase() === 'a' && elem.href;
             if (ischild) {
                 children.push(elem);
-                if (test_event) {
-                    // do not trigger global click if one child has a click event registered
+                if (test_event || testLinkWithHref) {
+                    // Do not trigger global click if one child has a click
+                    // event registered (or it is a link with href)
                     trigger = false;
                 }
             }

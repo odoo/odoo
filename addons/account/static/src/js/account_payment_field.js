@@ -80,6 +80,7 @@ var ShowPaymentLineWidget = AbstractField.extend({
                 title: 'Payment Information',
                 trigger: 'focus',
                 delay: { "show": 0, "hide": 100 },
+                container: $(k).parent(), // FIXME Ugly, should use the default body container but system & tests to adapt to properly destroy the popover
             };
             $(k).popover(options);
         });
@@ -127,6 +128,8 @@ var ShowPaymentLineWidget = AbstractField.extend({
      * @param {MouseEvent} event
      */
     _onOutstandingCreditAssign: function (event) {
+        event.stopPropagation();
+        event.preventDefault();
         var self = this;
         var id = $(event.target).data('id') || false;
         this._rpc({

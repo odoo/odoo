@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_stock_rules_report" model="ir.ui.view">
+        <field name="name">Stock Rules Report</field>
+        <field name="model">stock.rules.report</field>
+        <field name="arch" type="xml">
+            <form string="Product Routes Report">
+                <group>
+                    <field name="product_tmpl_id" invisible="1" />
+                    <field name="product_has_variants" invisible="1" />
+                    <field name="product_id" 
+                        domain="[('product_tmpl_id', '=', product_tmpl_id)]"
+                        attrs="{'readonly': [('product_has_variants', '=', False)]}" options="{'no_create': True}"/>
+                    <field name="warehouse_ids"
+                        groups="stock.group_stock_multi_warehouses"
+                        widget="many2many_tags" />
+                </group>
+                <footer>
+                    <button name="print_report" 
+                        string="Overview" 
+                        type="object" 
+                        class="btn-primary"/>
+                    <button string="Cancel" class="btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_stock_rules_report" model="ir.actions.act_window">
+        <field name="name">Stock Rules Report</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">stock.rules.report</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_stock_rules_report"/>
+        <field name="target">new</field>
+    </record>
+</odoo>

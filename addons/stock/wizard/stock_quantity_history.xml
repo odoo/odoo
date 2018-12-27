@@ -13,7 +13,7 @@
                 </group>
                 <footer>
                     <button name="open_table" string="Retrieve the Inventory Quantities" type="object" class="btn-primary"/>
-                    <button string="Cancel" class="btn-default" special="cancel" />
+                    <button string="Cancel" class="btn-secondary" special="cancel" />
                 </footer>
             </form>
         </field>
@@ -27,6 +27,6 @@
         <field name="target">new</field>
         <field name="context">{'default_compute_at_date': 0}</field>
     </record>
-    <menuitem id="menu_valuation" name="Inventory" parent="stock.menu_warehouse_report" sequence="100" action="action_stock_quantity_history"/>
+    <menuitem id="menu_valuation" name="Inventory Report" parent="stock.menu_warehouse_report" sequence="100" action="action_stock_quantity_history"/>
 </odoo>
 

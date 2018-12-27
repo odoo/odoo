@@ -28,7 +28,7 @@ except ImportError:
 def _toledo8217StatusParse(status):
     """ Parse a scale's status, returning a `(weight, weight_info)` pair. """
     weight, weight_info = None, None
-    stat = ord(status[status.index('?') + 1])
+    stat = status[status.index(b'?') + 1]
     if stat == 0:
         weight_info = 'ok'
     else:
@@ -51,7 +51,7 @@ def _toledo8217StatusParse(status):
 ScaleProtocol = namedtuple(
     'ScaleProtocol',
     "name baudrate bytesize stopbits parity timeout writeTimeout weightRegexp statusRegexp "
-    "statusParse commandTerminator commandDelay weightDelay newWeightDelay "
+    "statusParse commandTerminator commandDelay weightDelay newWeightDelay disable "
     "weightCommand zeroCommand tareCommand clearCommand emptyAnswerValid autoResetWeight")
 
 # 8217 Mettler-Toledo (Weight-only) Protocol, as described in the scale's Service Manual.
@@ -68,19 +68,20 @@ Toledo8217Protocol = ScaleProtocol(
     parity=serial.PARITY_EVEN,
     timeout=1,
     writeTimeout=1,
-    weightRegexp="\x02\\s*([0-9.]+)N?\\r",
-    statusRegexp="\x02\\s*(\\?.)\\r",
+    weightRegexp=b"\x02\\s*([0-9.]+)N?\\r",
+    statusRegexp=b"\x02\\s*(\\?.)\\r",
     statusParse=_toledo8217StatusParse,
     commandDelay=0.2,
     weightDelay=0.5,
     newWeightDelay=0.2,
-    commandTerminator='',
-    weightCommand='W',
-    zeroCommand='Z',
-    tareCommand='T',
-    clearCommand='C',
+    commandTerminator=b'',
+    weightCommand=b'W',
+    zeroCommand=b'Z',
+    tareCommand=b'T',
+    clearCommand=b'C',
     emptyAnswerValid=False,
     autoResetWeight=False,
+    disable=False
 )
 
 # The ADAM scales have their own RS232 protocol, usually documented in the scale's manual
@@ -95,21 +96,22 @@ ADAMEquipmentProtocol = ScaleProtocol(
     parity=serial.PARITY_NONE,
     timeout=0.2,
     writeTimeout=0.2,
-    weightRegexp=r"\s*([0-9.]+)kg", # LABEL format 3 + KG in the scale settings, but Label 1/2 should work
+    weightRegexp=b"\s*([0-9.]+)kg", # LABEL format 3 + KG in the scale settings, but Label 1/2 should work
     statusRegexp=None,
     statusParse=None,
-    commandTerminator="\r\n",
+    commandTerminator=b"\r\n",
     commandDelay=0.2,
     weightDelay=0.5,
     newWeightDelay=5,  # AZExtra beeps every time you ask for a weight that was previously returned!
                        # Adding an extra delay gives the operator a chance to remove the products
                        # before the scale starts beeping. Could not find a way to disable the beeps.
-    weightCommand='P',
-    zeroCommand='Z',
-    tareCommand='T',
+    weightCommand=b'P',
+    zeroCommand=b'Z',
+    tareCommand=b'T',
     clearCommand=None, # No clear command -> Tare again
     emptyAnswerValid=True, # AZExtra does not answer unless a new non-zero weight has been detected
     autoResetWeight=True,  # AZExtra will not return 0 after removing products
+    disable=True
 )
 
 
@@ -125,11 +127,13 @@ class Scale(Thread):
         self.scalelock = Lock()
         self.status = {'status':'connecting', 'messages':[]}
         self.input_dir = '/dev/serial/by-path/'
+        self.forbidden_dir = '/dev/serial/by-id/'
         self.weight = 0
         self.weight_info = 'ok'
         self.device = None
         self.path_to_scale = ''
         self.protocol = None
+        self.disabled = False
 
     def lockedstart(self):
         with self.lock:
@@ -165,8 +169,8 @@ class Scale(Thread):
             if not char:
                 break
             else:
-                answer.append(char)
-        return ''.join(answer)
+                answer.append(bytes(char))
+        return b''.join(answer)
 
     def _parse_weight_answer(self, protocol, answer):
         """ Parse a scale's answer to a weighing request, returning
@@ -212,15 +216,16 @@ class Scale(Thread):
                     self.set_status('disconnected', 'No RS-232 device found')
                     return None
 
-                devices = [device for device in listdir(self.input_dir)]
-
+                forbidden_devices = [os.readlink(self.forbidden_dir + d) for d in listdir(self.forbidden_dir) if 'usb-Sylvac_Power_USB_A32DV5VM' in d] # Skip special usb link with Sylvac
+                devices = [device for device in listdir(self.input_dir) if os.readlink(self.input_dir + device) not in forbidden_devices]
                 for device in devices:
+                    path = self.input_dir + device
                     driver = hw_proxy.rs232_devices.get(device)
                     if driver and driver != DRIVER_NAME:
                         # belongs to another driver
                         _logger.info('Ignoring %s, belongs to %s', device, driver)
                         continue
-                    path = self.input_dir + device
+
                     for protocol in SCALE_PROTOCOLS:
                         _logger.info('Probing %s with protocol %s', path, protocol)
                         connection = serial.Serial(path,
@@ -256,6 +261,8 @@ class Scale(Thread):
             return None
 
     def get_weight(self):
+        self.repeats = 5
+        self.disabled = False
         self.lockedstart()
         return self.weight
 
@@ -336,23 +343,30 @@ class Scale(Thread):
         self.device = None
 
         while True:
-            if self.device:
-                old_weight = self.weight
-                self.read_weight()
-                if self.weight != old_weight:
-                    _logger.info('New Weight: %s, sleeping %ss', self.weight, self.protocol.newWeightDelay)
-                    time.sleep(self.protocol.newWeightDelay)
-                    if self.weight and self.protocol.autoResetWeight:
-                        self.weight = 0
+            if not self.disabled:
+                if self.device:
+                    old_weight = self.weight
+                    self.read_weight()
+                    if self.weight != old_weight:
+                        _logger.info('New Weight: %s, sleeping %ss', self.weight, self.protocol.newWeightDelay)
+                        time.sleep(self.protocol.newWeightDelay)
+                        if self.weight and self.protocol.autoResetWeight:
+                            self.weight = 0
+                    else:
+                        _logger.info('Weight: %s, sleeping %ss', self.weight, self.protocol.weightDelay)
+                        time.sleep(self.protocol.weightDelay)
+                        self.disabled = True
                 else:
-                    _logger.info('Weight: %s, sleeping %ss', self.weight, self.protocol.weightDelay)
-                    time.sleep(self.protocol.weightDelay)
+                    with self.scalelock:
+                        self.device = self.get_device()
+                    if not self.device:
+                        # retry later to support "plug and play"
+                        time.sleep(10)
+                    else: 
+                        self.disabled = self.protocol.disable
             else:
-                with self.scalelock:
-                    self.device = self.get_device()
-                if not self.device:
-                    # retry later to support "plug and play"
-                    time.sleep(10)
+                time.sleep(10)
+
 
 scale_thread = None
 if serial:

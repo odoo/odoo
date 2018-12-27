@@ -8,6 +8,7 @@ from odoo.exceptions import UserError, ValidationError
 class PosSession(models.Model):
     _name = 'pos.session'
     _order = 'id desc'
+    _description = 'Point of Sale Session'
 
     POS_SESSION_STATE = [
         ('opening_control', 'Opening Control'),  # method action_pos_session_open
@@ -38,7 +39,7 @@ class PosSession(models.Model):
                             paid=order.amount_paid,
                         ))
                 order.action_pos_order_done()
-            orders_to_reconcile = session.order_ids.filtered(lambda order: order.state in ['invoiced', 'done'] and order.partner_id)
+            orders_to_reconcile = session.order_ids._filtered_for_reconciliation()
             orders_to_reconcile.sudo()._reconcile_payments()
 
     config_id = fields.Many2one(
@@ -54,7 +55,7 @@ class PosSession(models.Model):
         readonly=True,
         states={'opening_control': [('readonly', False)]},
         default=lambda self: self.env.uid)
-    currency_id = fields.Many2one('res.currency', related='config_id.currency_id', string="Currency")
+    currency_id = fields.Many2one('res.currency', related='config_id.currency_id', string="Currency", readonly=False)
     start_at = fields.Datetime(string='Opening Date', readonly=True)
     stop_at = fields.Datetime(string='Closing Date', readonly=True, copy=False)
 

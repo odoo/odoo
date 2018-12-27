@@ -40,8 +40,8 @@ class TestLifoPrice(common.TransactionCase):
         # category (or hand-assign the property_* version which seems...)
         # product_form.valuation = 'real_time'
         # product_form.cost_method = 'fifo'
-        product_form.property_stock_account_input = self.env.ref('stock_dropshipping.o_expense')
-        product_form.property_stock_account_output = self.env.ref('stock_dropshipping.o_income')
+        product_form.categ_id.property_stock_account_input_categ_id = self.env.ref('stock_dropshipping.o_expense')
+        product_form.categ_id.property_stock_account_output_categ_id = self.env.ref('stock_dropshipping.o_income')
         product_lifo_icecream = product_form.save()
 
         # I create a draft Purchase Order for first in move for 10 pieces at 60 euro
@@ -86,7 +86,7 @@ class TestLifoPrice(common.TransactionCase):
         with out_form.move_ids_without_package.new() as move:
             move.product_id = product_lifo_icecream
             move.quantity_done = 20.0
-            move.date_expected = fields.Date.context_today(self.env['stock.move.line'])
+            move.date_expected = fields.Datetime.now()
         outgoing_lifo_shipment = out_form.save()
 
         # I assign this outgoing shipment

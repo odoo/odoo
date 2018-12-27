@@ -72,6 +72,11 @@ class Http(models.AbstractModel):
     @classmethod
     def _add_dispatch_parameters(cls, func):
 
+        # Force website with query string paramater, typically set from website selector in frontend navbar
+        force_website_id = request.httprequest.args.get('fw')
+        if force_website_id and request.session.get('force_website_id') != force_website_id:
+            request.env['website']._force_website(request.httprequest.args.get('fw'))
+
         context = {}
         if not request.context.get('tz'):
             context['tz'] = request.session.get('geoip', {}).get('time_zone')
@@ -117,9 +122,13 @@ class Http(models.AbstractModel):
     @classmethod
     def _serve_page(cls):
         req_page = request.httprequest.path
+        page_domain = [('url', '=', req_page)] + request.website.website_domain()
 
-        domain = [('url', '=', req_page), '|', ('website_ids', 'in', request.website.id), ('website_ids', '=', False)]
-        pages = request.env['website.page'].search(domain)
+        published_domain = page_domain
+        # need to bypass website_published, to apply is_most_specific
+        # filter later if not publisher
+        pages = request.env['website.page'].sudo().search(published_domain, order='website_id')
+        pages = pages.filtered(pages._is_most_specific_page)
 
         if not request.website.is_publisher():
             pages = pages.filtered('is_visible')
@@ -137,10 +146,7 @@ class Http(models.AbstractModel):
     @classmethod
     def _serve_redirect(cls):
         req_page = request.httprequest.path
-        domain = [
-            '|', ('website_id', '=', request.website.id), ('website_id', '=', False),
-            ('url_from', '=', req_page)
-        ]
+        domain = [('url_from', '=', req_page)] + request.website.website_domain()
         return request.env['website.redirect'].search(domain, limit=1)
 
     @classmethod
@@ -178,7 +184,7 @@ class Http(models.AbstractModel):
                     return response
             except Exception as e:
                 if 'werkzeug' in config['dev_mode'] and (not isinstance(exception, QWebException) or not exception.qweb.get('cause')):
-                    raise
+                    raise e
                 exception = e
 
             values = dict(
@@ -231,30 +237,40 @@ class Http(models.AbstractModel):
                 html = request.env['ir.ui.view'].render_template('website.http_error', values)
             return werkzeug.wrappers.Response(html, status=code, content_type='text/html;charset=utf-8')
 
-    @classmethod
-    def binary_content(cls, xmlid=None, model='ir.attachment', id=None, field='datas',
+    def binary_content(self, xmlid=None, model='ir.attachment', id=None, field='datas',
                        unique=False, filename=None, filename_field='datas_fname', download=False,
                        mimetype=None, default_mimetype='application/octet-stream',
-                       access_token=None, env=None):
-        env = env or request.env
+                       access_token=None):
         obj = None
         if xmlid:
-            obj = env.ref(xmlid, False)
-        elif id and model in env:
-            obj = env[model].browse(int(id))
+            obj = self._xmlid_to_obj(self.env, xmlid)
+        elif id and model in self.env:
+            obj = self.env[model].browse(int(id))
         if obj and 'website_published' in obj._fields:
-            if env[obj._name].sudo().search([('id', '=', obj.id), ('website_published', '=', True)]):
-                env = env(user=SUPERUSER_ID)
-        return super(Http, cls).binary_content(
+            if self.env[obj._name].sudo().search([('id', '=', obj.id), ('website_published', '=', True)]):
+                self.sudo()
+        return super(Http, self).binary_content(
             xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename,
             filename_field=filename_field, download=download, mimetype=mimetype,
-            default_mimetype=default_mimetype, access_token=access_token, env=env)
+            default_mimetype=default_mimetype, access_token=access_token)
+
+    @classmethod
+    def _xmlid_to_obj(cls, env, xmlid):
+        website_id = env['website'].get_current_website()
+        if website_id and website_id.theme_id:
+            obj = env['ir.attachment'].search([('key', '=', xmlid), ('website_id', '=', website_id.id)])
+            if obj:
+                return obj[0]
+
+        return super(Http, cls)._xmlid_to_obj(env, xmlid)
 
 
 class ModelConverter(ModelConverter):
 
     def generate(self, uid, dom=None, args=None):
         Model = request.env[self.model].sudo(uid)
+        # Allow to current_website_id directly in route domain
+        args.update(current_website_id=request.env['website'].get_current_website().id)
         domain = safe_eval(self.domain, (args or {}).copy())
         if dom:
             domain += dom

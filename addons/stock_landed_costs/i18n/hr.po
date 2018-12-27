@@ -12,10 +12,10 @@
 # Mario Jureša <mario.juresa@uvid.hr>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
+"POT-Creation-Date: 2018-08-02 09:11+0000\n"
+"PO-Revision-Date: 2018-08-02 09:11+0000\n"
 "Last-Translator: Mario Jureša <mario.juresa@uvid.hr>, 2018\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
@@ -25,10 +25,10 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:343
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:347
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:364
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:368
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:344
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:348
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:365
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:369
 #, python-format
 msgid " already out"
 msgstr "već vani"
@@ -42,6 +42,11 @@ msgstr "Račun"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__account_journal_id
 msgid "Account Journal"
 msgstr "Dnevnici"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_needaction
+msgid "Action Needed"
+msgstr "Potrebna dodatna radnja"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__additional_landed_cost
@@ -73,7 +78,7 @@ msgid "By Weight"
 msgstr "Po težini"
 
 #. module: stock_landed_costs
-#: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Cancel"
 msgstr "Odustani"
 
@@ -83,7 +88,7 @@ msgid "Cancelled"
 msgstr "Otkazano"
 
 #. module: stock_landed_costs
-#: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Compute"
 msgstr "Izračunaj"
 
@@ -99,7 +104,7 @@ msgstr "Stavka troška"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__cost_lines
-#: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Cost Lines"
 msgstr "Stavke troškova"
 
@@ -114,7 +119,7 @@ msgstr ""
 "izračunati zavisne troškove."
 
 #. module: stock_landed_costs
-#: model:ir.actions.act_window,help:stock_landed_costs.action_stock_landed_cost
+#: model_terms:ir.actions.act_window,help:stock_landed_costs.action_stock_landed_cost
 msgid "Create a new landed cost"
 msgstr ""
 
@@ -134,11 +139,12 @@ msgstr "Datum kreiranja"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__date
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
 msgid "Date"
 msgstr "Datum"
 
 #. module: stock_landed_costs
-#: model:ir.actions.act_window,help:stock_landed_costs.stock_landed_cost_type_action
+#: model_terms:ir.actions.act_window,help:stock_landed_costs.stock_landed_cost_type_action
 msgid "Define a new kind of landed cost"
 msgstr ""
 
@@ -156,13 +162,13 @@ msgid "Display Name"
 msgstr "Naziv za prikaz"
 
 #. module: stock_landed_costs
-#: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
 #: model:mail.message.subtype,name:stock_landed_costs.mt_stock_landed_cost_open
 msgid "Done"
 msgstr "Riješeno"
 
 #. module: stock_landed_costs
-#: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
 #: selection:stock.landed.cost,state:0
 msgid "Draft"
 msgstr "Nacrt"
@@ -195,6 +201,21 @@ msgid "Final Cost"
 msgstr "Ukupni trošak"
 
 #. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_follower_ids
+msgid "Followers"
+msgstr "Pratitelji"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_channel_ids
+msgid "Followers (Channels)"
+msgstr "Pratitelji (Kanali)"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Pratitelji (Partneri)"
+
+#. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__former_cost
 msgid "Former Cost"
 msgstr "Prethodni trošak"
@@ -205,7 +226,7 @@ msgid "Former Cost(Per Unit)"
 msgstr "Prethodni trošak (po jedinici)"
 
 #. module: stock_landed_costs
-#: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
 msgid "Group By"
 msgstr "Grupiraj po"
 
@@ -217,14 +238,34 @@ msgid "ID"
 msgstr "ID"
 
 #. module: stock_landed_costs
-#: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_type_form
+#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__message_unread
+msgid "If checked new messages require your attention."
+msgstr "Ako je odabrano, nove poruke zahtijevaju Vašu pažnju."
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Ako je označeno, nove poruke zahtijevaju Vašu pažnju."
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr ""
+
+#. module: stock_landed_costs
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_type_form
 msgid "Information"
 msgstr "Informacije"
 
 #. module: stock_landed_costs
-#: model:ir.ui.view,arch_db:stock_landed_costs.view_product_landed_cost_form
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_product_landed_cost_form
 msgid "Inventory Valuation"
 msgstr "Popis vrednovanja"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_is_follower
+msgid "Is Follower"
+msgstr "Je pratitelj"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_product__landed_cost_ok
@@ -250,28 +291,28 @@ msgid "Landed Cost"
 msgstr "Zavisni trošak"
 
 #. module: stock_landed_costs
-#: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Landed Cost Name"
 msgstr "Naziv zavosnog troška"
 
 #. module: stock_landed_costs
 #: model:ir.ui.menu,name:stock_landed_costs.menu_stock_landed_cost_type
-#: model:ir.ui.view,arch_db:stock_landed_costs.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.res_config_settings_view_form
 msgid "Landed Cost Types"
 msgstr ""
 
 #. module: stock_landed_costs
 #: model:ir.actions.act_window,name:stock_landed_costs.action_stock_landed_cost
 #: model:ir.ui.menu,name:stock_landed_costs.menu_stock_landed_cost
-#: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
-#: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
-#: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_tree
-#: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_type_form
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_tree
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_type_form
 msgid "Landed Costs"
 msgstr "Zavisni troškovi"
 
 #. module: stock_landed_costs
-#: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Landed cost are computed based on the purchase unit of measure."
 msgstr "Zavisni troškovi su izračunati na temelju jedinice mjere nabave."
 
@@ -302,13 +343,18 @@ msgid "Last Updated on"
 msgstr "Vrijeme promjene"
 
 #. module: stock_landed_costs
-#: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
-msgid "Month"
-msgstr "Mjesec"
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_has_error
+msgid "Message Delivery error"
+msgstr ""
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_ids
+msgid "Messages"
+msgstr "Poruke"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__name
-#: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
 msgid "Name"
 msgstr "Naziv"
 
@@ -329,6 +375,31 @@ msgstr ""
 "zavisne troškove."
 
 #. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Broj akcija"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_has_error_counter
+msgid "Number of error"
+msgstr ""
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "Broj poruka koje zahtijevaju aktivnost"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr ""
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__message_unread_counter
+msgid "Number of unread messages"
+msgstr "Broj nepročitanih poruka"
+
+#. module: stock_landed_costs
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:87
 #, python-format
 msgid "Only draft landed costs can be validated"
@@ -340,7 +411,7 @@ msgid "Pickings"
 msgstr "Skladišnice"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:310
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:312
 #, python-format
 msgid "Please configure Stock Expense Account for product: %s."
 msgstr "Molimo definirajte kontro troška zalihe za proizvod : %s."
@@ -357,7 +428,7 @@ msgid "Product"
 msgstr "Proizvod"
 
 #. module: stock_landed_costs
-#: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_type_form
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_type_form
 msgid "Product Name"
 msgstr "Naziv proizvoda"
 
@@ -368,7 +439,7 @@ msgstr "Predložak proizvoda"
 
 #. module: stock_landed_costs
 #: model:ir.actions.act_window,name:stock_landed_costs.stock_landed_cost_type_action
-#: model:ir.ui.view,arch_db:stock_landed_costs.stock_landed_cost_tree_view
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.stock_landed_cost_tree_view
 msgid "Products"
 msgstr "Proizvodi"
 
@@ -390,7 +461,7 @@ msgid "State"
 msgstr "Stanje"
 
 #. module: stock_landed_costs
-#: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
 msgid "Status"
 msgstr "Status"
 
@@ -416,7 +487,7 @@ msgid "Stock Valuation Adjustment Lines"
 msgstr "Stavke ispravaka vrijednosti"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:158
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:161
 #, python-format
 msgid ""
 "The selected picking does not contain any move that would be impacted by "
@@ -436,7 +507,17 @@ msgid "Total"
 msgstr "Ukupno"
 
 #. module: stock_landed_costs
-#: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_unread
+msgid "Unread Messages"
+msgstr "Nepročitane poruke"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr "Brojač nepročitanih poruka"
+
+#. module: stock_landed_costs
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Validate"
 msgstr "Ovjeri"
 
@@ -452,7 +533,7 @@ msgstr ""
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__valuation_adjustment_lines
-#: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Valuation Adjustments"
 msgstr "Ispravci vrijednosti"
 
@@ -462,11 +543,21 @@ msgid "Volume"
 msgstr "Volumen"
 
 #. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__website_message_ids
+msgid "Website Messages"
+msgstr "Poruke webstranica"
+
+#. module: stock_landed_costs
+#: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__website_message_ids
+msgid "Website communication history"
+msgstr "Povijest komunikacije Web stranice"
+
+#. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__weight
 msgid "Weight"
 msgstr "Težina"
 
 #. module: stock_landed_costs
-#: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_type_form
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_type_form
 msgid "describe the product characteristics..."
 msgstr "Upišite kratak opis proizvoda ..."

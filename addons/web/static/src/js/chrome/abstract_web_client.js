@@ -60,10 +60,11 @@ var AbstractWebClient = Widget.extend(ServiceProviderMixin, KeyboardNavigationMi
         },
         load_filters: function (event) {
             return data_manager
-                .load_filters(event.data.dataset, event.data.action_id)
+                .load_filters(event.data)
                 .then(event.data.on_success);
         },
         create_filter: '_onCreateFilter',
+        delete_filter: '_onDeleteFilter',
         push_state: '_onPushState',
         show_effect: '_onShowEffect',
         // session
@@ -88,6 +89,8 @@ var AbstractWebClient = Widget.extend(ServiceProviderMixin, KeyboardNavigationMi
         set_title_part: '_onSetTitlePart',
     },
     init: function (parent) {
+        // a flag to determine that odoo is fully loaded
+        odoo.isReady = false;
         this.client_options = {};
         this._super(parent);
         ServiceProviderMixin.init.call(this);
@@ -111,6 +114,7 @@ var AbstractWebClient = Widget.extend(ServiceProviderMixin, KeyboardNavigationMi
 
         return session.is_bound
             .then(function () {
+                self.$el.toggleClass('o_rtl', _t.database.parameters.direction === "rtl");
                 self.bind_events();
                 return $.when(
                     self.set_action_manager(),
@@ -128,6 +132,10 @@ var AbstractWebClient = Widget.extend(ServiceProviderMixin, KeyboardNavigationMi
                 // Listen to 'scroll' event and propagate it on main bus
                 self.action_manager.$el.on('scroll', core.bus.trigger.bind(core.bus, 'scroll'));
                 core.bus.trigger('web_client_ready');
+                odoo.isReady = true;
+                if (session.uid === 1) {
+                    self.$el.addClass('o_is_superuser');
+                }
             });
     },
 
@@ -183,7 +191,9 @@ var AbstractWebClient = Widget.extend(ServiceProviderMixin, KeyboardNavigationMi
             // If it is not handled, we should display something clearer than the common crash_manager error dialog
             // since it won't show anything except "Script error."
             // This link will probably explain it better: https://blog.sentry.io/2016/05/17/what-is-script-error.html
-            if (message === "Script error." && !file && !line && !col && !error) {
+            if (!file && !line && !col) {
+                // Chrome and Opera set "Script error." on the `message` and hide the `error`
+                // Firefox handles the "Script error." directly. It sets the error thrown by the CORS file into `error`
                 if (window.onOriginError) {
                     window.onOriginError();
                     delete window.onOriginError;
@@ -191,7 +201,7 @@ var AbstractWebClient = Widget.extend(ServiceProviderMixin, KeyboardNavigationMi
                     crash_manager.show_error({
                         type: _t("Odoo Client Error"),
                         message: _t("Unknown CORS error"),
-                        data: {debug: _t("An unknown CORS error occured. The error probably originates from a JavaScript file served from a different origin.")},
+                        data: {debug: _t("An unknown CORS error occured. The error probably originates from a JavaScript file served from a different origin. (Opening your browser console might give you a hint on the error.)")},
                     });
                 }
             } else {
@@ -209,7 +219,7 @@ var AbstractWebClient = Widget.extend(ServiceProviderMixin, KeyboardNavigationMi
         this.action_manager = new ActionManager(this, session.user_context);
         var fragment = document.createDocumentFragment();
         return this.action_manager.appendTo(fragment).then(function () {
-            dom.append(self.$('.o_main_content'), fragment, {
+            dom.append(self.$el, fragment, {
                 in_DOM: true,
                 callbacks: [{widget: self.action_manager}],
             });
@@ -359,6 +369,18 @@ var AbstractWebClient = Widget.extend(ServiceProviderMixin, KeyboardNavigationMi
             .then(e.data.on_success);
     },
     /**
+     * @private
+     * @param {OdooEvent} e
+     * @param {Object} e.data.filter the filter description
+     * @param {function} e.data.on_success called when the RPC succeeds with its
+     *   returned value as argument
+     */
+    _onDeleteFilter: function (e) {
+        data_manager
+            .delete_filter(e.data.filterId)
+            .then(e.data.on_success);
+    },
+    /**
      * Displays a warning in a dialog or with the notification service
      *
      * @private
@@ -376,7 +398,7 @@ var AbstractWebClient = Widget.extend(ServiceProviderMixin, KeyboardNavigationMi
                 size: 'medium',
                 title: data.title,
                 $content: qweb.render("CrashManager.warning", data),
-            }).open();
+            }).open({shouldFocusButtons: true});
         } else {
             this.call('notification', 'notify', e.data);
         }

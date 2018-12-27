@@ -44,7 +44,7 @@ def float_to_time(hours):
     if hours == 24.0:
         return time.max
     fractional, integral = math.modf(hours)
-    return time(int(integral), int(60 * fractional), 0)
+    return time(int(integral), int(float_round(60 * fractional, precision_digits=0)), 0)
 
 
 def _boundaries(intervals, opening, closing):
@@ -143,7 +143,7 @@ class ResourceCalendar(models.Model):
     (begin_datetime, end_datetime). A list of intervals is therefore a list of
     tuples, holding several intervals of work or leaves. """
     _name = "resource.calendar"
-    _description = "Resource Calendar"
+    _description = "Resource Working Time"
 
     @api.model
     def default_get(self, fields):
@@ -155,15 +155,15 @@ class ResourceCalendar(models.Model):
     def _get_default_attendance_ids(self):
         return [
             (0, 0, {'name': _('Monday Morning'), 'dayofweek': '0', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-            (0, 0, {'name': _('Monday Evening'), 'dayofweek': '0', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+            (0, 0, {'name': _('Monday Afternoon'), 'dayofweek': '0', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
             (0, 0, {'name': _('Tuesday Morning'), 'dayofweek': '1', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-            (0, 0, {'name': _('Tuesday Evening'), 'dayofweek': '1', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+            (0, 0, {'name': _('Tuesday Afternoon'), 'dayofweek': '1', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
             (0, 0, {'name': _('Wednesday Morning'), 'dayofweek': '2', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-            (0, 0, {'name': _('Wednesday Evening'), 'dayofweek': '2', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+            (0, 0, {'name': _('Wednesday Afternoon'), 'dayofweek': '2', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
             (0, 0, {'name': _('Thursday Morning'), 'dayofweek': '3', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-            (0, 0, {'name': _('Thursday Evening'), 'dayofweek': '3', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+            (0, 0, {'name': _('Thursday Afternoon'), 'dayofweek': '3', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
             (0, 0, {'name': _('Friday Morning'), 'dayofweek': '4', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
-            (0, 0, {'name': _('Friday Evening'), 'dayofweek': '4', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'})
+            (0, 0, {'name': _('Friday Afternoon'), 'dayofweek': '4', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'})
         ]
 
     name = fields.Char(required=True)
@@ -197,12 +197,19 @@ class ResourceCalendar(models.Model):
     # --------------------------------------------------
     # Computation API
     # --------------------------------------------------
-    def _attendance_intervals(self, start_dt, end_dt, resource=None):
+    def _attendance_intervals(self, start_dt, end_dt, resource=None, domain=None):
         """ Return the attendance intervals in the given datetime range.
             The returned intervals are expressed in the resource's timezone.
         """
         assert start_dt.tzinfo and end_dt.tzinfo
         combine = datetime.combine
+
+        resource_ids = [resource.id, False] if resource else [False]
+        domain = domain if domain is not None else []
+        domain = domain + [
+            ('calendar_id', '=', self.id),
+            ('resource_id', 'in', resource_ids),
+        ]
 
         # express all dates and times in the resource's timezone
         tz = timezone((resource or self).tz)
@@ -211,7 +218,7 @@ class ResourceCalendar(models.Model):
 
         # for each attendance spec, generate the intervals in the date range
         result = []
-        for attendance in self.attendance_ids:
+        for attendance in self.env['resource.calendar.attendance'].search(domain):
             start = start_dt.date()
             if attendance.date_from:
                 start = max(start, attendance.date_from)
@@ -295,7 +302,7 @@ class ResourceCalendar(models.Model):
         )
 
     @api.multi
-    def plan_hours(self, hours, day_dt, compute_leaves=False, domain=None):
+    def plan_hours(self, hours, day_dt, compute_leaves=False, domain=None, resource=None):
         """
         `compute_leaves` controls whether or not this method is taking into
         account the global leaves.
@@ -309,11 +316,11 @@ class ResourceCalendar(models.Model):
 
         # which method to use for retrieving intervals
         if compute_leaves:
-            get_intervals = partial(self._work_intervals, domain=domain)
+            get_intervals = partial(self._work_intervals, domain=domain, resource=resource)
         else:
             get_intervals = self._attendance_intervals
 
-        if hours > 0:
+        if hours >= 0:
             delta = timedelta(days=14)
             for n in range(100):
                 dt = day_dt + delta * n
@@ -323,8 +330,7 @@ class ResourceCalendar(models.Model):
                         return revert(start + timedelta(hours=hours))
                     hours -= interval_hours
             return False
-
-        elif hours < 0:
+        else:
             hours = abs(hours)
             delta = timedelta(days=14)
             for n in range(100):
@@ -335,9 +341,6 @@ class ResourceCalendar(models.Model):
                         return revert(stop - timedelta(hours=hours))
                     hours -= interval_hours
             return False
-
-        else:
-            return revert(day_dt)
 
     @api.multi
     def plan_days(self, days, day_dt, compute_leaves=False, domain=None):
@@ -408,6 +411,7 @@ class ResourceCalendarAttendance(models.Model):
     hour_to = fields.Float(string='Work to', required=True)
     calendar_id = fields.Many2one("resource.calendar", string="Resource's Calendar", required=True, ondelete='cascade')
     day_period = fields.Selection([('morning', 'Morning'), ('afternoon', 'Afternoon')], required=True, default='morning')
+    resource_id = fields.Many2one('resource.resource', 'Resource')
 
     @api.onchange('hour_from', 'hour_to')
     def _onchange_hours(self):
@@ -423,7 +427,7 @@ class ResourceCalendarAttendance(models.Model):
 
 class ResourceResource(models.Model):
     _name = "resource.resource"
-    _description = "Resource Detail"
+    _description = "Resources"
 
     @api.model
     def default_get(self, fields):
@@ -502,7 +506,7 @@ class ResourceResource(models.Model):
 
 class ResourceCalendarLeaves(models.Model):
     _name = "resource.calendar.leaves"
-    _description = "Leave Detail"
+    _description = "Resource Leaves Detail"
 
     name = fields.Char('Reason')
     company_id = fields.Many2one(

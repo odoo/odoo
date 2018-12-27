@@ -30,7 +30,7 @@ return session.is_bound.then(function () {
     // Load the list of consumed tours and the tip template only if we are admin, in the frontend,
     // tours being only available for the admin. For the backend, the list of consumed is directly
     // in the page source.
-    if (session.is_frontend && session.is_superuser) {
+    if (session.is_frontend && session.is_admin) {
         var def = rpc.query({
                 model: 'web_tour.tour',
                 method: 'get_consumed_tours',
@@ -93,10 +93,10 @@ return session.is_bound.then(function () {
         })();
 
         // Enable the MutationObserver for the admin or if a tour is running, when the DOM is ready
-        start_service(session.is_superuser || tour_manager.running_tour);
+        start_service(session.is_admin || tour_manager.running_tour);
 
         // Override the TourManager so that it enables/disables the observer when necessary
-        if (!session.is_superuser) {
+        if (!session.is_admin) {
             var run = tour_manager.run;
             tour_manager.run = function () {
                 var self = this;

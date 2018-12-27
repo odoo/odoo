@@ -12,9 +12,11 @@ from odoo.http import request
 class WebsiteSaleBackend(WebsiteBackend):
 
     @http.route()
-    def fetch_dashboard_data(self, date_from, date_to):
-        results = super(WebsiteSaleBackend, self).fetch_dashboard_data(date_from, date_to)
+    def fetch_dashboard_data(self, website_id, date_from, date_to):
+        Website = request.env['website']
+        current_website = website_id and Website.browse(website_id) or Website.get_current_website()
 
+        results = super(WebsiteSaleBackend, self).fetch_dashboard_data(website_id, date_from, date_to)
         sales_values = dict(
             graph=[],
             best_sellers=[],
@@ -40,7 +42,7 @@ class WebsiteSaleBackend(WebsiteBackend):
         # Product-based computation
         report_product_lines = request.env['sale.report'].read_group(
             domain=[
-                ('team_id.team_type', '=', 'website'),
+                ('website_id', '=', current_website.id),
                 ('state', 'in', ['sale', 'done']),
                 ('confirmation_date', '>=', date_from),
                 ('confirmation_date', '<=', fields.Datetime.now())],
@@ -57,7 +59,8 @@ class WebsiteSaleBackend(WebsiteBackend):
 
         # Sale-based results computation
         sale_order_domain = [
-            ('team_id', 'in', request.env['crm.team'].search([('team_type', '=', 'website')]).ids),
+            ('website_id', '=', current_website.id),
+            ('team_id', 'in', request.env['crm.team'].search([('website_ids', '!=', False)]).ids),
             ('date_order', '>=', fields.Datetime.to_string(datetime_from)),
             ('date_order', '<=', fields.Datetime.to_string(datetime_to))]
         so_group_data = request.env['sale.order'].read_group(sale_order_domain, fields=['state'], groupby='state')
@@ -70,7 +73,7 @@ class WebsiteSaleBackend(WebsiteBackend):
 
         report_price_lines = request.env['sale.report'].read_group(
             domain=[
-                ('team_id.team_type', '=', 'website'),
+                ('website_id', '=', current_website.id),
                 ('state', 'in', ['sale', 'done']),
                 ('date', '>=', date_from),
                 ('date', '<=', date_to)],
@@ -110,7 +113,7 @@ class WebsiteSaleBackend(WebsiteBackend):
             previous_sale_label = _('Previous Year')
 
         sales_domain = [
-            ('team_id.team_type', '=', 'website'),
+            ('website_id', '=', current_website.id),
             ('state', 'in', ['sale', 'done']),
             ('confirmation_date', '>=', date_from),
             ('confirmation_date', '<=', fields.Datetime.now())
@@ -126,7 +129,6 @@ class WebsiteSaleBackend(WebsiteBackend):
         return results
 
     def _compute_sale_graph(self, date_from, date_to, sales_domain, previous=False):
-
         days_between = (date_to - date_from).days
         date_list = [(date_from + timedelta(days=x)) for x in range(0, days_between + 1)]
 

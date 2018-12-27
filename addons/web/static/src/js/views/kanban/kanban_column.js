@@ -7,6 +7,7 @@ var Dialog = require('web.Dialog');
 var KanbanRecord = require('web.KanbanRecord');
 var RecordQuickCreate = require('web.kanban_record_quick_create');
 var view_dialogs = require('web.view_dialogs');
+var viewUtils = require('web.viewUtils');
 var Widget = require('web.Widget');
 var KanbanColumnProgressBar = require('web.KanbanColumnProgressBar');
 
@@ -53,7 +54,9 @@ var KanbanColumn = Widget.extend({
         this.grouped_by_m2o = options.grouped_by_m2o;
         this.editable = options.editable;
         this.deletable = options.deletable;
+        this.archivable = options.archivable;
         this.draggable = options.draggable;
+        this.KanbanRecord = options.KanbanRecord || KanbanRecord; // the KanbanRecord class to use
         this.records_editable = options.records_editable;
         this.records_deletable = options.records_deletable;
         this.relation = options.relation;
@@ -153,7 +156,7 @@ var KanbanColumn = Widget.extend({
         this.$el.toggleClass('o_column_folded', this.folded && !config.device.isMobile);
         var tooltip = this.data.count + _t(' records');
         tooltip = '<p>' + tooltip + '</p>' + this.tooltipInfo;
-        this.$header.find('.o_kanban_header_title').tooltip({html: true}).attr('data-original-title', tooltip);
+        this.$header.find('.o_kanban_header_title').tooltip({}).attr('data-original-title', tooltip);
         if (!this.remaining) {
             this.$('.o_kanban_load_more').remove();
         } else {
@@ -170,6 +173,7 @@ var KanbanColumn = Widget.extend({
      * into a fragment, the focus has to be set manually once in the DOM.
      */
     on_attach_callback: function () {
+        _.invoke(this.records, 'on_attach_callback');
         if (this.quickCreateWidget) {
             this.quickCreateWidget.on_attach_callback();
         }
@@ -199,7 +203,7 @@ var KanbanColumn = Widget.extend({
         this.trigger_up('close_quick_create'); // close other quick create widgets
         this.trigger_up('start_quick_create');
         var context = this.data.getContext();
-        context['default_' + this.groupedBy] = this.id;
+        context['default_' + this.groupedBy] = viewUtils.getGroupValue(this.data, this.groupedBy);
         this.quickCreateWidget = new RecordQuickCreate(this, {
             context: context,
             formViewRef: this.quickCreateView,
@@ -237,7 +241,7 @@ var KanbanColumn = Widget.extend({
      * @return {Deferred}
      */
     _addRecord: function (recordState, options) {
-        var record = new KanbanRecord(this, recordState, this.record_options);
+        var record = new this.KanbanRecord(this, recordState, this.record_options);
         this.records.push(record);
         if (options && options.position === 'before') {
             return record.insertAfter(this.quickCreateWidget ? this.quickCreateWidget.$el : this.$header);

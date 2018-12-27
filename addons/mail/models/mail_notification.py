@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import api, fields, models
+from odoo.tools.translate import _
 
 
 class Notification(models.Model):
@@ -29,12 +30,11 @@ class Notification(models.Model):
     # bot value. Working with set inclusion, we could have a notif matching message from mail 1 and partner from mail 2, we dont want that.
     # The solution would be to iterate over mail or to filter mail after search,... or add a mail_id field on notification to KISS
     failure_type = fields.Selection(selection=[
-            ("NONE", "No error"),
-            ("SMTP", "Error while connecting to smtp server"),
-            ("RECIPIENT", "Invalid email adress"),
-            ("BOUNCE", "Email address not found"),
-            ("UNKNOWN", "Unknown error occured"),
-            ], default='NONE', string='Failure type')
+            ("SMTP", "Connection failed (outgoing mail server problem)"),
+            ("RECIPIENT", "Invalid email address"),
+            ("BOUNCE", "Email address rejected by destination"),
+            ("UNKNOWN", "Unknown error"),
+            ], string='Failure type')
     failure_reason = fields.Text('Failure reason', copy=False)
 
     @api.model_cr
@@ -47,8 +47,8 @@ class Notification(models.Model):
     def format_failure_reason(self):
         self.ensure_one()
         if self.failure_type != 'UNKNOWN':
-            return dict(type(self).failure_type.selection).get(self.failure_type)
+            return dict(type(self).failure_type.selection).get(self.failure_type, _('No Error'))
         else:
-            return "Unknow error occured: %s" % (self.failure_reason)
+            return _("Unknown error") + ": %s" % (self.failure_reason or '')
 
 

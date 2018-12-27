@@ -3,22 +3,23 @@
 # * google_drive
 # 
 # Translators:
-# Murat Kaplan <muratk@projetgrup.com>, 2017
-# Martin Trigaux, 2017
-# Ediz Duman <neps1192@gmail.com>, 2017
-# gezgin biri <gezginbiri@hotmail.com>, 2017
-# Saban Yildiz <sabany@projetgrup.com>, 2017
-# Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2017
-# Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2017
-# Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2017
+# Ediz Duman <neps1192@gmail.com>, 2018
+# Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2018
+# Martin Trigaux, 2018
+# Levent Karakaş <levent@mektup.at>, 2018
+# Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2018
+# nle_odoo, 2018
 # Umur Akın <umura@projetgrup.com>, 2018
+# Buket Şeker <buket_skr@hotmail.com>, 2018
+# Murat Kaplan <muratk@projetgrup.com>, 2018
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
-"Last-Translator: Umur Akın <umura@projetgrup.com>, 2018\n"
+"POT-Creation-Date: 2018-10-08 06:49+0000\n"
+"PO-Revision-Date: 2018-08-24 09:18+0000\n"
+"Last-Translator: Murat Kaplan <muratk@projetgrup.com>, 2018\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,7 +28,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: google_drive
-#: model:ir.ui.view,arch_db:google_drive.view_google_drive_config_form
+#: model_terms:ir.ui.view,arch_db:google_drive.view_google_drive_config_form
 msgid ""
 "<b>To create a new filter:</b><br/>\n"
 "                                - Go to the Odoo document you want to filter. For instance, go to Opportunities and search on Sales Department.<br/>\n"
@@ -44,35 +45,35 @@ msgstr ""
 "                                - Eğer süzgeç belirtilmemişse,  \"Fazlası\" seçeneğinde google belgeleri bağlantısı fırsatlardaki tüm kullanıcılarda görünecektir."
 
 #. module: google_drive
-#: model:ir.ui.view,arch_db:google_drive.view_google_drive_config_kanban
+#: model_terms:ir.ui.view,arch_db:google_drive.view_google_drive_config_kanban
 msgid "<strong>Active</strong>"
 msgstr ""
 
 #. module: google_drive
-#: model:ir.ui.view,arch_db:google_drive.view_google_drive_config_kanban
+#: model_terms:ir.ui.view,arch_db:google_drive.view_google_drive_config_kanban
 msgid "<strong>Model</strong>"
 msgstr ""
 
 #. module: google_drive
-#: model:ir.ui.view,arch_db:google_drive.view_google_drive_config_kanban
+#: model_terms:ir.ui.view,arch_db:google_drive.view_google_drive_config_kanban
 msgid "<strong>Template</strong>"
 msgstr ""
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config__active
 msgid "Active"
-msgstr "Aktif"
+msgstr "Etkin"
 
 #. module: google_drive
-#: model:ir.actions.act_window,help:google_drive.action_google_drive_users_config
+#: model_terms:ir.actions.act_window,help:google_drive.action_google_drive_users_config
 msgid "Add a new template"
 msgstr ""
 
 #. module: google_drive
 #: code:addons/google_drive/models/google_drive.py:42
 #, python-format
-msgid "At least one key cannot be found in your Google Drive name pattern"
-msgstr "Google sürücü adı şeklinde en az bir anahtar bulunamıyor"
+msgid "At least one key cannot be found in your Google Drive name pattern."
+msgstr ""
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_res_config_settings__google_drive_authorization_code
@@ -86,7 +87,12 @@ msgid ""
 "gdoc_%(field_name)s"
 msgstr ""
 "Yeni google sürücü, google tarafında adlandırılacağını seçin. Örneğin. gdoc_"
-" % (field_name) s"
+" %(field_name)s"
+
+#. module: google_drive
+#: model:ir.model,name:google_drive.model_res_config_settings
+msgid "Config Settings"
+msgstr "Konfigürasyon Ayarları"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config__create_uid
@@ -103,6 +109,11 @@ msgstr "Oluşturulma"
 #, python-format
 msgid "Creating google drive may only be done by one at a time."
 msgstr "Google sürücü oluşturma yalnızca tek tek tarafından yapılabilir."
+
+#. module: google_drive
+#: model:ir.filters,name:google_drive.filter_partner
+msgid "Customer"
+msgstr "Kayıtlı Müşteri"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config__display_name
@@ -127,8 +138,8 @@ msgid "Google Client"
 msgstr "Google Kullanıcı"
 
 #. module: google_drive
-#: model:ir.ui.view,arch_db:google_drive.view_google_drive_config_form
-#: model:ir.ui.view,arch_db:google_drive.view_google_drive_config_tree
+#: model_terms:ir.ui.view,arch_db:google_drive.view_google_drive_config_form
+#: model_terms:ir.ui.view,arch_db:google_drive.view_google_drive_config_tree
 msgid "Google Drive Configuration"
 msgstr "Google Drive Konfigürasyonu"
 
@@ -138,7 +149,7 @@ msgid "Google Drive Name Pattern"
 msgstr "Google Drive Adı"
 
 #. module: google_drive
-#: model:ir.ui.view,arch_db:google_drive.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:google_drive.res_config_settings_view_form
 msgid "Google Drive Templates"
 msgstr "Google Drive Şablonları"
 
@@ -175,7 +186,7 @@ msgid "Last Updated on"
 msgstr "Son Güncelleme"
 
 #. module: google_drive
-#: model:ir.actions.act_window,help:google_drive.action_google_drive_users_config
+#: model_terms:ir.actions.act_window,help:google_drive.action_google_drive_users_config
 msgid ""
 "Link your own google drive templates to any record of Odoo. If you have "
 "really specific documents you want your collaborator fill in, e.g. Use a "
@@ -204,7 +215,7 @@ msgstr "Lütfen geçerli bir Google belge URL'si girin."
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config__model
 msgid "Related Model"
-msgstr "İlgili Model"
+msgstr "İlişkili Model"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config__google_drive_resource_id
@@ -248,16 +259,13 @@ msgid "The URL to generate the authorization code from Google"
 msgstr "Google'dan yetkilendirme kodu oluşturmak için URL"
 
 #. module: google_drive
-#: model:ir.ui.view,arch_db:google_drive.view_google_drive_config_form
+#: model_terms:ir.ui.view,arch_db:google_drive.view_google_drive_config_form
 msgid ""
 "The name of the attached document can use fixed or variable data. To distinguish between documents in\n"
-"                                Google Drive, use fixed words and fields. For instance, in the example above, if you wrote Agrolait_%(name)s_Sales\n"
+"                                Google Drive, use fixed words and fields. For instance, in the example above, if you wrote Deco_Addict_%(name)s_Sales\n"
 "                                in the Google Drive name field, the document in your Google Drive and in Odoo attachment will be named\n"
-"                                'Agrolait_SO0001_Sales'."
+"                                'Deco_Addict_SO0001_Sales'."
 msgstr ""
-"Eklenen dosyanın adı sabit ya da değişken bir data kullanabilir. Google drive'da verileri birbirinden ayırmak için, sabit kelimeler ve alanlar kullanın.Örnekte olduğu gibi eğer  Agrolait_%(name)s_Sales yazarsanız\n"
-"                               , Google drivedaki dokumanın adı\n"
-"                                'Agrolait_SO0001_Sales' olarak kaydedilecektir."
 
 #. module: google_drive
 #: code:addons/google_drive/models/google_drive.py:135
@@ -285,13 +293,8 @@ msgstr ""
 "ve bunu yapılandırın."
 
 #. module: google_drive
-#: model:ir.ui.view,arch_db:google_drive.view_google_drive_config_form
+#: model_terms:ir.ui.view,arch_db:google_drive.view_google_drive_config_form
 msgid ""
 "https://docs.google.com/document/d/1vOtpJK9scIQz6taD9tJRIETWbEw3fSiaQHArsJYcua4/edit"
 msgstr ""
 "https://docs.Google.com/Document/d/1vOtpJK9scIQz6taD9tJRIETWbEw3fSiaQHArsJYcua4/Edit"
-
-#. module: google_drive
-#: model:ir.model,name:google_drive.model_res_config_settings
-msgid "res.config.settings"
-msgstr "res.config.settings"

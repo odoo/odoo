@@ -3,22 +3,15 @@
 # * sale_crm
 # 
 # Translators:
-# David Perez <david@closemarketing.es>, 2016
-# Alejandro Die Sanchis <marketing@domatix.com>, 2016
-# Antonio Trueba, 2016
-# Javier Ramirez <elbomba887@gmail.com>, 2016
-# Martin Trigaux, 2016
-# Oriol Carreras <oriolcarreras@gmail.com>, 2017
-# maitaoriana <maitaoriana@gmail.com>, 2017
-# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2017
-# e2f <projects@e2f.com>, 2018
+# Martin Trigaux, 2018
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.1\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-12-13 14:37+0000\n"
-"PO-Revision-Date: 2017-12-13 14:37+0000\n"
-"Last-Translator: e2f <projects@e2f.com>, 2018\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-09-21 13:17+0000\n"
+"Last-Translator: Pedro M. Baeza <pedro.baeza@gmail.com>, 2018\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,14 +20,20 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sale_crm
-#: model:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
+#: model_terms:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
 msgid "<span class=\"o_stat_text\"> Orders</span>"
 msgstr "<span class=\"o_stat_text\"> Pedidos</span>"
 
 #. module: sale_crm
-#: model:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
+#: model_terms:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
 msgid "<span class=\"o_stat_text\"> Quotation(s) </span>"
 msgstr "<span class=\"o_stat_text\">Presupuesto(s)</span>"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_account_invoice__campaign_id
+#: model:ir.model.fields,field_description:sale_crm.field_sale_order__campaign_id
+msgid "Campaign"
+msgstr "Campaña"
 
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_account_invoice
@@ -42,7 +41,7 @@ msgid "Invoice"
 msgstr "Factura"
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_target_sales_invoiced
+#: model:ir.model.fields,field_description:sale_crm.field_res_users__target_sales_invoiced
 msgid "Invoiced in Sales Orders Target"
 msgstr "Facturado en objetivo de órdenes de venta"
 
@@ -52,32 +51,43 @@ msgid "Lead/Opportunity"
 msgstr "Iniciativa/Oportunidad"
 
 #. module: sale_crm
-#: model:ir.ui.view,arch_db:sale_crm.sale_view_inherit123
+#: model_terms:ir.ui.view,arch_db:sale_crm.sale_view_inherit123
 msgid "Log in the chatter from which opportunity the order originates"
 msgstr "Entra en el chat desde cada oportunidad que genere el pedido"
 
 #. module: sale_crm
-#: model:ir.ui.view,arch_db:sale_crm.sale_view_inherit123
+#: model_terms:ir.ui.view,arch_db:sale_crm.sale_view_inherit123
 msgid "Marketing"
 msgstr "Marketing"
 
 #. module: sale_crm
-#: model:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
+#: model:ir.model.fields,field_description:sale_crm.field_account_invoice__medium_id
+#: model:ir.model.fields,field_description:sale_crm.field_sale_order__medium_id
+msgid "Medium"
+msgstr "Media"
+
+#. module: sale_crm
+#: model:ir.ui.menu,name:sale_crm.sale_order_menu_quotations_crm
+msgid "My Quotations"
+msgstr "Mis presupuestos"
+
+#. module: sale_crm
+#: model_terms:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
 msgid "New Quotation"
 msgstr "Nuevo Presupuesto"
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_crm_lead_sale_number
+#: model:ir.model.fields,field_description:sale_crm.field_crm_lead__sale_number
 msgid "Number of Quotations"
 msgstr "Número de cotizaciones"
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_sale_order_opportunity_id
+#: model:ir.model.fields,field_description:sale_crm.field_sale_order__opportunity_id
 msgid "Opportunity"
 msgstr "Oportunidad"
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_crm_lead_order_ids
+#: model:ir.model.fields,field_description:sale_crm.field_crm_lead__order_ids
 msgid "Orders"
 msgstr "Pedidos"
 
@@ -89,15 +99,18 @@ msgstr "Flujo"
 
 #. module: sale_crm
 #: model:ir.actions.act_window,name:sale_crm.sale_action_quotations_new
-#: model:ir.model,name:sale_crm.model_sale_order
 msgid "Quotation"
 msgstr "Presupuesto"
 
 #. module: sale_crm
 #: model:ir.actions.act_window,name:sale_crm.sale_action_quotations
-#: model:ir.ui.menu,name:sale_crm.sale_order_menu_quotations_crm
 msgid "Quotations"
 msgstr "Presupuestos"
+
+#. module: sale_crm
+#: model:ir.model,name:sale_crm.model_sale_order
+msgid "Sale Order"
+msgstr "Pedido de venta"
 
 #. module: sale_crm
 #: model:ir.actions.act_window,name:sale_crm.sale_action_orders
@@ -106,21 +119,55 @@ msgstr "Órdenes de venta"
 
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_crm_team
-msgid "Sales Channel"
-msgstr "Canal de Ventas"
+msgid "Sales Channels"
+msgstr "Canales de Ventas"
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_crm_lead_sale_amount_total
+#: model:ir.model.fields,field_description:sale_crm.field_account_invoice__source_id
+#: model:ir.model.fields,field_description:sale_crm.field_sale_order__source_id
+msgid "Source"
+msgstr "Fuente"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_crm_lead__sale_amount_total
 msgid "Sum of Orders"
 msgstr "Suma de pedidos"
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_sale_order_tag_ids
+#: model:ir.model.fields,field_description:sale_crm.field_sale_order__tag_ids
 msgid "Tags"
 msgstr "Etiquetas"
 
 #. module: sale_crm
-#: model:ir.model.fields,help:sale_crm.field_crm_lead_sale_amount_total
+#: model:ir.model.fields,help:sale_crm.field_account_invoice__campaign_id
+#: model:ir.model.fields,help:sale_crm.field_sale_order__campaign_id
+msgid ""
+"This is a name that helps you keep track of your different campaign efforts,"
+" e.g. Fall_Drive, Christmas_Special"
+msgstr ""
+"Esto es un nombre que facilita el seguimiento de sus diferentes proyectos de"
+" campaña. Por ejemplo: Rebajas_de_otoño, Especial_de_Navidad"
+
+#. module: sale_crm
+#: model:ir.model.fields,help:sale_crm.field_account_invoice__medium_id
+#: model:ir.model.fields,help:sale_crm.field_sale_order__medium_id
+msgid "This is the method of delivery, e.g. Postcard, Email, or Banner Ad"
+msgstr ""
+"Esto es el método de entrega. Por ejemplo: correo postal, correo "
+"electrónico, publicidad web"
+
+#. module: sale_crm
+#: model:ir.model.fields,help:sale_crm.field_account_invoice__source_id
+#: model:ir.model.fields,help:sale_crm.field_sale_order__source_id
+msgid ""
+"This is the source of the link, e.g. Search Engine, another domain, or name "
+"of email list"
+msgstr ""
+"Esto es la fuente del enlace. Por ejemplo: motor de búsqueda, otro dominio o"
+" nombre en listado de correos electrónicos"
+
+#. module: sale_crm
+#: model:ir.model.fields,help:sale_crm.field_crm_lead__sale_amount_total
 msgid "Untaxed Total of Confirmed Orders"
 msgstr "Importe total sin impuestos de los pedidos confirmados"
 

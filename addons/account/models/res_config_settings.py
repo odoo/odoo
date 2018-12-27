@@ -8,23 +8,23 @@ class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
     has_accounting_entries = fields.Boolean(compute='_compute_has_chart_of_accounts')
-    currency_id = fields.Many2one('res.currency', related="company_id.currency_id", required=True,
+    currency_id = fields.Many2one('res.currency', related="company_id.currency_id", required=True, readonly=False,
         string='Currency', help="Main currency of the company.")
     currency_exchange_journal_id = fields.Many2one(
         'account.journal',
-        related='company_id.currency_exchange_journal_id',
+        related='company_id.currency_exchange_journal_id', readonly=False,
         string="Exchange Gain or Loss Journal",
         domain="[('company_id', '=', company_id), ('type', '=', 'general')]",
         help='The accounting journal where automatic exchange differences will be registered')
     has_chart_of_accounts = fields.Boolean(compute='_compute_has_chart_of_accounts', string='Company has a chart of accounts')
     chart_template_id = fields.Many2one('account.chart.template', string='Template',
         domain="[('visible','=', True)]")
-    sale_tax_id = fields.Many2one('account.tax', string="Default Sale Tax", related='company_id.account_sale_tax_id')
-    purchase_tax_id = fields.Many2one('account.tax', string="Default Purchase Tax", related='company_id.account_purchase_tax_id')
+    sale_tax_id = fields.Many2one('account.tax', string="Default Sale Tax", related='company_id.account_sale_tax_id', readonly=False)
+    purchase_tax_id = fields.Many2one('account.tax', string="Default Purchase Tax", related='company_id.account_purchase_tax_id', readonly=False)
     tax_calculation_rounding_method = fields.Selection([
         ('round_per_line', 'Round calculation of taxes per line'),
         ('round_globally', 'Round globally calculation of taxes '),
-        ], related='company_id.tax_calculation_rounding_method', string='Tax calculation rounding method')
+        ], related='company_id.tax_calculation_rounding_method', string='Tax calculation rounding method', readonly=False)
     module_account_accountant = fields.Boolean(string='Accounting')
     group_analytic_accounting = fields.Boolean(string='Analytic Accounting',
         implied_group='analytic.group_analytic_accounting')
@@ -32,10 +32,30 @@ class ResConfigSettings(models.TransientModel):
     group_warning_account = fields.Boolean(string="Warnings in Invoices", implied_group='account.group_warning_account')
     group_cash_rounding = fields.Boolean(string="Cash Rounding", implied_group='account.group_cash_rounding')
     group_fiscal_year = fields.Boolean(string='Fiscal Years', implied_group='account.group_fiscal_year')
+    # group_show_line_subtotals_tax_excluded and group_show_line_subtotals_tax_included are opposite,
+    # so we can assume exactly one of them will be set, and not the other.
+    # We need both of them to coexist so we can take advantage of automatic group assignation.
+    group_show_line_subtotals_tax_excluded = fields.Boolean(
+        "Show line subtotals without taxes (B2B)",
+        implied_group='account.group_show_line_subtotals_tax_excluded',
+        group='base.group_portal,base.group_user,base.group_public')
+    group_show_line_subtotals_tax_included = fields.Boolean(
+        "Show line subtotals with taxes (B2C)",
+        implied_group='account.group_show_line_subtotals_tax_included',
+        group='base.group_portal,base.group_user,base.group_public')
+    group_products_in_bills = fields.Boolean(string="Use products in vendor bills",
+        implied_group='account.group_products_in_bills',
+        group='base.group_user',
+        help="Disable this option to use a simplified versions of vendor bills, where products are hidden.")
+    show_line_subtotals_tax_selection = fields.Selection([
+        ('tax_excluded', 'Tax-Excluded'),
+        ('tax_included', 'Tax-Included')], string="Line Subtotals Tax Display",
+        required=True, default='tax_excluded',
+        config_parameter='account.show_line_subtotals_tax_selection')
     module_account_asset = fields.Boolean(string='Assets Management')
     module_account_deferred_revenue = fields.Boolean(string="Revenue Recognition")
     module_account_budget = fields.Boolean(string='Budget Management')
-    module_account_payment = fields.Boolean(string='Online Payment')
+    module_account_payment = fields.Boolean(string='Invoice Online Payment')
     module_account_reports = fields.Boolean("Dynamic Reports")
     module_account_reports_followup = fields.Boolean("Follow-up Levels")
     module_account_check_printing = fields.Boolean("Allow check printing and deposits")
@@ -51,13 +71,25 @@ class ResConfigSettings(models.TransientModel):
     module_account_bank_statement_import_csv = fields.Boolean("Import in .csv format")
     module_account_bank_statement_import_camt = fields.Boolean("Import in CAMT.053 format")
     module_currency_rate_live = fields.Boolean(string="Automatic Currency Rates")
-    module_print_docsaway = fields.Boolean(string="Docsaway")
+    module_account_intrastat = fields.Boolean(string='Intrastat')
     module_product_margin = fields.Boolean(string="Allow Product Margin")
     module_l10n_eu_service = fields.Boolean(string="EU Digital Goods VAT")
     module_account_taxcloud = fields.Boolean(string="Account TaxCloud")
-    tax_exigibility = fields.Boolean(string='Cash Basis', related='company_id.tax_exigibility')
-    tax_cash_basis_journal_id = fields.Many2one('account.journal', related='company_id.tax_cash_basis_journal_id', string="Tax Cash Basis Journal")
-    account_hide_setup_bar = fields.Boolean(string='Hide Setup Bar', related='company_id.account_setup_bar_closed',help="Tick if you wish to hide the setup bar on the dashboard")
+    module_account_invoice_extract = fields.Boolean(string="Automate Bill Processing")
+    tax_exigibility = fields.Boolean(string='Cash Basis', related='company_id.tax_exigibility', readonly=False)
+    tax_cash_basis_journal_id = fields.Many2one('account.journal', related='company_id.tax_cash_basis_journal_id', string="Tax Cash Basis Journal", readonly=False)
+    invoice_reference_type = fields.Selection(string='Communication',
+        related='company_id.invoice_reference_type', help='Default Reference Type on Invoices.', readonly=False)
+    account_bank_reconciliation_start = fields.Date(string="Bank Reconciliation Threshold",
+        related='company_id.account_bank_reconciliation_start', readonly=False,
+        help="""The bank reconciliation widget won't ask to reconcile payments older than this date.
+               This is useful if you install accounting after having used invoicing for some time and
+               don't want to reconcile all the past payments with bank statements.""")
+
+    qr_code = fields.Boolean(string='Display SEPA QR code', related='company_id.qr_code', readonly=False)
+    invoice_is_print = fields.Boolean(string='Print', related='company_id.invoice_is_print', readonly=False)
+    invoice_is_email = fields.Boolean(string='Send Email', related='company_id.invoice_is_email', readonly=False)
+    incoterm_id = fields.Many2one('account.incoterms', string='Default incoterm', related='company_id.incoterm_id', help='International Commercial Terms are a series of predefined commercial terms used in international transactions.', readonly=False)
 
     @api.multi
     def set_values(self):
@@ -66,27 +98,26 @@ class ResConfigSettings(models.TransientModel):
             self.env.ref('base.group_user').write({'implied_ids': [(4, self.env.ref('product.group_sale_pricelist').id)]})
         """ install a chart of accounts for the given company (if required) """
         if self.chart_template_id and self.chart_template_id != self.company_id.chart_template_id:
-            wizard = self.env['wizard.multi.charts.accounts'].create({
-                'company_id': self.company_id.id,
-                'chart_template_id': self.chart_template_id.id,
-                'code_digits': self.chart_template_id.code_digits,
-                'sale_tax_rate': 15.0,
-                'purchase_tax_rate': 15.0,
-                'code_digits': self.chart_template_id.code_digits,
-                'complete_tax_set': self.chart_template_id.complete_tax_set,
-                'currency_id': self.currency_id.id,
-                'bank_account_code_prefix': self.chart_template_id.bank_account_code_prefix,
-                'cash_account_code_prefix': self.chart_template_id.cash_account_code_prefix,
-                'transfer_account_code_prefix': self.chart_template_id.transfer_account_code_prefix,
-            })
-            wizard.onchange_chart_template_id()
-            wizard.execute()
+            self.chart_template_id.load_for_current_company(15.0, 15.0)
 
     @api.depends('company_id')
     def _compute_has_chart_of_accounts(self):
         self.has_chart_of_accounts = bool(self.company_id.chart_template_id)
         self.chart_template_id = self.company_id.chart_template_id or False
-        self.has_accounting_entries = self.env['wizard.multi.charts.accounts'].existing_accounting(self.company_id)
+        self.has_accounting_entries = self.env['account.chart.template'].existing_accounting(self.company_id)
+
+    @api.onchange('show_line_subtotals_tax_selection')
+    def _onchange_sale_tax(self):
+        if self.show_line_subtotals_tax_selection == "tax_excluded":
+            self.update({
+                'group_show_line_subtotals_tax_included': False,
+                'group_show_line_subtotals_tax_excluded': True,
+            })
+        else:
+            self.update({
+                'group_show_line_subtotals_tax_included': True,
+                'group_show_line_subtotals_tax_excluded': False,
+            })
 
     @api.onchange('group_analytic_accounting')
     def onchange_analytic_accounting(self):

@@ -3,11 +3,11 @@
 
 
 {
-    'name': 'Repairs Management',
+    'name': 'Repairs',
     'version': '1.0',
     'sequence': 200,
     'category': 'Manufacturing',
-    'summary': 'Repair broken or damaged products',
+    'summary': 'Repair damaged products',
     'description': """
 The aim is to have a complete module to manage all products repairs.
 ====================================================================
@@ -22,7 +22,6 @@ The following topics are covered by this module:
     * Notes for the technician and for the final customer
 """,
     'depends': ['stock', 'sale_management', 'account'],
-    'website': 'https://www.odoo.com/page/manufacturing',
     'data': [
         'security/ir.model.access.csv',
         'security/repair_security.xml',

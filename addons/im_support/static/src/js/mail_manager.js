@@ -10,7 +10,6 @@ var WebClient = require('web.WebClient');
 var SupportChannel = require('im_support.SupportChannel');
 var SupportMessage = require('im_support.SupportMessage');
 var supportSession = require('im_support.SupportSession');
-var supportBus = require('im_support.SupportBus');
 
 var _t = core._t;
 
@@ -24,6 +23,7 @@ var SUPPORT_CHANNEL_STATE_KEY = 'im_support.channel_state';
  * livechat operators from another database (the Support database).
  */
 MailManager.include({
+    dependencies: (MailManager.prototype.dependencies || []).concat(['support_bus_service']),
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------
@@ -43,7 +43,7 @@ MailManager.include({
         this.pollingSupport = false;
 
         // listen to notifications coming from Support longpolling
-        supportBus.on('notification', this, this._onSupportNotification);
+        this.call('support_bus_service', 'onNotification', this, this._onSupportNotification);
 
         // check if there is a pending chat session with the Support
         var timeoutTimestamp = this.call('local_storage', 'getItem', POLL_TIMEOUT_KEY);
@@ -79,10 +79,13 @@ MailManager.include({
      *   timeout delay to set
      */
     startPollingSupport: function (pollingDelay) {
+        if (!('pollingSupport' in this)) {
+            return this.initSupport();
+        }
         if (!this.pollingSupport) {
             this.pollingSupport = true;
-            supportBus.add_channel(this.supportChannelUUID);
-            supportBus.start_polling();
+            this.call('support_bus_service', 'addChannel', this.supportChannelUUID);
+            this.call('support_bus_service', 'startPolling');
             this._setPollTimeout(pollingDelay);
         }
     },
@@ -169,7 +172,12 @@ MailManager.include({
      */
     _makeChannel: function (data, options) {
         if (data.id === this.supportChannelUUID) {
-            return new SupportChannel(this, data, options, this._commands);
+            return new SupportChannel({
+                parent: this,
+                data: data,
+                options: options,
+                commands: this._commands
+            });
         }
         return this._super.apply(this, arguments);
     },
@@ -178,7 +186,10 @@ MailManager.include({
      * @override
      */
     _makeMessage: function (data) {
-        if (_.contains(data.channel_ids, this.supportChannelUUID)) {
+        if (
+            this.supportChannelUUID &&
+            _.contains(data.channel_ids, this.supportChannelUUID)
+        ) {
             return new SupportMessage(this, data, this._emojis);
         }
         return this._super.apply(this, arguments);
@@ -207,7 +218,7 @@ MailManager.include({
      */
     _stopPollingSupport: function () {
         this.pollingSupport = false;
-        supportBus.stop_polling();
+        this.call('support_bus_service', 'stopPolling');
         this.call('local_storage', 'removeItem', POLL_TIMEOUT_KEY);
     },
 
@@ -231,10 +242,10 @@ MailManager.include({
                 // ignore history requests
                 return;
             }
-            var message = _.extend(notification[1], {
+            var messageData = _.extend(notification[1], {
                 channel_ids: [self.supportChannelUUID],
             });
-            self._handleChannelNotification(message);
+            self._handleChannelNotification({ data: messageData });
         });
     },
 });

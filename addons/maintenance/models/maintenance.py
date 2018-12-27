@@ -23,7 +23,7 @@ class MaintenanceStage(models.Model):
 class MaintenanceEquipmentCategory(models.Model):
     _name = 'maintenance.equipment.category'
     _inherit = ['mail.alias.mixin', 'mail.thread']
-    _description = 'Asset Category'
+    _description = 'Maintenance Equipment Category'
 
     @api.one
     @api.depends('equipment_ids')
@@ -92,13 +92,13 @@ class MaintenanceEquipmentCategory(models.Model):
 class MaintenanceEquipment(models.Model):
     _name = 'maintenance.equipment'
     _inherit = ['mail.thread', 'mail.activity.mixin']
-    _description = 'Equipment'
+    _description = 'Maintenance Equipment'
 
     @api.multi
     def _track_subtype(self, init_values):
         self.ensure_one()
         if 'owner_user_id' in init_values and self.owner_user_id:
-            return 'maintenance.mt_mat_assign'
+            return self.env.ref('maintenance.mt_mat_assign')
         return super(MaintenanceEquipment, self)._track_subtype(init_values)
 
     @api.multi
@@ -135,6 +135,7 @@ class MaintenanceEquipment(models.Model):
     model = fields.Char('Model')
     serial_no = fields.Char('Serial Number', copy=False)
     assign_date = fields.Date('Assigned Date', track_visibility='onchange')
+    effective_date = fields.Date('Effective Date', default=fields.Date.context_today, required=True, help="Date at which the equipment became effective. This date will be used to compute the Mean Time Between Failure.")
     cost = fields.Float('Cost')
     note = fields.Text('Note')
     warranty_date = fields.Date('Warranty Expiration Date', oldname='warranty')
@@ -148,9 +149,8 @@ class MaintenanceEquipment(models.Model):
     maintenance_team_id = fields.Many2one('maintenance.team', string='Maintenance Team')
     maintenance_duration = fields.Float(help="Maintenance Duration in hours.")
 
-    @api.depends('period', 'maintenance_ids.request_date', 'maintenance_ids.close_date')
+    @api.depends('effective_date', 'period', 'maintenance_ids.request_date', 'maintenance_ids.close_date')
     def _compute_next_maintenance(self):
-
         date_now = fields.Date.context_today(self)
         for equipment in self.filtered(lambda x: x.period > 0):
             next_maintenance_todo = self.env['maintenance.request'].search([
@@ -165,31 +165,31 @@ class MaintenanceEquipment(models.Model):
                 ('close_date', '!=', False)], order="close_date desc", limit=1)
             if next_maintenance_todo and last_maintenance_done:
                 next_date = next_maintenance_todo.request_date
-                date_gap = fields.Date.from_string(next_maintenance_todo.request_date) - fields.Date.from_string(last_maintenance_done.close_date)
+                date_gap = next_maintenance_todo.request_date - last_maintenance_done.close_date
                 # If the gap between the last_maintenance_done and the next_maintenance_todo one is bigger than 2 times the period and next request is in the future
                 # We use 2 times the period to avoid creation too closed request from a manually one created
-                if date_gap > timedelta(0) and date_gap > timedelta(days=equipment.period) * 2 and fields.Date.from_string(next_maintenance_todo.request_date) > fields.Date.from_string(date_now):
+                if date_gap > timedelta(0) and date_gap > timedelta(days=equipment.period) * 2 and next_maintenance_todo.request_date > date_now:
                     # If the new date still in the past, we set it for today
-                    if fields.Date.from_string(last_maintenance_done.close_date) + timedelta(days=equipment.period) < fields.Date.from_string(date_now):
+                    if last_maintenance_done.close_date + timedelta(days=equipment.period) < date_now:
                         next_date = date_now
                     else:
-                        next_date = fields.Date.to_string(fields.Date.from_string(last_maintenance_done.close_date) + timedelta(days=equipment.period))
+                        next_date = last_maintenance_done.close_date + timedelta(days=equipment.period)
             elif next_maintenance_todo:
                 next_date = next_maintenance_todo.request_date
-                date_gap = fields.Date.from_string(next_maintenance_todo.request_date) - fields.Date.from_string(date_now)
+                date_gap = next_maintenance_todo.request_date - date_now
                 # If next maintenance to do is in the future, and in more than 2 times the period, we insert an new request
                 # We use 2 times the period to avoid creation too closed request from a manually one created
                 if date_gap > timedelta(0) and date_gap > timedelta(days=equipment.period) * 2:
-                    next_date = fields.Date.to_string(fields.Date.from_string(date_now)+timedelta(days=equipment.period))
+                    next_date = date_now + timedelta(days=equipment.period)
             elif last_maintenance_done:
-                next_date = fields.Date.from_string(last_maintenance_done.close_date)+timedelta(days=equipment.period)
+                next_date = last_maintenance_done.close_date + timedelta(days=equipment.period)
                 # If when we add the period to the last maintenance done and we still in past, we plan it for today
-                if next_date < fields.Date.from_string(date_now):
+                if next_date < date_now:
                     next_date = date_now
             else:
-                next_date = fields.Date.to_string(fields.Date.from_string(date_now) + timedelta(days=equipment.period))
-
+                next_date = self.effective_date + timedelta(days=equipment.period)
             equipment.next_action_date = next_date
+
     @api.one
     @api.depends('maintenance_ids.stage_id.done')
     def _compute_maintenance_count(self):
@@ -235,7 +235,7 @@ class MaintenanceEquipment(models.Model):
             'equipment_id': self.id,
             'maintenance_type': 'preventive',
             'owner_user_id': self.owner_user_id.id,
-            'technician_user_id': self.technician_user_id.id,
+            'user_id': self.technician_user_id.id,
             'maintenance_team_id': self.maintenance_team_id.id,
             'duration': self.maintenance_duration,
             })
@@ -256,7 +256,7 @@ class MaintenanceEquipment(models.Model):
 class MaintenanceRequest(models.Model):
     _name = 'maintenance.request'
     _inherit = ['mail.thread', 'mail.activity.mixin']
-    _description = 'Maintenance Requests'
+    _description = 'Maintenance Request'
     _order = "id desc"
 
     @api.returns('self')
@@ -267,9 +267,9 @@ class MaintenanceRequest(models.Model):
     def _track_subtype(self, init_values):
         self.ensure_one()
         if 'stage_id' in init_values and self.stage_id.sequence <= 1:
-            return 'maintenance.mt_req_created'
+            return self.env.ref('maintenance.mt_req_created')
         elif 'stage_id' in init_values and self.stage_id.sequence > 1:
-            return 'maintenance.mt_req_status'
+            return self.env.ref('maintenance.mt_req_status')
         return super(MaintenanceRequest, self)._track_subtype(init_values)
 
     def _get_default_team_id(self):
@@ -289,7 +289,7 @@ class MaintenanceRequest(models.Model):
     category_id = fields.Many2one('maintenance.equipment.category', related='equipment_id.category_id', string='Category', store=True, readonly=True)
     equipment_id = fields.Many2one('maintenance.equipment', string='Equipment',
                                    ondelete='restrict', index=True)
-    technician_user_id = fields.Many2one('res.users', string='Owner', track_visibility='onchange', oldname='user_id')
+    user_id = fields.Many2one('res.users', string='Technician', track_visibility='onchange', oldname='technician_user_id')
     stage_id = fields.Many2one('maintenance.stage', string='Stage', ondelete='restrict', track_visibility='onchange',
                                group_expand='_read_group_stage_ids', default=_default_stage)
     priority = fields.Selection([('0', 'Very Low'), ('1', 'Low'), ('2', 'Normal'), ('3', 'High')], string='Priority')
@@ -302,7 +302,7 @@ class MaintenanceRequest(models.Model):
     maintenance_type = fields.Selection([('corrective', 'Corrective'), ('preventive', 'Preventive')], string='Maintenance Type', default="corrective")
     schedule_date = fields.Datetime('Scheduled Date', help="Date the maintenance team plans the maintenance.  It should not differ much from the Request Date. ")
     maintenance_team_id = fields.Many2one('maintenance.team', string='Team', required=True, default=_get_default_team_id)
-    duration = fields.Float(help="Duration in minutes and seconds.")
+    duration = fields.Float(help="Duration in hours.")
 
     @api.multi
     def archive_equipment_request(self):
@@ -318,22 +318,22 @@ class MaintenanceRequest(models.Model):
     @api.onchange('equipment_id')
     def onchange_equipment_id(self):
         if self.equipment_id:
-            self.technician_user_id = self.equipment_id.technician_user_id if self.equipment_id.technician_user_id else self.equipment_id.category_id.technician_user_id
+            self.user_id = self.equipment_id.technician_user_id if self.equipment_id.technician_user_id else self.equipment_id.category_id.technician_user_id
             self.category_id = self.equipment_id.category_id
             if self.equipment_id.maintenance_team_id:
                 self.maintenance_team_id = self.equipment_id.maintenance_team_id.id
 
     @api.onchange('category_id')
     def onchange_category_id(self):
-        if not self.technician_user_id or not self.equipment_id or (self.technician_user_id and not self.equipment_id.technician_user_id):
-            self.technician_user_id = self.category_id.technician_user_id
+        if not self.user_id or not self.equipment_id or (self.user_id and not self.equipment_id.technician_user_id):
+            self.user_id = self.category_id.technician_user_id
 
     @api.model
     def create(self, vals):
         # context: no_log, because subtype already handle this
         self = self.with_context(mail_create_nolog=True)
         request = super(MaintenanceRequest, self).create(vals)
-        if request.owner_user_id or request.technician_user_id:
+        if request.owner_user_id or request.user_id:
             request._add_followers()
         if request.equipment_id and not request.maintenance_team_id:
             request.maintenance_team_id = request.equipment_id.maintenance_team_id
@@ -347,12 +347,16 @@ class MaintenanceRequest(models.Model):
         if vals and 'kanban_state' not in vals and 'stage_id' in vals:
             vals['kanban_state'] = 'normal'
         res = super(MaintenanceRequest, self).write(vals)
-        if vals.get('owner_user_id') or vals.get('technician_user_id'):
+        if vals.get('owner_user_id') or vals.get('user_id'):
             self._add_followers()
-        if self.stage_id.done and 'stage_id' in vals:
-            self.write({'close_date': fields.Date.today()})
+        if 'stage_id' in vals:
+            self.filtered(lambda m: m.stage_id.done).write({'close_date': fields.Date.today()})
             self.activity_feedback(['maintenance.mail_act_maintenance_request'])
-        if 'schedule_date' in vals:
+        if vals.get('user_id') or vals.get('schedule_date'):
+            self.activity_update()
+        if vals.get('equipment_id'):
+            # need to change description of activity also so unlink old and create new activity
+            self.activity_unlink(['maintenance.mail_act_maintenance_request'])
             self.activity_update()
         return res
 
@@ -364,7 +368,8 @@ class MaintenanceRequest(models.Model):
             date_dl = fields.Datetime.from_string(request.schedule_date).date()
             updated = request.activity_reschedule(
                 ['maintenance.mail_act_maintenance_request'],
-                date_deadline=date_dl)
+                date_deadline=date_dl,
+                new_user_id=request.user_id.id or request.owner_user_id.id or self.env.uid)
             if not updated:
                 if request.equipment_id:
                     note = _('Request planned for <a href="#" data-oe-model="%s" data-oe-id="%s">%s</a>') % (
@@ -374,11 +379,11 @@ class MaintenanceRequest(models.Model):
                 request.activity_schedule(
                     'maintenance.mail_act_maintenance_request',
                     fields.Datetime.from_string(request.schedule_date).date(),
-                    note=note, user_id=request.technician_user_id.id or request.owner_user_id.id or self.env.uid)
+                    note=note, user_id=request.user_id.id or request.owner_user_id.id or self.env.uid)
 
     def _add_followers(self):
         for request in self:
-            partner_ids = (request.owner_user_id.partner_id + request.technician_user_id.partner_id).ids
+            partner_ids = (request.owner_user_id.partner_id + request.user_id.partner_id).ids
             request.message_subscribe(partner_ids=partner_ids)
 
     @api.model

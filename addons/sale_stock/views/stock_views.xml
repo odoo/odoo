@@ -8,7 +8,7 @@
         </template>
 
         <template id="exception_on_so">
-            <div class="alert alert-warning" role="alert"> 
+            <div>
                 Exception(s) occurred on the sale order(s):
                 <t t-foreach="sale_order_ids" t-as="sale_order">
                     <a href="#" data-oe-model="sale.order" t-att-data-oe-id="sale_order.id"><t t-esc="sale_order.name"/></a>.
@@ -42,7 +42,7 @@
         </template>
 
         <template id="exception_on_picking">
-            <div class="alert alert-warning" role="alert"> 
+            <div>
                 Exception(s) occurred on the picking:
                 <a href="#" data-oe-model="stock.picking" t-att-data-oe-id="origin_picking.id"><t t-esc="origin_picking.name"/></a>.
                 Manual actions may be needed.
@@ -92,9 +92,15 @@
             <field name="arch" type="xml">
                 <button name="action_view_orderpoints" position="after">
                     <button class="oe_stat_button" name="action_view_sales"
-                        type="object" icon="fa-usd" attrs="{'invisible': [('sale_ok', '=', False)]}"
-                        groups="sales_team.group_sale_salesman">
-                        <field string="Sales" name="sales_count" widget="statinfo" />
+                        type="object" icon="fa-signal" attrs="{'invisible': [('sale_ok', '=', False)]}"
+                        groups="sales_team.group_sale_salesman" help="Sold in the last 365 days">
+                        <div class="o_field_widget o_stat_info">
+                            <span class="o_stat_value">
+                                <field name="sales_count" widget="statinfo" nolabel="1" class="mr4"/>
+                                <field name="uom_name"/>
+                            </span>
+                            <span class="o_stat_text">Sold</span>
+                        </div>
                     </button>
                 </button>
             </field>

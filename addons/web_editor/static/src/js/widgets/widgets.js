@@ -4,7 +4,7 @@ odoo.define('web_editor.widget', function (require) {
 var ajax = require('web.ajax');
 var base = require('web_editor.base');
 var core = require('web.core');
-var Dialog = require('web.Dialog');
+var DialogBase = require('web.Dialog');
 var Widget = require('web.Widget');
 var weContext = require("web_editor.context");
 
@@ -26,7 +26,7 @@ function simulateMouseEvent(el, type) {
 /**
  * Extend Dialog class to handle save/cancel of edition components.
  */
-Dialog = Dialog.extend({
+var Dialog = DialogBase.extend({
     /**
      * @constructor
      */
@@ -83,7 +83,7 @@ var AltDialog = Dialog.extend({
         this.$editable = $editable;
         this.media = media;
         this.alt = ($(this.media).attr('alt') || "").replace(/&quot;/g, '"');
-        this.title = ($(this.media).attr('title') || "").replace(/&quot;/g, '"');
+        this.tag_title = ($(this.media).attr('title') || "").replace(/&quot;/g, '"');
     },
 
     //--------------------------------------------------------------------------
@@ -109,6 +109,9 @@ var AltDialog = Dialog.extend({
 
 var MediaWidget = Widget.extend({
     xmlDependencies: ['/web_editor/static/src/xml/editor.xml'],
+    events: {
+        'input input.o_we_search': '_onSearchInput',
+    },
 
     /**
      * @constructor
@@ -117,7 +120,7 @@ var MediaWidget = Widget.extend({
         this._super.apply(this, arguments);
         this.media = media;
         this.$media = $(media);
-        this.page = 0;
+        this._onSearchInput = _.debounce(this._onSearchInput, 500);
     },
 
     //--------------------------------------------------------------------------
@@ -132,23 +135,6 @@ var MediaWidget = Widget.extend({
             return;
         }
         this._clear();
-    },
-    /**
-     * @todo comment
-     */
-    getControlPanelConfig: function () {
-        return {
-            searchEnabled: true,
-            pagerEnabled: true,
-            pagerLeftEnabled: false,
-            pagerRightEnabled: false,
-        };
-    },
-    /**
-     * @override
-     */
-    goToPage: function (page) {
-        this.page = page;
     },
     /**
      * @abstract
@@ -178,6 +164,18 @@ var MediaWidget = Widget.extend({
         this.$media = $media;
         this.media = $media[0];
     },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _onSearchInput: function (ev) {
+        this.search($(ev.currentTarget).val() || '');
+        this.hasSearched = true;
+    },
 });
 
 /**
@@ -185,19 +183,20 @@ var MediaWidget = Widget.extend({
  */
 var ImageWidget = MediaWidget.extend({
     template: 'web_editor.dialog.image',
-    events: {
-        'click .o_upload_image_button': '_onUploadButtonClick',
-        'click .o_upload_image_button_no_optimization': '_onUploadButtonNoOptimizationClick',
+    events: _.extend({}, MediaWidget.prototype.events || {}, {
+        'click .o_upload_media_button': '_onUploadButtonClick',
+        'click .o_upload_media_button_no_optimization': '_onUploadButtonNoOptimizationClick',
         'change input[type=file]': '_onImageSelection',
-        'click .o_upload_image_url_button': '_onUploadURLButtonClick',
-        'input input.url': "_onSearchInput",
+        'click .o_upload_media_url_button': '_onUploadURLButtonClick',
+        'input input.o_we_url_input': '_onURLInputChange',
         'click .existing-attachments [data-src]': '_onImageClick',
         'dblclick .existing-attachments [data-src]': '_onImageDblClick',
         'click .o_existing_attachment_remove': '_onRemoveClick',
-    },
+        'click .o_load_more': '_onLoadMoreClick',
+    }),
 
     IMAGES_PER_ROW: 6,
-    IMAGES_ROWS: 2,
+    IMAGES_ROWS: 5,
 
     /**
      * @constructor
@@ -205,7 +204,8 @@ var ImageWidget = MediaWidget.extend({
     init: function (parent, media, options) {
         this._super.apply(this, arguments);
 
-        this.IMAGES_PER_PAGE = this.IMAGES_PER_ROW * this.IMAGES_ROWS;
+        this.imagesRows = this.IMAGES_ROWS;
+        this.IMAGES_DISPLAYED_TOTAL = this.IMAGES_PER_ROW * this.imagesRows;
 
         this.options = options;
         this.accept = options.accept || (options.document ? '*/*' : 'image/*');
@@ -242,7 +242,7 @@ var ImageWidget = MediaWidget.extend({
         var def = this._super.apply(this, arguments);
         var self = this;
 
-        this._renderImages();
+        this._renderImages(true);
 
         var o = {
             url: null,
@@ -265,22 +265,6 @@ var ImageWidget = MediaWidget.extend({
     // Public
     //--------------------------------------------------------------------------
 
-    /**
-     * @override
-     */
-    getControlPanelConfig: function () {
-        return _.extend(this._super.apply(this, arguments), {
-            pagerLeftEnabled: this.page > 0,
-            pagerRightEnabled: (this.page + 1) * this.IMAGES_PER_PAGE < this.records.length,
-        });
-    },
-    /**
-     * @override
-     */
-    goToPage: function (page) {
-        this._super.apply(this, arguments);
-        this._renderImages();
-    },
     /**
      * @override
      */
@@ -313,9 +297,9 @@ var ImageWidget = MediaWidget.extend({
                 }
                 if (!self.$media.is('img')) {
                     // Note: by default the images receive the bootstrap opt-in
-                    // img-responsive class. We cannot make them all responsive
+                    // img-fluid class. We cannot make them all responsive
                     // by design because of libraries and client databases img.
-                    self._replaceMedia($('<img/>', {class: 'img-responsive o_we_custom_image'}));
+                    self._replaceMedia($('<img/>', {class: 'img-fluid o_we_custom_image'}));
                 }
                 self.$media.attr('src', img.src);
 
@@ -361,13 +345,14 @@ var ImageWidget = MediaWidget.extend({
     search: function (needle, noRender) {
         var self = this;
         if (!noRender) {
-            this.$('input.url').val('').trigger('input').trigger('change');
+            this.$('input.o_we_url_input').val('').trigger('input').trigger('change');
         }
+        // TODO: Expand this for adding SVG
         var domain = this.domain.concat(['|', ['mimetype', '=', false], ['mimetype', this.options.document ? 'not in' : 'in', ['image/gif', 'image/jpe', 'image/jpeg', 'image/jpg', 'image/gif', 'image/png']]]);
         if (needle && needle.length) {
             domain.push('|', ['datas_fname', 'ilike', needle], ['name', 'ilike', needle]);
         }
-        domain.push('!', ['datas_fname', '=like', '%.crop'], '!', ['name', '=like', '%.crop']);
+        domain.push('|', ['datas_fname', '=', false], '!', ['datas_fname', '=like', '%.crop'], '!', ['name', '=like', '%.crop']);
         return this._rpc({
             model: 'ir.attachment',
             method: 'search_read',
@@ -409,6 +394,7 @@ var ImageWidget = MediaWidget.extend({
             });
             if (!noRender) {
                 self._renderImages();
+                self._adaptLoadMore();
             }
         });
     },
@@ -417,6 +403,14 @@ var ImageWidget = MediaWidget.extend({
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * @private
+     */
+    _adaptLoadMore: function () {
+        var noMoreImgToLoad = this.IMAGES_DISPLAYED_TOTAL >= this.records.length;
+        this.$('.o_load_more').toggleClass('d-none', noMoreImgToLoad);
+        this.$('.o_load_done_msg').toggleClass('d-none', !noMoreImgToLoad);
+    },
     /**
      * @override
      */
@@ -441,25 +435,44 @@ var ImageWidget = MediaWidget.extend({
     /**
      * @private
      */
-    _renderImages: function () {
+    _loadMoreImages: function (forceSearch) {
+        this.imagesRows += 2;
+        this.IMAGES_DISPLAYED_TOTAL = this.imagesRows * this.IMAGES_PER_ROW;
+        if (!forceSearch) {
+            this._renderImages();
+            this._adaptLoadMore();
+        } else {
+            this.search(this.$('.o_we_search').val() || '');
+        }
+    },
+    /**
+     * @private
+     */
+    _renderImages: function (withEffect) {
         var self = this;
-        var startIndex = this.page * this.IMAGES_PER_PAGE;
         var rows = _(this.records).chain()
-            .slice(startIndex, startIndex + this.IMAGES_PER_PAGE)
+            .slice(0, this.IMAGES_DISPLAYED_TOTAL)
             .groupBy(function (a, index) { return Math.floor(index / self.IMAGES_PER_ROW); })
             .values()
             .value();
 
-        this.$('.help-block').empty();
+        this.$('.form-text').empty();
 
-        this.$('.existing-attachments').replaceWith(QWeb.render('web_editor.dialog.image.existing.content', {rows: rows}));
+        // Render menu & content
+        this.$('.existing-attachments').replaceWith(
+            QWeb.render('web_editor.dialog.files.existing.content', {
+                rows: rows,
+                isDocument: this.options.document,
+                withEffect: withEffect,
+            })
+        );
 
         var $divs = this.$('.o_image');
         var imageDefs = _.map($divs, function (el) {
             var $div = $(el);
             if (/gif|jpe|jpg|png/.test($div.data('mimetype'))) {
                 var $img = $('<img/>', {
-                    class: 'img-responsive',
+                    class: 'img-fluid',
                     src: $div.data('url') || $div.data('src'),
                 });
                 var def = $.Deferred();
@@ -468,22 +481,24 @@ var ImageWidget = MediaWidget.extend({
                 return def;
             }
         });
-        $.when.apply($, imageDefs).then(function () {
-            _.delay(function () {
-                $divs.removeClass('o_image_loading');
-            }, 400);
-        });
+        if (withEffect) {
+            $.when.apply($, imageDefs).then(function () {
+                _.delay(function () {
+                    $divs.removeClass('o_image_loading');
+                }, 400);
+            });
+        }
         this._highlightSelectedImages();
     },
     /**
      * @private
      */
-    _toggleImage: function (attachment, clearSearch, force_select) {
+    _toggleImage: function (attachment, clearSearch, forceSelect) {
         if (this.multiImages) {
             var img = _.select(this.images, function (v) { return v.id === attachment.id; });
             if (img.length) {
-                if (!force_select) {
-                    this.images.splice(this.images.indexOf(img[0]),1);
+                if (!forceSelect) {
+                    this.images.splice(this.images.indexOf(img[0]), 1);
                 }
             } else {
                 this.images.push(attachment);
@@ -500,14 +515,14 @@ var ImageWidget = MediaWidget.extend({
     /**
      * @private
      */
-    _uploadImage: function () {
+    _uploadFile: function () {
         var self = this;
 
         /**
          * @todo file upload cannot be handled with _rpc smoothly. This uses the
          * form posting in iframe trick to handle the upload.
          */
-        var $iframe = this.$('iframe');
+        var $iframe = this.$('.o_file_upload_iframe');
         $iframe.on('load', function () {
             var iWindow = $iframe[0].contentWindow;
             var attachments = iWindow.attachments;
@@ -516,14 +531,14 @@ var ImageWidget = MediaWidget.extend({
             self.$('.well > span').remove();
             self.$('.well > div').show();
             _.each(attachments, function (record) {
-                record.src = record.url || '/web/image/' + record.id;
+                record.src = record.url || _.str.sprintf('/web/image/%s/%s', record.id, encodeURI(record.name)); // Name is added for SEO purposes
                 record.isDocument = !(/gif|jpe|jpg|png/.test(record.mimetype));
             });
             if (error || !attachments.length) {
                 _processFile(null, error || !attachments.length);
             }
             self.images = attachments;
-            for (var i = 0 ; i < attachments.length ; i++) {
+            for (var i = 0; i < attachments.length; i++) {
                 _processFile(attachments[i], error);
             }
 
@@ -532,21 +547,18 @@ var ImageWidget = MediaWidget.extend({
             }
 
             function _processFile(attachment, error) {
-                var $button = self.$('.o_upload_image_button');
                 if (!error) {
-                    $button.addClass('btn-success');
                     self._toggleImage(attachment, true);
                 } else {
-                    $button.addClass('btn-danger');
-                    self.$el.addClass('has-error').find('.help-block').text(error);
-                }
-
-                if (!self.multiImages) {
-                    self.trigger_up('save_request');
+                    self.$el.addClass('o_has_error').find('.form-control, .custom-select').addClass('is-invalid');
+                    self.$el.find('.form-text').text(error);
                 }
             }
         });
         this.$el.submit();
+
+        // Empty file input
+        this.$('.o_file_input').val('');
     },
 
     //--------------------------------------------------------------------------
@@ -556,12 +568,12 @@ var ImageWidget = MediaWidget.extend({
     /**
      * @private
      */
-    _onImageClick: function (ev, force_select) {
+    _onImageClick: function (ev, forceSelect) {
         var $img = $(ev.currentTarget);
         var attachment = _.find(this.records, function (record) {
             return record.id === $img.data('id');
         });
-        this._toggleImage(attachment, false, force_select);
+        this._toggleImage(attachment, false, forceSelect);
     },
     /**
      * @private
@@ -576,45 +588,67 @@ var ImageWidget = MediaWidget.extend({
     _onImageSelection: function () {
         var $form = this.$('form');
         this.$el.addClass('nosave');
-        $form.removeClass('has-error').find('.help-block').empty();
-        this.$('.o_upload_image_button').removeClass('btn-danger btn-success');
-        this._uploadImage();
+        $form.removeClass('o_has_error').find('.form-control, .custom-select').removeClass('is-invalid');
+        $form.find('.form-text').empty();
+        this.$('.o_upload_media_button').removeClass('btn-danger btn-success');
+        this._uploadFile();
     },
     /**
      * @private
      */
     _onRemoveClick: function (ev) {
         var self = this;
-        var $helpBlock = this.$('.help-block').empty();
-        var $a = $(ev.currentTarget);
-        var id = parseInt($a.data('id'), 10);
-        var attachment = _.findWhere(this.records, {id: id});
+        DialogBase.confirm(this, _t("Are you sure you want to delete this file ?"), {
+            confirm_callback: function () {
+                var $helpBlock = this.$('.form-text').empty();
+                var $a = $(ev.currentTarget);
+                var id = parseInt($a.data('id'), 10);
+                var attachment = _.findWhere(this.records, {id: id});
 
-        return this._rpc({
-            route: '/web_editor/attachment/remove',
-            params: {
-                ids: [id],
-            },
-        }).then(function (prevented) {
-            if (_.isEmpty(prevented)) {
-                self.records = _.without(self.records, attachment);
-                self._renderImages();
-                return;
+                return self._rpc({
+                    route: '/web_editor/attachment/remove',
+                    params: {
+                        ids: [id],
+                    },
+                }).then(function (prevented) {
+                    if (_.isEmpty(prevented)) {
+                        self.records = _.without(self.records, attachment);
+                        self.search('');
+                        return;
+                    }
+                    $helpBlock.replaceWith(QWeb.render('web_editor.dialog.image.existing.error', {
+                        views: prevented[id],
+                    }));
+                });
             }
-            $helpBlock.replaceWith(QWeb.render('web_editor.dialog.image.existing.error', {
-                views: prevented[id]
-            }));
         });
     },
     /**
      * @private
      */
-    _onSearchInput: function (ev) {
+    _onURLInputChange: function (ev) {
         var $input = $(ev.currentTarget);
-        var $button = $input.next('button');
-        var emptyValue = ($input.val() === '');
-        $button.toggleClass('btn-default', emptyValue).toggleClass('btn-primary', !emptyValue)
-               .prop('disabled', emptyValue);
+        var $button = this.$('.o_upload_media_url_button');
+        var $success = this.$('.o_we_url_success');
+        var $warning = this.$('.o_we_url_warning');
+        var $error = this.$('.o_we_url_error');
+
+        var inputValue = $input.val();
+        var emptyValue = (inputValue === '');
+
+        var isURL = /^.+\..+$/.test(inputValue); // TODO improve
+        var isImage = _.any(['.gif', '.jpe', '.jpg', '.png'], function (format) {
+            return inputValue.endsWith(format);
+        });
+
+        $button.toggleClass('btn-secondary', emptyValue).toggleClass('btn-primary', !emptyValue)
+               .prop('disabled', !isURL);
+        if (!this.options.document) {
+            $button.text((isURL && !isImage) ? _t("Add as document") : _t("Add image"));
+        }
+        $success.toggleClass('d-none', !isURL);
+        $warning.toggleClass('d-none', !isURL || this.options.document || isImage);
+        $error.toggleClass('d-none', emptyValue || isURL);
     },
     /**
      * @private
@@ -627,13 +661,27 @@ var ImageWidget = MediaWidget.extend({
      */
     _onUploadButtonNoOptimizationClick: function () {
         this.$('input[name="disable_optimization"]').val('1');
-        this.$('.o_upload_image_button').click();
+        this.$('.o_upload_media_button').click();
     },
     /**
      * @private
      */
     _onUploadURLButtonClick: function () {
-        this._uploadImage();
+        this._uploadFile();
+    },
+    /**
+     * @private
+     */
+    _onLoadMoreClick: function () {
+        this._loadMoreImages();
+    },
+    /**
+     * @override
+     */
+    _onSearchInput: function () {
+        this.imagesRows = this.IMAGES_ROWS;
+        this.IMAGES_DISPLAYED_TOTAL = this.IMAGES_PER_ROW * this.imagesRows;
+        this._super.apply(this, arguments);
     },
 });
 
@@ -643,10 +691,10 @@ var ImageWidget = MediaWidget.extend({
  */
 var IconWidget = MediaWidget.extend({
     template: 'web_editor.dialog.font-icons',
-    events : {
+    events: _.extend({}, MediaWidget.prototype.events || {}, {
         'click .font-icons-icon': '_onIconClick',
         'dblclick .font-icons-icon': '_onIconDblClick',
-    },
+    }),
 
     /**
      * @constructor
@@ -666,7 +714,7 @@ var IconWidget = MediaWidget.extend({
     start: function () {
         this.$icons = this.$('.font-icons-icon');
         var classes = (this.media && this.media.className || '').split(/\s+/);
-        for (var i = 0 ; i < classes.length ; i++) {
+        for (var i = 0; i < classes.length; i++) {
             var cls = classes[i];
             if (_.contains(this.alias, cls)) {
                 this.selectedIcon = cls;
@@ -682,14 +730,6 @@ var IconWidget = MediaWidget.extend({
     // Public
     //--------------------------------------------------------------------------
 
-    /**
-     * @override
-     */
-    getControlPanelConfig: function () {
-        return _.extend(this._super.apply(this, arguments), {
-            pagerEnabled: false,
-        });
-    },
     /**
      * @override
      */
@@ -750,12 +790,12 @@ var IconWidget = MediaWidget.extend({
      */
     _getFont: function (classNames) {
         if (!(classNames instanceof Array)) {
-            classNames = (classNames||"").split(/\s+/);
+            classNames = (classNames || "").split(/\s+/);
         }
         var fontIcon, cssData;
-        for (var k=0; k<this.iconsParser.length; k++) {
+        for (var k = 0; k < this.iconsParser.length; k++) {
             fontIcon = this.iconsParser[k];
-            for (var s=0; s<fontIcon.cssData.length; s++) {
+            for (var s = 0; s < fontIcon.cssData.length; s++) {
                 cssData = fontIcon.cssData[s];
                 if (_.intersection(classNames, cssData.names).length) {
                     return {
@@ -806,11 +846,11 @@ var IconWidget = MediaWidget.extend({
  */
 var VideoWidget = MediaWidget.extend({
     template: 'web_editor.dialog.video',
-    events : {
+    events: _.extend({}, MediaWidget.prototype.events || {}, {
         'change .o_video_dialog_options input': '_onUpdateVideoOption',
         'input textarea#o_video_text': '_onVideoCodeInput',
         'change textarea#o_video_text': '_onVideoCodeChange',
-    },
+    }),
 
     /**
      * @constructor
@@ -851,23 +891,14 @@ var VideoWidget = MediaWidget.extend({
     /**
      * @override
      */
-    getControlPanelConfig: function () {
-        return _.extend(this._super.apply(this, arguments), {
-            searchEnabled: false,
-            pagerEnabled: false,
-        });
-    },
-    /**
-     * @override
-     */
     save: function () {
         this._updateVideo();
         if (this.$('.o_video_dialog_iframe').is('iframe')) {
             this._replaceMedia($(
-                '<div class="media_iframe_video" data-oe-expression="' + this.$content.attr('src') + '">'+
-                    '<div class="css_editable_mode_display">&nbsp;</div>'+
-                    '<div class="media_iframe_video_size" contenteditable="false">&nbsp;</div>'+
-                    '<iframe src="' + this.$content.attr('src') + '" frameborder="0" contenteditable="false"></iframe>'+
+                '<div class="media_iframe_video" data-oe-expression="' + this.$content.attr('src') + '">' +
+                    '<div class="css_editable_mode_display">&nbsp;</div>' +
+                    '<div class="media_iframe_video_size" contenteditable="false">&nbsp;</div>' +
+                    '<iframe src="' + this.$content.attr('src') + '" frameborder="0" contenteditable="false"></iframe>' +
                 '</div>'
             ));
         }
@@ -947,17 +978,20 @@ var VideoWidget = MediaWidget.extend({
             $video.attr('src', '//player.vimeo.com/video/' + vimMatch[3] + autoplay);
             videoType = 'vim';
         } else if (dmMatch && dmMatch[2].length) {
-            var just_id = dmMatch[2].replace('video/','');
-            $video.attr('src', '//www.dailymotion.com/embed/video/' + just_id + autoplay);
+            var justId = dmMatch[2].replace('video/', '');
+            $video.attr('src', '//www.dailymotion.com/embed/video/' + justId + autoplay);
             videoType = 'dm';
         } else if (ykuMatch && ykuMatch[3].length) {
-            var yku_id = ykuMatch[3].indexOf('.html?') >= 0 ? ykuMatch[3].substring(0, ykuMatch[3].indexOf('.html?')) : ykuMatch[3];
-            $video.attr('src', '//player.youku.com/embed/' + yku_id);
+            var ykuId = ykuMatch[3].indexOf('.html?') >= 0 ? ykuMatch[3].substring(0, ykuMatch[3].indexOf('.html?')) : ykuMatch[3];
+            $video.attr('src', '//player.youku.com/embed/' + ykuId);
             videoType = 'yku';
         } else {
             return {errorCode: 1};
         }
 
+        if (ytMatch) {
+            $video.attr('src', $video.attr('src') + '&rel=0');
+        }
         if (options.loop && (ytMatch || vimMatch)) {
             $video.attr('src', $video.attr('src') + '&loop=1');
         }
@@ -987,8 +1021,8 @@ var VideoWidget = MediaWidget.extend({
     _updateVideo: function () {
         // Reset the feedback
         this.$content.empty();
-        this.$('#o_video_form_group').removeClass('has-error has-success');
-        this.$('.o_video_dialog_options li').addClass('hidden');
+        this.$('#o_video_form_group').removeClass('o_has_error o_has_success').find('.form-control, .custom-select').removeClass('is-invalid is-valid');
+        this.$('.o_video_dialog_options div').addClass('d-none');
 
         // Check video code
         var $textarea = this.$('textarea#o_video_text');
@@ -999,7 +1033,7 @@ var VideoWidget = MediaWidget.extend({
 
         // Detect if we have an embed code rather than an URL
         var embedMatch = code.match(/(src|href)=["']?([^"']+)?/);
-        if (embedMatch && embedMatch[2].length > 0 && embedMatch[2].indexOf('instagram')){
+        if (embedMatch && embedMatch[2].length > 0 && embedMatch[2].indexOf('instagram')) {
             embedMatch[1] = embedMatch[2]; // Instagram embed code is different
         }
         var url = embedMatch ? embedMatch[1] : code;
@@ -1014,23 +1048,26 @@ var VideoWidget = MediaWidget.extend({
             hide_dm_share: this.$('input#o_video_hide_dm_share').is(':checked'),
         });
 
-        var $opt_box = this.$('.o_video_dialog_options');
+        var $optBox = this.$('.o_video_dialog_options');
 
         // Show / Hide preview elements
-        this.$el.find('.o_video_dialog_preview_text, .media_iframe_video_size').add($opt_box).toggleClass('hidden', !query.$video);
+        this.$el.find('.o_video_dialog_preview_text, .media_iframe_video_size').add($optBox).toggleClass('d-none', !query.$video);
         // Toggle validation classes
-        this.$el.find('#o_video_form_group').toggleClass('has-error', !query.$video).toggleClass('has-success', !!query.$video);
+        this.$el.find('#o_video_form_group')
+            .toggleClass('o_has_error', !query.$video).find('.form-control, .custom-select').toggleClass('is-invalid', !query.$video)
+            .end()
+            .toggleClass('o_has_success', !!query.$video).find('.form-control, .custom-select').toggleClass('is-valid', !!query.$video);
 
         // Individually show / hide options base on the video provider
-        $opt_box.find('li.o_' + query.type + '_option').removeClass('hidden');
+        $optBox.find('div.o_' + query.type + '_option').removeClass('d-none');
 
         // Hide the entire options box if no options are available
-        $opt_box.toggleClass('hidden', $opt_box.find('li:not(.hidden)').length === 0);
+        $optBox.toggleClass('d-none', $optBox.find('div:not(.d-none)').length === 0);
 
         if (query.type === 'yt') {
             // Youtube only: If 'hide controls' is checked, hide 'fullscreen'
             // and 'youtube logo' options too
-            this.$('input#o_video_hide_fullscreen, input#o_video_hide_yt_logo').closest('li').toggleClass('hidden', this.$('input#o_video_hide_controls').is(':checked'));
+            this.$('input#o_video_hide_fullscreen, input#o_video_hide_yt_logo').closest('div').toggleClass('d-none', this.$('input#o_video_hide_controls').is(':checked'));
         }
 
         var $content = query.$video;
@@ -1038,13 +1075,13 @@ var VideoWidget = MediaWidget.extend({
             switch (query.errorCode) {
                 case 0:
                     $content = $('<div/>', {
-                        class: 'alert alert-danger o_video_dialog_iframe',
+                        class: 'alert alert-danger o_video_dialog_iframe mb-2 mt-2',
                         text: _t("The provided url is not valid"),
                     });
                     break;
                 case 1:
                     $content = $('<div/>', {
-                        class: 'alert alert-warning o_video_dialog_iframe',
+                        class: 'alert alert-warning o_video_dialog_iframe mb-2 mt-2',
                         text: _t("The provided url does not reference any supported video"),
                     });
                     break;
@@ -1096,10 +1133,8 @@ var MediaDialog = Dialog.extend({
     xmlDependencies: Dialog.prototype.xmlDependencies.concat(
         ['/web_editor/static/src/xml/editor.xml']
     ),
-    events : _.extend({}, Dialog.prototype.events, {
-        'input input#icon-search': '_onSearchInput',
+    events: _.extend({}, Dialog.prototype.events, {
         'shown.bs.tab a[data-toggle="tab"]': '_onTabChange',
-        'click .pager > li > a:not(.disabled)': '_onPagerClick',
     }),
     custom_events: _.extend({}, Dialog.prototype.custom_events || {}, {
         save_request: '_onSaveRequest',
@@ -1112,6 +1147,7 @@ var MediaDialog = Dialog.extend({
         var self = this;
         this._super(parent, _.extend({}, {
             title: _t("Select a Media"),
+            save_text: _t("Add"),
         }, options));
 
         if ($editable) {
@@ -1144,25 +1180,20 @@ var MediaDialog = Dialog.extend({
         }
 
         this.opened(function () {
-            if (!self.media) {
-                return;
-            }
-            if (self.$media.is('img')) {
-                self.$('[href="#editor-media-image"]').tab('show');
+            var tabToShow = 'icon';
+            if (!self.media || self.$media.is('img')) {
+                tabToShow = 'image';
             } else if (self.$media.is('a.o_image')) {
-                self.$('[href="#editor-media-document"]').tab('show');
+                tabToShow = 'document';
             } else if (self.$media.attr('class').match(/(^|\s)media_iframe_video($|\s)/)) {
-                self.$('[href="#editor-media-video"]').tab('show');
+                tabToShow = 'video';
             } else if (self.$media.parent().attr('class').match(/(^|\s)media_iframe_video($|\s)/)) {
                 self.$media = self.$media.parent();
                 self.media = self.$media[0];
-                self.$('[href="#editor-media-video"]').tab('show');
-            } else if (self.$media.attr('class').match(/(^|\s)fa($|\s)/)) {
-                self.$('[href="#editor-media-icon"]').tab('show');
+                tabToShow = 'video';
             }
+            self.$('[href="#editor-media-' + tabToShow + '"]').tab('show');
         });
-
-        this._onSearchInput = _.debounce(this._onSearchInput, 250);
     },
     /**
      * @override
@@ -1171,7 +1202,7 @@ var MediaDialog = Dialog.extend({
         var self = this;
         var defs = [this._super.apply(this, arguments)];
         this.$modal.addClass('note-image-dialog');
-        this.$modal.find('[role="dialog"]').addClass('o_select_media_dialog');
+        this.$modal.find('.modal-dialog').addClass('o_select_media_dialog');
 
         if (this.imageDialog) {
             defs.push(this.imageDialog.appendTo(this.$("#editor-media-image")));
@@ -1259,18 +1290,6 @@ var MediaDialog = Dialog.extend({
      */
     _setActive: function (widget) {
         this.active = widget;
-        this.active.goToPage(0);
-        this._updateControlPanel();
-    },
-    /**
-     * @private
-     */
-    _updateControlPanel: function () {
-        var cpConfig = this.active.getControlPanelConfig();
-        this.$('li.search').toggleClass("hidden", !cpConfig.searchEnabled);
-        this.$('li.previous, li.next').toggleClass("hidden", !cpConfig.pagerEnabled);
-        this.$('li.previous > a').toggleClass("disabled", !cpConfig.pagerLeftEnabled);
-        this.$('li.next > a').toggleClass("disabled", !cpConfig.pagerRightEnabled);
     },
 
     //--------------------------------------------------------------------------
@@ -1280,26 +1299,9 @@ var MediaDialog = Dialog.extend({
     /**
      * @private
      */
-    _onPagerClick: function (ev) {
-        this.active.goToPage(this.active.page + ($(ev.currentTarget).parent().hasClass('previous') ? -1 : 1));
-        this._updateControlPanel();
-    },
-    /**
-     * @private
-     */
     _onSaveRequest: function (ev) {
         ev.stopPropagation();
         this.save();
-    },
-    /**
-     * @private
-     */
-    _onSearchInput: function (ev) {
-        var self = this;
-        this.active.goToPage(0);
-        this.active.search($(ev.currentTarget).val() || '').then(function () {
-            self._updateControlPanel();
-        });
     },
     /**
      * @private
@@ -1352,7 +1354,7 @@ var LinkDialog = Dialog.extend({
             this.data.iniClassName = $(this.data.range.sc).filter("a").attr("class") || "";
             this.data.className = this.data.iniClassName.replace(/(^|\s+)btn(-[a-z0-9_-]*)?/gi, ' ');
 
-            var is_link = this.data.range.isOnAnchor();
+            var isLink = this.data.range.isOnAnchor();
 
             var sc = r.sc;
             var so = r.so;
@@ -1360,7 +1362,7 @@ var LinkDialog = Dialog.extend({
             var eo = r.eo;
 
             var nodes;
-            if (!is_link) {
+            if (!isLink) {
                 if (sc.tagName) {
                     sc = dom.firstChild(so ? sc.childNodes[so] : sc);
                     so = 0;
@@ -1374,7 +1376,7 @@ var LinkDialog = Dialog.extend({
                     so = 0;
                 }
                 if (ec.tagName) {
-                    ec = dom.lastChild(eo ? ec.childNodes[eo-1] : ec);
+                    ec = dom.lastChild(eo ? ec.childNodes[eo - 1] : ec);
                     eo = ec.textContent.length;
                 } else if (eo !== ec.textContent.length) {
                     ec.splitText(eo);
@@ -1384,11 +1386,11 @@ var LinkDialog = Dialog.extend({
 
                 // browsers can't target a picture or void node
                 if (dom.isVoid(sc) || dom.isImg(sc)) {
-                    so = dom.listPrev(sc).length-1;
+                    so = dom.listPrev(sc).length - 1;
                     sc = sc.parentNode;
                 }
                 if (dom.isBR(ec)) {
-                    eo = dom.listPrev(ec).length-1;
+                    eo = dom.listPrev(ec).length - 1;
                     ec = ec.parentNode;
                 } else if (dom.isVoid(ec) || dom.isImg(sc)) {
                     eo = dom.listPrev(ec).length;
@@ -1407,15 +1409,15 @@ var LinkDialog = Dialog.extend({
             if (nodes.length > 1 || dom.ancestor(nodes[0], dom.isImg)) {
                 var text = "";
                 this.data.images = [];
-                for (var i=0; i<nodes.length; i++) {
+                for (var i = 0; i < nodes.length; i++) {
                     if (dom.ancestor(nodes[i], dom.isImg)) {
                         this.data.images.push(dom.ancestor(nodes[i], dom.isImg));
                         text += '[IMG]';
-                    } else if (!is_link && nodes[i].nodeType === 1) {
+                    } else if (!isLink && nodes[i].nodeType === 1) {
                         // just use text nodes from listBetween
-                    } else if (!is_link && i===0) {
+                    } else if (!isLink && i === 0) {
                         text += nodes[i].textContent.slice(so, Infinity);
-                    } else if (!is_link && i===nodes.length-1) {
+                    } else if (!isLink && i === nodes.length - 1) {
                         text += nodes[i].textContent.slice(0, eo);
                     } else {
                         text += nodes[i].textContent;
@@ -1451,6 +1453,21 @@ var LinkDialog = Dialog.extend({
             this.$('input[name="url"]').val(match ? match[1] : this.data.url);
         }
 
+        // Hide the duplicate color buttons (most of the times, primary = alpha
+        // and secondary = beta for example but this may depend on the theme)
+        this.opened().then(function () {
+            var colors = [];
+            _.each(self.$('.o_btn_preview.o_link_dialog_color_item'), function (btn) {
+                var $btn = $(btn);
+                var color = $btn.css('background-color');
+                if (_.contains(colors, color)) {
+                    $btn.hide(); // Not remove to be able to edit buttons with those styles
+                } else {
+                    colors.push(color);
+                }
+            });
+        });
+
         this._adaptPreview();
 
         this.$('input:visible:first').focus();
@@ -1469,14 +1486,14 @@ var LinkDialog = Dialog.extend({
         var data = this._getData();
         if (data === null) {
             var $url = this.$('input[name="url"]');
-            $url.closest('.form-group').addClass('has-error');
+            $url.closest('.form-group').addClass('o_has_error').find('.form-control, .custom-select').addClass('is-invalid');
             $url.focus();
             return $.Deferred().reject();
         }
         this.data.text = data.label;
         this.data.url = data.url;
         this.data.className = data.classes.replace(/\s+/gi, ' ').replace(/^\s+|\s+$/gi, '');
-        if (data.classes.replace(/(^|[ ])(btn-default|btn-success|btn-primary|btn-info|btn-warning|btn-danger)([ ]|$)/gi, ' ')) {
+        if (data.classes.replace(/(^|[ ])(btn-secondary|btn-success|btn-primary|btn-info|btn-warning|btn-danger)([ ]|$)/gi, ' ')) {
             this.data.style = {'background-color': '', 'color': ''};
         }
         this.data.isNewWindow = data.isNewWindow;
@@ -1500,7 +1517,7 @@ var LinkDialog = Dialog.extend({
         $preview.attr({
             target: data.isNewWindow ? '_blank' : '',
             href: data.url && data.url.length ? data.url : '#',
-            class: data.classes.replace(/pull-\w+/, '') + ' o_btn_preview',
+            class: data.classes.replace(/float-\w+/, '') + ' o_btn_preview',
         }).html((data.label && data.label.length) ? data.label : data.url);
     },
     /**
@@ -1512,7 +1529,7 @@ var LinkDialog = Dialog.extend({
         var label = this.$('input[name="label"]').val() || url;
 
         if (label && this.data.images) {
-            for (var i = 0 ; i < this.data.images.length ; i++) {
+            for (var i = 0; i < this.data.images.length; i++) {
                 label = label.replace(/</, "&lt;").replace(/>/, "&gt;").replace(/\[IMG\]/, this.data.images[i].outerHTML);
             }
         }
@@ -1522,13 +1539,18 @@ var LinkDialog = Dialog.extend({
         }
 
         var style = this.$('input[name="link_style_color"]:checked').val() || '';
+        var shape = this.$('select[name="link_style_shape"]').val() || '';
         var size = this.$('select[name="link_style_size"]').val() || '';
+        var shapes = shape.split(',');
+        var outline = shapes[0] === 'outline';
+        shape = shapes.slice(outline ? 1 : 0).join(' ');
         var classes = (this.data.className || '')
-            + ((style && style.length) ? (' btn btn-' + style) : '')
-            + ((size && size.length) ? (' btn-' + size) : '');
+            + (style ? (' btn btn-' + (outline ? 'outline-' : '') + style) : '')
+            + (shape ? (' ' + shape) : '')
+            + (size ? (' btn-' + size) : '');
         var isNewWindow = this.$('input[name="is_new_window"]').prop('checked');
 
-        if (url.indexOf('@') >= 0 && url.indexOf('mailto:') < 0) {
+        if (url.indexOf('@') >= 0 && url.indexOf('mailto:') < 0 && !url.match(/^http[s]?/i)) {
             url = ('mailto:' + url);
         }
         return {
@@ -1553,9 +1575,9 @@ var LinkDialog = Dialog.extend({
      * @private
      */
     _onURLInput: function (ev) {
-        $(ev.currentTarget).closest('.form-group').removeClass('has-error');
+        $(ev.currentTarget).closest('.form-group').removeClass('o_has_error').find('.form-control, .custom-select').removeClass('is-invalid');
         var isLink = $(ev.currentTarget).val().indexOf('@') < 0;
-        this.$('input[name="is_new_window"]').closest('.form-group').toggleClass('hidden', !isLink);
+        this.$('input[name="is_new_window"]').closest('.form-group').toggleClass('d-none', !isLink);
     },
 });
 
@@ -1573,7 +1595,7 @@ var CropImageDialog = Dialog.extend({
     cssLibs: [
         '/web_editor/static/lib/cropper/css/cropper.css',
     ],
-    events : _.extend({}, Dialog.prototype.events, {
+    events: _.extend({}, Dialog.prototype.events, {
         'click .o_crop_options [data-event]': '_onCropOptionClick',
     }),
 
@@ -1656,7 +1678,7 @@ var CropImageDialog = Dialog.extend({
         if (this.$cropperImage.length) {
             var data = this.$media.data();
             var ratio = 0;
-            for (var i = 0 ; i < this.aspectRatioList.length ; i++) {
+            for (var i = 0; i < this.aspectRatioList.length; i++) {
                 if (this.aspectRatioList[i][1] === data.aspectRatio) {
                     ratio = this.aspectRatioList[i][2];
                     break;
@@ -1735,14 +1757,11 @@ var CropImageDialog = Dialog.extend({
      * @param {MouseEvent} ev
      */
     _onCropOptionClick: function (ev) {
-        ev.preventDefault();
         var $option = $(ev.currentTarget);
         var opt = $option.data('event');
         var value = $option.data('value');
         switch (opt) {
             case 'ratio':
-                $option.siblings().removeClass('active');
-                $option.addClass('active');
                 this.$cropperImage.cropper('reset');
                 this.imageData.aspectRatio = $option.data('label');
                 this.$cropperImage.cropper('setAspectRatio', value);
@@ -1768,5 +1787,6 @@ return {
     MediaDialog: MediaDialog,
     LinkDialog: LinkDialog,
     CropImageDialog: CropImageDialog,
+    ImageWidget: ImageWidget,
 };
 });

@@ -9,14 +9,14 @@ from odoo.http import request
 class WebsiteSaleLinkTrackerBackend(WebsiteSaleBackend):
 
     @http.route()
-    def fetch_dashboard_data(self, date_from, date_to):
-        results = super(WebsiteSaleLinkTrackerBackend, self).fetch_dashboard_data(date_from, date_to)
+    def fetch_dashboard_data(self, website_id, date_from, date_to):
+        results = super(WebsiteSaleLinkTrackerBackend, self).fetch_dashboard_data(website_id, date_from, date_to)
         results['dashboards']['sales']['utm_graph'] = self.fetch_utm_data(date_from, date_to)
         return results
 
     def fetch_utm_data(self, date_from, date_to):
         sale_utm_domain = [
-            ('team_id.team_type', '=', 'website'),
+            ('website_id', '!=', False),
             ('state', 'in', ['sale', 'done']),
             ('confirmation_date', '>=', date_from),
             ('confirmation_date', '<=', date_to)

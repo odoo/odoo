@@ -1,7 +1,6 @@
 odoo.define('im_support.systray_tests', function (require) {
 "use strict";
 
-var supportBus = require('im_support.SupportBus');
 var imSupportTestUtils = require('im_support.test_utils');
 
 var mailTestUtils = require('mail.testUtils');
@@ -21,6 +20,7 @@ QUnit.module('systray', {
             },
         };
         this.services = mailTestUtils.getMailServices();
+
         this.supportParams = {
             db_uuid: 'some_uuid',
             support_token: 'ABCDEFGHIJ',
@@ -40,9 +40,8 @@ QUnit.test('messaging menu displays the Support channel', function (assert) {
     });
     messagingMenu.appendTo($('#qunit-fixture'));
 
-    messagingMenu.$('.dropdown-toggle').click();
-    assert.strictEqual(messagingMenu.$('.o_mail_systray_dropdown_bottom .o_mail_preview[data-preview-id=SupportChannel]').length,
-        1, "should display the Support channel");
+    testUtils.dom.click(messagingMenu.$('.dropdown-toggle'));
+    assert.containsOnce(messagingMenu, '.o_mail_systray_dropdown_bottom .o_mail_preview[data-preview-id=SupportChannel]', "should display the Support channel");
 
     messagingMenu.destroy();
 });
@@ -74,11 +73,10 @@ QUnit.test('clicking on Support channel: channel not available', function (asser
     });
     messagingMenu.appendTo($('#qunit-fixture'));
 
-    messagingMenu.$('.dropdown-toggle').click();
-    assert.strictEqual(messagingMenu.$('.o_mail_systray_dropdown_bottom .o_mail_preview[data-preview-id=SupportChannel]').length,
-        1, "should display the Support channel");
+    testUtils.dom.click(messagingMenu.$('.dropdown-toggle'));
+    assert.containsOnce(messagingMenu, '.o_mail_systray_dropdown_bottom .o_mail_preview[data-preview-id=SupportChannel]');
 
-    messagingMenu.$('.o_mail_preview[data-preview-id=SupportChannel]').click();
+    testUtils.dom.click(messagingMenu.$('.o_mail_preview[data-preview-id=SupportChannel]'));
     assert.strictEqual($('.o_thread_window').length, 1,
         "should have open a chat window");
     assert.strictEqual($('.o_thread_window .o_thread_window_title').text().trim(), 'Support (offline)',
@@ -119,11 +117,10 @@ QUnit.test('clicking on Support channel: channel available', function (assert) {
     });
     messagingMenu.appendTo($('#qunit-fixture'));
 
-    messagingMenu.$('.dropdown-toggle').click();
-    assert.strictEqual(messagingMenu.$('.o_mail_systray_dropdown_bottom .o_mail_preview[data-preview-id=SupportChannel]').length,
-        1, "should display the Support channel");
+    testUtils.dom.click(messagingMenu.$('.dropdown-toggle'));
+    assert.containsOnce(messagingMenu, '.o_mail_systray_dropdown_bottom .o_mail_preview[data-preview-id=SupportChannel]');
 
-    messagingMenu.$('.o_mail_preview[data-preview-id=SupportChannel]').click();
+    testUtils.dom.click(messagingMenu.$('.o_mail_preview[data-preview-id=SupportChannel]'));
     assert.strictEqual($('.o_thread_window').length, 1,
         "should have open a chat window");
     assert.strictEqual($('.o_thread_window .o_thread_window_title').text().trim(), 'Support',
@@ -164,11 +161,10 @@ QUnit.test('post messages in Support channel', function (assert) {
     });
     messagingMenu.appendTo($('#qunit-fixture'));
 
-    messagingMenu.$('.dropdown-toggle').click();
-    assert.strictEqual(messagingMenu.$('.o_mail_systray_dropdown_bottom .o_mail_preview[data-preview-id=SupportChannel]').length,
-        1, "should display the Support channel");
+    testUtils.dom.click(messagingMenu.$('.dropdown-toggle'));
+    assert.containsOnce(messagingMenu, '.o_mail_systray_dropdown_bottom .o_mail_preview[data-preview-id=SupportChannel]');
 
-    messagingMenu.$('.o_mail_preview[data-preview-id=SupportChannel]').click();
+    testUtils.dom.click(messagingMenu.$('.o_mail_preview[data-preview-id=SupportChannel]'));
     assert.strictEqual($('.o_thread_window .o_composer_input').length, 1,
         "should have a composer");
 
@@ -208,25 +204,24 @@ QUnit.test('fold Support channel', function (assert) {
         services: this.services,
         session: this.supportParams,
     });
-    testUtils.intercept(messagingMenu, 'call_service', function (ev) {
+    testUtils.mock.intercept(messagingMenu, 'call_service', function (ev) {
         if (ev.data.service === 'local_storage') {
             assert.step('LocalStorage: ' + ev.data.method + ' ' + ev.data.args);
         }
     }, true);
     messagingMenu.appendTo($('#qunit-fixture'));
 
-    messagingMenu.$('.dropdown-toggle').click();
-    assert.strictEqual(messagingMenu.$('.o_mail_systray_dropdown_bottom .o_mail_preview[data-preview-id=SupportChannel]').length,
-        1, "should display the Support channel");
+    testUtils.dom.click(messagingMenu.$('.dropdown-toggle'));
+    assert.containsOnce(messagingMenu, '.o_mail_systray_dropdown_bottom .o_mail_preview[data-preview-id=SupportChannel]');
 
-    messagingMenu.$('.o_mail_preview[data-preview-id=SupportChannel]').click();
+    testUtils.dom.click(messagingMenu.$('.o_mail_preview[data-preview-id=SupportChannel]'));
     assert.strictEqual($('.o_thread_window').length, 1,
         "should have open a chat window");
 
     // fold, re-open and close channel
-    $('.o_thread_window .o_thread_window_title').click();
-    $('.o_thread_window .o_thread_window_title').click();
-    $('.o_thread_window .o_thread_window_close').click();
+    testUtils.dom.click($('.o_thread_window .o_thread_window_title'));
+    testUtils.dom.click($('.o_thread_window .o_thread_window_title'));
+    testUtils.dom.click($('.o_thread_window .o_thread_window_close'));
 
     assert.verifySteps([
         '/mail/init_messaging',
@@ -315,14 +310,14 @@ QUnit.test('receive messages in the Support channel', function (assert) {
         body: 'A message',
         channel_ids: [supportChannelID],
     };
-    var notification = [[false, 'mail.channel'], data];
-    supportBus.trigger('notification', [notification]);
+    var notification = [[false, 'mail.channel', 1], data];
+    messagingMenu.call('support_bus_service', 'trigger', 'notification', [notification]);
 
     assert.strictEqual($('.o_thread_window .o_thread_message').length, 1,
         "there should be a new message in the thread");
     assert.strictEqual($('.o_thread_window .o_thread_message .o_thread_author ').text().trim(),
         'An operator', "should correctly display the author");
-    assert.strictEqual($('.o_thread_window .o_thread_message .o_thread_message_avatar').attr('data-src'),
+    assert.hasAttrValue($('.o_thread_window .o_thread_message .o_thread_message_avatar'), 'data-src',
         '/mail/static/src/img/odoo_o.png', "should have correct avatar");
     assert.strictEqual($('.o_thread_window .o_thread_message .o_thread_message_content ').text().trim(),
         'A message', "message is correct");

@@ -3,19 +3,23 @@
 # * google_calendar
 # 
 # Translators:
-# Mateus Lopes <mateus1@gmail.com>, 2016
-# Martin Trigaux, 2016
-# grazziano <gra.negocia@gmail.com>, 2016
-# Fábio Novais <fabionovais@aptu.com.br>, 2016
-# Rodrigo de Almeida Sottomaior Macedo <rmsolucoeseminformatic4@gmail.com>, 2016
-# Marina Jacques <marinajacques@gmail.com>, 2017
+# Rodrigo de Almeida Sottomaior Macedo <rmsolucoeseminformatic4@gmail.com>, 2018
+# Martin Trigaux, 2018
+# grazziano <gra.negocia@gmail.com>, 2018
+# André Augusto Firmino Cordeiro <a.cordeito@gmail.com>, 2018
+# Fábio Novais <fabionovais@aptu.com.br>, 2018
+# Marina Jacques <marinajacques@gmail.com>, 2018
+# Mateus Lopes <mateus1@gmail.com>, 2018
+# Silmar <pinheirosilmar@gmail.com>, 2018
+# Marcelo Costa <marcelo@comdesk.com.br>, 2018
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
-"Last-Translator: Marina Jacques <marinajacques@gmail.com>, 2017\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-08-24 09:18+0000\n"
+"Last-Translator: Marcelo Costa <marcelo@comdesk.com.br>, 2018\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,14 +28,9 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: google_calendar
-#: model:ir.ui.view,arch_db:google_calendar.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:google_calendar.res_config_settings_view_form
 msgid "<i class=\"fa fa-fw fa-arrow-right\"/>Tutorial"
-msgstr "Tutorial"
-
-#. module: google_calendar
-#: model:ir.ui.menu,name:google_calendar.menu_calendar_google_tech_config
-msgid "API Credentials"
-msgstr "Credenciais da API"
+msgstr "<i class=\"fa fa-fw fa-arrow-right\"/>Tutorial"
 
 #. module: google_calendar
 #. openerp-web
@@ -74,14 +73,14 @@ msgstr ""
 "tente novamente ou entre em contato o administrador."
 
 #. module: google_calendar
-#: model:ir.model,name:google_calendar.model_calendar_attendee
-msgid "Attendee information"
-msgstr "Informação do Participante"
-
-#. module: google_calendar
-#: model:ir.ui.view,arch_db:google_calendar.view_users_form
+#: model_terms:ir.ui.view,arch_db:google_calendar.view_users_form
 msgid "Calendar"
 msgstr "Calendário"
+
+#. module: google_calendar
+#: model:ir.model,name:google_calendar.model_calendar_attendee
+msgid "Calendar Attendee Information"
+msgstr "Informações do Participante do Calendário"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_users__google_calendar_cal_id
@@ -89,12 +88,12 @@ msgid "Calendar ID"
 msgstr "ID da Agenda"
 
 #. module: google_calendar
-#: model:ir.ui.view,arch_db:google_calendar.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:google_calendar.res_config_settings_view_form
 msgid "Client ID"
 msgstr "ID do Cliente"
 
 #. module: google_calendar
-#: model:ir.ui.view,arch_db:google_calendar.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:google_calendar.res_config_settings_view_form
 msgid "Client Secret"
 msgstr "Segredo do Cliente"
 
@@ -109,6 +108,11 @@ msgid "Client_key"
 msgstr "Client_key"
 
 #. module: google_calendar
+#: model:ir.model,name:google_calendar.model_res_config_settings
+msgid "Config Settings"
+msgstr "Ajuste de configurações"
+
+#. module: google_calendar
 #. openerp-web
 #: code:addons/google_calendar/static/src/js/google_calendar.js:54
 #: code:addons/google_calendar/static/src/js/google_calendar.js:58
@@ -119,7 +123,7 @@ msgstr "Configuração"
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar__display_name
 msgid "Display Name"
-msgstr "Nome para Exibição"
+msgstr "Nome exibido"
 
 #. module: google_calendar
 #. openerp-web
@@ -148,6 +152,11 @@ msgid "Event disconnection success"
 msgstr "Sucesso de desconexão de evento"
 
 #. module: google_calendar
+#: model:ir.model,name:google_calendar.model_google_calendar
+msgid "Google Calendar"
+msgstr "Agenda do Google"
+
+#. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_attendee__google_internal_event_id
 msgid "Google Calendar Event Id"
 msgstr "Event id no Google Agenda"
@@ -165,7 +174,7 @@ msgid "Google ID should be unique!"
 msgstr "O Google ID deve ser único!"
 
 #. module: google_calendar
-#: code:addons/google_calendar/models/google_calendar.py:687
+#: code:addons/google_calendar/models/google_calendar.py:688
 #, python-format
 msgid ""
 "Google is lost... the next synchro will be a full synchro. \n"
@@ -202,7 +211,7 @@ msgstr ""
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar____last_update
 msgid "Last Modified on"
-msgstr "Última Modificação em"
+msgstr "Última modificação em"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_users__google_calendar_last_sync_date
@@ -289,17 +298,7 @@ msgstr ""
 "Você será redirecionado ao Google para autorizar o acesso a sua agenda!"
 
 #. module: google_calendar
-#: code:addons/google_calendar/models/google_calendar.py:295
+#: code:addons/google_calendar/models/google_calendar.py:296
 #, python-format
 msgid "Your token is invalid or has been revoked !"
 msgstr "Seu token é inválido ou foi revogado!"
-
-#. module: google_calendar
-#: model:ir.model,name:google_calendar.model_google_calendar
-msgid "google.calendar"
-msgstr "google.calendar"
-
-#. module: google_calendar
-#: model:ir.model,name:google_calendar.model_res_config_settings
-msgid "res.config.settings"
-msgstr "res.config.settings"

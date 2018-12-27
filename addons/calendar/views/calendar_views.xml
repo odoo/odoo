@@ -26,7 +26,7 @@
         <field name="arch" type="xml">
             <tree string="Calendar Alarm" editable="bottom">
                 <field name="name"/>
-                <field name="type"/>
+                <field name="alarm_type"/>
                 <field name="duration"/>
                 <field name="interval"/>
             </tree>
@@ -41,7 +41,7 @@
                  <group>
                     <group>
                         <field name="name"/>
-                        <field name="type" groups="base.group_no_one"/>
+                        <field name="alarm_type" groups="base.group_no_one"/>
                     </group>
                     <group>
                         <label for="duration"/>
@@ -88,7 +88,7 @@
         <field name="arch" type="xml">
             <form string="Meetings">
                 <sheet>
-                    <button string="Document" class="oe_stat_button pull-right" icon="fa-bars" type="object" name="action_open_calendar_event" attrs="{'invisible': ['|', ('res_model', '=', False), ('res_id', '=', False)]}"/>
+                    <button string="Document" class="oe_stat_button float-right" icon="fa-bars" type="object" name="action_open_calendar_event" attrs="{'invisible': ['|', ('res_model', '=', False), ('res_id', '=', False)]}"/>
                     <field name="res_model" invisible="1" />
                     <field name="res_id" invisible="1" />
                     <field name="state" invisible="1"/>
@@ -235,7 +235,7 @@
         <field name="priority" eval="2"/>
         <field name="arch" type="xml">
             <form string="Meetings">
-                <button string="Document" class="oe_stat_button pull-right" icon="fa-bars" type="object" name="action_open_calendar_event" attrs="{'invisible': ['|', ('res_model', '=', False), ('res_id', '=', False)]}"/>
+                <button string="Document" class="oe_stat_button float-right" icon="fa-bars" type="object" name="action_open_calendar_event" attrs="{'invisible': ['|', ('res_model', '=', False), ('res_id', '=', False)]}"/>
                 <field name="res_model" invisible="1" />
                 <field name="res_id" invisible="1" />
                 <field name="state" invisible="1"/>
@@ -291,9 +291,7 @@
                 <field name="user_id"/>
                 <field name="show_as"/>
                 <field name="privacy" string="Privacy"/>
-                <filter string="My Events" name="myevents" domain="[('user_id','=',uid)]" help="My Events"/>
                 <filter string="My Meetings" help="My Meetings" name="mymeetings" context='{"mymeetings": 1}'/>
-                <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                 <separator/>
                 <group expand="0" string="Group By">
                     <filter string="Responsible" name="responsible" domain="[]" context="{'group_by':'user_id'}"/>

@@ -6,6 +6,7 @@ from odoo import models, fields, api
 # We create a new model
 class mother(models.Model):
     _name = 'test.inherit.mother'
+    _description = 'Test Inherit Mother'
 
     name = fields.Char(default='Foo')
     state = fields.Selection([('a', 'A'), ('b', 'B')], default='a')
@@ -20,6 +21,7 @@ class mother(models.Model):
 # We inherit from the parent model, and we add some fields in the child model
 class daughter(models.Model):
     _name = 'test.inherit.daughter'
+    _description = 'Test Inherit Daughter'
 
     template_id = fields.Many2one('test.inherit.mother', 'Template',
                                   delegate=True, required=True, ondelete='cascade')
@@ -78,6 +80,7 @@ class res_partner(models.Model):
 # Contribution by Adrien Peiffer (ACSONE).
 class test_inherit_property(models.Model):
     _name = 'test.inherit.property'
+    _description = 'Test Inherit Property'
 
     name = fields.Char('Name', required=True)
     property_foo = fields.Integer(string='Foo', company_dependent=True)
@@ -104,6 +107,7 @@ class test_inherit_property(models.Model):
 #
 class Parent1(models.AbstractModel):
     _name = 'test.inherit.parent'
+    _description = 'Test Inherit Parent'
 
     def stuff(self):
         return 'P1'
@@ -112,6 +116,7 @@ class Parent1(models.AbstractModel):
 class Child(models.AbstractModel):
     _name = 'test.inherit.child'
     _inherit = 'test.inherit.parent'
+    _description = 'Test Inherit Child'
 
     bar = fields.Integer()
 

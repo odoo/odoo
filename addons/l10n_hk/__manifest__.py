@@ -7,7 +7,6 @@
     'category': 'Localization',
     'description': """ This is the base module to manage chart of accounting and localization for Hong Kong """,
     'author': 'Odoo SA',
-    'website': 'http://www.odoo.com',
     'depends': ['account'],
     'data': [
         'data/account_chart_template_data.xml',

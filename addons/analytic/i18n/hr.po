@@ -11,13 +11,14 @@
 # Đurđica Žarković <durdica.zarkovic@storm.hr>, 2017
 # Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2017
 # Stjepan Lovasić <stjepan.lovasic@gmail.com>, 2017
+# Tina Milas, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
-"Last-Translator: Stjepan Lovasić <stjepan.lovasic@gmail.com>, 2017\n"
+"POT-Creation-Date: 2018-08-02 09:12+0000\n"
+"PO-Revision-Date: 2018-08-02 09:12+0000\n"
+"Last-Translator: Tina Milas, 2018\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,25 +27,30 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 
 #. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_needaction
+msgid "Action Needed"
+msgstr "Potrebna dodatna radnja"
+
+#. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__active
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag__active
 msgid "Active"
 msgstr "Aktivan"
 
 #. module: analytic
-#: model:ir.actions.act_window,help:analytic.action_account_analytic_account_form
-#: model:ir.actions.act_window,help:analytic.action_analytic_account_form
+#: model_terms:ir.actions.act_window,help:analytic.action_account_analytic_account_form
+#: model_terms:ir.actions.act_window,help:analytic.action_analytic_account_form
 msgid "Add a new analytic account"
 msgstr ""
 
 #. module: analytic
-#: model:ir.actions.act_window,help:analytic.account_analytic_tag_action
+#: model_terms:ir.actions.act_window,help:analytic.account_analytic_tag_action
 msgid "Add a new tag"
 msgstr "Dodaj novu oznaku"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__amount
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_form
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_form
 msgid "Amount"
 msgstr "Iznos"
 
@@ -53,25 +59,27 @@ msgstr "Iznos"
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__name
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution__account_id
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__account_id
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
 msgid "Analytic Account"
 msgstr "Analitički konto"
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.account_analytic_group_action
-#: model:ir.ui.view,arch_db:analytic.account_analytic_group_form_view
-#: model:ir.ui.view,arch_db:analytic.account_analytic_group_tree_view
+#: model_terms:ir.ui.view,arch_db:analytic.account_analytic_group_form_view
+#: model_terms:ir.ui.view,arch_db:analytic.account_analytic_group_tree_view
 msgid "Analytic Account Groups"
 msgstr "Grupe analitičkih konta"
 
 #. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_res_users__has_group_analytic_accounting
 #: model:res.groups,name:analytic.group_analytic_accounting
 msgid "Analytic Accounting"
 msgstr "Analitičko računovodstvo"
 
 #. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_res_users__has_group_analytic_tags
 #: model:res.groups,name:analytic.group_analytic_tags
 msgid "Analytic Accounting Tags"
 msgstr ""
@@ -79,7 +87,7 @@ msgstr ""
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.action_account_analytic_account_form
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag__analytic_distribution_ids
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_list
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_list
 msgid "Analytic Accounts"
 msgstr "Analitička konta"
 
@@ -90,20 +98,20 @@ msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag__active_analytic_distribution
-#: model:ir.ui.view,arch_db:analytic.account_analytic_tag_form_view
+#: model_terms:ir.ui.view,arch_db:analytic.account_analytic_tag_form_view
 msgid "Analytic Distribution"
 msgstr "Analitička raspodjela"
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.account_analytic_line_action_entries
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_graph
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_pivot
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_tree
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_graph
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_pivot
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_tree
 msgid "Analytic Entries"
 msgstr "Stavke analitike"
 
 #. module: analytic
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_form
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_form
 msgid "Analytic Entry"
 msgstr "Stavka analitike"
 
@@ -125,28 +133,29 @@ msgstr "Oznaka analitike"
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.account_analytic_tag_action
 #: model:ir.model,name:analytic.model_account_analytic_tag
-#: model:ir.ui.view,arch_db:analytic.account_analytic_tag_form_view
-#: model:ir.ui.view,arch_db:analytic.account_analytic_tag_tree_view
+#: model_terms:ir.ui.view,arch_db:analytic.account_analytic_tag_form_view
+#: model_terms:ir.ui.view,arch_db:analytic.account_analytic_tag_tree_view
 msgid "Analytic Tags"
 msgstr "Oznake analitike"
 
 #. module: analytic
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
 msgid "Archived"
 msgstr "Arhivirano"
 
 #. module: analytic
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
 msgid "Associated Partner"
 msgstr "Povezani partner"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__balance
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_list
 msgid "Balance"
 msgstr "Saldo"
 
 #. module: analytic
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_kanban
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_kanban
 msgid "Balance:"
 msgstr "Saldo"
 
@@ -161,7 +170,7 @@ msgid "Childrens"
 msgstr ""
 
 #. module: analytic
-#: model:ir.actions.act_window,help:analytic.account_analytic_group_action
+#: model_terms:ir.actions.act_window,help:analytic.account_analytic_group_action
 msgid "Click to add a new analytic account group."
 msgstr ""
 
@@ -184,7 +193,7 @@ msgid "Complete Name"
 msgstr "Puni naziv"
 
 #. module: analytic
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
 msgid "Cost/Revenue"
 msgstr "Trošak/Prihod"
 
@@ -194,8 +203,8 @@ msgid "Costs & Revenues"
 msgstr "Troškovi i prihodi"
 
 #. module: analytic
-#: model:ir.actions.act_window,help:analytic.account_analytic_line_action
-#: model:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
+#: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action
+#: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid ""
 "Costs will be created automatically when you register supplier\n"
 "                invoices, expenses or timesheets."
@@ -223,6 +232,7 @@ msgstr "Datum kreiranja"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__credit
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_list
 msgid "Credit"
 msgstr "Potražuje"
 
@@ -244,6 +254,7 @@ msgstr "Datum"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__debit
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_list
 msgid "Debit"
 msgstr "Duguje"
 
@@ -263,14 +274,29 @@ msgid "Display Name"
 msgstr "Naziv za prikaz"
 
 #. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_follower_ids
+msgid "Followers"
+msgstr "Pratitelji"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_channel_ids
+msgid "Followers (Channels)"
+msgstr "Pratitelji (Kanali)"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Pratitelji (Partneri)"
+
+#. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__group_id
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__group_id
 msgid "Group"
 msgstr "Grupa"
 
 #. module: analytic
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
 msgid "Group By..."
 msgstr "Grupiraj po..."
 
@@ -284,6 +310,21 @@ msgid "ID"
 msgstr "ID"
 
 #. module: analytic
+#: model:ir.model.fields,help:analytic.field_account_analytic_account__message_unread
+msgid "If checked new messages require your attention."
+msgstr "Ako je odabrano, nove poruke zahtijevaju Vašu pažnju."
+
+#. module: analytic
+#: model:ir.model.fields,help:analytic.field_account_analytic_account__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Ako je označeno, nove poruke zahtijevaju Vašu pažnju."
+
+#. module: analytic
+#: model:ir.model.fields,help:analytic.field_account_analytic_account__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr ""
+
+#. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_account__active
 msgid ""
 "If the active field is set to False, it will allow you to hide the account "
@@ -291,8 +332,8 @@ msgid ""
 msgstr "Neaktivna konta se neće prikazivati u listama odabira."
 
 #. module: analytic
-#: model:ir.actions.act_window,help:analytic.account_analytic_line_action
-#: model:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
+#: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action
+#: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid ""
 "In Odoo, sales orders and projects are implemented using\n"
 "                analytic accounts. You can track costs and revenues to analyse\n"
@@ -300,6 +341,11 @@ msgid ""
 msgstr ""
 "U odoo-u ponude u prodaji i projekti su implementirane korištenjem\n"
 "analitičkih konta. Možete pratiti troškove i prihode kako bi jednostavno analizirali poslovanje "
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_is_follower
+msgid "Is Follower"
+msgstr "Je pratitelj"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account____last_update
@@ -329,31 +375,66 @@ msgid "Last Updated on"
 msgstr "Vrijeme promjene"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_group__parent_left
-msgid "Left Parent"
-msgstr "Left Parent"
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_has_error
+msgid "Message Delivery error"
+msgstr ""
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_ids
+msgid "Messages"
+msgstr "Poruke"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution__name
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_group__name
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_list
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_list
 msgid "Name"
 msgstr "Naziv"
 
 #. module: analytic
-#: model:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
+#: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid "No activity yet"
 msgstr ""
 
 #. module: analytic
-#: model:ir.actions.act_window,help:analytic.account_analytic_line_action
+#: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action
 msgid "No activity yet on this account"
 msgstr ""
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Broj akcija"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_has_error_counter
+msgid "Number of error"
+msgstr ""
+
+#. module: analytic
+#: model:ir.model.fields,help:analytic.field_account_analytic_account__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "Broj poruka koje zahtijevaju aktivnost"
+
+#. module: analytic
+#: model:ir.model.fields,help:analytic.field_account_analytic_account__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr ""
+
+#. module: analytic
+#: model:ir.model.fields,help:analytic.field_account_analytic_account__message_unread_counter
+msgid "Number of unread messages"
+msgstr "Broj nepročitanih poruka"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_group__parent_id
 msgid "Parent"
 msgstr "Nadređeni"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_group__parent_path
+msgid "Parent Path"
+msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution__tag_id
@@ -372,7 +453,7 @@ msgstr "Postotak"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__unit_amount
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_tree
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_tree
 msgid "Quantity"
 msgstr "Količina"
 
@@ -382,8 +463,8 @@ msgid "Reference"
 msgstr "Vezna oznaka"
 
 #. module: analytic
-#: model:ir.actions.act_window,help:analytic.account_analytic_line_action
-#: model:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
+#: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action
+#: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid ""
 "Revenues will be created automatically when you create customer\n"
 "                invoices. Customer invoices can be created based on sales orders\n"
@@ -395,12 +476,7 @@ msgstr ""
 "na troškovima (nrp. obračun troškova puta)."
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_group__parent_right
-msgid "Right Parent"
-msgstr "Desni roditelj"
-
-#. module: analytic
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
 msgid "Search Analytic Lines"
 msgstr "Traži analitičke linije"
 
@@ -416,9 +492,9 @@ msgid "Tags"
 msgstr "Oznake"
 
 #. module: analytic
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
-msgid "Tasks Month"
-msgstr "Zadaci po mjesecu"
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
+msgid "Tasks Date"
+msgstr ""
 
 #. module: analytic
 #: sql_constraint:account.analytic.distribution:0
@@ -427,7 +503,7 @@ msgid ""
 msgstr ""
 
 #. module: analytic
-#: code:addons/analytic/models/analytic_account.py:165
+#: code:addons/analytic/models/analytic_account.py:193
 #, python-format
 msgid ""
 "The selected account belongs to another company that the one you're trying "
@@ -435,14 +511,24 @@ msgid ""
 msgstr ""
 
 #. module: analytic
-#: model:ir.actions.act_window,help:analytic.account_analytic_group_action
+#: model_terms:ir.actions.act_window,help:analytic.account_analytic_group_action
 msgid "This allows to classify your analytic accounts."
 msgstr ""
 
 #. module: analytic
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_tree
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_tree
 msgid "Total"
 msgstr "Ukupno"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_unread
+msgid "Unread Messages"
+msgstr "Nepročitane poruke"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr "Brojač nepročitanih poruka"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__user_id
@@ -450,11 +536,16 @@ msgid "User"
 msgstr "Korisnik"
 
 #. module: analytic
+#: model:ir.model,name:analytic.model_res_users
+msgid "Users"
+msgstr "Korisnici"
+
+#. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_distribution
 msgid "account.analytic.distribution"
 msgstr ""
 
 #. module: analytic
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
 msgid "e.g. Project XYZ"
 msgstr "npr. Projekt XYZ"

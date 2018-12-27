@@ -77,7 +77,7 @@ var MentionManager = Widget.extend({
     detectDelimiter: function () {
         var self = this;
         var textVal = this._composer.$input.val();
-        var cursorPosition = this._getSelectionPositions().start;
+        var cursorPosition = this._getComposerSelectionPositions().start;
         var leftString = textVal.substring(0, cursorPosition);
 
         function validateKeyword(delimiter, beginningOnly) {
@@ -290,9 +290,8 @@ var MentionManager = Widget.extend({
      * @private
      * @returns a current cursor position
     */
-    _getSelectionPositions: function () {
-        var InputElement = this._composer.$input.get(0);
-        return InputElement ? dom.getSelectionRange(InputElement) : { start: 0, end: 0 };
+    _getComposerSelectionPositions: function () {
+        return this._composer.getSelectionPositions();
     },
     /**
      * @private
@@ -319,15 +318,18 @@ var MentionManager = Widget.extend({
                 suggestions: suggestions,
             }));
             this.$el
-                .addClass('open')
-                .find('ul')
+                .addClass('show')
+                .find('.dropdown-menu')
+                .addClass('show')
                 .css('max-width', this._composer.$input.width())
                 .find('.o_mention_proposition')
                 .first()
                 .addClass('active');
             this._open = true;
         } else {
-            this.$el.removeClass('open');
+            this.$el.removeClass('show')
+                .find('.dropdown-menu')
+                .removeClass('show');
             this.$el.empty();
             this._open = false;
         }
@@ -375,9 +377,9 @@ var MentionManager = Widget.extend({
         var textInput = this._composer.$input.val();
         var id = $(ev.currentTarget).data('id');
         var suggestions = _.flatten(this.get('mention_suggestions'));
-        var selectedSuggestion = _.find(suggestions, function (s) {
+        var selectedSuggestion = _.clone(_.find(suggestions, function (s) {
             return s.id === id;
-        });
+        }));
         var substitution = selectedSuggestion.substitution;
         if (!substitution) {
             // no substitution string given, so use the mention name instead
@@ -399,21 +401,25 @@ var MentionManager = Widget.extend({
         if (this._activeListener.selection.length) {
             // get mention matches (ordered by index in the text)
             var matches = this._getMatch(textInput, this._activeListener);
-            var index = getMentionIndex(matches, this._getSelectionPositions().start);
+            var index = getMentionIndex(matches, this._getComposerSelectionPositions().start);
             this._activeListener.selection.splice(index, 0, selectedSuggestion);
         } else {
             this._activeListener.selection.push(selectedSuggestion);
         }
 
         // update input text, and reset dropdown
-        var cursorPosition = this._getSelectionPositions().start;
+        var cursorPosition = this._getComposerSelectionPositions().start;
         var textLeft = textInput.substring(0, cursorPosition-(this._mentionWord.length+1));
         var textRight = textInput.substring(cursorPosition, textInput.length);
         var textInputNew = textLeft + substitution + ' ' + textRight;
         this._composer.$input.val(textInputNew);
         this._setCursorPosition(textLeft.length+substitution.length+2);
         this.set('mention_suggestions', []);
-        this._composer.focus(); // to trigger autoresize
+        this._composer.focus('body'); // to trigger autoresize
+        // suggestion after inserting will be used with escaped content
+        if (selectedSuggestion.name) {
+            selectedSuggestion.name = _.escape(selectedSuggestion.name);
+        }
     },
     /**
      * @private

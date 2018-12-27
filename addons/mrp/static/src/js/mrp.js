@@ -38,7 +38,7 @@ var SetBulletStatus = AbstractField.extend({
             var title = this.value === 'waiting' ? _t('Waiting Materials') : _t('Ready to produce');
             this.$el.attr({'title': title, 'style': 'display:inline'});
             this.$el.removeClass('text-success text-danger text-default');
-            this.$el.html($('<span>' + title + '</span>').addClass('label label-' + bullet_class));
+            this.$el.html($('<span>' + title + '</span>').addClass('badge badge-' + bullet_class));
         }
     }
 });

@@ -3,19 +3,14 @@
 # * link_tracker
 # 
 # Translators:
-# Collex100, 2017
-# Martin Trigaux, 2017
-# Sergey Vilizhanin <sv@grimmette.ru>, 2017
-# Viktor Pogrebniak <vp@aifil.ru>, 2017
-# Максим Дронь <dronmax@gmail.com>, 2017
-# Masha Koc <mariya.kos.ua@gmail.com>, 2017
+# Martin Trigaux, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
-"Last-Translator: Masha Koc <mariya.kos.ua@gmail.com>, 2017\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-09-21 13:17+0000\n"
+"Last-Translator: Martin Trigaux, 2018\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,8 +19,13 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: link_tracker
+#: model:ir.model.fields,field_description:link_tracker.field_link_tracker__campaign_id
+msgid "Campaign"
+msgstr "Кампания"
+
+#. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__link_click_ids
-#: model:ir.ui.view,arch_db:link_tracker.view_link_tracker_form
+#: model_terms:ir.ui.view,arch_db:link_tracker.view_link_tracker_form
 msgid "Clicks"
 msgstr "Переходы"
 
@@ -50,7 +50,7 @@ msgid "Create Date"
 msgstr "Дата создания"
 
 #. module: link_tracker
-#: model:ir.actions.act_window,help:link_tracker.action_link_tracker
+#: model_terms:ir.actions.act_window,help:link_tracker.action_link_tracker
 msgid "Create a new link tracker"
 msgstr ""
 
@@ -131,9 +131,25 @@ msgstr "Ссылка"
 
 #. module: link_tracker
 #: model:ir.actions.act_window,name:link_tracker.action_link_tracker
+#: model:ir.model,name:link_tracker.model_link_tracker
 #: model:ir.ui.menu,name:link_tracker.menu_url_shortener_main
 msgid "Link Tracker"
 msgstr "Трекер ссылок"
+
+#. module: link_tracker
+#: model:ir.model,name:link_tracker.model_link_tracker_click
+msgid "Link Tracker Click"
+msgstr ""
+
+#. module: link_tracker
+#: model:ir.model,name:link_tracker.model_link_tracker_code
+msgid "Link Tracker Code"
+msgstr ""
+
+#. module: link_tracker
+#: model:ir.model.fields,field_description:link_tracker.field_link_tracker__medium_id
+msgid "Medium"
+msgstr "Канал"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__count
@@ -161,6 +177,11 @@ msgid "Short URL code"
 msgstr "Короткий URL код"
 
 #. module: link_tracker
+#: model:ir.model.fields,field_description:link_tracker.field_link_tracker__source_id
+msgid "Source"
+msgstr "Источник"
+
+#. module: link_tracker
 #: model:ir.actions.act_window,name:link_tracker.action_view_click_statistics
 msgid "Statistics of Clicks"
 msgstr "Статистика кликов"
@@ -171,12 +192,31 @@ msgid "Target URL"
 msgstr "Целевой URL"
 
 #. module: link_tracker
-#: model:ir.ui.view,arch_db:link_tracker.view_link_tracker_filter
+#: model:ir.model.fields,help:link_tracker.field_link_tracker__campaign_id
+msgid ""
+"This is a name that helps you keep track of your different campaign efforts,"
+" e.g. Fall_Drive, Christmas_Special"
+msgstr ""
+
+#. module: link_tracker
+#: model:ir.model.fields,help:link_tracker.field_link_tracker__medium_id
+msgid "This is the method of delivery, e.g. Postcard, Email, or Banner Ad"
+msgstr ""
+
+#. module: link_tracker
+#: model:ir.model.fields,help:link_tracker.field_link_tracker__source_id
+msgid ""
+"This is the source of the link, e.g. Search Engine, another domain, or name "
+"of email list"
+msgstr ""
+
+#. module: link_tracker
+#: model_terms:ir.ui.view,arch_db:link_tracker.view_link_tracker_filter
 msgid "Title and URL"
 msgstr "Заголовок и URL"
 
 #. module: link_tracker
-#: model:ir.ui.view,arch_db:link_tracker.view_link_tracker_filter
+#: model_terms:ir.ui.view,arch_db:link_tracker.view_link_tracker_filter
 msgid "Tracked Link"
 msgstr "Отслеживаемая ссылка"
 
@@ -186,57 +226,42 @@ msgid "Tracked URL"
 msgstr "Отслеживаемый URL"
 
 #. module: link_tracker
-#: model:ir.ui.view,arch_db:link_tracker.view_link_tracker_form
+#: model_terms:ir.ui.view,arch_db:link_tracker.view_link_tracker_form
 msgid "Visit Page"
 msgstr "Посетить страницу"
 
 #. module: link_tracker
-#: code:addons/link_tracker/models/link_tracker.py:141
+#: code:addons/link_tracker/models/link_tracker.py:142
 #, python-format
 msgid "Visit Webpage"
 msgstr "Посетить страницу"
 
 #. module: link_tracker
-#: model:ir.ui.view,arch_db:link_tracker.view_link_tracker_form
+#: model_terms:ir.ui.view,arch_db:link_tracker.view_link_tracker_form
 msgid "Website Link"
 msgstr "Ссылка на вебсайт"
 
 #. module: link_tracker
-#: model:ir.ui.view,arch_db:link_tracker.view_link_tracker_click_form
-#: model:ir.ui.view,arch_db:link_tracker.view_link_tracker_click_graph
+#: model_terms:ir.ui.view,arch_db:link_tracker.view_link_tracker_click_form
+#: model_terms:ir.ui.view,arch_db:link_tracker.view_link_tracker_click_graph
 msgid "Website Link Clicks"
 msgstr "Клики на ссылки сайта"
 
 #. module: link_tracker
-#: model:ir.ui.view,arch_db:link_tracker.view_link_tracker_form_stats
+#: model_terms:ir.ui.view,arch_db:link_tracker.view_link_tracker_form_stats
 msgid "Website Link Graph"
 msgstr "Ссылка на сайт График"
 
 #. module: link_tracker
-#: model:ir.ui.view,arch_db:link_tracker.view_link_tracker_graph
-#: model:ir.ui.view,arch_db:link_tracker.view_link_tracker_tree
+#: model_terms:ir.ui.view,arch_db:link_tracker.view_link_tracker_graph
+#: model_terms:ir.ui.view,arch_db:link_tracker.view_link_tracker_tree
 msgid "Website Links"
 msgstr "Ссылки на сайт"
 
 #. module: link_tracker
-#: model:ir.ui.view,arch_db:link_tracker.view_link_tracker_click_tree
+#: model_terms:ir.ui.view,arch_db:link_tracker.view_link_tracker_click_tree
 msgid "Website Links Clicks"
 msgstr "Вебсайт: клики по ссылкам"
-
-#. module: link_tracker
-#: model:ir.model,name:link_tracker.model_link_tracker
-msgid "link.tracker"
-msgstr "link.tracker"
-
-#. module: link_tracker
-#: model:ir.model,name:link_tracker.model_link_tracker_click
-msgid "link.tracker.click"
-msgstr "link.tracker.click"
-
-#. module: link_tracker
-#: model:ir.model,name:link_tracker.model_link_tracker_code
-msgid "link.tracker.code"
-msgstr "link.tracker.code"
 
 #. module: link_tracker
 #: model:ir.actions.act_window,name:link_tracker.action_link_tracker_stats

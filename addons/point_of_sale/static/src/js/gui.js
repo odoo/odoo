@@ -28,16 +28,20 @@ var Gui = core.Class.extend({
 
         this.chrome.ready.then(function(){
             self.close_other_tabs();
-            var order = self.pos.get_order();
-            if (order) {
-                self.show_saved_screen(order);
-            } else {
-                self.show_screen(self.startup_screen);
-            }
+            self._show_first_screen();
             self.pos.bind('change:selectedOrder', function(){
                 self.show_saved_screen(self.pos.get_order());
             });
         });
+    },
+
+    _show_first_screen: function() {
+        var order = this.pos.get_order();
+        if (order) {
+            this.show_saved_screen(order);
+        } else {
+            this.show_screen(this.startup_screen);
+        }
     },
 
     /* ---- Gui: SCREEN MANIPULATION ---- */
@@ -226,66 +230,8 @@ var Gui = core.Class.extend({
     // - only_managers: restricts the list to managers
     // - current_user: password will not be asked if this 
     //                 user is selected.
-    // - title: The title of the user selection list. 
-    select_user: function(options){
-        options = options || {};
-        var self = this;
-        var def  = new $.Deferred();
-
-        var list = [];
-        for (var i = 0; i < this.pos.users.length; i++) {
-            var user = this.pos.users[i];
-            if (!options.only_managers || user.role === 'manager') {
-                list.push({
-                    'label': user.name,
-                    'item':  user,
-                });
-            }
-        }
-
-        this.show_popup('selection',{
-            title: options.title || _t('Select User'),
-            list: list,
-            confirm: function(user){ def.resolve(user); },
-            cancel: function(){ def.reject(); },
-            is_selected: function(user){ return user === self.pos.get_cashier(); },
-        });
-
-        return def.then(function(user){
-            if (options.security && user !== options.current_user && user.pos_security_pin) {
-                return self.ask_password(user.pos_security_pin).then(function(){
-                    return user;
-                });
-            } else {
-                return user;
-            }
-        });
-    },
-
-    // Ask for a password, and checks if it this
-    // the same as specified by the function call.
-    // returns a deferred that resolves on success,
-    // fails on failure.
-    ask_password: function(password) {
-        var self = this;
-        var ret = new $.Deferred();
-        if (password) {
-            this.show_popup('password',{
-                'title': _t('Password ?'),
-                confirm: function(pw) {
-                    if (pw !== password) {
-                        self.show_popup('error',_t('Incorrect Password'));
-                        ret.reject();
-                    } else {
-                        ret.resolve();
-                    }
-                },
-            });
-        } else {
-            ret.resolve();
-        }
-        return ret;
-    },
+    // - title: The title of the employee selection list.
+    
 
     // checks if the current user (or the user provided) has manager
     // access rights. If not, a popup is shown allowing the user to
@@ -298,7 +244,7 @@ var Gui = core.Class.extend({
         if (user.role === 'manager') {
             return new $.Deferred().resolve(user);
         } else {
-            return this.select_user({
+            return this.select_employee({
                 security:       true, 
                 only_managers:  true,
                 title:       _t('Login as a Manager'),

@@ -6,6 +6,7 @@ from odoo import api, models
 
 class FichePayeParser(models.AbstractModel):
     _name = 'report.l10n_fr_hr_payroll.report_l10n_fr_fiche_paye'
+    _description = "French Pay Slip"
 
     def get_payslip_lines(self, objs):
         res = []
@@ -30,7 +31,7 @@ class FichePayeParser(models.AbstractModel):
         return self.env['hr.payslip.line'].search([('slip_id', '=', obj.id), ('salary_rule_id.parent_rule_id.id', '=', parent_line.salary_rule_id.id)], limit=1)
 
     @api.model
-    def get_report_values(self, docids, data=None):
+    def _get_report_values(self, docids, data=None):
         payslip = self.env['hr.payslip'].browse(docids)
         return {
             'doc_ids': docids,

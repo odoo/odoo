@@ -36,6 +36,8 @@ var GraphView = AbstractView.extend({
         Renderer: GraphRenderer,
     },
     viewType: 'graph',
+    searchMenuTypes: ['filter', 'groupBy', 'timeRange', 'favorite'],
+
     /**
      * @override
      */
@@ -80,12 +82,14 @@ var GraphView = AbstractView.extend({
         this.controllerParams.measures = measures;
         this.controllerParams.groupableFields = groupableFields;
         this.rendererParams.stacked = this.arch.attrs.stacked !== "False";
+        this.rendererParams.title = this.arch.attrs.title; // TODO: use attrs.string instead
 
         this.loadParams.mode = this.arch.attrs.type || 'bar';
         this.loadParams.measure = measure || '__count__';
         this.loadParams.groupBys = groupBys || [];
         this.loadParams.intervalMapping = intervalMapping;
         this.loadParams.fields = this.fields;
+        this.loadParams.comparisonDomain = params.comparisonDomain;
     },
 });
 

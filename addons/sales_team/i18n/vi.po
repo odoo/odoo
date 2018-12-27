@@ -3,21 +3,20 @@
 # * sales_team
 # 
 # Translators:
-# son dang <son.dang@doda100.com>, 2017
-# Hoang Loc Le Huu <loclhh@gmail.com>, 2017
-# fanha99 <fanha99@hotmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
-# Su Pham Nghiep Vu <nghiepvusupham58@gmail.com>, 2017
-# file aio <fileaio@gmail.com>, 2017
-# Phạm Lân <phamquanglan@gmail.com>, 2017
-# lam nguyen <lamev.inc@gmail.com>, 2017
+# thanh nguyen <thanhnguyen.icsc@gmail.com>, 2018
+# Duy BQ <duybq86@gmail.com>, 2018
+# Martin Trigaux, 2018
+# fanha99 <fanha99@hotmail.com>, 2018
+# son dang <son.dang@doda100.com>, 2018
+# Minh Nguyen <ndminh210994@gmail.com>, 2018
+# khoibv Mr <kendev2009@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:26+0000\n"
-"PO-Revision-Date: 2017-10-02 11:26+0000\n"
-"Last-Translator: lam nguyen <lamev.inc@gmail.com>, 2017\n"
+"POT-Creation-Date: 2018-10-08 06:49+0000\n"
+"PO-Revision-Date: 2018-10-08 06:49+0000\n"
+"Last-Translator: khoibv Mr <kendev2009@gmail.com>, 2018\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,79 +25,78 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: sales_team
-#: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
 msgid "<span>New</span>"
-msgstr ""
+msgstr "<span> Mới</span>"
 
 #. module: sales_team
-#: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
 msgid "<span>Reporting</span>"
-msgstr ""
+msgstr "<span>Báo cáo</span>"
 
 #. module: sales_team
-#: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
 msgid "<span>View</span>"
 msgstr "<span>Xem</span>"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_active
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__message_needaction
+msgid "Action Needed"
+msgstr "Cần có Hành động"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__active
 msgid "Active"
 msgstr "Có hiệu lực"
 
 #. module: sales_team
 #: model:ir.actions.act_window,name:sales_team.mail_activity_type_action_config_sales
 msgid "Activity Types"
-msgstr ""
+msgstr "Kiểu Hoạt động"
 
 #. module: sales_team
 #: model:crm.team,name:sales_team.crm_team_1
 msgid "America"
-msgstr ""
+msgstr "Nước Mỹ"
 
 #. module: sales_team
-#: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
 msgid "Archived"
-msgstr "Đã lưu "
+msgstr "Lưu trữ"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__message_attachment_count
+msgid "Attachment Count"
+msgstr "Số đính kèm"
+
+#. module: sales_team
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
+msgid "Avatar"
+msgstr "Ảnh đại diện"
 
 #. module: sales_team
 #: selection:crm.team,dashboard_graph_type:0
 msgid "Bar"
-msgstr ""
+msgstr "Bar"
 
 #. module: sales_team
-#: code:addons/sales_team/models/crm_team.py:269
+#: code:addons/sales_team/models/crm_team.py:274
 #, python-format
 msgid "Big Pretty Button :)"
-msgstr ""
+msgstr "Nút lớn và đẹp :)"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_user_id
-msgid "Channel Leader"
-msgstr ""
-
-#. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_member_ids
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__member_ids
 msgid "Channel Members"
-msgstr ""
+msgstr "Thành viên của Kênh"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_team_type
-msgid "Channel Type"
-msgstr ""
-
-#. module: sales_team
-#: model:ir.actions.act_window,help:sales_team.crm_team_salesteams_act
-#: model:ir.actions.act_window,help:sales_team.sales_team_config_action
-msgid "Click here to define a new sales channel."
-msgstr ""
-
-#. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_color
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__color
 msgid "Color Index"
 msgstr "Mã màu"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_company_id
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__company_id
 msgid "Company"
 msgstr "Công ty"
 
@@ -113,39 +111,39 @@ msgid "Contact"
 msgstr "Liên hệ"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_dashboard_graph_model
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__dashboard_graph_model
 msgid "Content"
 msgstr "Nội dung"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_create_uid
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__create_uid
 msgid "Created by"
 msgstr "Được tạo bởi"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_create_date
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__create_date
 msgid "Created on"
 msgstr "Thời điểm tạo"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_currency_id
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__currency_id
 msgid "Currency"
 msgstr "Tiền tệ"
 
 #. module: sales_team
-#: model:ir.ui.view,arch_db:sales_team.crm_team_view_form
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "Dashboard"
-msgstr "Màn hình điều khiển"
+msgstr "Bảng thông tin"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_dashboard_button_name
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__dashboard_button_name
 msgid "Dashboard Button"
-msgstr ""
+msgstr "Nút Bảng thông tin"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_dashboard_graph_data
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__dashboard_graph_data
 msgid "Dashboard Graph Data"
-msgstr ""
+msgstr "Dữ liệu biểu đồ Bảng thông tin"
 
 #. module: sales_team
 #: selection:crm.team,dashboard_graph_group:0
@@ -153,71 +151,110 @@ msgid "Day"
 msgstr "Ngày"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_display_name
+#: model_terms:ir.actions.act_window,help:sales_team.crm_team_salesteams_act
+#: model_terms:ir.actions.act_window,help:sales_team.sales_team_config_action
+msgid "Define a new Sales Team"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__display_name
 msgid "Display Name"
 msgstr "Tên hiển thị"
 
 #. module: sales_team
 #: model:crm.team,name:sales_team.team_sales_department
 msgid "Europe"
-msgstr ""
+msgstr "Châu Âu"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_favorite_user_ids
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__favorite_user_ids
 msgid "Favorite Members"
-msgstr ""
+msgstr "Thành viên yêu thích"
 
 #. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_crm_team_is_favorite
+#: model:ir.model.fields,help:sales_team.field_crm_team__is_favorite
 msgid ""
 "Favorite teams to display them in the dashboard and access them easily."
 msgstr ""
+"Hiển thị các Nhóm ưa thích để hiển thị chúng trong bảng điều khiển và truy "
+"cập chúng một cách dễ dàng."
 
 #. module: sales_team
-#: model:ir.ui.view,arch_db:sales_team.crm_team_view_form
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid ""
 "Follow this salesteam to automatically track the events associated to users "
 "of this team."
 msgstr ""
+"Theo dõi (follow) đội bán hàng này để tự động truy vết các sự kiện gắn với "
+"các thành viên của đội này."
 
 #. module: sales_team
-#: model:ir.ui.view,arch_db:sales_team.crm_team_view_form
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__message_follower_ids
+msgid "Followers"
+msgstr "Người dõi theo"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__message_channel_ids
+msgid "Followers (Channels)"
+msgstr "Người theo dõi (Các kênh)"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Người theo dõi (Các đối tác)"
+
+#. module: sales_team
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "Graph"
 msgstr "Đồ thị"
 
 #. module: sales_team
-#: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
 msgid "Group By..."
 msgstr "Nhóm theo..."
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_dashboard_graph_group
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__dashboard_graph_group
 msgid "Group by"
-msgstr ""
+msgstr "Nhóm theo"
 
 #. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_crm_team_dashboard_graph_group
+#: model:ir.model.fields,help:sales_team.field_crm_team__dashboard_graph_group
 msgid "How this channel's dashboard graph will group the results."
-msgstr ""
+msgstr "Cách mà đồ thị bảng thông tin của kênh này sẽ nhóm các kết quả."
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_id
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__id
 msgid "ID"
 msgstr "ID"
 
 #. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_res_partner_team_id
-#: model:ir.model.fields,help:sales_team.field_res_users_team_id
-msgid ""
-"If set, this sales channel will be used for sales and assignations related "
-"to this partner"
+#: model:ir.model.fields,help:sales_team.field_crm_team__message_unread
+msgid "If checked new messages require your attention."
+msgstr "Nếu đánh dấu kiểm, các thông điệp mới yêu cầu sự có mặt của bạn."
+
+#. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_crm_team__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Nếu đánh dấu kiểm, các thông điệp mới yêu cầu sự có mặt của bạn."
+
+#. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_crm_team__message_has_error
+msgid "If checked, some messages have a delivery error."
 msgstr ""
 
 #. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_crm_team_active
+#: model:ir.model.fields,help:sales_team.field_res_partner__team_id
 msgid ""
-"If the active field is set to false, it will allow you to hide the sales "
-"channel without removing it."
+"If set, this Sales Team will be used for sales and assignations related to "
+"this partner"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_crm_team__active
+msgid ""
+"If the active field is set to false, it will allow you to hide the Sales "
+"Team without removing it."
 msgstr ""
 
 #. module: sales_team
@@ -226,44 +263,64 @@ msgid "Invoices"
 msgstr "Các hóa đơn"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team___last_update
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__message_is_follower
+msgid "Is Follower"
+msgstr "Trở thành người theo dõi"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team____last_update
 msgid "Last Modified on"
 msgstr "Sửa lần cuối vào"
 
 #. module: sales_team
 #: selection:crm.team,dashboard_graph_period:0
 msgid "Last Month"
-msgstr ""
+msgstr "Tháng gần nhất"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_write_uid
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__write_uid
 msgid "Last Updated by"
 msgstr "Cập nhật lần cuối bởi"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_write_date
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__write_date
 msgid "Last Updated on"
 msgstr "Cập nhật lần cuối vào"
 
 #. module: sales_team
 #: selection:crm.team,dashboard_graph_period:0
 msgid "Last Week"
-msgstr ""
+msgstr "Tuần Trước"
 
 #. module: sales_team
 #: selection:crm.team,dashboard_graph_period:0
 msgid "Last Year"
-msgstr ""
+msgstr "Năm ngoái"
 
 #. module: sales_team
 #: selection:crm.team,dashboard_graph_type:0
 msgid "Line"
-msgstr "Line"
+msgstr "Dòng"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__message_main_attachment_id
+msgid "Main Attachment"
+msgstr "Đính kèm chính"
 
 #. module: sales_team
 #: model:res.groups,name:sales_team.group_sale_manager
 msgid "Manager"
-msgstr "Quản trị dự án"
+msgstr "Quản lý"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__message_has_error
+msgid "Message Delivery error"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__message_ids
+msgid "Messages"
+msgstr "Thông điệp"
 
 #. module: sales_team
 #: selection:crm.team,dashboard_graph_group:0
@@ -271,30 +328,55 @@ msgid "Month"
 msgstr "Tháng"
 
 #. module: sales_team
-#: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
 msgid "My Favorites"
+msgstr "Mục yêu thích của tôi"
+
+#. module: sales_team
+#: code:addons/sales_team/models/crm_team.py:260
+#, python-format
+msgid "Not Defined"
+msgstr "Chưa xác định"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Số lượng Hành động"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__message_has_error_counter
+msgid "Number of error"
+msgstr "Số lỗi"
+
+#. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_crm_team__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "Số thông điệp cần có hành động"
+
+#. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_crm_team__message_has_error_counter
+msgid "Number of messages with delivery error"
 msgstr ""
 
 #. module: sales_team
-#: code:addons/sales_team/models/crm_team.py:255
-#, python-format
-msgid "Not Defined"
-msgstr ""
+#: model:ir.model.fields,help:sales_team.field_crm_team__message_unread_counter
+msgid "Number of unread messages"
+msgstr "Số thông điệp chưa đọc"
 
 #. module: sales_team
 #: selection:crm.team,dashboard_graph_model:0
 msgid "Pipeline"
-msgstr "Đường dẫn Pipeline"
+msgstr "Cơ hội"
 
 #. module: sales_team
 #: selection:crm.team,team_type:0
 msgid "Point of Sale"
-msgstr "Điểm bán hàng"
+msgstr "Điểm bán lẻ"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_reply_to
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__reply_to
 msgid "Reply-To"
-msgstr ""
+msgstr "Trả lời đến"
 
 #. module: sales_team
 #: selection:crm.team,dashboard_graph_model:0 selection:crm.team,team_type:0
@@ -303,27 +385,28 @@ msgstr "Bán hàng"
 
 #. module: sales_team
 #: model:ir.model,name:sales_team.model_crm_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_name
-#: model:ir.model.fields,field_description:sales_team.field_res_partner_team_id
-#: model:ir.model.fields,field_description:sales_team.field_res_users_sale_team_id
-#: model:ir.model.fields,field_description:sales_team.field_res_users_team_id
-#: model:ir.ui.view,arch_db:sales_team.crm_team_view_form
-#: model:ir.ui.view,arch_db:sales_team.crm_team_view_tree
-msgid "Sales Channel"
-msgstr ""
-
-#. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_res_users_sale_team_id
-msgid ""
-"Sales Channel the user is member of. Used to compute the members of a sales "
-"channel through the inverse one2many"
-msgstr ""
-
-#. module: sales_team
-#: model:ir.actions.act_window,name:sales_team.crm_team_salesteams_act
-#: model:ir.actions.act_window,name:sales_team.sales_team_config_action
 msgid "Sales Channels"
+msgstr "Kênh Kinh doanh"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__name
+#: model:ir.model.fields,field_description:sales_team.field_res_partner__team_id
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_tree
+msgid "Sales Team"
+msgstr "Đội ngũ bán hàng"
+
+#. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_res_users__sale_team_id
+msgid ""
+"Sales Team the user is member of. Used to compute the members of a Sales "
+"Team through the inverse one2many"
 msgstr ""
+
+#. module: sales_team
+#: model:ir.actions.act_window,name:sales_team.sales_team_config_action
+msgid "Sales Teams"
+msgstr "Nhóm bán hàng"
 
 #. module: sales_team
 #: selection:crm.team,dashboard_graph_group:0
@@ -331,102 +414,128 @@ msgid "Salesperson"
 msgstr "Nhân viên bán hàng"
 
 #. module: sales_team
-#: model:ir.ui.view,arch_db:sales_team.crm_team_view_form
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "Salesteam name..."
-msgstr ""
+msgstr "Tên Đội bán hàng..."
 
 #. module: sales_team
-#: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
 msgid "Salesteams Search"
-msgstr ""
+msgstr "Tìm Đội bán hàng"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_dashboard_graph_period
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__dashboard_graph_period
 msgid "Scale"
-msgstr ""
+msgstr "Tỉ lệ"
 
 #. module: sales_team
-#: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
 msgid "Settings"
 msgstr "Thiết lập"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_is_favorite
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__is_favorite
 msgid "Show on dashboard"
-msgstr ""
+msgstr "Hiện trên bảng thông tin"
 
 #. module: sales_team
-#: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__user_id
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
 msgid "Team Leader"
 msgstr "Trưởng nhóm"
 
 #. module: sales_team
-#: model:ir.ui.view,arch_db:sales_team.crm_team_view_form
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "Team Members"
-msgstr "Các thành viên trong nhóm"
+msgstr "Các thành viên trong đội"
 
 #. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_crm_team_color
-msgid "The color of the channel"
+#: model:ir.actions.act_window,name:sales_team.crm_team_salesteams_act
+msgid "Team Pipelines"
 msgstr ""
 
 #. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_crm_team_reply_to
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__team_type
+msgid "Team Type"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_crm_team__color
+msgid "The color of the channel"
+msgstr "Màu sắc của Kênh"
+
+#. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_crm_team__reply_to
 msgid ""
 "The email address put in the 'Reply-To' of all emails sent by Odoo about "
-"cases in this sales channel"
+"cases in this Sales Team"
 msgstr ""
 
 #. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_crm_team_dashboard_graph_model
+#: model:ir.model.fields,help:sales_team.field_crm_team__dashboard_graph_model
 msgid "The graph this channel will display in the Dashboard.\n"
-msgstr ""
+msgstr "Biểu đồ kênh này sẽ hiển thị trong Trang tổng quan.\n"
 
 #. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_crm_team_dashboard_graph_period
+#: model:ir.model.fields,help:sales_team.field_crm_team__dashboard_graph_period
 msgid "The time period this channel's dashboard graph will consider."
-msgstr ""
+msgstr "Khoảng thời gian biểu đồ bảng điều khiển của kênh này sẽ xem xét."
 
 #. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_crm_team_dashboard_graph_type
+#: model:ir.model.fields,help:sales_team.field_crm_team__dashboard_graph_type
 msgid "The type of graph this channel will display in the dashboard."
-msgstr ""
+msgstr "Loại biểu đồ kênh này sẽ hiển thị trong trang tổng quan."
 
 #. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_crm_team_team_type
+#: model:ir.model.fields,help:sales_team.field_crm_team__team_type
 msgid ""
 "The type of this channel, it will define the resources this channel uses."
-msgstr ""
+msgstr "Kiểu của kênh này, nó sẽ xác định các tài nguyên mà kênh này sử dụng."
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_dashboard_graph_type
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__dashboard_graph_type
 msgid "Type"
 msgstr "Loại"
 
 #. module: sales_team
-#: code:addons/sales_team/models/crm_team.py:146
-#: code:addons/sales_team/models/crm_team.py:173
+#: code:addons/sales_team/models/crm_team.py:151
+#: code:addons/sales_team/models/crm_team.py:178
 #, python-format
-msgid "Undefined graph model for Sales Channel: %s"
+msgid "Undefined graph model for Sales Team: %s"
 msgstr ""
 
 #. module: sales_team
-#: model:ir.actions.act_window,help:sales_team.crm_team_salesteams_act
-#: model:ir.actions.act_window,help:sales_team.sales_team_config_action
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__message_unread
+msgid "Unread Messages"
+msgstr "Tin chưa đọc"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr "Bộ đếm Thông điệp chưa đọc"
+
+#. module: sales_team
+#: model_terms:ir.actions.act_window,help:sales_team.crm_team_salesteams_act
+#: model_terms:ir.actions.act_window,help:sales_team.sales_team_config_action
 msgid ""
-"Use sales channels to organize your sales departments. \n"
+"Use Sales Teams to organize your sales departments.\n"
 "                    Each channel will work with a separate pipeline."
+msgstr ""
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_res_users__sale_team_id
+msgid "User's Sales Team"
 msgstr ""
 
 #. module: sales_team
 #: model:res.groups,name:sales_team.group_sale_salesman_all_leads
 msgid "User: All Documents"
-msgstr ""
+msgstr "Người dùng: Tất cả Tài liệu"
 
 #. module: sales_team
 #: model:res.groups,name:sales_team.group_sale_salesman
 msgid "User: Own Documents Only"
-msgstr ""
+msgstr "Người dùng: Chỉ tài liệu của chính mình"
 
 #. module: sales_team
 #: model:ir.model,name:sales_team.model_res_users
@@ -440,6 +549,16 @@ msgid "Website"
 msgstr "Trang web"
 
 #. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__website_message_ids
+msgid "Website Messages"
+msgstr "Thông điệp Website"
+
+#. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_crm_team__website_message_ids
+msgid "Website communication history"
+msgstr "Lịch sử thông tin liên lạc website"
+
+#. module: sales_team
 #: selection:crm.team,dashboard_graph_group:0
 msgid "Week"
 msgstr "Tuần"
@@ -450,11 +569,15 @@ msgid ""
 "the user will have access to all records of everyone in the sales "
 "application."
 msgstr ""
+"người dùng sẽ có toàn quyền truy cập đến tất cả các bản ghi của tất cả mọi "
+"người trong phạm vi ứng dụng bán hàng."
 
 #. module: sales_team
 #: model:res.groups,comment:sales_team.group_sale_salesman
 msgid "the user will have access to his own data in the sales application."
 msgstr ""
+"người dùng sẽ chỉ có quyền truy cập đến các dữ liệu của chính mình phạm vi "
+"ứng dụng bán hàng."
 
 #. module: sales_team
 #: model:res.groups,comment:sales_team.group_sale_manager
@@ -462,3 +585,5 @@ msgid ""
 "the user will have an access to the sales configuration as well as statistic"
 " reports."
 msgstr ""
+"người dùng sẽ có quyền truy cập đến các cấu hình bán hàng cũng như các báo "
+"cáo / thống kê."

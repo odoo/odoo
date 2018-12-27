@@ -29,9 +29,9 @@
         <field name="model">account.journal</field>
         <field name="inherit_id" ref="account.view_account_journal_search" />
         <field name="arch" type="xml">
-            <field name="name" position="after">
+            <xpath expr="//filter[@name='inactive']" position="before">
                 <filter name="available_in_pos" string="Available for Point of Sale" domain="[('journal_user', '=', True)]"/>
-            </field>
+            </xpath>
         </field>
     </record>
 

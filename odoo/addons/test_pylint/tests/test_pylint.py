@@ -30,83 +30,16 @@ class TestPyLint(TransactionCase):
         'unreachable',
 
         'mixed-indentation',
-
-        # py3k checks
-        'print-statement',
-        'backtick',
-        'next-method-called',
-
-        'misplaced-future',
-        'relative-import',
-        'deprecated-module',
-        'import-star-module-level',
-
-        'bad-builtin',
-
-        'dict-iter-method',
-        'dict-view-method',
-
-        'long-suffix',
-        'old-ne-operator',
-        'old-octal-operator',
-        'parameter-unpacking',
-        'invalid-string-codec',
-
-        'metaclass-assignment',
-        'deprecated-module',
-
-        'exception-message-attribute',
-        'indexing-exception',
-        'old-raise-syntax',
-        'raising-string',
-        'unpacking-in-except',
-
-        'no-comma-exception',
     ]
 
     BAD_FUNCTIONS = [
-        'apply',
-        'cmp',
-        'coerce',
-        'execfile',
         'input',
-        'intern',
-        'long',
-        'raw_input',
-        'reload',
-        'xrange',
-        'long',
-        'map',
-        'filter',
-        'zip',
-
-        'basestring',
-        'unichr',
-        'unicode',
-
-        'file',
-        'reduce',
     ]
 
     BAD_MODULES = [
-        'commands',
-        'cPickle',
         'csv',
-        'cStringIO',
-        'md5',
         'urllib',
-        'urllib2',
-        'urlparse',
-        'sgmllib',
-        'sha',
         'cgi',
-        'htmlentitydefs',
-        'HTMLParser',
-        'Queue',
-        'StringIO',
-        'UserDict',
-        'UserString',
-        'UserList',
     ] + list(tools.SUPPORTED_DEBUGGER)
 
     def _skip_test(self, reason):

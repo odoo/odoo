@@ -21,18 +21,18 @@ tour.register("banner", {
     position: "bottom",
     run: "drag_and_drop #wrap",
 }, {
-    trigger: "#wrapwrap .s_text_block_image_fw h2",
+    trigger: "#wrapwrap .s_cover h1",
     content: _t("<b>Click on a text</b> to start editing it. <i>It's that easy to edit your content!</i>"),
     position: "left",
     width: 150,
     run: "text",
 }, {
     trigger: ".oe_overlay_options .oe_options",
-    extra_trigger: "#wrapwrap .s_text_block_image_fw h2:not(:containsExact(\"Headline\"))",
+    extra_trigger: "#wrapwrap .s_cover h1:not(:containsExact(\"Catchy Headline\"))",
     content: _t("Customize any block through this menu. Try to change the background of the banner."),
     position: "bottom",
 }, {
-    trigger: "#snippet_structure .oe_snippet:eq(3) .oe_snippet_thumbnail",
+    trigger: "#snippet_structure .oe_snippet:eq(6) .oe_snippet_thumbnail",
     content: _t("Drag another block in your page, below the cover."),
     position: "bottom",
     run: "drag_and_drop #wrap",

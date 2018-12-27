@@ -3,15 +3,15 @@
 # * google_drive
 # 
 # Translators:
-# Kostas Goutoudis <goutoudis@gmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2018
+# Kostas Goutoudis <goutoudis@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:26+0000\n"
-"PO-Revision-Date: 2017-10-02 11:26+0000\n"
-"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
+"POT-Creation-Date: 2018-10-08 06:49+0000\n"
+"PO-Revision-Date: 2018-10-08 06:49+0000\n"
+"Last-Translator: Kostas Goutoudis <goutoudis@gmail.com>, 2018\n"
 "Language-Team: Greek (https://www.transifex.com/odoo/teams/41243/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: google_drive
-#: model:ir.ui.view,arch_db:google_drive.view_google_drive_config_form
+#: model_terms:ir.ui.view,arch_db:google_drive.view_google_drive_config_form
 msgid ""
 "<b>To create a new filter:</b><br/>\n"
 "                                - Go to the Odoo document you want to filter. For instance, go to Opportunities and search on Sales Department.<br/>\n"
@@ -37,40 +37,43 @@ msgstr ""
 "- Εάν το φίλτρο δεν έχει καθοριστεί, ο σύνδεσμος του εγγράφου Google θα εμφανιστεί στις επιλογές 'Περισσότερα' για όλους τους χρήστες για όλες τις ευκαιρίες."
 
 #. module: google_drive
-#: model:ir.ui.view,arch_db:google_drive.view_google_drive_config_kanban
+#: model_terms:ir.ui.view,arch_db:google_drive.view_google_drive_config_kanban
 msgid "<strong>Active</strong>"
 msgstr ""
 
 #. module: google_drive
-#: model:ir.ui.view,arch_db:google_drive.view_google_drive_config_kanban
+#: model_terms:ir.ui.view,arch_db:google_drive.view_google_drive_config_kanban
 msgid "<strong>Model</strong>"
 msgstr ""
 
 #. module: google_drive
-#: model:ir.ui.view,arch_db:google_drive.view_google_drive_config_kanban
+#: model_terms:ir.ui.view,arch_db:google_drive.view_google_drive_config_kanban
 msgid "<strong>Template</strong>"
 msgstr ""
 
 #. module: google_drive
-#: model:ir.model.fields,field_description:google_drive.field_google_drive_config_active
+#: model:ir.model.fields,field_description:google_drive.field_google_drive_config__active
 msgid "Active"
-msgstr "Ενεργή"
+msgstr "Σε Ισχύ"
 
 #. module: google_drive
-#: code:addons/google_drive/models/google_drive.py:41
-#, python-format
-msgid "At least one key cannot be found in your Google Drive name pattern"
+#: model_terms:ir.actions.act_window,help:google_drive.action_google_drive_users_config
+msgid "Add a new template"
 msgstr ""
-"Τουλάχιστον ένα κλειδί δεν μπορεί να βρεθεί στο Google Drive μοτίβο όνομά "
-"σας"
 
 #. module: google_drive
-#: model:ir.model.fields,field_description:google_drive.field_res_config_settings_google_drive_authorization_code
+#: code:addons/google_drive/models/google_drive.py:42
+#, python-format
+msgid "At least one key cannot be found in your Google Drive name pattern."
+msgstr ""
+
+#. module: google_drive
+#: model:ir.model.fields,field_description:google_drive.field_res_config_settings__google_drive_authorization_code
 msgid "Authorization Code"
 msgstr "Authorization Code"
 
 #. module: google_drive
-#: model:ir.model.fields,help:google_drive.field_google_drive_config_name_template
+#: model:ir.model.fields,help:google_drive.field_google_drive_config__name_template
 msgid ""
 "Choose how the new google drive will be named, on google side. Eg. "
 "gdoc_%(field_name)s"
@@ -79,22 +82,22 @@ msgstr ""
 "Π.χ. gdoc_%(field_name)s"
 
 #. module: google_drive
-#: model:ir.actions.act_window,help:google_drive.action_google_drive_users_config
-msgid "Click to add a new template."
-msgstr "Κάντε κλικ για να προσθέσετε ένα νέο πρότυπο."
+#: model:ir.model,name:google_drive.model_res_config_settings
+msgid "Config Settings"
+msgstr ""
 
 #. module: google_drive
-#: model:ir.model.fields,field_description:google_drive.field_google_drive_config_create_uid
+#: model:ir.model.fields,field_description:google_drive.field_google_drive_config__create_uid
 msgid "Created by"
 msgstr "Δημιουργήθηκε από"
 
 #. module: google_drive
-#: model:ir.model.fields,field_description:google_drive.field_google_drive_config_create_date
+#: model:ir.model.fields,field_description:google_drive.field_google_drive_config__create_date
 msgid "Created on"
 msgstr "Δημιουργήθηκε στις"
 
 #. module: google_drive
-#: code:addons/google_drive/models/google_drive.py:157
+#: code:addons/google_drive/models/google_drive.py:161
 #, python-format
 msgid "Creating google drive may only be done by one at a time."
 msgstr "Η δημιουργία google drive μπορεί να γίνει μόνο μία κάθε φορά."
@@ -105,46 +108,46 @@ msgid "Customer"
 msgstr "Πελάτης"
 
 #. module: google_drive
-#: model:ir.model.fields,field_description:google_drive.field_google_drive_config_display_name
+#: model:ir.model.fields,field_description:google_drive.field_google_drive_config__display_name
 msgid "Display Name"
 msgstr "Εμφάνιση Ονόματος"
 
 #. module: google_drive
-#: model:ir.model.fields,field_description:google_drive.field_google_drive_config_filter_id
+#: model:ir.model.fields,field_description:google_drive.field_google_drive_config__filter_id
 msgid "Filter"
 msgstr "Φίλτρο"
 
 #. module: google_drive
-#: code:addons/google_drive/models/google_drive.py:60
-#: code:addons/google_drive/models/google_drive.py:81
+#: code:addons/google_drive/models/google_drive.py:61
+#: code:addons/google_drive/models/google_drive.py:82
 #, python-format
 msgid "Go to the configuration panel"
 msgstr "Μετάβαση στον πίνακα ελέγχου"
 
 #. module: google_drive
-#: model:ir.model.fields,field_description:google_drive.field_google_drive_config_google_drive_client_id
+#: model:ir.model.fields,field_description:google_drive.field_google_drive_config__google_drive_client_id
 msgid "Google Client"
 msgstr "Πελάτης Google"
 
 #. module: google_drive
-#: model:ir.ui.view,arch_db:google_drive.view_google_drive_config_form
-#: model:ir.ui.view,arch_db:google_drive.view_google_drive_config_tree
+#: model_terms:ir.ui.view,arch_db:google_drive.view_google_drive_config_form
+#: model_terms:ir.ui.view,arch_db:google_drive.view_google_drive_config_tree
 msgid "Google Drive Configuration"
 msgstr "Ρύθμιση Google Drive"
 
 #. module: google_drive
-#: model:ir.model.fields,field_description:google_drive.field_google_drive_config_name_template
+#: model:ir.model.fields,field_description:google_drive.field_google_drive_config__name_template
 msgid "Google Drive Name Pattern"
 msgstr "Όνομα Μοτίβου Google Drive"
 
 #. module: google_drive
-#: model:ir.ui.view,arch_db:google_drive.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:google_drive.res_config_settings_view_form
 msgid "Google Drive Templates"
 msgstr ""
 
 #. module: google_drive
-#: code:addons/google_drive/models/google_drive.py:62
-#: code:addons/google_drive/models/google_drive.py:83
+#: code:addons/google_drive/models/google_drive.py:63
+#: code:addons/google_drive/models/google_drive.py:84
 #, python-format
 msgid "Google Drive is not yet configured. Please contact your administrator."
 msgstr ""
@@ -157,27 +160,27 @@ msgid "Google Drive templates config"
 msgstr "Ρύθμιση Πρότυπων Google Drive"
 
 #. module: google_drive
-#: model:ir.model.fields,field_description:google_drive.field_google_drive_config_id
+#: model:ir.model.fields,field_description:google_drive.field_google_drive_config__id
 msgid "ID"
 msgstr "Κωδικός"
 
 #. module: google_drive
-#: model:ir.model.fields,field_description:google_drive.field_google_drive_config___last_update
+#: model:ir.model.fields,field_description:google_drive.field_google_drive_config____last_update
 msgid "Last Modified on"
 msgstr "Τελευταία τροποποίηση στις"
 
 #. module: google_drive
-#: model:ir.model.fields,field_description:google_drive.field_google_drive_config_write_uid
+#: model:ir.model.fields,field_description:google_drive.field_google_drive_config__write_uid
 msgid "Last Updated by"
 msgstr "Τελευταία Ενημέρωση από"
 
 #. module: google_drive
-#: model:ir.model.fields,field_description:google_drive.field_google_drive_config_write_date
+#: model:ir.model.fields,field_description:google_drive.field_google_drive_config__write_date
 msgid "Last Updated on"
 msgstr "Τελευταία Ενημέρωση στις"
 
 #. module: google_drive
-#: model:ir.actions.act_window,help:google_drive.action_google_drive_users_config
+#: model_terms:ir.actions.act_window,help:google_drive.action_google_drive_users_config
 msgid ""
 "Link your own google drive templates to any record of Odoo. If you have "
 "really specific documents you want your collaborator fill in, e.g. Use a "
@@ -194,28 +197,28 @@ msgstr ""
 "χρησιμοποιήσετε σε συνεργασία με τους υπαλλήλους σας."
 
 #. module: google_drive
-#: model:ir.model.fields,field_description:google_drive.field_google_drive_config_model_id
+#: model:ir.model.fields,field_description:google_drive.field_google_drive_config__model_id
 msgid "Model"
 msgstr "Μοντέλο"
 
 #. module: google_drive
-#: code:addons/google_drive/models/google_drive.py:199
+#: code:addons/google_drive/models/google_drive.py:203
 #, python-format
 msgid "Please enter a valid Google Document URL."
 msgstr "Παρακαλώ εισάγετε μια έγκυρη διεύθυνση URL για Έγγραφο Google."
 
 #. module: google_drive
-#: model:ir.model.fields,field_description:google_drive.field_google_drive_config_model
+#: model:ir.model.fields,field_description:google_drive.field_google_drive_config__model
 msgid "Related Model"
 msgstr "Σχετικό Μοντέλο"
 
 #. module: google_drive
-#: model:ir.model.fields,field_description:google_drive.field_google_drive_config_google_drive_resource_id
+#: model:ir.model.fields,field_description:google_drive.field_google_drive_config__google_drive_resource_id
 msgid "Resource Id"
 msgstr "Ταυτότητα πηγής"
 
 #. module: google_drive
-#: code:addons/google_drive/models/google_drive.py:80
+#: code:addons/google_drive/models/google_drive.py:81
 #, python-format
 msgid ""
 "Something went wrong during the token generation. Please request again an "
@@ -225,12 +228,12 @@ msgstr ""
 "τον authorization code."
 
 #. module: google_drive
-#: model:ir.model.fields,field_description:google_drive.field_google_drive_config_name
+#: model:ir.model.fields,field_description:google_drive.field_google_drive_config__name
 msgid "Template Name"
 msgstr "Όνομα Προτύπου"
 
 #. module: google_drive
-#: model:ir.model.fields,field_description:google_drive.field_google_drive_config_google_drive_template_url
+#: model:ir.model.fields,field_description:google_drive.field_google_drive_config__google_drive_template_url
 msgid "Template URL"
 msgstr "Πρότυπη διεύθυνση URL"
 
@@ -240,34 +243,28 @@ msgid "Templates"
 msgstr "Πρότυπα"
 
 #. module: google_drive
-#: code:addons/google_drive/models/google_drive.py:98
+#: code:addons/google_drive/models/google_drive.py:99
 #, python-format
 msgid "The Google Template cannot be found. Maybe it has been deleted."
 msgstr "Το πρότυπο Google δεν μπορεί να βρεθεί. Πιθανόν να έχει διαγραφεί."
 
 #. module: google_drive
-#: model:ir.model.fields,help:google_drive.field_res_config_settings_google_drive_uri
+#: model:ir.model.fields,help:google_drive.field_res_config_settings__google_drive_uri
 msgid "The URL to generate the authorization code from Google"
 msgstr ""
 "Η διεύθυνση URL για να δημιουργήσετε το authorization code από την Google"
 
 #. module: google_drive
-#: model:ir.ui.view,arch_db:google_drive.view_google_drive_config_form
+#: model_terms:ir.ui.view,arch_db:google_drive.view_google_drive_config_form
 msgid ""
 "The name of the attached document can use fixed or variable data. To distinguish between documents in\n"
-"                                Google Drive, use fixed words and fields. For instance, in the example above, if you wrote Agrolait_%(name)s_Sales\n"
+"                                Google Drive, use fixed words and fields. For instance, in the example above, if you wrote Deco_Addict_%(name)s_Sales\n"
 "                                in the Google Drive name field, the document in your Google Drive and in Odoo attachment will be named\n"
-"                                'Agrolait_SO0001_Sales'."
+"                                'Deco_Addict_SO0001_Sales'."
 msgstr ""
-"Το όνομα του συνημμένου εγγράφου μπορεί να χρησιμοποιήσει σταθερά ή "
-"μεταβλητά δεδομένα. Για να γίνει διάκριση μεταξύ των εγγράφων στο Google "
-"Drive, χρησιμοποιήστε σταθερές λέξεις και πεδία. Για παράδειγμα, στο "
-"παραπάνω παράδειγμα, εάν γράψατε Agrolait_%(name)s_Sales στο πεδίο του "
-"ονόματος του Google Drive, το έγγραφο στο Google Drive σας και ως συνημμένο "
-"στο Odoo θα ονομάζεται 'Agrolait_SO0001_Sales'."
 
 #. module: google_drive
-#: code:addons/google_drive/models/google_drive.py:134
+#: code:addons/google_drive/models/google_drive.py:135
 #, python-format
 msgid ""
 "The permission 'reader' for 'anyone with the link' has not been written on "
@@ -277,12 +274,12 @@ msgstr ""
 "στο έγγραφο."
 
 #. module: google_drive
-#: model:ir.model.fields,field_description:google_drive.field_res_config_settings_google_drive_uri
+#: model:ir.model.fields,field_description:google_drive.field_res_config_settings__google_drive_uri
 msgid "URI"
 msgstr "URI"
 
 #. module: google_drive
-#: code:addons/google_drive/models/google_drive.py:59
+#: code:addons/google_drive/models/google_drive.py:60
 #, python-format
 msgid ""
 "You haven't configured 'Authorization Code' generated from google, Please "
@@ -292,13 +289,8 @@ msgstr ""
 "Παρακαλώ προβείτε στην δημιουργία του και ρυθμίστε το."
 
 #. module: google_drive
-#: model:ir.ui.view,arch_db:google_drive.view_google_drive_config_form
+#: model_terms:ir.ui.view,arch_db:google_drive.view_google_drive_config_form
 msgid ""
 "https://docs.google.com/document/d/1vOtpJK9scIQz6taD9tJRIETWbEw3fSiaQHArsJYcua4/edit"
 msgstr ""
 "https://docs.google.com/document/d/1vOtpJK9scIQz6taD9tJRIETWbEw3fSiaQHArsJYcua4/edit"
-
-#. module: google_drive
-#: model:ir.model,name:google_drive.model_res_config_settings
-msgid "res.config.settings"
-msgstr "res.config.settings"

@@ -1,10 +1,19 @@
 odoo.define('im_support.test_utils', function (require) {
 "use strict";
 
+var mailTestUtils = require('mail.testUtils');
 var supportSession = require('im_support.SupportSession');
 
 var testUtils = require('web.test_utils');
 
+
+mailTestUtils.MockMailService.include({
+    getServices: function () {
+        return _.extend(this._super(), {
+            support_bus_service: this.bus_service(),
+        });
+    },
+});
 
 /**
  * Extended version of addMockEnvironment that mocks RPCs done to the Support
@@ -49,7 +58,7 @@ function addMockSupportEnvironment(widget, params) {
         }
         return result;
     };
-    testUtils.addMockEnvironment(widget, params);
+    testUtils.mock.addMockEnvironment(widget, params);
     var widgetDestroy = widget.destroy;
     widget.destroy = function () {
         supportSession.rpc = originalRPC;
@@ -60,7 +69,7 @@ function addMockSupportEnvironment(widget, params) {
     // 'im_support.poll_timeout', to simulate a pending longpolling connection to
     // the Support server, such that the initSupport initiates a poll connection
     if (params.enableSupportPoll) {
-        testUtils.intercept(widget, 'call_service', function (ev) {
+        testUtils.mock.intercept(widget, 'call_service', function (ev) {
             if (ev.data.service === 'local_storage') {
                 if (ev.data.method === 'getItem' && ev.data.args[0] === 'im_support.poll_timeout') {
                     ev.data.callback(Date.now() + (60 * 1000));

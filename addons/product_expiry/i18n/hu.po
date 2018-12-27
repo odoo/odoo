@@ -3,15 +3,16 @@
 # * product_expiry
 # 
 # Translators:
-# Martin Trigaux, 2016
-# krnkris, 2016
+# Martin Trigaux, 2018
+# krnkris, 2018
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
-"Last-Translator: krnkris, 2016\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-08-24 09:23+0000\n"
+"Last-Translator: krnkris, 2018\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,20 +21,15 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: product_expiry
-#: model:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
-#: model:ir.ui.view,arch_db:product_expiry.view_move_form_expiry_simple
+#: model_terms:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.view_move_form_expiry_simple
 msgid ""
-"<span class=\"label label-danger\" attrs=\"{'invisible': "
+"<span class=\"badge badge-danger\" attrs=\"{'invisible': "
 "[('product_expiry_alert', '=', False)]}\">Expiration Alert</span>"
 msgstr ""
 
 #. module: product_expiry
-#: model:ir.ui.view,arch_db:product_expiry.report_delivery_document_inherit_product_expiry
-msgid "<span class=\"pull-right\">Expiry Date</span>"
-msgstr "<span class=\"pull-right\">Lejárati idő</span>"
-
-#. module: product_expiry
-#: model:ir.ui.view,arch_db:product_expiry.view_product_form_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.view_product_form_expiry
 msgid "<span>days</span>"
 msgstr ""
 
@@ -41,6 +37,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__alert_date
 msgid "Alert Date"
 msgstr "Figyelmeztetés dátuma"
+
+#. module: product_expiry
+#: model:mail.activity.type,name:product_expiry.mail_activity_type_alert_date_reached
+msgid "Alert Date Reached"
+msgstr ""
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__use_date
@@ -55,9 +56,9 @@ msgid ""
 msgstr ""
 
 #. module: product_expiry
-#: model:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
-#: model:ir.ui.view,arch_db:product_expiry.view_move_form_expiry_simple
-#: model:ir.ui.view,arch_db:product_expiry.view_product_form_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.view_move_form_expiry_simple
+#: model_terms:ir.ui.view,arch_db:product_expiry.view_product_form_expiry
 msgid "Dates"
 msgstr "Dátumok"
 
@@ -67,8 +68,8 @@ msgid "End of Life Date"
 msgstr "Határidő lejárati vég dátum"
 
 #. module: product_expiry
-#: model:ir.ui.view,arch_db:product_expiry.search_product_lot_filter_inherit_product_expiry
-msgid "Expiration alerts"
+#: model_terms:ir.ui.view,arch_db:product_expiry.search_product_lot_filter_inherit_product_expiry
+msgid "Expiration Alerts"
 msgstr ""
 
 #. module: product_expiry
@@ -106,6 +107,11 @@ msgid ""
 "Number of days before the goods starts deteriorating, without being "
 "dangerous yet. It will be computed using the lot/serial number."
 msgstr ""
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_procurement_group
+msgid "Procurement Group"
+msgstr "Beszerzési Csoport"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_product_product__alert_time
@@ -155,6 +161,12 @@ msgstr "Eltávolítás időpontja"
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_production_lot__product_expiry_alert
 msgid "The Alert Date has been reached."
+msgstr ""
+
+#. module: product_expiry
+#: code:addons/product_expiry/models/production_lot.py:84
+#, python-format
+msgid "The alert date has been reached for this lot/serial number"
 msgstr ""
 
 #. module: product_expiry

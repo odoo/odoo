@@ -284,6 +284,20 @@ class TestO2M(TransactionCase):
         delegating to a separate form view
         """
         f = Form(self.env['test_testing_utilities.parent'], view='test_testing_utilities.o2m_parent_ed')
+        custom_tree = self.env.ref('test_testing_utilities.editable_external').id
+
+        subs_field = f._view['fields']['subs']
+        tree_view = subs_field['views']['tree']
+        self.assertEqual(tree_view['type'], 'tree')
+        self.assertEqual(
+            tree_view['view_id'], custom_tree,
+            'check that the tree view is the one referenced by tree_view_ref'
+        )
+        self.assertIs(subs_field['views']['edition'], tree_view, "check that the edition view is the tree view")
+        self.assertEqual(
+            subs_field['views']['edition']['view_id'],
+            custom_tree
+        )
 
         with f.subs.new() as s:
             s.value = 1

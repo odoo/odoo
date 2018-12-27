@@ -105,7 +105,10 @@ odoo.define('payment_stripe.stripe', function(require) {
             acquirer_id: acquirer_id,
             access_token: access_token,
         }).then(function(data) {
-            try { provider_form[0].innerHTML = data; } catch (e) {};
+            var $pay_stripe = $('#pay_stripe').detach();
+            try { provider_form[0].innerHTML = data; } catch (e) {}
+            // Restore 'Pay Now' button HTML since data might have changed it.
+            $(provider_form[0]).find('#pay_stripe').replaceWith($pay_stripe);
         }).done(function () {
             getStripeHandler().open({
                 name: merchant,

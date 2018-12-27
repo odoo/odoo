@@ -6,9 +6,6 @@
             <field name="model">hr.payslip.employees</field>
             <field name="arch" type="xml">
                 <form string="Payslips by Employees">
-                    <header>
-                        <button icon="fa-cogs" string="Generate" name="compute_sheet" type="object" class="oe_highlight"  />
-                    </header>
                     <group>
                         <span colspan="4" nolabel="1">This wizard will generate payslips for all selected employee(s) based on the dates and credit note specified on Payslips Run.</span>
                     </group>
@@ -17,6 +14,10 @@
                         <newline/>
                         <field name="employee_ids" nolabel="1"/>
                     </group>
+                    <footer>
+                        <button icon="fa-cogs" string="Generate" name="compute_sheet" type="object" class="oe_highlight"/>
+                        <button string="Cancel" class="btn btn-secondary" special="cancel"/>
+                    </footer>
                </form>
             </field>
         </record>

@@ -45,19 +45,19 @@
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_card oe_kanban_global_click">
                                 <div class="row">
-                                    <div class="col-xs-6">
+                                    <div class="col-6">
                                         <strong><span><t t-esc="record.partner_id.value"/></span></strong>
                                     </div>
-                                    <div class="col-xs-6">
-                                        <strong><span class="pull-right text-right"><t t-esc="record.amount.value"/></span></strong>
+                                    <div class="col-6">
+                                        <strong><span class="float-right text-right"><t t-esc="record.amount.value"/></span></strong>
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-xs-6 text-muted">
+                                    <div class="col-6 text-muted">
                                         <span><t t-esc="record.number.value"/> <t t-esc="record.date.value"/></span>
                                     </div>
-                                    <div class="col-xs-6">
-                                        <span class="pull-right text-right">
+                                    <div class="col-6">
+                                        <span class="float-right text-right">
                                             <field name="state" widget="label_selection" options="{'classes': {'draft': 'default', 'cancel': 'default', 'none': 'danger', 'proforma': 'warning',
                                             'posted': 'success'}}"/>
                                         </span>
@@ -293,7 +293,7 @@
 
         <!-- Sales Voucher -->
         <record id="action_sale_receipt" model="ir.actions.act_window">
-            <field name="name">Sales Receipts</field>
+            <field name="name">Receipts</field>
             <field name="res_model">account.voucher</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,kanban</field>
@@ -325,7 +325,7 @@
 
         <menuitem id="menu_action_sale_receipt"
             action="action_sale_receipt"
-            parent="account.menu_finance_receivables_documents"
+            parent="account.menu_finance_receivables"
             sequence="10"/>
 
         <!--  Purchase Vouchers -->
@@ -411,7 +411,7 @@
             </field>
         </record>
         <record id="action_purchase_receipt" model="ir.actions.act_window">
-            <field name="name">Purchase Receipts</field>
+            <field name="name">Receipts</field>
             <field name="res_model">account.voucher</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,kanban</field>
@@ -442,5 +442,5 @@
         </record>
 
         <menuitem id="menu_action_purchase_receipt"
-            action="action_purchase_receipt" parent="account.menu_finance_payables_documents" sequence="4"/>
+            action="action_purchase_receipt" parent="account.menu_finance_payables" sequence="10"/>
 </odoo>

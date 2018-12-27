@@ -10,7 +10,7 @@ var snippet_editor = require('web_editor.snippet.editor');
 
 weWidgets.MediaDialog.include({
     start: function () {
-        this.$('[href="#editor-media-video"]').addClass('hidden');
+        this.$('[href="#editor-media-video"]').addClass('d-none');
         return this._super.apply(this, arguments);
     },
 });
@@ -41,6 +41,7 @@ snippet_editor.Class.include({
     start: function () {
         _.defer(function () {
             var $editable = $('#editable_area');
+            transcoder.linkImgToAttachmentThumbnail($editable);
             transcoder.imgToFont($editable);
             transcoder.styleToClass($editable);
 
@@ -53,7 +54,7 @@ snippet_editor.Class.include({
         this._super.apply(this, arguments);
 
         var $editable = $('#editable_area');
-        transcoder.linkImgToAttachmentThumbnail($editable);
+        transcoder.attachmentThumbnailToLinkImg($editable);
         transcoder.fontToImg($editable);
         transcoder.classToStyle($editable);
 

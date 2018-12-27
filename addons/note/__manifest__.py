@@ -2,12 +2,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'Productivity',
+    'name': 'Notes',
     'version': '1.0',
     'category': 'Tools',
     'description': "",
     'website': 'https://www.odoo.com/page/notes',
-    'summary': 'Notes, Reminders, Todos',
+    'summary': 'Organize your work with memos',
     'sequence': 45,
     'depends': [
         'mail',

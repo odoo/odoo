@@ -78,11 +78,11 @@
                                     <strong><t t-esc="record.product_qty.value"/> <small><t t-esc="record.product_uom_id.value"/></small></strong>
                                 </div>
                                 <div class="row">
-                                    <div class="col-xs-8 text-muted">
+                                    <div class="col-8 text-muted">
                                         <span><t t-esc="record.product_id.value"/></span>
                                     </div>
-                                    <div class="col-xs-4">
-                                        <span class="pull-right text-right">
+                                    <div class="col-4">
+                                        <span class="float-right text-right">
                                             <field name="state" widget="kanban_label_selection" options="{'classes': {'draft': 'default', 'done': 'success'}}"/>
                                         </span>
                                     </div>
@@ -113,13 +113,13 @@
                         </div>
                         <group>
                             <group>
-                                <field name="product_id" domain="[('bom_ids', '!=', False)]"/>
+                                <field name="product_id" domain="[('bom_ids', '!=', False)]" attrs="{'readonly':[('mo_id','!=',False)]}" force_save="1"/>
                                 <field name="bom_id" domain="['|',
                                             ('product_id','=',product_id),
                                             '&amp;',
                                                 ('product_tmpl_id.product_variant_ids','=',product_id),
                                                 ('product_id','=',False),
-                                                ('type', '=', 'normal')]"/>
+                                                ('type', '=', 'normal')]" attrs="{'readonly':[('mo_id','!=',False)]}" force_save="1"/>
                                 <label for="product_qty"/>
                                 <div class="o_row">
                                     <field name="product_qty"/>

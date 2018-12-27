@@ -6,7 +6,7 @@
         <div>
             <t t-if="outstanding">
                 <div>
-                    <strong class="pull-left" id="outstanding"><t t-esc="title"></t></strong>
+                    <strong class="float-left" id="outstanding"><t t-esc="title"></t></strong>
                 </div>
             </t>
             <table style="width:100%;">
@@ -14,7 +14,7 @@
                     <tr>
                     <t t-if="outstanding">
                         <td>
-                            <a title="assign to invoice" role="button" class="oe_form_field outstanding_credit_assign" t-att-data-id="line.id" style="margin-right: 10px;">Add</a>
+                            <a title="assign to invoice" role="button" class="oe_form_field btn btn-link outstanding_credit_assign" t-att-data-id="line.id" style="margin-right: 10px;" href="#">Add</a>
                         </td>
                         <td>
                             <span class="oe_form_field" style="margin-right: 30px;"><t t-esc="line.journal_name"></t></span>
@@ -78,8 +78,8 @@
                 </tr>
             </table>
         </div>
-        <button class="btn btn-xs btn-primary js_unreconcile_payment pull-left" t-att-payment-id="payment_id" style="margin-top:5px; margin-bottom:5px;">Unreconcile</button>
-        <button class="btn btn-xs btn-default js_open_payment pull-right" t-att-payment-id="account_payment_id" t-att-invoice-id="invoice_id" t-att-move-id="move_id" style="margin-top:5px; margin-bottom:5px;">View</button>
+        <button class="btn btn-sm btn-primary js_unreconcile_payment float-left" t-att-payment-id="payment_id" style="margin-top:5px; margin-bottom:5px;">Unreconcile</button>
+        <button class="btn btn-sm btn-secondary js_open_payment float-right" t-att-payment-id="account_payment_id" t-att-invoice-id="invoice_id" t-att-move-id="move_id" style="margin-top:5px; margin-bottom:5px;">View</button>
     </t>
 
 </templates>

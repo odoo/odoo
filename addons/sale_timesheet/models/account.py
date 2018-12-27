@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
+
 from odoo import api, fields, models, _
 from odoo.osv import expression
 
@@ -17,15 +18,47 @@ class AccountAnalyticLine(models.Model):
         ('billable_time', 'Billable Time'),
         ('billable_fixed', 'Billable Fixed'),
         ('non_billable', 'Non Billable'),
-        ('non_billable_project', 'No task found')], string="Billable Type", readonly=True, copy=False)
+        ('non_billable_project', 'No task found')], string="Billable Type", compute='_compute_timesheet_invoice_type', compute_sudo=True, store=True, readonly=True)
     timesheet_invoice_id = fields.Many2one('account.invoice', string="Invoice", readonly=True, copy=False, help="Invoice created from the timesheet")
-    timesheet_revenue = fields.Monetary("Revenue", default=0.0, readonly=True, copy=False)
+
+    @api.multi
+    @api.depends('so_line.product_id', 'project_id', 'task_id')
+    def _compute_timesheet_invoice_type(self):
+        for timesheet in self:
+            if timesheet.project_id:  # AAL will be set to False
+                invoice_type = 'non_billable_project' if not timesheet.task_id else 'non_billable'
+                if timesheet.task_id and timesheet.so_line.product_id.type == 'service':
+                    if timesheet.so_line.product_id.invoice_policy == 'delivery':
+                        if timesheet.so_line.product_id.service_type == 'timesheet':
+                            invoice_type = 'billable_time'
+                        else:
+                            invoice_type = 'billable_fixed'
+                    elif timesheet.so_line.product_id.invoice_policy == 'order':
+                        invoice_type = 'billable_fixed'
+                timesheet.timesheet_invoice_type = invoice_type
+
+    @api.onchange('employee_id')
+    def _onchange_task_id_employee_id(self):
+        if self.project_id:  # timesheet only
+            if self.task_id.billable_type == 'task_rate':
+                self.so_line = self.task_id.sale_line_id
+            elif self.task_id.billable_type == 'employee_rate':
+                self.so_line = self._timesheet_determine_sale_line(self.task_id, self.employee_id)
+            else:
+                self.so_line = False
+
+    @api.constrains('so_line', 'project_id')
+    def _check_sale_line_in_project_map(self):
+        for timesheet in self:
+            if timesheet.project_id and timesheet.so_line:  # billed timesheet
+                if timesheet.so_line not in timesheet.project_id.mapped('sale_line_employee_ids.sale_line_id') | timesheet.task_id.sale_line_id | timesheet.project_id.sale_line_id:
+                    raise ValidationError(_("This timesheet line cannot be billed: there is no Sale Order Item defined on the task, nor on the project. Please define one to save your timesheet line."))
 
     @api.multi
     def write(self, values):
         # prevent to update invoiced timesheets if one line is of type delivery
         if self.sudo().filtered(lambda aal: aal.so_line.product_id.invoice_policy == "delivery") and self.filtered(lambda timesheet: timesheet.timesheet_invoice_id):
-            if any([field_name in values for field_name in ['unit_amount', 'employee_id', 'task_id', 'timesheet_revenue', 'so_line', 'amount', 'date']]):
+            if any([field_name in values for field_name in ['unit_amount', 'employee_id', 'project_id', 'task_id', 'so_line', 'amount', 'date']]):
                 raise UserError(_('You can not modify already invoiced timesheets (linked to a Sales order items invoiced on Time and material).'))
         result = super(AccountAnalyticLine, self).write(values)
         return result
@@ -33,104 +66,40 @@ class AccountAnalyticLine(models.Model):
     @api.model
     def _timesheet_preprocess(self, values):
         values = super(AccountAnalyticLine, self)._timesheet_preprocess(values)
-        # task implies so line
-        if 'task_id' in values:
+        # task implies so line (at create)
+        if 'task_id' in values and not values.get('so_line') and values.get('employee_id'):
             task = self.env['project.task'].sudo().browse(values['task_id'])
-            values['so_line'] = task.sale_line_id.id or values.get('so_line', False)
-
-        # Set product_uom_id now so delivered qty is computed in SO line
-        if not 'product_uom_id' in values and all([v in values for v in ['employee_id', 'project_id']]):
             employee = self.env['hr.employee'].sudo().browse(values['employee_id'])
-            values['product_uom_id'] = employee.company_id.project_time_mode_id.id
+            values['so_line'] = self._timesheet_determine_sale_line(task, employee).id
         return values
 
     @api.multi
     def _timesheet_postprocess_values(self, values):
-        sudo_self = self.sudo()  # this creates only one env for all operation that required sudo()
         result = super(AccountAnalyticLine, self)._timesheet_postprocess_values(values)
-        # (re)compute the UoM from the employee company
-        if any([field_name in values for field_name in ['employee_id']]):
-            for timesheet in sudo_self:
-                uom = timesheet.employee_id.company_id.project_time_mode_id
+        # (re)compute the sale line
+        if any([field_name in values for field_name in ['task_id', 'employee_id']]):
+            for timesheet in self:
                 result[timesheet.id].update({
-                    'product_uom_id': uom.id,
+                    'so_line': timesheet._timesheet_determine_sale_line(timesheet.task_id, timesheet.employee_id).id,
                 })
-        # (re)compute the theorical revenue
-        if any([field_name in values for field_name in ['so_line', 'unit_amount', 'account_id']]):
-            for timesheet in sudo_self:
-                values_to_write = timesheet._timesheet_compute_theorical_revenue_values()
-                if values_to_write:
-                    result[timesheet.id].update(values_to_write)
         return result
 
-    @api.multi
-    def _timesheet_compute_theorical_revenue_values(self):
-        """ This method set the theorical revenue on the current timesheet lines.
-
-            If invoice on delivered quantity:
-                timesheet hours * (SO Line Price) * (1- discount),
-            elif invoice on ordered quantities & create task:
-                min (
-                    timesheet hours * (SO Line unit price) * (1- discount),
-                    TOTAL SO - TOTAL INVOICED - sum(timesheet revenues with invoice_id=False)
-                )
-            else:
-                0
-
-            :return: a dictionary mapping each record id to its corresponding
-                dictionnary values to write (may be empty).
+    @api.model
+    def _timesheet_determine_sale_line(self, task, employee):
+        """ Deduce the SO line associated to the timesheet line:
+            1/ timesheet on task rate: the so line will be the one from the task
+            2/ timesheet on employee rate task: find the SO line in the map of the project (even for subtask), or fallback on the SO line of the task, or fallback
+                on the one on the project
+            NOTE: this have to be consistent with `_compute_billable_type` on project.task.
         """
-        self.ensure_one()
-        timesheet = self
-
-        # find the timesheet UoM
-        timesheet_uom = timesheet.product_uom_id
-        if not timesheet_uom:  # fallback on default company timesheet UoM
-            timesheet_uom = self.env.user.company_id.project_time_mode_id
-
-        # default values
-        unit_amount = timesheet.unit_amount
-        so_line = timesheet.so_line
-        values = {
-            'timesheet_revenue': 0.0,
-            'timesheet_invoice_type': 'non_billable_project' if not timesheet.task_id else 'non_billable',
-        }
-        # set the revenue and billable type according to the product and the SO line
-        if timesheet.task_id and so_line.product_id.type == 'service':
-            # find the analytic account to convert revenue into its currency
-            analytic_account = timesheet.account_id
-            # convert the unit of mesure into hours
-            sale_price_hour = so_line.product_uom._compute_price(so_line.price_unit, timesheet_uom)
-            sale_price = so_line.currency_id._convert(
-                sale_price_hour, analytic_account.currency_id, so_line.company_id, fields.Date.today())  # amount from SO should be convert into analytic account currency
-
-            # calculate the revenue on the timesheet
-            if so_line.product_id.invoice_policy == 'delivery':
-                values['timesheet_revenue'] = analytic_account.currency_id.round(unit_amount * sale_price * (1-(so_line.discount/100)))
-                values['timesheet_invoice_type'] = 'billable_time' if so_line.product_id.service_type == 'timesheet' else 'billable_fixed'
-            elif so_line.product_id.invoice_policy == 'order' and so_line.product_id.service_type == 'timesheet':
-                quantity_hour = unit_amount
-                if so_line.product_uom.category_id == timesheet_uom.category_id:
-                    quantity_hour = so_line.product_uom._compute_quantity(so_line.product_uom_qty, timesheet_uom)
-                # compute the total revenue the SO since we are in fixed price
-                total_revenue_so = analytic_account.currency_id.round(quantity_hour * sale_price * (1-(so_line.discount/100)))
-                # compute the total revenue already existing (without the current timesheet line)
-                domain = [('so_line', '=', so_line.id)]
-                if timesheet.ids:
-                    domain += [('id', 'not in', timesheet.ids)]
-                analytic_lines = timesheet.search(domain)
-                total_revenue_invoiced = sum(analytic_lines.mapped('timesheet_revenue'))
-                # compute (new) revenue of current timesheet line
-                values['timesheet_revenue'] = min(
-                    analytic_account.currency_id.round(unit_amount * so_line.currency_id._convert(
-                        so_line.price_unit, analytic_account.currency_id, so_line.company_id, fields.Date.today()) * (1-so_line.discount)),
-                    total_revenue_so - total_revenue_invoiced
-                )
-                values['timesheet_invoice_type'] = 'billable_fixed'
-                # if the so line is already invoiced, and the delivered qty is still smaller than the ordered, then link the timesheet to the invoice
-                if so_line.invoice_status == 'invoiced':
-                    values['timesheet_invoice_id'] = so_line.invoice_lines and so_line.invoice_lines[0].invoice_id.id
-            elif so_line.product_id.invoice_policy == 'order' and so_line.product_id.service_type != 'timesheet':
-                values['timesheet_invoice_type'] = 'billable_fixed'
-
-        return values
+        if task.billable_type != 'no':
+            if task.billable_type == 'employee_rate':
+                map_entry = self.env['project.sale.line.employee.map'].search([('project_id', '=', task.project_id.id), ('employee_id', '=', employee.id)])
+                if map_entry:
+                    return map_entry.sale_line_id
+                if task.sale_line_id:
+                    return task.sale_line_id
+                return task.project_id.sale_line_id
+            elif task.billable_type == 'task_rate':
+                return task.sale_line_id
+        return self.env['sale.order.line']

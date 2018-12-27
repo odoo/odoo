@@ -29,17 +29,17 @@ class Company(models.Model):
         currency_id = self.env['res.users'].browse(self._uid).company_id.currency_id
         return currency_id or self._get_euro()
 
-    name = fields.Char(related='partner_id.name', string='Company Name', required=True, store=True)
+    name = fields.Char(related='partner_id.name', string='Company Name', required=True, store=True, readonly=False)
     sequence = fields.Integer(help='Used to order Companies in the company switcher', default=10)
     parent_id = fields.Many2one('res.company', string='Parent Company', index=True)
     child_ids = fields.One2many('res.company', 'parent_id', string='Child Companies')
     partner_id = fields.Many2one('res.partner', string='Partner', required=True)
     report_header = fields.Text(string='Company Tagline', help="Appears by default on the top right corner of your printed documents (report header).")
     report_footer = fields.Text(string='Report Footer', translate=True, help="Footer text displayed at the bottom of all reports.")
-    logo = fields.Binary(related='partner_id.image', default=_get_logo, string="Company Logo")
+    logo = fields.Binary(related='partner_id.image', default=_get_logo, string="Company Logo", readonly=False)
     # logo_web: do not store in attachments, since the image is retrieved in SQL for
     # performance reasons (see addons/web/controllers/main.py, Binary.company_logo)
-    logo_web = fields.Binary(compute='_compute_logo_web', store=True)
+    logo_web = fields.Binary(compute='_compute_logo_web', store=True, attachment=False)
     currency_id = fields.Many2one('res.currency', string='Currency', required=True, default=lambda self: self._get_user_currency())
     user_ids = fields.Many2many('res.users', 'res_company_users_rel', 'cid', 'user_id', string='Accepted Users')
     account_no = fields.Char(string='Account No.')
@@ -50,22 +50,19 @@ class Company(models.Model):
     state_id = fields.Many2one('res.country.state', compute='_compute_address', inverse='_inverse_state', string="Fed. State")
     bank_ids = fields.One2many('res.partner.bank', 'company_id', string='Bank Accounts', help='Bank accounts related to this company')
     country_id = fields.Many2one('res.country', compute='_compute_address', inverse='_inverse_country', string="Country")
-    email = fields.Char(related='partner_id.email', store=True)
-    phone = fields.Char(related='partner_id.phone', store=True)
-    website = fields.Char(related='partner_id.website')
-    vat = fields.Char(related='partner_id.vat', string="TIN")
+    email = fields.Char(related='partner_id.email', store=True, readonly=False)
+    phone = fields.Char(related='partner_id.phone', store=True, readonly=False)
+    website = fields.Char(related='partner_id.website', readonly=False)
+    vat = fields.Char(related='partner_id.vat', string="Tax ID", readonly=False)
     company_registry = fields.Char()
     paperformat_id = fields.Many2one('report.paperformat', 'Paper format', default=lambda self: self.env.ref('base.paperformat_euro', raise_if_not_found=False))
-    external_report_layout = fields.Selection([
-        ('background', 'Background'),
-        ('boxed', 'Boxed'),
-        ('clean', 'Clean'),
-        ('standard', 'Standard'),
-    ], string='Document Template')
-
+    external_report_layout_id = fields.Many2one('ir.ui.view', 'Document Template')
     _sql_constraints = [
         ('name_uniq', 'unique (name)', 'The company name must be unique !')
     ]
+
+    base_onboarding_company_state = fields.Selection([
+        ('not_done', "Not done"), ('just_done', "Just done"), ('done', "Done")], string="State of the onboarding company step", default='not_done')
 
     @api.model_cr
     def init(self):
@@ -237,6 +234,7 @@ class Company(models.Model):
             currency = self.env['res.currency'].browse(values['currency_id'])
             if not currency.active:
                 currency.write({'active': True})
+
         return super(Company, self).write(values)
 
     @api.constrains('parent_id')
@@ -263,3 +261,38 @@ class Company(models.Model):
                         .report_action(docids))
         else:
             return res
+
+    @api.model
+    def action_open_base_onboarding_company(self):
+        """ Onboarding step for company basic information. """
+        action = self.env.ref('base.action_open_base_onboarding_company').read()[0]
+        action['res_id'] = self.env.user.company_id.id
+        return action
+
+    def set_onboarding_step_done(self, step_name):
+        if self[step_name] == 'not_done':
+            self[step_name] = 'just_done'
+
+    def get_and_update_onbarding_state(self, onboarding_state, steps_states):
+        """ Needed to display onboarding animations only one time. """
+        old_values = {}
+        all_done = True
+        for step_state in steps_states:
+            old_values[step_state] = self[step_state]
+            if self[step_state] == 'just_done':
+                self[step_state] = 'done'
+            all_done = all_done and self[step_state] == 'done'
+
+        if all_done:
+            if self[onboarding_state] == 'not_done':
+                # string `onboarding_state` instead of variable name is not an error
+                old_values['onboarding_state'] = 'just_done'
+            else:
+                old_values['onboarding_state'] = 'done'
+            self[onboarding_state] = 'done'
+        return old_values
+
+    @api.multi
+    def action_save_onboarding_company_step(self):
+        if bool(self.street):
+            self.set_onboarding_step_done('base_onboarding_company_state')

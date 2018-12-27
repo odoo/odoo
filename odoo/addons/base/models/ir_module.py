@@ -14,8 +14,6 @@ import zipfile
 
 import requests
 
-from odoo.tools import pycompat
-
 from docutils import nodes
 from docutils.core import publish_string
 from docutils.transforms import Transform, writer_aux
@@ -188,8 +186,9 @@ class Module(models.Model):
                     'doctitle_xform': False,
                     'output_encoding': 'unicode',
                     'xml_declaration': False,
+                    'file_insertion_enabled': False,
                 }
-                output = publish_string(source=module.description or '', settings_overrides=overrides, writer=MyWriter())
+                output = publish_string(source=module.description if not module.application and module.description else '', settings_overrides=overrides, writer=MyWriter())
                 module.description_html = tools.html_sanitize(output)
 
     @api.depends('name')
@@ -272,7 +271,7 @@ class Module(models.Model):
                                    help='An auto-installable module is automatically installed by the '
                                         'system when all its dependencies are satisfied. '
                                         'If the module has no dependency, it is always installed.')
-    state = fields.Selection(STATES, string='Status', default='uninstalled', readonly=True, index=True)
+    state = fields.Selection(STATES, string='Status', default='uninstallable', readonly=True, index=True)
     demo = fields.Boolean('Demo Data', default=False, readonly=True)
     license = fields.Selection([
         ('GPL-2', 'GPL Version 2'),
@@ -292,6 +291,7 @@ class Module(models.Model):
     application = fields.Boolean('Application', readonly=True)
     icon = fields.Char('Icon URL')
     icon_image = fields.Binary(string='Icon', compute='_get_icon_image')
+    to_buy = fields.Boolean('Odoo Enterprise Module', default=False)
 
     _sql_constraints = [
         ('name_uniq', 'UNIQUE (name)', 'The name of the module must be unique!'),
@@ -516,7 +516,7 @@ class Module(models.Model):
         _logger.info('getting next %s', Todos)
         active_todo = Todos.search([('state', '=', 'open')], limit=1)
         if active_todo:
-            _logger.info('next action is %s', active_todo)
+            _logger.info('next action is "%s"', active_todo.name)
             return active_todo.action_launch()
         return {
             'type': 'ir.actions.act_url',
@@ -646,6 +646,7 @@ class Module(models.Model):
             'icon': terp.get('icon', False),
             'summary': terp.get('summary', ''),
             'url': terp.get('url') or terp.get('live_test_url', ''),
+            'to_buy': False
         }
 
     @api.model
@@ -681,7 +682,7 @@ class Module(models.Model):
                 updated_values = {}
                 for key in values:
                     old = getattr(mod, key)
-                    updated = tools.ustr(values[key]) if isinstance(values[key], pycompat.string_types) else values[key]
+                    updated = tools.ustr(values[key]) if isinstance(values[key], str) else values[key]
                     if (old or updated) and updated != old:
                         updated_values[key] = values[key]
                 if terp.get('installable', True) and mod.state == 'uninstallable':
@@ -692,11 +693,10 @@ class Module(models.Model):
                     mod.write(updated_values)
             else:
                 mod_path = modules.get_module_path(mod_name)
-                if not mod_path:
+                if not mod_path or not terp:
                     continue
-                if not terp or not terp.get('installable', True):
-                    continue
-                mod = self.create(dict(name=mod_name, state='uninstalled', **values))
+                state = "uninstalled" if terp.get('installable', True) else "uninstallable"
+                mod = self.create(dict(name=mod_name, state=state, **values))
                 res[1] += 1
 
             mod._update_dependencies(terp.get('depends', []))

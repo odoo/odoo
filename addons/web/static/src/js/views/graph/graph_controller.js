@@ -6,13 +6,11 @@ odoo.define('web.GraphController', function (require) {
 
 var core = require('web.core');
 var AbstractController = require('web.AbstractController');
-var GroupByMenuInterfaceMixin = require('web.GroupByMenuInterfaceMixin');
+var GroupByMenuMixin = require('web.GroupByMenuMixin');
 
 var qweb = core.qweb;
 
-var GraphController = AbstractController.extend(GroupByMenuInterfaceMixin,{
-    className: 'o_graph',
-
+var GraphController = AbstractController.extend(GroupByMenuMixin,{
     /**
      * @override
      * @param {Widget} parent
@@ -24,19 +22,24 @@ var GraphController = AbstractController.extend(GroupByMenuInterfaceMixin,{
      * @param {string[]} params.groupableFields,
      */
     init: function (parent, model, renderer, params) {
-        GroupByMenuInterfaceMixin.init.call(this);
+        GroupByMenuMixin.init.call(this);
         this._super.apply(this, arguments);
         this.measures = params.measures;
         // this parameter condition the appearance of a 'Group By'
         // button in the control panel owned by the graph view.
         this.isEmbedded = params.isEmbedded;
+
         // this parameter determines what is the list of fields
         // that may be used within the groupby menu available when
         // the view is embedded
         this.groupableFields = params.groupableFields;
-        // extends custom_events key. This allow the controller
-        // to listen to information comming from the groupby menu.
-        // this is used when the view is embedded.
+    },
+    /**
+     * @override
+     */
+    start: function () {
+        this.$el.addClass('o_graph_controller');
+        return this._super.apply(this, arguments);
     },
     /**
      * @todo check if this can be removed (mostly duplicate with
@@ -45,7 +48,7 @@ var GraphController = AbstractController.extend(GroupByMenuInterfaceMixin,{
     destroy: function () {
         if (this.$buttons) {
             // remove jquery's tooltip() handlers
-            this.$buttons.find('button').off().tooltip('destroy');
+            this.$buttons.find('button').off().tooltip('dispose');
         }
         this._super.apply(this, arguments);
     },
@@ -62,18 +65,20 @@ var GraphController = AbstractController.extend(GroupByMenuInterfaceMixin,{
      * @override
      * @returns {Object}
      */
-    getContext: function () {
+    getOwnedQueryParams: function () {
         var state = this.model.get();
         return {
-            graph_measure: state.measure,
-            graph_mode: state.mode,
-            graph_groupbys: state.groupedBy,
-            // this parameter is not used anywher for now
-            // the idea would be to seperate intervals from
-            // fieldnames in groupbys. This could be done
-            // in graph view only or everywhere but this is
-            // a big refactoring.
-            graph_intervalMapping: state.intervalMapping,
+            context: {
+                graph_measure: state.measure,
+                graph_mode: state.mode,
+                graph_groupbys: state.groupedBy,
+                // this parameter is not used anywher for now
+                // the idea would be to seperate intervals from
+                // fieldnames in groupbys. This could be done
+                // in graph view only or everywhere but this is
+                // a big refactoring.
+                graph_intervalMapping: state.intervalMapping,
+            }
         };
     },
     /**
@@ -88,7 +93,7 @@ var GraphController = AbstractController.extend(GroupByMenuInterfaceMixin,{
     renderButtons: function ($node) {
         if ($node) {
             var context = {
-                measures: _.pairs(_.omit(this.measures, '__count__')),
+                measures: _.sortBy(_.pairs(_.omit(this.measures, '__count__')), function (x) { return x[1].string.toLowerCase(); }),
             };
             this.$buttons = $(qweb.render('GraphView.buttons', context));
             this.$measureList = this.$buttons.find('.o_graph_measures_list');
@@ -110,10 +115,10 @@ var GraphController = AbstractController.extend(GroupByMenuInterfaceMixin,{
      * override
      *
      * @private
-     * @param {string[]} groupbys
+     * @param {string[]} groupBys
      */
-    _setGroupby: function (groupbys) {
-        this.update({groupBy: groupbys});
+    _setGroupby: function (groupBys) {
+        this.update({groupBy: groupBys});
     },
 
     /**
@@ -161,8 +166,9 @@ var GraphController = AbstractController.extend(GroupByMenuInterfaceMixin,{
         this.$buttons
             .find('.o_graph_button[data-mode="' + state.mode + '"]')
             .addClass('active');
-        this.$measureList.find('li').each(function (index, li) {
-            $(li).toggleClass('selected', $(li).data('field') === state.measure);
+        _.each(this.$measureList.find('.dropdown-item'), function (item) {
+            var $item = $(item);
+            $item.toggleClass('selected', $item.data('field') === state.measure);
         });
     },
 
@@ -174,19 +180,17 @@ var GraphController = AbstractController.extend(GroupByMenuInterfaceMixin,{
      * Do what need to be done when a button from the control panel is clicked.
      *
      * @private
-     * @param {MouseEvent} event
+     * @param {MouseEvent} ev
      */
-    _onButtonClick: function (event) {
-        var $target = $(event.target);
-        var parent;
+    _onButtonClick: function (ev) {
+        var $target = $(ev.target);
         var field;
         if ($target.hasClass('o_graph_button')) {
             this._setMode($target.data('mode'));
         } else if ($target.parents('.o_graph_measures_list').length) {
-            event.preventDefault();
-            event.stopPropagation();
-            parent = $target.parent();
-            field = parent.data('field');
+            ev.preventDefault();
+            ev.stopPropagation();
+            field = $target.data('field');
             this._setMeasure(field);
         }
     },

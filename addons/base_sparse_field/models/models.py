@@ -9,7 +9,7 @@ class IrModelFields(models.Model):
 
     ttype = fields.Selection(selection_add=[('serialized', 'serialized')])
     serialization_field_id = fields.Many2one('ir.model.fields', string='Serialization Field',
-        ondelete='cascade', domain="[('ttype','=','serialized')]",
+        ondelete='cascade', domain="[('ttype','=','serialized'), ('model_id', '=', model_id)]",
         help="If set, this field will be stored in the sparse structure of the "
              "serialization field, instead of having its own database column. "
              "This cannot be changed after creation.",
@@ -28,19 +28,33 @@ class IrModelFields(models.Model):
 
         return super(IrModelFields, self).write(vals)
 
-    def _reflect_field_params(self, field):
-        params = super(IrModelFields, self)._reflect_field_params(field)
+    def _reflect_model(self, model):
+        super(IrModelFields, self)._reflect_model(model)
 
-        params['serialization_field_id'] = None
-        if getattr(field, 'sparse', None):
-            model = self.env[field.model_name]
-            serialization_field = model._fields.get(field.sparse)
-            if serialization_field is None:
-                raise UserError(_("Serialization field `%s` not found for sparse field `%s`!") % (field.sparse, field.name))
-            serialization_record = self._reflect_field(serialization_field)
-            params['serialization_field_id'] = serialization_record.id
+        # set 'serialization_field_id' on sparse fields; it is done here to
+        # ensure that the serialized field is reflected already
+        cr = self._cr
+        query = """ UPDATE ir_model_fields
+                    SET serialization_field_id=%s
+                    WHERE model=%s AND name=%s
+                    RETURNING id
+                """
+        fields_data = self._existing_field_data(model._name)
 
-        return params
+        for field in model._fields.values():
+            ser_field_id = None
+            ser_field_name = getattr(field, 'sparse', None)
+            if ser_field_name:
+                if ser_field_name not in fields_data:
+                    msg = _("Serialization field `%s` not found for sparse field `%s`!")
+                    raise UserError(msg % (ser_field_name, field.name))
+                ser_field_id = fields_data[ser_field_name]['id']
+
+            if fields_data[field.name]['serialization_field_id'] != ser_field_id:
+                cr.execute(query, (ser_field_id, model._name, field.name))
+                record = self.browse(cr.fetchone())
+                self.pool.post_init(record.modified, ['serialization_field_id'])
+                self.clear_caches()
 
     def _instanciate_attrs(self, field_data):
         attrs = super(IrModelFields, self)._instanciate_attrs(field_data)
@@ -52,6 +66,7 @@ class IrModelFields(models.Model):
 
 class TestSparse(models.TransientModel):
     _name = 'sparse_fields.test'
+    _description = 'Sparse fields Test'
 
     data = fields.Serialized()
     boolean = fields.Boolean(sparse='data')

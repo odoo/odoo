@@ -3,16 +3,15 @@
 # * product_expiry
 # 
 # Translators:
-# Martin Trigaux, 2017
-# Wolfgang Taferner, 2017
-# e2f <projects@e2f.com>, 2018
+# Martin Trigaux, 2018
+# Johannes Croe <jcr@odoo.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
-"Last-Translator: e2f <projects@e2f.com>, 2018\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-09-21 13:17+0000\n"
+"Last-Translator: Johannes Croe <jcr@odoo.com>, 2018\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,22 +20,17 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: product_expiry
-#: model:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
-#: model:ir.ui.view,arch_db:product_expiry.view_move_form_expiry_simple
+#: model_terms:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.view_move_form_expiry_simple
 msgid ""
-"<span class=\"label label-danger\" attrs=\"{'invisible': "
+"<span class=\"badge badge-danger\" attrs=\"{'invisible': "
 "[('product_expiry_alert', '=', False)]}\">Expiration Alert</span>"
 msgstr ""
-"<span attrs=\"{'invisible': [('product_expiry_alert', '=', False)]}\" "
-"class=\"label label-danger\"/>"
+"<span class=\"badge badge-danger\" attrs=\"{'invisible': "
+"[('product_expiry_alert', '=', False)]}\">Ablaufalarm</span>"
 
 #. module: product_expiry
-#: model:ir.ui.view,arch_db:product_expiry.report_delivery_document_inherit_product_expiry
-msgid "<span class=\"pull-right\">Expiry Date</span>"
-msgstr "<span class=\"pull-right\"/>"
-
-#. module: product_expiry
-#: model:ir.ui.view,arch_db:product_expiry.view_product_form_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.view_product_form_expiry
 msgid "<span>days</span>"
 msgstr "<span/>"
 
@@ -44,6 +38,11 @@ msgstr "<span/>"
 #: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__alert_date
 msgid "Alert Date"
 msgstr "Alarmzeitpunkt"
+
+#. module: product_expiry
+#: model:mail.activity.type,name:product_expiry.mail_activity_type_alert_date_reached
+msgid "Alert Date Reached"
+msgstr ""
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__use_date
@@ -60,9 +59,9 @@ msgstr ""
 "(Alarme) zu bestimmen."
 
 #. module: product_expiry
-#: model:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
-#: model:ir.ui.view,arch_db:product_expiry.view_move_form_expiry_simple
-#: model:ir.ui.view,arch_db:product_expiry.view_product_form_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.view_move_form_expiry_simple
+#: model_terms:ir.ui.view,arch_db:product_expiry.view_product_form_expiry
 msgid "Dates"
 msgstr "Datumangaben"
 
@@ -72,9 +71,9 @@ msgid "End of Life Date"
 msgstr "Verwendbar bis"
 
 #. module: product_expiry
-#: model:ir.ui.view,arch_db:product_expiry.search_product_lot_filter_inherit_product_expiry
-msgid "Expiration alerts"
-msgstr "Ablaufalarme"
+#: model_terms:ir.ui.view,arch_db:product_expiry.search_product_lot_filter_inherit_product_expiry
+msgid "Expiration Alerts"
+msgstr ""
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_stock_production_lot
@@ -117,6 +116,11 @@ msgid ""
 "Number of days before the goods starts deteriorating, without being "
 "dangerous yet. It will be computed using the lot/serial number."
 msgstr ""
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_procurement_group
+msgid "Procurement Group"
+msgstr "Beschaffungsgruppe"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_product_product__alert_time
@@ -167,6 +171,12 @@ msgstr "Datum der Vernichtung"
 #: model:ir.model.fields,help:product_expiry.field_stock_production_lot__product_expiry_alert
 msgid "The Alert Date has been reached."
 msgstr "Das Alarmdatum wurde erreicht."
+
+#. module: product_expiry
+#: code:addons/product_expiry/models/production_lot.py:84
+#, python-format
+msgid "The alert date has been reached for this lot/serial number"
+msgstr ""
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_production_lot__life_date

@@ -1,7 +1,7 @@
 odoo.define('website.content.menu', function (require) {
 'use strict';
 
-var config = require('web.config');
+var dom = require('web.dom');
 var sAnimation = require('website.content.snippets.animation');
 
 sAnimation.registry.affixMenu = sAnimation.Class.extend({
@@ -26,11 +26,10 @@ sAnimation.registry.affixMenu = sAnimation.Class.extend({
         // Handle events for the collapse menus
         _.each(this.$headerClone.find('[data-toggle="collapse"]'), function (el) {
             var $source = $(el);
-            var targetClass = $source.attr('data-target');
-            var $target = self.$headerClone.find(targetClass);
-            var className = targetClass.substring(1);
-            $source.attr('data-target', targetClass + '_clone');
-            $target.removeClass(className).addClass(className + '_clone');
+            var targetIDSelector = $source.attr('data-target');
+            var $target = self.$headerClone.find(targetIDSelector);
+            $source.attr('data-target', targetIDSelector + '_clone');
+            $target.attr('id', targetIDSelector.substr(1) + '_clone');
         });
 
         // Window Handlers
@@ -66,8 +65,8 @@ sAnimation.registry.affixMenu = sAnimation.Class.extend({
         this.$headerClone.toggleClass('affixed', wOffset > (hOffset + 300));
 
         // Reset opened menus
-        this.$dropdowns.removeClass('open');
-        this.$navbarCollapses.removeClass('in').attr('aria-expanded', false);
+        this.$dropdowns.removeClass('show');
+        this.$navbarCollapses.removeClass('show').attr('aria-expanded', false);
     },
 });
 
@@ -76,89 +75,56 @@ sAnimation.registry.affixMenu = sAnimation.Class.extend({
  *
  * Note: this works well with the affixMenu... by chance (autohideMenu is called
  * after alphabetically).
- *
- * @todo We may want to avoid some code duplication by sharing what is done in
- * the backend in enterprise...
  */
 sAnimation.registry.autohideMenu = sAnimation.Class.extend({
-    selector: 'header:not(.o_no_autohide_menu) > .navbar > *',
+    selector: 'header #top_menu',
 
     /**
      * @override
      */
     start: function () {
-        var $allItems = this.$('#top_menu').children();
-        this.$unfoldableItems = $allItems.filter('.divider, .divider ~ li');
-        this.$items = $allItems.not(this.$unfoldableItems);
+        var self = this;
+        var defs = [this._super.apply(this, arguments)];
+        this.noAutohide = this.$el.closest('.o_no_autohide_menu').length;
+        if (!this.noAutohide) {
+            var $navbar = this.$el.closest('.navbar');
+            _.each($navbar.find('img'), function (img) {
+                if (img.complete) {
+                    return; // Already loaded
+                }
+                var def = $.Deferred();
+                defs.push(def);
+                $(img).one('load', function () {
+                    def.resolve();
+                });
+            });
 
-        $(window).on('resize', _.debounce(this._adapt.bind(this), 500));
-        this._adapt();
-
-        return this._super.apply(this, arguments);
+            // The previous code will make sure we wait for images to be fully
+            // loaded before initializing the auto more menu. But in some cases,
+            // it is not enough, we also have to wait for fonts or even extra
+            // scripts. Those will have no impact on the feature in most cases
+            // though, so we will only update the auto more menu at that time,
+            // no wait for it to initialize the feature.
+            var $window = $(window);
+            $window.on('load.autohideMenu', function () {
+                $window.trigger('resize');
+            });
+        }
+        return $.when.apply($, defs).then(function () {
+            if (!self.noAutohide) {
+                dom.initAutoMoreMenu(self.$el, {unfoldable: '.divider, .divider ~ li'});
+            }
+            self.$el.removeClass('o_menu_loading');
+        });
     },
     /**
      * @override
      */
     destroy: function () {
         this._super.apply(this, arguments);
-        this._restore();
-    },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     */
-    _adapt: function () {
-        this._restore();
-        if (config.device.isMobile) {
-            return;
-        }
-
-        this.maxWidth = this.$el.width();
-        var $unfoldable = this.$unfoldableItems.add(this.$el.children().not('.navbar-collapse'));
-        this.maxWidth -= _.reduce($unfoldable, function (sum, el) {
-            return sum + computeFloatOuterWidthWithMargins(el);
-        }, 0);
-
-        var nbItems = this.$items.length;
-        var menuItemsWidth = _.reduce(this.$items, function (sum, el) {
-            return sum + computeFloatOuterWidthWithMargins(el);
-        }, 0);
-
-        if (menuItemsWidth > this.maxWidth) {
-            this.$extraItemsToggle = $('<li/>', {class: 'o_extra_menu_items'});
-            this.$extraItemsToggle.append($('<a/>', {href: '#', class: 'dropdown-toggle', 'data-toggle': 'dropdown'})
-                .append($('<i/>', {class: 'fa fa-plus'})));
-            this.$extraItemsToggle.append($('<ul/>', {class: 'dropdown-menu'}));
-            this.$extraItemsToggle.insertAfter(this.$items.last());
-
-            menuItemsWidth += computeFloatOuterWidthWithMargins(this.$extraItemsToggle[0]);
-            do {
-                menuItemsWidth -= computeFloatOuterWidthWithMargins(this.$items.eq(--nbItems)[0]);
-            } while (menuItemsWidth > this.maxWidth);
-
-            var $extraItems = this.$items.slice(nbItems).detach();
-            this.$extraItemsToggle.children('ul').append($extraItems);
-            this.$extraItemsToggle.toggleClass('active', $extraItems.hasClass('active'));
-        }
-
-        function computeFloatOuterWidthWithMargins(el) {
-            var rect = el.getBoundingClientRect();
-            var style = window.getComputedStyle(el);
-            return rect.right - rect.left + parseFloat(style.marginLeft) + parseFloat(style.marginRight);
-        }
-    },
-    /**
-     * @private
-     */
-    _restore: function () {
-        if (this.$extraItemsToggle) {
-            this.$extraItemsToggle.find("> ul > *").insertBefore(this.$extraItemsToggle);
-            this.$extraItemsToggle.remove();
-            delete this.$extraItemsToggle;
+        if (!this.noAutohide) {
+            $(window).off('.autohideMenu');
+            dom.destroyAutoMoreMenu(this.$el);
         }
     },
 });
@@ -179,7 +145,7 @@ sAnimation.registry.menuDirection = sAnimation.Class.extend({
      * @override
      */
     start: function () {
-        this.defaultAlignment = this.$el.is('.navbar-right') ? 'right' : 'left';
+        this.defaultAlignment = this.$el.is('.ml-auto, .ml-auto ~ *') ? 'right' : 'left';
         return this._super.apply(this, arguments);
     },
 

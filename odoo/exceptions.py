@@ -46,13 +46,19 @@ class RedirectWarning(Exception):
       :param string button_text: text to put on the button that will trigger
           the redirection.
     """
+    # using this RedirectWarning won't crash if used as an except_orm
+    @property
+    def name(self):
+        return self.args[0]
 
 
 class AccessDenied(Exception):
-    """ Login/password error. No message, no traceback.
+    """ Login/password error. no traceback.
     Example: When you try to log with a wrong password."""
-    def __init__(self):
-        super(AccessDenied, self).__init__('Access denied')
+    def __init__(self, message='Access denied'):
+        super(AccessDenied, self).__init__(message)
+        self.with_traceback(None)
+        self.__cause__ = None
         self.traceback = ('', '', '')
 
 

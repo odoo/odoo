@@ -20,12 +20,18 @@ var ServiceProviderMixin = {
 
         // add already registered services from the service registry
         _.each(core.serviceRegistry.map, function (Service, serviceName) {
+            if (serviceName in self.UndeployedServices) {
+                throw new Error('Service "' + serviceName + '" is already loaded.');
+            }
             self.UndeployedServices[serviceName] = Service;
         });
         this._deployServices();
 
         // listen on newly added services
         core.serviceRegistry.onAdd(function (serviceName, Service) {
+            if (serviceName in self.services || serviceName in self.UndeployedServices) {
+                throw new Error('Service "' + serviceName + '" is already loaded.');
+            }
             self.UndeployedServices[serviceName] = Service;
             self._deployServices();
         });
@@ -42,16 +48,16 @@ var ServiceProviderMixin = {
         var self = this;
         var done = false;
         while (!done) {
-            var Service = _.find(this.UndeployedServices, function (Service) {
+            var serviceName = _.findKey(this.UndeployedServices, function (Service) {
                 // no missing dependency
                 return !_.some(Service.prototype.dependencies, function (depName) {
                     return !self.services[depName];
                 });
             });
-            if (Service) {
-                var service = new Service(this);
-                this.services[Service.prototype.name] = service;
-                delete this.UndeployedServices[Service.prototype.name];
+            if (serviceName) {
+                var service = new this.UndeployedServices[serviceName](this);
+                this.services[serviceName] = service;
+                delete this.UndeployedServices[serviceName];
                 service.start();
             } else {
                 done = true;
@@ -127,11 +133,14 @@ var ServicesMixin = {
      */
     _rpc: function (params, options) {
         var query = rpc.buildQuery(params);
-        var def = this.call('ajax', 'rpc', query.route, query.params, options);
-        return def ? def.promise() : $.Deferred().promise();
+        var def = this.call('ajax', 'rpc', query.route, query.params, options, this) || $.Deferred();
+        var promise = def.promise();
+        var abort = (def.abort ? def.abort : def.reject) || function () {};
+        promise.abort = abort.bind(def);
+        return promise;
     },
-    loadFieldView: function (dataset, view_id, view_type, options) {
-        return this.loadViews(dataset.model, dataset.get_context().eval(), [[view_id, view_type]], options).then(function (result) {
+    loadFieldView: function (modelName, context, view_id, view_type, options) {
+        return this.loadViews(modelName, context, [[view_id, view_type]], options).then(function (result) {
             return result[view_type];
         });
     },
@@ -146,11 +155,28 @@ var ServicesMixin = {
         });
         return def;
     },
-    loadFilters: function (dataset, action_id) {
+    loadFilters: function (modelName, actionId, context) {
         var def = $.Deferred();
         this.trigger_up('load_filters', {
-            dataset: dataset,
-            action_id: action_id,
+            modelName: modelName,
+            actionId: actionId,
+            context: context,
+            on_success: def.resolve.bind(def),
+        });
+        return def;
+    },
+    createFilter: function (filter) {
+        var def = $.Deferred();
+        this.trigger_up('create_filter', {
+            filter: filter,
+            on_success: def.resolve.bind(def),
+        });
+        return def;
+    },
+    deleteFilter: function (filterId) {
+        var def = $.Deferred();
+        this.trigger_up('delete_filter', {
+            filterId: filterId,
             on_success: def.resolve.bind(def),
         });
         return def;

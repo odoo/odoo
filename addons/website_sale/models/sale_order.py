@@ -17,24 +17,21 @@ class SaleOrder(models.Model):
     _inherit = "sale.order"
 
     website_order_line = fields.One2many(
-        'sale.order.line', 'order_id',
-        string='Order Lines displayed on Website', readonly=True,
+        'sale.order.line',
+        compute='_compute_website_order_line',
+        string='Order Lines displayed on Website',
         help='Order Lines to be displayed on the website. They should not be used for computation purpose.',
     )
     cart_quantity = fields.Integer(compute='_compute_cart_info', string='Cart Quantity')
     only_services = fields.Boolean(compute='_compute_cart_info', string='Only Services')
-    can_directly_mark_as_paid = fields.Boolean(compute='_compute_can_directly_mark_as_paid',
-        string="Can be directly marked as paid", store=True,
-        help="""Checked if the sales order can directly be marked as paid, i.e. if the quotation
-                is sent or confirmed and if the payment acquire is of the type transfer or manual""")
     is_abandoned_cart = fields.Boolean('Abandoned Cart', compute='_compute_abandoned_cart', search='_search_abandoned_cart')
     cart_recovery_email_sent = fields.Boolean('Cart recovery email already sent')
+    website_id = fields.Many2one('website', string='Website', readonly=True,
+                                 help='Website through which this order was placed.')
 
-    @api.depends('state', 'transaction_ids')
-    def _compute_can_directly_mark_as_paid(self):
-        for order in self:
-            transaction = order.get_portal_last_transaction()
-            order.can_directly_mark_as_paid = order.state in ['sent', 'sale'] and transaction and transaction.acquirer_id.provider in ['transfer', 'manual']
+    @api.one
+    def _compute_website_order_line(self):
+        self.website_order_line = self.order_line
 
     @api.multi
     @api.depends('website_order_line.product_uom_qty', 'website_order_line.product_id')
@@ -44,22 +41,22 @@ class SaleOrder(models.Model):
             order.only_services = all(l.product_id.type in ('service', 'digital') for l in order.website_order_line)
 
     @api.multi
-    @api.depends('team_id.team_type', 'date_order', 'order_line', 'state', 'partner_id')
+    @api.depends('website_id', 'date_order', 'order_line', 'state', 'partner_id')
     def _compute_abandoned_cart(self):
-        abandoned_delay = float(self.env['ir.config_parameter'].sudo().get_param('website_sale.cart_abandoned_delay', '1.0'))
-        abandoned_datetime = fields.Datetime.to_string(datetime.utcnow() - relativedelta(hours=abandoned_delay))
+        abandoned_delay = self.website_id and self.website_id.cart_abandoned_delay or 1.0
+        abandoned_datetime = datetime.utcnow() - relativedelta(hours=abandoned_delay)
         for order in self:
-            domain = order.date_order <= abandoned_datetime and order.team_id.team_type == 'website' and order.state == 'draft' and order.partner_id.id != self.env.ref('base.public_partner').id and order.order_line
+            domain = order.date_order and order.date_order <= abandoned_datetime and order.state == 'draft' and order.partner_id.id != self.env.ref('base.public_partner').id and order.order_line
             order.is_abandoned_cart = bool(domain)
 
     def _search_abandoned_cart(self, operator, value):
-        abandoned_delay = float(self.env['ir.config_parameter'].sudo().get_param('website_sale.cart_abandoned_delay', '1.0'))
+        abandoned_delay = self.website_id and self.website_id.cart_abandoned_delay or 1.0
         abandoned_datetime = fields.Datetime.to_string(datetime.utcnow() - relativedelta(hours=abandoned_delay))
         abandoned_domain = expression.normalize_domain([
             ('date_order', '<=', abandoned_datetime),
-            ('team_id.team_type', '=', 'website'),
+            ('website_id', '!=', False),
             ('state', '=', 'draft'),
-            ('partner_id.id', '!=', self.env.ref('base.public_partner').id),
+            ('partner_id', '!=', self.env.ref('base.public_partner').id),
             ('order_line', '!=', False)
         ])
         # is_abandoned domain possibilities
@@ -73,13 +70,30 @@ class SaleOrder(models.Model):
         product = self.env['product.product'].browse(product_id)
 
         # split lines with the same product if it has untracked attributes
-        if product and product.mapped('attribute_line_ids').filtered(lambda r: not r.attribute_id.create_variant) and not line_id:
+        if product and product.mapped('attribute_line_ids').filtered(lambda r: not r.attribute_id.create_variant == 'always') and not line_id:
             return self.env['sale.order.line']
 
         domain = [('order_id', '=', self.id), ('product_id', '=', product_id)]
         if line_id:
             domain += [('id', '=', line_id)]
-        return self.env['sale.order.line'].sudo().search(domain)
+        else:
+            domain += [('product_custom_attribute_value_ids', '=', False)]
+
+        lines = self.env['sale.order.line'].sudo().search(domain)
+
+        if line_id:
+            return lines
+        linked_line_id = kwargs.get('linked_line_id', False)
+        optional_product_ids = set(kwargs.get('optional_product_ids', []))
+
+        lines = lines.filtered(lambda line: line.linked_line_id.id == linked_line_id)
+        if optional_product_ids:
+            # only match the lines with the same chosen optional products on the existing lines
+            lines = lines.filtered(lambda line: optional_product_ids == set(line.mapped('option_line_ids.product_id.id')))
+        else:
+            lines = lines.filtered(lambda line: not line.option_line_ids)
+
+        return lines
 
     @api.multi
     def _website_product_id_change(self, order_id, product_id, qty=0):
@@ -108,10 +122,7 @@ class SaleOrder(models.Model):
         }
 
     @api.multi
-    def _get_line_description(self, order_id, product_id, attributes=None):
-        if not attributes:
-            attributes = {}
-
+    def _get_line_description(self, order_id, product_id, no_variant_attribute_values=None, custom_values=None):
         order = self.sudo().browse(order_id)
         product_context = dict(self.env.context)
         product_context.setdefault('lang', order.partner_id.lang)
@@ -119,23 +130,20 @@ class SaleOrder(models.Model):
 
         name = product.display_name
 
-        # add untracked attributes in the name
-        untracked_attributes = []
-        for k, v in attributes.items():
-            # attribute should be like 'attribute-48-1' where 48 is the product_id, 1 is the attribute_id and v is the attribute value
-            attribute_value = self.env['product.attribute.value'].sudo().browse(int(v))
-            if attribute_value and not attribute_value.attribute_id.create_variant:
-                untracked_attributes.append(attribute_value.name)
-        if untracked_attributes:
-            name += '\n%s' % (', '.join(untracked_attributes))
-
         if product.description_sale:
             name += '\n%s' % (product.description_sale)
+
+        if no_variant_attribute_values:
+            name += ''.join(['\n%s: %s' % (attribute_value['attribute_name'], attribute_value['attribute_value_name'])
+                for attribute_value in no_variant_attribute_values])
+
+        if custom_values:
+            name += ''.join(['\n%s: %s' % (custom_value['attribute_value_name'], custom_value['custom_value']) for custom_value in custom_values])
 
         return name
 
     @api.multi
-    def _cart_update(self, product_id=None, line_id=None, add_qty=0, set_qty=0, attributes=None, **kwargs):
+    def _cart_update(self, product_id=None, line_id=None, add_qty=0, set_qty=0, **kwargs):
         """ Add or set product quantity, add_qty can be negative """
         self.ensure_one()
         SaleOrderLineSudo = self.env['sale.order.line'].sudo()
@@ -162,7 +170,21 @@ class SaleOrder(models.Model):
         # Create line if no line with product_id can be located
         if not order_line:
             values = self._website_product_id_change(self.id, product_id, qty=1)
-            values['name'] = self._get_line_description(self.id, product_id, attributes=attributes)
+
+            custom_values = kwargs.get('product_custom_attribute_values')
+            if custom_values:
+                values['product_custom_attribute_value_ids'] = [(0, 0, {
+                    'attribute_value_id': custom_value['attribute_value_id'],
+                    'custom_value': custom_value['custom_value']
+                }) for custom_value in custom_values]
+
+            no_variant_attribute_values = kwargs.get('no_variant_attribute_values')
+            if no_variant_attribute_values:
+                values['product_no_variant_attribute_value_ids'] = [
+                    (6, 0, [int(attribute['value']) for attribute in no_variant_attribute_values])
+                ]
+
+            values['name'] = self._get_line_description(self.id, product_id, no_variant_attribute_values=no_variant_attribute_values, custom_values=custom_values)
             order_line = SaleOrderLineSudo.create(values)
 
             try:
@@ -205,13 +227,34 @@ class SaleOrder(models.Model):
 
             order_line.write(values)
 
-        return {'line_id': order_line.id, 'quantity': quantity}
+        # link a product to the sales order
+        if kwargs.get('linked_line_id'):
+            linked_line = SaleOrderLineSudo.browse(kwargs['linked_line_id'])
+            order_line.write({
+                'linked_line_id': linked_line.id,
+                'name': order_line.name + "\n" + _("Option for:") + ' ' + linked_line.product_id.display_name,
+            })
+            linked_line.write({"name": linked_line.name + "\n" + _("Option:") + ' ' + order_line.product_id.display_name})
+
+        option_lines = self.order_line.filtered(lambda l: l.linked_line_id.id == order_line.id)
+        for option_line_id in option_lines:
+            self._cart_update(option_line_id.product_id.id, option_line_id.id, add_qty, set_qty, **kwargs)
+
+        return {'line_id': order_line.id, 'quantity': quantity, 'option_ids': list(set(option_lines.ids))}
 
     def _cart_accessories(self):
         """ Suggest accessories based on 'Accessory Products' of products in cart """
         for order in self:
             accessory_products = order.website_order_line.mapped('product_id.accessory_product_ids').filtered(lambda product: product.website_published)
-            accessory_products -= order.website_order_line.mapped('product_id')
+            products = order.website_order_line.mapped('product_id')
+            accessory_products -= products
+
+            for product in products:
+                for product_template in accessory_products.mapped('product_tmpl_id'):
+                    template_accessory_products = accessory_products.filtered(lambda accessory_product: accessory_product.product_tmpl_id == product_template)
+                    # remove from the accessories the ones that are not available for the selected product
+                    accessory_products -= template_accessory_products - product_template.get_filtered_variants(product)
+
             return random.sample(accessory_products, len(accessory_products))
 
     @api.multi
@@ -220,7 +263,7 @@ class SaleOrder(models.Model):
         try:
             default_template = self.env.ref('website_sale.mail_template_sale_cart_recovery', raise_if_not_found=False)
             default_template_id = default_template.id if default_template else False
-            template_id = int(self.env['ir.config_parameter'].sudo().get_param('website_sale.cart_recovery_mail_template_id', default_template_id))
+            template_id = self.website_id and self.website_id.cart_recovery_mail_template_id.id or default_template_id
         except:
             template_id = False
         return {
@@ -231,7 +274,7 @@ class SaleOrder(models.Model):
             'view_id': composer_form_view_id,
             'target': 'new',
             'context': {
-                'default_composition_mode': 'mass_mail' if len(self) > 1 else 'comment',
+                'default_composition_mode': 'mass_mail',
                 'default_res_id': self.ids[0],
                 'default_model': 'sale.order',
                 'default_use_template': bool(template_id),
@@ -241,18 +284,23 @@ class SaleOrder(models.Model):
             },
         }
 
-    def action_mark_as_paid(self):
-        """ Mark directly a sales order as paid if:
-                - State: Quotation Sent, or sales order
-                - Provider: wire transfer or manual config
-            The transaction is marked as done
-            The invoice may be generated and marked as paid if configured in the website settings
-            """
-        self.ensure_one()
-        if self.can_directly_mark_as_paid:
-            self.action_confirm()
-            if self.env['ir.config_parameter'].sudo().get_param('website_sale.automatic_invoice', default=False):
-                self.payment_tx_id._generate_and_pay_invoice()
-            self.payment_tx_id.state = 'done'
-        else:
-            raise ValidationError(_("The quote should be sent and the payment acquirer type should be manual or wire transfer"))
+
+class SaleOrderLine(models.Model):
+    _inherit = "sale.order.line"
+
+    name_short = fields.Char(compute="_compute_name_short")
+
+    linked_line_id = fields.Many2one('sale.order.line', string='Linked Order Line', domain="[('order_id', '!=', order_id)]", ondelete='cascade')
+    option_line_ids = fields.One2many('sale.order.line', 'linked_line_id', string='Options Linked')
+
+    @api.multi
+    @api.depends('product_id.display_name')
+    def _compute_name_short(self):
+        """ Compute a short name for this sale order line, to be used on the website where we don't have much space.
+            To keep it short, instead of using the first line of the description, we take the product name without the internal reference.
+        """
+        for record in self:
+            record.name_short = record.product_id.with_context(display_default_code=False).display_name
+
+    def get_description_following_lines(self):
+        return self.name.splitlines()[1:]

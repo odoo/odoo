@@ -12,7 +12,7 @@ class ProductTemplate(models.Model):
         ('ordered_timesheet', 'Ordered quantities'),
         ('delivered_timesheet', 'Timesheets on tasks'),
         ('delivered_manual', 'Milestones (manually set quantities on order)')
-    ], string="Invoice based on", compute='_compute_service_policy', inverse='_inverse_service_policy')
+    ], string="Service Invoicing Policy", compute='_compute_service_policy', inverse='_inverse_service_policy')
     service_type = fields.Selection(selection_add=[
         ('timesheet', 'Timesheets on project (one fare per SO/Project)'),
     ])
@@ -24,11 +24,20 @@ class ProductTemplate(models.Model):
     ], string="Service Tracking", default="no",
        help="On Sales order confirmation, this product can generate a project and/or task. From those, you can track the service you are selling.")
     project_id = fields.Many2one(
-        'project.project', 'Project', company_dependent=True, domain=[('sale_line_id', '=', False)],
+        'project.project', 'Project', company_dependent=True, domain=[('billable_type', '=', 'no')],
         help='Select a non billable project on which tasks can be created. This setting must be set for each company.')
     project_template_id = fields.Many2one(
-        'project.project', 'Project Template', company_dependent=True, domain=[('sale_line_id', '=', False)], copy=True,
+        'project.project', 'Project Template', company_dependent=True, domain=[('billable_type', '=', 'no')], copy=True,
         help='Select a non billable project to be the skeleton of the new created project when selling the current product. Its stages and tasks will be duplicated.')
+
+    @api.multi
+    def _compute_visible_expense_policy(self):
+        super(ProductTemplate, self)._compute_visible_expense_policy()
+
+        visibility = self.user_has_groups('project.group_project_user')
+        for product_template in self:
+            if not product_template.visible_expense_policy:
+                product_template.visible_expense_policy = visibility
 
     @api.depends('invoice_policy', 'service_type')
     def _compute_service_policy(self):
@@ -83,3 +92,19 @@ class ProductTemplate(models.Model):
         if self.type == 'service':
             self.invoice_policy = 'order'
             self.service_type = 'timesheet'
+        elif self.type == 'consu' and self.service_policy == 'ordered_timesheet':
+            self.invoice_policy = 'order'
+
+
+class ProductProduct(models.Model):
+    _inherit = 'product.product'
+
+    @api.onchange('service_tracking')
+    def _onchange_service_tracking(self):
+        if self.service_tracking == 'no':
+            self.project_id = False
+            self.project_template_id = False
+        elif self.service_tracking == 'task_global_project':
+            self.project_template_id = False
+        elif self.service_tracking in ['task_new_project', 'project_only']:
+            self.project_id = False

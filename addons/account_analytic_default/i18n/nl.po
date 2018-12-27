@@ -3,18 +3,15 @@
 # * account_analytic_default
 # 
 # Translators:
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
-# Martin Trigaux, 2016
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
-# Cas Vissers <casvissers@brahoo.nl>, 2017
-# Eric Geens <ericgeens@yahoo.com>, 2018
+# Martin Trigaux, 2018
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
-"Last-Translator: Eric Geens <ericgeens@yahoo.com>, 2018\n"
+"POT-Creation-Date: 2018-09-18 09:49+0000\n"
+"PO-Revision-Date: 2018-09-18 09:49+0000\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2018\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,22 +20,22 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: account_analytic_default
-#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_kanban
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_kanban
 msgid "<i class=\"fa fa-calendar\"/> From"
 msgstr "<i class=\"fa fa-calendar\"/> Van"
 
 #. module: account_analytic_default
-#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_kanban
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_kanban
 msgid "<strong>Customer</strong>"
 msgstr "<strong>Klant</strong>"
 
 #. module: account_analytic_default
-#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_kanban
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_kanban
 msgid "<strong>Product</strong>"
 msgstr "<strong>Product</strong>"
 
 #. module: account_analytic_default
-#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "Accounts"
 msgstr "Kostenplaatsen"
 
@@ -49,20 +46,22 @@ msgid ""
 "An analytic default requires at least an analytic account or an analytic "
 "tag."
 msgstr ""
+"Een kostenplaats standaardwaarde vereist ten minste een kostenplaats of een "
+"kostenplaats label."
 
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__analytic_id
-#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "Analytic Account"
 msgstr "Kostenplaats"
 
 #. module: account_analytic_default
 #: model:ir.actions.act_window,name:account_analytic_default.action_analytic_default_list
 #: model:ir.ui.menu,name:account_analytic_default.menu_analytic_default_list
-#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form
-#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_tree
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_tree
 msgid "Analytic Defaults"
-msgstr "Kostenplaatsen standaarden"
+msgstr "Standaard kostenplaatsen"
 
 #. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_account_analytic_default
@@ -71,7 +70,6 @@ msgstr "Kostenverdeling"
 
 #. module: account_analytic_default
 #: model:ir.actions.act_window,name:account_analytic_default.action_product_default_list
-#: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_partner
 #: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_user
 msgid "Analytic Rules"
 msgstr "Kostenplaatsregels"
@@ -79,16 +77,16 @@ msgstr "Kostenplaatsregels"
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__analytic_tag_ids
 msgid "Analytic Tags"
-msgstr "Labels kostenplaats"
+msgstr "Kostenplaatslabels"
 
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__company_id
-#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "Company"
 msgstr "Bedijf"
 
 #. module: account_analytic_default
-#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form
 msgid "Conditions"
 msgstr "Voorwaarden"
 
@@ -103,9 +101,9 @@ msgid "Created on"
 msgstr "Aangemaakt op"
 
 #. module: account_analytic_default
-#: model:ir.ui.view,arch_db:account_analytic_default.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.res_config_settings_view_form
 msgid "Default Analytic Values"
-msgstr "Standaard analytische waardes"
+msgstr "Standaard kostenplaats waardes"
 
 #. module: account_analytic_default
 #: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default__date_stop
@@ -134,7 +132,7 @@ msgid ""
 msgstr "Bepaalt de volgorde bij het weergeven van de kostenverdeling"
 
 #. module: account_analytic_default
-#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "Group By"
 msgstr "Groepeer op"
 
@@ -165,13 +163,13 @@ msgstr "Laatst bijgewerkt op"
 
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__partner_id
-#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "Partner"
 msgstr "Relatie"
 
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__product_id
-#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "Product"
 msgstr "Product"
 
@@ -233,11 +231,11 @@ msgstr "Startdatum"
 
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default__user_id
-#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "User"
 msgstr "Gebruiker"
 
 #. module: account_analytic_default
-#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_kanban
+#: model_terms:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_kanban
 msgid "to"
-msgstr "tot"
+msgstr "t/m"

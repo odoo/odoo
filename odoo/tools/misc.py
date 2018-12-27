@@ -281,7 +281,7 @@ def flatten(list):
     """
     r = []
     for e in list:
-        if isinstance(e, (bytes, pycompat.text_type)) or not isinstance(e, collections.Iterable):
+        if isinstance(e, (bytes, str)) or not isinstance(e, collections.Iterable):
             r.append(e)
         else:
             r.extend(flatten(e))
@@ -304,7 +304,7 @@ def reverse_enumerate(l):
       File "<stdin>", line 1, in <module>
     StopIteration
     """
-    return pycompat.izip(range(len(l)-1, -1, -1), reversed(l))
+    return zip(range(len(l)-1, -1, -1), reversed(l))
 
 def partition(pred, elems):
     """ Return a pair equivalent to:
@@ -468,7 +468,7 @@ def human_size(sz):
     if not sz:
         return False
     units = ('bytes', 'Kb', 'Mb', 'Gb')
-    if isinstance(sz,pycompat.string_types):
+    if isinstance(sz, str):
         sz=len(sz)
     s, i = float(sz), 0
     while s >= 1024 and i < len(units)-1:
@@ -814,7 +814,7 @@ class mute_logger(object):
 
     def __enter__(self):
         for logger in self.loggers:
-            assert isinstance(logger, pycompat.string_types),\
+            assert isinstance(logger, str),\
                 "A logger name must be a string, got %s" % type(logger)
             logging.getLogger(logger).addFilter(self)
 
@@ -960,6 +960,10 @@ def freehash(arg):
         else:
             return id(arg)
 
+def clean_context(context):
+    """ This function take a dictionary and remove each entry with its key starting with 'default_' """
+    return {k: v for k, v in context.items() if not k.startswith('default_')}
+
 class frozendict(dict):
     """ An implementation of an immutable dictionary. """
     def __delitem__(self, key):
@@ -998,7 +1002,6 @@ class Collector(Mapping):
         return len(self._map)
 
 
-@pycompat.implements_to_string
 class StackMap(MutableMapping):
     """ A stack of mappings behaving as a single mapping, and used to implement
         nested scopes. The lookups search the stack from top to bottom, and
@@ -1144,14 +1147,11 @@ def formatLang(env, value, digits=None, grouping=True, monetary=False, dp=False,
                 if not digits and digits is not 0:
                     digits = DEFAULT_DIGITS
 
-    if isinstance(value, pycompat.string_types) and not value:
+    if isinstance(value, str) and not value:
         return ''
 
     lang = env.context.get('lang') or env.user.company_id.partner_id.lang or 'en_US'
-    lang_objs = env['res.lang'].search([('code', '=', lang)])
-    if not lang_objs:
-        lang_objs = env['res.lang'].search([], limit=1)
-    lang_obj = lang_objs[0]
+    lang_obj = env['res.lang']._lang_get(lang)
 
     res = lang_obj.format('%.' + str(digits) + 'f', value, grouping=grouping, monetary=monetary)
 
@@ -1177,7 +1177,7 @@ def format_date(env, value, lang_code=False, date_format=False):
     '''
     if not value:
         return ''
-    if isinstance(value, pycompat.string_types):
+    if isinstance(value, str):
         if len(value) < DATE_LENGTH:
             return ''
         if len(value) > DATE_LENGTH:
@@ -1197,7 +1197,7 @@ def format_date(env, value, lang_code=False, date_format=False):
 def _consteq(str1, str2):
     """ Constant-time string comparison. Suitable to compare bytestrings of fixed,
         known length only, because length difference is optimized. """
-    return len(str1) == len(str2) and sum(ord(x)^ord(y) for x, y in pycompat.izip(str1, str2)) == 0
+    return len(str1) == len(str2) and sum(ord(x)^ord(y) for x, y in zip(str1, str2)) == 0
 
 consteq = getattr(passlib.utils, 'consteq', _consteq)
 
@@ -1221,3 +1221,23 @@ pickle.load = _pickle_load
 pickle.loads = lambda text, encoding='ASCII': _pickle_load(io.BytesIO(text), encoding=encoding)
 pickle.dump = pickle_.dump
 pickle.dumps = pickle_.dumps
+
+def wrap_module(module, attr_list):
+    """Helper for wrapping a package/module to expose selected attributes
+
+       :param Module module: the actual package/module to wrap, as returned by ``import <module>``
+       :param iterable attr_list: a global list of attributes to expose, usually the top-level
+            attributes and their own main attributes. No support for hiding attributes in case
+            of name collision at different levels.
+    """
+    attr_list = set(attr_list)
+    class WrappedModule(object):
+        def __getattr__(self, attrib):
+            if attrib in attr_list:
+                target = getattr(module, attrib)
+                if isinstance(target, types.ModuleType):
+                    return wrap_module(target, attr_list)
+                return target
+            raise AttributeError(attrib)
+    # module and attr_list are in the closure
+    return WrappedModule()

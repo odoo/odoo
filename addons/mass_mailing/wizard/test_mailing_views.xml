@@ -7,14 +7,14 @@
             <field name="arch" type="xml">
                 <form string="Send a Sample Mail">
                     <p class="text-muted">
-                        Send a sample of this mailing to the above of email addresses for test purpose.
+                        Send a sample email for testing purpose to the address below.
                     </p>
                     <group>
                         <field name="email_to"/>
                     </group>
                     <footer>
                         <button string="Send Sample Mail" name="send_mail_test" type="object" class="btn-primary"/>
-                        <button string="Cancel" class="btn-default" special="cancel" />
+                        <button string="Cancel" class="btn-secondary" special="cancel" />
                     </footer>
                 </form>
             </field>

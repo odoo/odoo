@@ -24,12 +24,13 @@ class TestWorkOrderProcess(common.TransactionCase):
         self.env['stock.move'].search([('product_id', 'in', [product_bolt.id, product_screw.id])])._do_unreserve()
         (product_bolt + product_screw).write({'type': 'product'})
 
-        production_table = self.env['mrp.production'].create({
-            'product_id': dining_table.id,
-            'product_qty': 1.0,
-            'product_uom_id': dining_table.uom_id.id,
-            'bom_id': self.ref("mrp.mrp_bom_desk")
-        })
+        production_table_form = Form(self.env['mrp.production'])
+        production_table_form.product_id = dining_table
+        production_table_form.bom_id = self.env.ref("mrp.mrp_bom_desk")
+        production_table_form.product_qty = 1.0
+        production_table_form.product_uom_id = dining_table.uom_id
+        production_table = production_table_form.save()
+        production_table.action_confirm()
 
         # Set tracking lot on finish and consume products.
         dining_table.tracking = 'lot'
@@ -131,19 +132,18 @@ class TestWorkOrderProcess(common.TransactionCase):
         bom.bom_line_ids.filtered(lambda p: p.product_id == product_table_leg).operation_id = bom.routing_id.operation_ids[1]
         bom.bom_line_ids.filtered(lambda p: p.product_id == product_bolt).operation_id = bom.routing_id.operation_ids[2]
 
-        production_table = self.env['mrp.production'].create({
-            'product_id': dining_table.id,
-            'product_qty': 2.0,
-            'product_uom_id': dining_table.uom_id.id,
-            'bom_id': bom.id,
-        })
-
+        production_table_form = Form(self.env['mrp.production'])
+        production_table_form.product_id = dining_table
+        production_table_form.bom_id = bom
+        production_table_form.product_qty = 2.0
+        production_table_form.product_uom_id = dining_table.uom_id
+        production_table = production_table_form.save()
         # Set tracking lot on finish and consume products.
         dining_table.tracking = 'lot'
         product_table_sheet.tracking = 'lot'
         product_table_leg.tracking = 'lot'
         product_bolt.tracking = "lot"
-
+        production_table.action_confirm()
         # Initial inventory of product sheet, lags and bolt
         lot_sheet = self.env['stock.production.lot'].create({'product_id': product_table_sheet.id})
         lot_leg = self.env['stock.production.lot'].create({'product_id': product_table_leg.id})
@@ -277,18 +277,20 @@ class TestWorkOrderProcess(common.TransactionCase):
 
         # Create production order for customize laptop.
 
-        mo_custom_laptop = self.env['mrp.production'].create({
-            'product_id': custom_laptop.id,
-            'product_qty': 10,
-            'product_uom_id': unit,
-            'bom_id': bom_custom_laptop.id})
+        mo_custom_laptop_form = Form(self.env['mrp.production'])
+        mo_custom_laptop_form.product_id = custom_laptop
+        mo_custom_laptop_form.bom_id = bom_custom_laptop
+        mo_custom_laptop_form.product_qty = 10.0
+        mo_custom_laptop_form.product_uom_id = self.env.ref("uom.product_uom_unit")
+        mo_custom_laptop = mo_custom_laptop_form.save()
 
+        mo_custom_laptop.action_confirm()
         # Assign component to production order.
         mo_custom_laptop.action_assign()
 
         # Check production order status of availablity
 
-        self.assertEqual(mo_custom_laptop.availability, 'waiting')
+        self.assertEqual(mo_custom_laptop.reservation_state, 'confirmed')
 
         # --------------------------------------------------
         # Set inventory for rawmaterial charger and keybord
@@ -321,7 +323,7 @@ class TestWorkOrderProcess(common.TransactionCase):
 
         # Check consumed move status
         mo_custom_laptop.action_assign()
-        self.assertEqual( mo_custom_laptop.availability, 'assigned')
+        self.assertEqual(mo_custom_laptop.reservation_state, 'assigned')
 
         # Check current status of raw materials.
         for move in mo_custom_laptop.move_raw_ids:
@@ -450,11 +452,12 @@ class TestWorkOrderProcess(common.TransactionCase):
         # Create production order with product A 10 Unit.
         # -----------------------------------------------
 
-        mo_custom_product = self.env['mrp.production'].create({
-            'product_id': product_A.id,
-            'product_qty': 10,
-            'product_uom_id': unit,
-            'bom_id': bom_a.id})
+        mo_custom_product_form = Form(self.env['mrp.production'])
+        mo_custom_product_form.product_id = product_A
+        mo_custom_product_form.bom_id = bom_a
+        mo_custom_product_form.product_qty = 10.0
+        mo_custom_product_form.product_uom_id = self.env.ref("uom.product_uom_unit")
+        mo_custom_product = mo_custom_product_form.save()
 
         move_product_b = mo_custom_product.move_raw_ids.filtered(lambda x: x.product_id == product_B)
         move_product_c = mo_custom_product.move_raw_ids.filtered(lambda x: x.product_id == product_C)
@@ -496,6 +499,7 @@ class TestWorkOrderProcess(common.TransactionCase):
         # Start Production ...
         # --------------------
 
+        mo_custom_product.action_confirm()
         mo_custom_product.action_assign()
         context = {"active_ids": [mo_custom_product.id], "active_id": mo_custom_product.id}
         produce_form = Form(self.env['mrp.product.produce'].with_context(context))
@@ -539,13 +543,13 @@ class TestWorkOrderProcess(common.TransactionCase):
             'routing_id': three_step_routing.id
         })
 
-        mo_laptop = self.env['mrp.production'].create({
-            'product_id': laptop.id,
-            'product_qty': 3,
-            'product_uom_id': unit.id,
-            'bom_id': bom_laptop.id
-        })
+        mo_laptop_form = Form(self.env['mrp.production'])
+        mo_laptop_form.product_id = laptop
+        mo_laptop_form.bom_id = bom_laptop
+        mo_laptop_form.product_qty = 3
+        mo_laptop = mo_laptop_form.save()
 
+        mo_laptop.action_confirm()
         mo_laptop.button_plan()
         workorders = mo_laptop.workorder_ids
         self.assertEqual(len(workorders), 3)

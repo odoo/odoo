@@ -2,6 +2,7 @@ odoo.define('mail.Chatter', function (require) {
 "use strict";
 
 var Activity = require('mail.Activity');
+var AttachmentBox = require('mail.AttachmentBox');
 var ChatterComposer = require('mail.composer.Chatter');
 var Followers = require('mail.Followers');
 var ThreadField = require('mail.ThreadField');
@@ -30,6 +31,7 @@ var Chatter = Widget.extend({
     events: {
         'click .o_chatter_button_new_message': '_onOpenComposerMessage',
         'click .o_chatter_button_log_note': '_onOpenComposerNote',
+        'click .o_chatter_button_attachment': '_onOpenAttachments',
         'click .o_chatter_button_schedule_activity': '_onScheduleActivity',
     },
     supportedFieldTypes: ['one2many'],
@@ -39,9 +41,12 @@ var Chatter = Widget.extend({
      * @param {widget} parent
      * @param {Object} record
      * @param {Object} mailFields
-     * @param {boolean} [mailFields.mail_activity]
-     * @param {boolean} [mailFields.mail_followers]
-     * @param {boolean} [mailFields.mail_thread]
+     * @param {string} [mailFields.mail_activity]
+     * @param {string} [mailFields.mail_followers]
+     * @param {string} [mailFields.mail_thread]
+     * @param {Object} options
+     * @param {string} [options.viewType=record.viewType] current viewType in
+     *   which the chatter is instantiated
      */
     init: function (parent, record, mailFields, options) {
         this._super.apply(this, arguments);
@@ -64,25 +69,28 @@ var Chatter = Widget.extend({
         }
         if (mailFields.mail_thread) {
             this.fields.thread = new ThreadField(this, mailFields.mail_thread, record, options);
-            var nodeOptions = this.record.fieldsInfo.form[mailFields.mail_thread].options;
-            this.hasLogButton = nodeOptions.display_log_button;
+            var fieldsInfo = record.fieldsInfo[options.viewType || record.viewType];
+            var nodeOptions = fieldsInfo[mailFields.mail_thread].options || {};
+            this.hasLogButton = options.display_log_button || nodeOptions.display_log_button;
             this.postRefresh = nodeOptions.post_refresh || 'never';
         }
+        this.attachmentBoxOpened = false;
     },
     /**
      * @override
      */
     start: function () {
         this._$topbar = this.$('.o_chatter_topbar');
-
+        this.$('.o_topbar_right_area').append(QWeb.render('mail.chatter.Attachment.Button', {
+            count: this.record.data.message_attachment_count || 0,
+        }));
         // render and append the buttons
-        this._$topbar.append(QWeb.render('mail.chatter.Buttons', {
+        this._$topbar.prepend(QWeb.render('mail.chatter.Buttons', {
             newMessageButton: !!this.fields.thread,
             logNoteButton: this.hasLogButton,
             scheduleActivityButton: !!this.fields.activity,
             isMobile: config.device.isMobile,
         }));
-
         // start and append the widgets
         var fieldDefs = _.invoke(this.fields, 'appendTo', $('<div>'));
         var def = this._dp.add($.when.apply($, fieldDefs));
@@ -106,6 +114,7 @@ var Chatter = Widget.extend({
         // close the composer if we switch to another record as it is record dependent
         if (this.record.res_id !== record.res_id) {
             this._closeComposer(true);
+            this._closeAttachments();
         }
 
         // update the state
@@ -137,12 +146,24 @@ var Chatter = Widget.extend({
             self.$el.height('auto');
             self._updateMentionSuggestions();
         });
+        this._updateAttachmentCounter();
     },
 
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * @private
+     * @param {boolean} force
+     */
+    _closeAttachments: function () {
+        if (this.fields.attachments) {
+            this.$('.o_chatter_button_attachment').removeClass('o_active_attach');
+            this.fields.attachments.destroy();
+            this.attachmentBoxOpened = false;
+        }
+    },
     /**
      * @private
      * @param {boolean} force
@@ -160,6 +181,12 @@ var Chatter = Widget.extend({
      */
     _disableChatter: function () {
         this.$('.btn').prop('disabled', true); // disable buttons
+    },
+    /**
+     * @private
+     */
+    _disableComposer: function () {
+        this.$(".o_composer_button_send").prop('disabled', true);
     },
     /**
      * Discard changes on the record.
@@ -200,6 +227,29 @@ var Chatter = Widget.extend({
     },
     /**
      * @private
+     */
+    _enableComposer: function () {
+        this.$(".o_composer_button_send").prop('disabled', false);
+    },
+    /**
+     * @private
+     */
+    _openAttachments: function () {
+        var self = this;
+        this.fields.attachments = new AttachmentBox(this, this.record);
+
+        var $anchor = this.$('.o_chatter_topbar');
+        if (this._composer) {
+            $anchor = this.$('.o_thread_composer');
+        }
+        this.fields.attachments.insertAfter($anchor).then(function () {
+            self.$el.addClass('o_chatter_composer_active');
+            self.$('.o_chatter_button_attachment').addClass('o_active_attach');
+        });
+        this.attachmentBoxOpened = true;
+    },
+    /**
+     * @private
      * @param {Object} options
      * @param {Object[]} [options.suggested_partners=[]]
      * @param {boolean} [options.isLog]
@@ -225,16 +275,21 @@ var Chatter = Widget.extend({
             if (oldComposer) {
                 oldComposer.destroy();
             }
-            if (!config.device.touch) {
+            if (!config.device.isMobile) {
                 self._composer.focus();
             }
             self._composer.on('post_message', self, function (messageData) {
                 self._discardOnReload(messageData).then(function () {
+                    self._disableComposer();
                     self.fields.thread.postMessage(messageData).then(function () {
                         self._closeComposer(true);
                         if (self._reloadAfterPost(messageData)) {
                             self.trigger_up('reload');
+                        } else if (messageData.attachment_ids.length) {
+                            self.trigger_up('reload', {fieldNames: ['message_attachment_count']});
                         }
+                    }).fail(function () {
+                        self._enableComposer();
                     });
                 });
             });
@@ -289,7 +344,7 @@ var Chatter = Widget.extend({
                 self.fields.activity.$el.appendTo(self.$el);
             }
             if (self.fields.followers) {
-                self.fields.followers.$el.appendTo(self._$topbar);
+                self.fields.followers.$el.insertBefore(self.$('.o_chatter_button_attachment'));
             }
             if (self.fields.thread) {
                 self.fields.thread.$el.appendTo(self.$el);
@@ -323,6 +378,14 @@ var Chatter = Widget.extend({
         this.record = record;
         this.recordName = record.data.display_name;
     },
+    /**
+     * @private
+     */
+     _updateAttachmentCounter: function () {
+        var count = this.record.data.message_attachment_count || 0;
+        this.$('.o_chatter_attachment_button_count').html(' ('+ count +')');
+        this.$('.o_chatter_button_attachment').toggleClass('o_hidden', !count);
+     },
     /**
      * @private
      */
@@ -362,6 +425,16 @@ var Chatter = Widget.extend({
     // Handlers
     //--------------------------------------------------------------------------
 
+    /**
+     * @private
+     */
+    _onOpenAttachments: function () {
+        if (this.attachmentBoxOpened) {
+            this._closeAttachments();
+        } else {
+            this._openAttachments();
+        }
+    },
     /**
      * Discard changes on the record.
      * This is notified by the composer, when opening the full-composer.
@@ -439,7 +512,7 @@ var Chatter = Widget.extend({
      * @private
      */
     _onScheduleActivity: function () {
-        this.fields.activity.scheduleActivity(false);
+        this.fields.activity.scheduleActivity();
     },
 });
 

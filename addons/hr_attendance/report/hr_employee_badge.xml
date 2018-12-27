@@ -14,18 +14,18 @@
         <t t-call="web.basic_layout">
             <div class="page">
                 <t t-foreach="docs" t-as="employee">
-                    <div class="col-sm-6">
+                    <div class="col-md-6">
                         <table style="width:243pt; height:153pt; border: 1pt solid black; border-collapse:separate; border-radius:8pt; margin:5pt">
                             <td style="width:33%;" valign="center">
                                 <table style="width:77pt; height:150pt">
                                     <tr style="height:30%">
                                         <td align="center" valign="center">
-                                            <img t-if="employee.company_id and employee.company_id.logo" t-att-src="'data:image/png;base64,%s' % to_text(employee.company_id.logo)" style="max-height:45pt;max-width:90%" alt="Company Logo"/>
+                                            <img t-if="employee.company_id.logo" t-att-src="image_data_uri(employee.company_id.logo)" style="max-height:45pt;max-width:90%" alt="Company Logo"/>
                                         </td>
                                     </tr>
                                     <tr style="height:70%;">
                                         <td align="center" valign="center">
-                                            <img t-if="employee.image" t-att-src="'data:image/png;base64,%s' % to_text(employee.image)" style="max-height:85pt;max-width:90%" alt="Employee Image"/>
+                                            <img t-if="employee.image" t-att-src="image_data_uri(employee.image)" style="max-height:85pt;max-width:90%" alt="Employee Image"/>
                                         </td>
                                     </tr>
                                 </table>

@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:11+0000\n"
-"PO-Revision-Date: 2018-03-22 14:11+0000\n"
+"POT-Creation-Date: 2018-09-21 13:18+0000\n"
+"PO-Revision-Date: 2018-09-21 13:18+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -26,41 +26,46 @@ msgid "Assigned to Employee"
 msgstr ""
 
 #. module: hr_maintenance
-#: model:ir.ui.view,arch_db:hr_maintenance.maintenance_request_view_form_inherit_hr
-#: model:ir.ui.view,arch_db:hr_maintenance.maintenance_request_view_search_inherit_hr
+#: model_terms:ir.ui.view,arch_db:hr_maintenance.maintenance_request_view_form_inherit_hr
+#: model_terms:ir.ui.view,arch_db:hr_maintenance.maintenance_request_view_search_inherit_hr
 msgid "Created By"
 msgstr ""
 
 #. module: hr_maintenance
+#: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_request__owner_user_id
+msgid "Created by User"
+msgstr ""
+
+#. module: hr_maintenance
 #: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_request__department_id
-#: model:ir.ui.view,arch_db:hr_maintenance.maintenance_equipment_view_form_inherit_hr
-#: model:ir.ui.view,arch_db:hr_maintenance.maintenance_equipment_view_search_inherit_hr
-#: model:ir.ui.view,arch_db:hr_maintenance.maintenance_equipment_view_tree_inherit_hr
+#: model_terms:ir.ui.view,arch_db:hr_maintenance.maintenance_equipment_view_form_inherit_hr
+#: model_terms:ir.ui.view,arch_db:hr_maintenance.maintenance_equipment_view_search_inherit_hr
+#: model_terms:ir.ui.view,arch_db:hr_maintenance.maintenance_equipment_view_tree_inherit_hr
 #: selection:maintenance.equipment,equipment_assign_to:0
 msgid "Department"
 msgstr ""
 
 #. module: hr_maintenance
 #: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_request__employee_id
-#: model:ir.ui.view,arch_db:hr_maintenance.maintenance_equipment_view_form_inherit_hr
-#: model:ir.ui.view,arch_db:hr_maintenance.maintenance_equipment_view_search_inherit_hr
-#: model:ir.ui.view,arch_db:hr_maintenance.maintenance_equipment_view_tree_inherit_hr
+#: model_terms:ir.ui.view,arch_db:hr_maintenance.maintenance_equipment_view_form_inherit_hr
+#: model_terms:ir.ui.view,arch_db:hr_maintenance.maintenance_equipment_view_search_inherit_hr
+#: model_terms:ir.ui.view,arch_db:hr_maintenance.maintenance_equipment_view_tree_inherit_hr
 #: selection:maintenance.equipment,equipment_assign_to:0
 msgid "Employee"
 msgstr ""
 
 #. module: hr_maintenance
 #: model:ir.model,name:hr_maintenance.model_maintenance_equipment
-msgid "Equipment"
+msgid "Maintenance Equipment"
 msgstr ""
 
 #. module: hr_maintenance
 #: model:ir.model,name:hr_maintenance.model_maintenance_request
-msgid "Maintenance Requests"
+msgid "Maintenance Request"
 msgstr ""
 
 #. module: hr_maintenance
-#: model:ir.ui.view,arch_db:hr_maintenance.maintenance_request_view_search_inherit_hr
+#: model_terms:ir.ui.view,arch_db:hr_maintenance.maintenance_request_view_search_inherit_hr
 msgid "My Requests"
 msgstr ""
 
@@ -70,7 +75,12 @@ msgid "Other"
 msgstr ""
 
 #. module: hr_maintenance
-#: model:ir.ui.view,arch_db:hr_maintenance.maintenance_equipment_view_kanban_inherit_hr
+#: model:ir.model.fields,field_description:hr_maintenance.field_maintenance_equipment__owner_user_id
+msgid "Owner"
+msgstr ""
+
+#. module: hr_maintenance
+#: model_terms:ir.ui.view,arch_db:hr_maintenance.maintenance_equipment_view_kanban_inherit_hr
 msgid "Unassigned"
 msgstr ""
 

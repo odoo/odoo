@@ -8,7 +8,7 @@
 
     <record model="hr.leave.type" id="holiday_status_heures_sup">
       <field name="name">Heures Supplementaires</field>
-      <field name="limit">True</field>
+      <field name="allocation_type">no</field>
       <field name="color_name">lightblue</field>
     </record>
 
@@ -70,7 +70,7 @@
         <field name="code">RETENUES</field>
         <field name="parent_id" eval="False"/>
     </record>
-    
+
     <record id="SALC" model="hr.salary.rule.category">
         <field name="name">Total Charges Salariales</field>
         <field name="code">SALC</field>
@@ -378,7 +378,7 @@
         <field name="appears_on_payslip" eval="True"/>
         <field name="register_id" ref="hr_urssaf_register"/>
     </record>
-    
+
     <record id="hr_payroll_rules_C4_employer" model="hr.salary.rule">
         <field name="category_id" ref="hr_payroll.COMP"/>
         <field name="parent_rule_id" ref="hr_payroll_rules_C4_employe"/>
@@ -773,7 +773,7 @@
     </record>
 
 
-    
+
     <record id="hr_payroll_rules_C21_employe" model="hr.salary.rule">
         <field name="category_id" ref="SALC"/>
         <field name="name">Assurance deces cadres</field>
@@ -897,7 +897,7 @@
         <field name="register_id" ref="hr_prevoyance_register"/>
     </record>
 
-    
+
     <record id="hr_payroll_rules_C40_employe" model="hr.salary.rule">
         <field name="category_id" ref="SALC"/>
         <field name="name">Taxe Prevoyance</field>
@@ -909,7 +909,7 @@
         <field name="amount_percentage_base">categories.PREV</field>
         <field name="register_id" ref="hr_prevoyance_register"/>
     </record>
-    
+
     <record id="hr_payroll_rules_C40_employer" model="hr.salary.rule">
         <field name="category_id" ref="hr_payroll.COMP"/>
         <field name="parent_rule_id" ref="hr_payroll_rules_C40_employe"/>
@@ -936,7 +936,7 @@
         <field name="amount_select">percentage</field>
         <field name="amount_percentage_base">min(categories.BRUT,SECU)</field>
         <field name="register_id" ref="hr_urssaf_register"/>
-    </record>    
+    </record>
 
     <record id="hr_payroll_rules_C7_employer" model="hr.salary.rule">
         <field name="category_id" ref="hr_payroll.COMP"/>
@@ -967,7 +967,7 @@
         <field name="amount_percentage_base">categories.BRUT</field>
         <field name="register_id" ref="hr_urssaf_register"/>
     </record>
-    
+
     <record id="hr_payroll_rules_C8_employer" model="hr.salary.rule">
         <field name="category_id" ref="hr_payroll.COMP"/>
         <field name="parent_rule_id" ref="hr_payroll_rules_C8_employe"/>
@@ -983,7 +983,7 @@
         <field name="register_id" ref="hr_urssaf_register"/>
     </record>
 
-    
+
 
     <record id="hr_payroll_rules_C9_employe" model="hr.salary.rule">
         <field name="category_id" ref="SALC"/>
@@ -996,7 +996,7 @@
         <field name="amount_select">percentage</field>
         <field name="register_id" ref="hr_urssaf_register"/>
     </record>
-    
+
 
     <record id="hr_payroll_rules_C9_employer" model="hr.salary.rule">
         <field name="category_id" ref="hr_payroll.COMP"/>
@@ -1051,7 +1051,7 @@
         <field name="amount_percentage_base">categories.BRUT</field>
         <field name="register_id" ref="hr_cci_register"/>
     </record>
-    
+
     <record id="hr_payroll_rules_C23_employer" model="hr.salary.rule">
         <field name="category_id" ref="hr_payroll.COMP"/>
         <field name="parent_rule_id" ref="hr_payroll_rules_C23_employe"/>
@@ -1076,7 +1076,7 @@
         <field name="amount_percentage_base">categories.BRUT</field>
         <field name="register_id" ref="hr_cci_register"/>
     </record>
-    
+
     <record id="hr_payroll_rules_C24_employer" model="hr.salary.rule">
         <field name="category_id" ref="hr_payroll.COMP"/>
         <field name="parent_rule_id" ref="hr_payroll_rules_C24_employe"/>
@@ -1103,7 +1103,7 @@
         <field name="amount_percentage_base">categories.BRUT</field>
         <field name="register_id" ref="hr_cci_register"/>
     </record>
-    
+
     <record id="hr_payroll_rules_C25_employer" model="hr.salary.rule">
         <field name="category_id" ref="hr_payroll.COMP"/>
         <field name="parent_rule_id" ref="hr_payroll_rules_C25_employe"/>
@@ -1240,7 +1240,7 @@
         <field name="code">Fr-NC</field>
         <field name="name">Employe non-cadre</field>
         <field eval="[(6, 0, [ref('hr_payroll_rules_C12_employe'), ref('hr_payroll_rules_C13_employe'), ref('hr_payroll_rules_C14_employe'), ref('hr_payroll_rules_C15_employe')])]" name="rule_ids"/>
-        <field name="company_id" ref="base.main_company"/>    
+        <field name="company_id" ref="base.main_company"/>
         <field name="parent_id" ref="hr_payroll_salary_structure_base"/>
     </record>
 
@@ -1249,7 +1249,7 @@
         <field name="code">Fr-C</field>
         <field name="name">Employe cadre</field>
         <field eval="[(6, 0, [ref('hr_payroll_rules_C16_employe'), ref('hr_payroll_rules_C17_employe'), ref('hr_payroll_rules_C18_employe'), ref('hr_payroll_rules_C19_employe'), ref('hr_payroll_rules_C20_employe'), ref('hr_payroll_rules_C21_employe'), ref('hr_payroll_rules_C38_employe'), ref('hr_payroll_rules_C39_employe')])]" name="rule_ids"/>
-        <field name="company_id" ref="base.main_company"/>    
+        <field name="company_id" ref="base.main_company"/>
         <field name="parent_id" ref="hr_payroll_salary_structure_base"/>
     </record>
 </odoo>

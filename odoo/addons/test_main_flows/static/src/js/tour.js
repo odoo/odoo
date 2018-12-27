@@ -9,19 +9,24 @@ var _t = core._t;
 tour.register('main_flow_tour', {
     test: true,
     url: "/web",
-}, [tour.STEPS.MENU_MORE, {
-    trigger: '.o_app[data-menu-xmlid="sale.sale_menu_root"], .oe_menu_toggler[data-menu-xmlid="sale.sale_menu_root"]',
+}, [tour.STEPS.SHOW_APPS_MENU_ITEM, {
+    trigger: '.o_app[data-menu-xmlid="sale.sale_menu_root"]',
+    content: _t('Organize your sales activities with the <b>Sales app</b>.'),
+    position: 'right',
+    edition: 'community'
+}, {
+    trigger: '.o_app[data-menu-xmlid="sale.sale_menu_root"]',
     content: _t('Organize your sales activities with the <b>Sales app</b>.'),
     position: 'bottom',
+    edition: 'enterprise'
 }, {
 // Add Stockable product
-    edition: "enterprise",
     trigger: ".o_menu_sections a:contains('Products')",
     extra_trigger: '.o_main_navbar',
     content: _t("Let\'s create products."),
     position: "bottom",
 }, {
-    trigger: ".o_menu_sections a:has(span:contains('Products')), .oe_secondary_submenu .oe_menu_text:contains('Products'):first",
+    trigger: ".o_menu_sections a:has(span:contains('Products'))",
     content: _t("Let\'s create products."),
     position: "bottom"
 }, {
@@ -45,16 +50,16 @@ tour.register('main_flow_tour', {
     content: _t('Go to inventory tab'),
     position: 'top',
 }, {
-    trigger: '.o_field_widget[name=route_ids] .o_checkbox + label:contains("Manufacture")',
+    trigger: '.o_field_widget[name=route_ids] .custom-checkbox > label:contains("Manufacture")',
     content: _t('Check Manufacture'),
     position: 'right',
 }, {
-    trigger: '.o_field_widget[name=route_ids] .o_checkbox + label:contains("Buy")',
+    trigger: '.o_field_widget[name=route_ids] .custom-checkbox > label:contains("Buy")',
     content: _t('Uncheck Buy'),
     position: 'right',
 }, {
-    trigger: '.o_field_widget[name=route_ids] .o_checkbox + label:contains("Make To Order")',
-    content: _t('Uncheck  Make To Order'),
+    trigger: '.o_field_widget[name=route_ids] .custom-checkbox > label:contains("Replenish on Order (MTO)")',
+    content: _t('Uncheck  Replenish on Order (MTO)'),
     position: 'right',
 }, {
     trigger: '.o_notebook a:contains("General Information")',
@@ -109,8 +114,8 @@ tour.register('main_flow_tour', {
     content: _t('Go to inventory tab'),
     position: 'top',
 }, {
-    trigger: '.o_field_widget[name=route_ids] .o_checkbox + label:contains("Make To Order")',
-    content: _t('Check Make To Order'),
+    trigger: '.o_field_widget[name=route_ids] .custom-checkbox > label:contains("Replenish on Order (MTO)")',
+    content: _t('Check Replenish on Order (MTO)'),
     position: 'right',
 }, {
     trigger: '.o_notebook a:contains("Purchase")',
@@ -122,7 +127,7 @@ tour.register('main_flow_tour', {
     position: 'right',
 }, {
     trigger:  ".o_field_widget[name=name] input",
-    extra_trigger: "[role=\"dialog\"]",
+    extra_trigger: ".modal-dialog",
     content: _t('Select a seller'),
     position: 'top',
     run: "text the_flow.vendor",
@@ -135,12 +140,12 @@ tour.register('main_flow_tour', {
     position: 'right',
     run: "text 1",
 }, {
-    trigger:  "footer.modal-footer .btn-primary:first",
+    trigger:  ".modal-footer .btn-primary:first",
     extra_trigger: ".o_field_widget[name=name] > .o_external_button", // Wait name_create
     content: _t('Save & Close'),
     position: 'bottom',
 }, {
-    trigger: "footer.modal-footer .btn-primary",
+    trigger: ".modal-footer .btn-primary",
     content: _t('Save'),
     position: 'bottom',
 },
@@ -176,7 +181,7 @@ tour.register('main_flow_tour', {
     position: 'right',
 }, {
     trigger:  ".o_field_widget[name=name] input",
-    extra_trigger: "[role=\"dialog\"]",
+    extra_trigger: ".modal-dialog",
     content: _t('Select a seller'),
     position: 'top',
     run: "text the_flow.vendor",
@@ -190,11 +195,11 @@ tour.register('main_flow_tour', {
     position: 'right',
     run: "text 1",
 }, {
-    trigger:  "footer.modal-footer .btn-primary:first",
+    trigger:  ".modal-footer .btn-primary:first",
     content: _t('Save & Close'),
     position: 'bottom',
 }, {
-    trigger: "footer.modal-footer .btn-primary",
+    trigger: ".modal-footer .btn-primary",
     // Wait Save & Close and check value
     extra_trigger: ".o_field_widget[name=seller_ids] .o_data_row td:nth-child(2):contains('the_flow.vendor')",
     content: _t('Save'),
@@ -205,7 +210,7 @@ tour.register('main_flow_tour', {
     content: _t('Save the bom.'),
     position: 'bottom',
 }, {
-    trigger: ".breadcrumb li:first",
+    trigger: ".breadcrumb-item:first",
     extra_trigger: ".o_form_readonly", // FIXME: this is required due to an issue in tour_manager (see [*])
     content: _t("Use the breadcrumbs to <b>go back to products</b>."),
     position: "bottom"
@@ -269,10 +274,16 @@ tour.register('main_flow_tour', {
     trigger: '.o_menu_toggle',
     content: _t('Go back to the home menu'),
     position: 'bottom',
+}, tour.STEPS.SHOW_APPS_MENU_ITEM, {
+    trigger: '.o_app[data-menu-xmlid="crm.crm_menu_root"]',
+    content: _t('Organize your sales activities with the <b>CRM app</b>.'),
+    position: 'right',
+    edition: 'community'
 }, {
-    trigger: '.o_app[data-menu-xmlid="crm.crm_menu_root"], .oe_menu_toggler[data-menu-xmlid="crm.crm_menu_root"]',
+    trigger: '.o_app[data-menu-xmlid="crm.crm_menu_root"]',
     content: _t('Organize your sales activities with the <b>CRM app</b>.'),
     position: 'bottom',
+    edition: 'enterprise'
 }, {
     trigger: ".o-kanban-button-new",
     extra_trigger: '.o_opportunity_kanban',
@@ -326,8 +337,8 @@ tour.register('main_flow_tour', {
     run: function (actions) {
         actions.auto();
         // if the one2many isn't editable, we have to close the dialog
-        if ($("footer.modal-footer .btn-primary").length) {
-            actions.auto("footer.modal-footer .btn-primary");
+        if ($(".modal-footer .btn-primary").length) {
+            actions.auto(".modal-footer .btn-primary");
         }
     },
 }, {
@@ -338,7 +349,7 @@ tour.register('main_flow_tour', {
     trigger: ".o_field_widget[name=product_id] input",
     // the one2many may be editable or not according to the modules installed, so
     // we have to handle both cases
-    extra_trigger: '.o_field_widget[name=order_line] .o_data_row:nth(1).o_selected_row, [role="dialog"]',
+    extra_trigger: '.o_field_widget[name=order_line] .o_data_row:nth(1).o_selected_row, .modal-dialog',
     content: _t("Select a product"),
     position: "right",
     run: "text the_flow.service",
@@ -349,8 +360,8 @@ tour.register('main_flow_tour', {
     run: function (actions) {
         actions.auto();
         // if the one2many isn't editable, we have to close the dialog
-        if ($("footer.modal-footer .btn-primary").length) {
-            actions.auto("footer.modal-footer .btn-primary");
+        if ($(".modal-footer .btn-primary").length) {
+            actions.auto(".modal-footer .btn-primary");
         }
     },
 }, {
@@ -368,15 +379,15 @@ tour.register('main_flow_tour', {
     position: "right",
     run: "text test@the_flow.com",
 },{
-    trigger: "footer.modal-footer .btn-primary",
+    trigger: ".modal-footer .btn-primary",
     content: _t("Save your changes"),
     position: "bottom",
 },  {
-    trigger: "footer.modal-footer .btn-primary span:contains('Send')",
+    trigger: ".modal-footer .btn-primary span:contains('Send')",
     content: _t("Try to send it to email"),
     position: "bottom",
 }, {
-    trigger: ".o_statusbar_buttons > button:enabled:contains('Confirm Sale')",
+    trigger: ".o_statusbar_buttons > button:enabled:contains('Confirm')",
     content: _t("<p>Confirm this quotation</p>"),
     position: "bottom"
 }, {
@@ -390,17 +401,22 @@ tour.register('main_flow_tour', {
     trigger: '.o_menu_toggle',
     content: _t('Go back to the home menu'),
     position: 'bottom',
+}, tour.STEPS.SHOW_APPS_MENU_ITEM, {
+    trigger: '.o_app:contains("Inventory")',
+    content: _t('Go to Inventory'),
+    position: 'right',
+    edition: 'community'
 }, {
-    trigger: '.o_app > div:contains("Inventory"), .oe_menu_toggler:contains("Inventory")',
+    trigger: '.o_app > div:contains("Inventory")',
     content: _t('Go to Inventory'),
     position: 'bottom',
+    edition: 'enterprise'
 }, {
-    edition: "enterprise",
     trigger: ".o_menu_sections a:contains('Master Data')",
     content: _t("Go to Master Data"),
     position: "bottom"
 }, {
-    trigger: ".o_menu_sections a[data-menu-xmlid='stock.menu_reordering_rules_config'], .oe_secondary_submenu a[data-menu-xmlid='stock.menu_reordering_rules_config']",
+    trigger: ".o_menu_sections a[data-menu-xmlid='stock.menu_reordering_rules_config']",
     content: _t("Reordering Rules"),
     position: "bottom"
 }, {
@@ -431,17 +447,16 @@ tour.register('main_flow_tour', {
     position: "bottom"
 }, {
 // Run the schedulers
-    edition: "enterprise",
     trigger: ".o_menu_sections a:contains('Operations')",
     content: _t("Go to Run Schedulers"),
     position: "bottom"
 },{
-    trigger: ".o_menu_sections a[data-menu-xmlid='stock.menu_procurement_compute'], .oe_secondary_submenu a[data-menu-xmlid='stock.menu_procurement_compute']",
+    trigger: ".o_menu_sections a[data-menu-xmlid='stock.menu_procurement_compute']",
     content: _t("Click on schedulers"),
     position: "bottom"
 }, {
-    trigger: "footer.modal-footer .btn-primary",
-    extra_trigger: "[role=\"dialog\"]",
+    trigger: ".modal-footer .btn-primary",
+    extra_trigger: ".modal-dialog",
     content: _t("Run Schedulers"),
     position: "bottom",
 }, {
@@ -450,10 +465,16 @@ tour.register('main_flow_tour', {
     trigger: '.o_menu_toggle',
     content: _t('Go back to the home menu'),
     position: 'bottom',
+}, tour.STEPS.SHOW_APPS_MENU_ITEM, {
+    trigger: '.o_app:contains("Purchase")',
+    content: _t('Go to Purchase'),
+    position: 'right',
+    edition: 'community'
 }, {
-    trigger: '.o_app > div:contains("Purchases"), .oe_menu_toggler:contains("Purchases")',
+    trigger: '.o_app > div:contains("Purchase")',
     content: _t('Go to Purchase'),
     position: 'bottom',
+    edition: 'enterprise'
 }, {
     trigger: '.o_data_row:has(.o_data_cell:contains("the_flow.vendor"))',
     content: _t('Select the generated request for quotation'),
@@ -471,22 +492,18 @@ tour.register('main_flow_tour', {
     content: _t("Validate"),
     position: "bottom",
 }, {
-    trigger: "footer.modal-footer .btn-primary",
-    extra_trigger: "[role=\"dialog\"]",
+    trigger: ".modal-footer .btn-primary",
+    extra_trigger: ".modal-dialog",
     content: _t("Apply"),
     position: "bottom",
 }, {
-    trigger: ".o_back_button a, .breadcrumb li:not('.active'):last",
+    trigger: ".o_back_button a, .breadcrumb-item:not('.active'):last",
     content: _t('go back to the purchase order'),
     position: 'bottom',
  }, {
-    trigger: ".oe_button_box .oe_stat_button:has(div[name=invoice_count])",
+    trigger: ".o_statusbar_buttons > button:enabled:contains('Create Bill')",
     content: _t('go to Vendor Bills'),
     position: 'bottom',
-}, {
-    trigger: ".o_list_button_add",
-    content: _t("Let's create a new vendor bill"),
-    position: "right",
 }, {
     trigger: ".o_statusbar_buttons > button:enabled:contains('Validate')",
     content: _t("Try to send it to email"),
@@ -497,12 +514,12 @@ tour.register('main_flow_tour', {
     position: "bottom",
 }, {
     trigger: "select.o_field_widget[name=journal_id]",
-    extra_trigger: "[role=\"dialog\"]",
+    extra_trigger: ".modal-dialog",
     content: _t("Select Journal"),
     position: "bottom",
     run: 'text(Bank (USD))',
 }, {
-    trigger: "footer.modal-footer .btn-primary",
+    trigger: ".modal-footer .btn-primary",
     extra_trigger: ".o_field_widget[name=payment_method_id]", // FIXME: Wait onchange
     content: _t("Validate"),
     position: "bottom",
@@ -511,17 +528,21 @@ tour.register('main_flow_tour', {
     trigger: '.o_menu_toggle',
     content: _t('Go back to the home menu'),
     position: 'bottom',
+}, tour.STEPS.SHOW_APPS_MENU_ITEM, {
+    trigger: '.o_app:contains("Manufacturing")',
+    content: _t('Go to Manufacturing'),
+    position: 'right',
+    edition: 'community'
 }, {
-    trigger: '.o_app > div:contains("Manufacturing"), .oe_menu_toggler:contains("Manufacturing")',
+    trigger: '.o_app > div:contains("Manufacturing")',
     content: _t('Go to Manufacturing'),
     position: 'bottom',
+    edition: 'enterprise'
 }, {
-    edition: "enterprise",
     trigger: ".o_menu_sections a[data-menu-xmlid='mrp.menu_mrp_manufacturing']",
     content: _t('Click on Operations menuitem'),
     position: 'bottom',
 }, {
-    edition: "enterprise",
     trigger: ".o_menu_sections a[data-menu-xmlid='mrp.menu_mrp_production_action']",
     content: _t('Open manufacturing orders'),
     position: 'bottom',
@@ -534,11 +555,11 @@ tour.register('main_flow_tour', {
     content: _t("Check availability"),
     position: "bottom",
 }, {
-    trigger: ".o_statusbar_buttons > button.btn-primary:enabled:contains('Produce')",
+    trigger: ".o_statusbar_buttons > button:enabled:contains('Produce')",
     content: _t("Produce"),
     position: "bottom",
 }, {
-    trigger:  "footer.modal-footer .btn-primary:first",
+    trigger:  ".modal-footer .btn-primary:nth-child(3)",
     content: _t('Record Production'),
     position: 'bottom',
 }, {
@@ -550,17 +571,22 @@ tour.register('main_flow_tour', {
     trigger: '.o_menu_toggle',
     content: _t('Go back to the home menu'),
     position: 'bottom',
-}, {
-    trigger: '.o_app[data-menu-xmlid="sale.sale_menu_root"], .oe_menu_toggler[data-menu-xmlid="sale.sale_menu_root"]',
+}, tour.STEPS.SHOW_APPS_MENU_ITEM, {
+    trigger: '.o_app[data-menu-xmlid="sale.sale_menu_root"]',
     content: _t('Organize your sales activities with the <b>Sales app</b>.'),
     position: 'bottom',
+    edition: 'community'
 }, {
-    edition: "enterprise",
+    trigger: '.o_app[data-menu-xmlid="sale.sale_menu_root"]',
+    content: _t('Organize your sales activities with the <b>Sales app</b>.'),
+    position: 'bottom',
+    edition: 'enterprise'
+}, {
     trigger: ".o_menu_sections a[data-menu-xmlid='sale.sale_order_menu']",
     content: _t("Go to Sales menu"),
     position: "bottom"
 }, {
-    trigger: ".o_menu_sections a[data-menu-xmlid='sale.menu_sale_order'], .oe_secondary_submenu a[data-menu-xmlid='sale.menu_sale_order']",
+    trigger: ".o_menu_sections a[data-menu-xmlid='sale.menu_sale_order']",
     content: _t("Go to the sales orders"),
     position: "bottom"
 }, {
@@ -608,7 +634,7 @@ tour.register('main_flow_tour', {
     content: _t('Save'),
     position: 'bottom',
 }, {
-    trigger: '.breadcrumb li:nth-child(2) a',
+    trigger: '.breadcrumb-item:nth-child(2) a',
     extra_trigger: '.o_list_button_add', // Waiting save
     content: _t('Back to the sale order'),
     position: 'bottom',
@@ -617,7 +643,7 @@ tour.register('main_flow_tour', {
     content: _t("Validate"),
     position: "bottom",
 }, {
-    trigger: "footer.modal-footer .btn-primary",
+    trigger: ".modal-footer .btn-primary",
     content: _t("Create and View Invoices"),
     position: "bottom",
 }, {
@@ -630,12 +656,12 @@ tour.register('main_flow_tour', {
     position: "bottom",
 }, {
     trigger: "select.o_field_widget[name=journal_id]",
-    extra_trigger: "[role=\"dialog\"]",
+    extra_trigger: ".modal-dialog",
     content: _t("Select Journal"),
     position: "bottom",
     run: 'text(Bank (USD))',
 }, {
-    trigger: "footer.modal-footer .btn-primary",
+    trigger: ".modal-footer .btn-primary",
     content: _t("Validate"),
     position: "bottom",
 }, {
@@ -645,7 +671,7 @@ tour.register('main_flow_tour', {
     position: 'bottom',
 }, {
     edition: "enterprise",
-    trigger: '.o_app[data-menu-xmlid="account.menu_finance"], .oe_menu_toggler[data-menu-xmlid="account.menu_finance"]',
+    trigger: '.o_app[data-menu-xmlid="account_accountant.menu_accounting"]',
     content: _t('Go to Accounting'),
     position: 'bottom',
 }, {

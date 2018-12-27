@@ -6,7 +6,6 @@ from uuid import uuid4
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT
 
 
 class AccountCashboxLine(models.Model):
@@ -38,6 +37,7 @@ class AccountBankStmtCashWizard(models.Model):
 
 class PosConfig(models.Model):
     _name = 'pos.config'
+    _description = 'Point of Sale Configuration'
 
     def _default_sale_journal(self):
         journal = self.env.ref('point_of_sale.pos_sale_journal', raise_if_not_found=False)
@@ -63,6 +63,13 @@ class PosConfig(models.Model):
     def _compute_default_customer_html(self):
         return self.env['ir.qweb'].render('point_of_sale.customer_facing_display_html')
 
+    @api.depends('limit_categories', 'iface_available_categ_ids')
+    def _compute_iface_start_categ_domain_ids(self):
+        if self.limit_categories:
+            self.iface_start_categ_domain_ids =  self.iface_available_categ_ids
+        else:
+            self.iface_start_categ_domain_ids = self.env['pos.category'].search([])
+
     name = fields.Char(string='Point of Sale Name', index=True, required=True, help="An internal identification of the point of sale.")
     is_installed_account_accountant = fields.Boolean(string="Is the Full Accounting Installed",
         compute="_compute_is_installed_account_accountant")
@@ -71,7 +78,7 @@ class PosConfig(models.Model):
         'pos_config_id', 'journal_id', string='Available Payment Methods',
         domain="[('journal_user', '=', True ), ('type', 'in', ['bank', 'cash'])]",)
     picking_type_id = fields.Many2one('stock.picking.type', string='Operation Type')
-    use_existing_lots = fields.Boolean(related='picking_type_id.use_existing_lots')
+    use_existing_lots = fields.Boolean(related='picking_type_id.use_existing_lots', readonly=False)
     stock_location_id = fields.Many2one(
         'stock.location', string='Stock Location',
         domain=[('usage', '=', 'internal')], required=True, default=_get_default_location)
@@ -100,9 +107,13 @@ class PosConfig(models.Model):
         help='The receipt screen will be skipped if the receipt can be printed automatically.')
     iface_precompute_cash = fields.Boolean(string='Prefill Cash Payment',
         help='The payment input will behave similarily to bank payment input, and will be prefilled with the exact due amount.')
-    iface_tax_included = fields.Selection([('subtotal', 'Tax-Excluded Price'), ('total', 'Tax-Included Price')], related="company_id.iface_tax_included", required=True)
+    iface_tax_included = fields.Selection([('subtotal', 'Tax-Excluded Price'), ('total', 'Tax-Included Price')], string="Tax Display", default='subtotal', required=True)
     iface_start_categ_id = fields.Many2one('pos.category', string='Initial Category',
         help='The point of sale will display this product category by default. If no category is specified, all available products will be shown.')
+    iface_available_categ_ids = fields.Many2many('pos.category', string='Available Category Tree',
+        help='The point of sale will only display products which are within one of the selected category trees. If no category is specified, all available products will be shown')
+    iface_start_categ_domain_ids = fields.Many2many('pos.category', compute='_compute_iface_start_categ_domain_ids', store=False,
+        help='Technical field used as a domain for iface_start_categ_id.')
     iface_display_categ_images = fields.Boolean(string='Display Category Pictures',
         help="The product categories will be displayed with pictures.")
     restrict_price_control = fields.Boolean(string='Restrict Price Modifications to Managers',
@@ -137,7 +148,8 @@ class PosConfig(models.Model):
         help="Make several pricelists available in the Point of Sale. You can also apply a pricelist to specific customers from their contact form (in Sales tab). To be valid, this pricelist must be listed here as an available pricelist. Otherwise the default pricelist will apply.")
     company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.user.company_id)
     barcode_nomenclature_id = fields.Many2one('barcode.nomenclature', string='Barcode Nomenclature',
-        help='Defines what kind of barcodes are available and how they are assigned to products, customers and cashiers.')
+        help='Defines what kind of barcodes are available and how they are assigned to products, customers and cashiers.',
+        default=lambda self: self.env.user.company_id.nomenclature_id, required=True)
     group_pos_manager_id = fields.Many2one('res.groups', string='Point of Sale Manager Group', default=_get_group_pos_manager,
         help='This field is there to pass the id of the pos manager group to the point of sale client.')
     group_pos_user_id = fields.Many2one('res.groups', string='Point of Sale User Group', default=_get_group_pos_user,
@@ -152,9 +164,9 @@ class PosConfig(models.Model):
     use_pricelist = fields.Boolean("Use a pricelist.")
     tax_regime = fields.Boolean("Tax Regime")
     tax_regime_selection = fields.Boolean("Tax Regime Selection value")
-    barcode_scanner = fields.Boolean("Barcode Scanner")
     start_category = fields.Boolean("Set Start Category")
-    module_account_invoicing = fields.Boolean(string='Invoicing', help='Enables invoice generation from the Point of Sale.')
+    limit_categories = fields.Boolean("Restrict Available Product Categories")
+    module_account = fields.Boolean(string='Invoicing', help='Enables invoice generation from the Point of Sale.')
     module_pos_restaurant = fields.Boolean("Is a Bar/Restaurant")
     module_pos_discount = fields.Boolean("Global Discounts")
     module_pos_loyalty = fields.Boolean("Loyalty Program")
@@ -162,6 +174,7 @@ class PosConfig(models.Model):
     module_pos_reprint = fields.Boolean(string="Reprint Receipt")
     is_posbox = fields.Boolean("PosBox")
     is_header_or_footer = fields.Boolean("Header & Footer")
+    module_pos_hr = fields.Boolean(help="Show employee login screen")
 
     def _compute_is_installed_account_accountant(self):
         account_accountant = self.env['ir.module.module'].sudo().search([('name', '=', 'account_accountant'), ('state', '=', 'installed')])
@@ -196,7 +209,7 @@ class PosConfig(models.Model):
                 order="stop_at desc", limit=1)
             if session:
                 pos_config.last_session_closing_cash = session[0]['cash_register_balance_end_real']
-                pos_config.last_session_closing_date = session[0]['stop_at']
+                pos_config.last_session_closing_date = session[0]['stop_at'].date()
             else:
                 pos_config.last_session_closing_cash = 0
                 pos_config.last_session_closing_date = False
@@ -209,7 +222,7 @@ class PosConfig(models.Model):
                 pos_config.pos_session_username = session[0].user_id.name
                 pos_config.pos_session_state = session[0].state
                 pos_config.pos_session_duration = (
-                    datetime.now() - datetime.strptime(session[0].start_at, DATETIME_FORMAT)
+                    datetime.now() - session[0].start_at
                 ).days if session[0].start_at else 0
             else:
                 pos_config.pos_session_username = False
@@ -249,13 +262,18 @@ class PosConfig(models.Model):
         if any(self.journal_ids.mapped(lambda journal: journal.currency_id and journal.currency_id != self.currency_id)):
             raise ValidationError(_("All payment methods must be in the same currency as the Sales Journal or the company currency if that is not set."))
 
+    @api.constrains('company_id', 'available_pricelist_ids')
+    def _check_companies(self):
+        if any(self.available_pricelist_ids.mapped(lambda pl: pl.company_id.id not in (False, self.company_id.id))):
+            raise ValidationError(_("The selected pricelists must belong to no company or the company of the point of sale."))
+
     @api.onchange('iface_print_via_proxy')
     def _onchange_iface_print_via_proxy(self):
         self.iface_print_auto = self.iface_print_via_proxy
 
-    @api.onchange('module_account_invoicing')
-    def _onchange_module_account_invoicing(self):
-        if self.module_account_invoicing:
+    @api.onchange('module_account')
+    def _onchange_module_account(self):
+        if self.module_account:
             self.invoice_journal_id = self.env.ref('point_of_sale.pos_sale_journal')
 
     @api.onchange('picking_type_id')
@@ -267,7 +285,7 @@ class PosConfig(models.Model):
     def _onchange_use_pricelist(self):
         """
         If the 'pricelist' box is unchecked, we reset the pricelist_id to stop
-        using a pricelist for this posbox. 
+        using a pricelist for this iotbox.
         """
         if not self.use_pricelist:
             self.pricelist_id = self._default_pricelist()
@@ -276,20 +294,6 @@ class PosConfig(models.Model):
     def _onchange_available_pricelist_ids(self):
         if self.pricelist_id not in self.available_pricelist_ids:
             self.pricelist_id = False
-
-    @api.onchange('iface_scan_via_proxy')
-    def _onchange_iface_scan_via_proxy(self):
-        if self.iface_scan_via_proxy:
-            self.barcode_scanner = True
-        else:
-            self.barcode_scanner = False
-
-    @api.onchange('barcode_scanner')
-    def _onchange_barcode_scanner(self):
-        if self.barcode_scanner:
-            self.barcode_nomenclature_id = self.env['barcode.nomenclature'].search([], limit=1)
-        else:
-            self.barcode_nomenclature_id = False
 
     @api.onchange('is_posbox')
     def _onchange_is_posbox(self):
@@ -314,6 +318,13 @@ class PosConfig(models.Model):
     @api.onchange('start_category')
     def _onchange_start_category(self):
         if not self.start_category:
+            self.iface_start_categ_id = False
+
+    @api.onchange('limit_categories', 'iface_available_categ_ids', 'iface_start_categ_id')
+    def _onchange_limit_categories(self):
+        if not self.limit_categories:
+            self.iface_available_categ_ids = False
+        elif self.iface_start_categ_id not in self.iface_available_categ_ids:
             self.iface_start_categ_id = False
 
     @api.onchange('is_header_or_footer')
@@ -433,6 +444,11 @@ class PosConfig(models.Model):
         """
         self.ensure_one()
         if not self.current_session_id:
+            self._check_company_location()
+            self._check_company_journal()
+            self._check_company_invoice_journal()
+            self._check_company_payment()
+            self._check_currencies()
             self.current_session_id = self.env['pos.session'].create({
                 'user_id': self.env.uid,
                 'config_id': self.id

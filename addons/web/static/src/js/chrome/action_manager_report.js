@@ -46,10 +46,11 @@ ActionManager.include({
     _downloadReport: function (url) {
         framework.blockUI();
         var def = $.Deferred();
+        var type = 'qweb-' + url.split('/')[2];
         var blocked = !session.get_file({
             url: '/report/download',
             data: {
-                data: JSON.stringify([url, 'qweb-pdf']),
+                data: JSON.stringify([url, type]),
             },
             success: def.resolve.bind(def),
             error: function () {
@@ -68,6 +69,27 @@ ActionManager.include({
             this.do_warn(_t('Warning'), message, true);
         }
         return def;
+    },
+
+    /**
+     * Launch download action of the report
+     *
+     * @private
+     * @param {Object} action the description of the action to execute
+     * @param {Object} options @see doAction for details
+     * @returns {Deferred} resolved when the action has been executed
+     */
+    _triggerDownload: function (action, options, type){
+        var self = this;
+        var reportUrls = this._makeReportUrls(action);
+        return this._downloadReport(reportUrls[type]).then(function () {
+            if (action.close_on_report_download) {
+                var closeAction = { type: 'ir.actions.act_window_close' };
+                return self.doAction(closeAction, _.pick(options, 'on_close'));
+            } else {
+                return options.on_close();
+            }
+        });
     },
     /**
      * Executes actions of type 'ir.actions.report'.
@@ -92,21 +114,14 @@ ActionManager.include({
 
                 if (state === 'upgrade' || state === 'ok') {
                     // trigger the download of the PDF report
-                    var processedActions = [];
-                    var currentAction = action;
-                    var defs = [];
-                    do {
-                        var reportUrls = self._makeReportUrls(currentAction);
-                        defs.push(self._downloadReport(reportUrls.pdf));
-                        processedActions.push(currentAction);
-                        currentAction = currentAction.next_report_to_generate;
-                    } while (currentAction && !_.contains(processedActions, currentAction));
-                    return $.when.apply($, defs).done(options.on_close);
+                    return self._triggerDownload(action, options, 'pdf');
                 } else {
                     // open the report in the client action if generating the PDF is not possible
                     return self._executeReportClientAction(action, options);
                 }
             });
+        } else if (action.report_type === 'qweb-text') {
+            return self._triggerDownload(action, options, 'text');
         } else {
             console.error("The ActionManager can't handle reports of type " +
                 action.report_type, action);
@@ -160,6 +175,7 @@ ActionManager.include({
         var reportUrls = {
             html: '/report/html/' + action.report_name,
             pdf: '/report/pdf/' + action.report_name,
+            text: '/report/text/' + action.report_name,
         };
         // We may have to build a query string with `action.data`. It's the place
         // were report's using a wizard to customize the output traditionally put
@@ -182,5 +198,4 @@ ActionManager.include({
         return reportUrls;
     },
 });
-
 });
