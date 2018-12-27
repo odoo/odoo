@@ -229,9 +229,12 @@ class CustomerPortal(CustomerPortal):
             attachments=[('%s.pdf' % order_sudo.name, pdf)],
             **({'token': access_token} if access_token else {}))
 
+        query_string = '&message=sign_ok'
+        if order_sudo.has_to_be_paid(True):
+            query_string += '#allow_payment=yes'
         return {
             'force_refresh': True,
-            'redirect_url': order_sudo.get_portal_url(query_string='&message=sign_ok'),
+            'redirect_url': order_sudo.get_portal_url(query_string=query_string),
         }
 
     @http.route(['/my/orders/<int:order_id>/decline'], type='http', auth="public", methods=['POST'], website=True)
