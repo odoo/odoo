@@ -226,8 +226,9 @@
             <field name="model">mrp.production</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
-                <calendar date_start="date_planned_start" string="Manufacturing Orders" color="routing_id">
-                    <field name="name"/>
+                <calendar date_start="date_planned_start" string="Manufacturing Orders" color="routing_id" event_limit="5">
+                    <field name="routing_id"/>
+                    <field name="user_id" avatar_field="image_small"/>
                     <field name="product_id"/>
                     <field name="product_qty"/>
                 </calendar>
