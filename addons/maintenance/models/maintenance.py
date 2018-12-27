@@ -71,13 +71,10 @@ class MaintenanceEquipmentCategory(models.Model):
 
     @api.multi
     def unlink(self):
-        MailAlias = self.env['mail.alias']
         for category in self:
             if category.equipment_ids or category.maintenance_ids:
                 raise UserError(_("You cannot delete an equipment category containing equipments or maintenance requests."))
-            MailAlias += category.alias_id
         res = super(MaintenanceEquipmentCategory, self).unlink()
-        MailAlias.unlink()
         return res
 
     def get_alias_model_name(self, vals):

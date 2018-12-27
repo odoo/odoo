@@ -222,7 +222,7 @@ class Channel(models.Model):
         tools.image_resize_images(vals)
         # Create channel and alias
         channel = super(Channel, self.with_context(
-            alias_model_name=self._name, alias_parent_model_name=self._name, mail_create_nolog=True, mail_create_nosubscribe=True)
+            mail_create_nolog=True, mail_create_nosubscribe=True)
         ).create(vals)
         channel.alias_id.write({"alias_force_thread_id": channel.id, 'alias_parent_thread_id': channel.id})
 
@@ -237,8 +237,6 @@ class Channel(models.Model):
 
     @api.multi
     def unlink(self):
-        aliases = self.mapped('alias_id')
-
         # Delete mail.channel
         try:
             all_emp_group = self.env.ref('mail.channel_all_employees')
@@ -247,8 +245,6 @@ class Channel(models.Model):
         if all_emp_group and all_emp_group in self:
             raise UserError(_('You cannot delete those groups, as the Whole Company group is required by other modules.'))
         res = super(Channel, self).unlink()
-        # Cascade-delete mail aliases as well, as they should not exist without the mail.channel.
-        aliases.sudo().unlink()
         return res
 
     @api.multi

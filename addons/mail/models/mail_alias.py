@@ -5,7 +5,7 @@ import logging
 import re
 
 from odoo import _, api, fields, models
-from odoo.exceptions import ValidationError
+from odoo.exceptions import AccessError, ValidationError
 from odoo.tools import remove_accents
 from odoo.tools.safe_eval import safe_eval
 
@@ -29,6 +29,9 @@ class Alias(models.Model):
     _description = "Email Aliases"
     _rec_name = 'alias_name'
     _order = 'alias_model_id, alias_name'
+
+    # user can write only some fields as it's technical model.
+    ALIAS_WRITEABLE_FIELDS = ['alias_name', 'alias_parent_thread_id', 'alias_force_thread_id', 'alias_defaults']
 
     alias_name = fields.Char('Alias Name', help="The name of the email alias, e.g. 'jobs' if you want to catch emails for <jobs@example.odoo.com>")
     alias_model_id = fields.Many2one('ir.model', 'Aliased Model', required=True, ondelete="cascade",
@@ -102,6 +105,12 @@ class Alias(models.Model):
         if model_name:
             model = self.env['ir.model']._get(model_name)
             vals['alias_model_id'] = model.id
+            try:
+                self.env[model_name].check_access_rights('create')
+            except AccessError:
+                pass
+            else:
+                self = self.sudo()
         if parent_model_name:
             model = self.env['ir.model']._get(parent_model_name)
             vals['alias_parent_model_id'] = model.id
@@ -112,6 +121,8 @@ class Alias(models.Model):
         """"give a unique alias name if given alias name is already assigned"""
         if vals.get('alias_name') and self.ids:
             vals['alias_name'] = self._clean_and_make_unique(vals.get('alias_name'), alias_ids=self.ids)
+        if vals and all(key in self.ALIAS_WRITEABLE_FIELDS for key in list(vals)):
+            return super(Alias, self.sudo()).write(vals)
         return super(Alias, self).write(vals)
 
     @api.multi
@@ -219,7 +230,7 @@ class AliasMixin(models.AbstractModel):
         """ Delete the given records, and cascade-delete their corresponding alias. """
         aliases = self.mapped('alias_id')
         res = super(AliasMixin, self).unlink()
-        aliases.unlink()
+        aliases.sudo().unlink()
         return res
 
     @api.model_cr_context

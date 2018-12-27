@@ -718,7 +718,7 @@ class AccountJournal(models.Model):
             accounts = self.search([('bank_account_id', '=', bank_account.id)])
             if accounts <= self:
                 bank_accounts += bank_account
-        self.mapped('alias_id').unlink()
+        self.mapped('alias_id').sudo().unlink()
         ret = super(AccountJournal, self).unlink()
         bank_accounts.unlink()
         return ret
@@ -739,7 +739,7 @@ class AccountJournal(models.Model):
             self.alias_id.write(alias_values)
         else:
             self.alias_id = self.env['mail.alias'].with_context(alias_model_name='account.invoice',
-                alias_parent_model_name='account.journal').create(alias_values)
+                alias_parent_model_name='account.journal').sudo().create(alias_values)
 
         if vals.get('alias_name'):
             # remove alias_name to avoid useless write on alias
