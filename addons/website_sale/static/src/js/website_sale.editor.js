@@ -81,6 +81,21 @@ options.registry.website_sale = options.Class.extend({
         if (size_y >= 4) $select = $select.add($size.find('tr:eq(3) td:lt('+size_x+')'));
         $select.addClass("selected");
 
+        // this will work when clicking on the <td> of a product
+        var ppr = parseInt(this.$target.attr("ppr"));
+        // this condition is for the parent div
+        if (!ppr) {
+            ppr = parseInt(this.$('[ppr]').attr("ppr"));
+        }
+
+        // add active class to currently selected ppr
+        this.$el.find('.o_website_sale_ppr_select a[data-nbr_col="' + ppr + '"]').addClass('active');
+
+        // Adapt size array preview to fit ppr
+        $size.find('tr').each(function (index) {
+            $(this).find('td:gt(' + parseInt(ppr - 1) + ')').hide();
+        });
+
         this._rpc({
             model: 'product.style',
             method: 'search_read',
@@ -158,6 +173,14 @@ options.registry.website_sale = options.Class.extend({
                 sequence: value,
             },
         }).then(this.reload);
-    }
+    },
+    nbr_col: function (previewMode, value) {
+        this._rpc({
+            route: '/shop/change_columns_numbers',
+            params: {
+                columns_numbers: value,
+            },
+        }).then(this.reload);
+    },
 });
 });

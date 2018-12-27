@@ -152,6 +152,8 @@ sAnimations.registry.WebsiteSale = sAnimations.Class.extend(ProductConfiguratorM
         'change #shipping_use_same': '_onChangeShippingUseSame',
         'click .toggle_summary': '_onToggleSummary',
         'click input.js_product_change': 'onChangeVariant',
+        'click .o_wecommerce_apply_grid': '_applyShopLayoutToGrid',
+        'click .o_wecommerce_apply_list': '_applyShopLayoutToLine',
     },
 
     /**
@@ -192,6 +194,36 @@ sAnimations.registry.WebsiteSale = sAnimations.Class.extend(ProductConfiguratorM
         });
 
         this._startZoom();
+        // Do not activate image zoom for mobile devices, since it might prevent users from scrolling the page
+        if (!config.device.isMobile) {
+            var autoZoom = $('.ecom-zoomable').data('ecom-zoom-auto') || false,
+            factorZoom = parseFloat($('.ecom-zoomable').data('ecom-zoom-factor')) || 1.5,
+            attach = '#o-carousel-product';
+            _.each($('.ecom-zoomable img[data-zoom]'), function (el) {
+                onImageLoaded(el, function () {
+                    var $img = $(el);
+                    if (!_.str.endsWith(el.src, el.dataset.zoomImage) || // if zoom-img != img
+                        el.naturalWidth >= $(attach).width() * factorZoom || el.naturalHeight >= $(attach).height() * factorZoom) {
+                        $img.zoomOdoo({event: autoZoom ? 'mouseenter' : 'click', attach: attach});
+                    } else {
+                        $img.removeAttr('data-zoom');  // remove cursor
+                    }
+                });
+            });
+        }
+
+        function onImageLoaded(img, callback) {
+            $(img).on('load', function () { callback(); });
+            if (img.complete) {
+                $(img).off('load');
+                callback();
+            }
+        }
+        if ($('#products_grid').hasClass('o_wsale_layout_line')) {
+            $('.o_wecommerce_apply_list').fadeTo('fast', '.5');
+        } else {
+            $('.o_wecommerce_apply_grid').fadeTo('fast', '.5');
+        }
 
         return def;
     },
@@ -213,6 +245,24 @@ sAnimations.registry.WebsiteSale = sAnimations.Class.extend(ProductConfiguratorM
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+     _applyShopLayoutToGrid: function (ev) {
+        $(ev.currentTarget).closest('.btn-group').children('.o_wecommerce_apply_grid').fadeTo('fast', '.5');
+        $(ev.currentTarget).closest('.btn-group').children('.o_wecommerce_apply_list').fadeTo('fast', '1');
+        $('#products_grid').removeClass('o_wsale_layout_line');
+     },
+
+     /**
+     * @private
+     */
+     _applyShopLayoutToLine: function (ev) {
+        $(ev.currentTarget).closest('.btn-group').children('.o_wecommerce_apply_list').fadeTo('fast', '.5');
+        $(ev.currentTarget).closest('.btn-group').children('.o_wecommerce_apply_grid').fadeTo('fast', '1');
+        $('#products_grid').addClass('o_wsale_layout_line');
+     },
 
     /**
      * @private
@@ -308,7 +358,7 @@ sAnimations.registry.WebsiteSale = sAnimations.Class.extend(ProductConfiguratorM
 
             // manage fields order / visibility
             if (data.fields) {
-                if ($.inArray('zip', data.fields) > $.inArray('city', data.fields)){
+                if ($.inArray('zip', data.fields) > $.inArray('city', data.fields)) {
                     $(".div_zip").before($(".div_city"));
                 } else {
                     $(".div_zip").after($(".div_city"));
@@ -443,7 +493,7 @@ sAnimations.registry.WebsiteSale = sAnimations.Class.extend(ProductConfiguratorM
      * @private
      * @param {MouseEvent} ev
      */
-    _onClickAddCartJSON: function (ev){
+    _onClickAddCartJSON: function (ev) {
         this.onClickAddCartJSON(ev);
     },
     /**
@@ -500,13 +550,13 @@ sAnimations.registry.WebsiteSale = sAnimations.Class.extend(ProductConfiguratorM
             ev.preventDefault();
             $aSubmit.closest('form').submit();
         }
-        if ($aSubmit.hasClass('a-submit-disable')){
+        if ($aSubmit.hasClass('a-submit-disable')) {
             $aSubmit.addClass("disabled");
         }
-        if ($aSubmit.hasClass('a-submit-loading')){
+        if ($aSubmit.hasClass('a-submit-loading')) {
             var loading = '<span class="fa fa-cog fa-spin"/>';
             var fa_span = $aSubmit.find('span[class*="fa"]');
-            if (fa_span.length){
+            if (fa_span.length) {
                 fa_span.replaceWith(loading);
             } else {
                 $aSubmit.append(loading);

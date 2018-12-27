@@ -115,6 +115,7 @@
                         <span t-else="" itemprop="image" t-attf-content="{{request.httprequest.url_root}}web/image/product.template/{{product.id}}/image" t-field="product.image" t-options="{'widget': 'image', 'resize': None if product_image_big else '300x300', 'zoom': 'image'}" t-att-alt="product.name" />
                     </a>
                 </div>
+                <a itemprop="url" t-att-href="product_href" class="o_product_image_full" t-attf-style="background-image: url('{{request.httprequest.url_root}}web/image/product.template/{{product.id}}/image');"/>
                 <t t-if="show_publish">
                     <div id="website_published_button" class="" groups="sales_team.group_sale_manager">
                         <t t-call="website.publish_management">
@@ -124,20 +125,23 @@
                         </t>
                     </div>
                 </t>
-                <section>
+                <section class="p-3 text-center">
+                    <div class="o_wsale_product_btn"/>
                     <h6>
                         <a itemprop="name" t-att-href="product_href" t-att-content="product.name" t-field="product.name" />
                         <a role="button" t-if="not show_publish and not product.website_published" t-att-href="product_href" class="btn btn-secondary btn-sm btn-danger" title="This product is unpublished.">Unpublished</a>
                     </h6>
                     <div itemprop="offers" itemscope="itemscope" itemtype="http://schema.org/Offer" class="product_price">
-                        <b>
-                            <t t-if="True"><!-- compatibility 12.0 -->
-                                <del t-attf-class="text-danger mr8 {{'' if combination_info['has_discounted_price'] else 'd-none'}}" style="white-space: nowrap;" t-esc="combination_info['list_price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}" />
-                            </t>
-                            <span t-esc="combination_info['price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
-                            <span itemprop="price" style="display:none;" t-esc="combination_info['price']" />
-                            <span itemprop="priceCurrency" style="display:none;" t-esc="website.currency_id.name" />
-                        </b>
+                        <small>
+                            <b>
+                                <t t-if="True"><!-- compatibility 12.0 -->
+                                    <del t-attf-class="text-danger mr-2 {{'' if combination_info['has_discounted_price'] else 'd-none'}}" style="white-space: nowrap;" t-esc="combination_info['list_price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}" />
+                                </t>
+                                <span t-esc="combination_info['price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+                                <span itemprop="price" style="display:none;" t-esc="combination_info['price']" />
+                                <span itemprop="priceCurrency" style="display:none;" t-esc="website.currency_id.name" />
+                            </b>
+                        </small>
                     </div>
                 </section>
             </div>
@@ -146,23 +150,23 @@
 
     <template id="products_description" inherit_id="website_sale.products_item" active="False" customize_show="True" name="Product Description">
         <xpath expr="//div[hasclass('product_price')]" position="before">
-            <div class="text-info oe_subdescription" contenteditable="false">
+            <div class="oe_subdescription" contenteditable="false">
                 <div itemprop="description" t-field="product.description_sale"></div>
             </div>
         </xpath>
     </template>
 
     <template id="products_add_to_cart" inherit_id="website_sale.products_item" active="False" customize_show="True" name="Add to Cart">
-        <xpath expr="//div[hasclass('product_price')]" position="inside">
+        <xpath expr="//div[hasclass('o_wsale_product_btn')]" position="inside">
             <t t-set="product_variant" t-value="product_variant or product._create_first_product_variant()"/>
             <input name="product_id" t-att-value="product_variant.id" type="hidden" />
             <t t-if="product._is_quick_add_to_cart_possible()">
-                <a href="#" role="button" class="btn btn-secondary btn-sm a-submit" aria-label="Shopping cart" title="Shopping cart">
+                <a href="#" role="button" class="btn btn-secondary a-submit" aria-label="Shopping cart" title="Shopping cart">
                     <span class="fa fa-shopping-cart" />
                 </a>
             </t>
             <t t-elif="product._is_add_to_cart_possible()">
-                <a role="button" class="btn btn-secondary btn-sm" t-att-href="keep('/shop/product/%s' % slug(product), page=(pager['page']['num'] if pager['page']['num']&gt;1 else None))" aria-label="Shopping cart" title="Shopping cart">
+                <a role="button" class="btn btn-secondary" t-att-href="keep('/shop/product/%s' % slug(product), page=(pager['page']['num'] if pager['page']['num']&gt;1 else None))" aria-label="Shopping cart" title="Shopping cart">
                     <span class="fa fa-shopping-cart" />
                 </a>
             </t>
@@ -211,19 +215,18 @@
                                 <t t-set='editor_msg'>Drag building blocks here to customize the header for "<t t-esc='category.name'/>" category.</t>
                                 <div class="mb16" id="category_header" t-att-data-editor-message="editor_msg" t-field="category.website_description"/>
                             </t>
-                            <table width="100%">
+                            <table width="100%" class="table table-borderless">
                                 <tbody>
-                                    <tr t-ignore="true">
-                                        <td t-foreach="range(0,rows)" t-as="row" t-attf-width="#{100/rows}%"></td>
-                                    </tr>
                                     <tr t-foreach="bins" t-as="tr_product">
                                         <t t-foreach="tr_product" t-as="td_product">
                                             <t t-if="td_product">
                                                 <t t-set="product" t-value="td_product['product']" />
-                                                <td t-att-colspan="td_product['x'] != 1 and td_product['x']" t-att-rowspan="td_product['y'] != 1 and td_product['y']" t-attf-class="oe_product oe_grid oe-height-#{td_product['y']*2} #{ td_product['class'] }">
-                                                    <div class="oe_product_cart" t-att-data-publish="product.website_published and 'on' or 'off'">
-                                                        <t t-set="product_image_big" t-value="td_product['x']+td_product['y'] &gt; 2" />
-                                                        <t t-call="website_sale.products_item" />
+                                                <td t-att-ppr="rows" t-att-colspan="td_product['x'] != 1 and td_product['x']" t-att-rowspan="td_product['y'] != 1 and td_product['y']" t-attf-class="oe_product oe_grid oe-height-#{td_product['y']*2} #{ td_product['class'] }">
+                                                    <div class="oe_product_cart card" t-att-data-publish="product.website_published and 'on' or 'off'">
+                                                        <div class="card-body">
+                                                            <t t-set="product_image_big" t-value="td_product['x']+td_product['y'] &gt; 2" />
+                                                            <t t-call="website_sale.products_item" />
+                                                        </div>
                                                     </div>
                                                 </td>
                                             </t>
@@ -287,6 +290,30 @@
         </xpath>
     </template>
 
+    <template id="grid_or_line" inherit_id="website_sale.products" active="True" customize_show="True" name="Grid or Line Layout">
+        <xpath expr="//div[hasclass('products_pager')]/t[@t-call][last()]" position="after">
+            <div class="btn-group ml-2">
+                <span class="btn btn-primary o_wecommerce_apply_grid" title="Grid"><i class="fa fa-th-large"/></span>
+                <span class="btn btn-primary border-left o_wecommerce_apply_list" title="List"><i class="fa fa-th-list"/></span>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="show_by" inherit_id="website_sale.products" active="True" customize_show="True" name="Show products per page">
+        <xpath expr="//div[hasclass('products_pager')]/t[@t-call][last()]" position="after">
+            <div class="dropdown ml-2">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Show by
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item" t-att-href="keep('/shop', ppg=12)">12</a>
+                    <a class="dropdown-item" t-att-href="keep('/shop', ppg=20)">20</a>
+                    <a class="dropdown-item" t-att-href="keep('/shop', ppg=32)">32</a>
+                    <a class="dropdown-item" t-att-href="keep('/shop', ppg=64)">64</a>
+                </div>
+            </div>
+        </xpath>
+    </template>
 
     <!-- Add to cart button-->
     <template id="categories_recursive" name="Category list">
@@ -306,14 +333,18 @@
 
     <template id="products_categories" inherit_id="website_sale.products" active="False" customize_show="True" name="eCommerce Categories">
         <xpath expr="//div[@id='products_grid_before']" position="inside">
-            <ul class="nav nav-pills flex-column mt16">
-                <li class="nav-item">
-                    <a t-att-href="keep('/shop',category=0)" t-attf-class="nav-link#{'' if category else ' active'} o_not_editable">All Products</a>
-                </li>
-                <t t-foreach="categories" t-as="c">
-                    <t t-call="website_sale.categories_recursive" />
-                </t>
-            </ul>
+            <div class="card my-2 bg-shadow-sm">
+                <div class="card-body">
+                    <ul class="nav nav-pills flex-column">
+                        <li class="nav-item">
+                            <a t-att-href="keep('/shop',category=0)" t-attf-class="nav-link#{'' if category else ' active'} o_not_editable">All Products</a>
+                        </li>
+                        <t t-foreach="categories" t-as="c">
+                            <t t-call="website_sale.categories_recursive" />
+                        </t>
+                    </ul>
+                </div>
+            </div>
         </xpath>
         <xpath expr="//div[@id='products_grid_before']" position="attributes">
             <attribute name="class">col-lg-3 col-md-4 col-12</attribute>
@@ -340,59 +371,67 @@
     </template>
 
     <template id="option_collapse_products_categories" name="Collapsible Category List" inherit_id="website_sale.products_categories" active="False" customize_show="True">
-        <xpath expr="//div[@id='products_grid_before']/ul" position="replace">
-            <ul class="nav nav-pills flex-column mt16" id="o_shop_collapse_category">
-                <li class="nav-item">
-                    <a t-att-href="keep('/shop',category=0)" t-attf-class="nav-link#{'' if category else ' active'} o_not_editable">All Products</a>
-                </li>
-                <t t-foreach="categories" t-as="categ">
-                    <t t-call="website_sale.option_collapse_categories_recursive" />
-                </t>
-            </ul>
+        <xpath expr="//div[@id='products_grid_before']/div" position="replace">
+            <div class="card my-2 shadow-sm">
+                <div class="card-body">
+                    <ul class="nav nav-pills flex-column" id="o_shop_collapse_category">
+                        <li class="nav-item">
+                            <a t-att-href="keep('/shop',category=0)" t-attf-class="nav-link#{'' if category else ' active'} o_not_editable">All Products</a>
+                        </li>
+                        <t t-foreach="categories" t-as="categ">
+                            <t t-call="website_sale.option_collapse_categories_recursive" />
+                        </t>
+                    </ul>
+                </div>
+            </div>
         </xpath>
     </template>
 
     <template id="products_attributes" inherit_id="website_sale.products" active="False" customize_show="True" name="Product Attribute's Filters">
         <xpath expr="//div[@id='products_grid_before']" position="inside">
-            <form class="js_attributes" method="get">
-                <input type="hidden" name="search" t-att-value="search" />
-                <ul class="nav nav-pills flex-column mt16">
-                    <t t-foreach="attributes" t-as="a">
-                        <li t-if="a.value_ids and len(a.value_ids) &gt; 1" class="nav-item">
-                            <div>
-                                <strong t-field="a.name" />
-                            </div>
-                            <t t-if="a.type == 'select'">
-                                <select class="form-control" name="attrib">
-                                    <option value="" />
-                                    <t t-foreach="a.value_ids" t-as="v">
-                                        <option t-att-value="'%s-%s' % (a.id,v.id)" t-esc="v.name" t-att-selected="v.id in attrib_set" />
+            <div class="card my-2 shadow-sm">
+                <div class="card-body">
+                    <form class="js_attributes" method="get">
+                        <input type="hidden" name="search" t-att-value="search" />
+                        <ul class="nav nav-pills flex-column">
+                            <t t-foreach="attributes" t-as="a">
+                                <li t-if="a.value_ids and len(a.value_ids) &gt; 1" class="nav-item">
+                                    <div>
+                                        <strong t-field="a.name" />
+                                    </div>
+                                    <t t-if="a.type == 'select'">
+                                        <select class="form-control" name="attrib">
+                                            <option value="" />
+                                            <t t-foreach="a.value_ids" t-as="v">
+                                                <option t-att-value="'%s-%s' % (a.id,v.id)" t-esc="v.name" t-att-selected="v.id in attrib_set" />
+                                            </t>
+                                        </select>
                                     </t>
-                                </select>
-                            </t>
-                            <t t-if="a.type == 'radio'">
-                                <ul class="nav nav-pills flex-column">
-                                    <t t-foreach="a.value_ids" t-as="v">
-                                        <li class="nav-item">
-                                            <label style="margin: 0 20px;" t-attf-class="nav-link#{' active' if v.id in attrib_set else ''}">
-                                                <input type="checkbox" name="attrib" t-att-value="'%s-%s' % (a.id,v.id)" t-att-checked="'checked' if v.id in attrib_set else None" />
-                                                <span style="font-weight: normal" t-field="v.name" />
+                                    <t t-if="a.type == 'radio'">
+                                        <ul class="nav nav-pills flex-column">
+                                            <t t-foreach="a.value_ids" t-as="v">
+                                                <li class="nav-item">
+                                                    <label style="margin: 0 20px;" t-attf-class="nav-link#{' active' if v.id in attrib_set else ''}">
+                                                        <input type="checkbox" name="attrib" t-att-value="'%s-%s' % (a.id,v.id)" t-att-checked="'checked' if v.id in attrib_set else None" />
+                                                        <span style="font-weight: normal" t-field="v.name" />
+                                                    </label>
+                                                </li>
+                                            </t>
+                                        </ul>
+                                    </t>
+                                    <t t-if="a.type == 'color'">
+                                        <t t-foreach="a.value_ids" t-as="v">
+                                            <label t-attf-style="background-color:#{v.html_color or v.name}" t-attf-class="css_attribute_color #{'active' if v.id in attrib_set else ''}">
+                                                <input type="checkbox" name="attrib" t-att-value="'%s-%s' % (a.id,v.id)" t-att-checked="'checked' if v.id in attrib_set else None" t-att-title="v.name" />
                                             </label>
-                                        </li>
+                                        </t>
                                     </t>
-                                </ul>
+                                </li>
                             </t>
-                            <t t-if="a.type == 'color'">
-                                <t t-foreach="a.value_ids" t-as="v">
-                                    <label t-attf-style="background-color:#{v.html_color or v.name}" t-attf-class="css_attribute_color #{'active' if v.id in attrib_set else ''}">
-                                        <input type="checkbox" name="attrib" t-att-value="'%s-%s' % (a.id,v.id)" t-att-checked="'checked' if v.id in attrib_set else None" t-att-title="v.name" />
-                                    </label>
-                                </t>
-                            </t>
-                        </li>
-                    </t>
-                </ul>
-            </form>
+                        </ul>
+                    </form>
+                </div>
+            </div>
         </xpath>
         <xpath expr="//div[@id='products_grid_before']" position="attributes">
             <attribute name="class">col-lg-3 d-none d-md-block</attribute>
@@ -403,14 +442,8 @@
     </template>
 
     <template id="products_list_view" inherit_id="website_sale.products" active="False" customize_show="True" name="List View">
-        <xpath expr="//div[@id='products_grid']//table" position="replace">
-            <t t-foreach="products" t-as="product">
-                <div class="oe_product oe_list oe_product_cart" t-att-data-publish="product.website_published and 'on' or 'off'">
-                    <t t-call="website_sale.products_item">
-                        <t t-set="show_publish" t-value="True" />
-                    </t>
-                </div>
-            </t>
+        <xpath expr="//div[@id='products_grid']" position="attributes">
+            <attribute name="class" add="o_wsale_layout_line" separator=" "/>
         </xpath>
     </template>
 
