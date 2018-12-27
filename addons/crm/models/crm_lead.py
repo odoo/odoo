@@ -42,8 +42,7 @@ CRM_LEAD_FIELDS_TO_MERGE = [
     'date_action_last',
     'email_from',
     'email_cc',
-    'website',
-    'partner_name']
+    'website']
 
 
 class Lead(models.Model):
