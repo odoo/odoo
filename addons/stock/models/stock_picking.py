@@ -11,6 +11,7 @@ from odoo import api, fields, models, _
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools.float_utils import float_compare, float_is_zero, float_round
 from odoo.exceptions import UserError
+from odoo.tools.safe_eval import safe_eval
 from odoo.addons.stock.models.stock_move import PROCUREMENT_PRIORITIES
 from operator import itemgetter
 
@@ -146,7 +147,13 @@ class PickingType(models.Model):
         return action
 
     def get_action_picking_tree_late(self):
-        return self._get_action('stock.action_picking_tree_late')
+        action = self._get_action('stock.action_picking_tree_late')
+        if action.get('context'):
+            action_context = safe_eval(action['context'], {'active_id': self.id})
+            action_context['search_default_draft'] = 1
+            action_context['search_default_available'] = 1
+            action['context'] = action_context
+        return action
 
     def get_action_picking_tree_backorder(self):
         return self._get_action('stock.action_picking_tree_backorder')
