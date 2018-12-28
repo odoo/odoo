@@ -515,7 +515,7 @@ class Website(models.Model):
             :return: The view record or empty recordset
         '''
         View = self.env['ir.ui.view']
-        view = None
+        view = View
         if isinstance(view_id, pycompat.string_types):
             if 'website_id' in self._context:
                 domain = [('key', '=', view_id)] + self.env['website'].website_domain(self._context.get('website_id'))
@@ -527,20 +527,20 @@ class Website(models.Model):
             if views:
                 view = views.filter_duplicate()
             else:
-                view = self.env.ref(view_id)
+                # we handle the raise below
+                view = self.env.ref(view_id, raise_if_not_found=False)
                 # self.env.ref might return something else than an ir.ui.view (eg: a theme.ir.ui.view)
-                if view._name != 'ir.ui.view':
-                    view = None
+                if not view or view._name != 'ir.ui.view':
+                    # make sure we always return a recordset
+                    view = View
         elif isinstance(view_id, pycompat.integer_types):
             view = View.browse(view_id)
         else:
             raise ValueError('Expecting a string or an integer, not a %s.' % (type(view_id)))
 
-        if view:
-            return view
-        if raise_if_not_found:
+        if not view and raise_if_not_found:
             raise ValueError('No record found for unique ID %s. It may have been deleted.' % (view_id))
-        return None
+        return view
 
     @api.model
     def get_template(self, template):
