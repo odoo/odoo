@@ -25,6 +25,7 @@ import lxml.html
 import odoo
 from odoo import api, fields, models, modules, tools, _
 from odoo.exceptions import AccessDenied, UserError
+from odoo.osv import expression
 from odoo.tools.parse_version import parse_version
 from odoo.tools.misc import topological_sort
 from odoo.http import request
@@ -456,8 +457,23 @@ class Module(models.Model):
         """
         modules_to_remove = self.mapped('name')
         self.env['ir.model.data']._module_data_uninstall(modules_to_remove)
+        self._remove_copied_views()
         self.write({'state': 'uninstalled', 'latest_version': False})
         return True
+
+    @api.multi
+    def _remove_copied_views(self):
+        """ Remove the copies of the views installed by the modules in `self`.
+
+        Those copies do not have an external id so they will not be cleaned by
+        `_module_data_uninstall`. This is why we rely on `key` instead.
+
+        It is important to remove these copies because using them will crash if
+        they rely on data that don't exist anymore if the module is removed.
+        """
+        domain = expression.OR([[('key', '=like', m.name + '.%')] for m in self])
+        orphans = self.env['ir.ui.view'].with_context(active_test=False).search(domain)
+        orphans.unlink()
 
     @api.multi
     @api.returns('self')
