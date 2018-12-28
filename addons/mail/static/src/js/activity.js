@@ -7,6 +7,7 @@ var AbstractField = require('web.AbstractField');
 var BasicModel = require('web.BasicModel');
 var core = require('web.core');
 var field_registry = require('web.field_registry');
+var session = require('web.session');
 var time = require('web.time');
 
 var QWeb = core.qweb;
@@ -486,6 +487,7 @@ var Activity = BasicActivity.extend({
         if (activities.length) {
             var nbActivities = _.countBy(activities, 'state');
             this.$el.html(QWeb.render('mail.activity_items', {
+                uid: session.uid,
                 activities: activities,
                 nbPlannedActivities: nbActivities.planned,
                 nbTodayActivities: nbActivities.today,
@@ -591,7 +593,7 @@ var KanbanActivity = BasicActivity.extend({
             self.$('.o_activity').html(QWeb.render('mail.KanbanActivityDropdown', {
                 selection: self.selection,
                 records: _.groupBy(setDelayLabel(activities), 'state'),
-                uid: self.getSession().uid,
+                uid: session.uid,
             }));
         });
     },
