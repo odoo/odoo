@@ -150,7 +150,6 @@ class PickingType(models.Model):
         action = self._get_action('stock.action_picking_tree_late')
         if action.get('context'):
             action_context = safe_eval(action['context'], {'active_id': self.id})
-            action_context['search_default_draft'] = 1
             action_context['search_default_available'] = 1
             action['context'] = action_context
         return action
