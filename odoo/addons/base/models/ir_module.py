@@ -24,6 +24,7 @@ import lxml.html
 
 import odoo
 from odoo import api, fields, models, modules, tools, _
+from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
 from odoo.exceptions import AccessDenied, UserError
 from odoo.osv import expression
 from odoo.tools.parse_version import parse_version
@@ -472,7 +473,7 @@ class Module(models.Model):
         they rely on data that don't exist anymore if the module is removed.
         """
         domain = expression.OR([[('key', '=like', m.name + '.%')] for m in self])
-        orphans = self.env['ir.ui.view'].with_context(active_test=False).search(domain)
+        orphans = self.env['ir.ui.view'].with_context(**{'active_test': False, MODULE_UNINSTALL_FLAG: True}).search(domain)
         orphans.unlink()
 
     @api.multi
