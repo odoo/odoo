@@ -937,7 +937,31 @@ class PosOrder(models.Model):
         self.env['account.bank.statement.line'].with_context(context).create(args)
         self.amount_paid = sum(payment.amount for payment in self.statement_ids)
         return args.get('statement_id', False)
+ 
+    def _prepare_refund_order_data(self, current_session=None):
+        """
+        Prepare data for the creation of refund order based on the current order's data. Inheritance may inject its own data here
 
+        @param current_session: the single pos.session record that presents the current session for refunding order.
+            If not passed, the last closed session of the same original order's sales person will be used
+        @type current_session: pos.session
+
+        @return: dictionary of default data for the creation of refund order
+        @rtype: dict
+        """
+        current_session = current_session or self.env['pos.session'].search([('state', '!=', 'closed'), ('user_id', '=', self.env.uid)], limit=1)
+        return {
+            # ot used, name forced by create
+            'name': self.name + _(' REFUND'),
+            'session_id': current_session.id,
+            'date_order': fields.Datetime.now(),
+            'pos_reference': self.pos_reference,
+            'lines': False,
+            'amount_tax': -self.amount_tax,
+            'amount_total': -self.amount_total,
+            'amount_paid': 0,
+            }
+         
     @api.multi
     def refund(self):
         """Create a copy of order  for refund order"""
@@ -946,26 +970,10 @@ class PosOrder(models.Model):
         if not current_session:
             raise UserError(_('To return product(s), you need to open a session that will be used to register the refund.'))
         for order in self:
-            clone = order.copy({
-                # ot used, name forced by create
-                'name': order.name + _(' REFUND'),
-                'session_id': current_session.id,
-                'date_order': fields.Datetime.now(),
-                'pos_reference': order.pos_reference,
-                'lines': False,
-                'amount_tax': -order.amount_tax,
-                'amount_total': -order.amount_total,
-                'amount_paid': 0,
-            })
+            data_for_copy = order._prepare_refund_order_data(current_session)
+            clone = order.copy(data_for_copy)
             for line in order.lines:
-                clone_line = line.copy({
-                    # required=True, copy=False
-                    'name': line.name + _(' REFUND'),
-                    'order_id': clone.id,
-                    'qty': -line.qty,
-                    'price_subtotal': -line.price_subtotal,
-                    'price_subtotal_incl': -line.price_subtotal_incl,
-                })
+                line.copy(line._prepare_refund_data(clone))
             PosOrder += clone
 
         return {
@@ -1016,6 +1024,26 @@ class PosOrderLine(models.Model):
     tax_ids = fields.Many2many('account.tax', string='Taxes', readonly=True)
     tax_ids_after_fiscal_position = fields.Many2many('account.tax', compute='_get_tax_ids_after_fiscal_position', string='Taxes to Apply')
     pack_lot_ids = fields.One2many('pos.pack.operation.lot', 'pos_order_line_id', string='Lot/serial Number')
+
+    @api.model
+    def _prepare_refund_data(self, refund_order_id):
+        """
+        This prepares data for refund order line. Inheritance may inject more data here
+
+        @param refund_order_id: the pre-created refund order
+        @type refund_order_id: pos.order
+
+        @return: dictionary of data which is for creating a refund order line from the original line
+        @rtype: dict
+        """
+        return {
+            # required=True, copy=False
+            'name': self.name + _(' REFUND'),
+            'qty': -self.qty,
+            'order_id': refund_order_id.id,
+            'price_subtotal': -self.price_subtotal,
+            'price_subtotal_incl': -self.price_subtotal_incl,
+            }
 
     @api.model
     def create(self, values):
