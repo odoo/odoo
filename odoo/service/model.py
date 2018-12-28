@@ -138,7 +138,7 @@ def check(f):
                         pass
                     raise ValidationError(msg)
                 else:
-                    raise ValidationError(inst[0])
+                    raise ValidationError(inst.args[0])
 
     return wrapper
 
