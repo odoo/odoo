@@ -16,7 +16,7 @@ odoo.define("website_blog.tour", function (require) {
         position: "bottom",
     }, {
         trigger: "h1[data-oe-expression=\"blog_post.name\"]",
-        extra_trigger: "body.editor_has_snippets",
+        extra_trigger: ".o_snippets_loaded",
         content: _t("Write a title, the subtitle is optional."),
         position: "top",
         run: "text",
@@ -26,7 +26,7 @@ odoo.define("website_blog.tour", function (require) {
         content: _t("Set a blog post <b>cover</b>."),
         position: "bottom",
     }, {
-        trigger: "a:containsExact(" + _t("Change Cover")+ "):eq(1)",
+        trigger: "a:containsExact(" + _t("Change Cover")+ "):visible",
         content: _t("Click here to change your post cover."),
         position: "right",
     }, {
