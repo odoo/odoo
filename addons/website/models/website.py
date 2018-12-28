@@ -504,6 +504,12 @@ class Website(models.Model):
     def viewref(self, view_id, raise_if_not_found=True):
         ''' Given an xml_id or a view_id, return the corresponding view record.
             In case of website context, return the most specific one.
+
+            If no website_id is in the context, it will return the generic view,
+            instead of a random one like `get_view_id`.
+
+            Look also for archived views, no matter the context.
+
             :param view_id: either a string xml_id or an integer view_id
             :param raise_if_not_found: should the method raise an error if no view found
             :return: The view record or empty recordset
