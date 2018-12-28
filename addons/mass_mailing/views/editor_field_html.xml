@@ -23,4 +23,10 @@
 <template id="iframe_css_assets_readonly">
     <link rel="stylesheet" type="text/scss" href="/mass_mailing/static/src/css/basic_theme_readonly.css"/>
 </template>
+
+<template id="qunit_suite" inherit_id="web.qunit_suite">
+    <xpath expr="." position="inside">
+        <script type="text/javascript" src="/mass_mailing/static/tests/mass_mailing_html_tests.js"/>
+    </xpath>
+</template>
 </odoo>

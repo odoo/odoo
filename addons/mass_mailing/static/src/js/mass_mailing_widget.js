@@ -56,8 +56,8 @@ var MassMailingFieldHtml = FieldHtml.extend({
             convertInline.classToStyle($editable);
 
             self.trigger_up('field_changed', {
-                dataPointID: this.dataPointID,
-                changes: _.object([fieldName], [this._unWrap($editable.html())])
+                dataPointID: self.dataPointID,
+                changes: _.object([fieldName], [self._unWrap($editable.html())])
             });
 
             if (self._isDirty && self.mode === 'edit') {
