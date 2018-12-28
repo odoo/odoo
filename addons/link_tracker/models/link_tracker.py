@@ -202,7 +202,7 @@ class LinkTracker(models.Model):
 
         return code_rec.link_id.redirected_url
 
-    sql_constraints = [
+    _sql_constraints = [
         ('url_utms_uniq', 'unique (url, campaign_id, medium_id, source_id)', 'The URL and the UTM combination must be unique')
     ]
 
