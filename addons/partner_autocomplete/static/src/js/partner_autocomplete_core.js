@@ -50,6 +50,9 @@ return {
                 });
             }
 
+            odooSuggestions = _.filter(odooSuggestions, function (suggestion) {
+                return !suggestion.ignored;
+            });
             return def.resolve(odooSuggestions);
         };
 
