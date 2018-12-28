@@ -2,15 +2,11 @@ odoo.define("website_sale.tour_shop", function (require) {
     "use strict";
 
     var core = require("web.core");
-    var tour = require("web_tour.tour");
-    var base = require("web_editor.base");
-
     var _t = core._t;
 
-    tour.register("shop", {
-        url: "/shop",
-        wait_for: base.ready(),
-    }, [{
+    // return the steps, used for backend and frontend (because web_editor.base is only in the website)
+
+    return [{
         trigger: "#new-content-menu > a",
         content: _t("Let's create your first product."),
         extra_trigger: ".js_sale",
@@ -28,13 +24,14 @@ odoo.define("website_sale.tour_shop", function (require) {
         content: _t("Click on <em>Continue</em> to create the product."),
         position: "right",
     }, {
-        trigger: ".product_price .o_is_inline_editable .oe_currency_value",
+        trigger: ".product_price .oe_currency_value:visible",
+        extra_trigger: ".note-editable",
         content: _t("Edit the price of this product by clicking on the amount."),
         position: "bottom",
         run: "text 1.99",
     }, {
         trigger: "#wrap img.product_detail_img",
-        extra_trigger: ".product_price .o_is_inline_editable .oe_currency_value:not(:containsExact(1.00))",
+        extra_trigger: ".product_price .o_dirty .oe_currency_value:not(:containsExact(1.00))",
         content: _t("Double click here to set an image describing your product."),
         position: "top",
         run: function (actions) {
@@ -66,10 +63,10 @@ odoo.define("website_sale.tour_shop", function (require) {
         trigger: ".o_main_navbar .o_menu_toggle, #oe_applications .dropdown-toggle",
         content: _t("Let's now take a look at your administration dashboard to get your eCommerce website ready in no time."),
         position: "bottom",
-    }, {
+    }, { // backend
         trigger: '.o_apps > a[data-menu-xmlid="website.menu_website_configuration"], #oe_main_menu_navbar a[data-menu-xmlid="website.menu_website_configuration"]',
         content: _t("Open your website app here."),
         extra_trigger: ".o_apps,#oe_applications",
         position: "bottom",
-    }]);
+    }];
 });
