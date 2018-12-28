@@ -28,7 +28,8 @@ var PivotView = AbstractView.extend({
         Renderer: PivotRenderer,
     },
     viewType: 'pivot',
-    enableTimeRangeMenu: 'true',
+    searchMenuTypes: ['filter', 'groupBy', 'timeRange', 'favorite'],
+
     /**
      * @override
      * @param {Object} params
@@ -117,10 +118,9 @@ var PivotView = AbstractView.extend({
         this.controllerParams.groupableFields = groupableFields;
         // retrieve form and list view ids from the action to open those views
         // when a data cell of the pivot view is clicked
-
         this.controllerParams.views = [
-            _findView(params.action && params.action.views, 'list'),
-            _findView(params.action && params.action.views, 'form'),
+            _findView(params.actionViews, 'list'),
+            _findView(params.actionViews, 'form'),
         ];
         function _findView(views, viewType) {
             var view = _.find(views, function (view) {

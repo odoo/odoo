@@ -1762,8 +1762,8 @@
 
                     <h2>Due Date Computation</h2>
                     <div colspan="2">
-                        <label for="days" string="Due" attrs="{'invisible': [('option','not in',('day_after_invoice_date','after_invoice_month'))]}"/>
-                        <label for="days" string="Due the" attrs="{'invisible': [('option','in',('day_after_invoice_date','after_invoice_month'))]}"/>
+                        <label for="days" string="Due" attrs="{'invisible': [('option','!=', 'day_after_invoice_date')]}"/>
+                        <label for="days" string="Due the" attrs="{'invisible': [('option','=', 'day_after_invoice_date')]}"/>
                         <field name="days" class="oe_inline"/>
                         <label for="option" string=""/> <!--Empty label to force space between elements-->
                         <field name="option" class="oe_inline"/>

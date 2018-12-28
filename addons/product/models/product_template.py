@@ -83,7 +83,7 @@ class ProductTemplate(models.Model):
         help = "Cost used for stock valuation in standard price and as a first price to set in average/FIFO.")
 
     volume = fields.Float(
-        'Volume', compute='_compute_volume', inverse='_set_volume', store=True)
+        'Volume', compute='_compute_volume', inverse='_set_volume', digits=dp.get_precision('Volume'), store=True)
     volume_uom_name = fields.Char(string='Volume unit of measure label', compute='_compute_volume_uom_name', default=_get_default_volume_uom)
     weight = fields.Float(
         'Weight', compute='_compute_weight', digits=dp.get_precision('Stock Weight'),
@@ -135,15 +135,14 @@ class ProductTemplate(models.Model):
 
     # image: all image fields are base64 encoded and PIL-supported
     image = fields.Binary(
-        "Image", attachment=True,
-        help="This field holds the image used as image for the product, limited to 1024x1024px.")
+        "Image", help="This field holds the image used as image for the product, limited to 1024x1024px.")
     image_medium = fields.Binary(
-        "Medium-sized image", attachment=True,
+        "Medium-sized image",
         help="Medium-sized image of the product. It is automatically "
              "resized as a 128x128px image, with aspect ratio preserved, "
              "only when the image exceeds one of those sizes. Use this field in form views or some kanban views.")
     image_small = fields.Binary(
-        "Small-sized image", attachment=True,
+        "Small-sized image",
         help="Small-sized image of the product. It is automatically "
              "resized as a 64x64px image, with aspect ratio preserved. "
              "Use this field anywhere a small image is required.")

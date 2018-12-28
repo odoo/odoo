@@ -19,7 +19,7 @@ class BaseLanguageImport(models.TransientModel):
     name = fields.Char('Language Name', required=True)
     code = fields.Char('ISO Code', size=5, required=True,
                        help="ISO Language and Country code, e.g. en_US")
-    data = fields.Binary('File', required=True)
+    data = fields.Binary('File', required=True, attachment=False)
     filename = fields.Char('File Name', required=True)
     overwrite = fields.Boolean('Overwrite Existing Terms',
                                help="If you enable this option, existing translations (including custom ones) "

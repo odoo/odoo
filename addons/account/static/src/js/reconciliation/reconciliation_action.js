@@ -4,18 +4,16 @@ odoo.define('account.ReconciliationClientAction', function (require) {
 var AbstractAction = require('web.AbstractAction');
 var ReconciliationModel = require('account.ReconciliationModel');
 var ReconciliationRenderer = require('account.ReconciliationRenderer');
-var ControlPanelMixin = require('web.ControlPanelMixin');
-var Widget = require('web.Widget');
 var core = require('web.core');
-var _t = core._t;
 
 
 /**
  * Widget used as action for 'account.bank.statement' reconciliation
  */
-var StatementAction = AbstractAction.extend(ControlPanelMixin, {
+var StatementAction = AbstractAction.extend({
+    hasControlPanel: true,
     title: core._t('Bank Reconciliation'),
-    template: 'reconciliation',
+    contentTemplate: 'reconciliation',
     custom_events: {
         change_mode: '_onAction',
         change_filter: '_onAction',
@@ -34,7 +32,7 @@ var StatementAction = AbstractAction.extend(ControlPanelMixin, {
         load_more: '_onLoadMore',
         reload: 'reload',
     },
-    config: {
+    config: _.extend({}, AbstractAction.prototype.config, {
         // used to instantiate the model
         Model: ReconciliationModel.StatementModel,
         // used to instantiate the action interface
@@ -47,7 +45,7 @@ var StatementAction = AbstractAction.extend(ControlPanelMixin, {
         defaultDisplayQty: 10,
         // number of moves lines displayed in 'match' mode
         limitMoveLines: 15,
-    },
+    }),
 
     /**
      * @override
@@ -65,9 +63,6 @@ var StatementAction = AbstractAction.extend(ControlPanelMixin, {
             limitMoveLines: params.params && params.params.limitMoveLines || this.config.limitMoveLines,
         });
         this.widgets = [];
-        if (!this.action_manager) {
-            this.set_cp_bus(new Widget());
-        }
         // Adding values from the context is necessary to put this information in the url via the action manager so that
         // you can retrieve it if the person shares his url or presses f5
         _.each(params.params, function (value, name) {
@@ -90,13 +85,14 @@ var StatementAction = AbstractAction.extend(ControlPanelMixin, {
         var self = this;
         var def = this.model.load(this.params.context).then(this._super.bind(this));
         return def.then(function () {
-                self.title = self.model.bank_statement_id ? self.model.bank_statement_id.display_name : self.title;
+                var title = self.model.bank_statement_id  && self.model.bank_statement_id.display_name;
+                self._setTitle(title);
                 self.renderer = new self.config.ActionRenderer(self, self.model, {
                     'bank_statement_id': self.model.bank_statement_id,
                     'valuenow': self.model.valuenow,
                     'valuemax': self.model.valuemax,
                     'defaultDisplayQty': self.model.defaultDisplayQty,
-                    'title': self.title,
+                    'title': title,
                 });
             });
     },
@@ -124,9 +120,6 @@ var StatementAction = AbstractAction.extend(ControlPanelMixin, {
     start: function () {
         var self = this;
 
-        this.set("title", this.title);
-        this.update_control_panel({search_view_hidden: true}, {clear: true});
-
         this.renderer.prependTo(self.$('.o_form_sheet'));
         this._renderLines();
 
@@ -141,6 +134,8 @@ var StatementAction = AbstractAction.extend(ControlPanelMixin, {
                 this.renderer._renderNotifications(this.model.statement.notifications);
             this._openFirstLine();
         }
+
+        return this._super.apply(this, arguments);
     },
 
     /**
@@ -151,7 +146,7 @@ var StatementAction = AbstractAction.extend(ControlPanelMixin, {
     do_show: function () {
         this._super.apply(this, arguments);
         if (this.action_manager) {
-            this.update_control_panel({search_view_hidden: true}, {clear: true});
+            this.updateControlPanel({clear: true});
             this.action_manager.do_push_state({
                 action: this.params.tag,
                 active_id: this.params.res_id,
@@ -354,14 +349,14 @@ var StatementAction = AbstractAction.extend(ControlPanelMixin, {
  */
 var ManualAction = StatementAction.extend({
     title: core._t('Journal Items to Reconcile'),
-    config: {
+    config: _.extend({}, StatementAction.prototype.config, {
         Model: ReconciliationModel.ManualModel,
         ActionRenderer: ReconciliationRenderer.ManualRenderer,
         LineRenderer: ReconciliationRenderer.ManualLineRenderer,
         params: ['company_ids', 'mode', 'partner_ids', 'account_ids'],
         defaultDisplayQty: 30,
         limitMoveLines: 15,
-    },
+    }),
 
     //--------------------------------------------------------------------------
     // Handlers

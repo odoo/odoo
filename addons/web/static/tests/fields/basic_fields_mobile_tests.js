@@ -164,7 +164,7 @@ QUnit.module('basic_fields', {
         });
 
         var val = '<script>throw Error();</script><script>throw Error();</script>';
-        testUtils.fields.editInput(form.$('input'), val);
+        testUtils.fields.editInput(form.$('input.o_field_widget[name="foo"]'), val);
 
         // save
         testUtils.form.clickSave(form);

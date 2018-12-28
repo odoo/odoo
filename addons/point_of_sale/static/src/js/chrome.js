@@ -80,33 +80,13 @@ var OrderSelectorWidget = PosBaseWidget.extend({
 
 /* ------- The User Name Widget ------- */
 
-// Displays the current cashier's name and allows
-// to switch between cashiers.
+// Displays the current cashier's name
 
 var UsernameWidget = PosBaseWidget.extend({
     template: 'UsernameWidget',
     init: function(parent, options){
         options = options || {};
         this._super(parent,options);
-    },
-    renderElement: function(){
-        var self = this;
-        this._super();
-
-        this.$el.click(function(){
-            self.click_username();
-        });
-    },
-    click_username: function(){
-        var self = this;
-        this.gui.select_user({
-            'security':     true,
-            'current_user': this.pos.get_cashier(),
-            'title':      _t('Change Cashier'),
-        }).then(function(user){
-            self.pos.set_cashier(user);
-            self.renderElement();
-        });
     },
     get_name: function(){
         var user = this.pos.get_cashier();
@@ -130,7 +110,9 @@ var HeaderButtonWidget = PosBaseWidget.extend({
         options = options || {};
         this._super(parent, options);
         this.action = options.action;
-        this.label   = options.label;
+        this.label  = options.label;
+        this.button_class = options.button_class;
+
     },
     renderElement: function(){
         var self = this;
@@ -141,8 +123,8 @@ var HeaderButtonWidget = PosBaseWidget.extend({
             });
         }
     },
-    show: function(){ this.$el.removeClass('oe_hidden'); },
-    hide: function(){ this.$el.addClass('oe_hidden'); },
+    show: function() { this.$el.removeClass('oe_hidden'); },
+    hide: function() { this.$el.addClass('oe_hidden'); },
 });
 
 /* --------- The Debug Widget --------- */
@@ -510,7 +492,6 @@ var ClientScreenWidget = PosBaseWidget.extend({
                 this.$el.click(function(){
                     self.pos.render_html_for_customer_facing_display().then(function(rendered_html) {
                         self.pos.proxy.take_ownership_over_client_screen(rendered_html).then(
-       
                         function(data) {
                             if (typeof data === 'string') {
                                 data = JSON.parse(data);
@@ -587,7 +568,6 @@ var Chrome = PosBaseWidget.extend(AbstractAction.prototype, {
         this.widget = {};   // contains references to subwidgets instances
 
         this.cleanup_dom();
-
         this.pos.ready.done(function(){
             self.build_chrome();
             self.build_widgets();
@@ -824,8 +804,9 @@ var Chrome = PosBaseWidget.extend(AbstractAction.prototype, {
             'widget': HeaderButtonWidget,
             'append':  '.pos-rightheader',
             'args': {
-                label: _lt('Close'),
+                label: _t('Close'),
                 action: function(){ 
+                    this.$el.addClass('close_button');
                     var self = this;
                     if (!this.confirmed) {
                         this.$el.addClass('confirm');
@@ -856,30 +837,33 @@ var Chrome = PosBaseWidget.extend(AbstractAction.prototype, {
         },
     ],
 
-    // This method instantiates all the screens, widgets, etc. 
-    build_widgets: function() {
-        var classe;
-
-        for (var i = 0; i < this.widgets.length; i++) {
-            var def = this.widgets[i];
-            if ( !def.condition || def.condition.call(this) ) {
-                var args = typeof def.args === 'function' ? def.args(this) : def.args;
-                var w = new def.widget(this, args || {});
-                if (def.replace) {
-                    w.replace(this.$(def.replace));
-                } else if (def.append) {
-                    w.appendTo(this.$(def.append));
-                } else if (def.prepend) {
-                    w.prependTo(this.$(def.prepend));
+    load_widgets: function(widgets) {
+        for (var i = 0; i < widgets.length; i++) {
+            var widget = widgets[i];
+            if ( !widget.condition || widget.condition.call(this) ) {
+                var args = typeof widget.args === 'function' ? widget.args(this) : widget.args;
+                var w = new widget.widget(this, args || {});
+                if (widget.replace) {
+                    w.replace(this.$(widget.replace));
+                } else if (widget.append) {
+                    w.appendTo(this.$(widget.append));
+                } else if (widget.prepend) {
+                    w.prependTo(this.$(widget.prepend));
                 } else {
                     w.appendTo(this.$el);
                 }
-                this.widget[def.name] = w;
+                this.widget[widget.name] = w;
             }
         }
+    },
+
+    // This method instantiates all the screens, widgets, etc.
+    build_widgets: function() {
+        this.load_widgets(this.widgets);
 
         this.screens = {};
-        for (i = 0; i < this.gui.screen_classes.length; i++) {
+        var classe;
+        for (var i = 0; i < this.gui.screen_classes.length; i++) {
             classe = this.gui.screen_classes[i];
             if (!classe.condition || classe.condition.call(this)) {
                 var screen = new classe.widget(this,{});

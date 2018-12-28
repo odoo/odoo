@@ -23,14 +23,16 @@ odoo.define('web.AbstractView', function (require) {
  * in most case discarded.
  */
 
-var ajax = require('web.ajax');
-var Class = require('web.Class');
 var AbstractModel = require('web.AbstractModel');
 var AbstractRenderer = require('web.AbstractRenderer');
 var AbstractController = require('web.AbstractController');
-var utils = require('web.utils');
+var ControlPanelView = require('web.ControlPanelView');
+var mvc = require('web.mvc');
+var viewUtils = require('web.viewUtils');
 
-var AbstractView = Class.extend({
+var Factory = mvc.Factory;
+
+var AbstractView = Factory.extend({
     // name displayed in view switchers
     display_name: '',
     // indicates whether or not the view is mobile-friendly
@@ -40,22 +42,20 @@ var AbstractView = Class.extend({
     // multi_record is used to distinguish views displaying a single record
     // (e.g. FormView) from those that display several records (e.g. ListView)
     multi_record: true,
-    // determine if a search view should be displayed in the control panel and
-    // allowed to interact with the view.  Currently, the only not searchable
-    // views are the form view and the diagram view.
-    searchable: true,
     // viewType is the type of the view, like 'form', 'kanban', 'list'...
     viewType: undefined,
-    // if searchable, this flag determines if the search view will display a
-    // groupby menu or not.  This is useful for the views which do not support
-    // grouping data.
-    groupable: true,
-    enableTimeRangeMenu: false,
-    config: {
+    // determines if a search bar is available
+    withSearchBar: true,
+    // determines the search menus available and their orders
+    searchMenuTypes: ['filter', 'groupBy', 'favorite'],
+    // determines if a control panel should be instantiated
+    withControlPanel: true,
+    // determines the MVC components to use
+    config: _.extend({}, Factory.prototype.config, {
         Model: AbstractModel,
         Renderer: AbstractRenderer,
         Controller: AbstractController,
-    },
+    }),
 
     /**
      * The constructor function is supposed to set 3 variables: rendererParams,
@@ -65,33 +65,32 @@ var AbstractView = Class.extend({
      * @constructs AbstractView
      *
      * @param {Object} viewInfo
-     * @param {Object} viewInfo.arch
+     * @param {Object|string} viewInfo.arch
      * @param {Object} viewInfo.fields
      * @param {Object} viewInfo.fieldsInfo
      * @param {Object} params
-     * @param {string} params.modelName The actual model name
-     * @param {Object} params.context
-     * @param {number} [params.count]
+     * @param {string} [params.modelName]
+     * @param {Object} [params.action={}]
+     * @param {Object} [params.context={}]
      * @param {string} [params.controllerID]
-     * @param {string[]} params.domain
-     * @param {string[][]} params.timeRange
-     * @param {string[][]} params.comparisonTimeRange
-     * @param {string} params.timeRangeDescription
-     * @param {string} params.comparisonTimeRangeDescription
-     * @param {boolean} params.compare
-     * @param {string[]} params.groupBy
+     * @param {number} [params.count]
      * @param {number} [params.currentId]
-     * @param {boolean} params.isEmbedded
+     * @param {string} [params.controllerState]
+     * @param {string} [params.displayName]
+     * @param {Array[]} [params.domain=[]]
      * @param {number[]} [params.ids]
-     * @param {boolean} [params.withControlPanel]
-     * @param {boolean} [params.action.flags.headless]
-     * @param {string} [params.action.display_name]
-     * @param {string} [params.action.name]
-     * @param {string} [params.action.help]
-     * @param {string} [params.action.jsID]
-     * @param {boolean} [params.action.views]
+     * @param {boolean} [params.isEmbedded=false]
+     * @param {Object} [params.searchQuery={}]
+     * @param {Object} [params.searchQuery.context={}]
+     * @param {Array[]} [params.searchQuery.domain=[]]
+     * @param {string[]} [params.searchQuery.groupBy=[]]
+     * @param {Object} [params.userContext={}]
+     * @param {boolean} [params.withControlPanel=true]
      */
     init: function (viewInfo, params) {
+        var action = params.action || {};
+        params = _.defaults(params, this._extractParamsFromAction(action));
+
         // in general, the fieldsView has to be processed by the View (e.g. the
         // arch is a string that needs to be parsed) ; the only exception is for
         // inline form views inside form views, as they are processed alongside
@@ -103,89 +102,51 @@ var AbstractView = Class.extend({
         } else {
             this.fieldsView = viewInfo;
         }
-        this.fields = this.fieldsView.viewFields;
         this.arch = this.fieldsView.arch;
-        // the boolean parameter 'isEmbedded' determines if the view should be considered
-        // as a subview. For now this is only used by the graph controller that appends a
-        // 'Group By' button beside the 'Measures' button when the graph view is embedded.
+        this.fields = this.fieldsView.viewFields;
+        this.userContext = params.userContext || {};
+        this.withControlPanel = params.withControlPanel;
+
+        // the boolean parameter 'isEmbedded' determines if the view should be
+        // considered as a subview. For now this is only used by the graph
+        // controller that appends a 'Group By' button beside the 'Measures'
+        // button when the graph view is embedded.
         var isEmbedded = params.isEmbedded || false;
 
         this.rendererParams = {
             arch: this.arch,
             isEmbedded: isEmbedded,
-            noContentHelp: params.action && params.action.help,
+            noContentHelp: params.noContentHelp,
         };
 
-        var timeRangeMenuData = params.context.timeRangeMenuData;
-        var timeRange = [];
-        var comparisonTimeRange = [];
-        var compare = false;
-        var timeRangeDescription = "";
-        var comparisonTimeRangeDescription = "";
-        if (this.enableTimeRangeMenu && timeRangeMenuData) {
-            timeRange = timeRangeMenuData.timeRange;
-            comparisonTimeRange = timeRangeMenuData.comparisonTimeRange;
-            compare = comparisonTimeRange.length > 0;
-            timeRangeDescription = timeRangeMenuData.timeRangeDescription;
-            comparisonTimeRangeDescription = timeRangeMenuData.comparisonTimeRangeDescription;
-            this.rendererParams.timeRangeDescription = timeRangeDescription;
-            this.rendererParams.comparisonTimeRangeDescription = comparisonTimeRangeDescription;
-        }
-
         this.controllerParams = {
-            modelName: params.modelName,
+            actionViews: params.actionViews,
             activeActions: {
                 edit: this.arch.attrs.edit ? JSON.parse(this.arch.attrs.edit) : true,
                 create: this.arch.attrs.create ? JSON.parse(this.arch.attrs.create) : true,
                 delete: this.arch.attrs.delete ? JSON.parse(this.arch.attrs.delete) : true,
                 duplicate: this.arch.attrs.duplicate ? JSON.parse(this.arch.attrs.duplicate) : true,
             },
-            groupable: this.groupable,
-            enableTimeRangeMenu: this.enableTimeRangeMenu,
-            isEmbedded: isEmbedded,
-            controllerID: params.controllerID,
             bannerRoute: this.arch.attrs.banner_route,
+            controllerID: params.controllerID,
+            displayName: params.displayName,
+            isEmbedded: isEmbedded,
+            isMultiRecord: this.multi_record,
+            modelName: params.modelName,
+            viewType: this.viewType,
         };
-        // AAB: these params won't be necessary as soon as the ControlPanel will
-        // be instantiated by the View
-        this.controllerParams.displayName = params.action && (params.action.display_name || params.action.name);
-        this.controllerParams.isMultiRecord = this.multi_record;
-        this.controllerParams.searchable = this.searchable;
-        this.controllerParams.searchView = params.action && params.action.searchView;
-        this.controllerParams.searchViewHidden = this.searchview_hidden; // AAB: use searchable instead where it is used?
-        this.controllerParams.actionViews = params.action ? params.action.views : [];
-        this.controllerParams.viewType = this.viewType;
-        this.controllerParams.withControlPanel = true;
-        if (params.action && params.action.flags) {
-            this.controllerParams.withControlPanel = !params.action.flags.headless;
-        } else if ('withControlPanel' in params) {
-            this.controllerParams.withControlPanel = params.withControlPanel;
-        }
 
-        var groupBy = params.groupBy;
-        if (typeof groupBy === 'string') {
-            groupBy = [groupBy];
-        }
-
+        var controllerState = params.controllerState || {};
+        var currentId = controllerState.currentId || params.currentId;
         this.loadParams = {
             context: params.context,
             count: params.count || ((this.controllerParams.ids !== undefined) &&
                    this.controllerParams.ids.length) || 0,
             domain: params.domain,
-            timeRange: timeRange,
-            timeRangeDescription: timeRangeDescription,
-            comparisonTimeRange: comparisonTimeRange,
-            comparisonTimeRangeDescription: comparisonTimeRangeDescription,
-            compare: compare,
-            groupedBy: groupBy,
             modelName: params.modelName,
-            res_id: params.currentId,
-            res_ids: params.ids,
-            orderedBy: params.context ? params.context.orderedBy : [],
+            res_id: currentId,
+            res_ids: controllerState.resIds || params.ids || (currentId ? [currentId] : undefined),
         };
-        if (params.modelName) {
-            this.loadParams.modelName = params.modelName;
-        }
         // default_order is like:
         //   'name,id desc'
         // but we need it like:
@@ -197,8 +158,23 @@ var AbstractView = Class.extend({
                 return {name: order[0], asc: order[1] !== 'desc'};
             });
         }
+        if (params.searchQuery) {
+            this._updateMVCParams(params.searchQuery);
+        }
 
-        this.userContext = params.userContext;
+        this.controlPanelParams = {
+            action: action,
+            activateDefaultFavorite: params.activateDefaultFavorite,
+            breadcrumbs: params.breadcrumbs,
+            context: this.loadParams.context,
+            domain: this.loadParams.domain,
+            modelName: params.modelName,
+            searchMenuTypes: params.searchMenuTypes,
+            state: controllerState.cpState,
+            viewInfo: params.controlPanelFieldsView,
+            withBreadcrumbs: params.withBreadcrumbs,
+            withSearchBar: params.withSearchBar,
+        };
     },
 
     //--------------------------------------------------------------------------
@@ -206,69 +182,48 @@ var AbstractView = Class.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Main method of the view class. Create a controller, and make sure that
-     * data and libraries are loaded.
-     *
-     * There is a unusual thing going in this method with parents: we create
-     * renderer/model with parent as parent, then we have to reassign them at
-     * the end to make sure that we have the proper relationships.  This is
-     * necessary to solve the problem that the controller need the model and the
-     * renderer to be instantiated, but the model need a parent to be able to
-     * load itself, and the renderer needs the data in its constructor.
-     *
-     * @param {Widget} parent The parent of the resulting Controller (most
-     *      likely an action manager)
-     * @returns {Deferred} The deferred resolves to a controller
+     * @override
      */
     getController: function (parent) {
         var self = this;
-        // check if a model already exists, as if not, one will be created and
-        // we'll have to set the controller as its parent
-        var alreadyHasModel = !!this.model;
-        return $.when(this._loadData(parent), ajax.loadLibs(this)).then(function () {
-            var state = self.model.get(arguments[0]);
-            var renderer = self.getRenderer(parent, state);
-            var Controller = self.Controller || self.config.Controller;
-            var controllerParams = _.extend({
-                initialState: state,
-            }, self.controllerParams);
-            var controller = new Controller(parent, self.model, renderer, controllerParams);
-            renderer.setParent(controller);
-
-            if (!alreadyHasModel) {
-                // if we have a model, it already has a parent. Otherwise, we
-                // set the controller, so the rpcs from the model actually work
-                self.model.setParent(controller);
+        var def;
+        if (this.withControlPanel) {
+            def = this._createControlPanel(parent);
+        }
+        var _super = this._super.bind(this);
+        return $.when(def).then(function (controlPanel) {
+            if (controlPanel) {
+                var searchQuery = controlPanel.getSearchQuery();
+                self._updateMVCParams(searchQuery);
             }
-            return controller;
+            // get the parent of the model if it already exists, as _super will
+            // set the new controller as parent, which we don't want
+            var modelParent = self.model && self.model.getParent();
+            return _super(parent).done(function (controller) {
+                if (controlPanel) {
+                    controlPanel.setParent(controller);
+                }
+                if (modelParent) {
+                    // if we already add a model, restore its parent
+                    self.model.setParent(modelParent);
+                }
+            });
+
         });
     },
     /**
-     * Returns the view model or create an instance of it if none
+     * Ensures that only one instance of AbstractModel is created
      *
-     * @param {Widget} parent the parent of the model, if it has to be created
-     * @return {Object} instance of the view model
+     * @override
      */
-    getModel: function (parent) {
+    getModel: function () {
         if (!this.model) {
-            var Model = this.config.Model;
-            this.model = new Model(parent);
+            this.model = this._super.apply(this, arguments);
         }
         return this.model;
     },
     /**
-     * Returns the a new view renderer instance
-     *
-     * @param {Widget} parent the parent of the model, if it has to be created
-     * @param {Object} state the information related to the rendered view
-     * @return {Object} instance of the view renderer
-     */
-    getRenderer: function (parent, state) {
-        var Renderer = this.config.Renderer;
-        return new Renderer(parent, state, this.rendererParams);
-    },
-    /**
-     * this is useful to customize the actual class to use before calling
+     * This is useful to customize the actual class to use before calling
      * createView.
      *
      * @param {Controller} Controller
@@ -282,16 +237,61 @@ var AbstractView = Class.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Load initial data from the model
+     * Instantiates and starts a ControlPanelController.
      *
      * @private
-     * @param {Widget} parent the parent of the model
-     * @returns {Deferred<*>} a deferred that resolves to whatever the model
-     *   decide to return
+     * @param {Widget} parent
+     * @returns {ControlPanelController}
      */
-    _loadData: function (parent) {
-        var model = this.getModel(parent);
-        return model.load(this.loadParams);
+    _createControlPanel: function (parent) {
+        var self = this;
+        var controlPanelView = new ControlPanelView(this.controlPanelParams);
+        return controlPanelView.getController(parent).then(function (controlPanel) {
+            self.controllerParams.controlPanel = controlPanel;
+            return controlPanel.appendTo(document.createDocumentFragment()).then(function () {
+                return controlPanel;
+            });
+        });
+    },
+    /**
+     * @private
+     * @param {Object} [action]
+     * @param {Object} [action.context || {}]
+     * @param {boolean} [action.context.no_breadcrumbs=false]
+     * @param {integer} [action.context.active_id]
+     * @param {integer[]} [action.context.active_ids]
+     * @param {Object} [action.controlPanelFieldsView]
+     * @param {string} [action.display_name]
+     * @param {Array[]} [action.domain=[]]
+     * @param {string} [action.help]
+     * @param {integer} [action.id]
+     * @param {integer} [action.limit]
+     * @param {string} [action.name]
+     * @param {string} [action.res_model]
+     * @param {string} [action.target]
+     * @returns {Object}
+     */
+    _extractParamsFromAction: function (action) {
+        action = action || {};
+        var context = action.context || {};
+        var inline = action.target === 'inline';
+        return {
+            actionId: action.id || false,
+            actionViews: action.views || [],
+            activateDefaultFavorite: !context.active_id && !context.active_ids,
+            context: action.context || {},
+            controlPanelFieldsView: action.controlPanelFieldsView,
+            currentId: action.res_id ? action.res_id : undefined,  // load returns 0
+            displayName: action.display_name || action.name,
+            domain: action.domain || [],
+            limit: action.limit,
+            modelName: action.res_model,
+            noContentHelp: action.help,
+            searchMenuTypes: inline ? [] : this.searchMenuTypes,
+            withBreadcrumbs: 'no_breadcrumbs' in context ? !context.no_breadcrumbs : true,
+            withControlPanel: this.withControlPanel,
+            withSearchBar: inline ? false : this.withSearchBar,
+        };
     },
     /**
      * Processes a fieldsView. In particular, parses its arch.
@@ -303,11 +303,43 @@ var AbstractView = Class.extend({
      */
     _processFieldsView: function (fieldsView) {
         var fv = _.extend({}, fieldsView);
-        var doc = $.parseXML(fv.arch).documentElement;
-        var stripWhitespaces = doc.nodeName.toLowerCase() !== 'kanban';
-        fv.arch = utils.xml_to_json(doc, stripWhitespaces);
+        fv.arch = viewUtils.parseArch(fv.arch);
         fv.viewFields = _.defaults({}, fv.viewFields, fv.fields);
         return fv;
+    },
+    /**
+     * Hook to update the renderer, controller and load params with the result
+     * of a search (i.e. a context, a domain and a groupBy).
+     *
+     * @private
+     * @param {Object} searchQuery
+     * @param {Object} searchQuery.context
+     * @param {Object} [searchQuery.context.timeRangeMenuData={}]
+     * @param {Array[]} [searchQuery.context.timeRangeMenuData.comparisonTimeRange=[]]
+     * @param {string} [searchQuery.context.timeRangeMenuData.comparisonTimeRangeDescription='']
+     * @param {string} [searchQuery.context.timeRangeMenuData.timeRangeDescription='']
+     * @param {Array[]} [searchQuery.context.timeRangeMenuData.timeRange=[]]
+     * @param {Array[]} searchQuery.domain
+     * @param {string[]} searchQuery.groupBy
+     */
+    _updateMVCParams: function (searchQuery) {
+        var timeRangeMenuData = searchQuery.context.timeRangeMenuData || {};
+        var comparisonTimeRange = timeRangeMenuData.comparisonTimeRange || [];
+        var comparisonTimeRangeDescription = timeRangeMenuData.comparisonTimeRangeDescription || '';
+        var timeRangeDescription = timeRangeMenuData.timeRangeDescription || '';
+        this.loadParams = _.extend(this.loadParams, {
+            compare: comparisonTimeRange.length > 0,
+            comparisonTimeRange: comparisonTimeRange,
+            comparisonTimeRangeDescription: comparisonTimeRangeDescription,
+            context: searchQuery.context,
+            domain: searchQuery.domain,
+            groupedBy: searchQuery.groupBy,
+            timeRange: timeRangeMenuData.timeRange || [],
+            timeRangeDescription: timeRangeMenuData.timeRangeDescription || '',
+        });
+        this.loadParams.orderedBy = searchQuery.orderedBy ? searchQuery.orderedBy : this.loadParams.orderedBy;
+        this.rendererParams.timeRangeDescription = timeRangeDescription;
+        this.rendererParams.comparisonTimeRangeDescription = comparisonTimeRangeDescription;
     },
 });
 

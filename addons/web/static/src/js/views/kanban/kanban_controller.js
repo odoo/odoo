@@ -238,7 +238,7 @@ var KanbanController = BasicController.extend({
                             self.renderer.updateColumn(db_id, data);
                         });
                     });
-            }).fail(this.reload.bind(this));
+            }).fail(this.reload.bind(this, {}));
     },
     /**
      * @private
@@ -279,7 +279,7 @@ var KanbanController = BasicController.extend({
         } else if (this.on_create && this.on_create !== 'quick_create') {
             // Execute the given action
             this.do_action(this.on_create, {
-                on_close: this.reload.bind(this),
+                on_close: this.reload.bind(this, {}),
                 additional_context: state.context,
             });
         } else {

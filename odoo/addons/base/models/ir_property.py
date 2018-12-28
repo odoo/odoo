@@ -42,7 +42,7 @@ class Property(models.Model):
     value_float = fields.Float()
     value_integer = fields.Integer()
     value_text = fields.Text()  # will contain (char, text)
-    value_binary = fields.Binary()
+    value_binary = fields.Binary(attachment=False)
     value_reference = fields.Char()
     value_datetime = fields.Datetime()
     type = fields.Selection([('char', 'Char'),

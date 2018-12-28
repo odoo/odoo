@@ -25,6 +25,8 @@ var Registry = Class.extend({
      */
     init: function (mapping) {
         this.map = Object.create(mapping || null);
+        this._scoreMapping = Object.create(null);
+        this._sortedKeys = null;
         this.listeners = []; // listening callbacks on newly added items.
     },
 
@@ -39,9 +41,12 @@ var Registry = Class.extend({
      *
      * @param {string} key
      * @param {any} value
+     * @param {number} [score] if given, this value will be used to order keys
      * @returns {Registry} can be used to chain add calls.
      */
-    add: function (key, value) {
+    add: function (key, value, score) {
+        this._scoreMapping[key] = score === undefined ? key : score;
+        this._sortedKeys = null;
         this.map[key] = value;
         _.each(this.listeners, function (callback) {
             callback(key, value);
@@ -49,7 +54,7 @@ var Registry = Class.extend({
         return this;
     },
     /**
-     * Check if the registry contains the value
+     * Check if the registry contains the key
      *
      * @param {string} key
      * @returns {boolean}
@@ -58,18 +63,12 @@ var Registry = Class.extend({
         return (key in this.map);
     },
     /**
-     * Creates and returns a copy of the current mapping, with the provided
-     * mapping argument added in (replacing existing keys if needed)
+     * Returns the content of the registry (an object mapping keys to values)
      *
-     * Parent and child remain linked, a new key in the parent (which is not
-     * overwritten by the child) will appear in the child.
-     *
-     * @param {Object} [mapping={}] a mapping of keys to object-paths
+     * @returns {Object}
      */
-    extend: function (mapping) {
-        var child = new Registry(this.map);
-        _.extend(child.map, mapping);
-        return child;
+    entries: function () {
+        return Object.create(this.map);
     },
     /**
      * Returns the value associated to the given key.
@@ -96,12 +95,40 @@ var Registry = Class.extend({
         return null;
     },
     /**
+     * Return the list of keys in map object.
+     *
+     * The registry guarantees that the keys have a consistent order, defined by
+     * the 'score' value when the item has been added.
+     *
+     * @returns {string[]}
+     */
+    keys: function () {
+        var self = this;
+        if (!this._sortedKeys) {
+            this._sortedKeys = _.sortBy(Object.keys(this.map), function (key) {
+                return self._scoreMapping[key] || 0;
+            });
+        }
+        return this._sortedKeys;
+    },
+    /**
      * Register a callback to execute when items are added to the registry.
      *
      * @param {function} callback function with parameters (key, value).
      */
     onAdd: function (callback) {
         this.listeners.push(callback);
+    },
+    /**
+     * Return the list of values in map object
+     *
+     * @returns {string[]}
+     */
+    values: function () {
+        var self = this;
+        return this.keys().map(function (key) {
+            return self.map[key];
+        });
     },
 });
 

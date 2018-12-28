@@ -12,9 +12,9 @@ odoo.define('web.test_utils_create', function (require) {
 
 var ActionManager = require('web.ActionManager');
 var config = require('web.config');
-var ControlPanel = require('web.ControlPanel');
-var dom = require('web.dom');
+var ControlPanelView = require('web.ControlPanelView');
 var DebugManager = require('web.DebugManager');
+var dom = require('web.dom');
 var testUtilsMock = require('web.test_utils_mock');
 var Widget = require('web.Widget');
 
@@ -70,8 +70,13 @@ function createActionManager (params) {
         actionManager.destroy = originalDestroy;
         widget.destroy();
     };
-    actionManager.appendTo(widget.$el);
-
+    var fragment = document.createDocumentFragment();
+    actionManager.appendTo(fragment).then(function () {
+        dom.append(widget.$el, fragment, {
+            callbacks: [{ widget: actionManager }],
+            in_DOM: true,
+        });
+    });
     return actionManager;
 }
 
@@ -113,32 +118,46 @@ function createAsyncView(params) {
         $target = $('body');
         $target.addClass('debug');
     }
+    // reproduce the DOM environment of views
+    var $webClient = $('<div>').addClass('o_web_client').prependTo($target);
+    var $actionManager = $('<div>').addClass('o_action_manager').appendTo($webClient);
+
 
     // add mock environment: mock server, session, fieldviewget, ...
     var mockServer = testUtilsMock.addMockEnvironment(widget, params);
     var viewInfo = testUtilsMock.fieldsViewGet(mockServer, params);
+
     // create the view
-    var viewOptions = {
+    var View = params.View;
+    var viewOptions = _.defaults({}, params.viewOptions, {
         modelName: params.model || 'foo',
         ids: 'res_id' in params ? [params.res_id] : undefined,
         currentId: 'res_id' in params ? params.res_id : undefined,
         domain: params.domain || [],
         context: params.context || {},
-        groupBy: params.groupBy || [],
-    };
+    });
+    // patch the View to handle the groupBy given in params, as we can't give it
+    // in init (unlike the domain and context which can be set in the action)
+    testUtilsMock.patch(View, {
+        _updateMVCParams: function () {
+            this._super.apply(this, arguments);
+            this.loadParams.groupedBy = params.groupBy || viewOptions.groupBy || [];
+        },
+    });
     if (params.hasSelectors) {
         viewOptions.hasSelectors = params.hasSelectors;
     }
 
-    _.extend(viewOptions, params.viewOptions);
-
-    var view = new params.View(viewInfo, viewOptions);
-
-    // reproduce the DOM environment of views
-    var $web_client = $('<div>').addClass('o_web_client').prependTo($target);
-    var controlPanel = new ControlPanel(widget);
-    controlPanel.appendTo($web_client);
-    var $content = $('<div>').addClass('o_content').appendTo($web_client);
+    var view;
+    if (viewInfo.type === 'controlpanel' || viewInfo.type === 'search') {
+        // TODO: probably needs to create an helper just for that
+        view = new params.View({
+            viewInfo: viewInfo,
+            modelName: params.model || 'foo',
+        });
+    } else {
+        view = new params.View(viewInfo, viewOptions);
+    }
 
     if (params.interceptsPropagate) {
         _.each(params.interceptsPropagate, function (cb, name) {
@@ -155,16 +174,15 @@ function createAsyncView(params) {
             // when it will be called the second time (by its parent)
             delete view.destroy;
             widget.destroy();
-        };
 
-        // link the view to the control panel
-        view.set_cp_bus(controlPanel.get_bus());
+            testUtilsMock.unpatch(View);
+        };
 
         // render the view in a fragment as they must be able to render correctly
         // without being in the DOM
         var fragment = document.createDocumentFragment();
         return view.appendTo(fragment).then(function () {
-            dom.append($content, fragment, {
+            dom.prepend($actionManager, fragment, {
                 callbacks: [{ widget: view }],
                 in_DOM: true,
             });
@@ -176,7 +194,95 @@ function createAsyncView(params) {
         });
     });
 }
+/**
+ * create a controlPanel from various parameters.
+ *
+ * It returns an instance of ControlPanelController
+ *
+ * @param {Object} [params={}]
+ * @param {Object} [params.action={}]
+ * @param {Object} [params.context={}]
+ * @param {Object} [params.debug=false] if true, the widget will be appended in
+ *   the DOM. Also, RPCs and uncaught OdooEvent will be logged
+ * @param {string} [params.domain=[]]
+ * @param {integer} [params.fieldDebounce=0] the debounce value to use for the
+ *   duration of the test.
+ * @param {Object} params.intercepts an object with event names as key, and
+ *   callback as value.  Each key,value will be used to intercept the event.
+ *   Note that this is particularly useful if you want to intercept events going
+ *   up in the init process of the view, because there are no other way to do it
+ *   after this method returns
+ * @param {string} [params.modelName]
+ * @param {string[]} [params.searchMenuTypes = ['filter', 'groupBy', 'favorite']]
+ *   determines search menus displayed.
+ * @param {string} [params.template] the QWeb template to render
+ * @param {Object} [params.viewInfo={arch: '<controlpanel/>', fields: {}}]
+     a controlpanel (or search) fieldsview
+ * @param {string} [params.viewInfo.arch]
+ * @param {boolean} [params.context.no_breadcrumbs=false] if set to true,
+ *   breadcrumbs won't be rendered
+ * @param {boolean} [params.withBreadcrumbs=true] if set to false,
+ *   breadcrumbs won't be rendered
+ * @param {boolean} [params.withSearchBar=true] if set to false, no default
+ *   search bar will be rendered
+ *
+ * @returns {Deferred<ControlPanel>} resolves with an instance of the ControlPanelController
+ */
+function createControlPanel(params) {
+    params = params || {};
+    var $target = $('#qunit-fixture');
+    if (params.debug) {
+        $target = $('body');
+        $target.addClass('debug');
+    }
+    // reproduce the DOM environment of a view control panel
+    var $webClient = $('<div>').addClass('o_web_client').prependTo($target);
+    var $actionManager = $('<div>').addClass('o_action_manager').appendTo($webClient);
+    var $action = $('<div>').addClass('o_action').appendTo($actionManager);
 
+    var widget = new Widget();
+    // add mock environment: mock server, session, fieldviewget, ...
+    var mockServer = testUtilsMock.addMockEnvironment(widget, params);
+    if (!params.viewInfo) {
+        try {
+            params.viewInfo = testUtilsMock.fieldsViewGet(mockServer, params);
+        } catch (e) {
+            // if an error occurs we keep params.viewInfo undefined.
+            // It will be set to {arch: '<controlpanel/>', fields: {}} in
+            // ControlPanelView init function.
+        }
+    }
+
+    var viewOptions = _.defaults({}, params.viewOptions, {
+        modelName: params.model,
+        searchMenuTypes: params.searchMenuTypes,
+        viewInfo: params.viewInfo,
+    });
+    var controlPanelView = new ControlPanelView(viewOptions);
+    return controlPanelView.getController(widget).then(function (controlPanel) {
+        // override the controlPanel's 'destroy' so that it calls 'destroy' on
+        // the widget instead, as the widget is the parent of the controlPanel
+        // and the mockServer.
+        controlPanel.__destroy = controlPanel.destroy;
+        controlPanel.destroy = function () {
+            // remove the override to properly destroy the controlPanel and its
+            // children when it will be called the second time (by its parent)
+            delete controlPanel.destroy;
+            widget.destroy();
+        };
+
+        // render the controlPanel in a fragment as it must be able to render
+        // correctly without being in the DOM
+        var fragment = document.createDocumentFragment();
+        return controlPanel.appendTo(fragment).then(function () {
+            dom.prepend($action, fragment, {
+                callbacks: [{ widget: controlPanel }],
+                in_DOM: true,
+            });
+            return controlPanel;
+        });
+    });
+}
 /**
  * Create and return an instance of DebugManager with all rpcs going through a
  * mock method, assuming that the user has access rights, and is an admin.
@@ -279,6 +385,7 @@ function createView(params) {
 return {
     createActionManager: createActionManager,
     createAsyncView: createAsyncView,
+    createControlPanel: createControlPanel,
     createDebugManager: createDebugManager,
     createModel: createModel,
     createParent: createParent,

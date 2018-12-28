@@ -6,7 +6,7 @@ var base = require("web_editor.base");
 
 tour.register('test_survey', {
     test: true,
-    url: '/survey/start/user-feedback-form-1',
+    url: '/survey/start/1',
     wait_for: base.ready()
 }, [
     // Page-1

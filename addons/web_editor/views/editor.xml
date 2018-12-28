@@ -58,6 +58,12 @@
     </xpath>
 </template>
 
+<template id="_assets_secondary_variables" inherit_id="web._assets_secondary_variables">
+    <xpath expr="//link" position="before">
+        <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/secondary_variables.scss"/>
+    </xpath>
+</template>
+
 <template id="assets_common" inherit_id="web.assets_common" name="Web Editor Common Assets (used in backend interface and website)">
     <xpath expr="script[last()]" position="after">
         <script type="text/javascript" src="/web_editor/static/lib/vkbeautify/vkbeautify.0.99.00.beta.js"></script>
@@ -67,7 +73,7 @@
 </template>
 
 <template id="_assets_backend_helpers" inherit_id="web._assets_backend_helpers">
-    <xpath expr="//link[last()]" position="after">
+    <xpath expr="//link" position="before">
         <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/bootstrap_overridden.scss"/>
     </xpath>
 </template>
@@ -83,7 +89,7 @@
 </template>
 
 <template id="_assets_frontend_helpers" inherit_id="web._assets_frontend_helpers">
-    <xpath expr="//link[last()]" position="after">
+    <xpath expr="//link" position="before">
         <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/bootstrap_overridden.scss"/>
     </xpath>
 </template>

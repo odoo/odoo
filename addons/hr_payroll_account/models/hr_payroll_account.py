@@ -42,7 +42,7 @@ class HrPayslip(models.Model):
     @api.onchange('contract_id')
     def onchange_contract(self):
         super(HrPayslip, self).onchange_contract()
-        self.journal_id = self.contract_id.journal_id.id or (not self.contract_id and self.default_get(['journal_id'])['journal_id'])
+        self.journal_id = self.contract_id.journal_id.id or self.default_get(['journal_id'])['journal_id']
 
     @api.multi
     def action_payslip_cancel(self):
@@ -154,7 +154,6 @@ class HrContract(models.Model):
     _inherit = 'hr.contract'
     _description = 'Employee Contract'
 
-    analytic_account_id = fields.Many2one('account.analytic.account', 'Analytic Account')
     journal_id = fields.Many2one('account.journal', 'Salary Journal')
 
 class HrPayslipRun(models.Model):

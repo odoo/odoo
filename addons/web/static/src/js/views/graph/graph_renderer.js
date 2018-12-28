@@ -23,7 +23,7 @@ var CHART_TYPES = ['pie', 'bar', 'line'];
 var MAX_LEGEND_LENGTH = 25 * (Math.max(1, config.device.size_class));
 
 return AbstractRenderer.extend({
-    className: "o_graph_container",
+    className: "o_graph_renderer",
     /**
      * @override
      * @param {Widget} parent

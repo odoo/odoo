@@ -29,7 +29,7 @@ var CalendarView = AbstractView.extend({
         Renderer: CalendarRenderer,
     },
     viewType: 'calendar',
-    groupable: false,
+    searchMenuTypes: ['filter', 'favorite'],
 
     /**
      * @override

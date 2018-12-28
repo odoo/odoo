@@ -99,6 +99,7 @@ QUnit.module('activity view', {
                     activity_type_id: { string: "Activity type", type: "many2one", relation: "mail.activity.type" },
                     display_name: { string: "Display name", type: "char" },
                     date_deadline: { string: "Due Date", type: "date" },
+                    can_write: { string: "Can write", type: "boolean" },
                     state: {
                         string: 'State',
                         type: 'selection',
@@ -112,6 +113,8 @@ QUnit.module('activity view', {
                         id: 1,
                         display_name: "An activity",
                         date_deadline: moment().add(3, "days").format("YYYY-MM-DD"), // now
+                        can_write: true,
+
                         state: "planned",
                         activity_type_id: 1,
                         mail_template_ids: [8, 9],
@@ -120,6 +123,7 @@ QUnit.module('activity view', {
                         id: 2,
                         display_name: "An activity",
                         date_deadline: moment().format("YYYY-MM-DD"), // now
+                        can_write: true,
                         state: "today",
                         activity_type_id: 1,
                         mail_template_ids: [8, 9],
@@ -128,6 +132,7 @@ QUnit.module('activity view', {
                         id: 3,
                         display_name: "An activity",
                         date_deadline: moment().subtract(2, "days").format("YYYY-MM-DD"), // now
+                        can_write: true,
                         state: "overdue",
                         activity_type_id: 2,
                         mail_template_ids: [],
@@ -337,8 +342,8 @@ QUnit.test('activity view: activity widget', function (assert) {
 
     activity.destroy();
 });
-QUnit.test('activity view: no group by', function (assert) {
-    assert.expect(4);
+QUnit.test('activity view: no group_by_menu and no time_range_menu', function (assert) {
+    assert.expect(3);
 
     var actionManager = createActionManager({
         actions: [{
@@ -363,14 +368,12 @@ QUnit.test('activity view: no group by', function (assert) {
 
     actionManager.doAction(1);
 
-    assert.strictEqual($('.o_search_options .o_dropdown:visible').length, 2,
+    assert.containsN(actionManager, '.o_search_options .o_dropdown button:visible', 2,
         "only two elements should be available in view search");
-    assert.strictEqual($('.o_search_options .o_dropdown:visible .o_filters_menu').length, 1,
+    assert.isVisible(actionManager.$('.o_search_options .o_dropdown button.o_filters_menu_button'),
         "filter should be available in view search");
-    assert.strictEqual($('.o_search_options .o_dropdown:visible .o_favorites_menu').length, 1,
+    assert.isVisible(actionManager.$('.o_search_options .o_dropdown button.o_favorites_menu_button'),
         "favorites should be available in view search");
-    assert.strictEqual($('.o_search_options .o_dropdown:hidden .o_group_by_menu').length, 1,
-        "group by should be hidden");
     actionManager.destroy();
 });
 

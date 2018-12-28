@@ -244,7 +244,7 @@ QUnit.module('fields', {}, function () {
             // save and close modal
             testUtils.dom.click($('.modal .modal-footer .btn-primary:first'));
             // save form
-            testUtils.form.clickSave(form);;
+            testUtils.form.clickSave(form);
             // click next on pager
             testUtils.dom.click(form.pager.$('.o_pager_next'));
 
@@ -316,7 +316,7 @@ QUnit.module('fields', {}, function () {
             // save and close modal
             testUtils.dom.click($('.modal .modal-footer .btn-primary:first'));
             // save form
-            testUtils.form.clickSave(form);;
+            testUtils.form.clickSave(form);
             // click next on pager
             testUtils.dom.click(form.pager.$('.o_pager_next'));
 
@@ -562,7 +562,7 @@ QUnit.module('fields', {}, function () {
 
             // save the main record, and check that no extra rpcs are done (record
             // is not dirty, only a related record was modified)
-            testUtils.form.clickSave(form);;
+            testUtils.form.clickSave(form);
             assert.verifySteps(['read', 'get_formview_id', 'load_views', 'read', 'write', 'onchange', 'read']);
             form.destroy();
         });
@@ -681,7 +681,7 @@ QUnit.module('fields', {}, function () {
                 'value of the m2o should have been correctly updated');
 
             // save
-            testUtils.form.clickSave(form);;
+            testUtils.form.clickSave(form);
             assert.strictEqual(form.$('a.o_form_uri').text(), 'Partner 20',
                 "should display correct value after save");
 
@@ -709,7 +709,7 @@ QUnit.module('fields', {}, function () {
             // Remove value from many2one and then save, there should not have href with id and model on m2o anchor
             testUtils.form.clickEdit(form);
             form.$('.o_field_many2one input').val('').trigger('keyup').trigger('focusout');
-            testUtils.form.clickSave(form);;
+            testUtils.form.clickSave(form);
 
             assert.hasAttrValue(form.$('a.o_form_uri'), 'href', "#",
                 "href should have #");
@@ -795,10 +795,10 @@ QUnit.module('fields', {}, function () {
 
             testUtils.form.clickEdit(form);
 
-            assert.strictEqual(form.$('input').val(), "first record",
+            assert.strictEqual(form.$('.o_field_widget[name=trululu] input').val(), "first record",
                 "actual field value should be displayed to be edited");
 
-            testUtils.form.clickSave(form);;
+            testUtils.form.clickSave(form);
 
             assert.ok(form.$('a:contains(and some address)').length,
                 "should still display additional result");
@@ -959,7 +959,7 @@ QUnit.module('fields', {}, function () {
                 },
             });
             await testUtils.fields.many2one.searchAndClickItem('trululu', 'b');
-            testUtils.form.clickSave(form);;
+            testUtils.form.clickSave(form);
 
             assert.verifySteps(['name_create'],
                 "should wait for the name_create before creating the record");
@@ -1059,7 +1059,7 @@ QUnit.module('fields', {}, function () {
 
             testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
             await testUtils.fields.many2one.searchAndClickItem('trululu', {search: 'b'});
-            testUtils.form.clickSave(form);;
+            testUtils.form.clickSave(form);
 
             assert.verifySteps(['name_create'],
                 "should wait for the name_create before creating the record");
@@ -1138,7 +1138,7 @@ QUnit.module('fields', {}, function () {
                 assert.hasClass(form.$('.o_data_row:nth(1)'),'o_selected_row',
                     "the second row should be in edition");
 
-                testUtils.form.clickSave(form);;
+                testUtils.form.clickSave(form);
 
                 assert.containsOnce(form, '.o_data_row',
                     "there should be 1 row saved (the second one was empty and invalid)");
@@ -1674,7 +1674,7 @@ QUnit.module('fields', {}, function () {
             displayName = 'new value';
             testUtils.dom.click(form.$('.o_data_cell'));
             testUtils.fields.editInput(form.$('.o_data_cell input'), displayName);
-            testUtils.form.clickSave(form);;
+            testUtils.form.clickSave(form);
 
             form.destroy();
         });
@@ -1727,7 +1727,7 @@ QUnit.module('fields', {}, function () {
                 },
             });
 
-            testUtils.form.clickSave(form);;
+            testUtils.form.clickSave(form);
 
             form.destroy();
         });
@@ -1866,7 +1866,7 @@ QUnit.module('fields', {}, function () {
 
                 // Saving the modal and then the original model
                 testUtils.dom.click($modal.find('.modal-footer .btn-primary'));
-                testUtils.form.clickSave(form);;
+                testUtils.form.clickSave(form);
 
                 assert.verifySteps(['onchange sequence', 'partner_type write']);
 
@@ -1897,7 +1897,7 @@ QUnit.module('fields', {}, function () {
             });
             testUtils.form.clickEdit(form);
 
-            testUtils.dom.click(form.$('input'));
+            testUtils.dom.click(form.$('.o_field_widget[name=product_id] input'));
             form.destroy();
         });
 
@@ -1923,7 +1923,7 @@ QUnit.module('fields', {}, function () {
             });
             testUtils.form.clickEdit(form);
 
-            testUtils.dom.click(form.$('input:eq(2)'));
+            testUtils.dom.click(form.$('.o_field_widget[name=trululu] input'));
             form.destroy();
         });
 
@@ -1956,7 +1956,7 @@ QUnit.module('fields', {}, function () {
             });
 
             assert.strictEqual(count, 3, "should have done 3 rpcs (default_get, onchange, name_get)");
-            assert.strictEqual(form.$('input').val(), 'hello world',
+            assert.strictEqual(form.$('.o_field_widget[name=trululu] input').val(), 'hello world',
                 "should have taken the correct display name");
             form.destroy();
         });
@@ -1973,15 +1973,15 @@ QUnit.module('fields', {}, function () {
                     '</form>',
                 res_id: 1,
             });
-            assert.strictEqual(form.$('a').text(), '', 'the tag a should be empty');
+            assert.strictEqual(form.$('a[name=product_id]').text(), '', 'the tag a should be empty');
             testUtils.form.clickEdit(form);
 
             testUtils.fields.many2one.clickOpenDropdown('product_id');
             testUtils.fields.many2one.clickItem('product_id','xphone');
-            assert.strictEqual(form.$('input').val(), "xphone", "should have selected xphone");
+            assert.strictEqual(form.$('.o_field_widget[name=product_id] input').val(), "xphone", "should have selected xphone");
 
-            testUtils.form.clickDiscard(form);;
-            assert.strictEqual(form.$('a').text(), '', 'the tag a should be empty');
+            testUtils.form.clickDiscard(form);
+            assert.strictEqual(form.$('a[name=product_id]').text(), '', 'the tag a should be empty');
             form.destroy();
         });
 
@@ -2103,7 +2103,7 @@ QUnit.module('fields', {}, function () {
             // select a new value then cancel the creation of the new one --> restore the previous
             testUtils.fields.many2one.clickOpenDropdown('product_id');
             testUtils.fields.many2one.clickItem('product_id','o');
-            assert.strictEqual(form.$('input').val(), "xphone", "should have selected xphone");
+            assert.strictEqual(form.$('.o_field_many2one input').val(), "xphone", "should have selected xphone");
             form.$('.o_field_many2one input').focus().val('new product').trigger('keyup').trigger('blur');
             assert.strictEqual($('.modal').length, 1, "there should be one opened modal");
             testUtils.dom.click($('.modal .modal-footer .btn:contains(Cancel)'));
@@ -2739,7 +2739,7 @@ QUnit.module('fields', {}, function () {
                 'The display name field should have the right value');
 
             // Save the whole thing
-            testUtils.form.clickSave(form);;
+            testUtils.form.clickSave(form);
 
             x2mList = form.$('.o_field_x2many_list[name=p]');
 

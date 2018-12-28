@@ -21,8 +21,8 @@ class SaleOrder(models.Model):
         'account.incoterms', 'Incoterms',
         help="International Commercial Terms are a series of predefined commercial terms used in international transactions.")
     picking_policy = fields.Selection([
-        ('direct', 'Deliver each product when available'),
-        ('one', 'Deliver all products at once')],
+        ('direct', 'As soon as possible'),
+        ('one', 'When all products are ready')],
         string='Shipping Policy', required=True, readonly=True, default='direct',
         states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}
         ,help="If you deliver all products at once, the delivery order will be scheduled based on the greatest "
@@ -371,12 +371,9 @@ class SaleOrderLine(models.Model):
             values = line._prepare_procurement_values(group_id=group_id)
             product_qty = line.product_uom_qty - qty
 
-            procurement_uom = line.product_uom
+            line_uom = line.product_uom
             quant_uom = line.product_id.uom_id
-            get_param = self.env['ir.config_parameter'].sudo().get_param
-            if procurement_uom.id != quant_uom.id and get_param('stock.propagate_uom') != '1':
-                product_qty = line.product_uom._compute_quantity(product_qty, quant_uom, rounding_method='HALF-UP')
-                procurement_uom = quant_uom
+            product_qty, procurement_uom = line_uom._adjust_uom_quantities(product_qty, quant_uom)
 
             try:
                 self.env['procurement.group'].run(line.product_id, product_qty, procurement_uom, line.order_id.partner_shipping_id.property_stock_customer, line.name, line.order_id.name, values)

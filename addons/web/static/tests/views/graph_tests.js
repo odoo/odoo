@@ -118,7 +118,8 @@ QUnit.module('Views', {
                         '<field name="bar"/>' +
                 '</graph>',
         });
-        assert.strictEqual(graph.$('label').text(), "Partners", "should have 'Partners as title'");
+        assert.strictEqual(graph.$('.o_graph_renderer label').text(), "Partners",
+            "should have 'Partners as title'");
         graph.destroy();
     });
 
@@ -353,7 +354,7 @@ QUnit.module('Views', {
         });
     });
 
-    QUnit.test('getContext correctly returns mode, measure, groupbys and interval mapping', function (assert) {
+    QUnit.test('getOwnedQueryParams correctly returns mode, measure, groupbys and interval mapping', function (assert) {
         var done = assert.async();
         assert.expect(4);
 
@@ -366,11 +367,13 @@ QUnit.module('Views', {
                 '</graph>',
         });
         return concurrency.delay(0).then(function () {
-            assert.deepEqual(graph.getContext(), {
-                graph_mode: 'bar',
-                graph_measure: '__count__',
-                graph_groupbys: ['product_id'],
-                graph_intervalMapping: {},
+            assert.deepEqual(graph.getOwnedQueryParams(), {
+                context: {
+                    graph_mode: 'bar',
+                    graph_measure: '__count__',
+                    graph_groupbys: ['product_id'],
+                    graph_intervalMapping: {},
+                }
             }, "context should be correct");
 
             testUtils.dom.click(graph.$buttons.find('.dropdown-toggle:contains(Measures)'));
@@ -378,33 +381,39 @@ QUnit.module('Views', {
 
             return concurrency.delay(0);
         }).then(function () {
-            assert.deepEqual(graph.getContext(), {
-                graph_mode: 'bar',
-                graph_measure: 'foo',
-                graph_groupbys: ['product_id'],
-                graph_intervalMapping: {},
+            assert.deepEqual(graph.getOwnedQueryParams(), {
+                context: {
+                    graph_mode: 'bar',
+                    graph_measure: 'foo',
+                    graph_groupbys: ['product_id'],
+                    graph_intervalMapping: {},
+                },
             }, "context should be correct");
 
             testUtils.dom.click(graph.$buttons.find('button[data-mode="line"]'));
 
             return concurrency.delay(0);
         }).then(function () {
-            assert.deepEqual(graph.getContext(), {
-                graph_mode: 'line',
-                graph_measure: 'foo',
-                graph_groupbys: ['product_id'],
-                graph_intervalMapping: {},
+            assert.deepEqual(graph.getOwnedQueryParams(), {
+                context: {
+                    graph_mode: 'line',
+                    graph_measure: 'foo',
+                    graph_groupbys: ['product_id'],
+                    graph_intervalMapping: {},
+                },
             }, "context should be correct");
 
             testUtils.graph.reload(graph, {groupBy: ['product_id', 'color_id']}); // change groupbys
 
             return concurrency.delay(0);
         }).then(function () {
-            assert.deepEqual(graph.getContext(), {
-                graph_mode: 'line',
-                graph_measure: 'foo',
-                graph_groupbys: ['product_id', 'color_id'],
-                graph_intervalMapping: {},
+            assert.deepEqual(graph.getOwnedQueryParams(), {
+                context: {
+                    graph_mode: 'line',
+                    graph_measure: 'foo',
+                    graph_groupbys: ['product_id', 'color_id'],
+                    graph_intervalMapping: {},
+                },
             }, "context should be correct");
 
             graph.destroy();

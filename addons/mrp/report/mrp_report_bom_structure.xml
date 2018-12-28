@@ -23,7 +23,7 @@
                                 <thead>
                                     <tr>
                                         <th>Product</th>
-                                        <th>BoM</th>
+                                        <th name="th_mrp_bom_h">BoM</th>
                                         <th class="text-right">Quantity</th>
                                         <th class="text-left" groups="uom.group_uom">Unit of Measure</th>
                                         <th t-if="data['report_structure'] != 'bom_cost'" class="o_mrp_prod_cost text-right" title="This is the cost defined on the product.">Product Cost</th>
@@ -36,7 +36,7 @@
                                         <td>
                                             <span><a href="#" t-if="data['report_type'] == 'html'" t-att-data-res-id="data['product'].id" t-att-data-model="'product.product'" class="o_mrp_bom_action"><t t-esc="data['bom_prod_name']"/></a><t t-else="" t-esc="data['bom_prod_name']"/></span>
                                         </td>
-                                        <td>
+                                        <td name="td_mrp_bom">
                                             <span><a href="#" t-if="data['report_type'] == 'html'" t-att-data-res-id="data['bom'].id" t-att-data-model="'mrp.bom'" class="o_mrp_bom_action"><t t-esc="data['code']"/></a><t t-else="" t-esc="data['code']"/></span>
                                         </td>
                                         <td class="text-right"><span><t t-esc="data['bom_qty']" t-options='{"widget": "float", "decimal_precision": "Product Unit of Measure"}'/></span></td>
@@ -61,7 +61,7 @@
                                 <tfoot>
                                     <tr>
                                         <td></td>
-                                        <td></td>
+                                        <td name="td_mrp_bom_f"></td>
                                         <td class="text-right"><span><strong>Unit Cost</strong></span></td>
                                         <td groups="uom.group_uom"></td>
                                         <td t-if="data['report_structure'] != 'bom_cost'" class="o_mrp_prod_cost text-right">
@@ -100,7 +100,7 @@
                         <span class="fa fa-dropbox" title="This is a BoM of type Kit!" role="img" aria-label="This is a BoM of type Kit!"/>
                     </t>
                 </td>
-                <td>
+                <td name="td_mrp_bom">
                     <span>
                         <a href="#" t-att-data-res-id="l['child_bom']" t-att-data-model="'mrp.bom'" class="o_mrp_bom_action"><t t-esc="l['code']"/></a>
                   </span>
@@ -125,7 +125,7 @@
         <t t-if="data['operations']">
             <t t-set="space_td" t-value="'margin-left: '+ str(data['level'] * 20) + 'px;'"/>
             <tr class="o_mrp_bom_report_line o_mrp_bom_cost" t-att-data-id="'operation-' + str(data['bom'].id)" t-att-data-bom-id="data['bom'].id" t-att-parent_id="data['bom'].id" t-att-data-qty="data['bom_qty']" t-att-data-level="data['level']">
-                <td>
+                <td name="td_opr">
                     <span t-att-style="space_td"/>
                     <span class="o_mrp_bom_unfoldable fa fa-fw fa-caret-right" t-att-data-function="'get_operations'" role="img" aria-label="Unfold" title="Unfold"/>
                     Operations
@@ -150,7 +150,7 @@
       <t t-foreach="data['operations']" t-as="op">
           <t t-set="space_td" t-value="'margin-left: '+ str(op['level'] * 20) + 'px;'"/>
           <tr class="o_mrp_bom_report_line o_mrp_bom_cost" t-att-parent_id="'operation-' + str(data['bom_id'])">
-              <td>
+              <td name="td_opr_line">
                   <span t-att-style="space_td"/>
                   <a href="#" t-att-data-res-id="op['operation'].id" t-att-data-model="'mrp.routing.workcenter'" class="o_mrp_bom_action"><t t-esc="op['name']"/></a>
               </td>

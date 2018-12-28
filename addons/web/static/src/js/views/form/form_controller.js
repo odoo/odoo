@@ -132,7 +132,7 @@ var FormController = BasicController.extend({
      * @param {jQueryElement} $node
      */
     renderButtons: function ($node) {
-        var $footer = this.footerToButtons ? this.$('footer') : null;
+        var $footer = this.footerToButtons ? this.renderer.$('footer') : null;
         var mustRenderFooterButtons = $footer && $footer.length;
         if (!this.defaultButtons && !mustRenderFooterButtons) {
             return;
@@ -219,7 +219,7 @@ var FormController = BasicController.extend({
         var self = this;
         return this._super.apply(this, arguments).then(function (changedFields) {
             // the title could have been changed
-            self.set('title', self.getTitle());
+            self._setTitle(self.getTitle());
             self._updateEnv();
 
             if (_t.database.multi_lang && changedFields.length) {
@@ -250,6 +250,9 @@ var FormController = BasicController.extend({
      * @override
      */
     update: function (params, options) {
+        if ('currentId' in params && !params.currentId) {
+            this.mode = 'edit'; // if there is no record, we are in 'edit' mode
+        }
         params = _.extend({viewType: 'form', mode: this.mode}, params);
         return this._super(params, options);
     },
@@ -395,7 +398,7 @@ var FormController = BasicController.extend({
      */
     _update: function () {
         var title = this.getTitle();
-        this.set('title', title);
+        this._setTitle(title);
         this._updateButtons();
         this._updateSidebar();
         return this._super.apply(this, arguments).then(this.autofocus.bind(this));
@@ -406,7 +409,7 @@ var FormController = BasicController.extend({
     _updateButtons: function () {
         if (this.$buttons) {
             if (this.footerToButtons) {
-                var $footer = this.$('footer');
+                var $footer = this.renderer.$('footer');
                 if ($footer.length) {
                     this.$buttons.empty().append($footer);
                 }

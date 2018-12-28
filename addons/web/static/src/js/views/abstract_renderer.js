@@ -7,22 +7,18 @@ odoo.define('web.AbstractRenderer', function (require) {
  *
  */
 
-var Widget = require('web.Widget');
+var mvc = require('web.mvc');
 
 /**
  * @class AbstractRenderer
  */
-return Widget.extend({
+return mvc.Renderer.extend({
     /**
-     * @constructor
-     * @param {Widget} parent
-     * @param {any} state
-     * @param {Object} params
+     * @override
      * @param {string} [params.noContentHelp]
      */
     init: function (parent, state, params) {
-        this._super(parent);
-        this.state = state;
+        this._super.apply(this, arguments);
         this.arch = params.arch;
         this.noContentHelp = params.noContentHelp;
     },
