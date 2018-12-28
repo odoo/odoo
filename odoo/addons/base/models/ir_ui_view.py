@@ -251,7 +251,7 @@ actual arch.
         for view in self:
             arch_fs = None
             xml_id = view.xml_id or view.key
-            if 'xml' in config['dev_mode'] and view.arch_fs and xml_id:
+            if (self._context.get('read_arch_from_file') or 'xml' in config['dev_mode']) and view.arch_fs and xml_id:
                 # It is safe to split on / herebelow because arch_fs is explicitely stored with '/'
                 fullpath = get_resource_path(*view.arch_fs.split('/'))
                 if fullpath:
