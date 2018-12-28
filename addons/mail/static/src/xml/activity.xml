@@ -74,21 +74,26 @@
                                 </t>
                             </div>
                         </t>
-                        <div t-if="activity.can_write" class="o_thread_message_tools btn-group">
-                            <span class="o_mark_as_done" data-toggle="popover" t-att-data-activity-id="activity.id" t-att-data-force-next-activity="activity.force_next" t-att-data-previous-activity-type-id="activity.activity_type_id[0]">
-                                <a role="button" href="#" class="btn btn-link btn-success text-muted o_activity_link mr8">
-                                <i class="fa fa-check"/> Mark Done </a>
-                            </span>
-                            <a role="button" href="#" class="btn btn-link btn-secondary text-muted o_edit_activity o_activity_link" t-att-data-activity-id="activity.id">
-                                <i class="fa fa-pencil"/> Edit
-                            </a>
-                            <a role="button" href="#" class="btn btn-link btn-danger text-muted o_unlink_activity o_activity_link" t-att-data-activity-id="activity.id">
-                                <i class="fa fa-times"/> Cancel
-                            </a>
+                        <div class="o_thread_message_tools btn-group">
+                            <t t-call="mail.activity_thread_message_tools"/>
                         </div>
                     </div>
                 </div>
             </t>
+        </div>
+    </t>
+    <t t-name="mail.activity_thread_message_tools">
+        <div t-if="activity.can_write">
+            <span class="o_mark_as_done" data-toggle="popover" t-att-data-activity-id="activity.id" t-att-data-force-next-activity="activity.force_next" t-att-data-previous-activity-type-id="activity.activity_type_id[0]">
+                <a role="button" href="#" class="btn btn-link btn-success text-muted o_activity_link mr8">
+                <i class="fa fa-check"/> Mark Done </a>
+            </span>
+            <a role="button" href="#" class="btn btn-link btn-secondary text-muted o_edit_activity o_activity_link" t-att-data-activity-id="activity.id">
+                <i class="fa fa-pencil"/> Edit
+            </a>
+            <a role="button" href="#" class="btn btn-link btn-danger text-muted o_unlink_activity o_activity_link" t-att-data-activity-id="activity.id">
+                <i class="fa fa-times"/> Cancel
+            </a>
         </div>
     </t>
     <t t-name="mail.activity_feedback_form">
