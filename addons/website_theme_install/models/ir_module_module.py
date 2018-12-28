@@ -334,9 +334,6 @@ class IrModuleModule(models.Model):
         """
             Remove any existing theme on the current website and install the theme ``self`` instead.
 
-            The removal of the previous theme will however keep the existing data
-            that will also be used in the new theme.
-
             The actual loading of the theme on the current website will be done
             automatically on ``write`` thanks to the upgrade and/or install.
 
