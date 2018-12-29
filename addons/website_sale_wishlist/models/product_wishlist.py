@@ -83,3 +83,12 @@ class ProductTemplate(models.Model):
     def _is_in_wishlist(self):
         self.ensure_one()
         return self in self.env['product.wishlist'].current().mapped('product_id.product_tmpl_id')
+
+
+class ProductProduct(models.Model):
+    _inherit = 'product.product'
+
+    @api.multi
+    def _is_in_wishlist(self):
+        self.ensure_one()
+        return self in self.env['product.wishlist'].current().mapped('product_id')

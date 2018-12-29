@@ -20,29 +20,55 @@ sAnimations.registry.ProductWishlist = sAnimations.Class.extend(ProductConfigura
     },
     events: sAnimations.Class.events,
 
-    start: function () {
+    /**
+     * @constructor
+     */
+    init: function (parent) {
+        this._super.apply(this, arguments);
+        this.wishlistProductIDs = [];
+    },
+    /**
+     * Gets the current wishlist items.
+     * In editable mode, do nothing instead.
+     *
+     * @override
+     */
+    willStart: function () {
         var self = this;
         var def = this._super.apply(this, arguments);
         if (this.editableMode) {
             return def;
         }
 
-        this.wishlistProductIDs = [];
-
         var wishDef = $.get('/shop/wishlist', {
             count: 1,
         }).then(function (res) {
             self.wishlistProductIDs = JSON.parse(res);
-            self._updateWishlistView();
-            // trigger change on only one input
-            if (self.$('input.js_product_change').length) { // manage "List View of variants"
-                self.$('input.js_product_change:checked').first().trigger('change');
-            } else {
-                self.$('input.js_variant_change:checked').first().trigger('change');
-            }
         });
 
         return $.when(def, wishDef);
+    },
+    /**
+     * Updates the wishlist view (navbar) & the wishlist button (product page).
+     * In editable mode, do nothing instead.
+     *
+     * @override
+     */
+    start: function () {
+        var def = this._super.apply(this, arguments);
+        if (this.editableMode) {
+            return def;
+        }
+
+        this._updateWishlistView();
+        // trigger change on only one input
+        if (this.$('input.js_product_change').length) { // manage "List View of variants"
+            this.$('input.js_product_change:checked').first().trigger('change');
+        } else {
+            this.$('input.product_id').first().trigger('change');
+        }
+
+        return def;
     },
 
     //--------------------------------------------------------------------------

@@ -252,6 +252,12 @@ class HolidaysRequest(models.Model):
         ('duration_check', "CHECK ( number_of_days >= 0 )", "If you want to change the number of days you should use the 'period' mode"),
     ]
 
+    @api.onchange('holiday_status_id')
+    def _onchange_holiday_status_id(self):
+        self.request_unit_half = False
+        self.request_unit_hours = False
+        self.request_unit_custom = False
+
     @api.onchange('request_date_from_period', 'request_hour_from', 'request_hour_to',
                   'request_date_from', 'request_date_to',
                   'employee_id')
@@ -363,8 +369,11 @@ class HolidaysRequest(models.Model):
     def _compute_number_of_hours_display(self):
         for holiday in self:
             calendar = holiday.employee_id.resource_calendar_id or self.env.user.company_id.resource_calendar_id
-            number_of_hours = calendar.get_work_hours_count(self.date_from, self.date_to)
-            holiday.number_of_hours_display = number_of_hours or (holiday.number_of_days * HOURS_PER_DAY)
+            if holiday.date_from and holiday.date_to:
+                number_of_hours = calendar.get_work_hours_count(holiday.date_from, holiday.date_to)
+                holiday.number_of_hours_display = number_of_hours or (holiday.number_of_days * HOURS_PER_DAY)
+            else:
+                holiday.number_of_hours_display = 0
 
     @api.multi
     @api.depends('state', 'employee_id', 'department_id')
