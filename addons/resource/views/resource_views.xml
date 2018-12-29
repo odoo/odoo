@@ -116,13 +116,13 @@
         <field name="arch" type="xml">
             <form string="Leave Detail">
                 <group>
-                    <group>
+                    <group name="leave_details">
                         <field name="name" string="Reason"/>
                         <field name="calendar_id"/>
                         <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company" attrs="{'invisible':[('calendar_id','=',False)]}"/>
                         <field name="resource_id"/>
                     </group>
-                    <group>
+                    <group name="leave_dates">
                        <field name="date_from"/>
                        <field name="date_to"/>
                     </group>
@@ -250,16 +250,16 @@
                     <h1>
                         <field name="name"/>
                     </h1>
-                    <group>
+                    <group name="resource_details">
                         <field name="company_id" groups="base.group_multi_company"/>
                         <field name="hours_per_day"/>
                         <field name="tz"/>
                     </group>
                     <notebook>
-                        <page string="Working Hours">
+                        <page string="Working Hours" name="working_hours">
                             <field name="attendance_ids"/>
                         </page>
-                        <page string="Global Leaves">
+                        <page string="Global Leaves" name="global_leaves">
                             <field name="global_leave_ids">
                                 <tree editable="top">
                                     <field name="name"/>
