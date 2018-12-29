@@ -24,22 +24,14 @@
             <field name="arch" type="xml">
                 <form string="Website Settings">
                     <sheet>
-                        <div name="domain">
-                            <group name="domain">
-                                <group>
-                                    <field name="name"/>
-                                    <field name="domain"/>
-                                </group>
-                            </group>
-                        </div>
-                        <div name="other">
-                            <group name="other">
-                                <group>
-                                    <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                                    <field name="default_lang_id" widget="selection" groups="base.group_no_one"/>
-                                </group>
-                            </group>
-                        </div>
+                        <group name="domain">
+                            <field name="name"/>
+                            <field name="domain"/>
+                        </group>
+                        <group name="other">
+                            <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                            <field name="default_lang_id" widget="selection" groups="base.group_no_one"/>
+                        </group>
                     </sheet>
                 </form>
             </field>
