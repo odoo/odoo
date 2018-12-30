@@ -3,14 +3,16 @@
 # * hr
 # 
 # Translators:
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2015
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2016-2017
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:11+0000\n"
-"PO-Revision-Date: 2015-09-22 11:36+0000\n"
-"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>\n"
+"POT-Creation-Date: 2016-09-22 13:16+0000\n"
+"PO-Revision-Date: 2017-11-20 14:07+0000\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>\n"
 "Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -196,6 +198,11 @@ msgid "City"
 msgstr "Plaats"
 
 #. module: hr
+#: model:web.tip,description:hr.hr_tip_2
+msgid "Click here to change the recruitment goal!"
+msgstr "Klik hier om de werving & selectie doelstellingen bij te werken."
+
+#. module: hr
 #: model:ir.actions.act_window,help:hr.act_employee_from_department
 #: model:ir.actions.act_window,help:hr.open_view_employee_list_my
 msgid "Click to add a new employee."
@@ -204,12 +211,12 @@ msgstr "Klik om een nieuwe werknemer toe te voegen."
 #. module: hr
 #: model:ir.actions.act_window,help:hr.open_module_tree_department
 msgid "Click to create a department."
-msgstr "Klik om een nieuw departement aan te maken."
+msgstr "Klik om een nieuw afdeling aan te maken."
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.view_department_form_installer
 msgid "Click to define a new department."
-msgstr "Klik om een nieuw departement te definiëren."
+msgstr "Klik om een nieuw afdeling te definiëren."
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.action_hr_job
@@ -363,7 +370,7 @@ msgstr "Afdelingen"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_display_name
 #: model:ir.model.fields,field_description:hr.field_hr_job_display_name
 msgid "Display Name"
-msgstr "Naam weergeven"
+msgstr "Weergave naam"
 
 #. module: hr
 #: selection:hr.employee,marital:0
@@ -434,14 +441,12 @@ msgid "Employees Tags"
 msgstr "Werknemer labels"
 
 #. module: hr
-#: code:addons/hr/hr.py:299 constraint:hr.department:0
-#, python-format
+#: constraint:hr.department:0
 msgid "Error! You cannot create recursive departments."
 msgstr "Fout! het is niet toegestaan recursieve afdelingen aan te maken."
 
 #. module: hr
-#: code:addons/hr/hr.py:269 constraint:hr.employee:0
-#, python-format
+#: constraint:hr.employee:0
 msgid "Error! You cannot create recursive hierarchy of Employee(s)."
 msgstr "Fout! Het is niet toegestaan om een recursieve werknemer hiërarchie aan te maken."
 
@@ -502,6 +507,11 @@ msgstr "Volgers (Partners)"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_gender
 msgid "Gender"
 msgstr "Geslacht"
+
+#. module: hr
+#: model:web.tip,description:hr.hr_tip_1
+msgid "Get all applications related to this job position."
+msgstr "Geef alle sollicitaties gerelateerd aan deze vacature."
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_developer
@@ -634,14 +644,6 @@ msgid ""
 msgstr "Als het actief veld uitstaat, kunt u het resource record verbergen zonder deze te verwijderen."
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.hr_kanban_view_employees
-#: model:ir.ui.view,arch_db:hr.view_department_filter
-#: model:ir.ui.view,arch_db:hr.view_employee_filter
-#: model:ir.ui.view,arch_db:hr.view_job_filter
-msgid "Important Messages"
-msgstr "Belangrijke berichten"
-
-#. module: hr
 #: model:hr.job,website_description:hr.job_ceo
 #: model:hr.job,website_description:hr.job_hrm
 #: model:hr.job,website_description:hr.job_marketing
@@ -663,7 +665,7 @@ msgstr "Wordt geworven"
 #: model:hr.job,website_description:hr.job_hrm
 #: model:hr.job,website_description:hr.job_marketing
 msgid "Increase opportunities"
-msgstr "Verhoog uw opportuniteiten"
+msgstr "Verhoog het aantal prospects"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
@@ -855,13 +857,6 @@ msgid "Messages"
 msgstr "Berichten"
 
 #. module: hr
-#: model:ir.model.fields,help:hr.field_hr_department_message_ids
-#: model:ir.model.fields,help:hr.field_hr_employee_message_ids
-#: model:ir.model.fields,help:hr.field_hr_job_message_ids
-msgid "Messages and communication history"
-msgstr "Berichten en communicatie historie"
-
-#. module: hr
 #: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
 msgid "More <i class=\"fa fa-caret-down\"/>"
 msgstr "Meer <i class=\"fa fa-caret-down\"/>"
@@ -953,7 +948,7 @@ msgid ""
 "Odoo's department structure is used to manage all documents\n"
 "                related to employees by departments: expenses, timesheets,\n"
 "                leaves and holidays, recruitments, etc."
-msgstr "Odoo's departement structuur is gebruikt om alle documenten te beheren\ndie gerelateerd zijn aan werknemers per departement: uitgaven, urenstaten,\nafwezigheden en vakanties, aanwervingen, enz."
+msgstr "Odoo's afdeling structuur is gebruikt om alle documenten te beheren\ndie gerelateerd zijn aan werknemers per afdeling: uitgaven, urenstaten,\nafwezigheden en vakanties, aanwervingen, enz."
 
 #. module: hr
 #: model:ir.actions.client,name:hr.action_client_hr_menu
@@ -985,6 +980,11 @@ msgstr "Ons personeel aan het werk"
 #: model:ir.model.fields,field_description:hr.field_hr_department_parent_id
 msgid "Parent Department"
 msgstr "Hoofdafdeling"
+
+#. module: hr
+#: model:ir.model,name:hr.model_res_partner
+msgid "Partner"
+msgstr "Relatie"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_developer
@@ -1190,6 +1190,11 @@ msgid "Subordinates"
 msgstr "Ondergeschikten"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users_subscription_count
+msgid "Subscriptions"
+msgstr "Abonnementen"
+
+#. module: hr
 #: sql_constraint:hr.employee.category:0
 msgid "Tag name already exists !"
 msgstr "Label naam bestaat al!"
@@ -1249,6 +1254,10 @@ msgstr "Transformeer ons product in een suite van goed gepositioneerde bedrijfsa
 #: model:ir.model.fields,field_description:hr.field_hr_department_message_unread
 #: model:ir.model.fields,field_description:hr.field_hr_employee_message_unread
 #: model:ir.model.fields,field_description:hr.field_hr_job_message_unread
+#: model:ir.ui.view,arch_db:hr.hr_kanban_view_employees
+#: model:ir.ui.view,arch_db:hr.view_department_filter
+#: model:ir.ui.view,arch_db:hr.view_employee_filter
+#: model:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Unread Messages"
 msgstr "Ongelezen berichten"
 
@@ -1577,7 +1586,7 @@ msgid ""
 "Your departments structure is used to manage all documents\n"
 "                related to employees by departments: expenses and timesheets,\n"
 "                leaves and holidays, recruitments, etc."
-msgstr "Odoo's departement structuur is gebruikt om alle documenten te beheren\ndie gerelateerd zijn aan werknemers per departement: uitgaven, urenstaten,\nafwezigheden en vakanties, aanwervingen, enz."
+msgstr "Odoo's afdeling structuur is gebruikt om alle documenten te beheren\ndie gerelateerd zijn aan werknemers per departement: uitgaven, urenstaten,\nafwezigheden en vakanties, aanwervingen, enz."
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_department_form

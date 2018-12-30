@@ -3,13 +3,14 @@
 {
     'name': 'United States - Accounting',
     'version': '1.1',
-    'category': 'Localization/Account Charts',
+    'category': 'Localization',
     'description': """
 United States - Chart of accounts.
 ==================================
     """,
-    'depends': ['l10n_generic_coa'],
+    'depends': ['l10n_generic_coa', 'report'],
     'data': [
+        'data/res_company.xml',
     ],
     'demo': [],
     'test': [],

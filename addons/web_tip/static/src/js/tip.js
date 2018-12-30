@@ -15,6 +15,7 @@ var Tips = Class.extend({
         var self = this;
 
         this.tips = [];
+        this.tipObjects = {};
         this.view = null;
 
         var Tips = new Model('web.tip');
@@ -24,69 +25,49 @@ var Tips = Class.extend({
                 self.tips = tips;
             });
 
-        bus.on('action', this, function(action) {
-            self.on_action(action);
-        });
-
         bus.on('view_shown', this, function(view) {
             if (_.keys(view.fields_view).length === 0) {
                 view.on('view_loaded', this, function(fields_view) {
-                    self.view = view;
-                    self.on_view();
+                    if (this.view && this._eval_tips) {
+                        this.view.off('chatter_messages_displayed', this, this._eval_tips);
+                        this.view.off('to_edit_mode', this, this._remove_tips);
+                        this.view.off('to_view_mode', this, this._eval_tips);
+                        this.view.off('view_list_rendered', this, this._eval_tips);
+                    }
+                    this.view = view;
                 });
             } else {
-                self.view = view;
-                self.on_view();
+                this.view = view;
             }
         });
-    },
-
-    // stub
-    on_action: function(action) {
-        var self = this;
-        var action_id = action.id;
-        var model = action.res_model;
-    },
-
-    on_view: function() {
-        var self = this;
 
         bus.on('DOM_updated', this, function() {
-            var action_id = self.view.ViewManager.action ? self.view.ViewManager.action.id : null;
-            var model = self.view.fields_view.model;
-            var mode = self.view.fields_view.type;
+            if (!this.view) return;
+
+            var self = this;
+            var action_id = this.view.ViewManager.action ? this.view.ViewManager.action.id : null;
+            var model = this.view.fields_view.model;
+            var mode = this.view.fields_view.type;
+            var type = this.view.datarecord ? this.view.datarecord.type : null;
+
+            this._eval_tips = function() { self.eval_tips(action_id, model, mode, type); };
+            this._remove_tips = function() { self.remove_tips(); };
 
             if (mode == 'form') {
-                self.on_form_view(action_id, model);
+                if ($('.oe_chatter').length > 0) {
+                    this.view.on('chatter_messages_displayed', this, this._eval_tips);
+                } else {
+                    this._eval_tips();
+                }
+                this.view.on('to_edit_mode', this, this._remove_tips);
+                this.view.on('to_view_mode', this, this._eval_tips);
             }
-            else if (self.view.hasOwnProperty('editor')) {
-                self.view.on('view_list_rendered', self, function() {
-                    self.eval_tips(action_id, model, mode);
-                });
+            else if (this.view.hasOwnProperty('editor')) {
+                this.view.on('view_list_rendered', this, this._eval_tips);
             }
             else {
-                self.eval_tips(action_id, model, mode);
+                this._eval_tips();
             }
-        });
-    },
-
-    on_form_view: function(action_id, model) {
-        var self = this;
-        var type = this.view.datarecord ? this.view.datarecord.type : null
-
-        if ($('.oe_chatter').length > 0) {
-            this.view.on('chatter_messages_displayed', this, function() {
-                self.eval_tips(action_id, model, 'form', type);
-            });
-        } else {
-            this.eval_tips(action_id, model, 'form', type);
-        }
-
-        this.view.on('to_edit_mode', this, function() {
-            self.remove_tips();
-        });
-        this.view.on('to_view_mode', this, function() {
-            self.eval_tips(action_id, model, 'form', type);
         });
     },
 
@@ -107,7 +88,7 @@ var Tips = Class.extend({
         filter.is_consumed = false;
         tips = _.where(self.tips, filter);
         // To take into account a tip without fixed model : e.g. a generic tip on the breadcrumb
-        tips = tips.concat(_.where(self.tips, {mode: mode, is_consumed: false, model:false}))
+        tips = tips.concat(_.where(self.tips, {mode: mode, is_consumed: false, model:false}));
 
         if (type) {
             tips = _.filter(tips, function(tip) {
@@ -121,24 +102,32 @@ var Tips = Class.extend({
         valid_tips = _.uniq(valid_tips.concat(tips));
         _.each(valid_tips, function(tip) {
             if (!tip.is_consumed) {
-                var t = new Tip(tip);
-                t.do_tip();
+                if (self.tipObjects[tip.id]) {
+                    self.tipObjects[tip.id].destroy();
+                } else {
+                    self.tipObjects[tip.id] = new Tip(tip);
+                }
+                self.tipObjects[tip.id].do_tip();
             }
         });
     },
 
     remove_tips: function() {
-        $('.oe_breathing').remove();
+        for (var k in this.tipObjects) {
+            this.tipObjects[k].destroy();
+        }
+        this.tipObjects = {};
     },
 });
 
 var Tip = Class.extend({
     init: function(tip) {
+        var self = this;
         this.tip = tip;
-
         this.highlight_selector = tip.highlight_selector;
         this.end_selector = tip.end_selector ? tip.end_selector : tip.highlight_selector;
         this.triggers = tip.trigger_selector ? tip.trigger_selector.split(',') : [];
+        this._resize = function() { self._set_breathing_position(); };
     },
 
     do_tip: function() {
@@ -182,17 +171,9 @@ var Tip = Class.extend({
         });
 
         // resize
-        bus.on('resize', this, function() {
-            self._set_breathing_position();
-        });
-
-        bus.on('image_loaded', this, function() {
-            self._set_breathing_position();
-        });
-
-        bus.on('please_reposition_tip', this, function() {
-            self._set_breathing_position();
-        });
+        bus.on('resize', this, this._resize);
+        bus.on('image_loaded', this, this._resize);
+        bus.on('please_reposition_tip', this, this._resize);
 
         return true;
     },
@@ -257,6 +238,7 @@ var Tip = Class.extend({
         this.$overlay.on('click', function($ev) {
             self.end_tip();
         });
+
         $(document).on('keyup.web_tip', function($ev) {
             if ($ev.which === 27) { // esc
                 self.end_tip();
@@ -264,9 +246,8 @@ var Tip = Class.extend({
         });
 
         // resize
-        bus.on('resize', this, function() {
-            self._set_popover_position();
-        });
+        this._resize_position = function() { self._set_popover_position(); };
+        bus.on('resize', this, this._resize_position);
     },
 
     scroll_to_tip: function(){
@@ -280,22 +261,9 @@ var Tip = Class.extend({
     },
 
     end_tip: function() {
-        var Tips = new Model('web.tip');
-
-        this.$element.popover('destroy');
-        this.$element.removeClass('oe_tip_show_element');
-        this.$breathing.remove();
-        this.$helper.remove();
-        this.$overlay.remove();
-        this.$cross.remove();
-
-        _.each($('.oe_tip_fix_parent'), function(el) {
-            $(el).removeClass('oe_tip_fix_parent');
-        });
-        $(document).off('keyup.web_tip');
-
-        Tips.call('consume', [this.tip.id], {});
+        new Model('web.tip').call('consume', [this.tip.id], {});
         this.tip.is_consumed = true;
+        this.destroy();
     },
 
     _set_breathing_position: function() {
@@ -326,6 +294,31 @@ var Tip = Class.extend({
                 $('.popover-content').prepend(this.$cross);
             }
         }
+    },
+
+    destroy: function () {
+        if (this.$element) {
+            this.$element.popover('destroy');
+            this.$element.removeClass('oe_tip_show_element');
+        }
+        if (this.$breathing) {
+            this.$breathing.off().remove();
+        }
+        if (this.$helper) {
+            this.$helper.off().remove();
+            this.$overlay.off().remove();
+            this.$cross.off().remove();
+        }
+
+        $('.oe_tip_fix_parent').each(function() {
+            $(this).removeClass('oe_tip_fix_parent');
+        });
+        $(document).off('keyup.web_tip');
+
+        bus.off('resize', this, this._resize_position);
+        bus.off('resize', this, this._resize);
+        bus.off('image_loaded', this, this._resize);
+        bus.off('please_reposition_tip', this, this._resize);
     },
 });
 

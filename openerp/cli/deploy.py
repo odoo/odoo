@@ -17,21 +17,24 @@ class Deploy(Command):
 
     def deploy_module(self, module_path, url, login, password, db='', force=False):
         url = url.rstrip('/')
-        self.authenticate(url, login, password, db)
+        csrf_token = self.authenticate(url, login, password, db)
         module_file = self.zip_module(module_path)
         try:
-            return self.upload_module(url, module_file, force=force)
+            return self.upload_module(url, module_file, force=force, csrf_token=csrf_token)
         finally:
             os.remove(module_file)
 
-    def upload_module(self, server, module_file, force=False):
+    def upload_module(self, server, module_file, force=False, csrf_token=None):
         print("Uploading module file...")
         url = server + '/base_import_module/upload'
-        files = dict(mod_file=open(module_file, 'rb'))
-        force = '1' if force else ''
-        res = self.session.post(url, files=files, data=dict(force=force))
-        if res.status_code != 200:
-            raise Exception("Could not authenticate on server '%s'" % server)
+
+        post_data = {'force': '1' if force else ''}
+        if csrf_token: post_data['csrf_token'] = csrf_token
+
+        with open(module_file, 'rb') as f:
+            res = self.session.post(url, files={'mod_file': f}, data=post_data)
+        res.raise_for_status()
+
         return res.text
 
     def authenticate(self, server, login, password, db=''):
@@ -46,6 +49,8 @@ class Deploy(Command):
             raise Exception("The server '%s' does not have the 'base_import_module' installed." % server)
         elif res.status_code != 200:
             raise Exception(res.text)
+
+        return res.headers.get('x-csrf-token')
 
     def zip_module(self, path):
         path = os.path.abspath(path)

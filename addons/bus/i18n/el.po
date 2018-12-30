@@ -3,12 +3,13 @@
 # * bus
 # 
 # Translators:
+# Kostas Goutoudis <goutoudis@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2015-09-07 16:42+0000\n"
+"POT-Creation-Date: 2016-09-22 13:16+0000\n"
+"PO-Revision-Date: 2017-11-06 22:37+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Greek (http://www.transifex.com/odoo/odoo-9/language/el/)\n"
 "MIME-Version: 1.0\n"
@@ -20,12 +21,12 @@ msgstr ""
 #. module: bus
 #: sql_constraint:bus.presence:0
 msgid "A user can only have one IM status."
-msgstr ""
+msgstr "Ένας χρήστης μπορεί να έχει μόνο μία κατάσταση Άμεσης Συνομιλίας"
 
 #. module: bus
 #: selection:bus.presence,status:0
 msgid "Away"
-msgstr ""
+msgstr "Εκτός"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus_channel
@@ -35,23 +36,32 @@ msgstr "Κανάλι"
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus_create_date
 msgid "Create date"
-msgstr ""
+msgstr "Ημερομηνία Δημιουργίας"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus_create_uid
-#: model:ir.model.fields,field_description:bus.field_bus_presence_create_uid
 msgid "Created by"
 msgstr "Δημιουργήθηκε από"
-
-#. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_presence_create_date
-msgid "Created on"
-msgstr "Δημιουργήθηκε στις"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus_display_name
 #: model:ir.model.fields,field_description:bus.field_bus_presence_display_name
 msgid "Display Name"
+msgstr "Εμφάνιση Ονόματος"
+
+#. module: bus
+#: model:ir.model.fields,field_description:bus.field_res_users_partner_latitude
+msgid "Geo Latitude"
+msgstr ""
+
+#. module: bus
+#: model:ir.model.fields,field_description:bus.field_res_users_date_localization
+msgid "Geo Localization Date"
+msgstr ""
+
+#. module: bus
+#: model:ir.model.fields,field_description:bus.field_res_users_partner_longitude
+msgid "Geo Longitude"
 msgstr ""
 
 #. module: bus
@@ -65,35 +75,33 @@ msgstr "ID"
 #: model:ir.model.fields,field_description:bus.field_res_partner_im_status
 #: model:ir.model.fields,field_description:bus.field_res_users_im_status
 msgid "IM Status"
-msgstr ""
+msgstr "Κατάσταση Άμεσης Συνομιλίας"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus___last_update
 #: model:ir.model.fields,field_description:bus.field_bus_presence___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Τελευταία αλλαγή στις"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_presence_last_poll
 msgid "Last Poll"
-msgstr ""
+msgstr "Τελευταία Δημοσκόπηση"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_presence_last_presence
 msgid "Last Presence"
-msgstr ""
+msgstr "Τελευταία Παρουσία"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus_write_uid
-#: model:ir.model.fields,field_description:bus.field_bus_presence_write_uid
 msgid "Last Updated by"
-msgstr "Τελευταία ενημέρωση από"
+msgstr "Τελευταία Ενημέρωση από"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus_write_date
-#: model:ir.model.fields,field_description:bus.field_bus_presence_write_date
 msgid "Last Updated on"
-msgstr "Τελευταία ενημέρωση στις"
+msgstr "Τελευταία Ενημέρωση στις"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus_message
@@ -103,12 +111,12 @@ msgstr "Μήνυμα"
 #. module: bus
 #: selection:bus.presence,status:0
 msgid "Offline"
-msgstr ""
+msgstr "Offline"
 
 #. module: bus
 #: selection:bus.presence,status:0
 msgid "Online"
-msgstr ""
+msgstr "Online"
 
 #. module: bus
 #: model:ir.model,name:bus.model_res_partner
@@ -118,7 +126,7 @@ msgstr "Συνεργάτης"
 #. module: bus
 #: model:ir.model,name:bus.model_bus_presence
 msgid "User Presence"
-msgstr ""
+msgstr "Παρουσία Χρήστη"
 
 #. module: bus
 #: model:ir.model,name:bus.model_res_users
@@ -129,4 +137,4 @@ msgstr "Χρήστες"
 #. module: bus
 #: model:ir.model,name:bus.model_bus_bus
 msgid "bus.bus"
-msgstr ""
+msgstr "bus.bus"

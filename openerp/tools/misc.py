@@ -7,18 +7,22 @@ Miscellaneous tools used by OpenERP.
 """
 
 from functools import wraps
+import cPickle
 import cProfile
 from contextlib import contextmanager
 import subprocess
 import logging
 import os
 import passlib.utils
+import re
 import socket
 import sys
 import threading
 import time
+import types
 import werkzeug.utils
 import zipfile
+from cStringIO import StringIO
 from collections import defaultdict, Hashable, Iterable, Mapping, OrderedDict
 from itertools import islice, izip, groupby
 from lxml import etree
@@ -44,7 +48,10 @@ _logger = logging.getLogger(__name__)
 
 # List of etree._Element subclasses that we choose to ignore when parsing XML.
 # We include the *Base ones just in case, currently they seem to be subclasses of the _* ones.
-SKIPPED_ELEMENT_TYPES = (etree._Comment, etree._ProcessingInstruction, etree.CommentBase, etree.PIBase)
+SKIPPED_ELEMENT_TYPES = (etree._Comment, etree._ProcessingInstruction, etree.CommentBase, etree.PIBase, etree._Entity)
+
+# Configure default global parser
+etree.set_default_parser(etree.XMLParser(resolve_entities=False))
 
 #----------------------------------------------------------
 # Subprocesses
@@ -188,7 +195,16 @@ def file_open(name, mode="r", subdir='addons', pathinfo=False):
 
 
 def _fileopen(path, mode, basedir, pathinfo, basename=None):
-    name = os.path.normpath(os.path.join(basedir, path))
+    name = os.path.normpath(os.path.normcase(os.path.join(basedir, path)))
+
+    import openerp.modules as addons
+    paths = addons.module.ad_paths + [config['root_path']]
+    for addons_path in paths:
+        addons_path = os.path.normpath(os.path.normcase(addons_path)) + os.sep
+        if name.startswith(addons_path):
+            break
+    else:
+        raise ValueError("Unknown path: %s" % name)
 
     if basename is None:
         basename = name
@@ -316,6 +332,26 @@ def topological_sort(elems):
     map(visit, elems)
 
     return result
+
+
+try:
+    import xlwt
+
+    # add some sanitizations to respect the excel sheet name restrictions
+    # as the sheet name is often translatable, can not control the input
+    class PatchedWorkbook(xlwt.Workbook):
+        def add_sheet(self, name, cell_overwrite_ok=False):
+            # invalid Excel character: []:*?/\
+            name = re.sub(r'[\[\]:*?/\\]', '', name)
+
+            # maximum size is 31 characters
+            name = name[:31]
+            return super(PatchedWorkbook, self).add_sheet(name, cell_overwrite_ok=cell_overwrite_ok)
+
+    xlwt.Workbook = PatchedWorkbook
+
+except ImportError:
+    xlwt = None
 
 
 class UpdateableStr(local):
@@ -452,6 +488,7 @@ ALL_LANGUAGES = {
         'cs_CZ': u'Czech / Čeština',
         'da_DK': u'Danish / Dansk',
         'de_DE': u'German / Deutsch',
+        'de_CH': u'German (CH) / Deutsch (CH)',
         'el_GR': u'Greek / Ελληνικά',
         'en_AU': u'English (AU)',
         'en_GB': u'English (UK)',
@@ -498,6 +535,7 @@ ALL_LANGUAGES = {
         'lv_LV': u'Latvian / latviešu valoda',
         'mk_MK': u'Macedonian / македонски јазик',
         'mn_MN': u'Mongolian / монгол',
+        'my_MM': u'Burmese / မြန်မာဘာသာ',
         'nb_NO': u'Norwegian Bokmål / Norsk bokmål',
         'nl_NL': u'Dutch / Nederlands',
         'nl_BE': u'Dutch (BE) / Nederlands (BE)',
@@ -559,6 +597,15 @@ def mod10r(number):
             report = codec[ (int(digit) + report) % 10 ]
     return result + str((10 - report) % 10)
 
+def str2bool(s, default=None):
+    s = ustr(s).lower()
+    y = 'y yes 1 true t on'.split()
+    n = 'n no 0 false f off'.split()
+    if s not in (y + n):
+        if default is None:
+            raise ValueError('Use 0/1/yes/no/true/false/on/off')
+        return bool(default)
+    return s in y
 
 def human_size(sz):
     """
@@ -968,7 +1015,7 @@ class CountingStream(object):
 
 def stripped_sys_argv(*strip_args):
     """Return sys.argv with some arguments stripped, suitable for reexecution or subprocesses"""
-    strip_args = sorted(set(strip_args) | set(['-s', '--save', '-u', '--update', '-i', '--init']))
+    strip_args = sorted(set(strip_args) | set(['-s', '--save', '-u', '--update', '-i', '--init', '--i18n-overwrite']))
     assert all(config.parser.has_option(s) for s in strip_args)
     takes_value = dict((s, config.parser.get_option(s).takes_value()) for s in strip_args)
 
@@ -983,7 +1030,6 @@ def stripped_sys_argv(*strip_args):
             or (i >= 1 and (args[i - 1] in strip_args) and takes_value[args[i - 1]])
 
     return [x for i, x in enumerate(args) if not strip(args, i)]
-
 
 class ConstantMapping(Mapping):
     """
@@ -1050,14 +1096,15 @@ def dumpstacks(sig=None, frame=None):
     _logger.info("\n".join(code))
 
 def freehash(arg):
-    if isinstance(arg, Mapping):
-        return hash(frozendict(arg))
-    elif isinstance(arg, Iterable):
-        return hash(frozenset(arg))
-    elif isinstance(arg, Hashable):
+    try:
         return hash(arg)
-    else:
-        return id(arg)
+    except Exception:
+        if isinstance(arg, Mapping):
+            return hash(frozendict(arg))
+        elif isinstance(arg, Iterable):
+            return hash(frozenset(map(freehash, arg)))
+        else:
+            return id(arg)
 
 class frozendict(dict):
     """ An implementation of an immutable dictionary. """
@@ -1136,6 +1183,8 @@ def formatLang(env, value, digits=None, grouping=True, monetary=False, dp=False,
         if dp:
             decimal_precision_obj = env['decimal.precision']
             digits = decimal_precision_obj.precision_get(dp)
+        elif currency_obj:
+            digits = currency_obj.decimal_places
         elif (hasattr(value, '_field') and isinstance(value._field, (float_field, function_field)) and value._field.digits):
                 digits = value._field.digits[1]
                 if not digits and digits is not 0:
@@ -1147,12 +1196,12 @@ def formatLang(env, value, digits=None, grouping=True, monetary=False, dp=False,
     lang = env.user.company_id.partner_id.lang or 'en_US'
     lang_objs = env['res.lang'].search([('code', '=', lang)])
     if not lang_objs:
-        lang_objs = env['res.lang'].search([('code', '=', 'en_US')])
+        lang_objs = env['res.lang'].search([], limit=1)
     lang_obj = lang_objs[0]
 
     res = lang_obj.format('%.' + str(digits) + 'f', value, grouping=grouping, monetary=monetary)
 
-    if currency_obj:
+    if currency_obj and currency_obj.symbol:
         if currency_obj.position == 'after':
             res = '%s %s' % (res, currency_obj.symbol)
         elif currency_obj and currency_obj.position == 'before':
@@ -1165,3 +1214,44 @@ def _consteq(str1, str2):
     return len(str1) == len(str2) and sum(ord(x)^ord(y) for x, y in zip(str1, str2)) == 0
 
 consteq = getattr(passlib.utils, 'consteq', _consteq)
+
+class Pickle(object):
+    @classmethod
+    def load(cls, stream, errors=False):
+        unpickler = cPickle.Unpickler(stream)
+        # pickle builtins: str/unicode, int/long, float, bool, tuple, list, dict, None
+        unpickler.find_global = None
+        try:
+            return unpickler.load()
+        except Exception:
+            _logger.warning('Failed unpickling data, returning default: %r', errors, exc_info=True)
+            return errors
+
+    @classmethod
+    def loads(cls, text):
+        return cls.load(StringIO(text))
+
+    dumps = cPickle.dumps
+    dump = cPickle.dump
+
+pickle = Pickle
+
+def wrap_module(module, attr_list):
+    """Helper for wrapping a package/module to expose selected attributes
+
+       :param Module module: the actual package/module to wrap, as returned by ``import <module>``
+       :param iterable attr_list: a global list of attributes to expose, usually the top-level
+            attributes and their own main attributes. No support for hiding attributes in case
+            of name collision at different levels.
+    """
+    attr_list = set(attr_list)
+    class WrappedModule(object):
+        def __getattr__(self, attrib):
+            if attrib in attr_list:
+                target = getattr(module, attrib)
+                if isinstance(target, types.ModuleType):
+                    return wrap_module(target, attr_list)
+                return target
+            raise AttributeError(attrib)
+    # module and attr_list are in the closure
+    return WrappedModule()

@@ -589,7 +589,7 @@ ul.oe_menu_editor .disclose {
 }
 
 #theme_customize_modal {
-  overflow: visible;
+  overflow: auto;
   z-index: 1020;
   background: transparent;
   display: block;
@@ -654,12 +654,4 @@ ul.oe_menu_editor .disclose {
   opacity: 0.3;
   position: absolute;
   z-index: 1;
-}
-
-/* ---- force the browse to re-compute the stylesheets ---- */
-body.theme_customize_css_loading {
-  magin-top: 1px;
-}
-body.theme_customize_css_loading #wrapwrap {
-  magin-top: -1px;
 }

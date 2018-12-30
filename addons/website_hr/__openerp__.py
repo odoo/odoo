@@ -1,6 +1,6 @@
 {
     'name': 'Team Page',
-    'category': 'Website',
+    'category': 'Human Resources',
     'summary': 'Present Your Team',
     'version': '1.0',
     'description': """

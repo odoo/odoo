@@ -3,8 +3,8 @@
 
 {
     'name': 'Thailand - Accounting',
-    'version': '1.0',
-    'category': 'Localization/Account Charts',
+    'version': '2.0',
+    'category': 'Localization',
     'description': """
 Chart of Accounts for Thailand.
 ===============================
@@ -19,4 +19,5 @@ Thai accounting chart and localization.
         'account_chart_template.yml',
     ],
     'installable': True,
+    'post_init_hook': '_preserve_tag_on_taxes',
 }

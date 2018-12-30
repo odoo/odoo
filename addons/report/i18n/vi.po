@@ -7,9 +7,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-29 10:26+0000\n"
-"PO-Revision-Date: 2015-09-30 09:27+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"POT-Creation-Date: 2016-12-07 10:39+0000\n"
+"PO-Revision-Date: 2018-10-11 14:12+0000\n"
+"Last-Translator: Duy BQ <duybq86@gmail.com>\n"
 "Language-Team: Vietnamese (http://www.transifex.com/odoo/odoo-9/language/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,13 +20,12 @@ msgstr ""
 #. module: report
 #: model:ir.ui.view,arch_db:report.external_layout_footer
 msgid "&amp;bull;"
-msgstr ""
+msgstr "&amp;bull;"
 
 #. module: report
-#: model:ir.ui.view,arch_db:report.layout
 #: model:ir.ui.view,arch_db:report.minimal_layout
 msgid "&lt;!DOCTYPE html&gt;"
-msgstr ""
+msgstr "&lt;!DOCTYPE html&gt;"
 
 #. module: report
 #: selection:report.paperformat,format:0
@@ -91,7 +90,7 @@ msgstr ""
 #. module: report
 #: model:ir.model.fields,field_description:report.field_report_paperformat_report_ids
 msgid "Associated reports"
-msgstr ""
+msgstr "Báo cáo liên kết"
 
 #. module: report
 #: selection:report.paperformat,format:0
@@ -144,7 +143,7 @@ msgid "B9  23  33 x 62 mm"
 msgstr ""
 
 #. module: report
-#: code:addons/report/models/report.py:257
+#: code:addons/report/models/report.py:274
 #, python-format
 msgid "Bad Report Reference"
 msgstr ""
@@ -152,7 +151,7 @@ msgstr ""
 #. module: report
 #: model:ir.model.fields,field_description:report.field_report_paperformat_margin_bottom
 msgid "Bottom Margin (mm)"
-msgstr ""
+msgstr "Lề dưới (mm)"
 
 #. module: report
 #: selection:report.paperformat,format:0
@@ -194,19 +193,20 @@ msgstr ""
 #. module: report
 #: model:ir.model.fields,field_description:report.field_report_paperformat_default
 msgid "Default paper format ?"
-msgstr ""
+msgstr "Định dạng giấy mặc định?"
 
 #. module: report
+#: model:ir.model.fields,field_description:report.field_ir_qweb_field_barcode_display_name
 #: model:ir.model.fields,field_description:report.field_report_abstract_report_display_name
 #: model:ir.model.fields,field_description:report.field_report_display_name
 #: model:ir.model.fields,field_description:report.field_report_paperformat_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Tên hiển thị"
 
 #. module: report
 #: model:ir.model.fields,field_description:report.field_report_paperformat_header_line
 msgid "Display a header line"
-msgstr ""
+msgstr "Hiển thị dòng tiêu đề"
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.reporting_settings_form_inherited
@@ -226,7 +226,7 @@ msgstr ""
 #. module: report
 #: model:ir.ui.view,arch_db:report.external_layout_footer
 msgid "Email:"
-msgstr ""
+msgstr "Email:"
 
 #. module: report
 #: constraint:report.paperformat:0
@@ -241,7 +241,7 @@ msgstr ""
 #. module: report
 #: model:ir.model.fields,help:report.field_report_paperformat_report_ids
 msgid "Explicitly associated reports"
-msgstr ""
+msgstr "Báo cáo được liên kết rõ"
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.external_layout_footer
@@ -256,9 +256,10 @@ msgstr ""
 #. module: report
 #: model:ir.model.fields,field_description:report.field_report_paperformat_header_spacing
 msgid "Header spacing"
-msgstr ""
+msgstr "Khoảng cách tiêu đề"
 
 #. module: report
+#: model:ir.model.fields,field_description:report.field_ir_qweb_field_barcode_id
 #: model:ir.model.fields,field_description:report.field_report_abstract_report_id
 #: model:ir.model.fields,field_description:report.field_report_id
 #: model:ir.model.fields,field_description:report.field_report_paperformat_id
@@ -268,14 +269,15 @@ msgstr "ID"
 #. module: report
 #: selection:report.paperformat,orientation:0
 msgid "Landscape"
-msgstr ""
+msgstr "Ngang"
 
 #. module: report
+#: model:ir.model.fields,field_description:report.field_ir_qweb_field_barcode___last_update
 #: model:ir.model.fields,field_description:report.field_report___last_update
 #: model:ir.model.fields,field_description:report.field_report_abstract_report___last_update
 #: model:ir.model.fields,field_description:report.field_report_paperformat___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Sửa lần cuối vào"
 
 #. module: report
 #: model:ir.model.fields,field_description:report.field_report_paperformat_write_uid
@@ -297,7 +299,7 @@ msgstr ""
 #. module: report
 #: model:ir.model.fields,field_description:report.field_report_paperformat_margin_left
 msgid "Left Margin (mm)"
-msgstr ""
+msgstr "Lề trái (mm)"
 
 #. module: report
 #: selection:report.paperformat,format:0
@@ -317,12 +319,12 @@ msgstr "Tên"
 #. module: report
 #: model:ir.model.fields,field_description:report.field_report_paperformat_orientation
 msgid "Orientation"
-msgstr ""
+msgstr "Chiều giấy"
 
 #. module: report
 #: model:ir.model.fields,field_description:report.field_report_paperformat_dpi
 msgid "Output DPI"
-msgstr ""
+msgstr "Độ phân giải DPI"
 
 #. module: report
 #: model:ir.model.fields,field_description:report.field_report_paperformat_page_height
@@ -347,13 +349,13 @@ msgstr "Định dạng trang in"
 #. module: report
 #: model:ir.actions.act_window,name:report.paper_format_action
 msgid "Paper Format General Configuration"
-msgstr ""
+msgstr "Cấu hình Định dạng Trang"
 
 #. module: report
 #: model:ir.model.fields,field_description:report.field_ir_act_report_xml_paperformat_id
 #: model:ir.model.fields,field_description:report.field_res_company_paperformat_id
 msgid "Paper format"
-msgstr ""
+msgstr "Định trạng Trang in"
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.paperformat_view_form
@@ -364,7 +366,7 @@ msgstr ""
 #. module: report
 #: model:ir.model.fields,field_description:report.field_report_paperformat_format
 msgid "Paper size"
-msgstr ""
+msgstr "Cỡ Trang"
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.external_layout_footer
@@ -374,25 +376,26 @@ msgstr "Điện thoại"
 #. module: report
 #: selection:report.paperformat,orientation:0
 msgid "Portrait"
-msgstr ""
+msgstr "Dọc"
 
 #. module: report
 #: model:ir.actions.report.xml,name:report.action_report_externalpreview
 #: model:ir.ui.view,arch_db:report.reporting_settings_form_inherited
 msgid "Preview External Report"
-msgstr ""
+msgstr "Xem trước External Report"
 
 #. module: report
 #: model:ir.actions.report.xml,name:report.action_report_internalpreview
 #: model:ir.ui.view,arch_db:report.reporting_settings_form_inherited
 msgid "Preview Internal Report"
-msgstr ""
+msgstr "Xem trước báo cáo nội bộ"
 
 #. module: report
 #. openerp-web
 #: code:addons/report/static/src/js/qwebactionmanager.js:76
 #: code:addons/report/static/src/js/qwebactionmanager.js:84
 #: code:addons/report/static/src/js/qwebactionmanager.js:91
+#: code:addons/report/static/src/js/qwebactionmanager.js:96
 #: model:ir.model,name:report.model_report
 #, python-format
 msgid "Report"
@@ -408,7 +411,7 @@ msgstr "Báo cáo"
 #. module: report
 #: model:ir.model.fields,field_description:report.field_report_paperformat_margin_right
 msgid "Right Margin (mm)"
-msgstr ""
+msgstr "Lề phải (mm)"
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.act_report_xml_view_inherit
@@ -418,12 +421,12 @@ msgstr ""
 #. module: report
 #: model:ir.model.fields,help:report.field_report_paperformat_format
 msgid "Select Proper Paper size"
-msgstr ""
+msgstr "Chọn khổ giấy phù hợp"
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.external_layout_footer
 msgid "TIN:"
-msgstr ""
+msgstr "MST:"
 
 #. module: report
 #: selection:report.paperformat,format:0
@@ -433,15 +436,15 @@ msgstr ""
 #. module: report
 #: model:ir.ui.view,arch_db:report.preview_externalreport
 msgid "This is a sample of an external report."
-msgstr ""
+msgstr "Đây là một mẫu của external report"
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.preview_internalreport
 msgid "This is a sample of an internal report."
-msgstr ""
+msgstr "Đây là ví dụ của báo cáo nội bộ"
 
 #. module: report
-#: code:addons/report/models/report.py:257
+#: code:addons/report/models/report.py:274
 #, python-format
 msgid "This report is not loaded into the database: %s."
 msgstr ""
@@ -449,7 +452,7 @@ msgstr ""
 #. module: report
 #: model:ir.model.fields,field_description:report.field_report_paperformat_margin_top
 msgid "Top Margin (mm)"
-msgstr ""
+msgstr "Lề trên (mm)"
 
 #. module: report
 #. openerp-web
@@ -459,6 +462,12 @@ msgid ""
 "Unable to find Wkhtmltopdf on this \n"
 "system. The report will be shown in html.<br><br><a href=\"http://wkhtmltopdf.org/\" target=\"_blank\">\n"
 "wkhtmltopdf.org</a>"
+msgstr "Không thể tìm thấy Wkhtmltopdf trên trang này\nhệ thống. Báo cáo sẽ được hiển thị bằng html.<br><br><a href=\"http://wkhtmltopdf.org/\" target=\"_blank\">\nwkhtmltopdf.org"
+
+#. module: report
+#: code:addons/report/models/report.py:164
+#, python-format
+msgid "Unable to find Wkhtmltopdf on this system. The PDF can not be created."
 msgstr ""
 
 #. module: report
@@ -467,10 +476,10 @@ msgid "Website:"
 msgstr ""
 
 #. module: report
-#: code:addons/report/models/report.py:413
+#: code:addons/report/models/report.py:464
 #, python-format
 msgid "Wkhtmltopdf failed (error code: %s). Message: %s"
-msgstr ""
+msgstr "Wkhtmltopdf không thành công (mã lỗi: %s). Thông báo: %s"
 
 #. module: report
 #. openerp-web
@@ -479,7 +488,7 @@ msgstr ""
 msgid ""
 "You need to start OpenERP with at least two \n"
 "workers to print a pdf version of the reports."
-msgstr ""
+msgstr "Bạn cần bắt đầu Hệ thống với ít nhất hai\ncông nhân để in phiên bản pdf của báo cáo."
 
 #. module: report
 #. openerp-web
@@ -490,14 +499,13 @@ msgid ""
 "Wkhtmltopdf to at least 0.12.0 in order to get a correct display of headers and footers as well as\n"
 "support for table-breaking between pages.<br><br><a href=\"http://wkhtmltopdf.org/\" \n"
 "target=\"_blank\">wkhtmltopdf.org</a>"
-msgstr ""
+msgstr "Bạn nên nâng cấp phiên bản của Wkhtmltopdf\nđến ít nhất 0.12.0 để hiển thị chính xác các đầu trang và chân trang cũng như\nhỗ trợ cho việc liên kết bảng giữa các trang. <br><br><a href=\"http://wkhtmltopdf.org/\" \ntarget=\"_blank\">wkhtmltopdf.org</a>"
 
 #. module: report
-#: model:ir.model,name:report.model_ir_actions_report_xml
-msgid "ir.actions.report.xml"
-msgstr "ir.actions.report.xml"
-
-#. module: report
-#: model:ir.model,name:report.model_report_abstract_report
-msgid "report.abstract_report"
+#. openerp-web
+#: code:addons/report/static/src/js/qwebactionmanager.js:96
+#, python-format
+msgid ""
+"Your installation of Wkhtmltopdf seems to be broken. The \n"
+"report will be shown in html.<br><br><a href=\"http://wkhtmltopdf.org/\" target=\"_blank\">wkhtmltopdf.org</a>"
 msgstr ""

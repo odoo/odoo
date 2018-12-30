@@ -3,7 +3,7 @@ import logging
 
 import openerp
 from openerp.osv import osv, fields
-from openerp.tools import float_round, float_repr, image_get_resized_images, image_resize_image_big
+from openerp.tools import float_round, float_repr, image_resize_images
 from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
@@ -65,7 +65,8 @@ class PaymentAcquirer(osv.Model):
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'pre_msg': fields.html('Help Message', translate=True,
                                help='Message displayed to explain and help the payment process.'),
-        'post_msg': fields.html('Thanks Message', help='Message displayed after having done the payment process.'),
+        'post_msg': fields.html('Thanks Message', translate=True,
+                                help='Message displayed after having done the payment process.'),
         'view_template_id': fields.many2one('ir.ui.view', 'Form Button Template', required=True),
         'registration_view_template_id': fields.many2one('ir.ui.view', 'S2S Form Template',
                                                          domain=[('type', '=', 'qweb')],
@@ -96,30 +97,14 @@ class PaymentAcquirer(osv.Model):
 
     image = openerp.fields.Binary("Image", attachment=True,
         help="This field holds the image used for this provider, limited to 1024x1024px")
-    image_medium = openerp.fields.Binary("Medium-sized image",
-        compute='_compute_images', inverse='_inverse_image_medium', store=True, attachment=True,
+    image_medium = openerp.fields.Binary("Medium-sized image", attachment=True,
         help="Medium-sized image of this provider. It is automatically "\
              "resized as a 128x128px image, with aspect ratio preserved. "\
              "Use this field in form views or some kanban views.")
-    image_small = openerp.fields.Binary("Small-sized image",
-        compute='_compute_images', inverse='_inverse_image_small', store=True, attachment=True,
+    image_small = openerp.fields.Binary("Small-sized image", attachment=True,
         help="Small-sized image of this provider. It is automatically "\
              "resized as a 64x64px image, with aspect ratio preserved. "\
              "Use this field anywhere a small image is required.")
-
-    @openerp.api.depends('image')
-    def _compute_images(self):
-        for rec in self:
-            rec.image_medium = openerp.tools.image_resize_image_medium(rec.image)
-            rec.image_small = openerp.tools.image_resize_image_small(rec.image)
-
-    def _inverse_image_medium(self):
-        for rec in self:
-            rec.image = openerp.tools.image_resize_image_big(rec.image_medium)
-
-    def _inverse_image_small(self):
-        for rec in self:
-            rec.image = openerp.tools.image_resize_image_big(rec.image_small)
 
     _defaults = {
         'company_id': lambda self, cr, uid, obj, ctx=None: self.pool['res.users'].browse(cr, uid, uid).company_id.id,
@@ -143,6 +128,16 @@ class PaymentAcquirer(osv.Model):
     _constraints = [
         (_check_required_if_provider, 'Required fields not filled', ['required for this provider']),
     ]
+
+    @openerp.api.model
+    def create(self, vals):
+        image_resize_images(vals)
+        return super(PaymentAcquirer, self).create(vals)
+
+    @openerp.api.multi
+    def write(self, vals):
+        image_resize_images(vals)
+        return super(PaymentAcquirer, self).write(vals)
 
     def get_form_action_url(self, cr, uid, id, context=None):
         """ Returns the form action URL, for form-based acquirer implementations. """
@@ -198,8 +193,13 @@ class PaymentAcquirer(osv.Model):
 
         # Fill partner_* using values['partner_id'] or partner_id arguement
         partner_id = values.get('partner_id', partner_id)
+        billing_partner_id = values.get('billing_partner_id', partner_id)
         if partner_id:
             partner = self.pool['res.partner'].browse(cr, uid, partner_id, context=context)
+            if partner_id != billing_partner_id:
+                billing_partner = self.pool['res.partner'].browse(cr, uid, billing_partner_id, context=context)
+            else:
+                billing_partner = partner
             values.update({
                 'partner': partner,
                 'partner_id': partner_id,
@@ -213,11 +213,28 @@ class PaymentAcquirer(osv.Model):
                 'partner_country': partner.country_id,
                 'partner_phone': partner.phone,
                 'partner_state': partner.state_id,
+                'billing_partner': billing_partner,
+                'billing_partner_id': billing_partner_id,
+                'billing_partner_name': billing_partner.name,
+                'billing_partner_lang': billing_partner.lang,
+                'billing_partner_email': billing_partner.email,
+                'billing_partner_zip': billing_partner.zip,
+                'billing_partner_city': billing_partner.city,
+                'billing_partner_address': _partner_format_address(billing_partner.street, billing_partner.street2),
+                'billing_partner_country_id': billing_partner.country_id.id,
+                'billing_partner_country': billing_partner.country_id,
+                'billing_partner_phone': billing_partner.phone,
+                'billing_partner_state': billing_partner.state_id,
             })
         if values.get('partner_name'):
             values.update({
                 'partner_first_name': _partner_split_name(values.get('partner_name'))[0],
                 'partner_last_name': _partner_split_name(values.get('partner_name'))[1],
+            })
+        if values.get('billing_partner_name'):
+            values.update({
+                'billing_partner_first_name': _partner_split_name(values.get('billing_partner_name'))[0],
+                'billing_partner_last_name': _partner_split_name(values.get('billing_partner_name'))[1],
             })
 
         # Fix address, country fields
@@ -225,12 +242,16 @@ class PaymentAcquirer(osv.Model):
             values['address'] = _partner_format_address(values.get('partner_street', ''), values.get('partner_street2', ''))
         if not values.get('partner_country') and values.get('partner_country_id'):
             values['country'] = self.pool['res.country'].browse(cr, uid, values.get('partner_country_id'), context=context)
+        if not values.get('billing_partner_address'):
+            values['billing_address'] = _partner_format_address(values.get('billing_partner_street', ''), values.get('billing_partner_street2', ''))
+        if not values.get('billing_partner_country') and values.get('billing_partner_country_id'):
+            values['billing_country'] = self.pool['res.country'].browse(cr, uid, values.get('billing_partner_country_id'), context=context)
 
 
         # compute fees
         fees_method_name = '%s_compute_fees' % acquirer.provider
         if hasattr(self, fees_method_name):
-            fees = getattr(self, fees_method_name)(cr, uid, id, values['amount'], values['currency_id'], values['partner_country_id'], context=None)
+            fees = getattr(self, fees_method_name)(cr, uid, id, values['amount'], values['currency_id'], values.get('partner_country_id'), context=None)
             values['fees'] = float_round(fees, 2)
 
         # call <name>_form_generate_values to update the tx dict with acqurier specific values
@@ -310,7 +331,9 @@ class PaymentTransaction(osv.Model):
         return [(language.code, language.name) for language in languages]
 
     def _default_partner_country_id(self, cr, uid, context=None):
-        comp = self.pool['res.company'].browse(cr, uid, context.get('company_id', 1), context=context)
+        Company = self.pool['res.company']
+        company_id = Company.search(cr, uid, [], limit=1, order='id', context=context)
+        comp = Company.browse(cr, uid, context.get('company_id', company_id), context=context)
         return comp.country_id.id
 
     _columns = {
@@ -358,7 +381,7 @@ class PaymentTransaction(osv.Model):
 
         'callback_eval': fields.char('S2S Callback', help="""\
             Will be safe_eval with `self` being the current transaction. i.e.:
-                self.env['my.model'].payment_validated(self)""", oldname="s2s_cb_eval"),
+                self.env['my.model'].payment_validated(self)""", oldname="s2s_cb_eval", groups="base.group_system"),
         'payment_method_id': fields.many2one('payment.method', 'Payment Method', domain="[('acquirer_id', '=', acquirer_id)]"),
     }
 
@@ -395,7 +418,7 @@ class PaymentTransaction(osv.Model):
             custom_method_name = '%s_compute_fees' % acquirer.provider
             if hasattr(Acquirer, custom_method_name):
                 fees = getattr(Acquirer, custom_method_name)(
-                    cr, uid, acquirer.id, values.get('amount', 0.0), values.get('currency_id'), values.get('country_id'), context=None)
+                    cr, uid, acquirer.id, values.get('amount', 0.0), values.get('currency_id'), values.get('partner_country_id'), context=None)
                 values['fees'] = float_round(fees, 2)
 
             # custom create
@@ -454,7 +477,7 @@ class PaymentTransaction(osv.Model):
     def get_next_reference(self, cr, uid, reference, context=None):
         ref_suffix = 1
         init_ref = reference
-        while self.pool['payment.transaction'].search_count(cr, uid, [('reference', '=', reference)], context=context):
+        while self.pool['payment.transaction'].search_count(cr, openerp.SUPERUSER_ID, [('reference', '=', reference)], context=context):
             reference = init_ref + '-' + str(ref_suffix)
             ref_suffix += 1
         return reference

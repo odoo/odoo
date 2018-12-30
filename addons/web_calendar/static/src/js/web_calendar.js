@@ -21,12 +21,28 @@ var QWeb = core.qweb;
 function get_fc_defaultOptions() {
     var dateFormat = time.strftime_to_moment_format(_t.database.parameters.date_format);
 
+    // moment.js converts '%p' to 'A' for 'AM/PM'
+    // But FullCalendar v1.6.4 supports 'TT' format for 'AM/PM' but not 'A'
+    // NB: should be removed when fullcalendar is updated to 2.0 because it would
+    // be supported. See the following link
+    // http://fullcalendar.io/wiki/Upgrading-to-v2/
+    var timeFormat = time.strftime_to_moment_format(_t.database.parameters.time_format).replace('A', 'TT');
+
     // adapt format for fullcalendar v1.
     // see http://fullcalendar.io/docs1/utilities/formatDate/
     var conversions = [['YYYY', 'yyyy'], ['YY', 'y'], ['DDDD', 'dddd'], ['DD', 'dd']];
     _.each(conversions, function(conv) {
         dateFormat = dateFormat.replace(conv[0], conv[1]);
     });
+
+    // If 'H' is contained in timeFormat display '10:00'
+    // Else display '10 AM'. 
+    // See : http://fullcalendar.io/docs1/utilities/formatDate/
+    var hourFormat = function(timeFormat){
+        if (/H/.test(timeFormat))
+            return 'HH:mm';
+        return 'hh TT';
+    };
 
     return {
         weekNumberTitle: _t("W"),
@@ -36,10 +52,17 @@ function get_fc_defaultOptions() {
         dayNames: moment.weekdays(),
         dayNamesShort: moment.weekdaysShort(),
         firstDay: moment._locale._week.dow,
+        weekNumberCalculation: function(date) {
+            return moment(date).week();
+        },
+        axisFormat: hourFormat(timeFormat),
+        // Correct timeformat for agendaWeek and agendaDay
+        // http://fullcalendar.io/docs1/text/timeFormat/
+        timeFormat: timeFormat + ' {- ' + timeFormat + '}',
         weekNumbers: true,
         titleFormat: {
             month: 'MMMM yyyy',
-            week: "W",
+            week: "w",
             day: dateFormat,
         },
         columnFormat: {
@@ -83,6 +106,9 @@ var CalendarView = View.extend({
         this.title = (this.options.action)? this.options.action.name : '';
 
         this.shown = $.Deferred();
+        self.current_start = null;
+        self.current_end = null;
+        self.previous_ids = [];
     },
 
     set_default_options: function(options) {
@@ -308,7 +334,7 @@ var CalendarView = View.extend({
                 self.proxy('update_record')(event._id, data);
             },
             eventRender: function (event, element, view) {
-                element.find('.fc-event-title').html(event.title);
+                element.find('.fc-event-title').html(event.title + event.attendee_avatars);
             },
             eventAfterRender: function (event, element, view) {
                 if ((view.name !== 'month') && (((event.end-event.start)/60000)<=30)) {
@@ -532,6 +558,9 @@ var CalendarView = View.extend({
                     else if (value instanceof Array) {
                         temp_ret[fieldname] = value[1]; // no name_get to make
                     }
+                    else if (_.contains(["date", "datetime"], self.fields[fieldname].type)) {
+                        temp_ret[fieldname] = instance.web.format_value(value, self.fields[fieldname]);
+                    }
                     else {
                         throw new Error("Incomplete data received from dataset for record " + evt.id);
                     }
@@ -601,7 +630,6 @@ var CalendarView = View.extend({
                 if (attendee_other.length>2) {
                     the_title_avatar += '<span class="o_attendee_head" title="' + attendee_other.slice(0, -2) + '">+</span>';
                 }
-                the_title = the_title_avatar + the_title;
             }
         }
         
@@ -610,9 +638,10 @@ var CalendarView = View.extend({
             date_stop = m_start.toDate();
         }
         var r = {
-            'start': moment(date_start).format('YYYY-MM-DD HH:mm:ss'),
-            'end': moment(date_stop).format('YYYY-MM-DD HH:mm:ss'),
+            'start': moment(date_start).toString(),
+            'end': moment(date_stop).toString(),
             'title': the_title,
+            'attendee_avatars': the_title_avatar,
             'allDay': (this.fields[this.date_start].type == 'date' || (this.all_day && evt[this.all_day]) || false),
             'id': evt.id,
             'attendees':attendees
@@ -627,7 +656,7 @@ var CalendarView = View.extend({
                 r.className = 'o_calendar_color_'+ this.get_color(color_key);
             }
         } else { // if form all, get color -1
-            r.className = 'o_calendar_color_'+ self.all_filters[-1].color;
+            r.className = 'o_calendar_color_'+ (self.all_filters[-1] ? self.all_filters[-1].color : 1);
         }
         return r;
     },
@@ -665,17 +694,17 @@ var CalendarView = View.extend({
                 date_start_day = new Date(event.start.getFullYear(),event.start.getMonth(),event.start.getDate(),7);
                 date_stop_day = new Date(event_end.getFullYear(),event_end.getMonth(),event_end.getDate(),19);
             }
-            data[this.date_start] = time.datetime_to_str(date_start_day);
+            data[this.date_start] = time.auto_date_to_str(date_start_day, this.fields[this.date_start].type);
             if (this.date_stop) {
-                data[this.date_stop] = time.datetime_to_str(date_stop_day);
+                data[this.date_stop] = time.auto_date_to_str(date_stop_day, this.fields[this.date_stop].type);
             }
             diff_seconds = Math.round((date_stop_day.getTime() - date_start_day.getTime()) / 1000);
                             
         }
         else {
-            data[this.date_start] = time.datetime_to_str(event.start);
+            data[this.date_start] = time.auto_date_to_str(event.start, this.fields[this.date_start].type);
             if (this.date_stop) {
-                data[this.date_stop] = time.datetime_to_str(event_end);
+                data[this.date_stop] = time.auto_date_to_str(event_end, this.fields[this.date_stop].type);
             }
             diff_seconds = Math.round((event_end.getTime() - event.start.getTime()) / 1000);
         }
@@ -724,11 +753,25 @@ var CalendarView = View.extend({
                             );
                         }
                     }
+
+                // read_slice is launched uncoditionally, when quickly
+                // changing the range in the calender view, all of
+                // these RPC calls will race each other. Because of
+                // this we keep track of the current range of the
+                // calendar view.
+                self.current_start = start;
+                self.current_end = end;
                 self.dataset.read_slice(_.keys(self.fields), {
                     offset: 0,
                     domain: event_domain,
                     context: context,
                 }).done(function(events) {
+                    // undo the read_slice if it the range has changed since it launched
+                    if (self.current_start.getTime() != start.getTime() || self.current_end.getTime() != end.getTime()) {
+                        self.dataset.ids = self.previous_ids;
+                        return;
+                    }
+                    self.previous_ids = self.dataset.ids.slice();
                     if (self.dataset.index === null) {
                         if (events.length) {
                             self.dataset.index = 0;
@@ -818,16 +861,23 @@ var CalendarView = View.extend({
      * between given start, end dates.
      */
     get_range_domain: function(domain, start, end) {
-        var format = time.date_to_str;
-        
+        var format = time.datetime_to_str;
         var extend_domain = [[this.date_start, '<=', format(end)]];
-
         if (this.date_stop) {
-            extend_domain.push(
-                    [this.date_stop, '>=', format(start)]
-            );
+            extend_domain.push([this.date_stop, '>=', format(start)]);
+        } else if (!this.date_delay) {
+            extend_domain.push([this.date_start, '>=', format(start)]);
         }
         return new CompoundDomain(domain, extend_domain);
+    },
+
+    /**
+     * Get all_filters ordered by label
+     */
+    get_all_filters_ordered: function() {
+        return _.values(this.all_filters).sort(function(f1,f2) {
+            return _.string.naturalCmp(f1.label, f2.label);
+        });
     },
 
     /**
@@ -840,7 +890,7 @@ var CalendarView = View.extend({
         var index = this.dataset.get_id_index(id);
         if (index !== null) {
             event_id = this.dataset.ids[index];
-            this.dataset.write(event_id, data, {}).done(function() {
+            this.dataset.write(event_id, data, {}).always(function() {
                 if (is_virtual_id(event_id)) {
                     // this is a virtual ID and so this will create a new event
                     // with an unknown id for us.

@@ -267,8 +267,7 @@ class MergePartnerAutomatic(osv.TransientModel):
 
     def _update_values(self, cr, uid, src_partners, dst_partner, context=None):
         _logger.debug('_update_values for dst_partner: %s for src_partners: %r', dst_partner.id, list(map(operator.attrgetter('id'), src_partners)))
-
-        columns = dst_partner._columns
+        columns = dst_partner.fields_get().keys()
         def write_serializer(column, item):
             if isinstance(item, browse_record):
                 return item.id
@@ -276,8 +275,9 @@ class MergePartnerAutomatic(osv.TransientModel):
                 return item
 
         values = dict()
-        for column, field in columns.iteritems():
-            if field._type not in ('many2many', 'one2many') and not isinstance(field, fields.function):
+        for column in columns:
+            field = dst_partner._fields[column]
+            if field.type not in ('many2many', 'one2many') and field.compute is None:
                 for item in itertools.chain(src_partners, [dst_partner]):
                     if item[column]:
                         values[column] = write_serializer(column, item[column])
@@ -301,6 +301,12 @@ class MergePartnerAutomatic(osv.TransientModel):
 
         if len(partner_ids) > 3:
             raise UserError(_("For safety reasons, you cannot merge more than 3 contacts together. You can re-open the wizard several times if needed."))
+
+        child_ids = set()
+        for partner_id in partner_ids:
+            child_ids = child_ids.union(set(proxy.search(cr, uid, [('id', 'child_of', [partner_id])])) - set([partner_id]))
+        if set(partner_ids).intersection(child_ids):
+            raise UserError(_("You cannot merge a contact with one of his parent."))
 
         if openerp.SUPERUSER_ID != uid and len(set(partner.email for partner in proxy.browse(cr, uid, partner_ids, context=context))) > 1:
             raise UserError(_("All contacts must have the same email. Only the Administrator can merge contacts with different emails."))
@@ -548,9 +554,12 @@ class MergePartnerAutomatic(osv.TransientModel):
                 'min_id': min_id,
                 'aggr_ids': aggr_ids,
             }
-
-            proxy.create(cr, uid, values, context=context)
-            counter += 1
+            # To ensure that the used partners are accessible by the user
+            partner_ids = self.pool['res.partner'].search(cr, uid, [('id', 'in', aggr_ids)], context=context)
+            if len(partner_ids) >= 2:
+                values['aggr_ids'] = partner_ids
+                proxy.create(cr, uid, values, context=context)
+                counter += 1
 
         values = {
             'state': 'selection',
@@ -766,9 +775,9 @@ class MergePartnerAutomatic(osv.TransientModel):
             # don't update the partners if they are more of one who have invoice
             cr.execute("""  SELECT *
                             FROM res_partner as p
-                            WHERE p.id != %s AND p.email LIKE '%%%s' AND
+                            WHERE p.id != %s AND p.email LIKE %s AND
                                 EXISTS (SELECT * FROM account_invoice as a WHERE p.id = a.partner_id AND a.state in ('open','paid'))
-                    """ % (id, email))
+                    """, (id, '%' + email))
 
             if len(cr.fetchall()) > 1:
                 _logger.info("%s MORE OF ONE COMPANY", email)
@@ -777,13 +786,13 @@ class MergePartnerAutomatic(osv.TransientModel):
             # to display changed values
             cr.execute("""  SELECT id,email
                             FROM res_partner
-                            WHERE parent_id != %s AND id != %s AND email LIKE '%%%s'
-                    """ % (id, id, email))
+                            WHERE parent_id != %s AND id != %s AND email LIKE %s
+                    """, (id, id, '%' + email))
             _logger.info("%r", cr.fetchall())
 
             # upgrade
             cr.execute("""  UPDATE res_partner
                             SET parent_id = %s
-                            WHERE id != %s AND email LIKE '%%%s'
-                    """ % (id, id, email))
+                            WHERE id != %s AND email LIKE %s
+                    """, (id, id, '%' + email))
         return False

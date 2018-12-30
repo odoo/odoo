@@ -3,19 +3,20 @@
 # * sale_timesheet
 # 
 # Translators:
+# Piotr Szlązak <szlazakpiotr@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-14 10:28+0000\n"
-"PO-Revision-Date: 2015-10-08 13:47+0000\n"
-"Last-Translator: Dariusz Żbikowski <darek@krokus.com.pl>\n"
+"PO-Revision-Date: 2017-09-15 13:04+0000\n"
+"Last-Translator: zbik2607 <darek@krokus.com.pl>\n"
 "Language-Team: Polish (http://www.transifex.com/odoo/odoo-9/language/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: pl\n"
-"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_account_analytic_line
@@ -55,17 +56,17 @@ msgstr "Karta czasu pracy"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_hr_employee_timesheet_cost
 msgid "Timesheet Cost"
-msgstr ""
+msgstr "koszt listy obecności"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_timesheet_count
 msgid "Timesheet activities"
-msgstr ""
+msgstr "Aktywności karty pracy"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_timesheet_ids
 msgid "Timesheet activities associated to this sale"
-msgstr ""
+msgstr "Aktywności kart pracy związane z tą sprzedażą"
 
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.hr_timesheet_employee_extd_form
@@ -79,4 +80,4 @@ msgid ""
 "You can use only one product on timesheet within the same sale order. You "
 "should split your order to include only one contract based on time and "
 "material."
-msgstr ""
+msgstr "Możesz stosować tylko jeden produkt w karcie pracy w ramach tego samego zamówienia sprzedaży. Powinieneś podzielić zamówienie, aby zawierało tylko jedną umowę opartą na kosztach czasu i materiałów."

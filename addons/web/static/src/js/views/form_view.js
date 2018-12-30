@@ -58,7 +58,6 @@ var FormView = View.extend(common.FieldManagerMixin, {
         this.fields = {};
         this.fields_order = [];
         this.datarecord = {};
-        this._onchange_specs = {};
         this.onchanges_mutex = new utils.Mutex();
         this.default_focus_field = null;
         this.default_focus_button = null;
@@ -74,6 +73,7 @@ var FormView = View.extend(common.FieldManagerMixin, {
             "footer_to_buttons": false,
         });
         this.is_initialized = $.Deferred();
+        this.record_loaded = $.Deferred();
         this.mutating_mutex = new utils.Mutex();
         this.save_list = [];
         this.render_value_defs = [];
@@ -83,7 +83,6 @@ var FormView = View.extend(common.FieldManagerMixin, {
         this.rendering_engine = new FormRenderingEngine(this);
         self.set({actual_mode: self.options.initial_mode});
         this.has_been_loaded.done(function() {
-            self._build_onchange_specs();
             self.check_actual_mode();
             self.on("change:actual_mode", self, self.check_actual_mode);
             self.on("change:actual_mode", self, self.toggle_buttons);
@@ -114,6 +113,9 @@ var FormView = View.extend(common.FieldManagerMixin, {
         });
         if (this.$el) {
             this.$el.off('.formBlur');
+        }
+        if (this.$pager) {
+            this.$pager.off();
         }
         this._super();
     },
@@ -206,9 +208,10 @@ var FormView = View.extend(common.FieldManagerMixin, {
             if (this.fields_view.toolbar) {
                 this.sidebar.add_toolbar(this.fields_view.toolbar);
             }
+            var canDuplicate = this.is_action_enabled('create') && this.is_action_enabled('duplicate');
             this.sidebar.add_items('other', _.compact([
                 this.is_action_enabled('delete') && { label: _t('Delete'), callback: this.on_button_delete },
-                this.is_action_enabled('create') && { label: _t('Duplicate'), callback: this.on_button_duplicate }
+                canDuplicate && { label: _t('Duplicate'), callback: this.on_button_duplicate }
             ]));
 
             $node = $node || this.$('.oe_form_sidebar');
@@ -241,9 +244,7 @@ var FormView = View.extend(common.FieldManagerMixin, {
                     return;
                 }
                 var action = $el.data('pager-action');
-                var def = $.when(self.execute_pager_action(action));
-                $el.attr("disabled");
-                def.always(function() {
+                $.when(self.execute_pager_action(action)).always(function() {
                     $el.removeAttr("disabled");
                 });
             });
@@ -361,6 +362,7 @@ var FormView = View.extend(common.FieldManagerMixin, {
         this._actualize_mode();
         this.set({ 'title' : record.id ? record.display_name : _t("New") });
 
+        this.record_loaded = $.Deferred();
         _(this.fields).each(function (field, f) {
             field._dirty_flag = false;
             field._inhibit_on_change_flag = true;
@@ -370,23 +372,28 @@ var FormView = View.extend(common.FieldManagerMixin, {
         });
         return $.when.apply(null, set_values).then(function() {
             if (!record.id) {
-                // trigger onchanges
-                self.do_onchange(null);
+                // trigger onchange for new record after x2many with non-embedded views are loaded
+                var fields_loaded = _.pluck(self.fields, 'is_loaded');
+                $.when.apply(null, fields_loaded).done(function() {
+                    self.do_onchange(null);
+                });
             }
             self.on_form_changed();
-            self.rendering_engine.init_fields();
-            self.is_initialized.resolve();
-            self.do_update_pager(record.id === null || record.id === undefined);
-            if (self.sidebar) {
-               self.sidebar.do_attachement_update(self.dataset, self.datarecord.id);
-            }
-            if (record.id) {
-                self.do_push_state({id:record.id});
-            } else {
-                self.do_push_state({});
-            }
-            self.$el.removeClass('oe_form_dirty');
-            self.autofocus();
+            self.rendering_engine.init_fields().then(function() {
+                self.is_initialized.resolve();
+                self.record_loaded.resolve();
+                self.do_update_pager(record.id === null || record.id === undefined);
+                if (self.sidebar) {
+                   self.sidebar.do_attachement_update(self.dataset, self.datarecord.id);
+                }
+                if (record.id) {
+                    self.do_push_state({id:record.id});
+                } else {
+                    self.do_push_state({});
+                }
+                self.$el.removeClass('oe_form_dirty');
+                self.autofocus();
+            });
         });
     },
     /**
@@ -400,7 +407,7 @@ var FormView = View.extend(common.FieldManagerMixin, {
         var keys = _.keys(this.fields_view.fields);
         if (keys.length) {
             return this.dataset.default_get(keys).then(function(r) {
-                self.trigger('load_record', r);
+                self.trigger('load_record', _.clone(r));
             });
         }
         return self.trigger('load_record', {});
@@ -467,7 +474,25 @@ var FormView = View.extend(common.FieldManagerMixin, {
         _.each(this.fields, function(field, name) {
             self._onchange_fields.push(name);
             self._onchange_specs[name] = find(name, field.node);
-            _.each(field.field.views, function(view) {
+
+            // we get the list of first-level fields of x2many firstly by
+            // getting them from the field embedded views, then if no embedded
+            // view is present for a loaded view, we get them from the default
+            // view that has been loaded
+
+            // gather embedded view objects
+            var views = _.clone(field.field.views);
+            // also gather default view objects
+            if (field.viewmanager) {
+                _.each(field.viewmanager.views, function(view, view_type) {
+                    // add default view if it was not embedded and it is loaded
+                    var not_embedded = view.embedded_view === undefined; // ONLY FOR 9.0
+                    if (views[view_type] === undefined && view.controller && not_embedded) {
+                        views[view_type] = view.controller.fields_view;
+                    }
+                });
+            }
+            _.each(views, function(view) {
                 _.each(view.fields, function(_, subname) {
                     self._onchange_specs[name + '.' + subname] = find(subname, view.arch);
                 });
@@ -496,6 +521,9 @@ var FormView = View.extend(common.FieldManagerMixin, {
 
     do_onchange: function(widget) {
         var self = this;
+        if (self._onchange_specs === undefined) {
+            self._build_onchange_specs();
+        }
         var onchange_specs = self._onchange_specs;
         try {
             var def = $.when({});
@@ -584,19 +612,23 @@ var FormView = View.extend(common.FieldManagerMixin, {
             field.node.attrs.domain = domain;
         });
 
-        if (!_.isEmpty(result.value)) {
-            this._internal_set_values(result.value);
-        }
+        var def = $.when(!_.isEmpty(result.value) && this._internal_set_values(result.value));
+
         // FIXME XXX a list of warnings?
         if (!_.isEmpty(result.warning)) {
-            new Dialog(this, {
+            this.warning_displayed = true;
+            var dialog = new Dialog(this, {
                 size: 'medium',
                 title:result.warning.title,
                 $content: QWeb.render("CrashManager.warning", result.warning)
-            }).open();
+            });
+            dialog.open();
+            dialog.on('closed', this, function () {
+                this.warning_displayed = false;
+            });
         }
 
-        return $.Deferred().resolve();
+        return def;
         } catch(e) {
             console.error(e);
             crash_manager.show_message(e);
@@ -606,18 +638,18 @@ var FormView = View.extend(common.FieldManagerMixin, {
     _process_operations: function() {
         var self = this;
         return this.mutating_mutex.exec(function() {
+            function onchanges_mutex () {return self.onchanges_mutex.def;}
             function iterate() {
-
                 var mutex = new utils.Mutex();
+                mutex.exec(onchanges_mutex);
                 _.each(self.fields, function(field) {
-                    self.onchanges_mutex.def.then(function(){
-                        mutex.exec(function(){
-                            return field.commit_value();
-                        });
+                    mutex.exec(function(){
+                        return field.commit_value();
                     });
+                    mutex.exec(onchanges_mutex);
                 });
 
-                return mutex.def.then(function () { return self.onchanges_mutex.def; }).then(function() {
+                return mutex.def.then(function() {
                     var save_obj = self.save_list.pop();
                     if (save_obj) {
                         return self._process_save(save_obj).then(function() {
@@ -695,12 +727,11 @@ var FormView = View.extend(common.FieldManagerMixin, {
         this.set({actual_mode: mode});
     },
     check_actual_mode: function(source, options) {
-        var self = this;
         if(this.get("actual_mode") === "view") {
-            self.$el.removeClass('oe_form_editable').addClass('oe_form_readonly');
+            this.$el.removeClass('oe_form_editable').addClass('oe_form_readonly');
         } else {
-            self.$el.removeClass('oe_form_readonly').addClass('oe_form_editable');
-            this.autofocus();
+            this.$el.removeClass('oe_form_readonly').addClass('oe_form_editable');
+            _.defer(_.bind(this.autofocus, this));
         }
     },
     autofocus: function() {
@@ -719,18 +750,31 @@ var FormView = View.extend(common.FieldManagerMixin, {
             }
         }
     },
+    disable_button: function () {
+        this.$('.oe_form_buttons,.o_statusbar_buttons').add(this.$buttons).find('button').addClass('o_disabled').prop('disabled', true);
+        this.is_disabled = true;
+    },
+    enable_button: function () {
+        this.$('.oe_form_buttons,.o_statusbar_buttons').add(this.$buttons).find('button.o_disabled').removeClass('o_disabled').prop('disabled', false);
+        this.is_disabled = false;
+    },
     on_button_save: function(e) {
         var self = this;
-        $(e.target).attr("disabled", true);
-        return this.save().done(function(result) {
+        if (this.is_disabled) {
+            return;
+        }
+        this.disable_button();
+        return this.save().then(function(result) {
             self.trigger("save", result);
-            self.reload().then(function() {
+            return self.reload().then(function() {
                 self.to_view_mode();
                 core.bus.trigger('do_reload_needaction');
                 core.bus.trigger('form_view_saved', self);
+            }).always(function() {
+                self.enable_button();
             });
-        }).always(function(){
-            $(e.target).attr("disabled", false);
+        }).fail(function(){
+            self.enable_button();
         });
     },
     on_button_cancel: function(event) {
@@ -813,7 +857,10 @@ var FormView = View.extend(common.FieldManagerMixin, {
                 def.reject();
             },
         };
-        Dialog.confirm(this, message, options);
+        var dialog = Dialog.confirm(this, message, options);
+        dialog.$modal.on('hidden.bs.modal', function() {
+            def.reject();
+        });
         return def;
     },
     /**
@@ -847,19 +894,6 @@ var FormView = View.extend(common.FieldManagerMixin, {
                 first_invalid_field = null,
                 readonly_values = {},
                 deferred = [];
-
-            _.each(self.fields, function (f) {
-                var res = f.before_save();
-                if (res) {
-                    deferred.push(res);
-                    res.fail(function () {
-                        form_invalid = true;
-                        if (!first_invalid_field) {
-                            first_invalid_field = f;
-                        }
-                    });
-                }
-            });
 
             $.when.apply($, deferred).always(function () {
 
@@ -1005,6 +1039,7 @@ var FormView = View.extend(common.FieldManagerMixin, {
             } else {
                 var fields = _.keys(self.fields_view.fields);
                 fields.push('display_name');
+                fields.push('__last_update');
                 return self.dataset.read_index(fields,
                     {
                         context: { 'bin_size': true },

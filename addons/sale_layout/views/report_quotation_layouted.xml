@@ -23,8 +23,8 @@
                             <td t-if="display_discount" class="text-right" groups="sale.group_discount_per_so_line">
                                 <span t-field="l.discount"/>
                             </td>
-                            <td>
-                                <span t-esc="', '.join(map(lambda x: x.name, l.tax_id))"/>
+                            <td class="text-right">
+                                <span t-esc="', '.join(map(lambda x: (x.description or x.name), l.tax_id))"/>
                             </td>
                             <td class="text-right">
                                 <span t-field="l.price_subtotal"

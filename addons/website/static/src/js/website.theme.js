@@ -3,6 +3,7 @@ odoo.define('website.theme', function (require) {
 
 var ajax = require('web.ajax');
 var core = require('web.core');
+var session = require('web.session');
 var Widget = require('web.Widget');
 var base = require('web_editor.base');
 var website = require('website.website');
@@ -121,57 +122,41 @@ var Theme = Widget.extend({
         });
         return xml_ids;
     },
-    compute_stylesheets: function () {
-        var self = this;
-        self.has_error = false;
-        $('link[href*=".assets_"]').attr('data-loading', true);
-        function theme_customize_css_onload() {
-            if ($('link[data-loading]').size()) {
-                $('body').toggleClass('theme_customize_css_loading');
-                setTimeout(theme_customize_css_onload, 50);
-            } else {
-                $('body').removeClass('theme_customize_css_loading');
-                self.$el.removeClass("loading");
-
-                if (window.getComputedStyle($('button[data-toggle="collapse"]:first')[0]).getPropertyValue('position') === 'static' ||
-                    window.getComputedStyle($('#theme_customize_modal')[0]).getPropertyValue('display') === 'none') {
-                    if (self.has_error) {
-                        window.location.hash = "theme=true";
-                        window.location.reload();
-                    } else {
-                        self.has_error = true;
-                        $('link[href*=".assets_"][data-error]').removeAttr('data-error').attr('data-loading', true);
-                        self.update_stylesheets();
-                        setTimeout(theme_customize_css_onload, 50);
-                    }
-                }
-            }
-        }
-        theme_customize_css_onload();
-    },
-    update_stylesheets: function () {
-        $('link[href*=".assets_"]').each(function update () {
-            var $style = $(this);
-            var href = $style.attr("href").replace(/[^\/]+$/, new Date().getTime());
-            var $asset = $('<link rel="stylesheet" href="'+href+'"/>');
-            $asset.attr("onload", "$(this).prev().attr('disable', true).remove(); $(this).removeAttr('onload').removeAttr('onerror');");
-            $asset.attr("onerror", "$(this).prev().removeAttr('data-loading').attr('data-error','loading'); $(this).attr('disable', true).remove();");
-            $style.after($asset);
-        });
-    },
     update_style: function (enable, disable, reload) {
-        var self = this;
-        if (this.$el.hasClass("loading")) return;
-        this.$el.addClass("loading");
+        if (this.$el.hasClass("loading")) {
+            return;
+        }
+        this.$el.addClass('loading');
 
-        if (!reload && $('link[href*=".assets_"]').size()) {
-            this.compute_stylesheets();
+        if (!reload && !session.debug) {
+            var self = this;
             return ajax.jsonRpc('/website/theme_customize', 'call', {
-                    'enable': enable,
-                    'disable': disable
-                }).then(function () {
-                    self.update_stylesheets();
+                enable: enable,
+                disable: disable,
+                get_bundle: true,
+            }).then(function (bundleHTML) {
+                var $links = $('link[href*=".assets_frontend"]');
+                var $newLinks = $(bundleHTML).filter('link');
+
+                var linksLoaded = $.Deferred();
+                var nbLoaded = 0;
+                $newLinks.on('load', function (e) {
+                    if (++nbLoaded >= $newLinks.length) {
+                        linksLoaded.resolve();
+                    }
                 });
+                $newLinks.on('error', function (e) {
+                    linksLoaded.reject();
+                    window.location.hash = "theme=true";
+                    window.location.reload();
+                });
+
+                $links.last().after($newLinks);
+                return linksLoaded.then(function () {
+                    $links.remove();
+                    self.$el.removeClass('loading');
+                });
+            });
         } else {
             var href = '/website/theme_customize_reload'+
                 '?href='+encodeURIComponent(window.location.href)+
@@ -316,13 +301,19 @@ function theme_customize() {
 
 website.TopBar.include({
     start: function () {
-        this.$el.on('click', "#theme_customize a", theme_customize);
-        if ((window.location.hash || "").indexOf("theme=true") !== -1) {
-            theme_customize();
-            window.location.hash = "";
-        }
+        var self = this;
+        base.ready().then(function () {
+            self.$el.on('click', "#theme_customize a", theme_customize);
+            if ((window.location.hash || "").indexOf("theme=true") !== -1) {
+                theme_customize();
+                window.location.hash = "";
+            }
+        });
+
         return this._super();
     }
 });
+
+return Theme;
 
 });

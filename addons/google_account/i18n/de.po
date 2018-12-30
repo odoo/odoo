@@ -3,12 +3,14 @@
 # * google_account
 # 
 # Translators:
+# Fabian Liesch <fabian.liesch@gmail.com>, 2015
+# Jens Metschkoll <jmetschkoll@snej-production.de>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2015-09-12 19:45+0000\n"
+"POT-Creation-Date: 2017-08-16 15:23+0000\n"
+"PO-Revision-Date: 2017-12-06 11:28+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: German (http://www.transifex.com/odoo/odoo-9/language/de/)\n"
 "MIME-Version: 1.0\n"
@@ -30,7 +32,7 @@ msgstr "Angelegt am"
 #. module: google_account
 #: model:ir.model.fields,field_description:google_account.field_google_service_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Angezeigter Name"
 
 #. module: google_account
 #: model:ir.model.fields,field_description:google_account.field_google_service_id
@@ -53,12 +55,42 @@ msgid "Last Updated on"
 msgstr "Zuletzt aktualisiert am"
 
 #. module: google_account
+#: code:addons/google_account/google_account.py:98
+#, python-format
+msgid ""
+"Something went wrong during your token generation. Maybe your Authorization "
+"Code is invalid"
+msgstr "Während der Generierung des Tokens ist ein Fehler aufgetreten. Eventuell ist Ihr Autorisierungscode ungültig."
+
+#. module: google_account
+#: code:addons/google_account/google_account.py:37
+#, python-format
+msgid ""
+"Something went wrong during your token generation. Maybe your Authorization "
+"Code is invalid or already expired"
+msgstr "Während der Generierung des Tokens ist ein Fehler aufgetreten. Eventuell ist Ihr Autorisierungscode ungültig oder bereits abgelaufen."
+
+#. module: google_account
+#: code:addons/google_account/google_account.py:128
+#, python-format
+msgid ""
+"Something went wrong during your token generation. Maybe your Authorization "
+"Code is invalid or already expired [%s]"
+msgstr "Während der Generierung des Tokens ist ein Fehler aufgetreten. Eventuell ist Ihr Autorisierungscode ungültig oder bereits abgelaufen [%s]"
+
+#. module: google_account
 #: code:addons/google_account/google_account.py:173
 #, python-format
 msgid "Something went wrong with your request to google"
 msgstr "Etwas ging schief mit Ihrer Anfrage an Google"
 
 #. module: google_account
+#: code:addons/google_account/google_account.py:109
+#, python-format
+msgid "The account for the Google service '%s' is not configured"
+msgstr "Das Konto für den Google-Dienst '%s'  ist nicht konfiguriert."
+
+#. module: google_account
 #: model:ir.model,name:google_account.model_google_service
 msgid "google.service"
-msgstr ""
+msgstr "google.service"

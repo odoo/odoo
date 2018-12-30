@@ -1,0 +1,944 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * mrp_repair
+# 
+# Translators:
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-18 08:12+0000\n"
+"PO-Revision-Date: 2018-07-20 06:16+0000\n"
+"Last-Translator: Duy BQ <duybq86@gmail.com>\n"
+"Language-Team: Vietnamese (http://www.transifex.com/odoo/odoo-9/language/vi/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: vi\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: mrp_repair
+#: model:ir.model.fields,help:mrp_repair.field_mrp_repair_line_state
+msgid ""
+" * The 'Draft' status is set automatically as draft when repair order in draft status.                         \n"
+"* The 'Confirmed' status is set automatically as confirm when repair order in confirm status.                         \n"
+"* The 'Done' status is set automatically when repair order is completed.                        \n"
+"* The 'Cancelled' status is set automatically when user cancel repair order."
+msgstr ""
+
+#. module: mrp_repair
+#: model:ir.model.fields,help:mrp_repair.field_mrp_repair_state
+msgid ""
+" * The 'Draft' status is used when a user is encoding a new and unconfirmed repair order.             \n"
+"* The 'Confirmed' status is used when a user confirms the repair order.             \n"
+"* The 'Ready to Repair' status is used to start to repairing, user can start repairing only after repair order is confirmed.             \n"
+"* The 'To be Invoiced' status is used to generate the invoice before or after repairing done.             \n"
+"* The 'Done' status is set when repairing is completed.            \n"
+"* The 'Cancelled' status is used when user cancel repair order."
+msgstr ""
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+msgid "(<i>Remove</i>)"
+msgstr "(<i>Gỡ bỏ</i>)"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+msgid "(update)"
+msgstr "(cập nhật)"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+msgid "<i>(Add)</i>"
+msgstr "<i>(Thêm)</i>"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+msgid "<strong>Fees Line(s)</strong>"
+msgstr ""
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+msgid "<strong>Guarantee Limit:</strong>"
+msgstr ""
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+msgid "<strong>Lot Number</strong>"
+msgstr ""
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+msgid "<strong>Operation Line(s)</strong>"
+msgstr ""
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+msgid "<strong>Printing Date:</strong>"
+msgstr "<strong>Ngày In:</strong>"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+msgid "<strong>Product to Repair:</strong>"
+msgstr "<strong>Sản phẩm để sửa chữa:</strong>"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+msgid "<strong>Total Without Taxes</strong>"
+msgstr "<strong>Tổng chưa thuế</strong>"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+msgid "<strong>Total</strong>"
+msgstr "<strong>Tổng</strong>"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_message_needaction
+msgid "Action Needed"
+msgstr "Cần có Hành động"
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/wizard/cancel_repair.py:24
+#, python-format
+msgid "Active ID not Found"
+msgstr ""
+
+#. module: mrp_repair
+#: selection:mrp.repair.line,type:0
+msgid "Add"
+msgstr "Thêm"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+msgid "Add internal notes..."
+msgstr "Thêm ghi chú nội bộ..."
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+msgid "Add quotation notes..."
+msgstr "Thêm ghi chú báo giá..."
+
+#. module: mrp_repair
+#: selection:mrp.repair,invoice_method:0
+msgid "After Repair"
+msgstr "Sau sửa chữa"
+
+#. module: mrp_repair
+#: selection:mrp.repair,invoice_method:0
+msgid "Before Repair"
+msgstr "Trước sửa chữa"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_cancel_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_make_invoice
+msgid "Cancel"
+msgstr "Hủy"
+
+#. module: mrp_repair
+#: model:ir.model,name:mrp_repair.model_mrp_repair_cancel
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+msgid "Cancel Repair"
+msgstr "Hủy Sửa chữa"
+
+#. module: mrp_repair
+#: model:ir.actions.act_window,name:mrp_repair.action_cancel_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_cancel_repair
+msgid "Cancel Repair Order"
+msgstr "Hủy Lệnh Sửa chữa"
+
+#. module: mrp_repair
+#: selection:mrp.repair,state:0 selection:mrp.repair.line,state:0
+msgid "Cancelled"
+msgstr "Đã hủy"
+
+#. module: mrp_repair
+#: model:ir.model.fields,help:mrp_repair.field_mrp_repair_partner_id
+msgid "Choose partner for whom the order will be invoiced and delivered."
+msgstr "Chọn đối tác sẽ nhận hoá đơn và giao hàng."
+
+#. module: mrp_repair
+#: model:ir.actions.act_window,help:mrp_repair.action_repair_order_tree
+msgid "Click to create a reparation order."
+msgstr "Bấm để tạo một lệnh sửa chữa."
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_company_id
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+msgid "Company"
+msgstr "Công ty"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+msgid "Confirm Repair"
+msgstr "Xác nhận sửa chữa"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+#: selection:mrp.repair,state:0 selection:mrp.repair.line,state:0
+msgid "Confirmed"
+msgstr "Đã được xác nhận"
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:524
+#, python-format
+msgid ""
+"Couldn't find a pricelist line matching this product and quantity.\n"
+"You have to change either the product, the quantity or the pricelist."
+msgstr "Không thể tìn thấy một quy tắc tính giá phù hợp với số lượng và sản phẩm này.\nBạn phải thay đổi hoặc sản phẩm, số lượng hoặc bảng giá."
+
+#. module: mrp_repair
+#: model:ir.actions.act_window,name:mrp_repair.act_mrp_repair_invoice
+#: model:ir.ui.view,arch_db:mrp_repair.view_make_invoice
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+msgid "Create Invoice"
+msgstr "Tạo hóa đơn"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_make_invoice
+msgid "Create invoices"
+msgstr "Tạo hóa đơn"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_cancel_create_uid
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_create_uid
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_create_uid
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_create_uid
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_make_invoice_create_uid
+msgid "Created by"
+msgstr "Được tạo bởi"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_cancel_create_date
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_create_date
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_create_date
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_create_date
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_make_invoice_create_date
+msgid "Created on"
+msgstr "Được tạo vào"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_location_id
+msgid "Current Location"
+msgstr "Địa điểm hiện tại"
+
+#. module: mrp_repair
+#: model:ir.model.fields,help:mrp_repair.field_mrp_repair_message_last_post
+msgid "Date of the last message posted on the record."
+msgstr "Ngày của thông điệp gần nhất được ghi nhận trên một bản ghi"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_address_id
+msgid "Delivery Address"
+msgstr "Địa chỉ Giao hàng"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_location_dest_id
+msgid "Delivery Location"
+msgstr "Địa điểm giao hàng"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_name
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_name
+#: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+msgid "Description"
+msgstr "Miêu tả"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_location_dest_id
+msgid "Dest. Location"
+msgstr "Vị trí Đích"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_cancel_display_name
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_display_name
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_display_name
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_display_name
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_make_invoice_display_name
+msgid "Display Name"
+msgstr "Tên hiển thị"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_make_invoice
+msgid "Do you really want to create the invoice(s)?"
+msgstr "Bạn có thật sự muốn tạo hóa đơn?"
+
+#. module: mrp_repair
+#: selection:mrp.repair.line,state:0
+msgid "Done"
+msgstr "Hoàn thành"
+
+#. module: mrp_repair
+#: selection:mrp.repair.line,state:0
+msgid "Draft"
+msgstr "Bản thảo"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+msgid "End Repair"
+msgstr "Kết thúc sửa chữa"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+msgid "Extra Info"
+msgstr "Thông tin thêm"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fees_lines
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+msgid "Fees"
+msgstr "Phí"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_message_follower_ids
+msgid "Followers"
+msgstr "Người dõi theo"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_message_channel_ids
+msgid "Followers (Channels)"
+msgstr "Người theo dõi (Các kênh)"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Người theo dõi (Các đối tác)"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+msgid "Group By"
+msgstr "Group By"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_make_invoice_group
+msgid "Group by partner invoice address"
+msgstr "Nhóm theo địa chỉ xuất hoá đơn của đối tác"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+msgid "Guarantee limit Month"
+msgstr "Tháng hết hạn bảo hành"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+msgid "Guarantee limit by Month"
+msgstr "Hạn bảo hành theo Tháng"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+msgid "History"
+msgstr "Lịch sử"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_cancel_id
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_id
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_id
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_id
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_make_invoice_id
+msgid "ID"
+msgstr "ID"
+
+#. module: mrp_repair
+#: model:ir.model.fields,help:mrp_repair.field_mrp_repair_message_unread
+msgid "If checked new messages require your attention."
+msgstr "Nếu đánh dấu kiểm, các thông điệp mới yêu cầu sự có mặt của bạn."
+
+#. module: mrp_repair
+#: model:ir.model.fields,help:mrp_repair.field_mrp_repair_message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Nếu đánh dấu kiểm, các thông điệp mới yêu cầu sự có mặt của bạn."
+
+#. module: mrp_repair
+#: model:ir.actions.act_window,help:mrp_repair.action_repair_order_tree
+msgid ""
+"In a repair order, you can detail the components you remove,\n"
+"                add or replace and record the time you spent on the different\n"
+"                operations."
+msgstr "Trong một lệnh sửa chữa, bạn có thể chi tiết hoá các thành phần\n                mà bạn gỡ ra, thêm vào hoặc thay thế và ghi lại thời gian mà bạn\n                đã sử dụng cho các hoạt động khác nhau."
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_internal_notes
+msgid "Internal Notes"
+msgstr "Ghi chú nội bộ"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_move_id
+msgid "Inventory Move"
+msgstr "Dịch chuyển Kho"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_invoice_id
+msgid "Invoice"
+msgstr "Hóa đơn"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+msgid "Invoice Corrected"
+msgstr ""
+
+#. module: mrp_repair
+#: selection:mrp.repair,state:0
+msgid "Invoice Exception"
+msgstr "Hóa đơn ngoại lệ"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_invoice_line_id
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_invoice_line_id
+msgid "Invoice Line"
+msgstr "Chi tiết hóa đơn"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_invoice_method
+msgid "Invoice Method"
+msgstr "Phương thức xuất Hoá đơn"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+msgid "Invoice address:"
+msgstr "Địa chỉ xuất hóa đơn:"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+msgid "Invoice and shipping address:"
+msgstr "Địa chỉ xuất hóa đơn và giao hàng:"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_invoiced
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_invoiced
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_invoiced
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+msgid "Invoiced"
+msgstr "Đã xuất hóa đơn"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+msgid "Invoicing"
+msgstr "Xuất hóa đơn"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_partner_invoice_id
+msgid "Invoicing Address"
+msgstr "Địa chỉ xuất hoá đơn"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_message_is_follower
+msgid "Is Follower"
+msgstr "Trở thành người theo dõi"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_message_last_post
+msgid "Last Message Date"
+msgstr "Ngày thông điệp cuối cùng"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair___last_update
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_cancel___last_update
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee___last_update
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line___last_update
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_make_invoice___last_update
+msgid "Last Modified on"
+msgstr "Sửa lần cuối vào"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_cancel_write_uid
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_write_uid
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_write_uid
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_make_invoice_write_uid
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_write_uid
+msgid "Last Updated by"
+msgstr "Last Updated by"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_cancel_write_date
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_write_date
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_write_date
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_make_invoice_write_date
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_write_date
+msgid "Last Updated on"
+msgstr "Cập nhật lần cuối vào"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_lot_id
+msgid "Lot"
+msgstr "Lot"
+
+#. module: mrp_repair
+#: model:ir.model,name:mrp_repair.model_mrp_repair_make_invoice
+msgid "Make Invoice"
+msgstr "Tạo hoá đơn"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_message_ids
+msgid "Messages"
+msgstr "Thông điệp"
+
+#. module: mrp_repair
+#: model:ir.model.fields,help:mrp_repair.field_mrp_repair_message_ids
+msgid "Messages and communication history"
+msgstr "Lịch sử trao đổi"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_move_id
+msgid "Move"
+msgstr "Dịch chuyển"
+
+#. module: mrp_repair
+#: model:ir.model.fields,help:mrp_repair.field_mrp_repair_move_id
+msgid "Move created by the repair order"
+msgstr "Dịch chuyển được tạo bởi lệnh sửa chữa"
+
+#. module: mrp_repair
+#: selection:mrp.repair,invoice_method:0
+msgid "No Invoice"
+msgstr "Không xuất hoá đơn"
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:511
+#, python-format
+msgid "No Pricelist!"
+msgstr "Không có Bảng giá!"
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:322
+#, python-format
+msgid "No account defined for partner \"%s\"."
+msgstr "Không có tài khoản được xác định cho đối tác \"%s\"."
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:350
+#: code:addons/mrp_repair/mrp_repair.py:379
+#, python-format
+msgid "No account defined for product \"%s\"."
+msgstr "Không có tài khoản được xác định cho sản phẩm \"%s\"."
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:372
+#, python-format
+msgid "No product defined on Fees!"
+msgstr "Không có sản phẩm được xác định cho các Phí"
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:522
+#, python-format
+msgid "No valid pricelist line found !"
+msgstr "Không tìm thấy quy tắc tính giá hợp lệ !"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+msgid "Notes"
+msgstr "Ghi chú"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_message_needaction_counter
+msgid "Number of Actions"
+msgstr "Số lượng Hành động"
+
+#. module: mrp_repair
+#: model:ir.model.fields,help:mrp_repair.field_mrp_repair_message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "Số thông điệp cần có hành động"
+
+#. module: mrp_repair
+#: model:ir.model.fields,help:mrp_repair.field_mrp_repair_message_unread_counter
+msgid "Number of unread messages"
+msgstr "Số thông điệp chưa đọc"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_operations
+msgid "Operation Lines"
+msgstr ""
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+msgid "Operations"
+msgstr "Thao tác"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_partner_id
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+msgid "Partner"
+msgstr "Đối tác"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+msgid "Price"
+msgstr "Giá"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_pricelist_id
+msgid "Pricelist"
+msgstr "Bảng giá"
+
+#. module: mrp_repair
+#: model:ir.model.fields,help:mrp_repair.field_mrp_repair_pricelist_id
+msgid "Pricelist of the selected partner."
+msgstr "Bảng giá của đối tác được chọn."
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_product_id
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_product_id
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+msgid "Product"
+msgstr "Sản phẩm"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+msgid "Product Information"
+msgstr "Thông tin sản phẩm"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_product_qty
+msgid "Product Quantity"
+msgstr "Số lượng sản phẩm"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_product_uom
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_product_uom
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_product_uom
+msgid "Product Unit of Measure"
+msgstr "Đơn vị tính của sản phẩm"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_product_id
+msgid "Product to Repair"
+msgstr "Sản phẩm cần sửa chữa"
+
+#. module: mrp_repair
+#: model:ir.model.fields,help:mrp_repair.field_mrp_repair_lot_id
+msgid "Products repaired are all belonging to this lot"
+msgstr "Các sản phẩm được sửa chữa đều thuộc về lô này"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_product_uom_qty
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_product_uom_qty
+#: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+msgid "Quantity"
+msgstr "Số lượng"
+
+#. module: mrp_repair
+#: selection:mrp.repair,state:0
+msgid "Quotation"
+msgstr "Báo giá"
+
+#. module: mrp_repair
+#: model:ir.actions.report.xml,name:mrp_repair.action_report_mrp_repair_order
+msgid "Quotation / Order"
+msgstr "Báo giá / Đơn hàng"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_quotation_notes
+msgid "Quotation Notes"
+msgstr "Ghi chú báo giá"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+msgid "Quotations"
+msgstr "Báo giá"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+msgid "Ready To Repair"
+msgstr "Sẵn sàng sửa chữa"
+
+#. module: mrp_repair
+#: selection:mrp.repair,state:0
+msgid "Ready to Repair"
+msgstr "Sẵn sàng sửa chữa"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+msgid "Reair Orders"
+msgstr ""
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+msgid "Recreate Invoice"
+msgstr "Tạo lại hóa đơn"
+
+#. module: mrp_repair
+#: selection:mrp.repair.line,type:0
+msgid "Remove"
+msgstr "Gỡ bỏ"
+
+#. module: mrp_repair
+#: model:ir.model,name:mrp_repair.model_mrp_repair_fee
+msgid "Repair Fees Line"
+msgstr "Chi tiết phí sửa chữa"
+
+#. module: mrp_repair
+#: model:ir.model,name:mrp_repair.model_mrp_repair_line
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+msgid "Repair Line"
+msgstr "Hạng mục sửa chữa"
+
+#. module: mrp_repair
+#: model:ir.model,name:mrp_repair.model_mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+msgid "Repair Order"
+msgstr "Lệnh sữa chữa"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+msgid "Repair Order #:"
+msgstr "Lệnh sửa chữa số #:"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_repair_id
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_repair_id
+msgid "Repair Order Reference"
+msgstr "Tham chiếu lệnh sữa chữa"
+
+#. module: mrp_repair
+#: model:ir.actions.act_window,name:mrp_repair.action_repair_order_tree
+msgid "Repair Orders"
+msgstr "Lệnh sửa chữa"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+msgid "Repair Quotation #:"
+msgstr "Báo giá sửa chữa số:"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_name
+msgid "Repair Reference"
+msgstr "Tham chiếu sửa chữa"
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:285
+#, python-format
+msgid "Repair order is already invoiced."
+msgstr "Lệnh sửa chữa đã được xuất hoá đơn."
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/wizard/cancel_repair.py:32
+#, python-format
+msgid "Repair order is not invoiced."
+msgstr "Lệnh sửa chữa không được xuất hoá đơn."
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_repaired
+#: selection:mrp.repair,state:0
+msgid "Repaired"
+msgstr "Đã sửa chữa"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_lot_id
+msgid "Repaired Lot"
+msgstr ""
+
+#. module: mrp_repair
+#: model:ir.ui.menu,name:mrp_repair.menu_repair_order
+msgid "Repairs"
+msgstr "Sửa chữa"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_tree
+msgid "Repairs order"
+msgstr "Lệnh sửa chữa"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+msgid "Search Reair Orders"
+msgstr ""
+
+#. module: mrp_repair
+#: model:ir.model.fields,help:mrp_repair.field_mrp_repair_invoice_method
+msgid ""
+"Selecting 'Before Repair' or 'After Repair' will allow you to generate "
+"invoice before or after the repair is done respectively. 'No invoice' means "
+"you don't want to generate invoice for this repair order."
+msgstr "Việc lựa chọn 'Trước khi sửa chữa' hoặc 'Sau khi sửa chữa' sẽ cho phép bạn tạo hoá đơn trước hoặc sau khi sửa chữa được hoàn thành. 'Không hoá đơn' nghĩa là bạn không muốn tạo hoá đơn cho lệnh sửa chữa này."
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:272
+#, python-format
+msgid "Serial number is required for operation line with product '%s'"
+msgstr "Số Sê-ri là bắt buộc đối với hoạt động có sản phẩm '%s'"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+msgid "Set to Draft"
+msgstr "Thiết lập về dự thảo"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+msgid "Shipping address :"
+msgstr "Địa chỉ giao hàng:"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_location_id
+msgid "Source Location"
+msgstr "Địa điểm nguồn"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+msgid "Start Repair"
+msgstr "Bắt đầu sửa chữa"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_state
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_state
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+msgid "Status"
+msgstr "Trạng thái"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_price_subtotal
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_price_subtotal
+msgid "Subtotal"
+msgstr "Tổng phụ"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+msgid "Tax"
+msgstr "Thuế"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_amount_tax
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_tax_id
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_tax_id
+#: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+msgid "Taxes"
+msgstr "Các loại thuế"
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:207
+#, python-format
+msgid ""
+"The Product Unit of Measure you chose has a different category than in the "
+"product form."
+msgstr "Đơn vị đo lường sản phẩm mà bạn chọn có một nhóm khác với đơn vị trên form sản phẩm."
+
+#. module: mrp_repair
+#: sql_constraint:mrp.repair:0
+msgid "The name of the Repair Order must be unique!"
+msgstr "Tên của lệnh sửa chữa phải là duy nhất!"
+
+#. module: mrp_repair
+#: model:ir.actions.act_window,help:mrp_repair.action_repair_order_tree
+msgid ""
+"The repair order uses the warranty date on the Serial Number in\n"
+"                order to know if whether the repair should be invoiced to the\n"
+"                customer or not."
+msgstr "Lệnh sửa chữa sử dụng ngày bảo hành trên Số Seri để xác định việc sửa chữa\n                có cần phải xuất hoá đơn cho khách hàng hay không."
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_cancel_repair
+msgid ""
+"This operation will cancel the Repair process, but will not cancel it's "
+"Invoice. Do you want to continue?"
+msgstr "Hoạt động này sẽ hủy bỏ tiến trình sửa chữa, nhưng sẽ không hủy hoá đơn. Bạn có muốn tiếp tục?"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_to_invoice
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_to_invoice
+msgid "To Invoice"
+msgstr "Chờ hóa đơn"
+
+#. module: mrp_repair
+#: selection:mrp.repair,state:0
+msgid "To be Invoiced"
+msgstr "Chờ xuất hoá đơn"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_amount_total
+msgid "Total"
+msgstr "Tổng"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+msgid "Total amount"
+msgstr "Tổng số tiền"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_type
+msgid "Type"
+msgstr "Loại"
+
+#. module: mrp_repair
+#: selection:mrp.repair,state:0
+msgid "Under Repair"
+msgstr "Đang sửa chữa"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_price_unit
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_price_unit
+#: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+msgid "Unit Price"
+msgstr "Đơn giá"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+msgid "Unit of Measure"
+msgstr "Đơn vị tính"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_message_unread
+msgid "Unread Messages"
+msgstr "Thông điệp chưa đọc"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_message_unread_counter
+msgid "Unread Messages Counter"
+msgstr "Số tin nhắn chưa đọc"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_amount_untaxed
+msgid "Untaxed Amount"
+msgstr "Giá trị trước thuế"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
+msgid "Untaxed amount"
+msgstr "Tổng tiền trước thuế"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+msgid "VAT:"
+msgstr "VAT:"
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:207
+#, python-format
+msgid "Warning"
+msgstr "Cảnh báo"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_guarantee_limit
+msgid "Warranty Expiration"
+msgstr "Hết hạn Bảo hành"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_website_message_ids
+msgid "Website Messages"
+msgstr "Thông điệp Website"
+
+#. module: mrp_repair
+#: model:ir.model.fields,help:mrp_repair.field_mrp_repair_website_message_ids
+msgid "Website communication history"
+msgstr "Lịch sử thông tin liên lạc website"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_cancel_repair
+msgid "Yes"
+msgstr "Có"
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:308
+#, python-format
+msgid "You have to select a Partner Invoice Address in the repair form!"
+msgstr "Bạn phải chọn một Địa chỉ Hoá đơn Đối tác ở form sửa chữa!"
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:513
+#, python-format
+msgid ""
+"You have to select a pricelist in the Repair form !\n"
+"Please set one before choosing a product."
+msgstr ""
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_default_address_id
+msgid "unknown"
+msgstr "chưa rõ"

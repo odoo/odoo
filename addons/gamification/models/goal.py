@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from openerp import SUPERUSER_ID
-from openerp.osv import fields, osv
+from openerp.osv import fields, osv, expression
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DF
 from openerp.tools.safe_eval import safe_eval
 from openerp.tools.translate import _
@@ -64,6 +64,8 @@ class gamification_goal_definition(osv.Model):
         'model_id': fields.many2one('ir.model',
             string='Model',
             help='The model object for the field to evaluate'),
+        # model_inherited_model_ids can be removed in master.
+        # It was only used to force a domain in the form view which is now set by `on_change_model_id`
         'model_inherited_model_ids': fields.related('model_id', 'inherited_model_ids', type="many2many", obj="ir.model",
             string="Inherited models", readonly="True"),
         'field_id': fields.many2one('ir.model.fields',
@@ -128,30 +130,50 @@ class gamification_goal_definition(osv.Model):
                 obj.search(cr, uid, domain, context=context, count=True)
             except (ValueError, SyntaxError), e:
                 msg = e.message or (e.msg + '\n' + e.text)
-                raise UserError(_("The domain for the definition %s seems incorrect, please check it.\n\n%s" % (definition.name, msg)))
+                raise UserError(_("The domain for the definition %s seems incorrect, please check it.\n\n%s") % (definition.name, msg))
         return True
+
+    def _check_model_validity(self, cr, uid, ids, context=None):
+        """ make sure the selected field and model are usable"""
+        for definition in self.browse(cr, uid, ids, context=context):
+            try:
+                if not definition.model_id or not definition.field_id:
+                    continue
+
+                model = self.pool[definition.model_id.model]
+                field = model._fields[definition.field_id.name]
+                if not field.store:
+                    raise UserError(
+                        _("The model configuration for the definition %s seems incorrect, please check it.\n\n%s not stored") % (definition.name, definition.field_id.name))
+            except KeyError, e:
+                raise UserError(
+                    _("The model configuration for the definition %s seems incorrect, please check it.\n\n%s not found") % (definition.name, e.message))
 
     def create(self, cr, uid, vals, context=None):
         res_id = super(gamification_goal_definition, self).create(cr, uid, vals, context=context)
         if vals.get('computation_mode') in ('count', 'sum'):
             self._check_domain_validity(cr, uid, [res_id], context=context)
-
+        if vals.get('field_id'):
+            self._check_model_validity(cr, uid, [res_id], context=context)
         return res_id
 
     def write(self, cr, uid, ids, vals, context=None):
         res = super(gamification_goal_definition, self).write(cr, uid, ids, vals, context=context)
         if vals.get('computation_mode', 'count') in ('count', 'sum') and (vals.get('domain') or vals.get('model_id')):
             self._check_domain_validity(cr, uid, ids, context=context)
-
+        if vals.get('field_id') or vals.get('model_id') or vals.get('batch_mode'):
+            self._check_model_validity(cr, uid, ids, context=context)
         return res
 
     def on_change_model_id(self, cr, uid, ids, model_id, context=None):
-        """Prefill field model_inherited_model_ids"""
+        """Force domain for the `field_id` and `field_date_id` fields"""
         if not model_id:
-            return {'value': {'model_inherited_model_ids': []}}
+            return {'domain': {'field_id': expression.FALSE_DOMAIN, 'field_date_id': expression.FALSE_DOMAIN}}
         model = self.pool['ir.model'].browse(cr, uid, model_id, context=context)
-        # format (6, 0, []) to construct the domain ('model_id', 'in', m and m[0] and m[0][2])
-        return {'value': {'model_inherited_model_ids': [(6, 0, [m.id for m in model.inherited_model_ids])]}}
+        model_fields_domain = ['|', ('model_id', '=', model_id), ('model_id', 'in', model.inherited_model_ids.ids)]
+        model_date_fields_domain = expression.AND([[('ttype', 'in', ('date', 'datetime'))], model_fields_domain])
+        return {'domain': {'field_id': model_fields_domain, 'field_date_id': model_date_fields_domain}}
+
 
 class gamification_goal(osv.Model):
     """Goal instance for a user

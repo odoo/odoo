@@ -160,17 +160,35 @@ function parse_value (value, descriptor, value_if_empty) {
         case 'progressbar':
             return parse_value(value, {type: "float"});
         case 'datetime':
-            var datetime = moment(value, [date_pattern + ' ' + time_pattern, date_pattern_wo_zero + ' ' + time_pattern_wo_zero], true);
-            if (datetime.isValid())
+            var datetime = moment(value, [date_pattern + ' ' + time_pattern, date_pattern_wo_zero + ' ' + time_pattern_wo_zero, moment.ISO_8601], true);
+            if (datetime.isValid() && datetime.year() >= 1900)
                 return time.datetime_to_str(datetime.toDate());
+            datetime = moment(value, [date_pattern + ' ' + time_pattern, date_pattern_wo_zero + ' ' + time_pattern_wo_zero, moment.ISO_8601]);
+            if (datetime.isValid()) {
+                if (datetime.year() === 0) {
+                    datetime.year(moment.utc().year());
+                }
+                if (datetime.year() >= 1900) {
+                    return time.datetime_to_str(datetime.toDate());
+                }
+            }
             throw new Error(_.str.sprintf(_t("'%s' is not a correct datetime"), value));
         case 'date':
-            var date = moment(value, [date_pattern, date_pattern_wo_zero], true);
-            if (date.isValid())
+            var date = moment(value, [date_pattern, date_pattern_wo_zero, moment.ISO_8601], true);
+            if (date.isValid() && date.year() >= 1900)
                 return time.date_to_str(date.toDate());
+            date = moment(value, [date_pattern, date_pattern_wo_zero, moment.ISO_8601]);
+            if (date.isValid()) {
+                if (date.year() === 0) {
+                    date.year(moment.utc().year());
+                }
+                if (date.year() >= 1900) {
+                    return time.date_to_str(date.toDate());
+                }
+            }
             throw new Error(_.str.sprintf(_t("'%s' is not a correct date"), value));
         case 'time':
-            var _time = moment(value, [time_pattern, time_pattern_wo_zero], true);
+            var _time = moment(value, [time_pattern, time_pattern_wo_zero, moment.ISO_8601], true);
             if (_time.isValid())
                 return time.time_to_str(_time.toDate());
             throw new Error(_.str.sprintf(_t("'%s' is not a correct time"), value));

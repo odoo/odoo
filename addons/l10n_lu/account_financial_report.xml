@@ -1115,8 +1115,17 @@
             <field name="parent_id" ref="account_financial_report_133"/>
         </record>
 
+        <record model="account.financial.report" id="account_financial_report_164">
+          <field name="name">9. Quote-part dans la perte des entreprises mises en &#233;quivalence</field>
+          <field name="sequence">632</field>
+          <field name="sign" eval="1"/>
+          <field name="display_detail">no_detail</field>
+          <field name="type">accounts</field>
+          <field name="parent_id" ref="account_financial_report_119"/>
+        </record>
+
         <record model="account.financial.report" id="account_financial_report_136">
-            <field name="name">9. Charges exceptionnelles</field>
+            <field name="name">10. Charges exceptionnelles</field>
             <field name="sequence">633</field>
             <field name="sign" eval="1"/>
             <field name="display_detail">no_detail</field>
@@ -1125,7 +1134,7 @@
         </record>
 
         <record model="account.financial.report" id="account_financial_report_137">
-            <field name="name">10. Imp&#244;ts sur le r&#233;sultat</field>
+            <field name="name">11. Imp&#244;ts sur le r&#233;sultat</field>
             <field name="sequence">635</field>
             <field name="sign" eval="1"/>
             <field name="display_detail">no_detail</field>
@@ -1134,12 +1143,21 @@
         </record>
 
         <record model="account.financial.report" id="account_financial_report_138">
-            <field name="name">11. Autres imp&#244;ts ne figurant pas sous le poste ci-dessus</field>
+            <field name="name">12. Autres imp&#244;ts ne figurant pas sous le poste ci-dessus</field>
             <field name="sequence">637</field>
             <field name="sign" eval="1"/>
             <field name="display_detail">no_detail</field>
             <field name="type">accounts</field>
             <field name="parent_id" ref="account_financial_report_119"/>
+        </record>
+
+        <record model="account.financial.report" id="account_financial_report_162">
+                <field name="name">13. Profit de l'exercice</field>
+                <field name="sequence">800</field>
+                <field name="sign" eval="1"/>
+                <field name="display_detail">no_detail</field>
+                <field name="type">accounts</field>
+                <field name="parent_id" ref="account_financial_report_119"/>
         </record>
 
         <record model="account.financial.report" id="account_financial_report_140">
@@ -1295,8 +1313,17 @@
             <field name="parent_id" ref="account_financial_report_154"/>
         </record>
 
+            <record model="account.financial.report" id="account_financial_report_165">
+              <field name="name">9. Quote-part dans le profit des entreprises mises en &#233;quivalence</field>
+              <field name="sequence">732</field>
+              <field name="sign" eval="-1"/>
+              <field name="display_detail">no_detail</field>
+              <field name="type">accounts</field>
+              <field name="parent_id" ref="account_financial_report_140"/>
+            </record>
+
         <record model="account.financial.report" id="account_financial_report_157">
-            <field name="name">9. Produits exceptionnels</field>
+            <field name="name">10. Produits exceptionnels</field>
             <field name="sequence">733</field>
             <field name="sign" eval="-1"/>
             <field name="display_detail">no_detail</field>
@@ -1304,8 +1331,17 @@
             <field name="parent_id" ref="account_financial_report_140"/>
         </record>
 
+        <record model="account.financial.report" id="account_financial_report_163">
+                <field name="name">13. Perte de l'exercice</field>
+                <field name="sequence">800</field>
+                <field name="sign" eval="-1"/>
+                <field name="display_detail">no_detail</field>
+                <field name="type">accounts</field>
+                <field name="parent_id" ref="account_financial_report_140"/>
+        </record>
+
         <record model="account.financial.report" id="account_financial_report_161">
-            <field name="name">RESULTAT DE L'EXERCICE</field>
+            <field name="name">RESULTAT DE L'EXERCICE A TRANSFERER AU 142</field>
             <field name="sequence">800</field>
             <field name="sign" eval="-1"/>
             <field name="display_detail">no_detail</field>

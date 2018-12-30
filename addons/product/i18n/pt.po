@@ -4,15 +4,17 @@
 # 
 # Translators:
 # Andre Mendes <afm@thinkopen.solutions>, 2015
-# MMSRS <h_manuela_rodsilva@gmail.com>, 2015
+# Daniel C Santos <dcs@thinkopensolutions.pt>, 2015
+# Joao Vieira <joao.f.vieira@gmail.com>, 2016
+# Manuela Silva <inactive+h_manuela_rodsilva@transifex.com>, 2015
 # Ricardo Martins <ricardo.nbs.martins@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-29 10:26+0000\n"
-"PO-Revision-Date: 2015-09-30 09:23+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-05-30 16:03+0000\n"
+"Last-Translator: Joao Vieira <joao.f.vieira@gmail.com>\n"
 "Language-Team: Portuguese (http://www.transifex.com/odoo/odoo-9/language/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -144,7 +146,7 @@ msgstr "8-port Switch"
 msgid ""
 "<span attrs=\"{'invisible':[('base', 'not in', ('list_price','standard_price'))]}\">Public Price  -  </span>\n"
 "                            <span attrs=\"{'invisible':[('base', '!=', 'pricelist')]}\">Other Pricelist  -  </span>"
-msgstr ""
+msgstr "<span attrs=\"{'invisible':[('base', 'not in', ('list_price','standard_price'))]}\">Preço Público - </span>\n<span attrs=\"{'invisible':[('base', '!=', 'pricelist')]}\">Outra Lista de Preços - </span>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
@@ -260,7 +262,7 @@ msgstr "About the size of a credit card — and just 5.4 mm thin — iPod nano i
 #: model:ir.model.fields,field_description:product.field_product_product_message_needaction
 #: model:ir.model.fields,field_description:product.field_product_template_message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "Ação Necessária"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_active
@@ -555,7 +557,7 @@ msgstr "Categoria Tipo"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_category_form_view
 msgid "Category name"
-msgstr ""
+msgstr "Nome da categoria"
 
 #. module: product
 #: code:addons/product/pricelist.py:277
@@ -682,6 +684,12 @@ msgstr "Computador tudo-em-um"
 #: model:product.public.category,name:product.sub_computers
 msgid "Computers"
 msgstr "Computadores"
+
+#. module: product
+#: code:addons/product/product.py:460
+#, python-format
+msgid "Consumable"
+msgstr "Consumível"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_uom_category_id
@@ -1377,7 +1385,7 @@ msgstr "Se marcado, há novas mensagens que pedem a sua atenção."
 #: model:ir.model.fields,help:product.field_product_product_message_needaction
 #: model:ir.model.fields,help:product.field_product_template_message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "Se marcado, há novas mensagens que pedem a sua atenção."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_6
@@ -1824,13 +1832,13 @@ msgstr "Notas"
 #: model:ir.model.fields,field_description:product.field_product_product_message_needaction_counter
 #: model:ir.model.fields,field_description:product.field_product_template_message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "Número de Ações"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_message_needaction_counter
 #: model:ir.model.fields,help:product.field_product_template_message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr ""
+msgstr "Número de mensagens que requerem uma ação"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_message_unread_counter
@@ -2495,6 +2503,12 @@ msgstr "Sequência"
 #: model:product.template,name:product.product_product_59_product_template
 msgid "Server"
 msgstr "Servidor"
+
+#. module: product
+#: code:addons/product/product.py:460
+#, python-format
+msgid "Service"
+msgstr "Serviço"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_search_view
@@ -3219,7 +3233,7 @@ msgstr "When one playlist isn’t enough."
 msgid ""
 "When this field is filled in, the vendor data will only apply to the "
 "variant."
-msgstr ""
+msgstr "Quando este campo é preenchido, os dados do vendedor só se vão aplicar na variante ."
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_3

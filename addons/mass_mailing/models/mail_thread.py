@@ -27,7 +27,7 @@ class MailThread(osv.AbstractModel):
         email_to = decode_header(message, 'To')
 
         # 0. Verify whether this is a bounced email (wrong destination,...) -> use it to collect data, such as dead leads
-        if bounce_alias in email_to:
+        if bounce_alias and bounce_alias in email_to:
             # Bounce regex
             # Typical form of bounce is bounce_alias-128-crm.lead-34@domain
             # group(1) = the mail ID; group(2) = the model (if any); group(3) = the record ID

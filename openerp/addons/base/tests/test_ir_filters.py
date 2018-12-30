@@ -275,3 +275,27 @@ class TestGlobalDefaults(FiltersCase):
             dict(name='a', user_id=False, is_default=False, domain='[]', context='{}', sort='[]'),
             dict(name='b', user_id=False, is_default=True, domain='[]', context=context_value, sort='[]'),
         ])
+
+from openerp.tests.common import TransactionCase
+
+class TestReadGroup(TransactionCase):
+    """Test function read_group with groupby on a many2one field to a model
+    (in test, "user_id" to "res.users") which is ordered by an inherited not stored field (in
+    test, "name" inherited from "res.partners").
+    """
+
+    def setUp(self):
+        super(TestReadGroup, self).setUp()
+        self.ir_filters_model = self.env['ir.filters']
+        self.res_partner_model = self.env['res.partner']
+        self.res_users_model = self.env['res.users']
+
+    def test_read_group_1(self):
+        self.assertEqual(self.res_users_model._order, "name, login", "Model res.users must be ordered by name, login")
+        self.assertFalse(self.res_users_model._fields['name'].store, "Field name is not stored in res.users")
+
+        filter_a = self.ir_filters_model.create(dict(name="Filter_A", model_id="ir.filters"))
+        filter_b = self.ir_filters_model.create(dict(name="Filter_B", model_id="ir.filters"))
+        filter_b.write(dict(user_id=False))
+        res = self.ir_filters_model.read_group([], ['name', 'user_id'], ['user_id'])
+        self.assertTrue(any(val['user_id'] == False for val in res), "At least one group must contain val['user_id'] == False.")

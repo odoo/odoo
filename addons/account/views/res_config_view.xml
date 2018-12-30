@@ -5,7 +5,7 @@
             <field name="name">Chart Templates</field>
             <field name="res_model">ir.module.module</field>
             <field name="view_mode">kanban,tree,form</field>
-            <field name="context" eval="{'search_default_category_id': ref('base.module_category_localization_account_charts')}"/>
+            <field name="context" eval="{'search_default_category_id': ref('base.module_category_localization')}"/>
             <field name="search_view_id" ref="base.view_module_filter"/>
         </record>
 
@@ -56,13 +56,13 @@
                             <div attrs="{'invisible': ['|', '|', ('chart_template_id','=',False), ('complete_tax_set','=',False), ('has_chart_of_accounts','!=',False)]}">
                                 <label for="sale_tax_id"/>
                                 <field name="sale_tax_id"
-                                    domain="[('chart_template_id', '=', chart_template_id),('type_tax_use','in',('sale','all'))]"
+                                    domain="[('chart_template_id', 'parent_of', chart_template_id),('type_tax_use','in',('sale','all'))]"
                                     class="oe_inline"/>
                             </div>
                             <div attrs="{'invisible': ['|', '|', ('chart_template_id','=',False), ('complete_tax_set','=',False), ('has_chart_of_accounts','!=',False)]}">
                                 <label for="purchase_tax_id"/>
                                 <field name="purchase_tax_id"
-                                    domain="[('chart_template_id', '=', chart_template_id),('type_tax_use','in',('purchase', 'all'))]"
+                                    domain="[('chart_template_id', 'parent_of', chart_template_id),('type_tax_use','in',('purchase', 'all'))]"
                                     class="oe_inline"/>
                             </div>
                             <div attrs="{'invisible': ['|', '|', ('chart_template_id','=',False), ('complete_tax_set','=',True), ('has_chart_of_accounts','!=',False)]}">

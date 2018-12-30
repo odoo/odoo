@@ -54,7 +54,8 @@ class AssetModify(models.TransientModel):
         if 'method_end' in fields and asset.method_time == 'end':
             res.update({'method_end': asset.method_end})
         if self.env.context.get('active_id'):
-            res['asset_method_time'] = self._get_asset_method_time()
+            asset = self.env['account.asset.asset'].browse(self.env.context.get('active_id'))
+            res['asset_method_time'] = asset.method_time
         return res
 
     @api.multi

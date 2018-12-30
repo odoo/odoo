@@ -166,7 +166,7 @@ class stock_config_settings(osv.osv_memory):
 
     def onchange_adv_location(self, cr, uid, ids, group_stock_adv_location, context=None):
         if group_stock_adv_location:
-            return {'value': {'group_stock_multiple_locations': True}}
+            return {'value': {'group_stock_multiple_locations': 1}}
         return {}
 
     def _default_company(self, cr, uid, context=None):

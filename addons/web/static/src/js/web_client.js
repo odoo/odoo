@@ -285,20 +285,32 @@ var WebClient = Widget.extend({
         }
     },
     on_hashchange: function(event) {
-        var self = this;
-        var stringstate = event.getState(false);
-        if (!_.isEqual(this._current_state, stringstate)) {
-            var state = event.getState(true);
-            if(!state.action && state.menu_id) {
-                self.menu.is_bound.done(function() {
-                    self.menu.menu_click(state.menu_id);
-                });
-            } else {
-                state._push_me = false;  // no need to push state back...
-                this.action_manager.do_load_state(state, !!this._current_state);
-            }
+        if (this._ignore_hashchange) {
+            this._ignore_hashchange = false;
+            return;
         }
-        this._current_state = stringstate;
+
+        var self = this;
+        this.clear_uncommitted_changes().then(function () {
+            var stringstate = event.getState(false);
+            if (!_.isEqual(self._current_state, stringstate)) {
+                var state = event.getState(true);
+                if(!state.action && state.menu_id) {
+                    self.menu.is_bound.done(function() {
+                        self.menu.menu_click(state.menu_id);
+                    });
+                } else {
+                    state._push_me = false;  // no need to push state back...
+                    self.action_manager.do_load_state(state, !!self._current_state);
+                }
+            }
+            self._current_state = stringstate;
+        }, function () {
+            if (event) {
+                self._ignore_hashchange = true;
+                window.location = event.originalEvent.oldURL;
+            }
+        });
     },
     do_push_state: function(state) {
         this.set_title(state.title);

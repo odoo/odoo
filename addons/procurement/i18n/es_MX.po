@@ -3,12 +3,13 @@
 # * procurement
 # 
 # Translators:
+# David Hernandez <davidhernandez.ctam@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-18 08:11+0000\n"
-"PO-Revision-Date: 2015-09-19 08:24+0000\n"
+"PO-Revision-Date: 2016-03-10 13:16+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Spanish (Mexico) (http://www.transifex.com/odoo/odoo-9/language/es_MX/)\n"
 "MIME-Version: 1.0\n"
@@ -28,7 +29,7 @@ msgstr ""
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_exceptions
 msgid ""
 "<b>Sales Orders</b> are one typical source of Procurement Orders (but these are distinct documents). \n"
-"                <br/>Depending on the procurement parameters and the product configuration, the procurement engine will attempt to satisfy the need by reserving products from stock, ordering products from a supplier, or passing a manufacturing order, etc..."
+"                <br>Depending on the procurement parameters and the product configuration, the procurement engine will attempt to satisfy the need by reserving products from stock, ordering products from a supplier, or passing a manufacturing order, etc..."
 msgstr ""
 
 #. module: procurement
@@ -59,7 +60,7 @@ msgstr "Acción"
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "Acción Requerida"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_active
@@ -79,7 +80,7 @@ msgstr "Cancelar"
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view
 msgid "Cancel Procurement"
-msgstr ""
+msgstr "Cancelar la Contratación"
 
 #. module: procurement
 #: selection:procurement.order,state:0
@@ -90,7 +91,7 @@ msgstr "Cancelada"
 #: code:addons/procurement/procurement.py:139
 #, python-format
 msgid "Cannot delete Procurement Order(s) which are in %s state."
-msgstr ""
+msgstr "No se puede eliminar Orden(es) de Adquisición que están en el estado de%s."
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view
@@ -110,14 +111,14 @@ msgstr ""
 msgid ""
 "Click to create a Procurement order in exception state, or remove the filter"
 " on the search bar to display all the procurements."
-msgstr ""
+msgstr "Haz clic aquí para crear una orden de Adquisiciones en el estado de excepción, o quitar el filtro en la barra de búsqueda para mostrar todas las adquisiciones."
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_action
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_product_product_stat
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_product_template_stat
 msgid "Click to create a procurement order."
-msgstr ""
+msgstr "Da clic para crear una contratación."
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_company_id
@@ -128,7 +129,7 @@ msgstr "Compañía"
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_compute_schedulers_wizard
 msgid "Compute all procurements in the background."
-msgstr ""
+msgstr "Calcular todas las adquisiciones en el fondo."
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_order_compute_all
@@ -146,7 +147,7 @@ msgstr "Confirmado"
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_create_uid
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Creado por"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_group_create_date
@@ -159,12 +160,12 @@ msgstr "Creado en"
 #. module: procurement
 #: model:ir.model.fields,help:procurement.field_procurement_order_message_last_post
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "Fecha de último trabajo realizado en esta cuenta"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_group_move_type
 msgid "Delivery Method"
-msgstr ""
+msgstr "Método de Entrega"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_name
@@ -177,7 +178,7 @@ msgstr "Descripción"
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_display_name
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Nombre desplegado"
 
 #. module: procurement
 #: selection:procurement.order,state:0
@@ -197,7 +198,7 @@ msgstr "Excepciones"
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view
 msgid "External note..."
-msgstr ""
+msgstr "Nota externa..."
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view
@@ -212,7 +213,7 @@ msgstr "Fijo"
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_group_id
 msgid "Fixed Procurement Group"
-msgstr ""
+msgstr "Grupo de Adquisiciones fijo"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_message_follower_ids
@@ -222,17 +223,17 @@ msgstr "Seguidores"
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "Seguidores"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "Seguidores (Socios)"
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_rule_filter
 msgid "Global"
-msgstr ""
+msgstr "Global"
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_filter
@@ -261,12 +262,12 @@ msgstr "Si se marca, los nuevos mensajes requieren su atención"
 #. module: procurement
 #: model:ir.model.fields,help:procurement.field_procurement_order_message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "Si está marcado, hay nuevos mensajes que requieren su atención"
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_rule_filter
 msgid "If the route is global"
-msgstr ""
+msgstr "Si la ruta es global"
 
 #. module: procurement
 #: model:ir.model.fields,help:procurement.field_procurement_rule_active
@@ -276,12 +277,12 @@ msgstr ""
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "Es un Seguidor"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_message_last_post
 msgid "Last Message Date"
-msgstr ""
+msgstr "Fecha de último mensaje"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_group___last_update
@@ -289,7 +290,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_compute_all___last_update
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Ultima modificacion realizada"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_group_write_uid
@@ -297,7 +298,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_write_uid
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Ultima actualizacion por"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_group_write_date
@@ -305,7 +306,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_write_date
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Ultima actualización realizada"
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_filter
@@ -320,7 +321,7 @@ msgstr ""
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.mrp_company
 msgid "Logistics"
-msgstr ""
+msgstr "Logistica"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_message_ids
@@ -341,7 +342,7 @@ msgstr "Nombre"
 #: code:addons/procurement/procurement.py:206
 #, python-format
 msgid "No rule matching this procurement"
-msgstr ""
+msgstr "No regla que coincide con estas adquisiciones"
 
 #. module: procurement
 #: selection:procurement.order,priority:0
@@ -361,17 +362,17 @@ msgstr "Notas"
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "Número de acciones"
 
 #. module: procurement
 #: model:ir.model.fields,help:procurement.field_procurement_order_message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr ""
+msgstr "Número de mensajes que requieren una acción"
 
 #. module: procurement
 #: model:ir.model.fields,help:procurement.field_procurement_order_message_unread_counter
 msgid "Number of unread messages"
-msgstr ""
+msgstr "Número de mensajes sin leer"
 
 #. module: procurement
 #: selection:procurement.group,move_type:0
@@ -400,7 +401,7 @@ msgstr "Excepciones abastecimiento"
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_group_id
 msgid "Procurement Group"
-msgstr ""
+msgstr "Grupo de Adquisiciones"
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.procurement_tree_view
@@ -433,7 +434,7 @@ msgstr ""
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.procurement_group_form_view
 msgid "Procurement group"
-msgstr ""
+msgstr "Grupo de Adquisiciones"
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_filter
@@ -582,7 +583,7 @@ msgstr "Mensajes sin leer"
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_message_unread_counter
 msgid "Unread Messages Counter"
-msgstr ""
+msgstr "Contador de mensajes sin leer"
 
 #. module: procurement
 #: selection:procurement.order,priority:0
@@ -597,12 +598,12 @@ msgstr "Muy urgente"
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_website_message_ids
 msgid "Website Messages"
-msgstr ""
+msgstr "Mensajes del Website"
 
 #. module: procurement
 #: model:ir.model.fields,help:procurement.field_procurement_order_website_message_ids
 msgid "Website communication history"
-msgstr ""
+msgstr "Sitio Web historial de comunicación"
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_action

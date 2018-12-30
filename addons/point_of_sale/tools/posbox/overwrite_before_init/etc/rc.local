@@ -17,6 +17,6 @@ if [ "$_IP" ]; then
   printf "My IP address is %s\n" "$_IP"
 fi
 
-/etc/init_posbox_image.sh
+/etc/init_posbox_image.sh 2>&1 | tee /home/pi/init_posbox_image.log
 
 exit 0

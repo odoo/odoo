@@ -3,7 +3,7 @@
 {
     'name': 'Events Sales',
     'version': '1.1',
-    'category': 'Tools',
+    'category': 'Marketing',
     'website': 'https://www.odoo.com/page/events',
     'description': """
 Creating registration with sale orders.
@@ -18,7 +18,7 @@ that product, you will be able to choose an existing event of that category and
 when you confirm your sale order it will automatically create a registration for
 this event.
 """,
-    'depends': ['event', 'sale_crm'],
+    'depends': ['event', 'sale'],
     'data': [
         'views/event.xml',
         'views/product.xml',
@@ -26,6 +26,7 @@ this event.
         'event_sale_data.xml',
         'report/event_event_templates.xml',
         'security/ir.model.access.csv',
+        'security/event_security.xml',
         'wizard/event_edit_registration.xml',
     ],
     'demo': ['event_demo.xml'],

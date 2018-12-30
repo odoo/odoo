@@ -38,3 +38,17 @@ class ServerActions(models.Model):
             return False
         action.template_id.send_mail(self._context.get('active_id'), force_send=False, raise_exception=False)
         return False
+
+    @api.model
+    def _get_eval_context(self, action=None):
+        """ Override the method giving the evaluation context but also the
+        context used in all subsequent calls. Add the mail_notify_force_send
+        key set to False in the context. This way all notification emails linked
+        to the currently executed action will be set in the queue instead of
+        sent directly. This will avoid possible break in transactions. """
+        eval_context = super(ServerActions, self)._get_eval_context(action=action)
+        # re-dictify, because eval_context['context'] is a frozendict
+        ctx = dict(eval_context.get('context', {}))
+        ctx['mail_notify_force_send'] = False
+        eval_context['context'] = ctx
+        return eval_context

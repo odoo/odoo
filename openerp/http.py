@@ -20,6 +20,7 @@ import sys
 import threading
 import time
 import traceback
+import urllib2
 import urlparse
 import warnings
 from zlib import adler32
@@ -140,8 +141,11 @@ def local_redirect(path, query=None, keep_hash=False, forward_debug=True, code=3
     url = path
     if not query:
         query = {}
-    if forward_debug and request and request.debug:
-        query['debug'] = None
+    if request and request.debug:
+        if forward_debug:
+            query['debug'] = ''
+        else:
+            query['debug'] = None
     if query:
         url += '?' + werkzeug.url_encode(query)
     if keep_hash:
@@ -156,6 +160,10 @@ def redirect_with_hash(url, code=303):
     # See extensive test page at http://greenbytes.de/tech/tc/httpredirects/
     if request.httprequest.user_agent.browser in ('firefox',):
         return werkzeug.utils.redirect(url, code)
+    url = url.strip()
+    if urlparse.urlparse(url, scheme='http').scheme not in ('http', 'https'):
+        url = 'http://' + url
+    url = url.replace("'", "%27").replace("<", "%3C")
     return "<html><head><script>window.location = '%s' + location.hash;</script></head></html>" % url
 
 class WebRequest(object):
@@ -206,7 +214,7 @@ class WebRequest(object):
         to a database.
         """
         if not self.db:
-            return RuntimeError('request not bound to a database')
+            raise RuntimeError('request not bound to a database')
         return openerp.api.Environment(self.cr, self.uid, self.context)
 
     @lazy_property
@@ -242,7 +250,7 @@ class WebRequest(object):
         # can not be a lazy_property because manual rollback in _call_function
         # if already set (?)
         if not self.db:
-            return RuntimeError('request not bound to a database')
+            raise RuntimeError('request not bound to a database')
         if not self._cr:
             self._cr = self.registry.cursor()
         return self._cr
@@ -305,6 +313,15 @@ class WebRequest(object):
             # case, the request cursor is unusable. Rollback transaction to create a new one.
             if self._cr:
                 self._cr.rollback()
+                # With the session patch, we now clear the environment only if it exists
+                # We do so by checking if the environment is stored in request.__dict__
+                # Which is how lazy_property works.
+                # We do this, to avoid creating the environment before it is needed.
+                # For example some auth='none' controllers do "request.uid = request.session.uid" then
+                # "request.env.user ..." which is broken if we create the environment by doing self.env.clear()
+                # since it will not be linked to a user.
+                if self.__dict__.get('env'):
+                    self.env.clear()
             result = self.endpoint(*a, **kw)
             if isinstance(result, Response) and result.is_qweb:
                 # Early rendering of lazy responses to benefit from @service_model.check protection
@@ -320,6 +337,11 @@ class WebRequest(object):
         """ Indicates whether the current request is in "debug" mode
         """
         debug = 'debug' in self.httprequest.args
+
+        # check if request from rpc in debug mode
+        if not debug:
+            debug = self.httprequest.environ.get('HTTP_X_DEBUG_MODE')
+
         if not debug and self.httprequest.referrer:
             debug = bool(urlparse.parse_qs(urlparse.urlparse(self.httprequest.referrer).query, keep_blank_values=True).get('debug'))
         return debug
@@ -414,8 +436,7 @@ class WebRequest(object):
         return consteq(hm, hm_expected)
 
 def route(route=None, **kw):
-    """
-    Decorator marking the decorated method as being a handler for
+    """Decorator marking the decorated method as being a handler for
     requests. The method must be part of a subclass of ``Controller``.
 
     :param route: string or array. The route part that will determine which
@@ -428,8 +449,8 @@ def route(route=None, **kw):
 
                  * ``user``: The user must be authenticated and the current request
                    will perform using the rights of the user.
-                 * ``admin``: The user may not be authenticated and the current request
-                   will perform using the admin user.
+                 * ``public``: The user may or may not be authenticated. If she isn't,
+                   the current request will perform using the shared Public user.
                  * ``none``: The method is always active, even if there is no
                    database. Mainly used by the framework and authentication
                    modules. There request code will not have any facilities to access
@@ -440,16 +461,55 @@ def route(route=None, **kw):
     :param cors: The Access-Control-Allow-Origin cors directive value.
     :param bool csrf: Whether CSRF protection should be enabled for the route.
 
-                      Defaults to ``True``.
+                      Defaults to ``True``. See :ref:`CSRF Protection
+                      <csrf>` for more.
 
-                      CSRF protection only applies to *UNSAFE* methods as
-                      defined by :rfc:`7231`: GET, HEAD, TRACE and OPTIONS are
-                      safe, all other methods are unsafe.
+    .. _csrf:
 
-                      CSRF protection requires a csrf token to be sent as part
-                      of the request's form data, it can be obtained via
-                      :meth:`request.csrf_token()
-                      <openerp.http.WebRequest.csrf_token>`
+    .. admonition:: CSRF Protection
+        :class: alert-warning
+
+        .. versionadded:: 9.0
+
+        Odoo implements token-based `CSRF protection
+        <https://en.wikipedia.org/wiki/CSRF>`_.
+
+        CSRF protection is enabled by default and applies to *UNSAFE*
+        HTTP methods as defined by :rfc:`7231` (all methods other than
+        ``GET``, ``HEAD``, ``TRACE`` and ``OPTIONS``).
+
+        CSRF protection is implemented by checking requests using
+        unsafe methods for a value called ``csrf_token`` as part of
+        the request's form data. That value is removed from the form
+        as part of the validation and does not have to be taken in
+        account by your own form processing.
+
+        When adding a new controller for an unsafe method (mostly POST
+        for e.g. forms):
+
+        * if the form is generated in Python, a csrf token is
+          available via :meth:`request.csrf_token()
+          <openerp.http.WebRequest.csrf_token`, the
+          :data:`~openerp.http.request` object is available by default
+          in QWeb (python) templates, it may have to be added
+          explicitly if you are not using QWeb.
+
+        * if the form is generated in Javascript, the CSRF token is
+          added by default to the QWeb (js) rendering context as
+          ``csrf_token`` and is otherwise available as ``csrf_token``
+          on the ``web.core`` module:
+
+          .. code-block:: javascript
+
+              require('web.core').csrf_token
+
+        * if the endpoint can be called by external parties (not from
+          Odoo) as e.g. it is a REST API or a `webhook
+          <https://en.wikipedia.org/wiki/Webhook>`_, CSRF protection
+          must be disabled on the endpoint. If possible, you may want
+          to implement other methods of request validation (to ensure
+          it is not called by an unrelated third-party).
+
     """
     routing = kw.copy()
     assert 'type' not in routing or routing['type'] in ("http", "json")
@@ -755,7 +815,7 @@ class HttpRequest(WebRequest):
         if request.httprequest.method == 'OPTIONS' and request.endpoint and request.endpoint.routing.get('cors'):
             headers = {
                 'Access-Control-Max-Age': 60 * 60 * 24,
-                'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept'
+                'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept, X-Debug-Mode'
             }
             return Response(status=200, headers=headers)
 
@@ -763,7 +823,35 @@ class HttpRequest(WebRequest):
                 and request.endpoint.routing.get('csrf', True): # csrf checked by default
             token = self.params.pop('csrf_token', None)
             if not self.validate_csrf(token):
-                raise werkzeug.exceptions.BadRequest('Invalid CSRF Token')
+                if token is not None:
+                    _logger.warn("CSRF validation failed on path '%s'",
+                                 request.httprequest.path)
+                else:
+                    _logger.warn("""No CSRF validation token provided for path '%s'
+
+Odoo URLs are CSRF-protected by default (when accessed with unsafe
+HTTP methods). See
+https://www.odoo.com/documentation/9.0/reference/http.html#csrf for
+more details.
+
+* if this endpoint is accessed through Odoo via py-QWeb form, embed a CSRF
+  token in the form, Tokens are available via `request.csrf_token()`
+  can be provided through a hidden input and must be POST-ed named
+  `csrf_token` e.g. in your form add:
+
+      <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+* if the form is generated or posted in javascript, the token value is
+  available as `csrf_token` on `web.core` and as the `csrf_token`
+  value in the default js-qweb execution context
+
+* if the form is accessed by an external third party (e.g. REST API
+  endpoint, payment gateway callback) you will need to disable CSRF
+  protection (and implement your own protection if necessary) by
+  passing the `csrf=False` parameter to the `route` decorator.
+                    """, request.httprequest.path)
+
+                raise werkzeug.exceptions.BadRequest('Session expired (invalid CSRF token)')
 
         r = self._call_function(**self.params)
         if not r:
@@ -1043,9 +1131,12 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
         self.db = db
         self.uid = uid
         self.login = login
-        self.password = password
+        self.session_token = uid and security.compute_session_token(self, request.env)
         request.uid = uid
         request.disable_db = False
+
+        if hasattr(request, 'env'):
+            del request.env
 
         if uid: self.get_context()
         return uid
@@ -1058,7 +1149,20 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
         """
         if not self.db or not self.uid:
             raise SessionExpiredException("Session expired")
-        security.check(self.db, self.uid, self.password)
+        # We create our own environment instead of the request's one.
+        # This is due to the fact that the member "uid" on the request object isn't set yet.
+        # If we try to use the request's environment, the session checking will never succeed since
+        # the environment isn't bound to any user and it needs to be.
+        env = openerp.api.Environment(request.cr, self.uid, self.context)
+        #  == BACKWARD COMPATIBILITY TO CONVERT OLD SESSION TYPE TO THE NEW ONES ! REMOVE ME AFTER 11.0 ==
+        if self.get('password'):
+            security.check(self.db, self.uid, self.password)
+            self.session_token = security.compute_session_token(self, env)
+            self.pop('password')
+        # =================================================================================================
+        # here we check if the session is still valid
+        if not security.check_session(self, env):
+            raise SessionExpiredException("Session expired")
 
     def logout(self, keep_db=False):
         for k in self.keys():
@@ -1071,7 +1175,7 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
         self.setdefault("db", None)
         self.setdefault("uid", None)
         self.setdefault("login", None)
-        self.setdefault("password", None)
+        self.setdefault("session_token", None)
         self.setdefault("context", {})
 
     def get_context(self):
@@ -1131,12 +1235,6 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
     @_login.setter
     def _login(self, value):
         self.login = value
-    @property
-    def _password(self):
-        return self.password
-    @_password.setter
-    def _password(self, value):
-        self.password = value
 
     def send(self, service_name, method, *args):
         """
@@ -1159,11 +1257,10 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
 
         Ensures this session is valid (logged into the openerp server)
         """
-        if self.uid and not force:
+        if self.uid and self.session_token and not force:
             return
-        # TODO use authenticate instead of login
-        self.uid = self.proxy("common").login(self.db, self.login, self.password)
-        if not self.uid:
+
+        if not self.uid or not security.check_session(self, request.env):
             raise AuthenticationError("Authentication failure")
 
     def ensure_valid(self):
@@ -1192,7 +1289,7 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
             Use the registry and cursor in :data:`request` instead.
         """
         self.assert_valid()
-        r = self.proxy('object').exec_workflow(self.db, self.uid, self.password, model, signal, id)
+        r = service_model.exec_workflow(self.db, self.uid, model, signal, id)
         return r
 
     def model(self, model):
@@ -1304,6 +1401,8 @@ def session_gc(session_store):
 mimetypes.add_type('application/font-woff', '.woff')
 mimetypes.add_type('application/vnd.ms-fontobject', '.eot')
 mimetypes.add_type('application/x-font-ttf', '.ttf')
+# Add potentially missing (detected on windows) svg mime types
+mimetypes.add_type('image/svg+xml', '.svg')
 
 class Response(werkzeug.wrappers.Response):
     """ Response object passed through controller route chain.
@@ -1476,9 +1575,16 @@ class Root(object):
             httprequest.session.db = db_monodb(httprequest)
 
     def setup_lang(self, httprequest):
-        if not "lang" in httprequest.session.context:
-            lang = httprequest.accept_languages.best or "en_US"
-            lang = babel.core.LOCALE_ALIASES.get(lang, lang).replace('-', '_')
+        if "lang" not in httprequest.session.context:
+            alang = httprequest.accept_languages.best or "en-US"
+            try:
+                code, territory, _, _ = babel.core.parse_locale(alang, sep='-')
+                if territory:
+                    lang = '%s_%s' % (code, territory)
+                else:
+                    lang = babel.core.LOCALE_ALIASES[code]
+            except (ValueError, KeyError):
+                lang = 'en_US'
             httprequest.session.context["lang"] = lang
 
     def get_request(self, httprequest):
@@ -1603,6 +1709,7 @@ def db_filter(dbs, httprequest=None):
     d, _, r = h.partition('.')
     if d == "www" and r:
         d = r.partition('.')[0]
+    d, h = re.escape(d), re.escape(h)
     r = openerp.tools.config['dbfilter'].replace('%h', h).replace('%d', d)
     dbs = [i for i in dbs if re.match(r, i)]
     return dbs
@@ -1728,6 +1835,18 @@ def send_file(filepath_or_fp, mimetype=None, as_attachment=False, filename=None,
             if rv.status_code == 304:
                 rv.headers.pop('x-sendfile', None)
     return rv
+
+def content_disposition(filename):
+    filename = openerp.tools.ustr(filename)
+    escaped = urllib2.quote(filename.encode('utf8'))
+    browser = request.httprequest.user_agent.browser
+    version = int((request.httprequest.user_agent.version or '0').split('.')[0])
+    if browser == 'msie' and version < 9:
+        return "attachment; filename=%s" % escaped
+    elif browser == 'safari' and version < 537:
+        return u"attachment; filename=%s" % filename.encode('ascii', 'replace')
+    else:
+        return "attachment; filename*=UTF-8''%s" % escaped
 
 #----------------------------------------------------------
 # RPC controller

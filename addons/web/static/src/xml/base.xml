@@ -42,21 +42,21 @@
             <tr>
                 <td class="oe_form_group_cell oe_form_group_cell_label"><label for="old_pwd" class="oe_form_label">Old Password:</label></td>
                 <td class="oe_form_group_cell"><input type="password" name="old_pwd"
-                           minlength="1" autofocus="autofocus"/></td>
+                           minlength="1" autofocus="autofocus" autocomplete="current-password"/></td>
             </tr>
             <tr>
             <td class="oe_form_group_cell oe_form_group_cell_label"><label for="new_password" class="oe_form_label">New Password:</label></td>
             <td class="oe_form_group_cell"><input type="password" name="new_password"
-                       minlength="1"/></td>
+                       minlength="1" autocomplete="new-password"/></td>
             </tr>
             <tr>
                 <td class="oe_form_group_cell oe_form_group_cell_label"><label for="confirm_pwd" class="oe_form_label">Confirm New Password:</label></td>
                 <td class="oe_form_group_cell"><input type="password" name="confirm_pwd"
-                             minlength="1"/></td>
+                             minlength="1" autocomplete="new-password"/></td>
             </tr>
             <tr>
                 <td colspan="2" align="right">
-                    <button class='oe_button oe_form_button'>Change Password</button>
+                    <button type="button" class='oe_button oe_form_button'>Change Password</button>
                     <button type="button" class="oe_button oe_form_button_cancel oe_form_button oe_link" href="javascript:void(0)"><span>Cancel</span></button>
                 </td>
             </tr>
@@ -79,12 +79,58 @@
                 <span class="oe_topbar_name"/> <b class="caret"></b>
             </a>
             <ul class="dropdown-menu">
+                <li><a href="#" data-menu="documentation">Documentation</a></li>
+                <li><a href="#" data-menu="support">Support</a></li>
+                <li><a href="#" data-menu="about">About</a></li>
+                <li class="divider"/>
                 <li><a href="#" data-menu="settings">Preferences</a></li>
                 <li><a href="#" data-menu="account">My Odoo.com account</a></li>
                 <li><a href="#" data-menu="logout">Log out</a></li>
             </ul>
         </li>
 </t>
+
+<div t-name="UserMenu.about" class="oe_about">
+    <div class="container-fluid">
+        <div class="row">
+            <a class="oe_activate_debug_mode oe_right label label-primary" href="?debug" >Activate the developer mode</a>
+        </div>
+        <div class="row">
+            <div class="col-sm-offset-2 col-md-offset-2 col-sm-8 col-md-8 user-details">
+                <div class="user-image">
+                    <img src="/web/static/src/img/logo2.png" alt="Odoo (Formerly OpenERP)" title="Odoo (Formerly OpenERP)" class="img-circle"/>
+                </div>
+                <div class="user-info-block">
+                    <div class="user-heading">
+                        <h3>
+                            Version <t t-esc="db_info.server_version"/>
+                            (Community Edition)
+                        </h3>
+                        <t t-if="db_info.expiration_date">
+                            <h5>Database expiration: <t t-esc="new moment(db_info.expiration_date).format('LL')"/></h5>
+                        </t>
+                    </div>
+                    <div class="user-body">
+                        <div class="tab-content">
+                            <div id="settings" class="tab-pane active">
+                                <h4>Copyright © 2004-2015 Odoo S.A.</h4>
+                                <p>Odoo is a trademark of <a target="_blank" href="https://www.odoo.com" style="text-decoration: underline;">Odoo S.A.</a></p>
+                                <p>Licenced under the terms of <a target="_blank" href="http://www.gnu.org/licenses/lgpl.html" style="text-decoration: underline;">GNU Lesser General Public License</a></p>
+                                <p>For more information visit <a target="_blank" href="https://www.odoo.com" style="text-decoration: underline;">Odoo.com</a></p>
+                                <p>
+                                  <a href="https://www.odoo.com/web/about/facebook"><i class="fa fa-facebook-square fa-3x social-fb"></i></a>
+                                  <a href="https://www.odoo.com/web/about/twitter"><i class="fa fa-twitter-square fa-3x social-tw"></i></a>
+                                  <a href="https://www.odoo.com/web/about/googleplus"><i class="fa fa-google-plus-square fa-3x social-gp"></i></a>
+                                  <a href="https://www.odoo.com/web/about/linkedin"><i class="fa fa-linkedin-square fa-3x social-lk"></i></a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <t t-name="WebClient.timezone_warning">
     <i class="fa fa-exclamation-triangle oe_tz_warning"></i>
@@ -149,7 +195,7 @@
 
 <t t-name="WebClient.DebugManager">
     <li class="oe_debug_manager">
-        <a href="#" t-att-title='_t("Open Debug Menu")' class="dropdown-toggle oe_debug_button" data-toggle="dropdown">
+        <a href="#" title="Open Debug Menu" class="dropdown-toggle oe_debug_button" data-toggle="dropdown">
             <span class="fa fa-bug"/>
             <b class="caret"/>
         </a>
@@ -158,7 +204,9 @@
 </t>
 <t t-name="WebClient.DebugDropdown">
     <t t-if="active_view.type === 'form'">
-        <li class="oe_metadata"><a href="#" data-action="get_metadata">View Metadata</a></li>
+        <t t-if="active_view.controller.get_selected_ids().length == 1">
+            <li class="oe_metadata"><a href="#" data-action="get_metadata">View Metadata</a></li>
+        </t>
         <li class="oe_layout"><a href="#" data-action="toggle_layout_outline">Toggle Form Layout Outline</a></li>
         <li class="oe_defaults"><a href="#" data-action="set_defaults">Set Defaults</a></li>
     </t>
@@ -216,8 +264,13 @@
         <t t-raw="0"/>
     </div>
     <div class="btn-group btn-group-sm oe-pager-buttons" style="display: inline-block">
-        <a class="fa fa-chevron-left btn btn-default oe-pager-button" accesskey="O" type="button" data-pager-action="previous"></a>
-        <a class="fa fa-chevron-right btn btn-default oe-pager-button" accesskey="P" type="button" data-pager-action="next"></a>
+        <!-- accesskeys not wanted in X2Many widgets -->
+        <t t-if="!widget.x2m">
+            <t t-set="att_prev" t-value="{'accesskey': 'O'}" />
+            <t t-set="att_next" t-value="{'accesskey': 'P'}" />
+        </t>
+        <a class="fa fa-chevron-left btn btn-default oe-pager-button" t-att="att_prev" type="button" data-pager-action="previous"></a>
+        <a class="fa fa-chevron-right btn btn-default oe-pager-button" t-att="att_next" type="button" data-pager-action="next"></a>
     </div>
 </span>
 
@@ -359,12 +412,20 @@
     </tfoot>
 </table>
 <t t-name="ListView.buttons">
-    <t t-if="!widget.no_leaf and widget.options.action_buttons !== false and widget.options.addable and widget.is_action_enabled('create')">
-    <div class="oe_list_buttons">
-        <button type="button" class="btn btn-sm btn-primary o_list_button_add">
-            <t t-esc="widget.options.addable"/>
-        </button>
-    </div>
+    <t t-if="!widget.no_leaf and widget.options.action_buttons !== false">
+        <div class="oe_list_buttons">
+            <t t-if="widget.options.addable and widget.is_action_enabled('create')">
+                <button type="button" class="btn btn-sm btn-primary o_list_button_add" accesskey="C">
+                    <t t-esc="widget.options.addable"/>
+                </button>
+            </t>
+            <button type="button" class="btn btn-primary btn-sm o_list_button_save" accesskey="S">
+                Save
+            </button>
+            <button type="button" class="btn btn-default btn-sm o_list_button_discard" accesskey="D">
+                Discard
+            </button>
+        </div>
     </t>
 </t>
 <t t-name="ListView.pager" t-if="!widget.no_leaf and widget.options.pager !== false" t-call="ViewPager">
@@ -400,16 +461,6 @@
         <span name="delete" class="fa fa-trash-o"/>
     </td>
 </tr>
-<t t-extend="ListView.buttons">
-    <t t-jquery="button.o_list_button_add" t-operation="after">
-        <button type="button" class="btn btn-primary btn-sm o_list_button_save">
-            Save
-        </button>
-        <button type="button" class="btn btn-default btn-sm o_list_button_discard">
-            Discard
-        </button>
-    </t>
-</t>
 <button t-name="ListView.row.text_button" type="button"
         t-att-title="widget.string" t-att-disabled="disabled || undefined"
         t-att-class="disabled ? 'oe_list_button_disabled btn_txt oe_link' : 'btn_txt oe_link'"
@@ -575,7 +626,7 @@
                 <a><t t-esc="measure[1].string"/></a>
             </li>
             <li class="divider"></li>
-            <li data-field="__count__"><a>Quantity</a></li>
+            <li data-field="__count__"><a>Count</a></li>
         </ul>
     </div>
 </t>
@@ -607,7 +658,7 @@
                 <a><t t-esc="measure[1].string"/></a>
             </li>
             <li class="divider"></li>
-            <li data-field="__count__"><a>Quantity</a></li>
+            <li data-field="__count__"><a>Count</a></li>
         </ul>
     </div>
 </t>
@@ -661,6 +712,7 @@
                 t-att-autofocus="widget.node.attrs.autofocus"
                 t-att-placeholder="widget.node.attrs.placeholder"
                 t-att-maxlength="widget.field.size"
+                t-att-autocomplete="widget.password ? 'new-password' : widget.node.attrs.autocomplete"
             /><img class="oe_field_translate oe_input_icon" t-if="widget.field.translate" t-att-src='_s + "/web/static/src/img/icons/terp-translate.png"' width="16" height="16" border="0"/>
         </t>
         <t t-if="widget.get('effective_readonly')">
@@ -741,7 +793,7 @@
         <span class="o_count"/>
         <button class="btn btn-link" type="button"
             t-att-accesskey="widget.node.attrs.accesskey"/>
-        <input t-if="widget.debug" type="text" class="o_form_input o_debug_input"/>
+        <input t-if="widget.debug" t-att-readonly="widget.get('effective_readonly')" type="text" class="o_form_input o_debug_input"/>
     </div>
 </t>
 <t t-name="web.datepicker">
@@ -818,13 +870,11 @@
     ><img t-attf-src="#{prefix}/web/static/src/img/icons/#{widget.icon}.png" t-att-alt="widget.string" width="16" height="16"/>
 </t>
 <t t-name="FieldMany2ManyTag">
-    <t t-set="i" t-value="0"/>
     <t t-foreach="elements" t-as="el">
-        <span t-attf-class="badge dropdown #{'o_tag_color_' + (el['color'] || 0)}" t-att-data-color="(el['color'] || 0)" t-att-data-index="i" t-att-data-id="el['id']">
-            <t t-esc="el['name']"/>
+        <span t-attf-class="badge dropdown #{'o_tag_color_' + (el['color'] || 0)}" t-att-data-color="(el['color'] || 0)" t-att-data-index="el_index" t-att-data-id="el['id']">
+            <t t-esc="el['display_name']"/>
             <span t-if="!readonly" class="fa fa-times o_delete"/>
         </span>
-        <t t-set="i" t-value="i + 1"/>
     </t>
 </t>
 <t t-name="FieldMany2ManyTag.colorpicker">
@@ -1013,7 +1063,7 @@
                         <t t-raw="file.name || file.filename"/>
                     </span>
                     <t t-if="(!file.upload or file.percent_loaded&gt;=100)">
-                        <a class="o_image" t-att-href="file.url" t-attf-title="#{(file.name || file.filename) + (file.date?' \n('+file.date+')':'' )}" t-att-data-mimetype="file.mimetype" t-attf-data-src="/web/image/#{file.id}/100x80">
+                        <a class="o_image" target="_blank" t-att-href="file.url" t-attf-title="#{(file.name || file.filename) + (file.date?' \n('+file.date+')':'' )}" t-att-data-mimetype="file.mimetype" t-attf-data-src="/web/image/#{file.id}/100x80">
                             <t t-raw="file.name || file.filename"/>
                         </a>
                         <span class="fa fa-stack oe_delete" title="Delete this file" t-attf-data-id="#{file.id}">
@@ -1028,7 +1078,7 @@
             <t t-foreach="widget.get('value')" t-as="id">
                 <t t-set="file" t-value="widget.data[id]"/>
                 <div>
-                    <a t-att-href="file.url" t-attf-title="#{(file.name || file.filename) + (file.date?' \n('+file.date+')':'' )}">
+                    <a target="_blank" t-att-href="file.url" t-attf-title="#{(file.name || file.filename) + (file.date?' \n('+file.date+')':'' )}">
                         <t t-raw="file.name || file.filename"/>
                     </a>
                 </div>
@@ -1063,13 +1113,6 @@
 <t t-name="One2Many.listview" t-extend="ListView">
     <t t-jquery="thead > tr:first">
         this.removeAttr('t-if');
-    </t>
-
-    <t t-jquery="td.oe-actions">
-        this.removeAttr('t-if');
-    </t>
-    <t t-jquery="td.oe-actions" t-operation="prepend">
-        <h3 class="oe_view_title"><t t-esc="fields_view.arch.attrs.string"/></h3>
     </t>
 </t>
 
@@ -1397,13 +1440,11 @@
 <t t-name="FieldMany2ManyCheckBoxes">
     <t t-foreach="widget.get('records')" t-as="record">
         <div>
-            <t t-if="widget.get('value').indexOf(record[0]) !== -1">
-                <input type="checkbox" t-att-data-record-id="JSON.stringify(record[0])" checked="true"/>
-            </t>
-            <t t-if="widget.get('value').indexOf(record[0]) === -1">
-                <input type="checkbox" t-att-data-record-id="JSON.stringify(record[0])"/>
-            </t>
-            <t t-esc="record[1]"/>
+            <label style="font-weight: normal">
+                <input type="checkbox" t-att-data-record-id="JSON.stringify(record[0])"
+                       t-att-checked="(widget.get('value').indexOf(record[0]) !== -1) or null"/>
+                <t t-esc="record[1]"/>
+            </label>
         </div>
     </t>
 </t>
@@ -1425,8 +1466,13 @@
 <div t-name="Pager">
     <span class="o_pager_value"></span> / <span class="o_pager_limit"></span>
     <span class="btn-group btn-group-sm">
-        <button type="button" class="fa fa-chevron-left btn btn-icon o_pager_previous" accesskey="O"/>
-        <button type="button" class="fa fa-chevron-right btn btn-icon o_pager_next" accesskey="P"/>
+        <!-- accesskeys not wanted in X2Many widgets -->
+        <t t-if="!widget.getParent().x2m">
+            <t t-set="att_prev" t-value="{'accesskey': 'O'}" />
+            <t t-set="att_next" t-value="{'accesskey': 'P'}" />
+        </t>
+        <button type="button" class="fa fa-chevron-left btn btn-icon o_pager_previous" t-att="att_prev"/>
+        <button type="button" class="fa fa-chevron-right btn btn-icon o_pager_next" t-att="att_next"/>
     </span>
 </div>
 
@@ -1444,6 +1490,25 @@
         <span class="o_stat_text o_not_hover text-danger"><t t-esc="widget.string_false"/></span>
         <span class="o_stat_text o_hover text-success"><t t-esc="widget.hover_false"/></span>
     </t>
+</t>
+
+<t t-name="EnterpriseUpgrade">
+    <div class="row">
+        <div class="col-xs-6">
+            Get this feature and much more with Odoo Enterprise!
+            <ul class="list-unstyled">
+                <li><i class="fa fa-check"></i> Access to all Enterprise Apps</li>
+                <li><i class="fa fa-check"></i> New design</li>
+                <li><i class="fa fa-check"></i> Mobile support</li>
+                <li><i class="fa fa-check"></i> Upgrade to future versions</li>
+                <li><i class="fa fa-check"></i> Bugfixes guarantee</li>
+                <li><a href="http://www.odoo.com/editions" target="_blank"><i class="fa fa-plus"></i> And more</a></li>
+            </ul>
+        </div>
+        <div class="col-xs-6">
+            <img class="img-responsive" t-att-src='_s + "/web/static/src/img/enterprise_upgrade.jpg"' draggable="false"/>
+        </div>
+    </div>
 </t>
 
 </templates>

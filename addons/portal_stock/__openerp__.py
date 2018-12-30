@@ -5,7 +5,7 @@
 {
     'name': 'Portal Stock',
     'version': '0.1',
-    'category': 'Tools',
+    'category': 'Warehouse',
     'complexity': 'easy',
     'description': """
 This module adds access rules to your portal if stock and portal are installed.

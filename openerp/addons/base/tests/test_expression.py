@@ -1,6 +1,7 @@
 import unittest
 
 import openerp
+import openerp.osv.expression as expression
 from openerp.osv.expression import get_unaccent_wrapper
 from openerp.osv.orm import BaseModel
 import openerp.tests.common as common
@@ -210,8 +211,8 @@ class test_expression(common.TransactionCase):
         self.assertEqual(set(partner_ids), set([p_aa]),
             "_auto_join off: ('bank_ids.sanitized_acc_number', 'like', '..'): incorrect result")
         # Test produced queries
-        self.assertEqual(len(self.query_list), 3,
-            "_auto_join off: ('bank_ids.sanitized_acc_number', 'like', '..') should produce 3 queries (1 in res_partner_bank, 2 on res_partner)")
+        self.assertEqual(len(self.query_list), 2,
+            "_auto_join off: ('bank_ids.sanitized_acc_number', 'like', '..') should produce 2 queries (1 in res_partner_bank, 1 on res_partner)")
         sql_query = self.query_list[0].get_sql()
         self.assertIn('res_partner_bank', sql_query[0],
             "_auto_join off: ('bank_ids.sanitized_acc_number', 'like', '..') first query incorrect main table")
@@ -222,13 +223,13 @@ class test_expression(common.TransactionCase):
         
         self.assertEqual(set(['%' + name_test + '%']), set(sql_query[2]),
             "_auto_join off: ('bank_ids.sanitized_acc_number', 'like', '..') first query incorrect parameter")
-        sql_query = self.query_list[2].get_sql()
+        sql_query = self.query_list[1].get_sql()
         self.assertIn('res_partner', sql_query[0],
-            "_auto_join off: ('bank_ids.sanitized_acc_number', 'like', '..') third query incorrect main table")
+            "_auto_join off: ('bank_ids.sanitized_acc_number', 'like', '..') second query incorrect main table")
         self.assertIn('"res_partner"."id" in (%s)', sql_query[1],
-            "_auto_join off: ('bank_ids.sanitized_acc_number', 'like', '..') third query incorrect where condition")
+            "_auto_join off: ('bank_ids.sanitized_acc_number', 'like', '..') second query incorrect where condition")
         self.assertEqual(set([p_aa]), set(sql_query[2]),
-            "_auto_join off: ('bank_ids.sanitized_acc_number', 'like', '..') third query incorrect parameter")
+            "_auto_join off: ('bank_ids.sanitized_acc_number', 'like', '..') second query incorrect parameter")
 
         # Do: cascaded one2many without _auto_join
         self._reinit_mock()
@@ -237,8 +238,8 @@ class test_expression(common.TransactionCase):
         self.assertEqual(set(partner_ids), set([p_a, p_b]),
             "_auto_join off: ('child_ids.bank_ids.id', 'in', [..]): incorrect result")
         # Test produced queries
-        self.assertEqual(len(self.query_list), 5,
-            "_auto_join off: ('child_ids.bank_ids.id', 'in', [..]) should produce 5 queries (1 in res_partner_bank, 4 on res_partner)")
+        self.assertEqual(len(self.query_list), 3,
+            "_auto_join off: ('child_ids.bank_ids.id', 'in', [..]) should produce 3 queries (1 in res_partner_bank, 2 on res_partner)")
 
         # Do: one2many with _auto_join
         partner_bank_ids_col._auto_join = True
@@ -469,7 +470,7 @@ class test_expression(common.TransactionCase):
         self.assertTrue(set([p_a, p_b]).issubset(set(partner_ids)),
             "_auto_join off: ('child_ids.state_id.country_id.code', 'like', '..') incorrect result")
         # Test produced queries
-        self.assertEqual(len(self.query_list), 5,
+        self.assertEqual(len(self.query_list), 4,
             "_auto_join off: ('child_ids.state_id.country_id.code', 'like', '..') number of queries incorrect")
 
         # Do: ('child_ids.state_id.country_id.code', 'like', '..') with _auto_join
@@ -500,6 +501,25 @@ class test_expression(common.TransactionCase):
         norm_domain = ['&', '&', '&'] + domain
         assert norm_domain == expression.normalize_domain(domain), "Non-normalized domains should be properly normalized"
         
+    def test_40_negating_long_expression(self):
+        source = ['!','&',('user_id','=',4),('partner_id','in',[1,2])]
+        expect = ['|',('user_id','!=',4),('partner_id','not in',[1,2])]
+        self.assertEqual(expression.distribute_not(source), expect,
+            "distribute_not on expression applied wrongly")
+
+        pos_leaves = [[('a', 'in', [])], [('d', '!=', 3)]]
+        neg_leaves = [[('a', 'not in', [])], [('d', '=', 3)]]
+
+        source = expression.OR([expression.AND(pos_leaves)] * 1000)
+        expect = source
+        self.assertEqual(expression.distribute_not(source), expect,
+            "distribute_not on long expression without negation operator should not alter it")
+
+        source = ['!'] + source
+        expect = expression.AND([expression.OR(neg_leaves)] * 1000)
+        self.assertEqual(expression.distribute_not(source), expect,
+            "distribute_not on long expression applied wrongly")
+
     def test_translate_search(self):
         Country = self.registry('res.country')
         be = self.ref('base.be')

@@ -3,12 +3,13 @@
 # * hr
 # 
 # Translators:
+# jl2035 <jaka.luthar@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:11+0000\n"
-"PO-Revision-Date: 2015-09-19 08:16+0000\n"
+"POT-Creation-Date: 2016-09-22 13:16+0000\n"
+"PO-Revision-Date: 2017-11-18 00:01+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Slovenian (http://www.transifex.com/odoo/odoo-9/language/sl/)\n"
 "MIME-Version: 1.0\n"
@@ -113,7 +114,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee_message_needaction
 #: model:ir.model.fields,field_description:hr.field_hr_job_message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "Potreben je ukrep"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_active
@@ -128,7 +129,7 @@ msgstr ""
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Archived"
-msgstr ""
+msgstr "Arhivirano"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_bank_account_id
@@ -187,7 +188,7 @@ msgstr "Podrejeni oddelki"
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Citizenship & Other Information"
-msgstr ""
+msgstr "Državljanstvo in druge informacije "
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_city
@@ -195,25 +196,30 @@ msgid "City"
 msgstr "Kraj"
 
 #. module: hr
+#: model:web.tip,description:hr.hr_tip_2
+msgid "Click here to change the recruitment goal!"
+msgstr "Kliknite za spremembo kadrovskega cilja."
+
+#. module: hr
 #: model:ir.actions.act_window,help:hr.act_employee_from_department
 #: model:ir.actions.act_window,help:hr.open_view_employee_list_my
 msgid "Click to add a new employee."
-msgstr ""
+msgstr "S klikom ustvarite novega Zaposlenega."
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.open_module_tree_department
 msgid "Click to create a department."
-msgstr ""
+msgstr "S klikom ustvarite nov oddelek."
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.view_department_form_installer
 msgid "Click to define a new department."
-msgstr ""
+msgstr "S klikom definirate nov oddelek."
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.action_hr_job
 msgid "Click to define a new job position."
-msgstr ""
+msgstr "S klikom definirate novo delovno mesto."
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
@@ -362,7 +368,7 @@ msgstr "Oddelki"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_display_name
 #: model:ir.model.fields,field_description:hr.field_hr_job_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Prikaz naziva"
 
 #. module: hr
 #: selection:hr.employee,marital:0
@@ -433,14 +439,12 @@ msgid "Employees Tags"
 msgstr ""
 
 #. module: hr
-#: code:addons/hr/hr.py:299 constraint:hr.department:0
-#, python-format
+#: constraint:hr.department:0
 msgid "Error! You cannot create recursive departments."
 msgstr "Napaka! Ne morete kreirati rekurzivnih oddelkov."
 
 #. module: hr
-#: code:addons/hr/hr.py:269 constraint:hr.employee:0
-#, python-format
+#: constraint:hr.employee:0
 msgid "Error! You cannot create recursive hierarchy of Employee(s)."
 msgstr "Error! You cannot create recursive hierarchy of Employee(s)."
 
@@ -488,19 +492,24 @@ msgstr "Sledilci"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_message_channel_ids
 #: model:ir.model.fields,field_description:hr.field_hr_job_message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "Sledilci (kanali)"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_message_partner_ids
 #: model:ir.model.fields,field_description:hr.field_hr_employee_message_partner_ids
 #: model:ir.model.fields,field_description:hr.field_hr_job_message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "Sledilci (partnerji)"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_gender
 msgid "Gender"
 msgstr "Spol"
+
+#. module: hr
+#: model:web.tip,description:hr.hr_tip_1
+msgid "Get all applications related to this job position."
+msgstr ""
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_developer
@@ -551,7 +560,7 @@ msgstr "Združeno po"
 #. module: hr
 #: model:ir.model,name:hr.model_hr_department
 msgid "HR Department"
-msgstr ""
+msgstr "Kadrovski Oddelek"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
@@ -623,7 +632,7 @@ msgstr "Če je označeno, zahtevajo nova sporočila vašo pozornost."
 #: model:ir.model.fields,help:hr.field_hr_employee_message_needaction
 #: model:ir.model.fields,help:hr.field_hr_job_message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "Če je označeno, zahtevajo nova sporočila vašo pozornost."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee_active
@@ -631,14 +640,6 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the resource "
 "record without removing it."
 msgstr "Če je aktivno polje nastavljeno, bo doboljeno skriti zapis vira, ne da bi ga brisali."
-
-#. module: hr
-#: model:ir.ui.view,arch_db:hr.hr_kanban_view_employees
-#: model:ir.ui.view,arch_db:hr.view_department_filter
-#: model:ir.ui.view,arch_db:hr.view_employee_filter
-#: model:ir.ui.view,arch_db:hr.view_job_filter
-msgid "Important Messages"
-msgstr ""
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
@@ -676,7 +677,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee_message_is_follower
 #: model:ir.model.fields,field_description:hr.field_hr_job_message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "Je sledilec"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
@@ -854,13 +855,6 @@ msgid "Messages"
 msgstr "Sporočila"
 
 #. module: hr
-#: model:ir.model.fields,help:hr.field_hr_department_message_ids
-#: model:ir.model.fields,help:hr.field_hr_employee_message_ids
-#: model:ir.model.fields,help:hr.field_hr_job_message_ids
-msgid "Messages and communication history"
-msgstr "Komunikacije in kronologija"
-
-#. module: hr
 #: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
 msgid "More <i class=\"fa fa-caret-down\"/>"
 msgstr ""
@@ -914,7 +908,7 @@ msgstr "Beležke"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_message_needaction_counter
 #: model:ir.model.fields,field_description:hr.field_hr_job_message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "Število aktivnosti"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job_no_of_employee
@@ -932,7 +926,7 @@ msgstr "Število najetih kadrov za to delovno mesto med postopkom zaposlovanja."
 #: model:ir.model.fields,help:hr.field_hr_employee_message_needaction_counter
 #: model:ir.model.fields,help:hr.field_hr_job_message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr ""
+msgstr "Število sporočil, ki zahtevajo dejavnost"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job_no_of_recruitment
@@ -944,7 +938,7 @@ msgstr "Pričakovano število novo zaposlenih"
 #: model:ir.model.fields,help:hr.field_hr_employee_message_unread_counter
 #: model:ir.model.fields,help:hr.field_hr_job_message_unread_counter
 msgid "Number of unread messages"
-msgstr ""
+msgstr "Število neprebranih sporočil"
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.open_module_tree_department
@@ -984,6 +978,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_department_parent_id
 msgid "Parent Department"
 msgstr "Nadrejeni oddelek"
+
+#. module: hr
+#: model:ir.model,name:hr.model_res_partner
+msgid "Partner"
+msgstr "Partner"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_developer
@@ -1189,9 +1188,14 @@ msgid "Subordinates"
 msgstr "Podrejeni"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users_subscription_count
+msgid "Subscriptions"
+msgstr ""
+
+#. module: hr
 #: sql_constraint:hr.employee.category:0
 msgid "Tag name already exists !"
-msgstr ""
+msgstr "Označba že obstaja!"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category_ids
@@ -1248,6 +1252,10 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_department_message_unread
 #: model:ir.model.fields,field_description:hr.field_hr_employee_message_unread
 #: model:ir.model.fields,field_description:hr.field_hr_job_message_unread
+#: model:ir.ui.view,arch_db:hr.hr_kanban_view_employees
+#: model:ir.ui.view,arch_db:hr.view_department_filter
+#: model:ir.ui.view,arch_db:hr.view_employee_filter
+#: model:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Unread Messages"
 msgstr "Neprebrana sporočila"
 
@@ -1256,7 +1264,7 @@ msgstr "Neprebrana sporočila"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_message_unread_counter
 #: model:ir.model.fields,field_description:hr.field_hr_job_message_unread_counter
 msgid "Unread Messages Counter"
-msgstr ""
+msgstr "Števec neprebranih sporočil"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job_write_date
@@ -1348,7 +1356,7 @@ msgid ""
 "With just a quick glance on the Odoo employee screen, you\n"
 "                can easily find all the information you need for each person;\n"
 "                contact data, job position, availability, etc."
-msgstr ""
+msgstr "Z vpogledom v Odoo kadrovski sistem\nlahko enostavno in hitro najdete vse informacije za vsako osebo;\nkontaktni podatki, oddelek, odsotnost, itd."
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
@@ -1372,7 +1380,7 @@ msgstr "Službena e-pošta"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_work_location
 msgid "Work Location"
-msgstr ""
+msgstr "Lokacija Delovnega mesta"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_mobile_phone

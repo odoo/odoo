@@ -4,7 +4,7 @@
 {
     'name': 'Issue Tracking',
     'version': '1.0',
-    'category': 'Project Management',
+    'category': 'Project',
     'sequence': 40,
     'summary': 'Support, Bug Tracker, Helpdesk',
     'description': """

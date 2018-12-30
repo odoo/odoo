@@ -6,6 +6,9 @@
             <t t-if='receipt.table'>
                 at table <t t-esc='receipt.table' />
             </t>
+            <t t-if='receipt.customer_count'>
+                <div>Guests: <t t-esc='receipt.customer_count' /></div>
+            </t>
         </t>
     </t>
 
@@ -13,6 +16,9 @@
         <t t-jquery='.cashier' t-operation='append'>
             <t t-if='receipt.table'>
                 at table <t t-esc='receipt.table' />
+            </t>
+            <t t-if='receipt.customer_count'>
+                <div>Guests: <t t-esc='receipt.customer_count' /></div>
             </t>
         </t>
     </t>
@@ -30,7 +36,7 @@
         <t t-if='!widget.selected'>
             <div class='table' t-att-style='widget.table_style_str()'>
                 <span 
-                    t-if="widget.table.shape !== 'round'"
+                    t-if="widget.table.shape"
                     t-att-class='"table-cover " + (widget.fill >= 1 ? "full" : "")'
                     t-att-style='"height: " + Math.ceil(widget.fill * 100) + "%;"'
                     ></span>

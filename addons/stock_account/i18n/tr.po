@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-01 06:26+0000\n"
-"PO-Revision-Date: 2015-10-01 10:42+0000\n"
+"PO-Revision-Date: 2017-08-08 12:50+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Turkish (http://www.transifex.com/odoo/odoo-9/language/tr/)\n"
 "MIME-Version: 1.0\n"
@@ -52,7 +52,7 @@ msgstr "Ürün ve ürün kategorileri ile ilgili envanter değerlemeleri yapıla
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product_asset_category_id
 msgid "Asset Type"
-msgstr ""
+msgstr "Varlık Türü"
 
 #. module: stock_account
 #: selection:product.category,property_cost_method:0
@@ -63,7 +63,7 @@ msgstr "Ortalama Fiyat"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product_can_be_expensed
 msgid "Can be expensed"
-msgstr ""
+msgstr "Gider olabilir"
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
@@ -93,7 +93,7 @@ msgstr ""
 msgid ""
 "Choose the accounting date at which you want to value the stock moves "
 "created by the inventory instead of the default one (the inventory end date)"
-msgstr ""
+msgstr "Varsayılan tarih yerine envanter tarafından oluşturulan stok hareketlerini değerlemek istediğiniz muhasebe tarihini seçin (envanter bitiş tarihi)"
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_wizard_valuation_history
@@ -105,7 +105,7 @@ msgstr "Tarihinizi seçin"
 msgid ""
 "Coefficient to convert default Unit of Measure to Unit of Sale uos = uom * "
 "coeff"
-msgstr ""
+msgstr "Ölçü Birimini, Satış Birimine dönüştüren Katsayı sb= öb+ kats"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_company_id
@@ -150,19 +150,19 @@ msgstr "Tarih"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product_deferred_revenue_category_id
 msgid "Deferred Revenue Type"
-msgstr ""
+msgstr "Ertelenmiş Gelir Türü"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_display_name
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_display_name
 #: model:ir.model.fields,field_description:stock_account.field_wizard_valuation_history_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Adı Göster"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_inventory_accounting_date
 msgid "Force Accounting Date"
-msgstr ""
+msgstr "Muhasebe Tarihine Zorla"
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
@@ -192,7 +192,7 @@ msgid ""
 "account set on the product category will represent the current inventory "
 "value, and the stock input and stock output account will hold the "
 "counterpart moves for incoming and outgoing products."
-msgstr ""
+msgstr "Bir ürün için sürekli değerlendirme etkinleştirilirse, sistem otomatik olarak stok hareketlerine karşılık gelen günlük girdilerini oluşturur, 'Maliyet Yöntemi' ne göre belirlenmiş ürün fiyatı ile. Ürün kategorisinde açılan envanter varyasyonu mevcut envanter değerini temsil edecek ve stok giriş ve stok çıkış hesabı gelen ve giden ürünler için muadil hareketleri tutacaktır."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product_property_valuation
@@ -204,12 +204,12 @@ msgid ""
 "account set on the product category will represent the current inventory "
 "value, and the stock input and stock output account will hold the "
 "counterpart moves for incoming and outgoing products."
-msgstr ""
+msgstr "Bir ürün için sürekli değerlendirme etkinleştirilirse, sistem otomatik olarak stok hareketlerine karşılık gelen günlük girdilerini oluşturur, 'Maliyet Yöntemi' ne göre belirlenmiş ürün fiyatı ile. Ürün kategorisinde açılan envanter varyasyonu mevcut envanter değerini temsil edecek ve stok giriş ve stok çıkış hesabı gelen ve giden ürünler için muadil hareketleri tutacaktır."
 
 #. module: stock_account
 #: selection:stock.config.settings,module_stock_landed_costs:0
 msgid "Include landed costs in product costing computation"
-msgstr ""
+msgstr "Ürün maliyet hesaplamasında maliyet yüklemelerini de dahil et"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_config_settings_module_stock_landed_costs
@@ -221,7 +221,7 @@ msgstr "Maliyet Yüklemeleri (Landed Costs) modülü, maliyetleri ürünlere far
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_inventory
 msgid "Inventory"
-msgstr ""
+msgstr "Envanter"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_location
@@ -247,7 +247,7 @@ msgstr "Envanter Değeri"
 #: model:ir.model.fields,field_description:stock_account.field_wizard_valuation_history_choose_date
 #: model:ir.ui.menu,name:stock_account.menu_action_wizard_valuation_history
 msgid "Inventory at Date"
-msgstr ""
+msgstr "Envanter Tarihi"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_invoice
@@ -319,24 +319,24 @@ msgstr "Operasyon Tarihi"
 #: selection:product.category,property_valuation:0
 #: selection:product.template,property_valuation:0
 msgid "Periodic (manual)"
-msgstr ""
+msgstr "Periyodik (Manuel)"
 
 #. module: stock_account
 #: selection:stock.config.settings,group_stock_inventory_valuation:0
 msgid "Periodic inventory valuation (recommended)"
-msgstr ""
+msgstr "Periyodik Stok Değerleme (Önerilen)"
 
 #. module: stock_account
 #: selection:product.category,property_valuation:0
 #: selection:product.template,property_valuation:0
 msgid "Perpetual (automated)"
-msgstr ""
+msgstr "Sürekli Envanter (Otomatik)"
 
 #. module: stock_account
 #: selection:stock.config.settings,group_stock_inventory_valuation:0
 msgid ""
 "Perpetual inventory valuation (stock move generates accounting entries)"
-msgstr ""
+msgstr "Sürekli Envanter (Stok hareketleri otomatik muhasebe kayıtları oluşturur)"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_new_price
@@ -431,7 +431,7 @@ msgstr "Faturalama, stoktan farklı ölçü biriminde yapılmışsa, burada bir 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product_can_be_expensed
 msgid "Specify whether the product can be selected in an HR expense."
-msgstr ""
+msgstr "Ürünün bir İK giderinden seçilebileceğini belirleyin."
 
 #. module: stock_account
 #: selection:product.category,property_cost_method:0
@@ -453,7 +453,7 @@ msgid ""
 "Standard Price: The cost price is manually updated at the end of a specific period (usually once a year).\n"
 "                    Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.\n"
 "                    Real Price: The cost price displayed is the price of the last outgoing product (will be use in case of inventory loss for example)."
-msgstr ""
+msgstr "Standart Fiyat: Maliyet fiyatı belirli bir dönemin sonunda elle güncellenir (genellikle yılda bir). \nOrtalama Fiyat: Maliyet fiyatı her gelen sevkiyatta yeniden hesaplanır ve ürün değerlendirmesinde kullanılır.\nGerçek Fiyat: Gösterilen maliyet fiyatı son çıkan ürünün fiyatıdır (Örneğin stok kaybı durumunda kullanılacak)."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category_property_cost_method
@@ -461,7 +461,7 @@ msgid ""
 "Standard Price: The cost price is manually updated at the end of a specific period (usually once a year).\n"
 "Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.\n"
 "Real Price: The cost price displayed is the price of the last outgoing product (will be used in case of inventory loss for example)."
-msgstr ""
+msgstr "Standart Fiyat: Maliyet fiyatı belirli bir dönemin sonunda elle güncellenir (genellikle her yıl). \nOrtalama Fiyat: Maliyet fiyatı her gelen sevkiyatta yeniden hesaplanır.\nGerçek Fiyat: Görüntülenen maliyet fiyatı, son giden ürünün fiyatıdır (örneğin stok değer kaybı durumunda kullanılacaktır)"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category_property_stock_account_input_categ_id
@@ -645,7 +645,7 @@ msgstr "Bir ürün üzerinde gerçek zamanlı envanter değerlendirmesi etkinle�
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_wizard_valuation_history
 msgid "Wizard that opens the stock valuation history table"
-msgstr ""
+msgstr "Stok envanter düzeltmeleri geçmişini açan sihirbaz"
 
 #. module: stock_account
 #: code:addons/stock_account/stock_account.py:275
@@ -653,7 +653,7 @@ msgstr ""
 msgid ""
 "You don't have any stock journal defined on your product category, check if "
 "you have installed a chart of accounts"
-msgstr ""
+msgstr "Ürün kategorisine tanımlı bir stok yevmiyesi bulunamadı. Eğer muhasebe hesap planı yüklediyseniz bunu mutlaka kontrol edin."
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
@@ -668,7 +668,7 @@ msgstr "stock.config.settings"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_history
 msgid "stock.history"
-msgstr ""
+msgstr "stock.history"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product_cost_method

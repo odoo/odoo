@@ -58,7 +58,7 @@
         <field name="inherit_id" ref="account.invoice_supplier_form"/>
         <field name="arch" type="xml">
             <field name="reference" position="after" >
-                 <field name="purchase_id" domain="[('invoice_status', '=', 'to invoice'), ('partner_id', 'child_of', partner_id)]" attrs="{'invisible': [('state', '&lt;&gt;', 'draft')]}" class="oe_edit_only"/>
+                 <field name="purchase_id" attrs="{'invisible': [('state', '&lt;&gt;', 'draft')]}" class="oe_edit_only"/>
             </field>
             <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='company_id']" position="after">
                 <field name="purchase_line_id" invisible="1"/>

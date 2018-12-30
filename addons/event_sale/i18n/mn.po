@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2015-09-07 18:19+0000\n"
+"POT-Creation-Date: 2016-09-22 13:16+0000\n"
+"PO-Revision-Date: 2017-08-01 07:58+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Mongolian (http://www.transifex.com/odoo/odoo-9/language/mn/)\n"
 "MIME-Version: 1.0\n"
@@ -29,6 +29,11 @@ msgid "Apply"
 msgstr "Хэрэглэх"
 
 #. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_product_product_asset_category_id
+msgid "Asset Type"
+msgstr "Хөрөнгийн Төрөл"
+
+#. module: event_sale
 #: model:ir.model,name:event_sale.model_event_registration
 msgid "Attendee"
 msgstr "Оролцогч"
@@ -36,7 +41,7 @@ msgstr "Оролцогч"
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_seats_availability
 msgid "Available Seat"
-msgstr ""
+msgstr "Боломжит суудал"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_seats_available
@@ -46,7 +51,7 @@ msgstr "Байгаа суудлууд"
 #. module: event_sale
 #: model:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
 msgid "Before confirming"
-msgstr ""
+msgstr "Батлахаас өмнө"
 
 #. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_sale_order_line_event_id
@@ -83,12 +88,17 @@ msgid "Created on"
 msgstr "Үүсгэсэн"
 
 #. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_product_product_deferred_revenue_category_id
+msgid "Deferred Revenue Type"
+msgstr "Хойшлогдсон Орлогын Төрөл"
+
+#. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_event_event_ticket_seats_max
 msgid ""
 "Define the number of available tickets. If you have too much registrations "
 "you will not be able to sell tickets anymore. Set 0 to ignore this rule set "
 "as unlimited."
-msgstr ""
+msgstr "Боломжит тасалбарын тоог тодорхойлно уу. Хэрэв хэт олон бүртгэл байвал тасалбар худалдах боломжгүй болно. Энэ хязгааргүй гэсэн дүрмийг ашиглахгүй бол 0 болго."
 
 #. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_product_product_event_ok
@@ -103,12 +113,12 @@ msgstr "Хэрэв бараа нь борлуулалтын захиалгын �
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_display_name
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Дэлгэцийн Нэр"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_editor_id
 msgid "Editor id"
-msgstr ""
+msgstr "Засварлагчийн дугаар"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_email
@@ -126,7 +136,7 @@ msgstr "Үйл явдал"
 #. module: event_sale
 #: model:ir.actions.act_window,name:event_sale.action_sale_order_event_registration
 msgid "Event Registrations"
-msgstr ""
+msgstr "Арга хэмжээний Бүртгэлүүд"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_product_product_event_ok
@@ -164,7 +174,7 @@ msgstr "Функционалийн вебинар"
 #. module: event_sale
 #: model:event.type,name:event_sale.event_type
 msgid "Generic Events"
-msgstr ""
+msgstr "Ерөнхий Арга хэмжээнүүд"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_id
@@ -183,7 +193,7 @@ msgstr "Хугацаа дууссан эсэх"
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor___last_update
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Сүүлийн засвар хийсэн огноо"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_write_uid
@@ -202,7 +212,7 @@ msgstr "Сүүлийн засвар хийсэн огноо"
 #. module: event_sale
 #: selection:event.event.ticket,seats_availability:0
 msgid "Limited"
-msgstr ""
+msgstr "Хязгаартай"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_seats_max
@@ -219,13 +229,13 @@ msgstr "Нэр"
 #: code:addons/event_sale/models/event.py:131
 #, python-format
 msgid "No more available seats for the ticket"
-msgstr ""
+msgstr "Тасалбарын суудал дууссан"
 
 #. module: event_sale
 #: code:addons/event_sale/models/event.py:153
 #, python-format
 msgid "No more available seats for this ticket"
-msgstr ""
+msgstr "Энэ тасалбарын суудал дууссан"
 
 #. module: event_sale
 #: model:product.product,name:event_sale.event_0_product
@@ -241,7 +251,7 @@ msgstr "Эх үүсэл"
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_registration_id
 msgid "Original Registration"
-msgstr ""
+msgstr "Эх Бүртгэл"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_phone
@@ -282,7 +292,7 @@ msgstr "Бүртгэлүүд"
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_event_registration_ids
 msgid "Registrations to Edit"
-msgstr ""
+msgstr "Засах бүртгэлүүд"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_seats_reserved
@@ -318,7 +328,7 @@ msgstr "Борлуулалтын Захиалгын Мөр"
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_seats_used
 msgid "Seats used"
-msgstr ""
+msgstr "Ашигласан суудлууд"
 
 #. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_product_product_event_type_id
@@ -336,7 +346,7 @@ msgstr "Алгасах"
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_registration_sale_order_id
 msgid "Source Sale Order"
-msgstr ""
+msgstr "Эх борлуулалтын захиалга"
 
 #. module: event_sale
 #: model:event.event.ticket,name:event_sale.event_0_ticket_1
@@ -375,7 +385,7 @@ msgstr "Тасалбарын төрөл"
 #. module: event_sale
 #: model:ir.ui.view,arch_db:event_sale.view_event_form_inherit_ticket
 msgid "Tickets"
-msgstr ""
+msgstr "Тасалбарууд"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_product_product_event_type_id
@@ -408,14 +418,14 @@ msgstr "event_ok"
 #. module: event_sale
 #: model:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
 msgid "please give details about the registrations"
-msgstr ""
+msgstr "бүртгэлийн талаар мэдээлэл өгнө үү"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_registration_editor
 msgid "registration.editor"
-msgstr ""
+msgstr "registration.editor"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_registration_editor_line
 msgid "registration.editor.line"
-msgstr ""
+msgstr "registration.editor.line"

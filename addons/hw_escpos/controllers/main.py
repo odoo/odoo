@@ -76,19 +76,25 @@ class EscposDriver(Thread):
 
         printers = usb.core.find(find_all=True, custom_match=FindUsbClass(7))
 
-        # Currently we ask customers to put the STAR TSP650II into
-        # 'USB Mode' Vendor class instead of Printer class. When set
-        # to Printer class it doesn't show up under Linux at
-        # all. Vendor class does work, but that means that it's not
-        # going to have an interfaceClass 7.
+        # if no printers are found after this step we will take the
+        # first epson or star device we can find.
+        # epson
+        if not printers:
+            printers = usb.core.find(find_all=True, idVendor=0x04b8)
+        # star
         if not printers:
             printers = usb.core.find(find_all=True, idVendor=0x0519)
 
         for printer in printers:
+            try:
+                description = usb.util.get_string(printer, 256, printer.iManufacturer) + " " + usb.util.get_string(printer, 256, printer.iProduct)
+            except Exception as e:
+                _logger.error("Can not get printer description: %s" % (e.message or repr(e)))
+                description = 'Unknown printer'
             connected.append({
                 'vendor': printer.idVendor,
                 'product': printer.idProduct,
-                'name': usb.util.get_string(printer, 256, printer.iManufacturer) + " " + usb.util.get_string(printer, 256, printer.iProduct)
+                'name': description
             })
 
         return connected
@@ -103,8 +109,12 @@ class EscposDriver(Thread):
   
         printers = self.connected_usb_devices()
         if len(printers) > 0:
-            self.set_status('connected','Connected to '+printers[0]['name'])
-            return Usb(printers[0]['vendor'], printers[0]['product'])
+            print_dev = Usb(printers[0]['vendor'], printers[0]['product'])
+            self.set_status(
+                'connected',
+                "Connected to %s (in=0x%02x,out=0x%02x)" % (printers[0]['name'], print_dev.in_ep, print_dev.out_ep)
+            )
+            return print_dev
         else:
             self.set_status('disconnected','Printer Not Found')
             return None
@@ -192,6 +202,9 @@ class EscposDriver(Thread):
 
     def print_status(self,eprint):
         localips = ['0.0.0.0','127.0.0.1','127.0.1.1']
+        hosting_ap = os.system('pgrep hostapd') == 0
+        ssid = subprocess.check_output('iwconfig 2>&1 | grep \'ESSID:"\' | sed \'s/.*"\\(.*\\)"/\\1/\'', shell=True).rstrip()
+        mac = subprocess.check_output('ifconfig | grep -B 1 \'inet addr\' | grep -o \'HWaddr .*\' | sed \'s/HWaddr //\'', shell=True).rstrip()
         ips =  [ c.split(':')[1].split(' ')[0] for c in commands.getoutput("/sbin/ifconfig").split('\n') if 'inet addr' in c ]
         ips =  [ ip for ip in ips if ip not in localips ] 
         eprint.text('\n\n')
@@ -199,6 +212,11 @@ class EscposDriver(Thread):
         eprint.text('PosBox Status\n')
         eprint.text('\n')
         eprint.set(align='center')
+
+        if hosting_ap:
+            eprint.text('Wireless network:\nPosbox\n\n')
+        elif ssid:
+            eprint.text('Wireless network:\n' + ssid + '\n\n')
 
         if len(ips) == 0:
             eprint.text('ERROR: Could not connect to LAN\n\nPlease check that the PosBox is correc-\ntly connected with a network cable,\n that the LAN is setup with DHCP, and\nthat network addresses are available')
@@ -210,6 +228,7 @@ class EscposDriver(Thread):
                 eprint.text(ip+'\n')
 
         if len(ips) >= 1:
+            eprint.text('\nMAC Address:\n' + mac + '\n')
             eprint.text('\nHomepage:\nhttp://'+ips[0]+':8069\n')
 
         eprint.text('\n\n')

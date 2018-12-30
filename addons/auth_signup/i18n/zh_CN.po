@@ -3,14 +3,19 @@
 # * auth_signup
 # 
 # Translators:
+# fausthuang, 2016
+# fausthuang, 2016
+# inddroy inddroy <joe@joe-chow.com>, 2016
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2016
+# liAnGjiA <liangjia@qq.com>, 2017-2018
 # Xia Fajin <xia.fajin@elico-corp.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-14 10:27+0000\n"
-"PO-Revision-Date: 2015-09-14 04:28+0000\n"
-"Last-Translator: Xia Fajin <xia.fajin@elico-corp.com>\n"
+"POT-Creation-Date: 2016-09-22 13:16+0000\n"
+"PO-Revision-Date: 2018-03-25 18:27+0000\n"
+"Last-Translator: e2f_cn c7 <e2f_cn_c7@outlook.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -57,7 +62,7 @@ msgid ""
 "<p>You may change your password by following <a href=\"${object.signup_url}\">this link</a>, which will remain valid during 24 hours.</p>\n"
 "\n"
 "<p>Note: If you do not expect this, you can safely ignore this email.</p>"
-msgstr ""
+msgstr "\n<p>和这个邮件相关的Odoo账号被要求更改密码.</p>\n\n<p>你可以在以下链接中更改密码<a href=\"${object.signup_url}\">this link</a>, 该信息有效时间24小时.</p>\n\n<p>提示: 如不需要，可以忽略.</p>"
 
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.set_password_email
@@ -69,14 +74,14 @@ msgstr "${object.company_id.name} 邀请链接到Odoo"
 msgid ""
 "<strong>A password reset has been requested for this user. An email "
 "containing the following link has been sent:</strong>"
-msgstr ""
+msgstr "<strong>要求该用户更改密码，包含以下信息的邮件发出：</strong>"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
 msgid ""
 "<strong>An invitation email containing the following subscription link has "
 "been sent:</strong>"
-msgstr ""
+msgstr "<strong>包含以下订阅链接的邀请函发出：</strong>"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_base_config_settings_auth_signup_uninvited
@@ -84,16 +89,22 @@ msgid "Allow external users to sign up"
 msgstr "允许外部用户注册"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:60
+#: code:addons/auth_signup/controllers/main.py:64
 #, python-format
 msgid "An email has been sent with credentials to reset your password"
 msgstr "一封包含验证证书以重置您的密码的电子邮件已经发送"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:108
+#: code:addons/auth_signup/controllers/main.py:40
+#, python-format
+msgid "Another user is already registered using this email address."
+msgstr "该邮件地址已经被其他注册了"
+
+#. module: auth_signup
+#: code:addons/auth_signup/controllers/main.py:115
 #, python-format
 msgid "Authentication Failed."
-msgstr ""
+msgstr "身份验证失败"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.reset_password
@@ -105,12 +116,12 @@ msgstr "返回登录"
 #: code:addons/auth_signup/res_users.py:277
 #, python-format
 msgid "Cannot send email: user %s has no email address."
-msgstr ""
+msgstr "无法发送邮件：用户 %s 邮件地址为空。"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.reset_password
 msgid "Confirm"
-msgstr ""
+msgstr "确认"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.fields
@@ -120,10 +131,16 @@ msgstr "确认密码"
 #. module: auth_signup
 #: selection:res.users,state:0
 msgid "Connected"
-msgstr ""
+msgstr "已连接"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:62
+#: code:addons/auth_signup/controllers/main.py:43
+#, python-format
+msgid "Could not create a new account."
+msgstr "不能创建一个新账号"
+
+#. module: auth_signup
+#: code:addons/auth_signup/controllers/main.py:66
 #, python-format
 msgid "Could not reset your password"
 msgstr "无法重置您的密码"
@@ -175,10 +192,10 @@ msgid "Reset Password"
 msgstr "重置密码"
 
 #. module: auth_signup
-#: code:addons/auth_signup/res_users.py:250
+#: code:addons/auth_signup/res_users.py:253
 #, python-format
 msgid "Reset password: invalid username or email"
-msgstr ""
+msgstr "重置密码:无效的用户名或密码"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
@@ -200,7 +217,7 @@ msgstr "注册"
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_expiration
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_expiration
 msgid "Signup Expiration"
-msgstr "注册过期"
+msgstr "注册到期"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_token
@@ -224,7 +241,7 @@ msgstr "注册令牌（ Token  ）是有效的"
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_url
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_url
 msgid "Signup URL"
-msgstr "注册 URL"
+msgstr "注册网址"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_state
@@ -239,7 +256,7 @@ msgstr "用作通过注册创建的新用户的模版"
 #. module: auth_signup
 #: model:ir.model.fields,help:auth_signup.field_res_users_website_url
 msgid "The full URL to access the document through the website."
-msgstr ""
+msgstr "通过网站访问单据的完整网址。"
 
 #. module: auth_signup
 #: model:ir.model.fields,help:auth_signup.field_base_config_settings_auth_signup_reset_password
@@ -259,12 +276,12 @@ msgstr "在网站可见"
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_website_description
 msgid "Website Partner Full Description"
-msgstr "网站业务伙伴的详细描述"
+msgstr ""
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_website_short_description
 msgid "Website Partner Short Description"
-msgstr "网站业务伙伴简介"
+msgstr ""
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_website_url
@@ -274,7 +291,7 @@ msgstr "网站地址"
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_website_meta_description
 msgid "Website meta description"
-msgstr "网站meta描述"
+msgstr "网站元说明"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_website_meta_keywords
@@ -310,4 +327,4 @@ msgstr "例如:约翰"
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_self
 msgid "unknown"
-msgstr "未知的"
+msgstr "未知"

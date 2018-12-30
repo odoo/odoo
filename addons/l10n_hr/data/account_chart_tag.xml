@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data noupdate="1">
+    <data>
 
         <!-- Account Chart Template -->
         <record id="l10n_hr_chart_template_rrif" model="account.chart.template">
@@ -15,168 +15,408 @@
         </record>
 
         <!-- Account Tags -->
-        <record id="tax_tag_01" model="account.account.tag">
-            <field name="name">1. KOJE NE PODLIJEŽU OPOREZIVANJU (čl. 2. u svezi s čl. 5 i čl. 8 st. 7 Zakona)</field>
+        <record id="tag_hr_01" model="account.account.tag">
+            <field name="name">Ostali porezi, carine, trošarine i sl.</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_02" model="account.account.tag">
-            <field name="name">2.1. IZVOZNE - s pravom na odbitak pretporeza (čl. 13. st. 1. toč. 1. i čl. 14. Zakona)</field>
+
+        <record id="tag_hr_02" model="account.account.tag">
+            <field name="name">Porez na potrošnju</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_03" model="account.account.tag">
-            <field name="name">2.2. U VEZI S MEĐUNARODNIM PRIJEVOZOM  (čl. 13.b Zakona)</field>
+
+        <record id="tag_hr_03" model="account.account.tag">
+            <field name="name">PDV</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_04" model="account.account.tag">
-            <field name="name">2.3. TUZEMNE - bez prava na odbitak pretporeza (čl. 11. i čl. 11a Zakona)</field>
+
+        <record id="tag_hr_04" model="account.account.tag">
+            <field name="name">OBRAZAC PDV</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_05" model="account.account.tag">
-            <field name="name">2.4. OSTALO (čl. 13. st. 1. toč. 2. I čl. 13a Zakona)</field>
+
+        <record id="tag_hr_05" model="account.account.tag">
+            <field name="name">O S N O V I C A</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_06" model="account.account.tag">
-            <field name="name">PDV za predujam 0%</field>
+
+        <record id="tag_hr_06" model="account.account.tag">
+            <field name="name">Obračun isporuka (I+II)</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_07" model="account.account.tag">
-            <field name="name">PDV po nezaračunanim isporukama 0%</field>
+
+        <record id="tag_hr_07" model="account.account.tag">
+            <field name="name">I. Isporuke ne podliježu / oslobođene</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_08" model="account.account.tag">
-            <field name="name">PDV  0%</field>
+
+        <record id="tag_hr_08" model="account.account.tag">
+            <field name="name">I.1. Koje ne podliježu oporezivanju</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_09" model="account.account.tag">
-            <field name="name">PDV 10%</field>
+
+        <record id="tag_hr_09" model="account.account.tag">
+            <field name="name">I.2. Oslobođene ukupno</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_10" model="account.account.tag">
-            <field name="name">PDV za predujam 10%</field>
+
+        <record id="tag_hr_10" model="account.account.tag">
+            <field name="name">I.2.1. Izvozne</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_11" model="account.account.tag">
-            <field name="name">PDV po nezaračunanim isporukama 10%</field>
+
+        <record id="tag_hr_11" model="account.account.tag">
+            <field name="name">I.2.2. Isporuke dobara</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_12" model="account.account.tag">
-            <field name="name">PDV 25%</field>
+
+        <record id="tag_hr_12" model="account.account.tag">
+            <field name="name">I.2.3. Tuzemne  - bez prava odbitka</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_13" model="account.account.tag">
-            <field name="name">PDV za predujam 25%</field>
+
+        <record id="tag_hr_13" model="account.account.tag">
+            <field name="name">I.2.4. Ostale – s pravom odbitka</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_14" model="account.account.tag">
-            <field name="name">PDV po nezaračunanim isporukama 25%</field>
+
+        <record id="tag_hr_14" model="account.account.tag">
+            <field name="name">I.3. Isporuke po stopi od 0%</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_15" model="account.account.tag">
-            <field name="name">PDV 25% Usluge</field>
+
+        <record id="tag_hr_15" model="account.account.tag">
+            <field name="name">II. Oporezive isporuke</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_16" model="account.account.tag">
-            <field name="name">Pretporez 10% PDV</field>
+
+        <record id="tag_hr_16" model="account.account.tag">
+            <field name="name">II.1 Izdani računi po stopi 10%</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_17" model="account.account.tag">
-            <field name="name">Pretporez 25% PDV</field>
+
+        <record id="tag_hr_17" model="account.account.tag">
+            <field name="name">II.2 Izdani računi po stopi 22% i 23%</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_18" model="account.account.tag">
-            <field name="name">Pretporez 25% PDV Usluge</field>
+
+        <record id="tag_hr_18" model="account.account.tag">
+            <field name="name">II.3 Izdani računi po stopi 25%</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_19" model="account.account.tag">
-            <field name="name">Pretporez za predujam 25% PDV</field>
+
+        <record id="tag_hr_19" model="account.account.tag">
+            <field name="name">II.4 Nenaplaćeni izvoz</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_20" model="account.account.tag">
-            <field name="name">pp 70% Nepriznat 30% Priznat</field>
+
+        <record id="tag_hr_20" model="account.account.tag">
+            <field name="name">II.5 Oslobođenje izvoza – putnički promet</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_20_1" model="account.account.tag">
-            <field name="name">Pp 30% priz.(25%)</field>
+
+        <record id="tag_hr_21" model="account.account.tag">
+            <field name="name">III. OBRAČUNANI PRETPOREZ</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_20_2" model="account.account.tag">
-            <field name="name">Pp 70% nep.(25%)</field>
+
+        <record id="tag_hr_22" model="account.account.tag">
+            <field name="name">III.1. Pretporez 10%</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_21" model="account.account.tag">
-            <field name="name">pp 30% Nepriznat 70% Priznat</field>
+
+        <record id="tag_hr_23" model="account.account.tag">
+            <field name="name">III.2. Pretporez 22% i23%</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_21_1" model="account.account.tag">
-            <field name="name">pp 30% nep.(25%)</field>
+
+        <record id="tag_hr_24" model="account.account.tag">
+            <field name="name">III.3. Pretporez 25%</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_21_2" model="account.account.tag">
-            <field name="name">pp 70% priz.(25%)</field>
+
+        <record id="tag_hr_25" model="account.account.tag">
+            <field name="name">III.3. Pretporez 25% bis</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_22" model="account.account.tag">
-            <field name="name">Plaćeni PDV 25% pri uvozu dobara</field>
+
+        <record id="tag_hr_26" model="account.account.tag">
+            <field name="name">III.3. Pretporez 25% ter</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_23" model="account.account.tag">
-            <field name="name">Plaćeni PDV 10% pri uvozu dobara</field>
+
+        <record id="tag_hr_27" model="account.account.tag">
+            <field name="name">III.4. Plaćeni PP pri uvozu</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_24" model="account.account.tag">
-            <field name="name">Plaćeni PDV 0% pri uvozu dobara</field>
+
+        <record id="tag_hr_27_cred" model="account.account.tag">
+            <field name="name">III.4. Plaćeni PP pri uvozu - credit gt 0</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_25" model="account.account.tag">
-            <field name="name">Plaćeni PDV 10% na usluge inozemnih poduzetnika</field>
+
+        <record id="tag_hr_28" model="account.account.tag">
+            <field name="name">III.5. Plaćeni PP na ino usluge 10%</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_26" model="account.account.tag">
-            <field name="name">Plaćeni PDV 25% na usluge inozemnih poduzetnika</field>
+
+        <record id="tag_hr_29" model="account.account.tag">
+            <field name="name">III.6. Plaćeni PP na ino usluge 22% i 23%</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_27" model="account.account.tag">
-            <field name="name">Pretporez za predujam 0% PDV</field>
+
+        <record id="tag_hr_30" model="account.account.tag">
+            <field name="name">III.7. Plaćeni PP na ino usluge 25%</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_28" model="account.account.tag">
-            <field name="name">Pretporez 0% PDV</field>
+
+        <record id="tag_hr_31" model="account.account.tag">
+            <field name="name">III.0. Pretporez 0%</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_29" model="account.account.tag">
-            <field name="name">Samo PDV kod uvoza 25% usluge</field>
+
+        <record id="tag_hr_32" model="account.account.tag">
+            <field name="name">PDV – POREZ – razlika za uplatu/preplata</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_30" model="account.account.tag">
-            <field name="name">R2 pp 30% Nepriznat 70% Priznat</field>
+
+        <record id="tag_hr_33" model="account.account.tag">
+            <field name="name">VI. POREZNA OBVEZA U RAZDOBLJU</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_30_1" model="account.account.tag">
-            <field name="name">R2 pp 30% nep.(25%)</field>
+
+        <record id="tag_hr_34" model="account.account.tag">
+            <field name="name">I. Isporuke ne podliježu / oslobođene</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_30_2" model="account.account.tag">
-            <field name="name">R2 pp 70% priz.(25%)</field>
+
+        <record id="tag_hr_35" model="account.account.tag">
+            <field name="name">II. Oporezive isporuke</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_31" model="account.account.tag">
-            <field name="name">R2 pp 70% Nepriznat 30% Priznat</field>
+
+        <record id="tag_hr_36" model="account.account.tag">
+            <field name="name">II.1 Izdani računi po stopi 10%</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_31_1" model="account.account.tag">
-            <field name="name">R2 Pp 70% nep.(25%)</field>
+
+        <record id="tag_hr_37" model="account.account.tag">
+            <field name="name">II.2 Izdani računi po stopi 22% i 23%</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_31_2" model="account.account.tag">
-            <field name="name">R2 Pp 30% priz.(25%)</field>
+
+        <record id="tag_hr_38" model="account.account.tag">
+            <field name="name">II.3 Izdani računi po stopi 25%</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_32" model="account.account.tag">
-            <field name="name">Samo PDV kod uvoza 25%</field>
+
+        <record id="tag_hr_39" model="account.account.tag">
+            <field name="name">II.4 Oslobođenje izvoza – putnički promet</field>
             <field name="applicability">taxes</field>
         </record>
-        <record id="tax_tag_33" model="account.account.tag">
-            <field name="name">25% R-2 dobavljač</field>
+
+        <record id="tag_hr_40" model="account.account.tag">
+            <field name="name">III. OBRAČUNANI PRETPOREZ</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_hr_41" model="account.account.tag">
+            <field name="name">III.1. Pretporez 10%</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_hr_42" model="account.account.tag">
+            <field name="name">III.2. Pretporez 22% i 23%</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_hr_43" model="account.account.tag">
+            <field name="name">III.3. Pretporez 25%</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_hr_44" model="account.account.tag">
+            <field name="name">III.4. Plaćeni PP pri uvozu</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_hr_45" model="account.account.tag">
+            <field name="name">III.5. Plaćeni PP na ino usluge 10%</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_hr_46" model="account.account.tag">
+            <field name="name">III.6. Plaćeni PP na ino usluge 22% i 23%</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_hr_47" model="account.account.tag">
+            <field name="name">III.7. Plaćeni PP na ino usluge 25%</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_hr_48" model="account.account.tag">
+            <field name="name">III.8. Ispravci pretporeza</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_hr_49" model="account.account.tag">
+            <field name="name">Uplaćeno u razdoblju</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_hr_50" model="account.account.tag">
+            <field name="name">PDV - OSTALO</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_hr_51" model="account.account.tag">
+            <field name="name">Ostali podaci</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_hr_52" model="account.account.tag">
+            <field name="name">1. ZA ISPRAVAK PRETPOREZA</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_hr_53" model="account.account.tag">
+            <field name="name">1.1. NABAVA NEKRETNINA</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_hr_54" model="account.account.tag">
+            <field name="name">1.2. PRODAJA NEKRETNINA</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_hr_55" model="account.account.tag">
+            <field name="name">1.3. NABAVA OSOBNIH VOZILA</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_hr_56" model="account.account.tag">
+            <field name="name">1.4. PRODAJA OSOBNIH VOZILA</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_hr_57" model="account.account.tag">
+            <field name="name">1.5. NABAVA DUGOTRAJNE IMOVINE</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_hr_58" model="account.account.tag">
+            <field name="name">1.6. PRODAJA DUGOTRAJNE IMOVINE</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_hr_59" model="account.account.tag">
+            <field name="name">2. OTUĐENJE/STJECANJE GOSPODARSKE CJELINE ILI POGONA</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_hr_60" model="account.account.tag">
+            <field name="name">3. NABAVA DOBARA I USLUGA ZA REPREZENTACIJU</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_hr_61" model="account.account.tag">
+            <field name="name">4. NABAVA OSOBNIH VOZILA I DRUGIH SREDSTAVA ZA OSOBNI PRIJEVOZ</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_hr_62" model="account.account.tag">
+            <field name="name">5. OSNOVICA ZA OBRAČUN VLASTITE POTROŠNJE ZA OSOBNA VOZILA NABAV</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_hr_63" model="account.account.tag">
+            <field name="name">NEPRIZNATI PRETPOREZ</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_hr_64" model="account.account.tag">
+            <field name="name">NEPRIZNATI PRETPOREZ (osnovica 30 ili 70%)</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_hr_65" model="account.account.tag">
+            <field name="name">Nepriznati pretporez 10% (o)</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_hr_66" model="account.account.tag">
+            <field name="name">Nepriznati pretporez 22% i 23% (o)</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_hr_67" model="account.account.tag">
+            <field name="name">Nepriznati pretporez 25% (o)</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_hr_68" model="account.account.tag">
+            <field name="name">Nepriznati pretporez 25% (o) bis</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_hr_69" model="account.account.tag">
+            <field name="name">Nepriznati pretporez 25% (o) ter</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_hr_70" model="account.account.tag">
+            <field name="name">Pretporez koji još nije priznan (uključivo i neplaćeni R-2)</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_hr_71" model="account.account.tag">
+            <field name="name">NEPRIZNATI PRETPOREZ (porez)</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_hr_72" model="account.account.tag">
+            <field name="name">NEPRIZNATI PRETPOREZ (30 ili 70%)</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_hr_73" model="account.account.tag">
+            <field name="name">Nepriznati pretporez 10% (p)</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_hr_74" model="account.account.tag">
+            <field name="name">Nepriznati pretporez 22% i 23% (p)</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_hr_75" model="account.account.tag">
+            <field name="name">Nepriznati pretporez 25% (p)</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_hr_76" model="account.account.tag">
+            <field name="name">Pretporez koji još nije priznan (ukupno)</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_hr_77" model="account.account.tag">
+            <field name="name">Pretporez koji još nije priznan (neplaćeni R2)</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_hr_78" model="account.account.tag">
+            <field name="name">Pretporez koji još nije priznan (neplaćeni UVOZ dobara 25%)</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_hr_79" model="account.account.tag">
+            <field name="name">Pretporez koji još nije priznan (neplaćene INO usluge 25%)</field>
+            <field name="applicability">taxes</field>
+        </record>
+
+        <record id="tag_hr_80" model="account.account.tag">
+            <field name="name">Pretporez koji još nije priznan (neplaćene INO usluge 10%)</field>
             <field name="applicability">taxes</field>
         </record>
 

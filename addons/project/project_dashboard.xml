@@ -9,6 +9,7 @@
                 <field name="user_id"/>
                 <field name="color"/>
                 <field name="task_count"/>
+                <field name="task_needaction_count"/>
                 <field name="label_tasks"/>
                 <field name="task_ids"/>
                 <field name="alias_id"/>
@@ -50,10 +51,15 @@
                             </div>
 
                             <div class="o_project_kanban_boxes">
-                                <a t-if="record.use_tasks.raw_value" class="o_project_kanban_box" name="%(act_project_project_2_project_task_all)d" type="action">
-                                    <span class="o_value"><t t-esc="record.task_count.value"/></span>
-                                    <span class="o_label"><t t-esc="record.label_tasks.value"/></span>
-                                </a>
+                                <div t-if="record.use_tasks.raw_value" class="o_project_kanban_box">
+                                    <a name="%(act_project_project_2_project_task_all)d" type="action">
+                                        <span class="o_value"><t t-esc="record.task_count.value"/></span>
+                                        <span class="o_label"><t t-esc="record.label_tasks.value"/></span>
+                                    </a>
+                                    <a t-if="record.task_needaction_count.raw_value" class="o_needaction" name="%(act_project_project_2_project_task_all)d" type="action" context="{'search_default_message_needaction': 1}">
+                                        <t t-esc="record.task_needaction_count.raw_value"/>
+                                    </a>
+                                </div>
                                 <a t-if="record.doc_count.raw_value" class="o_project_kanban_box" name="attachment_tree_view" type="object">
                                     <span class="o_value"><t t-esc="record.doc_count.value"/></span>
                                     <span class="o_label">Documents</span>

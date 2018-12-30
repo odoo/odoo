@@ -10,8 +10,7 @@
 
         "Python Code" defines the amount of the tax.
         """,
-    'author': "Odoo SA",
-    'category': 'Accounting &amp; Finance',
+    'category': 'Accounting',
     'version': '1.0',
     'depends': ['account'],
     'data': [

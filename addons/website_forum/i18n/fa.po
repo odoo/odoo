@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-09 09:20+0000\n"
-"PO-Revision-Date: 2015-10-10 09:52+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"POT-Creation-Date: 2015-11-26 14:10+0000\n"
+"PO-Revision-Date: 2018-07-30 15:13+0000\n"
+"Last-Translator: Hamed Mohammadi <hamed@dehongi.com>\n"
 "Language-Team: Persian (http://www.transifex.com/odoo/odoo-9/language/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fa\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: website_forum
 #: model:mail.template,body_html:website_forum.validation_email
@@ -61,7 +61,7 @@ msgstr ""
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
 msgid "&amp;times;"
-msgstr ""
+msgstr "&amp;times;"
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
@@ -248,7 +248,7 @@ msgid "<i class=\"text-muted\">awarded users</i>"
 msgstr ""
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:419
+#: code:addons/website_forum/models/forum.py:483
 #, python-format
 msgid ""
 "<p>A new answer for <i>%s</i> has been posted. <a "
@@ -256,7 +256,16 @@ msgid ""
 msgstr ""
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:425
+#: code:addons/website_forum/models/forum.py:499
+#, python-format
+msgid ""
+"<p>A new question <i>%s</i> has been asked on %s and require your "
+"validation. <a href=\"%s/forum/%s/question/%s\">Click here to access the "
+"question.</a></p>"
+msgstr ""
+
+#. module: website_forum
+#: code:addons/website_forum/models/forum.py:489
 #, python-format
 msgid ""
 "<p>A new question <i>%s</i> has been asked on %s. <a "
@@ -328,7 +337,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_forum.display_post_question_block
 #: model:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "<span>By </span>"
-msgstr ""
+msgstr "<span>توسط </span>"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.tag
@@ -379,7 +388,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_message_needaction
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "اقدام مورد نیاز است"
 
 #. module: website_forum
 #: selection:forum.post,state:0
@@ -409,7 +418,7 @@ msgstr ""
 #: code:addons/website_forum/static/src/js/website_forum.editor.js:25
 #, python-format
 msgid "Add page in menu"
-msgstr ""
+msgstr "افزودن صفحه در منو"
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum_allow_share
@@ -436,7 +445,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_forum.display_post_question_block
 #, python-format
 msgid "Answer"
-msgstr ""
+msgstr "پاسخ"
 
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:478
@@ -506,7 +515,7 @@ msgstr ""
 #. module: website_forum
 #: selection:forum.forum,default_order:0
 msgid "Answered"
-msgstr ""
+msgstr "پاسخ داده شده"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.view_forum_post_search
@@ -529,7 +538,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_forum.view_forum_post_form
 #: model:ir.ui.view,arch_db:website_forum.view_forum_post_search
 msgid "Answers"
-msgstr ""
+msgstr "پاسخ ها"
 
 #. module: website_forum
 #: selection:forum.post,post_type:0
@@ -983,7 +992,7 @@ msgstr "کشور"
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.edit_profile
 msgid "Country..."
-msgstr ""
+msgstr "کشور..."
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote_create_date
@@ -1049,7 +1058,7 @@ msgstr ""
 #: model:ir.model.fields,help:website_forum.field_forum_forum_message_last_post
 #: model:ir.model.fields,help:website_forum.field_forum_post_message_last_post
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "تاریخ آخرین پیغام پست شده از این رکورد"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_default_order
@@ -1115,7 +1124,7 @@ msgstr "بحث"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote_display_name
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "نام نمایشی"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_user_bio
@@ -1307,13 +1316,13 @@ msgstr "دنبال‌کنندگان"
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_message_channel_ids
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "پیروان (کانال ها)"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_message_partner_ids
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "پیروان (شرکاء)"
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
@@ -1337,7 +1346,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_forum.view_forum_post_search
 #: model:website.menu,name:website_forum.menu_questions
 msgid "Forum"
-msgstr ""
+msgstr "انجمن"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_gamification_badge_level
@@ -1362,7 +1371,7 @@ msgstr ""
 #: model:ir.model,name:website_forum.model_forum_post
 #: model:ir.ui.view,arch_db:website_forum.view_forum_post_form
 msgid "Forum Post"
-msgstr ""
+msgstr "پست انجمن"
 
 #. module: website_forum
 #: model:ir.actions.act_window,name:website_forum.action_forum_post
@@ -1506,13 +1515,13 @@ msgstr "شناسه"
 #: model:ir.model.fields,help:website_forum.field_forum_forum_message_unread
 #: model:ir.model.fields,help:website_forum.field_forum_post_message_unread
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "اگر این گزینه را انتخاب کنید، پیام‌های جدید به توجه شما نیاز خواهند داشت"
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum_message_needaction
 #: model:ir.model.fields,help:website_forum.field_forum_post_message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "اگر این گزینه را انتخاب کنید، پیام‌های جدید به توجه شما نیاز خواهند داشت."
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum_karma_dofollow
@@ -1569,7 +1578,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_message_is_follower
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "دنبال می کند"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_has_validated_answer
@@ -1645,7 +1654,7 @@ msgstr "تاریخ آخرین پیام"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote___last_update
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "تاریخ آخرین به‌روزرسانی"
 
 #. module: website_forum
 #: selection:forum.forum,default_order:0
@@ -1674,11 +1683,6 @@ msgid "Last activity date"
 msgstr ""
 
 #. module: website_forum
-#: model:ir.model.fields,field_description:website_forum.field_res_users_calendar_last_notif_ack
-msgid "Last notification marked as read from base Calendar"
-msgstr ""
-
-#. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
 msgid "Last updated:"
 msgstr ""
@@ -1698,7 +1702,7 @@ msgstr ""
 #. module: website_forum
 #: selection:forum.forum,default_post_type:0
 msgid "Link"
-msgstr ""
+msgstr "لینک"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_allow_link
@@ -1811,7 +1815,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_forum.forum_index
 #: model:ir.ui.view,arch_db:website_forum.header
 msgid "Newest"
-msgstr ""
+msgstr "جدیدترین"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_a_2
@@ -1852,7 +1856,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_message_needaction_counter
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "تعداد اقدامات"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag_posts_count
@@ -1878,7 +1882,7 @@ msgstr ""
 #: model:ir.model.fields,help:website_forum.field_forum_forum_message_needaction_counter
 #: model:ir.model.fields,help:website_forum.field_forum_post_message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr ""
+msgstr "تعداد پیام ها که نیاز به عمل"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_count_posts_waiting_validation
@@ -1889,7 +1893,7 @@ msgstr ""
 #: model:ir.model.fields,help:website_forum.field_forum_forum_message_unread_counter
 #: model:ir.model.fields,help:website_forum.field_forum_post_message_unread_counter
 msgid "Number of unread messages"
-msgstr ""
+msgstr "تعداد پیام‌های خوانده نشده"
 
 #. module: website_forum
 #: selection:forum.post,state:0
@@ -1900,7 +1904,7 @@ msgstr ""
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_answers
 msgid "On"
-msgstr ""
+msgstr "روشن"
 
 #. module: website_forum
 #. openerp-web
@@ -1939,7 +1943,7 @@ msgstr "معلق"
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
 msgid "People"
-msgstr ""
+msgstr "افراد"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_plain_content
@@ -2070,7 +2074,7 @@ msgstr ""
 #: model:ir.ui.menu,name:website_forum.menu_forum_posts
 #: model:ir.ui.view,arch_db:website_forum.forum_index
 msgid "Posts"
-msgstr ""
+msgstr "پستها"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.new_question
@@ -2113,7 +2117,7 @@ msgstr ""
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header_footer_custom
-msgid "Q&amp;A"
+msgid "Q&amp;amp;A"
 msgstr ""
 
 #. module: website_forum
@@ -2123,7 +2127,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_parent_id
 #, python-format
 msgid "Question"
-msgstr ""
+msgstr "پرسش"
 
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:481
@@ -2201,7 +2205,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_forum.user_detail_full
 #: model:ir.ui.view,arch_db:website_forum.view_forum_post_search
 msgid "Questions"
-msgstr ""
+msgstr "پرسش ها"
 
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:421
@@ -2464,7 +2468,7 @@ msgstr "برچسب"
 #. module: website_forum
 #: sql_constraint:forum.tag:0
 msgid "Tag name already exists !"
-msgstr ""
+msgstr "برچسب نام از قبل وجود دارد!"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_tag_ids
@@ -2510,7 +2514,7 @@ msgstr ""
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "The"
-msgstr ""
+msgstr "این"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.moderation_queue
@@ -2702,7 +2706,7 @@ msgstr "پیام های ناخوانده"
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_message_unread_counter
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_message_unread_counter
 msgid "Unread Messages Counter"
-msgstr ""
+msgstr "شمارنده پیام‌های خوانده‌نشده"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.edit_profile
@@ -2803,7 +2807,7 @@ msgstr ""
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Waiting for validation"
-msgstr ""
+msgstr "منتظر تایید اعتبار"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.new_link
@@ -2820,38 +2824,38 @@ msgstr "تارنما"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_website_message_ids
 msgid "Website Messages"
-msgstr ""
+msgstr "پیام‌های وب‌سایت"
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum_website_message_ids
 msgid "Website communication history"
-msgstr ""
+msgstr "تاریخچه ارتباط با وبسایت"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_website_meta_description
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_website_meta_description
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag_website_meta_description
 msgid "Website meta description"
-msgstr ""
+msgstr "توضیحات متا وبسایت"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_website_meta_keywords
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_website_meta_keywords
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag_website_meta_keywords
 msgid "Website meta keywords"
-msgstr ""
+msgstr "کلیدواژه‌های متا وبسایت"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_website_meta_title
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_website_meta_title
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag_website_meta_title
 msgid "Website meta title"
-msgstr ""
+msgstr "عنوان متا وبسایت"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_welcome_message
 msgid "Welcome Message"
-msgstr ""
+msgstr "پیام خوش آمد گویی"
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
@@ -3278,7 +3282,7 @@ msgstr ""
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.user_detail_full
 msgid "website"
-msgstr ""
+msgstr "وبسایت"
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help

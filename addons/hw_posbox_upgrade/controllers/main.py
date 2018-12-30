@@ -70,7 +70,8 @@ upgrade_template = """
 	<p></p>
         However the preferred method to upgrade the posbox is to flash the sd-card with
         the <a href='http://nightly.odoo.com/trunk/posbox/'>latest image</a>. The upgrade
-        procedure is explained into to the <a href='/hw_proxy/static/doc/manual.pdf'>PosBox manual</a>
+        procedure is explained into to the
+        <a href='https://www.odoo.com/documentation/user/point_of_sale/posbox/index.html'>PosBox manual</a>
         </p>
         <p>
         To upgrade the posbox, click on the upgrade button. The upgrade will take a few minutes. <b>Do not reboot</b> the PosBox during the upgrade.

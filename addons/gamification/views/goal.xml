@@ -246,18 +246,9 @@
                                 <!-- Hide the fields below if manually -->
                                 <field name="model_id" class="oe_inline" on_change="on_change_model_id(model_id)"
                                     attrs="{'invisible':[('computation_mode','not in',('sum', 'count'))], 'required':[('computation_mode','in',('sum', 'count'))]}"/>
-                                <field name="model_inherited_model_ids" invisible="True" />
                                 <field name="field_id" class="oe_inline"
-                                    attrs="{'invisible':[('computation_mode','!=','sum')], 'required':[('computation_mode','=','sum')]}"
-                                    domain="['|',
-                                        ('model_id', '=', model_id),
-                                        ('model_id', 'in', model_inherited_model_ids and model_inherited_model_ids[0] and model_inherited_model_ids[0][2])]" />
-                                <field name="field_date_id" class="oe_inline" attrs="{'invisible':[('computation_mode','not in',('sum', 'count'))]}"
-                                    domain="[
-                                        ('ttype', 'in', ('date', 'datetime')),
-                                        '|',
-                                            ('model_id', '=', model_id),
-                                            ('model_id', 'in', model_inherited_model_ids and model_inherited_model_ids[0] and model_inherited_model_ids[0][2])]" />
+                                    attrs="{'invisible':[('computation_mode','!=','sum')], 'required':[('computation_mode','=','sum')]}"/>
+                                <field name="field_date_id" class="oe_inline" attrs="{'invisible':[('computation_mode','not in',('sum', 'count'))]}"/>
                                 <field name="domain" attrs="{'invisible':[('computation_mode','not in',('sum', 'count'))], 'required':[('computation_mode','in',('sum', 'count'))]}" class="oe_inline"/>
                                 <field name="compute_code" attrs="{'invisible':[('computation_mode','!=','python')], 'required':[('computation_mode','=','python')]}" placeholder="e.g. result = pool.get('mail.followers').search(cr, uid, [('res_model', '=', 'mail.channel'), ('partner_id', '=', object.user_id.partner_id.id)], count=True, context=context)"/>
                                 <field name="condition" widget="radio"/>

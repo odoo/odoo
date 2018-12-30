@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:41+0000\n"
-"PO-Revision-Date: 2015-09-08 10:19+0000\n"
+"POT-Creation-Date: 2015-09-18 08:12+0000\n"
+"PO-Revision-Date: 2017-07-25 15:07+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Danish (http://www.transifex.com/odoo/odoo-9/language/da/)\n"
 "MIME-Version: 1.0\n"
@@ -18,53 +18,67 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/js/website_form.js:208
+#, python-format
+msgid "'%s' is not a correct date"
+msgstr ""
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/js/website_form.js:203
+#, python-format
+msgid "'%s' is not a correct datetime"
+msgstr ""
+
+#. module: website_form
 #: code:addons/website_form/controllers/main.py:205
 #, python-format
 msgid "<p>Attached files : </p>"
-msgstr ""
+msgstr "<p>Vedhæftede filer: </p>"
 
 #. module: website_form
 #: model:ir.model.fields,field_description:website_form.field_ir_model_website_form_access
 msgid "Allowed to use in forms"
-msgstr ""
+msgstr "Tilladt at bruge i formularer"
 
 #. module: website_form
 #. openerp-web
 #: code:addons/website_form/static/src/xml/website_form.xml:21
 #, python-format
 msgid "An error has occured, the form has not been sent."
-msgstr ""
+msgstr "Der er opstået en fejl, formularen er ikke sendt."
 
 #. module: website_form
 #: model:ir.model.fields,help:website_form.field_ir_model_fields_website_form_blacklisted
 msgid "Blacklist this field for web forms"
-msgstr ""
+msgstr "Frasortér dette felt til webformularer"
 
 #. module: website_form
 #: model:ir.model.fields,field_description:website_form.field_ir_model_fields_website_form_blacklisted
 msgid "Blacklisted in web forms"
-msgstr ""
+msgstr "Sortlistet i webformularer"
 
 #. module: website_form
 #: code:addons/website_form/controllers/main.py:48
 #, python-format
 msgid "Custom infos"
-msgstr ""
+msgstr "Brugerdefinerede info"
 
 #. module: website_form
 #: model:ir.model.fields,help:website_form.field_ir_model_website_form_access
 msgid "Enable the form builder feature for this model."
-msgstr ""
+msgstr "Aktivér formularbygge funktionen til denne model."
 
 #. module: website_form
 #: model:ir.model.fields,help:website_form.field_website_website_form_enable_metadata
 msgid "Enable writing metadata on form submit."
-msgstr ""
+msgstr "Aktiver indtastning af metadata på formularen."
 
 #. module: website_form
 #: model:ir.model.fields,field_description:website_form.field_ir_model_website_form_default_field_id
 msgid "Field for custom form data"
-msgstr ""
+msgstr "Felt for brugerdefinerede formulardata"
 
 #. module: website_form
 #: model:ir.model,name:website_form.model_ir_model_fields
@@ -76,18 +90,18 @@ msgstr "Felter"
 msgid ""
 "Form action label. Ex: crm.lead could be 'Send an e-mail' and project.issue "
 "could be 'Create an Issue'."
-msgstr ""
+msgstr "Formular håndteringslabel. Ex: crm.lead kunne være 'Send en e-mail' og project.issue kunne være 'Opret et problem'."
 
 #. module: website_form
 #: model:ir.model.fields,field_description:website_form.field_ir_model_website_form_label
 msgid "Label for form action"
-msgstr ""
+msgstr "Etiket til formular håndtering"
 
 #. module: website_form
 #: code:addons/website_form/controllers/main.py:49
 #, python-format
 msgid "Metadata"
-msgstr ""
+msgstr "Metadata"
 
 #. module: website_form
 #: model:ir.model,name:website_form.model_ir_model
@@ -99,7 +113,7 @@ msgstr "Modeller"
 #: code:addons/website_form/static/src/xml/website_form.xml:14
 #, python-format
 msgid "Please fill in the form correctly."
-msgstr ""
+msgstr "Udfyld venligst formularen korrekt."
 
 #. module: website_form
 #: model:ir.model.fields,help:website_form.field_ir_model_website_form_default_field_id
@@ -111,7 +125,7 @@ msgstr ""
 #: code:addons/website_form/static/src/xml/website_form.xml:7
 #, python-format
 msgid "The form has been sent successfully."
-msgstr ""
+msgstr "Din meddelelse er afsendt."
 
 #. module: website_form
 #: model:ir.model,name:website_form.model_website
@@ -121,4 +135,4 @@ msgstr "Hjemmeside"
 #. module: website_form
 #: model:ir.model.fields,field_description:website_form.field_website_website_form_enable_metadata
 msgid "Write metadata"
-msgstr ""
+msgstr "Skriv metadata"

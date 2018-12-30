@@ -6,7 +6,6 @@ var utils = require('web.utils');
 var Widget = require('web.Widget');
 
 var round_di = utils.round_decimals;
-var round_pr = utils.round_precision;
 
 // This is a base class for all Widgets in the POS. It exposes relevant data to the 
 // templates : 
@@ -39,15 +38,9 @@ var PosBaseWidget = Widget.extend({
         var currency = (this.pos && this.pos.currency) ? this.pos.currency : {symbol:'$', position: 'after', rounding: 0.01, decimals: 2};
         var decimals = currency.decimals;
 
-        if (precision && (typeof this.pos.dp[precision]) !== undefined) {
+        if (precision && this.pos.dp[precision] !== undefined) {
             decimals = this.pos.dp[precision];
         }
-
-        this.format_currency_no_symbol = function(amount){
-            amount = round_pr(amount,currency.rounding);
-            amount = amount.toFixed(decimals);
-            return amount;
-        };
 
         if (typeof amount === 'number') {
             amount = round_di(amount,decimals).toFixed(decimals);

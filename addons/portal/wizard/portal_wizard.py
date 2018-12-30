@@ -81,7 +81,9 @@ class wizard_user(osv.osv_memory):
 
     _columns = {
         'wizard_id': fields.many2one('portal.wizard', string='Wizard', required=True, ondelete='cascade'),
-        'partner_id': fields.many2one('res.partner', string='Contact', required=True, readonly=True),
+        'partner_id': fields.many2one(
+            'res.partner', string='Contact', required=True, readonly=True,
+            ondelete='cascade'),
         'email': fields.char(string='Email', size=240),
         'in_portal': fields.boolean('In Portal'),
         'user_id': fields.many2one('res.users', string='Login User'),
@@ -94,8 +96,8 @@ class wizard_user(osv.osv_memory):
         error_emails = []
         error_user = []
         ctx = dict(context or {}, active_test=False)
-        for wizard_user in self.browse(cr, SUPERUSER_ID, ids, context):
-            if wizard_user.in_portal and not wizard_user.user_id:
+        for wizard_user in self.browse(cr, SUPERUSER_ID, ids, ctx):
+            if wizard_user.in_portal and not wizard_user.partner_id.user_ids:
                 email = extract_email(wizard_user.email)
                 if not email:
                     error_empty.append(wizard_user.partner_id)
@@ -123,33 +125,44 @@ class wizard_user(osv.osv_memory):
         return error_msg
 
     def action_apply(self, cr, uid, ids, context=None):
+        self.pool['res.partner'].check_access_rights(cr, uid, 'write')
         error_msg = self.get_error_messages(cr, uid, ids, context=context)
         if error_msg:
             raise UserError( "\n\n".join(error_msg))
 
-        for wizard_user in self.browse(cr, SUPERUSER_ID, ids, context):
+        for wizard_user in self.browse(cr, SUPERUSER_ID, ids, dict(context, active_test=False)):
             portal = wizard_user.wizard_id.portal_id
+            if not portal.is_portal:
+                raise UserError('Not a portal: ' + portal.name)
+            user = wizard_user.partner_id.user_ids and wizard_user.partner_id.user_ids[0] or False
             if wizard_user.partner_id.email != wizard_user.email:
                 wizard_user.partner_id.write({'email': wizard_user.email})
             if wizard_user.in_portal:
+                user_id = False
                 # create a user if necessary, and make sure it is in the portal group
-                if not wizard_user.user_id:
-                    user = self._create_user(cr, SUPERUSER_ID, wizard_user.id, context)
-                    wizard_user.write({'user_id': user})
+                if not user:
+                    if wizard_user.partner_id.company_id:
+                        company_id = wizard_user.partner_id.company_id.id
+                    else:
+                        company_id = self.pool['res.company']._company_default_get(cr, uid, 'res.users', context=context)
+                    user_id = self._create_user(cr, SUPERUSER_ID, wizard_user.id, dict(context, company_id=company_id))
+                else:
+                    user_id = user.id
+                wizard_user.write({'user_id': user_id})
                 if (not wizard_user.user_id.active) or (portal not in wizard_user.user_id.groups_id):
                     wizard_user.user_id.write({'active': True, 'groups_id': [(4, portal.id)]})
                     # prepare for the signup process
                     wizard_user.user_id.partner_id.signup_prepare()
+                    self._send_email(cr, uid, wizard_user.id, context)
                 wizard_user.refresh()
-                self._send_email(cr, uid, wizard_user.id, context)
             else:
                 # remove the user (if it exists) from the portal group
-                if wizard_user.user_id and (portal in wizard_user.user_id.groups_id):
+                if user and (portal in user.groups_id):
                     # if user belongs to portal only, deactivate it
-                    if len(wizard_user.user_id.groups_id) <= 1:
-                        wizard_user.user_id.write({'groups_id': [(3, portal.id)], 'active': False})
+                    if len(user.groups_id) <= 1:
+                        user.write({'groups_id': [(3, portal.id)], 'active': False})
                     else:
-                        wizard_user.user_id.write({'groups_id': [(3, portal.id)]})
+                        user.write({'groups_id': [(3, portal.id)]})
 
     def _create_user(self, cr, uid, ids, context=None):
         """ create a new user for wizard_user.partner_id
@@ -160,6 +173,8 @@ class wizard_user(osv.osv_memory):
         res_users = self.pool.get('res.users')
         create_context = dict(context or {}, noshortcut=True, no_reset_password=True)       # to prevent shortcut creation
         values = {
+            'company_id': context.get('company_id'),
+            'company_ids': [(6, 0, [context.get('company_id')])],
             'email': extract_email(wizard_user.email),
             'login': extract_email(wizard_user.email),
             'partner_id': wizard_user.partner_id.id,

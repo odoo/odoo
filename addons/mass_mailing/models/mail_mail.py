@@ -3,15 +3,13 @@
 
 import re
 import urlparse
-import re
 import werkzeug.urls
 
 from openerp import tools
 from openerp import SUPERUSER_ID
 from openerp.osv import osv, fields
 
-
-URL_REGEX = r'(\bhref=[\'"]([^\'"]+)[\'"])'
+from openerp.addons.link_tracker.models.link_tracker import URL_REGEX
 
 
 class MailMail(osv.Model):
@@ -64,15 +62,14 @@ class MailMail(osv.Model):
         body = super(MailMail, self).send_get_mail_body(cr, uid, ids, partner=partner, context=context)
         mail = self.browse(cr, uid, ids[0], context=context)
 
-        links_blacklist = ['/unsubscribe_from_list']
-
         if mail.mailing_id and body and mail.statistics_ids:
             for match in re.findall(URL_REGEX, mail.body_html):
-
                 href = match[0]
                 url = match[1]
 
-                if not [s for s in links_blacklist if s in href]:
+                parsed = urlparse.urlparse(url, scheme='http')
+
+                if parsed.scheme.startswith('http') and parsed.path.startswith('/r/'):
                     new_href = href.replace(url, url + '/m/' + str(mail.statistics_ids[0].id))
                     body = body.replace(href, new_href)
 
@@ -82,8 +79,9 @@ class MailMail(osv.Model):
         body = tools.append_content_to_html(base, body, plaintext=False, container_tag='div')
         # resolve relative image url to absolute for outlook.com
         def _sub_relative2absolute(match):
-            return match.group(1) + urlparse.urljoin(domain, match.group(2)) + '"'
-        body = re.sub('(<img(?=\s)[^>]*\ssrc=")(/[^/][^"]+)"', _sub_relative2absolute, body)
+            return match.group(1) + urlparse.urljoin(domain, match.group(2))
+        body = re.sub('(<img(?=\s)[^>]*\ssrc=")(/[^/][^"]+)', _sub_relative2absolute, body)
+        body = re.sub(r'(<[^>]+\bstyle="[^"]+\burl\(\'?)(/[^/\'][^\'")]+)', _sub_relative2absolute, body)
 
         # generate tracking URL
         if mail.statistics_ids:
@@ -97,6 +95,8 @@ class MailMail(osv.Model):
         res = super(MailMail, self).send_get_email_dict(cr, uid, ids, partner, context=context)
         mail = self.browse(cr, uid, ids[0], context=context)
         base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
+        if base_url.endswith('/'):
+            base_url = base_url.rstrip('/')
         if mail.mailing_id and res.get('body') and res.get('email_to'):
             emails = tools.email_split(res.get('email_to')[0])
             email_to = emails and emails[0] or False
@@ -108,7 +108,7 @@ class MailMail(osv.Model):
 
     def _postprocess_sent_message(self, cr, uid, mail, context=None, mail_sent=True):
         if mail_sent is True and mail.statistics_ids:
-            self.pool['mail.mail.statistics'].write(cr, uid, [s.id for s in mail.statistics_ids], {'sent': fields.datetime.now()}, context=context)
+            self.pool['mail.mail.statistics'].write(cr, uid, [s.id for s in mail.statistics_ids], {'sent': fields.datetime.now(), 'exception': False}, context=context)
         elif mail_sent is False and mail.statistics_ids:
             self.pool['mail.mail.statistics'].write(cr, uid, [s.id for s in mail.statistics_ids], {'exception': fields.datetime.now()}, context=context)
         return super(MailMail, self)._postprocess_sent_message(cr, uid, mail, context=context, mail_sent=mail_sent)

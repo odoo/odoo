@@ -4,6 +4,7 @@ import logging
 import threading
 
 from openerp import _, api, fields, models, tools
+from openerp.osv import expression
 
 _logger = logging.getLogger(__name__)
 
@@ -26,7 +27,7 @@ class Partner(models.Model):
     opt_out = fields.Boolean(
         'Opt-Out', help="If opt-out is checked, this contact has refused to receive emails for mass mailing and marketing campaign. "
                         "Filter 'Available for Mass Mailing' allows users to filter the partners when performing mass mailing.")
-    channel_ids = fields.Many2many('mail.channel', 'mail_channel_partner', 'partner_id', 'channel_id', string='Channels')
+    channel_ids = fields.Many2many('mail.channel', 'mail_channel_partner', 'partner_id', 'channel_id', string='Channels', copy=False)
 
     @api.multi
     def message_get_suggested_recipients(self):
@@ -46,7 +47,7 @@ class Partner(models.Model):
         if message.author_id and message.author_id.user_ids and message.author_id.user_ids[0].signature:
             signature = message.author_id.user_ids[0].signature
         elif message.author_id:
-            signature = "<p>--<br />%s</p>" % message.author_id.name
+            signature = "<p>-- <br/>%s</p>" % message.author_id.name
 
         # compute Sent by
         if message.author_id and message.author_id.user_ids:
@@ -66,7 +67,7 @@ class Partner(models.Model):
         record_name = message.record_name
 
         tracking = []
-        for tracking_value in message.tracking_value_ids:
+        for tracking_value in self.env['mail.tracking.value'].sudo().search([('mail_message_id', '=', message.id)]):
             tracking.append((tracking_value.field_desc,
                              tracking_value.get_old_display_value()[0],
                              tracking_value.get_new_display_value()[0]))
@@ -92,6 +93,7 @@ class Partner(models.Model):
 
         mail_values = {
             'mail_message_id': message.id,
+            'mail_server_id': message.mail_server_id.id,
             'auto_delete': self._context.get('mail_auto_delete', True),
             'references': references,
         }
@@ -101,15 +103,25 @@ class Partner(models.Model):
     @api.model
     def _notify_send(self, body, subject, recipients, **mail_values):
         emails = self.env['mail.mail']
-        recipients_nbr, recipients_max = 0, 50
+        recipients_nbr, recipients_max = len(recipients), 50
         email_chunks = [recipients[x:x + recipients_max] for x in xrange(0, len(recipients), recipients_max)]
         for email_chunk in email_chunks:
+            # TDE FIXME: missing message parameter. So we will find mail_message_id
+            # in the mail_values and browse it. It should already be in the
+            # cache so should not impact performances.
+            mail_message_id = mail_values.get('mail_message_id')
+            message = self.env['mail.message'].browse(mail_message_id) if mail_message_id else None
+            if message and message.model and message.res_id and message.model in self.env and hasattr(self.env[message.model], 'message_get_recipient_values'):
+                tig = self.env[message.model].browse(message.res_id)
+                recipient_values = tig.message_get_recipient_values(notif_message=message, recipient_ids=email_chunk.ids)
+            else:
+                recipient_values = self.env['mail.thread'].message_get_recipient_values(notif_message=None, recipient_ids=email_chunk.ids)
             create_values = {
                 'body_html': body,
                 'subject': subject,
-                'recipient_ids': [(4, recipient.id) for recipient in email_chunk],
             }
             create_values.update(mail_values)
+            create_values.update(recipient_values)
             emails |= self.env['mail.mail'].create(create_values)
         return emails, recipients_nbr
 
@@ -209,3 +221,29 @@ class Partner(models.Model):
             return self.env.cr.dictfetchall()[0].get('needaction_count')
         _logger.error('Call to needaction_count without partner_id')
         return 0
+
+    @api.model
+    def get_static_mention_suggestions(self):
+        """ To be overwritten to return the id, name and email of partners used as static mention
+            suggestions loaded once at webclient initialization and stored client side. """
+        return []
+
+    @api.model
+    def get_mention_suggestions(self, search, limit=8):
+        """ Return 'limit'-first partners' id, name and email such that the name or email matches a
+            'search' string. Prioritize users, and then extend the research to all partners. """
+        search_dom = expression.OR([[('name', 'ilike', search)], [('email', 'ilike', search)]])
+        fields = ['id', 'name', 'email']
+
+        # Search users
+        domain = expression.AND([[('user_ids.id', '!=', False)], search_dom])
+        users = self.search_read(domain, fields, limit=limit)
+
+        # Search partners if less than 'limit' users found
+        partners = []
+        if len(users) < limit:
+            partners = self.search_read(search_dom, fields, limit=limit)
+            # Remove duplicates
+            partners = [p for p in partners if not len([u for u in users if u['id'] == p['id']])] 
+
+        return [users, partners]

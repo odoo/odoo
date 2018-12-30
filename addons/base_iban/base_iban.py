@@ -32,7 +32,7 @@ def validate_iban(iban):
     iban_template = _map_iban_template[country_code]
     if len(iban) != len(iban_template.replace(' ', '')):
         raise ValidationError(_("The IBAN does not seem to be correct. You should have entered something like this %s\n"\
-            "Where B = National bank code, S = Branch code, C = Account No, k = Check digit" % iban_template))
+            "Where B = National bank code, S = Branch code, C = Account No, k = Check digit") % iban_template)
 
     check_chars = iban[4:] + iban[:4]
     digits = int(''.join(str(int(char, 36)) for char in check_chars))  # BASE 36: 0..9,A..Z -> 0..35
@@ -74,12 +74,6 @@ class ResPartnerBank(models.Model):
     def _check_iban(self):
         if self.acc_type == 'iban':
             validate_iban(self.acc_number)
-
-    @api.one
-    @api.constrains('acc_number', 'bank_bic')
-    def _check_bank_bic(self):
-        if self.acc_type == 'iban' and not self.bank_bic:
-            raise ValidationError(_("Please define BIC/Swift code on bank for bank type IBAN Account to make valid payments."))
 
 
 # Map ISO 3166-1 -> IBAN template, as described here :

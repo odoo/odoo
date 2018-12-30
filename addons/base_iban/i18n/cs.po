@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2015-09-07 16:35+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2018-05-30 15:48+0000\n"
+"Last-Translator: Jiří P.\n"
 "Language-Team: Czech (http://www.transifex.com/odoo/odoo-9/language/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: cs\n"
-"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
 #. module: base_iban
 #: model:ir.model,name:base_iban.model_res_partner_bank
@@ -26,21 +26,13 @@ msgstr "Bankovní účty"
 #: code:addons/base_iban/base_iban.py:57
 #, python-format
 msgid "Cannot compute the BBAN because the account number is not an IBAN."
-msgstr ""
+msgstr "BBAN nelze vypočítat, protože číslo účtu není IBAN."
 
 #. module: base_iban
 #: code:addons/base_iban/base_iban.py:26
 #, python-format
 msgid "No IBAN !"
-msgstr ""
-
-#. module: base_iban
-#: code:addons/base_iban/base_iban.py:82
-#, python-format
-msgid ""
-"Please define BIC/Swift code on bank for bank type IBAN Account to make "
-"valid payments."
-msgstr ""
+msgstr "Není IBAN!"
 
 #. module: base_iban
 #: code:addons/base_iban/base_iban.py:34
@@ -48,7 +40,7 @@ msgstr ""
 msgid ""
 "The IBAN does not seem to be correct. You should have entered something like this %s\n"
 "Where B = National bank code, S = Branch code, C = Account No, k = Check digit"
-msgstr ""
+msgstr "Zdá se, že IBAN není správný. Měli jste zadat něco podobného %s\nKde B = národní kód banky, S = kód pobočky, C = číslo účtu, k = kontrolní číslice"
 
 #. module: base_iban
 #: code:addons/base_iban/base_iban.py:30
@@ -60,4 +52,4 @@ msgstr "IBAN je neplatný, měl by začínat kódem země"
 #: code:addons/base_iban/base_iban.py:40
 #, python-format
 msgid "This IBAN does not pass the validation check, please verify it."
-msgstr ""
+msgstr "Tento IBAN neprojde ověřovací kontrolou, ověřte jej prosím."

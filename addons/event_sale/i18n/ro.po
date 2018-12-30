@@ -3,12 +3,13 @@
 # * event_sale
 # 
 # Translators:
+# Adrian Munteanu <adrian.munteanu@itconstruction.ro>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2015-09-07 18:19+0000\n"
+"POT-Creation-Date: 2016-09-22 13:16+0000\n"
+"PO-Revision-Date: 2017-12-17 13:06+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Romanian (http://www.transifex.com/odoo/odoo-9/language/ro/)\n"
 "MIME-Version: 1.0\n"
@@ -21,12 +22,17 @@ msgstr ""
 #: code:addons/event_sale/models/event.py:170
 #, python-format
 msgid " with ticket %s"
-msgstr ""
+msgstr "cu biletul %s"
 
 #. module: event_sale
 #: model:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
 msgid "Apply"
 msgstr "Aplicați"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_product_product_asset_category_id
+msgid "Asset Type"
+msgstr "Tipul bunului"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_event_registration
@@ -83,6 +89,11 @@ msgid "Created on"
 msgstr "Creat în"
 
 #. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_product_product_deferred_revenue_category_id
+msgid "Deferred Revenue Type"
+msgstr ""
+
+#. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_event_event_ticket_seats_max
 msgid ""
 "Define the number of available tickets. If you have too much registrations "
@@ -103,7 +114,7 @@ msgstr "Determina daca un produs are nevoie sa creeze automat o inregistrare a e
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_display_name
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Afişează nume"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_editor_id
@@ -183,7 +194,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor___last_update
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Ultima modificare la"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_write_uid
@@ -375,7 +386,7 @@ msgstr "Tip bilet"
 #. module: event_sale
 #: model:ir.ui.view,arch_db:event_sale.view_event_form_inherit_ticket
 msgid "Tickets"
-msgstr ""
+msgstr "Tichete"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_product_product_event_type_id

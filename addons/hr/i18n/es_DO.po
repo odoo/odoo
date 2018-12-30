@@ -3,12 +3,13 @@
 # * hr
 # 
 # Translators:
+# Eneldo Serrata <eneldoserrata@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:11+0000\n"
-"PO-Revision-Date: 2015-09-19 08:16+0000\n"
+"POT-Creation-Date: 2016-09-22 13:16+0000\n"
+"PO-Revision-Date: 2017-11-18 00:01+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Spanish (Dominican Republic) (http://www.transifex.com/odoo/odoo-9/language/es_DO/)\n"
 "MIME-Version: 1.0\n"
@@ -70,7 +71,7 @@ msgstr ""
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
 msgid "<span>Reports</span>"
-msgstr ""
+msgstr "<span>Informes</span>"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
@@ -113,7 +114,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee_message_needaction
 #: model:ir.model.fields,field_description:hr.field_hr_job_message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "Acción necesaria"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_active
@@ -128,7 +129,7 @@ msgstr ""
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Archived"
-msgstr ""
+msgstr "Archivado"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_bank_account_id
@@ -193,6 +194,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee_city
 msgid "City"
 msgstr "Ciudad"
+
+#. module: hr
+#: model:web.tip,description:hr.hr_tip_2
+msgid "Click here to change the recruitment goal!"
+msgstr ""
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.act_employee_from_department
@@ -271,7 +277,7 @@ msgstr ""
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Contact Information"
-msgstr ""
+msgstr "Información de contacto"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_cto
@@ -328,7 +334,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee_calendar_id
 msgid "Define the schedule of resource"
-msgstr ""
+msgstr "Definir el calendario de recursos"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_consultant
@@ -362,7 +368,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee_display_name
 #: model:ir.model.fields,field_description:hr.field_hr_job_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Nombre mostrado"
 
 #. module: hr
 #: selection:hr.employee,marital:0
@@ -372,7 +378,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_time_efficiency
 msgid "Efficiency Factor"
-msgstr ""
+msgstr "Factor de Eficiencia"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_employee
@@ -433,14 +439,12 @@ msgid "Employees Tags"
 msgstr ""
 
 #. module: hr
-#: code:addons/hr/hr.py:299 constraint:hr.department:0
-#, python-format
+#: constraint:hr.department:0
 msgid "Error! You cannot create recursive departments."
 msgstr ""
 
 #. module: hr
-#: code:addons/hr/hr.py:269 constraint:hr.employee:0
-#, python-format
+#: constraint:hr.employee:0
 msgid "Error! You cannot create recursive hierarchy of Employee(s)."
 msgstr ""
 
@@ -468,7 +472,7 @@ msgstr ""
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.hr_kanban_view_employees
 msgid "Follow"
-msgstr ""
+msgstr "Seguir"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_consultant
@@ -488,18 +492,23 @@ msgstr "Seguidores"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_message_channel_ids
 #: model:ir.model.fields,field_description:hr.field_hr_job_message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "Seguidores (Canales)"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_message_partner_ids
 #: model:ir.model.fields,field_description:hr.field_hr_employee_message_partner_ids
 #: model:ir.model.fields,field_description:hr.field_hr_job_message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "Seguidores (Empresas)"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_gender
 msgid "Gender"
+msgstr ""
+
+#. module: hr
+#: model:web.tip,description:hr.hr_tip_1
+msgid "Get all applications related to this job position."
 msgstr ""
 
 #. module: hr
@@ -623,22 +632,14 @@ msgstr "Si está marcado, hay nuevos mensajes que requieren su atención"
 #: model:ir.model.fields,help:hr.field_hr_employee_message_needaction
 #: model:ir.model.fields,help:hr.field_hr_job_message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "Si está marcado, hay nuevos mensajes que requieren su atención."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee_active
 msgid ""
 "If the active field is set to False, it will allow you to hide the resource "
 "record without removing it."
-msgstr ""
-
-#. module: hr
-#: model:ir.ui.view,arch_db:hr.hr_kanban_view_employees
-#: model:ir.ui.view,arch_db:hr.view_department_filter
-#: model:ir.ui.view,arch_db:hr.view_employee_filter
-#: model:ir.ui.view,arch_db:hr.view_job_filter
-msgid "Important Messages"
-msgstr ""
+msgstr "Si el registro del recurso no está activo, permanecerá oculto sin ser eliminado."
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
@@ -676,7 +677,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee_message_is_follower
 #: model:ir.model.fields,field_description:hr.field_hr_job_message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "Es un seguidor"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
@@ -746,7 +747,7 @@ msgstr "Fecha del último mensaje"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category___last_update
 #: model:ir.model.fields,field_description:hr.field_hr_job___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Última modificación en"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_write_uid
@@ -830,7 +831,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_image_medium
 msgid "Medium-sized photo"
-msgstr ""
+msgstr "Foto de tamaño medio"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee_image_medium
@@ -843,7 +844,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_member_ids
 msgid "Members"
-msgstr ""
+msgstr "Socios"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_message_ids
@@ -854,16 +855,9 @@ msgid "Messages"
 msgstr "Mensajes"
 
 #. module: hr
-#: model:ir.model.fields,help:hr.field_hr_department_message_ids
-#: model:ir.model.fields,help:hr.field_hr_employee_message_ids
-#: model:ir.model.fields,help:hr.field_hr_job_message_ids
-msgid "Messages and communication history"
-msgstr "Mensajes e historial de comunicación"
-
-#. module: hr
 #: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
 msgid "More <i class=\"fa fa-caret-down\"/>"
-msgstr ""
+msgstr "Más <i class=\"fa fa-caret-down\"/>"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
@@ -914,7 +908,7 @@ msgstr "Notas"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_message_needaction_counter
 #: model:ir.model.fields,field_description:hr.field_hr_job_message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "Número de acciones"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job_no_of_employee
@@ -932,7 +926,7 @@ msgstr ""
 #: model:ir.model.fields,help:hr.field_hr_employee_message_needaction_counter
 #: model:ir.model.fields,help:hr.field_hr_job_message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr ""
+msgstr "Número de mensajes que requieren una acción"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job_no_of_recruitment
@@ -944,7 +938,7 @@ msgstr ""
 #: model:ir.model.fields,help:hr.field_hr_employee_message_unread_counter
 #: model:ir.model.fields,help:hr.field_hr_job_message_unread_counter
 msgid "Number of unread messages"
-msgstr ""
+msgstr "Número de mensajes no leidos"
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.open_module_tree_department
@@ -986,6 +980,11 @@ msgid "Parent Department"
 msgstr ""
 
 #. module: hr
+#: model:ir.model,name:hr.model_res_partner
+msgid "Partner"
+msgstr "Contacto"
+
+#. module: hr
 #: model:hr.job,website_description:hr.job_developer
 msgid "Passion for the Internet and its culture"
 msgstr ""
@@ -1003,7 +1002,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_image
 msgid "Photo"
-msgstr ""
+msgstr "Foto"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
@@ -1056,7 +1055,7 @@ msgstr ""
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Related User"
-msgstr ""
+msgstr "Usuario del sistema Odoo"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users_employee_ids
@@ -1066,7 +1065,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee_user_id
 msgid "Related user name for the resource to manage its access."
-msgstr ""
+msgstr "Usuario relacionado del recurso para gestionar su acceso."
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_reporting_timesheet
@@ -1076,7 +1075,7 @@ msgstr "Informes"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job_requirements
 msgid "Requirements"
-msgstr ""
+msgstr "Requerimientos"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_resource_id
@@ -1086,7 +1085,7 @@ msgstr "Recurso"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_resource_type
 msgid "Resource Type"
-msgstr ""
+msgstr "Tipo de Recurso"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
@@ -1097,7 +1096,7 @@ msgstr ""
 #: model:hr.job,website_description:hr.job_marketing
 #: model:hr.job,website_description:hr.job_trainee
 msgid "Responsibilities"
-msgstr ""
+msgstr "Responsabilidades"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_sinid
@@ -1146,7 +1145,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_image_small
 msgid "Small-sized photo"
-msgstr ""
+msgstr "Foto pequeña"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee_image_small
@@ -1189,9 +1188,14 @@ msgid "Subordinates"
 msgstr ""
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users_subscription_count
+msgid "Subscriptions"
+msgstr "Suscripciones"
+
+#. module: hr
 #: sql_constraint:hr.employee.category:0
 msgid "Tag name already exists !"
-msgstr ""
+msgstr "Nombre de la etiqueta ya existe!"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category_ids
@@ -1220,7 +1224,7 @@ msgid ""
 "resource put alone on a phase of 5 days with 5 tasks assigned to him, will "
 "show a load of 100% for this phase by default, but if we put a efficiency of"
 " 200%, then his load will only be 50%."
-msgstr ""
+msgstr "Este campo representa la eficiencia de los recursos para completar tareas, por ejemplo, un recurso colocado sólo en una fase de 5 días con 5 tareas asignadas a él, mostrará una carga de 100% para esta fase por defecto, pero si ponemos una eficiencia de un 200%, entonces su carga sólo será del 50%."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee_image
@@ -1248,6 +1252,10 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_department_message_unread
 #: model:ir.model.fields,field_description:hr.field_hr_employee_message_unread
 #: model:ir.model.fields,field_description:hr.field_hr_job_message_unread
+#: model:ir.ui.view,arch_db:hr.hr_kanban_view_employees
+#: model:ir.ui.view,arch_db:hr.view_department_filter
+#: model:ir.ui.view,arch_db:hr.view_employee_filter
+#: model:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Unread Messages"
 msgstr "Mensajes sin leer"
 
@@ -1256,7 +1264,7 @@ msgstr "Mensajes sin leer"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_message_unread_counter
 #: model:ir.model.fields,field_description:hr.field_hr_job_message_unread_counter
 msgid "Unread Messages Counter"
-msgstr ""
+msgstr "Contador de mensajes no leídos"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job_write_date
@@ -1392,7 +1400,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_calendar_id
 msgid "Working Time"
-msgstr ""
+msgstr "Horario de trabajo"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_marketing

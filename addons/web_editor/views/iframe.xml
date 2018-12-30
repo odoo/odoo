@@ -15,7 +15,7 @@
                 var snippets_url = '<t t-esc="snippets or ''"/>';
                 var callback = window.location.href.match(/callback=([^&amp;=]+)/)[1];
             </script>
-            <link t-if="inline_mode" rel="stylesheet" href="/web_editor/static/src/css/inline.css" type="text/css"/>
+            <link t-if="enable_editor and inline_mode" rel="stylesheet" href="/web_editor/static/src/css/inline.css" type="text/css"/>
             <t t-if="not dont_load_assets">
                 <t t-call-assets="web_editor.assets_editor"/>
                 <style>
@@ -38,6 +38,13 @@
                             editable.innerHTML = value;
                         }
                     };
+                }
+                if(window['odoo']) {
+                    odoo.define('web.csrf', function (require) {
+                        var token = "<t t-esc="request.csrf_token(None)"/>";
+                        require('web.core').csrf_token = token;
+                        require('qweb').default_dict.csrf_token = token;
+                    });
                 }
             </script>
             <t t-raw="head or ''"/>

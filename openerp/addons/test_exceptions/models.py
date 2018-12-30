@@ -2,7 +2,7 @@
 import openerp.exceptions
 import openerp.osv.orm
 import openerp.osv.osv
-import openerp.tools.safe_eval
+from openerp.tools.safe_eval import safe_eval
 from openerp.exceptions import UserError
 from openerp.exceptions import except_orm
 
@@ -86,4 +86,4 @@ class m(openerp.osv.osv.Model):
 
     def generate_safe_eval(self, cr, uid, ids, f, context):
         globals_dict = { 'generate': lambda *args: f(cr, uid, ids, context) }
-        openerp.tools.safe_eval.safe_eval("generate()", mode='exec', globals_dict=globals_dict)
+        safe_eval("generate()", mode='exec', globals_dict=globals_dict)

@@ -17,7 +17,9 @@ class TestPayment(AccountingTestCase):
         self.currency_chf_id = self.env.ref("base.CHF").id
         self.currency_usd_id = self.env.ref("base.USD").id
         self.currency_eur_id = self.env.ref("base.EUR").id
-        self.env.ref('base.main_company').write({'currency_id': self.currency_eur_id})
+
+        company = self.env.ref('base.main_company')
+        self.cr.execute("UPDATE res_company SET currency_id = %s WHERE id = %s", [self.currency_eur_id, company.id])
         self.product = self.env.ref("product.product_product_4")
         self.payment_method_manual_in = self.env.ref("account.account_payment_method_manual_in")
         self.payment_method_manual_out = self.env.ref("account.account_payment_method_manual_out")

@@ -14,7 +14,7 @@ class hr_timesheet_report(models.Model):
     user_id = fields.Many2one('res.users', 'User', readonly=True)
     account_id = fields.Many2one('account.analytic.account', 'Analytic Account', readonly=True)
     company_id = fields.Many2one('res.company', 'Company', readonly=True)
-    cost = fields.Float('Cost', readonly=True, digits_compute=dp.get_precision('Account'))
+    cost = fields.Float('Cost', readonly=True, digits=dp.get_precision('Account'))
     quantity = fields.Float('Time', readonly=True)
 
     def _select(self):

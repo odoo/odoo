@@ -6,7 +6,7 @@
 {
     'name': 'Ecuador - Accounting',
     'version': '1.1',
-    'category': 'Localization/Account Charts',
+    'category': 'Localization',
     'description': """
 This is the base module to manage the accounting chart for Ecuador in OpenERP.
 ==============================================================================

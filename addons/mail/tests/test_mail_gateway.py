@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from email.utils import formataddr
+
 from .common import TestMail
 from openerp.tools import mute_logger
 import socket
@@ -173,6 +175,19 @@ Content-Type: text/html;
 --Apple-Mail=_9331E12B-8BD2-4EC7-B53E-01F3FBEC9227--
 """
 
+MAIL_SINGLE_BINARY = """X-Original-To: raoul@grosbedon.fr
+Delivered-To: raoul@grosbedon.fr
+Received: by mail1.grosbedon.com (Postfix, from userid 10002)
+    id E8166BFACA; Fri, 23 Aug 2013 13:18:01 +0200 (CEST)
+From: "Bruce Wayne" <bruce@wayneenterprises.com>
+Content-Type: application/pdf;
+Content-Disposition: filename=thetruth.pdf
+Content-Transfer-Encoding: base64
+Message-Id: <6BB1FAB2-2104-438E-9447-07AE2C8C4A92@sexample.com>
+Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
+
+SSBhbSB0aGUgQmF0TWFuCg=="""
+
 
 class TestMailgateway(TestMail):
 
@@ -227,6 +242,10 @@ class TestMailgateway(TestMail):
         self.assertIn('Second part',
                       res.get('body', ''),
                       'message_parse: second part of the html version should be in body after parsing multipart/mixed')
+
+        res = self.env['mail.thread'].message_parse(MAIL_SINGLE_BINARY)
+        self.assertEqual(res['body'], '')
+        self.assertEqual(res['attachments'][0][0], 'thetruth.pdf')
 
     @mute_logger('openerp.addons.mail.models.mail_thread', 'openerp.models')
     def test_message_process_alias_basic(self):
@@ -311,8 +330,8 @@ class TestMailgateway(TestMail):
                          'message_process: incoming email on Partners alias should send a bounce email')
         self.assertIn('New Frogs', self._mails[0].get('subject'),
                       'message_process: bounce email on Partners alias should contain the original subject')
-        self.assertIn('test.sylvie.lelitre@agrolait.com', self._mails[0].get('email_to'),
-                      'message_process: bounce email on Partners alias should have original email sender as recipient')
+        self.assertIn('whatever-2a840@postmaster.twitter.com', self._mails[0].get('email_to'),
+                      'message_process: bounce email on Partners alias should go to Return-Path address')
 
     @mute_logger('openerp.addons.mail.models.mail_thread', 'openerp.models', 'openerp.addons.mail.models.mail_mail')
     def test_message_process_alias_followers_bounce(self):

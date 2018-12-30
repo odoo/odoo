@@ -137,13 +137,7 @@ class Forum(models.Model):
         if (self.default_post_type == 'question' and not self.allow_question) \
                 or (self.default_post_type == 'discussion' and not self.allow_discussion) \
                 or (self.default_post_type == 'link' and not self.allow_link):
-            raise UserError(_('You cannot choose %s as default post since the forum does not allow it.' % self.default_post_type))
-
-    @api.one
-    @api.constrains('allow_link', 'allow_question', 'allow_discussion', 'default_post_type')
-    def _check_default_post_type(self):
-        if self.default_post_type == 'link' and not self.allow_link or self.default_post_type == 'question' and not self.allow_question or self.default_post_type == 'discussion' and not self.allow_discussion:
-            raise Warning(_('Post type in "Default post" must be activated'))
+            raise UserError(_('You cannot choose %s as default post since the forum does not allow it.') % self.default_post_type)
 
     @api.one
     def _compute_count_posts_waiting_validation(self):
@@ -157,7 +151,7 @@ class Forum(models.Model):
 
     @api.model
     def create(self, values):
-        return super(Forum, self.with_context(mail_create_nolog=True)).create(values)
+        return super(Forum, self.with_context(mail_create_nolog=True, mail_create_nosubscribe=True)).create(values)
 
     @api.model
     def _tag_to_write_vals(self, tags=''):
@@ -174,7 +168,7 @@ class Forum(models.Model):
                 else:
                     # check if user have Karma needed to create need tag
                     user = User.sudo().browse(self._uid)
-                    if user.exists() and user.karma >= self.karma_retag:
+                    if user.exists() and user.karma >= self.karma_retag and len(tag) and len(tag[1:].strip()):
                         post_tags.append((0, 0, {'name': tag[1:], 'forum_id': self.id}))
             else:
                 existing_keep.append(int(tag))
@@ -184,7 +178,7 @@ class Forum(models.Model):
     def get_tags_first_char(self):
         """ get set of first letter of forum tags """
         tags = self.env['forum.tag'].search([('forum_id', '=', self.id), ('posts_count', '>', 0)])
-        return sorted(set([tag.name[0].upper() for tag in tags]))
+        return sorted(set([tag.name[0].upper() for tag in tags if len(tag.name)]))
 
 
 class Post(models.Model):
@@ -215,14 +209,14 @@ class Post(models.Model):
     )
 
     # history
-    create_date = fields.Datetime('Asked on', select=True, readonly=True)
-    create_uid = fields.Many2one('res.users', string='Created by', select=True, readonly=True)
-    write_date = fields.Datetime('Update on', select=True, readonly=True)
+    create_date = fields.Datetime('Asked on', index=True, readonly=True)
+    create_uid = fields.Many2one('res.users', string='Created by', index=True, readonly=True)
+    write_date = fields.Datetime('Update on', index=True, readonly=True)
     bump_date = fields.Datetime('Bumped on', readonly=True,
                                 help="Technical field allowing to bump a question. Writing on this field will trigger "
                                      "a write on write_date and therefore bump the post. Directly writing on write_date "
                                      "is currently not supported and this field is a workaround.")
-    write_uid = fields.Many2one('res.users', string='Updated by', select=True, readonly=True)
+    write_uid = fields.Many2one('res.users', string='Updated by', index=True, readonly=True)
     relevancy = fields.Float('Relevance', compute="_compute_relevancy", store=True)
 
     # vote
@@ -250,7 +244,7 @@ class Post(models.Model):
 
     # closing
     closed_reason_id = fields.Many2one('forum.post.reason', string='Reason')
-    closed_uid = fields.Many2one('res.users', string='Closed by', select=1)
+    closed_uid = fields.Many2one('res.users', string='Closed by', index=True)
     closed_date = fields.Datetime('Closed on', readonly=True)
 
     # karma calculation and access
@@ -271,11 +265,42 @@ class Post(models.Model):
     can_downvote = fields.Boolean('Can Downvote', compute='_get_post_karma_rights')
     can_comment = fields.Boolean('Can Comment', compute='_get_post_karma_rights')
     can_comment_convert = fields.Boolean('Can Convert to Comment', compute='_get_post_karma_rights')
-    can_view = fields.Boolean('Can View', compute='_get_post_karma_rights')
+    can_view = fields.Boolean('Can View', compute='_get_post_karma_rights', search='_search_can_view')
     can_display_biography = fields.Boolean("Is the author's biography visible from his post", compute='_get_post_karma_rights')
     can_post = fields.Boolean('Can Automatically be Validated', compute='_get_post_karma_rights')
     can_flag = fields.Boolean('Can Flag', compute='_get_post_karma_rights')
     can_moderate = fields.Boolean('Can Moderate', compute='_get_post_karma_rights')
+
+    def _search_can_view(self, operator, value):
+        if operator not in ('=', '!=', '<>'):
+            raise ValueError('Invalid operator: %s' % (operator,))
+
+        if not value:
+            operator = operator == "=" and '!=' or '='
+            value = True
+
+        if self._uid == SUPERUSER_ID:
+            return [(1, '=', 1)]
+
+        user = self.env['res.users'].browse(self._uid)
+        req = """
+            SELECT p.id
+            FROM forum_post p
+                   LEFT JOIN res_users u ON p.create_uid = u.id
+                   LEFT JOIN forum_forum f ON p.forum_id = f.id
+            WHERE
+                (p.create_uid = %s and f.karma_close_own <= %s)
+                or (p.create_uid != %s and f.karma_close_all <= %s)
+                or (
+                    u.karma > 0
+                    and (p.active or p.create_uid = %s)
+                )
+        """
+
+        op = operator == "=" and "inselect" or "not inselect"
+
+        # don't use param named because orm will add other param (test_active, ...)
+        return [('id', op, (req, (user.id, user.karma, user.id, user.karma, user.id)))]
 
     @api.one
     @api.depends('content')
@@ -368,7 +393,7 @@ class Post(models.Model):
             post.can_downvote = is_admin or user.karma >= post.forum_id.karma_downvote
             post.can_comment = is_admin or user.karma >= post.karma_comment
             post.can_comment_convert = is_admin or user.karma >= post.karma_comment_convert
-            post.can_view = is_admin or user.karma >= post.karma_close or post_sudo.create_uid.karma > 0
+            post.can_view = is_admin or user.karma >= post.karma_close or (post_sudo.create_uid.karma > 0 and (post_sudo.active or post_sudo.create_uid == user))
             post.can_display_biography = is_admin or post_sudo.create_uid.karma >= post.forum_id.karma_user_bio
             post.can_post = is_admin or user.karma >= post.forum_id.karma_post
             post.can_flag = is_admin or user.karma >= post.forum_id.karma_flag
@@ -380,12 +405,13 @@ class Post(models.Model):
         if (self.post_type == 'question' and not self.forum_id.allow_question) \
                 or (self.post_type == 'discussion' and not self.forum_id.allow_discussion) \
                 or (self.post_type == 'link' and not self.forum_id.allow_link):
-            raise UserError(_('This forum does not allow %s' % self.post_type))
+            raise UserError(_('This forum does not allow %s') % self.post_type)
 
     def _update_content(self, content, forum_id):
         forum = self.env['forum.forum'].browse(forum_id)
         if content and self.env.user.karma < forum.karma_dofollow:
             for match in re.findall(r'<a\s.*href=".*?">', content):
+                match = re.escape(match)  # replace parenthesis or special char in regex
                 content = re.sub(match, match[:3] + 'rel="nofollow" ' + match[3:], content)
 
         if self.env.user.karma <= forum.karma_editor:
@@ -410,23 +436,13 @@ class Post(models.Model):
         elif post.parent_id and not post.can_answer:
             raise KarmaError('Not enough karma to answer to a question')
         if not post.parent_id and not post.can_post:
-            post.state = 'pending'
-        # messaging and chatter
-        base_url = self.env['ir.config_parameter'].get_param('web.base.url')
-        if post.parent_id:
-            body = _(
-                '<p>A new answer for <i>%s</i> has been posted. <a href="%s/forum/%s/question/%s">Click here to access the post.</a></p>' %
-                (post.parent_id.name, base_url, slug(post.parent_id.forum_id), slug(post.parent_id))
-            )
-            post.parent_id.message_post(subject=_('Re: %s') % post.parent_id.name, body=body, subtype='website_forum.mt_answer_new')
-        else:
-            body = _(
-                '<p>A new question <i>%s</i> has been asked on %s. <a href="%s/forum/%s/question/%s">Click here to access the question.</a></p>' %
-                (post.name, post.forum_id.name, base_url, slug(post.forum_id), slug(post))
-            )
-            post.message_post(subject=post.name, body=body, subtype='website_forum.mt_question_new')
-            if post.state == 'active':
-                self.env.user.sudo().add_karma(post.forum_id.karma_gen_question_new)
+            post.sudo().state = 'pending'
+
+        # add karma for posting new questions
+        if not post.parent_id and post.state == 'active':
+            self.env.user.sudo().add_karma(post.forum_id.karma_gen_question_new)
+
+        post.post_notification()
         return post
 
     @api.model
@@ -450,11 +466,18 @@ class Post(models.Model):
 
     @api.multi
     def write(self, vals):
+        trusted_keys = ['active', 'is_correct']  # fields where security is checked manually
         if 'content' in vals:
             vals['content'] = self._update_content(vals['content'], self.forum_id.id)
         if 'state' in vals:
-            if vals['state'] in ['active', 'close'] and any(not post.can_close for post in self):
-                raise KarmaError('Not enough karma to close or reopen a post.')
+            if vals['state'] in ['active', 'close']:
+                if any(not post.can_close for post in self):
+                    raise KarmaError('Not enough karma to close or reopen a post.')
+                trusted_keys += ['state', 'closed_uid', 'closed_date', 'closed_reason_id']
+            elif vals['state'] == 'flagged':
+                if any(not post.can_flag for post in self):
+                    raise KarmaError('Not enough karma to flag a post.')
+                trusted_keys += ['state', 'flag_user_id']
         if 'active' in vals:
             if any(not post.can_unlink for post in self):
                 raise KarmaError('Not enough karma to delete or reactivate a post')
@@ -467,7 +490,7 @@ class Post(models.Model):
                 if vals['is_correct'] != post.is_correct and post.create_uid.id != self._uid:
                     post.create_uid.sudo().add_karma(post.forum_id.karma_gen_answer_accepted * mult)
                     self.env.user.sudo().add_karma(post.forum_id.karma_gen_answer_accept * mult)
-        if any(key not in ['state', 'active', 'is_correct', 'closed_uid', 'closed_date', 'closed_reason_id'] for key in vals.keys()) and any(not post.can_edit for post in self):
+        if any(key not in trusted_keys for key in vals) and any(not post.can_edit for post in self):
             raise KarmaError('Not enough karma to edit a post.')
 
         res = super(Post, self).write(vals)
@@ -484,6 +507,28 @@ class Post(models.Model):
         return res
 
     @api.multi
+    def post_notification(self):
+        base_url = self.env['ir.config_parameter'].get_param('web.base.url')
+        for post in self:
+            if post.state == 'active' and post.parent_id:
+                body = _('<p>A new answer for <i>%s</i> has been posted. <a href="%s/forum/%s/question/%s">Click here to access the post.</a></p>') % \
+                        (post.parent_id.name, base_url, slug(post.parent_id.forum_id), slug(post.parent_id))
+                post.parent_id.message_post(subject=_('Re: %s') % post.parent_id.name, body=body, subtype='website_forum.mt_answer_new')
+            elif post.state == 'active' and not post.parent_id:
+                body = _('<p>A new question <i>%s</i> has been asked on %s. <a href="%s/forum/%s/question/%s">Click here to access the question.</a></p>') % \
+                        (post.name, post.forum_id.name, base_url, slug(post.forum_id), slug(post))
+                post.message_post(subject=post.name, body=body, subtype='website_forum.mt_question_new')
+            elif post.state == 'pending' and not post.parent_id:
+                # TDE FIXME: in master, you should probably use a subtype;
+                # however here we remove subtype but set partner_ids
+                partners = post.sudo().message_partner_ids.filtered(lambda partner: partner.user_ids and any(user.karma >= post.forum_id.karma_moderate for user in partner.user_ids))
+                note_subtype = self.sudo().env.ref('mail.mt_note')
+                body = _('<p>A new question <i>%s</i> has been asked on %s and require your validation. <a href="%s/forum/%s/question/%s">Click here to access the question.</a></p>') % \
+                        (post.name, post.forum_id.name, base_url, slug(post.forum_id), slug(post))
+                post.message_post(subject=post.name, body=body, subtype_id=note_subtype.id, partner_ids=partners.ids)
+        return True
+
+    @api.multi
     def reopen(self):
         if any(post.parent_id or post.state != 'close' for post in self):
             return False
@@ -494,8 +539,7 @@ class Post(models.Model):
             if post.closed_reason_id in (reason_offensive, reason_spam):
                 _logger.info('Upvoting user <%s>, reopening spam/offensive question',
                              post.create_uid)
-                # TODO: in master, consider making this a tunable karma parameter
-                post.create_uid.sudo().add_karma(post.forum_id.karma_gen_question_downvote * -5)
+                post.create_uid.sudo().add_karma(post.forum_id.karma_gen_answer_flagged * -1)
 
         self.sudo().write({'state': 'active'})
 
@@ -510,8 +554,7 @@ class Post(models.Model):
             for post in self:
                 _logger.info('Downvoting user <%s> for posting spam/offensive contents',
                              post.create_uid)
-                # TODO: in master, consider making this a tunable karma parameter
-                post.create_uid.sudo().add_karma(post.forum_id.karma_gen_question_downvote * 5)
+                post.create_uid.sudo().add_karma(post.forum_id.karma_gen_answer_flagged)
 
         self.write({
             'state': 'close',
@@ -530,12 +573,12 @@ class Post(models.Model):
         if self.state == 'pending':
             self.create_uid.sudo().add_karma(self.forum_id.karma_gen_question_new)
 
-        self.moderator_id = self.env.user
-
         self.write({
             'state': 'active',
             'active': True,
+            'moderator_id': self.env.user.id,
         })
+        self.post_notification()
         return True
 
     @api.one
@@ -568,9 +611,8 @@ class Post(models.Model):
             raise KarmaError('Not enough karma to mark a post as offensive')
 
         # remove some karma
-        # TODO: consider making this a tunable karma parameter (cfr close)
         _logger.info('Downvoting user <%s> for posting spam/offensive contents', self.create_uid)
-        self.create_uid.sudo().add_karma(self.forum_id.karma_gen_question_downvote * 5)
+        self.create_uid.sudo().add_karma(self.forum_id.karma_gen_answer_flagged)
 
         self.write({
             'state': 'offensive',
@@ -704,10 +746,11 @@ class Post(models.Model):
         self._cr.execute("""UPDATE forum_post SET views = views+1 WHERE id IN %s""", (self._ids,))
         return True
 
-    @api.one
+    @api.multi
     def get_access_action(self):
         """ Override method that generated the link to access the document. Instead
         of the classic form view, redirect to the post on the website directly """
+        self.ensure_one()
         return {
             'type': 'ir.actions.act_url',
             'url': '/forum/%s/question/%s' % (self.forum_id.id, self.id),
@@ -760,7 +803,7 @@ class Vote(models.Model):
     post_id = fields.Many2one('forum.post', string='Post', ondelete='cascade', required=True)
     user_id = fields.Many2one('res.users', string='User', required=True, default=lambda self: self._uid)
     vote = fields.Selection([('1', '1'), ('-1', '-1'), ('0', '0')], string='Vote', required=True, default='1')
-    create_date = fields.Datetime('Create Date', select=True, readonly=True)
+    create_date = fields.Datetime('Create Date', index=True, readonly=True)
     forum_id = fields.Many2one('forum.forum', string='Forum', related="post_id.forum_id", store=True)
     recipient_id = fields.Many2one('res.users', string='To', related="post_id.create_uid", store=True)
 
@@ -827,7 +870,7 @@ class Tags(models.Model):
     posts_count = fields.Integer('Number of Posts', compute='_get_posts_count', store=True)
 
     _sql_constraints = [
-            ('name_uniq', 'unique (name)', "Tag name already exists !"),
+        ('name_uniq', 'unique (name, forum_id)', "Tag name already exists !"),
     ]
 
     @api.multi

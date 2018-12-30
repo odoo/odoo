@@ -31,3 +31,25 @@ class TestRules(TransactionCase):
         # but this should
         with self.assertRaises(openerp.exceptions.AccessError):
             self.assertEqual(browse2.val, -1)
+
+    def test_many2many(self):
+        """ Test assignment of many2many field where rules apply. """
+        ids = [self.id1, self.id2]
+
+        # create container as superuser, connected to all some_objs
+        container_admin = self.env['test_access_right.container'].create({'some_ids': [(6, 0, ids)]})
+        self.assertItemsEqual(container_admin.some_ids.ids, ids)
+
+        # check the container as the public user
+        container_user = container_admin.sudo(self.browse_ref('base.public_user'))
+        self.assertItemsEqual(container_user.some_ids.ids, [self.id1])
+
+        # this should not fail
+        container_user.write({'some_ids': [(6, 0, ids)]})
+        self.assertItemsEqual(container_user.some_ids.ids, [self.id1])
+        self.assertItemsEqual(container_admin.some_ids.ids, ids)
+
+        # this removes accessible records only
+        container_user.write({'some_ids': [(5,)]})
+        self.assertItemsEqual(container_user.some_ids.ids, [])
+        self.assertItemsEqual(container_admin.some_ids.ids, [self.id2])

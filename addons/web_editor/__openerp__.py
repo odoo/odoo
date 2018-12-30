@@ -6,7 +6,6 @@ Odoo Web Editor widget.
 ==========================
 
 """,
-    'author': 'Odoo S.A.',
     'depends': ['web'],
     'data': [
         'security/ir.model.access.csv',

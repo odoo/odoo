@@ -61,9 +61,9 @@ def report_configuration():
     user = config['db_user'] or os.environ.get('PGUSER', 'default')
     _logger.info('database: %s@%s:%s', user, host, port)
 
-def rm_pid_file():
+def rm_pid_file(main_pid):
     config = openerp.tools.config
-    if not openerp.evented and config['pidfile']:
+    if config['pidfile'] and main_pid == os.getpid():
         try:
             os.unlink(config['pidfile'])
         except OSError:
@@ -76,10 +76,10 @@ def setup_pid_file():
     """
     config = openerp.tools.config
     if not openerp.evented and config['pidfile']:
+        pid = os.getpid()
         with open(config['pidfile'], 'w') as fd:
-            pidtext = "%d" % (os.getpid())
-            fd.write(pidtext)
-        atexit.register(rm_pid_file)
+            fd.write(str(pid))
+        atexit.register(rm_pid_file, pid)
 
 def export_translation():
     config = openerp.tools.config
@@ -128,11 +128,14 @@ def main(args):
     # bit overkill, but better safe than sorry I guess
     csv.field_size_limit(500 * 1024 * 1024)
 
-    if config["db_name"]:
-        try:
-            openerp.service.db._create_empty_database(config["db_name"])
-        except openerp.service.db.DatabaseExists:
-            pass
+    preload = []
+    if config['db_name']:
+        preload = config['db_name'].split(',')
+        for db_name in preload:
+            try:
+                openerp.service.db._create_empty_database(db_name)
+            except openerp.service.db.DatabaseExists:
+                pass
 
     if config["test_file"]:
         config["test_enable"] = True
@@ -149,10 +152,6 @@ def main(args):
     # signaling mecanism for registries loaded with -d
     if config['workers']:
         openerp.multi_process = True
-
-    preload = []
-    if config['db_name']:
-        preload = config['db_name'].split(',')
 
     stop = config["stop_after_init"]
 

@@ -142,12 +142,12 @@ class LunchOrderLine(models.Model):
                               readonly=True, store=True)
     note = fields.Text('Note')
     price = fields.Float(related='product_id.price', readonly=True, store=True,
-                         digits_compute=dp.get_precision('Account'))
+                         digits=dp.get_precision('Account'))
     state = fields.Selection([('new', 'New'),
                               ('confirmed', 'Received'),
                               ('ordered', 'Ordered'),
                               ('cancelled', 'Cancelled')],
-                             'Status', readonly=True, select=True, default='new')
+                             'Status', readonly=True, index=True, default='new')
     cashmove = fields.One2many('lunch.cashmove', 'order_id', 'Cash Move')
     currency_id = fields.Many2one('res.currency', related='order_id.currency_id')
 
@@ -192,7 +192,7 @@ class LunchProduct(models.Model):
     name = fields.Char('Product', required=True)
     category_id = fields.Many2one('lunch.product.category', 'Category', required=True)
     description = fields.Text('Description')
-    price = fields.Float('Price', digits_compute=dp.get_precision('Account'))
+    price = fields.Float('Price', digits=dp.get_precision('Account'))
     supplier = fields.Many2one('res.partner', 'Vendor')
 
 
@@ -234,7 +234,7 @@ class LunchAlert(models.Model):
     alert_type = fields.Selection([('specific', 'Specific Day'),
                                    ('week', 'Every Week'),
                                    ('days', 'Every Day')],
-                                  string='Recurrency', required=True, select=True, default='specific')
+                                  string='Recurrence', required=True, index=True, default='specific')
     specific_day = fields.Date('Day', default=fields.Date.context_today)
     monday = fields.Boolean('Monday')
     tuesday = fields.Boolean('Tuesday')

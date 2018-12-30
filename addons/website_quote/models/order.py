@@ -145,7 +145,7 @@ class sale_order(osv.osv):
     _columns = {
         'access_token': fields.char('Security Token', required=True, copy=False),
         'template_id': fields.many2one('sale.quote.template', 'Quotation Template', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}),
-        'website_description': fields.html('Description'),
+        'website_description': fields.html('Description', translate=True),
         'options' : fields.one2many('sale.order.option', 'order_id', 'Optional Products Lines', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, copy=True),
         'amount_undiscounted': fields.function(_get_total, string='Amount Before Discount', type="float", digits=0),
         'quote_viewed': fields.boolean('Quotation Viewed'),
@@ -189,12 +189,15 @@ class sale_order(osv.osv):
         lines = [(5,)]
         quote_template = self.pool.get('sale.quote.template').browse(cr, uid, template_id, context=context)
         for line in quote_template.quote_line:
+            date = time.strftime('%Y-%m-%d')
             res = self.pool.get('sale.order.line').product_id_change(cr, uid, False,
                 False, line.product_id.id, line.product_uom_qty, line.product_uom_id.id, line.product_uom_qty,
-                line.product_uom_id.id, line.name, partner, False, True, time.strftime('%Y-%m-%d'),
+                line.product_uom_id.id, line.name, partner, False, True, date,
                 False, fiscal_position_id, True, context)
             data = res.get('value', {})
             if pricelist_id:
+                pricelist = self.pool['product.pricelist'].browse(cr, uid, [pricelist_id], context=context)[0]
+                data.update(self.pool['sale.order.line']._get_purchase_price(cr, uid, pricelist, line.product_id, line.product_uom_id, date, context=context))
                 uom_context = context.copy()
                 uom_context['uom'] = line.product_uom_id.id
                 price = pricelist_obj.price_get(cr, uid, [pricelist_id], line.product_id.id, 1, context=uom_context)[pricelist_id]
@@ -203,6 +206,10 @@ class sale_order(osv.osv):
 
             if 'tax_id' in data:
                 data['tax_id'] = [(6, 0, data['tax_id'])]
+            else:
+                fpos = (fiscal_position_id and self.pool['account.fiscal.position'].browse(cr, uid, fiscal_position_id)) or False
+                taxes = fpos.map_tax(line.product_id.product_tmpl_id.taxes_id).ids if fpos else line.product_id.product_tmpl_id.taxes_id.ids
+                data['tax_id'] = [(6, 0, taxes)]
             data.update({
                 'name': line.name,
                 'price_unit': price,
@@ -212,6 +219,7 @@ class sale_order(osv.osv):
                 'product_uom': line.product_uom_id.id,
                 'website_description': line.website_description,
                 'state': 'draft',
+                'customer_lead': self._get_customer_lead(cr, uid, line.product_id.product_tmpl_id),
             })
             lines.append((0, 0, data))
         options = []
@@ -237,11 +245,12 @@ class sale_order(osv.osv):
         data = {
             'order_line': lines,
             'website_description': quote_template.website_description,
-            'note': quote_template.note,
             'options': options,
             'validity_date': date,
             'require_payment': quote_template.require_payment
         }
+        if quote_template.note:
+            data['note'] = quote_template.note
         return {'value': data}
 
     def recommended_products(self, cr, uid, ids, context=None):
@@ -252,17 +261,17 @@ class sale_order(osv.osv):
             products += line.product_id.product_tmpl_id.recommended_products(context=context)
         return products
 
-    def get_access_action(self, cr, uid, id, context=None):
+    def get_access_action(self, cr, uid, ids, context=None):
         """ Override method that generated the link to access the document. Instead
         of the classic form view, redirect to the online quote if exists. """
-        quote = self.browse(cr, uid, id, context=context)
+        quote = self.browse(cr, uid, ids[0], context=context)
         if not quote.template_id:
-            return super(sale_order, self).get_access_action(cr, uid, id, context=context)
+            return super(sale_order, self).get_access_action(cr, uid, ids, context=context)
         return {
             'type': 'ir.actions.act_url',
-            'url': '/quote/%s' % id,
+            'url': '/quote/%s' % quote.id,
             'target': 'self',
-            'res_id': id,
+            'res_id': quote.id,
         }
 
     def action_quotation_send(self, cr, uid, ids, context=None):
@@ -289,9 +298,9 @@ class sale_order(osv.osv):
         # create draft invoice if transaction is ok
         if tx and tx.state == 'done':
             if order.state in ['draft', 'sent']:
-                self.signal_workflow(cr, SUPERUSER_ID, [order.id], 'manual_invoice', context=context)
+                self.action_confirm(cr, SUPERUSER_ID, order.id, context=context)
             message = _('Order payed by %s. Transaction: %s. Amount: %s.') % (tx.partner_id.name, tx.acquirer_reference, tx.amount)
-            self.message_post(cr, uid, order_id, body=message, type='comment', subtype='mt_comment', context=context)
+            self.message_post(cr, uid, order_id, body=message, context=context)
             return True
         return False
 
@@ -301,6 +310,19 @@ class sale_order(osv.osv):
             template_values = self.onchange_template_id(cr, uid, [], defaults.get('template_id'), partner=values.get('partner_id'), fiscal_position_id=values.get('fiscal_position'), context=context).get('value', {})
             values = dict(template_values, **values)
         return super(sale_order, self).create(cr, uid, values, context=context)
+
+    def _get_payment_type(self, cr, uid, ids, context=None):
+        return 'form'
+
+    def _set_default_value_on_column(self, cr, column_name, context=None):
+        if column_name != 'access_token':
+            super(sale_order, self)._set_default_value_on_column(cr, column_name, context=context)
+        else:
+            query = """UPDATE %(table_name)s
+                          SET %(column_name)s = md5(random()::text || clock_timestamp()::text)::uuid
+                        WHERE %(column_name)s IS NULL
+                    """ % {'table_name': self._table, 'column_name': column_name}
+            cr.execute(query)
 
 
 class sale_quote_option(osv.osv):
@@ -319,6 +341,29 @@ class sale_quote_option(osv.osv):
     _defaults = {
         'quantity': 1,
     }
+
+    @api.onchange('product_id')
+    def _onchange_product_id(self):
+        if not self.product_id:
+            return
+        product = self.product_id
+        self.price_unit = product.list_price
+        self.website_description = product.product_tmpl_id.quote_description
+        self.name = product.name
+        self.uom_id = product.uom_id
+        domain = {'uom_id': [('category_id', '=', self.product_id.uom_id.category_id.id)]}
+        return {'domain': domain}
+
+    @api.onchange('uom_id')
+    def _onchange_product_uom(self):
+        if not self.product_id:
+            return
+        if not self.uom_id:
+            self.price_unit = 0.0
+            return
+        if self.uom_id.id != self.product_id.uom_id.id:
+            new_price = self.product_id.uom_id._compute_price(self.product_id.uom_id.id, self.price_unit, self.uom_id.id)
+            self.price_unit = new_price
 
     def on_change_product_id(self, cr, uid, ids, product, uom_id=None, context=None):
         vals, domain = {}, []
@@ -392,25 +437,30 @@ class sale_order_option(osv.osv):
             domain = {'uom_id': [('category_id', '=', product_obj.uom_id.category_id.id)]}
         return {'value': vals, 'domain': domain}
 
+    # TODO master: to remove, replaced by onchange of the new api
     def product_uom_change(self, cr, uid, ids, product, uom_id, context=None):
         context = context or {}
         if not uom_id:
             return {'value': {'price_unit': 0.0, 'uom_id': False}}
         return self.on_change_product_id(cr, uid, ids, product, uom_id=uom_id, context=context)
 
-    @api.onchange('product_id')
+    @api.onchange('product_id', 'uom_id')
     def _onchange_product_id(self):
+        if not self.product_id:
+            return
         product = self.product_id.with_context(lang=self.order_id.partner_id.lang)
         self.price_unit = product.list_price
         self.website_description = product.quote_description or product.website_description
         self.name = product.name
         if product.description_sale:
             self.name += '\n' + product.description_sale
-        self.uom_id = product.product_tmpl_id.uom_id
-        if product and self.order_id.pricelist_id:
+        self.uom_id = self.uom_id or product.uom_id
+        pricelist = self.order_id.pricelist_id
+        if pricelist and product:
             partner_id = self.order_id.partner_id.id
-            pricelist = self.order_id.pricelist_id.id
-            self.price_unit = self.order_id.pricelist_id.price_get(product.id, self.quantity, partner_id)[pricelist]
+            self.price_unit = pricelist.with_context(uom=self.uom_id.id).price_get(product.id, self.quantity, partner_id)[pricelist.id]
+        domain = {'uom_id': [('category_id', '=', self.product_id.uom_id.category_id.id)]}
+        return {'domain': domain}
 
 
 class product_template(osv.Model):

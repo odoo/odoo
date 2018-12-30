@@ -13,7 +13,7 @@ class tip(models.Model):
         self.is_consumed = self.env.user in self.user_ids
 
     title = fields.Char('Tip title')
-    description = fields.Html('Tip Description', required=True)
+    description = fields.Html('Tip Description', required=True, translate=True)
     action_id = fields.Many2one('ir.actions.act_window', string="Action",
         help="The action that will trigger the tip")
     model = fields.Char("Model", help="Model name on which to trigger the tip, e.g. 'res.partner'.")

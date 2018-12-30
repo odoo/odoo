@@ -6,12 +6,13 @@ odoo.define('website_portal', function(require) {
         return $.Deferred().reject("DOM doesn't contain '.o_website_portal_details' or '.o_my_show_more'");
     }
 
-
+    var state_options = $("select[name='state_id']:enabled option:not(:first)");
     $('.o_website_portal_details').on('change', "select[name='country_id']", function () {
-        var $select = $("select[name='state_id']");
-        $select.find("option:not(:first)").hide();
-        var nb = $select.find("option[data-country_id="+($(this).val() || 0)+"]").show().size();
-        $select.parent().toggle(nb>1);
+        var select = $("select[name='state_id']");
+        state_options.detach();
+        var displayed_state = state_options.filter("[data-country_id="+($(this).val() || 0)+"]");
+        var nb = displayed_state.appendTo(select).show().size();
+        select.parent().toggle(nb>=1);
     });
     $('.o_website_portal_details').find("select[name='country_id']").change();
 

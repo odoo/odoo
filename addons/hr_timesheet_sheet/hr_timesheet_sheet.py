@@ -8,7 +8,11 @@ from pytz import timezone
 import pytz
 
 from openerp.osv import fields, osv
-from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
+from openerp.tools import (
+    DEFAULT_SERVER_DATE_FORMAT,
+    DEFAULT_SERVER_DATETIME_FORMAT,
+    drop_view_if_exists,
+)
 from openerp.tools.translate import _
 from openerp.exceptions import UserError
 
@@ -23,18 +27,24 @@ class hr_timesheet_sheet(osv.osv):
         """ Compute the attendances, analytic lines timesheets and differences between them
             for all the days of a timesheet and the current day
         """
+        res = dict.fromkeys(ids, {
+            'total_attendance': 0.0,
+            'total_timesheet': 0.0,
+            'total_difference': 0.0,
+        })
 
-        res = {}
-        for sheet in self.browse(cr, uid, ids, context=context or {}):
-            res.setdefault(sheet.id, {
-                'total_attendance': 0.0,
-                'total_timesheet': 0.0,
-                'total_difference': 0.0,
-            })
-            for period in sheet.period_ids:
-                res[sheet.id]['total_attendance'] += period.total_attendance
-                res[sheet.id]['total_timesheet'] += period.total_timesheet
-                res[sheet.id]['total_difference'] += period.total_attendance - period.total_timesheet
+        cr.execute("""
+            SELECT sheet_id as id,
+                   sum(total_attendance) as total_attendance,
+                   sum(total_timesheet) as total_timesheet,
+                   sum(total_difference) as  total_difference
+            FROM hr_timesheet_sheet_sheet_day
+            WHERE sheet_id IN %s
+            GROUP BY sheet_id
+        """, (tuple(ids),))
+
+        res.update(dict((x.pop('id'), x) for x in cr.dictfetchall()))
+
         return res
 
     def check_employee_attendance_state(self, cr, uid, sheet_id, context=None):
@@ -64,8 +74,6 @@ class hr_timesheet_sheet(osv.osv):
                 raise UserError(_('In order to create a timesheet for this employee, you must link him/her to a user.'))
             if not self._sheet_date(cr, uid, ids, forced_user_id=new_user_id, context=context):
                 raise UserError(_('You cannot have 2 timesheets that overlap!\nYou should use the menu \'My Timesheet\' to avoid this problem.'))
-            if not self.pool.get('hr.employee').browse(cr, uid, vals['employee_id'], context=context).product_id:
-                raise UserError(_('In order to create a timesheet for this employee, you must link the employee to a product.'))
         if vals.get('attendances_ids'):
             # If attendances, we sort them by date asc before writing them, to satisfy the alternance constraint
             # In addition to the date order, deleting attendances are done before inserting attendances
@@ -291,6 +299,8 @@ class account_analytic_line(osv.osv):
         sheet_obj = self.pool.get('hr_timesheet_sheet.sheet')
         res = {}.fromkeys(ids, False)
         for ts_line in self.browse(cursor, user, ids, context=context):
+            if not ts_line.is_timesheet:
+                continue
             sheet_ids = sheet_obj.search(cursor, user,
                 [('date_to', '>=', ts_line.date), ('date_from', '<=', ts_line.date),
                  ('employee_id.user_id', '=', ts_line.user_id.id),
@@ -310,6 +320,7 @@ class account_analytic_line(osv.osv):
                     WHERE %(date_to)s >= l.date
                         AND %(date_from)s <= l.date
                         AND %(user_id)s = l.user_id
+                        AND l.is_timesheet = True
                     GROUP BY l.id""", {'date_from': ts.date_from,
                                         'date_to': ts.date_to,
                                         'user_id': ts.employee_id.user_id.id,})
@@ -504,6 +515,7 @@ class hr_timesheet_sheet_sheet_day(osv.osv):
     }
 
     def init(self, cr):
+        drop_view_if_exists(cr, 'hr_timesheet_sheet_sheet_day')
         cr.execute("""create or replace view hr_timesheet_sheet_sheet_day as
             SELECT
                 id,
@@ -568,7 +580,7 @@ class hr_timesheet_sheet_sheet_day(osv.osv):
                                 ON r.user_id = u.id
                                 LEFT JOIN res_partner p
                                 ON u.partner_id = p.id
-                            WHERE action in ('sign_in', 'sign_out')
+                            WHERE a.action in ('sign_in', 'sign_out')
                             group by (a.name AT TIME ZONE 'UTC' AT TIME ZONE coalesce(p.tz, 'UTC'))::date, s.id, timezone
                         )) AS foo
                         GROUP BY name, sheet_id, timezone
@@ -593,6 +605,7 @@ class hr_timesheet_sheet_sheet_account(osv.osv):
     }
 
     def init(self, cr):
+        drop_view_if_exists(cr, 'hr_timesheet_sheet_sheet_account')
         cr.execute("""create or replace view hr_timesheet_sheet_sheet_account as (
             select
                 min(l.id) as id,

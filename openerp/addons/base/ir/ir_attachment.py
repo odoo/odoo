@@ -8,60 +8,14 @@ import mimetypes
 import os
 import re
 
-from openerp import tools
-from openerp.tools.translate import _
+from openerp import SUPERUSER_ID, tools
 from openerp.exceptions import AccessError
 from openerp.osv import fields,osv
-from openerp import SUPERUSER_ID
-from openerp.exceptions import UserError
 from openerp.tools.translate import _
-from openerp.tools.misc import ustr
+from openerp.tools.misc import ustr, html_escape
+from openerp.tools.mimetypes import guess_mimetype
 
 _logger = logging.getLogger(__name__)
-
-try:
-    import magic
-except ImportError:
-    magic = None
-
-# We define our own guess_mimetype implementation and if magic is available we
-# use it instead.
-
-# However there are 2 python libs named 'magic' with incompatible api.
-# magic from pypi https://pypi.python.org/pypi/python-magic/
-# magic from file(1) https://packages.debian.org/squeeze/python-magic
-
-def guess_mimetype(bin_data):
-    # by default, guess the type using the magic number of file hex signature (like magic, but more limited)
-    # see http://www.filesignatures.net/ for file signatures
-    mapping = {
-        # pdf
-        'application/pdf' : ['%PDF'],
-         # jpg, jpeg, png, gif
-        'image/jpeg' : ['\xFF\xD8\xFF\xE0', '\xFF\xD8\xFF\xE2', '\xFF\xD8\xFF\xE3', '\xFF\xD8\xFF\xE1'],
-        'image/png' : ['\x89\x50\x4E\x47\x0D\x0A\x1A\x0A'],
-        'image/gif' : ['GIF87a', '\x47\x49\x46\x38\x37\x61', 'GIF89a', '\x47\x49\x46\x38\x39\x61'],
-        # zip, but will include jar, odt, ods, odp, docx, xlsx, pptx, apk
-        'application/zip' : ['PK'],
-        # doc, xls
-        'application/msword' : ['\xCF\x11\xE0\xA1\xB1\x1A\xE1\x00', '\xEC\xA5\xC1\x00', '\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1', '\x0D\x44\x4F\x43'],
-        'application/vnd.ms-excel' : ['\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1','\x09\x08\x10\x00\x00\x06\x05\x00','\xFD\xFF\xFF\xFF\x10','\xFD\xFF\xFF\xFF\x1F','\xFD\xFF\xFF\xFF\x23','\xFD\xFF\xFF\xFF\x28','\xFD\xFF\xFF\xFF\x29'],
-    }
-    for mimetype in mapping.keys():
-        for signature in mapping[mimetype]:
-            if bin_data.startswith(signature):
-                return mimetype
-    return 'application/octet-stream'
-
-# if available adapt magic from pypi
-if hasattr(magic,'from_buffer'):
-    guess_mimetype = lambda bin_data: magic.from_buffer(bin_data, mime=True)
-# or if available adapt magic from file(1)
-elif hasattr(magic,'open'):
-    ms = magic.open(magic.MAGIC_MIME_TYPE)
-    ms.load()
-    guess_mimetype = ms.buffer
-
 
 class ir_attachment(osv.osv):
     """Attachments are used to link binary files or url to any openerp document.
@@ -72,7 +26,7 @@ class ir_attachment(osv.osv):
     The 'data' function field (_data_get,data_set) is implemented using
     _file_read, _file_write and _file_delete which can be overridden to
     implement other storage engines, such methods should check for other
-    location pseudo uri (example: hdfs://hadoppserver)
+    location pseudo uri (example: hdfs://hadoopserver)
 
     The default implementation is the file:dirname location that stores files
     on the local filesystem using name based on their sha1 hash
@@ -149,7 +103,7 @@ class ir_attachment(osv.osv):
                 r = os.path.getsize(full_path)
             else:
                 r = open(full_path,'rb').read().encode('base64')
-        except IOError:
+        except (IOError, OSError):
             _logger.info("_read_file reading %s", full_path, exc_info=True)
         return r
 
@@ -211,7 +165,7 @@ class ir_attachment(osv.osv):
         fname_to_delete = attach.store_fname
         location = self._storage(cr, uid, context)
         # compute the index_content field
-        vals['index_content'] = self._index(cr, SUPERUSER_ID, bin_data, attach.datas_fname, attach.mimetype),
+        vals['index_content'] = self._index(cr, SUPERUSER_ID, bin_data, attach.datas_fname, attach.mimetype)
         if location != 'db':
             # create the file
             fname = self._file_write(cr, uid, value, checksum)
@@ -245,12 +199,27 @@ class ir_attachment(osv.osv):
             :param values : dict of values to create or write an ir_attachment
             :return mime : string indicating the mimetype, or application/octet-stream by default
         """
-        mimetype = 'application/octet-stream'
-        if values.get('datas_fname'):
+        mimetype = None
+        if values.get('mimetype'):
+            mimetype = values['mimetype']
+        if not mimetype and values.get('datas_fname'):
             mimetype = mimetypes.guess_type(values['datas_fname'])[0]
-        if values.get('datas'):
+        if not mimetype and values.get('url'):
+            mimetype = mimetypes.guess_type(values['url'])[0]
+        if values.get('datas') and (not mimetype or mimetype == 'application/octet-stream'):
             mimetype = guess_mimetype(values['datas'].decode('base64'))
-        return mimetype
+        return mimetype or 'application/octet-stream'
+
+    def _check_contents(self, cr, uid, values, context=None):
+        if context is None:
+            context = {}
+        mimetype = values['mimetype'] = self._compute_mimetype(values)
+        xml_like = 'ht' in mimetype or 'xml' in mimetype # hta, html, xhtml, etc.
+        force_text = (xml_like and (not self.pool['res.users']._is_admin(cr, uid, [uid]) or
+            context.get('attachments_mime_plainxml')))
+        if force_text:
+            values['mimetype'] = 'text/plain'
+        return values
 
     def _index(self, cr, uid, bin_data, datas_fname, file_type):
         """ compute the index content of the given filename, or binary data.
@@ -266,6 +235,30 @@ class ir_attachment(osv.osv):
                 index_content = ustr("\n".join(words))
         return index_content
 
+    def get_serving_groups(self):
+        """ An ir.attachment record may be used as a fallback in the
+        http dispatch if its type field is set to "binary" and its url
+        field is set as the request's url. Only the groups returned by
+        this method are allowed to create and write on such records.
+        """
+        return ['base.group_system']
+
+    def _check_serving_attachments(self, cr, uid, ids, context=None):
+        # restrict writing on attachments that could be served by the
+        # ir.http's dispatch exception handling
+        if uid == SUPERUSER_ID:
+            return True
+        user = self.pool['res.users'].browse(cr, uid, uid, context=context)
+        for ira in self.browse(cr, uid, ids, context):
+            if ira.type == 'binary' and ira.url:
+                has_group = user.has_group
+                if not any([has_group(g) for g in self.get_serving_groups()]):
+                    return False
+        return True
+
+    _constraints = [
+        (_check_serving_attachments, 'Sorry, you are not allowed to write on this document', ['type', 'url'])
+    ]
 
     _name = 'ir.attachment'
     _columns = {
@@ -290,7 +283,7 @@ class ir_attachment(osv.osv):
         'file_size': fields.integer('File Size', readonly=True),
         'checksum': fields.char("Checksum/SHA1", size=40, select=True, readonly=True),
         'mimetype': fields.char('Mime Type', readonly=True),
-        'index_content': fields.text('Indexed Content', readonly=True),
+        'index_content': fields.text('Indexed Content', readonly=True, _prefetch=False),
         'public': fields.boolean('Is public document'),
     }
 
@@ -302,11 +295,12 @@ class ir_attachment(osv.osv):
     }
 
     def _auto_init(self, cr, context=None):
-        super(ir_attachment, self)._auto_init(cr, context)
+        res = super(ir_attachment, self)._auto_init(cr, context)
         cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('ir_attachment_res_idx',))
         if not cr.fetchone():
             cr.execute('CREATE INDEX ir_attachment_res_idx ON ir_attachment (res_model, res_id)')
             cr.commit()
+        return res
 
     def check(self, cr, uid, ids, mode, context=None, values=None):
         """Restricts the access to an ir.attachment, according to referred model
@@ -426,6 +420,8 @@ class ir_attachment(osv.osv):
         # remove computed field depending of datas
         for field in ['file_size', 'checksum']:
             vals.pop(field, False)
+        if 'mimetype' in vals or 'datas' in vals:
+            vals = self._check_contents(cr, uid, vals, context=context)
         return super(ir_attachment, self).write(cr, uid, ids, vals, context)
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -441,9 +437,8 @@ class ir_attachment(osv.osv):
         # database allowed it. Helps avoid errors when concurrent transactions
         # are deleting the same file, and some of the transactions are
         # rolled back by PostgreSQL (due to concurrent updates detection).
-        to_delete = [a.store_fname
-                        for a in self.browse(cr, uid, ids, context=context)
-                            if a.store_fname]
+        to_delete = set([a.store_fname for a in self.browse(cr, uid, ids, context=context)
+                         if a.store_fname])
         res = super(ir_attachment, self).unlink(cr, uid, ids, context)
         for file_path in to_delete:
             self._file_delete(cr, uid, file_path)
@@ -454,9 +449,7 @@ class ir_attachment(osv.osv):
         # remove computed field depending of datas
         for field in ['file_size', 'checksum']:
             values.pop(field, False)
-        # if mimetype not given, compute it !
-        if 'mimetype' not in values:
-            values['mimetype'] = self._compute_mimetype(values)
+        values = self._check_contents(cr, uid, values, context=context)
         self.check(cr, uid, [], mode='write', context=context, values=values)
         return super(ir_attachment, self).create(cr, uid, values, context)
 

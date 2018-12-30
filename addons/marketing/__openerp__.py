@@ -4,7 +4,7 @@
     'name': 'Marketing',
     'version': '1.1',
     'depends': ['base', 'base_setup'],
-    'category': 'Hidden/Dependency',
+    'category': 'Hidden',
     'description': """
 Menu for Marketing.
 ===================

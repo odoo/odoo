@@ -86,10 +86,12 @@ class Applicant(models.Model):
 
     def _default_stage_id(self):
         if self._context.get('default_job_id'):
-            return self.env['hr.recruitment.stage'].search([
+            ids = self.env['hr.recruitment.stage'].search([
                 ('job_ids', '=', self._context['default_job_id']),
                 ('fold', '=', False)
-            ], order='sequence asc', limit=1).ids[0]
+            ], order='sequence asc', limit=1).ids
+            if ids:
+                return ids[0]
         return False
 
     def _default_company_id(self):
@@ -109,19 +111,19 @@ class Applicant(models.Model):
                            help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma")
     probability = fields.Float("Probability")
     partner_id = fields.Many2one('res.partner', "Contact")
-    create_date = fields.Datetime("Creation Date", readonly=True, select=True)
+    create_date = fields.Datetime("Creation Date", readonly=True, index=True)
     write_date = fields.Datetime("Update Date", readonly=True)
     stage_id = fields.Many2one('hr.recruitment.stage', 'Stage', track_visibility='onchange',
-                               domain="[('job_ids', '=', job_id)]", copy=False, select=1,
+                               domain="[('job_ids', '=', job_id)]", copy=False, index=True,
                                default=_default_stage_id)
     last_stage_id = fields.Many2one('hr.recruitment.stage', "Last Stage",
                                     help="Stage of the applicant before being in the current stage. Used for lost cases analysis.")
     categ_ids = fields.Many2many('hr.applicant.category', string="Tags")
     company_id = fields.Many2one('res.company', "Company", default=_default_company_id)
     user_id = fields.Many2one('res.users', "Responsible", track_visibility="onchange", default=lambda self: self.env.uid)
-    date_closed = fields.Datetime("Closed", readonly=True, select=True)
-    date_open = fields.Datetime("Assigned", readonly=True, select=True)
-    date_last_stage_update = fields.Datetime("Last Stage Update", select=True, default=fields.Datetime.now)
+    date_closed = fields.Datetime("Closed", readonly=True, index=True)
+    date_open = fields.Datetime("Assigned", readonly=True, index=True)
+    date_last_stage_update = fields.Datetime("Last Stage Update", index=True, default=fields.Datetime.now)
     date_action = fields.Date("Next Action Date")
     title_action = fields.Char("Next Action", size=64)
     priority = fields.Selection(AVAILABLE_PRIORITIES, "Appreciation", default='0')
@@ -226,10 +228,11 @@ class Applicant(models.Model):
             department_id = job.department_id.id
             user_id = job.user_id.id
             if not self.stage_id:
-                stage_id = self.env['hr.recruitment.stage'].search([
+                stage_ids = self.env['hr.recruitment.stage'].search([
                     ('job_ids', '=', job.id),
                     ('fold', '=', False)
-                ], order='sequence asc', limit=1).ids[0]
+                ], order='sequence asc', limit=1).ids
+                stage_id = stage_ids[0] if stage_ids else False
 
         return {'value': {
             'department_id': department_id,
@@ -389,13 +392,17 @@ class Applicant(models.Model):
             through message_process.
             This override updates the document according to the email.
         """
+        # remove default author when going through the mail gateway. Indeed we
+        # do not want to explicitly set user_id to False; however we do not
+        # want the gateway user to be responsible if no other responsible is
+        # found.
+        self = self.with_context(default_user_id=False)
         val = msg.get('from').split('<')[0]
         defaults = {
             'name': msg.get('subject') or _("No Subject"),
             'partner_name': val,
             'email_from': msg.get('from'),
             'email_cc': msg.get('cc'),
-            'user_id': False,
             'partner_id': msg.get('author_id', False),
         }
         if msg.get('priority'):

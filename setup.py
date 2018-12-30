@@ -35,16 +35,21 @@ def py2exe_datafiles():
         data_files[base] = [join(root, f) for f in filenames]
 
     import docutils
-    dudir = dirname(docutils.__file__)
-    for root, _, filenames in os.walk(dudir):
-        base = join('docutils', root[len(dudir) + 1:])
-        data_files[base] = [join(root, f) for f in filenames if not f.endswith(('.py', '.pyc', '.pyo'))]
-
     import passlib
-    pl = dirname(passlib.__file__)
-    for root, _, filenames in os.walk(pl):
-        base = join('passlib', root[len(pl) + 1:])
-        data_files[base] = [join(root, f) for f in filenames if not f.endswith(('.py', '.pyc', '.pyo'))]
+    import reportlab
+    import requests
+    data_mapping = ((docutils, 'docutils'),
+                    (passlib, 'passlib'),
+                    (reportlab, 'reportlab'),
+                    (requests, 'requests'))
+
+    for mod, datadir in data_mapping:
+        basedir = dirname(mod.__file__)
+        for root, _, filenames in os.walk(basedir):
+            base = join(datadir, root[len(basedir) + 1:])
+            data_files[base] = [join(root, f)
+                                for f in filenames
+                                if not f.endswith(('.py', '.pyc', '.pyo'))]
 
     return data_files.items()
 
@@ -126,7 +131,7 @@ setup(
     author_email=author_email,
     classifiers=filter(None, classifiers.split('\n')),
     license=license,
-    scripts=['openerp-server', 'odoo.py'],
+    scripts=['openerp-server', 'openerp-gevent', 'odoo.py'],
     packages=find_packages(),
     package_dir={'%s' % lib_name: 'openerp'},
     include_package_data=True,

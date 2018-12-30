@@ -5,12 +5,12 @@
 {
     'name': 'Partners Geo-Localization',
     'version': '1.0',
-    'category': 'Customer Relationship Management',
+    'category': 'Sales',
     'description': """
 Partners geolocalization
 ========================
     """,
-    'depends': ['crm'],
+    'depends': ['base'],
     'demo': [
     ],
     'data': [

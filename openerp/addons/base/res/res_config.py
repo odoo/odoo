@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import json
 import logging
 from operator import attrgetter
 import re
@@ -432,12 +433,20 @@ class res_config_settings(osv.osv_memory, res_config_module_installation_mixin):
             cr, user, view_id=view_id, view_type=view_type, context=context,
             toolbar=toolbar, submenu=submenu)
 
+        can_install_modules = self.pool['ir.module.module'].check_access_rights(
+                                    cr, user, 'write', raise_exception=False)
+
         doc = etree.XML(ret_val['arch'])
 
         for field in ret_val['fields']:
             if not field.startswith("module_"):
                 continue
             for node in doc.xpath("//field[@name='%s']" % field):
+                if not can_install_modules:
+                    node.set("readonly", "1")
+                    modifiers = json.loads(node.get("modifiers"))
+                    modifiers['readonly'] = True
+                    node.set("modifiers", json.dumps(modifiers))
                 if 'on_change' not in node.attrib:
                     node.set("on_change",
                     "onchange_module(%s, '%s')" % (field, field))
@@ -448,18 +457,14 @@ class res_config_settings(osv.osv_memory, res_config_module_installation_mixin):
     def onchange_module(self, cr, uid, ids, field_value, module_name, context=None):
         module_pool = self.pool.get('ir.module.module')
         module_ids = module_pool.search(
-            cr, uid, [('name', '=', module_name.replace("module_", '')),
+            cr, SUPERUSER_ID, [('name', '=', module_name.replace("module_", '')),
             ('state','in', ['to install', 'installed', 'to upgrade'])],
-            context=context)
-        installed_module_ids = module_pool.search(
-            cr, uid, [('name', '=', module_name.replace("module_", '')),
-            ('state', 'in', ['uninstalled'])],
             context=context)
 
         if module_ids and not field_value:
-            dep_ids = module_pool.downstream_dependencies(cr, uid, module_ids, context=context)
+            dep_ids = module_pool.downstream_dependencies(cr, SUPERUSER_ID, module_ids, context=context)
             dep_name = [x.shortdesc for x  in module_pool.browse(
-                cr, uid, dep_ids + module_ids, context=context)]
+                cr, SUPERUSER_ID, dep_ids + module_ids, context=context)]
             message = '\n'.join(dep_name)
             return {
                 'warning': {
@@ -467,18 +472,6 @@ class res_config_settings(osv.osv_memory, res_config_module_installation_mixin):
                     'message': _('Disabling this option will also uninstall the following modules \n%s') % message,
                 }
             }
-        if installed_module_ids and field_value:
-            dep_ids = module_pool.upstream_dependencies(cr, uid, installed_module_ids, context=context)
-            dep_name = [x['display_name'] for x in module_pool.search_read(
-                cr, uid, ['|', ('id', 'in', installed_module_ids), ('id', 'in', dep_ids), ('application', '=', True)], context=context)]
-            if dep_name:
-                message = ''.join(["- %s \n" % name for name in dep_name])
-                return {
-                    'warning': {
-                        'title': _('Warning!'),
-                        'message': _('Enabling this feature will install the following paying application(s) : \n%s') % message,
-                    }
-                }
         return {}
 
     def _get_classified_fields(self, cr, uid, context=None):
@@ -505,8 +498,8 @@ class res_config_settings(osv.osv_memory, res_config_module_installation_mixin):
                 field_groups = getattr(field, 'group', 'base.group_user').split(',')
                 groups.append((name, map(ref, field_groups), ref(field.implied_group)))
             elif name.startswith('module_') and (isinstance(field, fields.boolean) or isinstance(field, fields.selection)):
-                mod_ids = ir_module.search(cr, uid, [('name', '=', name[7:])])
-                record = ir_module.browse(cr, uid, mod_ids[0], context) if mod_ids else None
+                mod_ids = ir_module.search(cr, SUPERUSER_ID, [('name', '=', name[7:])])
+                record = ir_module.browse(cr, SUPERUSER_ID, mod_ids[0], context) if mod_ids else None
                 modules.append((name, record))
             else:
                 others.append(name)
@@ -528,6 +521,8 @@ class res_config_settings(osv.osv_memory, res_config_module_installation_mixin):
         # groups: which groups are implied by the group Employee
         for name, groups, implied_group in classified['group']:
             res[name] = all(implied_group in group.implied_ids for group in groups)
+            if self._fields[name].type == 'selection':
+                res[name] = int(res[name])
 
         # modules: which modules are installed/to install
         for name, module in classified['module']:
@@ -632,7 +627,7 @@ class res_config_settings(osv.osv_memory, res_config_module_installation_mixin):
         action_ids = act_window.search(cr, uid, [('res_model', '=', self._name)], context=context)
         name = self._name
         if action_ids:
-            name = act_window.read(cr, uid, action_ids[0], ['name'], context=context)['name']
+            name = act_window.read(cr, uid, [action_ids[0]], ['name'], context=context)[0]['name']
         return [(record.id, name) for record in self.browse(cr, uid , ids, context=context)]
 
     def get_option_path(self, cr, uid, menu_xml_id, context=None):

@@ -3,12 +3,15 @@
 # * web
 # 
 # Translators:
+# Kostas Goutoudis <goutoudis@gmail.com>, 2015-2016
+# Kostas Goutoudis <goutoudis@gmail.com>, 2016
+# Sophia Anastasopoulos <sophiaanast1@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-12 14:29+0000\n"
-"PO-Revision-Date: 2015-10-13 09:50+0000\n"
+"POT-Creation-Date: 2016-01-18 04:43+0000\n"
+"PO-Revision-Date: 2017-11-29 22:37+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Greek (http://www.transifex.com/odoo/odoo-9/language/el/)\n"
 "MIME-Version: 1.0\n"
@@ -22,7 +25,14 @@ msgstr ""
 #: code:addons/web/static/src/js/views/form_common.js:870
 #, python-format
 msgid " & Close"
-msgstr ""
+msgstr "& Κλείσιμο"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_widgets.js:442
+#, python-format
+msgid " selected records"
+msgstr "επιλεγμένες εγγραφές"
 
 #. module: web
 #. openerp-web
@@ -30,28 +40,28 @@ msgstr ""
 #: code:addons/web/static/src/js/views/search_filters.js:290
 #, python-format
 msgid "%(field)s %(operator)s"
-msgstr ""
+msgstr "%(field)s %(operator)s"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/search_filters.js:116
 #, python-format
 msgid "%(field)s %(operator)s \"%(value)s\""
-msgstr ""
+msgstr "%(field)s %(operator)s \"%(value)s\""
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/list_view.js:1579
 #, python-format
 msgid "%(page)d/%(page_count)d"
-msgstr ""
+msgstr "%(page)d/%(page_count)d"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/view_manager.js:66
 #, python-format
 msgid "%(view_type)s view"
-msgstr ""
+msgstr "%(view_type)s προβολή"
 
 #. module: web
 #. openerp-web
@@ -118,7 +128,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:web.layout
 #: model:ir.ui.view,arch_db:web.qunit_suite
 msgid "&lt;!DOCTYPE html&gt;"
-msgstr ""
+msgstr "&lt;!DOCTYPE html&gt;"
 
 #. module: web
 #: model:ir.ui.view,arch_db:web.webclient_bootstrap
@@ -137,7 +147,7 @@ msgstr "'%s' δεν είναι σωστή ημερομηνία"
 #: code:addons/web/static/src/js/framework/time.js:193
 #, python-format
 msgid "'%s' is not a correct date, datetime nor time"
-msgstr ""
+msgstr "'%s' δεν είναι έγκυρη ημερομηνία. ημερομηνία ή/και ώρα"
 
 #. module: web
 #. openerp-web
@@ -179,21 +189,28 @@ msgstr "'%s' δεν μπορεί να μετατραπεί σε ημερομην
 #: code:addons/web/static/src/js/framework/formats.js:77
 #, python-format
 msgid "(%d records)"
-msgstr ""
+msgstr "(%d records)"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:106
+#, python-format
+msgid "(Community Edition)"
+msgstr "(Έκδοση της Κοινότητας)"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base_common.xml:100
 #, python-format
 msgid "(no string)"
-msgstr ""
+msgstr "(no string)"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base_common.xml:34
 #, python-format
 msgid "(nolabel)"
-msgstr ""
+msgstr "(χωρίς ετικέτα)"
 
 #. module: web
 #. openerp-web
@@ -212,11 +229,19 @@ msgstr "...Μεταφόρτωση είναι σε εξέλιξη..."
 #. module: web
 #: model:ir.ui.view,arch_db:web.menu_secondary
 msgid "<span class=\"oe_logo_edit\">Edit Company data</span>"
-msgstr ""
+msgstr "<span class=\"oe_logo_edit\">Επεξεργασία δεδομένων επιχείρησης</span>"
 
 #. module: web
 #: model:ir.ui.view,arch_db:web.menu_secondary
 msgid "<span>Odoo</span>"
+msgstr "<span>Odoo</span>"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/widgets/user_menu.js:81
+#: code:addons/web/static/src/xml/base.xml:84
+#, python-format
+msgid "About"
 msgstr ""
 
 #. module: web
@@ -231,7 +256,14 @@ msgstr "Μη επιτρεπτή πρόσβαση"
 #: code:addons/web/static/src/js/framework/crash_manager.js:21
 #, python-format
 msgid "Access Error"
-msgstr ""
+msgstr "Σφάλμα Πρόσβασης"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:1503
+#, python-format
+msgid "Access to all Enterprise Apps"
+msgstr "Πρόσβασης σε όλες τις Enterprise Εφαρμογές"
 
 #. module: web
 #. openerp-web
@@ -256,72 +288,79 @@ msgstr "ID Ενέργειας:"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_widgets.js:666
+#: code:addons/web/static/src/js/views/form_widgets.js:660
 #, python-format
 msgid "Activate"
+msgstr "Ενεργοποίηση"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:96
+#, python-format
+msgid "Activate the developer mode"
 msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_widgets.js:663
+#: code:addons/web/static/src/js/views/form_widgets.js:657
 #, python-format
 msgid "Active"
 msgstr "Ενεργό"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_relational_widgets.js:1357
-#: code:addons/web/static/src/xml/base.xml:1059
-#: code:addons/web/static/src/xml/base.xml:1299
+#: code:addons/web/static/src/js/views/form_relational_widgets.js:1367
+#: code:addons/web/static/src/xml/base.xml:1110
+#: code:addons/web/static/src/xml/base.xml:1343
 #, python-format
 msgid "Add"
-msgstr "Πρόσθηκη"
+msgstr "Προσθήκη"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1172
+#: code:addons/web/static/src/xml/base.xml:1216
 #, python-format
 msgid "Add Custom Filter"
-msgstr ""
+msgstr "Προσθήκη Προσαρμοσμένου Φίλτρου"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1173
+#: code:addons/web/static/src/xml/base.xml:1217
 #, python-format
 msgid "Add a condition"
 msgstr "Προσθέστε μια συνθήκη"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_relational_widgets.js:1006
+#: code:addons/web/static/src/js/views/form_relational_widgets.js:1016
 #, python-format
 msgid "Add an item"
 msgstr "Προσθήκη ενός αντικειμένου"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1183
+#: code:addons/web/static/src/xml/base.xml:1227
 #, python-format
 msgid "Add custom group"
-msgstr ""
+msgstr "Προσθήκη Προσαρμοσμένης ομαδοποίησης"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:272
+#: code:addons/web/static/src/xml/base.xml:323
 #, python-format
 msgid "Add..."
 msgstr "Προσθήκη..."
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_relational_widgets.js:1298
+#: code:addons/web/static/src/js/views/form_relational_widgets.js:1308
 #, python-format
 msgid "Add: "
 msgstr "Προσθήκη: "
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1079
+#: code:addons/web/static/src/xml/base.xml:1123
 #, python-format
 msgid "Advanced Search..."
 msgstr "Προχωρημένη αναζήτηση..."
@@ -331,72 +370,86 @@ msgstr "Προχωρημένη αναζήτηση..."
 #: code:addons/web/static/src/js/framework/dialog.js:162
 #, python-format
 msgid "Alert"
-msgstr ""
+msgstr "Προσοχή"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:513
+#: code:addons/web/static/src/xml/base.xml:564
 #, python-format
 msgid "All users"
 msgstr "Όλοι οι χρήστες"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1173
-#: code:addons/web/static/src/xml/base.xml:1193
+#: code:addons/web/static/src/xml/base.xml:1508
+#, python-format
+msgid "And more"
+msgstr "και περισσότερα"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:1217
+#: code:addons/web/static/src/xml/base.xml:1237
 #, python-format
 msgid "Apply"
 msgstr "Εφαρμογή"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_widgets.js:670
+#: code:addons/web/static/src/js/views/form_widgets.js:664
 #: code:addons/web/static/src/js/views/list_view.js:308
 #, python-format
 msgid "Archive"
-msgstr ""
+msgstr "Αρχειοθέτηση"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/form_widgets.js:671
 #, python-format
 msgid "Archived"
-msgstr ""
+msgstr "Αρχειοθετημένα"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/search_menus.js:243
 #, python-format
 msgid "Are you sure that you want to remove this filter?"
-msgstr ""
+msgstr "Είστε σίγουροι ότι θέλετε να αφαιρέστε αυτό το φίλτρο;"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:244
+#: code:addons/web/static/src/xml/base.xml:295
 #, python-format
 msgid "Attachment :"
 msgstr "Συνημένο:"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1283
+#: code:addons/web/static/src/xml/base.xml:1327
 #, python-format
 msgid "Available fields"
 msgstr "Διαθέσιμα πεδία"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:565
+#: code:addons/web/static/src/xml/base.xml:616
 #, python-format
 msgid "Bar Chart"
 msgstr "Ραβδόγραμμα"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/list_view.js:1946
+#: code:addons/web/static/src/js/views/list_view.js:1955
 #, python-format
 msgid "Binary file"
-msgstr ""
+msgstr "Δυαδικό αρχείο"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:1507
+#, python-format
+msgid "Bugfixes guarantee"
+msgstr "Εγγύηση διορθώσεις σφαλμάτων"
 
 #. module: web
 #. openerp-web
@@ -424,7 +477,7 @@ msgstr "Bytes,Kb,Mb,Gb,Tb,Pb,Eb,Zb,Yb"
 #: code:addons/web/static/src/js/views/list_common.js:134
 #, python-format
 msgid "Can't convert value %s to context"
-msgstr ""
+msgstr "Δεν είναι δυνατή η μετατροπή της τιμής %s σε Περιεχόμενο"
 
 #. module: web
 #. openerp-web
@@ -466,9 +519,16 @@ msgstr "Αλλαγή προεπιλογής:"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:916
-#: code:addons/web/static/src/xml/base.xml:970
-#: code:addons/web/static/src/xml/base.xml:972
+#: code:addons/web/static/src/js/views/form_widgets.js:447
+#, python-format
+msgid "Change selection "
+msgstr "Αλλαγή επιλογής"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:967
+#: code:addons/web/static/src/xml/base.xml:1021
+#: code:addons/web/static/src/xml/base.xml:1023
 #, python-format
 msgid "Clear"
 msgstr "Καθαρισμός"
@@ -502,14 +562,14 @@ msgstr "Κατάσταση:"
 #: code:addons/web/static/src/xml/base.xml:53
 #, python-format
 msgid "Confirm New Password:"
-msgstr ""
+msgstr "Επιβεβαίωση νέου Κωδικού Πρόσβασης:"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/framework/dialog.js:187
 #, python-format
 msgid "Confirmation"
-msgstr ""
+msgstr "Επιβεβαίωση"
 
 #. module: web
 #. openerp-web
@@ -518,32 +578,33 @@ msgstr ""
 msgid "Context:"
 msgstr "Έκφραση:"
 
-#: code:addons/web/static/src/xml/base.xml:80
-#: code:addons/web/static/src/xml/base_common.xml:159
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:116
 #, python-format
 msgid "Copyright © 2004-2015 Odoo S.A."
 msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_widgets.js:1351
+#: code:addons/web/static/src/js/views/form_widgets.js:1347
 #, python-format
 msgid "Could not display the selected image."
 msgstr "Δεν ήταν δυνατή η προβολή της συγκεκριμένης εικόνας."
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/list_view.js:1101
+#: code:addons/web/static/src/js/views/list_view.js:1110
 #, python-format
 msgid "Could not find id in dataset"
-msgstr ""
+msgstr "Δεν ήταν δυνατή η εύρεση του αναγνωριστικού στο σύνολο δεδομένων"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/framework/utils.js:180
 #, python-format
 msgid "Could not serialize XML"
-msgstr ""
+msgstr "Δεν ήταν δυνατή η σειριοποίηση XML"
 
 #. module: web
 #. openerp-web
@@ -628,21 +689,28 @@ msgstr "Βάση Δεδομένων"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:624
+#: code:addons/web/static/src/xml/base.xml:110
+#, python-format
+msgid "Database expiration:"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:675
 #, python-format
 msgid "Day"
 msgstr "Ημέρα"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_widgets.js:664
+#: code:addons/web/static/src/js/views/form_widgets.js:658
 #, python-format
 msgid "Deactivate"
-msgstr ""
+msgstr "Απενεργοποίηση"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:470
+#: code:addons/web/static/src/xml/base.xml:521
 #, python-format
 msgid "Default:"
 msgstr "Προεπιλογή:"
@@ -691,14 +759,21 @@ msgstr "Είστε σίγουροι ότι θέλετε να διαγράψετ�
 #: code:addons/web/static/src/js/views/form_view.js:780
 #, python-format
 msgid "Do you really want to delete this record?"
-msgstr "Είστε σίγουροι ότι θέλετε να διαγράψετε αυτή τη καταγραφή;"
+msgstr "Είστε σίγουροι ότι θέλετε να διαγράψετε αυτήν την εγγραφή;"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/list_view.js:630
 #, python-format
 msgid "Do you really want to remove these records?"
-msgstr "Είστε σίγουροι ότι θέλετε να διαγράψετε αυτές τη καταγραφές;"
+msgstr "Είστε σίγουροι ότι θέλετε να διαγράψετε αυτές τις εγγραφές;"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:82
+#, python-format
+msgid "Documentation"
+msgstr ""
 
 #. module: web
 #. openerp-web
@@ -734,7 +809,7 @@ msgstr "Λήψη \"%s\""
 #: code:addons/web/static/src/js/views/pivot_view.js:123
 #, python-format
 msgid "Download xls"
-msgstr ""
+msgstr "Λήψη xls"
 
 #. module: web
 #. openerp-web
@@ -771,7 +846,7 @@ msgstr "Επεξεργασία ενέργειας"
 #: code:addons/web/static/src/xml/base.xml:172
 #, python-format
 msgid "Edit SearchView"
-msgstr ""
+msgstr "Επεξεργασία Προβολής Αναζήτησης"
 
 #. module: web
 #. openerp-web
@@ -791,7 +866,7 @@ msgstr "Email"
 #: code:addons/web/static/src/xml/website.tour.xml:25
 #, python-format
 msgid "End This Tutorial"
-msgstr "Τερματισμός αυτού του Οδηγού"
+msgstr "Τερματισμός αυτής της Εκμάθησης"
 
 #. module: web
 #. openerp-web
@@ -800,6 +875,13 @@ msgstr "Τερματισμός αυτού του Οδηγού"
 #, python-format
 msgid "Error"
 msgstr "Σφάλμα"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_widgets.js:458
+#, python-format
+msgid "Error: Bad domain"
+msgstr "Σφάλμα: Λανθασμένος τομέας"
 
 #. module: web
 #: code:addons/web/controllers/main.py:838
@@ -819,7 +901,7 @@ msgstr "Σφάλμα εκτίμησης"
 #: code:addons/web/static/src/xml/base.xml:599
 #, python-format
 msgid "Expand all"
-msgstr ""
+msgstr "Ανάπτυξη όλων"
 
 #. module: web
 #. openerp-web
@@ -841,7 +923,7 @@ msgstr "Εξαγωγή δεδομένων"
 #: code:addons/web/static/src/xml/base.xml:1277
 #, python-format
 msgid "Export Formats"
-msgstr "Φορμάτ  Εξαγωγής"
+msgstr "Μορφές Εξαγωγής"
 
 #. module: web
 #. openerp-web
@@ -883,7 +965,7 @@ msgstr "Αγαπημένα"
 #: code:addons/web/static/src/js/views/form_view.js:1292
 #, python-format
 msgid "Field '%s' specified in view could not be found."
-msgstr ""
+msgstr "Το πεδίο '%s' που ορίζεται στην προβολή δεν μπορεί να βρεθεί."
 
 #. module: web
 #. openerp-web
@@ -898,7 +980,7 @@ msgstr "Πεδίο:"
 #: code:addons/web/static/src/xml/base.xml:167
 #, python-format
 msgid "Fields View Get"
-msgstr ""
+msgstr "Ανάκτηση Πεδίων Προβολής"
 
 #. module: web
 #. openerp-web
@@ -947,21 +1029,28 @@ msgstr "Ενεργό φίλτρο: %s"
 #: code:addons/web/static/src/js/views/search_menus.js:90
 #, python-format
 msgid "Filter with same name already exists."
-msgstr ""
+msgstr "Υπάρχει ήδη φίλτρο με το όνομα αυτό."
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1169
+#: code:addons/web/static/src/xml/base.xml:1213
 #, python-format
 msgid "Filters"
 msgstr "Φίλτρα"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:598
+#: code:addons/web/static/src/xml/base.xml:649
 #, python-format
 msgid "Flip axis"
-msgstr ""
+msgstr "Αναστροφή άξονα"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:119
+#, python-format
+msgid "For more information visit"
+msgstr "Για περισσότερες πληροφορίες, επισκεφθείτε"
 
 #. module: web
 #. openerp-web
@@ -973,10 +1062,24 @@ msgstr "Φόρμα"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/xml/base.xml:118
+#, python-format
+msgid "GNU Lesser General Public License"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:1500
+#, python-format
+msgid "Get this feature and much more with Odoo Enterprise!"
+msgstr "Αποκτήστε αυτό το χαρακτηριστικό και πολύ περισσότερα με Odoo Enterprise!"
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/js/framework/crash_manager.js:24
 #, python-format
 msgid "Global Business Error"
-msgstr ""
+msgstr "Γενικό Επιχειρησιακό Σφάλμα"
 
 #. module: web
 #. openerp-web
@@ -1048,46 +1151,62 @@ msgstr "Ανενεργός"
 #: code:addons/web/static/src/js/views/graph_widget.js:197
 #, python-format
 msgid "Invalid data"
+msgstr "Μη έγκυρα δεδομένα"
+
+#. module: web
+#: code:addons/web/controllers/main.py:655
+#: code:addons/web/controllers/main.py:669
+#, python-format
+msgid ""
+"Invalid database name. Only alphanumerical characters, underscore, hyphen "
+"and dot are allowed."
 msgstr ""
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/widgets/debug_manager.js:106
-#: code:addons/web/static/src/xml/base.xml:165
+#: code:addons/web/static/src/xml/base.xml:211
 #, python-format
 msgid "JS Tests"
 msgstr "JS Τεστ"
 
 #. module: web
-#: code:addons/web/controllers/main.py:845
+#: code:addons/web/controllers/main.py:769
 #, python-format
 msgid "Languages"
 msgstr "Γλώσσες"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:208
+#: code:addons/web/static/src/xml/base.xml:254
 #, python-format
 msgid "Latest Modification Date:"
 msgstr "Τελευταία Ημερομηνία Τροποποίησης:"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:204
+#: code:addons/web/static/src/xml/base.xml:250
 #, python-format
 msgid "Latest Modification by:"
 msgstr "Τελευταία τροποποίηση από:"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:177
+#: code:addons/web/static/src/xml/base.xml:223
 #, python-format
 msgid "Leave Debug Mode"
 msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:566
+#: code:addons/web/static/src/xml/base.xml:118
+#, python-format
+msgid "Licenced under the terms of"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:617
 #, python-format
 msgid "Line Chart"
 msgstr "Γραμμικό γράφημα"
@@ -1131,7 +1250,7 @@ msgid ""
 "%s\n"
 "\n"
 "%s"
-msgstr ""
+msgstr "Αποτυχία τοπικής αξιολόγησης\n%s\n\n%s"
 
 #. module: web
 #: model:ir.ui.view,arch_db:web.login
@@ -1157,7 +1276,7 @@ msgstr "Χαμηλή"
 #: code:addons/web/static/src/js/views/search_inputs.js:440
 #, python-format
 msgid "M2O search fields do not currently handle multiple default values"
-msgstr ""
+msgstr "Τα πεδία αναζήτησης ΠολλάΠροςΈνα δεν μπορούν να χειριστούν πολλαπλές προεπιλεγμένες τιμές"
 
 #. module: web
 #: model:ir.ui.view,arch_db:web.login_layout
@@ -1177,14 +1296,14 @@ msgstr "Διαχείριση Φίλτρων"
 #: code:addons/web/static/src/js/framework/misc.js:20
 #, python-format
 msgid "Maybe you should consider reloading the application by pressing F5..."
-msgstr ""
+msgstr "Ίσως θα πρέπει να εξετάσετε την επαναφόρτωση της εφαρμογής πατώντας F5 ..."
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:570
 #, python-format
 msgid "Measure"
-msgstr ""
+msgstr "Μέτρηση"
 
 #. module: web
 #. openerp-web
@@ -1198,7 +1317,7 @@ msgstr "Μετρήσεις"
 #: code:addons/web/static/src/js/widgets/debug_manager.js:89
 #, python-format
 msgid "Metadata (%s)"
-msgstr ""
+msgstr "Μεταδομένα (%s)"
 
 #. module: web
 #. openerp-web
@@ -1212,14 +1331,21 @@ msgstr "Μέθοδος:"
 #: code:addons/web/static/src/js/framework/crash_manager.js:22
 #, python-format
 msgid "Missing Record"
-msgstr ""
+msgstr "Λείπει εγγραφή"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:1505
+#, python-format
+msgid "Mobile support"
+msgstr "Υποστήριξη κινητού"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/widgets/debug_manager.js:129
 #, python-format
 msgid "Model %s fields"
-msgstr ""
+msgstr "Πεδία του μοντέλου %s"
 
 #. module: web
 #. openerp-web
@@ -1252,21 +1378,21 @@ msgstr "Περισσότερα"
 #. module: web
 #: model:ir.ui.view,arch_db:web.menu
 msgid "More <b class=\"caret\"/>"
-msgstr ""
+msgstr "Περισσότερα <b class=\"caret\"/>"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:1303
 #, python-format
 msgid "Move Down"
-msgstr ""
+msgstr "Μετακίνηση Κάτω"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:1302
 #, python-format
 msgid "Move Up"
-msgstr ""
+msgstr "Μετακίνηση Επάνω"
 
 #. module: web
 #. openerp-web
@@ -1280,7 +1406,7 @@ msgstr ""
 #: code:addons/web/static/src/js/tour.js:181
 #, python-format
 msgid "Move your mouse here to open the insert block"
-msgstr ""
+msgstr "Μετακινήστε εδώ το ποντίκι σας για να εισάγετε πλαίσιο"
 
 #. module: web
 #. openerp-web
@@ -1315,21 +1441,28 @@ msgstr "Νέο"
 #: code:addons/web/static/src/xml/base.xml:48
 #, python-format
 msgid "New Password:"
-msgstr ""
+msgstr "Νέος Κωδικός Πρόσβασης:"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:1504
+#, python-format
+msgid "New design"
+msgstr "Νέα σχεδίαση"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/search_inputs.js:330
 #, python-format
 msgid "No"
-msgstr ""
+msgstr "Όχι"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:192
 #, python-format
 msgid "No Update:"
-msgstr ""
+msgstr "Μη Ανανέωση:"
 
 #. module: web
 #. openerp-web
@@ -1338,7 +1471,7 @@ msgstr ""
 msgid ""
 "No data available for this chart. Try to add some records, or make sure that"
 " there is no active filter in the search bar."
-msgstr ""
+msgstr "Δεν υπάρχουν διαθέσιμα δεδομένα για αυτό το γράφημα. Δοκιμάστε να προσθέσετε κάποιες εγγραφές, ή βεβαιωθείτε\nότι δεν υπάρχει κάποιο ενεργό φίλτρο στη γραμμή αναζήτησης"
 
 #. module: web
 #. openerp-web
@@ -1354,21 +1487,21 @@ msgstr ""
 #: code:addons/web/static/src/js/views/form_view.js:123
 #, python-format
 msgid "No data provided."
-msgstr ""
+msgstr "Δεν παρέχονται δεδομένα."
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/graph_widget.js:88
 #, python-format
 msgid "No data to display"
-msgstr ""
+msgstr "Δεν υπάρχουν δεδομένα προς εμφάνιση"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:641
 #, python-format
 msgid "No data to display."
-msgstr ""
+msgstr "Δεν υπάρχουν δεδομένα προς εμφάνιση."
 
 #. module: web
 #. openerp-web
@@ -1379,17 +1512,24 @@ msgstr "Δεν υπάρχουν αποτελέσματα για προβολή..
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/js/views/form_widgets.js:456
+#, python-format
+msgid "No selected record"
+msgstr "Δεν έχουν επιλεχθεί εγγραφές"
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/js/views/form_relational_widgets.js:328
 #, python-format
-msgid "No value found for the field  for value "
-msgstr ""
+msgid "No value found for the field %s for value %s"
+msgstr "Δεν βρέθηκε τιμή για το πεδίο %s για την τιμή %s"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/framework/utils.js:144
 #, python-format
 msgid "Node [%s] is not a JSONified XML node"
-msgstr ""
+msgstr "Ο κόμβος [%s] δεν είναι συμβατός JSON κόμβος XML"
 
 #. module: web
 #. openerp-web
@@ -1410,14 +1550,14 @@ msgstr ""
 #: code:addons/web/static/src/js/views/graph_widget.js:226
 #, python-format
 msgid "Not enough data points"
-msgstr ""
+msgstr "Όχι αρκετά σημεία δεδομένων"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:838
 #, python-format
 msgid "Not shown in kanban"
-msgstr ""
+msgstr "Απόκρυψη σε kanban"
 
 #. module: web
 #. openerp-web
@@ -1436,17 +1576,31 @@ msgstr "Odoo"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/apps.js:189
+#: code:addons/web/static/src/xml/base.xml:101
 #, python-format
-msgid "Odoo Apps will be available soon"
+msgid "Odoo (Formerly OpenERP)"
 msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_widgets.js:1678
+#: code:addons/web/static/src/js/apps.js:189
+#, python-format
+msgid "Odoo Apps will be available soon"
+msgstr "Οι Εφαρμογές Odoo θα είναι σύντομα διαθέσιμες"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_widgets.js:1675
 #, python-format
 msgid "Odoo Enterprise"
-msgstr ""
+msgstr "Odoo Enterprise"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:117
+#, python-format
+msgid "Odoo S.A."
+msgstr "Odoo A.E."
 
 #. module: web
 #: model:ir.ui.view,arch_db:web.qunit_suite
@@ -1455,10 +1609,24 @@ msgstr "Odoo Web Τεστ"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_widgets.js:677
+#: code:addons/web/static/src/xml/base.xml:117
+#, python-format
+msgid "Odoo is a trademark of"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:119
+#, python-format
+msgid "Odoo.com"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_widgets.js:671
 #, python-format
 msgid "Off"
-msgstr ""
+msgstr "Κλειστό"
 
 #. module: web
 #. openerp-web
@@ -1475,14 +1643,14 @@ msgstr "Ok"
 #: code:addons/web/static/src/xml/base.xml:43
 #, python-format
 msgid "Old Password:"
-msgstr ""
+msgstr "Παλιός Κωδικός Πρόσβασης:"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/form_widgets.js:675
 #, python-format
 msgid "On"
-msgstr ""
+msgstr "Ενεργό"
 
 #. module: web
 #. openerp-web
@@ -1493,24 +1661,31 @@ msgstr "Σε αλλαγή:"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/widgets/progress_bar.js:76
+#: code:addons/web/static/src/js/widgets/progress_bar.js:79
 #, python-format
 msgid "Only Integer Value should be valid."
-msgstr ""
+msgstr "Μόνο ακέραιη τιμή θα έπρεπε να είναι έγκυρη."
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:506
+#: code:addons/web/static/src/xml/base.xml:557
 #, python-format
 msgid "Only you"
 msgstr "Μόνο εσείς"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/xml/base.xml:198
+#, python-format
+msgid "Open Debug Menu"
+msgstr ""
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/js/views/form_relational_widgets.js:153
-#: code:addons/web/static/src/js/views/form_relational_widgets.js:924
-#: code:addons/web/static/src/js/views/form_relational_widgets.js:1088
-#: code:addons/web/static/src/js/views/form_relational_widgets.js:1314
+#: code:addons/web/static/src/js/views/form_relational_widgets.js:928
+#: code:addons/web/static/src/js/views/form_relational_widgets.js:1098
+#: code:addons/web/static/src/js/views/form_relational_widgets.js:1324
 #, python-format
 msgid "Open: "
 msgstr "Άνοιγμα: "
@@ -1518,7 +1693,7 @@ msgstr "Άνοιγμα: "
 #. module: web
 #: model:ir.ui.view,arch_db:web.login
 msgid "Password"
-msgstr "Συνθηματικό"
+msgstr "Κωδικός Πρόσβασης"
 
 #. module: web
 #. openerp-web
@@ -1534,7 +1709,7 @@ msgstr "Κυκλικό Διάγραμμα"
 msgid ""
 "Pie chart cannot display all zero numbers.. Try to change your domain to "
 "display positive results"
-msgstr ""
+msgstr "Το γράφημα πίτας δεν μπορεί να εμφανίστεί όταν όλες οι τιμές είναι μηδέν. Προσπαθήστε να αλλάξετε τον τομέα έτσι ώστε να εμφανίζει μόνο θετικά αποτελέσματα"
 
 #. module: web
 #. openerp-web
@@ -1543,28 +1718,28 @@ msgstr ""
 msgid ""
 "Pie chart cannot mix positive and negative numbers. Try to change your "
 "domain to only display positive results"
-msgstr ""
+msgstr "Το γράφημα πίτας δεν μπορεί να περιέχει και αρνητικές και θετικές τιμές. Προσπαθήστε να αλλάξετε τον τομέα έτσι ώστε να εμφανίζει μόνο θετικά αποτελέσματα"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/pivot_view.js:25
 #, python-format
 msgid "Pivot"
-msgstr ""
+msgstr "Συγκεντρωτικό"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/widgets/data_export.js:165
 #, python-format
 msgid "Please enter save field list name"
-msgstr ""
+msgstr "Παρακαλούμε εισάγετε τον όνομα της λίστας των πεδίων για αποθήκευση"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:1316
 #, python-format
 msgid "Please note that only the selected ids will be exported."
-msgstr ""
+msgstr "Παρακαλώ σημειώστε ότι μόνο τα επιλεγμένα ids θα εξαχθούν."
 
 #. module: web
 #. openerp-web
@@ -1573,7 +1748,7 @@ msgstr ""
 msgid ""
 "Please pay attention that all records matching your search filter will be "
 "exported. Not only the selected ids."
-msgstr ""
+msgstr "Παρακαλώ προσέξτε ότι όλες οι εγγραφές που αντιστοιχούν στην αναζήτησή σας θα εξαχθούν. Όχι μόνο τα επιλεγμένα τα αναγνωριστικά."
 
 #. module: web
 #. openerp-web
@@ -1592,12 +1767,12 @@ msgstr "Παρακαλώ επιλέξτε πεδία για να αποθηκε�
 #. module: web
 #: model:ir.ui.view,arch_db:web.menu_secondary
 msgid "Powered by"
-msgstr ""
+msgstr "Δημιουργήθηκε με "
 
 #. module: web
 #: model:ir.ui.view,arch_db:web.login_layout
 msgid "Powered by <span>Odoo</span>"
-msgstr ""
+msgstr "Δημιουργήθηκε με <span>Odoo</span>"
 
 #. module: web
 #. openerp-web
@@ -1627,8 +1802,8 @@ msgstr "Εκτύπωση Ροής Εργασιών"
 #: code:addons/web/static/src/xml/base.xml:578
 #: code:addons/web/static/src/xml/base.xml:610
 #, python-format
-msgid "Quantity"
-msgstr "Ποσότητα"
+msgid "Count"
+msgstr "Πλήθος"
 
 #. module: web
 #. openerp-web
@@ -1675,66 +1850,66 @@ msgstr "Σφάλμα Πόρων"
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/form_common.js:870
-#: code:addons/web/static/src/xml/base.xml:405
 #: code:addons/web/static/src/xml/base.xml:456
-#: code:addons/web/static/src/xml/base.xml:1209
+#: code:addons/web/static/src/xml/base.xml:507
+#: code:addons/web/static/src/xml/base.xml:1253
 #, python-format
 msgid "Save"
 msgstr "Αποθήκευση"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_common.js:881
+#: code:addons/web/static/src/js/views/form_common.js:885
 #, python-format
 msgid "Save & New"
 msgstr "Αποθήκευση  & Δημιουργία Νέου"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:963
-#: code:addons/web/static/src/xml/base.xml:965
+#: code:addons/web/static/src/xml/base.xml:1014
+#: code:addons/web/static/src/xml/base.xml:1016
 #, python-format
 msgid "Save As"
 msgstr "Αποθήκευση ως"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_widgets.js:1208
+#: code:addons/web/static/src/js/views/form_widgets.js:1204
 #, python-format
 msgid "Save As..."
 msgstr "Αποθήκευση ως…"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1354
+#: code:addons/web/static/src/xml/base.xml:1398
 #, python-format
 msgid "Save as:"
 msgstr "Αποθήκευση ως:"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1201
+#: code:addons/web/static/src/xml/base.xml:1245
 #, python-format
 msgid "Save current search"
-msgstr ""
+msgstr "Αποθήκευση τρέχοσας αναζήτησης"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_view.js:1129
+#: code:addons/web/static/src/js/views/form_view.js:1134
 #, python-format
 msgid "Save default"
 msgstr "Αποθήκευση προεπιλογής"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1287
+#: code:addons/web/static/src/xml/base.xml:1331
 #, python-format
 msgid "Save fields list"
 msgstr "Αποθήκευση λίστας πεδίων"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1360
+#: code:addons/web/static/src/xml/base.xml:1404
 #, python-format
 msgid "Saved exports:"
 msgstr "Αποθήκευση εξαγωγών:"
@@ -1744,7 +1919,7 @@ msgstr "Αποθήκευση εξαγωγών:"
 #: code:addons/web/static/src/js/views/search_inputs.js:349
 #, python-format
 msgid "Search %(field)s at: %(value)s"
-msgstr ""
+msgstr "Αναζήτηση %(field)s στο: %(value)s"
 
 #. module: web
 #. openerp-web
@@ -1753,7 +1928,7 @@ msgstr ""
 #: code:addons/web/static/src/js/views/search_inputs.js:391
 #, python-format
 msgid "Search %(field)s for: %(value)s"
-msgstr ""
+msgstr "Αναζήτηση %(field)s για: %(value)s"
 
 #. module: web
 #. openerp-web
@@ -1778,8 +1953,15 @@ msgstr "Αναζήτηση: "
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_common.js:1037
-#: code:addons/web/static/src/xml/base.xml:957
+#: code:addons/web/static/src/js/views/form_widgets.js:444
+#, python-format
+msgid "See selection "
+msgstr "Δείτε την επιλογή"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_common.js:1043
+#: code:addons/web/static/src/xml/base.xml:1008
 #, python-format
 msgid "Select"
 msgstr "Επιλογή"
@@ -1787,14 +1969,28 @@ msgstr "Επιλογή"
 #. module: web
 #: model:ir.ui.view,arch_db:web.login
 msgid "Select <i class=\"fa fa-database\"/>"
-msgstr ""
+msgstr "Επιλογή <i class=\"fa fa-database\"/>"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_common.js:1072
+#: code:addons/web/static/src/js/views/form_widgets.js:468
+#, python-format
+msgid "Select records..."
+msgstr "Επιλογή εγγραφών..."
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_common.js:1078
 #, python-format
 msgid "Selected domain"
-msgstr ""
+msgstr "Επιλεγμένος τομέας"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_widgets.js:468
+#, python-format
+msgid "Selected records"
+msgstr "Επιλεγμένες εγγραφές"
 
 #. module: web
 #. openerp-web
@@ -1822,7 +2018,7 @@ msgstr "Ορισμός προεπιλογών"
 #: code:addons/web/static/src/js/views/list_view.js:1013
 #, python-format
 msgid "Setting 'id' attribute on existing record %s"
-msgstr ""
+msgstr "Ορίστε το χαρακτηριστικό 'id' στην υπάρχουσα εγγραφή %s"
 
 #. module: web
 #. openerp-web
@@ -1836,7 +2032,7 @@ msgstr "Κοινό με όλους τους χρήστες"
 #: code:addons/web/static/src/js/apps.js:189
 #, python-format
 msgid "Showing locally available modules"
-msgstr ""
+msgstr "Προβολή τοπικά διαθέσιμων εφαρμογών"
 
 #. module: web
 #. openerp-web
@@ -1846,11 +2042,17 @@ msgid "Size:"
 msgstr "Μέγεθος:"
 
 #. module: web
+#: code:addons/web/controllers/main.py:1067
+#, python-format
+msgid "Something horrible happened"
+msgstr "Κάτι τρομερό συνέβη"
+
+#. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base_common.xml:107
 #, python-format
 msgid "Special:"
-msgstr ""
+msgstr "Ειδικά:"
 
 #. module: web
 #. openerp-web
@@ -1868,17 +2070,24 @@ msgstr "Ακόμη Φορτώνει...<br />Παρακαλώ Περιμένετ�
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_widgets.js:676
+#: code:addons/web/static/src/xml/base.xml:83
 #, python-format
-msgid "Switch Off"
-msgstr ""
+msgid "Support"
+msgstr "Υποστήριξη"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_widgets.js:678
+#: code:addons/web/static/src/js/views/form_widgets.js:670
+#, python-format
+msgid "Switch Off"
+msgstr "Κλειστό"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_widgets.js:672
 #, python-format
 msgid "Switch On"
-msgstr ""
+msgstr "Ανοιχτό"
 
 #. module: web
 #. openerp-web
@@ -1889,11 +2098,17 @@ msgstr "Κάνε ένα λεπτό διάλειμα,<br />γιατί ακόμη 
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/widgets/debug_manager.js:152
-#: code:addons/web/static/src/xml/base.xml:170
+#: code:addons/web/static/src/xml/base.xml:216
 #, python-format
 msgid "Technical Translation"
 msgstr "Τεχνική Μετάφραση"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_widgets.js:458
+#, python-format
+msgid "The domain is wrong."
+msgstr "Ο τομέας είναι λάθος"
 
 #. module: web
 #. openerp-web
@@ -1916,7 +2131,7 @@ msgstr "Τα επόμενα πεδία είναι μη έγκυρα"
 msgid ""
 "The line has been modified, your changes will be discarded. Are you sure you"
 " want to discard the changes ?"
-msgstr ""
+msgstr "Αυτή η γραμμή έχει τροποποιηθεί, οι αλλαγές σας θα χαθούν. Είστε σίγουροι ότι θέλετε να απορρίψετε αυτές τις αλλαγές;"
 
 #. module: web
 #: code:addons/web/controllers/main.py:831
@@ -1929,7 +2144,7 @@ msgstr "Ο νέος κωδικός και η επιβεβαίωση του πρ�
 #: code:addons/web/static/src/js/views/form_relational_widgets.js:1107
 #, python-format
 msgid "The o2m record must be saved before an action can be used"
-msgstr ""
+msgstr "Η εγγραφή ΈναΠροςΠολλά πρέπει να αποθηκευθτεί πριν χρησιμοποιηθεί για μια ενέργεια"
 
 #. module: web
 #: code:addons/web/controllers/main.py:837
@@ -1943,7 +2158,7 @@ msgstr "Ο παλιός κωδικός που δώσατε είναι λάθος
 #: code:addons/web/static/src/js/views/form_view.js:357
 #, python-format
 msgid "The record could not be found in the database."
-msgstr "Η καταγραφή δεν εντοπίστηκε στην βάση δεδομένων"
+msgstr "Η εγγραφή δεν εντοπίστηκε στην βάση δεδομένων"
 
 #. module: web
 #. openerp-web
@@ -1952,7 +2167,7 @@ msgstr "Η καταγραφή δεν εντοπίστηκε στην βάση δ
 msgid ""
 "The record has been modified, your changes will be discarded. Are you sure "
 "you want to leave this page ?"
-msgstr ""
+msgstr "Αυτή η καταγραφή έχει τροποποιηθεί, οι αλλαγές σας θα χαθούν. Είστε σίγουροι ότι θέλετε να φύγετε από αυτή τη σελίδα;"
 
 #. module: web
 #. openerp-web
@@ -1968,7 +2183,7 @@ msgstr "Το συγκεκριμένο αρχείο ξεπερνάει το μέ�
 msgid ""
 "The type of the field '%s' must be a many2many field with a relation to "
 "'ir.attachment' model."
-msgstr ""
+msgstr "Ο τύπος του πεδίου '%s' πρέπει να έχει μία σχέση ΠολλάΠροςΠολλά με το μοντέλο 'ir.attachment'."
 
 #. module: web
 #. openerp-web
@@ -1999,7 +2214,7 @@ msgstr "Αυτός ο πόρος είναι κενός"
 msgid ""
 "This wizard will export all data that matches the current search criteria to a CSV file.\n"
 "            You can export all data or only the fields that can be reimported after modification."
-msgstr ""
+msgstr "Αυτός ο οδηγός θα εξάγει όλα τα στοιχεία που ταιριάζουν με τα κριτήρια της αναζήτησής σε ένα αρχείο CSV.\nΜπορείτε να εξάγετε όλα τα δεδομένα ή μόνο τα πεδία που μπορούν να επανεισαχθούν μετά την τροποποίηση."
 
 #. module: web
 #. openerp-web
@@ -2008,14 +2223,14 @@ msgstr ""
 msgid ""
 "Timezone Mismatch : The timezone of your browser doesn't match the selected "
 "one. The time in Odoo is displayed according to your field timezone."
-msgstr ""
+msgstr "Ασυμφωνία Ζώνης ώρας : Η ζώνη ώρας του προγράμματος περιήγησης σας δεν ταιριάζει με την επιλεγμένη. Ο χρόνος στο Odoo εμφανίζεται σύμφωνα με τη ζώνη ώρας σας."
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:162
 #, python-format
 msgid "Toggle Form Layout Outline"
-msgstr ""
+msgstr "Εναλλαγή της διάταξης Φόρμας σε Διάρθρωση"
 
 #. module: web
 #. openerp-web
@@ -2029,7 +2244,7 @@ msgstr "Σύνολο"
 #: code:addons/web/static/src/js/web_client.js:134
 #, python-format
 msgid "Traceback:"
-msgstr ""
+msgstr "Ανίχνευση προς τα πίσω:"
 
 #. module: web
 #. openerp-web
@@ -2043,7 +2258,7 @@ msgstr "Δέντρο"
 #: code:addons/web/static/src/js/framework/crash_manager.js:48
 #, python-format
 msgid "Trying to reconnect... "
-msgstr ""
+msgstr "Προσπάθεια επανασύνδεσης..."
 
 #. module: web
 #. openerp-web
@@ -2058,7 +2273,7 @@ msgstr "Είδος:"
 #: code:addons/web/static/src/js/views/list_view.js:309
 #, python-format
 msgid "Unarchive"
-msgstr ""
+msgstr "Μη αρχειοθετημένο"
 
 #. module: web
 #. openerp-web
@@ -2082,7 +2297,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/base.xml:650
 #, python-format
 msgid "Unhandled widget"
-msgstr ""
+msgstr "Μη χειρίσιμο γραφικό στοιχείο"
 
 #. module: web
 #. openerp-web
@@ -2103,21 +2318,21 @@ msgstr "Άγνωστο πεδίο  %s στον τομέα %s"
 #: code:addons/web/static/src/js/views/list_view.js:1163
 #, python-format
 msgid "Unknown m2m command %s"
-msgstr ""
+msgstr "Άγνωστη εντολή %s ΠολλάΠροςΠολλά"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/framework/pyeval.js:949
 #, python-format
 msgid "Unknown nonliteral type "
-msgstr ""
+msgstr "Άγνωστος μη γραμματικού τύπου"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/framework/data.js:1067
 #, python-format
 msgid "Unknown operator %s in domain %s"
-msgstr ""
+msgstr "Άγνωστος χειριστής %s στον τομέα %s"
 
 #. module: web
 #. openerp-web
@@ -2128,38 +2343,36 @@ msgstr "Απεριόριστο"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/framework/data.js:1113
+#: code:addons/web/static/src/js/framework/data.js:1120
 #, python-format
 msgid "Unsupported operator %s in domain %s"
 msgstr "Μη υποστηριζόμενος χειριστής %s στο domain %s"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_widgets.js:1661
-#, python-format
-msgid "Upgrade now"
-msgstr ""
-
-#. module: web
-#. openerp-web
 #: code:addons/web/static/src/js/views/form_widgets.js:1658
 #, python-format
-msgid ""
-"Upgrade to <a href=\"https://www.odoo.com/editions\">Odoo Enterprise</a> to "
-"activate this feature."
-msgstr ""
+msgid "Upgrade now"
+msgstr "Αναβάθμιση τώρα"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:919
-#: code:addons/web/static/src/xml/base.xml:980
+#: code:addons/web/static/src/xml/base.xml:1506
+#, python-format
+msgid "Upgrade to future versions"
+msgstr "Αναβάθμιση σε μελλοντικές εκδόσεις"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:970
+#: code:addons/web/static/src/xml/base.xml:1031
 #, python-format
 msgid "Uploading ..."
 msgstr "Αποστολή..."
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_relational_widgets.js:1620
+#: code:addons/web/static/src/js/views/form_relational_widgets.js:1633
 #: code:addons/web/static/src/js/widgets/sidebar.js:168
 #, python-format
 msgid "Uploading Error"
@@ -2184,6 +2397,13 @@ msgstr "Χρησιμοποίησε ως προεπιλογή"
 #: code:addons/web/static/src/js/framework/crash_manager.js:23
 #, python-format
 msgid "Validation Error"
+msgstr "Σφάλμα Επικύρωσης"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:105
+#, python-format
+msgid "Version"
 msgstr ""
 
 #. module: web
@@ -2206,21 +2426,21 @@ msgstr "Προβολή"
 #: code:addons/web/static/src/xml/base.xml:166
 #, python-format
 msgid "View Fields"
-msgstr ""
+msgstr "Προβολή Πεδίων"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:161
 #, python-format
 msgid "View Metadata"
-msgstr ""
+msgstr "Προβολή Μεταδομένων"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/form_relational_widgets.js:746
 #, python-format
 msgid "View type '%s' is not supported in X2Many."
-msgstr ""
+msgstr "Η προβολή τύπου '%s' δεν υποστηρίζεται σε XΠροςΠολλά."
 
 #. module: web
 #. openerp-web
@@ -2246,7 +2466,7 @@ msgstr "Εβδομάδα"
 #: code:addons/web/static/src/js/views/form_view.js:1296
 #, python-format
 msgid "Widget type '%s' is not implemented"
-msgstr ""
+msgstr "Το γραφικό στοιχείο τύπου '%s' δεν έχει υλοποιηθεί"
 
 #. module: web
 #. openerp-web
@@ -2260,14 +2480,20 @@ msgstr "Γραφικό συστατικό:"
 #: code:addons/web/static/src/js/widgets/progress_bar.js:76
 #, python-format
 msgid "Wrong value entered!"
-msgstr ""
+msgstr "Έχει εισαχθεί λάθος τιμή!"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:188
 #, python-format
 msgid "XML ID:"
-msgstr ""
+msgstr "XML ID:"
+
+#. module: web
+#: code:addons/web/controllers/main.py:513
+#, python-format
+msgid "Wrong login/password"
+msgstr "Λανθασμένο όνομα χρήστη/κωδικός πρόσβασης"
 
 #. module: web
 #. openerp-web
@@ -2289,14 +2515,14 @@ msgstr "Ναι"
 #: code:addons/web/static/src/js/framework/crash_manager.js:53
 #, python-format
 msgid "You are back online"
-msgstr ""
+msgstr "Έχετε επανασυνδεθεί"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/form_relational_widgets.js:49
 #, python-format
 msgid "You are creating a new %s, are you sure it does not exist yet?"
-msgstr ""
+msgstr "Θέλετε να δημιουργήσετε μία νέα %s, είσαστε σίγουροι ότι δεν υπάρχει ήδη;"
 
 #. module: web
 #: code:addons/web/controllers/main.py:829
@@ -2310,7 +2536,7 @@ msgstr "Δεν μπορείτε να αφήσετε κανένα συνθημα�
 #, python-format
 msgid ""
 "You may not believe it,<br />but the application is actually loading..."
-msgstr ""
+msgstr "Μπορεί να μην το πιστεύετε,<br/>αλλά η εφαρμογή φορτώνει..."
 
 #. module: web
 #. openerp-web
@@ -2331,21 +2557,21 @@ msgstr "Πρέπει να επιλέξετε τουλάχιστον μία εγ�
 #: code:addons/web/static/src/js/framework/crash_manager.js:69
 #, python-format
 msgid "Your Odoo session expired. Please refresh the current web page."
-msgstr ""
+msgstr "Έληξε η Odoo συνεδρία σας. Παρακαλούμε ανανεώστε την τρέχουσα ιστοσελίδα."
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/framework/core.js:133
 #, python-format
 msgid "a day ago"
-msgstr ""
+msgstr "Μια ημέρα πριν"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/framework/core.js:129
 #, python-format
 msgid "about a minute ago"
-msgstr ""
+msgstr "Πριν από περίπου ένα λεπτό"
 
 #. module: web
 #. openerp-web
@@ -2359,7 +2585,7 @@ msgstr "περίπου πριν από ένα μήνα"
 #: code:addons/web/static/src/js/framework/core.js:137
 #, python-format
 msgid "about a year ago"
-msgstr ""
+msgstr "Πριν από περίπου ένα χρόνο"
 
 #. module: web
 #. openerp-web
@@ -2380,7 +2606,7 @@ msgstr "περιέχει"
 #: code:addons/web/static/src/js/views/search_filters.js:161
 #, python-format
 msgid "doesn't contain"
-msgstr ""
+msgstr "δεν περιέχει"
 
 #. module: web
 #. openerp-web
@@ -2389,7 +2615,7 @@ msgstr ""
 #: code:addons/web/static/src/js/views/search_filters.js:240
 #, python-format
 msgid "greater than"
-msgstr ""
+msgstr "μεγαλύτερη από"
 
 #. module: web
 #. openerp-web
@@ -2398,7 +2624,7 @@ msgstr ""
 #: code:addons/web/static/src/js/views/search_filters.js:242
 #, python-format
 msgid "greater than or equal to"
-msgstr ""
+msgstr "Μεγαλύτερο ή ίσο του"
 
 #. module: web
 #. openerp-web
@@ -2406,7 +2632,7 @@ msgstr ""
 #: code:addons/web/static/src/js/views/search_filters.js:267
 #, python-format
 msgid "is"
-msgstr ""
+msgstr "είναι"
 
 #. module: web
 #. openerp-web
@@ -2416,14 +2642,14 @@ msgstr ""
 #: code:addons/web/static/src/js/views/search_filters.js:238
 #, python-format
 msgid "is equal to"
-msgstr ""
+msgstr "είναι ίσο με"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/search_filters.js:286
 #, python-format
 msgid "is false"
-msgstr ""
+msgstr "είναι ψευδής"
 
 #. module: web
 #. openerp-web
@@ -2440,7 +2666,7 @@ msgstr "δεν είναι"
 #: code:addons/web/static/src/js/views/search_filters.js:239
 #, python-format
 msgid "is not equal to"
-msgstr ""
+msgstr "δεν είναι ίσο με"
 
 #. module: web
 #. openerp-web
@@ -2451,7 +2677,7 @@ msgstr ""
 #: code:addons/web/static/src/js/views/search_filters.js:270
 #, python-format
 msgid "is not set"
-msgstr ""
+msgstr "δεν έχει οριστεί"
 
 #. module: web
 #. openerp-web
@@ -2462,14 +2688,14 @@ msgstr ""
 #: code:addons/web/static/src/js/views/search_filters.js:269
 #, python-format
 msgid "is set"
-msgstr ""
+msgstr "έχει οριστεί"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/search_filters.js:285
 #, python-format
 msgid "is true"
-msgstr ""
+msgstr "είναι αληθές"
 
 #. module: web
 #. openerp-web
@@ -2478,7 +2704,7 @@ msgstr ""
 #: code:addons/web/static/src/js/views/search_filters.js:241
 #, python-format
 msgid "less than"
-msgstr ""
+msgstr "μικρότερο από"
 
 #. module: web
 #. openerp-web
@@ -2494,14 +2720,14 @@ msgstr "λιγότερο από ένα λεπτό πριν"
 #: code:addons/web/static/src/js/views/search_filters.js:243
 #, python-format
 msgid "less than or equal to"
-msgstr ""
+msgstr "μικρότερο ή ίσο από"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/search_inputs.js:229
 #, python-format
 msgid "not a valid integer"
-msgstr ""
+msgstr "δεν είναι έγκυρος ακέραιος"
 
 #. module: web
 #. openerp-web

@@ -1,0 +1,660 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * mrp_operations
+# 
+# Translators:
+# Martin Trigaux, 2016
+# Shaima Safar <shaima.safar@open-inside.com>, 2017
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-14 10:27+0000\n"
+"PO-Revision-Date: 2017-03-22 10:22+0000\n"
+"Last-Translator: Shaima Safar <shaima.safar@open-inside.com>\n"
+"Language-Team: Arabic (http://www.transifex.com/odoo/odoo-9/language/ar/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ar\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_workorder_nbr
+msgid "# of Lines"
+msgstr "عدد السطور"
+
+#. module: mrp_operations
+#: model:ir.model.fields,help:mrp_operations.field_mrp_production_workcenter_line_state
+msgid ""
+"* When a work order is created it is set in 'Draft' status.\n"
+"* When user sets work order in start mode that time it will be set in 'In Progress' status.\n"
+"* When work order is in running mode, during that time if user wants to stop or to make changes in order then can set in 'Pending' status.\n"
+"* When the user cancels the work order it will be set in 'Canceled' status.\n"
+"* When order is completely processed that time it is set in 'Finished' status."
+msgstr "* عندما يتم إنشاء أمر التشغيل يتم تعيين الحاله \"مسوده\"\n* عندما يحدد المستخدم من أمر التشغيل  فى حاله البدايه ذلك الوقت سيتم تعيين الحاله  \" في التقدم \" \n* عندما يكون أمر التشغيل في وسط التشغيل، وخلال ذلك الوقت إذا كان المستخدم يريد أن يتوقف أو لإجراء تغييرات في الامر ثم يمكن أن يحدد الحاله \"معلق\"\n* عندما يلغي المستخدم أمر التشغيل سيتم تعيين الحاله \"ملغاة\"\n* عندما تتم معالجة الامر  تماما ذلك الوقت يتم تعيين الحاله \"انتهى...."
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_workcenter_form_view_inherit
+msgid "Actual Production Date"
+msgstr "تاريخ الانتاج الحقيقي"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_workorder_bom_id
+msgid "Bill of Material"
+msgstr "قائمة الخامات"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.operation_calendar_view
+msgid "Calendar View"
+msgstr "عرض النتيجة"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_workcenter_form_view_inherit
+msgid "Cancel"
+msgstr "إلغاء"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_form_inherit_view
+msgid "Cancel Order"
+msgstr "إلغاء الأمر"
+
+#. module: mrp_operations
+#: selection:mrp.production.workcenter.line,production_state:0
+msgid "Canceled"
+msgstr "ملغي"
+
+#. module: mrp_operations
+#: selection:mrp.production.workcenter.line,state:0
+#: selection:mrp.workorder,state:0
+#: selection:mrp_operations.operation.code,start_stop:0
+msgid "Cancelled"
+msgstr "ملغي"
+
+#. module: mrp_operations
+#: model:ir.model.fields,help:mrp_operations.field_mrp_production_allow_reorder
+msgid ""
+"Check this to be able to move independently all production orders, without "
+"moving dependent ones."
+msgstr "تحقق من هذا لتتمكن من تحريك اوامر الانتاج بشكل مستقل, دون تحريك مايعتمد عليهم."
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_stock_move_move_dest_id_lines
+msgid "Children Moves"
+msgstr "التحركات الفرعية"
+
+#. module: mrp_operations
+#: model:ir.actions.act_window,help:mrp_operations.mrp_production_wc_action_form
+#: model:ir.actions.act_window,help:mrp_operations.mrp_production_wc_action_planning
+msgid "Click to start a new work order."
+msgstr "انقر هنا لبدأ أمر عمل جديد"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_code_code
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_code_id_10488
+msgid "Code"
+msgstr "الكود"
+
+#. module: mrp_operations
+#: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_confirm_action
+msgid "Confirmed Work Orders"
+msgstr "اوامر العمل المؤكدة"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_code_create_uid
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_create_uid
+msgid "Created by"
+msgstr "أنشئ بواسطة"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_code_create_date
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_create_date
+msgid "Created on"
+msgstr "أنشئ في"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.view_report_mrp_workorder_filter
+msgid "Current"
+msgstr "الحالي"
+
+#. module: mrp_operations
+#: model:ir.filters,name:mrp_operations.filter_mrp_workorder_current_production
+msgid "Current Production"
+msgstr "الانتاج الحالى "
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_workorder_date
+msgid "Date"
+msgstr "التاريخ"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_workorder_delay
+msgid "Delay"
+msgstr "تأخير"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_code_display_name
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_display_name
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_workorder_display_name
+msgid "Display Name"
+msgstr "اسم العرض"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.view_report_mrp_workorder_filter
+#: selection:mrp.production.workcenter.line,production_state:0
+#: selection:mrp_operations.operation.code,start_stop:0
+msgid "Done"
+msgstr "منتهي"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.view_mrp_production_workcenter_form_view_filter
+#: selection:mrp.production.workcenter.line,production_state:0
+#: selection:mrp.production.workcenter.line,state:0
+#: selection:mrp.workorder,state:0
+msgid "Draft"
+msgstr "مسودة"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_workcenter_form_view_inherit
+msgid "Duration"
+msgstr "المدة"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_date_finished
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_production_workcenter_line_date_finished
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_production_workcenter_line_date_planned_end
+msgid "End Date"
+msgstr "تاريخ الإنتهاء"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_form_inherit_view
+msgid "Finish Order"
+msgstr "إنهاء الأمر"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_form_inherit_view
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_form_inherit_view2
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_workcenter_form_view_inherit
+#: selection:mrp.production.workcenter.line,state:0
+#: selection:mrp.workorder,state:0
+msgid "Finished"
+msgstr "مُنتهي"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_production_allow_reorder
+msgid "Free Serialisation"
+msgstr "ترقيم حر"
+
+#. module: mrp_operations
+#: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_draft_action
+msgid "Future Work Orders"
+msgstr "أوامر العمل المستقبلية"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.view_mrp_production_workcenter_form_view_filter
+#: model:ir.ui.view,arch_db:mrp_operations.view_report_mrp_workorder_filter
+msgid "Group By"
+msgstr "تجميع حسب"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.graph_in_hrs_workcenter
+msgid "Hours by Work Center"
+msgstr "الساعات لمركز العمل"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_code_id
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_id
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_workorder_id
+msgid "ID"
+msgstr "المعرف"
+
+#. module: mrp_operations
+#: selection:mrp.production.workcenter.line,production_state:0
+msgid "In Production"
+msgstr "في الانتاج"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.view_mrp_production_workcenter_form_view_filter
+#: selection:mrp.production.workcenter.line,state:0
+#: selection:mrp.workorder,state:0
+msgid "In Progress"
+msgstr "قيد التقدم"
+
+#. module: mrp_operations
+#: code:addons/mrp_operations/mrp_operations.py:438
+#, python-format
+msgid ""
+"In order to Finish the operation, it must be in the Start or Resume state!"
+msgstr "لكى يتم إنهاء العمليه ، يجب أن يكون في البداية أو سير الحاله !"
+
+#. module: mrp_operations
+#: code:addons/mrp_operations/mrp_operations.py:429
+#, python-format
+msgid ""
+"In order to Pause the operation, it must be in the Start or Resume state!"
+msgstr "من أجل إيقاف مؤقت للعملية، يجب أن يكون في البداية أو سير الحاله !"
+
+#. module: mrp_operations
+#: code:addons/mrp_operations/mrp_operations.py:433
+#, python-format
+msgid "In order to Resume the operation, it must be in the Pause state!"
+msgstr "من أجل سير العملية، يجب أن تكون الحاله إيقاف مؤقت !"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_workcenter_form_view_inherit
+msgid "Information"
+msgstr "المعلومات"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation___last_update
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_code___last_update
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_workorder___last_update
+msgid "Last Modified on"
+msgstr "آخر تعديل في"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_code_write_uid
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_write_uid
+msgid "Last Updated by"
+msgstr "آخر تحديث بواسطة"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_code_write_date
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_write_date
+msgid "Last Updated on"
+msgstr "آخر تحديث في"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.view_mrp_production_workcenter_form_view_filter
+msgid "Late"
+msgstr "متأخر"
+
+#. module: mrp_operations
+#: model:ir.model,name:mrp_operations.model_mrp_production
+msgid "Manufacturing Order"
+msgstr "أمر الإنتاج"
+
+#. module: mrp_operations
+#: code:addons/mrp_operations/mrp_operations.py:105
+#, python-format
+msgid "Manufacturing order cannot be started in state \"%s\"!"
+msgstr "لا يمكن بدء أمر التصنيع في الحاله \"%s\"!"
+
+#. module: mrp_operations
+#: code:addons/mrp_operations/mrp_operations.py:445
+#, python-format
+msgid "No operation to cancel."
+msgstr "لا توجد عملية لإلغاءها"
+
+#. module: mrp_operations
+#: model:ir.actions.act_window,name:mrp_operations.mrp_production_code_action
+msgid "Operation Codes"
+msgstr "أكواد العملية"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_code_name
+msgid "Operation Name"
+msgstr "اسم العملية"
+
+#. module: mrp_operations
+#: code:addons/mrp_operations/mrp_operations.py:425
+#, python-format
+msgid ""
+"Operation has already started! You can either Pause/Finish/Cancel the "
+"operation."
+msgstr "بدأت العملية بالفعل! يمكنك إما إيقاف مؤقت / النهاية / الغاء العملية. "
+
+#. module: mrp_operations
+#: code:addons/mrp_operations/mrp_operations.py:441
+#, python-format
+msgid "Operation is Already Cancelled!"
+msgstr "تم إلغاء العملية من قبل"
+
+#. module: mrp_operations
+#: code:addons/mrp_operations/mrp_operations.py:448
+#, python-format
+msgid "Operation is already finished!"
+msgstr "تم إنهاء العملية سابقاً"
+
+#. module: mrp_operations
+#: code:addons/mrp_operations/mrp_operations.py:418
+#, python-format
+msgid "Operation is not started yet!"
+msgstr "لم يتم بدء تشغيل بعد ! "
+
+#. module: mrp_operations
+#: model:ir.actions.act_window,name:mrp_operations.mrp_production_operation_action
+#: model:ir.ui.view,arch_db:mrp_operations.workcenter_line_calendar
+#: model:ir.ui.view,arch_db:mrp_operations.workcenter_line_gantt
+msgid "Operations"
+msgstr "العمليات"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_order_date
+msgid "Order Date"
+msgstr "تاريخ الأمر"
+
+#. module: mrp_operations
+#: selection:mrp.workorder,state:0
+#: selection:mrp_operations.operation.code,start_stop:0
+msgid "Pause"
+msgstr "إيقاف مؤقت"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_form_inherit_view
+msgid "Pause Work Order"
+msgstr "إيقاف مؤقت لإمر التشغيل "
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_form_inherit_view
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_form_inherit_view2
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_workcenter_form_view_inherit
+#: model:ir.ui.view,arch_db:mrp_operations.view_mrp_production_workcenter_form_view_filter
+#: selection:mrp.production.workcenter.line,state:0
+msgid "Pending"
+msgstr "معلق"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_workcenter_form_view_inherit
+msgid "Planned Date"
+msgstr "الوقت المخطط"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.view_report_mrp_workorder_filter
+msgid "Planned Month"
+msgstr "شهر مخطط "
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_production_workcenter_line_product
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_workorder_product_id
+#: model:ir.ui.view,arch_db:mrp_operations.view_report_mrp_workorder_filter
+msgid "Product"
+msgstr "المنتج"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_workorder_category_id
+msgid "Product Category"
+msgstr "فئة المنتج"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_workorder_product_qty
+msgid "Product Qty"
+msgstr "كمية المنتج"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_workorder_product_tmpl_id
+msgid "Product Template"
+msgstr "قالب المنتج"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_workcenter_form_view_inherit
+msgid "Product to Produce"
+msgstr "المنتج المطلوب انتاجه"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_production_id
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_workorder_production_id
+#: model:ir.ui.view,arch_db:mrp_operations.view_mrp_production_workcenter_form_view_filter
+#: model:ir.ui.view,arch_db:mrp_operations.view_report_mrp_workorder_filter
+msgid "Production"
+msgstr "الإنتاج"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_operation_tree_view
+msgid "Production Operation"
+msgstr "عملية الانتاج"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_code_form_view
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_code_tree_view
+msgid "Production Operation Code"
+msgstr "كود عملية الانتاج"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_production_workcenter_line_production_state
+msgid "Production Status"
+msgstr "الحاله الانتاجيه "
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_workcenter_form_view_inherit
+msgid "Production Workcenter"
+msgstr "مراكز الانتاج"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.view_mrp_production_workcenter_form_view_filter
+msgid "Production started late"
+msgstr "بدأ الإنتاج مؤخراً"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_production_workcenter_line_qty
+msgid "Qty"
+msgstr "الكمية"
+
+#. module: mrp_operations
+#: model:ir.filters,name:mrp_operations.filter_mrp_workorder_quantity_produced
+msgid "Quantity Produced"
+msgstr "الكمية المنتجة "
+
+#. module: mrp_operations
+#: selection:mrp.production.workcenter.line,production_state:0
+msgid "Ready to Produce"
+msgstr "جاهز للانتاج"
+
+#. module: mrp_operations
+#: model:ir.ui.menu,name:mrp_operations.menu_report_mrp_workorders_tree
+msgid "Reports"
+msgstr "التقارير"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_workorder_user_id
+msgid "Responsible"
+msgstr "المسئول"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_form_inherit_view
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_form_inherit_view2
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_workcenter_form_view_inherit
+#: selection:mrp_operations.operation.code,start_stop:0
+msgid "Resume"
+msgstr "السيرة الذاتية"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_form_inherit_view
+msgid "Resume Work Order"
+msgstr "استئناف ترتيب العمل "
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_workorder_routing_id
+msgid "Routing"
+msgstr "التقريب"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_production_workcenter_line_date_planned
+msgid "Scheduled Date"
+msgstr "التاريخ المجدول"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.view_mrp_production_workcenter_form_view_filter
+msgid "Scheduled Date by Month"
+msgstr "من المقرر التسجيل حسب الشهر "
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.view_mrp_production_workcenter_form_view_filter
+msgid "Scheduled Month"
+msgstr "شهر الجدولة"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.view_report_mrp_workorder_filter
+msgid "Search"
+msgstr "بحث"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.view_mrp_production_workcenter_form_view_filter
+msgid "Search Work Orders"
+msgstr "ابحث عن اوامر العمل"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_form_inherit_view
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_form_inherit_view2
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_workcenter_form_view_inherit
+msgid "Set Draft"
+msgstr "عيين المشروع"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_form_inherit_view
+msgid "Set to Draft"
+msgstr "ضبط كمسودة"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_form_inherit_view
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_form_inherit_view2
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_workcenter_form_view_inherit
+#: selection:mrp_operations.operation.code,start_stop:0
+msgid "Start"
+msgstr "بدء"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_date_start
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_production_workcenter_line_date_start
+msgid "Start Date"
+msgstr "تاريخ البدء"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_form_inherit_view
+msgid "Start Working"
+msgstr "ابدأ العمل"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.view_report_mrp_workorder_filter
+msgid "Started"
+msgstr "بدأت"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_code_start_stop
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_production_workcenter_line_state
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_workorder_state
+#: model:ir.ui.view,arch_db:mrp_operations.view_mrp_production_workcenter_form_view_filter
+#: model:ir.ui.view,arch_db:mrp_operations.view_report_mrp_workorder_filter
+msgid "Status"
+msgstr "الحالة"
+
+#. module: mrp_operations
+#: model:ir.model,name:mrp_operations.model_stock_move
+msgid "Stock Move"
+msgstr "حركة المخزون"
+
+#. module: mrp_operations
+#: model:ir.model.fields,help:mrp_operations.field_mrp_production_workcenter_line_delay
+msgid "The elapsed time between operation start and stop in this Work Center"
+msgstr "في الوقت الذي انقضى بين بداية تشغيل وتوقف في هذا المركز العمل "
+
+#. module: mrp_operations
+#: model:ir.actions.act_window,help:mrp_operations.mrp_production_wc_action_planning
+msgid ""
+"To manufacture or assemble products, and use raw materials and\n"
+"            finished products you must also handle manufacturing operations.\n"
+"            Manufacturing operations are often called Work Orders. The various\n"
+"            operations will have different impacts on the costs of\n"
+"            manufacturing and planning depending on the available workload."
+msgstr "تصنيع أو تجميع المنتجات، واستخدام المواد الخام و\nالمنتجات النهائية يجب عليك أيضا التعامل مع عمليات التصنيع\nعمليات التصنيع غالبا ما تسمى أوامر العمل. مختلف\nسيكون للعمليات آثار مختلفة على تكاليف \"\nوالتصنيع، والتخطيط وفقا لحجم العمل المتاح."
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_workorder_total_cycles
+msgid "Total Cycles"
+msgstr "الدورات الكلية"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_workorder_total_hours
+msgid "Total Hours"
+msgstr "عدد الساعات الكلية"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_production_workcenter_line_uom
+msgid "Unit of Measure"
+msgstr "وحدة القياس"
+
+#. module: mrp_operations
+#: selection:mrp.production.workcenter.line,production_state:0
+msgid "Waiting Goods"
+msgstr "انتظار السلع"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_workcenter_id
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_workorder_workcenter_id
+#: model:ir.ui.view,arch_db:mrp_operations.view_mrp_production_workcenter_form_view_filter
+#: model:ir.ui.view,arch_db:mrp_operations.view_report_mrp_workorder_filter
+msgid "Work Center"
+msgstr "مركز العمل"
+
+#. module: mrp_operations
+#: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_resource_planning
+msgid "Work Centers"
+msgstr "مراكز العمل"
+
+#. module: mrp_operations
+#: model:ir.actions.report.xml,name:mrp_operations.report_wc_barcode
+msgid "Work Centers Barcode"
+msgstr "باركود مراكز العمل"
+
+#. module: mrp_operations
+#: model:ir.actions.act_window,name:mrp_operations.action_report_mrp_workorder
+#: model:ir.model,name:mrp_operations.model_mrp_production_workcenter_line
+msgid "Work Order"
+msgstr "امر العمل"
+
+#. module: mrp_operations
+#: model:ir.model,name:mrp_operations.model_mrp_workorder
+msgid "Work Order Report"
+msgstr "تقرير امر العمل"
+
+#. module: mrp_operations
+#: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_action_form
+#: model:ir.ui.menu,name:mrp_operations.menu_mrp_production_wc_order
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_workcenter_form_view_inherit
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_workcenter_tree_view_inherit
+#: model:ir.ui.view,arch_db:mrp_operations.view_mrp_production_workcenter_form_view_filter
+#: model:ir.ui.view,arch_db:mrp_operations.view_report_mrp_workorder_graph
+#: model:ir.ui.view,arch_db:mrp_operations.view_report_mrp_workorder_pivot
+msgid "Work Orders"
+msgstr "اوامر العمل"
+
+#. module: mrp_operations
+#: model:ir.ui.menu,name:mrp_operations.menu_mrp_production_wc_action_planning
+msgid "Work Orders By Resource"
+msgstr "أوامر العمل من خلال الموارد "
+
+#. module: mrp_operations
+#: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_action_planning
+msgid "Work Orders Planning"
+msgstr "تخطيط اوامر العمل"
+
+#. module: mrp_operations
+#: model:ir.actions.act_window,help:mrp_operations.mrp_production_wc_action_form
+msgid ""
+"Work Orders is the list of operations to be performed for each\n"
+"            manufacturing order. Once you start the first work order of a\n"
+"            manufacturing order, the manufacturing order is automatically\n"
+"            marked as started. Once you finish the latest operation of a\n"
+"            manufacturing order, the MO is automatically done and the related\n"
+"            products are produced."
+msgstr "أوامر العمل هي قائمة العمليات التي يتعين القيام بها لكل منها\nتصنيع النظام. بمجرد بدء أول أمر العمل ل\nتصنيع النظام، تصنيع النظام هو تلقائيا\nتم وضع علامة على أنها بدأت. بمجرد الانتهاء من أحدث عملية من\nتصنيع النظام، يتم تلقائيا مو وما يتصل بها\nيتم إنتاج المنتجات."
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_production_workcenter_line_delay
+msgid "Working Hours"
+msgstr "ساعات العمل"
+
+#. module: mrp_operations
+#: model:ir.filters,name:mrp_operations.filter_mrp_workorder_workload
+msgid "Workload"
+msgstr "عبء العمل"
+
+#. module: mrp_operations
+#: model:ir.model,name:mrp_operations.model_mrp_operations_operation
+msgid "mrp_operations.operation"
+msgstr "mrp_operations.operation"
+
+#. module: mrp_operations
+#: model:ir.model,name:mrp_operations.model_mrp_operations_operation_code
+msgid "mrp_operations.operation.code"
+msgstr "عمليات جواز سفر يقرأ إلكترونيا. عملية. الشفرة"

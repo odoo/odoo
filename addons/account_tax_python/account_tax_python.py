@@ -36,9 +36,9 @@ class AccountTaxPython(models.Model):
 
     @api.v8
     def compute_all(self, price_unit, currency=None, quantity=1.0, product=None, partner=None):
-        taxes = self.env['account.tax']
+        taxes = self.filtered(lambda r: r.amount_type != 'code')
         company = self.env.user.company_id
-        for tax in self:
+        for tax in self.filtered(lambda r: r.amount_type == 'code'):
             localdict = {'price_unit':price_unit, 'quantity': quantity, 'product':product, 'partner':partner, 'company': company}
             safe_eval(tax.python_applicable, localdict, mode="exec", nocopy=True)
             if localdict.get('result', False):
@@ -52,7 +52,7 @@ class AccountTaxPython(models.Model):
         partner = partner_id and self.pool.get('res.partner').browse(cr, uid, partner_id, context=context) or None
         ids = isinstance(ids, (int, long)) and [ids] or ids
         recs = self.browse(cr, uid, ids, context=context)
-        return recs.compute_all(price_unit, currency, quantity, product, partner)
+        return AccountTaxPython.compute_all(recs, price_unit, currency, quantity, product, partner)
 
 class AccountTaxTemplatePython(models.Model):
     _inherit = 'account.tax.template'

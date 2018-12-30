@@ -3,8 +3,8 @@
 
 {
     'name': 'Belgium - Accounting',
-    'version': '1.1',
-    'category': 'Localization/Account Charts',
+    'version': '2.0',
+    'category': 'Localization',
     'description': """
 This is the base module to manage the accounting chart for Belgium in OpenERP.
 ==============================================================================

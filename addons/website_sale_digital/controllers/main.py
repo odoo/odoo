@@ -31,6 +31,8 @@ class website_sale_digital(website_account):
     ], type='http', auth='user', website=True)
     def orders_followup(self, order=None, **post):
         response = super(website_sale_digital, self).orders_followup(order=order, **post)
+        if not 'order' in response.qcontext:
+            return response
 
         order_products_attachments = {}
         order = response.qcontext['order']

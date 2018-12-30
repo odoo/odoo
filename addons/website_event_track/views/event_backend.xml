@@ -20,7 +20,7 @@
                                         <span class="fa fa-bars fa-lg"/>
                                     </a>
                                     <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                                        <li><a t-att-href="record.website_url.value" type="url">View Track</a></li>
+                                        <li><a t-att-href="record.website_url.value">View Track</a></li>
                                         <t t-if="widget.editable"><li><a type="edit">Edit Track</a></li></t>
                                         <t t-if="widget.deletable"><li><a type="delete">Delete</a></li></t>
                                         <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
@@ -74,7 +74,7 @@
                     <field name="location_id"/>
                     <field name="state"/>
                     <field name="speaker_ids"/>
-                    <filter string="Important Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
+                    <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                     <group expand="0" string="Group By">
                         <filter string="Responsible"  context="{'group_by': 'user_id'}"/>
                         <filter string="Status" context="{'group_by':'state'}"/>

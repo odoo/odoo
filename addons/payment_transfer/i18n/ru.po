@@ -3,12 +3,13 @@
 # * payment_transfer
 # 
 # Translators:
+# Andrey Samorukov <andrey.samorukov@me.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:11+0000\n"
-"PO-Revision-Date: 2015-09-19 08:18+0000\n"
+"POT-Creation-Date: 2016-12-14 14:52+0000\n"
+"PO-Revision-Date: 2017-03-19 16:58+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -18,28 +19,41 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: payment_transfer
+#: code:addons/payment_transfer/models/payment_acquirer.py:32
+#, python-format
+msgid ""
+"<div>\n"
+"<h3>Please use the following transfer details</h3>\n"
+"<h4>%(bank_title)s</h4>\n"
+"%(bank_accounts)s\n"
+"<h4>Communication</h4>\n"
+"<p>Please use the order name as communication reference.</p>\n"
+"</div>"
+msgstr "<div>\n<h3>Пожалуйста, используйте следующую информацию для платежа</h3>\n<h4>%(bank_title)s</h4>\n%(bank_accounts)s\n<h4>Средство сообщения</h4>\n<p>Пожалуйста, используйте название заказа в качестве Ссылка на сообщение.</p>\n</div>"
+
+#. module: payment_transfer
 #: code:addons/payment_transfer/models/payment_acquirer.py:68
 #, python-format
 msgid "; multiple order found"
-msgstr ""
+msgstr "; найден многократный заказ"
 
 #. module: payment_transfer
 #: code:addons/payment_transfer/models/payment_acquirer.py:66
 #, python-format
 msgid "; no order found"
-msgstr ""
+msgstr "; заказ не найден"
 
 #. module: payment_transfer
 #: model:payment.acquirer,cancel_msg:payment_transfer.payment_acquirer_transfer
 msgid "<span><i>Cancel,</i> Your payment has been cancelled.</span>"
-msgstr ""
+msgstr "<span><i>Отмена,</i> Ваш платеж был отменен.</span>"
 
 #. module: payment_transfer
 #: model:payment.acquirer,done_msg:payment_transfer.payment_acquirer_transfer
 msgid ""
 "<span><i>Done,</i> Your online payment has been successfully processed. "
 "Thank you for your order.</span>"
-msgstr ""
+msgstr "<span><i>Выполнено,</i> Ваш онлайн платеж был успешно обработан. Спасибо за ваш заказ.</span>"
 
 #. module: payment_transfer
 #: model:payment.acquirer,error_msg:payment_transfer.payment_acquirer_transfer
@@ -47,14 +61,14 @@ msgid ""
 "<span><i>Error,</i> Please be aware that an error occurred during the "
 "transaction. The order has been confirmed but won't be paid. Don't hesitate "
 "to contact us if you have any questions on the status of your order.</span>"
-msgstr ""
+msgstr "<span><i>Ошибка,</i> Обратите внимание, что во время операции возникла ошибка. Заказ был подтвержден, но не будет оплачен. Обращайтесь к нам, если у вас есть какие-либо вопросы о состоянии вашего заказа.</span>"
 
 #. module: payment_transfer
 #: model:payment.acquirer,pending_msg:payment_transfer.payment_acquirer_transfer
 msgid ""
 "<span><i>Pending,</i> Your online payment has been successfully processed. "
 "But your order is not validated yet.</span>"
-msgstr ""
+msgstr "<span><i>В ожидании,</i> Ваш онлайн платеж был успешно обработан. Но ваш заказ еще не подтвержден.</span>"
 
 #. module: payment_transfer
 #: code:addons/payment_transfer/models/payment_acquirer.py:30
@@ -81,15 +95,15 @@ msgstr "Операция Оплаты"
 #. module: payment_transfer
 #: model:payment.acquirer,pre_msg:payment_transfer.payment_acquirer_transfer
 msgid "Transfer information will be provided after choosing the payment mode."
-msgstr ""
+msgstr "Информация о переводе будет предоставлена после выбора способа оплаты."
 
 #. module: payment_transfer
 #: model:payment.acquirer,name:payment_transfer.payment_acquirer_transfer
 msgid "Wire Transfer"
-msgstr ""
+msgstr "Банковский Перевод"
 
 #. module: payment_transfer
 #: code:addons/payment_transfer/models/payment_acquirer.py:64
 #, python-format
 msgid "received data for reference %s"
-msgstr ""
+msgstr "полученные данные для ссылки %s"

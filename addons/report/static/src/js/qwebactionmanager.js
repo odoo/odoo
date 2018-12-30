@@ -92,6 +92,13 @@ workers to print a pdf version of the reports.'), true);
 Wkhtmltopdf to at least 0.12.0 in order to get a correct display of headers and footers as well as\
 support for table-breaking between pages.<br><br><a href="http://wkhtmltopdf.org/" \
 target="_blank">wkhtmltopdf.org</a>'), true);
+                    } else if (presence === 'broken') {
+                        self.do_notify(_t('Report'), _t('Your installation of Wkhtmltopdf seems to be broken. The \
+report will be shown in html.<br><br><a href="http://wkhtmltopdf.org/" target="_blank">wkhtmltopdf.org</a>'), true);
+                        report_url = report_url.substring(12);
+                        window.open('/report/html/' + report_url, '_blank', 'height=768,width=1024');
+                        framework.unblockUI();
+                        return;
                     }
                     return trigger_download(self.session, response, c, action, options);
                 });

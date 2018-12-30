@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_tax_form_cash_basis_inherit" model="ir.ui.view">
+            <field name="name">tax.form.cash.basis.base.account.inherit</field>
+            <field name="model">account.tax</field>
+            <field name="inherit_id" ref="account_tax_cash_basis.view_tax_form_cash_basis_inherit"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='cash_basis_account']" position="after">
+                    <field name="cash_basis_base_account_id" attrs="{'invisible': [('use_cash_basis', '=', False)]}"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>

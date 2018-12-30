@@ -54,7 +54,12 @@ def check(f):
                 if args and isinstance(args[-1], dict):
                     ctx = args[-1]
             elif isinstance(kwargs, dict):
-                ctx = kwargs.get('context', {})
+                if 'context' in kwargs:
+                    ctx = kwargs['context']
+                elif 'kwargs' in kwargs:
+                    # http entry points such as call_kw()
+                    ctx = kwargs['kwargs'].get('context')
+
 
             uid = 1
             if args and isinstance(args[0], (long, int)):

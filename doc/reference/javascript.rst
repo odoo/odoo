@@ -428,9 +428,9 @@ High-level API: calling into Odoo models
 -------------------------------------------
 
 Access to Odoo object methods (made available through XML-RPC from the server)
-is done via :class:`Model` (exported in ``web.Model``). It maps onto the Odoo server objects via
-two primary methods, :func:`~Model.call` and
-:func:`~Model.query`.
+is done via :class:`Model`. It maps onto the Odoo server objects via two primary
+methods, :func:`~Model.call` (exported in ``web.Model``) and :func:`~Model.query`
+(exported in ``web.DataModel``, only available in the backend client).
 
 :func:`~Model.call` is a direct mapping to the corresponding method of
 the Odoo server object. Its usage is similar to that of the Odoo Model API,
@@ -784,15 +784,15 @@ Here is a description of the current file structure:
 * the ``framework/`` folder contains all basic low level modules.  The
   modules here are supposed to be generic.  Some of them are:
 
-    * ``web.ajax`` implements rpc calls
-    * ``web.core`` is a generic modules.  It exports various useful
-      objects and functions, such as ``qweb``, ``_t`` or the main bus.
-    * ``web.Widget`` contains the widget class
-    * ``web.Model`` is an abstraction over ``web.ajax`` to make
-      calls to the server model methods
-    * ``web.session`` is the former ``openerp.session``
-    * ``web.utils`` for useful code snippets
-    * ``web.time`` for every time-related generic functions
+  * ``web.ajax`` implements rpc calls
+  * ``web.core`` is a generic modules.  It exports various useful
+    objects and functions, such as ``qweb``, ``_t`` or the main bus.
+  * ``web.Widget`` contains the widget class
+  * ``web.Model`` is an abstraction over ``web.ajax`` to make
+    calls to the server model methods
+  * ``web.session`` is the former ``openerp.session``
+  * ``web.utils`` for useful code snippets
+  * ``web.time`` for every time-related generic functions
 * the ``views/`` folder contains all view definitions
 * ``widgets/`` is for standalone widgets
 

@@ -3,12 +3,15 @@
 # * base_action_rule
 # 
 # Translators:
+# Gideoni Willian da Silva <gd.willian@gmail.com>, 2015
+# grazziano <gra.negocia@gmail.com>, 2015
+# Mateus Lopes <mateus1@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-09 09:18+0000\n"
-"PO-Revision-Date: 2015-10-10 09:48+0000\n"
+"POT-Creation-Date: 2016-09-22 13:16+0000\n"
+"PO-Revision-Date: 2016-12-16 23:25+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/odoo/odoo-9/language/pt_BR/)\n"
 "MIME-Version: 1.0\n"
@@ -20,7 +23,7 @@ msgstr ""
 #. module: base_action_rule
 #: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
 msgid "<b>Please choose the document type before setting the conditions.</b>"
-msgstr ""
+msgstr "<b>Por favor, selecione o tipo de documento antes de definir as condições.</b>"
 
 #. module: base_action_rule
 #: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
@@ -29,9 +32,14 @@ msgid "Action Rule"
 msgstr "Ações Automáticas"
 
 #. module: base_action_rule
+#: model:ir.model,name:base_action_rule.model_base_action_rule_line_test
+msgid "Action Rule Line Test"
+msgstr "Ação de Linha de Regra de Teste"
+
+#. module: base_action_rule
 #: model:ir.model,name:base_action_rule.model_base_action_rule_lead_test
 msgid "Action Rule Test"
-msgstr ""
+msgstr "Ação de Regra de Teste"
 
 #. module: base_action_rule
 #: model:ir.model,name:base_action_rule.model_base_action_rule
@@ -63,7 +71,7 @@ msgstr "Ações Automatizadas"
 #. module: base_action_rule
 #: selection:base.action.rule,kind:0
 msgid "Based on Form Modification"
-msgstr ""
+msgstr "Baseado no Formulário de Modificação"
 
 #. module: base_action_rule
 #: selection:base.action.rule,kind:0
@@ -73,7 +81,7 @@ msgstr "Condição baseada em tempo"
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_filter_pre_domain
 msgid "Before Update Domain"
-msgstr ""
+msgstr "Antes da Atualização de Domínio"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_filter_pre_id
@@ -88,12 +96,12 @@ msgstr "Cancelado"
 #. module: base_action_rule
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_lead_test_customer
 msgid "Check this box if this contact is a customer."
-msgstr ""
+msgstr "Marque se o contato é um cliente."
 
 #. module: base_action_rule
 #: model:ir.actions.act_window,help:base_action_rule.base_action_rule_act
 msgid "Click to setup a new automated action rule."
-msgstr ""
+msgstr "Clique para configurar uma nova regra de ação automatizada."
 
 #. module: base_action_rule
 #: selection:base.action.rule.lead.test,state:0
@@ -103,7 +111,7 @@ msgstr "Fechado"
 #. module: base_action_rule
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_on_change_fields
 msgid "Comma-separated list of field names that triggers the onchange."
-msgstr ""
+msgstr "Lista de nomes de campo separados por vírgulas que disparam na mudança."
 
 #. module: base_action_rule
 #: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
@@ -118,11 +126,13 @@ msgstr "Data de Criação"
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_create_uid
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_create_uid
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_create_uid
 msgid "Created by"
 msgstr "Criado por"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_create_date
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_create_date
 msgid "Created on"
 msgstr "Criado em"
 
@@ -157,8 +167,9 @@ msgstr "Tipo de atraso"
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_display_name
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_display_name
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Nome de Exibição"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_filter_domain
@@ -201,6 +212,7 @@ msgstr "Horas"
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_id
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_id
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_id
 msgid "ID"
 msgstr "ID"
 
@@ -236,7 +248,7 @@ msgstr "Nesta mesma tela,, selecione o menu \"Salvar o filtro atual\", em seguid
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_customer
 msgid "Is a Customer"
-msgstr ""
+msgstr "É um Cliente"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_date_action_last
@@ -246,6 +258,7 @@ msgstr "Última Ação"
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule___last_update
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test___last_update
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test___last_update
 msgid "Last Modified on"
 msgstr "Última modificação em"
 
@@ -256,15 +269,22 @@ msgstr "Última Execução"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_write_uid
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_write_uid
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_write_uid
 msgid "Last Updated by"
 msgstr "Última atualização por"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_write_date
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_write_date
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_write_date
 msgid "Last Updated on"
 msgstr "Última atualização em"
+
+#. module: base_action_rule
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_lead_id
+msgid "Lead id"
+msgstr "Id do Prospecto"
 
 #. module: base_action_rule
 #: selection:base.action.rule,trg_date_range_type:0
@@ -282,6 +302,11 @@ msgid "Months"
 msgstr "Meses"
 
 #. module: base_action_rule
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_name
+msgid "Name"
+msgstr ""
+
+#. module: base_action_rule
 #: selection:base.action.rule.lead.test,state:0
 msgid "New"
 msgstr "Novo"
@@ -289,7 +314,7 @@ msgstr "Novo"
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_on_change_fields
 msgid "On Change Fields Trigger"
-msgstr ""
+msgstr "Campos de Disparo em Mudança"
 
 #. module: base_action_rule
 #: selection:base.action.rule,kind:0
@@ -304,7 +329,7 @@ msgstr "Na criação e atualização"
 #. module: base_action_rule
 #: selection:base.action.rule,kind:0
 msgid "On Deletion"
-msgstr ""
+msgstr "Em Exclusão"
 
 #. module: base_action_rule
 #: selection:base.action.rule,kind:0
@@ -341,7 +366,7 @@ msgstr "Nome da Regra"
 msgid ""
 "Select when the action must be run, and choose records and/or timing "
 "conditions."
-msgstr ""
+msgstr "Selecione quando a ação deve ser executada, e escolha registros e/ou condições de tempo."
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_sequence
@@ -367,7 +392,7 @@ msgstr "Definir Responsável"
 #. module: base_action_rule
 #: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
 msgid "Set selection based on a search filter:"
-msgstr ""
+msgstr "Defina a seleção baseada em um filtro de pesquisa:"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_state
@@ -382,17 +407,17 @@ msgstr "Assunto"
 #. module: base_action_rule
 #: model:ir.filters,name:base_action_rule.test_filter_done
 msgid "Test lead in state 'done'"
-msgstr ""
+msgstr "Condutor de teste no estado 'feito'"
 
 #. module: base_action_rule
 #: model:ir.filters,name:base_action_rule.test_filter_draft
 msgid "Test lead in state 'draft'"
-msgstr ""
+msgstr "Condutor de teste no estado 'rascunho'"
 
 #. module: base_action_rule
 #: model:ir.filters,name:base_action_rule.test_filter_open
 msgid "Test lead in state 'open'"
-msgstr ""
+msgstr "Condutor de teste no estado 'aberto'"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_trg_date_id
@@ -412,7 +437,12 @@ msgid ""
 "                be automatically set to a specific sales team, or an\n"
 "                opportunity which still has status pending after 14 days might\n"
 "                trigger an automatic reminder email."
-msgstr ""
+msgstr "Use ações automatizadas para disparar automaticamente ações para\nvárias telas. Exemplo: a oportunidade criada por um usuário específico pode\nser definida automaticamente para uma equipe de vendas específica, ou uma\noportunidade que ainda tem estado pendente após 14 dias pode\ndisparar um email de lembrete automático."
+
+#. module: base_action_rule
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_user_id
+msgid "User id"
+msgstr "Id do Usuário"
 
 #. module: base_action_rule
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_trg_date_calendar_id
@@ -443,4 +473,9 @@ msgstr "Quando desmarcado, esta regra é oculta e não será executada."
 msgid ""
 "You may also use filters instead of choosing records. In order to create a "
 "new filter:"
+msgstr "Você também pode usar filtros ao invés de escolher registos. Para criar um novo filtro:"
+
+#. module: base_action_rule
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_line_ids
+msgid "unknown"
 msgstr ""

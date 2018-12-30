@@ -18,7 +18,7 @@
             <field name="inherit_id" ref="stock.view_picking_internal_search"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='product_id']" position="before">
-                    <filter name="reception_to_invoice" string="Incoming Shipments to Invoice" domain="[('reception_to_invoice', '=', True)]"/>
+                    <!-- FORWARDPORT UP TO SAAS-10 -->
                 </xpath>
             </field>
         </record>

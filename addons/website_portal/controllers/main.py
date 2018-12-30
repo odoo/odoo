@@ -6,8 +6,8 @@ from openerp.tools.translate import _
 
 
 class website_account(http.Controller):
-    @http.route(['/my', '/my/home'], type='http', auth="public", website=True)
-    def account(self):
+    @http.route(['/my', '/my/home'], type='http', auth="user", website=True)
+    def account(self, **kw):
         partner = request.env.user.partner_id
 
         # get customer sales rep
@@ -37,6 +37,16 @@ class website_account(http.Controller):
             values.update(post)
             if not error:
                 post.update({'zip': post.pop('zipcode', '')})
+                if partner.type == "contact":
+                    address_fields = {
+                        'city': post.pop('city'),
+                        'street': post.pop('street'),
+                        'street2': post.pop('street2'),
+                        'zip': post.pop('zip'),
+                        'country_id': post.pop('country_id'),
+                        'state_id': post.pop('state_id')
+                    }
+                    partner.commercial_partner_id.sudo().write(address_fields)
                 partner.sudo().write(post)
                 if redirect:
                     return request.redirect(redirect)
@@ -60,6 +70,7 @@ class website_account(http.Controller):
         error_message = []
 
         mandatory_billing_fields = ["name", "phone", "email", "street2", "city", "country_id"]
+        optional_billing_fields = ["zipcode", "state_id", "vat", "street"]
 
         # Validation
         for field_name in mandatory_billing_fields:
@@ -85,5 +96,10 @@ class website_account(http.Controller):
         # error message for empty required fields
         if [err for err in error.values() if err == 'missing']:
             error_message.append(_('Some required fields are empty.'))
+
+        unknown = [k for k in data.iterkeys() if k not in mandatory_billing_fields + optional_billing_fields]
+        if unknown:
+            error['common'] = 'Unknown field'
+            error_message.append("Unknown field '%s'" % ','.join(unknown))
 
         return error, error_message

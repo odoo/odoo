@@ -3,12 +3,13 @@
 # * crm_partner_assign
 # 
 # Translators:
+# Manuela Silva <inactive+h_manuela_rodsilva@transifex.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-14 10:27+0000\n"
-"PO-Revision-Date: 2015-09-14 09:06+0000\n"
+"POT-Creation-Date: 2016-09-22 13:16+0000\n"
+"PO-Revision-Date: 2017-04-08 18:18+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Portuguese (http://www.transifex.com/odoo/odoo-9/language/pt/)\n"
 "MIME-Version: 1.0\n"
@@ -89,7 +90,7 @@ msgstr ""
 msgid ""
 "<span class=\"oe_grey\" attrs=\"{'invisible':[('partner_latitude','&lt;=',0)]}\">N </span>\n"
 "                                <span class=\"oe_grey\" attrs=\"{'invisible':[('partner_latitude','&gt;=',0)]}\">S </span>"
-msgstr ""
+msgstr "<span class=\"oe_grey\" attrs=\"{'invisible':[('partner_latitude','&lt;=',0)]}\">N </span>\n                                <span class=\"oe_grey\" attrs=\"{'invisible':[('partner_latitude','&gt;=',0)]}\">S </span>"
 
 #. module: crm_partner_assign
 #: model:ir.ui.view,arch_db:crm_partner_assign.view_crm_lead_geo_assign_form
@@ -173,7 +174,7 @@ msgstr "Probabilidade média"
 #. module: crm_partner_assign
 #: model:ir.ui.view,arch_db:crm_partner_assign.crm_opportunity_portal_tree
 msgid "Avg. of Probability"
-msgstr ""
+msgstr "Média da Probabilidade"
 
 #. module: crm_partner_assign
 #: model:ir.model,name:crm_partner_assign.model_crm_lead_report_assign
@@ -313,7 +314,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_activation_display_name
 #: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_grade_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Nome a Mostrar"
 
 #. module: crm_partner_assign
 #: model:ir.ui.view,arch_db:crm_partner_assign.crm_lead_channel_interested_form
@@ -370,7 +371,7 @@ msgstr "Longitude Geográfica"
 #: model:ir.ui.view,arch_db:crm_partner_assign.view_crm_lead_geo_assign_form
 #: model:ir.ui.view,arch_db:crm_partner_assign.view_crm_opportunity_geo_assign_form
 msgid "Geolocation"
-msgstr ""
+msgstr "Geolocalização"
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,help:crm_partner_assign.field_res_partner_grade_partner_weight
@@ -423,12 +424,12 @@ msgstr "ID"
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_implemented_partner_ids
 msgid "Implementation References"
-msgstr ""
+msgstr "Referências de Implementação"
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_assigned_partner_id
 msgid "Implemented by"
-msgstr ""
+msgstr "Implementado por"
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_channel_interested_interested
@@ -439,6 +440,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_partner_report_assign_date
 msgid "Invoice Account Date"
 msgstr ""
+
+#. module: crm_partner_assign
+#: model:ir.model,name:crm_partner_assign.model_account_invoice_report
+msgid "Invoices Statistics"
+msgstr "Estatísticas de Faturas"
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_assignation___last_update
@@ -547,7 +553,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_grade_partner_weight
 #: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_partner_weight
 msgid "Level Weight"
-msgstr ""
+msgstr "Nível de Peso"
 
 #. module: crm_partner_assign
 #: selection:crm.lead.report.assign,priority:0
@@ -563,7 +569,7 @@ msgstr "Probabilidade máxima"
 #: model:ir.ui.view,arch_db:crm_partner_assign.crm_lead_partner_filter
 #: model:ir.ui.view,arch_db:crm_partner_assign.crm_opportunity_partner_filter
 msgid "My Assigned Partners"
-msgstr ""
+msgstr "Os Meus Parceiros Atribuídos"
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_res_partner_activation_name
@@ -665,7 +671,7 @@ msgstr "Nível do Parceiro"
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_assignation_partner_location
 msgid "Partner Location"
-msgstr ""
+msgstr "Localização do Parceiro"
 
 #. module: crm_partner_assign
 #: model:ir.ui.view,arch_db:crm_partner_assign.crm_lead_portal_form
@@ -766,7 +772,7 @@ msgstr ""
 #: code:addons/crm_partner_assign/wizard/crm_forward_to_partner.py:82
 #, python-format
 msgid "Set an email address for the partner(s): %s"
-msgstr ""
+msgstr "Defina um endereço de e-mail para o(s) parceiro(s): %s"
 
 #. module: crm_partner_assign
 #: model:ir.model.fields,field_description:crm_partner_assign.field_crm_lead_report_assign_stage_id

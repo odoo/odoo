@@ -7,9 +7,6 @@
     syntax-checked and tested.
     """,
 
-    'author': "Odoo",
-    'website': "http://odoo.com",
-
     'category': 'Tests',
     'version': '0.1',
     'data': [

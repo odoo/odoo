@@ -8,37 +8,28 @@ __dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 __file="${__dir}/$(basename "${BASH_SOURCE[0]}")"
 __base="$(basename ${__file} .sh)"
 
+# Since we are emulating, the real /boot is not mounted, 
+# leading to mismatch between kernel image and modules.
+mount /dev/sda1 /boot
+
 # Recommends: antiword, graphviz, ghostscript, postgresql, python-gevent, poppler-utils
 export DEBIAN_FRONTEND=noninteractive
+echo "nameserver 8.8.8.8" >> /etc/resolv.conf
 
-# GUI-related packages
-PKGS_TO_DELETE="xserver-xorg-video-fbdev xserver-xorg xinit gstreamer1.0-x gstreamer1.0-omx gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-alsa gstreamer1.0-libav epiphany-browser lxde lxtask menu-xdg gksu xserver-xorg-video-fbturbo xpdf gtk2-engines alsa-utils netsurf-gtk zenity desktop-base lxpolkit weston omxplayer raspberrypi-artwork lightdm gnome-themes-standard-data gnome-icon-theme qt50-snapshot qt50-quick-particle-examples idle python-pygame python-tk idle3 python-serial python-picamera debian-reference-en dillo x2x scratch nuscratch raspberrypi-ui-mods timidity smartsim penguinspuzzle pistore sonic-pi python-pifacecommon python-pifacedigitalio oracle-java8-jdk minecraft-pi python-minecraftpi wolfram-engine raspi-config libgl1-mesa-dri libicu48 pypy-upstream lxde-icon-theme python3 avahi-daemon"
-INSTALLED_PKGS_TO_DELETE=""
-set +o errexit
-for CURRENT_PKG in $(echo $PKGS_TO_DELETE); do
-  $(dpkg --status $CURRENT_PKG &> /dev/null)
-  if [[ $? -eq 0 ]]; then
-    INSTALLED_PKGS_TO_DELETE="$INSTALLED_PKGS_TO_DELETE $CURRENT_PKG"
-  fi
-done
-set -o errexit
 
-apt-get -y remove --purge ${INSTALLED_PKGS_TO_DELETE}
+apt-get update && apt-get -y upgrade
+# Do not be too fast to upgrade to more recent firmware and kernel than 4.38
+# Firmware 4.44 seems to prevent the LED mechanism from working
 
-# Remove automatically installed dependency packages
-apt-get -y autoremove
+PKGS_TO_INSTALL="adduser postgresql-client python python-dateutil python-decorator python-docutils python-feedparser python-imaging python-jinja2 python-ldap python-libxslt1 python-lxml python-mako python-mock python-openid python-passlib python-psutil python-psycopg2 python-pybabel python-pychart python-pydot python-pyparsing python-pypdf python-reportlab python-requests python-tz python-vatnumber python-vobject python-werkzeug python-xlwt python-yaml postgresql python-gevent python-serial python-pip python-dev localepurge vim mc mg screen iw hostapd isc-dhcp-server git rsync console-data lightdm xserver-xorg-video-fbdev xserver-xorg-input-evdev iceweasel xdotool unclutter x11-utils openbox python-netifaces rpi-update"
 
-apt-get update
-apt-get -y dist-upgrade
-
-PKGS_TO_INSTALL="adduser postgresql-client python python-dateutil python-decorator python-docutils python-feedparser python-imaging python-jinja2 python-ldap python-libxslt1 python-lxml python-mako python-mock python-openid python-passlib python-psutil python-psycopg2 python-pybabel python-pychart python-pydot python-pyparsing python-pypdf python-reportlab python-requests python-tz python-vatnumber python-vobject python-werkzeug python-xlwt python-yaml postgresql python-gevent python-serial python-pip python-dev localepurge vim mc mg screen"
-
-apt-get -y install ${PKGS_TO_INSTALL}
+# KEEP OWN CONFIG FILES DURING PACKAGE CONFIGURATION
+# http://serverfault.com/questions/259226/automatically-keep-current-version-of-config-files-when-apt-get-install
+apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" --force-yes install ${PKGS_TO_INSTALL}
 
 apt-get clean
 localepurge
-rm -rf /usr/share/doc || true
-rm -rf /home/pi/python_games || true
+rm -rf /usr/share/doc
 
 # python-usb in wheezy is too old
 # the latest pyusb from pip does not work either, usb.core.find() never returns
@@ -47,14 +38,22 @@ rm -rf /home/pi/python_games || true
 pip install pyusb==1.0.0b1
 pip install qrcode
 pip install evdev
+pip install simplejson
+pip install unittest2
+
+# --upgrade because websocket_client in wheezy is bad:
+# https://github.com/docker/compose/issues/1288
+pip install --upgrade websocket_client
 
 groupadd usbusers
 usermod -a -G usbusers pi
 usermod -a -G lp pi
+usermod -a -G input lightdm
 
 sudo -u postgres createuser -s pi
 mkdir /var/log/odoo
 chown pi:pi /var/log/odoo
+chown pi:pi -R /home/pi/odoo/
 
 # logrotate is very picky when it comes to file permissions
 chown -R root:root /etc/logrotate.d/
@@ -64,7 +63,37 @@ chmod 644 /etc/logrotate.conf
 
 echo "* * * * * rm /var/run/odoo/sessions/*" | crontab -
 
-update-rc.d odoo defaults
+update-rc.d -f hostapd remove
+update-rc.d -f isc-dhcp-server remove
+
+systemctl daemon-reload
+systemctl enable ramdisks.service
+systemctl disable dphys-swapfile.service
+systemctl enable ssh
+
+# USER PI AUTO LOGIN (from nano raspi-config)
+# We take the whole algorithm from raspi-config in order to stay compatible with raspbian infrastructure
+if command -v systemctl > /dev/null && systemctl | grep -q '\-\.mount'; then
+        SYSTEMD=1
+elif [ -f /etc/init.d/cron ] && [ ! -h /etc/init.d/cron ]; then
+        SYSTEMD=0
+else
+        echo "Unrecognised init system"
+        return 1
+fi
+if [ $SYSTEMD -eq 1 ]; then
+    systemctl set-default graphical.target
+    ln -fs /etc/systemd/system/autologin@.service /etc/systemd/system/getty.target.wants/getty@tty1.service
+else
+    update-rc.d lightdm enable 2
+fi
+
+# disable overscan in /boot/config.txt, we can't use
+# overwrite_after_init because it's on a different device
+# (/dev/mmcblk0p1) and we don't mount that afterwards.
+# This option disables any black strips around the screen
+# cf: https://www.raspberrypi.org/documentation/configuration/raspi-config.md
+echo "disable_overscan=1" >> /boot/config.txt
 
 # https://www.raspberrypi.org/forums/viewtopic.php?p=79249
 # to not have "setting up console font and keymap" during boot take ages
@@ -77,6 +106,8 @@ create_ramdisk_dir () {
 
 create_ramdisk_dir "/var"
 create_ramdisk_dir "/etc"
+create_ramdisk_dir "/tmp"
 mkdir /root_bypass_ramdisks
+umount /dev/sda1
 
 reboot

@@ -3,15 +3,16 @@
 # * purchase
 # 
 # Translators:
-# Erwin van der Ploeg <erwin@bas-solutions.nl>, 2015
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2015
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2015-2017
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:18+0000\n"
-"PO-Revision-Date: 2015-10-10 09:51+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2017-10-29 12:50+0000\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>\n"
 "Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,7 +24,7 @@ msgstr ""
 #: model:mail.template,body_html:purchase.email_template_edi_purchase_done
 msgid ""
 "\n"
-"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
 "\n"
 "    <p>Hello ${object.partner_id.name},</p>\n"
 "\n"
@@ -33,7 +34,7 @@ msgid ""
 "       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n"
 "       &nbsp;&nbsp;Order number: <strong>${object.name}</strong><br />\n"
 "       &nbsp;&nbsp;Order total: <strong>${object.amount_total} ${object.currency_id.name}</strong><br />\n"
-"       &nbsp;&nbsp;Order date: ${object.date_order}<br />\n"
+"       &nbsp;&nbsp;Order date: ${format_tz(object.date_order, tz=user.tz, context={'lang':object.partner_id.lang})}<br />\n"
 "       % if object.origin:\n"
 "       &nbsp;&nbsp;Order reference: ${object.origin}<br />\n"
 "       % endif\n"
@@ -72,13 +73,13 @@ msgid ""
 "    </div>\n"
 "</div>\n"
 "            "
-msgstr ""
+msgstr "\n<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n\n    <p>Hella ${object.partner_id.name},</p>\n\n    <p>Hier is een ${object.state in ('draft', 'sent') and 'offerteaanvraag' or 'inkooporderbevestiging'} from ${object.company_id.name}: </p>\n\n    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n       &nbsp;&nbsp;<strong>REFERENTIES</strong><br />\n       &nbsp;&nbsp;Ordernummer: <strong>${object.name}</strong><br />\n       &nbsp;&nbsp;Ordertotaal: <strong>${object.amount_total} ${object.currency_id.name}</strong><br />\n       &nbsp;&nbsp;Orderdatum: ${format_tz(object.date_order, tz=user.tz, context={'lang':object.partner_id.lang})}<br />\n       % if object.origin:\n       &nbsp;&nbsp;Orderreferentie: ${object.origin}<br />\n       % endif\n       % if object.partner_ref:\n       &nbsp;&nbsp;Uw referentie: ${object.partner_ref}<br />\n       % endif\n       % if object.create_uid:\n       &nbsp;&nbsp;Uw contactpersoon: <a href=\"mailto:${object.create_uid.email or ''}?subject=Order%20${object.name}\">${object.create_uid.name}</a>\n       % endif\n    </p>\n\n    <br/>\n    <p>Heeft u vragen, aarzel dan niet om contact met ons op te nemen.</p>\n    <p>Vriendelijk bedankt!</p>\n    <br/>\n    <br/>\n    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n    </div>\n    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n            ${object.company_id.partner_id.sudo().with_context(show_address=True, html_format=True).name_get()[0][1] | safe}\n        </span>\n        % if object.company_id.phone:\n            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n                Tel.: &nbsp; ${object.company_id.phone}\n            </div>\n        % endif\n        % if object.company_id.website:\n            <div>\n                Web :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n            </div>\n        %endif\n        <p></p>\n    </div>\n</div>\n            "
 
 #. module: purchase
 #: model:mail.template,body_html:purchase.email_template_edi_purchase
 msgid ""
 "\n"
-"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
 "\n"
 "    <p>Hello ${object.partner_id.name},</p>\n"
 "\n"
@@ -87,7 +88,7 @@ msgid ""
 "    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
 "       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n"
 "       &nbsp;&nbsp;RFQ number: <strong>${object.name}</strong><br />\n"
-"       &nbsp;&nbsp;RFQ date: ${object.date_order}<br />\n"
+"       &nbsp;&nbsp;RFQ date: ${format_tz(object.date_order, tz=user.tz, context={'lang':object.partner_id.lang})}<br />\n"
 "       % if object.origin:\n"
 "       &nbsp;&nbsp;RFQ reference: ${object.origin}<br />\n"
 "       % endif\n"
@@ -126,7 +127,7 @@ msgid ""
 "    </div>\n"
 "</div>\n"
 "            "
-msgstr ""
+msgstr "\n<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n\n    <p>Hella ${object.partner_id.name},</p>\n\n    <p>Hier is een ${object.state in ('draft', 'sent') and 'offerteaanvraag' or 'inkooporderbevestiging'} from ${object.company_id.name}: </p>\n\n    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n       &nbsp;&nbsp;<strong>REFERENTIES</strong><br />\n       &nbsp;&nbsp;Ordernummer: <strong>${object.name}</strong><br />\n       &nbsp;&nbsp;Orderdatum: ${format_tz(object.date_order, tz=user.tz, context={'lang':object.partner_id.lang})}<br />\n       % if object.origin:\n       &nbsp;&nbsp;Orderreferentie: ${object.origin}<br />\n       % endif\n       % if object.partner_ref:\n       &nbsp;&nbsp;Uw referentie: ${object.partner_ref}<br />\n       % endif\n       % if object.create_uid:\n       &nbsp;&nbsp;UW contactpersoon: <a href=\"mailto:${object.create_uid.email or ''}?subject=Order%20${object.name}\">${object.create_uid.name}</a>\n       % endif\n    </p>\n\n    <br/>\n    <p>Indien u vragen heeft, neemt u dan alstublieft contact met ons op.</p>\n    <p>Vriendelijk bedankt!</p>\n    <br/>\n    <br/>\n    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n    </div>\n    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n            ${object.company_id.partner_id.sudo().with_context(show_address=True, html_format=True).name_get()[0][1] | safe}\n        </span>\n        % if object.company_id.phone:\n            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n                Tel.: &nbsp; ${object.company_id.phone}\n            </div>\n        % endif\n        % if object.company_id.website:\n            <div>\n                Web :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n            </div>\n        %endif\n        <p></p>\n    </div>\n</div>\n            "
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_config_settings_module_stock_dropshipping
@@ -223,7 +224,7 @@ msgstr "<strong>Verzendadres:</strong>"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Taxes</strong>"
-msgstr "<strong>Belastingen</strong>"
+msgstr "<strong>BTW</strong>"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -238,7 +239,7 @@ msgstr "<strong>Totaal</strong>"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Unit Price</strong>"
-msgstr "<strong>Eenheidsprijs</strong>"
+msgstr "<strong>Prijs</strong>"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -253,7 +254,7 @@ msgstr "Vereist actie"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_account_invoice_purchase_id
 msgid "Add Purchase Order"
-msgstr ""
+msgstr "Inkooporder toevoegen"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_advance_bidding
@@ -278,7 +279,7 @@ msgstr "Sta leveranciers toe om direct te leveren aan uw klanten"
 #. module: purchase
 #: selection:purchase.config.settings,group_manage_vendor_price:0
 msgid "Allow using and importing vendor pricelists"
-msgstr "Sta gebruiken en importeren van fabrikant prijslijsten toe"
+msgstr "Sta gebruiken en importeren van Leverancier prijslijsten toe"
 
 #. module: purchase
 #: selection:purchase.config.settings,module_purchase_requisition:0
@@ -301,7 +302,7 @@ msgstr "Hiermee kunt u verschillende maateenheden voor producten selecteren en o
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_account_config_settings_group_analytic_account_for_purchases
 msgid "Allows you to specify an analytic account on purchase order lines."
-msgstr "Staat u toe een analytische rekening te specificeren op inkooporderlijnen."
+msgstr "Staat u toe een analytische rekening te specificeren op inkooporderregels."
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -351,7 +352,7 @@ msgstr "Bijbehorende verwervingen"
 msgid ""
 "Associated Purchase Order. Filled in automatically when a PO is chosen on "
 "the vendor bill."
-msgstr ""
+msgstr "Gekoppelde inkooporder. Deze wordt automatisch ingevuld wanneer de inkooporder is geselecteerd op de inkoopfactuur."
 
 #. module: purchase
 #: model:ir.filters,name:purchase.filter_purchase_order_average_delivery_time
@@ -396,7 +397,7 @@ msgid ""
 "Calls for tenders are used when you want to generate requests for quotations to several vendors for a given set of products.\n"
 "                    You can configure per product if you directly do a Request for Quotation\n"
 "                    to one vendor or if you want a Call for Tenders to compare offers from several vendors."
-msgstr "Aanbestedingen worden gebruikt wanneer u aanvragen wilt genereren voor offertes naar verschillende fabrikanten voor een gegeven set van producten.\nU kan per product configureren of u direct een offerteaanvraag\nnaar een leverancier wilt sturen of dat u meerdere leveranciers wilt vragen voor een offerte om ze te vergelijken."
+msgstr "Aanbestedingen worden gebruikt wanneer u aanvragen wilt genereren voor offertes naar verschillende Leveranciers voor een gegeven set van producten.\nU kan per product configureren of u direct een offerteaanvraag\nnaar een leverancier wilt sturen of dat u meerdere leveranciers wilt vragen voor een offerte om ze te vergelijken."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_product_product_purchase_ok
@@ -463,6 +464,11 @@ msgid "Click to define a new product."
 msgstr "Klik om een nieuw product te definiëren."
 
 #. module: purchase
+#: model:web.tip,description:purchase.purchase_tip_1
+msgid "Click to mark products as received."
+msgstr "Klik om aan te geven dat het product is ontvangen."
+
+#. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_open_invoice
 msgid "Click to record a vendor bill related to this purchase."
 msgstr "Klik om een leveranciersfactuur aan te maken gerelateerd aan deze inkoop."
@@ -515,13 +521,13 @@ msgstr "Bevestig inkooporders in één stap"
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_control
 msgid "Control"
-msgstr "Bedien"
+msgstr "Controle"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_product_product_purchase_method
 #: model:ir.model.fields,field_description:purchase.field_product_template_purchase_method
 msgid "Control Purchase Bills"
-msgstr "Controleer aankooprekeningen"
+msgstr "Controleer leveranciersfactuur"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_config_settings_group_costing_method
@@ -597,12 +603,17 @@ msgid "Description"
 msgstr "Omschrijving"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_default_location_dest_id_usage
+msgid "Destination Location Type"
+msgstr "Bestemmingslocatie soort"
+
+#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_config_settings_display_name
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_display_name
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_display_name
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_display_name
 msgid "Display Name"
-msgstr "Naam weergeven"
+msgstr "Weergave naam"
 
 #. module: purchase
 #: selection:purchase.order,state:0 selection:purchase.report,state:0
@@ -644,7 +655,7 @@ msgstr "E-mail samenstellen wizard"
 msgid ""
 "Encoding help. When selected, the associated purchase order lines are added "
 "to the vendor bill. Several PO can be selected."
-msgstr ""
+msgstr "Help bij verwerken. Wanneer geselecteerd, dan worden de gekoppelde inkooporderregels toegevoegd aan de inkoopfactuur. U kunt meerdere inkooporders selecteren."
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
@@ -684,6 +695,11 @@ msgid "Get 2 levels of approvals to confirm a purchase order"
 msgstr "Krijg 2 niveau's van goedkeuring om een inkooporder te bevestigen"
 
 #. module: purchase
+#: model:web.tip,description:purchase.purchase_tip_3
+msgid "Get all the shipments related to this order."
+msgstr "Open alle leveringen gekoppeld aan deze order."
+
+#. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_line_search
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
@@ -704,11 +720,18 @@ msgid "ID"
 msgstr "ID"
 
 #. module: purchase
+#: model:web.tip,description:purchase.purchase_tip_2
+msgid ""
+"If a product has been broken or damaged during the transport, you can scrap "
+"it with this button."
+msgstr "Als een product is gebroken of beschadigd tijdens het transport, kunt u het product afkeuren middels deze knop."
+
+#. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid ""
 "If a purchase order is done, you cannot modify it manually anymore. You will"
 " not be able to receive invoices anymore for this purchase order."
-msgstr "Als een inkooporder klaar is kan u het niet meer manueel wijzigen. U kan geen facturen meer ontvangen voor deze inkooporder."
+msgstr "Als een inkooporder klaar is kan u het niet meer handmatig wijzigen. U kan geen facturen meer ontvangen voor deze inkooporder."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_message_unread
@@ -731,7 +754,7 @@ msgstr "Om een inkooporder te kunnen verwijderen, dient u deze eerst te annulere
 msgid ""
 "In the process of a public tendering, you can compare the tender lines and "
 "choose for each requested product which quantity you will buy from each bid."
-msgstr "Bij het verwerken van een aanbesteding kan u de aanbestedingslijnen vergelijken en er voor kiezen om voor elk product de hoeveelheid te specificeren die u wilt aankopen voor elke aanbesteding."
+msgstr "Bij het verwerken van een aanbesteding kan u de aanbestedingsregels vergelijken en er voor kiezen om voor elk product de hoeveelheid te specificeren die u wilt aankopen voor elke aanbesteding."
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_action_picking_tree_in_move
@@ -763,7 +786,7 @@ msgstr "International Commercial Terms (INCOTERMS) zijn een set van voorgedefini
 #. module: purchase
 #: model:ir.model,name:purchase.model_account_invoice
 msgid "Invoice"
-msgstr "Factuuradres"
+msgstr "Factuur"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_account_invoice_line
@@ -913,7 +936,7 @@ msgstr "Geen productvarianten"
 #, python-format
 msgid ""
 "No vendor associated to product %s. Please set one to fix this procurement."
-msgstr "Geen leverancier geassocieerd aan product %s. U dient er één in te stellen voor deze verwerving."
+msgstr "Geen leverancier gekoppeld aan product %s. U dient er één in te stellen voor deze verwerving."
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
@@ -1128,7 +1151,7 @@ msgstr "Waarde producten"
 msgid ""
 "Products can have several attributes, defining variants (Example: size, "
 "color,...)"
-msgstr "Producten kunnen meerdere attributen hebben die als varianten worden gedefinieerd (Voorbeelden zijn: maat, kleur,...)"
+msgstr "Producten kunnen meerdere kenmerken hebben die als varianten worden gedefinieerd (Voorbeelden zijn: maat, kleur,...)"
 
 #. module: purchase
 #: selection:purchase.config.settings,group_uom:0
@@ -1139,6 +1162,11 @@ msgstr "Producten hebben slechts één maateenheid (eenvoudiger)"
 #: model:ir.model.fields,help:purchase.field_res_company_po_double_validation
 msgid "Provide a double validation mechanism for purchases"
 msgstr "Voorzie een dubbel navigatie mechanisme voor inkopen"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_mail_mail_website_published
+msgid "Published"
+msgstr "Gepubliceerd"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management
@@ -1234,7 +1262,7 @@ msgstr "Inkooporder welke regels bevatten die nog niet zijn gefactureerd"
 #: selection:purchase.config.settings,module_purchase_requisition:0
 msgid ""
 "Purchase propositions trigger draft purchase orders to a single supplier"
-msgstr "Inkoopvoorstellen doen concept inkooporders afgaan naar één leverancier"
+msgstr "Inkoopvoorstellen resulteren in concept inkooporders bij één leverancier"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_stock_warehouse_buy_to_resupply
@@ -1419,7 +1447,7 @@ msgstr "Stel een vaste prijs in op elk product"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Set to Done"
-msgstr "Zet naar voltooid"
+msgstr "Zet op voltooid"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1445,7 +1473,7 @@ msgstr "Gemakkelijke aanbesteding (kies van één offerteaanvraag)"
 #: selection:purchase.config.settings,group_uom:0
 msgid ""
 "Some products may be sold/puchased in different unit of measures (advanced)"
-msgstr "Sommige producten mogen verkocht/aangekocht worden in verschillende maateenheden (geavanceerd)"
+msgstr "Sommige producten mogen verkocht/ingekocht worden in verschillende maateenheden (geavanceerd)"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_origin
@@ -1500,7 +1528,12 @@ msgstr "BTW"
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_taxes_id
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "Taxes"
-msgstr "Belastingen"
+msgstr "BTW"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order_default_location_dest_id_usage
+msgid "Technical field used to display the Drop Ship Address"
+msgstr "Technisch veld welke wordt gebruikt om het dropshipment adres weer te geven."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_notes
@@ -1582,7 +1615,7 @@ msgstr "Totaalprijs"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_tree
 msgid "Total Untaxed amount"
-msgstr "Totaalbedrag excl. belastingen"
+msgstr "Totaalbedrag excl. BTW"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_tree
@@ -1729,9 +1762,14 @@ msgid ""
 msgstr "Leveranciersfacturen kunnen op voorhand gegenereerd worden gebaseerd op inkooporders\nof ontvangsten. Dit staat u toe de facturen te beheren\ndie u ontvangt van leveranciers aan de hand van het concept\ndocument in Odoo."
 
 #. module: purchase
+#: model:ir.model.fields,help:purchase.field_mail_mail_website_published
+msgid "Visible on the website as a comment"
+msgstr "Zichtbaar op de website als commentaar"
+
+#. module: purchase
 #: selection:purchase.order,invoice_status:0
 msgid "Waiting Invoices"
-msgstr "Wachtende facturen"
+msgstr "Wachten op factuur"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_warehouse
@@ -1774,7 +1812,13 @@ msgid ""
 "You must define a product for everything you purchase, whether\n"
 "            it's a physical product, a consumable or services you buy to\n"
 "            subcontractants."
-msgstr "U moet een product definiëren voor alles dat u inkoopt, of het nu\neen fysiek product, verbruiksartikel of een dienst is die u aankoopt bij een\nuit te besteden opdracht."
+msgstr "U moet een product definiëren voor alles dat u inkoopt, of het nu\neen fysiek product, verbruiksartikel of een dienst is die u inkoopt bij een\nuit te besteden opdracht."
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:335
+#, python-format
+msgid "You must set a Vendor Location for this partner %s"
+msgstr "U dient een leverancierslocatie in te stellen voor deze partner %s"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_account_config_settings
@@ -1785,3 +1829,8 @@ msgstr "account.config.settings"
 #: model:ir.model,name:purchase.model_purchase_config_settings
 msgid "purchase.config.settings"
 msgstr "purchase.config.settings"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_mail_mail_description
+msgid "unknown"
+msgstr "onbekend"

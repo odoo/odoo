@@ -6,6 +6,7 @@ var crash_manager = require('web.crash_manager');
 var data = require('web.data');
 var Dialog = require('web.Dialog');
 var framework = require('web.framework');
+var pyeval = require('web.pyeval');
 
 var QWeb = core.qweb;
 var _t = core._t;
@@ -388,6 +389,7 @@ var DataExport = Dialog.extend({
     },
     add_field: function(field_id, string) {
         var field_list = this.$el.find('#fields_list');
+        field_id = this.records[field_id] || field_id;
         if (this.$el.find("#fields_list option[value='" + field_id + "']")
                 && !this.$el.find("#fields_list option[value='" + field_id + "']").length) {
             field_list.append(new Option(string, field_id));
@@ -426,7 +428,7 @@ var DataExport = Dialog.extend({
                 fields: exported_fields,
                 ids: this.ids_to_export,
                 domain: this.domain,
-                context: this.dataset.context,
+                context: pyeval.eval('contexts', [this.dataset._model.context()]),
                 import_compat: !!this.$el.find("#import_compat").val(),
             })},
             complete: framework.unblockUI,

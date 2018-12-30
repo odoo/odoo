@@ -3,19 +3,21 @@
 # * base_gengo
 # 
 # Translators:
+# zbik2607 <darek@krokus.com.pl>, 2016
+# Piotr Szlązak <szlazakpiotr@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2015-10-08 13:47+0000\n"
-"Last-Translator: Dariusz Żbikowski <darek@krokus.com.pl>\n"
+"PO-Revision-Date: 2018-07-23 13:49+0000\n"
+"Last-Translator: Paweł Wodyński <pw@myodoo.pl>\n"
 "Language-Team: Polish (http://www.transifex.com/odoo/odoo-9/language/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: pl\n"
-"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
 
 #. module: base_gengo
 #: model:ir.ui.view,arch_db:base_gengo.view_company_inherit_base_gengo_form
@@ -52,7 +54,7 @@ msgstr "Anuluj"
 msgid ""
 "Check this box if you're using the sandbox mode of Gengo, mainly used for "
 "testing purpose."
-msgstr ""
+msgstr "Zaznacz to pole, jeśli używasz trybu piaskownicy w Gengo, używanego głównie do testowania."
 
 #. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_res_company_gengo_comment
@@ -217,7 +219,7 @@ msgstr "Pobierz tłumaczenie"
 #. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_res_company_gengo_sandbox
 msgid "Sandbox Mode"
-msgstr ""
+msgstr "Tryb Sandbox"
 
 #. module: base_gengo
 #: model:ir.ui.view,arch_db:base_gengo.base_gengo_translation_wizard_from
@@ -227,7 +229,7 @@ msgstr "Wyślij"
 #. module: base_gengo
 #: selection:base.gengo.translations,sync_type:0
 msgid "Send New Terms"
-msgstr ""
+msgstr "wysłano nowe warunki"
 
 #. module: base_gengo
 #: selection:ir.translation,gengo_translation:0
@@ -237,7 +239,7 @@ msgstr "Standard"
 #. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_base_gengo_translations_sync_type
 msgid "Sync Type"
-msgstr ""
+msgstr "typ Sync"
 
 #. module: base_gengo
 #: code:addons/base_gengo/wizard/base_gengo_translations.py:95
@@ -245,7 +247,7 @@ msgstr ""
 msgid ""
 "The number of terms to sync should be between 1 to 200 to work with Gengo "
 "translation services."
-msgstr ""
+msgstr "Liczba terminów do zsynchronizowania powinna wynosić od 1 do 200, aby pracować z usługami tłumaczeniowymi Gengo."
 
 #. module: base_gengo
 #: model:ir.model.fields,help:base_gengo.field_res_company_gengo_comment

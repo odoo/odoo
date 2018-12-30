@@ -3,13 +3,15 @@
 # * mass_mailing
 # 
 # Translators:
+# Aleksandar Vangelovski <aleksandarv@hbee.eu>, 2016
+# Anica Milanova, 2016-2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-09 09:20+0000\n"
-"PO-Revision-Date: 2015-10-10 09:47+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"POT-Creation-Date: 2016-01-13 15:46+0000\n"
+"PO-Revision-Date: 2017-05-02 13:04+0000\n"
+"Last-Translator: Anica Milanova\n"
 "Language-Team: Macedonian (http://www.transifex.com/odoo/odoo-9/language/mk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -152,12 +154,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 #: model:mail.mass_mailing,body_html:mass_mailing.mass_mail_1
 msgid "<strong>My Company</strong>"
-msgstr ""
+msgstr "<strong>Моја компанија</strong>"
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_campaign_kanban
 msgid "<strong>Opened</strong>"
-msgstr ""
+msgstr "<strong>Отворено</strong>"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact_ab_pc
@@ -172,7 +174,7 @@ msgstr "AB Тестирање"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact_message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "Потребна е акција"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_active
@@ -200,13 +202,13 @@ msgstr "Примени"
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 msgid "Apps That Help You Grow Your Business"
-msgstr ""
+msgstr "Апликации кои што ви помагаат да го растете вашиот бизнис"
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_list_search
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_search
 msgid "Archived"
-msgstr ""
+msgstr "Архивирано"
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -221,7 +223,7 @@ msgstr "Привезоци"
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.mass_mail_theme_list
 msgid "Basic Theme"
-msgstr ""
+msgstr "Основна тема"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_body_html
@@ -288,12 +290,12 @@ msgstr ""
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.FieldTextHtmlInline
 msgid "Choose a Template"
-msgstr ""
+msgstr "Избери урнек"
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.snippet_options
 msgid "Choose a background image"
-msgstr ""
+msgstr "Одберете слика за позадина"
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,help:mass_mailing.action_view_mass_mailing_lists
@@ -311,7 +313,7 @@ msgstr ""
 #. module: mass_mailing
 #: model:ir.actions.act_window,help:mass_mailing.action_view_mass_mailing_contacts_from_list
 msgid "Click to create a recipient."
-msgstr ""
+msgstr "Кликни да креираш примач."
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,help:mass_mailing.action_view_mass_mailing_campaigns
@@ -491,6 +493,7 @@ msgstr "Избриши"
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_delivered
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_delivered
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_statistics_report_delivered
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
 msgid "Delivered"
 msgstr "Испорачано"
 
@@ -516,7 +519,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_statistics_report_display_name
 #: model:ir.model.fields,field_description:mass_mailing.field_mass_mailing_config_settings_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Прикажи име"
 
 #. module: mass_mailing
 #: selection:mass.mailing.config.settings,group_website_popup_on_exit:0
@@ -545,8 +548,10 @@ msgid "Domain"
 msgstr "Домен"
 
 #. module: mass_mailing
+#: code:addons/mass_mailing/models/mass_mailing.py:638
 #: selection:mail.mass_mailing,state:0
 #: selection:mail.statistics.report,state:0
+#, python-format
 msgid "Draft"
 msgstr "Нацрт"
 
@@ -636,12 +641,12 @@ msgstr "Пратители"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact_message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "Пратители (Канали)"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact_message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "Пратители (Партнери)"
 
 #. module: mass_mailing
 #: selection:mail.mass_mailing,reply_to_mode:0
@@ -666,13 +671,22 @@ msgstr ""
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
-#: model:mail.mass_mailing,body_html:mass_mailing.mass_mail_1
 msgid ""
 "Great stories have personality. Consider telling a great story that provides"
 " personality. Writing a story with personality for potential clients will "
 "assist with making a relationship connection. This shows up in small quirks "
 "like word choices or phrases. Write from your point of view, not from "
 "someone else's experience.<br/>"
+msgstr ""
+
+#. module: mass_mailing
+#: model:mail.mass_mailing,body_html:mass_mailing.mass_mail_1
+msgid ""
+"Great stories have personality. Consider telling a great story that provides"
+" personality. Writing a story with personality for potential clients will "
+"assist with making a relationship connection. This shows up in small quirks "
+"like word choices or phrases. Write from your point of view, not from "
+"someone else's experience.<br>"
 msgstr ""
 
 #. module: mass_mailing
@@ -691,8 +705,10 @@ msgstr "Групирај по..."
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.FieldTextHtmlInline
-msgid "Help"
-msgstr "Помош"
+msgid ""
+"Here you can design your own template from scratch by selecting your "
+"favorite theme."
+msgstr ""
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics_id
@@ -724,7 +740,7 @@ msgstr "Доколку е штиклирано, новите пораки го �
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_contact_message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "Доколку е штиклирано, новите пораки го бараат вашето вниманите."
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_campaign_unique_ab_testing
@@ -734,25 +750,27 @@ msgid ""
 msgstr "Ако е изберено, примачите ќе добијат е-маил само еднаш, дозволувајќи праќање на различни е-маил пораки во една кампања за да се тестира ефективноста на мејлинзите."
 
 #. module: mass_mailing
+#: code:addons/mass_mailing/models/mass_mailing.py:638
 #: selection:mail.mass_mailing,state:0
+#, python-format
 msgid "In Queue"
-msgstr ""
+msgstr "Во редица на чекање"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact_message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "е следач"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_keep_archives
 msgid "Keep Archives"
-msgstr ""
+msgstr "Задржи архивни примероци"
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 #: model:mail.mass_mailing,body_html:mass_mailing.mass_mail_1
 msgid "Kind Regards,"
-msgstr ""
+msgstr "Со почит,"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact_message_last_post
@@ -958,7 +976,7 @@ msgstr "Кампања за масовна е-маил порака"
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_graph
 #: model:ir.ui.view,arch_db:mass_mailing.view_mass_mailing_configuration
 msgid "Mass Mailing"
-msgstr "Масовно пуштање пошта"
+msgstr "Масовно праќање пошта"
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.action_mail_statistics_report
@@ -1067,11 +1085,6 @@ msgid "Messages"
 msgstr "Пораки"
 
 #. module: mass_mailing
-#: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_contact_message_ids
-msgid "Messages and communication history"
-msgstr "Пораки и историја на комуникација"
-
-#. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 #: model:mail.mass_mailing,body_html:mass_mailing.mass_mail_1
 msgid "Michael Fletcher"
@@ -1108,12 +1121,12 @@ msgstr ""
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact_message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "Број на акции"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_clicks_ratio
 msgid "Number of Clicks"
-msgstr ""
+msgstr "Број на кликања"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_list_contact_nbr
@@ -1128,12 +1141,12 @@ msgstr ""
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_contact_message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr ""
+msgstr "Број на пораки за кои ѝм е потребна акција"
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_contact_message_unread_counter
 msgid "Number of unread messages"
-msgstr ""
+msgstr "Број на непрочитани пораки"
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mail_statistics_search
@@ -1199,7 +1212,7 @@ msgstr "Процент на контакти до кои ќе биде испр�
 #. module: mass_mailing
 #: model:mail.mass_mailing,body_html:mass_mailing.mass_mail_1
 msgid "Place Order"
-msgstr ""
+msgstr "Постави нарачка"
 
 #. module: mass_mailing
 #: code:addons/mass_mailing/models/mass_mailing.py:758
@@ -1354,7 +1367,7 @@ msgstr "Избери"
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.FieldTextHtmlInline
 msgid "Select a theme"
-msgstr ""
+msgstr "Избери тема"
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -1396,7 +1409,7 @@ msgstr ""
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_campaign_form
 msgid "Send new Mass Mailing"
-msgstr ""
+msgstr "Прати нова масовна е-маил порака"
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -1404,17 +1417,21 @@ msgid "Send to All"
 msgstr "Испрати на сите"
 
 #. module: mass_mailing
+#: code:addons/mass_mailing/models/mass_mailing.py:638
 #: selection:mail.mass_mailing,state:0
+#, python-format
 msgid "Sending"
-msgstr ""
+msgstr "Праќање"
 
 #. module: mass_mailing
+#: code:addons/mass_mailing/models/mass_mailing.py:638
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics_sent
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_sent
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_statistics_report_sent
 #: selection:mail.mail.statistics,state:0 selection:mail.mass_mailing,state:0
 #: model:mail.mass_mailing.stage,name:mass_mailing.campaign_stage_3
 #: selection:mail.statistics.report,state:0
+#, python-format
 msgid "Sent"
 msgstr "Испратено"
 
@@ -1493,7 +1510,7 @@ msgstr "Статистики"
 #: model:ir.actions.act_window,name:mass_mailing.action_view_mass_mailing_links_statistics
 #: model:ir.actions.act_window,name:mass_mailing.dropdb snipp
 msgid "Statistics of Clicks"
-msgstr ""
+msgstr "Статистика на кликања"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_state
@@ -1545,12 +1562,12 @@ msgstr "Поддршка"
 #. module: mass_mailing
 #: sql_constraint:mail.mass_mailing.tag:0
 msgid "Tag name already exists !"
-msgstr ""
+msgstr "Името на тагот веќе постои !"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_tag_ids
 msgid "Tags"
-msgstr "Етикети"
+msgstr "Ознаки"
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.action_email_template_marketing
@@ -1563,7 +1580,7 @@ msgstr "Урнеци"
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 #, python-format
 msgid "Test Mailing"
-msgstr "Тесно испраќање порака"
+msgstr "Тест пошта"
 
 #. module: mass_mailing
 #: selection:mail.statistics.report,state:0
@@ -1602,6 +1619,12 @@ msgid "This mass mailing is scheduled to"
 msgstr ""
 
 #. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
+msgid ""
+"This will send the email to all recipients. Do you still want to proceed ?"
+msgstr "Со ова ќе се прати е-маил до сите приматели. Дали сеуште сакате да продолжите?"
+
+#. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_total
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_total
 msgid "Total"
@@ -1610,7 +1633,7 @@ msgstr "Вкупно"
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_links_search
 msgid "Tracked Link"
-msgstr ""
+msgstr "Проследена врска"
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_campaign_form
@@ -1631,7 +1654,7 @@ msgstr "Непрочитани Пораки"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact_message_unread_counter
 msgid "Unread Messages Counter"
-msgstr ""
+msgstr "Тезга на непрочитаните пораки"
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
@@ -1670,11 +1693,6 @@ msgid ""
 msgstr ""
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact_website_message_ids
-msgid "Website Messages"
-msgstr "Пораки на веб сајт"
-
-#. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mass_mailing_config_settings_group_website_popup_on_exit
 msgid "Website Pop-up"
 msgstr ""
@@ -1690,19 +1708,14 @@ msgid "Website Popup Redirect URL"
 msgstr ""
 
 #. module: mass_mailing
-#: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_contact_website_message_ids
-msgid "Website communication history"
-msgstr "Историја на веб комуникација"
-
-#. module: mass_mailing
 #: model:mail.mass_mailing,body_html:mass_mailing.mass_mail_1
 msgid "You get a 20% discount for signing up!"
-msgstr ""
+msgstr "Добивате 20% попуст за регистрирање!"
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 msgid "Your Logo"
-msgstr ""
+msgstr "Твое лого"
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
@@ -1712,7 +1725,7 @@ msgstr "Ваша нарачка"
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 msgid "Your order has shipped!"
-msgstr ""
+msgstr "Вашата нарачка е пристигната!"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_campaign_id

@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime, timedelta, date
+from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 import logging
 from operator import itemgetter
-from werkzeug import url_encode
 
 from openerp import SUPERUSER_ID
-from openerp import tools, api
+from openerp import tools, api, fields as newfields
 from openerp.addons.base.res.res_partner import format_address
 from openerp.addons.crm import crm_stage
 from openerp.osv import fields, osv
@@ -58,6 +57,14 @@ class crm_lead(format_address, osv.osv):
     _order = "priority desc,date_action,id desc"
     _inherit = ['mail.thread', 'ir.needaction_mixin', 'utm.mixin']
     _mail_mass_mailing = _('Leads / Opportunities')
+
+    def _get_default_probability(self, cr, uid, context=None):
+        """ Gives default probability """
+        stage_id = self._get_default_stage_id(cr, uid, context=context)
+        if stage_id:
+            return self.pool['crm.stage'].browse(cr, uid, stage_id, context=context).probability
+        else:
+            return 10
 
     def _get_default_stage_id(self, cr, uid, context=None):
         """ Gives default stage_id """
@@ -239,7 +246,7 @@ class crm_lead(format_address, osv.osv):
         'team_id': lambda s, cr, uid, c: s.pool['crm.team']._get_default_team_id(cr, SUPERUSER_ID, context=c, user_id=uid),
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.lead', context=c),
         'priority': lambda *a: crm_stage.AVAILABLE_PRIORITIES[0][0],
-        'probability': 10,
+        'probability': lambda s, cr, uid, c: s._get_default_probability(cr, uid, c),
         'color': 0,
         'date_last_stage_update': fields.datetime.now,
     }
@@ -282,6 +289,12 @@ class crm_lead(format_address, osv.osv):
     def on_change_user(self, cr, uid, ids, user_id, context=None):
         """ When changing the user, also set a team_id or restrict team id
             to the ones user_id is member of. """
+        if not context:
+            context = {}
+        if user_id and context.get('team_id'):
+            team = self.pool['crm.team'].browse(cr, uid, context['team_id'], context=context)
+            if user_id in team.member_ids.ids:
+                return {}
         team_id = self.pool['crm.team']._get_default_team_id(cr, uid, context=context, user_id=user_id)
         return {'value': {'team_id': team_id}}
 
@@ -514,11 +527,11 @@ class crm_lead(format_address, osv.osv):
                 value = dict(key).get(lead[field_name], lead[field_name])
             elif field.type == 'many2one':
                 if lead[field_name]:
-                    value = lead[field_name].name_get()[0][1]
+                    value = lead[field_name].sudo().name_get()[0][1]
             elif field.type == 'many2many':
                 if lead[field_name]:
                     for val in lead[field_name]:
-                        field_value = val.name_get()[0][1]
+                        field_value = val.sudo().name_get()[0][1]
                         value += field_value + ","
             else:
                 value = lead[field_name]
@@ -594,6 +607,8 @@ class crm_lead(format_address, osv.osv):
         """
         Search for opportunities that have   the same partner and that arent done or cancelled
         """
+        if not email:
+            return []
         partner_match_domain = []
         for email in set(email_split(email) + [email]):
             partner_match_domain.append(('email_from', '=ilike', email))
@@ -662,7 +677,7 @@ class crm_lead(format_address, osv.osv):
 
         # Check if the stage is in the stages of the sales team. If not, assign the stage with the lowest sequence
         if merged_data.get('team_id'):
-            team_stage_ids = self.pool.get('crm.stage').search(cr, uid, [('team_ids', 'in', merged_data['team_id']), ('type', '=', merged_data.get('type'))], order='sequence', context=context)
+            team_stage_ids = self.pool.get('crm.stage').search(cr, uid, [('team_ids', 'in', merged_data['team_id']), ('type', 'in', [merged_data.get('type'), 'both'])], order='sequence', context=context)
             if merged_data.get('stage_id') not in team_stage_ids:
                 merged_data['stage_id'] = team_stage_ids and team_stage_ids[0] or False
         # Write merged data into first opportunity
@@ -692,7 +707,10 @@ class crm_lead(format_address, osv.osv):
             'date_conversion': fields.datetime.now(),
         }
         if not lead.stage_id or lead.stage_id.type=='lead':
-            val['stage_id'] = self.stage_find(cr, uid, [lead], team_id, [('type', 'in', ('opportunity', 'both'))], context=context)
+            stage_id = self.stage_find(cr, uid, [lead], team_id, [('type', 'in', ['opportunity', 'both'])], context=context)
+            val['stage_id'] = stage_id
+            if stage_id:
+                val['probability'] = self.pool['crm.stage'].browse(cr, uid, stage_id, context=context).probability
         return val
 
     def convert_opportunity(self, cr, uid, ids, partner_id, user_ids=False, team_id=False, context=None):
@@ -712,9 +730,11 @@ class crm_lead(format_address, osv.osv):
         return True
 
     def _lead_create_contact(self, cr, uid, lead, name, is_company, parent_id=False, context=None):
+        if context is None:
+            context = {}
         partner = self.pool.get('res.partner')
         vals = {'name': name,
-            'user_id': lead.user_id.id,
+            'user_id': context.get('default_user_id') or lead.user_id.id,
             'comment': lead.description,
             'team_id': lead.team_id.id or False,
             'parent_id': parent_id,
@@ -872,6 +892,9 @@ class crm_lead(format_address, osv.osv):
             context['default_team_id'] = vals.get('team_id')
         if vals.get('user_id') and 'date_open' not in vals:
             vals['date_open'] = fields.datetime.now()
+        if context.get('default_partner_id') and not vals.get('email_from'):
+            partner_id = self.pool['res.partner'].browse(cr, uid, context.get('default_partner_id'))
+            vals['email_from'] = partner_id.email
 
         # context: no_log, because subtype already handle this
         create_context = dict(context, mail_create_nolog=True)
@@ -889,6 +912,8 @@ class crm_lead(format_address, osv.osv):
             vals.update(onchange_stage_values)
         if vals.get('probability') >= 100 or not vals.get('active', True):
             vals['date_closed'] = fields.datetime.now()
+        elif 'probability' in vals and vals['probability'] < 100:
+            vals['date_closed'] = False
         return super(crm_lead, self).write(cr, uid, ids, vals, context=context)
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -916,7 +941,7 @@ class crm_lead(format_address, osv.osv):
             if alias_record and alias_record.alias_domain and alias_record.alias_name:
                 dynamic_help = '<p>%s</p>' % _("""All email incoming to %(link)s  will automatically create new opportunity.
 Update your business card, phone book, social media,... Send an email right now and see it here.""") % {
-                    'link': "<a href='mailto:%s'>%s</a>" % (alias_record.alias_name, alias_record.alias_domain)
+                    'link': "<a href='mailto:%(email)s'>%(email)s</a>" % {'email': '%s@%s' % (alias_record.alias_name, alias_record.alias_domain)}
                 }
                 return '<p class="oe_view_nocontent_create">%s</p>%s%s' % (
                     _('Click to add a new opportunity'),
@@ -955,11 +980,12 @@ Update your business card, phone book, social media,... Send an email right now 
     def _notification_get_recipient_groups(self, cr, uid, ids, message, recipients, context=None):
         res = super(crm_lead, self)._notification_get_recipient_groups(cr, uid, ids, message, recipients, context=context)
 
-        won_action = self._notification_link_helper(cr, uid, ids, 'method', context=context, method='case_mark_won')
-        lost_action = self._notification_link_helper(cr, uid, ids, 'method', context=context, method='case_mark_lost')
-        convert_action = self._notification_link_helper(cr, uid, ids, 'method', context=context, method='convert_opportunity')
-
         lead = self.browse(cr, uid, ids[0], context=context)
+
+        won_action = self._notification_link_helper(cr, uid, ids, 'controller', controller='/lead/case_mark_won', context=context)
+        lost_action = self._notification_link_helper(cr, uid, ids, 'controller', controller='/lead/case_mark_lost', context=context)
+        convert_action = self._notification_link_helper(cr, uid, ids, 'controller', controller='/lead/convert', context=context)
+
         if lead.type == 'lead':
             res['group_sale_salesman'] = {
                 'actions': [{'url': convert_action, 'title': 'Convert to opportunity'}]
@@ -1005,6 +1031,12 @@ Update your business card, phone book, social media,... Send an email right now 
             through message_process.
             This override updates the document according to the email.
         """
+        # remove default author when going through the mail gateway. Indeed we
+        # do not want to explicitly set user_id to False; however we do not
+        # want the gateway user to be responsible if no other responsible is
+        # found.
+        create_context = dict(context or {})
+        create_context['default_user_id'] = False
         if custom_values is None:
             custom_values = {}
         defaults = {
@@ -1012,14 +1044,13 @@ Update your business card, phone book, social media,... Send an email right now 
             'email_from': msg.get('from'),
             'email_cc': msg.get('cc'),
             'partner_id': msg.get('author_id', False),
-            'user_id': False,
         }
         if msg.get('author_id'):
             defaults.update(self.on_change_partner_id(cr, uid, None, msg.get('author_id'), context=context)['value'])
         if msg.get('priority') in dict(crm_stage.AVAILABLE_PRIORITIES):
             defaults['priority'] = msg.get('priority')
         defaults.update(custom_values)
-        return super(crm_lead, self).message_new(cr, uid, msg, custom_values=defaults, context=context)
+        return super(crm_lead, self).message_new(cr, uid, msg, custom_values=defaults, context=create_context)
 
     def message_update(self, cr, uid, ids, msg, update_vals=None, context=None):
         """ Overrides mail_thread message_update that is called by the mailgateway
@@ -1075,6 +1106,7 @@ Update your business card, phone book, social media,... Send an email right now 
         return res
 
     def retrieve_sales_dashboard(self, cr, uid, context=None):
+        date_today = newfields.Date.from_string(fields.date.context_today(self, cr, uid, context=context))
 
         res = {
             'meeting': {
@@ -1113,32 +1145,32 @@ Update your business card, phone book, social media,... Send an email right now 
             if opp['date_deadline']:
                 date_deadline = datetime.strptime(opp['date_deadline'], tools.DEFAULT_SERVER_DATE_FORMAT).date()
 
-                if date_deadline == date.today():
+                if date_deadline == date_today:
                     res['closing']['today'] += 1
-                if date_deadline >= date.today() and date_deadline <= date.today() + timedelta(days=7):
+                if date_deadline >= date_today and date_deadline <= date_today + timedelta(days=7):
                     res['closing']['next_7_days'] += 1
-                if date_deadline < date.today():
+                if date_deadline < date_today and not opp['date_closed']:
                     res['closing']['overdue'] += 1
 
             # Next activities
             if opp['next_activity_id'] and opp['date_action']:
                 date_action = datetime.strptime(opp['date_action'], tools.DEFAULT_SERVER_DATE_FORMAT).date()
 
-                if date_action == date.today():
+                if date_action == date_today:
                     res['activity']['today'] += 1
-                if date_action >= date.today() and date_action <= date.today() + timedelta(days=7):
+                if date_action >= date_today and date_action <= date_today + timedelta(days=7):
                     res['activity']['next_7_days'] += 1
-                if date_action < date.today():
+                if date_action < date_today and not opp['date_closed']:
                     res['activity']['overdue'] += 1
 
             # Won in Opportunities
             if opp['date_closed']:
                 date_closed = datetime.strptime(opp['date_closed'], tools.DEFAULT_SERVER_DATETIME_FORMAT).date()
 
-                if date_closed <= date.today() and date_closed >= date.today().replace(day=1):
+                if date_closed <= date_today and date_closed >= date_today.replace(day=1):
                     if opp['planned_revenue']:
                         res['won']['this_month'] += opp['planned_revenue']
-                elif date_closed < date.today().replace(day=1) and date_closed >= date.today().replace(day=1) - relativedelta(months=+1):
+                elif date_closed < date_today.replace(day=1) and date_closed >= date_today.replace(day=1) - relativedelta(months=+1):
                     if opp['planned_revenue']:
                         res['won']['last_month'] += opp['planned_revenue']
 
@@ -1168,9 +1200,9 @@ Update your business card, phone book, social media,... Send an email right now 
         for act in activites_done:
             if act['date']:
                 date_act = datetime.strptime(act['date'], tools.DEFAULT_SERVER_DATETIME_FORMAT).date()
-                if date_act <= date.today() and date_act >= date.today().replace(day=1):
+                if date_act <= date_today and date_act >= date_today.replace(day=1):
                         res['done']['this_month'] += 1
-                elif date_act < date.today().replace(day=1) and date_act >= date.today().replace(day=1) - relativedelta(months=+1):
+                elif date_act < date_today.replace(day=1) and date_act >= date_today.replace(day=1) - relativedelta(months=+1):
                     res['done']['last_month'] += 1
 
         # Meetings
@@ -1186,9 +1218,9 @@ Update your business card, phone book, social media,... Send an email right now 
             if meeting['start']:
                 start = datetime.strptime(meeting['start'], tools.DEFAULT_SERVER_DATETIME_FORMAT).date()
 
-                if start == date.today():
+                if start == date_today:
                     res['meeting']['today'] += 1
-                if start >= date.today() and start <= date.today() + timedelta(days=7):
+                if start >= date_today and start <= date_today + timedelta(days=7):
                     res['meeting']['next_7_days'] += 1
 
         res['nb_opportunities'] = len(opportunities)

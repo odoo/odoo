@@ -57,11 +57,12 @@ class StockMove(osv.osv):
                         'name': line['name'],
                         'procurement_id': move.procurement_id.id,
                         'split_from': move.id, #Needed in order to keep sale connection, but will be removed by unlink
+                        'price_unit': product.standard_price,
                     }
                     mid = move_obj.copy(cr, uid, move.id, default=valdef, context=context)
                     to_explode_again_ids.append(mid)
                 else:
-                    if prod_obj.type in ('consu','product'):
+                    if product._need_procurement():
                         valdef = {
                             'name': move.rule_id and move.rule_id.name or "/",
                             'origin': move.origin,
@@ -187,7 +188,7 @@ class StockMove(osv.osv):
                 production_obj.signal_workflow(cr, uid, [prod_id], 'button_produce')
             if move.production_id.id:
                 self.write(cr, uid, new_moves, {'production_id': move.production_id.id}, context=context)
-            res.append(new_moves)
+            res += new_moves
         return res
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -261,7 +262,7 @@ class stock_warehouse(osv.osv):
                 for warehouse in self.browse(cr, uid, ids, context=context):
                     if warehouse.manufacture_pull_id:
                         pull_obj.unlink(cr, uid, warehouse.manufacture_pull_id.id, context=context)
-        return super(stock_warehouse, self).write(cr, uid, ids, vals, context=None)
+        return super(stock_warehouse, self).write(cr, uid, ids, vals, context=context)
 
     def get_all_routes_for_wh(self, cr, uid, warehouse, context=None):
         all_routes = super(stock_warehouse, self).get_all_routes_for_wh(cr, uid, warehouse, context=context)

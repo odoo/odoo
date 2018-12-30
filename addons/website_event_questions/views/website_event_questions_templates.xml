@@ -22,7 +22,7 @@
         </xpath>
 
         <!-- Generic questions -->
-        <xpath expr="//div[@class='container']/t[last()]" position="after">
+        <xpath expr="//div[hasclass('modal-body')]/div/t[last()]" position="after">
             <t t-if="event.general_question_ids">
                 <h4 class="page-header mt32"><strong>Last questions</strong></h4>
                 <div class="row">

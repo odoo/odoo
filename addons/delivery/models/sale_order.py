@@ -3,6 +3,7 @@
 
 from openerp import models, fields, api, _
 from openerp.exceptions import UserError
+import openerp.addons.decimal_precision as dp
 
 
 class SaleOrder(models.Model):
@@ -33,7 +34,7 @@ class SaleOrder(models.Model):
     def action_confirm(self):
         res = super(SaleOrder, self).action_confirm()
         for so in self:
-            self.invoice_shipping_on_delivery = all([not line.is_delivery for line in so.order_line])
+            so.invoice_shipping_on_delivery = all([not line.is_delivery for line in so.order_line])
         return res
 
     @api.multi
@@ -69,6 +70,8 @@ class SaleOrder(models.Model):
             else:
                 raise UserError(_('No carrier set for this order.'))
 
+        return True
+
     def _create_delivery_line(self, carrier, price_unit):
         SaleOrderLine = self.env['sale.order.line']
 
@@ -91,10 +94,19 @@ class SaleOrder(models.Model):
         }
         if self.order_line:
             values['sequence'] = self.order_line[-1].sequence + 1
-        SaleOrderLine.create(values)
+        sol = SaleOrderLine.sudo().create(values)
+        return sol
 
 
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 
     is_delivery = fields.Boolean(string="Is a Delivery", default=False)
+    product_qty = fields.Float(compute='_compute_product_qty', string='Quantity', digits=dp.get_precision('Product Unit of Measure'))
+
+    @api.depends('product_id', 'product_uom', 'product_uom_qty')
+    def _compute_product_qty(self):
+        for line in self:
+            if not line.product_id or not line.product_uom or not line.product_uom_qty:
+                return 0.0
+            line.product_qty = self.env['product.uom']._compute_qty_obj(line.product_uom, line.product_uom_qty, line.product_id.uom_id)

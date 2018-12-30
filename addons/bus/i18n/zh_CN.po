@@ -3,13 +3,19 @@
 # * bus
 # 
 # Translators:
+# Jeffery Chenn <jeffery9@gmail.com>, 2016
+# Jeffery Chenn <jeffery9@gmail.com>, 2016
+# Joray <13637815@qq.com>, 2016
+# Joray <13637815@qq.com>, 2016
+# zhangpeiqing <zpq001@live.com>, 2015
+# 秋颜 杨 <1394933305@qq.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2015-09-10 00:57+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"POT-Creation-Date: 2016-09-22 13:16+0000\n"
+"PO-Revision-Date: 2016-09-27 09:46+0000\n"
+"Last-Translator: 秋颜 杨 <1394933305@qq.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,7 +36,7 @@ msgstr "离开"
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus_channel
 msgid "Channel"
-msgstr "渠道"
+msgstr "频道"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus_create_date
@@ -39,20 +45,29 @@ msgstr "创建日期"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus_create_uid
-#: model:ir.model.fields,field_description:bus.field_bus_presence_create_uid
 msgid "Created by"
-msgstr "创建于"
-
-#. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_presence_create_date
-msgid "Created on"
-msgstr "创建于"
+msgstr "创建者"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus_display_name
 #: model:ir.model.fields,field_description:bus.field_bus_presence_display_name
 msgid "Display Name"
+msgstr "显示名称"
+
+#. module: bus
+#: model:ir.model.fields,field_description:bus.field_res_users_partner_latitude
+msgid "Geo Latitude"
 msgstr ""
+
+#. module: bus
+#: model:ir.model.fields,field_description:bus.field_res_users_date_localization
+msgid "Geo Localization Date"
+msgstr ""
+
+#. module: bus
+#: model:ir.model.fields,field_description:bus.field_res_users_partner_longitude
+msgid "Geo Longitude"
+msgstr "地理经度"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus_id
@@ -71,7 +86,7 @@ msgstr "IM的状态"
 #: model:ir.model.fields,field_description:bus.field_bus_bus___last_update
 #: model:ir.model.fields,field_description:bus.field_bus_presence___last_update
 msgid "Last Modified on"
-msgstr "最后修改日"
+msgstr "最后修改时间"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_presence_last_poll
@@ -85,15 +100,13 @@ msgstr "最后登录"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus_write_uid
-#: model:ir.model.fields,field_description:bus.field_bus_presence_write_uid
 msgid "Last Updated by"
-msgstr "最后更新"
+msgstr "最后更新者"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus_write_date
-#: model:ir.model.fields,field_description:bus.field_bus_presence_write_date
 msgid "Last Updated on"
-msgstr "最后更新"
+msgstr "最后更新时间"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus_message
@@ -103,7 +116,7 @@ msgstr "消息"
 #. module: bus
 #: selection:bus.presence,status:0
 msgid "Offline"
-msgstr "断网"
+msgstr "离线"
 
 #. module: bus
 #: selection:bus.presence,status:0
@@ -118,7 +131,7 @@ msgstr "业务伙伴"
 #. module: bus
 #: model:ir.model,name:bus.model_bus_presence
 msgid "User Presence"
-msgstr ""
+msgstr "用户出现"
 
 #. module: bus
 #: model:ir.model,name:bus.model_res_users
@@ -129,4 +142,4 @@ msgstr "用户"
 #. module: bus
 #: model:ir.model,name:bus.model_bus_bus
 msgid "bus.bus"
-msgstr ""
+msgstr "bus.bus"

@@ -25,21 +25,18 @@ import pytz
 import re
 import xmlrpclib
 from operator import itemgetter
-from contextlib import contextmanager
 from psycopg2 import Binary
 
 import openerp
 import openerp.tools as tools
+from openerp.sql_db import LazyCursor
 from openerp.tools.translate import _
 from openerp.tools import float_repr, float_round, frozendict, html_sanitize
 import json
-from openerp import SUPERUSER_ID, registry
+from openerp import SUPERUSER_ID
 
-@contextmanager
-def _get_cursor():
-    # yield a valid cursor from any environment or create a new one if none found
-    with registry().cursor() as cr:
-        yield cr
+# deprecated; kept for backward compatibility only
+_get_cursor = LazyCursor
 
 EMPTY_DICT = frozendict()
 
@@ -378,7 +375,7 @@ class float(_column):
     @property
     def digits(self):
         if self._digits_compute:
-            with _get_cursor() as cr:
+            with LazyCursor() as cr:
                 return self._digits_compute(cr)
         else:
             return self._digits
@@ -633,20 +630,21 @@ class binary(_column):
             ('res_field', '=', name),
             ('res_id', '=', id),
         ])
-        if value:
-            if att:
-                att.write({'datas': value})
+        with att.env.norecompute():
+            if value:
+                if att:
+                    att.write({'datas': value})
+                else:
+                    att.create({
+                        'name': name,
+                        'res_model': obj._name,
+                        'res_field': name,
+                        'res_id': id,
+                        'type': 'binary',
+                        'datas': value,
+                    })
             else:
-                att.create({
-                    'name': name,
-                    'res_model': obj._name,
-                    'res_field': name,
-                    'res_id': id,
-                    'type': 'binary',
-                    'datas': value,
-                })
-        else:
-            att.unlink()
+                att.unlink()
         return []
 
 class selection(_column):
@@ -817,6 +815,7 @@ class one2many(_column):
         context.update(self._context)
         if not values:
             return
+        original_obj = obj
         obj = obj.pool[self._obj]
         rec = obj.browse(cr, user, [], context=context)
         with rec.env.norecompute():
@@ -848,7 +847,8 @@ class one2many(_column):
                     inverse_field = obj._fields.get(self._fields_id)
                     assert inverse_field, 'Trying to unlink the content of a o2m but the pointed model does not have a m2o'
                     # if the o2m has a static domain we must respect it when unlinking
-                    domain = self._domain(obj) if callable(self._domain) else self._domain
+                    domain = (self._domain(original_obj)
+                              if callable(self._domain) else self._domain)
                     extra_domain = domain or []
                     ids_to_unlink = obj.search(cr, user, [(self._fields_id,'=',id)] + extra_domain, context=context)
                     # If the model has cascade deletion, we delete the rows because it is the intended behavior,
@@ -861,9 +861,18 @@ class one2many(_column):
                     # Must use write() to recompute parent_store structure if needed
                     obj.write(cr, user, act[2], {self._fields_id:id}, context=context or {})
                     ids2 = act[2] or [0]
-                    cr.execute('select id from '+_table+' where '+self._fields_id+'=%s and id <> ALL (%s)', (id,ids2))
-                    ids3 = map(lambda x:x[0], cr.fetchall())
-                    obj.write(cr, user, ids3, {self._fields_id:False}, context=context or {})
+                    # if the o2m has a static domain we must respect it when unlinking
+                    domain = (self._domain(original_obj)
+                              if callable(self._domain) else self._domain)
+                    extra_domain = domain or []
+                    ids3 = obj.search(cr, user, [(self._fields_id,'=',id), ('id','not in',ids2)] + extra_domain, context=context)
+                    # If the model has cascade deletion, we delete the rows because it is the intended behavior,
+                    # otherwise we only nullify the reverse foreign key column.
+                    inverse_field = obj._fields.get(self._fields_id)
+                    if getattr(inverse_field, "ondelete", None) == "cascade":
+                        obj.unlink(cr, user, ids3, context=context)
+                    else:
+                        obj.write(cr, user, ids3, {self._fields_id: False}, context=context or {})
         return result
 
     def search(self, cr, obj, args, name, value, offset=0, limit=None, uid=None, operator='like', context=None):
@@ -1038,6 +1047,25 @@ class many2many(_column):
             return
         rel, id1, id2 = self._sql_names(model)
         obj = model.pool[self._obj]
+
+        def link(ids):
+            # beware of duplicates when inserting
+            query = """ INSERT INTO {rel} ({id1}, {id2})
+                        (SELECT %s, unnest(%s)) EXCEPT (SELECT {id1}, {id2} FROM {rel} WHERE {id1}=%s)
+                    """.format(rel=rel, id1=id1, id2=id2)
+            for sub_ids in cr.split_for_in_conditions(ids):
+                cr.execute(query, (id, list(sub_ids), id))
+
+        def unlink_all():
+            # remove all records for which user has access rights
+            clauses, params, tables = obj.pool.get('ir.rule').domain_get(cr, user, obj._name, context=context)
+            cond = " AND ".join(clauses) if clauses else "1=1"
+            query = """ DELETE FROM {rel} USING {tables}
+                        WHERE {rel}.{id1}=%s AND {rel}.{id2}={table}.id AND {cond}
+                    """.format(rel=rel, id1=id1, id2=id2,
+                               table=obj._table, tables=','.join(tables), cond=cond)
+            cr.execute(query, [id] + params)
+
         for act in values:
             if not (isinstance(act, list) or isinstance(act, tuple)) or not act:
                 continue
@@ -1051,23 +1079,12 @@ class many2many(_column):
             elif act[0] == 3:
                 cr.execute('delete from '+rel+' where ' + id1 + '=%s and '+ id2 + '=%s', (id, act[1]))
             elif act[0] == 4:
-                # following queries are in the same transaction - so should be relatively safe
-                cr.execute('SELECT 1 FROM '+rel+' WHERE '+id1+' = %s and '+id2+' = %s', (id, act[1]))
-                if not cr.fetchone():
-                    cr.execute('insert into '+rel+' ('+id1+','+id2+') values (%s,%s)', (id, act[1]))
+                link([act[1]])
             elif act[0] == 5:
-                cr.execute('delete from '+rel+' where ' + id1 + ' = %s', (id,))
+                unlink_all()
             elif act[0] == 6:
-
-                d1, d2,tables = obj.pool.get('ir.rule').domain_get(cr, user, obj._name, context=context)
-                if d1:
-                    d1 = ' and ' + ' and '.join(d1)
-                else:
-                    d1 = ''
-                cr.execute('delete from '+rel+' where '+id1+'=%s AND '+id2+' IN (SELECT '+rel+'.'+id2+' FROM '+rel+', '+','.join(tables)+' WHERE '+rel+'.'+id1+'=%s AND '+rel+'.'+id2+' = '+obj._table+'.id '+ d1 +')', [id, id]+d2)
-
-                for act_nbr in act[2]:
-                    cr.execute('insert into '+rel+' ('+id1+','+id2+') values (%s, %s)', (id, act_nbr))
+                unlink_all()
+                link(act[2])
 
     #
     # TODO: use a name_search
@@ -1346,7 +1363,7 @@ class function(_column):
     @property
     def digits(self):
         if self._digits_compute:
-            with _get_cursor() as cr:
+            with LazyCursor() as cr:
                 return self._digits_compute(cr)
         else:
             return self._digits
@@ -1430,6 +1447,7 @@ class function(_column):
     def to_field_args(self):
         args = super(function, self).to_field_args()
         args['store'] = bool(self.store)
+        args['company_dependent'] = False
         if self._type in ('float',):
             args['digits'] = self._digits_compute or self._digits
         elif self._type in ('binary',):

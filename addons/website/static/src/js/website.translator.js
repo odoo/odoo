@@ -31,6 +31,14 @@ website.TopBar.include({
     edit_master: function (ev) {
         ev.preventDefault();
         var $link = $('.js_language_selector a[data-default-lang]');
+        if (!$link.length) {
+            // Fallback for old website
+            var l = false;
+            _.each($('.js_language_selector a'), function(a) {
+               if (!l || a.href.length < l.href.length) { l = a; }
+            });
+            $link = $(l);
+        }
         $link[0].search += ($link[0].search ? '&' : '?') + 'enable_editor=1';
         $link.click();
     },
@@ -59,9 +67,9 @@ var Translate = translate.Class.include({
             dialog.appendTo($(document.body));
             dialog.on('activate', this, function () {
                 if (dialog.$('input[name=do_not_show]').prop('checked')) {
-                    localStorage.removeItem(nodialog);
-                } else {
                     localStorage.setItem(nodialog, true);
+                } else {
+                    localStorage.removeItem(nodialog);
                 }
                 dialog.$el.modal('hide');
             });

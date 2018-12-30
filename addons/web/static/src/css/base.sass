@@ -1263,6 +1263,7 @@ $sheet-padding: 16px
             margin: 0
     .oe_form_sheetbg
         padding: 16px 0
+        position: relative
     .oe_form_sheet_width
         min-width: 650px
         max-width: $sheet-max-width
@@ -1278,6 +1279,7 @@ $sheet-padding: 16px
         .oe_form_sheetbg
             background: url(/web/static/src/img/form_sheetbg.png)
             border-bottom: 1px solid #ddd
+            z-index: 1
             // Customize font weight according bootstrap3
             .oe_subtotal_footer label
                 font-weight: bold
@@ -1517,6 +1519,7 @@ $sheet-padding: 16px
                 background-color: #F66 !important
                 border: 1px solid #D00 !important
         .oe_input_icon
+            position: relative
             cursor: pointer
             margin: 3px 0 0 -21px
             vertical-align: top
@@ -1865,7 +1868,7 @@ $sheet-padding: 16px
             opacity: 0
             display: block !important
     .oe_list.oe_list_editable.oe_editing
-        .oe_edition .oe_list_field_cell
+        .oe_edition .oe_list_field_cell:not(.oe-button)
             *
                 visibility: hidden
             color: transparent
@@ -1891,6 +1894,9 @@ $sheet-padding: 16px
                 margin: 0
             input, textarea, select
                 min-width: 0
+            textarea.field_text
+                position: relative
+                z-index: 1
             &.oe_form_field_float,&.oe_form_view_integer
                 &.oe_readonly
                     padding: 6px 0px 0px
@@ -1908,6 +1914,9 @@ $sheet-padding: 16px
                     width: calc(100% - 20px)
             &.oe_form_field_reference
                 display: table
+        .oe_list_record_delete
+            opacity: 0.5
+            pointer-events: none
     .oe_list_group_name
         white-space: nowrap
     // }}}
@@ -1959,6 +1968,7 @@ $sheet-padding: 16px
                 border-width: 0
         td.oe_number
             text-align: right !important
+            white-space: nowrap !important
             max-width: 100px
         td.oe_list_field_date, th.oe_list_header_date
             min-width: 6em
@@ -2412,6 +2422,7 @@ body.oe_single_form
             height: auto !important
         .oe-view-manager
             display: block
+            overflow: visible
         .oe_application, .oe_view_manager_wrapper
             height: auto !important
         .oe_application > div > .oe_view_manager > .oe_view_manager_wrapper > div > .oe_view_manager_body
@@ -2553,10 +2564,18 @@ body
     .oe-view-manager-content
         > div
             position: absolute !important
+            top: 0
+            right: 0
+            bottom: 0
+            left: 0
         .oe-view-manager-content
             > div
                 position: relative !important
-
+    .modal .oe-view-manager-content > div
+        position: static !important
+        max-height: 450px
+    .modal > .modal-dialog > .modal-content
+        max-height: 450px
 
 // au BufWritePost,FileWritePost *.sass :!sass --style expanded --line-numbers <afile> > "%:p:r.css"
 
@@ -2591,3 +2610,6 @@ body
         width: 100px
         white-space: nowrap
         padding-left: 10px
+
+.nvtooltip thead
+    background-color: transparent

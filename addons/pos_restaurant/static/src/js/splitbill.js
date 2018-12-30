@@ -107,6 +107,7 @@ var SplitbillScreenWidget = screens.ScreenWidget.extend({
             return;
         }
 
+        delete neworder.temporary;
 
         if(full){
             this.gui.show_screen('payment');

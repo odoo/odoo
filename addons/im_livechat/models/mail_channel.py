@@ -24,6 +24,11 @@ class MailChannel(models.Model):
             should be added to the notification, since the user cannot be listining to the channel.
         """
         notifications = super(MailChannel, self)._channel_message_notifications(message)
+        message_values_dict = notifications[0][1] if len(notifications) else dict(message.message_format()[0])
+        for channel in self:
+            # add uuid for private livechat channels to allow anonymous to listen
+            if channel.channel_type == 'livechat':
+                notifications.append([channel.uuid, message_values_dict])
         if not message.author_id:
             unpinned_channel_partner = self.mapped('channel_last_seen_partner_ids').filtered(lambda cp: not cp.is_pinned)
             if unpinned_channel_partner:
@@ -32,11 +37,11 @@ class MailChannel(models.Model):
         return notifications
 
     @api.multi
-    def channel_info(self):
+    def channel_info(self, extra_info=False):
         """ Extends the channel header by adding the livechat operator and the 'anonymous' profile
             :rtype : list(dict)
         """
-        channel_infos = super(MailChannel, self).channel_info()
+        channel_infos = super(MailChannel, self).channel_info(extra_info)
         # add the operator id
         if self.env.context.get('im_livechat_operator_partner_id'):
             partner_name = self.env['res.partner'].browse(self.env.context.get('im_livechat_operator_partner_id')).name_get()[0]
@@ -53,11 +58,12 @@ class MailChannel(models.Model):
     def channel_fetch_slot(self):
         values = super(MailChannel, self).channel_fetch_slot()
         pinned_channels = self.env['mail.channel.partner'].search([('partner_id', '=', self.env.user.partner_id.id), ('is_pinned', '=', True)]).mapped('channel_id')
-        values['channel_livechat'] = self.search([('channel_type', '=', 'livechat'), ('public', 'in', ['public']), ('id', 'in', pinned_channels.ids)]).channel_info()
+        values['channel_livechat'] = self.search([('channel_type', '=', 'livechat'), ('id', 'in', pinned_channels.ids)]).channel_info()
         return values
 
     @api.model
     def cron_remove_empty_session(self):
+        hours = 1 # never remove empty session created within the last hour
         self.env.cr.execute("""
             SELECT id as id
             FROM mail_channel C
@@ -65,7 +71,8 @@ class MailChannel(models.Model):
                 SELECT *
                 FROM mail_message_mail_channel_rel R
                 WHERE R.mail_channel_id = C.id
-            ) AND C.channel_type = 'livechat' AND livechat_channel_id IS NOT NULL;
-        """)
+            ) AND C.channel_type = 'livechat' AND livechat_channel_id IS NOT NULL AND
+                COALESCE(write_date, create_date, (now() at time zone 'UTC'))::timestamp
+                < ((now() at time zone 'UTC') - interval %s)""", ("%s hours" % hours,))
         empty_channel_ids = [item['id'] for item in self.env.cr.dictfetchall()]
         self.browse(empty_channel_ids).unlink()

@@ -31,7 +31,7 @@ var Option = Class.extend({
 
     // helper for this.$target.find
     $: function (selector) {
-        return this.$target(selector);
+        return this.$target.find(selector);
     },
 
     _bind_li_menu: function () {
@@ -230,6 +230,7 @@ var Option = Class.extend({
 
 /* ----- default options ---- */
 
+// to remove after 9.0 (keep for compatibility without update with -u)
 var media = Option.extend({
     start: function () {
         var self =this;
@@ -460,7 +461,7 @@ var many2one = Option.extend({
             return;
         }
         if (isNaN(+name)) {
-            if (this.Model === "res.partner") {
+            if (this.Model !== "res.partner") {
                 domain.push(['name', 'ilike', name]);
             } else {
                 domain.push('|', ['name', 'ilike', name], ['email', 'ilike', name]);
@@ -503,6 +504,7 @@ var many2one = Option.extend({
         this.$target.attr('data-oe-many2one-id', this.ID).data('oe-many2one-id', this.ID);
 
         this.buildingBlock.parent.rte.historyRecordUndo(this.$target);
+        this.$target.trigger('content_changed');
 
         if (self.$target.data('oe-type') === "contact") {
             $('[data-oe-contact-options]')

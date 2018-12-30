@@ -82,6 +82,10 @@
                 return symbolMap[match];
             });
         },
+        meridiemParse: /রাত|শকাল|দুপুর|বিকেল|রাত/,
+        isPM: function (input) {
+            return /^(দুপুর|বিকেল|রাত)$/.test(input);
+        },
         //Bengali is a vast language its spoken
         //in different forms in various parts of the world.
         //I have just generalized with most common one used

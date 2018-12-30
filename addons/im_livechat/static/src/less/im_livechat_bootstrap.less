@@ -1,0 +1,32 @@
+// bootstrap variables and vendor prefixes needed to embed im_livechat in external pages
+@gray-light:    lighten(#000, 46.7%); // #777
+@gray-lighter:  lighten(#000, 93.5%); // #eee
+@screen-xs-max: 767px;
+@navbar-height: 44px;
+.text-muted {
+  color: @gray-light;
+}
+.box-sizing(@boxmodel) {
+  -webkit-box-sizing: @boxmodel;
+     -moz-box-sizing: @boxmodel;
+          box-sizing: @boxmodel;
+}
+
+.o_chat_window {
+  &,* {
+    .box-sizing(border-box);
+  }
+  .o_chat_header {
+    height: 28px;
+    .fa-close {
+      text-decoration: none;
+      font-weight: bold;
+      &:before {
+        content: "X";
+      }
+    }
+    > span {
+      margin: auto 0;
+    }
+  }
+}

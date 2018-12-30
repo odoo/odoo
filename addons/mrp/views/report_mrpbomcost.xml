@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="mrp_bom_cost">
+        <div class="o_form_view">
+            <div class="page o_form_sheet_bg">
+                <div class="o_form_sheet">
+                    <t t-foreach="lines" t-as="line">
+                        <t t-set="currency" t-value="line['currency']"/>
+                        <table class="table table-condensed">
+                            <thead>
+                                <tr>
+                                    <th colspan="6">
+                                        <h1><t t-esc="line['name']"/></h1><br/>
+                                        <b><t t-esc="line['product_uom_qty']"/> <t t-esc="line['product_uom'].name"/></b>
+                                        <table>
+                                            <tbody>
+                                                <tr t-foreach="line['attributes']" t-as="attrib">
+                                                    <td><span t-esc="attrib[0]"/></td>
+                                                    <td><span t-esc="attrib[1]"/></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <h2>Cost Structure</h2>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th colspan="2">Raw Materials</th>
+                                    <th class="col-sm-2 text-right">Quantity</th>
+                                    <th class="col-sm-2 text-right">Unit Cost</th>
+                                    <th class="col-sm-2 text-right">Total Cost</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="line['lines']" t-as="bom_line">
+                                    <td colspan="2">
+                                        <span t-esc="bom_line['product_id'].name"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-esc="bom_line['product_uom_qty']"/> <span t-esc="bom_line['product_uom'].name" groups="product.group_uom"/>
+                                    </td>
+                                    <td class="text-right"><span t-esc="bom_line['price_unit']" t-esc-options='{"widget": "monetary", "display_currency": "currency"}'/></td>
+                                    <td class="text-right"><span t-esc="bom_line['total_price']" t-esc-options='{"widget": "monetary", "display_currency": "currency"}'/></td>
+                                </tr>
+                                <tr>
+                                    <th colspan="4" class="text-right">Total Cost of Raw Materials</th>
+                                    <th class="text-right"><t t-esc="line['total']" t-esc-options='{"widget": "monetary", "display_currency": "currency"}'/></th>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </t>
+                </div>
+            </div>
+        </div>
+    </template>
+</odoo>

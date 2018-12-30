@@ -23,11 +23,11 @@ Although the database will follow the same process described on that form.
 
 The required steps are:
 
-* creating a request
-* uploading a database dump
-* running the upgrade process
-* obtaining the status of the database request
-* downloading the upgraded database dump
+* :ref:`creating a request <upgrade-api-create-method>`
+* :ref:`uploading a database dump <upgrade-api-upload-method>`
+* :ref:`running the upgrade process <upgrade-api-process-method>`
+* :ref:`obtaining the status of the database request <upgrade-api-status-method>`
+* :ref:`downloading the upgraded database dump <upgrade-api-download-method>`
 
 The methods
 ~~~~~~~~~~~
@@ -60,9 +60,11 @@ The ``create`` method
     :param str filename: (required) a purely informative name for you database dump file
     :param str timezone: (optional) the timezone used by your server. Only for Odoo source version < 6.1
     :return: request result
-    :rtype: json dictionary
+    :rtype: JSON dictionary
 
-The *create* method returns a json dictionary containing the following keys:
+The *create* method returns a JSON dictionary containing the following keys:
+
+.. _upgrade-api-json-failure:
 
 ``failures``
 ''''''''''''
@@ -201,10 +203,16 @@ Here are 2 examples of database upgrade request creation using:
 Uploading your database dump
 ============================
 
-This action upload your database dump.
+There are 2 methods to upload your database dump:
+
+* the ``upload`` method using the HTTPS protocol
+* the ``request_sftp_access`` method using the SFTP protocol
 
 The ``upload`` method
 ---------------------
+
+It's the most simple and most straightforward way of uploading your database dump.
+It uses the HTTPS protocol.
 
 .. py:function:: https://upgrade.odoo.com/database/v1/upload
 
@@ -213,12 +221,12 @@ The ``upload`` method
     :param str key: (required) your private key
     :param str request: (required) your request id
     :return: request result
-    :rtype: json dictionary
+    :rtype: JSON dictionary
 
 The request id and the private key are obtained using the :ref:`create method
 <upgrade-api-create-method>`
 
-The result is a json dictionary containing the list of ``failures``, which
+The result is a JSON dictionary containing the list of ``failures``, which
 should be empty if everything went fine.
 
 .. rst-class:: setup doc-aside
@@ -230,8 +238,6 @@ should be empty if everything went fine.
         import os
         import pycurl
         from urllib import urlencode
-        from io import BytesIO
-        import json
 
         UPLOAD_URL = "https://upgrade.odoo.com/database/v1/upload"
         DUMPFILE = "openchs.70.cdump"
@@ -267,6 +273,144 @@ should be empty if everything went fine.
         HEADER="Content-Type: application/octet-stream"
         curl -H $HEADER --data-binary "@${DUMPFILE}" "${UPLOAD_URL}?${URL_PARAMS}"
 
+.. _upgrade-api-request-sftp-access-method:
+
+The ``request_sftp_access`` method
+----------------------------------
+
+This method is recommanded for big database dumps.
+It uses the SFTP protocol and supports resuming.
+
+It will create a temporary SFTP server where you can connect to and allow you
+to upload your database dump using an SFTP client.
+
+.. py:function:: https://upgrade.odoo.com/database/v1/request_sftp_access
+
+    Creates an SFTP server
+
+    :param str key: (required) your private key
+    :param str request: (required) your request id
+    :param str ssh_keys: (required) the path to a file listing the ssh public keys you'd like to use
+    :return: request result
+    :rtype: JSON dictionary
+
+The request id and the private key are obtained using the :ref:`create method
+<upgrade-api-create-method>`
+
+The file listing your ssh public keys should be roughly similar to a standard ``authorized_keys`` file.
+This file should only contains public keys, blank lines or comments (lines starting with the ``#`` character)
+
+Your database upgrade request should be in the ``draft`` state.
+
+The ``request_sftp_access`` method returns a JSON dictionary containing the following keys:
+
+
+.. rst-class:: setup doc-aside
+
+.. switcher::
+
+    .. code-block:: python
+
+        import os
+        import pycurl
+        from urllib import urlencode
+
+        UPLOAD_URL = "https://upgrade.odoo.com/database/v1/request_sftp_access"
+        SSH_KEYS="/path/to/your/authorized_keys"
+
+        fields = dict([
+            ('request', '10534'),
+            ('key', 'Aw7pItGVKFuZ_FOR3U8VFQ=='),
+        ])
+        postfields = urlencode(fields)
+
+        c = pycurl.Curl()
+        c.setopt(pycurl.URL, UPLOAD_URL+"?"+postfields)
+        c.setopt(pycurl.POST, 1)
+        c.setopt(c.HTTPPOST,[("ssh_keys",
+                                (c.FORM_FILE, SSH_KEYS,
+                                c.FORM_CONTENTTYPE, "text/plain"))
+                            ])
+
+        c.perform()
+        c.close()
+
+    .. code-block:: bash
+
+        REQUEST_SFTP_ACCESS_URL="https://upgrade.odoo.com/database/v1/request_sftp_access"
+        SSH_KEYS=/path/to/your/authorized_keys
+        KEY="Aw7pItGVKFuZ_FOR3U8VFQ=="
+        REQUEST_ID="10534"
+        URL_PARAMS="key=${KEY}&request=${REQUEST_ID}"
+
+        curl -sS "${REQUEST_SFTP_ACCESS_URL}?${URL_PARAMS}" -F ssh_keys=@${SSH_KEYS} > request_sftp_result.json
+
+        # check for failures
+        failures=$(cat request_sftp_result.json | jq -r '.failures[]')
+        if [ "$failures" != "" ]; then
+          echo $failures | jq -r '.'
+          exit 1
+        fi
+
+
+``failures``
+''''''''''''
+
+The list of errors. See :ref:`failures <upgrade-api-json-failure>` for an
+explanation about the JSON dictionary returned in case of failure.
+
+``request``
+'''''''''''
+
+If the call is successful, the value associated to the *request* key
+will be a dictionary containing your SFTP connexion parameters:
+
+* ``hostname``: the host address to connect to
+* ``sftp_port``: the port to connect to
+* ``sftp_user``: the SFTP user to use for connecting
+* ``shared_file``: the filename you need to use (identical to the ``filename`` value you have used when creating the request in the :ref:`create method <upgrade-api-create-method>`.)
+* ``request_id``: the related upgrade request id (only informative, ,not required for the connection)
+* ``sample_command``: a sample command using the 'sftp' client
+
+You should normally be able to connect using the sample command as is.
+
+You will only have access to the ``shared_file``. No other files will be
+accessible and you will not be able to create new files in your shared
+environment on the SFTP server.
+
+Using the 'sftp' client
++++++++++++++++++++++++
+
+Once you have successfully connected using your SFTP client, you can upload
+your database dump. Here is a sample session using the 'sftp' client:
+
+::
+
+    $ sftp -P 2200 user_10534@upgrade.odoo.com
+    Connected to upgrade.odoo.com.
+    sftp> put /path/to/openchs.70.cdump openchs.70.cdump
+    Uploading /path/to/openchs.70.cdump to /openchs.70.cdump
+    sftp> ls -l openchs.70.cdump
+    -rw-rw-rw-    0 0        0          849920 Aug 30 15:58 openchs.70.cdump
+
+If your connection is interrupted, you can continue your file transfer using
+the ``-a`` command line switch:
+
+.. code-block:: text
+
+    sftp> put -a /path/to/openchs.70.cdump openchs.70.cdump
+    Resuming upload of /path/to/openchs.70.cdump to /openchs.70.cdump
+
+If you don't want to manually type the command and need to automate your
+database upgrade using a script, you can use a batch file or pipe your commands to 'sftp':
+
+::
+
+  echo "put /path/to/openchs.70.cdump openchs.70.cdump" | sftp -b - -P 2200 user_10534@upgrade.odoo.com
+
+The ``-b`` parameter takes a filename. If the filename is ``-``, it reads the commands from standard input.
+
+
 .. _upgrade-api-process-method:
 
 Asking to process your request
@@ -284,12 +428,12 @@ The ``process`` method
     :param str key: (required) your private key
     :param str request: (required) your request id
     :return: request result
-    :rtype: json dictionary
+    :rtype: JSON dictionary
 
 The request id and the private key are obtained using the :ref:`create method
 <upgrade-api-create-method>`
 
-The result is a json dictionary containing the list of ``failures``, which
+The result is a JSON dictionary containing the list of ``failures``, which
 should be empty if everything went fine.
 
 .. rst-class:: setup doc-aside
@@ -350,12 +494,12 @@ The ``status`` method
     :param str key: (required) your private key
     :param str request: (required) your request id
     :return: request result
-    :rtype: json dictionary
+    :rtype: JSON dictionary
 
 The request id and the private key are obtained using the :ref:`create method
 <upgrade-api-create-method>`
 
-The result is a json dictionary containing various information about your
+The result is a JSON dictionary containing various information about your
 database upgrade request.
 
 .. rst-class:: setup doc-aside
@@ -395,7 +539,7 @@ database upgrade request.
         KEY="Aw7pItGVKFuZ_FOR3U8VFQ=="
         REQUEST_ID="10534"
         URL_PARAMS="key=${KEY}&request=${REQUEST_ID}"
-        curl -sS "${PROCESS_URL}?${URL_PARAMS}"
+        curl -sS "${STATUS_URL}?${URL_PARAMS}"
 
 Sample output
 -------------
@@ -502,4 +646,28 @@ The ``request`` key contains various useful information about your request:
           }
         }
 
+.. _upgrade-api-download-method:
+
+Downloading your database dump
+==============================
+
+Beside downloading your migrated database using the URL provided by the
+:ref:`status method <upgrade-api-status-method>`, you can also use the SFTP
+protocol as described in the :ref:`request_sftp_access method
+<upgrade-api-request-sftp-access-method>`
+
+The diffence is that you'll only be able to download the migrated database. No
+uploading will be possible.
+
+Your database upgrade request should be in the ``done`` state.
+
+Once you have successfully connected using your SFTP client, you can download
+your database dump. Here is a sample session using the 'sftp' client:
+
+::
+
+    $ sftp -P 2200 user_10534@upgrade.odoo.com
+    Connected to upgrade.odoo.com.
+    sftp> get upgraded_openchs.70.cdump /path/to/upgraded_openchs.70.cdump
+    Downloading /upgraded_openchs.70.cdump to /path/to/upgraded_openchs.70.cdump
 

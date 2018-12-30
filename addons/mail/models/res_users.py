@@ -47,10 +47,10 @@ class Users(models.Model):
             msg = _("You cannot create a new user from here.\n To create new user please go to configuration panel.")
             raise openerp.exceptions.RedirectWarning(msg, action.id, _('Go to the configuration panel'))
 
-        user = super(Users, self.with_context({
-            'alias_model_name': self._name,
-            'alias_parent_model_name': self._name
-        })).create(values)
+        user = super(Users, self.with_context(
+            alias_model_name=self._name,
+            alias_parent_model_name=self._name
+        )).create(values)
         user.alias_id.sudo().write({"alias_force_thread_id": user.id, "alias_parent_thread_id": user.id})
 
         # create a welcome message

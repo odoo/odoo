@@ -96,6 +96,7 @@
                 context="{
                             'default_composition_mode': 'mass_mail',
                             'default_partner_to': '${object.id or \'\'}',
+                            'default_active_domain': [['id', 'in', context.get('active_ids', [])]],
                         }"/>
     </data>
 </openerp>

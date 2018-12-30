@@ -4,3 +4,4 @@
 import hr
 
 import res_users
+import res_partner

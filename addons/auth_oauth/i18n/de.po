@@ -3,12 +3,16 @@
 # * auth_oauth
 # 
 # Translators:
+# Fabian Liesch <fabian.liesch@gmail.com>, 2016
+# Rudolf Schnapka <rs@techno-flex.de>, 2016
+# Thorsten Vocks <thorsten.vocks@openbig.org>, 2016
+# Wolfgang Taferner, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2015-09-12 19:45+0000\n"
+"POT-Creation-Date: 2016-09-22 13:16+0000\n"
+"PO-Revision-Date: 2016-09-23 09:14+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: German (http://www.transifex.com/odoo/odoo-9/language/de/)\n"
 "MIME-Version: 1.0\n"
@@ -27,7 +31,7 @@ msgid ""
 "                                    - Edit settings and set both Authorized Redirect URIs and Authorized JavaScript Origins to your hostname.<br/>\n"
 "                                    <br/>\n"
 "                                    Now copy paste the client_id here:"
-msgstr ""
+msgstr "<br/>\n                                    - Ein neues Projekt anlegen<br/>\n                                    - Gehe zu API-Zugriff<br/>\n                                    - Legen Sie eine oauth client_id an<br/>\n                                    - Einstellungen bearbeiten und Authorisierte Redirect URIs sowie Authorisierte JavaScript Herkunft auf Ihren hostname einstellen.<br/>\n                                    <br/>\n                                    Jetzt mit copy paste die client_id hier einfügen:"
 
 #. module: auth_oauth
 #: code:addons/auth_oauth/controllers/main.py:99
@@ -104,13 +108,13 @@ msgstr "Angelegt am"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_currency_id
-msgid "Currency id"
+msgid "Currency"
 msgstr ""
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_property_payment_term_id
 msgid "Customer Payment Term"
-msgstr "Zahlungsbedingungen für Kunden"
+msgstr "Kundenzahlungsbedingung"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_data_endpoint
@@ -120,7 +124,7 @@ msgstr "Daten URL"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Anzeigename"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_property_account_position_id
@@ -135,7 +139,7 @@ msgstr "Google APIs Konsole"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_has_unreconciled_entries
 msgid "Has unreconciled entries"
-msgstr ""
+msgstr "Nicht ausgeglichene Einträge vorhanden"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_id
@@ -151,7 +155,7 @@ msgstr "Alle Rechnungen"
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_issued_total
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_journal_item_count
 msgid "Journal Items"
-msgstr "Journal Einträge"
+msgstr "Buchungszeilen"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider___last_update
@@ -174,12 +178,12 @@ msgid ""
 "Last time the invoices & payments matching was performed for this partner. "
 "It is set either if there's not at least an unreconciled debit and an "
 "unreconciled credit or if you click the \"Done\" button."
-msgstr ""
+msgstr "Das letzte Mal, an dem der Rechnungs-/Zahlungsabgleich für diesen Partner durchgeführt wurde. Es wird gesetzt, wenn nicht wenigstens eine unausgeglichene Forderung und eine unausgegliche Verbindlichkeit besteht oder wenn Sie die Schaltfläche \"Erledigt\" gedrückt haben."
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_last_time_entries_checked
 msgid "Latest Invoices & Payments Matching Date"
-msgstr ""
+msgstr "Letzte Rechnungen & Zahlungen am Datum"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_oauth_access_token
@@ -258,7 +262,7 @@ msgstr "Die Steuerzuordnung steuert die zu benutzenden Steuern und Konten für d
 msgid ""
 "The partner has at least one unreconciled debit and credit since last time "
 "the invoices & payments matching was performed."
-msgstr ""
+msgstr "Der Partner hat mindestens einen nicht ausgeglichenen Soll- oder Habenposten seit dem letzten Abgleich von Rechnungen und Zahlungen."
 
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_property_account_payable_id
@@ -279,7 +283,7 @@ msgstr "Dieses Konto wird als Debitorenkonto für diesen Partner an Stelle des S
 msgid ""
 "This payment term will be used instead of the default one for purchase "
 "orders and vendor bills"
-msgstr ""
+msgstr "Diese Zahlungsbedingung wird anstelle der Standardzahlungsbedingung für Bestellaufträge und Lieferantenrechnungen verwendet"
 
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_property_payment_term_id
@@ -294,7 +298,7 @@ msgid ""
 "To setup the signin process with Google, first you have to perform the following steps:<br/>\n"
 "                                    <br/>\n"
 "                                    - Go to the"
-msgstr ""
+msgstr "Zur automatischen Anmeldung mit einem google Konto, müssen Sie zunächst folgendes tun:<br/>\n<br/>\n- Zum"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_total_invoiced
@@ -319,7 +323,7 @@ msgstr "Gesamtschulden dieses Kunden"
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_debit
 msgid "Total amount you have to pay to this vendor."
-msgstr ""
+msgstr "Gesamtbetrag der offenen Zahlungen an diesen Lieferant."
 
 #. module: auth_oauth
 #: model:ir.model,name:auth_oauth.model_res_users
@@ -329,7 +333,7 @@ msgstr "Benutzer"
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_currency_id
 msgid "Utility field to express amount currency"
-msgstr ""
+msgstr "Hilfsfeld, welches die Betragswährung ausweist"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_validation_endpoint
@@ -339,7 +343,7 @@ msgstr "Validierungs URL"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_property_supplier_payment_term_id
 msgid "Vendor Payment Term"
-msgstr ""
+msgstr "Lieferantenzahlungsbedingung"
 
 #. module: auth_oauth
 #: code:addons/auth_oauth/controllers/main.py:101

@@ -97,6 +97,7 @@ class purchase_order(osv.Model):
                 'message': message
                 }
             if partner.purchase_warn == 'block':
+                self.update({'partner_id': False})
                 return {'warning': warning}
 
         if warning:
@@ -108,7 +109,7 @@ class purchase_order(osv.Model):
 class account_invoice(osv.osv):
     _inherit = 'account.invoice'
 
-    @api.onchange('partner_id')
+    @api.onchange('partner_id', 'company_id')
     def _onchange_partner_id(self):
         result =  super(account_invoice, self)._onchange_partner_id()
         partner = self.partner_id
@@ -141,7 +142,7 @@ class account_invoice(osv.osv):
 class stock_picking(osv.osv):
     _inherit = 'stock.picking'
 
-    def onchange_partner_id(self, cr, uid, ids, partner_id=None, context=None):
+    def onchange_picking_type(self, cr, uid, ids, picking_type_id, partner_id, context=None):
         if not partner_id:
             return {}
         partner = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
@@ -166,11 +167,19 @@ class stock_picking(osv.osv):
             if partner.picking_warn == 'block':
                 return {'value': {'partner_id': False}, 'warning': warning}
 
-        result = {'value': {}}
+        result = super(stock_picking, self).onchange_picking_type(cr, uid, ids, picking_type_id, partner_id, context=context)
+        if result.get('warning', False):
+            warning['title'] = title and title + ' & '+ result['warning']['title'] or result['warning']['title']
+            warning['message'] = message and message + ' ' + result['warning']['message'] or result['warning']['message']
 
         if warning:
             result['warning'] = warning
         return result
+
+    # FORWARD-PORT UP TO SAAS-10, REMOVE THIS METHOD IN MASTER
+    def onchange_partner_id(self, cr, uid, ids, partner_id=None, context=None):
+        return self.onchange_picking_type(cr, uid, ids, False, partner_id, context=context)
+
 
 class product_product(osv.osv):
     _inherit = 'product.template'
@@ -195,7 +204,7 @@ class sale_order_line(osv.osv):
             fiscal_position_id=False, flag=False, warehouse_id=False, context=None):
         warning = {}
         if not product:
-            return {'value': {'th_weight' : 0, 'product_packaging': False,
+            return {'value': {'product_packaging': False,
                 'product_uom_qty': qty}, 'domain': {'product_uom': [],
                    'product_uom': []}}
         product_obj = self.pool.get('product.product')
@@ -218,6 +227,40 @@ class sale_order_line(osv.osv):
         if result.get('warning',False):
             warning['title'] = title and title +' & '+result['warning']['title'] or result['warning']['title']
             warning['message'] = message and message +'\n\n'+result['warning']['message'] or result['warning']['message']
+
+        if warning:
+            result['warning'] = warning
+        return result
+
+    @api.multi
+    @api.onchange('product_id')
+    def product_id_change(self):
+        warning = self.onchange_product_id_warning()
+        product_info = self.product_id
+        if product_info.sale_line_warn != 'no-message':
+            if product_info.sale_line_warn == 'block':
+                return warning
+        result = super(sale_order_line, self).product_id_change()
+        result['warning'] = warning and warning.get('warning')
+        return result
+
+    def onchange_product_id_warning(self):
+        if not self.product_id:
+            return
+        result = {}
+        warning = {}
+        title = False
+        message = False
+
+        product_info = self.product_id
+
+        if product_info.sale_line_warn != 'no-message':
+            title = _("Warning for %s") % product_info.name
+            message = product_info.sale_line_warn_msg
+            warning['title'] = title
+            warning['message'] = message
+            if product_info.sale_line_warn == 'block':
+                return {'warning': warning}
 
         if warning:
             result['warning'] = warning

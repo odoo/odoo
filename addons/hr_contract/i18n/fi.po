@@ -3,13 +3,14 @@
 # * hr_contract
 # 
 # Translators:
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-18 08:11+0000\n"
-"PO-Revision-Date: 2015-10-02 11:48+0000\n"
-"Last-Translator: Kari Lindgren <kari.lindgren@emsystems.fi>\n"
+"PO-Revision-Date: 2017-03-07 08:34+0000\n"
+"Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>\n"
 "Language-Team: Finnish (http://www.transifex.com/odoo/odoo-9/language/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,7 +21,7 @@ msgstr ""
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "Vaatii toimia"
 
 #. module: hr_contract
 #: model:ir.model,name:hr_contract.model_base_action_rule
@@ -141,7 +142,7 @@ msgstr "Osasto"
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_display_name
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_display_name
 msgid "Display Name"
-msgstr "Näytä nimi"
+msgstr "Näyttönimi"
 
 #. module: hr_contract
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
@@ -169,7 +170,7 @@ msgstr ""
 #: selection:hr.contract,state:0
 #: model:mail.message.subtype,name:hr_contract.mt_contract_close
 msgid "Expired"
-msgstr ""
+msgstr "Vanhentunut"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_message_follower_ids
@@ -179,12 +180,12 @@ msgstr "Seuraajat"
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "Seuraajat (kanavat)"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "Seuraajat (kumppanit)"
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract_type_sequence
@@ -225,12 +226,7 @@ msgstr "Jos valittu, uudet viestit vaativat huomiosi."
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract_message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
-
-#. module: hr_contract
-#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
-msgid "Important Messages"
-msgstr ""
+msgstr "Jos valittu, uudet viestit vaativat huomiosi."
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_employee_vehicle_distance
@@ -245,7 +241,7 @@ msgstr "Tiedot"
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "on seuraaja"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee_manager
@@ -324,7 +320,7 @@ msgstr "Muistiinpanot"
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "Toimenpiteiden määrä"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee_children
@@ -334,12 +330,12 @@ msgstr "Lasten lukumäärä"
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract_message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr ""
+msgstr "Toimenpiteitä vaativien viestien määrä"
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract_message_unread_counter
 msgid "Number of unread messages"
-msgstr ""
+msgstr "Lukemattomien viestien määrä"
 
 #. module: hr_contract
 #: model:ir.filters,name:hr_contract.contract_open
@@ -397,7 +393,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 #: model:mail.message.subtype,name:hr_contract.mt_contract_pending
 msgid "To Renew"
-msgstr ""
+msgstr "Uusittavaksi"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_trial_date_end
@@ -416,23 +412,24 @@ msgstr "Koeajan alkupäivä"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_message_unread
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Unread Messages"
 msgstr "Lukemattomia viestejä"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_message_unread_counter
 msgid "Unread Messages Counter"
-msgstr ""
+msgstr "Lukemattomien viestien laskuri"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_base_action_rule_trg_date_resource_field_id
 msgid "Use employee work schedule"
-msgstr ""
+msgstr "Käytä työntekijän työaikataulua"
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_base_action_rule_trg_date_resource_field_id
 msgid "Use the user's working schedule."
-msgstr ""
+msgstr "Käytä työntekijän työaikataulua."
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_visa_expire

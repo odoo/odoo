@@ -21,6 +21,7 @@ class ResCompany(models.Model):
 
 class HrEmployee(models.Model):
     _inherit = 'hr.employee'
+    # FIXME: this field should be in module hr_timesheet, not sale_timesheet
     timesheet_cost = fields.Float(string='Timesheet Cost', default=0.0)
 
 
@@ -43,7 +44,10 @@ class AccountAnalyticLine(models.Model):
     def _get_sale_order_line(self, vals=None):
         result = dict(vals or {})
         if self.is_timesheet:
-            sol = result.get('so_line', False) or self.so_line
+            if result.get('so_line'):
+                sol = self.env['sale.order.line'].browse([result['so_line']])
+            else:
+                sol = self.so_line
             if not sol and self.account_id:
                 sol = self.env['sale.order.line'].search([
                     ('order_id.project_id', '=', self.account_id.id),
@@ -51,27 +55,45 @@ class AccountAnalyticLine(models.Model):
                     ('product_id.track_service', '=', 'timesheet'),
                     ('product_id.type', '=', 'service')],
                     limit=1)
-            else:
-                sol = self.so_line
             if sol:
-                emp = self.env['hr.employee'].search([('user_id', '=', self.user_id.id)], limit=1)
-                if result.get('amount', False):
-                    amount = result['amount']
-                elif emp and emp.timesheet_cost:
-                    amount = -self.unit_amount * emp.timesheet_cost
-                elif self.product_id and self.product_id.standard_price:
-                    amount = -self.unit_amount * self.product_id.standard_price
-                else:
-                    amount = self.amount or 0.0
                 result.update({
-                    'product_id': sol.product_id.id,
-                    'product_uom_id': self.env.user.company_id.project_time_mode_id.id or sol.product_id.uom_id.id,
-                    'amount': amount,
                     'so_line': sol.id,
+                    'product_id': sol.product_id.id,
                 })
+                result = self._get_timesheet_cost(result)
+
         result = super(AccountAnalyticLine, self)._get_sale_order_line(vals=result)
         return result
 
+    def _get_timesheet_cost(self, vals=None):
+        result = dict(vals or {})
+        if result.get('is_timesheet') or self.is_timesheet:
+            if result.get('amount'):
+                return result
+            unit_amount = result.get('unit_amount', 0.0) or self.unit_amount
+            user_id = result.get('user_id') or self.user_id.id
+            user = self.env['res.users'].browse([user_id])
+            emp = self.env['hr.employee'].search([('user_id', '=', user_id)], limit=1)
+            cost = emp and emp.timesheet_cost or 0.0
+            uom = (emp or user).company_id.project_time_mode_id
+            # Nominal employee cost = 1 * company project UoM (project_time_mode_id)
+            result.update(
+                amount=(-unit_amount * cost),
+                product_uom_id=uom.id
+            )
+        return result
+
+    @api.multi
+    def write(self, values):
+        for line in self:
+            values = line._get_timesheet_cost(vals=values)
+            super(AccountAnalyticLine, line).write(values)
+        return True
+
+    @api.model
+    def create(self, values):
+        values = self._get_timesheet_cost(vals=values)
+        return super(AccountAnalyticLine, self).create(values)
 
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
@@ -105,7 +127,7 @@ class SaleOrder(models.Model):
             if not order.project_id:
                 for line in order.order_line:
                     if line.product_id.track_service == 'timesheet':
-                        order._create_analytic_account(prefix=order.product_id.default_code or None)
+                        order._create_analytic_account(prefix=line.product_id.default_code or None)
                         break
         return result
 
@@ -138,7 +160,21 @@ class SaleOrderLine(models.Model):
     @api.multi
     def _compute_analytic(self, domain=None):
         if not domain:
-            domain = [('so_line', 'in', self.ids), '|', ('amount', '<=', 0.0), ('is_timesheet', '=', True)]
+            # To filter on analyic lines linked to an expense
+            expense_type_id = self.env.ref('account.data_account_type_expenses', raise_if_not_found=False)
+            expense_type_id = expense_type_id and expense_type_id.id
+            domain = [
+                ('so_line', 'in', self.ids),
+                    '|',
+                        '|',
+                            ('amount', '<', 0.0),
+                            ('is_timesheet', '=', True),
+                        '&',
+                            ('amount', '=', 0),
+                            '|',
+                                ('move_id', '=', False),
+                                ('move_id.account_id.user_type_id', '=', expense_type_id)
+            ]
         return super(SaleOrderLine, self)._compute_analytic(domain=domain)
 
     @api.model

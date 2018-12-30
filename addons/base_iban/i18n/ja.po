@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2015-09-07 16:35+0000\n"
+"PO-Revision-Date: 2016-12-04 06:36+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Japanese (http://www.transifex.com/odoo/odoo-9/language/ja/)\n"
 "MIME-Version: 1.0\n"
@@ -26,21 +26,13 @@ msgstr "銀行口座"
 #: code:addons/base_iban/base_iban.py:57
 #, python-format
 msgid "Cannot compute the BBAN because the account number is not an IBAN."
-msgstr ""
+msgstr "口座番号はIBANはないので BBAN を計算することができません。"
 
 #. module: base_iban
 #: code:addons/base_iban/base_iban.py:26
 #, python-format
 msgid "No IBAN !"
-msgstr ""
-
-#. module: base_iban
-#: code:addons/base_iban/base_iban.py:82
-#, python-format
-msgid ""
-"Please define BIC/Swift code on bank for bank type IBAN Account to make "
-"valid payments."
-msgstr ""
+msgstr "IBANがありません！"
 
 #. module: base_iban
 #: code:addons/base_iban/base_iban.py:34
@@ -48,7 +40,7 @@ msgstr ""
 msgid ""
 "The IBAN does not seem to be correct. You should have entered something like this %s\n"
 "Where B = National bank code, S = Branch code, C = Account No, k = Check digit"
-msgstr ""
+msgstr "このIBANは正しくないようです。次のように何かを入れるべきです：%s\nB =国内銀行コード、S =支店コード、C =口座番号、k =チェックデジット"
 
 #. module: base_iban
 #: code:addons/base_iban/base_iban.py:30
@@ -60,4 +52,4 @@ msgstr "このIBANは無効です。それは国コードから始まる必要�
 #: code:addons/base_iban/base_iban.py:40
 #, python-format
 msgid "This IBAN does not pass the validation check, please verify it."
-msgstr ""
+msgstr "このIBANは、検証チェックに合格しませんでした。確認してください。"

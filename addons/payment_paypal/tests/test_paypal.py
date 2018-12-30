@@ -65,7 +65,7 @@ class PaypalForm(PaypalCommon):
             'address1': 'Huge Street 2/543',
             'city': 'Sin City',
             'zip': '1000',
-            'country': 'Belgium',
+            'country': 'BE',
             'email': 'norbert.buyer@example.com',
             'return': '%s' % urlparse.urljoin(self.base_url, PaypalController._return_url),
             'notify_url': '%s' % urlparse.urljoin(self.base_url, PaypalController._notify_url),

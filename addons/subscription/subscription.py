@@ -130,8 +130,9 @@ class subscription_subscription(osv.osv):
 
     def set_done(self, cr, uid, ids, context=None):
         res = self.read(cr,uid, ids, ['cron_id'])
-        ids2 = [x['cron_id'][0] for x in res if x['id']]
-        self.pool.get('ir.cron').write(cr, uid, ids2, {'active':False})
+        ids2 = [x['cron_id'][0] for x in res if x['cron_id']]
+        if ids2:
+            self.pool.get('ir.cron').write(cr, uid, ids2, {'active':False})
         self.write(cr, uid, ids, {'state':'done'})
         return True
 

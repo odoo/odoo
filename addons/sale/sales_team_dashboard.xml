@@ -47,7 +47,7 @@
 
             <xpath expr="//div[contains(@class, 'o_kanban_primary_right')]" position="after">
                 <div t-if="record.invoiced_target.raw_value" class="col-xs-12 o_kanban_primary_bottom">
-                    <field name="invoiced" widget="progress" options="{'title': 'Invoicing', 'current_value': 'invoiced', 'max_value': 'invoiced_target', 'editable': true, 'edit_max_value': true, 'on_change': 'update_invoiced_target'}"/>
+                    <field name="invoiced" widget="progress" title="Invoicing" options="{'current_value': 'invoiced', 'max_value': 'invoiced_target', 'editable': true, 'edit_max_value': true, 'on_change': 'update_invoiced_target'}"/>
                 </div>
                 <div t-if="!record.invoiced_target.raw_value" class="col-xs-12 o_kanban_primary_bottom text-center">
                     <a href="#" class="sales_team_target_definition o_inline_link">Click to define a team target</a> 

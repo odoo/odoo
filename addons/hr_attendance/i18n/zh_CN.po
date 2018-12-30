@@ -3,13 +3,17 @@
 # * hr_attendance
 # 
 # Translators:
+# fausthuang, 2015
+# fausthuang, 2015
+# Jeffery Chenn <jeffery9@gmail.com>, 2016
+# liAnGjiA <liangjia@qq.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2015-09-10 00:57+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-06-22 13:04+0000\n"
+"Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,12 +26,12 @@ msgstr ""
 msgid ""
 "(*) A positive delay means that the employee worked less than recorded.<br/>\n"
 "(*) A negative delay means that the employee worked more than encoded."
-msgstr ""
+msgstr "(*) 迟到数值为正表示该员工实际工作时间比记录的少。<br/>\n(*) 迟到数值为负表示该员工实际工作时间比记录的多。"
 
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.report_attendanceerrors
 msgid "<strong>Total period</strong>"
-msgstr ""
+msgstr "<strong>所有期间</strong>"
 
 #. module: hr_attendance
 #: selection:hr.employee,state:0
@@ -56,7 +60,7 @@ msgstr "动作类型"
 msgid ""
 "Allowed difference in minutes between the signin/signout and the timesheet "
 "computation for one sheet. Set this to 0 for no tolerance."
-msgstr ""
+msgstr "允许工单表的登入/登出在计算时差异的分钟数。将它设置为0表示不容忍。"
 
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.view_hr_attendance_error
@@ -75,7 +79,7 @@ msgstr "出勤"
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_attendance_access
 msgid "Attendance Access"
-msgstr "查看 出席人数"
+msgstr "出勤访问"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_graph
@@ -118,7 +122,7 @@ msgid ""
 "Below the maximum tolerance, the attendance error will not be taken into "
 "account. Above the maximum tolerance, the error is considered to be "
 "voluntary and will be taken into account."
-msgstr ""
+msgstr "低于最大的公差，考勤错误不会被计入高于最大公差，误差被认为是自愿的并且被计入"
 
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.view_hr_attendance_error
@@ -142,14 +146,14 @@ msgstr "配置"
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_create_uid
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_error_create_uid
 msgid "Created by"
-msgstr "创建于"
+msgstr "创建者"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_action_reason_create_date
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_create_date
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_error_create_date
 msgid "Created on"
-msgstr "创建于"
+msgstr "创建时间"
 
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.view_hr_attendance_filter
@@ -192,7 +196,7 @@ msgstr "部门"
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_error_display_name
 #: model:ir.model.fields,field_description:hr_attendance.field_report_hr_attendance_report_attendanceerrors_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "显示名称"
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_employee
@@ -242,7 +246,7 @@ msgstr "ID"
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_error___last_update
 #: model:ir.model.fields,field_description:hr_attendance.field_report_hr_attendance_report_attendanceerrors___last_update
 msgid "Last Modified on"
-msgstr "最后修改日"
+msgstr "最后修改时间"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_last_sign
@@ -254,14 +258,14 @@ msgstr "上次签到"
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_error_write_uid
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_write_uid
 msgid "Last Updated by"
-msgstr "最后更新"
+msgstr "最后更新者"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_action_reason_write_date
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_error_write_date
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_write_date
 msgid "Last Updated on"
-msgstr "最后更新"
+msgstr "最后更新时间"
 
 #. module: hr_attendance
 #. openerp-web
@@ -273,7 +277,7 @@ msgstr "上次签入时间是：%s,<br />%s.<br />，单击此处签出。"
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_error_max_delay
 msgid "Maximum Tolerance (in minutes)"
-msgstr ""
+msgstr "最大偏差（以分钟计）"
 
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.report_attendanceerrors
@@ -410,4 +414,4 @@ msgstr "你试图%s  前面的日期到另外的事件！尝试联系 人力资�
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_report_hr_attendance_report_attendanceerrors
 msgid "report.hr_attendance.report_attendanceerrors"
-msgstr ""
+msgstr "report.hr_attendance.report_attendanceerrors"

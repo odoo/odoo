@@ -445,7 +445,7 @@ class Escpos:
             img_rgba = Image.open(f)
             img = Image.new('RGB', img_rgba.size, (255,255,255))
             channels = img_rgba.split()
-            if len(channels) > 1:
+            if len(channels) > 3:
                 # use alpha channel as mask
                 img.paste(img_rgba, mask=channels[3])
             else:
@@ -522,8 +522,12 @@ class Escpos:
         # Print Code
         if code:
             self._raw(code)
+            # We are using type A commands
+            # So we need to add the 'NULL' character
+            # https://github.com/python-escpos/python-escpos/pull/98/files#diff-a0b1df12c7c67e38915adbe469051e2dR444
+            self._raw('\x00')
         else:
-            raise exception.BarcodeCodeError()
+            raise BarcodeCodeError()
 
     def receipt(self,xml):
         """

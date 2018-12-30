@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-29 10:27+0000\n"
-"PO-Revision-Date: 2015-09-30 09:25+0000\n"
+"POT-Creation-Date: 2016-09-22 13:18+0000\n"
+"PO-Revision-Date: 2017-02-26 19:08+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Kabyle (http://www.transifex.com/odoo/odoo-9/language/kab/)\n"
 "MIME-Version: 1.0\n"
@@ -105,18 +105,18 @@ msgstr "Snes"
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_equipment_id
 msgid "Asset"
-msgstr ""
+msgstr "Urmiden"
 
 #. module: hr_equipment
 #: model:ir.model,name:hr_equipment.model_hr_equipment_category
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_id_5383
+#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_id_6493
 msgid "Asset Category"
-msgstr ""
+msgstr "Taggayt n Wurmid"
 
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_name
 msgid "Asset Name"
-msgstr ""
+msgstr "Isem n Wurmid"
 
 #. module: hr_equipment
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_category_view_tree
@@ -168,7 +168,7 @@ msgstr ""
 #. module: hr_equipment
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_search
 msgid "Available"
-msgstr ""
+msgstr "Tilin"
 
 #. module: hr_equipment
 #: selection:hr.equipment.request,kanban_state:0
@@ -484,13 +484,6 @@ msgid "If checked, new messages require your attention."
 msgstr ""
 
 #. module: hr_equipment
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_kanban
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_search
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_search
-msgid "Important Messages"
-msgstr ""
-
-#. module: hr_equipment
 #: selection:hr.equipment.request,kanban_state:0
 #: model:hr.equipment.stage,name:hr_equipment.stage_1
 msgid "In Progress"
@@ -550,7 +543,7 @@ msgstr "Aleqqem aneggaru di"
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_location
 msgid "Location"
-msgstr ""
+msgstr "Adeg"
 
 #. module: hr_equipment
 #: selection:hr.equipment.request,priority:0
@@ -621,13 +614,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_message_ids
 msgid "Messages"
 msgstr "Iznan"
-
-#. module: hr_equipment
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_message_ids
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_message_ids
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_request_message_ids
-msgid "Messages and communication history"
-msgstr "Amazray n iznan  d  teywalin"
 
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_model
@@ -739,7 +725,7 @@ msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
 "- everyone: everyone can post\n"
 "- partners: only authenticated partners\n"
-"- followers: only followers of the related document\n"
+"- followers: only followers of the related document or members of following channels\n"
 msgstr ""
 
 #. module: hr_equipment
@@ -865,7 +851,7 @@ msgstr "Tawila"
 #. module: hr_equipment
 #: model:hr.equipment.category,name:hr_equipment.hr_equipment_software
 msgid "Software"
-msgstr ""
+msgstr "Aseɣẓan"
 
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_stage_id
@@ -897,7 +883,7 @@ msgstr "Amgay"
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_name
 msgid "Subjects"
-msgstr ""
+msgstr "Isental"
 
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_user_id
@@ -964,6 +950,9 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_message_unread
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_message_unread
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_message_unread
+#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_kanban
+#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_search
+#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_search
 msgid "Unread Messages"
 msgstr "Iznan ur neţwaɣer-ara"
 
@@ -1009,7 +998,7 @@ msgstr ""
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_warranty
 msgid "Warranty"
-msgstr ""
+msgstr "Warranty"
 
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_website_message_ids

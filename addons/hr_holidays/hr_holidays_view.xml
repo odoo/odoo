@@ -22,30 +22,27 @@
             <field name="arch" type="xml">
                 <search string="Search Leave">
                     <field name="name"/>
-                    <filter string="My Leaves" domain="[('user_id','=',uid)]" name="my_leaves"/>
                     <filter domain="[('state','in',('confirm','validate1'))]" string="To Approve" name="approve"/>
                     <filter string="Approved Leaves" domain="[('state', '=', 'validate')]" name="validated"/>
                     <separator/>
                     <filter name="active_types" string="Active Types" domain="[('holiday_status_id.active', '=', True)]" help="Filters only on allocations and requests that belong to an holiday type that is 'active' (active field is True)"/>
                     <separator/>
-                    <filter string="Important Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
+                    <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                     <separator/>
                     <filter string="My Department Leaves" name="department" domain="[('department_id.manager_id.user_id', '=', uid)]" help="My Department Leaves"/>
                     <filter string="My Team Leaves" domain="[('employee_id.parent_id.user_id', '=', uid)]" groups="base.group_hr_manager" help="Leaves of Your Team Member"/>
                     <separator/>
                     <filter string="To Report in Payslip" name="gray" domain="[('payslip_status', '=', False)]" groups="base.group_hr_manager"/>
                     <separator/>
-                    <separator/>
                     <filter string="To Do" name="todo" domain="[('payslip_status', '=', False), ('holiday_status_id.active', '=', True)]"/>
                     <separator/>
-                    <filter name="year" string="Year"
-                        domain="['|','&amp;',('date_to', '&lt;=', time.strftime('%%Y-12-31')),
-                                             ('date_to', '&gt;=', time.strftime('%%Y-01-01')),
-                                     '&amp;',('date_from', '&lt;=', time.strftime('%%Y-12-31')),
-                                             ('date_from', '&gt;=', time.strftime('%%Y-01-01'))]"
-                        help="Current Year Leaves"/>
+                    <filter name="year" string="Current"
+                        domain="[('holiday_status_id.active', '=', True)]" help="Active Leaves and Allocations"/>
                     <separator/>
-                    <filter string="My Requests" name="my_leaves" domain="[('user_id', '=', uid)]" help="My Leave Requests"/>
+                    <filter string="My Requests" name="my_leaves" domain="[('user_id', '=', uid)]"/>
+                    <separator/>
+                    <filter name="leaves" string="Leaves" domain="[('type', '=', 'remove')]"/>
+                    <filter name="allocations" string="Allocations" domain="[('type', '=', 'add')]"/>
                     <field name="employee_id"/>
                     <field name="department_id"/>
                     <field name="holiday_status_id"/>
@@ -56,7 +53,7 @@
                         <filter string="Manager" context="{'group_by':'manager_id'}"/>
                         <filter name="group_type" string="Type" context="{'group_by':'holiday_status_id'}"/>
                         <separator/>
-                        <filter name="group_date_from" string="Start Month" context="{'group_by':'date_from:month'}"/>
+                        <filter name="group_date_from" string="Start Month" context="{'group_by':'date_from'}"/>
                     </group>
                 </search>
             </field>
@@ -70,6 +67,7 @@
             <field name="arch" type="xml">
                 <calendar string="Leave Request" color="employee_id"
                           date_start="date_from" date_stop="date_to"
+                          mode="month"
                           quick_add="False" avatar_model="hr.employee">
                     <field name="employee_id"/>
                     <field name="holiday_status_id"/>
@@ -88,7 +86,7 @@
                 <header>
                     <button string="Confirm" name="confirm" states="draft" type="workflow" class="oe_highlight"/>
                     <button string="Approve" name="validate" states="confirm" type="workflow" groups="base.group_hr_user" class="oe_highlight"/>
-                    <button string="Validate" name="second_validate" states="validate1" type="workflow" groups="base.group_hr_user" class="oe_highlight"/>
+                    <button string="Validate" name="second_validate" states="validate1" type="workflow" groups="base.group_hr_manager" class="oe_highlight"/>
                     <button string="Refuse" name="refuse" states="confirm,validate,validate1" type="workflow" groups="base.group_hr_user"/>
                     <button string="Reset to Draft" name="reset" type="workflow"
                             attrs="{'invisible': ['|', ('can_reset', '=', False), ('state', 'not in', ['confirm', 'refuse'])]}"/>
@@ -148,7 +146,8 @@
                     <field name="number_of_days" string="Allocated Days" sum="Remaining Days"/>
                     <field name="manager_id" invisible="1"/>
                     <field name="user_id" invisible="1"/>
-                    <field name="date_from" invisible="1"/>
+                    <field name="date_from"/>
+                    <field name="date_to"/>
                     <field name="message_needaction" invisible="1"/>
                     <field name="state"/>
                 </tree>
@@ -251,7 +250,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">calendar</field>
             <field name="context">{'search_default_year': 1, 'search_default_group_employee': 1}</field>
-            <field name="domain">[('holiday_type','=','employee'), ('type', '=', 'remove')]</field>
+            <field name="domain">[('holiday_type','=','employee'), ('type', '=', 'remove'), ('state', '!=', 'refuse')]</field>
             <field name="search_view_id" ref="view_hr_holidays_filter"/>
         </record>
 
@@ -418,6 +417,7 @@
             <field name="context">{
                 'search_default_group_type': 1,
                 'search_default_year': 1 ,
+                'search_default_my_leaves': 1,
                 'needaction_menu_ref':
                 [
                     'hr_holidays.menu_open_ask_holidays_new',
@@ -460,7 +460,7 @@
             <field name="res_model">hr.holidays</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar</field>
-            <field name="context">{'search_default_department':1, 'search_default_approve':1}</field>
+            <field name="context">{'default_type':'add', 'search_default_department':1, 'search_default_approve':1}</field>
             <field name="domain">[('type','=','add')]</field>
             <field name="search_view_id" ref="view_hr_holidays_filter"/>
         </record>

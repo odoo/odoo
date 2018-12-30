@@ -4,7 +4,7 @@
 {
     'name': 'Timesheet on Issues',
     'version': '1.0',
-    'category': 'Project Management',
+    'category': 'Project',
     'description': """
 This module adds the Timesheet support for the Issues/Bugs Management in Project.
 =================================================================================

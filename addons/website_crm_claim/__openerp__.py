@@ -5,7 +5,7 @@
 {
     'name': 'Website CRM Claim',
     'version': '0.2',
-    'category': 'Tools',
+    'category': 'Sales',
     'complexity': 'easy',
     'description': """
 This module adds claim menu and features to your portal if claim and portal are installed.

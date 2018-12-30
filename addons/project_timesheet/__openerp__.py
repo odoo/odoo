@@ -4,7 +4,7 @@
 {
     'name': 'Bill Time on Tasks',
     'version': '1.0',
-    'category': 'Project Management',
+    'category': 'Project',
     'description': """
 Synchronization of project task work entries with timesheet entries.
 ====================================================================

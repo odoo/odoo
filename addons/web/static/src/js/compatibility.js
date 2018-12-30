@@ -89,6 +89,7 @@ openerp.web.form.FieldMany2One = core.form_widget_registry.get('many2one');
 openerp.web.form.FormWidget = form_common.FormWidget;
 openerp.web.form.tags = make_old_registry(core.form_tag_registry);
 openerp.web.form.widgets = make_old_registry(core.form_widget_registry);
+openerp.web.form.custom_widgets = make_old_registry(core.form_custom_registry);
 
 openerp.web.format_value = formats.format_value;
 openerp.web.FormView = FormView;

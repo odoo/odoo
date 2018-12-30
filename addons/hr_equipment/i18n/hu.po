@@ -4,14 +4,15 @@
 # 
 # Translators:
 # Kovács Tibor <kovika@gmail.com>, 2015
-# Kris Krnacs, 2015
+# krnkris, 2015
+# krnkris, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-29 10:27+0000\n"
-"PO-Revision-Date: 2015-10-15 21:11+0000\n"
-"Last-Translator: Kris Krnacs\n"
+"POT-Creation-Date: 2016-09-22 13:18+0000\n"
+"PO-Revision-Date: 2016-09-23 13:52+0000\n"
+"Last-Translator: krnkris\n"
 "Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -111,7 +112,7 @@ msgstr "Eszköz"
 
 #. module: hr_equipment
 #: model:ir.model,name:hr_equipment.model_hr_equipment_category
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_id_5383
+#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_id_6493
 msgid "Asset Category"
 msgstr "Eszköz kategória"
 
@@ -486,13 +487,6 @@ msgid "If checked, new messages require your attention."
 msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
 
 #. module: hr_equipment
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_kanban
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_search
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_search
-msgid "Important Messages"
-msgstr "Fontos üzenet"
-
-#. module: hr_equipment
 #: selection:hr.equipment.request,kanban_state:0
 #: model:hr.equipment.stage,name:hr_equipment.stage_1
 msgid "In Progress"
@@ -529,7 +523,7 @@ msgstr "Utolsó üzenet dátuma"
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request___last_update
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_stage___last_update
 msgid "Last Modified on"
-msgstr "Utoljára frissítve ekkor"
+msgstr "Utolsó frissítés dátuma"
 
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_write_uid
@@ -547,7 +541,7 @@ msgstr "Utoljára frissítve, által"
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_stage_write_date
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_write_date
 msgid "Last Updated on"
-msgstr "Utoljára frissítve ekkor"
+msgstr "Utoljára frissítve "
 
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_location
@@ -623,13 +617,6 @@ msgstr "Karbantartási id azonosítók"
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_message_ids
 msgid "Messages"
 msgstr "Üzenetek"
-
-#. module: hr_equipment
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_message_ids
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_message_ids
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_request_message_ids
-msgid "Messages and communication history"
-msgstr "Üzenetek és kommunikáció történet"
 
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_model
@@ -741,8 +728,8 @@ msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
 "- everyone: everyone can post\n"
 "- partners: only authenticated partners\n"
-"- followers: only followers of the related document\n"
-msgstr "Az üzenetátjáró használatának alapvető irányvonalai a dokumentumra vonatkozó üzenetek kiküldéséhez.\n- mindenki: mindenki tud üzenni\n- ügyfelek: csak a hitelesített partnerek\n- követők: csak az idevonatkozó dokumentum követői\n"
+"- followers: only followers of the related document or members of following channels\n"
+msgstr "Az üzenetátjáró használatának alapvető irányvonalai a dokumentumra vonatkozó üzenetek kiküldéséhez.\n- mindenki: mindenki tud üzenni\n- ügyfelek: csak a hitelesített partnerek\n- követők: csak az idevonatkozó dokumentum követői vagy a következő csatornák tagjai\n"
 
 #. module: hr_equipment
 #: model:hr.equipment.category,name:hr_equipment.hr_equipment_printer
@@ -966,6 +953,9 @@ msgstr "Karbantartás alatt"
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_message_unread
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_message_unread
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_message_unread
+#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_kanban
+#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_search
+#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_search
 msgid "Unread Messages"
 msgstr "Olvasatlan üzenetek"
 

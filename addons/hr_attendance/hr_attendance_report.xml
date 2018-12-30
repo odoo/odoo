@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <report 
-            id="action_report_hrattendanceerror" 
-            model="hr.employee" 
-            string="Attendance Error Report"
-            report_type="qweb-pdf"
-            name="hr_attendance.report_attendanceerrors" 
-            file="hr_attendance.report_attendanceerrors"
-        />
+        <record id="action_report_hrattendanceerror" model="ir.actions.report.xml">
+            <field name="name">Attendance Error Report</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="model">hr.employee</field>
+            <field name="report_name">hr_attendance.report_attendanceerrors</field>
+            <field name="report_file">hr_attendance.report_attendanceerrors</field>
+        </record>
     </data>
 </openerp>

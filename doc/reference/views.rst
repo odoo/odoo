@@ -158,7 +158,8 @@ root can have the following attributes:
     as a string of the form ``yyyy-MM-dd``).
 
     ``{$name}`` can be ``bf`` (``font-weight: bold``), ``it``
-    (``font-style: italic``), or any bootstrap contextual color (``danger``,
+    (``font-style: italic``), or any `bootstrap contextual color
+    <http://getbootstrap.com/components/#available-variations>`_ (``danger``,
     ``info``, ``muted``, ``primary``, ``success`` or ``warning``).
 ``create``, ``edit``, ``delete``
     allows *dis*\ abling the corresponding action in the view by setting the
@@ -224,8 +225,7 @@ Possible children elements of the list view are:
         context of the current row's record, if ``True`` the corresponding
         attribute is set on the cell.
 
-        Possible attributes are ``invisible`` (hides the button) and
-        ``readonly`` (disables the button but still shows it)
+        Possible attribute is ``invisible`` (hides the button).
     ``states``
         shorthand for ``invisible`` ``attrs``: a list of states, comma separated,
         requires that the model has a ``state`` field and that it is
@@ -233,6 +233,11 @@ Possible children elements of the list view are:
 
         Makes the button ``invisible`` if the record is *not* in one of the
         listed states
+
+        .. danger::
+
+            Using ``states`` in combination with ``attrs`` may lead to
+            unexpected results as domains are combined with a logical AND.
     ``context``
         merged into the view's context when performing the button's Odoo call
     ``confirm``
@@ -362,7 +367,7 @@ system. Available semantic components are:
     .. todo:: list of widgets
 
        & options & specific attributes (e.g. widget=statusbar
-       statusbar_visible statusbar_colors clickable)
+       statusbar_visible clickable)
   ``options``
     JSON object specifying configuration option for the field's widget
     (including default widgets)
@@ -501,13 +506,10 @@ The states are shown following the order used in the field (the list in a
 selection field, etc). States that are always visible are specified with the
 attribute ``statusbar_visible``.
 
-``statusbar_colors`` can be used to give a custom color to specific states.
-
 ::
 
     <field name="state" widget="statusbar"
-        statusbar_visible="draft,sent,progress,invoiced,done"
-        statusbar_colors="{'shipping_except':'red','waiting_date':'blue'}"/>
+        statusbar_visible="draft,sent,progress,invoiced,done" />
 
 The Sheet
 '''''''''
@@ -811,7 +813,7 @@ attributes:
 
 ``default_group_by``
   whether the kanban view should be grouped if no grouping is specified via
-  the action or the current research. Should be the name of the field to group
+  the action or the current search. Should be the name of the field to group
   by when no grouping is otherwise specified
 ``default_order``
   cards sorting order used if the user has not already sorted the records (via
@@ -828,17 +830,13 @@ attributes:
 Possible children of the view element are:
 
 ``field``
-  declares fields to aggregate or to use in kanban *logic*. If the field is
-  simply displayed in the kanban view, it does not need to be pre-declared.
+  declares fields to use in kanban *logic*. If the field is simply displayed in
+  the kanban view, it does not need to be pre-declared.
 
   Possible attributes are:
 
   ``name`` (required)
     the name of the field to fetch
-  ``sum``, ``avg``, ``min``, ``max``, ``count``
-    displays the corresponding aggregation at the top of a kanban column, the
-    field's value is the label of the aggregation (a string). Only one
-    aggregate operation per field is supported.
 
 ``templates``
   defines a list of :ref:`reference/qweb` templates. Cards definition may be
@@ -861,7 +859,9 @@ Possible children of the view element are:
     according to current user parameters, the latter is the direct value from
     a :meth:`~openerp.models.Model.read` (except for date and datetime fields
     that are `formatted according to user's locale
-    <https://github.com/odoo/odoo/blob/8.0/addons/web_kanban/static/src/js/kanban.js#L900>`_)
+    <https://github.com/odoo/odoo/blob/a678bd4e/addons/web_kanban/static/src/js/kanban_record.js#L102>`_)
+  ``formats``
+    the :js:class:`web.formats` module to manipulate and convert values
   ``read_only_mode``
     self-explanatory
 
@@ -949,7 +949,7 @@ calendar view are:
     ``date_stop`` is provided records become movable (via drag and drop)
     directly in the calendar
 ``date_delay``
-    alternative to ``date_end``, provides the duration of the event instead of
+    alternative to ``date_stop``, provides the duration of the event instead of
     its end date
 
     .. todo:: what's the unit? Does it allow moving the record?
@@ -959,7 +959,7 @@ calendar view are:
     same color segment are allocated the same highlight color in the calendar,
     colors are allocated semi-randomly.
 ``event_open_popup``
-    opens the event in a dialog instead of switching to the form view, enabled
+    opens the event in a dialog instead of switching to the form view, disabled
     by default
 ``quick_add``
     enables quick-event creation on click: only asks the user for a ``name``
@@ -971,6 +971,9 @@ calendar view are:
 ``all_day``
     name of a boolean field on the record indicating whether the corresponding
     event is flagged as day-long (and duration is irrelevant)
+``mode``
+    Default display mode when loading the calendar.
+    Possible attributes are: ``day``, ``week``, ``month``
 
 
 .. todo::
@@ -1010,22 +1013,40 @@ take the following attributes:
   and the end date will be set to the start date
 ``date_delay``
   name of the field providing the duration of the event
-``progress``
-  name of a field providing the completion percentage for the record's event,
-  between 0 and 100
+``duration_unit``
+  one of ``minute``, ``hour`` (default), ``day``, ``week``, ``month``, ``year``
+
 ``default_group_by``
   name of a field to group tasks by
+``type``
+  ``gantt`` classic gantt view (default)
 
-.. previously documented content which don't seem to be used anymore:
+  ``consolidate`` values of the first children are consolidated in the gantt's task
+  
+  ``planning`` children are displayed in the gantt's task
+``consolidation``
+  field name to display consolidation value in record cell
+``consolidation_max``
+  dictionary with the "group by" field as key and the maximum consolidation
+  value that can be reached before displaying the cell in red
+  (e.g. ``{"user_id": 100}``)
 
-   * string
-   * day_length
-   * color
-   * mode
-   * date_string
-   * <level>
-   * <field>
-   * <html>
+  .. warning::
+      The dictionnary definition must use double-quotes, ``{'user_id': 100}`` is
+      not a valid value
+``consolidation_label``
+  string to display next to the consolidation value, if not specified, the label
+  of the consolidation field will be used
+``fold_last_level``
+  If a value is set, the last grouping level is folded
+``round_dnd_dates``
+  enables rounding the task's start and end dates to the nearest scale marks
+
+.. ``progress``
+    name of a field providing the completion percentage for the record's event,
+    between 0 and 100
+.. consolidation_exclude
+.. consolidation_color
 
 .. _reference/views/diagram:
 

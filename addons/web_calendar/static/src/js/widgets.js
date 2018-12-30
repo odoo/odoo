@@ -53,7 +53,7 @@ var QuickCreate = Dialog.extend({
             return _t("Create");
         }
         var title = (_.isUndefined(parent.field_widget)) ?
-                (parent.string || parent.name) :
+                (parent.title || parent.string || parent.name) :
                 (parent.field_widget.string || parent.field_widget.name || '');
         return _t("Create: ") + title;
     },
@@ -214,7 +214,7 @@ var SidebarFilter = Widget.extend({
         var self = this;
         _.forEach(self.view.all_filters, function(o) {
             if (_.contains(self.view.now_filter_ids, o.value)) {
-                self.$('div.o_calendar_responsible input[value=' + o.value + ']').prop('checked',o.is_checked);
+                self.$('div.o_calendar_responsible input[value="' + o.value + '"]').prop('checked',o.is_checked);
             }
         });
     },
@@ -222,7 +222,7 @@ var SidebarFilter = Widget.extend({
         var self = this;
         if (!filters) {
             filters = [];
-            _.forEach(self.view.all_filters, function(o) {
+            _.forEach(self.view.get_all_filters_ordered(), function(o) {
                 if (_.contains(self.view.now_filter_ids, o.value)) {
                     filters.push(o);
                 }

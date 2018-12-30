@@ -15,6 +15,9 @@
                 <field name="group_route_so_lines" widget="radio"/>
                 <field name="group_mrp_properties" widget="radio" groups="base.group_no_one"/>
             </xpath>
+            <field name="group_sale_delivery_address" position="after">
+                <field name="group_display_incoterm" widget="radio"/>
+            </field>
         </field>
     </record>
 </odoo>

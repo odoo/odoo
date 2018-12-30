@@ -3,13 +3,15 @@
 # * barcodes
 # 
 # Translators:
+# Aleksandar Vangelovski <aleksandarv@hbee.eu>, 2016
+# Anica Milanova, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-14 10:27+0000\n"
-"PO-Revision-Date: 2015-09-07 16:16+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-11-23 13:08+0000\n"
+"Last-Translator: Anica Milanova\n"
 "Language-Team: Macedonian (http://www.transifex.com/odoo/odoo-9/language/mk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,7 +23,7 @@ msgstr ""
 #: code:addons/barcodes/barcodes.py:223
 #, python-format
 msgid " '*' is not a valid Regex Barcode Pattern. Did you mean '.*' ?"
-msgstr ""
+msgstr " '*' не е валиден Regex Barcode модел. Дали мислевте '.*' ?"
 
 #. module: barcodes
 #: code:addons/barcodes/barcodes.py:221
@@ -58,7 +60,9 @@ msgid ""
 msgstr ""
 
 #. module: barcodes
+#: code:addons/barcodes/barcodes.py:191
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule_alias
+#, python-format
 msgid "Alias"
 msgstr "Алијас"
 
@@ -76,6 +80,12 @@ msgstr ""
 #: model:ir.model.fields,help:barcodes.field_barcode_nomenclature_name
 msgid "An internal identification of the barcode nomenclature"
 msgstr ""
+
+#. module: barcodes
+#: code:addons/barcodes/barcodes.py:183
+#, python-format
+msgid "Any"
+msgstr "Било кои"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule_barcode_nomenclature_id
@@ -107,7 +117,7 @@ msgstr ""
 #. module: barcodes
 #: model:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
 msgid "Click to add a Barcode Nomenclature ."
-msgstr ""
+msgstr "Кликни за да додадеш номенклатура на баркод."
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature_create_uid
@@ -126,7 +136,7 @@ msgstr "Креирано на"
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule_display_name
 #: model:ir.model.fields,field_description:barcodes.field_barcodes_barcode_events_mixin_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Прикажи име"
 
 #. module: barcodes
 #: selection:barcode.nomenclature,upc_ean_conv:0
@@ -140,9 +150,16 @@ msgstr ""
 
 #. module: barcodes
 #. openerp-web
-#: code:addons/barcodes/static/src/js/form_view_barcode_handler.js:51
+#: code:addons/barcodes/static/src/js/form_view_barcode_handler.js:122
 #, python-format
 msgid "Error : Document not editable"
+msgstr ""
+
+#. module: barcodes
+#. openerp-web
+#: code:addons/barcodes/static/src/js/form_view_barcode_handler.js:56
+#, python-format
+msgid "Error : No last scanned barcode"
 msgstr ""
 
 #. module: barcodes
@@ -208,6 +225,13 @@ msgid "Sequence"
 msgstr "Секвенца"
 
 #. module: barcodes
+#. openerp-web
+#: code:addons/barcodes/static/src/js/form_view_barcode_handler.js:68
+#, python-format
+msgid "Set quantity"
+msgstr "Подеси количина"
+
+#. module: barcodes
 #: model:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
 msgid "Tables"
 msgstr ""
@@ -243,9 +267,16 @@ msgstr ""
 
 #. module: barcodes
 #. openerp-web
-#: code:addons/barcodes/static/src/js/form_view_barcode_handler.js:51
+#: code:addons/barcodes/static/src/js/form_view_barcode_handler.js:122
 #, python-format
 msgid "To modify this document, please first start edition."
+msgstr ""
+
+#. module: barcodes
+#. openerp-web
+#: code:addons/barcodes/static/src/js/form_view_barcode_handler.js:56
+#, python-format
+msgid "To set the quantity please scan a barcode first."
 msgstr ""
 
 #. module: barcodes
@@ -272,6 +303,12 @@ msgid "UPC/EAN Conversion"
 msgstr ""
 
 #. module: barcodes
+#: code:addons/barcodes/barcodes.py:191
+#, python-format
+msgid "Unit Product"
+msgstr "Единица на производ"
+
+#. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule_sequence
 msgid ""
 "Used to order rules such that rules with a smaller sequence match first"
@@ -280,7 +317,7 @@ msgstr ""
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcodes_barcode_events_mixin__barcode_scanned
 msgid "Value of the last barcode scanned."
-msgstr ""
+msgstr "Вредноста од последниот испечатен баркод."
 
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_barcode_nomenclature

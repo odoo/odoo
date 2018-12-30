@@ -156,4 +156,4 @@
       total_qty += rec.qty
     product = self.pool.get("product.product").browse(cr, uid, ref('product1'))
     assert total_qty == 0, "Total quantity in stock should be 0 as the backorder took everything out of stock"
-    assert product.qty_available == 0, "Quantity available should be 0 too" 
+    assert product.qty_available == 0, "Quantity available should be 0 too"

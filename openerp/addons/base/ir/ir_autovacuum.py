@@ -4,6 +4,7 @@
 import logging
 
 from openerp import models
+from openerp.exceptions import AccessDenied
 
 _logger = logging.getLogger(__name__)
 
@@ -28,6 +29,8 @@ class AutoVacuum(models.TransientModel):
         _logger.info("GC'd %d user log entries", cr.rowcount)
 
     def power_on(self, cr, uid, *args, **kwargs):
+        if not self.pool['res.users']._is_admin(cr, uid, [uid]):
+            raise AccessDenied()
         self._gc_transient_models(cr, uid, *args, **kwargs)
         self._gc_user_logs(cr, uid, *args, **kwargs)
         return True

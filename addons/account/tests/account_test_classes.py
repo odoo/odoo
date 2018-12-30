@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-from openerp.tests.common import TransactionCase
+from openerp.tests.common import HttpCase
 
-class AccountingTestCase(TransactionCase):
+class AccountingTestCase(HttpCase):
     """ This class extends the base TransactionCase, in order to test the
     accounting with localization setups. It is configured to run the tests after
     the installation of all modules, and will SKIP TESTS ifit  cannot find an already

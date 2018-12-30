@@ -27,4 +27,41 @@
            </t>
         </t>
     </t>
+
+    <div t-name="CalendarInvitation" class="o_calendar_invitation_page">
+        <div class="pull-right">
+            <t t-esc="attendee_data['current_attendee'].cn"/> (<t t-esc="attendee_data['current_attendee'].email"/>)
+            <div t-if="attendee_data['current_attendee'].state !== 'needsAction'" t-attf-class="o_#{attendee_data['current_attendee'].state}">
+                <t t-if="attendee_data['current_attendee'].state === 'accepted'">Yes I'm going.</t>
+                <t t-if="attendee_data['current_attendee'].state === 'declined'">No I'm not going.</t>
+            </div>
+        </div>
+        <div class="pull-left o_logo">
+            <img class="img img-responsive" src='/web/binary/company_logo'/>
+        </div>
+        <div class="o_event_title">
+            <h2>Calendar Invitation</h2>
+            <h3><t t-esc="attendee_data['meeting'].event"/></h3>
+        </div>
+        <table class="o_event_table table table-striped">
+            <tr>
+                <th>When</th>
+                <td><t t-esc="attendee_data['meeting'].when"/></td>
+            </tr>
+            <tr>
+                <th>Where</th>
+                <td><t t-esc="attendee_data['meeting'].where or '-'"/></td>
+            </tr>
+            <tr>
+                <th>Who</th>
+                <td>
+                    <ul>
+                        <li t-foreach="attendee_data['attendee']" t-as="attendee" t-attf-class="o_#{attendee.status}">
+                            <t t-esc="attendee.name"/>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        </table>
+    </div>
 </template>

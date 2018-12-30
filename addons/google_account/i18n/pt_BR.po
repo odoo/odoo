@@ -3,12 +3,14 @@
 # * google_account
 # 
 # Translators:
+# grazziano <gra.negocia@gmail.com>, 2015
+# Sávio Castelo <savio591@hotmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2015-09-12 17:44+0000\n"
+"POT-Creation-Date: 2017-08-16 15:23+0000\n"
+"PO-Revision-Date: 2017-08-16 17:14+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/odoo/odoo-9/language/pt_BR/)\n"
 "MIME-Version: 1.0\n"
@@ -30,7 +32,7 @@ msgstr "Criado em"
 #. module: google_account
 #: model:ir.model.fields,field_description:google_account.field_google_service_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Nome de Exibição"
 
 #. module: google_account
 #: model:ir.model.fields,field_description:google_account.field_google_service_id
@@ -53,12 +55,42 @@ msgid "Last Updated on"
 msgstr "Última atualização em"
 
 #. module: google_account
+#: code:addons/google_account/google_account.py:98
+#, python-format
+msgid ""
+"Something went wrong during your token generation. Maybe your Authorization "
+"Code is invalid"
+msgstr "Erro ao gerar seu token de acesso. Talvez seu código de autorização seja inválido"
+
+#. module: google_account
+#: code:addons/google_account/google_account.py:37
+#, python-format
+msgid ""
+"Something went wrong during your token generation. Maybe your Authorization "
+"Code is invalid or already expired"
+msgstr "Erro ao gerar seu token de acesso. Talvez seja porque seu código de autorização seja inválido"
+
+#. module: google_account
+#: code:addons/google_account/google_account.py:128
+#, python-format
+msgid ""
+"Something went wrong during your token generation. Maybe your Authorization "
+"Code is invalid or already expired [%s]"
+msgstr "Algo deu errado ao gerar seu token. Talvez seja porque seu código de autorização seja inválido ou expirou [%s]"
+
+#. module: google_account
 #: code:addons/google_account/google_account.py:173
 #, python-format
 msgid "Something went wrong with your request to google"
 msgstr "Algo deu errado com o seu pedido para o Google"
 
 #. module: google_account
+#: code:addons/google_account/google_account.py:109
+#, python-format
+msgid "The account for the Google service '%s' is not configured"
+msgstr ""
+
+#. module: google_account
 #: model:ir.model,name:google_account.model_google_service
 msgid "google.service"
-msgstr ""
+msgstr "google.service"

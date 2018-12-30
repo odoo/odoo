@@ -2,7 +2,7 @@
 {
     'name': 'Issue Rating',
     'version': '1.0',
-    'category': 'Hidden',
+    'category': 'Project',
     'description': """
 This module allows a customer to give rating on Project Issue.
 """,

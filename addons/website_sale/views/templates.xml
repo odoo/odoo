@@ -17,7 +17,7 @@
   </xpath>
 </template>
 
-<template id="assets_editor" inherit_id="website.assets_editor" name="Shop Editor" groups="base.group_sale_manager">
+<template id="assets_editor" inherit_id="website.assets_editor" name="Shop Editor">
   <xpath expr="." position="inside">
       <script type="text/javascript" src="/website_sale/static/src/js/website_sale.editor.js"></script>
       <script type="text/javascript" src="/website_sale/static/src/js/website_sale_tour_shop.js"></script>
@@ -92,17 +92,17 @@
               <t t-if="(compute_currency(product.lst_price) - product.price) &gt; 0.1">
                 <del class="text-danger mr8" style="white-space: nowrap;" t-field="product.lst_price" t-field-options='{
                   "widget": "monetary",
-                  "from_currency": "product.company_id.currency_id",
-                  "display_currency": "user_id.partner_id.property_product_pricelist.currency_id"
+                  "from_currency": "product.currency_id",
+                  "display_currency": "website.currency_id"
                 }'/>
               </t>
               <span t-field="product.price" style="white-space: nowrap;"  t-field-options='{
                    "widget": "monetary",
-                   "display_currency": "user_id.partner_id.property_product_pricelist.currency_id"
+                   "display_currency": "website.currency_id"
                }'>
               </span>
               <span itemprop="price" style="display:none;" t-esc="product.price"/>
-              <span itemprop="priceCurrency" style="display:none;" t-esc="user_id.partner_id.property_product_pricelist.currency_id.name"/>
+              <span itemprop="priceCurrency" style="display:none;" t-esc="website.currency_id.name"/>
           </b>
       </div>
   </section>
@@ -366,7 +366,8 @@
                 <h1 itemprop="name" t-field="product.name">Product Name</h1>
                 <span itemprop="url" style="display:none;" t-esc="'/shop/product/%s' % slug(product)"/>
 
-                <form t-att-action="keep('/shop/cart/update')" class="js_add_cart_variants" t-att-data-attribute_value_ids="product.product_variant_ids.ids" method="POST">
+                <t t-set="attribute_value_ids" t-value="get_attribute_value_ids(product)"/>
+                <form t-att-action="keep('/shop/cart/update')" class="js_add_cart_variants" t-att-data-attribute_value_ids="attribute_value_ids" method="POST">
                   <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                   <div class="js_product">
                     <t t-placeholder="select">
@@ -422,23 +423,23 @@
             t-field="product.lst_price"
             t-field-options='{
               "widget": "monetary",
-              "from_currency": "product.company_id.currency_id",
-              "display_currency": "user_id.partner_id.property_product_pricelist.currency_id"
+              "from_currency": "product.currency_id",
+              "display_currency": "website.currency_id"
            }'/>
           <b class="oe_price" style="white-space: nowrap;"
             t-field="product.price"
             t-field-options='{
                "widget": "monetary",
-               "display_currency": "user_id.partner_id.property_product_pricelist.currency_id"
+               "display_currency": "website.currency_id"
            }'/>
           <span itemprop="price" style="display:none;" t-esc="product.price"/>
-          <span itemprop="priceCurrency" style="display:none;" t-esc="user_id.partner_id.property_product_pricelist.currency_id.name"/>
+          <span itemprop="priceCurrency" style="display:none;" t-esc="website.currency_id.name"/>
       </h4>
-      <h4 class="css_non_editable_mode_hidden">
+      <h4 class="css_non_editable_mode_hidden decimal_precision" t-att-data-precision="product.currency_id.decimal_places">
         <span t-field="product.lst_price"
             t-field-options='{
                "widget": "monetary",
-               "display_currency": "website.pricelist_id.currency_id"
+               "display_currency": "product.currency_id"
            }'/>
       </h4>
       <h4 class="hidden oe_not_available bg-warning">Product not available</h4>
@@ -450,14 +451,11 @@
     <input type="hidden" t-if="len(product.product_variant_ids) == 1" name="product_id" t-att-value="product.product_variant_ids[0].id"/>
     <t t-if="len(product.product_variant_ids) &gt; 1">
       <label label-default="label-default" class="radio" t-foreach="product.product_variant_ids" t-as="variant_id">
-        <input type="radio" name="product_id" class="js_product_change" t-att-checked="'checked' if variant_id_index == 0 else ''" t-att-value="variant_id.id" t-att-data-lst_price="variant_id.lst_price" t-att-data-price="variant_id.price"/>
+        <input type="radio" name="product_id" class="js_product_change" t-att-checked="'checked' if variant_id_index == 0 else ''" t-att-value="variant_id.id" t-att-data-lst_price="compute_currency(variant_id.lst_price)" t-att-data-price="variant_id.price"/>
         <span t-esc="variant_id.name_get()[0][1]"/>
-        <span class="badge" t-if="variant_id.price_extra">
-          <t t-esc="variant_id.price_extra > 0 and '+' or ''"/><span t-field="variant_id.price_extra" style="white-space: nowrap;" t-field-options='{
-                "widget": "monetary",
-                "from_currency": "product.company_id.currency_id",
-                "display_currency": "user_id.partner_id.property_product_pricelist.currency_id"
-              }'/>
+        <t t-set="diff_price" t-value="variant_id.price - variant_id.product_tmpl_id.price"/>
+        <span class="badge" t-if="diff_price != 0">
+          <t t-esc="diff_price > 0 and '+' or '-'"/><span t-esc="abs(diff_price)" t-esc-options='{"widget": "monetary", "display_currency": "website.currency_id"}'/>
         </span>
       </label>
     </t>
@@ -480,8 +478,8 @@
                   <span t-if="value_id.price_extra">
                       <t t-esc="value_id.price_extra > 0 and '+' or ''"/><span t-field="value_id.price_extra" style="white-space: nowrap;" t-field-options='{
                                "widget": "monetary",
-                                "from_currency": "product.company_id.currency_id",
-                               "display_currency": "user_id.partner_id.property_product_pricelist.currency_id"
+                                "from_currency": "product.currency_id",
+                               "display_currency": "website.currency_id"
                            }'/>
                   </span>
               </option>
@@ -500,8 +498,8 @@
                           <span class="badge" t-if="value_id.price_extra">
                               <t t-esc="value_id.price_extra > 0 and '+' or ''"/><span t-field="value_id.price_extra" style="white-space: nowrap;" t-field-options='{
                                       "widget": "monetary",
-                                      "from_currency": "product.company_id.currency_id",
-                                      "display_currency": "user_id.partner_id.property_product_pricelist.currency_id"
+                                      "from_currency": "product.currency_id",
+                                      "display_currency": "website.currency_id"
                                    }'/>
                           </span>
                       </label>
@@ -538,13 +536,13 @@
       <div class="container mt32" t-if="product.alternative_product_ids">
           <h3>Suggested alternatives:</h3>
           <div class='row mt16' style="">
-          <t t-foreach="product.alternative_product_ids" t-as="product">
+          <t t-foreach="product.alternative_product_ids" t-as="alt_product">
               <div class='col-md-2 thumbnail' style='width: 170px; height:130px; float:left; display:inline; margin-right: 10px; overflow:hidden;'>
                   <div class='mt16 text-center' style="height: 100%;">
-                      <div t-field="product.image_small" t-field-options='{"widget": "image", "class": "img-rounded shadow o_alternative_product" }'/>
+                      <div t-field="alt_product.image_small" t-field-options='{"widget": "image", "class": "img-rounded shadow o_alternative_product" }'/>
                       <h5>
-                          <a t-attf-href="/shop/product/#{ slug(product) }" style="display: block">
-                              <span t-att-title='product.name' t-field='product.name' style="display: block;"/>
+                          <a t-attf-href="/shop/product/#{ slug(alt_product) }" style="display: block">
+                              <span t-att-title='alt_product.name' t-field='alt_product.name' style="display: block;"/>
                           </a>
                       </h5>
                   </div>
@@ -705,11 +703,11 @@
     <li t-att-class="(step==40 and 'text-primary') or 'text-muted'" id="step40">
       <t t-if="step&gt;40 and step&lt;50">
         <a href="/shop/payment"  class='text-success'>
-          <t t-if="not website_sale_order or not website_sale_order.website_order_line or not website_sale_order.only_services">Payment</t><span class="chevron"></span>
+          Payment<span class="chevron"></span>
         </a>
       </t>
       <t t-if="not (step&gt;40 and step&lt;50)">
-          <t t-if="not website_sale_order or not website_sale_order.website_order_line or not website_sale_order.only_services">Payment</t><span class="chevron"></span>
+          Payment<span class="chevron"></span>
       </t>
     </li>
   </xpath>
@@ -718,11 +716,11 @@
     <li t-att-class="(step==30 and 'text-primary') or 'text-muted'" id="step30">
       <t t-if="step&gt;30 and step&lt;50">
         <a href="/shop/extra_info"  class='text-success'>
-          <t t-if="not website_sale_order or not website_sale_order.website_order_line or not website_sale_order.only_services">Extra Info</t><span class="chevron"></span>
+          Extra Info<span class="chevron"></span>
         </a>
       </t>
       <t t-if="not (step&gt;30 and step&lt;50)">
-          <t t-if="not website_sale_order or not website_sale_order.website_order_line or not website_sale_order.only_services">Extra Info</t><span class="chevron"></span>
+          Extra Info<span class="chevron"></span>
       </t>
     </li>
   </xpath>
@@ -772,16 +770,15 @@
                   </div>
               </td>
               <td class="text-center" id="td-price" name="price">
-                  <del t-attf-class="text-danger #{compute_currency(line.product_id.lst_price) - line.price_reduce &lt; 1 and 'hidden' or ''}" style="text-decoration: line-through; white-space: nowrap;"
+                  <del t-attf-class="text-danger #{'' if line.product_id.lst_price - line.discounted_price &gt; 0.1 else 'hidden'}" style="text-decoration: line-through; white-space: nowrap;"
                     t-field="line.product_id.lst_price" t-field-options='{
                         "widget": "monetary",
                         "from_currency": "line.company_id.currency_id",
-                        "display_currency": "user_id.partner_id.property_product_pricelist.currency_id"
+                        "display_currency": "website.currency_id"
                     }'/>
-                <span t-field="line.price_reduce" style="white-space: nowrap;" t-field-options='{
+                <span t-field="line.discounted_price" style="white-space: nowrap;" t-field-options='{
                      "widget": "monetary",
-                     "from_currency": "website_sale_order.pricelist_id.currency_id",
-                     "display_currency": "user_id.partner_id.property_product_pricelist.currency_id"
+                     "display_currency": "website.currency_id"
                  }'/>
               </td>
           </tr>
@@ -897,13 +894,13 @@
                         <del class="text-danger mr8" style="white-space: nowrap;"
                           t-field="product.lst_price" t-field-options='{
                               "widget": "monetary",
-                              "from_currency": "product.company_id.currency_id",
-                              "display_currency": "user_id.partner_id.property_product_pricelist.currency_id"
+                              "from_currency": "product.currency_id",
+                              "display_currency": "website.currency_id"
                           }'/>
                       </t>
                       <span t-field="product.price" style="white-space: nowrap;" t-field-options='{
                            "widget": "monetary",
-                           "display_currency": "user_id.partner_id.property_product_pricelist.currency_id"
+                           "display_currency": "website.currency_id"
                        }'/>
                   </td>
                   <td class="text-center">
@@ -970,7 +967,7 @@
                       </div>
                   </div>
                   <div t-attf-class="form-group #{error.get('name') and 'has-error' or ''} col-lg-6">
-                      <label class="control-label" for="contact_name">Your Name</label>
+                      <label class="control-label" for="name">Your Name</label>
                       <input type="text" name="name" class="form-control" t-att-value="checkout.get('name')"/>
                   </div>
                   <div t-if="has_check_vat" class="clearfix"/>
@@ -983,7 +980,7 @@
                       <input type="text" name="vat" class="form-control" t-att-value="checkout.get('vat')"/>
                   </div>
                   <div t-attf-class="form-group #{error.get('email') and 'has-error' or ''} col-lg-6">
-                      <label class="control-label" for="contact_name">Email</label>
+                      <label class="control-label" for="email">Email</label>
                       <input type="email" name="email" class="form-control" t-att-value="checkout.get('email')"/>
                   </div>
                   <div t-attf-class="form-group #{error.get('phone') and 'has-error' or ''} col-lg-6">
@@ -1080,7 +1077,7 @@
                   </div>
                   <div t-attf-class="form-group #{error.get('shipping_state_id') and 'has-error' or ''} col-lg-6">
                       <label class="control-label label-optional" for="shipping_state_id">State / Province</label>
-                      <select name="shipping_state_id" class="form-control" t-att-readonly="  'readonly' if shipping_id &gt;= 0 else ''">
+                      <select name="shipping_state_id" class="form-control" t-att-disabled="  'disabled' if shipping_id &gt;= 0 else ''">
                           <option value="">State / Province...</option>
                           <t t-foreach="states or []" t-as="state">
                               <option t-att-value="state.id" style="display:none;" t-att-data-country_id="state.country_id.id" t-att-selected="state.id == checkout.get('shipping_state_id')"><t t-esc="state.name"/></option>
@@ -1153,7 +1150,7 @@
                              <span t-field="line.price_unit" style="white-space: nowrap;" t-field-options='{
                                  "widget": "monetary",
                                  "from_currency": "website_sale_order.pricelist_id.currency_id",
-                                 "display_currency": "user_id.partner_id.property_product_pricelist.currency_id"
+                                 "display_currency": "website.currency_id"
                              }'/>
                           </td>
                       </tr>
@@ -1235,7 +1232,7 @@
 
 <template id="payment_sale_note" inherit_id="payment" name="Display Sale Note" customize_show="True" active="False">
   <xpath expr="//t[@id='acquirers_list']" position="before">
-    <t t-set="sale_note" t-value="website_sale_order.get_salenote(website_sale_order.partner_id.id)"/>
+    <t t-set="sale_note" t-value="website_sale_order.note"/>
     <t t-if="sale_note and sale_note != ''">
       <div class="oe_accept_cgv_button">
         <label><input type="checkbox" checked="checked" id="checkbox_cgv"/> <t t-esc="sale_note"/></label>
@@ -1271,6 +1268,7 @@
                                 <th>Products</th>
                                 <th>Quantity</th>
                                 <th class="text-right" width="100">Unit Price</th>
+                                <th class="text-right" width="100">Taxes</th>
                                 <th class="text-right" width="100">Subtotal</th>
                             </tr>
                         </thead>
@@ -1298,12 +1296,17 @@
                                 </td>
                                 <td>
                                     <div class="text-right"
+                                        t-field="line.price_tax"
+                                        t-field-options='{"widget": "monetary", "display_currency": "order.pricelist_id.currency_id"}'/>
+                                </td>
+                                <td>
+                                    <div class="text-right"
                                         t-field="line.price_subtotal"
                                         t-field-options='{"widget": "monetary", "display_currency": "order.pricelist_id.currency_id"}'/>
                                 </td>
                             </tr>
                             <tr>
-                                <td></td><td></td>
+                                <td colspan="3"/>
                                 <td class="text-right"><strong>Total:</strong></td>
                                 <td class="text-right">
                                     <strong t-field="order.amount_total"
@@ -1374,7 +1377,7 @@
     <t t-if="tx_ids and state == 'cancel'">
       <p>The payment seems to have been canceled.</p>
     </t>
-    <t t-if="tx_ids and state == 'pending' and validation == 'manual'">
+    <t t-if="tx_ids and state == 'pending' and validation">
       <p>Your transaction is waiting a manual confirmation.</p><br />
       <t t-if="tx_post_msg">
         <div class="hidden-print"><t t-raw="tx_post_msg"/></div>
@@ -1387,14 +1390,14 @@
 
 <!-- Page Shop my cart and payment total -->
 <template id="total">
-  <div id="cart_total" t-if="website_sale_order">
+  <div id="cart_total" t-if="website_sale_order and website_sale_order.website_order_line">
         <div class="row" id="order_total_untaxed">
               <span class="col-xs-6 text-right text-muted">Subtotal:</span>
               <span class="col-xs-6 text-left text-muted">
                   <span t-field="website_sale_order.amount_untaxed" style="white-space: nowrap;" t-field-options='{
                           "widget": "monetary",
                           "from_currency": "website_sale_order.pricelist_id.currency_id",
-                          "display_currency": "user_id.partner_id.property_product_pricelist.currency_id"
+                          "display_currency": "website.currency_id"
                       }'/>
               </span>
         </div>
@@ -1404,7 +1407,7 @@
                   <span t-field="website_sale_order.amount_tax" style="white-space: nowrap;" t-field-options='{
                           "widget": "monetary",
                           "from_currency": "website_sale_order.pricelist_id.currency_id",
-                          "display_currency": "user_id.partner_id.property_product_pricelist.currency_id"
+                          "display_currency": "website.currency_id"
                       }'/>
               </span>
         </div>
@@ -1414,7 +1417,7 @@
                   <span t-field="website_sale_order.amount_total" style="white-space: nowrap;" t-field-options='{
                           "widget": "monetary",
                           "from_currency": "website_sale_order.pricelist_id.currency_id",
-                          "display_currency": "user_id.partner_id.property_product_pricelist.currency_id"
+                          "display_currency": "website.currency_id"
                       }'/>
               </span>
         </div>
@@ -1424,8 +1427,11 @@
 <!-- payment acquirer information -->
 <template id="payment_confirmation_status">
     <t t-if="order.payment_acquirer_id.auto_confirm == 'none'">
-      <div class="alert alert-info" role="alert">
-        <t t-raw="order.payment_acquirer_id.pending_msg"/>
+      <div class="panel panel-info">
+        <div class="panel-heading" t-raw="order.payment_acquirer_id.pending_msg" />
+        <div class="panel-body" t-if="order.payment_acquirer_id.post_msg">
+            <t t-raw="order.payment_acquirer_id.post_msg"/>
+        </div>
       </div>
     </t>
     <t t-if="order.payment_acquirer_id.auto_confirm == 'at_pay_confirm'">
@@ -1476,10 +1482,13 @@
 
 <!-- Add a link to the product page in the portal orders followup page -->
 <template id="orders_followup_products_links" name="Orders Followup Products Links" inherit_id="website_portal_sale.orders_followup">
-    <xpath expr="//span[@t-esc='ol.product_id.name']" position="replace">
-        <a t-att-href="ol.product_id.website_url">
-            <span t-esc="ol.product_id.name"/>
+    <xpath expr="//div[@id='product_name']/*" position="replace">
+        <a t-if="ol.product_id.website_published" t-att-href="ol.product_id.website_url">
+            <span t-esc="ol.name"/>
         </a>
+        <t t-if="not ol.product_id.website_published">
+          <span t-esc="ol.name"/>
+        </t>
     </xpath>
 </template>
 

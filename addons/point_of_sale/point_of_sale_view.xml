@@ -35,23 +35,25 @@
                         <page string="Products">
                             <field name="lines" colspan="4" nolabel="1">
                                 <tree string="Order lines" editable="bottom">
-                                    <field name="product_id" on_change="onchange_product_id(parent.pricelist_id,product_id,qty,parent.partner_id)"/>
-                                    <field name="qty" on_change="onchange_qty(parent.pricelist_id,product_id, discount, qty, price_unit, context)"/>
-                                    <field name="price_unit" on_change="onchange_qty(parent.pricelist_id,product_id, discount, qty, price_unit, context)" widget="monetary"/>
-                                    <field name="discount"  on_change="onchange_qty(parent.pricelist_id,product_id, discount, qty, price_unit, context)" widget="monetary"/>
+                                    <field name="product_id"/>
+                                    <field name="qty"/>
+                                    <field name="price_unit" widget="monetary"/>
+                                    <field name="discount" widget="monetary"/>
                                     <field name="tax_ids_after_fiscal_position" widget="many2many_tags"/>
+                                    <field name="tax_ids" widget="many2many_tags" invisible="1"/>
                                     <field name="price_subtotal" widget="monetary"/>
                                     <field name="price_subtotal_incl" widget="monetary"/>
                                 </tree>
                                 <form string="Order lines">
                                     <group col="4">
-                                        <field name="product_id" on_change="onchange_product_id(parent.pricelist_id,product_id,qty,parent.partner_id)"/>
-                                        <field name="qty" on_change="onchange_qty(parent.pricelist_id,product_id, discount, qty, price_unit, context)"/>
-                                        <field name="discount"  on_change="onchange_qty(parent.pricelist_id,product_id, discount, qty, price_unit, context)" widget="monetary"/>
-                                        <field name="price_unit" on_change="onchange_qty(parent.pricelist_id,product_id, discount, qty, price_unit, context)" widget="monetary"/>
+                                        <field name="product_id"/>
+                                        <field name="qty"/>
+                                        <field name="discount" widget="monetary"/>
+                                        <field name="price_unit" widget="monetary"/>
                                         <field name="price_subtotal" invisible="1" widget="monetary"/>
                                         <field name="price_subtotal_incl" invisible="1" widget="monetary"/>
-                                        <field name="tax_ids" widget="many2many_tags"/>
+                                        <field name="tax_ids_after_fiscal_position" widget="many2many_tags"/>
+                                        <field name="tax_ids" widget="many2many_tags" invisible="1"/>
                                         <field name="notice"/>
                                     </group>
                                 </form>
@@ -81,7 +83,7 @@
                                 <field name="company_id" groups="base.group_multi_company"/>
                                 <field name="location_id" widget="selection" groups="stock.group_locations"/>
                                 <field name="user_id" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'point_of_sale.group_pos_user']}"/>
-                                <field name="pricelist_id" groups="product.group_sale_pricelist" domain="[('type','=','sale')]"/>
+                                <field name="pricelist_id" groups="product.group_sale_pricelist"/>
                                 <field name="picking_id" readonly="1"/>
                                 <field name="pos_reference"/>
                             </group>
@@ -688,7 +690,6 @@
                                 <field name="iface_tax_included" />
                             </group>
                             <group>
-                                <field name="iface_fullscreen" />
                                 <field name="iface_big_scrollbars" />
                                 <field name="iface_print_auto" />
                                 <field name="iface_display_categ_images" />
@@ -698,7 +699,7 @@
                         </group>
                         <group string="Hardware Proxy / PosBox" >
                             <field name="proxy_ip" />
-                            <field name="iface_print_via_proxy" string="Receipt Printer"/>
+                            <field name="iface_print_via_proxy" string="Receipt Printer" on_change="onchange_iface_print_via_proxy(iface_print_via_proxy)"/>
                             <field name="iface_scan_via_proxy" string="Barcode Scanner"/>
                             <field name="iface_electronic_scale" />
                             <field name="iface_cashdrawer" />
@@ -813,18 +814,18 @@
                                     <span class="o_stat_text">Money Out</span>
                                 </div>
                             </button>
-                            <button name="%(account.action_view_account_bnk_stmt_cashbox)d"
+                            <button name="open_cashbox"
                                     class="oe_stat_button"
                                     attrs="{'invisible':['|', ('cash_control', '=', False), ('state', '!=', 'opening_control')]}"
                                     icon="fa-money"
-                                    type="action" context="{'balance': 'start', 'bank_statement_id': cash_register_id}">
+                                    type="object" context="{'balance': 'start'}">
                                 <span class="o_stat_text">Set Opening Balance</span>
                             </button>
-                            <button name="%(account.action_view_account_bnk_stmt_cashbox)d"
+                            <button name="open_cashbox"
                                     class="oe_stat_button"
                                     attrs="{'invisible':['|', '|', ('cash_control', '=', False), ('state', '=', 'opening_control'), ('state', '=', 'closed')]}"
                                     icon="fa-money"
-                                    type="action" context="{'balance': 'end', 'bank_statement_id': cash_register_id}">
+                                    type="object" context="{'balance': 'end'}">
                                 <span class="o_stat_text">Set Closing Balance</span>
                             </button>
                         </div>
@@ -854,14 +855,6 @@
                                     <label for="cash_register_balance_end" attrs="{'invisible' : [('state', '=', 'opening_control')]}" string="= Theoretical Closing Balance" class="oe_force_bold oe_opening_total"/>
                                     <field name="cash_register_balance_end" nolabel="1" attrs="{'invisible' : [('state', '=', 'opening_control')]}" class="oe_bold oe_pos_total" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                                 </group>
-                                <div class="oe_clear"/>
-                                <div attrs="{'invisible' : ['|', ('cash_journal_id', '=', False), ('state', '!=', 'opening_control')]}" class="oe_view_nocontent" groups="point_of_sale.group_pos_manager">
-                                    <p class="oe_view_nocontent_create">
-                                    You can define another list of available currencies on the
-                                    <i>Cash Registers</i> tab of the <b><field name="cash_journal_id" class="oe_inline"/></b>
-                                    payment method.
-                                    </p>
-                                </div>
                             </div>
                             <div>
                                 <group class="oe_subtotal_footer oe_right" attrs="{'invisible': ['|', ('cash_control', '=', False), ('state', '=', 'opening_control')]}">
@@ -921,7 +914,7 @@
                     <field name="user_id" />
                     <group expand="0" string="Group By">
                         <filter string="User" domain="[]" context="{'group_by' : 'user_id'}" />
-                        <filter string="Point of Sale" domain="[]" context="{'group_by': 'user_id'}" />
+                        <filter string="Point of Sale" domain="[]" context="{'group_by': 'config_id'}" />
                     </group>
                 </search>
             </field>
@@ -988,6 +981,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
             <field name="search_view_id" ref="view_pos_config_search" />
+            <field name="domain">[('state','=','active')]</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to create a new PoS config.

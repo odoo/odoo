@@ -1,0 +1,658 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * mrp_operations
+# 
+# Translators:
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-14 10:27+0000\n"
+"PO-Revision-Date: 2018-06-24 13:09+0000\n"
+"Last-Translator: Linas Versada <paulius.sladkevicius@gmail.com>\n"
+"Language-Team: Lithuanian (http://www.transifex.com/odoo/odoo-9/language/lt/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: lt\n"
+"Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);\n"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_workorder_nbr
+msgid "# of Lines"
+msgstr "# eilučių"
+
+#. module: mrp_operations
+#: model:ir.model.fields,help:mrp_operations.field_mrp_production_workcenter_line_state
+msgid ""
+"* When a work order is created it is set in 'Draft' status.\n"
+"* When user sets work order in start mode that time it will be set in 'In Progress' status.\n"
+"* When work order is in running mode, during that time if user wants to stop or to make changes in order then can set in 'Pending' status.\n"
+"* When the user cancels the work order it will be set in 'Canceled' status.\n"
+"* When order is completely processed that time it is set in 'Finished' status."
+msgstr ""
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_workcenter_form_view_inherit
+msgid "Actual Production Date"
+msgstr ""
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_workorder_bom_id
+msgid "Bill of Material"
+msgstr "Komplektavimo specifikacija"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.operation_calendar_view
+msgid "Calendar View"
+msgstr "Kalendoriaus rodinys"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_workcenter_form_view_inherit
+msgid "Cancel"
+msgstr "Atšaukti"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_form_inherit_view
+msgid "Cancel Order"
+msgstr "Atšaukti užsakymą"
+
+#. module: mrp_operations
+#: selection:mrp.production.workcenter.line,production_state:0
+msgid "Canceled"
+msgstr "Atšaukta"
+
+#. module: mrp_operations
+#: selection:mrp.production.workcenter.line,state:0
+#: selection:mrp.workorder,state:0
+#: selection:mrp_operations.operation.code,start_stop:0
+msgid "Cancelled"
+msgstr "Atšauktas"
+
+#. module: mrp_operations
+#: model:ir.model.fields,help:mrp_operations.field_mrp_production_allow_reorder
+msgid ""
+"Check this to be able to move independently all production orders, without "
+"moving dependent ones."
+msgstr ""
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_stock_move_move_dest_id_lines
+msgid "Children Moves"
+msgstr ""
+
+#. module: mrp_operations
+#: model:ir.actions.act_window,help:mrp_operations.mrp_production_wc_action_form
+#: model:ir.actions.act_window,help:mrp_operations.mrp_production_wc_action_planning
+msgid "Click to start a new work order."
+msgstr "Paspauskite, norėdami pradėti naują darbo užsakymą."
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_code_code
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_code_id_10488
+msgid "Code"
+msgstr "Kodas"
+
+#. module: mrp_operations
+#: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_confirm_action
+msgid "Confirmed Work Orders"
+msgstr ""
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_code_create_uid
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_create_uid
+msgid "Created by"
+msgstr "Sukūrė"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_code_create_date
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_create_date
+msgid "Created on"
+msgstr "Sukurta"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.view_report_mrp_workorder_filter
+msgid "Current"
+msgstr "Naudojami"
+
+#. module: mrp_operations
+#: model:ir.filters,name:mrp_operations.filter_mrp_workorder_current_production
+msgid "Current Production"
+msgstr "Dabartinė gamyba"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_workorder_date
+msgid "Date"
+msgstr "Data"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_workorder_delay
+msgid "Delay"
+msgstr "Uždelsta"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_code_display_name
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_display_name
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_workorder_display_name
+msgid "Display Name"
+msgstr "Vaizduojamas pavadinimas"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.view_report_mrp_workorder_filter
+#: selection:mrp.production.workcenter.line,production_state:0
+#: selection:mrp_operations.operation.code,start_stop:0
+msgid "Done"
+msgstr "Atlikti"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.view_mrp_production_workcenter_form_view_filter
+#: selection:mrp.production.workcenter.line,production_state:0
+#: selection:mrp.production.workcenter.line,state:0
+#: selection:mrp.workorder,state:0
+msgid "Draft"
+msgstr "Juodraštis"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_workcenter_form_view_inherit
+msgid "Duration"
+msgstr "Laikotarpis"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_date_finished
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_production_workcenter_line_date_finished
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_production_workcenter_line_date_planned_end
+msgid "End Date"
+msgstr "Pabaigos data"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_form_inherit_view
+msgid "Finish Order"
+msgstr "Pabaigti užsakymą"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_form_inherit_view
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_form_inherit_view2
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_workcenter_form_view_inherit
+#: selection:mrp.production.workcenter.line,state:0
+#: selection:mrp.workorder,state:0
+msgid "Finished"
+msgstr "Pabaigta"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_production_allow_reorder
+msgid "Free Serialisation"
+msgstr ""
+
+#. module: mrp_operations
+#: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_draft_action
+msgid "Future Work Orders"
+msgstr ""
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.view_mrp_production_workcenter_form_view_filter
+#: model:ir.ui.view,arch_db:mrp_operations.view_report_mrp_workorder_filter
+msgid "Group By"
+msgstr "Grupuoti pagal"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.graph_in_hrs_workcenter
+msgid "Hours by Work Center"
+msgstr ""
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_code_id
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_id
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_workorder_id
+msgid "ID"
+msgstr "ID"
+
+#. module: mrp_operations
+#: selection:mrp.production.workcenter.line,production_state:0
+msgid "In Production"
+msgstr "Gaminama"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.view_mrp_production_workcenter_form_view_filter
+#: selection:mrp.production.workcenter.line,state:0
+#: selection:mrp.workorder,state:0
+msgid "In Progress"
+msgstr "Vykdoma"
+
+#. module: mrp_operations
+#: code:addons/mrp_operations/mrp_operations.py:438
+#, python-format
+msgid ""
+"In order to Finish the operation, it must be in the Start or Resume state!"
+msgstr ""
+
+#. module: mrp_operations
+#: code:addons/mrp_operations/mrp_operations.py:429
+#, python-format
+msgid ""
+"In order to Pause the operation, it must be in the Start or Resume state!"
+msgstr ""
+
+#. module: mrp_operations
+#: code:addons/mrp_operations/mrp_operations.py:433
+#, python-format
+msgid "In order to Resume the operation, it must be in the Pause state!"
+msgstr ""
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_workcenter_form_view_inherit
+msgid "Information"
+msgstr "Informacija"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation___last_update
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_code___last_update
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_workorder___last_update
+msgid "Last Modified on"
+msgstr "Paskutinį kartą keista"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_code_write_uid
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_write_uid
+msgid "Last Updated by"
+msgstr "Paskutinį kartą atnaujino"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_code_write_date
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_write_date
+msgid "Last Updated on"
+msgstr "Paskutinį kartą atnaujinta"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.view_mrp_production_workcenter_form_view_filter
+msgid "Late"
+msgstr "Pavėluota"
+
+#. module: mrp_operations
+#: model:ir.model,name:mrp_operations.model_mrp_production
+msgid "Manufacturing Order"
+msgstr "Gamybos užsakymas"
+
+#. module: mrp_operations
+#: code:addons/mrp_operations/mrp_operations.py:105
+#, python-format
+msgid "Manufacturing order cannot be started in state \"%s\"!"
+msgstr ""
+
+#. module: mrp_operations
+#: code:addons/mrp_operations/mrp_operations.py:445
+#, python-format
+msgid "No operation to cancel."
+msgstr ""
+
+#. module: mrp_operations
+#: model:ir.actions.act_window,name:mrp_operations.mrp_production_code_action
+msgid "Operation Codes"
+msgstr ""
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_code_name
+msgid "Operation Name"
+msgstr "Operacijos pavadinimas"
+
+#. module: mrp_operations
+#: code:addons/mrp_operations/mrp_operations.py:425
+#, python-format
+msgid ""
+"Operation has already started! You can either Pause/Finish/Cancel the "
+"operation."
+msgstr ""
+
+#. module: mrp_operations
+#: code:addons/mrp_operations/mrp_operations.py:441
+#, python-format
+msgid "Operation is Already Cancelled!"
+msgstr ""
+
+#. module: mrp_operations
+#: code:addons/mrp_operations/mrp_operations.py:448
+#, python-format
+msgid "Operation is already finished!"
+msgstr ""
+
+#. module: mrp_operations
+#: code:addons/mrp_operations/mrp_operations.py:418
+#, python-format
+msgid "Operation is not started yet!"
+msgstr ""
+
+#. module: mrp_operations
+#: model:ir.actions.act_window,name:mrp_operations.mrp_production_operation_action
+#: model:ir.ui.view,arch_db:mrp_operations.workcenter_line_calendar
+#: model:ir.ui.view,arch_db:mrp_operations.workcenter_line_gantt
+msgid "Operations"
+msgstr "Operacija"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_order_date
+msgid "Order Date"
+msgstr "Užsakymo data"
+
+#. module: mrp_operations
+#: selection:mrp.workorder,state:0
+#: selection:mrp_operations.operation.code,start_stop:0
+msgid "Pause"
+msgstr "Pauzė"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_form_inherit_view
+msgid "Pause Work Order"
+msgstr ""
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_form_inherit_view
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_form_inherit_view2
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_workcenter_form_view_inherit
+#: model:ir.ui.view,arch_db:mrp_operations.view_mrp_production_workcenter_form_view_filter
+#: selection:mrp.production.workcenter.line,state:0
+msgid "Pending"
+msgstr "Laukianti"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_workcenter_form_view_inherit
+msgid "Planned Date"
+msgstr "Suplanuota data"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.view_report_mrp_workorder_filter
+msgid "Planned Month"
+msgstr ""
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_production_workcenter_line_product
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_workorder_product_id
+#: model:ir.ui.view,arch_db:mrp_operations.view_report_mrp_workorder_filter
+msgid "Product"
+msgstr "Produktas"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_workorder_category_id
+msgid "Product Category"
+msgstr "Produkto kategorija"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_workorder_product_qty
+msgid "Product Qty"
+msgstr "Produkto kiekis"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_workorder_product_tmpl_id
+msgid "Product Template"
+msgstr "Produkto šablonas"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_workcenter_form_view_inherit
+msgid "Product to Produce"
+msgstr ""
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_production_id
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_workorder_production_id
+#: model:ir.ui.view,arch_db:mrp_operations.view_mrp_production_workcenter_form_view_filter
+#: model:ir.ui.view,arch_db:mrp_operations.view_report_mrp_workorder_filter
+msgid "Production"
+msgstr "Gamyba"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_operation_tree_view
+msgid "Production Operation"
+msgstr ""
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_code_form_view
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_code_tree_view
+msgid "Production Operation Code"
+msgstr ""
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_production_workcenter_line_production_state
+msgid "Production Status"
+msgstr ""
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_workcenter_form_view_inherit
+msgid "Production Workcenter"
+msgstr "Gamybos darbo centras"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.view_mrp_production_workcenter_form_view_filter
+msgid "Production started late"
+msgstr "Pavėluotai pradėta gamyba"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_production_workcenter_line_qty
+msgid "Qty"
+msgstr "Kiekis"
+
+#. module: mrp_operations
+#: model:ir.filters,name:mrp_operations.filter_mrp_workorder_quantity_produced
+msgid "Quantity Produced"
+msgstr "Pagamintas kiekis"
+
+#. module: mrp_operations
+#: selection:mrp.production.workcenter.line,production_state:0
+msgid "Ready to Produce"
+msgstr "Paruošta gamybai"
+
+#. module: mrp_operations
+#: model:ir.ui.menu,name:mrp_operations.menu_report_mrp_workorders_tree
+msgid "Reports"
+msgstr "Ataskaitos"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_workorder_user_id
+msgid "Responsible"
+msgstr "Atsakingas asmuo"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_form_inherit_view
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_form_inherit_view2
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_workcenter_form_view_inherit
+#: selection:mrp_operations.operation.code,start_stop:0
+msgid "Resume"
+msgstr "Gyvenimo aprašymas"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_form_inherit_view
+msgid "Resume Work Order"
+msgstr ""
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_workorder_routing_id
+msgid "Routing"
+msgstr "Technologinė kortelė"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_production_workcenter_line_date_planned
+msgid "Scheduled Date"
+msgstr "Suplanuota data"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.view_mrp_production_workcenter_form_view_filter
+msgid "Scheduled Date by Month"
+msgstr "Suplanuota data pagal mėnesį"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.view_mrp_production_workcenter_form_view_filter
+msgid "Scheduled Month"
+msgstr "Suplanuotas mėnuo"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.view_report_mrp_workorder_filter
+msgid "Search"
+msgstr "Paieška"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.view_mrp_production_workcenter_form_view_filter
+msgid "Search Work Orders"
+msgstr "Ieškoti darbo užsakymų"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_form_inherit_view
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_form_inherit_view2
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_workcenter_form_view_inherit
+msgid "Set Draft"
+msgstr ""
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_form_inherit_view
+msgid "Set to Draft"
+msgstr "Atstatyti į juodraštį"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_form_inherit_view
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_form_inherit_view2
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_workcenter_form_view_inherit
+#: selection:mrp_operations.operation.code,start_stop:0
+msgid "Start"
+msgstr "Pradėti"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_date_start
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_production_workcenter_line_date_start
+msgid "Start Date"
+msgstr "Pradžios data"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_form_inherit_view
+msgid "Start Working"
+msgstr "Pradėti dirbti"
+
+#. module: mrp_operations
+#: model:ir.ui.view,arch_db:mrp_operations.view_report_mrp_workorder_filter
+msgid "Started"
+msgstr "Pradėta"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_code_start_stop
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_production_workcenter_line_state
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_workorder_state
+#: model:ir.ui.view,arch_db:mrp_operations.view_mrp_production_workcenter_form_view_filter
+#: model:ir.ui.view,arch_db:mrp_operations.view_report_mrp_workorder_filter
+msgid "Status"
+msgstr "Būsena"
+
+#. module: mrp_operations
+#: model:ir.model,name:mrp_operations.model_stock_move
+msgid "Stock Move"
+msgstr "Atsargų perkėlimas"
+
+#. module: mrp_operations
+#: model:ir.model.fields,help:mrp_operations.field_mrp_production_workcenter_line_delay
+msgid "The elapsed time between operation start and stop in this Work Center"
+msgstr ""
+
+#. module: mrp_operations
+#: model:ir.actions.act_window,help:mrp_operations.mrp_production_wc_action_planning
+msgid ""
+"To manufacture or assemble products, and use raw materials and\n"
+"            finished products you must also handle manufacturing operations.\n"
+"            Manufacturing operations are often called Work Orders. The various\n"
+"            operations will have different impacts on the costs of\n"
+"            manufacturing and planning depending on the available workload."
+msgstr "Produktų gaminimui, surinkimui, žaliavų ir nebaigtų produktų\nnaudojimui taip pat turite tvarkyti gaminimo operacijas. Gaminimo\noperacijos dažnai vadinamos darbo užsakymais. Įvairios operacijos\nturės skirtingą įtaką gaminimo kaštams ir planavimui, priklausomai\nnuo galimos darbo apkrovos."
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_workorder_total_cycles
+msgid "Total Cycles"
+msgstr "Iš viso ciklų"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_workorder_total_hours
+msgid "Total Hours"
+msgstr "Iš viso valandų"
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_production_workcenter_line_uom
+msgid "Unit of Measure"
+msgstr "Matavimo vienetas"
+
+#. module: mrp_operations
+#: selection:mrp.production.workcenter.line,production_state:0
+msgid "Waiting Goods"
+msgstr ""
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_operations_operation_workcenter_id
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_workorder_workcenter_id
+#: model:ir.ui.view,arch_db:mrp_operations.view_mrp_production_workcenter_form_view_filter
+#: model:ir.ui.view,arch_db:mrp_operations.view_report_mrp_workorder_filter
+msgid "Work Center"
+msgstr "Darbo centras"
+
+#. module: mrp_operations
+#: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_resource_planning
+msgid "Work Centers"
+msgstr "Darbo centrai"
+
+#. module: mrp_operations
+#: model:ir.actions.report.xml,name:mrp_operations.report_wc_barcode
+msgid "Work Centers Barcode"
+msgstr ""
+
+#. module: mrp_operations
+#: model:ir.actions.act_window,name:mrp_operations.action_report_mrp_workorder
+#: model:ir.model,name:mrp_operations.model_mrp_production_workcenter_line
+msgid "Work Order"
+msgstr "Užduoties pavadinimas"
+
+#. module: mrp_operations
+#: model:ir.model,name:mrp_operations.model_mrp_workorder
+msgid "Work Order Report"
+msgstr ""
+
+#. module: mrp_operations
+#: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_action_form
+#: model:ir.ui.menu,name:mrp_operations.menu_mrp_production_wc_order
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_workcenter_form_view_inherit
+#: model:ir.ui.view,arch_db:mrp_operations.mrp_production_workcenter_tree_view_inherit
+#: model:ir.ui.view,arch_db:mrp_operations.view_mrp_production_workcenter_form_view_filter
+#: model:ir.ui.view,arch_db:mrp_operations.view_report_mrp_workorder_graph
+#: model:ir.ui.view,arch_db:mrp_operations.view_report_mrp_workorder_pivot
+msgid "Work Orders"
+msgstr "Darbų seka"
+
+#. module: mrp_operations
+#: model:ir.ui.menu,name:mrp_operations.menu_mrp_production_wc_action_planning
+msgid "Work Orders By Resource"
+msgstr ""
+
+#. module: mrp_operations
+#: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_action_planning
+msgid "Work Orders Planning"
+msgstr "Darbų užsakymų planavimas"
+
+#. module: mrp_operations
+#: model:ir.actions.act_window,help:mrp_operations.mrp_production_wc_action_form
+msgid ""
+"Work Orders is the list of operations to be performed for each\n"
+"            manufacturing order. Once you start the first work order of a\n"
+"            manufacturing order, the manufacturing order is automatically\n"
+"            marked as started. Once you finish the latest operation of a\n"
+"            manufacturing order, the MO is automatically done and the related\n"
+"            products are produced."
+msgstr ""
+
+#. module: mrp_operations
+#: model:ir.model.fields,field_description:mrp_operations.field_mrp_production_workcenter_line_delay
+msgid "Working Hours"
+msgstr "Darbo valandos"
+
+#. module: mrp_operations
+#: model:ir.filters,name:mrp_operations.filter_mrp_workorder_workload
+msgid "Workload"
+msgstr "Darbo krūvis"
+
+#. module: mrp_operations
+#: model:ir.model,name:mrp_operations.model_mrp_operations_operation
+msgid "mrp_operations.operation"
+msgstr ""
+
+#. module: mrp_operations
+#: model:ir.model,name:mrp_operations.model_mrp_operations_operation_code
+msgid "mrp_operations.operation.code"
+msgstr ""

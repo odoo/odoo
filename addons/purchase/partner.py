@@ -19,7 +19,8 @@ class res_partner(models.Model):
     def _commercial_fields(self):
         return super(res_partner, self)._commercial_fields()
 
-    property_purchase_currency_id = fields.Many2one('res.currency', string="Supplier Currency",\
-      help="This currency will be used, instead of the default one, for purchases from the current partner")
+    property_purchase_currency_id = fields.Many2one(
+        'res.currency', string="Supplier Currency", company_dependent=True,
+        help="This currency will be used, instead of the default one, for purchases from the current partner")
     purchase_order_count = fields.Integer(compute='_purchase_invoice_count', string='# of Purchase Order')
     supplier_invoice_count = fields.Integer(compute='_purchase_invoice_count', string='# Vendor Bills')

@@ -20,7 +20,7 @@ Tour.register({
     id:   'rte',
     name: "Test RTE",
     mode: 'test',
-    path: '/web_editor/field/html?callback=FieldTextHtml_0&enable_editor=1&datarecord=%7B%7D',
+    path: '/web_editor/field/html?debug&callback=FieldTextHtml_0&enable_editor=1&datarecord=%7B%7D',
     steps: [
         {
             title:     "Change html for this test",
@@ -132,7 +132,7 @@ Tour.register({
         },
         {
             waitFor:   '#editable_area > section .row > div:first:has( font:last:containsExact(Bat) )',
-            element:   '.note-air-popover button[data-event="undo"]',
+            element:   '.note-image-popover button[data-event="undo"]',
             title:     "undo",
         },
         {
@@ -387,6 +387,51 @@ Tour.register({
         {
             waitFor:   '#wrapwrap img:eq(2)[style*="float:right"]',
             title:     "check the second font class to css",
+        },
+    ]
+});
+
+
+Tour.register({
+    id:   'rte_backend_inline',
+    name: "Test RTE in backend view",
+    mode: 'test',
+    steps: [
+        {
+            title:      "Beginning test",
+        },
+        {
+            title:     "Click on edit button",
+            element:   '.o_form_button_edit, .oe_form_button_edit',
+        },
+        {
+            title:     "Add text to inline html field and save",
+            element:   '.o_form_button_save, .oe_form_button_save',
+            onload: function(){
+                $('.oe_form_field_html_text .note-editable > p').append('<i>world</i>');
+            },
+        },
+        {
+            title:      "Verify saved data after edition then click on edit button",
+            waitFor:    '.oe_form_field_html_text p > i:last-child:contains(world)',
+            element:    '.o_form_button_edit, .oe_form_button_edit',
+        },
+        {
+            title:      "Switch to code view mode",
+            element:    'button[data-event="codeview"]',
+        },
+        {
+            title:      "Modify code view content and save",
+            element:   '.o_form_button_save, .oe_form_button_save',
+            onload: function(){
+                $('.oe_form_field_html_text textarea.note-codable').val(function(_, val){
+                    return val.replace('</p>', '<u>!</u></p>');
+                });
+            },
+        },
+        {
+            title:      "Verify saved data after code view edition",
+            waitFor:    '.oe_form_field_html_text p > u:last-child:contains(!)',
         },
     ]
 });

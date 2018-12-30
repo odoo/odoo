@@ -18,7 +18,7 @@
   Create an incoming picking for this product of 300 PCE from suppliers to stock
 - 
   !record {model: stock.picking, id: pick_neg}:
-    name: Incoming picking
+    name: Incoming picking (negative product)
     partner_id: base.res_partner_2
     picking_type_id: picking_type_in
     move_lines:
@@ -59,7 +59,7 @@
   Make a delivery order of 300 pieces to the customer
 - 
   !record {model: stock.picking, id: delivery_order_neg}:
-    name: outgoing picking
+    name: outgoing picking (negative product)
     partner_id: base.res_partner_4
     picking_type_id: stock.picking_type_out
     move_lines:

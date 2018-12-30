@@ -3,14 +3,16 @@
 # * auth_signup
 # 
 # Translators:
-# Kris Krnacs, 2015
+# krnkris, 2015-2016
+# krnkris, 2016
+# Oregional <geza.nagy@oregional.hu>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-14 10:27+0000\n"
-"PO-Revision-Date: 2015-09-19 22:00+0000\n"
-"Last-Translator: Kris Krnacs\n"
+"POT-Creation-Date: 2016-09-22 13:16+0000\n"
+"PO-Revision-Date: 2016-09-23 13:51+0000\n"
+"Last-Translator: krnkris\n"
 "Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -81,16 +83,22 @@ msgstr "<strong>Egy meghívó e-mail-t küldtünk a következő feliratkozási l
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_base_config_settings_auth_signup_uninvited
 msgid "Allow external users to sign up"
-msgstr "Külső felhasználók bejelentkezésének engedéjezése"
+msgstr "Külső felhasználók bejelentkezésének engedélyezése"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:60
+#: code:addons/auth_signup/controllers/main.py:64
 #, python-format
 msgid "An email has been sent with credentials to reset your password"
 msgstr "Egy e-mail lett kiküldve a jelszava visszaállításának biztosítására"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:108
+#: code:addons/auth_signup/controllers/main.py:40
+#, python-format
+msgid "Another user is already registered using this email address."
+msgstr "Ezzel az email címmel már regisztrált egy másik felhasználó."
+
+#. module: auth_signup
+#: code:addons/auth_signup/controllers/main.py:115
 #, python-format
 msgid "Authentication Failed."
 msgstr "Azonosítás nem sikerült"
@@ -123,7 +131,13 @@ msgid "Connected"
 msgstr "Kapcsolódott"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:62
+#: code:addons/auth_signup/controllers/main.py:43
+#, python-format
+msgid "Could not create a new account."
+msgstr "Nem tudta létrehozni az új fiókot."
+
+#. module: auth_signup
+#: code:addons/auth_signup/controllers/main.py:66
 #, python-format
 msgid "Could not reset your password"
 msgstr "Nem lehetett visszaállítani a jelszaát"
@@ -136,7 +150,7 @@ msgstr "Jelszóváltoztató engedélyezése a belépési oldalról"
 #. module: auth_signup
 #: model:ir.model.fields,help:auth_signup.field_base_config_settings_auth_signup_uninvited
 msgid "If unchecked, only invited users may sign up."
-msgstr "He nincs bejelölve, vsak maghívott felhasználók jelentkezhetnek be."
+msgstr "Ha nincs bejelölve, csak meghívott felhasználók jelentkezhetnek be."
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:91
@@ -175,7 +189,7 @@ msgid "Reset Password"
 msgstr "Jelszó visszaállítása"
 
 #. module: auth_signup
-#: code:addons/auth_signup/res_users.py:250
+#: code:addons/auth_signup/res_users.py:253
 #, python-format
 msgid "Reset password: invalid username or email"
 msgstr "Jelszó visszaállító: hibás felhasználónév vagy jelszó"
@@ -264,7 +278,7 @@ msgstr "Honlap partnerek részletes leírása"
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_website_short_description
 msgid "Website Partner Short Description"
-msgstr "Honlap partnerek rövid leírása"
+msgstr "Honlap partner rövid leírása"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_website_url

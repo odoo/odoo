@@ -5,7 +5,7 @@
 {
     'name': 'Create Tasks from SO',
     'version': '1.0',
-    'category': 'Project Management',
+    'category': 'Project',
     'description': """
 Automatically creates project tasks from procurement lines.
 ===========================================================

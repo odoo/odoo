@@ -405,6 +405,35 @@ class TestResource(TestResourceCommon):
             default_interval=(8, 16), context=context)
         self.assertEqual(res, 32.0, 'resource_calendar: wrong get_working_hours computation')
 
+        self.att0_0_id = self.resource_attendance.create(
+            cr, uid, {
+                'name': 'Att0',
+                'dayofweek': '0',
+                'hour_from': 7.5,
+                'hour_to': 12.5,
+                'calendar_id': self.calendar_id,
+            }, context=context
+        )
+        self.att0_1_id = self.resource_attendance.create(
+            cr, uid, {
+                'name': 'Att0',
+                'dayofweek': '0',
+                'hour_from': 13,
+                'hour_to': 14,
+                'calendar_id': self.calendar_id,
+            }, context=context
+        )
+        date1 = datetime.strptime('2013-02-11 07:30:00', '%Y-%m-%d %H:%M:%S')
+        date2 = datetime.strptime('2013-02-11 14:00:00', '%Y-%m-%d %H:%M:%S')
+        res = self.resource_calendar.get_working_hours(
+            cr, uid, self.calendar_id,
+            date1,
+            date2,
+            compute_leaves=False, resource_id=self.resource1_id, context=context)
+        # 7h30 -> 12h30 = 5 / 13h -> 14h = 1 / -> 6h
+        self.assertEqual(res, 6, 'resource_calendar: wrong get_working_hours computation')
+
+
     def test_50_calendar_schedule_days(self):
         """ Testing calendar days scheduling """
         cr, uid = self.cr, self.uid

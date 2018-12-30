@@ -24,6 +24,11 @@
             LLL : "D MMMM YYYY [pukul] LT",
             LLLL : "dddd, D MMMM YYYY [pukul] LT"
         },
+        meridiemParse: /pagi|tengahari|petang|malam/,
+        isPM: function (input) {
+            // TODO: This is wrong.
+            return /^(tengahari|petang|malam)$/.test(input);
+        },
         meridiem : function (hours, minutes, isLower) {
             if (hours < 11) {
                 return 'pagi';

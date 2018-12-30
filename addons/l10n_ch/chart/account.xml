@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <menuitem id="account_reports_ch_statements_menu" name="Swiss Statements" parent="account.menu_finance_reports" sequence="3" groups="account.group_account_user"/>
-    
+
     <data noupdate="1">
         <record id="action_client_l10n_ch_menu" model="ir.actions.client">
             <field name="name">Open Account Dashboard Menu</field>
@@ -15,7 +15,7 @@
          <!-- Account Tags -->
 
         <record id="transfer_account_id" model="account.account.template">
-            <field name="code">101</field>
+            <field name="code">1090</field>
             <field name="name">Transferts internes</field>
             <field name="user_type_id" ref="account.data_account_type_current_assets"/>
             <field eval="True" name="reconcile"/>
@@ -23,8 +23,8 @@
         <record id="l10nch_chart_template" model="account.chart.template">
             <field name="name">Plan comptable 2015</field>
             <field name="code_digits">1</field>
-            <field name="bank_account_code_prefix">1020</field>
-            <field name="cash_account_code_prefix">1000</field>
+            <field name="bank_account_code_prefix">102</field>
+            <field name="cash_account_code_prefix">100</field>
             <field name="currency_id" ref="base.CHF"/>
             <field name="transfer_account_id" ref="transfer_account_id"/>
             <field name="spoken_languages" eval="'it_IT;de_DE'"/>
@@ -45,6 +45,20 @@
             <field name="name">Ajustement de la valeur des titres</field>
             <field name="user_type_id" ref="account.data_account_type_current_assets"/>
             <field eval="False" name="reconcile"/>
+            <field name="chart_template_id" ref="l10nch_chart_template"/>
+        </record>
+        <record id="ch_coa_1091" model="account.account.template">
+            <field name="code">1091</field>
+            <field name="name">Compte d'attente pour salaires</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field eval="True" name="reconcile"/>
+            <field name="chart_template_id" ref="l10nch_chart_template"/>
+        </record>
+        <record id="ch_coa_1099" model="account.account.template">
+            <field name="code">1099</field>
+            <field name="name">Compte d'attente autre</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field eval="True" name="reconcile"/>
             <field name="chart_template_id" ref="l10nch_chart_template"/>
         </record>
         <record id="ch_coa_1100" model="account.account.template">
@@ -131,9 +145,51 @@
             <field eval="False" name="reconcile"/>
             <field name="chart_template_id" ref="l10nch_chart_template"/>
         </record>
+        <record id="ch_coa_1207" model="account.account.template">
+            <field name="code">1207</field>
+            <field name="name">Variation des stocks de marchandises</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field eval="False" name="reconcile"/>
+            <field name="chart_template_id" ref="l10nch_chart_template"/>
+        </record>
+        <record id="ch_coa_1208" model="account.account.template">
+            <field name="code">1208</field>
+            <field name="name">Acomptes sur les marchandises commerciales</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field eval="False" name="reconcile"/>
+            <field name="chart_template_id" ref="l10nch_chart_template"/>
+        </record>
+        <record id="ch_coa_1209" model="account.account.template">
+            <field name="code">1209</field>
+            <field name="name">Corrections de la valeur des stocks de marchandises</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field eval="False" name="reconcile"/>
+            <field name="chart_template_id" ref="l10nch_chart_template"/>
+        </record>
         <record id="ch_coa_1210" model="account.account.template">
             <field name="code">1210</field>
             <field name="name">Matières premières</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field eval="False" name="reconcile"/>
+            <field name="chart_template_id" ref="l10nch_chart_template"/>
+        </record>
+        <record id="ch_coa_1217" model="account.account.template">
+            <field name="code">1217</field>
+            <field name="name">Variation des stocks des matières premières</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field eval="False" name="reconcile"/>
+            <field name="chart_template_id" ref="l10nch_chart_template"/>
+        </record>
+        <record id="ch_coa_1218" model="account.account.template">
+            <field name="code">1218</field>
+            <field name="name">Acomptes sur matières premières</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field eval="False" name="reconcile"/>
+            <field name="chart_template_id" ref="l10nch_chart_template"/>
+        </record>
+        <record id="ch_coa_1219" model="account.account.template">
+            <field name="code">1219</field>
+            <field name="name">Corrections de la valeur sur matières premières</field>
             <field name="user_type_id" ref="account.data_account_type_current_assets"/>
             <field eval="False" name="reconcile"/>
             <field name="chart_template_id" ref="l10nch_chart_template"/>
@@ -166,16 +222,58 @@
             <field eval="False" name="reconcile"/>
             <field name="chart_template_id" ref="l10nch_chart_template"/>
         </record>
+        <record id="ch_coa_1267" model="account.account.template">
+            <field name="code">1267</field>
+            <field name="name">Variation de stocks de produits finis</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field eval="False" name="reconcile"/>
+            <field name="chart_template_id" ref="l10nch_chart_template"/>
+        </record>
+        <record id="ch_coa_1269" model="account.account.template">
+            <field name="code">1269</field>
+            <field name="name">Correction de la valeur de stocks de produits finis</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field eval="False" name="reconcile"/>
+            <field name="chart_template_id" ref="l10nch_chart_template"/>
+        </record>
         <record id="ch_coa_1270" model="account.account.template">
             <field name="code">1270</field>
-            <field name="name">Travaux en cours</field>
+            <field name="name">Stocks de produits semi-ouvrés</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field eval="False" name="reconcile"/>
+            <field name="chart_template_id" ref="l10nch_chart_template"/>
+        </record>
+        <record id="ch_coa_1277" model="account.account.template">
+            <field name="code">1277</field>
+            <field name="name">Variation de stock produits semi-ouvrés</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field eval="False" name="reconcile"/>
+            <field name="chart_template_id" ref="l10nch_chart_template"/>
+        </record>
+        <record id="ch_coa_1279" model="account.account.template">
+            <field name="code">1279</field>
+            <field name="name">Corrections de la valeur des stock produits semi-ouvrés</field>
             <field name="user_type_id" ref="account.data_account_type_current_assets"/>
             <field eval="False" name="reconcile"/>
             <field name="chart_template_id" ref="l10nch_chart_template"/>
         </record>
         <record id="ch_coa_1280" model="account.account.template">
             <field name="code">1280</field>
-            <field name="name">Prestations de services non facturées</field>
+            <field name="name">Travaux en cours</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field eval="False" name="reconcile"/>
+            <field name="chart_template_id" ref="l10nch_chart_template"/>
+        </record>
+        <record id="ch_coa_1287" model="account.account.template">
+            <field name="code">1287</field>
+            <field name="name">Variation de la valeur des travaux en cours</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field eval="False" name="reconcile"/>
+            <field name="chart_template_id" ref="l10nch_chart_template"/>
+        </record>
+        <record id="ch_coa_1289" model="account.account.template">
+            <field name="code">1289</field>
+            <field name="name">Corrections de la valeur des travaux en cours</field>
             <field name="user_type_id" ref="account.data_account_type_current_assets"/>
             <field eval="False" name="reconcile"/>
             <field name="chart_template_id" ref="l10nch_chart_template"/>
@@ -252,7 +350,7 @@
         </record>
         <record id="ch_coa_1509" model="account.account.template">
             <field name="code">1509</field>
-            <field name="name">Ajustement de la valeur des machines et appareils</field>
+            <field name="name">Amortissements sur les machines et appareils</field>
             <field name="user_type_id" ref="account.data_account_type_current_assets"/>
             <field eval="False" name="reconcile"/>
             <field name="chart_template_id" ref="l10nch_chart_template"/>
@@ -266,7 +364,7 @@
         </record>
         <record id="ch_coa_1519" model="account.account.template">
             <field name="code">1519</field>
-            <field name="name">Ajustement de la valeur du mobilier et des installations</field>
+            <field name="name">Amortissements sur le mobilier et les installations</field>
             <field name="user_type_id" ref="account.data_account_type_current_assets"/>
             <field eval="False" name="reconcile"/>
             <field name="chart_template_id" ref="l10nch_chart_template"/>
@@ -280,7 +378,7 @@
         </record>
         <record id="ch_coa_1529" model="account.account.template">
             <field name="code">1529</field>
-            <field name="name">Ajustement de la valeur des machines de bureau, inf. et syst. comm.</field>
+            <field name="name">Amortissements sur les machines de bureau, inf. et syst. comm.</field>
             <field name="user_type_id" ref="account.data_account_type_current_assets"/>
             <field eval="False" name="reconcile"/>
             <field name="chart_template_id" ref="l10nch_chart_template"/>
@@ -294,7 +392,7 @@
         </record>
         <record id="ch_coa_1539" model="account.account.template">
             <field name="code">1539</field>
-            <field name="name">Ajustement de la valeur des véhicules</field>
+            <field name="name">Amortissements sur les véhicules</field>
             <field name="user_type_id" ref="account.data_account_type_current_assets"/>
             <field eval="False" name="reconcile"/>
             <field name="chart_template_id" ref="l10nch_chart_template"/>
@@ -308,7 +406,49 @@
         </record>
         <record id="ch_coa_1549" model="account.account.template">
             <field name="code">1549</field>
-            <field name="name">Ajustement de la valeur des outillages et appareils</field>
+            <field name="name">Amortissements sur les outillages et appareils</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field eval="False" name="reconcile"/>
+            <field name="chart_template_id" ref="l10nch_chart_template"/>
+        </record>
+        <record id="ch_coa_1550" model="account.account.template">
+            <field name="code">1550</field>
+            <field name="name">Installations de stockage</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field eval="False" name="reconcile"/>
+            <field name="chart_template_id" ref="l10nch_chart_template"/>
+        </record>
+        <record id="ch_coa_1559" model="account.account.template">
+            <field name="code">1559</field>
+            <field name="name">Amortissements sur les installations de stockage</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field eval="False" name="reconcile"/>
+            <field name="chart_template_id" ref="l10nch_chart_template"/>
+        </record>
+        <record id="ch_coa_1570" model="account.account.template">
+            <field name="code">1570</field>
+            <field name="name">Equipements et Installations</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field eval="False" name="reconcile"/>
+            <field name="chart_template_id" ref="l10nch_chart_template"/>
+        </record>
+        <record id="ch_coa_1579" model="account.account.template">
+            <field name="code">1579</field>
+            <field name="name">Amortissements sur les équipements et installations</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field eval="False" name="reconcile"/>
+            <field name="chart_template_id" ref="l10nch_chart_template"/>
+        </record>
+        <record id="ch_coa_1590" model="account.account.template">
+            <field name="code">1590</field>
+            <field name="name">Autres immobilisations corporelles meubles</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field eval="False" name="reconcile"/>
+            <field name="chart_template_id" ref="l10nch_chart_template"/>
+        </record>
+        <record id="ch_coa_1599" model="account.account.template">
+            <field name="code">1599</field>
+            <field name="name">Amortissements sur les autres immobilisations corporelles meubles</field>
             <field name="user_type_id" ref="account.data_account_type_current_assets"/>
             <field eval="False" name="reconcile"/>
             <field name="chart_template_id" ref="l10nch_chart_template"/>
@@ -322,7 +462,7 @@
         </record>
         <record id="ch_coa_1609" model="account.account.template">
             <field name="code">1609</field>
-            <field name="name">Ajustement de la valeur des immeubles d’exploitation</field>
+            <field name="name">Amortissements sur les immeubles d’exploitation</field>
             <field name="user_type_id" ref="account.data_account_type_current_assets"/>
             <field eval="False" name="reconcile"/>
             <field name="chart_template_id" ref="l10nch_chart_template"/>
@@ -336,7 +476,7 @@
         </record>
         <record id="ch_coa_1709" model="account.account.template">
             <field name="code">1709</field>
-            <field name="name">Ajustement de la valeur des brevets, know-how, licences, droits, dév.</field>
+            <field name="name">Amortissements sur les brevets, know-how, licences, droits, dév.</field>
             <field name="user_type_id" ref="account.data_account_type_current_assets"/>
             <field eval="False" name="reconcile"/>
             <field name="chart_template_id" ref="l10nch_chart_template"/>
@@ -393,6 +533,13 @@
         <record id="ch_coa_2140" model="account.account.template">
             <field name="code">2140</field>
             <field name="name">Autres dettes à court terme rémunérées</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field eval="False" name="reconcile"/>
+            <field name="chart_template_id" ref="l10nch_chart_template"/>
+        </record>
+        <record id="ch_coa_2160" model="account.account.template">
+            <field name="code">2160</field>
+            <field name="name">Dettes envers l'actionnaire</field>
             <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
             <field eval="False" name="reconcile"/>
             <field name="chart_template_id" ref="l10nch_chart_template"/>
@@ -586,6 +733,13 @@
             <field eval="False" name="reconcile"/>
             <field name="chart_template_id" ref="l10nch_chart_template"/>
         </record>
+        <record id="ch_coa_3009" model="account.account.template">
+            <field name="code">3009</field>
+            <field name="name">Déductions sur ventes</field>
+            <field name="user_type_id" ref="account.data_account_type_revenue"/>
+            <field eval="False" name="reconcile"/>
+            <field name="chart_template_id" ref="l10nch_chart_template"/>
+        </record>
         <record id="ch_coa_3200" model="account.account.template">
             <field name="code">3200</field>
             <field name="name">Ventes de marchandises</field>
@@ -623,18 +777,61 @@
         </record>
         <record id="ch_coa_3800" model="account.account.template">
             <field name="code">3800</field>
-            <field name="name">Déductions sur ventes</field>
+            <field name="name">Escomptes</field>
+            <field name="user_type_id" ref="account.data_account_type_revenue"/>
+            <field eval="False" name="reconcile"/>
+            <field name="chart_template_id" ref="l10nch_chart_template"/>
+        </record>
+        <record id="ch_coa_3801" model="account.account.template">
+            <field name="code">3801</field>
+            <field name="name">Rabais et réduction de prix</field>
+            <field name="user_type_id" ref="account.data_account_type_revenue"/>
+            <field eval="False" name="reconcile"/>
+            <field name="chart_template_id" ref="l10nch_chart_template"/>
+        </record>
+        <record id="ch_coa_3802" model="account.account.template">
+            <field name="code">3802</field>
+            <field name="name">Ristournes</field>
+            <field name="user_type_id" ref="account.data_account_type_revenue"/>
+            <field eval="False" name="reconcile"/>
+            <field name="chart_template_id" ref="l10nch_chart_template"/>
+        </record>
+        <record id="ch_coa_3803" model="account.account.template">
+            <field name="code">3803</field>
+            <field name="name">Commissions de tiers</field>
+            <field name="user_type_id" ref="account.data_account_type_revenue"/>
+            <field eval="False" name="reconcile"/>
+            <field name="chart_template_id" ref="l10nch_chart_template"/>
+        </record>
+        <record id="ch_coa_3804" model="account.account.template">
+            <field name="code">3804</field>
+            <field name="name">Frais d'encaissement</field>
             <field name="user_type_id" ref="account.data_account_type_revenue"/>
             <field eval="False" name="reconcile"/>
             <field name="chart_template_id" ref="l10nch_chart_template"/>
         </record>
         <record id="ch_coa_3805" model="account.account.template">
             <field name="code">3805</field>
-            <field name="name">Pertes sur clients, variation du ducroire</field>
+            <field name="name">Pertes sur créances clients, variation ducroire</field>
             <field name="user_type_id" ref="account.data_account_type_revenue"/>
             <field eval="False" name="reconcile"/>
             <field name="chart_template_id" ref="l10nch_chart_template"/>
         </record>
+        <record id="ch_coa_3806" model="account.account.template">
+            <field name="code">3806</field>
+            <field name="name">Différences de change</field>
+            <field name="user_type_id" ref="account.data_account_type_revenue"/>
+            <field eval="False" name="reconcile"/>
+            <field name="chart_template_id" ref="l10nch_chart_template"/>
+        </record>
+        <record id="ch_coa_3807" model="account.account.template">
+            <field name="code">3807</field>
+            <field name="name">Frais d'expédition</field>
+            <field name="user_type_id" ref="account.data_account_type_revenue"/>
+            <field eval="False" name="reconcile"/>
+            <field name="chart_template_id" ref="l10nch_chart_template"/>
+        </record>
+
         <record id="ch_coa_3900" model="account.account.template">
             <field name="code">3900</field>
             <field name="name">Variation des stocks de produits semi-finis</field>
@@ -663,6 +860,55 @@
             <field eval="False" name="reconcile"/>
             <field name="chart_template_id" ref="l10nch_chart_template"/>
         </record>
+        <record id="ch_coa_4008" model="account.account.template">
+            <field name="code">4008</field>
+            <field name="name">Variations de stocks</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field eval="False" name="reconcile"/>
+            <field name="chart_template_id" ref="l10nch_chart_template"/>
+        </record>
+        <record id="ch_coa_4009" model="account.account.template">
+            <field name="code">4009</field>
+            <field name="name">Déductions obtenues sur achats</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field eval="False" name="reconcile"/>
+            <field name="chart_template_id" ref="l10nch_chart_template"/>
+        </record>
+        <record id="ch_coa_4070" model="account.account.template">
+            <field name="code">4070</field>
+            <field name="name">Frêts à l'achat</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field eval="False" name="reconcile"/>
+            <field name="chart_template_id" ref="l10nch_chart_template"/>
+        </record>
+        <record id="ch_coa_4071" model="account.account.template">
+            <field name="code">4071</field>
+            <field name="name">Droits de douanes à l'importation</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field eval="False" name="reconcile"/>
+            <field name="chart_template_id" ref="l10nch_chart_template"/>
+        </record>
+        <record id="ch_coa_4072" model="account.account.template">
+            <field name="code">4072</field>
+            <field name="name">Frais de transport à l'achat</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field eval="False" name="reconcile"/>
+            <field name="chart_template_id" ref="l10nch_chart_template"/>
+        </record>
+        <record id="ch_coa_4080" model="account.account.template">
+            <field name="code">4080</field>
+            <field name="name">Variations de stocks</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field eval="False" name="reconcile"/>
+            <field name="chart_template_id" ref="l10nch_chart_template"/>
+        </record>
+        <record id="ch_coa_4086" model="account.account.template">
+            <field name="code">4086</field>
+            <field name="name">Pertes de matières</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field eval="False" name="reconcile"/>
+            <field name="chart_template_id" ref="l10nch_chart_template"/>
+        </record>
         <record id="ch_coa_4200" model="account.account.template">
             <field name="code">4200</field>
             <field name="name">Achats de marchandises destinées à la revente</field>
@@ -679,7 +925,56 @@
         </record>
         <record id="ch_coa_4500" model="account.account.template">
             <field name="code">4500</field>
-            <field name="name">Charges d‘énergie pour l‘exploitation</field>
+            <field name="name">Electricité</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field eval="False" name="reconcile"/>
+            <field name="chart_template_id" ref="l10nch_chart_template"/>
+        </record>
+        <record id="ch_coa_4510" model="account.account.template">
+            <field name="code">4510</field>
+            <field name="name">Gaz</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field eval="False" name="reconcile"/>
+            <field name="chart_template_id" ref="l10nch_chart_template"/>
+        </record>
+        <record id="ch_coa_4520" model="account.account.template">
+            <field name="code">4520</field>
+            <field name="name">Mazout</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field eval="False" name="reconcile"/>
+            <field name="chart_template_id" ref="l10nch_chart_template"/>
+        </record>
+        <record id="ch_coa_4521" model="account.account.template">
+            <field name="code">4521</field>
+            <field name="name">Charbon, briquettes, bois</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field eval="False" name="reconcile"/>
+            <field name="chart_template_id" ref="l10nch_chart_template"/>
+        </record>
+        <record id="ch_coa_4530" model="account.account.template">
+            <field name="code">4530</field>
+            <field name="name">Essence</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field eval="False" name="reconcile"/>
+            <field name="chart_template_id" ref="l10nch_chart_template"/>
+        </record>
+        <record id="ch_coa_4540" model="account.account.template">
+            <field name="code">4540</field>
+            <field name="name">Eau</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field eval="False" name="reconcile"/>
+            <field name="chart_template_id" ref="l10nch_chart_template"/>
+        </record>
+        <record id="ch_coa_4800" model="account.account.template">
+            <field name="code">4800</field>
+            <field name="name">Variation des stocks de marchandises</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field eval="False" name="reconcile"/>
+            <field name="chart_template_id" ref="l10nch_chart_template"/>
+        </record>
+        <record id="ch_coa_4801" model="account.account.template">
+            <field name="code">4801</field>
+            <field name="name">Variation des stocks de matières premières</field>
             <field name="user_type_id" ref="account.data_account_type_expenses"/>
             <field eval="False" name="reconcile"/>
             <field name="chart_template_id" ref="l10nch_chart_template"/>
@@ -687,6 +982,41 @@
         <record id="ch_coa_4900" model="account.account.template">
             <field name="code">4900</field>
             <field name="name">Déductions sur les charges</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field eval="False" name="reconcile"/>
+            <field name="chart_template_id" ref="l10nch_chart_template"/>
+        </record>
+        <record id="ch_coa_4900" model="account.account.template">
+            <field name="code">4900</field>
+            <field name="name">Escomptes</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field eval="False" name="reconcile"/>
+            <field name="chart_template_id" ref="l10nch_chart_template"/>
+        </record>
+        <record id="ch_coa_4901" model="account.account.template">
+            <field name="code">4901</field>
+            <field name="name">Rabais et réductions de prix</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field eval="False" name="reconcile"/>
+            <field name="chart_template_id" ref="l10nch_chart_template"/>
+        </record>
+        <record id="ch_coa_4092" model="account.account.template">
+            <field name="code">4902</field>
+            <field name="name">Ristournes</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field eval="False" name="reconcile"/>
+            <field name="chart_template_id" ref="l10nch_chart_template"/>
+        </record>
+        <record id="ch_coa_4903" model="account.account.template">
+            <field name="code">4903</field>
+            <field name="name">Commissions obtenues sur achats</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field eval="False" name="reconcile"/>
+            <field name="chart_template_id" ref="l10nch_chart_template"/>
+        </record>
+        <record id="ch_coa_4906" model="account.account.template">
+            <field name="code">4906</field>
+            <field name="name">Différences de change</field>
             <field name="user_type_id" ref="account.data_account_type_expenses"/>
             <field eval="False" name="reconcile"/>
             <field name="chart_template_id" ref="l10nch_chart_template"/>
@@ -886,10 +1216,8 @@
             <field name="property_account_payable_id" ref="ch_coa_2000"/>
             <field name="property_account_expense_categ_id" ref="ch_coa_4200"/>
             <field name="property_account_income_categ_id" ref="ch_coa_3200"/>
-            <field name="property_account_expense_id" ref="ch_coa_4200"/>
-            <field name="property_account_income_id" ref="ch_coa_3200"/>
-            <field name="income_currency_exchange_account_id" ref="ch_coa_6950"/>
-            <field name="expense_currency_exchange_account_id" ref="ch_coa_6900"/>
+            <field name="income_currency_exchange_account_id" ref="ch_coa_3806"/>
+            <field name="expense_currency_exchange_account_id" ref="ch_coa_4906"/>
         </record>
     </data>
 </odoo>

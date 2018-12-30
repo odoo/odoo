@@ -77,7 +77,7 @@ class base_action_rule_test(common.TransactionCase):
         self.assertEqual(lead.state, 'done')
         self.assertEqual(lead.user_id, self.user_demo)
 
-    def test_04_recomputed_field(self):
+    def test_10_recomputed_field(self):
         """
         Check that a rule is executed whenever a field is recomputed after a
         change on another model.
@@ -91,3 +91,44 @@ class base_action_rule_test(common.TransactionCase):
         partner.write({'customer': True})
         self.assertTrue(lead.customer)
         self.assertEqual(lead.user_id, self.user_demo)
+
+    def test_11_recomputed_field(self):
+        """
+        Check that a rule is executed whenever a field is recomputed and the
+        context contains the target field
+        """
+        partner = self.env.ref('base.res_partner_1')
+        lead = self.create_lead(state='draft', partner_id=partner.id)
+        self.assertFalse(lead.deadline, 'There should not be a deadline defined')
+        # change priority and user; this triggers deadline recomputation, and
+        # the server action should set the boolean field to True
+        lead.write({'priority': True, 'user_id': self.user_admin.id})
+        self.assertTrue(lead.deadline, 'Deadline should be defined')
+        self.assertTrue(lead.is_assigned_to_admin, 'Lead should be assigned to admin')
+
+    def test_12_recursive(self):
+        """ Check that a rule is executed recursively by a secondary change. """
+        lead = self.create_lead(state='open')
+        self.assertEqual(lead.state, 'open')
+        self.assertEqual(lead.user_id, self.user_admin)
+        # change partner; this should trigger the rule that modifies the state
+        partner = self.env.ref('base.res_partner_1')
+        lead.write({'partner_id': partner.id})
+        self.assertEqual(lead.state, 'draft')
+
+    def test_20_direct_line(self):
+        """
+        Check that a rule is executed after creating a line record.
+        """
+        line = self.env['base.action.rule.line.test'].create({'name': "Line"})
+        self.assertEqual(line.user_id, self.user_demo)
+
+    def test_20_indirect_line(self):
+        """
+        Check that creating a lead with a line executes rules on both records.
+        """
+        lead = self.create_lead(line_ids=[(0, 0, {'name': "Line"})])
+        self.assertEqual(lead.state, 'draft')
+        self.assertEqual(lead.user_id, self.user_demo)
+        self.assertEqual(len(lead.line_ids), 1)
+        self.assertEqual(lead.line_ids.user_id, self.user_demo)

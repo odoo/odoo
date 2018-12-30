@@ -6,13 +6,7 @@
         <menuitem
             name='Payments'
             id='root_payment_menu'
-            parent='account.menu_finance_reports'/>
-
-        <!-- Payment menu in invoicing -->
-        <menuitem
-            name='Payments'
-            id='finance_payment_menu'
-            parent='account.menu_finance_reports'/>
+            parent='account.menu_finance_configuration'/>
 
         <!-- Payment acquirers -->
         <record id="payment_transaction_action_child" model="ir.actions.act_window">
@@ -231,12 +225,6 @@
             parent='root_payment_menu'
             sequence='20' />
 
-        <menuitem
-            action='action_payment_transaction'
-            id='finance_pay_tx_menu'
-            parent='finance_payment_menu'
-            sequence='20' />
-
         <!-- Payment Methods -->
         <record model='ir.ui.view' id='payment_method_tree_view'>
             <field name='name'>payment.method.tree</field>
@@ -307,11 +295,6 @@
             action='payment_method_action'
             id='payment_method_menu'
             parent='root_payment_menu'/>
-
-        <menuitem
-            action='payment_method_action'
-            id='finance_pay_method_menu'
-            parent='finance_payment_menu' />
 
     </data>
 </openerp>

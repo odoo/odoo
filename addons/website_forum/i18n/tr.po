@@ -7,9 +7,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-09 09:20+0000\n"
-"PO-Revision-Date: 2015-10-17 13:25+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"POT-Creation-Date: 2015-11-26 14:10+0000\n"
+"PO-Revision-Date: 2016-12-22 12:06+0000\n"
+"Last-Translator: Ahmet Altinisik <aaltinisik@altinkaya.com.tr>\n"
 "Language-Team: Turkish (http://www.transifex.com/odoo/odoo-9/language/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -61,7 +61,7 @@ msgstr "$ {} Object.company_id.name Forumlar doğrulama"
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
 msgid "&amp;times;"
-msgstr ""
+msgstr "&amp;times;"
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
@@ -248,7 +248,7 @@ msgid "<i class=\"text-muted\">awarded users</i>"
 msgstr ""
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:419
+#: code:addons/website_forum/models/forum.py:483
 #, python-format
 msgid ""
 "<p>A new answer for <i>%s</i> has been posted. <a "
@@ -256,7 +256,16 @@ msgid ""
 msgstr "<p><i>%s</i> için yeni bir yanıt gönderildi. Mesajı görüntülemek için<a href=\"%s/forum/%s/question/%s\">buraya tıklayın.</a></p>"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:425
+#: code:addons/website_forum/models/forum.py:499
+#, python-format
+msgid ""
+"<p>A new question <i>%s</i> has been asked on %s and require your "
+"validation. <a href=\"%s/forum/%s/question/%s\">Click here to access the "
+"question.</a></p>"
+msgstr ""
+
+#. module: website_forum
+#: code:addons/website_forum/models/forum.py:489
 #, python-format
 msgid ""
 "<p>A new question <i>%s</i> has been asked on %s. <a "
@@ -305,7 +314,7 @@ msgstr ""
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.close_post
 msgid "<span class=\"text-muted\">or</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">veya</span>"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.user_detail_full
@@ -328,7 +337,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_forum.display_post_question_block
 #: model:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "<span>By </span>"
-msgstr ""
+msgstr "<span>Tarafından </span>"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.tag
@@ -379,7 +388,7 @@ msgstr "Yanıt seçimleri"
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_message_needaction
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "Eylem Gerekiyor"
 
 #. module: website_forum
 #: selection:forum.post,state:0
@@ -1115,7 +1124,7 @@ msgstr "Tartışmalar"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote_display_name
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Adı Göster"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_user_bio
@@ -1155,22 +1164,22 @@ msgstr "Bütün Mesajları düzenlemek"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_edit_own
 msgid "Edit own posts"
-msgstr ""
+msgstr "Kendi gönderilerinizi düzenleyin"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.edit_post
 msgid "Edit reply"
-msgstr ""
+msgstr "Cevabı düzenle"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.new_link
 msgid "Edit your Link"
-msgstr ""
+msgstr "Bağlantınızı Düzenleyin"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.edit_post
 msgid "Edit your Post"
-msgstr ""
+msgstr "Gönderinizi Düzenleyin"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_7
@@ -1263,7 +1272,7 @@ msgstr ""
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_7
 msgid "First edit"
-msgstr ""
+msgstr "İlk düzenleme"
 
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_31
@@ -1307,13 +1316,13 @@ msgstr "İzleyiciler"
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_message_channel_ids
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "İzleyiciler (Kanallar)"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_message_partner_ids
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "İzleyiciler (İş ortakları)"
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
@@ -1512,7 +1521,7 @@ msgstr "Eğer işaretliyse yeni iletiler ilginizi gerektirir."
 #: model:ir.model.fields,help:website_forum.field_forum_forum_message_needaction
 #: model:ir.model.fields,help:website_forum.field_forum_post_message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "İşaretliyse, yeni mesajlar dikkatinizi gerektirir."
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum_karma_dofollow
@@ -1569,7 +1578,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_message_is_follower
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "Takipçi mi"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_has_validated_answer
@@ -1672,11 +1681,6 @@ msgstr "Son Güncellenen"
 #: model:ir.ui.view,arch_db:website_forum.forum_index
 msgid "Last activity date"
 msgstr "Son etkinlik tarihi"
-
-#. module: website_forum
-#: model:ir.model.fields,field_description:website_forum.field_res_users_calendar_last_notif_ack
-msgid "Last notification marked as read from base Calendar"
-msgstr ""
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
@@ -1852,7 +1856,7 @@ msgstr "Kayda değer Soru"
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_message_needaction_counter
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "İşlem Sayısı"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag_posts_count
@@ -1878,7 +1882,7 @@ msgstr ""
 #: model:ir.model.fields,help:website_forum.field_forum_forum_message_needaction_counter
 #: model:ir.model.fields,help:website_forum.field_forum_post_message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr ""
+msgstr "Eylem gerektiren mesaj sayısı"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_count_posts_waiting_validation
@@ -1889,7 +1893,7 @@ msgstr ""
 #: model:ir.model.fields,help:website_forum.field_forum_forum_message_unread_counter
 #: model:ir.model.fields,help:website_forum.field_forum_post_message_unread_counter
 msgid "Number of unread messages"
-msgstr ""
+msgstr "Okunmamış mesaj sayısı"
 
 #. module: website_forum
 #: selection:forum.post,state:0
@@ -1900,7 +1904,7 @@ msgstr "Saldırgan"
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_answers
 msgid "On"
-msgstr ""
+msgstr "Açık"
 
 #. module: website_forum
 #. openerp-web
@@ -2113,7 +2117,7 @@ msgstr ""
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header_footer_custom
-msgid "Q&amp;A"
+msgid "Q&amp;amp;A"
 msgstr ""
 
 #. module: website_forum
@@ -2148,7 +2152,7 @@ msgstr "Soru downvoted"
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.display_post_question_block
 msgid "Question has accepted answer"
-msgstr ""
+msgstr "Sorunun kabul edilmiş cevabı var"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.404
@@ -2242,7 +2246,7 @@ msgstr ""
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.display_post_question_block
 msgid "Redirect to external link"
-msgstr ""
+msgstr "Harici bağlantıya yönlendir"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_description_full
@@ -2464,7 +2468,7 @@ msgstr "Etiket"
 #. module: website_forum
 #: sql_constraint:forum.tag:0
 msgid "Tag name already exists !"
-msgstr ""
+msgstr "Etiket adı halihazırda mevcut !"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_tag_ids
@@ -2702,7 +2706,7 @@ msgstr "Okunmamış Mesajlar"
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_message_unread_counter
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_message_unread_counter
 msgid "Unread Messages Counter"
-msgstr ""
+msgstr "Okunmamış Mesaj Sayacı"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.edit_profile

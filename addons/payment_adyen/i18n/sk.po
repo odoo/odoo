@@ -1,0 +1,127 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * payment_adyen
+# 
+# Translators:
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2016
+# Miroslav Fic <mirko.fic@gmail.com>, 2016
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-18 08:11+0000\n"
+"PO-Revision-Date: 2016-03-07 21:22+0000\n"
+"Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>\n"
+"Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: sk\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+
+#. module: payment_adyen
+#: code:addons/payment_adyen/models/adyen.py:123
+#, python-format
+msgid "; multiple order found"
+msgstr "; viacnásobná objednávka nájdená"
+
+#. module: payment_adyen
+#: code:addons/payment_adyen/models/adyen.py:121
+#, python-format
+msgid "; no order found"
+msgstr "; žiadna objednávka nájdená"
+
+#. module: payment_adyen
+#: model:payment.acquirer,cancel_msg:payment_adyen.payment_acquirer_adyen
+msgid "<span><i>Cancel,</i> Your payment has been cancelled.</span>"
+msgstr "<span><i>Zruśiť,</i> Vaša platba bola zrušená.</span>"
+
+#. module: payment_adyen
+#: model:payment.acquirer,done_msg:payment_adyen.payment_acquirer_adyen
+msgid ""
+"<span><i>Done,</i> Your online payment has been successfully processed. "
+"Thank you for your order.</span>"
+msgstr "<span><i>Hotovo,</i> Vaša online platba bola úspešne spracovaná. Ďakujeme za objednávku.</span>"
+
+#. module: payment_adyen
+#: model:payment.acquirer,error_msg:payment_adyen.payment_acquirer_adyen
+msgid ""
+"<span><i>Error,</i> Please be aware that an error occurred during the "
+"transaction. The order has been confirmed but won't be paid. Don't hesitate "
+"to contact us if you have any questions on the status of your order.</span>"
+msgstr "<span><i>Chyba,</i> Upozorňujeme, že počas transakcie došlo k chybe. Objednávka bola potvrdená ale nebude zaplatená. Neváhajte nás kontaktovať ak máte otázky ohľadom stavu vašej objednávky.</span>"
+
+#. module: payment_adyen
+#: model:payment.acquirer,pending_msg:payment_adyen.payment_acquirer_adyen
+msgid ""
+"<span><i>Pending,</i> Your online payment has been successfully processed. "
+"But your order is not validated yet.</span>"
+msgstr "<span><i>Čakajúce,</i> Vaša online platba bola úspešne spracovaná. Ale vaša objednávka nebola ešte potvrdená.</span>"
+
+#. module: payment_adyen
+#: model:payment.acquirer,name:payment_adyen.payment_acquirer_adyen
+msgid "Adyen"
+msgstr "Adyen"
+
+#. module: payment_adyen
+#: code:addons/payment_adyen/models/adyen.py:169
+#, python-format
+msgid "Adyen: feedback error"
+msgstr "Adyen: problém so spätnou väzbou"
+
+#. module: payment_adyen
+#: code:addons/payment_adyen/models/adyen.py:131
+#, python-format
+msgid "Adyen: invalid merchantSig, received %s, computed %s"
+msgstr "Adyen: nesprávne merchantSig, obdržané %s, vyrátané %s"
+
+#. module: payment_adyen
+#: code:addons/payment_adyen/models/adyen.py:119
+#, python-format
+msgid "Adyen: received data for reference %s"
+msgstr "Adyen: prijaté dáta pre referenciu %s"
+
+#. module: payment_adyen
+#: code:addons/payment_adyen/models/adyen.py:112
+#, python-format
+msgid ""
+"Adyen: received data with missing reference (%s) or missing pspReference "
+"(%s)"
+msgstr "Adyen: prijaté dáta s chýbajúcou referenciou (%s) alebo chýbajucou pspReferenciou (%s)"
+
+#. module: payment_adyen
+#: model:ir.ui.view,arch_db:payment_adyen.acquirer_form_adyen
+msgid "How to configure your Adyen account?"
+msgstr "Ako konfigurovať váš Adyen účet?"
+
+#. module: payment_adyen
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer_adyen_merchant_account
+msgid "Merchant Account"
+msgstr "Účet obchodníka"
+
+#. module: payment_adyen
+#: model:ir.model,name:payment_adyen.model_payment_acquirer
+msgid "Payment Acquirer"
+msgstr "Nadobúdateľ platby "
+
+#. module: payment_adyen
+#: model:ir.model,name:payment_adyen.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "Platobná transakcia"
+
+#. module: payment_adyen
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer_adyen_skin_code
+msgid "Skin Code"
+msgstr "Skin kód"
+
+#. module: payment_adyen
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer_adyen_skin_hmac_key
+msgid "Skin HMAC Key"
+msgstr "Skin HMAC kľúč"
+
+#. module: payment_adyen
+#: model:payment.acquirer,pre_msg:payment_adyen.payment_acquirer_adyen
+msgid ""
+"You will be redirected to the Adyen website after clicking on the payment "
+"button."
+msgstr "Po kliknutí na tlačidlo platby budete presmerovaný na webstránku Adyen."

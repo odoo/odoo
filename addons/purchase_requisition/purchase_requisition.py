@@ -41,7 +41,7 @@ class purchase_requisition(osv.osv):
                                   'Status', track_visibility='onchange', required=True,
                                   copy=False),
         'multiple_rfq_per_supplier': fields.boolean('Multiple RFQ per vendor'),
-        'account_analytic_id': fields.many2one('account.analytic.account', 'Analytic Account'),
+        'account_analytic_id': fields.many2one('account.analytic.account', 'Analytic Account', domain=[('account_type', '=', 'normal')]),
         'picking_type_id': fields.many2one('stock.picking.type', 'Picking Type', required=True),
     }
 
@@ -143,7 +143,7 @@ class purchase_requisition(osv.osv):
         qty = product_uom._compute_qty(cr, uid, requisition_line.product_uom_id.id, requisition_line.product_qty, default_uom_po_id)
 
         taxes = product.supplier_taxes_id
-        fpos = supplier.property_account_position_id.id
+        fpos = supplier.property_account_position_id
         taxes_id = fpos.map_tax(taxes).ids if fpos else []
 
         po = po_obj.browse(cr, uid, [purchase_id], context=context)
@@ -257,11 +257,6 @@ class purchase_requisition(osv.osv):
             if not confirm:
                 raise UserError(_('You have no line selected for buying.'))
 
-            #check for complete RFQ
-            for quotation in tender.purchase_ids:
-                if (self.check_valid_quotation(cr, uid, quotation, context=context)):
-                    #Set PO state to confirm
-                    po.button_confirm(cr, uid, [quotation.id], context=context)
 
             #get other confirmed lines per supplier
             for po_line in tender.po_line_ids:
@@ -314,7 +309,7 @@ class purchase_requisition_line(osv.osv):
         'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure')),
         'requisition_id': fields.many2one('purchase.requisition', 'Call for Tenders', ondelete='cascade'),
         'company_id': fields.related('requisition_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True),
-        'account_analytic_id': fields.many2one('account.analytic.account', 'Analytic Account',),
+        'account_analytic_id': fields.many2one('account.analytic.account', 'Analytic Account', domain=[('account_type', '=', 'normal')]),
         'schedule_date': fields.date('Scheduled Date'),
     }
 
@@ -348,6 +343,7 @@ class purchase_order(osv.osv):
     def button_confirm(self, cr, uid, ids, context=None):
         res = super(purchase_order, self).button_confirm(cr, uid, ids, context=context)
         proc_obj = self.pool.get('procurement.order')
+        stock_move_obj = self.pool.get('stock.move')
         for po in self.browse(cr, uid, ids, context=context):
             if po.requisition_id and (po.requisition_id.exclusive == 'exclusive'):
                 for order in po.requisition_id.purchase_ids:
@@ -358,6 +354,11 @@ class purchase_order(osv.osv):
                         order.button_cancel()
                     po.requisition_id.tender_done(context=context)
             for element in po.order_line:
+                if element.product_id == po.requisition_id.procurement_id.product_id:
+                    stock_move_obj.write(cr, uid, element.move_ids.ids, {
+                        'procurement_id': po.requisition_id.procurement_id.id,
+                        'move_dest_id': po.requisition_id.procurement_id.move_dest_id.id,
+                        }, context=context)
                 if not element.quantity_tendered:
                     element.write({'quantity_tendered': element.product_qty})
         return res
@@ -431,6 +432,7 @@ class procurement_order(osv.osv):
                 self.message_post(cr, uid, [procurement.id], body=_("Purchase Requisition created"), context=context)
                 procurement.write({'requisition_id': requisition_id})
                 req_ids += [procurement.id]
+                res += [procurement.id]
         set_others = set(ids) - set(req_ids)
         if set_others:
             res += super(procurement_order, self).make_po(cr, uid, list(set_others), context=context)

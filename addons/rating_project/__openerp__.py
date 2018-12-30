@@ -2,7 +2,7 @@
 {
     'name': 'Project Rating',
     'version': '1.0',
-    'category': 'Hidden',
+    'category': 'Project',
     'description': """
 This module Allows a customer to give rating on Project.
 """,

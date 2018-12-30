@@ -1,30 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
-
-<div t-name="project.SetCoverModal" class="modal" tabindex="-1" data-backdrop="static" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&amp;times;</button>
-                <h4 class="modal-title">Set a Cover Image</h4>
-            </div>
-            <div class="modal-body">
-                <div class="container-fluid">
-                    <div t-if="attachment_ids.length > 0" class="row">
-                        <t t-foreach="attachment_ids" t-as="attachment">
-                            <div class="col-sm-3 o_image" style="height: 100%">
-                                <img style="cursor: pointer; width: 100%" t-att-src="'/web/image/' + attachment['id'] + '?unique=1'" t-att-data-id="attachment['id']"/>
-                            </div>
-                        </t>
-                    </div>
-                    <div t-if="attachment_ids.length == 0">
-                        There is no available image to be set as cover. Send a message on the task with an attached image.
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer"><button type="button" class="btn btn-primary" data-dismiss="modal">Close</button></div>
+    <t t-name="project.SetCoverModal">
+        <div t-if="attachment_ids.length > 0" class="o_kanban_task_cover_image">
+            <img t-foreach="attachment_ids" t-as="attachment" t-attf-class="img-responsive#{cover_id == attachment['id'] ? ' o_selected' : ''}" t-attf-src="/web/image/#{attachment['id']}?unique=1" t-att-data-id="attachment['id']"/>
         </div>
-    </div>
-</div>
-
+        <div t-if="attachment_ids.length == 0">There is no available image to be set as cover. Send a message on the task with an attached image.</div>
+    </t>
 </templates>

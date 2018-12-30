@@ -27,6 +27,10 @@ var OdooSupport = Widget.extend({
         // bind event
         $(window).on("odoo_support_ready_to_bind", this, _.bind(this.bind_actions, this));
     },
+    destroy: function () {
+        $(window).off("odoo_support_ready_to_bind");
+        return this._super.apply(this, arguments);
+    },
     bind_actions: function(event, button){
         if (button === 'usermenu'){
             $('.oe_user_menu_placeholder .odoo_support_contact').on('click', this, _.bind(this.click_action, this));
@@ -49,6 +53,9 @@ var OdooSupport = Widget.extend({
         }
     },
     start_support: function(){
+        // The free livechat service doesn't exist anymore
+        window.open('https://www.odoo.com/help', '_blank');
+        return;
         var self = this;
         if(!this.assets_loaded){
             this.load_assets().then(function(){

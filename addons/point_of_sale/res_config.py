@@ -1,7 +1,7 @@
 from openerp.osv import fields, osv
 
 class pos_configuration(osv.TransientModel):
-    _inherit = 'base.config.settings'
+    _inherit = 'res.config.settings'
     _name = 'pos.config.settings'
 
     _columns = {

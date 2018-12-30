@@ -37,16 +37,16 @@ class WebsiteMembership(http.Controller):
         partner_obj = request.registry['res.partner']
         post_name = post.get('search') or post.get('name', '')
         current_country = None
+        today = time.strftime(DEFAULT_SERVER_DATE_FORMAT)
 
         # base domain for groupby / searches
-        base_line_domain = [("partner.website_published", "=", True), ('state', 'in', ['free', 'paid'])]
+        base_line_domain = [
+            ("partner.website_published", "=", True), ('state', '=', 'paid'),
+            ('date_to', '>=', today), ('date_from', '<=', today)
+        ]
         if membership_id and membership_id != 'free':
             membership_id = int(membership_id)
-            today = time.strftime(DEFAULT_SERVER_DATE_FORMAT)
-            base_line_domain += [
-                    ('membership_id', '=', membership_id), ('date_to', '>=', today),
-                    ('date_from', '<=', today), ('state', '=', 'paid')
-            ]
+            base_line_domain.append(('membership_id', '=', membership_id))
             membership = product_obj.browse(cr, uid, membership_id, context=context)
         else:
             membership = None
@@ -58,12 +58,14 @@ class WebsiteMembership(http.Controller):
         if membership_id != 'free':
             membership_line_ids = membership_line_obj.search(cr, SUPERUSER_ID, base_line_domain, context=context)
             country_domain = [('member_lines', 'in', membership_line_ids)]
+            if not membership_id:
+                country_domain = ['|', country_domain[0], ('membership_state', '=', 'free')]
         else:
             membership_line_ids = []
             country_domain = [('membership_state', '=', 'free')]
-            if post_name:
-                country_domain += ['|', ('name', 'ilike', post_name),
-                                      ('website_description', 'ilike', post_name)]
+        if post_name:
+            country_domain += ['|', ('name', 'ilike', post_name),
+                                  ('website_description', 'ilike', post_name)]
         countries = partner_obj.read_group(
             cr, SUPERUSER_ID, country_domain + [("website_published", "=", True)], ["id", "country_id"],
             groupby="country_id", orderby="country_id", context=request.context)
@@ -109,7 +111,7 @@ class WebsiteMembership(http.Controller):
 
         google_map_partner_ids = []
         if request.env.ref('website_membership.opt_index_google_map').customize_show:
-            membership_lines_ids = membership_line_obj.search(cr, uid, line_domain, context=context)
+            membership_line_ids = membership_line_obj.search(cr, uid, line_domain, context=context)
             google_map_partner_ids = membership_line_obj.get_published_companies(cr, uid, membership_line_ids, limit=2000, context=context)
 
         search_domain = [('membership_state', '=', 'free'), ('website_published', '=', True)]
@@ -136,6 +138,7 @@ class WebsiteMembership(http.Controller):
                 count_members += len(free_partner_ids)
 
         google_map_partner_ids = ",".join(map(str, google_map_partner_ids))
+        google_maps_api_key = request.env['ir.config_parameter'].sudo().get_param('google_maps_api_key')
 
         partners = { p.id: p for p in partner_obj.browse(request.cr, SUPERUSER_ID, list(page_partner_ids), request.context)}
 
@@ -160,6 +163,7 @@ class WebsiteMembership(http.Controller):
             'pager': pager,
             'post': post,
             'search': "?%s" % werkzeug.url_encode(post),
+            'google_maps_api_key': google_maps_api_key,
         }
         return request.website.render("website_membership.index", values)
 

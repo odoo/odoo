@@ -15,6 +15,16 @@ class AccountConfigSettings(models.TransientModel):
     _name = 'account.config.settings'
     _inherit = 'res.config.settings'
 
+    @api.one
+    @api.depends('company_id')
+    def _get_currency_id(self):
+        self.currency_id = self.company_id.currency_id
+
+    @api.one
+    def _set_currency_id(self):
+        if self.currency_id != self.company_id.currency_id:
+            self.company_id.currency_id = self.currency_id
+
     company_id = fields.Many2one('res.company', string='Company', required=True,
         default=lambda self: self.env.user.company_id)
     has_default_company = fields.Boolean(readonly=True,
@@ -22,7 +32,7 @@ class AccountConfigSettings(models.TransientModel):
     expects_chart_of_accounts = fields.Boolean(related='company_id.expects_chart_of_accounts',
         string='This company has its own chart of accounts',
         help='Check this box if this company is a legal entity.')
-    currency_id = fields.Many2one('res.currency', related='company_id.currency_id', required=True,
+    currency_id = fields.Many2one('res.currency', compute='_get_currency_id', inverse='_set_currency_id', required=True,
         string='Default company currency', help="Main currency of the company.")
     paypal_account = fields.Char(related='company_id.paypal_account', size=128, string='Paypal account',
         help="""Paypal account (email) for receiving online payments (credit card, etc.)
@@ -82,11 +92,9 @@ class AccountConfigSettings(models.TransientModel):
     currency_exchange_journal_id = fields.Many2one('account.journal',
         related='company_id.currency_exchange_journal_id',
         string="Rate Difference Journal",)
-    module_account_asset = fields.Boolean(string='Assets management & Revenue recognition',
+    module_account_asset = fields.Boolean(string='Assets management',
         help='Asset management: This allows you to manage the assets owned by a company or a person. '
                  'It keeps track of the depreciation occurred on those assets, and creates account move for those depreciation lines.\n\n'
-                 'Revenue recognition: This allows you to manage the Revenue recognition on selling product. '
-                 'It keeps track of the installment occurred on those revenue recognition, and creates account move for those installment lines.\n'
              '-This installs the module account_asset. If you do not check this box, you will be able to do invoicing & payments, '
              'but not accounting (Journal Items, Chart of Accounts, ...)')
     module_account_budget = fields.Boolean(string='Budget management',
@@ -129,12 +137,10 @@ class AccountConfigSettings(models.TransientModel):
         help='Get your bank statements from your bank and import them in Odoo in the .OFX format.\n'
             'This installs the module account_bank_statement_import_ofx.')
 
-
     @api.model
     def _default_has_default_company(self):
         count = self.env['res.company'].search_count([])
         return bool(count == 1)
-
 
     @api.onchange('company_id')
     def onchange_company_id(self):
@@ -158,8 +164,8 @@ class AccountConfigSettings(models.TransientModel):
             ir_values = self.env['ir.values']
             taxes_id = ir_values.get_default('product.template', 'taxes_id', company_id = self.company_id.id)
             supplier_taxes_id = ir_values.get_default('product.template', 'supplier_taxes_id', company_id = self.company_id.id)
-            self.default_sale_tax_id = isinstance(taxes_id, list) and taxes_id[0] or taxes_id
-            self.default_purchase_tax_id = isinstance(supplier_taxes_id, list) and supplier_taxes_id[0] or supplier_taxes_id
+            self.default_sale_tax_id = isinstance(taxes_id, list) and len(taxes_id) > 0 and taxes_id[0] or taxes_id
+            self.default_purchase_tax_id = isinstance(supplier_taxes_id, list) and len(supplier_taxes_id) > 0 and supplier_taxes_id[0] or supplier_taxes_id
         return {}
 
     @api.onchange('chart_template_id')
@@ -174,10 +180,10 @@ class AccountConfigSettings(models.TransientModel):
                 ir_values_obj = self.env['ir.values']
                 # default tax is given by the lowest sequence. For same sequence we will take the latest created as it will be the case for tax created while isntalling the generic chart of account
                 sale_tax = tax_templ_obj.search(
-                    [('chart_template_id', '=', self.chart_template_id.id), ('type_tax_use', '=', 'sale')], limit=1,
+                    [('chart_template_id', 'parent_of', self.chart_template_id.id), ('type_tax_use', '=', 'sale')], limit=1,
                     order="sequence, id desc")
                 purchase_tax = tax_templ_obj.search(
-                    [('chart_template_id', '=', self.chart_template_id.id), ('type_tax_use', '=', 'purchase')], limit=1,
+                    [('chart_template_id', 'parent_of', self.chart_template_id.id), ('type_tax_use', '=', 'purchase')], limit=1,
                     order="sequence, id desc")
                 self.sale_tax_id = sale_tax
                 self.purchase_tax_id = purchase_tax
@@ -238,8 +244,8 @@ class AccountConfigSettings(models.TransientModel):
                 'purchase_tax_rate': self.purchase_tax_rate,
                 'complete_tax_set': self.complete_tax_set,
                 'currency_id': self.currency_id.id,
-                'bank_account_code_prefix': self.bank_account_code_prefix,
-                'cash_account_code_prefix': self.cash_account_code_prefix,
+                'bank_account_code_prefix': self.bank_account_code_prefix or self.chart_template_id.bank_account_code_prefix,
+                'cash_account_code_prefix': self.cash_account_code_prefix or self.chart_template_id.cash_account_code_prefix,
             })
             wizard.execute()
 

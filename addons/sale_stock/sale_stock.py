@@ -4,6 +4,7 @@
 from datetime import datetime, timedelta
 from openerp import api, fields, models, _
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT, float_compare
+from openerp.exceptions import UserError
 
 
 class SaleOrder(models.Model):
@@ -72,7 +73,7 @@ class SaleOrder(models.Model):
 
     @api.multi
     def action_cancel(self):
-        self.order_line.mapped('procurement_ids').cancel()
+        self.mapped('order_line').mapped('procurement_ids').cancel()
         super(SaleOrder, self).action_cancel()
 
     @api.multi
@@ -87,20 +88,42 @@ class SaleOrder(models.Model):
         res.update({'move_type': self.picking_policy, 'partner_id': self.partner_shipping_id.id})
         return res
 
+    @api.model
+    def _get_customer_lead(self, product_tmpl_id):
+        super(SaleOrder, self)._get_customer_lead(product_tmpl_id)
+        return product_tmpl_id.sale_delay
+
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 
     product_packaging = fields.Many2one('product.packaging', string='Packaging', default=False)
     route_id = fields.Many2one('stock.location.route', string='Route', domain=[('sale_selectable', '=', True)])
-    product_tmpl_id = fields.Many2one('product.template', related='product_id.product_tmpl_id', string='Product Template')
+    product_tmpl_id = fields.Many2one('product.template', related='product_id.product_tmpl_id', string='Product Template', readonly=True)
+
+    @api.depends('order_id.state')
+    def _compute_invoice_status(self):
+        super(SaleOrderLine, self)._compute_invoice_status()
+        for line in self:
+            # We handle the following specific situation: a physical product is partially delivered,
+            # but we would like to set its invoice status to 'Fully Invoiced'. The use case is for
+            # products sold by weight, where the delivered quantity rarely matches exactly the
+            # quantity ordered.
+            if line.order_id.state == 'done'\
+                    and line.invoice_status == 'no'\
+                    and line.product_id.type in ['consu', 'product']\
+                    and line.product_id.invoice_policy == 'delivery'\
+                    and line.procurement_ids.mapped('move_ids')\
+                    and all(move.state in ['done', 'cancel'] for move in line.procurement_ids.mapped('move_ids')):
+                line.invoice_status = 'invoiced'
 
     @api.multi
     @api.depends('product_id')
     def _compute_qty_delivered_updateable(self):
         for line in self:
             if line.product_id.type not in ('consu', 'product'):
-                return super(SaleOrderLine, self)._compute_qty_delivered_updateable()
-            line.qty_delivered_updateable = False
+                super(SaleOrderLine, line)._compute_qty_delivered_updateable()
+            else:
+                line.qty_delivered_updateable = False
 
     @api.onchange('product_id')
     def _onchange_product_id_set_customer_lead(self):
@@ -113,41 +136,34 @@ class SaleOrderLine(models.Model):
             return self._check_package()
         return {}
 
-    @api.onchange('product_id', 'product_uom_qty')
+    @api.onchange('product_id')
+    def _onchange_product_id_uom_check_availability(self):
+        if not self.product_uom or (self.product_id.uom_id.category_id.id != self.product_uom.category_id.id):
+            self.product_uom = self.product_id.uom_id
+        self._onchange_product_id_check_availability()
+
+    @api.onchange('product_uom_qty', 'product_uom', 'route_id')
     def _onchange_product_id_check_availability(self):
-        if not self.product_id:
+        if not self.product_id or not self.product_uom_qty or not self.product_uom:
             self.product_packaging = False
             return {}
-        precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
-        self.product_tmpl_id = self.product_id.product_tmpl_id
         if self.product_id.type == 'product':
-            product = self.product_id.with_context(
-                lang=self.order_id.partner_id.lang,
-                partner_id=self.order_id.partner_id.id,
-                date_order=self.order_id.date_order,
-                pricelist_id=self.order_id.pricelist_id.id,
-                uom=self.product_uom.id,
-                warehouse_id=self.order_id.warehouse_id.id
-            )
-            if float_compare(product.virtual_available, self.product_uom_qty, precision_digits=precision) == -1:
-                # Check if MTO, Cross-Dock or Drop-Shipping
-                is_available = False
-                for route in self.route_id+self.product_id.route_ids:
-                    for pull in route.pull_ids:
-                        if pull.location_id.id == self.order_id.warehouse_id.lot_stock_id.id:
-                            is_available = True
+            precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+            product_qty = self.env['product.uom']._compute_qty_obj(self.product_uom, self.product_uom_qty, self.product_id.uom_id)
+            if float_compare(self.product_id.virtual_available, product_qty, precision_digits=precision) == -1:
+                is_available = self._check_routing()
                 if not is_available:
                     warning_mess = {
                         'title': _('Not enough inventory!'),
                         'message' : _('You plan to sell %.2f %s but you only have %.2f %s available!\nThe stock on hand is %.2f %s.') % \
-                            (self.product_uom_qty, self.product_uom.name or self.product_id.uom_id.name, product.virtual_available, self.product_uom.name or self.product_id.uom_id.name, product.qty_available, self.product_uom.name or self.product_id.uom_id.name)
+                            (self.product_uom_qty, self.product_uom.name, self.product_id.virtual_available, self.product_id.uom_id.name, self.product_id.qty_available, self.product_id.uom_id.name)
                     }
                     return {'warning': warning_mess}
         return {}
 
     @api.onchange('product_uom_qty')
     def _onchange_product_uom_qty(self):
-        if self.state == 'sale' and self.product_id.type != 'service' and self.product_uom_qty < self._origin.product_uom_qty:
+        if self.state == 'sale' and self.product_id.type in ['product', 'consu'] and self.product_uom_qty < self._origin.product_uom_qty:
             warning_mess = {
                 'title': _('Ordered quantity decreased!'),
                 'message' : _('You are decreasing the ordered quantity! Do not forget to manually update the delivery order if needed.'),
@@ -172,12 +188,17 @@ class SaleOrderLine(models.Model):
 
     @api.multi
     def _get_delivered_qty(self):
+        """Computes the delivered quantity on sale order lines, based on done stock moves related to its procurements
+        """
         self.ensure_one()
         super(SaleOrderLine, self)._get_delivered_qty()
         qty = 0.0
         for move in self.procurement_ids.mapped('move_ids').filtered(lambda r: r.state == 'done' and not r.scrapped):
+            #Note that we don't decrease quantity for customer returns on purpose: these are exeptions that must be treated manually. Indeed,
+            #modifying automatically the delivered quantity may trigger an automatic reinvoicing (refund) of the SO, which is definitively not wanted
             if move.location_dest_id.usage == "customer":
-                qty += self.env['product.uom']._compute_qty_obj(move.product_uom, move.product_uom_qty, self.product_uom)
+                if not move.origin_returned_move_id:
+                    qty += self.env['product.uom']._compute_qty_obj(move.product_uom, move.product_uom_qty, self.product_uom)
         return qty
 
     @api.multi
@@ -195,6 +216,38 @@ class SaleOrderLine(models.Model):
                 },
             }
         return {}
+
+    def _check_routing(self):
+        """ Verify the route of the product based on the warehouse
+            return True if the product availibility in stock does not need to be verified,
+            which is the case in MTO, Cross-Dock or Drop-Shipping
+        """
+        is_available = False
+        product_routes = self.route_id or (self.product_id.route_ids + self.product_id.categ_id.total_route_ids)
+
+        # Check MTO
+        wh_mto_route = self.order_id.warehouse_id.mto_pull_id.route_id
+        if wh_mto_route and wh_mto_route <= product_routes:
+            is_available = True
+        else:
+            mto_route_id = False
+            try:
+                mto_route_id = self.env['stock.warehouse']._get_mto_route()
+            except UserError:
+                # if route MTO not found in ir_model_data, we treat the product as in MTS
+                pass
+            if mto_route_id and mto_route_id in product_routes.ids:
+                is_available = True
+
+        # Check Drop-Shipping
+        if not is_available:
+            for pull_rule in product_routes.mapped('pull_ids'):
+                if pull_rule.picking_type_id.sudo().default_location_src_id.usage == 'supplier' and\
+                        pull_rule.picking_type_id.sudo().default_location_dest_id.usage == 'customer':
+                    is_available = True
+                    break
+
+        return is_available
 
 
 class StockLocationRoute(models.Model):
@@ -217,8 +270,8 @@ class ProcurementOrder(models.Model):
     @api.model
     def _run_move_create(self, procurement):
         vals = super(ProcurementOrder, self)._run_move_create(procurement)
-        if self.sale_line_id:
-            vals.update({'sequence': self.sale_line_id.sequence})
+        if procurement.sale_line_id:
+            vals.update({'sequence': procurement.sale_line_id.sequence})
         return vals
 
 
@@ -252,7 +305,14 @@ class StockPicking(models.Model):
                     break
             picking.sale_id = sale_order.id if sale_order else False
 
-    sale_id = fields.Many2one(comodel_name='sale.order', string="Sale Order", compute='_compute_sale_id')
+    def _search_sale_id(self, operator, value):
+        moves = self.env['stock.move'].search(
+            [('picking_id', '!=', False), ('procurement_id.sale_line_id.order_id', operator, value)]
+        )
+        return [('id', 'in', moves.mapped('picking_id').ids)]
+
+    sale_id = fields.Many2one(comodel_name='sale.order', string="Sale Order",
+                              compute='_compute_sale_id', search='_search_sale_id')
 
 
 class AccountInvoiceLine(models.Model):
@@ -269,30 +329,42 @@ class AccountInvoiceLine(models.Model):
                 qty_done = sum([uom_obj._compute_qty_obj(x.uom_id, x.quantity, x.product_id.uom_id) for x in s_line.invoice_lines if x.invoice_id.state in ('open', 'paid')])
                 quantity = uom_obj._compute_qty_obj(self.uom_id, self.quantity, self.product_id.uom_id)
                 # Put moves in fixed order by date executed
-                moves = self.env['stock.move']
-                for procurement in s_line.procurement_ids:
-                    moves |= procurement.move_ids
-                moves.sorted(lambda x: x.date)
+                moves = s_line.mapped('procurement_ids.move_ids').sorted(lambda x: x.date)
                 # Go through all the moves and do nothing until you get to qty_done
                 # Beyond qty_done we need to calculate the average of the price_unit
                 # on the moves we encounter.
-                average_price_unit = 0
-                qty_delivered = 0
-                invoiced_qty = 0
-                for move in moves:
-                    if move.state != 'done':
-                        continue
-                    invoiced_qty += move.product_qty
-                    if invoiced_qty <= qty_done:
-                        continue
-                    qty_to_consider = move.product_qty
-                    if invoiced_qty - move.product_qty < qty_done:
-                        qty_to_consider = invoiced_qty - qty_done
-                    qty_to_consider = min(qty_to_consider, quantity - qty_delivered)
-                    qty_delivered += qty_to_consider
-                    average_price_unit = (average_price_unit * (qty_delivered - qty_to_consider) + move.price_unit * qty_to_consider) / qty_delivered
-                    if qty_delivered == quantity:
-                        break
+                average_price_unit = self._compute_average_price(qty_done, quantity, moves)
                 price_unit = average_price_unit or price_unit
-                price_unit = uom_obj._compute_qty_obj(self.uom_id, price_unit, self.product_id.uom_id)
+                price_unit = self.product_id.uom_id._compute_price(self.product_id.uom_id.id, price_unit, to_uom_id=self.uom_id.id)
         return price_unit
+
+    def _compute_average_price(self, qty_done, quantity, moves):
+        average_price_unit = 0
+        qty_delivered = 0
+        invoiced_qty = 0
+        for move in moves:
+            if move.state != 'done':
+                continue
+            invoiced_qty += move.product_qty
+            if invoiced_qty <= qty_done:
+                continue
+            qty_to_consider = move.product_qty
+            if invoiced_qty - move.product_qty < qty_done:
+                qty_to_consider = invoiced_qty - qty_done
+            qty_to_consider = min(qty_to_consider, quantity - qty_delivered)
+            qty_delivered += qty_to_consider
+            average_price_unit = (average_price_unit * (qty_delivered - qty_to_consider) + move.price_unit * qty_to_consider) / qty_delivered
+            if qty_delivered == quantity:
+                break
+        return average_price_unit
+
+
+class ProductProduct(models.Model):
+    _inherit = 'product.product'
+
+    @api.multi
+    def _need_procurement(self):
+        for product in self:
+            if product.type not in ['service', 'digital']:
+                return True
+        return super(ProductProduct, self)._need_procurement()

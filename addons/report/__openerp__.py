@@ -1,7 +1,7 @@
 {
     'name': 'Report',
     'category': 'Base',
-    'summary': 'Report',
+    'summary': 'Hidden',
     'version': '1.0',
     'description': """
 Report

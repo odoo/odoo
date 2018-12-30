@@ -29,12 +29,12 @@ class PosBox(CashBox):
 class PosBoxIn(PosBox):
     _inherit = 'cash.box.in'
 
-    def _compute_values_for_statement_line(self, cr, uid, box, record, context=None):
+    def _calculate_values_for_statement_line(self, cr, uid, id, record, context=None):
         
         if context is None:
             context = {}
     
-        values = super(PosBoxIn, self)._compute_values_for_statement_line(cr, uid, box, record, context=context)
+        values = super(PosBoxIn, self)._calculate_values_for_statement_line(cr, uid, id, record, context=context)[0]
 
         active_model = context.get('active_model', False) or False
         active_ids = context.get('active_ids', []) or []
@@ -49,8 +49,8 @@ class PosBoxIn(PosBox):
 class PosBoxOut(PosBox):
     _inherit = 'cash.box.out'
 
-    def _compute_values_for_statement_line(self, cr, uid, box, record, context=None):
-        values = super(PosBoxOut, self)._compute_values_for_statement_line(cr, uid, box, record, context=context)
+    def _calculate_values_for_statement_line(self, cr, uid, id, record, context=None):
+        values = super(PosBoxOut, self)._calculate_values_for_statement_line(cr, uid, id, record, context=context)[0]
 
         active_model = context.get('active_model', False) or False
         active_ids = context.get('active_ids', []) or []

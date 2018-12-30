@@ -38,6 +38,8 @@ class MailMailStats(osv.Model):
             if not self.pool.get(stat.model):
                 continue
             target = self.pool[stat.model].browse(cr, uid, stat.res_id, context=context)
+            if not target or not target.exists():
+                continue
             email = ''
             for email_field in ('email', 'email_from'):
                 if email_field in target and target[email_field]:

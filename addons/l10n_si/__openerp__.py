@@ -5,10 +5,10 @@
 
 {
     "name": "Slovenian - Accounting",
-    "version": "1.0",
+    "version": "1.1",
     "author": "Mentis d.o.o.",
     "website": "http://www.mentis.si",
-    "category": "Localization/Account Charts",
+    'category': 'Localization',
     "description": "Kontni načrt za gospodarske družbe",
     "depends": ["account", "base_iban", "base_vat", "account_cancel"],
     "data": [

@@ -11,7 +11,7 @@ diff --git a/openacademy/models.py b/openacademy/models.py
 +from datetime import timedelta
  from openerp import models, fields, api, exceptions
  
- class Course(models.Model):
+ class Session(models.Model):
 @@ -55,6 +56,8 @@ class Session(models.Model):
      attendee_ids = fields.Many2many('res.partner', string="Attendees")
  

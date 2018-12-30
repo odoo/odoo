@@ -20,15 +20,14 @@
                             <group>
                                 <field name="name" required="True"/>
                                 <field name="model_id" required="1" options="{'no_open': True, 'no_create': True}"
-                                    on_change="onchange_model_id(model_id)"
-                                    domain="[('model', 'in', ['res.partner', 'mail.mass_mailing.contact'])]"/>
+                                    domain="[('model', 'in', ['res.partner', 'mail.mass_mailing.contact', 'crm.lead', 'hr.applicant'])]"/>
                                 <field name="model" invisible="True"/>
                                 <field name="use_default_to" invisible="1"/>
                             </group>
                         </group>
                         <notebook>
                             <page string="Body">
-                                <field name="body_html" nolabel="1" widget="html_frame" options="{'editor_url': '/mass_mailing/field/email_template'}"/>
+                                <field name="body_html" nolabel="1" widget="html"/>
                                 <field name="attachment_ids" widget="many2many_binary"/>
                             </page>
                         </notebook>

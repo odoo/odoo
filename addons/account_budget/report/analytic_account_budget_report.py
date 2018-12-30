@@ -60,11 +60,16 @@ class analytic_account_budget_report(report_sxw.rml_parse):
                      'theo':0.00,
                      'pln':0.00,
                      'prac':0.00,
-                     'perc':0.00
+                     'perc':0.00,
+                     'date_from': budget_name[0].date_from,
+                     'date_to': budget_name[0].date_to,
                 }
                 result.append(res)
-
-                line_ids = c_b_lines_obj.search(self.cr, self.uid, [('id', 'in', b_line_ids), ('crossovered_budget_id','=',budget_ids[i][0])])
+                domain_lines = [('id', 'in', b_line_ids),
+                                ('crossovered_budget_id', '=', budget_ids[i][0]),
+                                ('date_from', '<=', d_to),
+                                ('date_to', '>=', d_from)]
+                line_ids = c_b_lines_obj.search(self.cr, self.uid, domain_lines)
                 line_id = c_b_lines_obj.browse(self.cr, self.uid, line_ids)
                 tot_theo = tot_pln = tot_prac = tot_perc = 0
 

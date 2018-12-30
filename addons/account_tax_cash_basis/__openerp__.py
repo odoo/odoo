@@ -3,14 +3,13 @@
 {
     'name' : 'Account Tax Cash Basis',
     'version' : '1.1',
-    'author' : 'OpenERP SA',
     'summary': 'Allow to have cash basis on tax',
     'sequence': 4,
     'description': """
     Add an option on tax to allow them to be cash based, meaning that during reconciliation, if there is a tax with
     cash basis involved, a new journal entry will be create containing those taxes value.
     """,
-    'category' : 'Accounting & Finance',
+    'category': 'Accounting',
     'website': 'https://www.odoo.com/page/accounting',
     'depends' : ['account'],
     'data': [

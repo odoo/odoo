@@ -108,11 +108,12 @@ $(document).ready(function () {
         },
     });
 
-    $('iframe').ready(function() {
+    $('iframe.o_wslides_iframe_viewer').ready(function() {
         // TODO : make it work. For now, once the iframe is loaded, the value of #page_count is
         // still now set (the pdf is still loading)
-        var max_page = $('iframe').contents().find('#page_count').val();
-        new SlideSocialEmbed($(this), max_page).setElement($('.oe_slide_js_embed_code_widget'));
+        var $iframe = $(this);
+        var max_page = $iframe.contents().find('#page_count').val();
+        new SlideSocialEmbed($iframe, max_page).setElement($('.oe_slide_js_embed_code_widget'));
     });
 
 

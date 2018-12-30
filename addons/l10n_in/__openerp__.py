@@ -3,7 +3,7 @@
 
 {
     'name': 'Indian - Accounting',
-    'version': '1.0',
+    'version': '2.0',
     'description': """
 Indian Accounting: Chart of Account.
 ====================================
@@ -16,8 +16,7 @@ Note: The Schedule VI has been revised by MCA and is applicable for all Balance 
 31st March, 2011. The Format has done away with earlier two options of format of Balance
 Sheet, now only Vertical format has been permitted Which is Supported By OpenERP.
   """,
-    'author': ['OpenERP SA'],
-    'category': 'Localization/Account Charts',
+    'category': 'Localization',
     'depends': [
         'account',
     ],

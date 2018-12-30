@@ -16,8 +16,13 @@ def _auto_install_l10n(cr, registry):
         if country_code in ['BJ', 'BF', 'CM', 'CF', 'KM', 'CG', 'CI', 'GA', 'GN', 'GW', 'GQ', 'ML', 'NE', 'CD', 'SN', 'TD', 'TG']:
             #countries using OHADA Chart of Accounts
             module_list.append('l10n_syscohada')
+        elif country_code == 'GB':
+            module_list.append('l10n_uk')
         else:
-            module_list.append('l10n_' + country_code.lower())
+            if registry['ir.module.module'].search(cr, SUPERUSER_ID, [('name', '=', 'l10n_' + country_code.lower())]):
+                module_list.append('l10n_' + country_code.lower())
+            else:
+                module_list.append('l10n_generic_coa')
         if country_code == 'US':
             module_list.append('account_plaid')
             module_list.append('account_check_printing')

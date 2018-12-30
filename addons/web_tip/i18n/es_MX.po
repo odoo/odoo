@@ -3,13 +3,15 @@
 # * web_tip
 # 
 # Translators:
+# David Hernandez <davidhernandez.ctam@gmail.com>, 2016
+# Sarai Osorio <sarai.osorio@jarsa.com.mx>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-07 14:41+0000\n"
-"PO-Revision-Date: 2015-09-08 11:06+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-07-12 15:46+0000\n"
+"Last-Translator: Sarai Osorio <sarai.osorio@jarsa.com.mx>\n"
 "Language-Team: Spanish (Mexico) (http://www.transifex.com/odoo/odoo-9/language/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,12 +27,12 @@ msgstr "Acción"
 #. module: web_tip
 #: model:ir.model.fields,help:web_tip.field_web_tip_highlight_selector
 msgid "CSS selector for the element to highlight"
-msgstr ""
+msgstr "Selector CSS para el elemento para resaltar"
 
 #. module: web_tip
 #: model:ir.model.fields,help:web_tip.field_web_tip_end_selector
 msgid "CSS selector used to end the tip"
-msgstr ""
+msgstr "Selector CSS utiliza para poner fin a la punta"
 
 #. module: web_tip
 #: model:ir.model.fields,help:web_tip.field_web_tip_trigger_selector
@@ -41,12 +43,20 @@ msgstr ""
 #: model:ir.model.fields,field_description:web_tip.field_web_tip_user_ids
 #: model:ir.ui.view,arch_db:web_tip.edit_tip_form
 msgid "Consumed by"
-msgstr ""
+msgstr "Consumido por"
+
+#. module: web_tip
+#: model:web.tip,description:web_tip.web_tip_3
+msgid ""
+"Create one column per stage in your working process. For example, in a "
+"development project, stages might be: Specifications, Development, Test, "
+"Done."
+msgstr "Crear una columna por etapa en su proceso de trabajo. Por ejemplo, en un proyecto de desarrollo, etapas podrían ser: Especificaciones, desarrollo, pruebas, hecho."
 
 #. module: web_tip
 #: model:ir.model.fields,field_description:web_tip.field_web_tip_create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Creado por"
 
 #. module: web_tip
 #: model:ir.model.fields,field_description:web_tip.field_web_tip_create_date
@@ -56,27 +66,27 @@ msgstr "Creado en"
 #. module: web_tip
 #: model:ir.model.fields,field_description:web_tip.field_web_tip_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Nombre desplegado"
 
 #. module: web_tip
 #: model:ir.model.fields,field_description:web_tip.field_web_tip_end_event
 msgid "End event"
-msgstr ""
+msgstr "Término de evento"
 
 #. module: web_tip
 #: model:ir.model.fields,field_description:web_tip.field_web_tip_end_selector
 msgid "End selector"
-msgstr ""
+msgstr "Selector final"
 
 #. module: web_tip
 #: model:ir.model.fields,help:web_tip.field_web_tip_end_event
 msgid "Event to end the tip"
-msgstr ""
+msgstr "Evento para poner fin a la punta"
 
 #. module: web_tip
 #: model:ir.model.fields,field_description:web_tip.field_web_tip_highlight_selector
 msgid "Highlight selector"
-msgstr ""
+msgstr "Selector Alumbrado"
 
 #. module: web_tip
 #: model:ir.model.fields,field_description:web_tip.field_web_tip_id
@@ -84,19 +94,27 @@ msgid "ID"
 msgstr "ID"
 
 #. module: web_tip
+#: model:web.tip,description:web_tip.web_tip_4
+msgid ""
+"If you're done with this item, click here to archive it. It won't appear "
+"again, but you can display it with the 'Archived' filter, and reactivate it "
+"if necessary."
+msgstr ""
+
+#. module: web_tip
 #: model:ir.model.fields,field_description:web_tip.field_web_tip___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Ultima modificacion realizada"
 
 #. module: web_tip
 #: model:ir.model.fields,field_description:web_tip.field_web_tip_write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Ultima actualizacion por"
 
 #. module: web_tip
 #: model:ir.model.fields,field_description:web_tip.field_web_tip_write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Ultima actualización realizada"
 
 #. module: web_tip
 #: model:ir.ui.view,arch_db:web_tip.edit_tip_form
@@ -122,7 +140,7 @@ msgstr "Modelo"
 #. module: web_tip
 #: model:ir.model.fields,help:web_tip.field_web_tip_model
 msgid "Model name on which to trigger the tip, e.g. 'res.partner'."
-msgstr ""
+msgstr "Nombre del modelo en el que para activar la punta, por ejemplo, 'res.partner'."
 
 #. module: web_tip
 #: model:ir.model.fields,help:web_tip.field_web_tip_type
@@ -130,9 +148,16 @@ msgid "Model type, e.g. lead or opportunity for crm.lead"
 msgstr ""
 
 #. module: web_tip
+#: model:web.tip,description:web_tip.web_tip_1
+msgid ""
+"Navigate easily between documents using the navigation path to go back to "
+"previous screens."
+msgstr ""
+
+#. module: web_tip
 #: model:ir.model.fields,field_description:web_tip.field_web_tip_placement
 msgid "Placement"
-msgstr ""
+msgstr "Colocación"
 
 #. module: web_tip
 #: model:ir.model.fields,help:web_tip.field_web_tip_placement
@@ -140,9 +165,16 @@ msgid "Popover placement, bottom, top, left or right"
 msgstr ""
 
 #. module: web_tip
+#: model:web.tip,description:web_tip.web_tip_2
+msgid ""
+"Save time and change the document stage right here, no need to go back to "
+"your pipeline."
+msgstr ""
+
+#. module: web_tip
 #: model:ir.model.fields,help:web_tip.field_web_tip_action_id
 msgid "The action that will trigger the tip"
-msgstr ""
+msgstr "La acción que dará lugar a la punta"
 
 #. module: web_tip
 #: model:ir.ui.view,arch_db:web_tip.edit_tip_search
@@ -152,29 +184,29 @@ msgstr ""
 #. module: web_tip
 #: model:ir.model.fields,field_description:web_tip.field_web_tip_description
 msgid "Tip Description"
-msgstr ""
+msgstr "Tip Descripción"
 
 #. module: web_tip
 #: model:ir.model.fields,field_description:web_tip.field_web_tip_is_consumed
 msgid "Tip consumed"
-msgstr ""
+msgstr "Sugerencia consumida"
 
 #. module: web_tip
 #: model:ir.model.fields,field_description:web_tip.field_web_tip_title
 msgid "Tip title"
-msgstr ""
+msgstr "Título de la punta"
 
 #. module: web_tip
 #: model:ir.actions.act_window,name:web_tip.edit_tip_action
 #: model:ir.model,name:web_tip.model_web_tip
 #: model:ir.ui.menu,name:web_tip.menu_tip_action
 msgid "Tips"
-msgstr ""
+msgstr "Tips"
 
 #. module: web_tip
 #: model:ir.model.fields,field_description:web_tip.field_web_tip_trigger_selector
 msgid "Trigger selector"
-msgstr ""
+msgstr "Selector Trigger"
 
 #. module: web_tip
 #: model:ir.model.fields,field_description:web_tip.field_web_tip_type

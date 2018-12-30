@@ -4,25 +4,33 @@
 # 
 # Translators:
 # Hamid Darabi, 2015
+# Sahar Daraye <sahar.daraye.1369@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-12 14:29+0000\n"
-"PO-Revision-Date: 2015-10-13 09:50+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"POT-Creation-Date: 2016-01-18 04:43+0000\n"
+"PO-Revision-Date: 2018-07-30 15:01+0000\n"
+"Last-Translator: Hamed Mohammadi <hamed@dehongi.com>\n"
 "Language-Team: Persian (http://www.transifex.com/odoo/odoo-9/language/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fa\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/form_common.js:870
 #, python-format
 msgid " & Close"
+msgstr "بستن"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_widgets.js:442
+#, python-format
+msgid " selected records"
 msgstr ""
 
 #. module: web
@@ -31,28 +39,28 @@ msgstr ""
 #: code:addons/web/static/src/js/views/search_filters.js:290
 #, python-format
 msgid "%(field)s %(operator)s"
-msgstr ""
+msgstr "%(field)s %(operator)s"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/search_filters.js:116
 #, python-format
 msgid "%(field)s %(operator)s \"%(value)s\""
-msgstr ""
+msgstr "%(field)s %(operator)s \"%(value)s\""
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/list_view.js:1579
 #, python-format
 msgid "%(page)d/%(page_count)d"
-msgstr ""
+msgstr "%(page)d/%(page_count)d"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/view_manager.js:66
 #, python-format
 msgid "%(view_type)s view"
-msgstr ""
+msgstr "view"
 
 #. module: web
 #. openerp-web
@@ -145,7 +153,7 @@ msgstr ""
 #: code:addons/web/static/src/js/framework/formats.js:166
 #, python-format
 msgid "'%s' is not a correct datetime"
-msgstr ""
+msgstr "'%s' یک تاریخ معتبر نیست"
 
 #. module: web
 #. openerp-web
@@ -184,10 +192,17 @@ msgstr ""
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/xml/base.xml:106
+#, python-format
+msgid "(Community Edition)"
+msgstr "(نسخه عمومی)"
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/xml/base_common.xml:100
 #, python-format
 msgid "(no string)"
-msgstr ""
+msgstr "(بدون رشته)"
 
 #. module: web
 #. openerp-web
@@ -213,11 +228,19 @@ msgstr "...درحال بارگذاری..."
 #. module: web
 #: model:ir.ui.view,arch_db:web.menu_secondary
 msgid "<span class=\"oe_logo_edit\">Edit Company data</span>"
-msgstr ""
+msgstr "<span class=\"oe_logo_edit\">ویرایش داده شرکت</span>"
 
 #. module: web
 #: model:ir.ui.view,arch_db:web.menu_secondary
 msgid "<span>Odoo</span>"
+msgstr "<span>اودو</span>"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/widgets/user_menu.js:81
+#: code:addons/web/static/src/xml/base.xml:84
+#, python-format
+msgid "About"
 msgstr ""
 
 #. module: web
@@ -232,7 +255,14 @@ msgstr "امکان دسترسی وجود ندارد"
 #: code:addons/web/static/src/js/framework/crash_manager.js:21
 #, python-format
 msgid "Access Error"
-msgstr ""
+msgstr "خطای دسترسی"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:1503
+#, python-format
+msgid "Access to all Enterprise Apps"
+msgstr "دسترسی به همه برنامه‌های سازمانی"
 
 #. module: web
 #. openerp-web
@@ -246,7 +276,7 @@ msgstr "عمل"
 #: code:addons/web/static/src/js/views/form_relational_widgets.js:1106
 #, python-format
 msgid "Action Button"
-msgstr ""
+msgstr "عملکرد دکمه"
 
 #. module: web
 #. openerp-web
@@ -257,72 +287,79 @@ msgstr "شناسه عمل"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_widgets.js:666
+#: code:addons/web/static/src/js/views/form_widgets.js:660
 #, python-format
 msgid "Activate"
+msgstr "فعال‌سازی"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:96
+#, python-format
+msgid "Activate the developer mode"
 msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_widgets.js:663
+#: code:addons/web/static/src/js/views/form_widgets.js:657
 #, python-format
 msgid "Active"
 msgstr "فعال"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_relational_widgets.js:1357
-#: code:addons/web/static/src/xml/base.xml:1059
-#: code:addons/web/static/src/xml/base.xml:1299
+#: code:addons/web/static/src/js/views/form_relational_widgets.js:1367
+#: code:addons/web/static/src/xml/base.xml:1110
+#: code:addons/web/static/src/xml/base.xml:1343
 #, python-format
 msgid "Add"
 msgstr "افزودن"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1172
+#: code:addons/web/static/src/xml/base.xml:1216
 #, python-format
 msgid "Add Custom Filter"
-msgstr ""
+msgstr "افزودن فیلتر سفارشی"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1173
+#: code:addons/web/static/src/xml/base.xml:1217
 #, python-format
 msgid "Add a condition"
-msgstr ""
+msgstr "افزودن یک شرط"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_relational_widgets.js:1006
+#: code:addons/web/static/src/js/views/form_relational_widgets.js:1016
 #, python-format
 msgid "Add an item"
-msgstr ""
+msgstr "افزودن یک گزینه"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1183
+#: code:addons/web/static/src/xml/base.xml:1227
 #, python-format
 msgid "Add custom group"
-msgstr ""
+msgstr "افزودن گروه سفارشی"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:272
+#: code:addons/web/static/src/xml/base.xml:323
 #, python-format
 msgid "Add..."
 msgstr "افزودن‌..."
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_relational_widgets.js:1298
+#: code:addons/web/static/src/js/views/form_relational_widgets.js:1308
 #, python-format
 msgid "Add: "
 msgstr "افزودن: "
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1079
+#: code:addons/web/static/src/xml/base.xml:1123
 #, python-format
 msgid "Advanced Search..."
 msgstr "جستجوی پیشرفته..."
@@ -332,71 +369,85 @@ msgstr "جستجوی پیشرفته..."
 #: code:addons/web/static/src/js/framework/dialog.js:162
 #, python-format
 msgid "Alert"
-msgstr ""
+msgstr "اخطار"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:513
+#: code:addons/web/static/src/xml/base.xml:564
 #, python-format
 msgid "All users"
 msgstr "همه کاربر ان"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1173
-#: code:addons/web/static/src/xml/base.xml:1193
+#: code:addons/web/static/src/xml/base.xml:1508
+#, python-format
+msgid "And more"
+msgstr "افزودن بیشتر"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:1217
+#: code:addons/web/static/src/xml/base.xml:1237
 #, python-format
 msgid "Apply"
 msgstr "اعمال"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_widgets.js:670
+#: code:addons/web/static/src/js/views/form_widgets.js:664
 #: code:addons/web/static/src/js/views/list_view.js:308
 #, python-format
 msgid "Archive"
-msgstr ""
+msgstr "بایگانی"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/form_widgets.js:671
 #, python-format
 msgid "Archived"
-msgstr ""
+msgstr "بایگانی شده"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/search_menus.js:243
 #, python-format
 msgid "Are you sure that you want to remove this filter?"
-msgstr ""
+msgstr "آیا از حذف این فیلتر مطمئن هستید؟"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:244
+#: code:addons/web/static/src/xml/base.xml:295
 #, python-format
 msgid "Attachment :"
 msgstr "پیوست:"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1283
+#: code:addons/web/static/src/xml/base.xml:1327
 #, python-format
 msgid "Available fields"
-msgstr ""
+msgstr "فیلدهای موجود"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:565
+#: code:addons/web/static/src/xml/base.xml:616
 #, python-format
 msgid "Bar Chart"
-msgstr ""
+msgstr "نمودار میله‌ای"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/list_view.js:1946
+#: code:addons/web/static/src/js/views/list_view.js:1955
 #, python-format
 msgid "Binary file"
+msgstr "فایل باینری"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:1507
+#, python-format
+msgid "Bugfixes guarantee"
 msgstr ""
 
 #. module: web
@@ -418,7 +469,7 @@ msgstr "نوع دکمه:"
 #: code:addons/web/static/src/js/framework/utils.js:285
 #, python-format
 msgid "Bytes,Kb,Mb,Gb,Tb,Pb,Eb,Zb,Yb"
-msgstr ""
+msgstr "بایت,کیلوبایت,مگابایت,گیگابایت,ترابیات,پتابایت,اگزابایت,زتابایت,یوتابایت"
 
 #. module: web
 #. openerp-web
@@ -463,13 +514,20 @@ msgstr "تغییر کلمه عبور"
 #: code:addons/web/static/src/xml/base_common.xml:71
 #, python-format
 msgid "Change default:"
+msgstr "تغییر پیش‌فرض"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_widgets.js:447
+#, python-format
+msgid "Change selection "
 msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:916
-#: code:addons/web/static/src/xml/base.xml:970
-#: code:addons/web/static/src/xml/base.xml:972
+#: code:addons/web/static/src/xml/base.xml:967
+#: code:addons/web/static/src/xml/base.xml:1021
+#: code:addons/web/static/src/xml/base.xml:1023
 #, python-format
 msgid "Clear"
 msgstr "پاک‌سازی"
@@ -480,7 +538,7 @@ msgstr "پاک‌سازی"
 #: code:addons/web/static/src/js/web_client.js:132
 #, python-format
 msgid "Client Error"
-msgstr ""
+msgstr "خطای سرویس‌گیرنده"
 
 #. module: web
 #. openerp-web
@@ -510,7 +568,7 @@ msgstr ""
 #: code:addons/web/static/src/js/framework/dialog.js:187
 #, python-format
 msgid "Confirmation"
-msgstr ""
+msgstr "تاییدیه"
 
 #. module: web
 #. openerp-web
@@ -519,32 +577,33 @@ msgstr ""
 msgid "Context:"
 msgstr "زمینه:"
 
-#: code:addons/web/static/src/xml/base.xml:80
-#: code:addons/web/static/src/xml/base_common.xml:159
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:116
 #, python-format
 msgid "Copyright © 2004-2015 Odoo S.A."
 msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_widgets.js:1351
+#: code:addons/web/static/src/js/views/form_widgets.js:1347
 #, python-format
 msgid "Could not display the selected image."
-msgstr ""
+msgstr "تصویر مورد نظر قابل نمایش نمی‌باشد."
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/list_view.js:1101
+#: code:addons/web/static/src/js/views/list_view.js:1110
 #, python-format
 msgid "Could not find id in dataset"
-msgstr ""
+msgstr "شناسه در داده‌های موجود پیدا نشد"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/framework/utils.js:180
 #, python-format
 msgid "Could not serialize XML"
-msgstr ""
+msgstr "عدم توانایی در مرتب سازی XML"
 
 #. module: web
 #. openerp-web
@@ -562,14 +621,14 @@ msgstr "ایجاد"
 #: code:addons/web/static/src/js/views/form_common.js:223
 #, python-format
 msgid "Create \"<strong>%s</strong>\""
-msgstr ""
+msgstr "افزودن \"<strong>%s</strong>\""
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/form_relational_widgets.js:27
 #, python-format
 msgid "Create a %s"
-msgstr ""
+msgstr "ایجاد یک %s"
 
 #. module: web
 #. openerp-web
@@ -583,7 +642,7 @@ msgstr "ایجاد و ویرایش..."
 #: code:addons/web/static/src/js/views/form_relational_widgets.js:40
 #, python-format
 msgid "Create and edit"
-msgstr ""
+msgstr "ایجاد و ویرایش"
 
 #. module: web
 #. openerp-web
@@ -598,7 +657,7 @@ msgstr "ایجاد: "
 #: code:addons/web/static/src/xml/base.xml:249
 #, python-format
 msgid "Created by :"
-msgstr ""
+msgstr "ایجاد شده توسط"
 
 #. module: web
 #. openerp-web
@@ -612,7 +671,7 @@ msgstr "تاریخ ایجاد:"
 #: code:addons/web/static/src/xml/base.xml:196
 #, python-format
 msgid "Creation User:"
-msgstr ""
+msgstr "ایجاد کاربر:"
 
 #. module: web
 #. openerp-web
@@ -629,21 +688,28 @@ msgstr "پایگاه داده"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:624
+#: code:addons/web/static/src/xml/base.xml:110
+#, python-format
+msgid "Database expiration:"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:675
 #, python-format
 msgid "Day"
 msgstr "روز"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_widgets.js:664
+#: code:addons/web/static/src/js/views/form_widgets.js:658
 #, python-format
 msgid "Deactivate"
-msgstr ""
+msgstr "غیرفعال‌سازی"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:470
+#: code:addons/web/static/src/xml/base.xml:521
 #, python-format
 msgid "Default:"
 msgstr "پیش فرض:"
@@ -703,6 +769,13 @@ msgstr "آیا واقعا میخواهید این رکوردها حذف شوند
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/xml/base.xml:82
+#, python-format
+msgid "Documentation"
+msgstr "مستندات"
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/xml/base_common.xml:63
 #, python-format
 msgid "Domain:"
@@ -713,7 +786,7 @@ msgstr "دامنه:"
 #: code:addons/web/static/src/js/framework/misc.js:17
 #, python-format
 msgid "Don't leave yet,<br />it's still loading..."
-msgstr ""
+msgstr "لطفا خارج نشوید,<br />در حال بارگذاری..."
 
 #. module: web
 #. openerp-web
@@ -728,14 +801,14 @@ msgstr "دانلود"
 #: code:addons/web/static/src/js/views/list_view.js:1962
 #, python-format
 msgid "Download \"%s\""
-msgstr ""
+msgstr "دانلود \"%s\""
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/pivot_view.js:123
 #, python-format
 msgid "Download xls"
-msgstr ""
+msgstr "دانلود اکسل"
 
 #. module: web
 #. openerp-web
@@ -749,7 +822,7 @@ msgstr "تکثیر کردن"
 #: code:addons/web/static/src/js/views/form_widgets.js:352
 #, python-format
 msgid "E-mail Error"
-msgstr ""
+msgstr "خطای پست‌الکترونیک"
 
 #. module: web
 #. openerp-web
@@ -765,14 +838,14 @@ msgstr "ویرایش"
 #: code:addons/web/static/src/xml/base.xml:173
 #, python-format
 msgid "Edit Action"
-msgstr ""
+msgstr "ویرایش کنش"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:172
 #, python-format
 msgid "Edit SearchView"
-msgstr ""
+msgstr "ویرایش وضعیت نمایش جستجو"
 
 #. module: web
 #. openerp-web
@@ -792,7 +865,7 @@ msgstr "پست الکترونیک"
 #: code:addons/web/static/src/xml/website.tour.xml:25
 #, python-format
 msgid "End This Tutorial"
-msgstr ""
+msgstr "خاتمه‌ی این خودآموز"
 
 #. module: web
 #. openerp-web
@@ -801,6 +874,13 @@ msgstr ""
 #, python-format
 msgid "Error"
 msgstr "خطا"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_widgets.js:458
+#, python-format
+msgid "Error: Bad domain"
+msgstr ""
 
 #. module: web
 #: code:addons/web/controllers/main.py:838
@@ -813,14 +893,14 @@ msgstr "خطا،کلمه عبور تغییر نکرد !"
 #: code:addons/web/static/src/js/framework/pyeval.js:981
 #, python-format
 msgid "Evaluation Error"
-msgstr ""
+msgstr "ارور ارزیابی"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:599
 #, python-format
 msgid "Expand all"
-msgstr ""
+msgstr "گسترش همه"
 
 #. module: web
 #. openerp-web
@@ -835,42 +915,42 @@ msgstr "برونش"
 #: code:addons/web/static/src/js/widgets/data_export.js:50
 #, python-format
 msgid "Export Data"
-msgstr ""
+msgstr "برونش داده"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:1277
 #, python-format
 msgid "Export Formats"
-msgstr ""
+msgstr "برونش قالب"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/widgets/data_export.js:41
 #, python-format
 msgid "Export To File"
-msgstr ""
+msgstr "برونش بر روی فایل"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:1271
 #, python-format
 msgid "Export Type:"
-msgstr ""
+msgstr "نوع برونش:"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:1274
 #, python-format
 msgid "Export all Data"
-msgstr ""
+msgstr "برونش تمام داده‌ها"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/view_manager.js:370
 #, python-format
 msgid "Failed to evaluate search criterions"
-msgstr ""
+msgstr "موفق نشد شرایط جستجو ارزیابی کند"
 
 #. module: web
 #. openerp-web
@@ -906,7 +986,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/base.xml:1285
 #, python-format
 msgid "Fields to export"
-msgstr ""
+msgstr "فیلد های در جهت خروجی گرفتن"
 
 #. module: web
 #. openerp-web
@@ -934,14 +1014,14 @@ msgstr "فیلتر"
 #: code:addons/web/static/src/js/views/search_menus.js:83
 #, python-format
 msgid "Filter name is required."
-msgstr ""
+msgstr "نام فیلتر مورد نیاز است."
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/search_inputs.js:484
 #, python-format
 msgid "Filter on: %s"
-msgstr ""
+msgstr "فیلتر شده بر اساس: %s"
 
 #. module: web
 #. openerp-web
@@ -952,16 +1032,23 @@ msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1169
+#: code:addons/web/static/src/xml/base.xml:1213
 #, python-format
 msgid "Filters"
 msgstr "فیلترها"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:598
+#: code:addons/web/static/src/xml/base.xml:649
 #, python-format
 msgid "Flip axis"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:119
+#, python-format
+msgid "For more information visit"
 msgstr ""
 
 #. module: web
@@ -971,6 +1058,20 @@ msgstr ""
 #, python-format
 msgid "Form"
 msgstr "فرم"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:118
+#, python-format
+msgid "GNU Lesser General Public License"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:1500
+#, python-format
+msgid "Get this feature and much more with Odoo Enterprise!"
+msgstr ""
 
 #. module: web
 #. openerp-web
@@ -1006,7 +1107,7 @@ msgstr "گروه‌بندی برمبنای"
 #: code:addons/web/static/src/js/views/search_inputs.js:660
 #, python-format
 msgid "Group by: %s"
-msgstr ""
+msgstr "گروه‌بندی بر اساس: %s"
 
 #. module: web
 #. openerp-web
@@ -1049,49 +1150,65 @@ msgstr "غیرفعال"
 #: code:addons/web/static/src/js/views/graph_widget.js:197
 #, python-format
 msgid "Invalid data"
+msgstr "داده نا معتبر"
+
+#. module: web
+#: code:addons/web/controllers/main.py:655
+#: code:addons/web/controllers/main.py:669
+#, python-format
+msgid ""
+"Invalid database name. Only alphanumerical characters, underscore, hyphen "
+"and dot are allowed."
 msgstr ""
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/widgets/debug_manager.js:106
-#: code:addons/web/static/src/xml/base.xml:165
+#: code:addons/web/static/src/xml/base.xml:211
 #, python-format
 msgid "JS Tests"
-msgstr ""
+msgstr "آزمایش جاوااسکریپت"
 
 #. module: web
-#: code:addons/web/controllers/main.py:845
+#: code:addons/web/controllers/main.py:769
 #, python-format
 msgid "Languages"
 msgstr "زبان‌ها"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:208
+#: code:addons/web/static/src/xml/base.xml:254
 #, python-format
 msgid "Latest Modification Date:"
 msgstr "تاریخ آخرین تغییر"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:204
+#: code:addons/web/static/src/xml/base.xml:250
 #, python-format
 msgid "Latest Modification by:"
 msgstr "آخرین تغییرات توسط:"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:177
+#: code:addons/web/static/src/xml/base.xml:223
 #, python-format
 msgid "Leave Debug Mode"
 msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:566
+#: code:addons/web/static/src/xml/base.xml:118
+#, python-format
+msgid "Licenced under the terms of"
+msgstr "دارای مجوز تحت شرایط"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:617
 #, python-format
 msgid "Line Chart"
-msgstr ""
+msgstr "نمودار خطی"
 
 #. module: web
 #. openerp-web
@@ -1178,28 +1295,28 @@ msgstr "مدیریت فیلترها"
 #: code:addons/web/static/src/js/framework/misc.js:20
 #, python-format
 msgid "Maybe you should consider reloading the application by pressing F5..."
-msgstr ""
+msgstr "شاید بهتر باشد با فشردن کلید F5 صفحه را دوباره بارگذاری کنید..."
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:570
 #, python-format
 msgid "Measure"
-msgstr ""
+msgstr "ندازه"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:602
 #, python-format
 msgid "Measures"
-msgstr ""
+msgstr "اندازه‌ها"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/widgets/debug_manager.js:89
 #, python-format
 msgid "Metadata (%s)"
-msgstr ""
+msgstr "متادیتا (%s)"
 
 #. module: web
 #. openerp-web
@@ -1213,7 +1330,14 @@ msgstr "روش:"
 #: code:addons/web/static/src/js/framework/crash_manager.js:22
 #, python-format
 msgid "Missing Record"
-msgstr ""
+msgstr "رکورد کمبود"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:1505
+#, python-format
+msgid "Mobile support"
+msgstr "پشتیبانی موبایل"
 
 #. module: web
 #. openerp-web
@@ -1227,7 +1351,7 @@ msgstr "فیلدهای مدل %s"
 #: code:addons/web/static/src/xml/base.xml:254
 #, python-format
 msgid "Modified by :"
-msgstr ""
+msgstr "ویرایش توسط:"
 
 #. module: web
 #. openerp-web
@@ -1253,21 +1377,21 @@ msgstr "بیشتر"
 #. module: web
 #: model:ir.ui.view,arch_db:web.menu
 msgid "More <b class=\"caret\"/>"
-msgstr ""
+msgstr "بیشتر <b class=\"caret\"/>"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:1303
 #, python-format
 msgid "Move Down"
-msgstr ""
+msgstr "بفرست پایین"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:1302
 #, python-format
 msgid "Move Up"
-msgstr ""
+msgstr "بفرست بالا"
 
 #. module: web
 #. openerp-web
@@ -1288,7 +1412,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/base.xml:83
 #, python-format
 msgid "My Odoo.com account"
-msgstr ""
+msgstr "اکانت من در Odoo.com"
 
 #. module: web
 #. openerp-web
@@ -1320,6 +1444,13 @@ msgstr ""
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/xml/base.xml:1504
+#, python-format
+msgid "New design"
+msgstr "طرح جیدی"
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/js/views/search_inputs.js:330
 #, python-format
 msgid "No"
@@ -1330,7 +1461,7 @@ msgstr "خیر"
 #: code:addons/web/static/src/xml/base.xml:192
 #, python-format
 msgid "No Update:"
-msgstr ""
+msgstr "بدون به روز رسانی:"
 
 #. module: web
 #. openerp-web
@@ -1355,34 +1486,41 @@ msgstr ""
 #: code:addons/web/static/src/js/views/form_view.js:123
 #, python-format
 msgid "No data provided."
-msgstr ""
+msgstr "هیچ داده ای ارائه نشده."
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/graph_widget.js:88
 #, python-format
 msgid "No data to display"
-msgstr ""
+msgstr "داده‌ای برای نمایش نیست"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:641
 #, python-format
 msgid "No data to display."
-msgstr ""
+msgstr "داده‌ای برای نمایش نیست."
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/form_common.js:243
 #, python-format
 msgid "No results to show..."
+msgstr "نتیجه‌ای برای نمایش وجود ندارد"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_widgets.js:456
+#, python-format
+msgid "No selected record"
 msgstr ""
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/form_relational_widgets.js:328
 #, python-format
-msgid "No value found for the field  for value "
+msgid "No value found for the field %s for value %s"
 msgstr ""
 
 #. module: web
@@ -1411,7 +1549,7 @@ msgstr ""
 #: code:addons/web/static/src/js/views/graph_widget.js:226
 #, python-format
 msgid "Not enough data points"
-msgstr ""
+msgstr "نقطه های داده کافی نیست"
 
 #. module: web
 #. openerp-web
@@ -1433,6 +1571,13 @@ msgstr "شی:"
 #: model:ir.ui.view,arch_db:web.layout
 #, python-format
 msgid "Odoo"
+msgstr "Odoo"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:101
+#, python-format
+msgid "Odoo (Formerly OpenERP)"
 msgstr ""
 
 #. module: web
@@ -1440,14 +1585,21 @@ msgstr ""
 #: code:addons/web/static/src/js/apps.js:189
 #, python-format
 msgid "Odoo Apps will be available soon"
-msgstr ""
+msgstr "برنامه‌های اودو به زودی در دسترس خواهد بود"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_widgets.js:1678
+#: code:addons/web/static/src/js/views/form_widgets.js:1675
 #, python-format
 msgid "Odoo Enterprise"
-msgstr ""
+msgstr "اودو سازمانی"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:117
+#, python-format
+msgid "Odoo S.A."
+msgstr "سایت اودوو "
 
 #. module: web
 #: model:ir.ui.view,arch_db:web.qunit_suite
@@ -1456,10 +1608,24 @@ msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_widgets.js:677
+#: code:addons/web/static/src/xml/base.xml:117
+#, python-format
+msgid "Odoo is a trademark of"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:119
+#, python-format
+msgid "Odoo.com"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_widgets.js:671
 #, python-format
 msgid "Off"
-msgstr ""
+msgstr "خاموش"
 
 #. module: web
 #. openerp-web
@@ -1483,7 +1649,7 @@ msgstr ""
 #: code:addons/web/static/src/js/views/form_widgets.js:675
 #, python-format
 msgid "On"
-msgstr ""
+msgstr "روشن"
 
 #. module: web
 #. openerp-web
@@ -1494,24 +1660,31 @@ msgstr "بهنگام تغییر:"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/widgets/progress_bar.js:76
+#: code:addons/web/static/src/js/widgets/progress_bar.js:79
 #, python-format
 msgid "Only Integer Value should be valid."
-msgstr ""
+msgstr "فقط عدد صحیح مجاز باشد"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:506
+#: code:addons/web/static/src/xml/base.xml:557
 #, python-format
 msgid "Only you"
+msgstr "فقط خودتان"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:198
+#, python-format
+msgid "Open Debug Menu"
 msgstr ""
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/form_relational_widgets.js:153
-#: code:addons/web/static/src/js/views/form_relational_widgets.js:924
-#: code:addons/web/static/src/js/views/form_relational_widgets.js:1088
-#: code:addons/web/static/src/js/views/form_relational_widgets.js:1314
+#: code:addons/web/static/src/js/views/form_relational_widgets.js:928
+#: code:addons/web/static/src/js/views/form_relational_widgets.js:1098
+#: code:addons/web/static/src/js/views/form_relational_widgets.js:1324
 #, python-format
 msgid "Open: "
 msgstr "باز: "
@@ -1526,7 +1699,7 @@ msgstr "گذرواژه"
 #: code:addons/web/static/src/xml/base.xml:567
 #, python-format
 msgid "Pie Chart"
-msgstr ""
+msgstr "نمودار دایره‌ای"
 
 #. module: web
 #. openerp-web
@@ -1551,14 +1724,14 @@ msgstr ""
 #: code:addons/web/static/src/js/views/pivot_view.js:25
 #, python-format
 msgid "Pivot"
-msgstr ""
+msgstr "پیوت"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/widgets/data_export.js:165
 #, python-format
 msgid "Please enter save field list name"
-msgstr ""
+msgstr "لطفا نام لیست فیلد ذخیره را وارد کنید"
 
 #. module: web
 #. openerp-web
@@ -1581,24 +1754,24 @@ msgstr ""
 #: code:addons/web/static/src/js/widgets/data_export.js:414
 #, python-format
 msgid "Please select fields to export..."
-msgstr ""
+msgstr "لطفا فیلد های مورد نظر جهت خروجی گرفتن را انتخاب کنید..."
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/widgets/data_export.js:401
 #, python-format
 msgid "Please select fields to save export list..."
-msgstr ""
+msgstr "لطفا فیلد های مورد نظر جهت خروجی گرفتن را انتخاب کنید..."
 
 #. module: web
 #: model:ir.ui.view,arch_db:web.menu_secondary
 msgid "Powered by"
-msgstr ""
+msgstr "قدرت گرفته توسط"
 
 #. module: web
 #: model:ir.ui.view,arch_db:web.login_layout
 msgid "Powered by <span>Odoo</span>"
-msgstr ""
+msgstr "راه اندازی شده به وسیله <span>اُدو</span>"
 
 #. module: web
 #. openerp-web
@@ -1628,7 +1801,7 @@ msgstr "چاپ گردش کار"
 #: code:addons/web/static/src/xml/base.xml:578
 #: code:addons/web/static/src/xml/base.xml:610
 #, python-format
-msgid "Quantity"
+msgid "Count"
 msgstr "تعداد"
 
 #. module: web
@@ -1636,7 +1809,7 @@ msgstr "تعداد"
 #: code:addons/web/static/src/xml/base.xml:627
 #, python-format
 msgid "Quarter"
-msgstr ""
+msgstr "ربع"
 
 #. module: web
 #. openerp-web
@@ -1664,88 +1837,88 @@ msgstr "حذف همه"
 #: code:addons/web/static/src/js/views/form_relational_widgets.js:328
 #, python-format
 msgid "Render"
-msgstr ""
+msgstr "خروجی"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/form_widgets.js:382
 #, python-format
 msgid "Resource Error"
-msgstr ""
+msgstr "خطا در منبع"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/form_common.js:870
-#: code:addons/web/static/src/xml/base.xml:405
 #: code:addons/web/static/src/xml/base.xml:456
-#: code:addons/web/static/src/xml/base.xml:1209
+#: code:addons/web/static/src/xml/base.xml:507
+#: code:addons/web/static/src/xml/base.xml:1253
 #, python-format
 msgid "Save"
 msgstr "ذخیره"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_common.js:881
+#: code:addons/web/static/src/js/views/form_common.js:885
 #, python-format
 msgid "Save & New"
 msgstr "دخیره و جدید:"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:963
-#: code:addons/web/static/src/xml/base.xml:965
+#: code:addons/web/static/src/xml/base.xml:1014
+#: code:addons/web/static/src/xml/base.xml:1016
 #, python-format
 msgid "Save As"
 msgstr "ذخیره به عنوان"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_widgets.js:1208
+#: code:addons/web/static/src/js/views/form_widgets.js:1204
 #, python-format
 msgid "Save As..."
 msgstr "ذخیره به عنوان..."
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1354
+#: code:addons/web/static/src/xml/base.xml:1398
 #, python-format
 msgid "Save as:"
 msgstr "ذخیره به عنوان:"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1201
+#: code:addons/web/static/src/xml/base.xml:1245
 #, python-format
 msgid "Save current search"
-msgstr ""
+msgstr "ذخیره سازی فایل فعلی"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_view.js:1129
+#: code:addons/web/static/src/js/views/form_view.js:1134
 #, python-format
 msgid "Save default"
-msgstr ""
+msgstr "ذخیر به عنوان پیش فرض"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1287
+#: code:addons/web/static/src/xml/base.xml:1331
 #, python-format
 msgid "Save fields list"
 msgstr "ذخیره لیست فیلدها"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1360
+#: code:addons/web/static/src/xml/base.xml:1404
 #, python-format
 msgid "Saved exports:"
-msgstr ""
+msgstr "خروجی های ذخیره شده:"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/search_inputs.js:349
 #, python-format
 msgid "Search %(field)s at: %(value)s"
-msgstr ""
+msgstr "جستجو %(field)s در: %(value)s"
 
 #. module: web
 #. openerp-web
@@ -1754,7 +1927,7 @@ msgstr ""
 #: code:addons/web/static/src/js/views/search_inputs.js:391
 #, python-format
 msgid "Search %(field)s for: %(value)s"
-msgstr ""
+msgstr "جستجو %(field)s درباره: %(value)s"
 
 #. module: web
 #. openerp-web
@@ -1779,8 +1952,15 @@ msgstr "جستجو "
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_common.js:1037
-#: code:addons/web/static/src/xml/base.xml:957
+#: code:addons/web/static/src/js/views/form_widgets.js:444
+#, python-format
+msgid "See selection "
+msgstr "مشاهده بخش انتخاب شده"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_common.js:1043
+#: code:addons/web/static/src/xml/base.xml:1008
 #, python-format
 msgid "Select"
 msgstr "انتخاب"
@@ -1788,14 +1968,28 @@ msgstr "انتخاب"
 #. module: web
 #: model:ir.ui.view,arch_db:web.login
 msgid "Select <i class=\"fa fa-database\"/>"
+msgstr "انتخاب <i class=\"fa fa-database\"/>"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_widgets.js:468
+#, python-format
+msgid "Select records..."
 msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_common.js:1072
+#: code:addons/web/static/src/js/views/form_common.js:1078
 #, python-format
 msgid "Selected domain"
 msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_widgets.js:468
+#, python-format
+msgid "Selected records"
+msgstr "رکوردهای انتخاب شده"
 
 #. module: web
 #. openerp-web
@@ -1816,7 +2010,7 @@ msgstr "تنظیم به پیش‌فرض"
 #: code:addons/web/static/src/xml/base.xml:163
 #, python-format
 msgid "Set Defaults"
-msgstr ""
+msgstr "تنظیم به پیش‌فرض"
 
 #. module: web
 #. openerp-web
@@ -1837,7 +2031,7 @@ msgstr "اشتراک با همه کاربران"
 #: code:addons/web/static/src/js/apps.js:189
 #, python-format
 msgid "Showing locally available modules"
-msgstr ""
+msgstr "در حال نمایش ماجول‌های در دسترس محلی"
 
 #. module: web
 #. openerp-web
@@ -1847,18 +2041,24 @@ msgid "Size:"
 msgstr "اندازه:"
 
 #. module: web
+#: code:addons/web/controllers/main.py:1067
+#, python-format
+msgid "Something horrible happened"
+msgstr "چیز وحشتناکی اتفاق افتاد"
+
+#. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base_common.xml:107
 #, python-format
 msgid "Special:"
-msgstr ""
+msgstr "ویژه:"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/framework/misc.js:15
 #, python-format
 msgid "Still loading..."
-msgstr ""
+msgstr "هنوز در حال بارگذاری..."
 
 #. module: web
 #. openerp-web
@@ -1869,17 +2069,24 @@ msgstr "در حال بارگذاری...</ br>  لطفا صبر کنید."
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_widgets.js:676
+#: code:addons/web/static/src/xml/base.xml:83
 #, python-format
-msgid "Switch Off"
+msgid "Support"
 msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_widgets.js:678
+#: code:addons/web/static/src/js/views/form_widgets.js:670
+#, python-format
+msgid "Switch Off"
+msgstr "خاموش کردن"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_widgets.js:672
 #, python-format
 msgid "Switch On"
-msgstr ""
+msgstr "روشن کردن"
 
 #. module: web
 #. openerp-web
@@ -1890,10 +2097,16 @@ msgstr "یه قهوه بد نیست،<br /> چون هنوز کار داره..."
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/widgets/debug_manager.js:152
-#: code:addons/web/static/src/xml/base.xml:170
+#: code:addons/web/static/src/xml/base.xml:216
 #, python-format
 msgid "Technical Translation"
+msgstr "ترجمه فنی"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/form_widgets.js:458
+#, python-format
+msgid "The domain is wrong."
 msgstr ""
 
 #. module: web
@@ -1901,7 +2114,7 @@ msgstr ""
 #: code:addons/web/static/src/js/views/form_widgets.js:1208
 #, python-format
 msgid "The field is empty, there's nothing to save !"
-msgstr ""
+msgstr "این فیلد خالی است، چیزی برای ذخیره‌سازی وجود ندارد !"
 
 #. module: web
 #. openerp-web
@@ -1937,14 +2150,14 @@ msgstr ""
 #, python-format
 msgid ""
 "The old password you provided is incorrect, your password was not changed."
-msgstr ""
+msgstr "این رمز عبور سابق شما, رمز عبور شما تغییر پیدا کرده است."
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/form_view.js:357
 #, python-format
 msgid "The record could not be found in the database."
-msgstr ""
+msgstr "اطلاعات در پایگاه داده پیدا نشد."
 
 #. module: web
 #. openerp-web
@@ -1976,7 +2189,7 @@ msgstr ""
 #: code:addons/web/static/src/js/views/form_widgets.js:1193
 #, python-format
 msgid "There was a problem while uploading your file"
-msgstr ""
+msgstr "خطا در هنگام بارگذاری فایل شما"
 
 #. module: web
 #. openerp-web
@@ -1991,7 +2204,7 @@ msgstr ""
 #: code:addons/web/static/src/js/views/form_widgets.js:382
 #, python-format
 msgid "This resource is empty"
-msgstr ""
+msgstr "منبع خالی است"
 
 #. module: web
 #. openerp-web
@@ -2059,7 +2272,7 @@ msgstr "نوع:"
 #: code:addons/web/static/src/js/views/list_view.js:309
 #, python-format
 msgid "Unarchive"
-msgstr ""
+msgstr "برگشت از بایگانی"
 
 #. module: web
 #. openerp-web
@@ -2083,7 +2296,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/base.xml:650
 #, python-format
 msgid "Unhandled widget"
-msgstr ""
+msgstr "ویجت کنترل نشده"
 
 #. module: web
 #. openerp-web
@@ -2129,42 +2342,40 @@ msgstr "نامحدود"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/framework/data.js:1113
+#: code:addons/web/static/src/js/framework/data.js:1120
 #, python-format
 msgid "Unsupported operator %s in domain %s"
 msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_widgets.js:1661
-#, python-format
-msgid "Upgrade now"
-msgstr ""
-
-#. module: web
-#. openerp-web
 #: code:addons/web/static/src/js/views/form_widgets.js:1658
 #, python-format
-msgid ""
-"Upgrade to <a href=\"https://www.odoo.com/editions\">Odoo Enterprise</a> to "
-"activate this feature."
-msgstr ""
+msgid "Upgrade now"
+msgstr "حالا ارتقاء بده"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:919
-#: code:addons/web/static/src/xml/base.xml:980
+#: code:addons/web/static/src/xml/base.xml:1506
+#, python-format
+msgid "Upgrade to future versions"
+msgstr "آپگرید به نسخه‌های آینده"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:970
+#: code:addons/web/static/src/xml/base.xml:1031
 #, python-format
 msgid "Uploading ..."
 msgstr "در حال آپلود..."
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_relational_widgets.js:1620
+#: code:addons/web/static/src/js/views/form_relational_widgets.js:1633
 #: code:addons/web/static/src/js/widgets/sidebar.js:168
 #, python-format
 msgid "Uploading Error"
-msgstr ""
+msgstr "خطای بارگذاری"
 
 #. module: web
 #. openerp-web
@@ -2178,13 +2389,20 @@ msgstr "در حال آپلود..."
 #: code:addons/web/static/src/xml/base.xml:1204
 #, python-format
 msgid "Use by default"
-msgstr ""
+msgstr "استفاده به عنوان پیش‌فرض"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/framework/crash_manager.js:23
 #, python-format
 msgid "Validation Error"
+msgstr "خطای ارزیابی"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:105
+#, python-format
+msgid "Version"
 msgstr ""
 
 #. module: web
@@ -2207,14 +2425,14 @@ msgstr "نما"
 #: code:addons/web/static/src/xml/base.xml:166
 #, python-format
 msgid "View Fields"
-msgstr ""
+msgstr "نمایش فیلد ها"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:161
 #, python-format
 msgid "View Metadata"
-msgstr ""
+msgstr "نمایش متادیتا"
 
 #. module: web
 #. openerp-web
@@ -2254,21 +2472,27 @@ msgstr ""
 #: code:addons/web/static/src/xml/base_common.xml:51
 #, python-format
 msgid "Widget:"
-msgstr ""
+msgstr "ویجت:"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/widgets/progress_bar.js:76
 #, python-format
 msgid "Wrong value entered!"
-msgstr ""
+msgstr "مقدار وارد‌شده اشتباه است!"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:188
 #, python-format
 msgid "XML ID:"
-msgstr ""
+msgstr "شناسه XML:"
+
+#. module: web
+#: code:addons/web/controllers/main.py:513
+#, python-format
+msgid "Wrong login/password"
+msgstr "نام وردو/گذرواژه اشتباه"
 
 #. module: web
 #. openerp-web
@@ -2290,7 +2514,7 @@ msgstr "بله"
 #: code:addons/web/static/src/js/framework/crash_manager.js:53
 #, python-format
 msgid "You are back online"
-msgstr ""
+msgstr "شما دوباره آنلاین هستید"
 
 #. module: web
 #. openerp-web
@@ -2399,7 +2623,7 @@ msgstr "بزرگتر از"
 #: code:addons/web/static/src/js/views/search_filters.js:242
 #, python-format
 msgid "greater than or equal to"
-msgstr ""
+msgstr "بزرگتر یا مساوی با"
 
 #. module: web
 #. openerp-web
@@ -2424,7 +2648,7 @@ msgstr "برابر است با"
 #: code:addons/web/static/src/js/views/search_filters.js:286
 #, python-format
 msgid "is false"
-msgstr ""
+msgstr "غلط است"
 
 #. module: web
 #. openerp-web
@@ -2463,14 +2687,14 @@ msgstr "تنظیم نشده است"
 #: code:addons/web/static/src/js/views/search_filters.js:269
 #, python-format
 msgid "is set"
-msgstr ""
+msgstr "تنظیم شده"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/search_filters.js:285
 #, python-format
 msgid "is true"
-msgstr ""
+msgstr "درست است"
 
 #. module: web
 #. openerp-web
@@ -2495,21 +2719,21 @@ msgstr "کمتر از یک دقیقه پیش"
 #: code:addons/web/static/src/js/views/search_filters.js:243
 #, python-format
 msgid "less than or equal to"
-msgstr ""
+msgstr "کمتر یا مساوی با"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/search_inputs.js:229
 #, python-format
 msgid "not a valid integer"
-msgstr ""
+msgstr "یک عدد صحیح نیست"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/search_inputs.js:244
 #, python-format
 msgid "not a valid number"
-msgstr ""
+msgstr "یک عدد نیست"
 
 #. module: web
 #. openerp-web

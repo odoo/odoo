@@ -64,6 +64,7 @@ var KanbanRecord = Widget.extend({
                 qweb_context[p] = _.bind(this[p], this);
             }
         }
+        this.qweb_context = qweb_context;
         this.content = this.qweb.render('kanban-box', qweb_context);
     },
 
@@ -81,7 +82,18 @@ var KanbanRecord = Widget.extend({
     },
 
     start: function() {
+        var self = this;
         this.add_widgets();
+        this.$('[tooltip]').each(function () {
+            var $el = $(this);
+            var tooltip = $el.attr('tooltip');
+            if (tooltip) {
+                $el.tooltip({
+                    'html': true,
+                    'title': self.qweb.render(tooltip, self.qweb_context)
+                });
+            }
+        });
     },
 
     renderElement: function () {
@@ -129,7 +141,7 @@ var KanbanRecord = Widget.extend({
             if (!id) { id = undefined; }
             if (options.preview_image)
                 field = options.preview_image;
-            var unique = this.record.__last_update.value.replace(/[^0-9]/g, '');
+            var unique = this.record.__last_update && this.record.__last_update.value.replace(/[^0-9]/g, '');
             url = session.url('/web/image', {model: model, field: field, id: id, unique: unique});
             if (cache !== undefined) {
                 // Set the cache duration in seconds.
@@ -172,14 +184,15 @@ var KanbanRecord = Widget.extend({
                 if (elem == ev.currentTarget) {
                     ischild = false;
                 }
+                var test_event = events && events.click && (events.click.length > 1 || events.click[0].namespace !== "tooltip");
                 if (ischild) {
                     children.push(elem);
-                    if (events && events.click) {
+                    if (test_event) {
                         // do not trigger global click if one child has a click event registered
                         trigger = false;
                     }
                 }
-                if (trigger && events && events.click) {
+                if (trigger && test_event) {
                     _.each(events.click, function(click_event) {
                         if (click_event.selector) {
                             // For each parent of original target, check if a

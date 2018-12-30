@@ -5,57 +5,6 @@
         <li class="o_planner_systray hidden-xs">
             <div class="progress"><div class="progress-bar"/></div>
         </li>
-        <li class="o_planner_help">
-            <a class="dropdown-toggle" data-toggle="dropdown" href="#" title="Open Help Menu" aria-expanded="false">
-                <span class="fa fa-question-circle"/>
-                <b class="caret"/>
-            </a>
-            <ul class="dropdown-menu" role="menu">
-                <li class="o_planner_link"><a href="#" data-menu="planner">Planner</a></li>
-                <li><a href="#" data-menu="documentation">Documentation</a></li>
-                <li><a href="#" data-menu="support">Support</a></li>
-                <li><a href="#" data-menu="about">About</a></li>
-            </ul>
-        </li>
-    </t>
-
-    <t t-name="PlannerLauncher.about">
-        <div class="oe_about">
-
-            <div class="container-fluid">
-                <div class="row">
-                    <a class="oe_activate_debug_mode oe_right label label-primary" href="?debug" >Activate the developer mode</a>
-                </div>
-                <div class="row">
-                    <div class="col-sm-offset-2 col-md-offset-2 col-sm-8 col-md-8 user-details">
-                        <div class="user-image">
-                            <img src="/web/static/src/img/logo2.png" alt="Odoo (Formerly OpenERP)" title="Odoo (Formerly OpenERP)" class="img-circle"/>
-                        </div>
-                        <div class="user-info-block">
-                            <div class="user-heading">
-                                <h3>Version <t t-esc="version_info.server_version"/></h3>
-                            </div>
-                            <div class="user-body">
-                                <div class="tab-content">
-                                    <div id="settings" class="tab-pane active">
-                                        <h4>Copyright © 2004-2015 Odoo S.A.</h4>
-                                        <p>Odoo is a trademark of <a target="_blank" href="https://www.odoo.com" style="text-decoration: underline;">Odoo S.A.</a></p>
-                                        <p>Licenced under the terms of <a target="_blank" href="http://www.gnu.org/licenses/lgpl.html" style="text-decoration: underline;">GNU Lesser General Public License</a></p>
-                                        <p>For more information visit <a target="_blank" href="https://www.odoo.com" style="text-decoration: underline;">Odoo.com</a></p>
-                                        <p>
-                                          <a href="https://www.odoo.com/web/about/facebook"><i class="fa fa-facebook-square fa-3x social-fb"></i></a>
-                                          <a href="https://www.odoo.com/web/about/twitter"><i class="fa fa-twitter-square fa-3x social-tw"></i></a>
-                                          <a href="https://www.odoo.com/web/about/googleplus"><i class="fa fa-google-plus-square fa-3x social-gp"></i></a>
-                                          <a href="https://www.odoo.com/web/about/linkedin"><i class="fa fa-linkedin-square fa-3x social-lk"></i></a>
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
     </t>
 
     <div t-name="PlannerDialog" class="modal" id="PlannerDialog" tabindex="-1" role="dialog" aria-labelledby="PlannerDialogLabel" aria-hidden="true">
@@ -92,7 +41,6 @@
         </div>
     </div>
 
-
     <t t-name="PlannerMenu">
         <li t-foreach="orphan_pages" t-as="orphan_page">
             <a t-att-href="'#' + menu_item_page_map[orphan_page]"><span class="fa fa-fw"/><t t-esc="orphan_page"/></a>
@@ -104,5 +52,4 @@
             </li>
         </t>
     </t>
-
 </templates>

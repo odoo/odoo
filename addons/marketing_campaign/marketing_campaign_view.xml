@@ -8,9 +8,10 @@
             <field name="params" eval="{'menu_id': ref('base.marketing_menu')}"/>
         </record>
 
+        <!-- disabled since marketing menu is empty by default -->
         <record id="base.open_menu" model="ir.actions.todo">
             <field name="action_id" ref="action_client_marketing_menu"/>
-            <field name="state">open</field>
+            <field name="state">done</field>
         </record>
 
     </data>

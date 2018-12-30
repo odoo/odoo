@@ -109,35 +109,30 @@ options.registry.slider = options.Class.extend({
         },0);
         return $clone;
     },
-    remove_slide: function (type, value) {
-        if(type !== "click") return;
-
-        if (this.remove_process) {
-            return;
-        }
+    remove_slide: function (type) {
+        if (type !== "click" || this.remove_process) return;
         var self = this;
-        var new_index = 0;
-        var cycle = this.$inner.find('.item').length - 1;
-        var index = this.$inner.find('.item.active').index();
+
+        var $items = this.$inner.find('.item');
+        var cycle = $items.length - 1;
+        var $active = $items.filter('.active');
+        var index = $active.index();
 
         if (cycle > 0) {
             this.remove_process = true;
-            var $el = this.$inner.find('.item.active');
-            self.$target.on('slid.bs.carousel', function (event) {
-                $el.remove();
+            this.$target.on('slid.bs.carousel.slide_removal', function (event) {
+                $active.remove();
                 self.$indicators.find("li:last").remove();
-                self.$target.off('slid.bs.carousel');
+                self.$target.off('slid.bs.carousel.slide_removal');
                 self.rebind_event();
                 self.remove_process = false;
-                if (cycle == 1) {
-                    self.on_remove_slide(event);
+                if (cycle === 1) {
+                    self.$target.find('.carousel-control, .carousel-indicators').addClass("hidden");
                 }
             });
-            setTimeout(function () {
-                self.$target.carousel( index > 0 ? --index : cycle );
-            }, 500);
-        } else {
-            this.$target.find('.carousel-control, .carousel-indicators').addClass("hidden");
+            _.defer(function () {
+                self.$target.carousel(index > 0 ? --index : cycle);
+            });
         }
     },
     interval : function(type, value) {
@@ -326,7 +321,9 @@ options.registry.marginAndResize = options.Class.extend({
                 $body.removeClass(cursor);
                 setTimeout(function () {
                     self.buildingBlock.editor_busy = false;
-                    self.$target.closest(".o_editable").trigger("content_changed");
+                    if (begin !== current) {
+                        self.buildingBlock.parent.rte.historyRecordUndo(self.$target, 'resize_' + XY);
+                    }
                 },0);
                 self.$target.removeClass("resize_editor_busy");
             };
@@ -336,8 +333,8 @@ options.registry.marginAndResize = options.Class.extend({
         this.$overlay.find(".oe_handle.size .auto_size").on('click', function (event){
             self.$target.css("height", "");
             self.$target.css("overflow", "");
+            self.buildingBlock.parent.rte.historyRecordUndo(self.$target, 'resize_Y');
             self.buildingBlock.cover_target(self.$overlay, self.$target);
-            self.$target.closest(".o_editable").trigger("content_changed");
             return false;
         });
     },
@@ -525,6 +522,8 @@ options.registry.parallax = options.Class.extend({
     }
 });
 
+
+// to remove after 9.0 (keep for compatibility without update with -u)
 options.registry.transform = options.Class.extend({
     start: function () {
         var self = this;
@@ -725,7 +724,9 @@ options.registry.collapse = options.Class.extend(preventParentEmpty).extend({
         this.create_ids(this.$target);
     },
     on_clone: function ($clone) {
-        this._super();
+        this._super.apply(this, arguments);
+        $clone.find('[data-toggle="collapse"]').removeAttr('data-target').removeData('target');
+        $clone.find('.panel-collapse').removeAttr('id');
         this.create_ids($clone);
     },
     on_move: function () {
@@ -742,6 +743,74 @@ options.registry.collapse = options.Class.extend(preventParentEmpty).extend({
         }
     }
 });
+
+return options;
+
+});
+
+
+odoo.define('website.rte.summernote', function (require) {
+'use strict';
+
+var core = require('web.core');
+var options = require('website.snippets.editor');
+require('web_editor.rte.summernote');
+
+var eventHandler = $.summernote.eventHandler;
+var renderer = $.summernote.renderer;
+var tplIconButton = renderer.getTemplate().iconButton;
+var _t = core._t;
+
+var fn_tplPopovers = renderer.tplPopovers;
+renderer.tplPopovers = function (lang, options) {
+    var $popover = $(fn_tplPopovers.call(this, lang, options));
+    $popover.find('.note-image-popover .btn-group:has([data-value="img-thumbnail"])').append(
+        tplIconButton('fa fa-object-ungroup', {
+            title: _t('Transform the picture (click twice to reset transformation)'),
+            event: 'transform',
+        }));
+    return $popover;
+};
+
+
+$.summernote.pluginEvents.transform = function (event, editor, layoutInfo, sorted) {
+    var $editable = layoutInfo.editable();
+    var $selection = layoutInfo.handle().find('.note-control-selection');
+    var $image = $($selection.data('target'));
+
+    if($image.data('transfo-destroy')) {
+        $image.removeData('transfo-destroy');
+        return;
+    }
+
+    $image.transfo();
+
+    var mouseup = function (event) {
+        $('.note-popover button[data-event="transform"]').toggleClass('active', $image.is('[style*="transform"]'));
+    };
+    $(document).on('mouseup', mouseup);
+
+    var mousedown = function (event) {
+        if (!$(event.target).closest('.transfo-container').length) {
+            $image.transfo("destroy");
+            $(document).off('mousedown', mousedown).off('mouseup', mouseup);
+        }
+        if ($(event.target).closest('.note-popover').length) {
+            $image.data('transfo-destroy', true).attr("style", ($image.attr("style") || '').replace(/[^;]*transform[\w:]*;?/g, ''));
+        }
+        $image.trigger('content_changed');
+    };
+    $(document).on('mousedown', mousedown);
+};
+
+
+var fn_boutton_update = eventHandler.modules.popover.button.update;
+eventHandler.modules.popover.button.update = function ($container, oStyle) {
+    fn_boutton_update.call(this, $container, oStyle);
+    $container.find('button[data-event="transform"]')
+        .toggleClass('active', $(oStyle.image).is('[style*="transform"]'))
+        .toggleClass('hidden', !$(oStyle.image).is('img'));
+};
 
 
 });

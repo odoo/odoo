@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-09 09:20+0000\n"
-"PO-Revision-Date: 2015-10-10 09:52+0000\n"
+"POT-Creation-Date: 2015-11-26 14:10+0000\n"
+"PO-Revision-Date: 2015-11-27 08:46+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: English (United Kingdom) (http://www.transifex.com/odoo/odoo-9/language/en_GB/)\n"
 "MIME-Version: 1.0\n"
@@ -249,7 +249,7 @@ msgid "<i class=\"text-muted\">awarded users</i>"
 msgstr ""
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:419
+#: code:addons/website_forum/models/forum.py:483
 #, python-format
 msgid ""
 "<p>A new answer for <i>%s</i> has been posted. <a "
@@ -257,7 +257,16 @@ msgid ""
 msgstr ""
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:425
+#: code:addons/website_forum/models/forum.py:499
+#, python-format
+msgid ""
+"<p>A new question <i>%s</i> has been asked on %s and require your "
+"validation. <a href=\"%s/forum/%s/question/%s\">Click here to access the "
+"question.</a></p>"
+msgstr ""
+
+#. module: website_forum
+#: code:addons/website_forum/models/forum.py:489
 #, python-format
 msgid ""
 "<p>A new question <i>%s</i> has been asked on %s. <a "
@@ -380,7 +389,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_message_needaction
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "Action Needed"
 
 #. module: website_forum
 #: selection:forum.post,state:0
@@ -1513,7 +1522,7 @@ msgstr "If checked new messages require your attention."
 #: model:ir.model.fields,help:website_forum.field_forum_forum_message_needaction
 #: model:ir.model.fields,help:website_forum.field_forum_post_message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "If checked, new messages require your attention."
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum_karma_dofollow
@@ -1672,11 +1681,6 @@ msgstr "Last Updated on"
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.forum_index
 msgid "Last activity date"
-msgstr ""
-
-#. module: website_forum
-#: model:ir.model.fields,field_description:website_forum.field_res_users_calendar_last_notif_ack
-msgid "Last notification marked as read from base Calendar"
 msgstr ""
 
 #. module: website_forum
@@ -1853,7 +1857,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_message_needaction_counter
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "Number of Actions"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag_posts_count
@@ -1879,7 +1883,7 @@ msgstr ""
 #: model:ir.model.fields,help:website_forum.field_forum_forum_message_needaction_counter
 #: model:ir.model.fields,help:website_forum.field_forum_post_message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr ""
+msgstr "Number of messages which requires an action"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_count_posts_waiting_validation
@@ -2114,7 +2118,7 @@ msgstr ""
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header_footer_custom
-msgid "Q&amp;A"
+msgid "Q&amp;amp;A"
 msgstr ""
 
 #. module: website_forum

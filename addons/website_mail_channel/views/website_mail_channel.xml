@@ -50,7 +50,7 @@
                     <div t-esc="group.description" class="text-muted"/>
                 </div>
                 <div class="col-md-2">
-                    <i class='fa fa-fw fa-user'/> <t t-esc="len(group.message_follower_ids)"/> members<br />
+                    <i class='fa fa-fw fa-user'/> <t t-esc="len(group.channel_partner_ids)"/> members<br />
                     <i class='fa fa-fw fa-envelope-o'/> <t t-raw="group_data[group.id]['monthly_message_nbr']"/> messages / month
                 </div>
                 <div class="col-md-3">
@@ -213,7 +213,7 @@
                                     }'/>
                                 </t>
                                 <t t-if="not message.author_id"><t t-esc="message.email_from"/></t>
-                                - <i class="fa fa-calendar"/> <t t-esc="message.date"/>
+                                - <i class="fa fa-calendar"/> <span t-field="message.date"/>
                             </small>
                             <div t-raw="message.body"/>
 
@@ -276,7 +276,7 @@
                             }'/>
                         </t>
                         <t t-if="not thread.author_id"><t t-esc="thread.email_from"/></t>
-                        - <i class="fa fa-calendar"/> <t t-esc="thread.date"/>
+                        - <i class="fa fa-calendar"/> <span t-field="thread.date"/>
                         - <i class="fa fa-paperclip"/> <t t-esc="len(thread.attachment_ids)"/>
                     </small>
                     <p t-if="thread.child_ids" class="mt8">

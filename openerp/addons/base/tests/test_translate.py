@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from lxml.etree import XMLSyntaxError
 import unittest
-from openerp.tools.translate import quote, unquote, xml_translate
+from openerp.tools.translate import quote, unquote, xml_translate, html_translate
 
 class TranslationToolsTestCase(unittest.TestCase):
 
@@ -40,6 +41,22 @@ class TranslationToolsTestCase(unittest.TestCase):
         self.assertEquals(result, source)
         self.assertItemsEqual(terms,
             ['Form stuff', 'Blah blah blah', 'Put some more text here'])
+
+    def test_translate_xml_text(self):
+        """ Test xml_translate() on plain text. """
+        terms = []
+        source = "Blah blah blah"
+        result = xml_translate(terms.append, source)
+        self.assertEquals(result, source)
+        self.assertItemsEqual(terms, [source])
+
+    def test_translate_xml_text_entity(self):
+        """ Test xml_translate() on plain text with HTML escaped entities. """
+        terms = []
+        source = "Blah&amp;nbsp;blah&amp;nbsp;blah"
+        result = xml_translate(terms.append, source)
+        self.assertEquals(result, source)
+        self.assertItemsEqual(terms, [source])
 
     def test_translate_xml_inline1(self):
         """ Test xml_translate() with formatting elements. """
@@ -102,7 +119,7 @@ class TranslationToolsTestCase(unittest.TestCase):
         terms = []
         source = """<div>
                         stuff before
-                        <div translation="off">Do not translate this</div>
+                        <div t-translation="off">Do not translate this</div>
                         stuff after
                     </div>"""
         result = xml_translate(terms.append, source)
@@ -142,3 +159,11 @@ class TranslationToolsTestCase(unittest.TestCase):
         self.assertEquals(result, source)
         self.assertItemsEqual(terms,
             ['<span class="oe_menu_text">Blah</span>', 'More <b class="caret"/>'])
+
+    def test_translate_html(self):
+        """ Test xml_translate() and html_translate() with <i> elements. """
+        source = """<i class="fa-check"></i>"""
+        result = xml_translate(lambda term: term, source)
+        self.assertEquals(result, """<i class="fa-check"/>""")
+        result = html_translate(lambda term: term, source)
+        self.assertEquals(result, source)

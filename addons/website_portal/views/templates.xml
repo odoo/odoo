@@ -19,7 +19,7 @@
                       <t t-call="website_portal.contact" />
                       <div class="oe_structure"/>
                     </div>
-                    <div class="col-md-3 col-md-offset-1 o_my_sidebar">
+                    <div id="o_my_sidebar" class="col-md-3 col-md-offset-1 o_my_sidebar">
                         <div class="o_my_details">
                             <h3 class="page-header">Your Details <a href="/my/account" class="btn btn-default btn-xs">Change</a></h3>
                             <div t-field="user.partner_id" t-field-options='{"widget": "contact", "fields": ["email", "phone", "address", "name"]}'/>
@@ -32,7 +32,7 @@
     </template>
 
     <template id="website_portal.custom_panel" inherit_id='website_portal.account' customize_show="True" name="Editable Panel" active="False">
-        <xpath expr="//div[@class='o_my_sidebar']" position="inside">
+        <xpath expr="//div[@id='o_my_sidebar']" position="inside">
             <div class="oe_structure">
               <h3 class="page-header">Custom Panel</h3>
               <p>Place your content here.</p>
@@ -73,11 +73,11 @@
                                       </div>
                                     </div>
                                     <div t-attf-class="form-group #{error.get('name') and 'has-error' or ''} col-lg-6">
-                                        <label class="control-label" for="contact_name">Your Name</label>
+                                        <label class="control-label" for="name">Your Name</label>
                                         <input type="text" name="name" class="form-control" t-att-value="name or partner.name" />
                                     </div>
                                     <div t-attf-class="form-group #{error.get('email') and 'has-error' or ''} col-lg-6">
-                                        <label class="control-label" for="contact_name">Email</label>
+                                        <label class="control-label" for="email">Email</label>
                                         <input type="email" name="email" class="form-control" t-att-value="email or partner.email" />
                                     </div>
                                     <div t-attf-class="form-group #{error.get('phone') and 'has-error' or ''} col-lg-6">
@@ -113,7 +113,7 @@
                                         <select name="country_id" class="form-control">
                                             <option value="">Country...</option>
                                             <t t-foreach="countries or []" t-as="country">
-                                                <option t-att-value="country.id" t-att-selected="country.id == partner.country_id.id">
+                                                <option t-att-value="country.id" t-att-selected="country.id == int(country_id) if country_id else country.id == partner.country_id.id">
                                                     <t t-esc="country.name" />
                                                 </option>
                                             </t>

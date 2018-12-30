@@ -3,6 +3,7 @@ import logging
 from passlib.context import CryptContext
 
 import openerp
+from openerp import api
 from openerp.osv import fields, osv
 
 from openerp.addons.base.res import res_users
@@ -34,6 +35,7 @@ class res_users(osv.osv):
 
     def set_pw(self, cr, uid, id, name, value, args, context):
         if value:
+            self.write(cr, uid, [id], {})  # force update of write_date
             self._set_password(cr, uid, id, value, context=context)
             self.invalidate_cache(cr, uid, context=context)
 
@@ -95,3 +97,7 @@ class res_users(osv.osv):
         internally
         """
         return default_crypt_context
+
+    @api.model
+    def _get_session_token_fields(self):
+        return super(res_users, self)._get_session_token_fields() | {'password_crypt'}

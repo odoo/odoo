@@ -345,7 +345,7 @@
     </record>
 
     <record model="account.financial.report" id="account_financial_report_abr_120">
-      <field name="name">1. &#224; 2. Charges brutes (moins B.1 &#224; B.4)</field>
+      <field name="name">1. &#224; 2. Charges brutes (moins B.1 &#224; B.3 et B.5)</field>
       <field name="sequence">601</field>
       <field name="sign" eval="1"/>
       <field name="display_detail">no_detail</field>
@@ -479,8 +479,17 @@
       <field name="parent_id" ref="account_financial_report_abr_133"/>
     </record>
 
+    <record model="account.financial.report" id="account_financial_report_abr_164">
+      <field name="name">9. Quote-part dans la perte des entreprises mises en &#233;quivalence</field>
+      <field name="sequence">632</field>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+      <field name="parent_id" ref="account_financial_report_abr_119"/>
+    </record>
+
     <record model="account.financial.report" id="account_financial_report_abr_136">
-      <field name="name">9. Charges exceptionnelles</field>
+      <field name="name">10. Charges exceptionnelles</field>
       <field name="sequence">633</field>
       <field name="sign" eval="1"/>
       <field name="display_detail">no_detail</field>
@@ -489,7 +498,7 @@
     </record>
 
     <record model="account.financial.report" id="account_financial_report_abr_137">
-      <field name="name">10. Imp&#244;ts sur le r&#233;sultat</field>
+      <field name="name">11. Imp&#244;ts sur le r&#233;sultat</field>
       <field name="sequence">635</field>
       <field name="sign" eval="1"/>
       <field name="display_detail">no_detail</field>
@@ -498,12 +507,21 @@
     </record>
 
     <record model="account.financial.report" id="account_financial_report_abr_138">
-      <field name="name">11. Autres imp&#244;ts ne figurant pas sous le poste ci-dessus</field>
+      <field name="name">12. Autres imp&#244;ts ne figurant pas sous le poste ci-dessus</field>
       <field name="sequence">637</field>
       <field name="sign" eval="1"/>
       <field name="display_detail">no_detail</field>
       <field name="type">accounts</field>
       <field name="parent_id" ref="account_financial_report_abr_119"/>
+    </record>
+
+    <record model="account.financial.report" id="account_financial_report_abr_162">
+            <field name="name">13. Profit de l'exercice</field>
+            <field name="sequence">800</field>
+            <field name="sign" eval="1"/>
+            <field name="display_detail">no_detail</field>
+            <field name="type">accounts</field>
+            <field name="parent_id" ref="account_financial_report_abr_119"/>
     </record>
 
     <record model="account.financial.report" id="account_financial_report_abr_140">
@@ -516,7 +534,7 @@
     </record>
 
     <record model="account.financial.report" id="account_financial_report_abr_141">
-      <field name="name">1. &#224; 4. Produits bruts (moins A.1 et A.2)</field>
+      <field name="name">1. &#224; 3. et 5. Produits bruts (moins A.1 et A.2)</field>
       <field name="sequence">701</field>
       <field name="sign" eval="-1"/>
       <field name="display_detail">no_detail</field>
@@ -524,13 +542,31 @@
       <field name="parent_id" ref="account_financial_report_abr_140"/>
     </record>
 
-    <record model="account.financial.report" id="account_financial_report_abr_147">
-      <field name="name">5. Autres produits d&#8217;exploitation</field>
-      <field name="sequence">713</field>
+    <record model="account.financial.report" id="account_financial_report_abr_144">
+      <field name="name">4. Reprises de corrections de valeur</field>
+      <field name="sequence">710</field>
+      <field name="sign" eval="-1"/>
+      <field name="display_detail">detail_flat</field>
+      <field name="type">sum</field>
+      <field name="parent_id" ref="account_financial_report_abr_140"/>
+    </record>
+
+    <record model="account.financial.report" id="account_financial_report_abr_145">
+      <field name="name">a) sur frais d'&#233;tablissement et sur immobilisations corporelles et incorporelles</field>
+      <field name="sequence">711</field>
       <field name="sign" eval="-1"/>
       <field name="display_detail">no_detail</field>
       <field name="type">accounts</field>
-      <field name="parent_id" ref="account_financial_report_abr_140"/>
+      <field name="parent_id" ref="account_financial_report_abr_144"/>
+    </record>
+
+    <record model="account.financial.report" id="account_financial_report_abr_146">
+      <field name="name">b) sur &#233;l&#233;ments de l'actif circulant</field>
+      <field name="sequence">712</field>
+      <field name="sign" eval="-1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+      <field name="parent_id" ref="account_financial_report_abr_144"/>
     </record>
 
     <record model="account.financial.report" id="account_financial_report_abr_148">
@@ -614,8 +650,17 @@
       <field name="parent_id" ref="account_financial_report_abr_154"/>
     </record>
 
+    <record model="account.financial.report" id="account_financial_report_abr_165">
+      <field name="name">9. Quote-part dans le profit des entreprises mises en &#233;quivalence</field>
+      <field name="sequence">732</field>
+      <field name="sign" eval="-1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+      <field name="parent_id" ref="account_financial_report_abr_140"/>
+    </record>
+
     <record model="account.financial.report" id="account_financial_report_abr_157">
-      <field name="name">9. Produits exceptionnels</field>
+      <field name="name">10. Produits exceptionnels</field>
       <field name="sequence">733</field>
       <field name="sign" eval="-1"/>
       <field name="display_detail">no_detail</field>
@@ -623,8 +668,17 @@
       <field name="parent_id" ref="account_financial_report_abr_140"/>
     </record>
 
+    <record model="account.financial.report" id="account_financial_report_abr_163">
+            <field name="name">13. Perte de l'exercice</field>
+            <field name="sequence">800</field>
+            <field name="sign" eval="-1"/>
+            <field name="display_detail">no_detail</field>
+            <field name="type">accounts</field>
+            <field name="parent_id" ref="account_financial_report_abr_140"/>
+    </record>
+
     <record model="account.financial.report" id="account_financial_report_abr_161">
-      <field name="name">RESULTAT DE L'EXERCICE</field>
+      <field name="name">RESULTAT DE L'EXERCICE A TRANSFERER AU 142</field>
       <field name="sequence">800</field>
       <field name="sign" eval="-1"/>
       <field name="display_detail">no_detail</field>

@@ -33,9 +33,7 @@ class AssetAssetReport(models.Model):
                     dl.name as name,
                     dl.depreciation_date as depreciation_date,
                     a.date as date,
-                    (CASE WHEN (select min(d.id) from account_asset_depreciation_line as d
-                                left join account_asset_asset as ac ON (ac.id=d.asset_id)
-                                where a.id=ac.id) = min(dl.id)
+                    (CASE WHEN dlmin.id = min(dl.id)
                       THEN a.value
                       ELSE 0
                       END) as gross_value,
@@ -59,8 +57,9 @@ class AssetAssetReport(models.Model):
                     a.company_id as company_id
                 from account_asset_depreciation_line dl
                     left join account_asset_asset a on (dl.asset_id=a.id)
+                    left join (select min(d.id) as id,ac.id as ac_id from account_asset_depreciation_line as d inner join account_asset_asset as ac ON (ac.id=d.asset_id) group by ac_id) as dlmin on dlmin.ac_id=a.id
                 group by
                     dl.amount,dl.asset_id,dl.depreciation_date,dl.name,
                     a.date, dl.move_check, a.state, a.category_id, a.partner_id, a.company_id,
-                    a.value, a.id, a.salvage_value
+                    a.value, a.id, a.salvage_value, dlmin.id
         )""")

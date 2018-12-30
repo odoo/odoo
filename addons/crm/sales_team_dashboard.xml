@@ -33,7 +33,7 @@
 
                 <xpath expr="//div[contains(@class, 'o_primary')]" position="after">
                     <div t-if="record.use_leads.raw_value and record.alias_name.value and record.alias_domain.value">
-                        <small><i class="fa fa-envelope-o"></i> <field name="alias_id"/></small>
+                        <small><i class="fa fa-envelope-o"></i>&amp;nbsp; <field name="alias_id"/></small>
                     </div>
                 </xpath>
 

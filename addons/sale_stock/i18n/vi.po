@@ -3,13 +3,14 @@
 # * sale_stock
 # 
 # Translators:
+# Duy Pham <phamduy1812@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-01 06:27+0000\n"
-"PO-Revision-Date: 2015-10-01 09:22+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2018-09-17 06:28+0000\n"
+"Last-Translator: thanh nguyen <thanhnguyen.icsc@gmail.com>\n"
 "Language-Team: Vietnamese (http://www.transifex.com/odoo/odoo-9/language/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,7 +22,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:sale_stock.report_invoice_document_inherit_sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.report_saleorder_document_inherit_sale_stock
 msgid "<strong>Incoterms:</strong>"
-msgstr ""
+msgstr "<strong>Điều khoản thương mại:</strong>"
 
 #. module: sale_stock
 #: selection:sale.config.settings,module_delivery:0
@@ -51,7 +52,7 @@ msgstr "Công ty"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_default_picking_policy
 msgid "Default Shipping Policy"
-msgstr ""
+msgstr "Chính sách giao mặc định"
 
 #. module: sale_stock
 #: selection:sale.order,picking_policy:0
@@ -95,7 +96,7 @@ msgid ""
 "Incoterms are series of sales terms. They are used to divide transaction "
 "costs and responsibilities between buyer and seller and reflect state-of-"
 "the-art transportation practices."
-msgstr ""
+msgstr "Incoterms là một bộ các thuật ngữ thương mại. Chúng được sử dụng để phân chia chi phí và trách nhiệm giữa người mua và người bán và phản anh các thực nghiệm vận tải tốt nhất đã được cả thế giới thừa nhận."
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order_incoterm
@@ -107,7 +108,7 @@ msgstr "Điều khoản thương mại quốc tế mà một chuỗi các điề
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_location_route
 msgid "Inventory Routes"
-msgstr ""
+msgstr "Định tuyến Kho"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_account_invoice
@@ -117,7 +118,7 @@ msgstr "Hóa đơn"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_account_invoice_line
 msgid "Invoice Line"
-msgstr ""
+msgstr "Chi tiết hoá đơn"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_res_company_security_lead
@@ -125,7 +126,7 @@ msgid ""
 "Margin of error for dates promised to customers. Products will be scheduled "
 "for procurement and delivery that many days earlier than the actual promised"
 " date, to cope with unexpected delays in the supply chain."
-msgstr ""
+msgstr "Biên độ sai lệch cho số ngày mà bạn hứa với khách hàng. Sản phẩm / Hàng hoá sẽ được ấn định cung ứng và bàn giao sớm hơn ngày mà bạn hứa với số ngày sớm hơn chính là Ngày an toàn Bán, để có thể đề phòng tình huống chậm trễ không mong đợi trong chuỗi cung ứng của bạn"
 
 #. module: sale_stock
 #: selection:sale.config.settings,group_route_so_lines:0
@@ -135,13 +136,13 @@ msgstr ""
 #. module: sale_stock
 #: selection:sale.config.settings,module_delivery:0
 msgid "No shipping costs on sales orders"
-msgstr ""
+msgstr "Không tính phí giao hàng đối với đơn hàng"
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:141
 #, python-format
 msgid "Not enough inventory!"
-msgstr ""
+msgstr "Không đủ hàng trong kho"
 
 #. module: sale_stock
 #: code:addons/sale_stock/res_config.py:42
@@ -158,7 +159,7 @@ msgstr ""
 #: code:addons/sale_stock/sale_stock.py:152
 #, python-format
 msgid "Ordered quantity decreased!"
-msgstr ""
+msgstr "Số lượng đặt hàng đã giảm"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line_product_packaging
@@ -193,7 +194,7 @@ msgstr "Tuyến đường"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_picking_sale_id
 msgid "Sale Order"
-msgstr ""
+msgstr "Đơn hàng"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.stock_location_route_form_view_inherit_sale_stock
@@ -218,7 +219,7 @@ msgstr "Thống kê đơn hàng"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_company_security_lead
 msgid "Sales Safety Days"
-msgstr ""
+msgstr "Ngày an toàn Bán"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_location_route_sale_selectable
@@ -244,7 +245,7 @@ msgstr "Vận chuyển"
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
 msgid "Shipping Information"
-msgstr ""
+msgstr "Thông tin Giao hàng"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_picking_policy
@@ -265,7 +266,7 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking
 msgid "Transfer"
-msgstr ""
+msgstr "Chuyển hàng"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_warehouse_id
@@ -277,7 +278,7 @@ msgstr "Kho hàng"
 #: code:addons/sale_stock/sale_stock.py:193
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "Cảnh báo"
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:153
@@ -285,7 +286,7 @@ msgstr ""
 msgid ""
 "You are decreasing the ordered quantity! Do not forget to manually update "
 "the delivery order if needed."
-msgstr ""
+msgstr "Bạn đang giảm số lượng được đặt hàng! Đừng quên cập nhật lại lệnh giao hàng nếu cần thiết."
 
 #. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:142

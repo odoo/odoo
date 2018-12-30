@@ -25,7 +25,7 @@ var FieldTextHtmlSimple = widget.extend({
     template: 'web_editor.FieldTextHtmlSimple',
     _config: function () {
         var self = this;
-        return {
+        var config = {
             'focus': false,
             'height': 180,
             'toolbar': [
@@ -38,6 +38,7 @@ var FieldTextHtmlSimple = widget.extend({
                 ['insert', ['link', 'picture']],
                 ['history', ['undo', 'redo']]
             ],
+            'prettifyHtml': false,
             'styleWithSpan': false,
             'inlinemedia': ['p'],
             'lang': "odoo",
@@ -46,6 +47,10 @@ var FieldTextHtmlSimple = widget.extend({
                 self.trigger('changed_value');
             }
         };
+        if (session.debug) {
+            config.toolbar.splice(7, 0, ['view', ['codeview']]);
+        }
+        return config;
     },
     start: function() {
         var def = this._super.apply(this, arguments);
@@ -58,9 +63,23 @@ var FieldTextHtmlSimple = widget.extend({
     initialize_content: function() {
         var self = this;
         this.$textarea = this.$("textarea").val(this.get('value') || "<p><br/></p>");
+        this.$content = $();
 
         if (this.get("effective_readonly")) {
-            this.$textarea.hide().after('<div class="note-editable"/>');
+            if (this.options['style-inline']) {
+                var $iframe = $('<iframe class="o_readonly"/>');
+                this.$textarea.hide().after($iframe);
+                var load = function () {
+                    self.$content = $($iframe.contents()[0]).find("body");
+                    self.$content.html(self.text_to_html(self.get('value')));
+                    self.resize();
+                };
+                setTimeout(load);
+                $iframe.on('load', load);
+            } else {
+                this.$content = $('<div class="o_readonly"/>');
+                this.$textarea.hide().after(this.$content);
+            }
         } else {
             this.$textarea.summernote(this._config());
 
@@ -73,8 +92,12 @@ var FieldTextHtmlSimple = widget.extend({
             var reset = _.bind(this.reset_history, this);
             this.view.on('load_record', this, reset);
             setTimeout(reset, 0);
+
+            this.$content = this.$('.note-editable:first');
+            if (this.options['style-inline']) {
+                transcoder.style_to_class(this.$content);
+            }
         }
-        this.$content = this.$('.note-editable:first');
 
         $(".oe-view-manager-content").on("scroll", function () {
             $('.o_table_handler').remove();
@@ -90,23 +113,45 @@ var FieldTextHtmlSimple = widget.extend({
     },
     text_to_html: function (text) {
         var value = text || "";
-        if (value.match(/^\s*$/)) {
-            value = '<p><br/></p>';
-        } else {
-            value = "<p>"+value.split(/<br\/?>/).join("</p><p>")+"</p>";
-            value = value.replace('<p><p>', '<p>').replace('</p></p>', '</p>');
+        try {
+            $(text)[0].innerHTML;
+            return text;
+        } catch (e) {
+            if (value.match(/^\s*$/)) {
+                value = '<p><br/></p>';
+            } else {
+                value = "<p>"+value.split(/<br\/?>/).join("<br/></p><p>")+"</p>";
+                value = value.replace(/<p><\/p>/g, '').replace('<p><p>', '<p>').replace('<p><p ', '<p ').replace('</p></p>', '</p>');
+            }
         }
         return value;
     },
     focus: function() {
-        var input = !this.get("effective_readonly") && this.$textarea;
-        return input ? input.focus() : false;
+        if (this.get("effective_readonly")) {
+            return false;
+        }
+        // on IE an error may occur when creating range on not displayed element
+        try {
+            return this.$content.focusInEnd();
+        } catch (e) {
+            return this.$content.focus();
+        }
+    },
+    resize: function() {
+        this.$('> iframe.o_readonly').css('height', '0px').css('height', Math.max(30, Math.min(this.$content[0] ? this.$content[0].scrollHeight : 0, 500)) + 'px');
     },
     render_value: function() {
         var value = this.get('value');
         this.$textarea.val(value || '');
         this.$content.html(this.text_to_html(value));
-        this.$content.focusInEnd();
+        if (this.get("effective_readonly")) {
+            this.resize();
+        } else {
+            transcoder.style_to_class(this.$content);
+        }
+        if (this.$content.is(document.activeElement)) {
+            this.focus();
+        }
         var history = this.$content.data('NoteHistory');
         if (history && history.recordUndo()) {
             this.$('.note-toolbar').find('button[data-event="undo"]').attr('disabled', false);
@@ -115,12 +160,17 @@ var FieldTextHtmlSimple = widget.extend({
     is_false: function() {
         return !this.get('value') || this.get('value') === "<p><br/></p>" || !this.get('value').match(/\S/);
     },
-    before_save: function() {
+    commit_value: function() {
+        /* Switch to WYSIWYG mode if currently in code view */
+        if (session.debug) {
+            var layoutInfo = this.$textarea.data('layoutInfo');
+            $.summernote.pluginEvents.codeview(undefined, undefined, layoutInfo, false);
+        }
         if (this.options['style-inline']) {
             transcoder.class_to_style(this.$content);
             transcoder.font_to_img(this.$content);
-            this.internal_set_value(this.$content.html());
         }
+        this.internal_set_value(this.$content.html());
     },
     destroy_content: function () {
         $(".oe-view-manager-content").off("scroll");
@@ -133,6 +183,11 @@ var FieldTextHtml = widget.extend({
     template: 'web_editor.FieldTextHtml',
     willStart: function () {
         var self = this;
+
+        if (this.field.translate === false) {
+            this.languages = [];
+            return $.when();
+        }
         return new Model('res.lang').call("search_read", [[['code', '!=', 'en_US']], ["name", "code"]]).then(function (res) {
             self.languages = res;
         });
@@ -173,16 +228,19 @@ var FieldTextHtml = widget.extend({
                 self.$iframe.css("height", (self.$body.find("#oe_snippets").length ? 500 : 300) + "px");
             }
         };
-        $(window).on('resize', self.resize);
+        $(window).on('resize', this.resize);
 
         var def = this._super.apply(this, arguments);
         this.$translate.remove();
         this.$translate = $();
         return def;
     },
+    get_datarecord: function() {
+        return this.view.get_fields_values();
+    },
     get_url: function (_attr) {
-        var src = this.options.editor_url ? this.options.editor_url+"?" : "/web_editor/field/html?";
-        var datarecord = this.view.get_fields_values();
+        var src = this.options.editor_url || "/web_editor/field/html";
+        var datarecord = this.get_datarecord();
 
         var attr = {
             'model': this.view.model,
@@ -197,6 +255,9 @@ var FieldTextHtml = widget.extend({
         }
         if (this.options.snippets) {
             attr.snippets = this.options.snippets;
+        }
+        if (this.options.template) {
+            attr.template = this.options.template;
         }
         if (!this.get("effective_readonly")) {
             attr.enable_editor = 1;
@@ -214,6 +275,10 @@ var FieldTextHtml = widget.extend({
             attr[k] = _attr[k];
         }
 
+        if (src.indexOf('?') === -1) {
+            src += "?";
+        }
+
         for (var k in attr) {
             if (attr[k] !== null) {
                 src += "&"+k+"="+(_.isBoolean(attr[k]) ? +attr[k] : attr[k]);
@@ -222,18 +287,48 @@ var FieldTextHtml = widget.extend({
 
         delete datarecord[this.name];
         src += "&datarecord="+ encodeURIComponent(JSON.stringify(datarecord));
-
         return src;
     },
+    _toggleFormButtons: function(enable) {
+        if (this.$formButtons) {
+            if (enable) {
+                this.$formButtons.find('button').removeClass('o_disabled').attr('disabled', false);
+            } else {
+                this.$formButtons.find('button').addClass('o_disabled').attr('disabled', true);
+            }
+        }
+    },
     initialize_content: function() {
+        var self = this;
+
+        // Do not Forward port in >= 10.0
+        function getModalButtons() {
+            var $modal = self.getParent().getParent();
+            if ($modal && $modal.$footer) {
+                return $modal.$footer;
+            }
+        }
+
+        this.$formButtons = this.getParent().$buttons || getModalButtons();
         this.$el.closest('.modal-body').css('max-height', 'none');
         this.$iframe = this.$el.find('iframe');
+        // deactivate any button to avoid saving a not ready iframe
+        // Do not Forward port in >= 10.0
+        this._toggleFormButtons(false);
         this.document = null;
         this.$body = $();
         this.$content = $();
         this.editor = false;
         window.odoo[this.callback+"_updown"] = null;
         this.$iframe.attr("src", this.get_url());
+        this.view.on("load_record", this, function(r){
+            if (!self.$body.find('.o_dirty').length){
+                var url = self.get_url();
+                if(url !== self.$iframe.attr("src")){
+                    self.$iframe.attr("src", url);
+                }
+            }
+        });
     },
     on_content_loaded: function () {
         var self = this;
@@ -245,6 +340,9 @@ var FieldTextHtml = widget.extend({
         this.lang = this.lang ? this.lang[1] : this.view.dataset.context.lang;
         this._dirty_flag = false;
         this.render_value();
+        // reactivate all the buttons when the field's content (the iframe) is loaded
+        // Do not Forward port in >= 10.0
+        this._toggleFormButtons(true);
         setTimeout(function () {
             self.add_button();
             setTimeout(self.resize,0);
@@ -292,7 +390,12 @@ var FieldTextHtml = widget.extend({
         });
     },
     render_value: function() {
-        if (this.lang !== this.view.dataset.context.lang || this.$iframe.attr('src').match(/[?&]edit_translations=1/)) {
+        if (this.$iframe.attr('src').match(/[?&]edit_translations=1/)) {
+            return;
+        }
+        // ONLY HAVE THIS IN 9.0 AND SAAS-11
+        var is_editor_onchange = this.get('value') === '<p>on_change_model_and_list</p>';
+        if (this.lang !== this.view.dataset.context.lang && !is_editor_onchange) {
             return;
         }
         var value = (this.get('value') || "").replace(/^<p[^>]*>(\s*|<br\/?>)<\/p>$/, '');
@@ -314,18 +417,37 @@ var FieldTextHtml = widget.extend({
     is_false: function() {
         return this.get('value') === false || !this.$content.html() || !this.$content.html().match(/\S/);
     },
-    before_save: function () {
+    commit_value: function () {
         if (this.lang !== 'en_US' && this.$body.find('.o_dirty').length) {
             this.internal_set_value( this.view.datarecord[this.name] );
             this._dirty_flag = false;
             return this.editor.save();
         } else if (this._dirty_flag && this.editor && this.editor.buildingBlock) {
+            /* Switch to WYSIWYG mode if currently in code view */
+            if (session.debug) {
+                var layoutInfo = this.editor.rte.editable().data('layoutInfo');
+                $.summernote.pluginEvents.codeview(undefined, undefined, layoutInfo, false);
+            }
+            var $ancestors = this.$iframe.filter(':not(:visible)').parentsUntil(':visible').addBack();
+            var ancestorsStyle = [];
+            // temporarily force displaying iframe (needed for firefox)
+            _.each($ancestors, function (el) {
+                var $el = $(el);
+                ancestorsStyle.unshift($el.attr('style') || null);
+                $el.css({display: 'initial', visibility: 'hidden', height: 1});
+            });
             this.editor.buildingBlock.clean_for_save();
+            _.each($ancestors, function (el) {
+                var $el = $(el);
+                $el.attr('style', ancestorsStyle.pop());
+            });
             this.internal_set_value( this.$content.html() );
         }
     },
     destroy: function () {
-        $(window).off('resize', self.resize);
+        // Do not Forward port in >= 10.0
+        this._toggleFormButtons(true);
+        $(window).off('resize', this.resize);
         delete window.odoo[this.callback+"_editor"];
         delete window.odoo[this.callback+"_content"];
         delete window.odoo[this.callback+"_updown"];
@@ -336,5 +458,10 @@ var FieldTextHtml = widget.extend({
 core.form_widget_registry
     .add('html', FieldTextHtmlSimple)
     .add('html_frame', FieldTextHtml);
+
+return {
+    FieldTextHtmlSimple: FieldTextHtmlSimple,
+    FieldTextHtml: FieldTextHtml,
+};
 
 });

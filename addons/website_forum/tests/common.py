@@ -12,7 +12,7 @@ KARMA = {
     'unlink_own': 10, 'unlink_all': 20,
     'post': 100, 'flag': 500, 'moderate': 1000,
     'gen_que_new': 1, 'gen_que_upv': 5, 'gen_que_dwv': -10,
-    'gen_ans_upv': 10, 'gen_ans_dwv': -20,
+    'gen_ans_upv': 10, 'gen_ans_dwv': -20, 'gen_ans_flag': -45,
 }
 
 
@@ -81,6 +81,7 @@ class TestForumCommon(common.SavepointCase):
             'karma_gen_answer_downvote': KARMA['gen_ans_dwv'],
             'karma_gen_answer_accept': 9999,
             'karma_gen_answer_accepted': 9999,
+            'karma_gen_answer_flagged': KARMA['gen_ans_flag'],
         })
         cls.post = Post.create({
             'name': 'TestQuestion',
