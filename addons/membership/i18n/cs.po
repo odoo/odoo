@@ -3,18 +3,19 @@
 # * membership
 # 
 # Translators:
-# Martin Trigaux, 2017
 # Jan Horzinka <jan.horzinka@centrum.cz>, 2018
 # Michal Veselý <michal@veselyberanek.net>, 2018
-# J. Podhorecky <j.podhorecky@volny.cz>, 2018
+# Martin Trigaux, 2018
 # Jaroslav Helemik Nemec <nemec@helemik.cz>, 2018
+# trendspotter <j.podhorecky@volny.cz>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Jaroslav Helemik Nemec <nemec@helemik.cz>, 2018\n"
+"PO-Revision-Date: 2017-09-20 10:19+0000\n"
+"Last-Translator: trendspotter <j.podhorecky@volny.cz>, 2018\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -45,7 +46,7 @@ msgstr ""
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.membership_products_kanban
 msgid "<strong> To:</strong>"
-msgstr ""
+msgstr "<strong> Komu:</strong>"
 
 #. module: membership
 #: model:ir.model.fields,help:membership.field_res_partner_associate_member
@@ -130,7 +131,7 @@ msgstr "Kategorie"
 #: model:ir.model.fields,help:membership.field_product_product_membership
 #: model:ir.model.fields,help:membership.field_product_template_membership
 msgid "Check if the product is eligible for membership."
-msgstr ""
+msgstr "Zkontrolujte, zda je výrobek způsobilý pro členství."
 
 #. module: membership
 #: model:ir.actions.act_window,help:membership.action_membership_members
@@ -181,7 +182,7 @@ msgstr "Aktuální stav členství"
 #: model:ir.model.fields,field_description:membership.field_res_partner_membership_state
 #: model:ir.model.fields,field_description:membership.field_res_users_membership_state
 msgid "Current Membership Status"
-msgstr ""
+msgstr "Aktuální stav členství"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
@@ -255,7 +256,7 @@ msgstr ""
 #. module: membership
 #: sql_constraint:product.template:0
 msgid "Error ! Ending Date cannot be set before Beginning Date."
-msgstr ""
+msgstr "Chyba! Datum ukončení nelze nastavit před počátečním datem."
 
 #. module: membership
 #: code:addons/membership/models/partner.py:159
@@ -439,7 +440,7 @@ msgstr "Analýza členství"
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.membership_products_form
 msgid "Membership Duration"
-msgstr ""
+msgstr "Délka členství"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_product_product_membership_date_to
@@ -447,7 +448,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:membership.field_res_partner_membership_stop
 #: model:ir.model.fields,field_description:membership.field_res_users_membership_stop
 msgid "Membership End Date"
-msgstr ""
+msgstr "Datum ukončení členství"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line_member_price
@@ -486,7 +487,7 @@ msgstr "Výrobky členství"
 #: model:ir.model.fields,field_description:membership.field_res_partner_membership_start
 #: model:ir.model.fields,field_description:membership.field_res_users_membership_start
 msgid "Membership Start Date"
-msgstr ""
+msgstr "Datum zahájení členství"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
@@ -496,7 +497,7 @@ msgstr "Stav členství"
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line_state
 msgid "Membership Status"
-msgstr ""
+msgstr "Stav členství"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.membership_products_form
@@ -509,7 +510,7 @@ msgstr "Výrobky členství"
 #: model:ir.cron,cron_name:membership.ir_cron_update_membership
 #: model:ir.cron,name:membership.ir_cron_update_membership
 msgid "Membership: update memberships"
-msgstr ""
+msgstr "Členství: aktualizovat členství"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_partner_form
@@ -531,7 +532,7 @@ msgstr "Nečlen"
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "None/Canceled/Old/Waiting"
-msgstr ""
+msgstr "Žádné / Zrušeno / Staré / Čekání"
 
 #. module: membership
 #: model:ir.actions.act_window,help:membership.action_membership_members
@@ -607,7 +608,7 @@ msgstr "Obchodník"
 #: model:ir.model.fields,help:membership.field_res_partner_free_member
 #: model:ir.model.fields,help:membership.field_res_users_free_member
 msgid "Select if you want to give free membership."
-msgstr ""
+msgstr "Zvolte, zda chcete zdarma poskytnout členství."
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership_start_date
@@ -638,7 +639,7 @@ msgstr "Cena vyjednaná partnerem"
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.membership_products_form
 msgid "This note will be displayed on quotations..."
-msgstr ""
+msgstr "Tato poznámka bude zobrazena na nabídkách..."
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_report_membership_search
@@ -648,7 +649,7 @@ msgstr ""
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "This will display waiting, invoiced and total pending columns"
-msgstr ""
+msgstr "Zobrazí se čekající, fakturované a celkově čekající sloupce"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line_date_to
