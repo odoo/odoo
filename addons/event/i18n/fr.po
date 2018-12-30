@@ -3,41 +3,41 @@
 # * event
 # 
 # Translators:
-# Clo <clo@odoo.com>, 2017
 # mathieu betton <mathieu.betton@gmail.com>, 2017
-# Fabien Pinckaers <fp@openerp.com>, 2017
-# Micky Jault <micky037@hotmail.fr>, 2017
-# Martin Trigaux, 2017
-# Xavier Belmere <Info@cartmeleon.com>, 2017
-# Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2017
-# Eloïse Stilmant <est@odoo.com>, 2017
-# Richard Mathot <rim@odoo.com>, 2017
-# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2017
-# Xavier Symons <xsy@openerp.com>, 2017
 # Tony Galmiche <tony.galmiche@infosaone.com>, 2017
+# Micky Jault <micky037@hotmail.fr>, 2017
 # Jérémy Donas <LeDistordu@users.noreply.github.com>, 2017
-# Florian Hatat, 2017
 # Daniel & Delphine <dd2013@leschoupinous.net>, 2017
-# Olivier Lenoir <olivier.lenoir@free.fr>, 2017
 # f5f0a0dac17dde787a1d812a6989680e, 2017
 # Shark McGnark <peculiarcheese@gmail.com>, 2017
 # Lucas Deliege <lud@odoo.com>, 2017
+# Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2017
+# Xavier Belmere <Info@cartmeleon.com>, 2017
 # Alexis de Lattre <alexis@via.ecp.fr>, 2017
 # Nancy Bolognesi <nb@microcom.ca>, 2017
-# Loic <loic.richard2@gmail.com>, 2017
 # Melanie Bernard <mbe@odoo.com>, 2017
-# Quentin THEURET <odoo@kerpeo.com>, 2017
-# nle_odoo, 2017
+# Fabien Pinckaers <fp@openerp.com>, 2017
+# Florian Hatat, 2017
 # fr rev <e2ffr02@hotmail.com>, 2018
 # fr trans <e2ftrans1@yahoo.com>, 2018
-# e2f <projects@e2f.com>, 2018
+# nle_odoo, 2018
+# Martin Trigaux, 2018
+# Richard Mathot <rim@odoo.com>, 2018
+# Olivier Lenoir <olivier.lenoir@free.fr>, 2018
+# Xavier Symons <xsy@openerp.com>, 2018
+# Quentin THEURET <odoo@kerpeo.com>, 2018
+# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2018
+# Clo <clo@odoo.com>, 2018
+# Eloïse Stilmant <est@odoo.com>, 2018
+# Olivier ANDRE <frsw194@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-07-27 11:56+0000\n"
-"PO-Revision-Date: 2018-07-27 11:56+0000\n"
-"Last-Translator: e2f <projects@e2f.com>, 2018\n"
+"PO-Revision-Date: 2017-09-20 10:17+0000\n"
+"Last-Translator: Olivier ANDRE <frsw194@gmail.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -211,6 +211,168 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"\n"
+"<div style=\"background:#F3F5F6;color:#515166;padding:25px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
+"% set date_begin = format_tz(object.event_id.date_begin, tz='UTC', format='%Y%m%dT%H%M%SZ')\n"
+"% set date_end = format_tz(object.event_id.date_end, tz='UTC', format='%Y%m%dT%H%M%SZ')\n"
+"    <table style=\"width:600px;margin:5px auto;\">\n"
+"        <tbody>\n"
+"            <tr>\n"
+"                <td>\n"
+"                    <a href=\"/\">\n"
+"                        <img src=\"/logo\" alt=\"${object.company_id.name}\" style=\"vertical-align:baseline;max-width:100px;\" />\n"
+"                    </a>\n"
+"                </td>\n"
+"                <td style=\"text-align:right;vertical-align:middle;\">\n"
+"                    % if 'website_url' in object.event_id and object.event_id.website_url:\n"
+"                        <a href=\"${object.event_id.website_url}\" style=\"background-color: #1abc9c; padding: 12px; font-weight: 12px; text-decoration: none; color: #fff; border-radius: 5px; font-size:16px;\">View Event</a>\n"
+"                    % endif\n"
+"                </td>\n"
+"            </tr>\n"
+"        </tbody>\n"
+"    </table>\n"
+"    <table style=\"width:600px;margin:0px auto;background:white;border:1px solid #e1e1e1;\">\n"
+"        <tbody>\n"
+"            <tr>\n"
+"                <td style=\"padding:15px 20px 0px 20px; font-size:16px; font-weight:300;\">\n"
+"                    <p style=\"font-size:16px;\">\n"
+"                        Bonjour,\n"
+"                    </p><p style=\"font-size:16px;\">\n"
+"                        Nous sommes heureux de confirmer votre enregistrement pour l'événement :\n"
+"                    </p>\n"
+"                    <ul>\n"
+"                        <li>Evénement : \n"
+"                        % if 'website_url' in object.event_id and object.event_id.website_url:\n"
+"                            <a href=\"${object.event_id.website_url}\" style=\"color:#875A7B;text-decoration:none;\">${object.event_id.name}</a>\n"
+"                        % else:\n"
+"                            <strong>${object.event_id.name}</strong>\n"
+"                        % endif\n"
+"                        </li>\n"
+"                        <li>Participant : ${object.name}</li>\n"
+"                    </ul>\n"
+"                    <p style=\"font-size:16px;\">\n"
+"                        A bientôt,\n"
+"                    </p>\n"
+"                    <p style=\"font-size:16px; margin-bottom: 30px\">\n"
+"                        <i>\n"
+"                           -- <br/>\n"
+"                        % if object.event_id.organizer_id:\n"
+"                            ${object.event_id.organizer_id.name}\n"
+"                        % else:\n"
+"                            Les organisateurs..\n"
+"                        % endif\n"
+"                        </i>\n"
+"                    </p>\n"
+"                </td>\n"
+"            </tr>\n"
+"            <tr>\n"
+"                <td style=\"padding:15px 20px 0px 20px;\">\n"
+"                    <table style=\"width:100%;border-top:1px solid #e1e1e1;\">\n"
+"                        <tr>\n"
+"                            <td style=\"padding:25px 0px;vertical-align:top;\">\n"
+"                                <img src=\"/web_editor/font_to_img/61555/rgb(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" height=\"34\">\n"
+"                            </td>\n"
+"                            <td style=\"padding:25px 10px 25px 10px;width:50%;line-height:20px;vertical-align:top;\">\n"
+"                                <div><strong>From</strong> ${object.event_id.date_begin_located}</div>\n"
+"                                <div><strong>To</strong> ${object.event_id.date_end_located}</div>\n"
+"                                <div style=\"font-size:12px;color:#9e9e9e\"><i><strong>Fuseau horaire</strong> ${object.event_id.date_tz}</i></div>\n"
+"                            </td>\n"
+"                            % if object.event_id.address_id.country_id.name:\n"
+"                                <td style=\"padding:25px 0px;vertical-align:top;\">\n"
+"                                    <img src=\"/web_editor/font_to_img/61505/rgb(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" height=\"34\">\n"
+"                                </td>\n"
+"                                <td style=\"padding:30px 10px 25px 10px;width:50%;vertical-align:top;\">\n"
+"                                    % set location = ''\n"
+"                                    % if object.event_id.address_id.name:\n"
+"                                        <p style=\"margin:0px 0px 0px 0px;\">${object.event_id.address_id.name}</p>\n"
+"                                    % endif\n"
+"                                    % if object.event_id.address_id.street:\n"
+"                                        <p style=\"margin:0px 0px 0px 0px;\">${object.event_id.address_id.street}</p>\n"
+"                                        % set location = object.event_id.address_id.street\n"
+"                                    % endif\n"
+"                                    % if object.event_id.address_id.street2:\n"
+"                                        <p style=\"margin:0px 0px 0px 0px;\">${object.event_id.address_id.street2}</p>\n"
+"                                        % set location = '%s, %s' % (location, object.event_id.address_id.street2)\n"
+"                                    % endif\n"
+"                                    <p style=\"margin:0px 0px 0px 0px;\">\n"
+"                                    % if object.event_id.address_id.city:\n"
+"                                        ${object.event_id.address_id.city},\n"
+"                                        % set location = '%s, %s' % (location, object.event_id.address_id.city)\n"
+"                                    % endif\n"
+"                                    % if object.event_id.address_id.state_id.name:\n"
+"                                        ${object.event_id.address_id.state_id.name},\n"
+"                                        % set location = '%s, %s' % (location, object.event_id.address_id.state_id.name)\n"
+"                                    % endif\n"
+"                                    % if object.event_id.address_id.zip:\n"
+"                                        ${object.event_id.address_id.zip}\n"
+"                                        % set location = '%s, %s' % (location, object.event_id.address_id.zip)\n"
+"                                    % endif\n"
+"                                    </p>\n"
+"                                    % if object.event_id.address_id.country_id.name:\n"
+"                                        <p style=\"margin:0px 0px 0px 0px;\">${object.event_id.address_id.country_id.name}</p>\n"
+"                                        % set location = '%s, %s' % (location, object.event_id.address_id.country_id.name)\n"
+"                                    % endif\n"
+"                                </td>\n"
+"                            % endif\n"
+"                        </tr>\n"
+"                    </table>\n"
+"                    % if object.event_id.organizer_id:\n"
+"                        <table style=\"width:100%;border-top:1px solid #e1e1e1;\">\n"
+"                            <tr>\n"
+"                                <td style=\"padding:10px 0px 25px 0px;\">\n"
+"                                    <h2 style=\"font-weight:300;margin:10px 0px\">Des questions au sujet de cet événement ?</h2>\n"
+"                                    <p>Veuillez contacter l'organisateur :</p>\n"
+"                                    <ul>\n"
+"                                        <li>${object.event_id.organizer_id.name}</li>\n"
+"                                        % if object.event_id.organizer_id.email\n"
+"                                            <li>Email: <a href=\"mailto:${object.event_id.organizer_id.email}\" style=\"text-decoration:none;color:#875A7B;\">${object.event_id.organizer_id.email}</a></li>\n"
+"                                        % endif\n"
+"                                        % if object.event_id.organizer_id.phone\n"
+"                                            <li>Téléphone : ${object.event_id.organizer_id.phone}</li>\n"
+"                                        % endif\n"
+"                                    </ul>\n"
+"\n"
+"                                </td>\n"
+"                            </tr>\n"
+"                        </table>\n"
+"                    % endif\n"
+"                    <table style=\"width:100%;border-top:1px solid #e1e1e1;\">\n"
+"                        <tr>\n"
+"                            <td style=\"padding:25px 0px;\">\n"
+"                                <strong>Ajouter cet événement à votre calendrier</strong>\n"
+"                                <a href=\"https://www.google.com/calendar/render?action=TEMPLATE&text=${object.event_id.name}&dates=${date_begin}/${date_end}&location=${location}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\"> Google</a>\n"
+"                                <a href=\"https://bay02.calendar.live.com/calendar/calendar.aspx?rru=addevent&summary=${object.event_id.name}&dtstart=${date_begin}&dtend=${date_end}&location=${location}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\"> Outlook</a>\n"
+"                                <a href=\"https://calendar.yahoo.com/?v=60&view=d&type=20&title=${object.event_id.name}&in_loc=${location}&st=${format_tz(object.event_id.date_begin, tz='UTC', format='%Y%m%dT%H%M%S')}&et=${format_tz(object.event_id.date_end, tz='UTC', format='%Y%m%dT%H%M%S')}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\"> Yahoo</a>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </table>\n"
+"                </td>\n"
+"            </tr>\n"
+"        </tbody>\n"
+"    </table>\n"
+"    % if object.event_id.address_id:\n"
+"    <div style=\"width:598px;margin:0px auto;border-left:1px solid #dddddd;border-right:1px solid #dddddd;border-bottom:1px solid #dddddd;\">\n"
+"        <a href=\"https://maps.google.com/maps?q=${location}\" target=\"new\">\n"
+"            <img src=\"http://maps.googleapis.com/maps/api/staticmap?autoscale=1&size=598x200&maptype=roadmap&format=png&visual_refresh=true&markers=size:mid%7Ccolor:0xa5117d%7Clabel:%7C${location}\" style=\"vertical-align:bottom;\" />\n"
+"        </a>\n"
+"    </div>\n"
+"    % endif\n"
+"    <table style=\"width:600px;margin:0px auto;text-align:center;\">\n"
+"        <tbody>\n"
+"            <tr>\n"
+"                <td style=\"padding-top:10px;font-size: 12px;\">\n"
+"                    <div>Sent by ${object.company_id.name}</div>\n"
+"                    % if 'website_url' in object.event_id and object.event_id.website_url:\n"
+"                    <div>\n"
+"                        Découvrez <a href=\"/event\" style=\"text-decoration:none;color:#717188;\">tous nos événements</a>.\n"
+"                    </div>\n"
+"                    % endif\n"
+"                </td>\n"
+"            </tr>\n"
+"        </tbody>\n"
+"    </table>\n"
+"</div>\n"
+"            "
 
 #. module: event
 #: model:mail.template,body_html:event.event_reminder
@@ -583,6 +745,8 @@ msgid ""
 "<font style=\"color: rgb(255, 255, 255); font-size: 24px;\">to learn <i>Odoo"
 " Programming</i></font>"
 msgstr ""
+"<font style=\"color: rgb(255, 255, 255); font-size: 24px;\">pour apprendre "
+"<i>la Programmation Odoo</i></font>"
 
 #. module: event
 #: model:event.event,description:event.event_1
@@ -590,6 +754,8 @@ msgid ""
 "<font style=\"color: rgb(255, 255, 255); font-size: 24px;\">to learn "
 "<i>technical aspects</i></font>"
 msgstr ""
+"<font style=\"color: rgb(255, 255, 255); font-size: 24px;\">pour apprendre "
+"<i>les aspects techniques</i></font>"
 
 #. module: event
 #: model:event.event,description:event.event_3
@@ -597,6 +763,8 @@ msgid ""
 "<font style=\"font-size: 24px;\">to learn <i>business applications "
 "development</i></font>"
 msgstr ""
+"<font style=\"font-size: 24px;\">pour apprendre <i>le développement "
+"d'applications d'entreprise</i></font>"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_kanban
@@ -676,7 +844,7 @@ msgstr ""
 "développeurs qui ont besoin d'apprendre les processus de "
 "<strong>développement des applications métiers</strong>. Cette formation "
 "s'adresse aux nouveaux développeurs et professionnels de l'informatique qui "
-"veulent en apprendre plus à propos des aspects techniques.</span> "
+"veulent en apprendre plus à propos des aspects techniques.</span>"
 
 #. module: event
 #: model:event.event,description:event.event_2
@@ -838,7 +1006,7 @@ msgstr "Confirmer Automatiquement les Inscriptions"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type_use_mail_schedule
 msgid "Automatically Send Emails"
-msgstr "Envoyer automatiquement des emails "
+msgstr "Envoyer automatiquement des emails"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_seats_available
@@ -900,7 +1068,7 @@ msgstr "Amenez votre propre ordinateur portable."
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Building a Full Application"
-msgstr "Construire une application complète."
+msgstr "Construire une application complète"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -1389,7 +1557,7 @@ msgstr "Nombre de participants attendus"
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_form
 msgid "Finish Event"
-msgstr "Terminer l'évenement."
+msgstr "Terminer l'évenement"
 
 #. module: event
 #: model:event.event,description:event.event_2
@@ -1426,7 +1594,7 @@ msgstr "Séminaire fonctionnel en ligne"
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "Functional flow of the main applications;"
-msgstr "Organigramme fonctionnel des principales applications"
+msgstr "Organigramme fonctionnel des principales applications ;"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -1566,7 +1734,7 @@ msgstr ""
 msgid "It will select this default minimum value when you choose this event"
 msgstr ""
 "Cette valeur par défaut minimum sera sélectionnée si vous choisissez cet "
-"évènement."
+"évènement"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_color
@@ -1843,7 +2011,7 @@ msgid ""
 "knowledge of the Python programming is recommended."
 msgstr ""
 "Les participants sont priés d'avoir une minimum de connaissances dans la "
-"programmation. Une connaissance de base du code Python est recommandée. "
+"programmation. Une connaissance de base du code Python est recommandée."
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -2382,7 +2550,7 @@ msgstr "semaine prochaine"
 #: code:addons/event/models/event.py:514
 #, python-format
 msgid "on "
-msgstr "sur"
+msgstr "sur "
 
 #. module: event
 #: model:ir.model,name:event.model_res_config_settings
