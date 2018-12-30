@@ -41,7 +41,7 @@ msgstr "\" výstraha s"
 #: code:addons/website/models/website.py:388
 #, python-format
 msgid "%s (id:%s)"
-msgstr ""
+msgstr "%s (id:%s)"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.show_website_info
@@ -626,6 +626,8 @@ msgid ""
 "<span class=\"carousel-control-prev-icon\"/>\n"
 "            <span class=\"sr-only\">Previous</span>"
 msgstr ""
+"<span class=\"carousel-control-prev-icon\"/>\n"
+"            <span class=\"sr-only\">Předchozí</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
@@ -659,6 +661,9 @@ msgid ""
 "                                <span class=\"s_comparisons_price\"><b>125</b></span>\n"
 "                                <span class=\"s_comparisons_decimal\">.00</span>"
 msgstr ""
+"<span class=\"s_comparisons_currency\">$</span>\n"
+"                                <span class=\"s_comparisons_price\"><b>125</b></span>\n"
+"                                <span class=\"s_comparisons_decimal\">.00</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
@@ -1445,7 +1450,7 @@ msgstr "Výchozí"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Default Access Rights"
-msgstr ""
+msgstr "Výchozí přístupová práva"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website__default_lang_id
@@ -1851,7 +1856,7 @@ msgstr ""
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__favicon
 msgid "Favicon"
-msgstr ""
+msgstr "Favicon"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_three_columns
@@ -2001,7 +2006,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 #, python-format
 msgid "Go to Website"
-msgstr ""
+msgstr "Přejít na webové stránky"
 
 #. module: website
 #. openerp-web
@@ -2052,7 +2057,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_res_config_settings__google_management_client_id
 #: model:ir.model.fields,field_description:website.field_website__google_management_client_id
 msgid "Google Client ID"
-msgstr ""
+msgstr "Google Client ID"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__google_management_client_secret
@@ -2475,7 +2480,7 @@ msgstr "Klíč"
 #: code:addons/website/static/src/xml/website.seo.xml:105
 #, python-format
 msgid "Keyword"
-msgstr ""
+msgstr "Klíčové slovo"
 
 #. module: website
 #. openerp-web
@@ -2849,7 +2854,7 @@ msgstr "Název"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Name and favicon of your website"
-msgstr ""
+msgstr "Název a favicon vašeho webu"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
@@ -2979,6 +2984,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.show_website_info
 msgid "Note: To hide this page, uncheck it from the top Customize menu."
 msgstr ""
+"Poznámka: Chcete-li tuto stránku skrýt, zrušte její zaškrtnutí v horní části"
+" nabídky Přizpůsobit."
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__language_count
@@ -3600,7 +3607,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Shadows"
-msgstr ""
+msgstr "Stíny"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_share
@@ -3797,7 +3804,7 @@ msgstr ""
 #: code:addons/website/models/website.py:387
 #, python-format
 msgid "Template <b>%s (id:%s)</b> is calling this file"
-msgstr ""
+msgstr "Šablona <b>%s (id:%s)</b> volá tento soubor"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.500
@@ -3923,7 +3930,7 @@ msgstr "Téma"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.list_website_pages
 msgid "There are currently no pages for your website."
-msgstr ""
+msgstr "Momentálně nejsou žádné stránky pro váš web."
 
 #. module: website
 #. openerp-web
@@ -4079,7 +4086,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Track visits in Google Analytics"
-msgstr ""
+msgstr "Sledovat návštěvnost v Google Analytics"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -4340,7 +4347,7 @@ msgstr "Viditelné na aktuálním webu"
 #: code:addons/website/static/src/xml/website.backend.xml:29
 #, python-format
 msgid "Visits"
-msgstr ""
+msgstr "Návštěv"
 
 #. module: website
 #. openerp-web
@@ -4468,7 +4475,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.view_website_form
 msgid "Website Settings"
-msgstr ""
+msgstr "Nastavení webových stránek"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -4611,7 +4618,7 @@ msgstr ""
 #. module: website
 #: sql_constraint:res.users:0
 msgid "You can not have two users with the same login!"
-msgstr ""
+msgstr "Nemůžete mít dva uživatele se stejným přihlašovacím jménem!"
 
 #. module: website
 #: code:addons/website/controllers/backend.py:47
@@ -4734,7 +4741,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.brand_promotion
 msgid "free website"
-msgstr ""
+msgstr "webové stránky zdarma "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.show_website_info
