@@ -338,10 +338,15 @@
                                         <field name="type" required="1" widget="radio" options="{'horizontal': true}"/>
                                         <field name="parent_id" invisible="1"/>
                                         <hr/>
-                                        <group>
-                                            <group attrs="{'invisible': [('type','=', 'contact')]}">
-                                                <label for="street" string="Address"/>
-                                                <div>
+                                        <group col="12">
+                                            <group colspan="5">
+                                                <field name="name" string="Contact Name" attrs="{'required' : [('type', '=', 'contact')]}"/>
+                                                <field name="title" placeholder="e.g. Mr."
+                                                    attrs="{'invisible': [('type','!=', 'contact')]}"/>
+                                                <field name="function" placeholder="e.g. Sales Director"
+                                                    attrs="{'invisible': [('type','!=', 'contact')]}"/>
+                                                <label for="street" string="Address" attrs="{'invisible': [('type','=', 'contact')]}"/>
+                                                <div attrs="{'invisible': [('type','=', 'contact')]}">
                                                     <div class="o_address_format" name="div_address">
                                                         <field name="street" placeholder="Street..." class="o_address_street"/>
                                                         <field name="street2" placeholder="Street 2..." class="o_address_street"/>
@@ -351,17 +356,15 @@
                                                         <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
                                                     </div>
                                                 </div>
+                                                <field name="comment" placeholder="Internal notes..."/>
                                             </group>
-                                            <group>
-                                                <field name="name" string="Contact Name" attrs="{'required' : [('type', '=', 'contact')]}"/>
-                                                <field name="title" placeholder="e.g. Mr."
-                                                    attrs="{'invisible': [('type','!=', 'contact')]}"/>
-                                                <field name="function" placeholder="e.g. Sales Director"
-                                                    attrs="{'invisible': [('type','!=', 'contact')]}"/>
+                                            <group colspan="5">
                                                 <field name="email"/>
                                                 <field name="phone" widget="phone"/>
                                                 <field name="mobile" widget="phone"/>
-                                                <field name="comment" placeholder="internal note..."/>
+                                            </group>
+                                            <group colspan="1">
+                                                <field name="image_medium" widget="image" class="oe_avatar" nolabel="1"/>
                                             </group>
                                         </group>
                                         <field name="supplier" invisible="True"/>
