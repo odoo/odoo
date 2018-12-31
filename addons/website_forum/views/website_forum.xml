@@ -256,6 +256,11 @@
                     <t t-else="">Comments</t>
                 </t>
             </a>
+            <span> • </span><a t-attf-href="/forum/#{ slug(forum) }/question/#{ slug(question) }">
+            <t t-esc="question.favourite_count"/>
+            <t t-if="question.favourite_count&lt;=1">Favorite</t>
+            <t t-else="">Favorites</t>
+            </a>
             <t t-if="question.state == 'flagged'">
                 <span> • </span>
                 Flagged
@@ -739,7 +744,8 @@
                     <t t-set="post" t-value="question"/>
                     <div class="mt4">
                         <a t-attf-data-href="/forum/#{slug(question.forum_id)}/question/#{slug(question)}/toggle_favourite" aria-label="Toggle favorite status" title="Toggle favorite status"
-                            t-attf-class="favourite_question no-decoration fa fa-2x fa-star #{question.user_favourite and 'forum_favourite_question' or ''}"/>
+                            t-attf-class="favourite_question no-decoration fa fa-2x fa-star #{question.user_favourite and 'forum_favourite_question' or ''}"/><br/>
+                        <t t-esc="question.favourite_count"/>
                     </div>
                 </t>
             </div>
