@@ -224,6 +224,9 @@ sAnimations.registry.WebsiteSale = sAnimations.Class.extend(ProductConfiguratorM
         } else {
             $('.o_wecommerce_apply_grid').fadeTo('fast', '.5');
         }
+        if ($('.o_wsale_product_btn').children().length === 0) {
+            $('.o_wsale_product_btn').hide();
+        }
 
         return def;
     },

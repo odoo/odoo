@@ -162,19 +162,17 @@
         height: 88px;
         z-index: 5;
         overflow: hidden;
-        position: absolute;
-        top: 0;
-        right: 0;
+        @include o-position-absolute($left: 0, $top: 0);
     }
 
     .ribbon {
         font: bold 15px Sans-Serif;
         color: white;
         text-align: center;
-        transform: rotate(45deg);
+        transform: rotate(-45deg);
         position: relative;
         padding: 7px 0;
-        left: -5px;
+        left: -31px;
         top: 14px;
         width: 120px;
         cursor: default;
