@@ -95,7 +95,7 @@ class HolidaysType(models.Model):
     @api.multi
     @api.depends('validity_start', 'validity_stop')
     def _compute_valid(self):
-        dt = self._context.get('default_date_from') or fields.Datetime.now()
+        dt = self._context.get('default_date_from') or fields.Date.context_today(self)
 
         for holiday_type in self:
             if holiday_type.validity_start and holiday_type.validity_stop:
@@ -106,7 +106,7 @@ class HolidaysType(models.Model):
                 holiday_type.valid = True
 
     def _search_valid(self, operator, value):
-        dt = self._context.get('default_date_from') or fields.Datetime.now()
+        dt = self._context.get('default_date_from') or fields.Date.context_today(self)
 
         signs = ['>=', '<='] if operator == '=' else ['<=', '>=']
 
