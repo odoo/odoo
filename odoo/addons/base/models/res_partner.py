@@ -149,7 +149,7 @@ class Partner(models.Model):
     title = fields.Many2one('res.partner.title')
     parent_id = fields.Many2one('res.partner', string='Related Company', index=True)
     parent_name = fields.Char(related='parent_id.name', readonly=True, string='Parent name')
-    child_ids = fields.One2many('res.partner', 'parent_id', string='Contacts', domain=[('active', '=', True)])  # force "active_test" domain to bypass _search() override
+    child_ids = fields.One2many('res.partner', 'parent_id', string='Contact', domain=[('active', '=', True)])  # force "active_test" domain to bypass _search() override
     ref = fields.Char(string='Reference', index=True)
     lang = fields.Selection(_lang_get, string='Language', default=lambda self: self.env.lang,
                             help="All the emails and documents sent to this contact will be translated in this language.")
@@ -179,12 +179,12 @@ class Partner(models.Model):
     type = fields.Selection(
         [('contact', 'Contact'),
          ('invoice', 'Invoice Address'),
-         ('delivery', 'Shipping Address'),
+         ('delivery', 'Delivery Address'),
          ('other', 'Other Address'),
          ("private", "Private Address"),
         ], string='Address Type',
         default='contact',
-        help="Invoice & Shipping addresses are used in sales orders. Private addresses are only visible by authorized users.")
+        help="Invoice & Delivery addresses are used in sales orders. Private addresses are only visible by authorized users.")
     street = fields.Char()
     street2 = fields.Char()
     zip = fields.Char(change_default=True)
