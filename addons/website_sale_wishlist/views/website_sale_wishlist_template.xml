@@ -9,6 +9,12 @@
         </xpath>
     </template>
 
+    <template id="assets_common" inherit_id="web.assets_common" name="Wishlist variant">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/website_sale_wishlist/static/src/js/website_sale_tour_variant_wishlist.js"></script>
+        </xpath>
+    </template>
+
     <template id="add_to_wishlist" inherit_id="website_sale.products_item" active="True" customize_show="True" name="Wishlist" priority="20">
         <xpath expr="//div[hasclass('product_price')]" position="inside">
             <t t-set="in_wish" t-value="product._is_in_wishlist()"/>
