@@ -351,7 +351,7 @@ class HolidaysRequest(models.Model):
         if self.employee_id:
             self.department_id = self.employee_id.department_id
 
-    @api.onchange('date_from', 'date_to')
+    @api.onchange('date_from', 'date_to', 'employee_id')
     def _onchange_leave_dates(self):
         if self.date_from and self.date_to:
             self.number_of_days = self._get_number_of_days(self.date_from, self.date_to, self.employee_id.id)
