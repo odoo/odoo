@@ -1578,7 +1578,8 @@ var Discuss = AbstractAction.extend({
     },
     /**
      * @private
-     * @param {integer} channelID
+     * @param {OdooEvent} ev
+     * @param {integer} ev.data.channelID
      */
     _onUpdateChannel: function (ev) {
         if (this._thread.getID() !== ev.data.channelID) {

@@ -474,6 +474,7 @@ var Dashboard = AbstractAction.extend({
             var timeout;
 
             this.on('change', function(data) {
+                // TODO: MSH: To check
                 element = this.container.firstChild;
                 var animationClass = data.delta > 0 ? 'is-increasing' : 'is-decreasing';
                 element.className += (' ' + animationClass);

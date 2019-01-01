@@ -305,6 +305,7 @@ var AbstractWebClient = Widget.extend(ServiceProviderMixin, KeyboardNavigationMi
         var url = '#' + $.param(state);
         this._current_state = $.deparam($.param(state), false); // stringify all values
         $.bbq.pushState(url);
+        // TODO: MSH: To check
         this.trigger('state_pushed', state);
     },
     // --------------------------------------------------------------

@@ -216,6 +216,7 @@ var LongpollingBus = Bus.extend(ServicesMixin, {
         this._isOdooFocused = params.focus;
         if (params.focus) {
             this._lastPresenceTime = new Date().getTime();
+            // TODO: MSH: To check
             this.trigger('window_focus', this._isOdooFocused);
         }
     },

@@ -377,10 +377,11 @@ var ThreadWindow = AbstractThreadWindow.extend({
     },
     /**
      * @private
-     * @param {integer} channelID
+     * @param {OdooEvent} ev
+     * @param {integer} ev.data.channelID
      */
-    _onUpdateChannel: function (channelID) {
-        if (this._thread.getID() !== channelID) {
+    _onUpdateChannel: function (ev) {
+        if (this._thread.getID() !== ev.data.channelID) {
             return;
         }
         this.render();

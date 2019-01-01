@@ -181,6 +181,7 @@ var KeywordList = Widget.extend({
             });
             keyword.on('removed', self, function () {
                self.trigger('list-not-full');
+               // TODO: MSH: To check
                self.trigger('content-updated', true);
             });
             keyword.on('selected', self, function (ev) {
@@ -225,6 +226,7 @@ var HtmlPage = Class.extend(mixins.PropertiesMixin, {
     changeTitle: function (title) {
         // TODO create tag if missing
         $('title').text(title.trim() || this.initTitle);
+        // TODO: MSH: To check
         this.trigger('title-changed', title);
     },
     description: function () {
@@ -233,6 +235,7 @@ var HtmlPage = Class.extend(mixins.PropertiesMixin, {
     changeDescription: function (description) {
         // TODO create tag if missing
         $('meta[name=description]').attr('content', description);
+        // TODO: MSH: To check
         this.trigger('description-changed', description);
     },
     keywords: function () {
@@ -592,6 +595,7 @@ var MetaImageSelector = Widget.extend({
         }, null, $image);
         mediaDialog.open();
         mediaDialog.on('save', this, function (image) {
+            // TODO: MSH: To check
             var src = image.attr('src');
             self.activeMetaImg = src;
             self.customImgUrl = src;

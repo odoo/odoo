@@ -572,6 +572,7 @@ var EditMenuDialog = weWidgets.Dialog.extend({
         var self = this;
         var dialog = new MenuEntryDialog(this, {}, undefined, {});
         dialog.on('save', this, function (link) {
+            // TODO: MSH: To check
             var new_menu = {
                 id: _.uniqueId('new-'),
                 name: link.text,
@@ -613,6 +614,7 @@ var EditMenuDialog = weWidgets.Dialog.extend({
         if (menu) {
             var dialog = new MenuEntryDialog(this, {}, undefined, menu);
             dialog.on('save', this, function (link) {
+                // TODO: MSH: To check
                 var id = link.id;
                 var menu_obj = self.flat[id];
                 _.extend(menu_obj, {
