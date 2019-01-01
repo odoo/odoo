@@ -4156,6 +4156,34 @@ msgid ""
 "(technically: Server Actions) to be triggered for each incoming mail.\n"
 "    "
 msgstr ""
+"\n"
+"Recupera le email in arrivo sui server POP/IMAP.\n"
+"============================================\n"
+"\n"
+"Inserisci i parametri dei tuoi account POP/IMAP, e tutte le email che arrivano su\n"
+"questi account saranno scaricate automaticamente nel tuo sistema Odoo. Sono\n"
+"supportati tutti i server compatibili POP3/IMAP, compresi quelli che richiedono\n"
+"una connessione SSL/TLS criptata.\n"
+"\n"
+"Puoi così creare facilmente flussi di lavoro basati su email per molti documenti Odoo utilizzando le funzioni email, ad esempio:\n"
+"----------------------------------------------------------------------------------------------------------\n"
+"    * Lead/Opportunità CRM\n"
+"    * Richieste CRM\n"
+"    * Domande di progetto\n"
+"    * Compiti di progetto\n"
+"    * Assunzioni in risorse umane (candidati)\n"
+"\n"
+"Basta installare l'applicazione in questione per poter assegnare uno qualsiasi\n"
+"di questi tipi di documenti (lead, domande di progetto) al proprio account di posta elettronica in arrivo. Le nuove email\n"
+"genereranno automaticamente nuovi documenti del tipo scelto, quindi è molto veloce per creare\n"
+"un'integrazione email-verso-Odoo. Ancora meglio: questi documenti funzionano direttamente come mini\n"
+"conversazioni sincronizzate per email. Puoi rispondere da Odoo e\n"
+"le risposte saranno raccolte automaticamente al loro ritorno, e allegate\n"
+"allo stesso documento di *conversazione*.\n"
+"\n"
+"Per esigenze più specifiche, è anche possibile assegnare azioni personalizzate\n"
+"(tecnicamente: Azioni Server) da attivare per ogni email in arrivo.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hw_screen
@@ -4685,6 +4713,35 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Modulo di gestione del piano dei conti per il Belgio in Odoo.\n"
+"==============================================================================\n"
+"\n"
+"Dopo l'installazione di questo modulo, viene avviata il wizard di configurazione per la contabilità.\n"
+"    * Abbiamo i modelli di conto che possono essere utili per generare i piani dei conti.\n"
+"    * Su questo particolare wizard, ti sarà chiesto di inserire il nome dell'azienda,\n"
+"      il modello del piano da seguire, il numero di cifre da generare, il codice\n"
+"      dell'account e il conto bancario e la valuta per creare i sezionali.\n"
+"\n"
+"Così, la copia pura del modello di piano viene generata.\n"
+"\n"
+"Wizard forniti da questo modulo:\n"
+"--------------------------------\n"
+"    * Partner IVA Intra: Registra i partner con la loro partita IVA e gli importi\n"
+"      fatturati. Prepara un formato di file XML.\n"
+"      \n"
+"        **Percorso di accesso:** Fatturazione/Analisi/Rapporti legali/Dichiarazioni del Belgio /Partner IVA Intra\n"
+"    * Dichiarazione periodica dell'IVA: Prepara un file XML per la dichiarazione dell'IVA\n"
+"      dell'azienda principale dell'utente attualmente connesso.\n"
+"      \n"
+"        **Percorso di accesso:** Fatturazione/Analisi/Rapporti legali/Dichiarazioni del Belgio/Dichiarazioni periodiche dell'IVA\n"
+"    * Elenco annuale dei clienti assoggettati all'IVA: Prepara un file XML per la dichiarazione\n"
+"      dell'IVA dell'azienda principale dell'utente attualmente connesso in base\n"
+"      all'anno fiscale.\n"
+"      \n"
+"        **Percorso di accesso :** Fatturazione/Analisi/Rapporti legali/Dichiarazioni del Belgio/Elenco annuale dei clienti assoggettati all'IVA.\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_do_reports
@@ -5783,6 +5840,18 @@ msgid ""
 "\n"
 "Also implements the removal strategy First Expiry First Out (FEFO) widely used, for example, in food industries.\n"
 msgstr ""
+"\n"
+"Traccia le diverse date sui prodotti e sui lotti di produzione.\n"
+"======================================================\n"
+"\n"
+"Le seguenti date possono essere tracciate::\n"
+"-------------------------------\n"
+"    - fine vita\n"
+"    - data di scadenza\n"
+"    - data di rimozione\n"
+"    - data avviso\n"
+"\n"
+"Attua anche la strategia di rimozione ampiamente utilizzata, ad esempio, nell'industria alimentare: First Expiry First Out (FEFO)\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_project
@@ -6521,17 +6590,17 @@ msgstr "<strong>Report:</strong>"
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "<strong>Ro</strong>"
-msgstr ""
+msgstr "<strong>Ro</strong>"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "<strong>Rq</strong>"
-msgstr ""
+msgstr "<strong>Rq</strong>"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "<strong>Seq</strong>"
-msgstr ""
+msgstr "<strong>Seq</strong>"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_base_module_upgrade
@@ -6545,7 +6614,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "<strong>Tr</strong>"
-msgstr ""
+msgstr "<strong>Tr</strong>"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -7496,7 +7565,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view_arch_fs
 msgid "Arch Filename"
-msgstr ""
+msgstr "Nome file arch"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_view_form
@@ -7577,7 +7646,7 @@ msgstr "Allega il nuovo documento"
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_attachment_search
 msgid "Attached Document Name"
-msgstr "Nome del Documento in Allegato"
+msgstr "Nome documento allegato"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_attachment_form
@@ -7592,7 +7661,7 @@ msgstr "Allegato"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment_name
 msgid "Attachment Name"
-msgstr "Nome Allegato"
+msgstr "Nome allegato"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_attachment
@@ -8774,7 +8843,7 @@ msgstr "Tipo di Azienda"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company_company_registry
 msgid "Company registry"
-msgstr "Registro delle Imprese"
+msgstr "Registro Imprese"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_contact_address
@@ -8907,14 +8976,16 @@ msgid ""
 "Connection Test Failed! Here is what we got instead:\n"
 " %s"
 msgstr ""
-"Test di Connessione Fallito! Ecco cosa abbiamo invece:\n"
+"Prova di connessione non riuscita, di seguito il risultato:\n"
 " %s"
 
 #. module: base
 #: code:addons/base/ir/ir_mail_server.py:189
 #, python-format
 msgid "Connection Test Succeeded! Everything seems properly set up!"
-msgstr "Test di Connessione Superato! Tutto sembra configurato correttamente!"
+msgstr ""
+"Prova di connessione superata, sembra che tutto sia configurato "
+"correttamente."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_constraint_name
@@ -10900,7 +10971,7 @@ msgstr "File"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment_datas
 msgid "File Content"
-msgstr "Contenuto File"
+msgstr "Contenuto file"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_language_export_format
@@ -10912,7 +10983,7 @@ msgstr "Formato File"
 #: model:ir.model.fields,field_description:base.field_base_language_import_filename
 #: model:ir.model.fields,field_description:base.field_ir_attachment_datas_fname
 msgid "File Name"
-msgstr "Nome File"
+msgstr "Nome file"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment_file_size
@@ -13867,7 +13938,7 @@ msgstr "Messaggio"
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_users_form
 msgid "Messaging and Social"
-msgstr "Messagi e Social"
+msgstr "Messaggistica e social"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron_function
@@ -13897,7 +13968,7 @@ msgstr "Tipo MIME"
 #. module: base
 #: model:ir.ui.view,arch_db:base.sequence_view
 msgid "Minute: %(min)s"
-msgstr "Minuti: %(min)s"
+msgstr "Minuto: %(min)s"
 
 #. module: base
 #: selection:ir.cron,interval_type:0
@@ -16560,7 +16631,7 @@ msgstr "Salva"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_report_xml_attachment
 msgid "Save as Attachment Prefix"
-msgstr "Nome allegato"
+msgstr "Salva come prefisso allegato"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_maintenance
@@ -19707,7 +19778,7 @@ msgstr "Settimane"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hw_scale
 msgid "Weighing Scale Hardware Driver"
-msgstr ""
+msgstr "Driver hardware bilancia"
 
 #. module: base
 #: model:res.country,name:base.eh
