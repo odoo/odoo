@@ -4,32 +4,33 @@
 # 
 # Translators:
 # Robert Frykelius <robert.frykelius@linserv.se>, 2016
-# Martin Trigaux, 2016
-# Kristoffer Grundström <kristoffer.grundstrom1983@gmail.com>, 2016
-# lasch a <bmail440@gmail.com>, 2016
-# Anders Wallenquist <anders.wallenquist@vertel.se>, 2016
-# Patrik Lermon <patrik.lermon@gmail.com>, 2016
-# lynnliuying <lynn.liu1971@gmail.com>, 2016
-# Leif Persson <leifpz54@gmail.com>, 2016
 # Jan-Eric Lindh <jelindh@gmail.com>, 2016
-# Jonathan S <jonathan.c.strom@gmail.com>, 2016
-# Johan Bergquist <johan.bergquist@netip.se>, 2016
 # Christelle Wehbe <libanon_cristelle@hotmail.com>, 2016
-# Martin Wilderoth <martin.wilderoth@linserv.se>, 2016
-# Haojun Zou <apollo_zhj@msn.com>, 2016
+# Leif Persson <leifpz54@gmail.com>, 2016
 # Daniel Forslund <daniel.forslund@gmail.com>, 2016
 # Zou Haojun <haojunzou84@gmail.com>, 2016
+# Jonathan S <jonathan.c.strom@gmail.com>, 2016
+# lasch a <bmail440@gmail.com>, 2016
+# Johan Bergquist <johan.bergquist@netip.se>, 2016
+# Kristoffer Grundström <hamnisdude@gmail.com>, 2016
+# Patrik Lermon <patrik.lermon@gmail.com>, 2016
 # Frida E, 2017
 # Kim Asplund <kim.asplund@gmail.com>, 2017
+# Martin Wilderoth <martin.wilderoth@linserv.se>, 2017
+# lynnliuying <lynn.liu1971@gmail.com>, 2017
 # Egils Verkstad <egils@riseup.net>, 2017
+# Martin Trigaux, 2017
+# Haojun Zou <apollo_zhj@msn.com>, 2018
 # Chrille Hedberg <hedberg.chrille@gmail.com>, 2018
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-05-26 08:44+0000\n"
-"PO-Revision-Date: 2017-05-26 08:44+0000\n"
-"Last-Translator: Chrille Hedberg <hedberg.chrille@gmail.com>, 2018\n"
+"PO-Revision-Date: 2016-09-07 09:15+0000\n"
+"Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>, 2018\n"
 "Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -109,7 +110,7 @@ msgstr "Antal siffror"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_code_digits
 msgid "# of Digits *"
-msgstr "antalet siffror *"
+msgstr "Antal siffror *"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_nbr
@@ -2499,12 +2500,12 @@ msgstr "Kontant"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_cash_account_code_prefix
 msgid "Cash Accounts Prefix"
-msgstr ""
+msgstr "Kontantkontoprefix"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_cash_account_code_prefix
 msgid "Cash Accounts Prefix *"
-msgstr ""
+msgstr "Kontantkontoprefix *"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:203
@@ -3530,12 +3531,28 @@ msgstr "Datum"
 #. module: account
 #: selection:account.payment.term.line,option:0
 msgid "Day(s) after the end of the invoice month (Net EOM)"
-msgstr ""
+msgstr "Dagar efter faktureringens månadsskifte (Netto MS)"
 
 #. module: account
 #: selection:account.payment.term.line,option:0
 msgid "Day(s) after the invoice date"
+msgstr "Dagar efter fakturadatum"
+
+#. module: account
+#: model:res.company,overdue_msg:base.main_company
+msgid ""
+"Dear Sir/Madam,\n"
+"\n"
+"Our records indicate that some payments on your account are still due. Please find details below.\n"
+"If the amount has already been paid, please disregard this notice. Otherwise, please forward us the total amount stated below.\n"
+"If you have any queries regarding your account, Please contact us.\n"
+"\n"
+"Thank you in advance for your cooperation.\n"
+"Best Regards,"
 msgstr ""
+"Hej,\n"
+"\n"
+"Enligt våra noteringar finns det fortfarande utestående fordringar, se nedan. Vänligen bortse från detta meddelande om ni redan har betalat. Annars ber vi er skicka betalningen snarast. Tveka inte att kontakta oss om det finns några frågor."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_debit
@@ -3644,7 +3661,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_cash_account_code_prefix
 msgid "Define the code prefix for the cash accounts"
-msgstr ""
+msgstr "Ange kod-prefixet för kontantkontona"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_tax_template_form
@@ -5930,7 +5947,7 @@ msgstr "Lås-datum"
 #: model:ir.model.fields,field_description:account.field_account_config_settings_period_lock_date
 #: model:ir.model.fields,field_description:account.field_res_company_period_lock_date
 msgid "Lock Date for Non-Advisers"
-msgstr ""
+msgstr "Lås-datum för andra än ekonomi"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_config_settings
@@ -6364,6 +6381,8 @@ msgid ""
 "No users, including Advisers, can edit accounts prior to and inclusive of "
 "this date. Use it for fiscal year locking for example."
 msgstr ""
+"Inga användare, inklusive ekonomi-personal, kan ändra bokföringen före och "
+"inklusive detta datum. Använd detta för att exempelvis låsa bokföringsåret."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_chart_template_code_digits
@@ -6464,7 +6483,7 @@ msgstr "Antal dagar"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company_accounts_code_digits
 msgid "Number of digits in an account code"
-msgstr "Antalet siffror i en kontokod"
+msgstr "Antalet siffror i ett bokföringskonto"
 
 #. module: account
 #. openerp-web
@@ -6616,6 +6635,9 @@ msgid ""
 "of this date. Use it for period locking inside an open fiscal year, for "
 "example."
 msgstr ""
+"Endast användare med rättighetern 'Controller' kan korrigera bokföringen "
+"till och med detta datum. Använd för periodlåstning inuti ett öppet "
+"bokföringsår."
 
 #. module: account
 #: selection:account.invoice,state:0 selection:account.invoice.report,state:0
@@ -6767,12 +6789,12 @@ msgstr "Förfallna betalningar"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company_overdue_msg
 msgid "Overdue Payments Message"
-msgstr "Förfallna fakturor meddelande"
+msgstr "Påminnelsemeddelande"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_overdue_msg
 msgid "Overdue Payments Message *"
-msgstr ""
+msgstr "Påminnelsemeddelande *"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -7304,7 +7326,7 @@ msgstr "Prefix av bankkonton"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company_cash_account_code_prefix
 msgid "Prefix of the cash accounts"
-msgstr "Prefix av konton konton"
+msgstr "Prefix för kontantkonton"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_cash_account_code_prefix
@@ -7925,12 +7947,12 @@ msgstr "Granska listan med tillgängliga valutor (från"
 #. module: account
 #: selection:res.company,tax_calculation_rounding_method:0
 msgid "Round Globally"
-msgstr "Avrunda globalt"
+msgstr "Avrunda totalen"
 
 #. module: account
 #: selection:res.company,tax_calculation_rounding_method:0
 msgid "Round per Line"
-msgstr "Avrunda per linje"
+msgstr "Avrunda per rad"
 
 #. module: account
 #: selection:account.journal,type:0
@@ -8577,7 +8599,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_tax_calculation_rounding_method
 msgid "Tax calculation rounding method *"
-msgstr ""
+msgstr "Momsavrundningsmetod *"
 
 #. module: account
 #: sql_constraint:account.tax:0 sql_constraint:account.tax.template:0
@@ -8946,6 +8968,8 @@ msgid ""
 "The last line's computation type should be \"Balance\" to ensure that the "
 "whole amount will be allocated."
 msgstr ""
+"Sista regeln bör vara \"Saldo\" för att säkerställa att hela beloppet "
+"hanteras."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_move_id
@@ -9773,17 +9797,17 @@ msgstr "Använd"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_use_anglo_saxon
 msgid "Use Anglo-Saxon Accounting"
-msgstr ""
+msgstr "Använd anglo-saxisk bokföring"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_use_anglo_saxon
 msgid "Use Anglo-Saxon Accounting *"
-msgstr ""
+msgstr "Använd anglo-saxisk bokföring *"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_use_anglo_saxon
 msgid "Use Anglo-Saxon accounting"
-msgstr ""
+msgstr "Använd anglo-saxisk bokföring"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_module_account_sepa
@@ -9798,7 +9822,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company_anglo_saxon_accounting
 msgid "Use anglo-saxon accounting"
-msgstr ""
+msgstr "Använd anglo-saxisk bokföring"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_module_account_batch_deposit
@@ -10219,6 +10243,8 @@ msgstr ""
 msgid ""
 "You cannot add/modify entries prior to and inclusive of the lock date %s"
 msgstr ""
+"Du kan inte lägga till/ändra transaktioner före och till och med detta "
+"låsdatum.%s. "
 
 #. module: account
 #: code:addons/account/models/account_move.py:187
@@ -10227,6 +10253,9 @@ msgid ""
 "You cannot add/modify entries prior to and inclusive of the lock date %s. "
 "Check the company settings or ask someone with the 'Adviser' role"
 msgstr ""
+"Du kan inte lägga till/ändra transaktioner före och till och med detta "
+"låsdatum %s. Kontrollera bolagsinställningar eller fråga någon med "
+"'Controller'-rättigheter."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:938

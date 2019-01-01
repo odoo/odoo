@@ -3,18 +3,20 @@
 # * account
 # 
 # Translators:
-# Dorin Hongu <dhongu@gmail.com>, 2016
-# Cozmin Candea <office@terrabit.ro>, 2016
 # Sergiu Baltariu <s_baltariu@yahoo.com>, 2016
-# Martin Trigaux, 2016
 # Fekete Mihai <mihai.fekete@forestandbiomass.ro>, 2016
+# Cozmin Candea <office@terrabit.ro>, 2018
+# Sorin Trifu <sorin.trifu@bizconsulting.ro>, 2018
+# Martin Trigaux, 2018
+# Dorin Hongu <dhongu@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-05-26 08:44+0000\n"
-"PO-Revision-Date: 2017-05-26 08:44+0000\n"
-"Last-Translator: Fekete Mihai <mihai.fekete@forestandbiomass.ro>, 2016\n"
+"PO-Revision-Date: 2016-09-07 09:15+0000\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2018\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1357,7 +1359,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account_account_src_id
 msgid "Account on Product"
-msgstr ""
+msgstr "Cont în produs"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_template_tag_ids
@@ -1372,6 +1374,8 @@ msgid ""
 "Account that will be set on invoice tax lines for invoices. Leave empty to "
 "use the expense account."
 msgstr ""
+"Contul care va fi stabilit pe liniile de facturare pentru facturi. Lăsați "
+"goale pentru a utiliza contul de cheltuieli."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_refund_account_id
@@ -1380,6 +1384,8 @@ msgid ""
 "Account that will be set on invoice tax lines for refunds. Leave empty to "
 "use the expense account."
 msgstr ""
+"Contul care va fi stabilit pe linii de facturare pentru stornări. Lăsați "
+"goale pentru a utiliza contul de cheltuieli."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account_account_dest_id
@@ -1731,7 +1737,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_module_l10n_us_check_printing
 msgid "Allow check printing and deposits"
-msgstr ""
+msgstr "Permie tiparire cec si depozite"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_group_multi_currency
@@ -3610,6 +3616,27 @@ msgid "Day(s) after the invoice date"
 msgstr "Zile după data facturii"
 
 #. module: account
+#: model:res.company,overdue_msg:base.main_company
+msgid ""
+"Dear Sir/Madam,\n"
+"\n"
+"Our records indicate that some payments on your account are still due. Please find details below.\n"
+"If the amount has already been paid, please disregard this notice. Otherwise, please forward us the total amount stated below.\n"
+"If you have any queries regarding your account, Please contact us.\n"
+"\n"
+"Thank you in advance for your cooperation.\n"
+"Best Regards,"
+msgstr ""
+"Stimate Domn/Doamnă,\n"
+"\n"
+"Înregistrările noastre indică faptul ca aveți unele plăți încă scadente. Găsiți toate detaliile mai jos.\n"
+"Dacă suma a fost deja plătită, vă rugam sa ignorați acest aviz. În cazul contrar, vă rugam să efectuați plata restantă descrisa mai jos.\n"
+"Dacă aveți întrebări în legătură cu contul dumneavoastră, vă rugam să ne contactați.\n"
+"\n"
+"Va mulțumim anticipat pentru cooperarea dumneavoastră.\n"
+"Cu stima,"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_debit
 #: model:ir.ui.view,arch_db:account.report_financial
 #: model:ir.ui.view,arch_db:account.report_generalledger
@@ -3932,6 +3959,8 @@ msgid ""
 "Document: Customer account statement<br/>\n"
 "                    Date:"
 msgstr ""
+"Document: Contul clientului<br/>\n"
+"                    Data:"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -4182,7 +4211,7 @@ msgstr "Șablon Excel"
 #: code:addons/account/models/chart_template.py:185
 #, python-format
 msgid "Exchange Difference"
-msgstr ""
+msgstr "Diferență curs"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company_currency_exchange_journal_id
@@ -4507,6 +4536,10 @@ msgid ""
 "customers. The search tool can also be used to personalise your Invoices "
 "reports and so, match this analysis to your needs."
 msgstr ""
+"Din acest raport puteți avea o imagine de ansamblu asupra sumei facturate "
+"clienților dvs. Instrumentul de căutare poate fi, de asemenea, utilizat "
+"pentru a personaliza rapoartele facturilor și, astfel, potriviți această "
+"analiză cu nevoile dvs."
 
 #. module: account
 #: model:ir.model,name:account.model_account_full_reconcile
@@ -4834,6 +4867,8 @@ msgid ""
 "If set, taxes which are computed after this one will be computed based on "
 "the price tax included."
 msgstr ""
+"Dacă este setat, taxele calculate după acesta vor fi calculate pe baza taxei"
+" incluse în preț ."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_analytic
@@ -4988,6 +5023,10 @@ msgid ""
 "                        in the payable and receivable accounts. These would be invoices \n"
 "                        that have not been paid or payments that have not been reconciled."
 msgstr ""
+"Dacă doriți să puteți trimite clienților extrasele dvs. de la Odoo, mai "
+"întâi trebuie să înregistrați toate tranzacțiile restante în conturile de "
+"plăți și de încasatări. Acestea ar fi facturi care nu au fost încasate sau "
+"încasări care nu au fost reconciliate."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -5200,7 +5239,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Invite Users"
-msgstr ""
+msgstr "Invitați utilizatori"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:965
@@ -5690,7 +5729,7 @@ msgstr "Iunie"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_reason
 msgid "Justification"
-msgstr ""
+msgstr "Justificare"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_kanban_dashboard
@@ -6041,7 +6080,7 @@ msgstr "Litigiu"
 #: model:ir.model.fields,field_description:account.field_account_config_settings_fiscalyear_lock_date
 #: model:ir.model.fields,field_description:account.field_res_company_fiscalyear_lock_date
 msgid "Lock Date"
-msgstr ""
+msgstr "Dată blocare"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_period_lock_date
@@ -6250,7 +6289,7 @@ msgstr "Mesaj pentru factură"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Minus Cost of Revenue"
-msgstr ""
+msgstr "Cost negativ al veniturilor"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
@@ -6852,7 +6891,7 @@ msgstr ""
 #. module: account
 #: model:account.account.type,name:account.data_account_type_other_income
 msgid "Other Income"
-msgstr ""
+msgstr "Alte venituri"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_form
@@ -9991,7 +10030,7 @@ msgstr "Utilizează jurnalul specific"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company_anglo_saxon_accounting
 msgid "Use anglo-saxon accounting"
-msgstr ""
+msgstr "Utilizare contabilitate anglo-saxonă "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_module_account_batch_deposit
@@ -10405,7 +10444,7 @@ msgstr ""
 #: code:addons/account/models/account_payment.py:128
 #, python-format
 msgid "You can only register payments for open invoices"
-msgstr ""
+msgstr "Puteți înregistra plăți numai pentru facturile deschise"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_financial_report_style_overwrite

@@ -3,19 +3,20 @@
 # * payment
 # 
 # Translators:
-# Martin Trigaux, 2016
 # Jakub Lohnisky <jakub@lepremier.cz>, 2016
-# Adam Kettner <cetnerix@gmail.com>, 2016
 # xlu <xlu@seznam.cz>, 2016
-# trendspotter, 2018
+# Adam Kettner <cetnerix@gmail.com>, 2016
+# Martin Trigaux, 2016
 # Michal Veselý <michal@veselyberanek.net>, 2018
+# trendspotter <j.podhorecky@volny.cz>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:27+0000\n"
-"PO-Revision-Date: 2017-06-23 13:27+0000\n"
-"Last-Translator: Michal Veselý <michal@veselyberanek.net>, 2018\n"
+"PO-Revision-Date: 2016-09-07 09:24+0000\n"
+"Last-Translator: trendspotter <j.podhorecky@volny.cz>, 2018\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -215,7 +216,7 @@ msgstr "Authorize.Net"
 #. module: payment
 #: selection:payment.transaction,state:0
 msgid "Authorized"
-msgstr ""
+msgstr "Autorizováno"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_buckaroo
@@ -272,7 +273,7 @@ msgstr "Nastavit způsoby příjmu plateb"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_module_id
 msgid "Corresponding Module"
-msgstr ""
+msgstr "Odpovídající modul"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_partner_payment_token_count
@@ -307,7 +308,7 @@ msgstr "Datum vytvoření"
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "Credentials"
-msgstr ""
+msgstr "Pověření"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.view_partners_form_payment_defaultcreditcard
@@ -415,7 +416,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction_fees
 msgid "Fees amount; set by the system because depends on the acquirer"
-msgstr ""
+msgstr "Částka poplatku; nastavena systémem, protože závisí na nabyvateli"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction_state_message
@@ -455,7 +456,7 @@ msgstr "Seskupit podle"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_pre_msg
 msgid "Help Message"
-msgstr ""
+msgstr "Zpráva nápovědy"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_id
@@ -519,7 +520,7 @@ msgstr "Naposled upraveno"
 #. module: payment
 #: selection:payment.acquirer,save_token:0
 msgid "Let the customer decide"
-msgstr ""
+msgstr "Nechte zákazníka rozhodnout"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_website_published
@@ -569,6 +570,7 @@ msgstr ""
 #: model:ir.model.fields,help:payment.field_payment_acquirer_cancel_msg
 msgid "Message displayed, if order is cancel during the payment process."
 msgstr ""
+"Zobrazená zpráva, pokud je objednávka během platebního procesu zrušena."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_done_msg
@@ -583,6 +585,8 @@ msgid ""
 "Message displayed, if order is in pending state after having done the "
 "payment process."
 msgstr ""
+"Zobrazená zpráva, pokud je objednávka v pohotovostním stavu po provedení "
+"platebního procesu."
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
@@ -689,7 +693,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:payment.payment_token_tree_view
 #: model:ir.ui.view,arch_db:payment.payment_token_view_search
 msgid "Payment Tokens"
-msgstr ""
+msgstr "Platební tokeny"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_transaction
@@ -726,7 +730,7 @@ msgstr "Platby"
 #: model:payment.acquirer,name:payment.payment_acquirer_paypal
 #: selection:payment.acquirer,provider:0
 msgid "Paypal"
-msgstr ""
+msgstr "Paypal"
 
 #. module: payment
 #: selection:payment.transaction,state:0
@@ -767,7 +771,7 @@ msgstr ""
 #. module: payment
 #: constraint:payment.acquirer:0
 msgid "Required fields not filled"
-msgstr ""
+msgstr "Požadovaná pole nejsou vyplněna"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_callback_eval
@@ -828,6 +832,9 @@ msgid ""
 " image, with aspect ratio preserved. Use this field anywhere a small image "
 "is required."
 msgstr ""
+"Malý obrázek tohoto poskytovatele. Automaticky se změní velikost obrazu 64 x"
+" 64 pixelů a zachová se poměr stran. Použijte toto pole všude, kde je "
+"požadován malý snímek."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_state
@@ -907,7 +914,7 @@ msgstr "Druh"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_date_validate
 msgid "Validation Date"
-msgstr ""
+msgstr "Datum ověření"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_dom_var
@@ -917,7 +924,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_int_var
 msgid "Variable international fees (in percents)"
-msgstr ""
+msgstr "Variable international fees (in percents)"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_website_published
@@ -967,6 +974,8 @@ msgid ""
 "You will be redirected to the Ingenico website after clicking on the payment"
 " button."
 msgstr ""
+"Budete přesměrováni na webovou stránku Ingenico po kliknutí na tlačítko "
+"platby."
 
 #. module: payment
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_payu

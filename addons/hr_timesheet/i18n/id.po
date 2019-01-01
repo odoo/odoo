@@ -3,18 +3,20 @@
 # * hr_timesheet
 # 
 # Translators:
-# Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2016
 # William Surya Permana <zarambie_game@yahoo.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # Febrasari Almania <febrasari.almania@gmail.com>, 2016
+# Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2016
 # Ngalim Siregar <ngalim.siregar@gmail.com>, 2016
+# Ryanto The <ry.the77@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-29 13:59+0000\n"
-"PO-Revision-Date: 2016-09-29 13:59+0000\n"
-"Last-Translator: Ngalim Siregar <ngalim.siregar@gmail.com>, 2016\n"
+"PO-Revision-Date: 2016-09-07 09:22+0000\n"
+"Last-Translator: Ryanto The <ry.the77@gmail.com>, 2018\n"
 "Language-Team: Indonesian (https://www.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,12 +27,12 @@ msgstr ""
 #. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.view_project_kanban_inherited
 msgid "<span class=\"o_label\">Timesheets</span>"
-msgstr ""
+msgstr "<span class=\"o_label\">Lembar waktu</span>"
 
 #. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.report_timesheet
 msgid "<span>Timesheet Entries</span>"
-msgstr ""
+msgstr "<span>Antri Lembar waktu</span>"
 
 #. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.report_timesheet
@@ -53,7 +55,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project_allow_timesheets
 #: model:ir.ui.view,arch_db:hr_timesheet.project_invoice_form
 msgid "Allow timesheets"
-msgstr ""
+msgstr "Mengizinkan Lembar waktu"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_account_analytic_line
@@ -82,13 +84,15 @@ msgstr ""
 #: constraint:project.task:0
 msgid "Circular references are not permitted between tasks and sub-tasks"
 msgstr ""
+"Melingkar referensi yang tidak permit antara tugas tugas dan menggantikan "
+"tugas"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line
 #: model:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line_by_project
 #: model:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_report
 msgid "Click to record activities."
-msgstr ""
+msgstr "Klik untuk merekam aktifitas"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task_delay_hours
@@ -107,7 +111,7 @@ msgstr "Dihitung sebagai: waktu + sisa waktu."
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task_total_hours_spent
 msgid "Computed as: Time Spent + Sub-tasks Hours."
-msgstr ""
+msgstr "Dihitung sebagai: Waktu yang dihabiskan + Menggantikan Jam kerja"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task_effective_hours
@@ -205,7 +209,7 @@ msgstr "Proyek"
 #. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.report_timesheet
 msgid "Project -"
-msgstr ""
+msgstr "Proyek"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user_remaining_hours
@@ -216,7 +220,7 @@ msgstr "Jam tersisa"
 #. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.view_task_kanban_inherited_progress
 msgid "Remaining hours"
-msgstr ""
+msgstr "jam Tersisa"
 
 #. module: hr_timesheet
 #: model:ir.ui.menu,name:hr_timesheet.menu_timesheets_reports
@@ -254,7 +258,7 @@ msgstr ""
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task_children_hours
 msgid "Sub-tasks Hours"
-msgstr ""
+msgstr "Menggantikan-Jam kerja"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task_children_hours
@@ -262,6 +266,9 @@ msgid ""
 "Sum of the planned hours of all sub-tasks (when a sub-task is closed or its "
 "spent hours exceed its planned hours, spent hours are counted instead)"
 msgstr ""
+"Jumlah yang direncanakan dari jam semua pengganti kerja (Ketika pengganti "
+"tugas saya menghabiskan berjam-jam melewati menjelaskan, jam yang dihabiskan"
+" adalah dihitung sebagai gantinya)"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_project_task
@@ -297,7 +304,7 @@ msgstr "Kegiatan absen"
 #: model:ir.actions.act_window,name:hr_timesheet.project_task_action_view_timesheet
 #: model:ir.actions.report.xml,name:hr_timesheet.timesheet_report
 msgid "Timesheet Entries"
-msgstr ""
+msgstr "Antrian Lembar waktu"
 
 #. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
@@ -354,6 +361,9 @@ msgid ""
 "                day. Every time spent on a project will become a cost and can be re-invoiced to\n"
 "                customers if required."
 msgstr ""
+"Anda dapat mendaftar dan melacak jam kerja Anda dengan setiap proyek\n"
+"                hari. Setiap waktu yang dihabiskan untuk proyek harus menjadi biaya dan dapat menjadi faktur untuk\n"
+"                Pelanggan jika diperlukan."
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,help:hr_timesheet.action_define_analytic_structure
