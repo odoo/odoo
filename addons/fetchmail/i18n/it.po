@@ -3,19 +3,20 @@
 # * fetchmail
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
-# Paolo Valier <paolo.valier@hotmail.it>, 2016
-# Francesco <francesco.bianchi.88@gmail.com>, 2016
+# Giacomo Grasso <giacomo.grasso.82@gmail.com>, 2016
 # Francesco Garganese <francesco.garganese@aeromnia.aero>, 2016
 # p_amoruso <p.amoruso@elvenstudio.it>, 2016
-# Giacomo Grasso <giacomo.grasso.82@gmail.com>, 2016
+# Paolo Valier, 2016
+# Martin Trigaux, 2016
+# Sergio Zanchetta <primes2h@gmail.com>, 2016
 # Giovanni Perteghella <giovanni@perteghella.org>, 2016
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
-"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"PO-Revision-Date: 2016-09-07 09:19+0000\n"
 "Last-Translator: Giovanni Perteghella <giovanni@perteghella.org>, 2016\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
@@ -27,12 +28,12 @@ msgstr ""
 #. module: fetchmail
 #: model:ir.ui.view,arch_db:fetchmail.view_email_server_tree
 msgid "# of emails"
-msgstr "# di email"
+msgstr "N. di email"
 
 #. module: fetchmail
 #: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Actions to Perform on Incoming Mails"
-msgstr "Azione da effettuare sulle mail in entrata"
+msgstr "Azioni da eseguire sulle email in ingresso"
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_active
@@ -47,7 +48,7 @@ msgstr "Avanzate"
 #. module: fetchmail
 #: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Advanced Options"
-msgstr "Impostazioni avanzate"
+msgstr "Opzioni avanzate"
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_configuration
@@ -69,7 +70,7 @@ msgstr "Confermato"
 #: code:addons/fetchmail/models/fetchmail.py:137
 #, python-format
 msgid "Connection test failed: %s"
-msgstr "Test connessione fallito: %s"
+msgstr "Prova di connessione non riuscita: %s"
 
 #. module: fetchmail
 #: model:ir.model.fields,help:fetchmail.field_fetchmail_server_is_ssl
@@ -77,8 +78,8 @@ msgid ""
 "Connections are encrypted with SSL/TLS through a dedicated port (default: "
 "IMAPS=993, POP3S=995)"
 msgstr ""
-"Le connessioni sono criptata con SSL/TLS attraverso una porta dedicata "
-"(default: IMAPS = 993, POP3S = 995)"
+"Le connessioni sono cifrate con SSL/TLS tramite una porta dedicata "
+"(predefinite: IMAPS = 993, POP3S = 995)"
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_object_id
@@ -99,12 +100,12 @@ msgstr "Creato il"
 #: model:ir.model.fields,help:fetchmail.field_fetchmail_server_priority
 msgid "Defines the order of processing, lower values mean higher priority"
 msgstr ""
-"Definisce l'ordine di esecuzione, valori bassi significano priorità alta"
+"Definisce l'ordine di elaborazione, valori bassi indicano alta priorità"
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_display_name
 msgid "Display Name"
-msgstr "Nome Visualizzato"
+msgstr "Nome visualizzato"
 
 #. module: fetchmail
 #: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
@@ -114,7 +115,7 @@ msgstr "Preleva ora"
 #. module: fetchmail
 #: model:ir.model.fields,help:fetchmail.field_fetchmail_server_server
 msgid "Hostname or IP of the mail server"
-msgstr "Hostname o IP del mail server"
+msgstr "Nome host o IP del server email"
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_id
@@ -139,19 +140,19 @@ msgstr "Se SSL è richiesta."
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_mail_mail_fetchmail_server_id
 msgid "Inbound Mail Server"
-msgstr "Server mail in ingresso"
+msgstr "Server email in arrivo"
 
 #. module: fetchmail
 #: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
 #: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
 msgid "Incoming Mail Server"
-msgstr "Mail server in ingresso"
+msgstr "Server email in ingresso"
 
 #. module: fetchmail
 #: model:ir.actions.act_window,name:fetchmail.action_email_server_tree
 #: model:ir.ui.menu,name:fetchmail.menu_action_fetchmail_server_tree
 msgid "Incoming Mail Servers"
-msgstr "Mail server in ingresso"
+msgstr "Server email in ingresso"
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_attach
@@ -166,7 +167,7 @@ msgstr "Mantieni Originale"
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_date
 msgid "Last Fetch Date"
-msgstr "Ultima data prelievo mail"
+msgstr "Data ultimo prelievo"
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server___last_update
@@ -176,12 +177,12 @@ msgstr "Ultima modifica il"
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_write_uid
 msgid "Last Updated by"
-msgstr "Ultima modifica di"
+msgstr "Ultimo aggiornamento di"
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_write_date
 msgid "Last Updated on"
-msgstr "Ultima modifica il"
+msgstr "Ultimo aggiornamento il"
 
 #. module: fetchmail
 #: selection:fetchmail.server,type:0
@@ -191,7 +192,7 @@ msgstr "Server locale"
 #. module: fetchmail
 #: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Login Information"
-msgstr "Informazioni di accesso"
+msgstr "Informazioni accesso"
 
 #. module: fetchmail
 #: model:ir.actions.act_window,name:fetchmail.act_server_history
@@ -221,7 +222,7 @@ msgstr ""
 #. module: fetchmail
 #: model:ir.model,name:fetchmail.model_mail_mail
 msgid "Outgoing Mails"
-msgstr "Email in Uscita"
+msgstr "Email in uscita"
 
 #. module: fetchmail
 #: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
@@ -241,7 +242,7 @@ msgstr "Server POP/IMAP"
 #. module: fetchmail
 #: model:ir.ui.view,arch_db:fetchmail.view_email_server_tree
 msgid "POP/IMAP Servers"
-msgstr "POP / IMAP Server"
+msgstr "Server POP/IMAP"
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_password
@@ -293,22 +294,22 @@ msgstr "Cerca mail server in ingresso"
 #. module: fetchmail
 #: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Server & Login"
-msgstr "Server & Login"
+msgstr "Server e accesso"
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_action_id
 msgid "Server Action"
-msgstr "Azione Server"
+msgstr "Azione server"
 
 #. module: fetchmail
 #: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Server Information"
-msgstr "Informazioni sul server"
+msgstr "Informazioni server"
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_server
 msgid "Server Name"
-msgstr "Nome Server"
+msgstr "Nome server"
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_priority
@@ -318,17 +319,17 @@ msgstr "Priorità server"
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_type
 msgid "Server Type"
-msgstr "Tipo di Server"
+msgstr "Tipo server"
 
 #. module: fetchmail
 #: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
 msgid "Server type IMAP."
-msgstr "Tipo di server IMAP."
+msgstr "Server di tipo IMAP."
 
 #. module: fetchmail
 #: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
 msgid "Server type POP."
-msgstr "Tipo server POP."
+msgstr "Server di tipo POP."
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_state
@@ -338,12 +339,12 @@ msgstr "Stato"
 #. module: fetchmail
 #: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Test & Confirm"
-msgstr "Test & Conferma"
+msgstr "Prova e conferma"
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_user
 msgid "Username"
-msgstr "Utente"
+msgstr "Nome utente"
 
 #. module: fetchmail
 #: model:ir.model.fields,help:fetchmail.field_fetchmail_server_original

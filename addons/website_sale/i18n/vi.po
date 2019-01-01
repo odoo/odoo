@@ -3,21 +3,22 @@
 # * website_sale
 # 
 # Translators:
-# Martin Trigaux, 2016
-# fanha99 <fanha99@hotmail.com>, 2016
 # Phạm Lân <phamquanglan@gmail.com>, 2016
-# sao sang <saosangmo@yahoo.com>, 2016
 # Hoang Loc Le Huu <loclhh@gmail.com>, 2016
 # son dang <son.dang@doda100.com>, 2016
+# sao sang <saosangmo@yahoo.com>, 2016
+# Martin Trigaux, 2017
 # Duc Dao <blakice12@gmail.com>, 2017
 # thanh nguyen <thanhnguyen.icsc@gmail.com>, 2018
+# fanha99 <fanha99@hotmail.com>, 2018
 # Duy BQ <duybq86@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-11-30 14:34+0000\n"
-"PO-Revision-Date: 2017-11-30 14:34+0000\n"
+"PO-Revision-Date: 2016-09-07 09:34+0000\n"
 "Last-Translator: Duy BQ <duybq86@gmail.com>, 2018\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
@@ -333,6 +334,9 @@ msgid ""
 "                                        <strong>Upselling</strong>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                          <strong>Đăng bán</strong>\n"
+"                                     </span>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -349,6 +353,9 @@ msgid ""
 "                                        <strong>You have a broad catalog?</strong><br/>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                           <strong>Bạn có một bản danh mục?</strong> <br/>\n"
+"                                     </span>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -417,6 +424,8 @@ msgid ""
 "<span class=\"panel-title\"><span class=\"fa fa-credit-card\"/><strong> "
 "Authorize.net, Ingenico, etc.</strong></span>"
 msgstr ""
+"<span class=\"panel-title\"><span class=\"fa fa-credit-"
+"card\"/><strong>Authorize.net, Ingenico, .v.v.</strong></span>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -694,6 +703,11 @@ msgid ""
 " agreeing (or disagreeing) with the Terms and Conditions or Privacy Policies"
 " of these third parties."
 msgstr ""
+"<b>Điều khoản Liên kết đến các trang web khác</b> sẽ thông báo cho người "
+"dùng rằng bạn không chịu trách nhiệm cho bất kỳ trang web bên thứ ba nào mà "
+"bạn liên kết đến. Loại điều khoản này thường sẽ thông báo cho người dùng "
+"rằng họ có trách nhiệm đọc và đồng ý (hoặc không đồng ý) với các Điều khoản "
+"và Điều kiện hoặc Chính sách quyền riêng tư của các bên thứ ba này."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.terms
@@ -946,6 +960,10 @@ msgid ""
 "Shop page, hit Customize and turn *Product Categories* on. A product can "
 "belong to several categories."
 msgstr ""
+"Danh mục có thể được xuất bản trên trang Shop (lưới danh mục trực tuyến) để "
+"giúp khách hàng tìm thấy tất cả các mục trong một danh mục. Để xuất bản "
+"chúng, hãy truy cập trang Cửa hàng, nhấn Tùy chỉnh và bật * Danh mục sản "
+"phẩm *. Một sản phẩm có thể thuộc về một số danh mục."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -1043,17 +1061,17 @@ msgstr "Thành phần"
 #. module: website_sale
 #: model:product.public.category,name:website_sale.Computer_all_in_one
 msgid "Computer all-in-one"
-msgstr ""
+msgstr "Máy tính tất cả trong một"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.sub_computers
 msgid "Computers"
-msgstr ""
+msgstr "Máy vi tính"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Configure your delivery methods (pricing, destinations)"
-msgstr ""
+msgstr "Cấu hình phương thức giao hàng của bạn (giá cả, điểm đến)"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -1228,7 +1246,7 @@ msgstr "Thiết bị"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Discount % or amounts, margins, roundings, periods, etc."
-msgstr ""
+msgstr "Giảm giá% hoặc số tiền, tỷ suất lợi nhuận, làm tròn, thời gian, v.v."
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image_display_name
@@ -1309,7 +1327,7 @@ msgstr "Lỗi ! Bạn không thể tạo nhóm với cấu trúc lặp đi lặp
 #. module: website_sale
 #: model:product.public.category,name:website_sale.External_Hard_Drive
 msgid "External Hard Drive"
-msgstr ""
+msgstr "Ổ cứng ngoài"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.extra_info_option
@@ -2439,6 +2457,8 @@ msgid ""
 "Some acquirers like Authorize.net and Ingenico can be used as payment "
 "gateways with your own payment processor."
 msgstr ""
+"Một số người mua như Authorize.net và Ingenico có thể được sử dụng làm cổng "
+"thanh toán với bộ xử lý thanh toán của riêng bạn."
 
 #. module: website_sale
 #: code:addons/website_sale/controllers/main.py:485
@@ -2608,6 +2628,9 @@ msgid ""
 "several places: Contact us page, website header &amp; footer, printed "
 "business documents like orders and invoices, etc."
 msgstr ""
+"Bước đầu tiên là thiết lập thông tin của công ty bạn. Điều này được sử dụng "
+"ở một số nơi: Trang liên hệ với chúng tôi, tiêu đề trang web &amp; chân "
+"trang, tài liệu kinh doanh in như đơn đặt hàng và hóa đơn, vv"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_delivery_carrier_website_url
@@ -2632,7 +2655,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "There are two strategies to sell more to a customer:"
-msgstr ""
+msgstr "Có hai chiến lược để bán nhiều hơn cho khách hàng:"
 
 #. module: website_sale
 #. openerp-web

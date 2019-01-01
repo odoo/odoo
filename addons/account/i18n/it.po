@@ -27,8 +27,8 @@
 # Marco Calcagni <mcalcagni@dinamicheaziendali.it>, 2018
 # Sebastiano Pistore <SebastianoPistore.info@protonmail.ch>, 2018
 # Léonie Bouchat <lbo@odoo.com>, 2018
-# Martin Trigaux, 2018
 # Sergio Zanchetta <primes2h@gmail.com>, 2018
+# Martin Trigaux, 2018
 # 
 msgid ""
 msgstr ""
@@ -36,7 +36,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-05-26 08:44+0000\n"
 "PO-Revision-Date: 2016-09-07 09:15+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2018\n"
+"Last-Translator: Martin Trigaux, 2018\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2212,7 +2212,7 @@ msgstr "Prezzo medio"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Awaiting payments"
-msgstr "Pagamenti in attesa"
+msgstr "pagamenti in attesa"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:183
@@ -2535,7 +2535,7 @@ msgstr "Con nota di credito"
 #. module: account
 #: model:ir.filters,name:account.filter_invoice_salespersons
 msgid "By Salespersons"
-msgstr "Per commerciale"
+msgstr "Per addetto vendite"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position_active
@@ -3528,7 +3528,7 @@ msgstr "Nota di credito"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_credit_account_id
 msgid "Credit account"
-msgstr "Conto \"Avere\""
+msgstr "Conto avere"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_reconcile_credit
@@ -3742,6 +3742,27 @@ msgid "Day(s) after the invoice date"
 msgstr "Giorno/i dopo la data fattura"
 
 #. module: account
+#: model:res.company,overdue_msg:base.main_company
+msgid ""
+"Dear Sir/Madam,\n"
+"\n"
+"Our records indicate that some payments on your account are still due. Please find details below.\n"
+"If the amount has already been paid, please disregard this notice. Otherwise, please forward us the total amount stated below.\n"
+"If you have any queries regarding your account, Please contact us.\n"
+"\n"
+"Thank you in advance for your cooperation.\n"
+"Best Regards,"
+msgstr ""
+"Gentile signore/signora, \n"
+"\n"
+"Dalle nostre registrazioni contabili risultano ancora sospesi alcuni pagamenti. Vi preghiamo di verificare i dettagli allegati.\n"
+"Se il pagamento dovesse essere già stato corrisposto, vi preghiamo di non considerare la presente. In caso contrario, vi chiediamo di corrispondere l'importo indicato di seguito.\n"
+"Se dovessero esserci dubbi o richieste a riguardo, non esitate a contattarci.\n"
+"\n"
+"Ringraziamo in anticipo per la Vostra collaborazione.\n"
+"Distinti saluti,"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_debit
 #: model:ir.ui.view,arch_db:account.report_financial
 #: model:ir.ui.view,arch_db:account.report_generalledger
@@ -3759,7 +3780,7 @@ msgstr "Metodi di addebito"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_debit_account_id
 msgid "Debit account"
-msgstr "Conto \"Dare\""
+msgstr "Conto dare"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_reconcile_debit
@@ -3794,12 +3815,12 @@ msgstr "Sequenza specifica per nota di credito"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_default_credit_account_id
 msgid "Default Credit Account"
-msgstr "Conto \"Avere\" predefinito"
+msgstr "Conto avere predefinito"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_default_debit_account_id
 msgid "Default Debit Account"
-msgstr "Conto \"Dare\" predefinito"
+msgstr "Conto dare predefinito"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_default_purchase_tax_id
@@ -4119,7 +4140,7 @@ msgstr "Nota di credito in bozza"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Draft bills"
-msgstr "Fatture in bozza"
+msgstr "fatture in bozza"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_bank_statement_draft_tree
@@ -4674,7 +4695,7 @@ msgstr ""
 #: code:addons/account/models/account_journal_dashboard.py:103
 #, python-format
 msgid "Future"
-msgstr "Futuro"
+msgstr "Future"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
@@ -5158,7 +5179,7 @@ msgstr "Se si vuole eseguire questa operazione da soli:"
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_immediate
 msgid "Immediate Payment"
-msgstr "Rimessa diretta"
+msgstr "Pagamento immediato"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_module_account_bank_statement_import_qif
@@ -5574,7 +5595,7 @@ msgstr "Fatture dovute"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Invoices to validate"
-msgstr "Fatture da validare"
+msgstr "fatture da validare"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.product_template_form_view
@@ -7266,7 +7287,7 @@ msgstr "Partner"
 #: code:addons/account/models/account_journal_dashboard.py:96
 #, python-format
 msgid "Past"
-msgstr "Passato"
+msgstr "Precedenti"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_payable
@@ -7435,7 +7456,7 @@ msgstr "Termini di pagamento: DF FM"
 #. module: account
 #: model:account.payment.term,note:account.account_payment_term_immediate
 msgid "Payment term: Immediate Payment"
-msgstr "Termini di pagamento: rimessa diretta"
+msgstr "Termini di pagamento: pagamento immediato"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_payment_id
@@ -7478,7 +7499,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Payments to do"
-msgstr "Pagamenti da effettuare"
+msgstr "pagamenti da effettuare"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_payments_widget
@@ -8352,7 +8373,7 @@ msgstr "Imposta sulle vendite (%)"
 #: model:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model:ir.ui.view,arch_db:account.view_account_invoice_report_search
 msgid "Salesperson"
-msgstr "Commerciale"
+msgstr "Addetto vendite"
 
 #. module: account
 #. openerp-web

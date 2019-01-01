@@ -3,26 +3,27 @@
 # * account
 # 
 # Translators:
-# Otgonbayar.A <gobi.mn@gmail.com>, 2017
-# Martin Trigaux, 2017
-# nasaaskii <nasaaskii@gmail.com>, 2017
-# Ubuntu Erka <erdenebold10@gmail.com>, 2017
-# Bayarkhuu Bataa, 2017
-# Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2017
 # Batsaihan Purevjav <batsaihan.p@gmail.com>, 2017
 # ERDENESAIKHAN BATZORIG <esab.orgil@gmail.com>, 2017
-# Jacara <baskhuujacara@gmail.com>, 2017
+# Ubuntu Erka <erdenebold10@gmail.com>, 2017
 # Unurjargal Tsoodol <unuruu25@gmail.com>, 2017
 # Puujee S <puujeemtz@gmail.com>, 2017
-# Batzul B <batzul.active@gmail.com>, 2017
 # darambazar <daramaa26@gmail.com>, 2017
+# nasaaskii <nasaaskii@gmail.com>, 2017
+# Batzul B <batzul.active@gmail.com>, 2017
+# Bayarkhuu Bataa, 2017
+# Otgonbayar.A <gobi.mn@gmail.com>, 2017
+# Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2017
+# Jacara <baskhuujacara@gmail.com>, 2018
+# Martin Trigaux, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-05-26 08:44+0000\n"
-"PO-Revision-Date: 2017-05-26 08:44+0000\n"
-"Last-Translator: darambazar <daramaa26@gmail.com>, 2017\n"
+"PO-Revision-Date: 2016-09-07 09:15+0000\n"
+"Last-Translator: Martin Trigaux, 2018\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2221,7 +2222,8 @@ msgstr "Баланс тайлан"
 #: model:ir.model.fields,help:account.field_account_bank_statement_balance_end
 msgid "Balance as calculated based on Opening Balance and transaction lines"
 msgstr ""
-"Нээлтийн Баланс болон гүйлгээний мөрүүд дээр тулгуурлан тооцоологдсон баланс"
+"Эхний үлдэгдэл болон гүйлгээний мөрүүд дээр тулгуурлан тооцоологдсон "
+"үлдэгдэл"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_balance_cash_basis
@@ -3720,6 +3722,25 @@ msgid "Day(s) after the invoice date"
 msgstr "Нэхэмжлэлийн огнооноос хойшх өдрийн тоо"
 
 #. module: account
+#: model:res.company,overdue_msg:base.main_company
+msgid ""
+"Dear Sir/Madam,\n"
+"\n"
+"Our records indicate that some payments on your account are still due. Please find details below.\n"
+"If the amount has already been paid, please disregard this notice. Otherwise, please forward us the total amount stated below.\n"
+"If you have any queries regarding your account, Please contact us.\n"
+"\n"
+"Thank you in advance for your cooperation.\n"
+"Best Regards,"
+msgstr ""
+"Эрхэм Ноён/Хатагтай танд,\n"
+"\n"
+"Бидний бүртгэлээс дараах төлбөрүүд нь хугацаа хэтэрсэн байдалтай байна. Хэрэв төлөгдсөн бол энэ мэдэгдлийг тоохгүй байж болно. Гэхдээ өөрийн данс, тооцоотой холбоотой аливаа асуулт байвал бидэнд хандана уу. \n"
+"\n"
+"Танд урьдчилан баярлалаа.\n"
+"Амжилт хүсье,"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_debit
 #: model:ir.ui.view,arch_db:account.report_financial
 #: model:ir.ui.view,arch_db:account.report_generalledger
@@ -4224,7 +4245,7 @@ msgstr "Дараа сарын сүүл"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_balance_end_real
 msgid "Ending Balance"
-msgstr "Төгсгөлийн баланс"
+msgstr "Эцсийн үлдэгдэл"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_cashbox_end_id
@@ -5204,7 +5225,7 @@ msgstr "Ирсэн"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_general_ledger_initial_balance
 msgid "Include Initial Balances"
-msgstr "Нээлтийн баланс багтах"
+msgstr "Эхний үлдэгдэл багтах"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_analytic
@@ -8646,7 +8667,7 @@ msgstr "Эхлэл огноо"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_balance_start
 msgid "Starting Balance"
-msgstr "Нээлтийн баланс"
+msgstr "Эхний үлдэгдэл"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_cashbox_start_id
@@ -9256,8 +9277,8 @@ msgid ""
 "The ending balance is incorrect !\n"
 "The expected balance (%s) is different from the computed one. (%s)"
 msgstr ""
-"Төгсгөлийн баланс зөв биш байна !\n"
-"Таамагласан баланс (%s) байтал тооцоолсон баланс (%s) "
+"Эцсийн үлдэгдэл зөв биш байна !\n"
+"Таамагласан үлдэгдэл (%s) байтал тооцоолсон үлдэгдэл (%s) "
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -10292,7 +10313,7 @@ msgid ""
 "Used to register a loss when the ending balance of a cash register differs "
 "from what the system computes"
 msgstr ""
-"Кассын төгсгөлийн баланс системийн тооцоолсон балансаас зөрж байгаа "
+"Кассын эцсийн үлдэгдэл системийн тооцоолсон үлдэгдлээс зөрж байгаа "
 "тохиолдолд алдагдалыг бүртгэхэд хэрэглэгддэг"
 
 #. module: account
@@ -10301,8 +10322,8 @@ msgid ""
 "Used to register a profit when the ending balance of a cash register differs"
 " from what the system computes"
 msgstr ""
-"Кассын төгсгөлийн баланс системийн тооцоолсон балансаас зөрж байгаа "
-"тохиолдолд ашигийг бүртгэхэд хэрэглэгддэг"
+"Кассын эцсийн үлдэгдэл системийн тооцоолсон үлдэгдлээс зөрж байгаа "
+"тохиолдолд ашгийг бүртгэхэд хэрэглэгддэг"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_analytic_line_company_currency_id
