@@ -129,11 +129,14 @@ return Widget.extend({
         });
         $.when.apply($, defs).then(function () {
             _.each(arguments, function (args, index) {
+                var facet = expandResult[index];
                 var counter = args && args.length;
                 if (counter) {
-                    expandResult[index].$el.find("strong").append(" (" + counter + ")");
+                    facet._expand_result = args;
+                    facet.$el.find("strong").append(" (" + counter + ")");
                 } else {
-                    expandResult[index].$el.remove();
+                    facet._expand_result = false;
+                    facet.$el.remove();
                 }
             });
         });
@@ -182,15 +185,18 @@ return Widget.extend({
     expand: function () {
         var self = this;
         var current_result = this.current_result;
-        current_result.expand(this.get_search_string()).then(function (results) {
-            (results).reverse().forEach(function (result) {
+        function showExpandResult (results) {
+            results.reverse().forEach(function (result) {
                 result.indent = true;
                 var $li = self.make_list_item(result);
                 current_result.$el.after($li);
             });
             self.current_result.expanded = true;
             self.current_result.$el.find('a.o-expand').removeClass('o-expand').addClass('o-expanded');
-        });
+        }
+        if (current_result._expand_result.length) {
+            showExpandResult(current_result._expand_result);
+        }
     },
     fold: function () {
         var $next = this.current_result.$el.next();
