@@ -676,7 +676,7 @@ class Partner(models.Model):
                                display_name=unaccent('res_partner.display_name'),
                                reference=unaccent('res_partner.ref'),
                                percent=unaccent('%s'),
-                               vat=unaccent('vat'),)
+                               vat=unaccent('res_partner.vat'),)
 
             where_clause_params += [search_name]*5
             if limit:
