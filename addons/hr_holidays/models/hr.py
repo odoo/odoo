@@ -144,6 +144,14 @@ class Employee(models.Model):
             employee.current_leave_state = leave_data.get(employee.id, {}).get('current_leave_state')
             employee.current_leave_id = leave_data.get(employee.id, {}).get('current_leave_id')
 
+    @api.onchange('parent_id')
+    def _onchange_parent_id(self):
+        super(Employee, self)._onchange_parent_id()
+        previous_manager = self._origin.parent_id.user_id
+        manager = self.parent_id.user_id
+        if manager and manager.has_group('hr.group_hr_user') and (self.leave_manager_id == previous_manager or not self.leave_manager_id):
+            self.leave_manager_id = manager
+
     @api.multi
     def _compute_show_leaves(self):
         show_leaves = self.env['res.users'].has_group('hr_holidays.group_hr_holidays_user')
