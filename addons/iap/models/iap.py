@@ -66,7 +66,7 @@ def jsonrpc(url, method='call', params=None):
             e.data = response['error']['data']
             raise e
         return response.get('result')
-    except (ValueError, requests.exceptions.ConnectionError, requests.exceptions.MissingSchema) as e:
+    except (ValueError, requests.exceptions.ConnectionError, requests.exceptions.MissingSchema, requests.exceptions.Timeout, requests.exceptions.HTTPError) as e:
         raise exceptions.AccessError('The url that this service requested returned an error. Please contact the author the app. The url it tried to contact was ' + url)
 
 #----------------------------------------------------------
@@ -78,7 +78,7 @@ class IapTransaction(object):
         self.credit = None
 
 @contextlib.contextmanager
-def charge(env, key, account_token, credit, description=None, credit_template=None):
+def charge(env, key, account_token, credit, description=None, credit_template=None, dbuuid=False):
     """
     Account charge context manager: takes a hold for ``credit``
     amount before executing the body, then captures it if there
@@ -102,6 +102,7 @@ def charge(env, key, account_token, credit, description=None, credit_template=No
         'credit': credit,
         'key': key,
         'description': description,
+        'dbuuid': dbuuid,
     }
     try:
         transaction_token = jsonrpc(endpoint + '/iap/1/authorize', params=params)
