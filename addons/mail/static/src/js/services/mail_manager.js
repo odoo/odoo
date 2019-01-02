@@ -676,8 +676,8 @@ var MailManager =  AbstractService.extend({
     },
     /**
      * Get the previews of the mail failures
-     * Mail failures of a same model are grouped together, so that there are few
-     * preview items on the messaging menu in the systray.
+     * Mail failures of a same model with the same type are grouped together, so
+     * that there are few preview items on the messaging menu in the systray.
      *
      * To determine whether this is a model preview or a document preview review
      * the documentID is omitted for a model preview, whereas it is set for a
@@ -696,10 +696,11 @@ var MailManager =  AbstractService.extend({
         _.each(this._mailFailures, function (failure) {
             var unreadCounter = 1;
             var isSameDocument = true;
-            var sameModelItem = _.find(items, function (item) {
+            var sameModelAndTypeItem = _.find(items, function (item) {
                 if (
                     item.failure.isLinkedToDocument() &&
-                    (item.failure.getDocumentModel() === failure.getDocumentModel())
+                    (item.failure.getDocumentModel() === failure.getDocumentModel()) &&
+                    (item.failure.getFailureType() === failure.getFailureType())
                 ) {
                     isSameDocument = item.failure.getDocumentID() === failure.getDocumentID();
                     return true;
@@ -707,10 +708,10 @@ var MailManager =  AbstractService.extend({
                 return false;
             });
 
-            if (failure.isLinkedToDocument() && sameModelItem) {
-                unreadCounter = sameModelItem.unreadCounter + 1;
-                isSameDocument = sameModelItem.isSameDocument && isSameDocument;
-                var index = _.findIndex(items, sameModelItem);
+            if (failure.isLinkedToDocument() && sameModelAndTypeItem) {
+                unreadCounter = sameModelAndTypeItem.unreadCounter + 1;
+                isSameDocument = sameModelAndTypeItem.isSameDocument && isSameDocument;
+                var index = _.findIndex(items, sameModelAndTypeItem);
                 items[index] = {
                     unreadCounter: unreadCounter,
                     failure: failure,
