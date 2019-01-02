@@ -4035,7 +4035,7 @@ QUnit.module('relational_fields', {
         form.$('.o_field_x2many_list_row_add a').click();
         form.$('.o_input').val('pi').trigger('input');
         // delete the line above it
-        form.$('.o_list_record_delete').first().click();
+        form.$('.o_list_record_remove').first().click();
         // the next line should be displayed below the newly added one
         assert.strictEqual(form.$('.o_data_row').length, 2, "should have 2 records");
         assert.strictEqual(form.$('.o_data_row').text(), 'pikawa',
