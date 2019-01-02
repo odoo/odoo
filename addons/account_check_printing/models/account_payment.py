@@ -51,7 +51,7 @@ class AccountPayment(models.Model):
     @api.onchange('amount','currency_id')
     def _onchange_amount(self):
         res = super(AccountPayment, self)._onchange_amount()
-        self.check_amount_in_words = self.currency_id.amount_to_text(self.amount)
+        self.check_amount_in_words = self.currency_id and self.currency_id.amount_to_text(self.amount) or False
         return res
 
     def _check_communication(self, payment_method_id, communication):
