@@ -103,7 +103,19 @@
       <field name="account_id" ref="chart2704"/>
       <field name="refund_account_id" ref="chart2704"/>
       <field name="tag_ids" eval="[(6,0,[ref('tag_no_06'),ref('tag_no_15')])]"/>
-	<field name="tax_group_id" ref="tax_group_10"/>
+      <field name="tax_group_id" ref="tax_group_10"/>
+    </record>
+    <record id="tax3b" model="account.tax.template">
+      <field name="chart_template_id" ref="no_chart_template"/>
+      <field name="name">Utgående 12% mva</field>
+      <field name="description">Utgående 12% mva</field>
+      <field name="amount">12</field>
+      <field name="amount_type">percent</field>
+      <field name="type_tax_use">sale</field>
+      <field name="account_id" ref="chart2704"/>
+      <field name="refund_account_id" ref="chart2704"/>
+      <field name="tag_ids" eval="[(6,0,[ref('tag_no_06'),ref('tag_no_15')])]"/>
+      <field name="tax_group_id" ref="tax_group_12"/>
     </record>
     <record id="tax4" model="account.tax.template">
       <field name="chart_template_id" ref="no_chart_template"/>
@@ -139,9 +151,20 @@
       <field name="account_id" ref="chart2714"/>
       <field name="refund_account_id" ref="chart2714"/>
       <field name="tag_ids" eval="[(6,0,[ref('tag_no_09'),ref('tag_no_12')])]"/>
-	<field name="tax_group_id" ref="tax_group_10"/>
+      <field name="tax_group_id" ref="tax_group_10"/>
     </record>
-
+    <record id="tax6b" model="account.tax.template">
+      <field name="chart_template_id" ref="no_chart_template"/>
+      <field name="name">Inngående 12% mva</field>
+      <field name="description">Inngående 12% mva</field>
+      <field name="amount">12</field>
+      <field name="amount_type">percent</field>
+      <field name="type_tax_use">purchase</field>
+      <field name="account_id" ref="chart2714"/>
+      <field name="refund_account_id" ref="chart2714"/>
+      <field name="tag_ids" eval="[(6,0,[ref('tag_no_09'),ref('tag_no_12')])]"/>
+      <field name="tax_group_id" ref="tax_group_12"/>
+    </record>
     <record id="tax7" model="account.tax.template">
       <field name="chart_template_id" ref="no_chart_template"/>
       <field name="name">Inngående 0% mva</field>
