@@ -218,6 +218,13 @@ class Employee(models.Model):
             if employee.pin and not employee.pin.isdigit():
                 raise ValidationError(_("The PIN must be a sequence of digits."))
 
+    @api.onchange('parent_id')
+    def _onchange_parent_id(self):
+        manager = self.parent_id
+        previous_manager = self._origin.parent_id
+        if manager and (self.coach_id == previous_manager or not self.coach_id):
+            self.coach_id = manager
+
     @api.onchange('job_id')
     def _onchange_job_id(self):
         if self.job_id:
