@@ -53,6 +53,9 @@ return {
             odooSuggestions = _.filter(odooSuggestions, function (suggestion) {
                 return !suggestion.ignored;
             });
+            _.each(odooSuggestions, function(suggestion){
+              delete suggestion.ignored;
+            });
             return def.resolve(odooSuggestions);
         };
 
