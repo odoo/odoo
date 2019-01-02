@@ -1,24 +1,70 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import fields
 from odoo.addons.product.tests.test_product_attribute_value_config import TestProductAttributeValueSetup
 from odoo.tests import tagged
 
 
+class TestSaleProductAttributeValueSetup(TestProductAttributeValueSetup):
+    def _setup_currency(self, currency_ratio=2):
+        """Get or create a currency. This makes the test non-reliant on demo.
+
+        With an easy currency rate, for a simple 2 ratio in the following tests.
+        """
+        from_currency = self.computer.currency_id
+        self._set_or_create_rate_today(from_currency, rate=1)
+
+        to_currency = self._get_or_create_currency("my currency", "C")
+        self._set_or_create_rate_today(to_currency, currency_ratio)
+
+        return to_currency
+
+    def _set_or_create_rate_today(self, currency, rate):
+        """Get or create a currency rate for today. This makes the test
+        non-reliant on demo data."""
+        name = fields.Date.today()
+        currency_id = currency.id
+        company_id = self.env.user.company_id.id
+
+        CurrencyRate = self.env['res.currency.rate']
+
+        currency_rate = CurrencyRate.search([
+            ('company_id', '=', company_id),
+            ('currency_id', '=', currency_id),
+            ('name', '=', name),
+        ])
+
+        if currency_rate:
+            currency_rate.rate = rate
+        else:
+            CurrencyRate.create({
+                'company_id': company_id,
+                'currency_id': currency_id,
+                'name': name,
+                'rate': rate,
+            })
+
+    def _get_or_create_currency(self, name, symbol):
+        """Get or create a currency based on name. This makes the test
+        non-reliant on demo data."""
+        currency = self.env['res.currency'].search([('name', '=', name)])
+        return currency or currency.create({
+            'name': name,
+            'symbol': symbol,
+        })
+
+
 @tagged('post_install', '-at_install')
-class TestSaleProductAttributeValueConfig(TestProductAttributeValueSetup):
-    def _setup_pricelist(self):
-        # easy currency rate, for a simple 2 ratio in the following tests
-        self.computer.currency_id.rate_ids[0].rate = 1
-        currency_ratio = 2
-        currency = self.env['res.currency'].browse(1 if self.computer.currency_id.id != 1 else 2)
-        currency.rate_ids[0].rate = currency_ratio
+class TestSaleProductAttributeValueConfig(TestSaleProductAttributeValueSetup):
+    def _setup_pricelist(self, currency_ratio=2):
+        to_currency = self._setup_currency(currency_ratio)
 
         discount = 10
 
         pricelist = self.env['product.pricelist'].create({
             'name': 'test pl',
-            'currency_id': currency.id,
+            'currency_id': to_currency.id,
             'company_id': self.computer.company_id.id,
         })
 
