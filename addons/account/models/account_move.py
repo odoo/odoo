@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import time
+from datetime import datetime
 from collections import OrderedDict
 from odoo import api, fields, models, _
 from odoo.osv import expression
@@ -724,11 +725,18 @@ class AccountMoveLine(models.Model):
                 return unsigned_domain
 
             return expression.OR([unsigned_domain, build_for_amount(-amount)])
+            
+        date = str
+        try:
+            format = self.env['res.lang']._lang_get(self.env.user.lang).date_format
+            date = fields.Date.to_string(datetime.strptime(str, format).date())
+        except ValueError:
+            pass
 
         str_domain = [
             '|', ('move_id.name', 'ilike', str),
             '|', ('move_id.ref', 'ilike', str),
-            '|', ('date_maturity', 'like', str),
+            '|', ('date_maturity', 'like', date),
             '&', ('name', '!=', '/'), ('name', 'ilike', str)
         ]
         if str[0] in ['-', '+']:
