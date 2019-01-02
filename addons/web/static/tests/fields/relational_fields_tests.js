@@ -2853,7 +2853,7 @@ QUnit.module('relational_fields', {
         $modal.find('thead input[type=checkbox]').click();
 
         $modal.find('.btn.btn-sm.btn-primary.o_select_button').click();
-        
+
         pager_limit = form.$('.o_field_many2many.o_field_widget.o_field_x2many.o_field_x2many_list .o_pager_limit');
         assert.equal(pager_limit.text(), '51',
             'We should have 51 records in the m2m field');
@@ -3996,6 +3996,50 @@ QUnit.module('relational_fields', {
         assert.strictEqual(form.$('.o_data_row').length, 42, "should display 42 records and the create line");
         assert.strictEqual(form.$('.o_data_row:has(.o_data_cell:contains(#76))').index(), 38, "should display '#76' at the penultimate line");
         assert.strictEqual(form.$('.o_data_row:has(.o_field_char)').index(), 41, "should display the create line at the last position");
+
+        form.destroy();
+    });
+
+    QUnit.test('delete a record while adding another one in a multipage', function (assert) {
+        // in a many2one with at least 2 pages, add a new line. Delete the line above it.
+        // (the onchange makes it so that the virtualID is inserted in the middle of the currentResIDs.)
+        // it should load the next line to display it on the page.
+        assert.expect(2);
+
+        this.data.partner.records[0].turtles = [2, 3];
+        this.data.partner.onchanges.turtles = function (obj) {
+           obj.turtles = [[5]].concat(obj.turtles);
+        };
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field name="turtles">' +
+                                '<tree editable="bottom" limit="1" decoration-muted="turtle_bar == False">' +
+                                    '<field name="turtle_foo"/>' +
+                                    '<field name="turtle_bar"/>' +
+                                '</tree>' +
+                            '</field>' +
+                        '</group>' +
+                    '</sheet>' +
+                 '</form>',
+            res_id: 1,
+        });
+
+        form.$buttons.find('.o_form_button_edit').click();
+        // add a line (virtual record)
+        form.$('.o_field_x2many_list_row_add a').click();
+        form.$('.o_input').val('pi').trigger('input');
+        // delete the line above it
+        form.$('.o_list_record_delete').first().click();
+        // the next line should be displayed below the newly added one
+        assert.strictEqual(form.$('.o_data_row').length, 2, "should have 2 records");
+        assert.strictEqual(form.$('.o_data_row').text(), 'pikawa',
+            "should display the correct records on page 1");
 
         form.destroy();
     });
@@ -6270,7 +6314,7 @@ QUnit.module('relational_fields', {
                 '</form>',
             res_id: 1,
             mockRPC: function (route, args) {
-                assert.step(args.method + ' ' + args.model)
+                assert.step(args.method + ' ' + args.model);
                 return this._super(route, args);
             },
             viewOptions: {
@@ -11988,6 +12032,53 @@ QUnit.module('relational_fields', {
             "should contain no tags");
         assert.strictEqual(form.$('.o_field_many2manytags input').get(0), document.activeElement,
             "m2m tags input should have kept the focus");
+
+        form.destroy();
+    });
+
+    QUnit.test('widget many2many_tags in one2many with display_name', function (assert) {
+        assert.expect(4);
+        this.data.turtle.records[0].partner_ids = [2];
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<field name="turtles">' +
+                            '<tree>' +
+                                '<field name="partner_ids" widget="many2many_tags"/>' +  // will use display_name
+                            '</tree>' +
+                            '<form>' +
+                                '<sheet>' +
+                                    '<field name="partner_ids"/>' +
+                                '</sheet>' +
+                            '</form>' +
+                        '</field>' +
+                    '</sheet>' +
+                '</form>',
+            archs: {
+                'partner,false,list': '<tree><field name="foo"/></tree>',
+            },
+            res_id: 1,
+        });
+
+        assert.strictEqual(form.$('.o_field_one2many[name="turtles"] .o_list_view .o_field_many2manytags[name="partner_ids"]').text().replace(/\s/g, ''),
+            "secondrecordaaa", "the tags should be correctly rendered");
+
+        // open the x2m form view
+        form.$('.o_field_one2many[name="turtles"] .o_list_view td.o_data_cell:first').click();
+        assert.strictEqual($('.modal .o_form_view .o_field_many2many[name="partner_ids"] .o_list_view .o_data_cell').text(),
+            "blipMy little Foo Value", "the list view should be correctly rendered with foo");
+
+        $('.modal button.o_form_button_cancel').click();
+        assert.strictEqual(form.$('.o_field_one2many[name="turtles"] .o_list_view .o_field_many2manytags[name="partner_ids"]').text().replace(/\s/g, ''),
+            "secondrecordaaa", "the tags should still be correctly rendered");
+
+        form.$buttons.find('.o_form_button_edit').click();
+        assert.strictEqual(form.$('.o_field_one2many[name="turtles"] .o_list_view .o_field_many2manytags[name="partner_ids"]').text().replace(/\s/g, ''),
+            "secondrecordaaa", "the tags should still be correctly rendered");
 
         form.destroy();
     });

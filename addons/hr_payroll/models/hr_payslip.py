@@ -180,9 +180,9 @@ class HrPayslip(models.Model):
                 for interval in day_intervals:
                     holiday = interval[2]['leaves'].holiday_id
                     current_leave_struct = leaves.setdefault(holiday.holiday_status_id, {
-                        'name': holiday.holiday_status_id.name,
+                        'name': holiday.holiday_status_id.name or _('Global Leaves'),
                         'sequence': 5,
-                        'code': holiday.holiday_status_id.name,
+                        'code': holiday.holiday_status_id.name or 'GLOBAL',
                         'number_of_days': 0.0,
                         'number_of_hours': 0.0,
                         'contract_id': contract.id,
