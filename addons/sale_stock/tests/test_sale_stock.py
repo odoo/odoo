@@ -742,3 +742,56 @@ class TestSaleStock(TestSale):
         return_picking.button_validate()
         # Checks the delivery amount (must still be 10).
         self.assertEqual(sale_order.order_line.qty_delivered, 10)
+
+    def test_08_sale_return_qty_and_cancel(self):
+        """
+        Test a SO with a product on delivery with a 5 quantity.
+        Create two invoices: one for 3 quantity and one for 2 quantity
+        Then cancel Sale order, it won't raise any warning, it should be cancelled.
+        """
+        partner = self.partner
+        product = self.products['prod_del']
+        so_vals = {
+            'partner_id': partner.id,
+            'partner_invoice_id': partner.id,
+            'partner_shipping_id': partner.id,
+            'order_line': [(0, 0, {
+                'name': product.name,
+                'product_id': product.id,
+                'product_uom_qty': 5.0,
+                'product_uom': product.uom_id.id,
+                'price_unit': product.list_price})],
+            'pricelist_id': self.env.ref('product.list0').id,
+        }
+        so = self.env['sale.order'].create(so_vals)
+
+        # confirm the so
+        so.action_confirm()
+
+        # deliver partially
+        pick = so.picking_ids
+        pick.move_lines.write({'quantity_done': 3})
+
+        wiz_act = pick.button_validate()
+        wiz = self.env[wiz_act['res_model']].browse(wiz_act['res_id']).with_context(wiz_act['context'])
+        wiz.process()
+
+        # create invoice for 3 quantity and post it
+        inv_1 = so._create_invoices()
+        inv_1.post()
+        self.assertEqual(inv_1.state, 'posted', 'invoice should be in posted state')
+
+        pick_2 = so.picking_ids.filtered('backorder_id')
+        pick_2.move_lines.write({'quantity_done': 2})
+        pick_2.button_validate()
+
+        # create invoice for remaining 2 quantity
+        inv_2 = so._create_invoices()
+        self.assertEqual(inv_2.state, 'draft', 'invoice should be in draft state')
+
+        # check the status of invoices after cancelling the order
+        so.action_cancel()
+        wizard = self.env['sale.order.cancel'].with_context({'order_id': so.id}).create({'order_id': so.id})
+        wizard.action_cancel()
+        self.assertEqual(inv_1.state, 'posted', 'A posted invoice state should remain posted')
+        self.assertEqual(inv_2.state, 'cancel', 'A drafted invoice state should be cancelled')

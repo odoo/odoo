@@ -33,6 +33,7 @@ Preferences
         'report/stock_report_deliveryslip.xml',
         'data/sale_stock_data.xml',
         'wizard/stock_rules_report_views.xml',
+        'wizard/sale_order_cancel_views.xml',
     ],
     'demo': ['data/sale_order_demo.xml'],
     'qweb': ['static/src/xml/qty_at_date.xml'],
