@@ -16,10 +16,8 @@ class StockMoveLine(models.Model):
 
     @api.depends('picking_id', 'product_id')
     def _compute_expiration_date_readonly(self):
-        if not self.picking_id.picking_type_id.use_existing_lots and self.product_id.use_expiration_date:
-            self.expiration_date_readonly = False
-        else:
-            self.expiration_date_readonly = True
+        for line in self:
+            line.expiration_date_readonly = bool(not line.picking_id.picking_type_id.use_existing_lots and line.product_id.use_expiration_date)
 
     @api.onchange('product_id', 'product_uom_id')
     def onchange_product_id(self):
