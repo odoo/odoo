@@ -1061,7 +1061,7 @@ class Binary(http.Controller):
             filename_field=filename_field, download=download, mimetype=mimetype,
             default_mimetype='image/png', access_token=access_token)
 
-        if status != 200 and download:
+        if (status != 200 and download) or status == 301:
             return request.env['ir.http']._response_by_status(status, headers, content)
 
         content = limited_image_resize(
