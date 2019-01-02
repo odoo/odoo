@@ -406,7 +406,7 @@ class InventoryLine(models.Model):
         """
         for line in self:
             if line.product_id.type != 'product':
-                raise UserError(_("You can only adjust stockable products."))
+                raise UserError(_("You can only adjust stockable products.") + '\n\n%s -> %s' % (line.product_id.display_name, line.product_id.type))
 
     def _get_quants(self):
         return self.env['stock.quant'].search([
