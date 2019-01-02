@@ -809,6 +809,7 @@ QUnit.module('account', {
                         [{
                             partner_id: false,
                             counterpart_aml_dicts:[{
+                              "analytic_tag_ids": [[6, null, []]],
                               "counterpart_aml_id": 114,
                               "credit": 0,
                               "debit": 32.57999999999993,
