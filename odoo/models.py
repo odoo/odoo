@@ -3728,6 +3728,12 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         modified_ids = {row[0] for row in cr.fetchall()}
         self.browse(modified_ids).modified(['parent_path'])
 
+    def _load_records_write(self, values):
+        self.write(values)
+
+    def _load_records_create(self, values):
+        return self.create(values)
+
     def _load_records(self, data_list, update=False):
         """ Create or update records of this model, and assign XMLIDs.
 
@@ -3785,7 +3791,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         # update existing records
         for data in to_update:
-            data['record'].write(data['values'])
+            data['record']._load_records_write(data['values'])
 
         # determine existing parents for new records
         for parent_model, parent_field in self._inherits.items():
@@ -3812,7 +3818,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                     _logger.warning("Creating record %s in module %s.", data['xml_id'], module)
 
         # create records
-        records = self.create([data['values'] for data in to_create])
+        records = self._load_records_create([data['values'] for data in to_create])
         for data, record in pycompat.izip(to_create, records):
             data['record'] = record
 
