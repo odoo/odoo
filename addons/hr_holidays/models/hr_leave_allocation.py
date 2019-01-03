@@ -244,16 +244,16 @@ class HolidaysAllocation(models.Model):
 
     @api.onchange('holiday_type')
     def _onchange_type(self):
+        self.employee_id = None
+        self.department_id = None
+        self.category_id = None
+        self.mode_company_id = None
         if self.holiday_type == 'employee' and not self.employee_id:
             if self.env.user.employee_ids:
                 self.employee_id = self.env.user.employee_ids[0]
         elif self.holiday_type == 'department':
             if self.env.user.employee_ids:
                 self.department_id = self.department_id or self.env.user.employee_ids[0].department_id
-            self.employee_id = None
-        elif self.holiday_type == 'category':
-            self.employee_id = None
-            self.department_id = None
 
     @api.onchange('employee_id')
     def _onchange_employee(self):
