@@ -24,7 +24,7 @@
 
             <t t-set="direction" t-value="request.env['res.lang'].search([('code', '=', request.env.lang)]).direction"/>
             <div id="wrapwrap" t-attf-class="#{pageName or ''} #{direction == 'rtl' and 'o_rtl' or ''} #{'o_portal' if is_portal else ''}">
-                <header>
+                <header id="top" data-anchor="true">
                     <nav class="navbar navbar-expand-md navbar-light bg-light">
                         <div class="container">
                             <a href="/" class="navbar-brand logo">
@@ -55,7 +55,7 @@
                 <main>
                     <t t-raw="0"/>
                 </main>
-                <footer class="bg-light o_footer">
+                <footer id="bottom" data-anchor="true" class="bg-light o_footer">
                     <div class="container mt16 mb16" id="footer">
                         <div class="float-right mb16" t-ignore="true" t-if="not editable">
                             Powered by <a target="_blank" href="http://www.odoo.com?utm_source=db&amp;utm_medium=portal">Odoo</a>

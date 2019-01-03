@@ -1080,6 +1080,31 @@ registry._fixAppleCollapse = Animation.extend({
     },
 });
 
+registry.anchorSlide = Animation.extend({
+    selector: 'a[href^="/"][href*="#"], a[href^="#"]',
+    read_events: {
+        'click': '_onAnimateClick',
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _onAnimateClick: function (ev) {
+        var hash = ev.currentTarget.hash;
+        var $anchor = $(hash);
+        if ($anchor.length && $anchor.attr('data-anchor') && this.$target[0].pathname === window.location.pathname) {
+            ev.preventDefault();
+            $('html, body').animate({
+                scrollTop: $anchor.offset().top,
+            }, 500);
+        }
+    },
+});
+
 return {
     Class: Animation,
     registry: registry,
