@@ -19,4 +19,13 @@
         <field name="email_to">${(not object.partner_id and object.email_from)|safe}</field>
         <field name="body_html"></field>
     </record>
+
+    <!-- Email activity type revamped for crm leads with templates -->
+    <record id="mail_activity_data_crm_email" model="mail.activity.type">
+        <field name="name">Email</field>
+        <field name="icon">fa-envelope</field>
+        <field name="sequence">3</field>
+        <field name="res_model_id" ref="crm.model_crm_lead"/>
+        <field name="superseed_type_id" ref="mail.mail_activity_data_email"/>
+    </record>
 </odoo>

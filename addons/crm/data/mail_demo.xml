@@ -18,4 +18,16 @@
         <field name="res_model_id" ref="crm.model_crm_lead"/>
         <field name="delay_count">10</field>
     </record>
+
+    <record id="mail_template_demo_crm_lead" model="mail.template">
+        <field name="name">Reminder</field>
+        <field name="model_id" ref="crm.model_crm_lead"/>
+        <field name="partner_to">${object.partner_id.id if object.partner_id else False}</field>
+        <field name="email_to">${(object.email_from if not object.partner_id else '')|safe}</field>
+        <field name="body_html" type="html"><p>Hello</p></field>
+        <field name="auto_delete" eval="True"/>
+    </record>
+    <record id="mail_activity_data_crm_email" model="mail.activity.type">
+        <field name="mail_template_ids" eval="[(4, ref('crm.mail_template_demo_crm_lead'))]"/>
+    </record>
 </odoo>
