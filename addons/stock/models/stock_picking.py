@@ -432,11 +432,12 @@ class Picking(models.Model):
             else:
                 picking.show_mark_as_todo = True
 
-    @api.multi
-    @api.depends('state', 'is_locked')
+    @api.depends('state', 'is_locked', 'move_lines')
     def _compute_show_validate(self):
         for picking in self:
-            if not (picking.immediate_transfer) and picking.state == 'draft':
+            if not picking.move_lines:
+                picking.show_validate = False
+            elif not picking.immediate_transfer and picking.state == 'draft':
                 picking.show_validate = False
             elif picking.state not in ('draft', 'waiting', 'confirmed', 'assigned') or not picking.is_locked:
                 picking.show_validate = False
