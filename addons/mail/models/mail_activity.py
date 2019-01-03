@@ -10,6 +10,7 @@ import pytz
 from odoo import api, exceptions, fields, models, _
 
 from odoo.tools.misc import clean_context
+from odoo.osv import expression
 
 _logger = logging.getLogger(__name__)
 
@@ -57,6 +58,12 @@ class MailActivityType(models.Model):
         domain=['&', ('is_mail_thread', '=', True), ('transient', '=', False)],
         help='Specify a model if the activity should be specific to a model'
              ' and not available when managing activities for other models.')
+    superseed_type_id = fields.Many2one(
+        'mail.activity.type', string='Superseeds', domain=[('res_model_id', '=', False)],
+        help='Replaces this generic activity type by a model-specific one.')
+    is_superseeded = fields.Integer(
+        'Overriden', compute='_compute_is_superseeded', search='_search_is_superseeded',
+        help='Model-specific activity types superseeding the current one.')
     default_next_type_id = fields.Many2one('mail.activity.type', 'Default Next Activity',
         domain="['|', ('res_model_id', '=', False), ('res_model_id', '=', res_model_id)]")
     force_next = fields.Boolean("Auto Schedule Next Activity", default=False)
@@ -83,6 +90,42 @@ class MailActivityType(models.Model):
     def _onchange_res_model_id(self):
         self.mail_template_ids = self.mail_template_ids.filtered(lambda template: template.model_id == self.res_model_id)
         self.res_model_change = self.initial_res_model_id and self.initial_res_model_id != self.res_model_id
+
+    def _compute_is_superseeded(self):
+        current_model = self.env.context.get('default_res_model', self.env.context.get('active_model'))
+        if current_model:
+            overseeding = self.env['mail.activity.type'].search([
+                ('superseed_type_id', 'in', self.ids),
+                ('res_model_id.model', '=', current_model)
+            ])
+            for activity_type in self:
+                activity_type.is_superseeded = activity_type in overseeding.mapped('superseed_type_id')
+        else:
+            for activity_type in self:
+                activity_type.is_superseeded = False
+
+    def _search_is_superseeded(self, operator, value):
+        search_positive = operator not in expression.NEGATIVE_TERM_OPERATORS and value  # != False or = True
+        current_model = self.env.context.get('default_res_model', self.env.context.get('active_model'))
+        if not current_model:
+            return expression.FALSE_DOMAIN if search_positive else expression.TRUE_DOMAIN
+
+        overseeding = self.env['mail.activity.type'].search([
+            ('superseed_type_id', '!=', False),
+            ('res_model_id.model', '=', current_model)
+        ])
+        return [('id', 'in' if search_positive else 'not in', overseeding.mapped('superseed_type_id').ids)]
+
+    @api.onchange('superseed_type_id')
+    def _onchange_superseed_type_id(self):
+        for fname in ['summary', 'icon', 'category', 'decoration_type', 'force_next', 'default_next_type_id']:
+            if not self[fname]:
+                self[fname] = self.superseed_type_id[fname]
+
+        if not self.delay_count and self.superseed_type_id.delay_count:
+            self.delay_from = self.superseed_type_id.delay_from
+            self.delay_unit = self.superseed_type_id.delay_unit
+            self.delay_count = self.superseed_type_id.delay_count
 
     def _compute_initial_res_model_id(self):
         for activity_type in self:
@@ -121,7 +164,7 @@ class MailActivity(models.Model):
     # activity
     activity_type_id = fields.Many2one(
         'mail.activity.type', 'Activity',
-        domain="['|', ('res_model_id', '=', False), ('res_model_id', '=', res_model_id)]", ondelete='restrict')
+        domain="['&', ('is_superseeded', '=', False), '|', ('res_model_id', '=', False), ('res_model_id', '=', res_model_id)]", ondelete='restrict')
     activity_category = fields.Selection(related='activity_type_id.category', readonly=False)
     activity_decoration = fields.Selection(related='activity_type_id.decoration_type', readonly=False)
     icon = fields.Char('Icon', related='activity_type_id.icon', readonly=False)

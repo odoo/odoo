@@ -18,6 +18,7 @@
                     <group>
                         <group name="activity_details">
                             <field name="category" invisible="1"/>
+                            <field name="superseed_type_id" groups="base.group_no_one"/>
                             <field name="res_model_id" groups="base.group_no_one"/>
                             <field name="res_model_change" invisible="1"/>
                             <field name="initial_res_model_id" invisible="1"/>
@@ -117,7 +118,8 @@
                     </group>
                     <group>
                         <group>
-                            <field name="activity_type_id" required="1" options="{'no_create': True, 'no_open': True}"/>
+                            <field name="activity_type_id" required="1" options="{'no_create': True, 'no_open': True}"
+                                context="{'default_res_model': res_model}"/>
                             <field name="summary" placeholder="e.g. Discuss proposal"/>
                         </group>
                         <group>
