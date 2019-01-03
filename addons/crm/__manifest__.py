@@ -26,6 +26,7 @@
         'security/ir.model.access.csv',
 
         'data/crm_data.xml',
+        'data/mail_data.xml',
         'data/crm_stage_data.xml',
         'data/crm_lead_data.xml',
         'data/digest_data.xml',
@@ -48,7 +49,7 @@
     ],
     'demo': [
         'data/crm_demo.xml',
-        'data/mail_activity_demo.xml',
+        'data/mail_demo.xml',
         'data/crm_lead_demo.xml',
     ],
     'css': ['static/src/css/crm.css'],
