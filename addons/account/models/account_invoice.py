@@ -447,6 +447,9 @@ class AccountInvoice(models.Model):
 
     @api.model
     def create(self, vals):
+        if not vals.get('journal_id') and vals.get('type'):
+            vals['journal_id'] = self.with_context(type=vals.get('type'))._default_journal().id
+
         onchanges = {
             '_onchange_partner_id': ['account_id', 'payment_term_id', 'fiscal_position_id', 'partner_bank_id'],
             '_onchange_journal_id': ['currency_id'],
@@ -1408,7 +1411,7 @@ class AccountInvoice(models.Model):
         res = {}
         for line in self.tax_line_ids:
             res.setdefault(line.tax_id.tax_group_id, {'base': 0.0, 'amount': 0.0})
-            res[line.tax_id.tax_group_id]['amount'] += line.amount
+            res[line.tax_id.tax_group_id]['amount'] += line.amount_total
             res[line.tax_id.tax_group_id]['base'] += line.base
         res = sorted(res.items(), key=lambda l: l[0].sequence)
         res = [(

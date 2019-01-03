@@ -1,0 +1,470 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="account_group_1" model="account.group">
+            <field name="name">Activos</field>
+            <field name="code_prefix">1</field>
+        </record>
+        <record id="account_group_11" model="account.group">
+            <field name="parent_id" ref="l10n_do.account_group_1"/>
+            <field name="name">Activos Corrientes</field>
+            <field name="code_prefix">11</field>
+        </record>
+        <record id="account_group_1101" model="account.group">
+            <field name="parent_id" ref="l10n_do.account_group_11"/>
+            <field name="name">Efectivo y Equivalentes de Efectivo</field>
+            <field name="code_prefix">1101</field>
+        </record>
+        <record id="account_group_110101" model="account.group">
+            <field name="parent_id" ref="l10n_do.account_group_1101"/>
+            <field name="name">Caja</field>
+            <field name="code_prefix">110101</field>
+        </record>
+        <record id="account_group_110102" model="account.group">
+            <field name="parent_id" ref="l10n_do.account_group_1101"/>
+            <field name="name">Bancos</field>
+            <field name="code_prefix">110102</field>
+        </record>
+        <record id="account_group_110103" model="account.group">
+            <field name="parent_id" ref="l10n_do.account_group_1101"/>
+            <field name="name">Inversiones Temporales Plazo Menor 90 días</field>
+            <field name="code_prefix">110103</field>
+        </record>
+        <record id="account_group_1102" model="account.group">
+            <field name="parent_id" ref="l10n_do.account_group_11"/>
+            <field name="name">Inversiones en Valores a Corto Plazo</field>
+            <field name="code_prefix">1102</field>
+        </record>
+        <record id="account_group_110301" model="account.group">
+            <field name="parent_id" ref="l10n_do.account_group_11"/>
+            <field name="name">Cuentas y Documentos por Cobrar</field>
+            <field name="code_prefix">1103</field>
+        </record>
+        <record id="account_group_documentosporcobrar" model="account.group">
+            <field name="parent_id" ref="l10n_do.account_group_110301"/>
+            <field name="name">Documentos por Cobrar</field>
+            <field name="code_prefix">110301</field>
+        </record>
+        <record id="account_group_110302" model="account.group">
+            <field name="parent_id" ref="l10n_do.account_group_110301"/>
+            <field name="name">Cuentas por Cobrar</field>
+            <field name="code_prefix">110302</field>
+        </record>
+        <record id="account_group_1104" model="account.group">
+            <field name="parent_id" ref="l10n_do.account_group_11"/>
+            <field name="name">Provisión para Cuentas Incobrables</field>
+            <field name="code_prefix">1104</field>
+        </record>
+        <record id="account_group_1105" model="account.group">
+            <field name="parent_id" ref="l10n_do.account_group_11"/>
+            <field name="name">Inventarios</field>
+            <field name="code_prefix">1105</field>
+        </record>
+        <record id="account_group_1106" model="account.group">
+            <field name="parent_id" ref="l10n_do.account_group_11"/>
+            <field name="name">Deterioro Acumulado de Valor de Inventarios</field>
+            <field name="code_prefix">1106</field>
+        </record>
+        <record id="account_group_1107" model="account.group">
+            <field name="parent_id" ref="l10n_do.account_group_11"/>
+            <field name="name">Estimación por Obsolencia de Inventario</field>
+            <field name="code_prefix">1107</field>
+        </record>
+        <record id="account_group_1108" model="account.group">
+            <field name="parent_id" ref="l10n_do.account_group_11"/>
+            <field name="name">Impuestos Adelantados</field>
+            <field name="code_prefix">1108</field>
+        </record>
+        <record id="account_group_110801" model="account.group">
+            <field name="parent_id" ref="l10n_do.account_group_1108"/>
+            <field name="name">ITBIS Adelantado en Compras</field>
+            <field name="code_prefix">110801</field>
+        </record>
+        <record id="account_group_110803" model="account.group">
+            <field name="parent_id" ref="l10n_do.account_group_1108"/>
+            <field name="name">Otros Impuestos y Saldos</field>
+            <field name="code_prefix">110803</field>
+        </record>
+        <record id="account_group_1109" model="account.group">
+            <field name="parent_id" ref="l10n_do.account_group_11"/>
+            <field name="name">Inversiones Temporales</field>
+            <field name="code_prefix">1109</field>
+        </record>
+        <record id="account_group_1110" model="account.group">
+            <field name="parent_id" ref="l10n_do.account_group_11"/>
+            <field name="name">Pagos Anticipados</field>
+            <field name="code_prefix">1110</field>
+        </record>
+        <record id="account_group_12" model="account.group">
+            <field name="parent_id" ref="l10n_do.account_group_1"/>
+            <field name="name">Activo Fijos</field>
+            <field name="code_prefix">12</field>
+        </record>
+        <record id="account_group_1201" model="account.group">
+            <field name="parent_id" ref="l10n_do.account_group_12"/>
+            <field name="name">Propiedades, Planta y Equipo</field>
+            <field name="code_prefix">1201</field>
+        </record>
+        <record id="account_group_120101" model="account.group">
+            <field name="parent_id" ref="l10n_do.account_group_1201"/>
+            <field name="name">Bienes Inmuebles (CAT 1)</field>
+            <field name="code_prefix">120101</field>
+        </record>
+        <record id="account_group_120102" model="account.group">
+            <field name="parent_id" ref="l10n_do.account_group_1201"/>
+            <field name="name">Bienes Muebles (CAT 2)</field>
+            <field name="code_prefix">120102</field>
+        </record>
+        <record id="account_group_120103" model="account.group">
+            <field name="parent_id" ref="l10n_do.account_group_1201"/>
+            <field name="name">Bienes Muebles (CAT 3)</field>
+            <field name="code_prefix">120103</field>
+        </record>
+        <record id="account_group_1202" model="account.group">
+            <field name="parent_id" ref="l10n_do.account_group_12"/>
+            <field name="name">Depreciación Acumulada de Propiedades, Planta y Equipo</field>
+            <field name="code_prefix">1202</field>
+        </record>
+        <record id="account_group_1203" model="account.group">
+            <field name="parent_id" ref="l10n_do.account_group_12"/>
+            <field name="name">Deterioro de Valor Acumulado de Propiedades, Planta y Equipo</field>
+            <field name="code_prefix">1203</field>
+        </record>
+        <record id="account_group_1204" model="account.group">
+            <field name="parent_id" ref="l10n_do.account_group_12"/>
+            <field name="name">Activos Intangibles</field>
+            <field name="code_prefix">1204</field>
+        </record>
+        <record id="account_group_1205" model="account.group">
+            <field name="parent_id" ref="l10n_do.account_group_12"/>
+            <field name="name">Bienes en Arrendamiento</field>
+            <field name="code_prefix">1205</field>
+        </record>
+        <record id="account_group_1206" model="account.group">
+            <field name="parent_id" ref="l10n_do.account_group_12"/>
+            <field name="name">Depreciación Acumulada de Bienes en Arrendamiento</field>
+            <field name="code_prefix">1206</field>
+        </record>
+        <record id="account_group_1207" model="account.group">
+            <field name="parent_id" ref="l10n_do.account_group_12"/>
+            <field name="name">Deterioro de Valor Acumulado de Bienes en Arrendamiento</field>
+            <field name="code_prefix">1207</field>
+        </record>
+        <record id="account_group_1208" model="account.group">
+            <field name="parent_id" ref="l10n_do.account_group_12"/>
+            <field name="name">Inversiones Permanentes</field>
+            <field name="code_prefix">1208</field>
+        </record>
+        <record id="account_group_1209" model="account.group">
+            <field name="parent_id" ref="l10n_do.account_group_12"/>
+            <field name="name">Activos Diferidos</field>
+            <field name="code_prefix">1209</field>
+        </record>
+        <record id="account_group_13" model="account.group">
+            <field name="name">Costos de Construcción</field>
+            <field name="code_prefix">13</field>
+        </record>
+        <record id="account_group_1301" model="account.group">
+            <field name="name">Construcción en Proceso</field>
+            <field name="code_prefix">1301</field>
+        </record>
+        <record id="account_group_130101" model="account.group">
+            <field name="name">Costos de Costrucción en Proceso</field>
+            <field name="code_prefix">130101</field>
+        </record>
+        <record id="account_group_2" model="account.group">
+            <field name="name">Pasivos</field>
+            <field name="code_prefix">2</field>
+        </record>
+        <record id="account_group_21" model="account.group">
+            <field name="parent_id" ref="l10n_do.account_group_2"/>
+            <field name="name">Pasivo Corriente</field>
+            <field name="code_prefix">21</field>
+        </record>
+        <record id="account_group_2101" model="account.group">
+            <field name="parent_id" ref="l10n_do.account_group_21"/>
+            <field name="name">Cuentas y Documentos por Pagar a Corto Plazo</field>
+            <field name="code_prefix">2101</field>
+        </record>
+        <record id="account_group_2102" model="account.group">
+            <field name="parent_id" ref="l10n_do.account_group_21"/>
+            <field name="name">Beneficios por Pagar a Corto Plazo</field>
+            <field name="code_prefix">2102</field>
+        </record>
+        <record id="account_group_2103" model="account.group">
+            <field name="parent_id" ref="l10n_do.account_group_21"/>
+            <field name="name">Impuestos y Retenciones</field>
+            <field name="code_prefix">2103</field>
+        </record>
+        <record id="account_group_210301" model="account.group">
+            <field name="parent_id" ref="l10n_do.account_group_2103"/>
+            <field name="name">ITBIS por Pagar</field>
+            <field name="code_prefix">210301</field>
+        </record>
+        <record id="account_group_210302" model="account.group">
+            <field name="parent_id" ref="l10n_do.account_group_2103"/>
+            <field name="name">ITBIS Retenido</field>
+            <field name="code_prefix">210302</field>
+        </record>
+        <record id="account_group_210303" model="account.group">
+            <field name="parent_id" ref="l10n_do.account_group_2103"/>
+            <field name="name">ISR Retenido</field>
+            <field name="code_prefix">210303</field>
+        </record>
+        <record id="account_group_210304" model="account.group">
+            <field name="parent_id" ref="l10n_do.account_group_2103"/>
+            <field name="name">Retenciones en Nómina</field>
+            <field name="code_prefix">210304</field>
+        </record>
+        <record id="account_group_210305" model="account.group">
+            <field name="parent_id" ref="l10n_do.account_group_2103"/>
+            <field name="name">Otros Impuestos o Retenciones</field>
+            <field name="code_prefix">210305</field>
+        </record>
+        <record id="account_group_2104" model="account.group">
+            <field name="parent_id" ref="l10n_do.account_group_21"/>
+            <field name="name">Provisiones a Corto Plazo</field>
+            <field name="code_prefix">2104</field>
+        </record>
+        <record id="account_group_2105" model="account.group">
+            <field name="parent_id" ref="l10n_do.account_group_21"/>
+            <field name="name">Tarjetas de Crédito</field>
+            <field name="code_prefix">2105</field>
+        </record>
+        <record id="account_group_22" model="account.group">
+            <field name="parent_id" ref="l10n_do.account_group_2"/>
+            <field name="name">Pasivo No Corriente</field>
+            <field name="code_prefix">22</field>
+        </record>
+        <record id="account_group_2201" model="account.group">
+            <field name="parent_id" ref="l10n_do.account_group_22"/>
+            <field name="name">Cuentas y Documentos por Pagar a Largo Plazo</field>
+            <field name="code_prefix">2201</field>
+        </record>
+        <record id="account_group_2202" model="account.group">
+            <field name="parent_id" ref="l10n_do.account_group_22"/>
+            <field name="name">Provisión para Obligaciones Laborales</field>
+            <field name="code_prefix">2202</field>
+        </record>
+        <record id="account_group_2203" model="account.group">
+            <field name="parent_id" ref="l10n_do.account_group_22"/>
+            <field name="name">Anticipos de Clientes y Pagos no Identificados</field>
+            <field name="code_prefix">2203</field>
+        </record>
+        <record id="account_group_2204" model="account.group">
+            <field name="parent_id" ref="l10n_do.account_group_22"/>
+            <field name="name">Provisiones a Largo Plazo</field>
+            <field name="code_prefix">2204</field>
+        </record>
+        <record id="account_group_3" model="account.group">
+            <field name="name">Capital</field>
+            <field name="code_prefix">3</field>
+        </record>
+        <record id="account_group_31" model="account.group">
+            <field name="parent_id" ref="l10n_do.account_group_3"/>
+            <field name="name">Capital Contable</field>
+            <field name="code_prefix">31</field>
+        </record>
+        <record id="account_group_3101" model="account.group">
+            <field name="parent_id" ref="l10n_do.account_group_31"/>
+            <field name="name">Capital Social</field>
+            <field name="code_prefix">3101</field>
+        </record>
+        <record id="account_group_3102" model="account.group">
+            <field name="parent_id" ref="l10n_do.account_group_31"/>
+            <field name="name">Superávit por Revaluación de Activos</field>
+            <field name="code_prefix">3102</field>
+        </record>
+        <record id="account_group_32" model="account.group">
+            <field name="parent_id" ref="l10n_do.account_group_3"/>
+            <field name="name">Utilidades Restringidas</field>
+            <field name="code_prefix">32</field>
+        </record>
+        <record id="account_group_3201" model="account.group">
+            <field name="parent_id" ref="l10n_do.account_group_32"/>
+            <field name="name">Reserva Legal</field>
+            <field name="code_prefix">3201</field>
+        </record>
+        <record id="account_group_33" model="account.group">
+            <field name="parent_id" ref="l10n_do.account_group_3"/>
+            <field name="name">Resultados</field>
+            <field name="code_prefix">33</field>
+        </record>
+        <record id="account_group_3301" model="account.group">
+            <field name="parent_id" ref="l10n_do.account_group_33"/>
+            <field name="name">Resultados Acumulados</field>
+            <field name="code_prefix">3301</field>
+        </record>
+        <record id="account_group_3302" model="account.group">
+            <field name="parent_id" ref="l10n_do.account_group_33"/>
+            <field name="name">Resultados del Ejercicio</field>
+            <field name="code_prefix">3302</field>
+        </record>
+        <record id="account_group_3304" model="account.group">
+            <field name="parent_id" ref="l10n_do.account_group_33"/>
+            <field name="name">Otras Reservas de Patrimonio</field>
+            <field name="code_prefix">3304</field>
+        </record>
+        <record id="account_group_4" model="account.group">
+            <field name="name">Ingresos y Ganancias</field>
+            <field name="code_prefix">4</field>
+        </record>
+        <record id="account_group_41" model="account.group">
+            <field name="parent_id" ref="l10n_do.account_group_4"/>
+            <field name="name">Ingresos por Operaciones</field>
+            <field name="code_prefix">41</field>
+        </record>
+        <record id="account_group_4101" model="account.group">
+            <field name="parent_id" ref="l10n_do.account_group_41"/>
+            <field name="name">Ventas de Bienes</field>
+            <field name="code_prefix">4101</field>
+        </record>
+        <record id="account_group_4102" model="account.group">
+            <field name="parent_id" ref="l10n_do.account_group_41"/>
+            <field name="name">Ventas de Servicios</field>
+            <field name="code_prefix">4102</field>
+        </record>
+        <record id="account_group_4103" model="account.group">
+            <field name="parent_id" ref="l10n_do.account_group_41"/>
+            <field name="name">Devoluciones</field>
+            <field name="code_prefix">4103</field>
+        </record>
+        <record id="account_group_4104" model="account.group">
+            <field name="parent_id" ref="l10n_do.account_group_41"/>
+            <field name="name">Descuentos</field>
+            <field name="code_prefix">4104</field>
+        </record>
+        <record id="account_group_42" model="account.group">
+            <field name="parent_id" ref="l10n_do.account_group_41"/>
+            <field name="name">Ingresos No Operacionales</field>
+            <field name="code_prefix">42</field>
+        </record>
+        <record id="account_group_4201" model="account.group">
+            <field name="parent_id" ref="l10n_do.account_group_4"/>
+            <field name="name">Intereses Ganados</field>
+            <field name="code_prefix">4201</field>
+        </record>
+        <record id="account_group_4202" model="account.group">
+            <field name="parent_id" ref="l10n_do.account_group_42"/>
+            <field name="name">Ventas de Activos</field>
+            <field name="code_prefix">4202</field>
+        </record>
+        <record id="account_group_4203" model="account.group">
+            <field name="parent_id" ref="l10n_do.account_group_42"/>
+            <field name="name">Dividendos Ganados</field>
+            <field name="code_prefix">4203</field>
+        </record>
+        <record id="account_group_4204" model="account.group">
+            <field name="parent_id" ref="l10n_do.account_group_42"/>
+            <field name="name">Ingresos Extraordinarios</field>
+            <field name="code_prefix">4204</field>
+        </record>
+        <record id="account_group_5" model="account.group">
+            <field name="name">Costos, Gastos y Pérdidas</field>
+            <field name="code_prefix">5</field>
+        </record>
+        <record id="account_group_51" model="account.group">
+            <field name="parent_id" ref="l10n_do.account_group_5"/>
+            <field name="name">Costos de Operación</field>
+            <field name="code_prefix">51</field>
+        </record>
+        <record id="account_group_5101" model="account.group">
+            <field name="parent_id" ref="l10n_do.account_group_51"/>
+            <field name="name">Costos de Ventas</field>
+            <field name="code_prefix">5101</field>
+        </record>
+        <record id="account_group_5102" model="account.group">
+            <field name="parent_id" ref="l10n_do.account_group_51"/>
+            <field name="name">Costos de Producción</field>
+            <field name="code_prefix">5102</field>
+        </record>
+        <record id="account_group_6" model="account.group">
+            <field name="name">Gastos y Pérdidas</field>
+            <field name="code_prefix">6</field>
+        </record>
+        <record id="account_group_61" model="account.group">
+            <field name="parent_id" ref="l10n_do.account_group_6"/>
+            <field name="name">Gastos de Operación</field>
+            <field name="code_prefix">61</field>
+        </record>
+        <record id="account_group_6101" model="account.group">
+            <field name="parent_id" ref="l10n_do.account_group_61"/>
+            <field name="name">Gastos de Personal</field>
+            <field name="code_prefix">6101</field>
+        </record>
+        <record id="account_group_610101" model="account.group">
+            <field name="parent_id" ref="l10n_do.account_group_6101"/>
+            <field name="name">Aportes a la Seguridad Social</field>
+            <field name="code_prefix">610101</field>
+        </record>
+        <record id="account_group_610102" model="account.group">
+            <field name="parent_id" ref="l10n_do.account_group_6101"/>
+            <field name="name">Otras Cargas Patronales</field>
+            <field name="code_prefix">610102</field>
+        </record>
+        <record id="account_group_6102" model="account.group">
+            <field name="parent_id" ref="l10n_do.account_group_61"/>
+            <field name="name">Gastos de Administración</field>
+            <field name="code_prefix">6102</field>
+        </record>
+        <record id="account_group_6103" model="account.group">
+            <field name="parent_id" ref="l10n_do.account_group_61"/>
+            <field name="name">Gastos por Trabajo, Suministros y Servicios</field>
+            <field name="code_prefix">6103</field>
+        </record>
+        <record id="account_group_610301" model="account.group">
+            <field name="parent_id" ref="l10n_do.account_group_6103"/>
+            <field name="name">Gastos Honorarios por Servicios Profesionales (P. Física)</field>
+            <field name="code_prefix">610301</field>
+        </record>
+        <record id="account_group_610302" model="account.group">
+            <field name="parent_id" ref="l10n_do.account_group_6103"/>
+            <field name="name">Gastos Honorarios por Servicios Profesionales (P. Jurídica)</field>
+            <field name="code_prefix">610302</field>
+        </record>
+        <record id="account_group_610303" model="account.group">
+            <field name="parent_id" ref="l10n_do.account_group_6103"/>
+            <field name="name">Gastos Honorarios por Servicios Profesionales (P. Jurídica)</field>
+            <field name="code_prefix">610303</field>
+        </record>
+        <record id="account_group_6104" model="account.group">
+            <field name="parent_id" ref="l10n_do.account_group_61"/>
+            <field name="name">Gastos por Depreciación</field>
+            <field name="code_prefix">6104</field>
+        </record>
+        <record id="account_group_6105" model="account.group">
+            <field name="parent_id" ref="l10n_do.account_group_61"/>
+            <field name="name">Gastos por Reparaciones</field>
+            <field name="code_prefix">6105</field>
+        </record>
+        <record id="account_group_6106" model="account.group">
+            <field name="parent_id" ref="l10n_do.account_group_61"/>
+            <field name="name">Gastos de Representación</field>
+            <field name="code_prefix">6106</field>
+        </record>
+        <record id="account_group_6107" model="account.group">
+            <field name="parent_id" ref="l10n_do.account_group_61"/>
+            <field name="name">Gastos Financieros</field>
+            <field name="code_prefix">6107</field>
+        </record>
+        <record id="account_group_6108" model="account.group">
+            <field name="parent_id" ref="l10n_do.account_group_61"/>
+            <field name="name">Gastos Extraordinarios</field>
+            <field name="code_prefix">6108</field>
+        </record>
+        <record id="account_group_7" model="account.group">
+            <field name="name">Cuentas Liquidadoras de Resultados</field>
+            <field name="code_prefix">7</field>
+        </record>
+        <record id="account_group_71" model="account.group">
+            <field name="parent_id" ref="l10n_do.account_group_7"/>
+            <field name="name">Cuenta Liquidadora</field>
+            <field name="code_prefix">71</field>
+        </record>
+        <record id="account_group_7101" model="account.group">
+            <field name="parent_id" ref="l10n_do.account_group_71"/>
+            <field name="name">Pérdidas y Ganancias</field>
+            <field name="code_prefix">7101</field>
+        </record>
+    </data>
+</odoo>

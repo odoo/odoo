@@ -236,16 +236,17 @@ return AbstractModel.extend({
         this.setDate(this.data.target_date.clone().add(-1, this.data.scale));
     },
     /**
-     * @todo: this should not work. it ignores the domain/context
-     *
      * @override
-     * @param {any} _handle ignored
-     * @param {any} _params ignored ? really ?
+     * @param {Object} [params.context]
+     * @param {Array} [params.domain]
      * @returns {Deferred}
      */
-    reload: function (_handle, params) {
+    reload: function (handle, params) {
         if (params.domain) {
             this.data.domain = params.domain;
+        }
+        if (params.context) {
+            this.data.context = params.context;
         }
         return this._loadCalendar();
     },

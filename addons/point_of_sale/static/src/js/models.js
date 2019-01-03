@@ -1525,7 +1525,8 @@ exports.Orderline = Backbone.Model.extend({
             return false;
         }else if(this.get_discount() > 0){             // we don't merge discounted orderlines
             return false;
-        }else if(price !== orderline.get_product().get_price(orderline.order.pricelist, this.get_quantity())){
+        }else if(!utils.float_is_zero(price - orderline.get_product().get_price(orderline.order.pricelist, this.get_quantity()),
+                    this.pos.currency.decimals)){
             return false;
         }else if(this.product.tracking == 'lot') {
             return false;

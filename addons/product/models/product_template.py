@@ -332,6 +332,8 @@ class ProductTemplate(models.Model):
 
     @api.multi
     def name_get(self):
+        # Prefetch the fields used by the `name_get`, so `browse` doesn't fetch other fields
+        self.read(['name', 'default_code'])
         return [(template.id, '%s%s' % (template.default_code and '[%s] ' % template.default_code or '', template.name))
                 for template in self]
 

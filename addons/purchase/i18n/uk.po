@@ -3,23 +3,24 @@
 # * purchase
 # 
 # Translators:
-# Bohdan Lisnenko, 2017
-# ТАрас <tratatuta@i.ua>, 2017
-# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2017
-# Martin Trigaux, 2017
 # Yaroslav Molochko <onorua@gmail.com>, 2017
-# Анатолій Пономаренко <aponomarenko020@gmail.com>, 2017
 # Zoriana Zaiats, 2017
+# Анатолій Пономаренко <aponomarenko020@gmail.com>, 2017
+# ТАрас <tratatuta@i.ua>, 2017
 # Анатолій Пономаренко <Ponomarenkoa@minfin.gov.ua>, 2017
 # Евгений Жердев <e.v.zherdev@gmail.com>, 2017
+# Martin Trigaux, 2017
+# Bohdan Lisnenko, 2017
 # Olga Lugova <trolka.olug@gmail.com>, 2018
+# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-07-27 11:55+0000\n"
-"PO-Revision-Date: 2018-07-27 11:55+0000\n"
-"Last-Translator: Olga Lugova <trolka.olug@gmail.com>, 2018\n"
+"PO-Revision-Date: 2017-09-20 10:22+0000\n"
+"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2018\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1082,7 +1083,8 @@ msgstr "Керувати ціною постачальника"
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Manage your purchase agreements (call for tenders, blanket orders)"
 msgstr ""
-"Керуйте своїми угодами про покупку (дзвінки на тендери, загальний порядок)"
+"Керуйте своїми угодами про покупку (дзвінки на тендери, довгострокові "
+"замовлення)"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_purchase_manager
@@ -1633,27 +1635,27 @@ msgstr "Комерційні пропозиції"
 #. module: purchase
 #: selection:purchase.order,state:0
 msgid "RFQ"
-msgstr "ЗКП"
+msgstr "ЗНКП"
 
 #. module: purchase
 #: model:mail.message.subtype,name:purchase.mt_rfq_approved
 msgid "RFQ Approved"
-msgstr "ЗКП затвердженно"
+msgstr "ЗНКП затвердженно"
 
 #. module: purchase
 #: model:mail.message.subtype,name:purchase.mt_rfq_confirmed
 msgid "RFQ Confirmed"
-msgstr "ЗКП підтвердженно"
+msgstr "ЗНКП підтвердженно"
 
 #. module: purchase
 #: model:mail.message.subtype,name:purchase.mt_rfq_done
 msgid "RFQ Done"
-msgstr "ЗКП виконано"
+msgstr "ЗНКП виконано"
 
 #. module: purchase
 #: selection:purchase.order,state:0 selection:purchase.report,state:0
 msgid "RFQ Sent"
-msgstr "ЗКП відправлено"
+msgstr "ЗНКП відправлено"
 
 #. module: purchase
 #: model:mail.template,report_name:purchase.email_template_edi_purchase
@@ -1663,12 +1665,12 @@ msgstr "RFQ_${(object.name or '').replace('/','_')}"
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_purchase_order
 msgid "RFQs and Purchases"
-msgstr "ЗКП та купівлі"
+msgstr "ЗНКП та купівлі"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Re-Send RFQ by Email"
-msgstr "Переслати ЗКП по пошті"
+msgstr "Переслати ЗНКП по пошті"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1701,7 +1703,7 @@ msgstr "Референс"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_product_uom
 msgid "Reference Unit of Measure"
-msgstr "Основна одиниця виміру"
+msgstr "Основна одиниця вимірювання"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_origin
@@ -1732,12 +1734,12 @@ msgstr "Звітування"
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
 #: model:ir.ui.view,arch_db:purchase.report_purchasequotation_document
 msgid "Request for Quotation"
-msgstr "Запит комерційної пропозиції"
+msgstr "Запит на комерційну пропозицію"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "Request for Quotation #"
-msgstr "Запит комерційної пропозиції №"
+msgstr "Запит на комерційну пропозицію №"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -1748,7 +1750,7 @@ msgstr "Попросіть своїх постачальників достав�
 #: model:ir.actions.act_window,name:purchase.purchase_rfq
 #: model:ir.ui.menu,name:purchase.menu_purchase_rfq
 msgid "Requests for Quotation"
-msgstr "Запити комерційної пропозиції"
+msgstr "Запити на комерційну пропозицію"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_move_ids
@@ -1915,7 +1917,7 @@ msgstr "Терміни та умови"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_website_url
 msgid "The full URL to access the document through the website."
-msgstr "URL-адреса повністю, для доступу до документації через сайт"
+msgstr "URL-адреса повністю, для доступу до документації через сайт."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.product_product_action
@@ -1966,7 +1968,7 @@ msgid ""
 "                    converted into a purchase order, you will be able to control the receipt\n"
 "                    of the products and the vendor bill."
 msgstr ""
-"Запит комерційної пропозиції - це перший крок у процесі закупівлі. "
+"Запит на комерційну пропозицію - це перший крок у процесі закупівлі. "
 "Перетворюючи його на замовлення на купівлю ви можете контролювати свої "
 "надходження товарів та рахунки постачальників."
 
@@ -2141,7 +2143,7 @@ msgstr "Категорії одиниць виміру"
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_uom_form_action
 msgid "Units of Measure"
-msgstr "Одиниці виміру"
+msgstr "Одиниці вимірювання"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -2233,7 +2235,7 @@ msgstr "Прайс-листи постачальника"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_partner_ref
 msgid "Vendor Reference"
-msgstr "Посилання на постачальника"
+msgstr "Посилання постачальника"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management_supplier_name
