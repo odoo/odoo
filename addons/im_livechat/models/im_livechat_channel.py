@@ -124,27 +124,26 @@ class ImLivechatChannel(models.Model):
     # Channel Methods
     # --------------------------
     @api.multi
-    def get_available_users(self):
+    def _get_available_users(self):
         """ get available user of a given channel
             :retuns : return the res.users having their im_status online
         """
         self.ensure_one()
-        return self.sudo().user_ids.filtered(lambda user: user.im_status == 'online')
+        return self.user_ids.filtered(lambda user: user.im_status == 'online')
 
-    @api.model
-    def get_mail_channel(self, livechat_channel_id, anonymous_name, user_id=None, country_id=None):
+    @api.multi
+    def _get_mail_channel(self, anonymous_name, user_id=None, country_id=None):
         """ Return a mail.channel given a livechat channel. It creates one with a connected operator, or return false otherwise
-            :param livechat_channel_id : the identifier if the im_livechat.channel
             :param anonymous_name : the name of the anonymous person of the channel
             :param user_id : the id of the logged in visitor, if any
             :param country_code : the country of the anonymous person of the channel
-            :type livechat_channel_id : int
             :type anonymous_name : str
             :return : channel header
             :rtype : dict
         """
+        self.ensure_one()
         # get the avalable user of the channel
-        operators = self.sudo().browse(livechat_channel_id).get_available_users()
+        operators = self._get_available_users()
         if len(operators) == 0:
             return False
         # choose the res.users operator and get its partner id
@@ -158,7 +157,7 @@ class ImLivechatChannel(models.Model):
         mail_channel = self.env["mail.channel"].with_context(mail_create_nosubscribe=False).sudo().create({
             'channel_partner_ids': channel_partner_to_add,
             'livechat_operator_id': operator_partner_id,
-            'livechat_channel_id': livechat_channel_id,
+            'livechat_channel_id': self.id,
             'anonymous_name': False if user_id else anonymous_name,
             'country_id': country_id,
             'channel_type': 'livechat',
@@ -169,24 +168,25 @@ class ImLivechatChannel(models.Model):
         mail_channel._broadcast([operator_partner_id])
         return mail_channel.sudo().channel_info()[0]
 
-    @api.model
-    def get_channel_infos(self, channel_id):
-        channel = self.browse(channel_id)
+    def _get_channel_infos(self):
+        self.ensure_one()
+
         return {
-            'button_text': channel.button_text,
-            'input_placeholder': channel.input_placeholder,
-            'default_message': channel.default_message,
-            "channel_name": channel.name,
-            "channel_id": channel.id,
+            'button_text': self.button_text,
+            'input_placeholder': self.input_placeholder,
+            'default_message': self.default_message,
+            "channel_name": self.name,
+            "channel_id": self.id,
         }
 
-    @api.model
-    def get_livechat_info(self, channel_id, username='Visitor'):
+    def get_livechat_info(self, username='Visitor'):
+        self.ensure_one()
+
         info = {}
-        info['available'] = len(self.browse(channel_id).get_available_users()) > 0
+        info['available'] = len(self._get_available_users()) > 0
         info['server_url'] = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         if info['available']:
-            info['options'] = self.sudo().get_channel_infos(channel_id)
+            info['options'] = self._get_channel_infos()
             info['options']["default_username"] = username
         return info
 
