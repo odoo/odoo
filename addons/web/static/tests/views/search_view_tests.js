@@ -907,6 +907,73 @@ QUnit.module('Search View', {
         actionManager.destroy();
     });
 
+    QUnit.module('AutoComplete');
+
+    QUnit.test('Autocomplete: search result counter', function (assert) {
+        assert.expect(10);
+
+        this.data.partner.fields.m2o_field = {string: "Pony",type: "many2one",relation: 'pony'};
+        var actions = [{
+            id: 1,
+            name: 'Partners Action 1',
+            res_model: 'partner',
+            type: 'ir.actions.act_window',
+            views: [[false, 'list']],
+            search_view_id: [false, 'search'],
+        }];
+
+        var archs = {
+            // list view
+            'partner,false,list': '<tree><field name="foo"/><field name="m2o_field"/></tree>',
+
+            // search view
+            'partner,false,search': '<search>'+
+                    '<field name="m2o_field"/>' +
+                    '<field name="foo"/>' +
+                '</search>',
+        };
+
+        var actionManager = createActionManager({
+            actions: actions,
+            archs: archs,
+            data: this.data,
+            mockRPC: function (route, args) {
+                if (args.method === "name_search") {
+                    assert.step(args.method);
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        actionManager.doAction(1);
+
+        assert.strictEqual(actionManager.$('.o_searchview input.o_searchview_input')[0], document.activeElement,
+            "searchview input should be focused");
+
+        actionManager.$('.o_searchview input.o_searchview_input').trigger("keydown").val("l").trigger("keyup").trigger("input");
+        assert.strictEqual(actionManager.$('.o-selection-focus').text().trim(), "Search Pony for: l (3)",
+            "There should be a search label 'Search Pony for: l (3)'");
+        actionManager.$(".o_searchview_autocomplete li.o-selection-focus a:first").mousedown();
+        assert.strictEqual(actionManager.$('li.o-indent').length, 3,
+            "'Search Pony for: l (3)' should have 3 search result");
+
+        actionManager.$('.o_searchview input.o_searchview_input').trigger("keydown").val("le").trigger("keyup").trigger("input");
+        assert.strictEqual(actionManager.$('.o-selection-focus').text().trim(), "Search Pony for: le (2)",
+            "There should be a search label 'Search Pony for: le (2)'");
+        actionManager.$(".o_searchview_autocomplete li.o-selection-focus a:first").mousedown();
+        assert.strictEqual(actionManager.$('li.o-indent').length, 2,
+            "'Search Pony for: le (2)' should have 2 search result");
+
+        actionManager.$('.o_searchview input.o_searchview_input').trigger("keydown").val("lea").trigger("keyup").trigger("input");
+        assert.strictEqual(actionManager.$('.o-selection-focus').text().trim(), "",
+            "There should be no search label for m2o_field");
+            // 'lea' word has no any result for m2o_field.
+
+        assert.verifySteps(['name_search', "name_search", "name_search"]);
+
+        actionManager.destroy();
+    });
+
     QUnit.module('Autocompletion');
 
     QUnit.test('selection via autocompletion modifies appropriately submenus', function (assert) {

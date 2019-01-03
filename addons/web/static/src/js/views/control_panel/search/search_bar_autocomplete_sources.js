@@ -10,7 +10,6 @@ var pyUtils = require('web.py_utils');
 var ServicesMixin = require('web.ServicesMixin');
 var time = require('web.time');
 
-
 var _t = core._t;
 var _lt = core._lt;
 
@@ -69,6 +68,7 @@ var Field = FilterInterface.extend(ServicesMixin, {
      */
     init: function (parent, filter, field, context) {
         this._super.apply(this, arguments);
+
         this.field = field;
         this.filter = filter;
         this.attrs = _.extend({}, field, filter.attrs);

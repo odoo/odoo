@@ -185,6 +185,9 @@ return Widget.extend({
     expand: function () {
         var self = this;
         var current_result = this.current_result;
+        if (current_result._expand_result.length) {
+            showExpandResult(current_result._expand_result);
+        }
         function showExpandResult (results) {
             results.reverse().forEach(function (result) {
                 result.indent = true;
@@ -193,9 +196,6 @@ return Widget.extend({
             });
             self.current_result.expanded = true;
             self.current_result.$el.find('a.o-expand').removeClass('o-expand').addClass('o-expanded');
-        }
-        if (current_result._expand_result.length) {
-            showExpandResult(current_result._expand_result);
         }
     },
     fold: function () {
