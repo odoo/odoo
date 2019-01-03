@@ -57,7 +57,7 @@ class HrPayrollStructure(models.Model):
         all_rules = []
         for struct in self:
             all_rules += struct.rule_ids._recursive_search_of_rules()
-        return all_rules
+        return list(set(all_rules))
 
     @api.multi
     def _get_parent_structure(self):

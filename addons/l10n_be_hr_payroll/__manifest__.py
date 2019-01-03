@@ -25,7 +25,11 @@ Belgian Payroll Rules.
         'views/reports.xml',
         'views/l10n_be_hr_payroll_view.xml',
         'data/l10n_be_hr_payroll_data.xml',
+        'data/report_paperformat.xml',
         'views/res_config_settings_views.xml',
+        'wizard/l10n_be_individual_account_wizard_views.xml',
+        'report/hr_individual_account_reports.xml',
+        'report/hr_individual_account_templates.xml',
     ],
     'demo':[
         'data/l10n_be_hr_payroll_demo.xml'
