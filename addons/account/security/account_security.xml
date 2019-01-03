@@ -11,11 +11,13 @@
     <record id="group_show_line_subtotals_tax_excluded" model="res.groups">
         <field name="name">Tax display B2B</field>
         <field name="comment">Show line subtotals without taxes (B2B)</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
     </record>
 
     <record id="group_show_line_subtotals_tax_included" model="res.groups">
         <field name="name">Tax display B2C</field>
         <field name="comment">Show line subtotals with taxes included (B2C)</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
     </record>
 
     <record id="base.group_public" model="res.groups">
