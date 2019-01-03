@@ -84,6 +84,10 @@ odoo.define('website_sale.website_sale', function (require) {
     $('.oe_website_sale').each(function () {
         var oe_website_sale = this;
 
+        // Keep the last active line to refocus it after rerender
+        var lastSelection = null;
+        var $checkoutButton = $('a[href*="/shop/checkout"]');
+
         $(oe_website_sale).on("change", 'input[name="add_qty"]', function (event) {
             var product_ids = [];
             var product_dom = $(".js_product .js_add_cart_variants[data-attribute_value_ids]");
@@ -127,6 +131,14 @@ odoo.define('website_sale.website_sale', function (require) {
               };
         })();
 
+        // We want this to be triggered on input to update the quantity on idle,
+        // even when the focus is not removed (change would not be triggered).
+        // Indeed when clicking on "Checkout" in that case, the following page
+        // would not be updated if the RPC was done too late before the click.
+        $(oe_website_sale).on("input", ".oe_cart input.js_quantity[data-product-id]", function () {
+            $(this).trigger('change');
+        });
+
         $(oe_website_sale).on("change", ".oe_cart input.js_quantity[data-product-id]", function () {
           var $input = $(this);
             if ($input.data('update_change') || $('body').hasClass('editor_enable')) {
@@ -141,6 +153,12 @@ odoo.define('website_sale.website_sale', function (require) {
           var $dom_optional = $dom.nextUntil(':not(.optional_product.info)');
           var line_id = parseInt($input.data('line-id'),10);
           var product_ids = [parseInt($input.data('product-id'),10)];
+          // Prevent clicking on the Checkout button while the RPC is not done
+          $checkoutButton.addClass("disabled");
+          $checkoutButton.find('span.fa')
+              .addClass("fa-spinner")
+              .addClass("fa-pulse")
+              .removeClass("fa-long-arrow-right");
           clickwatch(function(){
             $dom_optional.each(function(){
                 $(this).find('.js_quantity').text(value);
@@ -148,11 +166,31 @@ odoo.define('website_sale.website_sale', function (require) {
             });
             $input.data('update_change', true);
 
+            // Save the currently focused element and the input selection
+            var activeElement = document.activeElement;
+            var lastActiveLineId = $(activeElement).data('line-id');
+            if (lastActiveLineId) {
+                lastSelection = {
+                    lineId: lastActiveLineId,
+                    selectionStart: activeElement.selectionStart,
+                    selectionEnd: activeElement.selectionEnd,
+                };
+            } else {
+                lastSelection = null;
+            }
+
             ajax.jsonRpc("/shop/cart/update_json", 'call', {
                 'line_id': line_id,
                 'product_id': parseInt($input.data('product-id'), 10),
                 'set_qty': value
             }).then(function (data) {
+                // Reset the state of the Checkout button after the RPC
+                $checkoutButton.removeClass("disabled");
+                $checkoutButton.find('span.fa')
+                    .removeClass("fa-spinner")
+                    .removeClass("fa-pulse")
+                    .addClass("fa-long-arrow-right");
+
                 $input.data('update_change', false);
                 var check_value = parseInt($input.val() || 0, 10);
                 if (isNaN(check_value)) {
@@ -176,6 +214,13 @@ odoo.define('website_sale.website_sale', function (require) {
                 $('.js_quantity[data-line-id='+line_id+']').val(data.quantity).html(data.quantity);
 
                 $(".js_cart_lines").first().before(data['website_sale.cart_lines']).end().remove();
+
+                // Reset the focus and the selection after rerender
+                if (lastSelection) {
+                    var $newInput = $(".js_cart_lines input[data-line-id=" + lastSelection.lineId + "]");
+                    $newInput.focus();
+                    $newInput[0].setSelectionRange(lastSelection.selectionStart, lastSelection.selectionEnd);
+                }
 
                 if (data.warning) {
                     var cart_alert = $('.oe_cart').parent().find('#data_warning');
