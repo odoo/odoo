@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.product.tests.test_product_attribute_value_config import TestProductAttributeValueSetup
+from odoo.addons.sale.tests.test_sale_product_attribute_value_config import TestSaleProductAttributeValueSetup
 from odoo.tests import tagged
 
 
 @tagged('post_install', '-at_install')
-class TestWebsiteSaleProductAttributeValueConfig(TestProductAttributeValueSetup):
+class TestWebsiteSaleProductAttributeValueConfig(TestSaleProductAttributeValueSetup):
 
     def test_get_combination_info(self):
         current_website = self.env['website'].get_current_website()
@@ -27,12 +27,8 @@ class TestWebsiteSaleProductAttributeValueConfig(TestProductAttributeValueSetup)
         self.computer.taxes_id = tax
         tax_ratio = (100 + tax.amount) / 100
 
-        # easy currency rate, for a simple 2 ratio in the following tests
-        self.computer.currency_id.rate_ids[0].rate = 1
-        ratio = 2
-        currency = self.env['res.currency'].browse(1 if self.computer.currency_id.id != 1 else 2)
-        currency.rate_ids[0].rate = ratio
-        pricelist.currency_id = currency
+        currency_ratio = 2
+        pricelist.currency_id = self._setup_currency(currency_ratio)
 
         # ensure pricelist is set to with_discount
         pricelist.discount_policy = 'with_discount'
@@ -43,8 +39,8 @@ class TestWebsiteSaleProductAttributeValueConfig(TestProductAttributeValueSetup)
         self.env.ref('account.group_show_line_subtotals_tax_included').users -= self.env.user
 
         combination_info = self.computer._get_combination_info()
-        self.assertEqual(combination_info['price'], 2222 * discount_rate * ratio)
-        self.assertEqual(combination_info['list_price'], 2222 * discount_rate * ratio)
+        self.assertEqual(combination_info['price'], 2222 * discount_rate * currency_ratio)
+        self.assertEqual(combination_info['list_price'], 2222 * discount_rate * currency_ratio)
         self.assertEqual(combination_info['has_discounted_price'], False)
 
         # CASE: B2C setting
@@ -52,8 +48,8 @@ class TestWebsiteSaleProductAttributeValueConfig(TestProductAttributeValueSetup)
         self.env.ref('account.group_show_line_subtotals_tax_excluded').users -= self.env.user
 
         combination_info = self.computer._get_combination_info()
-        self.assertEqual(combination_info['price'], 2222 * discount_rate * ratio * tax_ratio)
-        self.assertEqual(combination_info['list_price'], 2222 * discount_rate * ratio * tax_ratio)
+        self.assertEqual(combination_info['price'], 2222 * discount_rate * currency_ratio * tax_ratio)
+        self.assertEqual(combination_info['list_price'], 2222 * discount_rate * currency_ratio * tax_ratio)
         self.assertEqual(combination_info['has_discounted_price'], False)
 
         # CASE: pricelist 'without_discount'
@@ -63,6 +59,6 @@ class TestWebsiteSaleProductAttributeValueConfig(TestProductAttributeValueSetup)
         # ideally we would need to use compare_amounts everywhere, but this is
         # the only rounding where it fails without it
         combination_info = self.computer._get_combination_info()
-        self.assertEqual(pricelist.currency_id.compare_amounts(combination_info['price'], 2222 * discount_rate * ratio * tax_ratio), 0)
-        self.assertEqual(pricelist.currency_id.compare_amounts(combination_info['list_price'], 2222 * ratio * tax_ratio), 0)
+        self.assertEqual(pricelist.currency_id.compare_amounts(combination_info['price'], 2222 * discount_rate * currency_ratio * tax_ratio), 0)
+        self.assertEqual(pricelist.currency_id.compare_amounts(combination_info['list_price'], 2222 * currency_ratio * tax_ratio), 0)
         self.assertEqual(combination_info['has_discounted_price'], True)
