@@ -272,7 +272,7 @@
             <field name="name">hr.holidays.tree</field>
             <field name="model">hr.holidays</field>
             <field name="arch" type="xml">
-                <tree decoration-danger="state == 'refuse'" decoration-info="state == ' draft'" string="Leave Requests"
+                <tree decoration-danger="state == 'refuse'" decoration-info="state == 'draft'" string="Leave Requests"
                        decoration-bf="message_needaction == True">
                     <field name="employee_id"/>
                     <field name="holiday_type" string="Mode" groups="base.group_no_one"/>
