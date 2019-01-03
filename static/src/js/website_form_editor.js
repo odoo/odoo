@@ -443,10 +443,12 @@ odoo.define('website_form_editor', function (require) {
 
         // Disable a button of the snippet overlay
         disable_button: function (button_name, message) {
-            this.$overlay.on('click', '.oe_snippet_' + button_name, this.prevent_button);
-            var remove_button = this.$overlay.find('.oe_snippet_' + button_name);
-            remove_button.css('background-color', 'lightgray');
-            remove_button.attr('title', message);
+            // TODO refactor in master
+            var className = 'oe_snippet_' + button_name;
+            this.$overlay.on('click', '.' + className, this.prevent_button);
+            var $button = this.$overlay.find('.' + className);
+            $button.attr('title', message).tooltip({delay: 0});
+            $button.removeClass(className); // Disable the functionnality
         },
 
         prevent_button: function (event) {
