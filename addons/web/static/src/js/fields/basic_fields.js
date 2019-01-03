@@ -2759,6 +2759,7 @@ var FieldDomain = AbstractField.extend({
                 readonly: this.mode === "readonly" || this.inDialog,
                 filters: this.fsFilters,
                 debugMode: session.debug,
+                showSearchInput: this.nodeOptions.showSearchInput || false,
             });
             def = this.domainSelector.prependTo(this.$el);
         } else {
