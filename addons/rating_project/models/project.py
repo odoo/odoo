@@ -108,4 +108,5 @@ class Project(models.Model):
         action_context = safe_eval(action['context']) if action['context'] else {}
         action_context.update(self._context)
         action_context['search_default_rating_tasks'] = 1
+        action_context.pop('group_by', None)
         return dict(action, context=action_context)
