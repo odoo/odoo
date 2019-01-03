@@ -1430,4 +1430,80 @@ options.registry.topMenuColor = options.registry.colorpicker.extend({
         });
     },
 });
+
+/**
+ * Handles the edition of snippet's anchor name.
+ */
+options.registry.anchorName = options.Class.extend({
+    xmlDependencies: ['/website/static/src/xml/website.editor.xml'],
+    preventChildPropagation: true,
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    onClone: function () {
+        this.$target.removeAttr('id data-anchor');
+    },
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * @see this.selectClass for parameters
+     */
+    openAnchorDialog: function (previewMode, value, $opt) {
+        var self = this;
+        new Dialog(this, {
+            title: _t("Anchor Name"),
+            $content: $(qweb.render('website.dialog.anchorName', {
+                currentAnchor: this.$target.attr('id'),
+            })),
+            buttons: [
+                {
+                    text: _t("Save"),
+                    classes: 'btn-primary',
+                    click: function () {
+                        var $input = this.$('.o_input_anchor_name');
+                        var anchorName = $input.val().trim().replace(/\s/g, '_');
+                        var alreadyExists = $('#' + anchorName).length > 0;
+                        $input.toggleClass('is-invalid', alreadyExists);
+                        if (!alreadyExists) {
+                            self._setAnchorName(anchorName);
+                            this.close();
+                        }
+                    }
+                },
+                {
+                    text: _t("Discard"),
+                    close: true,
+                },
+            ],
+        }).open();
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {String} value
+     */
+    _setAnchorName: function (value) {
+        if (value) {
+            this.$target.attr({
+                'id': value,
+                'data-anchor': true,
+            });
+        } else {
+            this.$target.removeAttr('id data-anchor');
+        }
+        this.$target.trigger('content_changed');
+    },
+});
 });

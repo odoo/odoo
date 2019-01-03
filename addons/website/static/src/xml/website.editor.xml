@@ -69,4 +69,28 @@
             <span t-attf-class="o_color_preview bg-#{color}"/>
         </button>
     </t>
+    <t t-extend="web_editor.dialog.link">
+        <t t-jquery="#o_link_dialog_url_input" t-operation="after">
+            <small class="form-text">Hint: Type '/' to link to an existing page and '#' to an anchor.</small>
+        </t>
+        <t t-jquery="div.o_url_input" t-operation="after">
+            <div class="form-group row o_link_dialog_page_anchor d-none">
+                <label class="col-form-label col-md-3" for="o_link_dialog_anchor_input">Page Anchor</label>
+                <div class="col-md-9">
+                    <select name="link_anchor" class="form-control link-style"></select>
+                    <small class="form-text font-weight-bold o_anchors_loading">Loading...</small>
+                </div>
+            </div>
+        </t>
+    </t>
+    <!-- Anchor Name option dialog -->
+    <div t-name="website.dialog.anchorName">
+        <div class="form-group row">
+            <label class="col-form-label col-md-3" for="anchorName">Choose an anchor name</label>
+            <div class="col-md-9">
+                <input type="text" class="form-control o_input_anchor_name" id="anchorName" t-attf-value="#{currentAnchor}" placeholder="Anchor name"/>
+                <div class="invalid-feedback">The chosen name already exists</div>
+            </div>
+        </div>
+    </div>
 </templates>
