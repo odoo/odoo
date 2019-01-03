@@ -586,6 +586,21 @@ class TestPickShip(TestStockCommon):
         self.assertEqual(set(return_pick_picking.move_lines.move_orig_ids.ids), set((picking_pick.move_lines | return_pack_picking.move_lines).ids))
         self.assertEqual(len(return_pick_picking.move_lines.move_dest_ids), 0)
 
+    def test_forward_canceling_moves(self):
+        """ Test that when we cancel ship it should be cancel pick , pack ."""
+        pick, pack, ship = self.create_pick_pack_ship()
+        pickings = pack + pick + ship
+        # Set forword canceling option on the moves.
+        pickings.mapped('move_lines').write({'previous_move_propagate': True})
+        # Cancel the outgoing moves.
+        ship.action_cancel()
+        # Check the status of Ship.
+        self.assertTrue(ship.state, 'cancel')
+        # Check the status of Pack ( Should be auto cancel from Ship).
+        self.assertTrue(pack.state, 'cancel')
+        # Check the status of pick ( Should be auto cancel from Pack)
+        self.assertTrue(pick.state, 'cancel')
+
     def test_merge_move_mto_mts(self):
         """ Create 2 moves of the same product in the same picking with
         one in 'MTO' and the other one in 'MTS'. The moves shouldn't be merged
