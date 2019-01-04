@@ -269,7 +269,7 @@ else:
         <field name="condition_select">python</field>
         <field name="condition_python">result = (employee.marital in ['divorced', 'single', 'widower']) and (categories.PP + categories.FamRed + categories.ChA &lt; 0.0)</field>
         <field name="amount_select">code</field>
-        <field name="amount_python_compute">result = min(25.00, - (categories.PP + categories.FamRed + categories.ChA))</field>
+        <field name="amount_python_compute">result = min(26.00, - (categories.PP + categories.FamRed + categories.ChA))</field>
     </record>
     <record id="hr_salary_rule_reduction_isolated_parent" model="hr.salary.rule">
         <field name="category_id" ref='hr_salary_rule_category_family_reductions'/>
@@ -302,7 +302,7 @@ else:
         <field name="condition_select">python</field>
         <field name="condition_python">result = (employee.other_dependent_people and employee.dependent_seniors) and (categories.PP + categories.FamRed + categories.ChA &lt; 0.0)</field>
         <field name="amount_select">code</field>
-        <field name="amount_python_compute">result = min(73.0 * employee.dependent_seniors, - (categories.PP + categories.FamRed + categories.ChA))</field>
+        <field name="amount_python_compute">result = min(80.0 * employee.dependent_seniors, - (categories.PP + categories.FamRed + categories.ChA))</field>
     </record>
     <record id="hr_salary_rule_reduction_juniors" model="hr.salary.rule">
         <field name="category_id" ref='hr_salary_rule_category_family_reductions'/>
@@ -324,7 +324,7 @@ else:
         <field name="condition_select">python</field>
         <field name="condition_python">result = (employee.marital in ['married', 'cohabitant'] and employee.spouse_fiscal_status=='with income' and employee.spouse_net_revenue &lt;= 225.0) and (categories.PP + categories.FamRed + categories.ChA &lt; 0.0)</field>
         <field name="amount_select">code</field>
-        <field name="amount_python_compute">result = min(110.50, - (categories.PP + categories.FamRed + categories.ChA))</field>
+        <field name="amount_python_compute">result = min(115.0, - (categories.PP + categories.FamRed + categories.ChA))</field>
     </record>
     <record id="hr_salary_rule_reduction_insufficient_other_net" model="hr.salary.rule">
         <field name="category_id" ref='hr_salary_rule_category_family_reductions'/>
@@ -335,7 +335,7 @@ else:
         <field name="condition_select">python</field>
         <field name="condition_python">result = (employee.marital in ['married', 'cohabitant'] and employee.spouse_fiscal_status=='with income' and not employee.spouse_net_revenue and employee.spouse_other_net_revenue &lt;= 450.0) and (categories.PP + categories.FamRed + categories.ChA &lt; 0.0)</field>
         <field name="amount_select">code</field>
-        <field name="amount_python_compute">result = min(220.0, - (categories.PP + categories.FamRed + categories.ChA))</field>
+        <field name="amount_python_compute">result = min(229.5, - (categories.PP + categories.FamRed + categories.ChA))</field>
     </record>
     <record id="hr_payroll_rules_spouse_handicap" model="hr.salary.rule">
         <field name="category_id" ref="hr_payroll_head_div_net"/>
