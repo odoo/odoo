@@ -547,6 +547,10 @@ class Picking(models.Model):
     def action_assign_owner(self):
         self.move_line_ids.write({'owner_id': self.owner_id.id})
 
+    def action_assign_partner(self):
+        for picking in self:
+            picking.move_lines.write({'partner_id': picking.partner_id.id})
+
     @api.multi
     def do_print_picking(self):
         self.write({'printed': True})
