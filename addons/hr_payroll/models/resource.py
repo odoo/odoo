@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import models, fields
+from odoo import models, fields, api
 from odoo.osv.expression import AND, OR
 
 
@@ -16,6 +16,15 @@ class ResourceCalendar(models.Model):
         'resource.calendar.attendance', 'calendar_id', 'Employees working Time',
         domain=[('resource_id', '!=', False)])
 
+    def _get_global_attendances(self):
+        res = super(ResourceCalendar, self)._get_global_attendances()
+        res |= self.normal_attendance_ids.filtered(lambda attendance: not attendance.date_from and not attendance.date_to)
+        return res
+
+    # Add a key on the api.onchange decorator
+    @api.onchange('attendance_ids', 'normal_attendance_ids')
+    def _onchange_hours_per_day(self):
+        return super(ResourceCalendar, self)._onchange_hours_per_day()
 
 class ResourceCalendarAttendance(models.Model):
     _inherit = 'resource.calendar.attendance'
