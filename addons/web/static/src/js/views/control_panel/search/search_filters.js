@@ -191,13 +191,13 @@ var DateTime = Field.extend({
         type: 'datetime'
     },
     operators: [
+        {value: "between", text: _lt("is between")},
         {value: "=", text: _lt("is equal to")},
         {value: "!=", text: _lt("is not equal to")},
         {value: ">", text: _lt("is after")},
         {value: "<", text: _lt("is before")},
         {value: ">=", text: _lt("is after or equal to")},
         {value: "<=", text: _lt("is before or equal to")},
-        {value: "between", text: _lt("is between")},
         {value: "∃", text: _lt("is set")},
         {value: "∄", text: _lt("is not set")}
     ],
@@ -245,13 +245,15 @@ var DateTime = Field.extend({
     start: function () {
         return $.when(
             this._super.apply(this, arguments),
-            this._create_new_widget("datewidget_0")
+            this._create_new_widget("datewidget_0"),
+            this._create_new_widget("datewidget_1")
         );
     },
     _create_new_widget: function (name) {
+        var currentDate = moment();
         this[name] = new (this._get_widget_class())(this);
         return this[name].appendTo(this.$el).then((function () {
-            this[name].setValue(moment(new Date()));
+            this[name].setValue(name === "datewidget_0" ? currentDate.startOf("day") : currentDate.endOf("day"));
         }).bind(this));
     },
     _get_widget_class: function () {
