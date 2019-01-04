@@ -16,7 +16,7 @@ class StockPickingBatch(models.Model):
         copy=False, required=True,
         help='Name of the batch picking')
     user_id = fields.Many2one(
-        'res.users', string='Responsible', track_visibility='onchange',
+        'res.users', string='Responsible', tracking=True,
         help='Person responsible for this batch picking')
     picking_ids = fields.One2many(
         'stock.picking', 'batch_id', string='Pickings',
@@ -26,7 +26,7 @@ class StockPickingBatch(models.Model):
         ('in_progress', 'Running'),
         ('done', 'Done'),
         ('cancel', 'Cancelled')], default='draft',
-        copy=False, track_visibility='onchange', required=True)
+        copy=False, tracking=True, required=True)
 
     @api.model
     def create(self, vals):

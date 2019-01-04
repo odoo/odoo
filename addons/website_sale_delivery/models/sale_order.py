@@ -13,7 +13,7 @@ class SaleOrder(models.Model):
     amount_delivery = fields.Monetary(
         compute='_compute_amount_delivery', digits=0,
         string='Delivery Amount',
-        help="The amount without tax.", store=True, track_visibility='always')
+        help="The amount without tax.", store=True, tracking=True)
     has_delivery = fields.Boolean(
         compute='_compute_has_delivery', string='Has delivery',
         help="Has an order line set for delivery", store=True)
