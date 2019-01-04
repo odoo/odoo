@@ -551,7 +551,7 @@ tour.register('main_flow_tour', {
     content: _t('Select the generated manufacturing order'),
     position: 'bottom',
 }, {
-    trigger: ".o_statusbar_buttons > button:enabled:contains('Check availability')",
+    trigger: ".o_statusbar_buttons > button[name='action_assign']:enabled",
     content: _t("Check availability"),
     position: "bottom",
 }, {
