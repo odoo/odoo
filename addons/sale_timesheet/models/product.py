@@ -22,7 +22,10 @@ class ProductTemplate(models.Model):
         ('task_in_project', 'Create a task in sale order\'s project'),
         ('project_only', 'Create a new project but no task'),
         ], string="Service Tracking", default="no",
-       help="On Sales order confirmation, this product can generate a project and/or task. From those, you can track the service you are selling.")
+        help="On Sales order confirmation, this product can generate a project and/or task. \
+        From those, you can track the service you are selling.\n \
+        'In sale order\'s project': Will use the sale order\'s configured project if defined or fallback to \
+        creating a new project based on the selected template.")
     project_id = fields.Many2one(
         'project.project', 'Project', company_dependent=True, domain=[('billable_type', '=', 'no')],
         help='Select a non billable project on which tasks can be created. This setting must be set for each company.')

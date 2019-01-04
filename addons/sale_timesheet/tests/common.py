@@ -28,11 +28,16 @@ class TestCommonSaleTimesheetNoChart(TestCommonSaleNoChart):
             'reconcile': True,
             'user_type_id': cls.env.ref('account.data_account_type_revenue').id,
         })
+        cls.analytic_account_sale = cls.env['account.analytic.account'].create({
+            'name': 'Project for selling timesheet - AA',
+            'code': 'AA-2030'
+        })
 
         # Create projects
         cls.project_global = cls.env['project.project'].create({
             'name': 'Project for selling timesheets',
             'allow_timesheets': True,
+            'analytic_account_id': cls.analytic_account_sale.id,
         })
         cls.project_template = cls.env['project.project'].create({
             'name': 'Project TEMPLATE for services',
