@@ -306,12 +306,12 @@ class Channel(models.Model):
             headers['X-Forge-To'] = list_to
         return headers
 
-    def _message_receive_bounce(self, email, partner, mail_id=None):
+    def _message_receive_bounce(self, email, partner):
         """ Override bounce management to unsubscribe bouncing addresses """
         for p in partner:
             if p.message_bounce >= self.MAX_BOUNCE_LIMIT:
                 self._action_unfollow(p)
-        return super(Channel, self)._message_receive_bounce(email, partner, mail_id=mail_id)
+        return super(Channel, self)._message_receive_bounce(email, partner)
 
     def _notify_email_recipient_values(self, recipient_ids):
         # Excluded Blacklisted

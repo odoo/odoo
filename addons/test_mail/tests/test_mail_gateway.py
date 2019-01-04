@@ -346,42 +346,116 @@ class TestMailgateway(BaseFunctionalTest, MockEmails):
         self.assertEqual(self._mails[0].get('email_from'), formataddr(('MAILER-DAEMON', 'bounce.test@test.com')))
 
     @mute_logger('odoo.addons.mail.models.mail_thread')
-    def test_message_process_bounce(self):
-        """ Writing to bounce alias is considered as a bounce """
+    def test_message_process_bounce_alias(self):
+        """ Writing to bounce alias is considered as a bounce even if not multipart/report bounce structure """
         self.assertEqual(self.partner_1.message_bounce, 0)
+        self.assertEqual(self.test_record.message_bounce, 0)
+
+        bounced_mail_id = 4442
+        bounce_email_to = '%s+%s-%s-%s@%s' % ('bounce.test', bounced_mail_id, self.test_record._name, self.test_record.id, 'test.com')
+        record = self.format_and_process(MAIL_TEMPLATE, self.partner_1.email_formatted, bounce_email_to, subject='Undelivered Mail Returned to Sender')
+        self.assertFalse(record)
+        # No information found in bounce email -> not possible to do anything except avoiding email
+        self.assertEqual(self.partner_1.message_bounce, 0)
+        self.assertEqual(self.test_record.message_bounce, 0)
+
+    @mute_logger('odoo.addons.mail.models.mail_thread')
+    def test_message_process_bounce_from_mailer_demon(self):
+        """ MAILER_DAEMON emails are considered as bounce """
+        self.assertEqual(self.partner_1.message_bounce, 0)
+        self.assertEqual(self.test_record.message_bounce, 0)
+
+        record = self.format_and_process(MAIL_TEMPLATE, 'MAILER-DAEMON@example.com', 'groups@test.com', subject='Undelivered Mail Returned to Sender')
+        self.assertFalse(record)
+        # No information found in bounce email -> not possible to do anything except avoiding email
+        self.assertEqual(self.partner_1.message_bounce, 0)
+        self.assertEqual(self.test_record.message_bounce, 0)
+
+    @mute_logger('odoo.addons.mail.models.mail_thread')
+    def test_message_process_bounce_multipart_alias(self):
+        """ Multipart/report bounce correctly make related partner bounce """
+        self.assertEqual(self.partner_1.message_bounce, 0)
+        self.assertEqual(self.test_record.message_bounce, 0)
 
         bounced_mail_id = 4442
         bounce_email_to = '%s+%s-%s-%s@%s' % ('bounce.test', bounced_mail_id, self.test_record._name, self.test_record.id, 'test.com')
         record = self.format_and_process(test_mail_data.MAIL_BOUNCE, self.partner_1.email_formatted, bounce_email_to, subject='Undelivered Mail Returned to Sender')
         self.assertFalse(record)
-        # self.assertEqual(self.partner_1.message_bounce, 1)  # TDE FIXME: smart test crashing in current master
+        # Missing in reply to message_id -> cannot find original record
+        self.assertEqual(self.partner_1.message_bounce, 1)
+        self.assertEqual(self.test_record.message_bounce, 0)
 
     @mute_logger('odoo.addons.mail.models.mail_thread')
-    def test_message_process_bounce_whatever_from(self):
-        """ Writing to bounce alias is considered as a bounce """
+    def test_message_process_bounce_multipart_alias_reply(self):
+        """ Multipart/report bounce correctly make related partner and record found in bounce email bounce """
         self.assertEqual(self.partner_1.message_bounce, 0)
+        self.assertEqual(self.test_record.message_bounce, 0)
 
         bounced_mail_id = 4442
         bounce_email_to = '%s+%s-%s-%s@%s' % ('bounce.test', bounced_mail_id, self.test_record._name, self.test_record.id, 'test.com')
-        record = self.format_and_process(test_mail_data.MAIL_BOUNCE, 'Whatever <what@ever.com>', bounce_email_to, subject='Undelivered Mail Returned to Sender')
+        extra = self.fake_email.message_id
+        record = self.format_and_process(test_mail_data.MAIL_BOUNCE, self.partner_1.email_formatted, bounce_email_to, subject='Undelivered Mail Returned to Sender', extra=extra)
         self.assertFalse(record)
-        # self.assertEqual(self.partner_1.message_bounce, 1)  # TDE FIXME: smart test crashing in current master
+        self.assertEqual(self.partner_1.message_bounce, 1)
+        self.assertEqual(self.test_record.message_bounce, 1)
 
-    @mute_logger('odoo.addons.mail.models.mail_thread') 
-    def test_message_process_bounce_multipart_report(self):
-        """ Multipart/report emails should be considered as bounce """
+    @mute_logger('odoo.addons.mail.models.mail_thread')
+    def test_message_process_bounce_multipart_alias_whatever_from(self):
+        """ Multipart/report bounce correctly make related record found in bounce email bounce """
         self.assertEqual(self.partner_1.message_bounce, 0)
-        record = self.format_and_process(test_mail_data.MAIL_BOUNCE, 'Whatever <what@ever.com>', 'groups@test.com', subject='Undelivered Mail Returned to Sender')
-        self.assertFalse(record)
-        # self.assertEqual(self.partner_1.message_bounce, 1)  # TDE FIXME: smart test crashing in current master
+        self.assertEqual(self.test_record.message_bounce, 0)
 
-    @mute_logger('odoo.addons.mail.models.mail_thread') 
-    def test_message_process_bounce_mailer_demon(self):
-        """ Multipart/report emails should be considered as bounce """
-        self.assertEqual(self.partner_1.message_bounce, 0)
-        record = self.format_and_process(MAIL_TEMPLATE, 'MAILER-DAEMON@example.com', 'groups@test.com', subject='Undelivered Mail Returned to Sender')
+        bounced_mail_id = 4442
+        bounce_email_to = '%s+%s-%s-%s@%s' % ('bounce.test', bounced_mail_id, self.test_record._name, self.test_record.id, 'test.com')
+        extra = self.fake_email.message_id
+        record = self.format_and_process(test_mail_data.MAIL_BOUNCE, 'Whatever <what@ever.com>', bounce_email_to, subject='Undelivered Mail Returned to Sender', extra=extra)
         self.assertFalse(record)
-        # self.assertEqual(self.partner_1.message_bounce, 1)  # TDE FIXME: smart test crashing in current master
+        self.assertEqual(self.partner_1.message_bounce, 0)
+        self.assertEqual(self.test_record.message_bounce, 1)
+
+    @mute_logger('odoo.addons.mail.models.mail_thread')
+    def test_message_process_bounce_multipart_whatever_to_and_from(self):
+        """ Multipart/report bounce correctly make related record found in bounce email bounce """
+        self.assertEqual(self.partner_1.message_bounce, 0)
+        self.assertEqual(self.test_record.message_bounce, 0)
+
+        extra = self.fake_email.message_id
+        record = self.format_and_process(test_mail_data.MAIL_BOUNCE, 'Whatever <what@ever.com>', 'groups@test.com', subject='Undelivered Mail Returned to Sender', extra=extra)
+        self.assertFalse(record)
+        self.assertEqual(self.partner_1.message_bounce, 0)
+        self.assertEqual(self.test_record.message_bounce, 1)
+
+    @mute_logger('odoo.addons.mail.models.mail_thread')
+    def test_message_process_bounce_records_channel(self):
+        """ Test blacklist allow to multi-bounce and auto update of mail.channel """
+        self.other_record = self.env['mail.test.gateway'].create({
+            'email_from': 'Another name <%s>' % self.partner_1.email
+        })
+        self.yet_other_record = self.env['mail.test.gateway'].create({
+            'email_from': 'Yet Another name <%s>' % self.partner_1.email.upper()
+        })
+        self.test_channel = self.env['mail.channel'].create({
+            'name': 'Test',
+            'channel_last_seen_partner_ids': [(0, 0, {'partner_id': self.partner_1.id})],
+        })
+        self.fake_email.write({
+            'model': 'mail.channel',
+            'res_id': self.test_channel.id,
+        })
+        self.assertIn(self.partner_1, self.test_channel.channel_partner_ids)
+        self.assertEqual(self.partner_1.message_bounce, 0)
+        self.assertEqual(self.other_record.message_bounce, 0)
+        self.assertEqual(self.yet_other_record.message_bounce, 0)
+
+        extra = self.fake_email.message_id
+        for i in range(10):
+            record = self.format_and_process(test_mail_data.MAIL_BOUNCE, 'A third name <%s>' % self.partner_1.email, 'groups@test.com', subject='Undelivered Mail Returned to Sender', extra=extra)
+            self.assertFalse(record)
+        self.assertEqual(self.partner_1.message_bounce, 10)
+        self.assertEqual(self.test_record.message_bounce, 0)
+        self.assertEqual(self.other_record.message_bounce, 10)
+        self.assertEqual(self.yet_other_record.message_bounce, 10)
+        self.assertNotIn(self.partner_1, self.test_channel.channel_partner_ids)
 
     # --------------------------------------------------
     # Thread formation
