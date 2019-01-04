@@ -1249,7 +1249,7 @@ QUnit.module('Search View', {
         var $filterDropdown = $('.modal .o_filters_menu');
         testUtils.dom.click($filterDropdown.find('.o_add_custom_filter'));
 
-        assert.containsN($filterDropdown, '.o_input', 3);
+        assert.containsN($filterDropdown, '.o_input', 4);
 
         // We really are interested in the click event
         // We do it twice on each input to make sure

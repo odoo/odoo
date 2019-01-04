@@ -159,15 +159,10 @@
     .o_filter_condition {
         @include o-search-options-dropdown-custom-item;
         margin-bottom: 8px;
-        .o_or_filter { // or between conditions
-            display: none;  // hidden for the first condition
-            @include o-position-absolute($top: 7px, $left: -18px);
-        }
+        max-width: 90%;
     }
-    .o_filter_condition + .o_filter_condition {
-        .o_or_filter {
-            display: block; // displayed from second condition
-        }
+    .o_condition_type .btn {
+        min-width: 52px; // to avoid flickering while changing the dropdown value
     }
     .o_searchview_extended_prop_op {
         margin: 3px 0px; // vertical gap between selects
@@ -179,7 +174,7 @@
         }
     }
     .o_searchview_extended_delete_prop { // delete condition button position
-        @include o-position-absolute(3px, -18px);
+        @include o-position-absolute(3px, -10px);
         cursor: pointer;
     }
     .o_add_filter_menu { // apply and add buttons

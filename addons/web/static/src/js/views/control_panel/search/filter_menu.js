@@ -20,6 +20,8 @@ var FilterMenu = DropdownMenu.extend({
         'click .o_add_custom_filter': '_onAddCustomFilterClick',
         'click .o_add_condition': '_onAddCondition',
         'click .o_apply_filter': '_onApplyClick',
+        "click .o_condition_type .dropdown-item": "_onConditionTypeClick",
+        "click .o_condition_type .btn": "_onConditionButtonClick",
     }),
     /**
      * @override
@@ -75,6 +77,9 @@ var FilterMenu = DropdownMenu.extend({
         this.propositions.push(prop);
         this.$('.o_apply_filter').prop('disabled', false);
         prop.insertBefore(this.$addFilterMenu);
+        if (this.propositions.length > 1) {
+            this.$menu.find(".o_condition_type").removeClass('o_hidden');
+        }
     },
     /**
      * Confirm a filter proposition, creates it and add it to the menu.
@@ -82,6 +87,7 @@ var FilterMenu = DropdownMenu.extend({
      * @private
      */
     _commitSearch: function () {
+        var type = this.$menu.find(".o_condition_type .btn:visible").data('type') || "any";
         var filters = _.invoke(this.propositions, 'get_filter').map(function (preFilter) {
             return {
                 type: 'filter',
@@ -91,7 +97,7 @@ var FilterMenu = DropdownMenu.extend({
         });
         // TO DO intercepts 'new_filters' and decide what to do whith filters
         //  rewrite web.search_filters?
-        this.trigger_up('new_filters', {filters: filters});
+        this.trigger_up('new_filters', {filters: filters, type: type});
         _.invoke(this.propositions, 'destroy');
         this.propositions = [];
         this._toggleCustomFilterMenu();
@@ -175,6 +181,25 @@ var FilterMenu = DropdownMenu.extend({
         this._toggleCustomFilterMenu();
     },
     /**
+     * Manually handling the dropdown inside dropdown
+     * because nested dropdown buttons are not working as expected.
+     *
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onConditionTypeClick: function (ev) {
+        var $target = $(ev.target);
+        this.$('.o_condition_type .btn').data('type', $target.data('type')).text(ev.target.text);
+        $target.parent().removeClass('show');
+    },
+    /**
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onConditionButtonClick: function (ev) {
+        this.$('.o_condition_type .dropdown-menu').toggleClass('show');
+    },
+    /**
      * @private
      * @param {MouseEvent} ev
      */
@@ -209,6 +234,9 @@ var FilterMenu = DropdownMenu.extend({
         this.propositions = _.without(this.propositions, ev.target);
         if (!this.propositions.length) {
             this.$('.o_apply_filter').prop('disabled', true);
+        }
+        if (this.propositions.length < 2) {
+            this.$menu.find(".o_condition_type").addClass('o_hidden');
         }
         ev.target.destroy();
     },

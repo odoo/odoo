@@ -1131,6 +1131,16 @@
 <t t-name="FilterMenuGenerator">
     <div t-if="Object.keys(widget.fields).length !== 0 &amp;&amp; widget.items.length !== 0" role="separator" class="dropdown-divider o_generator_menu"/>
     <button t-if="Object.keys(widget.fields).length !== 0" type="button" class="dropdown-item o_generator_menu o_add_custom_filter" aria-expanded="false">Add Custom Filter</button>
+    <div t-if="widget.generatorMenuIsOpen" class="dropdown-item-text o_generator_menu o_condition_type o_hidden">
+        <div class="btn-group">
+            <button class="btn btn-sm btn-primary dropdown-toggle" data-type="all">All</button>
+            <div class="dropdown-menu" role="menu">
+                <a role="menuitem" class="dropdown-item" data-type="all">All</a>
+                <a role="menuitem" class="dropdown-item" data-type="any">Any</a>
+            </div>
+        </div>&amp;nbsp;
+        of the following rules
+    </div>
     <div t-if="widget.generatorMenuIsOpen" class="dropdown-item-text o_generator_menu o_add_filter_menu">
         <button class="btn btn-primary o_apply_filter" type="button">Apply</button>
         <button class="btn btn-secondary o_add_condition" type="button">
@@ -1251,7 +1261,6 @@
 </t>
 <t t-name="SearchView.extended_search.proposition">
     <div role="menuitem" class="dropdown-item-text o_filter_condition">
-        <span class="o_or_filter">or</span>
         <span>
             <select class="o_input o_searchview_extended_prop_field">
                 <t t-foreach="widget.attrs.fields" t-as="field">

@@ -64,8 +64,33 @@ QUnit.module('FilterMenu', {
         testUtils.dom.click(filterMenu.$('.o_add_custom_filter'));
         assert.containsNone(filterMenu, '.dropdown-divider');
         assert.isVisible(filterMenu.$('.o_add_filter_menu'));
-        assert.containsN(filterMenu, '.dropdown-item, .dropdown-item-text', 3,
-            'should have 3 elements: a add custom filter item, a proposition, a apply button + add condition button');
+        assert.containsN(filterMenu, '.dropdown-item, .dropdown-item-text', 6,
+            'should have 6 elements: a add custom filter item, a proposition, condition type button, 2 dropdown item for type, a apply button + add condition button');
+
+        filterMenu.destroy();
+    });
+
+    QUnit.test('click on add custom filter operator type', function (assert) {
+        assert.expect(4);
+
+        var filterMenu = createFilterMenu([], this.fields, {
+            intercepts: {
+                new_filters: function (ev) {
+                    assert.strictEqual(ev.data.type, 'all');
+                    assert.strictEqual(ev.data.filters.length, 2);
+                },
+            },
+        });
+        // open menu dropdown
+        testUtils.dom.click(filterMenu.$('span.fa-filter'));
+        // open add custom filter submenu
+        testUtils.dom.click(filterMenu.$('.o_add_custom_filter'));
+        assert.isNotVisible(filterMenu.$('.o_condition_type'), 'Condition type should not be visible for single condition');
+
+        // Add one more condition
+        testUtils.dom.click(filterMenu.$('.o_add_condition'));
+        assert.isVisible(filterMenu.$('.o_condition_type'), 'Condition type should be visible');
+        testUtils.dom.click(filterMenu.$('.o_apply_filter'));
 
         filterMenu.destroy();
     });
@@ -82,8 +107,8 @@ QUnit.module('FilterMenu', {
         testUtils.dom.click(filterMenu.$('.o_searchview_extended_delete_prop'));
 
         assert.containsNone(filterMenu, '.dropdown-divider');
-        assert.containsN(filterMenu, '.dropdown-item, .dropdown-item-text', 2,
-            'should have 2 elements: a add custom filter item, a apply button + add condition button');
+        assert.containsN(filterMenu, '.dropdown-item, .dropdown-item-text', 5,
+            'should have 5 elements: a add custom filter item, condition type button, 2 dropdown item for type, a apply button + add condition button');
 
         filterMenu.destroy();
     });

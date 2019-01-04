@@ -224,7 +224,15 @@ var ControlPanelController = mvc.Controller.extend({
      */
     _onNewFilters: function (ev) {
         ev.stopPropagation();
-        this.model.createNewFilters(ev.data.filters);
+        var self = this;
+        if (ev.data.type === 'all') {
+            // Generating filter with different groups is for AND condition
+            _.each(ev.data.filters, function (filter) {
+                self.model.createNewFilters([filter]);
+            });
+        } else {
+            this.model.createNewFilters(ev.data.filters);
+        }
         this._reportNewQueryAndRender();
     },
     /**
