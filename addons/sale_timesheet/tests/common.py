@@ -88,7 +88,7 @@ class TestCommonSaleTimesheetNoChart(TestCommonSaleNoChart):
             'uom_po_id': uom_hour.id,
             'default_code': 'SERV-ORDERED3',
             'service_type': 'timesheet',
-            'service_tracking': 'task_new_project',
+            'service_tracking': 'task_in_project',
             'project_id': False,  # will create a project
             'taxes_id': False,
             'property_account_income_id': cls.account_sale.id,
@@ -166,7 +166,7 @@ class TestCommonSaleTimesheetNoChart(TestCommonSaleNoChart):
             'uom_po_id': uom_hour.id,
             'default_code': 'SERV-DELI3',
             'service_type': 'timesheet',
-            'service_tracking': 'task_new_project',
+            'service_tracking': 'task_in_project',
             'project_id': False,  # will create a project
             'taxes_id': False,
             'property_account_income_id': cls.account_sale.id,
@@ -244,7 +244,7 @@ class TestCommonSaleTimesheetNoChart(TestCommonSaleNoChart):
             'uom_po_id': uom_hour.id,
             'default_code': 'SERV-DELI3',
             'service_type': 'manual',
-            'service_tracking': 'task_new_project',
+            'service_tracking': 'task_in_project',
             'project_id': False,  # will create a project
             'taxes_id': False,
             'property_account_income_id': cls.account_sale.id,
