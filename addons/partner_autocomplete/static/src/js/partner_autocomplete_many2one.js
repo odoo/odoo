@@ -9,6 +9,7 @@ var field_registry = require('web.field_registry');
 var _t = core._t;
 
 var PartnerField = FieldMany2One.extend(AutocompleteMixin, {
+    description: "",
     jsLibs: [
         '/partner_autocomplete/static/lib/jsvat.js'
     ],

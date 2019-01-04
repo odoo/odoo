@@ -6891,7 +6891,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('proper stringification in debug mode tooltip', async function (assert) {
-        assert.expect(4);
+        assert.expect(6);
 
         var initialDebugMode = config.debug;
         config.debug = true;
@@ -6903,7 +6903,8 @@ QUnit.module('Views', {
             arch: '<form string="Partners">' +
                     '<sheet>' +
                         '<field name="product_id" context="{\'lang\': \'en_US\'}" ' +
-                            'attrs=\'{"invisible": [["product_id", "=", 33]]}\'/>' +
+                            'attrs=\'{"invisible": [["product_id", "=", 33]]}\' ' +
+                            'widget="many2one" />' +
                     '</sheet>' +
                 '</form>',
         });
@@ -6920,6 +6921,11 @@ QUnit.module('Views', {
             1, 'modifiers should be present for this field');
         assert.strictEqual($('.oe_tooltip_technical>li[data-item="modifiers"]')[0].lastChild.wholeText.trim(),
             '{"invisible":[["product_id","=",33]]}', "modifiers should be properly stringified");
+
+        assert.strictEqual($('.oe_tooltip_technical>li[data-item="widget"]').length,
+            1, 'widget should be present for this field');
+        assert.strictEqual($('.oe_tooltip_technical>li[data-item="widget"]')[0].lastChild.wholeText.trim(),
+            'Many2one (many2one)', "widget description should be correct");
 
         config.debug = initialDebugMode;
         form.destroy();

@@ -11,6 +11,7 @@ var _t = core._t;
 
 
 var MassMailingFieldHtml = FieldHtml.extend({
+    description: "",
     xmlDependencies: (FieldHtml.prototype.xmlDependencies || []).concat(["/mass_mailing/static/src/xml/mass_mailing.xml"]),
     jsLibs: [
        '/mass_mailing/static/src/js/mass_mailing_snippets.js',

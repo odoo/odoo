@@ -137,6 +137,7 @@ var Many2ManyAttendee = FieldMany2ManyTags.extend({
     // as this widget is model dependant (rpc on res.partner), use it in another
     // context probably won't work
     // supportedFieldTypes: ['many2many'],
+    description: "",
     tag_template: "Many2ManyAttendeeTag",
     specialData: "_fetchSpecialAttendeeStatus",
 

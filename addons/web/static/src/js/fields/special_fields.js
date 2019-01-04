@@ -16,6 +16,7 @@ var _t = core._t;
  * the time difference between UTC time and local time, in minutes.
  */
 var FieldTimezoneMismatch = FieldSelection.extend({
+    description: "",
     /**
      * @override
      */
@@ -124,6 +125,7 @@ var FieldTimezoneMismatch = FieldSelection.extend({
 var FieldReportLayout = relational_fields.FieldMany2One.extend({
     // this widget is not generic, so we disable its studio use
     // supportedFieldTypes: ['many2one', 'selection'],
+    description: "",
     events: _.extend({}, relational_fields.FieldMany2One.prototype.events, {
         'click img': '_onImgClicked',
     }),
