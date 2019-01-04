@@ -27,6 +27,7 @@ var ListRenderer = require('web.ListRenderer');
 var Pager = require('web.Pager');
 
 var _t = core._t;
+var _lt = core._lt;
 var qweb = core.qweb;
 
 //------------------------------------------------------------------------------
@@ -92,6 +93,7 @@ var M2ODialog = Dialog.extend({
 });
 
 var FieldMany2One = AbstractField.extend({
+    description: _lt("Many2one"),
     supportedFieldTypes: ['many2one'],
     template: 'FieldMany2One',
     custom_events: _.extend({}, AbstractField.prototype.custom_events, {
@@ -763,6 +765,10 @@ var FieldMany2One = AbstractField.extend({
         var data = event.data;
         this._searchCreatePopup(data.view_type, false, this._createContext(data.value));
     },
+});
+
+var Many2oneBarcode = FieldMany2One.extend({
+    description: "",
 });
 
 var ListFieldMany2One = FieldMany2One.extend({
@@ -1477,6 +1483,7 @@ var One2ManyKanbanRenderer = KanbanRenderer.extend({
 });
 
 var FieldOne2Many = FieldX2Many.extend({
+    description: _lt("One2many"),
     className: 'o_field_one2many',
     supportedFieldTypes: ['one2many'],
 
@@ -1681,6 +1688,7 @@ var FieldOne2Many = FieldX2Many.extend({
 });
 
 var FieldMany2Many = FieldX2Many.extend({
+    description: _lt("Many2many"),
     className: 'o_field_many2many',
     supportedFieldTypes: ['many2many'],
 
@@ -1956,6 +1964,7 @@ var FieldMany2ManyBinaryMultiFiles = AbstractField.extend({
 });
 
 var FieldMany2ManyTags = AbstractField.extend({
+    description: _lt("Tags"),
     tag_template: "FieldMany2ManyTag",
     className: "o_field_many2manytags",
     supportedFieldTypes: ['many2many'],
@@ -2275,6 +2284,7 @@ var KanbanFieldMany2ManyTags = FieldMany2ManyTags.extend({
 });
 
 var FieldMany2ManyCheckBoxes = AbstractField.extend({
+    description: _lt("Checkboxes"),
     template: 'FieldMany2ManyCheckBoxes',
     events: _.extend({}, AbstractField.prototype.events, {
         change: '_onChange',
@@ -2431,6 +2441,7 @@ var FieldStatus = AbstractField.extend({
  * of type 'selection' and 'many2one'.
  */
 var FieldSelection = AbstractField.extend({
+    description: _lt("Selection"),
     template: 'FieldSelection',
     specialData: "_fetchSpecialRelation",
     supportedFieldTypes: ['selection', 'many2one'],
@@ -2557,6 +2568,7 @@ var FieldSelection = AbstractField.extend({
 });
 
 var FieldRadio = FieldSelection.extend({
+    description: _lt("Radio"),
     template: null,
     className: 'o_field_radio',
     tagName: 'span',
@@ -2661,6 +2673,7 @@ var FieldRadio = FieldSelection.extend({
 
 
 var FieldSelectionBadge = FieldSelection.extend({
+    description: _lt("Badges"),
     template: null,
     className: 'o_field_selection_badge',
     tagName: 'span',
@@ -2877,6 +2890,7 @@ var FieldReference = FieldMany2One.extend({
 
 return {
     FieldMany2One: FieldMany2One,
+    Many2oneBarcode: Many2oneBarcode,
     KanbanFieldMany2One: KanbanFieldMany2One,
     ListFieldMany2One: ListFieldMany2One,
 

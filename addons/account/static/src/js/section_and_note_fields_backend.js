@@ -76,6 +76,7 @@ var SectionAndNoteListRenderer = ListRenderer.extend({
 // to be sure this custom code will only impact selected fields having the widget
 // and not applied to any other existing ListRenderer.
 var SectionAndNoteFieldOne2Many = FieldOne2Many.extend({
+    description: "",
     /**
      * We want to use our custom renderer for the list.
      *

@@ -51,6 +51,7 @@ BasicModel.include({
 });
 
 var FieldMany2ManyTagsEmail = M2MTags.extend({
+    description: "",
     tag_template: "FieldMany2ManyTagsEmail",
     fieldsToFetch: _.extend({}, M2MTags.prototype.fieldsToFetch, {
         email: {type: 'char'},
