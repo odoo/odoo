@@ -6,51 +6,27 @@
     <a class="btn btn-danger hidden gengo_inprogress disabled"  href="#"> <i class="fa fa-clock-o"></i> Translation in Progress</a>
     <a class="btn btn-link gengo_info" data-action="translation_gengo_info">Count Words</a>
 </t>
-<t t-name="web_editor.TranslatorInfoDialog">
-    <div class="modal fade" tabindex="-1" role="dialog">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button title="Close" type="button" class="close" data-dismiss="modal">×</button>
-                    <h2 class="modal-title">Translate this page</h2>
-                </div>
-                <div class="modal-body">
-                    <section>
-                        <p>You are about to enter the translation mode.</p>
-                        <p>
-                            Here are the visuals used to help you translate efficiently:
-                            <ul class="oe_translate_examples">
-                                <li style="background:#ffffb6;">
-                                    Content to translate or you can post them to <b><a href="http://gengo.com/" >Gengo</a></b> for translation.
-                                </li>
-                                <li data-oe-translation-state="inprogress">
-                                    Translation in process (Gengo)
-                                </li>
-                                <li data-oe-translation-state="translated">
-                                    Already translated content
-                                </li>
-                            </ul>
-                        </p>
-                        <p>
+<t t-extend="web_editor.TranslatorInfoDialog">
+    <t t-jquery=".oe_translate_examples" t-operation="replace">
+        <ul class="oe_translate_examples">
+            <li style="background:#ffffb6;">
+                Content to translate or you can post them to <b><a href="http://gengo.com/" >Gengo</a></b> for translation.
+            </li>
+            <li data-oe-translation-state="inprogress">
+                Translation in process (Gengo)
+            </li>
+            <li data-oe-translation-state="translated">
+                Already translated content
+            </li>
+        </ul>
+    </t>
+    <t t-jquery="p:last" t-operation="replace">
+        <p> <!-- Keep wrong indent for translation --> 
                             In this mode, you can translate texts or post texts to Gengo for translation.
                             To change the structure of the page, you must edit the
                             master page.
-                        </p>
-                    </section>
-                </div>
-                <div class="modal-footer">
-                    <div>
-                        <input type="checkbox" name="do_not_show"/>
-                        Do not show this dialog later.
-                    </div>
-                    <div>
-                        <button type="button" data-action="activate" class="btn btn-primary">Ok</button>
-                        <button type="button" class="btn btn-default" data-action="discard" data-dismiss="modal">Cancel</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+        </p>
+    </t>
 </t>
 
 <t t-name="website.GengoTranslatorPostDialog">
