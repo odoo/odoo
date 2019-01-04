@@ -40,8 +40,8 @@ var ListRenderer = BasicRenderer.extend({
         'click .o_group_header': '_onToggleGroup',
         'click thead .o_list_record_selector input': '_onToggleSelection',
         'keypress thead tr td': '_onKeyPress',
-        'keydown tr': '_onKeyDown',
-        'keydown thead tr': '_onKeyDown',
+        'keydown tr .o_list_record_selector': '_onKeyDown',
+        'keydown thead tr .o_list_record_selector': '_onKeyDown',
     },
     /**
      * @constructor
@@ -742,24 +742,22 @@ var ListRenderer = BasicRenderer.extend({
      * @param {KeyboardEvent} e
      */
     _onKeyDown: function (e) {
-        if (!this.editable) {
-            switch (e.which) {
-                case $.ui.keyCode.DOWN:
-                    $(e.currentTarget).next().find('input').focus();
-                    e.preventDefault();
-                    break;
-                case $.ui.keyCode.UP:
-                    $(e.currentTarget).prev().find('input').focus();
-                    e.preventDefault();
-                    break;
-                case $.ui.keyCode.ENTER:
-                    e.preventDefault();
-                    var id = $(e.currentTarget).data('id');
-                    if (id) {
-                        this.trigger_up('open_record', { id: id, target: e.target });
-                    }
-                    break;
-            }
+        switch (e.which) {
+            case $.ui.keyCode.DOWN:
+                $(e.currentTarget).closest('tr').next().find('input').focus();
+                e.preventDefault();
+                break;
+            case $.ui.keyCode.UP:
+                $(e.currentTarget).closest('tr').prev().find('input').focus();
+                e.preventDefault();
+                break;
+            case $.ui.keyCode.ENTER:
+                e.preventDefault();
+                var id = $(e.currentTarget).closest('tr').data('id');
+                if (id) {
+                    this.trigger_up('open_record', { id: id, target: e.target });
+                }
+                break;
         }
     },
     /**
