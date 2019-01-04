@@ -330,6 +330,22 @@ class BaseCase(TreeCase, MetaCase('DummyCase', (object,), {})):
         return self.env.ref(xid)
 
     @contextmanager
+    def with_user(self, login):
+        """ Change user for a given test, like with self.with_user() ... """
+        old_uid = self.uid
+        try:
+            user = self.env['res.users'].sudo().search([('login', '=', login)])
+            assert user, "Login %s not found" % login
+            # switch user
+            self.uid = user.id
+            self.env = self.env(user=self.uid)
+            yield
+        finally:
+            # back
+            self.uid = old_uid
+            self.env = self.env(user=self.uid)
+
+    @contextmanager
     def _assertRaises(self, exception, *, msg=None):
         """ Context manager that clears the environment upon failure. """
         with super(BaseCase, self).assertRaises(exception, msg=msg) as cm:
