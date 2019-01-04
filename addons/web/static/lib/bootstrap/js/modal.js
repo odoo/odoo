@@ -641,4 +641,3 @@
   return Modal;
 
 })));
-//# sourceMappingURL=modal.js.map
