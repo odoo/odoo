@@ -63,28 +63,23 @@
             }
             .o_theme_accepted_icon{
                 display: block;
-                position: absolute;
-                left: 0;
-                top: 0;
+                @include o-position-absolute($left: 0, $top: 0);
                 overflow: hidden;
-                width: 90px;
-                height: 90px;
+                width: 100px;
+                height: 100px;
+                z-index: 2;
                 &:before{
                     content: '';
                     background-color: $o-brand-primary;
                     width: 70px;
                     height: 125px;
                     display: block;
-                    position: absolute;
-                    top: -43px;
-                    left: -29px;
+                    @include o-position-absolute($left: -29px, $top: -43px);
                     transform: rotate(45deg);
                     box-shadow: 0 0 40px 0 rgba(0, 0, 0, .5);
                 }
                 i{
-                    position: absolute;
-                    top: 15px;
-                    left: 15px;
+                    @include o-position-absolute($left: 15px, $top: 15px);
                 }
             }
         }
@@ -116,7 +111,7 @@
         }
 
         .o_button_area {
-            @include o-position-absolute(-1px, -1px, -1px, -1px);
+            @include o-position-absolute(0,0,0,0);
             transition: opacity 100ms ease 0s;
             display: flex;
             flex-flow: column nowrap;
