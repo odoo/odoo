@@ -492,6 +492,45 @@ class AccountBankStatementLine(models.Model):
     def _get_communication(self, payment_method_id):
         return self.name or ''
 
+
+    def _prepare_account_payment_data(self, amount):
+        """
+        @param amount: the amount to create payment. Positive amount for customer payment and negative amount for supplier payment
+        @type amount: float
+        @return: dictionary of values to create an account payment
+        """
+        currency = self.journal_id.currency_id or self.company_id.currency_id
+        amount_is_positive = float_compare(amount, 0.0, precision_rounding=currency.rounding) == 1
+        payment_methods = amount_is_positive and self.journal_id.inbound_payment_method_ids or self.journal_id.outbound_payment_method_ids
+        payment_type = 'inbound' if amount_is_positive else 'outbound'
+        partner_type = False
+        if self.partner_id:
+            if amount_is_positive:
+                partner_type = 'customer'
+            else:
+                partner_type = 'supplier'
+
+        return {
+            'payment_method_id': payment_methods and payment_methods[0].id or False,
+            'payment_type': payment_type,
+            'partner_id': self.partner_id and self.partner_id.id or False,
+            'partner_type': partner_type,
+            'journal_id': self.statement_id.journal_id.id,
+            'payment_date': self.date,
+            'state': 'reconciled',
+            'currency_id': currency.id,
+            'amount': abs(amount),
+            'communication': self._get_communication(payment_methods[0] if payment_methods else False),
+            'name': self.statement_id.name or _("Bank Statement %s") % self.date,
+            }
+
+    def _prepare_partner_bank_data(self):
+        return {
+            'acc_number': self.account_number,
+            'partner_id': self.partner_id.id
+            }
+
+
     def process_reconciliation(self, counterpart_aml_dicts=None, payment_aml_rec=None, new_aml_dicts=None):
         """ Match statement lines with existing payments (eg. checks) and/or payables/receivables (eg. invoices and credit notes) and/or new move lines (eg. write-offs).
             If any new journal item needs to be created (via new_aml_dicts or counterpart_aml_dicts), a new journal entry will be created and will contain those
@@ -577,30 +616,8 @@ class AccountBankStatementLine(models.Model):
 
             # Create The payment
             payment = self.env['account.payment']
-            if abs(total)>0.00001:
-                partner_id = self.partner_id and self.partner_id.id or False
-                partner_type = False
-                if partner_id:
-                    if total < 0:
-                        partner_type = 'supplier'
-                    else:
-                        partner_type = 'customer'
-
-                payment_methods = (total>0) and self.journal_id.inbound_payment_method_ids or self.journal_id.outbound_payment_method_ids
-                currency = self.journal_id.currency_id or self.company_id.currency_id
-                payment = self.env['account.payment'].create({
-                    'payment_method_id': payment_methods and payment_methods[0].id or False,
-                    'payment_type': total >0 and 'inbound' or 'outbound',
-                    'partner_id': self.partner_id and self.partner_id.id or False,
-                    'partner_type': partner_type,
-                    'journal_id': self.statement_id.journal_id.id,
-                    'payment_date': self.date,
-                    'state': 'reconciled',
-                    'currency_id': currency.id,
-                    'amount': abs(total),
-                    'communication': self._get_communication(payment_methods[0] if payment_methods else False),
-                    'name': self.statement_id.name or _("Bank Statement %s") %  self.date,
-                })
+            if abs(total) > 0.00001:
+                payment = self.env['account.payment'].create(self._prepare_account_payment_data(total))
 
             # Complete dicts to create both counterpart move lines and write-offs
             to_create = (counterpart_aml_dicts + new_aml_dicts)
@@ -670,9 +687,7 @@ class AccountBankStatementLine(models.Model):
             bank_account = self.env['res.partner.bank'].search(
                 [('acc_number', '=', self.account_number), ('partner_id', '=', self.partner_id.id)])
             if not bank_account:
-                bank_account = self.env['res.partner.bank'].create({
-                    'acc_number': self.account_number, 'partner_id': self.partner_id.id
-                })
+                bank_account = self.env['res.partner.bank'].create(self._prepare_partner_bank_data())
             self.bank_account_id = bank_account
 
         counterpart_moves.assert_balanced()
@@ -680,4 +695,4 @@ class AccountBankStatementLine(models.Model):
 
     def _check_invoice_state(self, invoice):
         if invoice.state == 'in_payment' and all([payment.state == 'reconciled' for payment in invoice.mapped('payment_move_line_ids.payment_id')]):
-           invoice.write({'state': 'paid'})
+            invoice.write({'state': 'paid'})
