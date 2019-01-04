@@ -165,9 +165,10 @@ class AccountChartTemplate(models.Model):
         of accounts had been created for it yet.
         """
         self.ensure_one()
-        if request and request.db:
-            company_id = request.env.user.company_id.id
-            company = self.env['res.company'].browse(company_id)
+        # do not use `request.env` here, it can cause deadlocks
+        if request and request.session.uid:
+            current_user = self.env['res.users'].browse(request.uid)
+            company = current_user.company_id
         else:
             # fallback to company of current user, most likely __system__
             # (won't work well for multi-company)
@@ -185,9 +186,10 @@ class AccountChartTemplate(models.Model):
         rights.
         """
         self.ensure_one()
-        if request and request.db:
-            company_id = request.env.user.company_id.id
-            company = self.env['res.company'].browse(company_id)
+        # do not use `request.env` here, it can cause deadlocks
+        if request and request.session.uid:
+            current_user = self.env['res.users'].browse(request.uid)
+            company = current_user.company_id
         else:
             # fallback to company of current user, most likely __system__
             # (won't work well for multi-company)
