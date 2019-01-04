@@ -12,8 +12,8 @@ Graph a method
 
 Odoo embeds a profiler of code. This embeded profiler output can be used to
 generate a graph of calls triggered by the method, number of queries, percentage
-of time taken in the method itself as well as time taken in method and it's
-sub-called methods.
+of time taken in the method itself as well as the time that the method took and
+its sub-called methods.
 
 .. code:: python
 
@@ -23,7 +23,7 @@ sub-called methods.
     @api.multi
     def mymethod(...)
 
-This produce a file called /temp/prof.profile
+This produces a file called /temp/prof.profile
 
 A tool called *gprof2dot* will produce a graph with this result:
 
@@ -37,7 +37,7 @@ A tool called *xdot* will display the resulting graph:
     
     xdot /temp/prof.xdot
     
-The profiler can be also used without saving data in a file.
+The profiler can be also used without saving data in a file:
 
 .. code:: python
 
@@ -78,7 +78,7 @@ completely reviewed.
 Dump stack
 ==========
 
-Sending the SIGQUIT signal to an odoo process (only available on POSIX) makes
+Sending the SIGQUIT signal to an Odoo process (only available on POSIX) makes
 this process output the current stack trace to log, with info level. When an
 odoo process seems stucked, sending this signal to the process permit to know
 what the process is doing, and letting the process continue his job.
@@ -86,8 +86,8 @@ what the process is doing, and letting the process continue his job.
 Tracing code execution
 ======================
 
-Instead of sending the SIGQUIT signal to an odoo process often enough, to check
-where processes is performing worse than expected, we can use pyflame tool to
+Instead of sending the SIGQUIT signal to an Odoo process often enough, to check
+where the processes are performing worse than expected, we can use the pyflame tool to
 do it for us.
 
 Install pyflame and flamegraph
@@ -118,7 +118,7 @@ Once done, we'll display them as an execution graph.
 
 where <PID> is the process ID of the odoo process you want to graph. This will
 wait until the dead of the process, with a maximum of one hour, and and get 5
-traces a second. With the output of pyflame, we can produce an svg graph with
+traces a second. With the output of pyflame, we can produce an SVG graph with
 the flamegraph tool:
 
 .. code:: bash
