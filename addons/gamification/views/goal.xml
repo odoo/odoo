@@ -234,7 +234,7 @@
                             <field name="description" class="oe_inline"/>
                         </div>
 
-                        <group string="How to compute the goal?">
+                        <group string="How to compute the goal?" name="compute_details">
 
                             <field widget="radio" name="computation_mode"/>
 
@@ -248,20 +248,20 @@
                             <field name="compute_code" attrs="{'invisible':[('computation_mode','!=','python')], 'required':[('computation_mode','=','python')]}" placeholder="e.g. result = env['mail.followers'].search_count([('res_model', '=', 'mail.channel'), ('partner_id', '=', object.user_id.partner_id.id)])"/>
                             <field name="condition" widget="radio"/>
                         </group>
-                        <group string="Optimisation" attrs="{'invisible': [('computation_mode', '!=', 'count')]}">
+                        <group string="Optimisation" name="optimisation" attrs="{'invisible': [('computation_mode', '!=', 'count')]}">
                             <field name="batch_mode" />
-                            <div colspan="4">In batch mode, the domain is evaluated globally. If enabled, do not use keyword 'user' in above filter domain.</div>
+                            <div colspan="2">In batch mode, the domain is evaluated globally. If enabled, do not use keyword 'user' in above filter domain.</div>
                             <field name="batch_distinctive_field" attrs="{'invisible': [('batch_mode', '=', False)], 'required':  [('batch_mode', '=', True)]}"
                                 domain="[('model_id', '=', model_id)]" class="oe_inline" />
                             <field name="batch_user_expression" attrs="{'invisible': [('batch_mode', '=', False)], 'required':  [('batch_mode', '=', True)]}" class="oe_inline"
                                 placeholder="e.g. user.partner_id.id"/>
                         </group>
-                        <group string="Formating Options">
+                        <group string="Formating Options" name="format_options">
                             <field name="display_mode" widget="radio" />
                             <field name="suffix" placeholder="e.g. days" class="oe_inline"/>
                             <field name="monetary"/>
                         </group>
-                        <group string="Clickable Goals" attrs="{'invisible': [('computation_mode', '=', 'manually')]}">
+                        <group string="Clickable Goals" name="clickable_goals" attrs="{'invisible': [('computation_mode', '=', 'manually')]}">
                             <field name="action_id"  class="oe_inline"/>
                             <field name="res_id_field"  attrs="{'invisible': [('action_id', '=', False)]}" class="oe_inline"/>
                         </group>
