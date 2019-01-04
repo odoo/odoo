@@ -912,7 +912,12 @@ ListRenderer.include({
                 this.trigger_up('discard_changes', {
                     recordID: ev.target.dataPointID,
                 });
-                this.$('.o_field_x2many_list_row_add a:first').focus();
+                if (this.addCreateLine) {
+                    // focus 1st control in case of x2many list
+                    this.$('.o_field_x2many_list_row_add a:first').focus();
+                } else {
+                    this.trigger_up('focus_searchview');
+                }
                 break;
         }
     },

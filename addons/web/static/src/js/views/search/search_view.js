@@ -471,7 +471,7 @@ var SearchView = Widget.extend({
         }
     },
     on_attach_callback: function () {
-        this._focusInput();
+        this.focusInput();
     },
     get_title: function () {
         return this.title;
@@ -569,12 +569,12 @@ var SearchView = Widget.extend({
         if (this.$buttons) {
             this.$buttons.toggle(!this.headless && is_visible && this.visible_filters);
         }
-        this._focusInput();
+        this.focusInput();
     },
     /**
      * puts the focus on the search input
      */
-    _focusInput: function () {
+    focusInput: function () {
         if (!config.device.touch && config.device.size_class >= config.device.SIZES.MD) {
             this.$('input').focus();
         }

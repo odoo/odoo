@@ -22,6 +22,7 @@ var ListController = BasicController.extend({
         add_record: '_onAddRecord',
         button_clicked: '_onButtonClicked',
         edit_line: '_onEditLine',
+        focus_searchview: '_onFocusSearchView',
         save_line: '_onSaveLine',
         resequence: '_onResequence',
         selection_changed: '_onSelectionChanged',
@@ -483,6 +484,15 @@ var ListController = BasicController.extend({
             return field.attrs.name;
         });
         new DataExport(this, record, defaultExportFields).open();
+    },
+    /**
+     * Set focus to search view
+     * @private
+     */
+    _onFocusSearchView: function () {
+        if (this.searchView) {
+            this.searchView.focusInput();
+        }
     },
     /**
      * Called when the renderer displays an editable row and the user tries to
