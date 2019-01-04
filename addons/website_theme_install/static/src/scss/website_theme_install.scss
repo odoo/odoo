@@ -33,9 +33,6 @@
             font: 12px/20px Courier, monospace;
             letter-spacing: -1px;
         }
-        .o_theme_accepted_icon{
-            display: none;
-        }
 
         &.o_theme_installed{
             position: relative;
@@ -44,42 +41,38 @@
                 .fa {
                     color: $o-brand-primary;
                 }
-                &:hover{
+                &:hover {
                     border-color: $o-brand-primary;
                 }
             }
-            .o_theme_preview_bottom{
+            .o_theme_preview_bottom {
                 padding: 10px 10px 5px;
                 background-color: $o-brand-primary;
                 img{
                     border: 1px solid $white;
                 }
             }
-            h5{
-                color: $white;
+            h5, h6 {
+                color: $white !important;
             }
-            h6{
-                color: $gray-200 !important;
-            }
-            .o_theme_accepted_icon{
-                display: block;
-                @include o-position-absolute($left: 0, $top: 0);
+            .o_theme_accepted_icon {
+                @include o-position-absolute($right: 0, $top: 0);
                 overflow: hidden;
-                width: 100px;
-                height: 100px;
+                width: 80px;
+                height: 80px;
                 z-index: 2;
-                &:before{
+                &:before {
                     content: '';
-                    background-color: $o-brand-primary;
+                    @include o-position-absolute($right: -29px, $top: -59px);
+                    display: block;
                     width: 70px;
                     height: 125px;
-                    display: block;
-                    @include o-position-absolute($left: -29px, $top: -43px);
-                    transform: rotate(45deg);
-                    box-shadow: 0 0 40px 0 rgba(0, 0, 0, .5);
+                    background-color: $o-brand-primary;
+                    box-shadow: 0 0 40px 0 rgba(0, 0, 0, .4);
+                    transform: rotate(-45deg);
                 }
-                i{
-                    @include o-position-absolute($left: 15px, $top: 15px);
+                i {
+                    @include o-position-absolute($right: 10px, $top: 10px);
                 }
             }
         }
@@ -196,7 +189,4 @@
             }
         }
     }
-}
-.btn-group.o_search_options .o_dropdown{
-    display: none;
 }
