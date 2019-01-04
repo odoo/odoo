@@ -51,7 +51,7 @@ class Job(models.Model):
     state = fields.Selection([
         ('recruit', 'Recruitment in Progress'),
         ('open', 'Not Recruiting')
-    ], string='Status', readonly=True, required=True, track_visibility='always', copy=False, default='recruit', help="Set whether the recruitment process is open or closed for this job position.")
+    ], string='Status', readonly=True, required=True, tracking=True, copy=False, default='recruit', help="Set whether the recruitment process is open or closed for this job position.")
 
     _sql_constraints = [
         ('name_company_uniq', 'unique(name, company_id, department_id)', 'The name of the job position must be unique per department in company!'),
@@ -348,7 +348,7 @@ class Department(models.Model):
     company_id = fields.Many2one('res.company', string='Company', index=True, default=lambda self: self.env.user.company_id)
     parent_id = fields.Many2one('hr.department', string='Parent Department', index=True)
     child_ids = fields.One2many('hr.department', 'parent_id', string='Child Departments')
-    manager_id = fields.Many2one('hr.employee', string='Manager', track_visibility='onchange')
+    manager_id = fields.Many2one('hr.employee', string='Manager', tracking=True)
     member_ids = fields.One2many('hr.employee', 'department_id', string='Members', readonly=True)
     jobs_ids = fields.One2many('hr.job', 'department_id', string='Jobs')
     note = fields.Text('Note')

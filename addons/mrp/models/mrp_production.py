@@ -56,7 +56,7 @@ class MrpProduction(models.Model):
     product_qty = fields.Float(
         'Quantity To Produce',
         default=1.0, digits=dp.get_precision('Product Unit of Measure'),
-        readonly=True, required=True, track_visibility='onchange',
+        readonly=True, required=True, tracking=True,
         states={'draft': [('readonly', False)]})
     product_uom_id = fields.Many2one(
         'uom.uom', 'Product Unit of Measure',
@@ -108,7 +108,7 @@ class MrpProduction(models.Model):
         ('done', 'Done'),
         ('cancel', 'Cancelled')], string='State',
         compute='_compute_state', copy=False, index=True, readonly=True,
-        store=True, track_visibility='onchange',
+        store=True, tracking=True,
         help=" * Draft: The MO is not confirmed yet.\n"
              " * Confirmed: The MO is confirmed, the stock rules and the reordering of the components are trigerred.\n"
              " * Planned: The WO are planned.\n"
@@ -122,7 +122,7 @@ class MrpProduction(models.Model):
         ('waiting', 'Waiting Another Operation')],
         string='Material Availability',
         compute='_compute_state', copy=False, index=True, readonly=True,
-        store=True, track_visibility='onchange', oldname='availability',
+        store=True, tracking=True, oldname='availability',
         help=" * Ready: The material is available to start the production.\n\
             * Waiting: The material is not available to start the production.\n\
             The material availability is impacted by the manufacturing readiness\

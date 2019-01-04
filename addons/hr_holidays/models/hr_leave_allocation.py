@@ -41,29 +41,29 @@ class HolidaysAllocation(models.Model):
         ('refuse', 'Refused'),
         ('validate1', 'Second Approval'),
         ('validate', 'Approved')
-        ], string='Status', readonly=True, track_visibility='onchange', copy=False, default='confirm',
+        ], string='Status', readonly=True, tracking=True, copy=False, default='confirm',
         help="The status is set to 'To Submit', when a leave request is created." +
         "\nThe status is 'To Approve', when leave request is confirmed by user." +
         "\nThe status is 'Refused', when leave request is refused by manager." +
         "\nThe status is 'Approved', when leave request is approved by manager.")
     date_from = fields.Datetime(
         'Start Date', readonly=True, index=True, copy=False,
-        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, track_visibility='onchange')
+        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, tracking=True)
     date_to = fields.Datetime(
         'End Date', readonly=True, copy=False,
-        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, track_visibility='onchange')
+        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, tracking=True)
     holiday_status_id = fields.Many2one(
         "hr.leave.type", string="Leave Type", required=True, readonly=True,
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]},
         domain=[('valid', '=', True)], default=_default_holiday_status_id)
     employee_id = fields.Many2one(
         'hr.employee', string='Employee', index=True, readonly=True,
-        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, default=_default_employee, track_visibility='onchange')
+        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, default=_default_employee, tracking=True)
     manager_id = fields.Many2one('hr.employee', string='Manager', readonly=True)
     notes = fields.Text('Reasons', readonly=True, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
     # duration
     number_of_days = fields.Float(
-        'Number of Days', track_visibility='onchange',
+        'Number of Days', tracking=True,
         help='Duration in days. Reference field to use when necessary.')
     number_of_days_display = fields.Float(
         'Duration (days)', compute='_compute_number_of_days_display',
