@@ -199,6 +199,7 @@ var FiltersMenu = DropdownMenu.extend({
         }
         $.when(def).then(function () {
             self.$addCustomFilter
+                .attr('aria-expanded', self.generatorMenuIsOpen)
                 .toggleClass('o_closed_menu', !self.generatorMenuIsOpen)
                 .toggleClass('o_open_menu', self.generatorMenuIsOpen);
             self.$('.o_add_filter_menu').toggle();
