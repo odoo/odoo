@@ -150,9 +150,9 @@ class MailBlackListMixin(models.AbstractModel):
         for record in self:
             record.is_blacklisted = record.email_normalized in blacklist
 
-    def _message_receive_bounce(self, email, partner, mail_id=None):
+    def _message_receive_bounce(self, email, partner):
         """ Override of mail.thread generic method. Purpose is to increment the
         bounce counter of the record. """
-        super(MailBlackListMixin, self)._message_receive_bounce(email, partner, mail_id=mail_id)
+        super(MailBlackListMixin, self)._message_receive_bounce(email, partner)
         for record in self:
             record.message_bounce = record.message_bounce + 1
