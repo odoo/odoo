@@ -105,7 +105,13 @@ var PlanAction = Widget.extend(ControlPanelMixin, {
      * @private
      */
     _refreshPlan: function(dom){
-        this.$el.html(dom);
+        // TODO: Not forward port this fix on master
+        var $dom = $(dom);
+        $dom.find('div.o_timesheet_plan_sale_timesheet_dashboard > table.table, ' +
+            'div.o_timesheet_plan_sale_timesheet_people_time > table.table, ' +
+            'div.o_project_plan_project_timesheet_forecast > table.table')
+            .wrap('<div class="table-responsive"></div>');
+        this.$el.html($dom);
     },
     /**
      * Call controller to get the html content
