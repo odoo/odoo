@@ -73,6 +73,7 @@ class ProjectCreateSalesOrder(models.TransientModel):
 
         # create SO
         sale_order = self.env['sale.order'].create({
+            'project_id': self.project_id.id,
             'partner_id': self.partner_id.id,
             'analytic_account_id': self.project_id.analytic_account_id.id,
             'client_order_ref': self.project_id.name,
