@@ -59,7 +59,7 @@ class MailTestFull(models.Model):
     name = fields.Char()
     email_from = fields.Char(tracking=True)
     count = fields.Integer(default=1)
-    datetime = fields.Datetime(default=fields.Datetime.now)
+    datetime = fields.Datetime(default=fields.Datetime.now, track_visibility='onchange')
     mail_template = fields.Many2one('mail.template', 'Template')
     customer_id = fields.Many2one('res.partner', 'Customer', tracking=2)
     user_id = fields.Many2one('res.users', 'Responsible', tracking=1)
@@ -80,6 +80,14 @@ class MailTestFull(models.Model):
         if 'umbrella_id' in init_values and self.umbrella_id:
             return self.env.ref('test_mail.st_mail_test_full_umbrella_upd')
         return super(MailTestFull, self)._track_subtype(init_values)
+
+    def message_get_default_recipients(self):
+        return {
+            r.id: {'partner_ids': r.customer_id.ids,
+                   'email_to': False,
+                   'email_cc': False}
+            for r in self
+        }
 
 
 class MailTestAlias(models.Model):

@@ -103,6 +103,12 @@ class TestMailPerformance(TransactionCase):
 
     @users('__system__', 'emp')
     @warmup
+    def test_create_mail_nolog(self):
+        with self.assertQueryCount(__system__=5, emp=5):  # test_mail only: 5 - 5
+            self.env['mail.test.simple'].with_context(mail_create_nolog=True).create({'name': 'Test'})
+
+    @users('__system__', 'emp')
+    @warmup
     def test_create_mail_simple(self):
         with self.assertQueryCount(__system__=8, emp=8):  # test_mail only: 8 - 8
             self.env['mail.test.simple'].create({'name': 'Test'})

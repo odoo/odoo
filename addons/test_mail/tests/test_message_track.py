@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 from email.utils import formataddr
 
 from odoo.addons.test_mail.tests import common
@@ -117,8 +119,36 @@ class TestTracking(common.BaseFunctionalTest, common.MockEmails):
             [('customer_id', 'many2one', False, self.user_admin.partner_id)  # onchange tracked field
              ])
 
-    def test_message_tracking_sequence(self):
-        """ Update some tracked fields and check that the mail.tracking.value are ordered according to their tracking_sequence"""
+    def test_message_track_template_qweb(self):
+        """ Update some tracked fields linked to some template -> message with onchange """
+        self.assertEqual(self.record.message_ids, self.env['mail.message'])
+
+        print('----------------------------------')
+        self.record.write({
+            'name': 'Test2',
+            'datetime': datetime.now() - relativedelta(days=1)
+        })
+        print('----------------------------------')
+
+        self.assertEqual(self.record.message_ids, self.env['mail.message'])
+
+        # one email send due to template
+        print(self._mails)
+        self.assertEqual(len(self._mails), 1)
+        # import pdb
+        # pdb.set_trace()
+        # self.assertEqual(set(self._mails[0]['email_to']), set([formataddr((self.user_admin.name, self.user_admin.email))]))
+        # self.assertHtmlEqual(self._mails[0]['body'], '<p>Hello Test2</p>')
+
+        # one new message containing tracking; without subtype linked to tracking
+        self.assertEqual(self.record.message_ids[1].subtype_id, self.env.ref('mail.mt_note'))
+        self.assertTracking(
+            self.record.message_ids[1],
+            [('customer_id', 'many2one', False, self.user_admin.partner_id)  # onchange tracked field
+             ])
+
+    def test_message_track_sequence(self):
+        """ Update some tracked fields and check that the mail.tracking.value are ordered according to their track_sequence"""
         self.record.write({
             'name': 'Zboub',
             'customer_id': self.user_admin.partner_id.id,
