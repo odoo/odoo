@@ -259,6 +259,7 @@ var FormRenderer = BasicRenderer.extend({
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
+
     /**
      * @override
      */
@@ -278,6 +279,16 @@ var FormRenderer = BasicRenderer.extend({
                 this.lastActivatedFieldIndex = activatedIndex;
             }
         }
+        return this.lastActivatedFieldIndex;
+    },
+    /**
+     * override this method to store last activated field index
+     * last activated field index will be useful when dialog is closed and give focus back to last active field
+     *
+     * @override
+     */
+    _activatePreviousFieldWidget: function (record, currentIndex) {
+        this.lastActivatedFieldIndex = this._super.apply(this, arguments);
         return this.lastActivatedFieldIndex;
     },
     /**
