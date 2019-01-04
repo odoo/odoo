@@ -45,7 +45,7 @@ Other optional directories compose the module.
 - *wizard/* : regroups the transient models (``models.TransientModel``) and their views
 - *report/* : contains the printable reports and models based on SQL views. Python objects and XML views are included in this directory
 - *tests/* : contains the Python tests
-
+- *security/* : contains the access rules to the module content
 
 File naming
 -----------
@@ -191,18 +191,18 @@ To declare a record in XML, the **record** notation (using *<record>*) is recomm
         </field>
     </record>
 
-Odoo supports custom tags acting as syntactic sugar:
+Odoo supports :ref:`custom tags <reference/data/shortcuts>` custom tags acting as syntactic sugar:
 
 - menuitem: use it as a shortcut to declare a ``ir.ui.menu``
 - template: use it to declare a QWeb View requiring only the ``arch`` section of the view.
 - report: use to declare a :ref:`report action <reference/actions/report>`
-- act_window: use it if the record notation can't do what you want
+- act_window: use to declare a :ref:`window action <reference/actions/window>`
 
 The 4 first tags are prefered over the *record* notation.
 
 
-Naming xml_id
--------------
+Naming xml ids
+--------------
 
 Security, View and Action
 ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -281,6 +281,7 @@ Inherited XML
 ~~~~~~~~~~~~~
 
 The naming pattern of inherited view is
+
 #. Extension mode: Use the same xml id than the original view you are extending, and suffix it by :samp:`{_inherit}` . For instance, the view :samp:`project.project_view_form` can be extended by :samp:`project_forecast.project_view_form_inherit`.
 #. Primary mode: Keep the original xml id.
 
@@ -488,7 +489,7 @@ So, you can write ``if some_collection:`` instead of ``if len(some_collection):`
 - As a good developper, document your code (docstring on methods, simple
   comments for tricky part of code)
 - In additions to these guidelines, you may also find the following link
-  interesting: http://python.net/~goodger/projects/pycon/2007/idiomatic/handout.html
+  interesting: https://david.goodger.org/projects/pycon/2007/idiomatic/handout.html
   (a little bit outdated, but quite relevant)
 
 Programming in Odoo
@@ -550,7 +551,7 @@ object (such as sale.order.line, on sale.order creation) having a field
 name *my_field*, their default value will be set too.
 
 If you need to create a key context influencing the behavior of some object,
-choice a good name, and eventually prefix it by the name of the module to
+choose a good name, and eventually prefix it by the name of the module to
 isolate its impact. A good example are the keys of ``mail`` module :
 *mail_create_nosubscribe*, *mail_notrack*, *mail_notify_user_signature*, ...
 
@@ -615,7 +616,7 @@ importantly do not copy these patterns!
 
 Here is a memorable example to help you remember what the issue is about (but
 do not copy the code there). Before continuing, please be sure to read the
-online documentation of pyscopg2 to learn of to use it properly:
+online documentation of pyscopg2 to learn how to use it properly:
 
 - The problem with query parameters (http://initd.org/psycopg/docs/usage.html#the-problem-with-the-query-parameters)
 - How to pass parameters with psycopg2 (http://initd.org/psycopg/docs/usage.html#passing-parameters-to-sql-queries)
@@ -629,8 +630,8 @@ and simple methods is more advisable than having few large and complex methods.
 A good rule of thumb is to split a method as soon as it has more than one
 responsibility (see http://en.wikipedia.org/wiki/Single_responsibility_principle).
 
-Hardcoding a business logic in a method should be avoided as it prevents to be
-easily extended by a submodule.
+Hardcoding a business logic in a method should be avoided as it prevents
+an easy extension by a submodule.
 
 .. code-block:: python
 

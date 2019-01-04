@@ -154,6 +154,8 @@ values).
 
 .. ignored assert
 
+.. _reference/data/shortcuts:
+
 Shortcuts
 =========
 
