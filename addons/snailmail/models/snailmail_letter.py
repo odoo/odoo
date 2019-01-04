@@ -165,12 +165,12 @@ class SnailmailLetter(models.Model):
             else:
                 # adding the web logo from the company for future possible customization
                 document.update({
-                    'company_logo': letter.company_id.logo_web,
+                    'company_logo': letter.company_id.logo_web.decode('utf-8'),
                 })
                 attachment = letter._fetch_attachment()
                 if attachment:
                     document.update({
-                        'pdf_bin': route == 'print' and attachment.datas,
+                        'pdf_bin': route == 'print' and attachment.datas.decode('utf-8'),
                         'pages': route == 'estimate' and self._count_pages_pdf(base64.b64decode(attachment.datas)),
                     })
                 else:
@@ -321,7 +321,7 @@ class SnailmailLetter(models.Model):
 
     @api.model
     def _snailmail_cron(self):
-        letters_send = self.search([('state', 'in', ['pending', 'error'])])
+        letters_send = self.search([('state', '=', 'pending')])
         if letters_send:
             letters_send._snailmail_print()
         limit_date = datetime.datetime.utcnow() - datetime.timedelta(days=1)

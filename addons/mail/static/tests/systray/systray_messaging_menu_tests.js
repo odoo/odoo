@@ -625,5 +625,161 @@ QUnit.test("messaging menu widget: channel seen notification", function ( assert
     messagingMenu.destroy();
 });
 
+QUnit.test("messaging menu widget: preview with no message should be undated", function ( assert ) {
+    assert.expect(2);
+
+    // remove any message on the channel
+    this.data['mail.channel'].records[0].channel_message_ids = [];
+    this.data['mail.message'].records[0].channel_ids = [];
+
+    var messagingMenu = new MessagingMenu();
+    testUtils.addMockEnvironment(messagingMenu, {
+        services: this.services,
+        data: this.data,
+    });
+
+    messagingMenu.appendTo($('#qunit-fixture'));
+
+    messagingMenu.$('.dropdown-toggle').click();
+
+    assert.strictEqual(messagingMenu.$('.o_mail_preview').length, 1,
+        "should have two previews in messaging menu");
+
+    assert.ok(_.isEmpty(messagingMenu.$('.o_mail_preview .o_last_message_date').text().trim()),
+        "should have preview as undated");
+
+    messagingMenu.destroy();
+});
+
+QUnit.test("messaging menu widget: sort dated previews before undated previews", function ( assert ) {
+    assert.expect(5);
+
+    var dm = {
+        id: 2,
+        name: "DM",
+        channel_type: "chat",
+    };
+
+    this.data['mail.channel'].records.push(dm);
+    this.data.initMessaging.channel_slots.direct_message = [dm];
+
+    var messagingMenu = new MessagingMenu();
+    testUtils.addMockEnvironment(messagingMenu, {
+        services: this.services,
+        data: this.data,
+    });
+
+    messagingMenu.appendTo($('#qunit-fixture'));
+    messagingMenu.$('.dropdown-toggle').click();
+
+    assert.strictEqual(messagingMenu.$('.o_mail_preview').length, 2,
+        "should have two previews in messaging menu");
+
+    var $preview1 = messagingMenu.$('.o_mail_preview').eq(0);
+    var $preview2 = messagingMenu.$('.o_mail_preview').eq(1);
+
+    assert.strictEqual($preview1.data('preview-id'), 1,
+        "should have channel preview as the 1st preview (dated preview)");
+    assert.notOk(_.isEmpty($preview1.find('.o_last_message_date').text().trim()),
+        "should have channel preview as dated");
+    assert.strictEqual($preview2.data('preview-id'), 2,
+        "should have DM preview as the 1st preview (non-dated preview)");
+    assert.ok(_.isEmpty($preview2.find('.o_last_message_date').text().trim()),
+        "should have DM preview as undated");
+
+    messagingMenu.destroy();
+});
+
+QUnit.test('global counter with channel previews', function (assert) {
+    assert.expect(5);
+
+    var channels = [{
+        id: 1,
+        name: "channel1",
+        channel_type: "channel",
+        channel_message_ids: [1, 2],
+        message_unread_counter: 2,
+    }, {
+        id: 2,
+        name: "channel2",
+        channel_type: "channel",
+        channel_message_ids: [3],
+        message_unread_counter: 1,
+    }, {
+        id: 3,
+        name: "channel3",
+        channel_type: "channel",
+        channel_message_ids: [4],
+        message_unread_counter: 0,
+    }];
+
+    var messages = [{
+        author_id: [1, "Demo"],
+        body: "<p>message 1</p>",
+        channel_ids: [1],
+        id: 1,
+        model: 'mail.channel',
+        record_name: 'channel1',
+        res_id: 1,
+    }, {
+        author_id: [1, "Demo"],
+        body: "<p>message 2</p>",
+        channel_ids: [1],
+        id: 2,
+        model: 'mail.channel',
+        record_name: 'channel1',
+        res_id: 1,
+    }, {
+        author_id: [1, "Demo"],
+        body: "<p>message 3</p>",
+        channel_ids: [2],
+        id: 3,
+        model: 'mail.channel',
+        record_name: 'channel2',
+        res_id: 2,
+    }, {
+        author_id: [1, "Demo"],
+        body: "<p>message 4</p>",
+        channel_ids: [3],
+        id: 4,
+        model: 'mail.channel',
+        record_name: 'channel3',
+        res_id: 3,
+    }];
+
+    this.data['mail.channel'].records = channels;
+    this.data.initMessaging.channel_slots.channel_channel = channels;
+    this.data['mail.message'].records = messages;
+
+    var messagingMenu = new MessagingMenu();
+    testUtils.addMockEnvironment(messagingMenu, {
+        services: this.services,
+        data: this.data,
+        session: {
+            partner_id: 3,
+        },
+    });
+    messagingMenu.appendTo($('#qunit-fixture'));
+    assert.strictEqual(messagingMenu.$('.o_notification_counter').text(), '2',
+        "should display a counter of 2 on the messaging menu icon");
+
+    messagingMenu.$('.dropdown-toggle').click();
+
+    assert.strictEqual(messagingMenu.$('.o_mail_preview').length, 3,
+        "should display 3 previews");
+    var $previewChannel1 = messagingMenu.$('.o_mail_preview[data-preview-id=1]');
+    var $previewChannel2 = messagingMenu.$('.o_mail_preview[data-preview-id=2]');
+    var $previewChannel3 = messagingMenu.$('.o_mail_preview[data-preview-id=3]');
+
+    assert.strictEqual($previewChannel1.data('unread-counter'), 2,
+        "preview of channel 1 should have unread counter of 2");
+    assert.strictEqual($previewChannel2.data('unread-counter'), 1,
+        "preview of channel 2 should have unread counter of 1");
+    assert.strictEqual($previewChannel3.data('unread-counter'), 0,
+        "preview of channel 3 should have unread counter of 0");
+
+    messagingMenu.destroy();
+});
+
 });
 });

@@ -47,7 +47,7 @@ var OptionalProductsModal = Dialog.extend(ServicesMixin, ProductConfiguratorMixi
     init: function (parent, params) {
         var self = this;
 
-        this._super(parent, {
+        var options = _.extend({
             size: 'large',
             buttons: [{
                 text: params.okButtonText,
@@ -57,8 +57,10 @@ var OptionalProductsModal = Dialog.extend(ServicesMixin, ProductConfiguratorMixi
                 text: params.cancelButtonText,
                 click: this._onCancelButtonClick
             }],
-            title: params.title
-        });
+            technical: !params.isWebsite,
+        }, params || {});
+
+        this._super(parent, options);
 
         this.rootProduct = params.rootProduct;
         this.container = parent;
@@ -70,10 +72,6 @@ var OptionalProductsModal = Dialog.extend(ServicesMixin, ProductConfiguratorMixi
             delete this.events['change [data-attribute_exclusions]'];
             delete this.events['click button.js_add_cart_json'];
         }
-
-        this._opened.then(function () {
-            self.triggerVariantChange(self.$el);
-        });
     },
      /**
      * @override
@@ -85,7 +83,8 @@ var OptionalProductsModal = Dialog.extend(ServicesMixin, ProductConfiguratorMixi
         var getModalContent = ajax.jsonRpc(uri, 'call', {
             product_id: self.rootProduct.product_id,
             variant_values: self.rootProduct.variant_values,
-            pricelist_id: self.pricelistId,
+            pricelist_id: self.pricelistId || false,
+            add_qty: self.rootProduct.quantity,
             kwargs: {
                 context: _.extend({
                     'quantity': self.rootProduct.quantity
@@ -124,6 +123,7 @@ var OptionalProductsModal = Dialog.extend(ServicesMixin, ProductConfiguratorMixi
                 self.$modal.attr('open', true);
                 self.$modal.removeAttr("aria-hidden");
                 self.$modal.modal().appendTo(self.container);
+                self.$modal.focus();
                 self._opened.resolve();
             }
         });
@@ -138,10 +138,18 @@ var OptionalProductsModal = Dialog.extend(ServicesMixin, ProductConfiguratorMixi
      *
      * @override
      */
-    start: function (){
-        this._super.apply(this, arguments);
+    start: function () {
+        var def = this._super.apply(this, arguments);
+        var self = this;
 
         this.$el.find('input[name="add_qty"]').val(this.rootProduct.quantity);
+
+        return def.then(function () {
+            // This has to be triggered to compute the "out of stock" feature
+            self._opened.then(function () {
+                self.triggerVariantChange(self.$el);
+            });
+        });
     },
 
     //--------------------------------------------------------------------------
@@ -357,7 +365,7 @@ var OptionalProductsModal = Dialog.extend(ServicesMixin, ProductConfiguratorMixi
 
             ajax.jsonRpc(self._getUri("/product_configurator/optional_product_items"), 'call', {
                 'product_id': productId,
-                'pricelist_id': self.pricelistId
+                'pricelist_id': self.pricelistId || false,
             }).then(function (addedItem) {
                 var $addedItem = $(addedItem);
                 $modal.find('tr:last').after($addedItem);
@@ -408,7 +416,7 @@ var OptionalProductsModal = Dialog.extend(ServicesMixin, ProductConfiguratorMixi
 
         this._removeOptionOption($modal, productTemplateId);
 
-        $('tr:last').after($parent);
+        $modal.find('tr:last').after($parent);
     },
 
     /**

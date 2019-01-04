@@ -1937,7 +1937,7 @@ var BasicModel = AbstractModel.extend({
                     addDef = this._applyX2ManyChange(record, fieldName, {
                         operation: 'ADD_M2M',
                         ids: values
-                    });
+                    }, viewType);
                 }
                 if (removedIds.length) {
                     var listData = _.map(list.data, function (localId) {
@@ -1951,7 +1951,7 @@ var BasicModel = AbstractModel.extend({
                             }
                             return _.findWhere(listData, {res_id: resID}).id;
                         }),
-                    });
+                    }, viewType);
                 }
                 return $.when(addDef, removedDef);
         }
@@ -3404,6 +3404,7 @@ var BasicModel = AbstractModel.extend({
         _.each(element._changes, function (command) {
             if (command.operation === 'DELETE' ||
                     command.operation === 'FORGET' ||
+                    (command.operation === 'ADD' &&  !command.isNew)||
                     command.operation === 'REMOVE_ALL') {
                 return;
             }
@@ -3528,7 +3529,7 @@ var BasicModel = AbstractModel.extend({
             model: params.modelName,
             offset: params.offset || (type === 'record' ? _.indexOf(res_ids, res_id) : 0),
             openGroupByDefault: params.openGroupByDefault,
-            orderedBy: params.orderedBy || (params.context && params.context.orderedBy) || [],
+            orderedBy: params.orderedBy || [],
             orderedResIDs: params.orderedResIDs,
             parentID: params.parentID,
             rawContext: params.rawContext,
@@ -4456,7 +4457,7 @@ var BasicModel = AbstractModel.extend({
                 if (orderData1 > orderData2) {
                     return order.asc ? 1 : -1;
                 }
-                return compareRecords(record1ID, record2ID, level + 1);
+                return compareRecords(resId1, resId2, level + 1);
             };
             utils.stableSort(list.res_ids, compareRecords);
         }

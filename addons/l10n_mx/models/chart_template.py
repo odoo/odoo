@@ -44,7 +44,8 @@ class AccountChartTemplate(models.Model):
     @api.model
     def _prepare_transfer_account_for_direct_creation(self, name, company):
         res = super(AccountChartTemplate, self)._prepare_transfer_account_for_direct_creation(name, company)
-        xml_id = self.env.ref('l10n_mx.account_tag_102_01').id
-        res.setdefault('tag_ids', [])
-        res['tag_ids'].append((4, xml_id))
+        if company.country_id.code == 'MX':
+            xml_id = self.env.ref('l10n_mx.account_tag_102_01').id
+            res.setdefault('tag_ids', [])
+            res['tag_ids'].append((4, xml_id))
         return res

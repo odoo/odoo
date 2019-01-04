@@ -3,22 +3,23 @@
 # * project
 # 
 # Translators:
-# Martin Trigaux, 2018
 # Mathias Markl <mathias.markl@mukit.at>, 2018
 # brokemeister <work@maltejansen.de>, 2018
 # Jan Meyer, 2018
-# Johannes Croe <jcr@odoo.com>, 2018
 # Constantin Ehrenstein <transifex@skiller.eu>, 2018
+# Martin Trigaux, 2018
 # Wolfgang Taferner, 2018
 # Thorsten Vocks <thorsten.vocks@openbig.org>, 2018
 # Katharina Moritz <kmo@e2f.com>, 2018
+# Johannes Croe <jcr@odoo.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-10-08 06:48+0000\n"
-"PO-Revision-Date: 2018-10-08 06:48+0000\n"
-"Last-Translator: Katharina Moritz <kmo@e2f.com>, 2018\n"
+"PO-Revision-Date: 2018-08-24 09:23+0000\n"
+"Last-Translator: Johannes Croe <jcr@odoo.com>, 2018\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -54,12 +55,12 @@ msgstr "# Aufgaben"
 #. module: project
 #: model:mail.template,subject:project.rating_project_request_email_template
 msgid "${object.project_id.company_id.name}: Satisfaction Survey"
-msgstr ""
+msgstr "${object.project_id.company_id.name}: Zufriedenheitsumfrage"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "% On"
-msgstr ""
+msgstr "% auf"
 
 #. module: project
 #: code:addons/project/models/project.py:302
@@ -74,6 +75,9 @@ msgid ""
 "(Un)archiving a project automatically (un)archives its tasks. Do you want to"
 " proceed?"
 msgstr ""
+"Das Archivieren bzw. Aufheben einer Archivierung eines Beitrags archiviert "
+"automatisch auch dessen Antworten bzw. hebt deren Archivierung auf. Möchten "
+"Sie fortfahren?"
 
 #. module: project
 #. openerp-web
@@ -163,6 +167,62 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div>\n"
+"    % set access_token = object.rating_get_access_token()\n"
+"    % set partner = object.rating_get_partner_id()\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"width:100%; margin:0px auto;\">\n"
+"    <tbody>\n"
+"        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"            Hallo ${partner.name},<br/>\n"
+"            Bitte nehmen Sie sich einen Moment und bewerten sie die Task \"<strong>${object.name}</strong>\"\n"
+"            % if object.rating_get_rated_partner_id().name:\n"
+"                assigned to <strong>${object.rating_get_rated_partner_id().name}</strong>.<br/>\n"
+"            % else:\n"
+"                .<br/>\n"
+"            % endif\n"
+"        </td></tr>\n"
+"        <tr><td style=\"text-align: center;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" summary=\"o_mail_notification\" style=\"width:100%; margin: 32px 0px 32px 0px;\">\n"
+"                <tr><td style=\"font-size: 13px;\">\n"
+"                    <strong>Sagen Sie uns wie Sie den Service fanden<br/>\n"
+"                    <span style=\"text-color: #888888\">(Klicken Sie auf eins der Smileys)</span>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"font-size: 13px;\">\n"
+"                    <table style=\"width:100%;text-align:center;\">\n"
+"                        <tr>\n"
+"                            <td>\n"
+"                                <a href=\"/rating/${access_token}/10\">\n"
+"                                    <img alt=\"Satisfied\" src=\"/rating/static/src/img/rating_10.png\" title=\"Satisfied\"/>\n"
+"                                </a>\n"
+"                            </td>\n"
+"                            <td>\n"
+"                                <a href=\"/rating/${access_token}/5\">\n"
+"                                    <img alt=\"Not satisfied\" src=\"/rating/static/src/img/rating_5.png\" title=\"Not satisfied\"/>\n"
+"                                </a>\n"
+"                            </td>\n"
+"                            <td>\n"
+"                                <a href=\"/rating/${access_token}/1\">\n"
+"                                    <img alt=\"Highly Dissatisfied\" src=\"/rating/static/src/img/rating_1.png\" title=\"Highly Dissatisfied\"/>\n"
+"                                </a>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </table>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td></tr>\n"
+"        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"            Danke für Ihr feedback. Es hilft uns uns ständig zu verbessern.\n"
+"            % if object.project_id.rating_status == 'stage':\n"
+"                <br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">Diese Umfrage wurde Ihnen gesendet da Ihre Anfrage die Stage <b>${object.stage_id.name}</b>erreicht hat.</span>\n"
+"            % endif\n"
+"            % if object.project_id.rating_status == 'periodic':\n"
+"                <br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">Die Kundenumfrage wurde gesendet.<b>${object.project_id.rating_status_period}</b>Solang die Anfrage in der Stage ${object.stage_id.name}</b>ist.</span>\n"
+"            % endif\n"
+"        </td></tr>\n"
+"    </tbody>\n"
+"    </table>\n"
+"</div>\n"
+"            "
 
 #. module: project
 #: model:mail.template,body_html:project.mail_template_data_project_task
@@ -177,6 +237,14 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div>Lieber ${object.partner_id.name or 'Kunde'},<br/>\n"
+"    Danke für Ihre Anfrage.<br/>\n"
+"    Wenn Sie Fragen haben dann melden Sie sich bitte.\n"
+"    <br/><br/>\n"
+"    Danke,\n"
+"    <br/>\n"
+"</div>\n"
+"        "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_index
@@ -216,38 +284,41 @@ msgid ""
 "<p class=\"o_view_nocontent_smiling_face\">\n"
 "                    Create a new project</p>"
 msgstr ""
+"<p class=\"o_view_nocontent_smiling_face\">\n"
+"                    Neues Projekt erstellen</p>"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/tour.js:66
 #, python-format
 msgid "<p>Once your task is ready, you can save it.</p>"
-msgstr ""
+msgstr "<p>Wenn die Aufgabe bereit ist können Sie sie speichern.</p>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_project
 msgid "<small class=\"text-muted\">Project - </small>"
-msgstr ""
+msgstr "<small class=\"text-muted\">Projekt - </small>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<small class=\"text-right\">Status:</small>"
-msgstr ""
+msgstr "<small class=\"text-right\">Status:</small>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<strong class=\"d-block mb-2\">Attachments</strong>"
-msgstr ""
+msgstr "<strong class=\"d-block mb-2\">Anhänge</strong>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<strong class=\"d-block mb-2\">Description</strong>"
-msgstr ""
+msgstr "<strong class=\"d-block mb-2\">Beschreibung</strong>"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_0
 msgid "<strong style=\"font-size: 16px;\">Try the mail gateway</strong>"
 msgstr ""
+"<strong style=\"font-size: 16px;\">Versuchen Sie den mail gateway</strong>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -277,7 +348,7 @@ msgstr "<strong/>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_popover
 msgid "<strong>Rated by: </strong>"
-msgstr ""
+msgstr "<strong>Bewertet durch: </strong>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -346,6 +417,8 @@ msgid ""
 "Add columns to configure <b>stages for your tasks</b>.<br/><i>e.g. New - In "
 "Progress - Done</i>"
 msgstr ""
+"Fügen Sie Kolonnen hinzu um <b>die Etappen Ihere Aufgaben</b>zu "
+"konfigurieren.<br/><i>e.g. Neu - In Bearbeitung - Fertig</i>"
 
 #. module: project
 #: model:project.task.type,name:project.project_stage_data_2
@@ -357,7 +430,7 @@ msgstr "Fortgeschritten"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:34
 #, python-format
 msgid "Agile"
-msgstr ""
+msgstr "Agile"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_id
@@ -393,7 +466,7 @@ msgstr "Alle"
 #. module: project
 #: model:ir.ui.menu,name:project.menu_project_management
 msgid "All Tasks"
-msgstr ""
+msgstr "Alle Aufgaben"
 
 #. module: project
 #. openerp-web
@@ -616,7 +689,7 @@ msgstr "Zirkelbezüge zwischen Aufgaben und Unteraufgaben sind nicht erlaubt."
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.act_project_project_2_project_task_all
 msgid "Click <i>Create</i> to start a new task."
-msgstr ""
+msgstr "Klick <i>Anlegen</i> um eine neue Aufgabe zu erstellen."
 
 #. module: project
 #. openerp-web
@@ -728,17 +801,17 @@ msgstr "Projekt erstellen"
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all_config
 msgid "Create a new project"
-msgstr ""
+msgstr "Neues Projekt erstellen"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_task_type_form
 msgid "Create a new stage in the task pipeline"
-msgstr ""
+msgstr "Neue Stufe hinzufügen"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_tags_action
 msgid "Create a new tag"
-msgstr ""
+msgstr "Neues Tag erstellen"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.action_view_task
@@ -748,7 +821,7 @@ msgstr "Eine neue Aufgabe erstellen"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__create_date
 msgid "Created On"
-msgstr ""
+msgstr "Erstellt an"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__create_uid
@@ -814,7 +887,7 @@ msgstr "E-Mail Kunde"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:44
 #, python-format
 msgid "Customer Feedback"
-msgstr ""
+msgstr "Kunden Feedback"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__access_url
@@ -935,7 +1008,7 @@ msgstr "Übersicht"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:38
 #, python-format
 msgid "Digital Marketing"
-msgstr ""
+msgstr "Digitales Marketing"
 
 #. module: project
 #. openerp-web
@@ -1011,7 +1084,7 @@ msgstr ""
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:39
 #, python-format
 msgid "Editing"
-msgstr ""
+msgstr "In Bearbeitung"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__email_from
@@ -2495,7 +2568,7 @@ msgstr "Stufenbeschreibung und Tips"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__name
 msgid "Stage Name"
-msgstr "Bezeichnung Stufe"
+msgstr "Stufenbezeichnung "
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_stage

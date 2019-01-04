@@ -232,6 +232,9 @@ msgid ""
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
+"在庫可能品は在庫管理対象のプロダクトです。在庫アプリのインストールが必要です。\n"
+"消耗品は移動処理の対象ではあるものの、厳密な在庫管理対象ではないプロダクトです。\n"
+"サービス品は物理的なモノが存在しない無形のプロダクトです。"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_warning_purchase
@@ -1370,7 +1373,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Purchase Representative"
-msgstr ""
+msgstr "購買担当者"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__group_warning_purchase
@@ -1541,8 +1544,11 @@ msgid "Reporting"
 msgstr "レポーティング"
 
 #. module: purchase
+#: code:addons/purchase/models/purchase.py:276
 #: model:ir.actions.report,name:purchase.report_purchase_quotation
+#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchasequotation_document
+#, python-format
 msgid "Request for Quotation"
 msgstr "見積依頼"
 

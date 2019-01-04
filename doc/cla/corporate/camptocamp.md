@@ -34,3 +34,5 @@ Damien Crier damien.crier@camptocamp.com https://github.com/damdam-s
 Simone Orsi simahawk@gmail.com https://github.com/simahawk
 Patrick Tombez patrick.tombez@camptocamp.com https://github.com/p-tombez
 Julien Coux julien.coux@camptocamp.com https://github.com/jcoux
+Alexandre Saunier alexandre.saunier@camptocamp.com https://github.com/asaunier
+Frédéric Junod frederic.junod@camptocamp.com https://github.com/fredj

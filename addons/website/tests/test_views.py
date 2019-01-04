@@ -10,7 +10,7 @@ import unittest
 from lxml import etree as ET, html
 from lxml.html import builder as h
 
-from odoo.tests import common
+from odoo.tests import common, HttpCase
 
 
 def attrs(**kwargs):
@@ -561,5 +561,235 @@ class TestCowViewSaving(common.TransactionCase):
         specific_view = View.with_context(website_id=1).get_view_id('website.main_view')
         generic_view_arch = View.browse(generic_view).with_context(load_all_views=True).read_combined(['arch'])['arch']
         specific_view_arch = View.browse(specific_view).with_context(load_all_views=True, website_id=1).read_combined(['arch'])['arch']
-        self.assertEqual(generic_view_arch == '<body>GENERIC<div>VIEW<span>C</span></div></body>', True)
-        self.assertEqual(specific_view_arch == '<body>SPECIFIC<div>VIEW<span>D</span></div></body>', True, "Writing on top level view hierarchy with a website in context should write on the view and clone it's inherited views")
+        self.assertEqual(generic_view_arch, '<body>GENERIC<div>VIEW<span>C</span></div></body>')
+        self.assertEqual(specific_view_arch, '<body>SPECIFIC<div>VIEW<span>D</span></div></body>', "Writing on top level view hierarchy with a website in context should write on the view and clone it's inherited views")
+
+    def test_multi_website_view_obj_active(self):
+        ''' With the following structure:
+            * A generic active parent view
+            * A generic active child view, that is inactive on website 1
+            The methods to retrieve views should return the specific inactive
+            child over the generic active one.
+        '''
+        View = self.env['ir.ui.view']
+        self.inherit_view.with_context(website_id=1).write({'active': False})
+
+        # Test _view_obj() return the inactive specific over active generic
+        inherit_view = View._view_obj(self.inherit_view.key)
+        self.assertEqual(inherit_view.active, True, "_view_obj should return the generic one")
+        inherit_view = View.with_context(website_id=1)._view_obj(self.inherit_view.key)
+        self.assertEqual(inherit_view.active, False, "_view_obj should return the specific one")
+
+        # Test get_related_views() return the inactive specific over active generic
+        # Note that we cannot test get_related_views without a website in context as it will fallback on a website with get_current_website()
+        views = View.with_context(website_id=1).get_related_views(self.base_view.key)
+        self.assertEqual(views.mapped('active'), [True, False], "get_related_views should return the specific child")
+
+        # Test filter_duplicate() return the inactive specific over active generic
+        view = View.with_context(active_test=False).search([('key', '=', self.inherit_view.key)]).filter_duplicate()
+        self.assertEqual(view.active, True, "filter_duplicate should return the generic one")
+        view = View.with_context(active_test=False, website_id=1).search([('key', '=', self.inherit_view.key)]).filter_duplicate()
+        self.assertEqual(view.active, False, "filter_duplicate should return the specific one")
+
+    def test_get_related_views_tree(self):
+        View = self.env['ir.ui.view']
+
+        self.base_view.write({'name': 'B', 'key': 'B'})
+        self.inherit_view.write({'name': 'I', 'key': 'I'})
+        View.create({
+            'name': 'II',
+            'mode': 'extension',
+            'inherit_id': self.inherit_view.id,
+            'arch': '<div position="inside">, sub ext</div>',
+            'key': 'II',
+        })
+        self.inherit_view.with_context(website_id=1).write({'name': 'Extension'})  # Trigger cow on hierarchy
+        View.create({
+            'name': 'II2',
+            'mode': 'extension',
+            'inherit_id': self.inherit_view.id,
+            'arch': '<div position="inside">, sub sibling specific</div>',
+            'key': 'II2',
+        })
+
+        #       B
+        #      / \
+        #     /   \
+        #    I     I'
+        #   / \     |
+        # II  II2   II'
+
+        views = View.with_context(website_id=1).get_related_views('B')
+        self.assertEqual(views.mapped('key'), ['B', 'I', 'II'], "Should only return the specific tree")
+
+
+class Crawler(HttpCase):
+    def setUp(self):
+        super(Crawler, self).setUp()
+        View = self.env['ir.ui.view']
+
+        self.base_view = View.create({
+            'name': 'Base',
+            'type': 'qweb',
+            'arch': '<div>base content</div>',
+            'key': 'website.base_view',
+        }).with_context(load_all_views=True)
+
+        self.inherit_view = View.create({
+            'name': 'Extension',
+            'mode': 'extension',
+            'inherit_id': self.base_view.id,
+            'arch': '<div position="inside">, extended content</div>',
+            'key': 'website.extension_view',
+        })
+
+    def test_get_switchable_related_views(self):
+        View = self.env['ir.ui.view']
+        Website = self.env['website']
+
+        # Set up
+        website_1 = Website.create({'name': 'Website 1'})  # will have specific views
+        website_2 = Website.create({'name': 'Website 2'})  # will use generic views
+
+        self.base_view.write({'name': 'Main Frontend Layout', 'key': '_portal.frontend_layout'})
+        event_main_view = self.base_view.copy({
+            'name': 'Events',
+            'key': '_website_event.index',
+            'arch': '<t t-call="_website.layout"><div>Arch is not important in this test</div></t>',
+        })
+        self.inherit_view.write({'name': 'Main layout', 'key': '_website.layout'})
+
+        self.inherit_view.copy({'name': 'Show Sign In', 'customize_show': True, 'key': '_portal.portal_show_sign_in'})
+        view_logo = self.inherit_view.copy({
+            'name': 'Show Logo',
+            'inherit_id': self.inherit_view.id,
+            'customize_show': True,
+            'key': '_website.layout_logo_show',
+        })
+        view_logo.copy({'name': 'Affix Top Menu', 'key': '_website.affix_top_menu'})
+
+        event_child_view = self.inherit_view.copy({
+            'name': 'Filters',
+            'customize_show': True,
+            'inherit_id': event_main_view.id,
+            'key': '_website_event.event_left_column',
+            'priority': 30,
+        })
+        view_photos = event_child_view.copy({'name': 'Photos', 'key': '_website_event.event_right_photos'})
+        event_child_view.copy({'name': 'Quotes', 'key': '_website_event.event_right_quotes', 'priority': 30})
+
+        event_child_view.copy({'name': 'Filter by Category', 'inherit_id': event_child_view.id, 'key': '_website_event.event_category'})
+        event_child_view.copy({'name': 'Filter by Country', 'inherit_id': event_child_view.id, 'key': '_website_event.event_location'})
+
+        # Customize
+        #   | Main Frontend Layout
+        #       | Show Sign In
+        #   | Main Layout
+        #       | Affix Top Menu
+        #       | Show Logo
+        #   | Events
+        #       | Filters
+        #       | Photos
+        #       | Quotes
+        #   | Filters
+        #       | Filter By Category
+        #       | Filter By Country
+
+        self.authenticate("admin", "admin")
+        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+
+        # Simulate website 2 (that use only generic views)
+        url = base_url + '/website/force_website'
+        json = {'params': {'website_id': website_2.id}}
+        self.opener.post(url=url, json=json)
+
+        # Test controller
+        url = base_url + '/website/get_switchable_related_views'
+        json = {'params': {'key': '_website_event.index'}}
+        response = self.opener.post(url=url, json=json)
+        res = response.json()['result']
+
+        self.assertEqual(
+            [v['name'] for v in res],
+            ['Show Sign In', 'Affix Top Menu', 'Show Logo', 'Filters', 'Photos', 'Quotes', 'Filter by Category', 'Filter by Country'],
+            "Sequence should not be taken into account for customize menu",
+        )
+        self.assertEqual(
+            [v['inherit_id'][1] for v in res],
+            ['Main Frontend Layout', 'Main layout', 'Main layout', 'Events', 'Events', 'Events', 'Filters', 'Filters'],
+            "Sequence should not be taken into account for customize menu (Checking Customize headers)",
+        )
+
+        # Trigger COW
+        view_logo.with_context(website_id=website_1.id).write({'arch': '<div position="inside">, trigger COW, arch is not relevant in this test</div>'})
+        # This would wrongly become:
+
+        # Customize
+        #   | Main Frontend Layout
+        #       | Show Sign In
+        #   | Main Layout
+        #       | Affix Top Menu
+        #       | Show Logo <==== Was above "Affix Top Menu"
+        #   | Events
+        #       | Filters
+        #       | Photos
+        #       | Quotes
+        #   | Filters
+        #       | Filter By Category
+        #       | Filter By Country
+
+        # Simulate website 1 (that has specific views)
+        url = base_url + '/website/force_website'
+        json = {'params': {'website_id': website_1.id}}
+        self.opener.post(url=url, json=json)
+
+        # Test controller
+        url = base_url + '/website/get_switchable_related_views'
+        json = {'params': {'key': '_website_event.index'}}
+        response = self.opener.post(url=url, json=json)
+        res = response.json()['result']
+        self.assertEqual(
+            [v['name'] for v in res],
+            ['Show Sign In', 'Affix Top Menu', 'Show Logo', 'Filters', 'Photos', 'Quotes', 'Filter by Category', 'Filter by Country'],
+            "multi-website COW should not impact customize views order (COW view will have a bigger ID and should not be last)",
+        )
+        self.assertEqual(
+            [v['inherit_id'][1] for v in res],
+            ['Main Frontend Layout', 'Main layout', 'Main layout', 'Events', 'Events', 'Events', 'Filters', 'Filters'],
+            "multi-website COW should not impact customize views menu header position or split (COW view will have a bigger ID and should not be last)",
+        )
+
+        # Trigger COW
+        view_photos.with_context(website_id=website_1.id).write({'arch': '<div position="inside">, trigger COW, arch is not relevant in this test</div>'})
+        # This would wrongly become:
+
+        # Customize
+        #   | Main Frontend Layout
+        #       | Show Sign In
+        #   | Main Layout
+        #       | Affix Top Menu
+        #       | Show Logo
+        #   | Events
+        #       | Filters
+        #       | Quotes
+        #   | Filters
+        #       | Filter By Category
+        #       | Filter By Country
+        #   | Events     <==== JS code creates a new Events header as the Event's children views are not one after the other anymore..
+        #       | Photos <==== .. since Photos got duplicated and now have a bigger ID that others
+
+        # Test controller
+        url = base_url + '/website/get_switchable_related_views'
+        json = {'params': {'key': '_website_event.index'}}
+        response = self.opener.post(url=url, json=json)
+        res = response.json()['result']
+        self.assertEqual(
+            [v['name'] for v in res],
+            ['Show Sign In', 'Affix Top Menu', 'Show Logo', 'Filters', 'Photos', 'Quotes', 'Filter by Category', 'Filter by Country'],
+            "multi-website COW should not impact customize views order (COW view will have a bigger ID and should not be last) (2)",
+        )
+        self.assertEqual(
+            [v['inherit_id'][1] for v in res],
+            ['Main Frontend Layout', 'Main layout', 'Main layout', 'Events', 'Events', 'Events', 'Filters', 'Filters'],
+            "multi-website COW should not impact customize views menu header position or split (COW view will have a bigger ID and should not be last) (2)",
+        )

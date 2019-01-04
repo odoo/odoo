@@ -43,7 +43,10 @@ var History = function History($editable) {
             $editable.removeAttr('contentEditable').removeProp('contentEditable');
         }
 
+        $editable.trigger('content_will_be_destroyed');
         $editable.html(oSnap.contents).scrollTop(oSnap.scrollTop);
+        $editable.trigger('content_was_recreated');
+
         $('.oe_overlay').remove();
         $('.note-control-selection').hide();
 
@@ -290,6 +293,20 @@ var RTEWidget = Widget.extend({
         $('.o_not_editable').attr('contentEditable', false);
 
         var $editable = this.editable();
+
+        // When a undo/redo is performed, the whole DOM is changed so we have
+        // to prepare for it (website will restart animations for example)
+        // TODO should be better handled
+        $editable.on('content_will_be_destroyed', function (ev) {
+            self.trigger_up('content_will_be_destroyed', {
+                $target: $(ev.currentTarget),
+            });
+        });
+        $editable.on('content_was_recreated', function (ev) {
+            self.trigger_up('content_was_recreated', {
+                $target: $(ev.currentTarget),
+            });
+        });
 
         $editable.addClass('o_editable')
         .data('rte', this)

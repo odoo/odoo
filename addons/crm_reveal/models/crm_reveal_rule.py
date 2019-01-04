@@ -230,12 +230,7 @@ class CRMRevealRule(models.Model):
     @api.model
     def _get_reveal_views_to_process(self):
         """ Return list of reveal rule ids grouped by IPs """
-        batch_limit = self.env['ir.config_parameter'].sudo().get_param('reveal.fetch_limit', DEFAULT_REVEAL_BATCH_LIMIT)
-        try:
-            batch_limit = int(batch_limit)
-        except ValueError:
-            batch_limit = DEFAULT_REVEAL_BATCH_LIMIT
-
+        batch_limit = DEFAULT_REVEAL_BATCH_LIMIT
         query = """
             SELECT v.reveal_ip, array_agg(v.reveal_rule_id ORDER BY r.sequence)
             FROM crm_reveal_view v
@@ -302,7 +297,7 @@ class CRMRevealRule(models.Model):
             'account_token': account_token.account_token,
             'data': server_payload
         }
-        result = jsonrpc(endpoint, params=params)
+        result = jsonrpc(endpoint, params=params, timeout=300)
         for res in result.get('reveal_data', []):
             if not res.get('not_found'):
                 lead = self._create_lead_from_response(res)

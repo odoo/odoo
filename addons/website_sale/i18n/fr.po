@@ -3,40 +3,41 @@
 # * website_sale
 # 
 # Translators:
-# e2f <projects@e2f.com>, 2018
 # Saad Thaifa <saad.thaifa@gmail.com>, 2018
-# fr rev <e2ffr02@hotmail.com>, 2018
-# Martin Trigaux, 2018
-# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2018
-# Frédéric LIETART <stuff@tifred.fr>, 2018
-# Olivier Lenoir <olivier.lenoir@free.fr>, 2018
-# Richard Mathot <rim@odoo.com>, 2018
-# Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2018
 # Fabri Yohann <psn@fabri.pw>, 2018
-# Clo <clo@odoo.com>, 2018
 # Miguel Vidali <mvidali129@gmail.com>, 2018
 # Melanie Bernard <mbe@odoo.com>, 2018
 # Shark McGnark <peculiarcheese@gmail.com>, 2018
-# Fred Gilson <fgi@odoo.com>, 2018
-# f5f0a0dac17dde787a1d812a6989680e, 2018
-# Eloïse Stilmant <est@odoo.com>, 2018
-# Maximilien Tantin <maximilien.tantin@horanet.com>, 2018
+# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2018
+# Olivier Lenoir <olivier.lenoir@free.fr>, 2018
 # Lionel Sausin <ls@numerigraphe.com>, 2018
 # Lucas Deliege <lud@odoo.com>, 2018
 # Simon Maillard <simon@ogesta.fr>, 2018
 # David Réchatin <david@rechatin.com>, 2018
+# Maximilien Tantin <maximilien.tantin@horanet.com>, 2018
 # fr trans <e2ftrans1@yahoo.com>, 2018
+# Frédéric LIETART <stuff@tifred.fr>, 2018
+# Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2018
+# Clo <clo@odoo.com>, 2018
+# f5f0a0dac17dde787a1d812a6989680e, 2018
+# fr rev <e2ffr02@hotmail.com>, 2018
+# Eloïse Stilmant <est@odoo.com>, 2018
+# Fred Gilson <fgi@odoo.com>, 2018
 # Marie Willemyns <mwi@odoo.com>, 2018
 # Nathan Grognet <ngr@odoo.com>, 2018
 # Lucas Deliege <lud@openerp.com>, 2018
+# e2f <projects@e2f.com>, 2018
 # Quentin THEURET <odoo@kerpeo.com>, 2018
+# Martin Trigaux, 2018
+# Richard Mathot <rim@odoo.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-10-08 06:48+0000\n"
-"PO-Revision-Date: 2018-10-08 06:48+0000\n"
-"Last-Translator: Quentin THEURET <odoo@kerpeo.com>, 2018\n"
+"PO-Revision-Date: 2018-08-24 09:35+0000\n"
+"Last-Translator: Richard Mathot <rim@odoo.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -726,6 +727,11 @@ msgid "Bank Name"
 msgstr "Nom de la banque"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address
+msgid "Be aware!"
+msgstr ""
+
+#. module: website_sale
 #: model:res.country.group,name:website_sale.benelux
 msgid "BeNeLux"
 msgstr "Bénélux"
@@ -1390,6 +1396,19 @@ msgid "It is forbidden to modify a sales order which is not in draft status."
 msgstr ""
 "Il est interdit de modifier un bon de commande qui n'est pas en l'étape "
 "Brouillon. "
+
+#. module: website_sale
+#: code:addons/website_sale/models/sale_order.py:184
+#, python-format
+msgid "The given product does not exist therefore it cannot be added to cart."
+msgstr ""
+
+#. module: website_sale
+#: code:addons/website_sale/models/sale_order.py:198
+#, python-format
+msgid ""
+"The given combination does not exist therefore it cannot be added to cart."
+msgstr ""
 
 #. module: website_sale
 #: selection:res.company,website_sale_onboarding_payment_acquirer_state:0
@@ -2724,6 +2743,13 @@ msgstr ""
 "prix et les règles de calcul depuis les listes de prix."
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address
+msgid ""
+"You are editing your <b>billing and shipping</b> addresses at the same time!<br/>\n"
+"                                            If you want to modify your shipping address, create a"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.sale_report_action_carts
 #: model_terms:ir.actions.act_window,help:website_sale.sale_report_action_dashboard
 msgid "You don't have any order from the website"
@@ -2863,6 +2889,11 @@ msgstr "kg"
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "ml-2"
 msgstr "ml-2"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address
+msgid "new address"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products

@@ -25,7 +25,7 @@
         <field name="arch" type="xml">
             <xpath expr="//group[@name='main_group']" position="after">
                 <group>
-                    <field name="sale_order_ids" widget="many2many" readonly="True">
+                    <field name="sale_order_ids" widget="many2many" readonly="True" attrs="{'invisible': [('sale_order_ids', '=', [])]}">
                         <tree>
                             <field name="name"/>
                             <field name="partner_id"/>

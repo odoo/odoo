@@ -34,34 +34,48 @@
     background-position: bottom center;
     background-repeat: no-repeat;
     min-height: 620px;
+
+    .table {
+        border-top: 1px solid gray('300');
+    }
+
+    .table td, .table th {
+        border-top: none;
+    }
     thead tr th, h2 {
         color: $o-brand-odoo;
     }
     tbody {
         color: gray('700');
-        tr:nth-child(odd) {
-            background-color: rgba(220, 205, 216, 0.2);
-        }
-        tr td {
-            border-top: none;
+        tr {
+            &:nth-child(odd) {
+                background-color: rgba(220, 205, 216, 0.2);
+            }
+            &.o_line_section {
+                color: $o-brand-odoo;
+                background-color: rgba(73, 80, 87, 0.2) !important;
+            }
         }
     }
     /*Total table*/
-    .row > .col-4 > table {
-        tr:nth-child(odd) {
-            background-color: transparent !important;
-        }
-        tr:first-child td {
-            /*we could get rid of this rule if .border-black td would be terminated in report.scss*/
-            border-top: none !important;
-        }
-        tr:last-child td {
-            color: $o-brand-odoo;
-        }
-    }
-    #total {
-        table tr:last-child td {
-            border-bottom: 1px solid black;
+    /* row div rule compat 12.0 */
+    .row > div > table,
+    div#total table {
+        tr {
+            &:nth-child(odd) {
+                background-color: transparent !important;
+            }
+            /* first-child & last-child rule compat 12.0 */
+            &:first-child,
+            &:last-child,
+            &.o_subtotal,
+            &.o_total {
+                border-top: none !important;
+                td {
+                    color: $o-brand-odoo;
+                    border-top: 1px solid gray('400') !important;
+                }
+            }
         }
     }
 }

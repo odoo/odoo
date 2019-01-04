@@ -189,6 +189,27 @@ var Mailbox = SearchableThread.extend({
             throw (_.str(_t("Missing domain for mailbox with ID '%s'"), this._id));
         }
     },
+    /**
+     * Post a message from inbox. This is used when using the 'reply' feature
+     * on a message that is linked to a document thread.
+     *
+     * @override
+     * @private
+     * @param {Object} messageData
+     * @param {Object} options
+     * @param {integer} options.documentID
+     * @param {string} options.documentModel
+     * @returns {$.Promise}
+     */
+    _postMessage: function (messageData, options) {
+        var documentThread = this.call(
+            'mail_service',
+            'getDocumentThread',
+            options.documentModel,
+            options.documentID
+        );
+        return documentThread.postMessage(messageData);
+    },
 });
 
 return Mailbox;

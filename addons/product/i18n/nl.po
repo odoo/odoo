@@ -6,15 +6,15 @@
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2018
 # Thomas Pot <thomas@open2bizz.nl>, 2018
 # Cas Vissers <casvissers@brahoo.nl>, 2018
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2018
 # Martin Trigaux, 2018
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2018
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2018
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 06:49+0000\n"
+"POT-Creation-Date: 2018-12-19 08:21+0000\n"
 "PO-Revision-Date: 2018-08-24 09:23+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2018\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
@@ -87,11 +87,6 @@ msgstr ""
 "<span attrs=\"{'invisible':[('base', '!=', 'list_price')]}\">Verkoopprijs - </span>\n"
 "<span attrs=\"{'invisible':[('base', '!=', 'standard_price')]}\">Kostprijs - </span>\n"
 "<span attrs=\"{'invisible':[('base', '!=', 'pricelist')]}\">Andere prijslijst - </span>"
-
-#. module: product
-#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
-msgid "<span class=\"o_form_label\">New Price =</span>"
-msgstr "<span class=\"o_form_label\">Nieuwe prijs =</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_category_form_view
@@ -2181,6 +2176,16 @@ msgstr ""
 "modus *Varianten aanmaken*."
 
 #. module: product
+#: code:addons/product/models/product_attribute.py:46
+#, python-format
+msgid ""
+"You are trying to change the type of an attribute value still referenced on "
+"at least one product template: %s"
+msgstr ""
+"U probeert het type van een kenmerkwaarde te wijzigen waarnaar nog steeds "
+"wordt verwezen op ten minste één productsjabloon: %s"
+
+#. module: product
 #: code:addons/product/models/product_attribute.py:56
 #, python-format
 msgid ""
@@ -2398,6 +2403,11 @@ msgstr "Aantal ongelezen berichten"
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_sale_pricelist
 msgid "Use pricelists to adapt your price per customers"
 msgstr "Gebruik prijslijsten voor klantspecifieke prijzen"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
+msgid "Valid"
+msgstr "Geldig"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
@@ -2690,6 +2700,11 @@ msgid "e.g. USD Retailers"
 msgstr "bijv. USD handelaren"
 
 #. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
+msgid "from"
+msgstr "van"
+
+#. module: product
 #: model:product.product,weight_uom_name:product.consu_delivery_01
 #: model:product.product,weight_uom_name:product.consu_delivery_02
 #: model:product.product,weight_uom_name:product.consu_delivery_03
@@ -2784,3 +2799,8 @@ msgstr "het productsjabloon"
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 msgid "to"
 msgstr "t/m"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
+msgid "until"
+msgstr "tot"

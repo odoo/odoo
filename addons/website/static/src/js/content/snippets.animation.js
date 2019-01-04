@@ -7,6 +7,7 @@ odoo.define('website.content.snippets.animation', function (require) {
 
 var Class = require('web.Class');
 var core = require('web.core');
+var dom = require('web.dom');
 var mixins = require('web.mixins');
 var utils = require('web.utils');
 var Widget = require('web.Widget');
@@ -256,6 +257,29 @@ var Animation = Widget.extend({
      */
     selector: false,
     /**
+     * Extension of @see Widget.events
+     *
+     * A description of the event handlers to bind/delegate once the widget
+     * has been rendered::
+     *
+     *   'click .hello .world': 'async _onHelloWorldClick',
+     *     _^_      _^_           _^_        _^_
+     *      |        |             |          |
+     *      |  (Optional) jQuery   |  Handler method name
+     *      |  delegate selector   |
+     *      |                      |_ (Optional) space separated options
+     *      |                          * async: use the automatic system
+     *      |_ Event name with           making handlers promise-ready (see
+     *         potential jQuery          makeButtonHandler, makeAsyncHandler)
+     *         namespaces
+     *
+     * Note: the values may be replaced by a function declaration. This is
+     * however a deprecated behavior.
+     *
+     * @type {Object}
+     */
+    events: {},
+    /**
      * Acts as @see Widget.events except that the events are only binded if the
      * Animation instance is instanciated in edit mode.
      */
@@ -371,6 +395,54 @@ var Animation = Widget.extend({
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * @see this.events
+     * @override
+     */
+    _delegateEvents: function () {
+        var self = this;
+        var originalEvents = this.events;
+
+        var events = {};
+        _.each(this.events, function (method, event) {
+            // If the method is a function, use the default Widget system
+            if (typeof method !== 'string') {
+                events[event] = method;
+                return;
+            }
+            // If the method is only a function name without options, use the
+            // default Widget system
+            var methodOptions = method.split(' ');
+            if (methodOptions.length <= 1) {
+                events[event] = method;
+                return;
+            }
+            // If the method has no meaningful options, use the default Widget
+            // system
+            var isAsync = _.contains(methodOptions, 'async');
+            if (!isAsync) {
+                events[event] = method;
+                return;
+            }
+
+            method = self.proxy(methodOptions[methodOptions.length - 1]);
+            if (_.str.startsWith(event, 'click')) {
+                // Protect click handler to be called multiple times by
+                // mistake by the user and add a visual disabling effect
+                // for buttons.
+                method = dom.makeButtonHandler(method);
+            } else {
+                // Protect all handlers to be recalled while the previous
+                // async handler call is not finished.
+                method = dom.makeAsyncHandler(method);
+            }
+            events[event] = method;
+        });
+
+        this.events = events;
+        this._super.apply(this, arguments);
+        this.events = originalEvents;
+    },
     /**
      * Registers `AnimationEffect` instances.
      *

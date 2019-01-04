@@ -25,6 +25,14 @@ class TestOdoobot(BaseFunctionalTest, MockEmails, TestRecipients):
         self.test_record_employe = self.test_record.sudo(self.user_employee)
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_fetch_listener(self):
+        channel = self.env['mail.channel'].sudo(self.user_employee).init_odoobot()
+        partners = self.env['mail.channel'].channel_fetch_listeners(channel.uuid)
+        odoobot = self.env.ref("base.partner_root")
+        odoobot_in_fetch_listeners = [partner for partner in partners if partner['id'] == odoobot.id]
+        self.assertEqual(len(odoobot_in_fetch_listeners), 1, 'odoobot should appear only once in channel_fetch_listeners')
+
+    @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_odoobot_ping(self):
         kwargs = self.message_post_default_kwargs.copy()
         kwargs.update({'body': self.odoobot_ping_body, 'partner_ids': [self.odoobot.id, self.user_admin.partner_id.id]})

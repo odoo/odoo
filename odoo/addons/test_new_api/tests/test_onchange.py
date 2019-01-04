@@ -1,4 +1,8 @@
 # -*- coding: utf-8 -*-
+try:
+    from unittest.mock import patch
+except ImportError:
+    from mock import patch
 
 from odoo.tests import common
 
@@ -145,10 +149,17 @@ class TestOnChange(common.TransactionCase):
             (5,),
             (1, message1.id, {
                 'name': "[%s] %s" % ("Foo", USER.name),
+                'body': "ABC",
+                'author': USER.name_get()[0],
+                'size': 3,
+                'important': False,
             }),
             (1, message2.id, {
                 'name': "[%s] %s" % ("Foo", USER.name),
                 'body': "XYZ",          # this must be sent back
+                'author': USER.name_get()[0],
+                'size': 3,
+                'important': False,
             }),
             (0, 0, {
                 'name': "[%s] %s" % ("Foo", USER.name),
@@ -258,11 +269,16 @@ class TestOnChange(common.TransactionCase):
             'name': partner2.name,
             'lines': [
                 (5,),
-                (1, line1.id, {'name': partner2.name,
-                               'partner': (partner2.id, partner2.name)}),
-                (0, 0, {'name': partner2.name,
-                        'partner': (partner2.id, partner2.name),
-                        'tags': [(5,)]}),
+                (1, line1.id, {
+                    'name': partner2.name,
+                    'partner': (partner2.id, partner2.name),
+                    'tags': [(5,)],
+                }),
+                (0, 0, {
+                    'name': partner2.name,
+                    'partner': (partner2.id, partner2.name),
+                    'tags': [(5,)],
+                }),
             ],
         })
 
@@ -282,11 +298,16 @@ class TestOnChange(common.TransactionCase):
             'name': partner2.name,
             'lines': [
                 (5,),
-                (1, line1.id, {'name': partner2.name,
-                               'partner': (partner2.id, partner2.name)}),
-                (0, 0, {'name': partner2.name,
-                        'partner': (partner2.id, partner2.name),
-                        'tags': [(5,), (0, 0, {'name': 'Tag'})]}),
+                (1, line1.id, {
+                    'name': partner2.name,
+                    'partner': (partner2.id, partner2.name),
+                    'tags': [(5,)],
+                }),
+                (0, 0, {
+                    'name': partner2.name,
+                    'partner': (partner2.id, partner2.name),
+                    'tags': [(5,), (0, 0, {'name': 'Tag'})],
+                }),
             ],
         }
         self.assertEqual(result['value'], expected_value)
@@ -435,7 +456,14 @@ class TestOnChange(common.TransactionCase):
 
         self.assertEqual(
             result['value']['important_emails'],
-            [(5,), (1, email.id, {'name': u'[Foo Bar] %s' % USER.name})],
+            [(5,), (1, email.id, {
+                'name': u'[Foo Bar] %s' % USER.name,
+                'body': BODY,
+                'author': USER.name_get()[0],
+                'size': len(BODY),
+                'important': True,
+                'email_to': demo.email,
+            })],
         )
 
     def test_onchange_related(self):
@@ -466,3 +494,32 @@ class TestOnChange(common.TransactionCase):
         result = Message.onchange(value, ['message', 'message_name', 'message_currency'], field_onchange)
 
         self.assertEqual(result['value'], onchange_result)
+
+    def test_onchange_many2one_one2many(self):
+        """ Setting a many2one field should not read the inverse one2many. """
+        discussion = self.env.ref('test_new_api.discussion_0')
+        field_onchange = self.Message._onchange_spec()
+        self.assertEqual(field_onchange.get('discussion'), '1')
+
+        values = {
+            'discussion': discussion.id,
+            'name': "[%s] %s" % ('', self.env.user.name),
+            'body': False,
+            'author': self.env.uid,
+            'size': 0,
+        }
+
+        called = [False]
+        orig_read = type(discussion).read
+
+        def mock_read(self, fields=None, load='_classic_read'):
+            if discussion in self and 'messages' in (fields or ()):
+                called[0] = True
+            return orig_read(self, fields, load)
+
+        # changing 'discussion' on message should not read 'messages' on discussion
+        with patch.object(type(discussion), 'read', mock_read, create=True):
+            self.env.cache.invalidate()
+            self.Message.onchange(values, 'discussion', field_onchange)
+
+        self.assertFalse(called[0], "discussion.messages has been read")

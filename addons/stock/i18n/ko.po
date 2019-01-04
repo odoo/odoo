@@ -3,6 +3,7 @@
 # * stock
 # 
 # Translators:
+# nle_odoo, 2018
 # 경민기 <moonend@gmail.com>, 2018
 # Goh Gangtai <gangtai.goh@gmail.com>, 2018
 # Linda Stockelova <stockeloval@btlnet.com>, 2018
@@ -17,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-24 09:34+0000\n"
+"POT-Creation-Date: 2018-12-19 08:20+0000\n"
 "PO-Revision-Date: 2018-08-24 09:25+0000\n"
 "Last-Translator: Linkup <link-up@naver.com>, 2018\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
@@ -1057,6 +1058,7 @@ msgstr "컨텐츠"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_replenish__product_uom_category_id
+#: model:ir.model.fields,help:stock.field_stock_inventory_line__product_uom_category_id
 msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
@@ -1353,7 +1355,7 @@ msgstr "고객"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_dhl
-msgid "DHL USA"
+msgid "DHL Connector"
 msgstr ""
 
 #. module: stock
@@ -1803,7 +1805,7 @@ msgstr "임시 이동"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_easypost
-msgid "Easypost"
+msgid "Easypost Connector"
 msgstr ""
 
 #. module: stock
@@ -1875,8 +1877,8 @@ msgstr "FIFO, LIFO..."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_fedex
-msgid "FedEx"
-msgstr "FedEx"
+msgid "FedEx Connector"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_destination__filtered_location
@@ -2638,14 +2640,14 @@ msgstr "완료 된 수량 편집이 가능합니까"
 #, python-format
 msgid ""
 "It is not possible to reserve more products of %s than you have in stock."
-msgstr "% s의 상품을 재고보다 더 보유 할 수 없습니다."
+msgstr "%s 의 상품을 재고보다 더 보유 할 수 없습니다."
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:266
 #, python-format
 msgid ""
 "It is not possible to unreserve more products of %s than you have in stock."
-msgstr "% s의 더 많은 제품을 재고보다 확보 할 수 없습니다."
+msgstr "%s의 더 많은 제품을 재고보다 확보 할 수 없습니다."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__product_packaging
@@ -4792,7 +4794,7 @@ msgstr ""
 #: code:addons/stock/wizard/stock_picking_return.py:103
 #, python-format
 msgid "Return of %s"
-msgstr "% s의 반품"
+msgstr "%s의 반품"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_picking_return.py:153
@@ -6111,13 +6113,13 @@ msgstr "작업 유형"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_ups
-msgid "UPS"
-msgstr "UPS"
+msgid "UPS Connector"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_usps
-msgid "USPS"
-msgstr "USPS"
+msgid "USPS Connector"
+msgstr ""
 
 #. module: stock
 #. openerp-web
@@ -6245,6 +6247,11 @@ msgstr "단위"
 #: model:ir.ui.menu,name:stock.menu_stock_uom_categ_form_action
 msgid "UoM Categories"
 msgstr "단위 범주"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_inventory_line__product_uom_category_id
+msgid "Uom category"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_change_product_quantity
@@ -6917,8 +6924,8 @@ msgstr "_취소"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_bpost
-msgid "bpost"
-msgstr "bpost"
+msgid "bpost Connector"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form

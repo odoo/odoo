@@ -7,14 +7,15 @@
 # Martin Trigaux, 2018
 # Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2018
 # Onii Onii <onii0223@yahoo.com>, 2018
+# Batzul B <batzul.active@gmail.com>, 2018
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 06:49+0000\n"
+"POT-Creation-Date: 2018-12-19 08:21+0000\n"
 "PO-Revision-Date: 2018-08-24 09:23+0000\n"
-"Last-Translator: Onii Onii <onii0223@yahoo.com>, 2018\n"
+"Last-Translator: Batzul B <batzul.active@gmail.com>, 2018\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -85,11 +86,6 @@ msgstr ""
 "<span attrs=\"{'invisible':[('base', '!=', 'list_price')]}\">Нийтийн Үнэ  -  </span>\n"
 "                            <span attrs=\"{'invisible':[('base', '!=', 'standard_price')]}\">Өртөг  -  </span>\n"
 "                            <span attrs=\"{'invisible':[('base', '!=', 'pricelist')]}\">Бусад үнийн хүснэгт  -  </span>"
-
-#. module: product
-#: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
-msgid "<span class=\"o_form_label\">New Price =</span>"
-msgstr ""
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_category_form_view
@@ -2145,6 +2141,14 @@ msgid ""
 msgstr ""
 
 #. module: product
+#: code:addons/product/models/product_attribute.py:46
+#, python-format
+msgid ""
+"You are trying to change the type of an attribute value still referenced on "
+"at least one product template: %s"
+msgstr ""
+
+#. module: product
 #: code:addons/product/models/product_attribute.py:56
 #, python-format
 msgid ""
@@ -2358,6 +2362,11 @@ msgstr "Уншаагүй зурвасын тоолуур"
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_sale_pricelist
 msgid "Use pricelists to adapt your price per customers"
 msgstr "Үнийн хүснэгтийг ашиглан захиалгчидаар үнийг тохируулж болно"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
+msgid "Valid"
+msgstr ""
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
@@ -2638,6 +2647,11 @@ msgid "e.g. USD Retailers"
 msgstr "ж.нь. USD Жижиглэн борлуулагчууд"
 
 #. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
+msgid "from"
+msgstr "хаанаас"
+
+#. module: product
 #: model:product.product,weight_uom_name:product.consu_delivery_01
 #: model:product.product,weight_uom_name:product.consu_delivery_02
 #: model:product.product,weight_uom_name:product.consu_delivery_03
@@ -2732,3 +2746,8 @@ msgstr "барааны үлгэр"
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 msgid "to"
 msgstr "-"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_template_form_view
+msgid "until"
+msgstr ""

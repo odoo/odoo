@@ -3,26 +3,30 @@
 # * website_event
 # 
 # Translators:
-# digitouch UAB <digitouchagencyeur@gmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
-# Audrius Palenskis <audrius.palenskis@gmail.com>, 2017
-# Antanas Muliuolis <an.muliuolis@gmail.com>, 2017
-# Šarūnas Ažna <sarunas.azna@gmail.com>, 2017
-# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2017
-# Rolandas <info@paninfo.lt>, 2017
+# Martin Trigaux, 2018
+# Arminas Grigonis <arminas@versada.lt>, 2018
+# Anatolij, 2018
+# Silvija Butko <silvija.butko@gmail.com>, 2018
+# Audrius Palenskis <audrius.palenskis@gmail.com>, 2018
+# Rolandas <info@paninfo.lt>, 2018
+# Šarūnas Ažna <sarunas.azna@gmail.com>, 2018
+# Antanas Muliuolis <an.muliuolis@gmail.com>, 2018
+# digitouch UAB <digitouchagencyeur@gmail.com>, 2018
+# Linas Versada <linaskrisiukenas@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:54+0000\n"
-"PO-Revision-Date: 2017-09-20 09:54+0000\n"
-"Last-Translator: Rolandas <info@paninfo.lt>, 2017\n"
+"POT-Creation-Date: 2018-10-02 10:07+0000\n"
+"PO-Revision-Date: 2018-08-24 09:34+0000\n"
+"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2018\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: lt\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
@@ -30,24 +34,31 @@ msgid "(Free)"
 msgstr "(Nemokama)"
 
 #. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.brand_promotion
+msgid ""
+".\n"
+"            Try the"
+msgstr ""
+
+#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
 msgid "<b>End of Registration</b>"
-msgstr ""
+msgstr "<b>Registracijos pabaiga</b>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
 msgid "<b>Price</b>"
-msgstr ""
+msgstr "<b>Kaina</b>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
 msgid "<b>Quantity</b>"
-msgstr ""
+msgstr "<b>Kiekis</b>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
 msgid "<b>Ticket Type</b>"
-msgstr ""
+msgstr "<b>Bilieto tipas</b>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.country_events_list
@@ -61,7 +72,14 @@ msgid ""
 "                    <i class=\"fa fa-clock-o\"/> To"
 msgstr ""
 "<br/>\n"
-"                    <i class=\"fa fa-clock-o\"/> Kam"
+"                    <i class=\"fa fa-clock-o\"/> Iki"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.registration_template
+msgid ""
+"<em><i class=\"fa fa-plus-circle\" role=\"img\" aria-label=\"Create\" title=\"Create\"/>\n"
+"                    Configure and Launch Event Registration</em>"
+msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
@@ -69,17 +87,27 @@ msgid "<i class=\"fa fa-clock-o\"/> From"
 msgstr "<i class=\"fa fa-clock-o\"/> Nuo"
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.registration_template
+#: model_terms:ir.ui.view,arch_db:website_event.event_right_country_event
 msgid ""
-"<i class=\"fa fa-plus-circle\"/>\n"
-"                    <em>Configure and Launch Event Registration</em>"
+"<i class=\"fa fa-flag fa-5x\"/>\n"
+"                            Events from Your Country"
+msgstr ""
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.registration_complete
+msgid "<i class=\"fa fa-fw fa-arrow-right\"/>Add to Google Calendar"
+msgstr ""
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.registration_complete
+msgid "<i class=\"fa fa-fw fa-arrow-right\"/>Add to iCal/Outlook"
 msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index
 #: model_terms:ir.ui.view,arch_db:website_event.registration_complete
 msgid "<i>to</i>"
-msgstr "<i>kam</i>"
+msgstr "<i>iki</i>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_right_quotes
@@ -98,11 +126,14 @@ msgid ""
 "                        Sold Out\n"
 "                    </span>"
 msgstr ""
+"<span itemprop=\"availability\" content=\"http://schema.org/SoldOut\">\n"
+"                        Išparduota\n"
+"                    </span>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
 msgid "<span itemprop=\"name\">Event Registration</span>"
-msgstr ""
+msgstr "<span itemprop=\"name\">Įvykio registracija</span>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
@@ -111,11 +142,14 @@ msgid ""
 "                        Free\n"
 "                    </span>"
 msgstr ""
+"<span itemprop=\"price\" content=\"0\">\n"
+"                        Nemokamas\n"
+"                    </span>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_location
 msgid "<span>Online Events</span>"
-msgstr ""
+msgstr "<span>Įvykiai internetu</span>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
@@ -140,7 +174,7 @@ msgstr "<strong>Vardas</strong>"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 msgid "<strong>Participate on Twitter</strong>"
-msgstr "<strong>Dalyvauti Twitteryje</strong>"
+msgstr "<strong>Diskutuoti \"Twitter\"</strong>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
@@ -151,7 +185,7 @@ msgstr ""
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.ticket
 msgid "<strong>Ticket Type:</strong>"
-msgstr ""
+msgstr "<strong>Bilieto tipas:</strong>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
@@ -159,13 +193,13 @@ msgid "<strong>Use this tag:</strong>"
 msgstr "<strong>Naudokite šią žymą:</strong>"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:96
+#: code:addons/website_event/controllers/main.py:101
 #, python-format
 msgid "All Categories"
 msgstr "Visos kategorijos"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:103
+#: code:addons/website_event/controllers/main.py:108
 #, python-format
 msgid "All Countries"
 msgstr "Visos šalys"
@@ -178,7 +212,7 @@ msgstr "Visi įvykiai"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.res_config_settings_view_form
 msgid "Ask questions to attendees when registering online"
-msgstr ""
+msgstr "Klausti dalyvių klausimu, kai jie registruojasi internetu"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
@@ -196,13 +230,15 @@ msgid ""
 "Check this option to have menus for your event on the\n"
 "                                website: registrations, schedule, map, ..."
 msgstr ""
+"Pažymėkite šį pasirinkimą, jei norite turėti įvykio meniu\n"
+"savo svetainėje: registracijos, dienotvarkė, žemėlapis, ..."
 
 #. module: website_event
 #. openerp-web
 #: code:addons/website_event/static/src/js/website.tour.event.js:24
 #, python-format
 msgid "Click <em>Continue</em> to create the event."
-msgstr "Spausti <em>Tęsti</em>sukurti įvykį."
+msgstr "Norėdami sukurti įvykį, spauskite <em>Tęsti</em>"
 
 #. module: website_event
 #. openerp-web
@@ -216,7 +252,7 @@ msgstr "Paspauskite čia, norėdami sukurti naują įvykį."
 #: code:addons/website_event/static/src/js/website.tour.event.js:43
 #, python-format
 msgid "Click here to customize your event further."
-msgstr ""
+msgstr "Paspauskite čia norėdami konfigūruoti savo įvykį dar detaliau."
 
 #. module: website_event
 #. openerp-web
@@ -224,6 +260,11 @@ msgstr ""
 #, python-format
 msgid "Click to publish your event."
 msgstr "Paspauskite čia, norėdami publikuoti savo įvykį."
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
+msgid "Close"
+msgstr "Uždaryti"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
@@ -238,42 +279,39 @@ msgid ""
 "Create a name for your new event and click <em>\"Continue\"</em>. e.g: "
 "Technical Training"
 msgstr ""
-"Sukurkite vardą savo įvykiui ir paspauskite <em>\"Tęsti\"</em>. pvz: "
-"Techniniai mokymai"
+"Sukurkite pavadinimą savo naujam įvykiui ir spauskite <em>\"Tęsti\"</em>. "
+"Pvz.: Techniniai mokymai"
 
 #. module: website_event
-#: model:ir.model.fields,help:website_event.field_event_event_website_menu
+#: model:ir.model.fields,help:website_event.field_event_event__website_menu
 msgid ""
 "Creates menus Introduction, Location and Register on the page  of the event "
 "on the website."
 msgstr ""
+"Įvykio puslapyje svetainėje sukuria meniu punktus: Įžanga, Vieta, "
+"Registracija"
 
 #. module: website_event
-#: model:ir.model.fields,field_description:website_event.field_event_event_website_menu
+#: model:ir.model.fields,field_description:website_event.field_event_event__website_menu
 msgid "Dedicated Menu"
-msgstr ""
+msgstr "Skirtas meniu"
 
 #. module: website_event
-#: model:ir.model.fields,field_description:website_event.field_event_type_website_menu
+#: model:ir.model.fields,field_description:website_event.field_event_type__website_menu
 msgid "Display a dedicated menu on Website"
-msgstr ""
+msgstr "Rodyti priskirtąjį meniu svetainėje"
 
 #. module: website_event
 #. openerp-web
 #: code:addons/website_event/static/src/js/website.tour.event.js:28
 #, python-format
 msgid "Drag this block and drop it in your page."
-msgstr "Vilkite šį bloką ir numeskite jį į savo puslapį."
+msgstr "Tempkite šį bloką į įkelkite jį į savo puslapį."
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_complete
 msgid "E-mail"
 msgstr "El. paštas"
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form_inherit_website
-msgid "Edit Badges"
-msgstr "Redaguoti pažymėjimus"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.ticket
@@ -306,9 +344,16 @@ msgid "Event Location"
 msgstr "Įvykio vieta"
 
 #. module: website_event
-#: model:ir.model.fields,field_description:website_event.field_event_event_menu_id
+#: model:ir.model.fields,field_description:website_event.field_event_event__menu_id
 msgid "Event Menu"
 msgstr "Įvykio meniu"
+
+#. module: website_event
+#. openerp-web
+#: code:addons/website_event/static/src/js/website_event.editor.js:31
+#, python-format
+msgid "Event Name"
+msgstr "Įvykio pavadinimas"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.404
@@ -324,12 +369,12 @@ msgstr "Įvykis publikuotas"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
 msgid "Event registration is closed."
-msgstr "Registracija į įvykį baigta."
+msgstr "Įvykio registracija yra uždaryta."
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
 msgid "Event registration not yet started."
-msgstr "Registracija į įvyki dar neprasidėjo."
+msgstr "Įvykio registracija dar neprasidėjo."
 
 #. module: website_event
 #: model:mail.message.subtype,description:website_event.mt_event_unpublished
@@ -338,20 +383,14 @@ msgid "Event unpublished"
 msgstr "Įvykis nepublikuotas"
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.header_footer_custom
 #: model:website.menu,name:website_event.menu_events
 msgid "Events"
 msgstr "Įvykiai"
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.event_right_country_event
-msgid "Events from Your Country"
-msgstr "Įvykiai iš Jūsų šalies"
-
-#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.country_events
 msgid "Events in visitor's country"
-msgstr ""
+msgstr "Įvykiai lankytojo šalyje"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.country_events_list
@@ -364,24 +403,32 @@ msgid ""
 "Find out what people see and say about this event,\n"
 "                            and join the conversation."
 msgstr ""
-"Sužinokite, ką žmonės apie šį įvykį kalba,\n"
+"Sužinokite, ką žmonės kalba apie šį įvykį,\n"
 "                            ir prisijunkite prie pokalbio."
 
 #. module: website_event
-#: code:addons/website_event/models/event.py:54
-#: code:addons/website_event/models/event.py:61
-#, python-format
-msgid "Introduction"
-msgstr "Įvadas"
+#: model_terms:ir.ui.view,arch_db:website_event.event_description_full
+msgid "Google Maps"
+msgstr "Google Maps"
 
 #. module: website_event
-#: model:ir.model.fields,field_description:website_event.field_event_event_is_participating
+#: code:addons/website_event/models/event.py:70
+#, python-format
+msgid "Introduction"
+msgstr "Įžanga"
+
+#. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_event__is_participating
 msgid "Is Participating"
 msgstr "Dalyvauja"
 
 #. module: website_event
-#: code:addons/website_event/models/event.py:54
-#: code:addons/website_event/models/event.py:62
+#: model:ir.model.fields,field_description:website_event.field_event_event__is_published
+msgid "Is published"
+msgstr ""
+
+#. module: website_event
+#: code:addons/website_event/models/event.py:71
 #, python-format
 msgid "Location"
 msgstr "Vieta"
@@ -389,7 +436,7 @@ msgstr "Vieta"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_complete
 msgid "N/A"
-msgstr "N/A"
+msgstr "nėra"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_complete
@@ -398,30 +445,35 @@ msgstr "Pavadinimas"
 
 #. module: website_event
 #. openerp-web
-#: code:addons/website_event/controllers/main.py:183
-#: code:addons/website_event/static/src/js/website_event.editor.js:29
-#: model_terms:ir.ui.view,arch_db:website_event.content_new_event
+#: code:addons/website_event/controllers/main.py:200
+#: code:addons/website_event/static/src/js/website_event.editor.js:30
 #, python-format
 msgid "New Event"
 msgstr "Naujas įvykis"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:34
+#: code:addons/website_event/controllers/main.py:39
 #, python-format
 msgid "Next Events"
 msgstr "Kiti įvykiai"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:43
+#: code:addons/website_event/controllers/main.py:48
 #, python-format
 msgid "Next Week"
 msgstr "Kita savaitė"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:51
+#: code:addons/website_event/controllers/main.py:56
 #, python-format
 msgid "Next month"
 msgstr "Kitas mėnuo"
+
+#. module: website_event
+#: code:addons/website_event/models/event.py:150
+#, python-format
+msgid "No date has been specified for the event, no file will be generated."
+msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index
@@ -429,27 +481,26 @@ msgid "No event found"
 msgstr "Įvykių nerasta"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:55
-#, python-format
-msgid "Old Events"
-msgstr "Seni įvykiai"
+#: model_terms:ir.ui.view,arch_db:website_event.brand_promotion
+msgid "Odoo"
+msgstr "Odoo"
 
 #. module: website_event
 #. openerp-web
 #: code:addons/website_event/static/src/js/website.tour.event.js:33
 #, python-format
 msgid "Once you click on save, your event is updated."
-msgstr "Kai paspaudžiate išsaugoti, Jūsų įvykis atnaujinamas."
+msgstr "Kai paspausite \"Atnaujinti\", jūsų įvykis bus atnaujintas."
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index
 msgid "Online"
-msgstr "Prisijungta"
+msgstr "Prisijungęs"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index
 msgid "Organized by:"
-msgstr "Organizuota:"
+msgstr "Organizuoja:"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
@@ -473,6 +524,12 @@ msgid "Participating"
 msgstr "Dalyvauja"
 
 #. module: website_event
+#: code:addons/website_event/controllers/main.py:60
+#, python-format
+msgid "Past Events"
+msgstr ""
+
+#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_complete
 msgid "Phone"
 msgstr "Telefonas"
@@ -483,9 +540,26 @@ msgid "Photos of Past Events"
 msgstr "Praėjusių įvykių nuotraukos"
 
 #. module: website_event
+#. openerp-web
+#: code:addons/website_event/static/src/js/website_event.js:55
+#, python-format
+msgid "Please select at least one ticket."
+msgstr "Pasirinkite bent vieną bilietą."
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.brand_promotion
+msgid "Powered by"
+msgstr "Technologija"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form_inherit_website
+msgid "Preview Badges"
+msgstr "Peržiūrėti ženklelius"
+
+#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.ticket
 msgid "Price"
-msgstr "Suma"
+msgstr "Kaina"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.ticket
@@ -503,8 +577,7 @@ msgid "Reference"
 msgstr "Numeris"
 
 #. module: website_event
-#: code:addons/website_event/models/event.py:54
-#: code:addons/website_event/models/event.py:63
+#: code:addons/website_event/models/event.py:72
 #, python-format
 msgid "Register"
 msgstr "Registruotis"
@@ -517,7 +590,7 @@ msgstr "Registruotis dabar"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 msgid "Registration for this event is now closed"
-msgstr ""
+msgstr "Registracija į šį įvykį uždaryta"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.404
@@ -537,7 +610,7 @@ msgstr "Peržiūrėti visus artėjančius įvykius"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 msgid "Social Stream"
-msgstr ""
+msgstr "Socialinių tinklų"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.404
@@ -545,13 +618,13 @@ msgid "Sorry, the requested event is not available anymore."
 msgstr "Atsiprašome, pasirinktas įvykis jau nebepasiekiamas."
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:39
+#: code:addons/website_event/controllers/main.py:44
 #, python-format
 msgid "This Week"
-msgstr "Šia Savaitę"
+msgstr "Ši savaitė"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:47
+#: code:addons/website_event/controllers/main.py:52
 #, python-format
 msgid "This month"
 msgstr "Šį mėnesį"
@@ -562,7 +635,7 @@ msgid "Ticket Type #"
 msgstr "Bilieto tipas #"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:35
+#: code:addons/website_event/controllers/main.py:40
 #, python-format
 msgid "Today"
 msgstr "Šiandien"
@@ -571,31 +644,28 @@ msgstr "Šiandien"
 #: model_terms:ir.ui.view,arch_db:website_event.index
 msgid "Use the top menu <i>'Content'</i> to create your first event."
 msgstr ""
-
-#. module: website_event
-#: model:ir.model.fields,field_description:website_event.field_event_event_website_published
-msgid "Visible in Website"
-msgstr "Prieinama tinklalapyje"
+"Norėdami sukurti savo pirmąjį įvykį, naudokite <i>\"Turinį\"</i> iš "
+"viršutinio meniu."
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 msgid "Visualize on Google Maps"
-msgstr ""
+msgstr "\"Google Maps\" vizualizacija"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_complete
 msgid "We are glad to confirm your registration to our event"
-msgstr ""
+msgstr "Džiaugiamės galėdami patvirtinti jūsų registraciją į mūsų renginį"
 
 #. module: website_event
 #: model:ir.actions.act_url,name:website_event.action_open_website
 msgid "Website Home"
-msgstr "Pagrindinis tinklalapio puslapis"
+msgstr "Svetainės namų puslapis"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form_inherit_website
 msgid "Website Menu"
-msgstr ""
+msgstr "Svetainės meniu"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
@@ -614,11 +684,19 @@ msgid ""
 "                        It gives confidence in your\n"
 "                        events."
 msgstr ""
+"Čia parašykite vieno iš dalyvių citatą.\n"
+"Tai suteikia pasitikėjimo jūsų\n"
+"renginiais."
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_complete
 msgid "Your registration"
 msgstr "Jūsų registracija"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.brand_promotion
+msgid "open source website builder"
+msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_details
@@ -628,4 +706,4 @@ msgstr "iki"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index
 msgid "unpublished"
-msgstr "nepublikuota"
+msgstr "nepaskelbta"

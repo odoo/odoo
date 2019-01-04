@@ -4,6 +4,7 @@ odoo.define('portal.chatter', function(require) {
 var base = require('web_editor.base');
 var ajax = require('web.ajax');
 var core = require('web.core');
+var dom = require('web.dom');
 var Widget = require('web.Widget');
 var rpc = require('web.rpc');
 var time = require('web.time');
@@ -21,7 +22,8 @@ var _t = core._t;
 var PortalChatter = Widget.extend({
     template: 'portal.chatter',
     events: {
-        "click .o_portal_chatter_pager_btn": '_onClickPager'
+        "click .o_portal_chatter_pager_btn": '_onClickPager',
+        'click .o_portal_chatter_composer_btn': '_onSubmitButtonClick',
     },
 
     init: function(parent, options){
@@ -43,6 +45,11 @@ var PortalChatter = Widget.extend({
         this.set('pager', {});
         this.set('domain', this.options['domain']);
         this._current_page = this.options['pager_start'];
+
+        // TODO simplify this using the 'async' keyword in the events
+        // property definition as soon as this widget is converted in
+        // frontend widget.
+        this._onSubmitButtonClick = dom.makeButtonHandler(this._onSubmitButtonClick);
     },
     willStart: function(){
         var self = this;
@@ -226,6 +233,12 @@ var PortalChatter = Widget.extend({
         ev.preventDefault();
         var page = $(ev.currentTarget).data('page');
         this._changeCurrentPage(page);
+    },
+    /**
+     * @private
+     */
+    _onSubmitButtonClick: function () {
+        return $.Deferred();
     },
 });
 

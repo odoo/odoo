@@ -64,7 +64,18 @@ class MailMail(models.Model):
         # notification field: if not set, set if mail comes from an existing mail.message
         if 'notification' not in values and values.get('mail_message_id'):
             values['notification'] = True
-        return super(MailMail, self).create(values)
+        new_mail = super(MailMail, self).create(values)
+        if values.get('attachment_ids'):
+            new_mail.attachment_ids.check(mode='read')
+        return new_mail
+
+    @api.multi
+    def write(self, vals):
+        res = super(MailMail, self).write(vals)
+        if vals.get('attachment_ids'):
+            for mail in self:
+                mail.attachment_ids.check(mode='read')
+        return res
 
     @api.multi
     def unlink(self):
