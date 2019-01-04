@@ -540,9 +540,10 @@ class SaleOrder(models.Model):
             self.force_quotation_send()
 
         # create an analytic account if at least an expense product
-        if any([expense_policy != 'no' for expense_policy in self.order_line.mapped('product_id.expense_policy')]):
-            if not self.analytic_account_id:
-                self._create_analytic_account()
+        for order in self:
+            if any([expense_policy != 'no' for expense_policy in order.order_line.mapped('product_id.expense_policy')]):
+                if not order.analytic_account_id:
+                    order._create_analytic_account()
 
         return True
 
