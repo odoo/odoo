@@ -30,6 +30,8 @@ $o-theme-color-palette: map-merge((
 }
 
 // Gray colors
+// Extend grays with transparent ones (for some reason, BS4 create black-50 and
+// white-50 but does not allow overridding that with variables).
 $o-gray-color-palette: nth($o-gray-color-palettes, $o-gray-color-palette-number) !default;
 $o-gray-color-palette: map-merge($o-transparent-grays, $o-gray-color-palette);
 @function palette-gray($key) {
