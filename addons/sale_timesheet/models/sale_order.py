@@ -280,16 +280,16 @@ class SaleOrderLine(models.Model):
             implied if so line of generated task has been modified, we may regenerate it.
         """
         so_line_task_global_project = self.filtered(lambda sol: sol.is_service and sol.product_id.service_tracking == 'task_global_project')
-        so_line_new_project = self.filtered(lambda sol: sol.is_service and sol.product_id.service_tracking in ['project_only', 'task_new_project'])
+        so_line_new_project = self.filtered(lambda sol: sol.is_service and sol.product_id.service_tracking in ['project_only', 'task_in_project'])
 
         # search so lines from SO of current so lines having their project generated, in order to check if the current one can
         # create its own project, or reuse the one of its order.
         map_so_project = {}
         if so_line_new_project:
             order_ids = self.mapped('order_id').ids
-            so_lines_with_project = self.search([('order_id', 'in', order_ids), ('project_id', '!=', False), ('product_id.service_tracking', 'in', ['project_only', 'task_new_project']), ('product_id.project_template_id', '=', False)])
+            so_lines_with_project = self.search([('order_id', 'in', order_ids), ('project_id', '!=', False), ('product_id.service_tracking', 'in', ['project_only', 'task_in_project']), ('product_id.project_template_id', '=', False)])
             map_so_project = {sol.order_id.id: sol.project_id for sol in so_lines_with_project}
-            so_lines_with_project_templates = self.search([('order_id', 'in', order_ids), ('project_id', '!=', False), ('product_id.service_tracking', 'in', ['project_only', 'task_new_project']), ('product_id.project_template_id', '!=', False)])
+            so_lines_with_project_templates = self.search([('order_id', 'in', order_ids), ('project_id', '!=', False), ('product_id.service_tracking', 'in', ['project_only', 'task_in_project']), ('product_id.project_template_id', '!=', False)])
             map_so_project_templates = {(sol.order_id.id, sol.product_id.project_template_id.id): sol.project_id for sol in so_lines_with_project_templates}
 
         # search the global project of current SO lines, in which create their task
@@ -311,7 +311,7 @@ class SaleOrderLine(models.Model):
                 if map_sol_project.get(so_line.id):
                     so_line._timesheet_create_task(project=map_sol_project[so_line.id])
 
-        # project_only, task_new_project: create a new project, based or not on a template (1 per SO). May be create a task too.
+        # project_only, task_in_project: create a new project, based or not on a template (1 per SO). May be create a task too.
         for so_line in so_line_new_project:
             project = so_line.project_id
             if not project and _can_create_project(so_line):
@@ -320,7 +320,7 @@ class SaleOrderLine(models.Model):
                     map_so_project_templates[(so_line.order_id.id, so_line.product_id.project_template_id.id)] = project
                 else:
                     map_so_project[so_line.order_id.id] = project
-            if so_line.product_id.service_tracking == 'task_new_project':
+            if so_line.product_id.service_tracking == 'task_in_project':
                 if not project:
                     if so_line.product_id.project_template_id:
                         project = map_so_project_templates[(so_line.order_id.id, so_line.product_id.project_template_id.id)]
