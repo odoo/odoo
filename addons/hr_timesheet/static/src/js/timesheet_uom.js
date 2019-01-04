@@ -85,6 +85,7 @@ var widgetName = 'timesheet_uom' in session ?
          session.timesheet_uom.timesheet_widget : 'float_factor';
 var FieldTimesheetUom = widgetName === 'float_toggle' ?
          FieldTimesheetToggle : (fieldRegistry.get(widgetName) || FieldTimesheetFactor);
+FieldTimesheetUom.prototype.description = "";
 
 fieldRegistry.add('timesheet_uom', FieldTimesheetUom);
 

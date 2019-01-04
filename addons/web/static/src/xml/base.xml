@@ -27,7 +27,13 @@
         </li>
         <li t-if="widget.attrs.widget" data-item="widget">
             <span class="oe_tooltip_technical_title">Widget:</span>
-            <t t-esc="widget.attrs.widget"/>
+            <t t-set="description" t-value="widget.attrs.Widget.prototype.description"/>
+            <t t-if="description">
+                <t t-esc="description"/> (<t t-esc="widget.attrs.widget"/>)
+            </t>
+            <t t-else="1">
+                <t t-esc="widget.attrs.widget"/>
+            </t>
         </li>
         <li t-if="widget.attrs.size || widget.field.size" data-item="size">
             <span class="oe_tooltip_technical_title">Size:</span>

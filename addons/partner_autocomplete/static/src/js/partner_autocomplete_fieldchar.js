@@ -16,6 +16,7 @@ var FieldChar = basic_fields.FieldChar;
  * "website" and "image" fields of records of this model).
  */
 var FieldAutocomplete = FieldChar.extend(AutocompleteMixin, {
+    description: "",
     className: 'o_field_partner_autocomplete',
     debounceSuggestions: 400,
     resetOnAnyFieldChange: true,

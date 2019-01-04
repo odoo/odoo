@@ -23,6 +23,7 @@ var field_utils = require('web.field_utils');
 
 var qweb = core.qweb;
 var _t = core._t;
+var _lt = core._lt;
 
 var TranslatableFieldMixin = {
     //--------------------------------------------------------------------------
@@ -406,6 +407,7 @@ var NumericField = InputField.extend({
 });
 
 var FieldChar = InputField.extend(TranslatableFieldMixin, {
+    description: _lt("Text"),
     className: 'o_field_char',
     tagName: 'span',
     supportedFieldTypes: ['char'],
@@ -485,6 +487,7 @@ var LinkButton = AbstractField.extend({
 });
 
 var FieldDate = InputField.extend({
+    description: _lt("Date"),
     className: "o_field_date",
     tagName: "span",
     supportedFieldTypes: ['date', 'datetime'],
@@ -600,6 +603,7 @@ var FieldDate = InputField.extend({
 });
 
 var FieldDateTime = FieldDate.extend({
+    description: _lt("Date & Time"),
     supportedFieldTypes: ['datetime'],
 
     /**
@@ -659,6 +663,7 @@ var FieldDateTime = FieldDate.extend({
 });
 
 var FieldMonetary = InputField.extend({
+    description: _lt("Monetary"),
     className: 'o_field_monetary o_field_number',
     tagName: 'span',
     supportedFieldTypes: ['float', 'monetary'],
@@ -771,6 +776,7 @@ var FieldMonetary = InputField.extend({
 
 var FieldBoolean = AbstractField.extend({
     className: 'o_field_boolean',
+    description: _lt("Checkbox"),
     events: _.extend({}, AbstractField.prototype.events, {
         change: '_onChange',
     }),
@@ -895,6 +901,7 @@ var FieldBoolean = AbstractField.extend({
 });
 
 var FieldInteger = NumericField.extend({
+    description: _lt("Integer"),
     className: 'o_field_integer o_field_number',
     supportedFieldTypes: ['integer'],
 
@@ -928,6 +935,7 @@ var FieldInteger = NumericField.extend({
 });
 
 var FieldFloat = NumericField.extend({
+    description: _lt("Decimal"),
     className: 'o_field_float o_field_number',
     supportedFieldTypes: ['float'],
 
@@ -946,6 +954,7 @@ var FieldFloat = NumericField.extend({
 });
 
 var FieldFloatTime = FieldFloat.extend({
+    description: _lt("Time"),
     // this is not strictly necessary, as for this widget to be used, the 'widget'
     // attrs must be set to 'float_time', so the formatType is automatically
     // 'float_time', but for the sake of clarity, we explicitely define a
@@ -959,6 +968,7 @@ var FieldFloatTime = FieldFloat.extend({
 });
 
 var FieldFloatFactor = FieldFloat.extend({
+    description: "",
     supportedFieldTypes: ['float'],
     className: 'o_field_float_factor',
     formatType: 'float_factor',
@@ -1095,10 +1105,12 @@ var FieldFloatToggle = AbstractField.extend({
 });
 
 var FieldPercentage = FieldFloat.extend({
+    description: _lt("Percentage"),
     formatType:'percentage',
 });
 
 var FieldText = InputField.extend(TranslatableFieldMixin, {
+    description: _lt("Multiline Text"),
     className: 'o_field_text',
     supportedFieldTypes: ['text'],
     tagName: 'span',
@@ -1172,10 +1184,10 @@ var ListFieldText = FieldText.extend({
  * Displays a handle to modify the sequence.
  */
 var HandleWidget = AbstractField.extend({
+    description: _lt("Handle"),
     className: 'o_row_handle fa fa-arrows ui-sortable-handle',
     widthFactor: 0,
     tagName: 'span',
-    description: "",
     supportedFieldTypes: ['integer'],
 
     /*
@@ -1187,6 +1199,7 @@ var HandleWidget = AbstractField.extend({
 });
 
 var FieldEmail = InputField.extend({
+    description: _lt("Email"),
     className: 'o_field_email',
     events: _.extend({}, InputField.prototype.events, {
         'click': '_onClick',
@@ -1249,6 +1262,7 @@ var FieldEmail = InputField.extend({
 });
 
 var FieldPhone = FieldEmail.extend({
+    description: _lt("Phone"),
     className: 'o_field_phone',
     prefix: 'tel',
 
@@ -1271,6 +1285,7 @@ var FieldPhone = FieldEmail.extend({
 });
 
 var UrlWidget = InputField.extend({
+    description: _lt("URL"),
     className: 'o_field_url',
     events: _.extend({}, InputField.prototype.events, {
         'click': '_onClick',
@@ -1394,10 +1409,12 @@ var CopyClipboard = {
 };
 
 var TextCopyClipboard = FieldText.extend(CopyClipboard, {
+    description: _lt("Copy to Clipboard"),
     clipboardTemplate: 'CopyClipboardText',
 });
 
 var CharCopyClipboard = FieldChar.extend(CopyClipboard, {
+    description: _lt("Copy to Clipboard"),
     clipboardTemplate: 'CopyClipboardChar',
 });
 
@@ -1526,6 +1543,7 @@ var AbstractFieldBinary = AbstractField.extend({
 });
 
 var FieldBinaryImage = AbstractFieldBinary.extend({
+    description: _lt("Image"),
     fieldDependencies: _.extend({}, AbstractFieldBinary.prototype.fieldDependencies, {
         __last_update: {type: 'datetime'},
     }),
@@ -1587,6 +1605,7 @@ var FieldBinaryImage = AbstractFieldBinary.extend({
 });
 
 var FieldBinaryFile = AbstractFieldBinary.extend({
+    description: _lt("File"),
     template: 'FieldBinaryFile',
     events: _.extend({}, AbstractFieldBinary.prototype.events, {
         'click': function (event) {
@@ -1669,6 +1688,7 @@ var FieldBinaryFile = AbstractFieldBinary.extend({
 });
 
 var FieldPdfViewer = FieldBinaryFile.extend({
+    description: _lt("PDF Viewer"),
     supportedFieldTypes: ['binary'],
     template: 'FieldPdfViewer',
     /**
@@ -1778,6 +1798,7 @@ var FieldPdfViewer = FieldBinaryFile.extend({
 });
 
 var PriorityWidget = AbstractField.extend({
+    description: _lt("Priority"),
     // the current implementation of this widget makes it
     // only usable for fields of type selection
     className: "o_priority",
@@ -2148,6 +2169,7 @@ var FieldBooleanButton = AbstractField.extend({
 });
 
 var BooleanToggle = FieldBoolean.extend({
+    description: _lt("Toggle"),
     className: FieldBoolean.prototype.className + ' o_boolean_toggle',
     events: {
         'click': '_onClick'
@@ -2215,6 +2237,7 @@ var StatInfo = AbstractField.extend({
 });
 
 var FieldPercentPie = AbstractField.extend({
+    description: _lt("Percentage Pie"),
     template: 'FieldPercentPie',
     supportedFieldTypes: ['integer', 'float'],
 
@@ -2280,6 +2303,7 @@ var FieldPercentPie = AbstractField.extend({
  * - title: title of the bar, displayed on top of the bar --> not translated,  use parameter "title" instead
  */
 var FieldProgressBar = AbstractField.extend({
+    description: _lt("Progress Bar"),
     template: "ProgressBar",
     events: {
         'change input': 'on_change_input',
@@ -2439,6 +2463,7 @@ var FieldProgressBar = AbstractField.extend({
  * switching between a green bullet / gray bullet.
 */
 var FieldToggleBoolean = AbstractField.extend({
+    description: _lt("Button"),
     template: "toggle_button",
     events: {
         'click': '_onToggleButton'
