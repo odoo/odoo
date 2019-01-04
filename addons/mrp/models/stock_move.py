@@ -182,6 +182,24 @@ class StockMove(models.Model):
         self.sudo().unlink()
         return processed_moves
 
+    def _decrease_reserved_quanity(self, quantity):
+        """ Decrease the reservation on move lines but keeps the
+        all other data.
+        """
+        move_line_to_unlink = self.env['stock.move.line']
+        for move in self:
+            reserved_quantity = quantity
+            for move_line in self.move_line_ids:
+                if move_line.product_uom_qty > reserved_quantity:
+                    move_line.product_uom_qty = reserved_quantity
+                else:
+                    move_line.product_uom_qty = 0
+                    reserved_quantity -= move_line.product_uom_qty
+                if not move_line.product_uom_qty and not move_line.qty_done:
+                    move_line_to_unlink |= move_line
+        move_line_to_unlink.unlink()
+        return True
+
     def _prepare_phantom_move_values(self, bom_line, quantity):
         return {
             'picking_id': self.picking_id.id if self.picking_id else False,
