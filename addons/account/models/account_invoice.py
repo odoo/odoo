@@ -1117,21 +1117,8 @@ class AccountInvoice(models.Model):
                     for child_tax in tax.children_tax_ids:
                         done_taxes.append(child_tax.id)
 
-                analytic_tag_ids = [(4, analytic_tag.id, None) for analytic_tag in tax_line.analytic_tag_ids]
-                res.append({
-                    'invoice_tax_line_id': tax_line.id,
-                    'tax_line_id': tax_line.tax_id.id,
-                    'type': 'tax',
-                    'name': tax_line.name,
-                    'price_unit': tax_line.amount_total,
-                    'quantity': 1,
-                    'price': tax_line.amount_total,
-                    'account_id': tax_line.account_id.id,
-                    'account_analytic_id': tax_line.account_analytic_id.id,
-                    'analytic_tag_ids': analytic_tag_ids,
-                    'invoice_id': self.id,
-                    'tax_ids': [(6, 0, list(done_taxes))] if tax_line.tax_id.include_base_amount else []
-                })
+                tax_move_line_data = tax_line._prepare_tax_move_line_data(self, done_taxes)
+                res.append(tax_move_line_data)
                 done_taxes.append(tax.id)
         return res
 
@@ -1907,6 +1894,27 @@ class AccountInvoiceTax(models.Model):
     def _compute_amount_total(self):
         for tax_line in self:
             tax_line.amount_total = tax_line.amount + tax_line.amount_rounding
+            
+    def _prepare_tax_move_line_data(self, done_taxe_ids):
+        """
+        @param done_taxe_ids: list of done tax ids
+        @return: dictionary of value to create tax move line
+        """
+        analytic_tag_ids = [(4, analytic_tag.id, None) for analytic_tag in self.analytic_tag_ids]
+        return {
+            'invoice_tax_line_id': self.id,
+            'tax_line_id': self.tax_id.id,
+            'type': 'tax',
+            'name': self.name,
+            'price_unit': self.amount_total,
+            'quantity': 1,
+            'price': self.amount_total,
+            'account_id': self.account_id.id,
+            'account_analytic_id': self.account_analytic_id.id,
+            'analytic_tag_ids': analytic_tag_ids,
+            'invoice_id': self.id,
+            'tax_ids': [(6, 0, list(done_taxe_ids))] if analytic_tag_ids.tax_id.include_base_amount else []
+            }
 
 
 class AccountPaymentTerm(models.Model):
