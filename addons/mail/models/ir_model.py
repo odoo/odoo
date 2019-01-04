@@ -17,6 +17,10 @@ class IrModel(models.Model):
         string="Mail Activity", default=False,
         help="Whether this model supports activities.",
     )
+    is_mail_blacklist = fields.Boolean(
+        string="Mail Blacklist", default=False,
+        help="Whether this model supports blacklist.",
+    )
 
     def unlink(self):
         # Delete followers, messages and attachments for models that will be unlinked.
@@ -51,13 +55,15 @@ class IrModel(models.Model):
 
     @api.multi
     def write(self, vals):
-        if self and ('is_mail_thread' in vals or 'is_mail_activity' in vals):
+        if self and ('is_mail_thread' in vals or 'is_mail_activity' in vals or 'is_mail_blacklist' in vals):
             if not all(rec.state == 'manual' for rec in self):
                 raise UserError(_('Only custom models can be modified.'))
             if 'is_mail_thread' in vals and not all(rec.is_mail_thread <= vals['is_mail_thread'] for rec in self):
                 raise UserError(_('Field "Mail Thread" cannot be changed to "False".'))
             if 'is_mail_activity' in vals and not all(rec.is_mail_activity <= vals['is_mail_activity'] for rec in self):
                 raise UserError(_('Field "Mail Activity" cannot be changed to "False".'))
+            if 'is_mail_blacklist' in vals and not all(rec.is_mail_blacklist <= vals['is_mail_blacklist'] for rec in self):
+                raise UserError(_('Field "Mail Blacklist" cannot be changed to "False".'))
             res = super(IrModel, self).write(vals)
             # setup models; this reloads custom models in registry
             self.pool.setup_models(self._cr)
@@ -72,6 +78,7 @@ class IrModel(models.Model):
         vals = super(IrModel, self)._reflect_model_params(model)
         vals['is_mail_thread'] = issubclass(type(model), self.pool['mail.thread'])
         vals['is_mail_activity'] = issubclass(type(model), self.pool['mail.activity.mixin'])
+        vals['is_mail_blacklist'] = issubclass(type(model), self.pool['mail.blacklist.mixin'])
         return vals
 
     @api.model
@@ -85,4 +92,8 @@ class IrModel(models.Model):
             parents = model_class._inherit or []
             parents = [parents] if isinstance(parents, str) else parents
             model_class._inherit = parents + ['mail.activity.mixin']
+        if model_data.get('is_mail_blacklist') and model_class._name != 'mail.blacklist.mixin':
+            parents = model_class._inherit or []
+            parents = [parents] if isinstance(parents, str) else parents
+            model_class._inherit = parents + ['mail.blacklist.mixin']
         return model_class
