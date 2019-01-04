@@ -673,6 +673,60 @@ class MailThread(models.AbstractModel):
         self.env['mail.mail'].create(bounce_mail_values).send()
 
     @api.model
+    def _routing_handle_bounce(self, email_message, message_dict):
+        """ Handle bounce of incoming email. Based on values of the bounce (email
+        and related partner, send message and its messageID)
+
+          * find blacklist-enabled records with email_normalized = bounced email
+            and call ``_message_receive_bounce`` on each of them to propagate
+            bounce information through various records linked to same email;
+          * if not already done (i.e. if original record is not blacklist enabled
+            like a bounce on an applicant), find record linked to bounced message
+            and call ``_message_receive_bounce``;
+
+        :param email_message: incoming email;
+        :type email_message: email.message;
+        :param message_dict: dictionary holding already-parsed values and in
+            which bounce-related values will be added;
+        :type message_dict: dictionary;
+        """
+        bounced_record, bounced_record_done = False, False
+        bounced_email, bounced_partner = message_dict['bounced_email'], message_dict['bounced_partner']
+        bounced_msg_id, bounced_message = message_dict['bounced_msg_id'], message_dict['bounced_message']
+
+        if bounced_email:
+            bounced_model, bounced_res_id = bounced_message.model, bounced_message.res_id
+
+            if bounced_model and bounced_model in self.env and bounced_res_id:
+                bounced_record = self.env[bounced_model].sudo().browse(bounced_res_id).exists()
+
+            bl_models = self.env['ir.model'].sudo().search(['&', ('is_mail_blacklist', '=', True), ('model', '!=', 'mail.thread.blacklist')])
+            for model in [bl_model for bl_model in bl_models if bl_model.model in self.env]:  # transient test mode
+                rec_bounce_w_email = self.env[model.model].sudo().search([('email_normalized', '=', bounced_email)])
+                rec_bounce_w_email._message_receive_bounce(bounced_email, bounced_partner)
+                bounced_record_done = bool(bounced_record and model.model == bounced_model and bounced_record in rec_bounce_w_email)
+
+            # set record as bounced unless already done due to blacklist mixin
+            if bounced_record and not bounced_record_done and issubclass(type(bounced_record), self.pool['mail.thread']):
+                bounced_record._message_receive_bounce(bounced_email, bounced_partner)
+
+            if bounced_partner and bounced_message:
+                self.env['mail.notification'].sudo().search([
+                    ('mail_message_id', '=', bounced_message.id),
+                    ('res_partner_id', 'in', bounced_partner.ids)]
+                ).write({'notification_status': 'bounce'})
+
+        if bounced_record:
+            _logger.info('Routing mail from %s to %s with Message-Id %s: not routing bounce email from %s replying to %s (model %s ID %s)',
+                         message_dict['email_from'], message_dict['to'], message_dict['message_id'], bounced_email, bounced_msg_id, bounced_model, bounced_res_id)
+        elif bounced_email:
+            _logger.info('Routing mail from %s to %s with Message-Id %s: not routing bounce email from %s replying to %s (no document found)',
+                         message_dict['email_from'], message_dict['to'], message_dict['message_id'], bounced_email, bounced_msg_id)
+        else:
+            _logger.info('Routing mail from %s to %s with Message-Id %s: not routing bounce email.',
+                         message_dict['email_from'], message_dict['to'], message_dict['message_id'])
+
+    @api.model
     def _routing_check_route(self, message, message_dict, route, raise_exception=True):
         """ Verify route validity. Check and rules:
             1 - if thread_id -> check that document effectively exists; otherwise
@@ -822,57 +876,21 @@ class MailThread(models.AbstractModel):
         # for all the odd MTAs out there, as there is no standard header for the envelope's `rcpt_to` value.
         rcpt_tos_localparts = [e.split('@')[0].lower() for e in tools.email_split(message_dict['recipients'])]
 
-        # 0. Verify whether this is a bounced email and use it to collect bounce data and update notifications for customers
+        # 0. Handle bounce: verify whether this is a bounced email and use it to collect bounce data and update notifications for customers
+        #    Bounce regex: typical form of bounce is bounce_alias+128-crm.lead-34@domain
+        #       group(1) = the mail ID; group(2) = the model (if any); group(3) = the record ID 
+        #    Bounce message (not alias)
+        #       See http://datatracker.ietf.org/doc/rfc3462/?include_text=1
+        #        As all MTA does not respect this RFC (googlemail is one of them),
+        #       we also need to verify if the message come from "mailer-daemon"
         if bounce_alias and bounce_alias in email_to_localpart:
-            # Bounce regex: typical form of bounce is bounce_alias+128-crm.lead-34@domain
-            # group(1) = the mail ID; group(2) = the model (if any); group(3) = the record ID
             bounce_re = re.compile("%s\+(\d+)-?([\w.]+)?-?(\d+)?" % re.escape(bounce_alias), re.UNICODE)
             bounce_match = bounce_re.search(email_to)
-
             if bounce_match:
-                bounced_mail_id, bounced_model, bounced_thread_id = bounce_match.group(1), bounce_match.group(2), bounce_match.group(3)
-
-                email_part = next((part for part in message.walk() if part.get_content_type() == 'message/rfc822'), None)
-                dsn_part = next((part for part in message.walk() if part.get_content_type() == 'message/delivery-status'), None)
-
-                partners, partner_address = self.env['res.partner'], False
-                if dsn_part and len(dsn_part.get_payload()) > 1:
-                    dsn = dsn_part.get_payload()[1]
-                    final_recipient_data = tools.decode_message_header(dsn, 'Final-Recipient')
-                    partner_address = final_recipient_data.split(';', 1)[1].strip()
-                    if partner_address:
-                        partners = partners.sudo().search([('email', '=', partner_address)])
-                        for partner in partners:
-                            partner._message_receive_bounce(partner_address, partner, mail_id=bounced_mail_id)
-
-                mail_message = self.env['mail.message']
-                if email_part:
-                    email = email_part.get_payload()[0]
-                    bounced_message_id = tools.mail_header_msgid_re.findall(tools.decode_message_header(email, 'Message-Id'))
-                    mail_message = self.env['mail.message'].sudo().search([('message_id', 'in', bounced_message_id)])
-
-                if partners and mail_message:
-                    notifications = self.env['mail.notification'].sudo().search([
-                        ('mail_message_id', '=', mail_message.id),
-                        ('res_partner_id', 'in', partners.ids)])
-                    notifications.write({
-                        'notification_status': 'bounce'
-                    })
-
-                if bounced_model in self.env and hasattr(self.env[bounced_model], '_message_receive_bounce') and bounced_thread_id:
-                    self.env[bounced_model].browse(int(bounced_thread_id))._message_receive_bounce(partner_address, partners, mail_id=bounced_mail_id)
-
-                _logger.info('Routing mail from %s to %s with Message-Id %s: bounced mail from mail %s, model: %s, thread_id: %s: dest %s (partner %s)',
-                             email_from, email_to, message_id, bounced_mail_id, bounced_model, bounced_thread_id, partner_address, partners)
+                self._routing_handle_bounce(message, message_dict)
                 return []
-
-        # 0. First check if this is a bounce message or not.
-        #    See http://datatracker.ietf.org/doc/rfc3462/?include_text=1
-        #    As all MTA does not respect this RFC (googlemail is one of them),
-        #    we also need to verify if the message come from "mailer-daemon"
         if message.get_content_type() == 'multipart/report' or email_from_localpart == 'mailer-daemon':
-            _logger.info('Routing mail with Message-Id %s: not routing bounce email from %s to %s',
-                         message_id, email_from, email_to)
+            self._routing_handle_bounce(message, message_dict)
             return []
 
         # 1. Handle reply
@@ -1003,7 +1021,7 @@ class MailThread(models.AbstractModel):
 
             post_params = dict(subtype_id=subtype_id, partner_ids=partner_ids, **message_dict)
             # remove computational values not stored on mail.message and avoid warnings when creating it
-            for x in ('from', 'to', 'cc', 'recipients', 'references', 'in_reply_to'):
+            for x in ('from', 'to', 'cc', 'recipients', 'references', 'in_reply_to', 'bounced_email', 'bounced_message', 'bounced_msg_id', 'bounced_partner'):
                 post_params.pop(x, None)
             new_msg = False
             if thread._name == 'mail.thread':  # message with parent_id not linked to record
@@ -1118,7 +1136,7 @@ class MailThread(models.AbstractModel):
             self.write(update_vals)
         return True
 
-    def _message_receive_bounce(self, email, partner, mail_id=None):
+    def _message_receive_bounce(self, email, partner):
         """Called by ``message_process`` when a bounce email (such as Undelivered
         Mail Returned to Sender) is received for an existing thread. The default
         behavior is to do nothing. This method is meant to be overridden in various
@@ -1126,11 +1144,8 @@ class MailThread(models.AbstractModel):
         mailing statistics update. check is an integer  ``message_bounce`` column exists.
         If it is the case, its content is incremented.
 
-        :param record partner: partner matching the bounced email address, if any;
         :param string email: email that caused the bounce;
-        :param mail_id: ID of the sent email that bounced. It may not exist anymore
-                        but it could be useful if the information was kept. This is
-                        used notably in mass mailing;
+        :param record partner: partner matching the bounced email address, if any;
         """
         pass
 
@@ -1247,6 +1262,44 @@ class MailThread(models.AbstractModel):
 
         return self._message_parse_extract_payload_postprocess(message, {'body': body, 'attachments': attachments})
 
+    def _message_parse_extract_bounce(self, email_message, message_dict):
+        """ Parse email and extract bounce information to be used in future
+        processing.
+
+        :param email_message: an email.message instance;
+        :param message_dict: dictionary holding already-parsed values and in
+            which bounce-related values will be added;
+        """
+        if not isinstance(email_message, Message):
+            raise TypeError('message must be an email.message.Message at this point')
+
+        email_part = next((part for part in email_message.walk() if part.get_content_type() == 'message/rfc822'), None)
+        dsn_part = next((part for part in email_message.walk() if part.get_content_type() == 'message/delivery-status'), None)
+
+        bounced_email = False
+        bounced_partner = self.env['res.partner'].sudo()
+        if dsn_part and len(dsn_part.get_payload()) > 1:
+            dsn = dsn_part.get_payload()[1]
+            final_recipient_data = tools.decode_message_header(dsn, 'Final-Recipient')
+            bounced_email = tools.email_normalize(final_recipient_data.split(';', 1)[1].strip())
+            if bounced_email:
+                bounced_partner = self.env['res.partner'].sudo().search([('email_normalized', '=', bounced_email)])
+
+        bounced_msg_id = False
+        bounced_message = self.env['mail.message'].sudo()
+        if email_part:
+            email = email_part.get_payload()[0]
+            bounced_msg_id = tools.mail_header_msgid_re.findall(tools.decode_message_header(email, 'Message-Id'))
+            if bounced_msg_id:
+                bounced_message = self.env['mail.message'].sudo().search([('message_id', 'in', bounced_msg_id)])
+
+        return {
+            'bounced_email': bounced_email,
+            'bounced_partner': bounced_partner,
+            'bounced_msg_id': bounced_msg_id,
+            'bounced_message': bounced_message,
+        }
+
     @api.model
     def message_parse(self, message, save_original=False):
         """ Parses an email.message.Message representing an RFC-2822 email
@@ -1354,6 +1407,7 @@ class MailThread(models.AbstractModel):
                 msg_dict['internal'] = parent_ids.subtype_id and parent_ids.subtype_id.internal or False
 
         msg_dict.update(self._message_parse_extract_payload(message, save_original=save_original))
+        msg_dict.update(self._message_parse_extract_bounce(message, msg_dict))
         return msg_dict
 
     # ------------------------------------------------------
