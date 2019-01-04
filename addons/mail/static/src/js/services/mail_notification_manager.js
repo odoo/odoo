@@ -186,7 +186,6 @@ MailManager.include({
                 channel.incrementNeedactionCounter();
             }
         });
-        // TODO: MSH: To check
         this._mailBus.trigger('update_needaction', inbox.getMailboxCounter());
     },
     /**
@@ -281,7 +280,6 @@ MailManager.include({
                 self._mailBus.trigger('update_message', {message: message});
             }
         });
-        // TODO: MSH: To check
         this._mailBus.trigger('update_needaction', this.needactionCounter);
     },
     /**
@@ -319,7 +317,6 @@ MailManager.include({
         }
         var inbox = this.getMailbox('inbox');
         inbox.decrementMailboxCounter(data.message_ids.length);
-        // TODO: MSH: To check
         this._mailBus.trigger('update_needaction', inbox.getMailboxCounter());
     },
     /**
@@ -435,7 +432,6 @@ MailManager.include({
             starred.decrementMailboxCounter(data.message_ids.length);
         }
 
-        // TODO: MSH: To check
         this._mailBus.trigger('update_starred', starred.getMailboxCounter());
     },
     /**

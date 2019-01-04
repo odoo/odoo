@@ -118,7 +118,6 @@ var EditorMenuBar = Widget.extend({
      * @returns {Deferred}
      */
     cancel: function (reload) {
-        // TODO: MSH: To check
         var self = this;
         var def = $.Deferred();
         if (!rte.history.getEditableHasUndo().length) {
