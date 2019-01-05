@@ -514,10 +514,8 @@ class StockMove(models.Model):
             'product_variant_ids')
         fifo_valued_categories = self.env['product.category'].search([('property_cost_method', '=', 'fifo')])
         fifo_valued_products |= self.env['product.product'].search([('categ_id', 'child_of', fifo_valued_categories.ids)])
-        moves_to_vacuum = self.env['stock.move']
-        for product in fifo_valued_products:
-            moves_to_vacuum |= self.search(
-                [('product_id', '=', product.id), ('remaining_qty', '<', 0)] + self._get_all_base_domain())
+        moves_to_vacuum = self.search(
+            [('product_id', 'in', fifo_valued_products.ids), ('remaining_qty', '<', 0)] + self._get_all_base_domain())
         moves_to_vacuum._fifo_vacuum()
 
     @api.multi
