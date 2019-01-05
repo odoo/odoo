@@ -337,7 +337,7 @@ class WebsiteSale(ProductConfiguratorController):
         }
         return request.render("website_sale.product", values)
 
-    @http.route(['/shop/change_pricelist/<model("product.pricelist"):pl_id>'], type='http', auth="public", website=True)
+    @http.route(['/shop/change_pricelist/<model("product.pricelist"):pl_id>'], type='http', auth="public", website=True, sitemap=False)
     def pricelist_change(self, pl_id, **post):
         if (pl_id.selectable or pl_id == request.env.user.partner_id.property_product_pricelist) \
                 and request.website.is_pricelist_available(pl_id.id):
@@ -345,7 +345,7 @@ class WebsiteSale(ProductConfiguratorController):
             request.website.sale_get_order(force_pricelist=pl_id.id)
         return request.redirect(request.httprequest.referrer or '/shop')
 
-    @http.route(['/shop/pricelist'], type='http', auth="public", website=True)
+    @http.route(['/shop/pricelist'], type='http', auth="public", website=True, sitemap=False)
     def pricelist(self, promo, **post):
         redirect = post.get('r', '/shop/cart')
         pricelist = request.env['product.pricelist'].sudo().search([('code', '=', promo)], limit=1)

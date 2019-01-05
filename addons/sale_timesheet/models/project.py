@@ -186,7 +186,7 @@ class ProjectTask(models.Model):
             self.partner_id = self.sale_line_id.order_partner_id
         # set domain on SO: on non billable project, all SOL of customer, otherwise the one from the SO
         result = result or {}
-        domain = [('is_service', '=', True), ('is_expense', '=', False), ('order_partner_id', '=', self.partner_id.id), ('state', 'in', ['sale', 'done'])]
+        domain = [('is_service', '=', True), ('is_expense', '=', False), ('order_partner_id', 'child_of', self.partner_id.commercial_partner_id.id), ('state', 'in', ['sale', 'done'])]
         if self.project_id.sale_order_id:
             domain += [('order_id', '=', self.project_id.sale_order_id.id)]
         result.setdefault('domain', {})['sale_line_id'] = domain
@@ -195,8 +195,11 @@ class ProjectTask(models.Model):
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
         result = super(ProjectTask, self)._onchange_partner_id()
-        if self.sale_line_id.order_partner_id != self.partner_id:
+        result = result or {}
+        if self.sale_line_id.order_partner_id.commercial_partner_id != self.partner_id.commercial_partner_id:
             self.sale_line_id = False
+        if self.partner_id:
+            result.setdefault('domain', {})['sale_line_id'] = [('is_service', '=', True), ('is_expense', '=', False), ('order_partner_id', 'child_of', self.partner_id.commercial_partner_id.id), ('state', 'in', ['sale', 'done'])]
         return result
 
     @api.multi
