@@ -3,16 +3,16 @@
 # * google_account
 # 
 # Translators:
-# Bole <bole@dajmi5.com>, 2017
-# Đurđica Žarković <durdica.zarkovic@storm.hr>, 2017
-# Martin Trigaux, 2017
+# Bole <bole@dajmi5.com>, 2019
+# Đurđica Žarković <durdica.zarkovic@storm.hr>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:56+0000\n"
-"PO-Revision-Date: 2018-08-02 09:56+0000\n"
-"Last-Translator: Martin Trigaux, 2017\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-08-24 09:18+0000\n"
+"Last-Translator: Đurđica Žarković <durdica.zarkovic@storm.hr>, 2019\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,12 +28,17 @@ msgstr "Kreirao"
 #. module: google_account
 #: model:ir.model.fields,field_description:google_account.field_google_service__create_date
 msgid "Created on"
-msgstr "Datum kreiranja"
+msgstr "Kreirano"
 
 #. module: google_account
 #: model:ir.model.fields,field_description:google_account.field_google_service__display_name
 msgid "Display Name"
 msgstr "Naziv za prikaz"
+
+#. module: google_account
+#: model:ir.model,name:google_account.model_google_service
+msgid "Google Service"
+msgstr ""
 
 #. module: google_account
 #: model:ir.model.fields,field_description:google_account.field_google_service__id
@@ -56,13 +61,13 @@ msgid "Last Updated on"
 msgstr "Vrijeme promjene"
 
 #. module: google_account
-#: code:addons/google_account/models/google_service.py:171
+#: code:addons/google_account/models/google_service.py:172
 #, python-format
 msgid "Method not supported [%s] not in [GET, POST, PUT, PATCH or DELETE]!"
 msgstr "Metoda nije podržana [%s] nije u [GET, POST, PUT, PATCH ili DELETE]!"
 
 #. module: google_account
-#: code:addons/google_account/models/google_service.py:119
+#: code:addons/google_account/models/google_service.py:120
 #, python-format
 msgid ""
 "Something went wrong during your token generation. Maybe your Authorization "
@@ -72,7 +77,7 @@ msgstr ""
 "Kod Autorizacije."
 
 #. module: google_account
-#: code:addons/google_account/models/google_service.py:55
+#: code:addons/google_account/models/google_service.py:56
 #, python-format
 msgid ""
 "Something went wrong during your token generation. Maybe your Authorization "
@@ -82,7 +87,7 @@ msgstr ""
 "Kod Autorizacije ili je već istekao."
 
 #. module: google_account
-#: code:addons/google_account/models/google_service.py:149
+#: code:addons/google_account/models/google_service.py:150
 #, python-format
 msgid ""
 "Something went wrong during your token generation. Maybe your Authorization "
@@ -92,18 +97,13 @@ msgstr ""
 "Autorizacije već istekao [%s]."
 
 #. module: google_account
-#: code:addons/google_account/models/google_service.py:192
+#: code:addons/google_account/models/google_service.py:193
 #, python-format
 msgid "Something went wrong with your request to google"
 msgstr "Nešto je pogrešno u vašem zahtjevu prema Google-u"
 
 #. module: google_account
-#: code:addons/google_account/models/google_service.py:130
+#: code:addons/google_account/models/google_service.py:131
 #, python-format
 msgid "The account for the Google service '%s' is not configured."
 msgstr ""
-
-#. module: google_account
-#: model:ir.model,name:google_account.model_google_service
-msgid "google.service"
-msgstr "google.service"

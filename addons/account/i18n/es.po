@@ -11,6 +11,7 @@
 # Miguel Orueta <mo@landoo.es>, 2018
 # e2f_es_ t7 <e2f_es_t7@outlook.com>, 2018
 # Angel Moya - PESOL <angel.moya@pesol.es>, 2018
+# Cristóbal Martí Oliver <info@moblesmarti.com>, 2018
 # Luis M. Triana <luis.triana@jarsa.com.mx>, 2018
 # renodoo <ren@odoo.com>, 2018
 # Lina Maria Avendaño Carvajal <lina8823@gmail.com>, 2018
@@ -21,7 +22,6 @@
 # Martin Trigaux, 2018
 # Carlos Lopez <celm1990@hotmail.com>, 2018
 # Cristian Salamea <ovnicraft@gmail.com>, 2018
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2018
 # Gustavo Valverde, 2018
 # Nicolás Broggi <rnbroggi@gmail.com>, 2018
 # Cristopher Cravioto <ccr@odoo.com>, 2018
@@ -37,7 +37,10 @@
 # Pilar Marín <pilar@odooperu.pe>, 2018
 # Rodrigo Aragon <conectacoatepec@gmail.com>, 2018
 # Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2018
-# Cristóbal Martí Oliver <info@moblesmarti.com>, 2018
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2018
+# cc53a0412107de288f77ae97a300f6b0, 2019
+# Gabriel Umaña <gabriel.umana@delfixcr.com>, 2019
+# Jhonsons Jimenez <jhonson1195@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -45,7 +48,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-12-19 08:20+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
-"Last-Translator: Cristóbal Martí Oliver <info@moblesmarti.com>, 2018\n"
+"Last-Translator: Jhonsons Jimenez <jhonson1195@gmail.com>, 2019\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -235,19 +238,19 @@ msgstr ""
 "        <br/><br/>\n"
 "        Aquí está \n"
 "        % if object.number:\n"
-"            invoice <strong>${object.number}</strong>\n"
+"            adjunto su factura <strong>${object.number}</strong>\n"
 "        % else:\n"
-"            invoice\n"
+"            adjunto su factura\n"
 "        %endif\n"
 "        % if object.origin:\n"
-"            (with reference: ${object.origin})\n"
+"            (con referencia: ${object.origin})\n"
 "        % endif\n"
-"        amounting in <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
+"        por un monto de  <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
 "        from ${object.company_id.name}.\n"
 "        % if object.state=='paid':\n"
-"            This invoice is already paid.\n"
+"            Esta factura ya está pagada.\n"
 "        % else:\n"
-"            Please remit payment at your earliest convenience.\n"
+"            Por favor remita el pago a su más pronta conveniencia.\n"
 "        % endif\n"
 "        <br/><br/>\n"
 "        Si tienes alguna pregunta, no dudes en contactarnos.\n"
@@ -1448,7 +1451,7 @@ msgstr "Saldos vencidos de empresa"
 #. module: account
 #: model:ir.model,name:account.model_report_account_report_agedpartnerbalance
 msgid "Aged Partner Balance Report"
-msgstr ""
+msgstr "Estado de antigüedad de saldos"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__alias_id
@@ -1651,13 +1654,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_amount_max
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__match_amount_max
 msgid "Amount Max Parameter"
-msgstr "Importe máximo del parámetro"
+msgstr "Parámetro importe máximo"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_amount_min
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__match_amount_min
 msgid "Amount Min Parameter"
-msgstr "Importe mínimo del parámetro"
+msgstr "Parámetro importe mínimo"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_nature
@@ -1675,13 +1678,13 @@ msgstr "Importe pagado"
 #: selection:account.reconcile.model,match_nature:0
 #: selection:account.reconcile.model.template,match_nature:0
 msgid "Amount Paid/Received"
-msgstr "Importe pagado/recibido"
+msgstr "Importe pagado/cobrado"
 
 #. module: account
 #: selection:account.reconcile.model,match_nature:0
 #: selection:account.reconcile.model.template,match_nature:0
 msgid "Amount Received"
-msgstr "Importe recibido"
+msgstr "Importe cobrado"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_line__price_subtotal_signed
@@ -1725,7 +1728,8 @@ msgstr "Importe:"
 #: sql_constraint:account.fiscal.position.account:0
 msgid ""
 "An account fiscal position could be defined only one time on same accounts."
-msgstr "Una posición fiscal de una cuenta podría definirse solamente una vez."
+msgstr ""
+"Solo se puede definir una posición fiscal cada vez en la misma cuenta."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_form
@@ -2080,7 +2084,7 @@ msgstr "Importación Automática"
 #: code:addons/account/models/account_move.py:399
 #, python-format
 msgid "Automatic reversal of: %s"
-msgstr ""
+msgstr "reversión automática de: 1%s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__price_average
@@ -2323,7 +2327,7 @@ msgstr "Cuenta base de impuestos recibidos"
 #: code:addons/account/models/company.py:19
 #, python-format
 msgid "Based on Customer"
-msgstr ""
+msgstr "Basado en el Cliente"
 
 #. module: account
 #: selection:account.tax,tax_exigibility:0
@@ -2335,7 +2339,7 @@ msgstr "Basado en factura"
 #: code:addons/account/models/company.py:19
 #, python-format
 msgid "Based on Invoice Number"
-msgstr ""
+msgstr "Basado en el número de factura"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__tax_exigibility
@@ -4418,12 +4422,12 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__invoice_is_email
 msgid "Email by default"
-msgstr ""
+msgstr "correo electrónico por defecto"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Email your Vendor Bills"
-msgstr ""
+msgstr "Correo electrónico para sus facturas de proveedor"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_common_journal_report__date_to
@@ -4600,7 +4604,7 @@ msgstr "Estados federales"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_import_wizard__attachment_ids
 msgid "Files"
-msgstr ""
+msgstr "Archivos"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.cash_box_in_form
@@ -4681,7 +4685,7 @@ msgstr "Ejercicio fiscal"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.action_account_fiscal_year_form
 msgid "Fiscal Year 2018"
-msgstr ""
+msgstr "Año Fiscal 2018"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.actions_account_fiscal_year
@@ -9318,7 +9322,7 @@ msgstr "Documento origen"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice__source_email
 msgid "Source Email"
-msgstr ""
+msgstr "fuente del correo electrónico"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_cash_rounding__strategy
@@ -10487,6 +10491,10 @@ msgid ""
 "        * Amount Paid: Only applied when paying an amount.\n"
 "        * Amount Paid/Received: Applied in both cases."
 msgstr ""
+"El modelo de conciliación solo se aplicará al tipo de transacción seleccionado:\n"
+"        * Import cobrado: Solo se aplicará cuando se cobre un importe.\n"
+"        * Importe pagado: Solo se aplicará cuando se pague un importe.\n"
+"        * Importe pagado/cobrado: Aplicado en ambos casos."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_partner
@@ -10664,14 +10672,6 @@ msgstr ""
 "sobre la cuenta y sus especificidades."
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1439
-#, python-format
-msgid ""
-"This %s has been created from: <a href=# data-oe-model=account.invoice data-"
-"oe-id=%d>%s</a><br>Reason: %s"
-msgstr ""
-
-#. module: account
 #: code:addons/account/models/account_journal_dashboard.py:100
 #, python-format
 msgid "This Week"
@@ -10753,6 +10753,14 @@ msgstr ""
 "codifique los ratios de ventas y compras o que elija de una lista de "
 "impuestos. Esta última elección asume que se ha completado el conjunto de "
 "impuestos de esta plantilla."
+
+#. module: account
+#: code:addons/account/models/account_invoice.py:1458
+#, python-format
+msgid ""
+"This customer invoice credit note has been created from: <a href=# data-oe-"
+"model=account.invoice data-oe-id=%d>%s</a><br>Reason: %s"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -10903,6 +10911,14 @@ msgstr ""
 "Este campo técnico se utilizará en el momento de la creación/importación de "
 "apuntes de extractos para posteriormente evitar el proceso de conciliación. "
 "El apunte sólamente creará una contrapartida en esta cuenta"
+
+#. module: account
+#: code:addons/account/models/account_invoice.py:1460
+#, python-format
+msgid ""
+"This vendor bill credit note has been created from: <a href=# data-oe-"
+"model=account.invoice data-oe-id=%d>%s</a><br>Reason: %s"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_validate_account_move

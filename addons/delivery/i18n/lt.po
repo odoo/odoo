@@ -13,7 +13,7 @@
 # Antanas Muliuolis <an.muliuolis@gmail.com>, 2018
 # Monika Raciunaite <monika.raciunaite@gmail.com>, 2018
 # digitouch UAB <digitouchagencyeur@gmail.com>, 2018
-# Linas Versada <linaskrisiukenas@gmail.com>, 2018
+# Linas Versada <linaskrisiukenas@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -21,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-10-08 06:49+0000\n"
 "PO-Revision-Date: 2018-08-24 09:17+0000\n"
-"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2018\n"
+"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2019\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -39,7 +39,8 @@ msgstr "${(object.name or '').replace('/','_')}"
 msgid ""
 "${object.company_id.name} Delivery Order (Ref ${object.name or 'n/a' })"
 msgstr ""
-"${object.company_id.name} Delivery Order (Ref ${object.name or 'n/a' })"
+"${object.company_id.name} Pristatymo užsakymas (Ref ${object.name or 'n/a' "
+"})"
 
 #. module: delivery
 #: model:mail.template,body_html:delivery.mail_template_data_delivery_confirmation
@@ -68,16 +69,39 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Sveiki, ${object.partner_id.name},<br/><br/>\n"
+"        Džiaugiamės galėdami pranešti, kad jūsų užsakymas buvo išsiųstas.\n"
+"        %if object.carrier_tracking_ref:\n"
+"            Jūsų sekimo numeris yra\n"
+"            <strong>\n"
+"            %if object.carrier_tracking_url:\n"
+"                <a href=\"${object.carrier_tracking_url}\" target=\"_blank\">${object.carrier_tracking_ref}</a>.\n"
+"            %else:\n"
+"                ${object.carrier_tracking_ref}.\n"
+"            %endif\n"
+"            </strong>\n"
+"        %endif\n"
+"        <br/><br/>\n"
+"        Prisegtame pristatymo užsakyme rasite daugiau informacijos.<br/><br/>\n"
+"        Ačiū,<br/>\n"
+"        % if user and user.signature:\n"
+"          ${user.signature | safe}\n"
+"        % endif\n"
+"    </p>\n"
+"</div>\n"
+"        "
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
 msgid "<i class=\"fa fa-arrow-right\"/> Add to order"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-right\"/>Pridėti prie užsakymo"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
 msgid "<i class=\"fa fa-arrow-right\"/> Get rate"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-right\"/>Gauti kainą"
 
 #. module: delivery
 #: code:addons/delivery/models/delivery_carrier.py:77
@@ -87,6 +111,9 @@ msgid ""
 "                    Buy Odoo Enterprise now to get more providers.\n"
 "                </p>"
 msgstr ""
+"<p class=\"o_view_nocontent\">\n"
+"Įsigykite \"Odoo Enterprise\" dabar ir gaukite daugiau tiekėjų.\n"
+"</p>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_package_view_form
@@ -102,7 +129,7 @@ msgstr "<strong>Kurjeris</strong>"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_document2
 msgid "<strong>Shipping Weight</strong>"
-msgstr ""
+msgstr "<strong>Siuntimo svoris</strong>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_document2
@@ -146,7 +173,7 @@ msgstr "Archyvuotas"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__available_carrier_ids
 msgid "Available Carriers"
-msgstr ""
+msgstr "Pasiekiami kurjeriai"
 
 #. module: delivery
 #: selection:delivery.carrier,delivery_type:0
@@ -186,7 +213,7 @@ msgstr "Sąlyga"
 #. module: delivery
 #: model:ir.model,name:delivery.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Konfigūracijos nustatymai"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_res_partner
@@ -220,7 +247,7 @@ msgstr "Klaidų registravimas"
 #. module: delivery
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_carrier_form
 msgid "Define a new delivery method"
-msgstr ""
+msgstr "Nustatyti naują pristatymo būdą"
 
 #. module: delivery
 #: model:product.category,name:delivery.product_category_deliveries
@@ -326,7 +353,7 @@ msgstr "Rodomas pavadinimas"
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.act_delivery_trackers_url
 msgid "Display tracking links"
-msgstr ""
+msgstr "Rodyti sekimo nuorodas"
 
 #. module: delivery
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_carrier_form
@@ -456,7 +483,7 @@ msgstr "Integracijos lygis"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__invoice_shipping_on_delivery
 msgid "Invoice Shipping on Delivery"
-msgstr "Siuntos sąskaita su pristatymu"
+msgstr "Siuntos sąskaita pristatant"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_line__is_delivery
@@ -597,7 +624,7 @@ msgstr "Pakuotės informacija"
 #: code:addons/delivery/wizard/choose_delivery_package.py:52
 #, python-format
 msgid "Package too heavy!"
-msgstr ""
+msgstr "Pakuotė per sunki!"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_quant_package
@@ -616,7 +643,7 @@ msgstr "Fizinė pakuotė"
 msgid ""
 "Please use \"Check price\" in order to compute a shipping price for this "
 "quotation."
-msgstr "Papauskite \"Tikrinti kainą\" šio pasiūlymo gabenimo kainai paskaičiuoti."
+msgstr "Naudokite \"tikrinti kainą\" šio pasiūlymo gabenimo kainai paskaičiuoti."
 
 #. module: delivery
 #: selection:delivery.price.rule,variable:0
@@ -643,7 +670,7 @@ msgstr "Kainodaros taisyklės"
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
-msgstr ""
+msgstr "Produkto perkėlimai (atsargų perkėlimo eilutė)"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_product_packaging
@@ -766,12 +793,14 @@ msgid ""
 "The weight of your package is higher than the maximum weight authorized for "
 "this package type. Please choose another package type."
 msgstr ""
+"Jūsų pakuotės svoris yra didesnis nei maksimalus svoris, leidžiamas šiam "
+"pakuotės tipui. Pasirinkite kitą pakuotės tipą."
 
 #. module: delivery
 #: code:addons/delivery/models/delivery_grid.py:111
 #, python-format
 msgid "There is no matching delivery rule."
-msgstr ""
+msgstr "Nėra sutampančios pristatymo taisyklės."
 
 #. module: delivery
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_carrier_form
@@ -780,7 +809,7 @@ msgid ""
 "                according to your settings; on the sales order (based on the\n"
 "                quotation) or the invoice (based on the delivery orders)."
 msgstr ""
-"Šie metodai leidžia automatiškai skaičiuoti pristatymo kainą\n"
+"Šie būdai leidžia automatiškai skaičiuoti pristatymo kainą\n"
 "pagal jūsų nustatymus; pardavimų užsakymuose (pagal komercinį\n"
 "pasiūlymą) arba sąskaitose (pagal pristatymo užsakymus)."
 
@@ -788,7 +817,7 @@ msgstr ""
 #: model:ir.model.fields,help:delivery.field_res_partner__property_delivery_carrier_id
 msgid "This delivery method will be used when invoicing from picking."
 msgstr ""
-"Šis pristatymo metodas bus naudojamas, kai pateiksite sąskaitas iš paėmimų."
+"Šis pristatymo metodas bus naudojamas, kai pateiksite sąskaitas iš paėmimo."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__margin
@@ -798,7 +827,7 @@ msgstr "Šis procentas bus pridėtas prie siuntimo kainos."
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form
 msgid "Trackers URL"
-msgstr ""
+msgstr "Sekimo URL"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
@@ -876,7 +905,7 @@ msgstr "Svoris * tūris"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_stock_quant_package__weight
 msgid "Weight computed based on the sum of the weights of the products."
-msgstr ""
+msgstr "Svoris suskaičiuotas pagal produktų svorių sumą."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__shipping_weight
@@ -886,7 +915,7 @@ msgstr "Siuntos svoris"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_stock_quant_package__shipping_weight
 msgid "Weight used to compute the price of the delivery (if applicable)."
-msgstr ""
+msgstr "Svoris naudojamas pristatymo kainos nustatymui (jei aktualu)."
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_package_barcode_delivery
@@ -911,7 +940,7 @@ msgid ""
 "You are shipping different packaging types in the same shipment.\n"
 "Packaging Types: %s"
 msgstr ""
-"Jūs siunčiate skirtingus pakavimo tipus toje pačioje siuntoje\n"
+"Jūs siunčiate skirtingus pakavimo tipus toje pačioje siuntoje.\n"
 "Pakuočių tipai: %s"
 
 #. module: delivery
@@ -925,7 +954,7 @@ msgstr ""
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form
 msgid "You have multiple tracker links, they are available in the chatter."
-msgstr ""
+msgstr "Turite kelias sekimo nuorodas, jos pasiekiamos susirašinėjime."
 
 #. module: delivery
 #: code:addons/delivery/models/stock_picking.py:185
@@ -934,18 +963,18 @@ msgid ""
 "Your delivery method has no redirect on courier provider's website to track "
 "this order."
 msgstr ""
-"Jūsų pristatymo metodas neturi nukreipimo į kurjerio svetainę, per kurį "
+"Jūsų pristatymo būdas neturi nukreipimo į kurjerio svetainę, per kurią "
 "galėtumėte sekti šį užsakymą."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__zip_from
 msgid "Zip From"
-msgstr "Pašto kodas nuo"
+msgstr "Pašto kodas iš"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__zip_to
 msgid "Zip To"
-msgstr "Zip į"
+msgstr "Pašto kodas į"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form

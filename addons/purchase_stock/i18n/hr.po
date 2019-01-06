@@ -3,18 +3,20 @@
 # * purchase_stock
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Bole <bole@dajmi5.com>, 2018
-# Karolina Tonković <karolina.tonkovic@storm.hr>, 2018
-# Marko Carević <marko.carevic@live.com>, 2018
-# Tina Milas, 2018
+# Martin Trigaux, 2019
+# Bole <bole@dajmi5.com>, 2019
+# Karolina Tonković <karolina.tonkovic@storm.hr>, 2019
+# Marko Carević <marko.carevic@live.com>, 2019
+# Mario Jureša <mario.juresa@uvid.hr>, 2019
+# Tina Milas, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:12+0000\n"
-"PO-Revision-Date: 2018-08-02 09:12+0000\n"
-"Last-Translator: Tina Milas, 2018\n"
+"POT-Creation-Date: 2018-10-24 09:34+0000\n"
+"PO-Revision-Date: 2018-08-24 09:24+0000\n"
+"Last-Translator: Tina Milas, 2019\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,20 +25,20 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 
 #. module: purchase_stock
-#: code:addons/purchase_stock/models/stock.py:123
-#, python-format
-msgid " Buy"
-msgstr "Kupi"
+#: model_terms:ir.ui.view,arch_db:purchase_stock.stock_production_lot_view_form
+msgid "<span class=\"o_stat_text\">Purchase Orders</span>"
+msgstr ""
 
 #. module: purchase_stock
-#: model:ir.model.fields,field_description:purchase_stock.field_procurement_rule__action
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_rule__action
 msgid "Action"
 msgstr "Akcija"
 
 #. module: purchase_stock
-#: code:addons/purchase_stock/models/stock.py:118
-#: selection:procurement.rule,action:0
+#: code:addons/purchase_stock/models/stock.py:127
+#: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_report_stock_rule
 #: model:stock.location.route,name:purchase_stock.route_warehouse0_buy
+#: selection:stock.rule,action:0
 #, python-format
 msgid "Buy"
 msgstr "Kupi"
@@ -47,11 +49,13 @@ msgid "Buy rule"
 msgstr "Pravilo kupnje"
 
 #. module: purchase_stock
-#: code:addons/purchase_stock/models/stock.py:120
-#, python-format
-msgid ""
-"Can't find any Buy route. Please create a route with the 'Buy' action for "
-"your receipts operation types."
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse__buy_to_resupply
+msgid "Buy to Resupply"
+msgstr ""
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_res_config_settings
+msgid "Config Settings"
 msgstr ""
 
 #. module: purchase_stock
@@ -68,10 +72,8 @@ msgstr "Dostaviti"
 #: model:ir.model.fields,help:purchase_stock.field_product_template__route_ids
 msgid ""
 "Depending on the modules installed, this will allow you to define the route "
-"of the product: whether it will be bought, manufactured, MTO/MTS,..."
+"of the product: whether it will be bought, manufactured, MTO, etc."
 msgstr ""
-"Ovisno o instaliranim modulima, ovo će Vam dopustiti definiranje rute "
-"proizvoda: hoće li biti kupljeni, proizvedeni, MTO/MTS,..."
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__default_location_dest_id_usage
@@ -143,12 +145,17 @@ msgid "Logistics"
 msgstr "Logistika"
 
 #. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_stock_production_lot
+msgid "Lot/Serial"
+msgstr "Lot/Serija"
+
+#. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
 msgid "Manual actions may be needed."
 msgstr ""
 
 #. module: purchase_stock
-#: selection:procurement.rule,action:0
+#: selection:stock.rule,action:0
 msgid "Manufacture"
 msgstr "Proizvodnja"
 
@@ -164,11 +171,6 @@ msgstr ""
 #: model:ir.model,name:purchase_stock.model_stock_warehouse_orderpoint
 msgid "Minimum Inventory Rule"
 msgstr "Pravilo minimalne zalihe"
-
-#. module: purchase_stock
-#: selection:procurement.rule,action:0
-msgid "Move From Another Location"
-msgstr "Premjesti s nekog drugog mjesta"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
@@ -196,14 +198,19 @@ msgid "Procurement Group"
 msgstr "Grupa nabave"
 
 #. module: purchase_stock
-#: model:ir.model,name:purchase_stock.model_procurement_rule
-msgid "Procurement Rule"
-msgstr "Pravilo nabave"
-
-#. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_product_template
 msgid "Product Template"
 msgstr "Predložak proizvoda"
+
+#. module: purchase_stock
+#: selection:stock.rule,action:0
+msgid "Pull & Push"
+msgstr ""
+
+#. module: purchase_stock
+#: selection:stock.rule,action:0
+msgid "Pull From"
+msgstr ""
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_purchase_order
@@ -218,18 +225,25 @@ msgstr "Stavka naloga nabave"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_picking__purchase_id
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_production_lot__purchase_order_ids
+#: model_terms:ir.ui.view,arch_db:purchase_stock.stock_production_lot_view_form
 msgid "Purchase Orders"
 msgstr "Nalozi u nabavi"
 
 #. module: purchase_stock
-#: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse__buy_to_resupply
-msgid "Purchase to resupply this warehouse"
-msgstr "Kupnja na ovo opskrbno skladište"
+#: model:ir.model,name:purchase_stock.model_purchase_report
+msgid "Purchase Report"
+msgstr ""
 
 #. module: purchase_stock
-#: model:ir.model,name:purchase_stock.model_purchase_report
-msgid "Purchases Orders"
-msgstr "Nalozi za nabavu"
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_production_lot__purchase_order_count
+msgid "Purchase order count"
+msgstr ""
+
+#. module: purchase_stock
+#: selection:stock.rule,action:0
+msgid "Push To"
+msgstr ""
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
@@ -283,12 +297,22 @@ msgid "Stock Moves"
 msgstr "Skladišni prijenosi"
 
 #. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_stock_rule
+msgid "Stock Rule"
+msgstr ""
+
+#. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_report_stock_report_stock_rule
+msgid "Stock rule report"
+msgstr ""
+
+#. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order__default_location_dest_id_usage
 msgid "Technical field used to display the Drop Ship Address"
 msgstr "Tehničko polje korišteno za prikaz Drop Ship adrese"
 
 #. module: purchase_stock
-#: code:addons/purchase_stock/models/purchase.py:261
+#: code:addons/purchase_stock/models/purchase.py:265
 #, python-format
 msgid ""
 "The quantities on your purchase order indicate less than billed. You should "
@@ -296,7 +320,7 @@ msgid ""
 msgstr ""
 
 #. module: purchase_stock
-#: code:addons/purchase_stock/models/procurement.py:22
+#: code:addons/purchase_stock/models/stock_rule.py:38
 #, python-format
 msgid ""
 "There is no vendor associated to the product %s. Please define a vendor for "
@@ -344,7 +368,15 @@ msgid "When products are bought, they can be delivered to this warehouse"
 msgstr "Kada se proizvodi kupuju, mogu se dostaviti na ovo skladište"
 
 #. module: purchase_stock
-#: code:addons/purchase_stock/models/purchase.py:253
+#: code:addons/purchase_stock/models/stock_rule.py:20
+#, python-format
+msgid ""
+"When products are needed in <b>%s</b>, <br/> a request for quotation is "
+"created to fulfill the need."
+msgstr ""
+
+#. module: purchase_stock
+#: code:addons/purchase_stock/models/purchase.py:257
 #, python-format
 msgid ""
 "You cannot decrease the ordered quantity below the received quantity.\n"
@@ -352,7 +384,7 @@ msgid ""
 msgstr ""
 
 #. module: purchase_stock
-#: code:addons/purchase_stock/models/purchase.py:182
+#: code:addons/purchase_stock/models/purchase.py:186
 #, python-format
 msgid "You must set a Vendor Location for this partner %s"
 msgstr "Morate postaviti lokaciju dobavljača za ovog partnera %s "
@@ -371,8 +403,3 @@ msgstr "od"
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
 msgid "ordered instead of"
 msgstr ""
-
-#. module: purchase_stock
-#: model:ir.model,name:purchase_stock.model_res_config_settings
-msgid "res.config.settings"
-msgstr "res.config.settings"

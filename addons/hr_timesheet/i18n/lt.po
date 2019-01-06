@@ -9,8 +9,8 @@
 # Šarūnas Ažna <sarunas.azna@gmail.com>, 2018
 # Monika Raciunaite <monika.raciunaite@gmail.com>, 2018
 # digitouch UAB <digitouchagencyeur@gmail.com>, 2018
-# Linas Versada <linaskrisiukenas@gmail.com>, 2018
 # UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2018
+# Linas Versada <linaskrisiukenas@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-12-19 08:20+0000\n"
 "PO-Revision-Date: 2018-08-24 09:19+0000\n"
-"Last-Translator: UAB \"Draugiški sprendimai\" <transifex@draugiskisprendimai.lt>, 2018\n"
+"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2019\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -39,27 +39,27 @@ msgstr "<span class=\"o_stat_text\">Darbo laiko žiniaraščiai</span>"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid "<span> planned hours</span>"
-msgstr ""
+msgstr "<span>suplanuotos valandos</span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet
 msgid "<span>Date</span>"
-msgstr ""
+msgstr "<span>Data</span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet
 msgid "<span>Description</span>"
-msgstr ""
+msgstr "<span>Aprašymas</span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet
 msgid "<span>Responsible</span>"
-msgstr ""
+msgstr "<span>Atsakingas</span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet
 msgid "<span>Time</span>"
-msgstr ""
+msgstr "<span>Laikas</span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet
@@ -147,12 +147,12 @@ msgstr "Įmonės"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_account__company_uom_id
 msgid "Company UOM"
-msgstr "Įmonės UOM"
+msgstr "Įmonės matavimo vienetas"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__total_hours_spent
 msgid "Computed as: Time Spent + Sub-tasks Hours."
-msgstr "Skaičiuojama taip : Praleistas laikas + Dukterinių užduočių valandos."
+msgstr "Skaičiuojama taip: Praleistas laikas + Dukterinių užduočių valandos."
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__effective_hours
@@ -162,7 +162,7 @@ msgstr "Apskaičiuota bendra suma, gaunama sudėjus visas baigtas užduotis."
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Konfigūracijos nustatymai"
 
 #. module: hr_timesheet
 #: model:ir.ui.menu,name:hr_timesheet.hr_timesheet_menu_configuration
@@ -193,7 +193,7 @@ msgstr "Aprašymas"
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__progress
 msgid "Display progress of current task."
-msgstr ""
+msgstr "Dabartinės užduoties dienos progresas."
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_task
@@ -204,7 +204,7 @@ msgstr "Trukmė"
 #: code:addons/hr_timesheet/models/hr_timesheet.py:95
 #, python-format
 msgid "Duration (%s)"
-msgstr ""
+msgstr "Trukmė (%s)"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user__hours_effective
@@ -221,7 +221,7 @@ msgstr "Darbuotojas"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__timesheet_encode_uom_id
 msgid "Encoding Unit"
-msgstr ""
+msgstr "Kodavimo vienetas"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
@@ -241,7 +241,7 @@ msgstr "Grupuoti pagal"
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_ir_http
 msgid "HTTP Routing"
-msgstr ""
+msgstr "HTTP nukreipimas"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__effective_hours
@@ -294,7 +294,7 @@ msgstr "Mano darbo laiko žiniaraščiai"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user__hours_planned
 msgid "Planned Hours"
-msgstr "Planuojamos valandos"
+msgstr "Suplanuotos valandos"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/models/analytic_account.py:28
@@ -353,7 +353,7 @@ msgstr "Projektai"
 #: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_report_by_project
 #: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_report_by_task
 msgid "Record a new activity"
-msgstr ""
+msgstr "Įrašyti naują veiklą"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__remaining_hours
@@ -381,6 +381,7 @@ msgstr "Atsakingas"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
 msgid "Set time unit used to record your timesheets"
 msgstr ""
+"Nustatykite laiko vienetą, kuriuo registruojami jūsų apskaitos žiniaraščiai"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.hr_timesheet_config_settings_action
@@ -396,12 +397,12 @@ msgstr "Praleistos valandos"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__subtask_effective_hours
 msgid "Sub-tasks Hours Spent"
-msgstr ""
+msgstr "Praleistos dukterinės užduoties valandos"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__subtask_effective_hours
 msgid "Sum of actually spent hours on the subtask(s)"
-msgstr ""
+msgstr "Iš tikrųjų prie dukterinės užduoties praleistų valandų suma"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
@@ -428,6 +429,8 @@ msgid ""
 "The project you are timesheeting on is not linked to an active analytic "
 "account. Set one on the project configuration."
 msgstr ""
+"Apskaitomas projektas nėra susietas su aktyvia analitine sąskaita. "
+"Nustatykite ją projekto konfigūracijoje."
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/models/project.py:147
@@ -436,6 +439,8 @@ msgid ""
 "This task must be part of a project because they some timesheets are linked "
 "to it."
 msgstr ""
+"Ši užduoties turi būti projekto dalis, kadangi yra su ja susietų apskaitos "
+"žiniaraščių."
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_account_analytic_account__company_uom_id
@@ -455,11 +460,13 @@ msgid ""
 "This will set the unit of measure used to encode timesheet. This will simply provide tools\n"
 "        and widgets to help the encoding. All reporting will still be expressed in hours (default value)."
 msgstr ""
+"Tai nustatys matavimo vienetą, naudojamą apskaitos žiniaraščio kodavimui. Tai tiesiog suteiks įrankius\n"
+"ir valdiklius, kurie padės kodavime. Visos ataskaitos vis dar bus išreikštos valandomis (numatytoji reikšmė)."
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
 msgid "Time Encoding"
-msgstr ""
+msgstr "Laiko kodavimas"
 
 #. module: hr_timesheet
 #: model:ir.ui.menu,name:hr_timesheet.menu_hr_time_tracking
@@ -467,7 +474,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_hr_timesheet_line_pivot
 msgid "Timesheet"
-msgstr "Darbo apskaitos žiniaraštis"
+msgstr "Darbo laiko apskaitos žiniaraštis"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_tree
@@ -478,17 +485,17 @@ msgstr "Darbo laiko žiniaraščio veikla"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_hr_employee__timesheet_cost
 msgid "Timesheet Cost"
-msgstr "Žiniaraščio kaštai"
+msgstr "Darbo laiko žiniaraščio kaštai"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
 msgid "Timesheet Date"
-msgstr ""
+msgstr "Darbo apskaitos žiniaraščio data"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_company__timesheet_encode_uom_id
 msgid "Timesheet Encoding Unit"
-msgstr ""
+msgstr "Darbo apskaitos žiniaraščio kodavimo vienetas"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.project_task_action_view_timesheet
@@ -499,7 +506,7 @@ msgstr "Darbo laiko žiniaraščio įrašai"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
 msgid "Timesheet by Date"
-msgstr ""
+msgstr "Darbo apskaitos žiniaraščiai pagal datą"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_from_employee
@@ -517,7 +524,7 @@ msgstr "Darbo apskaitos žiniaraščiai"
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__allow_timesheets
 msgid "Timesheets can be logged on this task."
-msgstr ""
+msgstr "Darbo žiniaraščiai gali būti registruojami šioje užduotyje."
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/models/project.py:32
@@ -525,6 +532,8 @@ msgstr ""
 msgid ""
 "To allow timesheet, your project %s should have an analytic account set."
 msgstr ""
+"Kad būtų leidžiami apskaitos žiniaraščiai, jūsų projektas %s turėtų turėti "
+"nustatytą analitinę sąskaitą."
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_tree
@@ -541,13 +550,15 @@ msgstr "Iš viso valandų"
 msgid ""
 "Total remaining time, can be re-estimated periodically by the assignee of "
 "the task."
-msgstr "Užduoties įgaliotinis gali periodiškai pertvarkyti visą likusį laiką."
+msgstr ""
+"Visas likęs laikas, kuris gali būti periodiškai perskaičiuotas užduoties "
+"vykdytojo."
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/models/project.py:51
 #, python-format
 msgid "Unknown Analytic Account"
-msgstr ""
+msgstr "Nežinoma analitinė sąskaita"
 
 #. module: hr_timesheet
 #: model:res.groups,name:hr_timesheet.group_hr_timesheet_user
@@ -562,7 +573,7 @@ msgstr "Patvirtintos atostogos sukuria darbo laiko žiniaraščius automatiškai
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_uom_uom__timesheet_widget
 msgid "Widget"
-msgstr ""
+msgstr "Valdiklis"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_uom_uom__timesheet_widget
@@ -570,6 +581,8 @@ msgid ""
 "Widget used in the webclient when this unit is the one used to encode "
 "timesheets."
 msgstr ""
+"Valdiklis, naudojamas naršyklėje, kai šis vienetas yra naudojamas apskaitos "
+"žiniaraščių kodavimui."
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
@@ -578,6 +591,8 @@ msgid ""
 "analytic account. Please change it, or reactivate the current one to "
 "timesheet on the project."
 msgstr ""
+"Šiame projekte negalite registruoti apskaitos žiniaraščių, nes jie susieti "
+"su neaktyvia analitine sąskaita. Pakeiskite ją arba aktyvuokite iš naujo. "
 
 #. module: hr_timesheet
 #: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line
@@ -591,7 +606,7 @@ msgid ""
 "                customers if required."
 msgstr ""
 "Galite registruoti ir sekti savo projekto darbo valandas kasdien.\n"
-"Visas laikas praleistas prie projekto taps kaštais, už kuriuos galima pateikti\n"
+"Visas laikas, praleistas prie projekto, taps kaštais, už kuriuos galima pateikti\n"
 "sąskaitą klientams, jei to reikia."
 
 #. module: hr_timesheet

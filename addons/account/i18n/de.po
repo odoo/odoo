@@ -9346,7 +9346,7 @@ msgstr "Kasse starten"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "State"
-msgstr "Bundesland"
+msgstr "Status"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_dashboard_onboarding_state
@@ -10644,14 +10644,6 @@ msgstr ""
 "beinhaltet Angaben zu Konto und dessen Spezifika."
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1439
-#, python-format
-msgid ""
-"This %s has been created from: <a href=# data-oe-model=account.invoice data-"
-"oe-id=%d>%s</a><br>Reason: %s"
-msgstr ""
-
-#. module: account
 #: code:addons/account/models/account_journal_dashboard.py:100
 #, python-format
 msgid "This Week"
@@ -10733,6 +10725,14 @@ msgstr ""
 "einrichten und vorgeben oder aus einer Liste auswählen lassen wollen. "
 "Letzeres setzt voraus, dass eine entsprechende Vorlage vollständig definiert"
 " wurde."
+
+#. module: account
+#: code:addons/account/models/account_invoice.py:1458
+#, python-format
+msgid ""
+"This customer invoice credit note has been created from: <a href=# data-oe-"
+"model=account.invoice data-oe-id=%d>%s</a><br>Reason: %s"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -10888,6 +10888,14 @@ msgstr ""
 "Dieses Feld kann verwendet werden, um nach Anlage/Import einer "
 "Kontoauszugszeile einem nochmaligen Ausgleich der Rechnung vorzubeugen. Die "
 "Auszugsposition erzeugt lediglich eine Gegenbuchung auf diesem Konto."
+
+#. module: account
+#: code:addons/account/models/account_invoice.py:1460
+#, python-format
+msgid ""
+"This vendor bill credit note has been created from: <a href=# data-oe-"
+"model=account.invoice data-oe-id=%d>%s</a><br>Reason: %s"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_validate_account_move
