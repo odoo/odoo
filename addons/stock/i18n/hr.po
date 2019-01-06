@@ -3,26 +3,27 @@
 # * stock
 # 
 # Translators:
-# Mario Jureša <mario.juresa@uvid.hr>, 2017
-# Martin Trigaux, 2017
-# Bole <bole@dajmi5.com>, 2017
-# Karolina Tonković <karolina.tonkovic@storm.hr>, 2017
-# Tina Milas, 2017
-# Marko Carević <marko.carevic@live.com>, 2017
-# Vladimir Olujić <olujic.vladimir@storm.hr>, 2017
-# storm_mpildek <matija.pildek@storm.hr>, 2017
-# Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2017
-# Đurđica Žarković <durdica.zarkovic@storm.hr>, 2017
-# KRISTINA PALAŠ <kristina.palas@storm.hr>, 2017
-# Stjepan Lovasić <stjepan.lovasic@gmail.com>, 2018
-# Ivan Marijanović <ivanm101@yahoo.com>, 2018
+# KRISTINA PALAŠ <kristina.palas@storm.hr>, 2019
+# Ivan Marijanović <ivanm101@yahoo.com>, 2019
+# Stjepan Lovasić <stjepan.lovasic@gmail.com>, 2019
+# Đurđica Žarković <durdica.zarkovic@storm.hr>, 2019
+# Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2019
+# Marko Carević <marko.carevic@live.com>, 2019
+# Mario Jureša <mario.juresa@uvid.hr>, 2019
+# Martin Trigaux, 2019
+# Bole <bole@dajmi5.com>, 2019
+# Vladimir Olujić <olujic.vladimir@storm.hr>, 2019
+# Karolina Tonković <karolina.tonkovic@storm.hr>, 2019
+# storm_mpildek <matija.pildek@storm.hr>, 2019
+# Tina Milas, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:11+0000\n"
-"PO-Revision-Date: 2018-08-02 09:11+0000\n"
-"Last-Translator: Ivan Marijanović <ivanm101@yahoo.com>, 2018\n"
+"POT-Creation-Date: 2018-12-19 08:20+0000\n"
+"PO-Revision-Date: 2018-08-24 09:25+0000\n"
+"Last-Translator: Tina Milas, 2019\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,7 +32,7 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:343
+#: code:addons/stock/models/stock_move.py:341
 #, python-format
 msgid ""
 "\n"
@@ -40,7 +41,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:344
+#: code:addons/stock/models/stock_move.py:342
 #, python-format
 msgid ""
 "\n"
@@ -49,13 +50,13 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:331
+#: code:addons/stock/models/stock_move.py:329
 #, python-format
 msgid " (%s reserved)"
 msgstr " (%s rezervirano)"
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:334
+#: code:addons/stock/models/stock_move.py:332
 #, python-format
 msgid " (reserved)"
 msgstr "(rezervirano)"
@@ -77,7 +78,7 @@ msgid "#Products"
 msgstr "#Proizvoda"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:486
+#: code:addons/stock/models/stock_warehouse.py:559
 #, python-format
 msgid "%s: Supply Product from %s"
 msgstr "%s: nabavi proizvode sa %s"
@@ -113,6 +114,11 @@ msgid ""
 msgstr ""
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
+msgid ", max:"
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
 msgid ""
 ".\n"
@@ -124,6 +130,14 @@ msgstr ""
 msgid ""
 "<br/>\n"
 "                    <strong>Here is your current inventory: </strong>"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/stock_rule.py:111
+#, python-format
+msgid ""
+"<br>A need is created in <b>%s</b> and a rule will be triggered to fulfill "
+"it."
 msgstr ""
 
 #. module: stock
@@ -156,10 +170,15 @@ msgstr ""
 "                                <span class=\"o_stat_text\">Max:</span>"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
+#: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
+#: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
+msgid "<span class=\"o_stat_text\">On Hand</span>"
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<span><strong>Customer Address:</strong></span>"
-msgstr "<span><strong>Adresa Kupca:</strong></span>"
+msgstr "<span><strong>Adresa kupca:</strong></span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -179,7 +198,7 @@ msgstr "<span><strong>Adresa skladišta:</strong></span>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "<span>New</span>"
-msgstr "<span>¨Novo</span>"
+msgstr "<span>Novo</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
@@ -249,6 +268,11 @@ msgid "<strong>Package</strong>"
 msgstr "<strong>Pakiranje</strong>"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_track_confirmation
+msgid "<strong>Product(s) tracked: </strong>"
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -298,13 +322,18 @@ msgid "<strong>Total Quantity</strong>"
 msgstr "<strong>Ukupna količina</strong>"
 
 #. module: stock
-#: code:addons/stock/models/stock_inventory.py:122
+#: model_terms:ir.ui.view,arch_db:stock.stock_package_destination_form_view
+msgid "<strong>Where do you want to send the products ?</strong>"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/stock_inventory.py:123
 #, python-format
 msgid "A Pack"
 msgstr "Paket"
 
 #. module: stock
-#: code:addons/stock/models/stock_move_line.py:87
+#: code:addons/stock/models/stock_move_line.py:88
 #, python-format
 msgid "A done move line should never have a reserved quantity."
 msgstr ""
@@ -319,20 +348,18 @@ msgstr ""
 #: model:ir.model.fields,help:stock.field_product_template__type
 #: model:ir.model.fields,help:stock.field_stock_move__product_type
 msgid ""
-"A stockable product is a product for which you manage stock. The \"Inventory\" app has to be installed.\n"
-"A consumable product, on the other hand, is a product for which stock is not managed.\n"
-"A service is a non-material product you provide.\n"
-"A digital content is a non-material product you sell online. The files attached to the products are the one that are sold on the e-commerce such as e-books, music, pictures,... The \"Digital Product\" module has to be installed."
+"A storable product is a product for which you manage stock. The Inventory app has to be installed.\n"
+"A consumable product is a product for which stock is not managed.\n"
+"A service is a non-material product you provide."
 msgstr ""
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_res_users__has_group_warning_stock
 #: model:res.groups,name:stock.group_warning_stock
 msgid "A warning can be set on a partner (Stock)"
 msgstr "Upozorenje može biti postavljeno na partnera (zaliha)"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_procurement_rule__action
+#: model:ir.model.fields,field_description:stock.field_stock_rule__action
 msgid "Action"
 msgstr "Akcija"
 
@@ -343,12 +370,10 @@ msgid "Action Needed"
 msgstr "Potrebna dodatna radnja"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_procurement_rule__active
-#: model:ir.model.fields,field_description:stock.field_stock_incoterms__active
 #: model:ir.model.fields,field_description:stock.field_stock_location__active
-#: model:ir.model.fields,field_description:stock.field_stock_location_path__active
 #: model:ir.model.fields,field_description:stock.field_stock_location_route__active
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__active
+#: model:ir.model.fields,field_description:stock.field_stock_rule__active
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__active
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__active
 msgid "Active"
@@ -356,11 +381,13 @@ msgstr "Aktivan"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__activity_ids
+#: model:ir.model.fields,field_description:stock.field_stock_production_lot__activity_ids
 msgid "Activities"
 msgstr "Aktivnosti"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__activity_state
+#: model:ir.model.fields,field_description:stock.field_stock_production_lot__activity_state
 msgid "Activity State"
 msgstr "Status aktivnosti"
 
@@ -378,6 +405,12 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:stock.action_routes_form
 msgid "Add a new route"
 msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_form
+msgid ""
+"Add an internal note that will be printed on the Picking Operations sheet"
+msgstr "Dodaj internu napomenu koja će se ispisati na skladišnom nalogu"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_config_settings__group_stock_adv_location
@@ -413,6 +446,11 @@ msgid "Address"
 msgstr "Adresa"
 
 #. module: stock
+#: model:ir.model.fields,help:stock.field_stock_rule__partner_address_id
+msgid "Address where goods should be delivered. Optional."
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Advanced Scheduling"
 msgstr ""
@@ -431,11 +469,6 @@ msgstr "Alias"
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "All"
 msgstr "Sve"
-
-#. module: stock
-#: model:ir.actions.act_window,name:stock.action_picking_type_list
-msgid "All Operations"
-msgstr "Sve operacije"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.stock_picking_action_picking_type
@@ -457,7 +490,7 @@ msgstr ""
 "će biti dostupni"
 
 #. module: stock
-#: code:addons/stock/models/stock_inventory.py:112
+#: code:addons/stock/models/stock_inventory.py:113
 #, python-format
 msgid "All products"
 msgstr "Svi proizvodi"
@@ -481,6 +514,11 @@ msgid ""
 msgstr ""
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_rule_form
+msgid "Applicability"
+msgstr "Primjenjivost"
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
 msgid "Applicable On"
 msgstr "Primjenjiv na"
@@ -501,11 +539,6 @@ msgid "Applicable on Warehouse"
 msgstr "Primjenjiv na skladištu"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.view_procurement_rule_form
-msgid "Applied On"
-msgstr "Primjenjeno na"
-
-#. module: stock
 #: model:ir.model.fields,help:stock.field_product_replenish__route_ids
 msgid ""
 "Apply specific route(s) for the replenishment instead of product's default "
@@ -513,13 +546,11 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.stock_incoterms_view_search
-#: model_terms:ir.ui.view,arch_db:stock.stock_location_path_filter
 #: model_terms:ir.ui.view,arch_db:stock.stock_location_route_view_search
 #: model_terms:ir.ui.view,arch_db:stock.stock_warehouse_view_search
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
 #: model_terms:ir.ui.view,arch_db:stock.view_pickingtype_filter
-#: model_terms:ir.ui.view,arch_db:stock.view_procurement_rule_filter
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_rule_filter
 #: model_terms:ir.ui.view,arch_db:stock.warehouse_orderpoint_search
 msgid "Archived"
 msgstr "Arhivirano"
@@ -557,6 +588,12 @@ msgid "At a Specific Date"
 msgstr ""
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking__message_attachment_count
+#: model:ir.model.fields,field_description:stock.field_stock_production_lot__message_attachment_count
+msgid "Attachment Count"
+msgstr ""
+
+#. module: stock
 #: model:ir.ui.menu,name:stock.menu_variants_action
 msgid "Attribute Values"
 msgstr "Vrijednosti značajki"
@@ -568,12 +605,12 @@ msgid "Attributes"
 msgstr "Značajke"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_location_path__auto
+#: model:ir.model.fields,field_description:stock.field_stock_rule__auto
 msgid "Automatic Move"
 msgstr "Automatski prijenos"
 
 #. module: stock
-#: selection:stock.location.path,auto:0
+#: selection:stock.rule,auto:0
 msgid "Automatic No Step Added"
 msgstr "Automatski se ne dodaje korak"
 
@@ -589,6 +626,7 @@ msgstr "Dostupno"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_search_form_view_stock
+#: model_terms:ir.ui.view,arch_db:stock.stock_product_search_form_view
 msgid "Available Products"
 msgstr "Dostupni proizvodi"
 
@@ -621,7 +659,7 @@ msgid "Backorder creation"
 msgstr "Izrada zaostalog naloga"
 
 #. module: stock
-#: code:addons/stock/models/stock_picking.py:73
+#: code:addons/stock/models/stock_picking.py:71
 #, python-format
 msgid "Backorder exists"
 msgstr "Zaostali nalog postoji"
@@ -634,19 +672,23 @@ msgstr "Zaostali nalozi"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__barcode
+#: model:ir.model.fields,field_description:stock.field_stock_picking_type__barcode
+#: model_terms:ir.ui.view,arch_db:stock.report_location_barcode
+#: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
+#: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "Barcode"
 msgstr "Barkod"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_picking_type__barcode_nomenclature_id
-msgid "Barcode Nomenclature"
-msgstr "Barkod nomenklatura"
-
-#. module: stock
 #: model:ir.ui.menu,name:stock.menu_wms_barcode_nomenclature_all
 msgid "Barcode Nomenclatures"
 msgstr "Barkod nomenklature"
+
+#. module: stock
+#: model:ir.model,name:stock.model_barcode_rule
+msgid "Barcode Rule"
+msgstr "Barkod pravilo"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_stock_barcode
@@ -664,17 +706,12 @@ msgid "Blocking Message"
 msgstr "Blokiranje poruke"
 
 #. module: stock
-#: selection:stock.warehouse,delivery_steps:0
-msgid "Bring goods to output location before shipping (Pick + Ship)"
-msgstr ""
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package__quant_ids
 msgid "Bulk Content"
 msgstr "Grupni sadržaj"
 
 #. module: stock
-#: selection:procurement.rule,action:0
+#: selection:stock.rule,action:0
 msgid "Buy"
 msgstr "Kupi"
 
@@ -689,7 +726,7 @@ msgid "By Unique Serial Number"
 msgstr "Po jedinstvenom serijskom broju"
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:655
+#: code:addons/stock/models/stock_move.py:644
 #, python-format
 msgid ""
 "By changing this quantity here, you accept the new quantity as complete: "
@@ -717,31 +754,9 @@ msgstr ""
 " ne koriste označite kao neaktivne."
 
 #. module: stock
-#: model:ir.model.fields,help:stock.field_stock_incoterms__active
-msgid ""
-"By unchecking the active field, you may hide an INCOTERM you will not use."
-msgstr ""
-"Ako odznačite aktivno polje, možda ćete sakriti INCOTERM koji nećete "
-"koristiti."
-
-#. module: stock
-#: model:stock.incoterms,name:stock.incoterm_CIP
-msgid "CARRIAGE AND INSURANCE PAID TO"
-msgstr ""
-
-#. module: stock
-#: model:stock.incoterms,name:stock.incoterm_CPT
-msgid "CARRIAGE PAID TO"
-msgstr ""
-
-#. module: stock
-#: model:stock.incoterms,name:stock.incoterm_CFR
-msgid "COST AND FREIGHT"
-msgstr ""
-
-#. module: stock
-#: model:stock.incoterms,name:stock.incoterm_CIF
-msgid "COST, INSURANCE AND FREIGHT"
+#: model:product.product,name:stock.product_cable_management_box
+#: model:product.template,name:stock.product_cable_management_box_product_template
+msgid "Cable Management Box"
 msgstr ""
 
 #. module: stock
@@ -750,15 +765,15 @@ msgid "Calendar View"
 msgstr "Kalendarski pogled"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:432
+#: code:addons/stock/models/stock_warehouse.py:520
 #, python-format
 msgid "Can't find any customer or supplier location."
 msgstr "Ne mogu pronaći nijednu lokaciju kupca ili dobavljača."
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:481
+#: code:addons/stock/models/stock_warehouse.py:256
 #, python-format
-msgid "Can't find any generic Make To Order route."
+msgid "Can't find any generic route %s."
 msgstr ""
 
 #. module: stock
@@ -769,6 +784,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_procurement_compute_wizard
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quantity_history
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_return_picking_form
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_rules_report
 msgid "Cancel"
 msgstr "Odustani"
 
@@ -790,7 +806,7 @@ msgid "Cancelled Moves"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:279
+#: code:addons/stock/models/stock_move.py:277
 #, python-format
 msgid ""
 "Cannot set the done quantity from this stock move, work directly with the "
@@ -808,7 +824,6 @@ msgid "Category"
 msgstr "Kategorija"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_product_product__route_from_categ_ids
 #: model:ir.model.fields,field_description:stock.field_product_template__route_from_categ_ids
 msgid "Category Routes"
 msgstr "Kategorija rute"
@@ -816,7 +831,7 @@ msgstr "Kategorija rute"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking__move_dest_exists
 msgid "Chained Move Exists"
-msgstr "Postoji ulančani prenos"
+msgstr "Postoji ulančani prijenos"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_change_product_qty
@@ -871,6 +886,12 @@ msgid "Choose a date to get the inventory at that date"
 msgstr ""
 
 #. module: stock
+#: code:addons/stock/models/stock_picking.py:998
+#, python-format
+msgid "Choose destination location"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quantity_history__compute_at_date
 msgid ""
 "Choose to analyze the current inventory or from a specific date in the past."
@@ -887,11 +908,6 @@ msgid "Client"
 msgstr "Klijent"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_incoterms__code
-msgid "Code"
-msgstr "Šifra"
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__color
 msgid "Color"
 msgstr "Boja"
@@ -902,28 +918,22 @@ msgid "Companies"
 msgstr "Tvrtke"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_procurement_rule__company_id
 #: model:ir.model.fields,field_description:stock.field_report_stock_forecast__company_id
 #: model:ir.model.fields,field_description:stock.field_stock_inventory__company_id
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line__company_id
 #: model:ir.model.fields,field_description:stock.field_stock_location__company_id
-#: model:ir.model.fields,field_description:stock.field_stock_location_path__company_id
 #: model:ir.model.fields,field_description:stock.field_stock_location_route__company_id
 #: model:ir.model.fields,field_description:stock.field_stock_move__company_id
 #: model:ir.model.fields,field_description:stock.field_stock_picking__company_id
 #: model:ir.model.fields,field_description:stock.field_stock_quant__company_id
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package__company_id
+#: model:ir.model.fields,field_description:stock.field_stock_rule__company_id
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__company_id
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__company_id
 #: model_terms:ir.ui.view,arch_db:stock.quant_package_search_view
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
 msgid "Company"
 msgstr "Tvrtka"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.view_picking_form
-msgid "Completion Date"
-msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quantity_history__compute_at_date
@@ -966,15 +976,22 @@ msgid "Conditions"
 msgstr "Uvjeti"
 
 #. module: stock
+#: model:ir.model,name:stock.model_res_config_settings
+msgid "Config Settings"
+msgstr ""
+
+#. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_config_settings
 msgid "Configuration"
 msgstr "Postava"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.stock_package_destination_form_view
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
 #: model_terms:ir.ui.view,arch_db:stock.view_overprocessed_transfer
 #: model_terms:ir.ui.view,arch_db:stock.view_product_replenish
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_operations
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_track_confirmation
 msgid "Confirm"
 msgstr "Potvrdi"
 
@@ -1015,6 +1032,7 @@ msgstr "Sadržaj"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_replenish__product_uom_category_id
+#: model:ir.model.fields,help:stock.field_stock_inventory_line__product_uom_category_id
 msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
@@ -1026,7 +1044,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__posx
 msgid "Corridor (X)"
-msgstr "Corridor (X)"
+msgstr "Hodnik (X)"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_immediate_transfer.py:24
@@ -1077,7 +1095,7 @@ msgid "Create Backorder"
 msgstr "Napravi zaostali nalog"
 
 #. module: stock
-#: code:addons/stock/models/stock_picking.py:757
+#: code:addons/stock/models/stock_picking.py:755
 #, python-format
 msgid "Create Backorder?"
 msgstr "Napravi zaostali nalog?"
@@ -1085,32 +1103,27 @@ msgstr "Napravi zaostali nalog?"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_scrap_tree_view
 msgid "Create Date"
-msgstr "Kreiraj datum"
+msgstr "Datum kreiranja"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_move_line__picking_type_use_create_lots
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__use_create_lots
 msgid "Create New Lots/Serial Numbers"
 msgstr "Kreiraj nove lot/serijske brojeve"
 
 #. module: stock
-#: selection:procurement.rule,procure_method:0
-msgid "Create Procurement"
-msgstr "Napravi nabavku"
+#: model:ir.model.fields,help:stock.field_stock_rule__procure_method
+msgid ""
+"Create Procurement: A procurement will be created in the source location and the system will try to find a rule to resolve it. The available stock will be ignored.\n"
+"             Take from Stock: The products will be taken from the available stock."
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
 msgid ""
-"Create a backorder, if you expect to process the remaining\n"
-"                        products later.  Do not create a backorder if you will not\n"
-"                        supply the remaining products."
-msgstr ""
-"Kreirajte zaostali nalog ako očekujete obradu preostalih\n"
-"proizvoda kasnije. Nemojte kreirati zaostali nalog ako nećete\n"
-"nadoknaditi preostale proizvode."
-
-#. module: stock
-#: model_terms:ir.actions.act_window,help:stock.action_incoterms_tree
-msgid "Create a new incoterm"
+"Create a backorder if you expect to process the remaining\n"
+"                        products later. Do not create a backorder if you will not\n"
+"                        process the remaining products."
 msgstr ""
 
 #. module: stock
@@ -1155,7 +1168,6 @@ msgstr "Kreirani prijenosi"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_group__create_uid
-#: model:ir.model.fields,field_description:stock.field_procurement_rule__create_uid
 #: model:ir.model.fields,field_description:stock.field_product_putaway__create_uid
 #: model:ir.model.fields,field_description:stock.field_product_removal__create_uid
 #: model:ir.model.fields,field_description:stock.field_product_replenish__create_uid
@@ -1163,15 +1175,14 @@ msgstr "Kreirani prijenosi"
 #: model:ir.model.fields,field_description:stock.field_stock_change_product_qty__create_uid
 #: model:ir.model.fields,field_description:stock.field_stock_fixed_putaway_strat__create_uid
 #: model:ir.model.fields,field_description:stock.field_stock_immediate_transfer__create_uid
-#: model:ir.model.fields,field_description:stock.field_stock_incoterms__create_uid
 #: model:ir.model.fields,field_description:stock.field_stock_inventory__create_uid
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line__create_uid
 #: model:ir.model.fields,field_description:stock.field_stock_location__create_uid
-#: model:ir.model.fields,field_description:stock.field_stock_location_path__create_uid
 #: model:ir.model.fields,field_description:stock.field_stock_location_route__create_uid
 #: model:ir.model.fields,field_description:stock.field_stock_move__create_uid
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__create_uid
 #: model:ir.model.fields,field_description:stock.field_stock_overprocessed_transfer__create_uid
+#: model:ir.model.fields,field_description:stock.field_stock_package_destination__create_uid
 #: model:ir.model.fields,field_description:stock.field_stock_package_level__create_uid
 #: model:ir.model.fields,field_description:stock.field_stock_picking__create_uid
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__create_uid
@@ -1181,9 +1192,13 @@ msgstr "Kreirani prijenosi"
 #: model:ir.model.fields,field_description:stock.field_stock_quantity_history__create_uid
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking__create_uid
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking_line__create_uid
+#: model:ir.model.fields,field_description:stock.field_stock_rule__create_uid
+#: model:ir.model.fields,field_description:stock.field_stock_rules_report__create_uid
 #: model:ir.model.fields,field_description:stock.field_stock_scheduler_compute__create_uid
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__create_uid
 #: model:ir.model.fields,field_description:stock.field_stock_traceability_report__create_uid
+#: model:ir.model.fields,field_description:stock.field_stock_track_confirmation__create_uid
+#: model:ir.model.fields,field_description:stock.field_stock_track_line__create_uid
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__create_uid
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__create_uid
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_scrap__create_uid
@@ -1192,7 +1207,6 @@ msgstr "Kreirao"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_group__create_date
-#: model:ir.model.fields,field_description:stock.field_procurement_rule__create_date
 #: model:ir.model.fields,field_description:stock.field_product_putaway__create_date
 #: model:ir.model.fields,field_description:stock.field_product_removal__create_date
 #: model:ir.model.fields,field_description:stock.field_product_replenish__create_date
@@ -1200,45 +1214,39 @@ msgstr "Kreirao"
 #: model:ir.model.fields,field_description:stock.field_stock_change_product_qty__create_date
 #: model:ir.model.fields,field_description:stock.field_stock_fixed_putaway_strat__create_date
 #: model:ir.model.fields,field_description:stock.field_stock_immediate_transfer__create_date
-#: model:ir.model.fields,field_description:stock.field_stock_incoterms__create_date
 #: model:ir.model.fields,field_description:stock.field_stock_inventory__create_date
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line__create_date
 #: model:ir.model.fields,field_description:stock.field_stock_location__create_date
-#: model:ir.model.fields,field_description:stock.field_stock_location_path__create_date
 #: model:ir.model.fields,field_description:stock.field_stock_location_route__create_date
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__create_date
 #: model:ir.model.fields,field_description:stock.field_stock_overprocessed_transfer__create_date
+#: model:ir.model.fields,field_description:stock.field_stock_package_destination__create_date
 #: model:ir.model.fields,field_description:stock.field_stock_package_level__create_date
 #: model:ir.model.fields,field_description:stock.field_stock_picking__create_date
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__create_date
+#: model:ir.model.fields,field_description:stock.field_stock_production_lot__create_date
 #: model:ir.model.fields,field_description:stock.field_stock_quant__create_date
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package__create_date
 #: model:ir.model.fields,field_description:stock.field_stock_quantity_history__create_date
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking__create_date
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking_line__create_date
+#: model:ir.model.fields,field_description:stock.field_stock_rule__create_date
+#: model:ir.model.fields,field_description:stock.field_stock_rules_report__create_date
 #: model:ir.model.fields,field_description:stock.field_stock_scheduler_compute__create_date
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__create_date
 #: model:ir.model.fields,field_description:stock.field_stock_traceability_report__create_date
+#: model:ir.model.fields,field_description:stock.field_stock_track_confirmation__create_date
+#: model:ir.model.fields,field_description:stock.field_stock_track_line__create_date
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__create_date
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__create_date
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_scrap__create_date
 msgid "Created on"
-msgstr "Datum kreiranja"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.view_procurement_rule_form
-msgid "Creates"
-msgstr "Kreira"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.view_move_search
-msgid "Creation"
 msgstr "Kreirano"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__create_date
 #: model:ir.model.fields,field_description:stock.field_stock_picking__date
-#: model:ir.model.fields,field_description:stock.field_stock_production_lot__create_date
+#: model_terms:ir.ui.view,arch_db:stock.view_move_search
 msgid "Creation Date"
 msgstr "Datum kreiranja"
 
@@ -1253,7 +1261,7 @@ msgid "Credit Card"
 msgstr "Kreditna kartica"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:437
+#: code:addons/stock/models/stock_warehouse.py:525
 #, python-format
 msgid "Cross-Dock"
 msgstr "Cross-Dock"
@@ -1290,21 +1298,19 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_picking.py:111
+#: code:addons/stock/models/stock_picking.py:109
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
 #, python-format
 msgid "Customer"
 msgstr "Kupac"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_product_product__sale_delay
 #: model:ir.model.fields,field_description:stock.field_product_template__sale_delay
 msgid "Customer Lead Time"
 msgstr "Rok isporuke kupcu"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_partner__property_stock_customer
-#: model:ir.model.fields,field_description:stock.field_res_users__property_stock_customer
 #: selection:stock.location,usage:0
 msgid "Customer Location"
 msgstr "Lokacija kupca"
@@ -1315,55 +1321,14 @@ msgid "Customer Locations"
 msgstr "Lokacije kupca"
 
 #. module: stock
-#: model:stock.location,name:stock.stock_location_customers
 #: selection:stock.picking.type,code:0
 msgid "Customers"
 msgstr "Kupci"
 
 #. module: stock
-#: model:stock.incoterms,name:stock.incoterm_DAF
-msgid "DELIVERED AT FRONTIER"
-msgstr ""
-
-#. module: stock
-#: model:stock.incoterms,name:stock.incoterm_DAP
-msgid "DELIVERED AT PLACE"
-msgstr ""
-
-#. module: stock
-#: model:stock.incoterms,name:stock.incoterm_DAT
-msgid "DELIVERED AT TERMINAL"
-msgstr ""
-
-#. module: stock
-#: model:stock.incoterms,name:stock.incoterm_DDP
-msgid "DELIVERED DUTY PAID"
-msgstr ""
-
-#. module: stock
-#: model:stock.incoterms,name:stock.incoterm_DDU
-msgid "DELIVERED DUTY UNPAID"
-msgstr ""
-
-#. module: stock
-#: model:stock.incoterms,name:stock.incoterm_DEQ
-msgid "DELIVERED EX QUAY"
-msgstr ""
-
-#. module: stock
-#: model:stock.incoterms,name:stock.incoterm_DES
-msgid "DELIVERED EX SHIP"
-msgstr ""
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_dhl
 msgid "DHL Connector"
 msgstr ""
-
-#. module: stock
-#: model:ir.ui.menu,name:stock.stock_picking_type_menu
-msgid "Dashboard"
-msgstr "Kontrolna ploča"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_report_stock_forecast__date
@@ -1372,6 +1337,7 @@ msgstr "Kontrolna ploča"
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_body_print
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_inventory
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_tree
+#: model_terms:ir.ui.view,arch_db:stock.view_move_search
 msgid "Date"
 msgstr "Datum"
 
@@ -1406,6 +1372,27 @@ msgid "Day(s) to purchase"
 msgstr "Dan(a) za nabavu"
 
 #. module: stock
+#: model:res.company,overdue_msg:stock.res_company_1
+msgid ""
+"Dear Sir/Madam,\n"
+"\n"
+"Our records indicate that some payments on your account are still due. Please find details below.\n"
+"If the amount has already been paid, please disregard this notice. Otherwise, please forward us the total amount stated below.\n"
+"If you have any queries regarding your account, Please contact us.\n"
+"\n"
+"Thank you in advance for your cooperation.\n"
+"Best Regards,"
+msgstr ""
+"Poštovani Gospodine/Gospođo,\n"
+"\n"
+"Naša evidencija pokazuje da ima nepodmiranih dugovanja. Molimo ispunite sljedeće podatke.\n"
+"Ukoliko je iznos već plaćen, molimo zanemarite ovu obavijest, u protivnom, molimo da uplatite ukupan navedeni iznos.\n"
+"Ukoliko imate pitanja vezanih za Vaš račun, molimo da nas kontaktirate.\n"
+"\n"
+"Unaprijed zahvaljujemo na suradnji.\n"
+"Srdačan pozdrav,"
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__default_location_dest_id
 msgid "Default Destination Location"
 msgstr "Zadana odredišna lokacija"
@@ -1416,21 +1403,9 @@ msgid "Default Owner"
 msgstr "Zadani vlasnik"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_warehouse__default_resupply_wh_id
-msgid "Default Resupply Warehouse"
-msgstr "Zadano skladište popunjivanja"
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__default_location_src_id
 msgid "Default Source Location"
 msgstr "Zadana izvorna lokacija"
-
-#. module: stock
-#: model:ir.model.fields,help:stock.field_stock_production_lot__product_uom_id
-#: model:ir.model.fields,help:stock.field_stock_quant__product_uom_id
-#: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__product_uom
-msgid "Default Unit of Measure used for all stock operation."
-msgstr "Predefinirana JM za sve funkcije zalihe."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse__reception_steps
@@ -1441,6 +1416,13 @@ msgstr "Predefinirana ulazna ruta"
 #: model:ir.model.fields,help:stock.field_stock_warehouse__delivery_steps
 msgid "Default outgoing route to follow"
 msgstr "Predefinirana izlazna ruta"
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_production_lot__product_uom_id
+#: model:ir.model.fields,help:stock.field_stock_quant__product_uom_id
+#: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__product_uom
+msgid "Default unit of measure used for all stock operations."
+msgstr ""
 
 #. module: stock
 #: selection:stock.move,procure_method:0
@@ -1499,18 +1481,35 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.stock_location_path_form
-#: model_terms:ir.ui.view,arch_db:stock.view_procurement_rule_form
+#: model:ir.model.fields,field_description:stock.field_stock_rule__delay
 msgid "Delay"
 msgstr "Kašnjenje"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_location_path__delay
-msgid "Delay (days)"
-msgstr "Zastoj (dana)"
+#: selection:stock.warehouse,delivery_steps:0
+msgid "Deliver goods directly (1 step)"
+msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/product.py:331
+#: code:addons/stock/models/stock_warehouse.py:526
+#, python-format
+msgid "Deliver in 1 step (ship)"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/stock_warehouse.py:526
+#, python-format
+msgid "Deliver in 2 steps (pick + ship)"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/stock_warehouse.py:527
+#, python-format
+msgid "Deliver in 3 steps (pick + pack + ship)"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/product.py:335
 #, python-format
 msgid "Delivered Qty"
 msgstr "Otpremljena kol."
@@ -1521,7 +1520,8 @@ msgid "Deliveries"
 msgstr "Dostave"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:213
+#: code:addons/stock/models/stock_warehouse.py:734
+#: model:stock.picking.type,name:stock.chi_picking_type_out
 #: model:stock.picking.type,name:stock.picking_type_out
 #, python-format
 msgid "Delivery Orders"
@@ -1548,22 +1548,18 @@ msgid "Delivery Type"
 msgstr "Tip isporuke"
 
 #. module: stock
-#: model:ir.model.fields,help:stock.field_product_product__sale_delay
 #: model:ir.model.fields,help:stock.field_product_template__sale_delay
 msgid ""
 "Delivery lead time, in days. It's the number of days, promised to the "
-"customer, between the confirmation of the order and the delivery."
+"customer, between the confirmation of the sales order and the delivery."
 msgstr ""
 
 #. module: stock
-#: model:ir.model.fields,help:stock.field_product_product__route_ids
 #: model:ir.model.fields,help:stock.field_product_template__route_ids
 msgid ""
 "Depending on the modules installed, this will allow you to define the route "
-"of the product: whether it will be bought, manufactured, MTO/MTS,..."
+"of the product: whether it will be bought, manufactured, MTO, etc."
 msgstr ""
-"Ovisno o instaliranim modulima, ovo će Vam dopustiti definiranje rute "
-"proizvoda: hoće li biti kupljeni, proizvedeni, MTO/MTS,..."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__name
@@ -1582,30 +1578,26 @@ msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
-msgid "Description for Receptions"
+msgid "Description for Receipts"
 msgstr ""
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_product_product__description_pickingout
 #: model:ir.model.fields,field_description:stock.field_product_template__description_pickingout
 msgid "Description on Delivery Orders"
 msgstr ""
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_product_product__description_picking
 #: model:ir.model.fields,field_description:stock.field_product_template__description_picking
 msgid "Description on Picking"
 msgstr "Opis na skladišnicama"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_product_product__description_pickingin
 #: model:ir.model.fields,field_description:stock.field_product_template__description_pickingin
 msgid "Description on Receptions"
 msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
-#: model_terms:ir.ui.view,arch_db:stock.view_move_search
 msgid "Destination"
 msgstr "Odredište"
 
@@ -1615,9 +1607,12 @@ msgid "Destination Address "
 msgstr "Odredišna adresa "
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_location_path__location_dest_id
+#: code:addons/stock/models/stock_rule.py:96
 #: model:ir.model.fields,field_description:stock.field_stock_move__location_dest_id
 #: model:ir.model.fields,field_description:stock.field_stock_picking__location_dest_id
+#: model:ir.model.fields,field_description:stock.field_stock_rule__location_id
+#: model_terms:ir.ui.view,arch_db:stock.view_move_search
+#, python-format
 msgid "Destination Location"
 msgstr "Odredišna lokacija"
 
@@ -1644,21 +1639,21 @@ msgid "Destination Package :"
 msgstr ""
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_package_destination__location_dest_id
+msgid "Destination location"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__route_ids
 msgid "Destination route"
 msgstr "Odredišna ruta"
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:471
+#: code:addons/stock/models/stock_move.py:470
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #, python-format
 msgid "Detailed Operations"
 msgstr ""
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.stock_location_path_form
-msgid "Details"
-msgstr "Detalji"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__show_details_visible
@@ -1666,17 +1661,11 @@ msgid "Details Visible"
 msgstr ""
 
 #. module: stock
-#: model:ir.model.fields,help:stock.field_procurement_rule__procure_method
-msgid ""
-"Determines the procurement method of the stock move that will be generated: "
-"whether it will need to 'take from the available stock' in its source "
-"location or needs to ignore its stock and create a procurement over there."
-msgstr ""
-
-#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.stock_package_destination_form_view
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
 #: model_terms:ir.ui.view,arch_db:stock.view_product_replenish
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_operations
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_track_confirmation
 msgid "Discard"
 msgstr "Odbaci"
 
@@ -1686,25 +1675,29 @@ msgid "Discounted Product"
 msgstr "Proizvod na popustu"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_res_config_settings__group_lot_on_delivery_slip
+msgid "Display Lots & Serial Numbers"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_group__display_name
-#: model:ir.model.fields,field_description:stock.field_procurement_rule__display_name
 #: model:ir.model.fields,field_description:stock.field_product_putaway__display_name
 #: model:ir.model.fields,field_description:stock.field_product_removal__display_name
 #: model:ir.model.fields,field_description:stock.field_product_replenish__display_name
 #: model:ir.model.fields,field_description:stock.field_report_stock_forecast__display_name
+#: model:ir.model.fields,field_description:stock.field_report_stock_report_stock_rule__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_backorder_confirmation__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_change_product_qty__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_fixed_putaway_strat__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_immediate_transfer__display_name
-#: model:ir.model.fields,field_description:stock.field_stock_incoterms__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_inventory__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_location__display_name
-#: model:ir.model.fields,field_description:stock.field_stock_location_path__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_location_route__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_move__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_overprocessed_transfer__display_name
+#: model:ir.model.fields,field_description:stock.field_stock_package_destination__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_package_level__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_picking__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__display_name
@@ -1714,15 +1707,24 @@ msgstr "Proizvod na popustu"
 #: model:ir.model.fields,field_description:stock.field_stock_quantity_history__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking_line__display_name
+#: model:ir.model.fields,field_description:stock.field_stock_rule__display_name
+#: model:ir.model.fields,field_description:stock.field_stock_rules_report__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_scheduler_compute__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_traceability_report__display_name
+#: model:ir.model.fields,field_description:stock.field_stock_track_confirmation__display_name
+#: model:ir.model.fields,field_description:stock.field_stock_track_line__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_scrap__display_name
 msgid "Display Name"
 msgstr "Naziv za prikaz"
+
+#. module: stock
+#: model:res.groups,name:stock.group_lot_on_delivery_slip
+msgid "Display Serial & Lot Number in Delivery Slips"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__qty_done
@@ -1753,6 +1755,7 @@ msgid "Don’t propagate scheduling changes through chains of operations"
 msgstr ""
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_inventory_filter
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 #: selection:stock.inventory,state:0 selection:stock.package_level,state:0
 #: selection:stock.picking,state:0 selection:stock.scrap,state:0
@@ -1765,11 +1768,6 @@ msgid "Draft Moves"
 msgstr "Prijenosi nacrta"
 
 #. module: stock
-#: model:stock.incoterms,name:stock.incoterm_EXW
-msgid "EX WORKS"
-msgstr ""
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_easypost
 msgid "Easypost Connector"
 msgstr ""
@@ -1780,8 +1778,17 @@ msgid "Effective Date"
 msgstr "Efektivni datum"
 
 #. module: stock
+#: model:ir.model.fields,help:stock.field_product_template__tracking
+#: model:ir.model.fields,help:stock.field_stock_inventory_line__product_tracking
+#: model:ir.model.fields,help:stock.field_stock_move__has_tracking
+#: model:ir.model.fields,help:stock.field_stock_move_line__tracking
+#: model:ir.model.fields,help:stock.field_stock_scrap__tracking
+msgid "Ensure the traceability of a storable product in your warehouse."
+msgstr ""
+
+#. module: stock
 #. openerp-web
-#: code:addons/stock/static/src/xml/stock_traceability_report_backend.xml:14
+#: code:addons/stock/static/src/xml/stock_traceability_report_backend.xml:13
 #, python-format
 msgid "Error"
 msgstr "Greška"
@@ -1807,14 +1814,8 @@ msgid "Exception(s):"
 msgstr ""
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.product_template_search_form_view_stock
-msgid "Exhausted Stock"
-msgstr "Iscrpljena zaliha"
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__date_expected
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__date_expected
-#: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Expected Date"
 msgstr "Očekivani datum"
 
@@ -1826,7 +1827,7 @@ msgstr "Datumi isteka"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_form
 msgid "External note..."
-msgstr "Eksterna bilješka ..."
+msgstr "Eksterna bilješka..."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_removal__method
@@ -1834,23 +1835,13 @@ msgid "FIFO, LIFO..."
 msgstr "FIFO, LIFO..."
 
 #. module: stock
-#: model:stock.incoterms,name:stock.incoterm_FAS
-msgid "FREE ALONGSIDE SHIP"
-msgstr ""
-
-#. module: stock
-#: model:stock.incoterms,name:stock.incoterm_FCA
-msgid "FREE CARRIER"
-msgstr ""
-
-#. module: stock
-#: model:stock.incoterms,name:stock.incoterm_FOB
-msgid "FREE ON BOARD"
-msgstr ""
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_fedex
 msgid "FedEx Connector"
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_package_destination__filtered_location
+msgid "Filtered Location"
 msgstr ""
 
 #. module: stock
@@ -1859,7 +1850,7 @@ msgid "Filters"
 msgstr "Filteri"
 
 #. module: stock
-#: selection:procurement.rule,group_propagation_option:0
+#: selection:stock.rule,group_propagation_option:0
 msgid "Fixed"
 msgstr "Fiksno"
 
@@ -1874,9 +1865,21 @@ msgid "Fixed Locations Per Product Category"
 msgstr "Fiksne lokacije po kategorijama proizvoda"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_procurement_rule__group_id
+#: model:ir.model.fields,field_description:stock.field_stock_rule__group_id
 msgid "Fixed Procurement Group"
 msgstr "Fiksna grupa nabave"
+
+#. module: stock
+#: model:ir.model,name:stock.model_stock_fixed_putaway_strat
+msgid "Fixed Putaway Strategy on Location"
+msgstr ""
+
+#. module: stock
+#. openerp-web
+#: code:addons/stock/static/src/xml/stock_traceability_report_line.xml:6
+#, python-format
+msgid "Fold"
+msgstr "Skupi"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__message_follower_ids
@@ -1916,7 +1919,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/product.py:326
+#: code:addons/stock/models/product.py:330
 #: model:ir.model.fields,field_description:stock.field_product_template__virtual_available
 #: model:ir.model.fields,field_description:stock.field_stock_move__availability
 #, python-format
@@ -1928,14 +1931,10 @@ msgstr "Predviđena količina"
 #: model:ir.model.fields,field_description:stock.field_stock_package_level__location_id
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_body_print
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_inventory
+#: model_terms:ir.ui.view,arch_db:stock.view_inventory_form
 #: model_terms:ir.ui.view,arch_db:stock.view_move_tree
 msgid "From"
 msgstr "Od"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_move_line__from_loc
-msgid "From Loc"
-msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__show_reserved_availability
@@ -1953,31 +1952,31 @@ msgid "Future Activities"
 msgstr "Buduće aktivnosti"
 
 #. module: stock
-#: code:addons/stock/models/product.py:329
+#: code:addons/stock/models/product.py:333
 #, python-format
 msgid "Future Deliveries"
 msgstr "Buduće otpreme"
 
 #. module: stock
-#: code:addons/stock/models/product.py:334
+#: code:addons/stock/models/product.py:338
 #, python-format
 msgid "Future P&L"
 msgstr "Budući P&L"
 
 #. module: stock
-#: code:addons/stock/models/product.py:344
+#: code:addons/stock/models/product.py:348
 #, python-format
 msgid "Future Productions"
 msgstr "Buduća proizvodnja"
 
 #. module: stock
-#: code:addons/stock/models/product.py:339
+#: code:addons/stock/models/product.py:343
 #, python-format
 msgid "Future Qty"
 msgstr "Buduće kol."
 
 #. module: stock
-#: code:addons/stock/models/product.py:321
+#: code:addons/stock/models/product.py:325
 #, python-format
 msgid "Future Receipts"
 msgstr "Buduće primke"
@@ -2000,17 +1999,6 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.stock_location_path_filter
-#: model_terms:ir.ui.view,arch_db:stock.view_procurement_rule_filter
-msgid "Global"
-msgstr "Globalno"
-
-#. module: stock
-#: model:ir.model.fields,help:stock.field_stock_warehouse__default_resupply_wh_id
-msgid "Goods will always be resupplied from this warehouse"
-msgstr "Roba će uvijek biti opskrbljena iz ovog skladišta."
-
-#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_level_forecast_filter
 msgid "Graph"
 msgstr "Dijagram"
@@ -2022,6 +2010,7 @@ msgstr "Dijagram"
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_filter
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
+#: model_terms:ir.ui.view,arch_db:stock.view_pickingtype_filter
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_level_forecast_filter
 #: model_terms:ir.ui.view,arch_db:stock.warehouse_orderpoint_search
 msgid "Group By"
@@ -2030,6 +2019,7 @@ msgstr "Grupiraj po"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_package_search_view
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_rule_filter
 msgid "Group by..."
 msgstr "Grupiraj po..."
 
@@ -2041,7 +2031,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__move_line_exist
 msgid "Has Pack Operations"
-msgstr "Ima operaciju pakiranja."
+msgstr "Ima operaciju pakiranja"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__has_packages
@@ -2060,6 +2050,7 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__product_has_variants
+#: model:ir.model.fields,field_description:stock.field_stock_rules_report__product_has_variants
 msgid "Has variants"
 msgstr ""
 
@@ -2078,24 +2069,23 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_group__id
-#: model:ir.model.fields,field_description:stock.field_procurement_rule__id
 #: model:ir.model.fields,field_description:stock.field_product_putaway__id
 #: model:ir.model.fields,field_description:stock.field_product_removal__id
 #: model:ir.model.fields,field_description:stock.field_product_replenish__id
 #: model:ir.model.fields,field_description:stock.field_report_stock_forecast__id
+#: model:ir.model.fields,field_description:stock.field_report_stock_report_stock_rule__id
 #: model:ir.model.fields,field_description:stock.field_stock_backorder_confirmation__id
 #: model:ir.model.fields,field_description:stock.field_stock_change_product_qty__id
 #: model:ir.model.fields,field_description:stock.field_stock_fixed_putaway_strat__id
 #: model:ir.model.fields,field_description:stock.field_stock_immediate_transfer__id
-#: model:ir.model.fields,field_description:stock.field_stock_incoterms__id
 #: model:ir.model.fields,field_description:stock.field_stock_inventory__id
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line__id
 #: model:ir.model.fields,field_description:stock.field_stock_location__id
-#: model:ir.model.fields,field_description:stock.field_stock_location_path__id
 #: model:ir.model.fields,field_description:stock.field_stock_location_route__id
 #: model:ir.model.fields,field_description:stock.field_stock_move__id
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__id
 #: model:ir.model.fields,field_description:stock.field_stock_overprocessed_transfer__id
+#: model:ir.model.fields,field_description:stock.field_stock_package_destination__id
 #: model:ir.model.fields,field_description:stock.field_stock_package_level__id
 #: model:ir.model.fields,field_description:stock.field_stock_picking__id
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__id
@@ -2105,9 +2095,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_quantity_history__id
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking__id
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking_line__id
+#: model:ir.model.fields,field_description:stock.field_stock_rule__id
+#: model:ir.model.fields,field_description:stock.field_stock_rules_report__id
 #: model:ir.model.fields,field_description:stock.field_stock_scheduler_compute__id
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__id
 #: model:ir.model.fields,field_description:stock.field_stock_traceability_report__id
+#: model:ir.model.fields,field_description:stock.field_stock_track_confirmation__id
+#: model:ir.model.fields,field_description:stock.field_stock_track_line__id
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__id
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__id
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty__id
@@ -2116,13 +2110,13 @@ msgid "ID"
 msgstr "ID"
 
 #. module: stock
-#: code:addons/stock/models/stock_inventory.py:402
+#: code:addons/stock/models/stock_inventory.py:431
 #, python-format
 msgid "INV:"
 msgstr "INV:"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_change_product_qty.py:97
+#: code:addons/stock/wizard/stock_change_product_qty.py:88
 #, python-format
 msgid "INV: %s"
 msgstr "INV: %s"
@@ -2155,21 +2149,6 @@ msgid "If checked, some messages have a delivery error."
 msgstr ""
 
 #. module: stock
-#: model:ir.model.fields,help:stock.field_stock_location_path__propagate
-msgid ""
-"If checked, when the previous move is cancelled or split, the move generated"
-" by this move will too"
-msgstr ""
-
-#. module: stock
-#: model:ir.model.fields,help:stock.field_procurement_rule__propagate
-msgid ""
-"If checked, when the previous move of the move (which was generated by a "
-"next procurement) is cancelled or split, the move generated by this move "
-"will too"
-msgstr ""
-
-#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__propagate
 msgid "If checked, when this move is cancelled, cancel the linked move too"
 msgstr "Otkazivanjem ovog prijenosa otkaži i povezani prijenos"
@@ -2194,17 +2173,18 @@ msgid ""
 msgstr ""
 
 #. module: stock
+#: model:ir.model.fields,help:stock.field_stock_inventory__date
+msgid ""
+"If the inventory adjustment is not validated, date at which the theoritical quantities have been checked.\n"
+"If the inventory adjustment is validated, date at which the inventory adjustment has been validated."
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid ""
 "If the picking is unlocked you can edit initial demand (for a draft picking)"
 " or done quantities (for a done picking)."
 msgstr ""
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.stock_location_path_filter
-#: model_terms:ir.ui.view,arch_db:stock.view_procurement_rule_filter
-msgid "If the route is global"
-msgstr "Ako je ruta globalna"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__show_reserved
@@ -2223,6 +2203,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
+#: model:ir.model.fields,help:stock.field_stock_move_line__picking_type_use_create_lots
 #: model:ir.model.fields,help:stock.field_stock_picking_type__use_create_lots
 msgid ""
 "If this is checked only, it will suppose you want to create new Lots/Serial "
@@ -2230,6 +2211,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
+#: model:ir.model.fields,help:stock.field_stock_move_line__picking_type_use_existing_lots
 #: model:ir.model.fields,help:stock.field_stock_picking_type__use_existing_lots
 msgid ""
 "If this is checked, you will be able to choose the Lots/Serial Numbers. You "
@@ -2256,7 +2238,7 @@ msgid "If ticked, you will be able to select entire packages to move"
 msgstr ""
 
 #. module: stock
-#: model:ir.model.fields,help:stock.field_procurement_rule__active
+#: model:ir.model.fields,help:stock.field_stock_rule__active
 msgid "If unchecked, it will allow you to hide the rule without removing it."
 msgstr "Ako nije označeno, omogućuje sakrivanje pravila bez brisanja."
 
@@ -2278,7 +2260,7 @@ msgid "Immediate Transfer"
 msgstr "Neposredni prijenos"
 
 #. module: stock
-#: code:addons/stock/models/stock_picking.py:720
+#: code:addons/stock/models/stock_picking.py:718
 #, python-format
 msgid "Immediate Transfer?"
 msgstr "Neposredni prijenos?"
@@ -2294,6 +2276,7 @@ msgid "Immediately after sales order confirmation"
 msgstr ""
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_inventory_filter
 #: selection:stock.inventory,state:0
 msgid "In Progress"
 msgstr "U tijeku"
@@ -2331,44 +2314,14 @@ msgid "Incoming Shipments"
 msgstr "Primke"
 
 #. module: stock
-#: model:ir.model.fields,help:stock.field_stock_incoterms__code
-msgid "Incoterm Standard Code"
-msgstr "Inkoterm standardni broj"
-
-#. module: stock
-#: model:ir.actions.act_window,name:stock.action_incoterms_tree
-#: model:ir.model,name:stock.model_stock_incoterms
-#: model:ir.ui.menu,name:stock.menu_action_incoterm_open
-#: model_terms:ir.ui.view,arch_db:stock.stock_incoterms_form
-#: model_terms:ir.ui.view,arch_db:stock.stock_incoterms_view_search
-#: model_terms:ir.ui.view,arch_db:stock.view_incoterms_tree
-msgid "Incoterms"
-msgstr "Incoterms"
-
-#. module: stock
-#: model:ir.model.fields,help:stock.field_stock_incoterms__name
-msgid ""
-"Incoterms are series of sales terms. They are used to divide transaction "
-"costs and responsibilities between buyer and seller and reflect state-of-"
-"the-art transportation practices."
-msgstr ""
-
-#. module: stock
-#: model_terms:ir.actions.act_window,help:stock.action_incoterms_tree
-msgid ""
-"Incoterms are used to divide transaction costs and responsibilities between "
-"buyer and seller."
-msgstr ""
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__product_uom_qty
+#: model_terms:ir.ui.view,arch_db:stock.view_move_kandan
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Initial Demand"
 msgstr "Početni zahtjev"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:97
-#: model:stock.location,name:stock.stock_location_company
+#: code:addons/stock/models/stock_warehouse.py:444
 #, python-format
 msgid "Input"
 msgstr "Ulaz"
@@ -2379,15 +2332,10 @@ msgid "Input Location"
 msgstr "Lokacija ulaza"
 
 #. module: stock
-#: code:addons/stock/models/stock_scrap.py:135
+#: code:addons/stock/models/stock_scrap.py:138
 #, python-format
 msgid "Insufficient Quantity"
 msgstr ""
-
-#. module: stock
-#: model:stock.location,name:stock.stock_location_inter_wh
-msgid "Inter Company Transit"
-msgstr "Tranzit između poduzeća"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
@@ -2413,7 +2361,7 @@ msgid "Internal Reference"
 msgstr "Interna oznaka"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:235
+#: code:addons/stock/models/stock_warehouse.py:759
 #: model:stock.picking.type,name:stock.picking_type_internal
 #, python-format
 msgid "Internal Transfers"
@@ -2439,19 +2387,19 @@ msgstr ""
 "broja"
 
 #. module: stock
-#: code:addons/stock/models/product.py:250
+#: code:addons/stock/models/product.py:254
 #, python-format
 msgid "Invalid domain left operand %s"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/product.py:252
+#: code:addons/stock/models/product.py:256
 #, python-format
 msgid "Invalid domain operator %s"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/product.py:254
+#: code:addons/stock/models/product.py:258
 #, python-format
 msgid "Invalid domain right operand %s"
 msgstr ""
@@ -2493,14 +2441,12 @@ msgstr ""
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.quantsact
-#: model:ir.actions.act_window,name:stock.stock_picking_type_action
 #: model:ir.actions.report,name:stock.action_report_inventory
 #: model:ir.model,name:stock.model_stock_inventory
-#: model:ir.model.fields,field_description:stock.field_res_users__group_stock_user
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line__inventory_id
 #: model:ir.model.fields,field_description:stock.field_stock_move__inventory_id
+#: model:ir.model.fields,field_description:stock.field_stock_track_confirmation__inventory_id
 #: model:ir.ui.menu,name:stock.menu_stock_root
-#: model:ir.ui.menu,name:stock.menu_valuation
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_pivot
 msgid "Inventory"
@@ -2540,7 +2486,6 @@ msgid "Inventory Lines"
 msgstr ""
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_product_product__property_stock_inventory
 #: model:ir.model.fields,field_description:stock.field_product_template__property_stock_inventory
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line__inventory_location_id
 msgid "Inventory Location"
@@ -2557,6 +2502,11 @@ msgid "Inventory Loss"
 msgstr "Gubitak inventure"
 
 #. module: stock
+#: model:ir.actions.act_window,name:stock.stock_picking_type_action
+msgid "Inventory Overview"
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_filter
 msgid "Inventory Product"
 msgstr ""
@@ -2569,6 +2519,7 @@ msgstr "Inventura broj"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_quantity_history
+#: model:ir.ui.menu,name:stock.menu_valuation
 msgid "Inventory Report"
 msgstr ""
 
@@ -2581,12 +2532,7 @@ msgstr "Rute zalihe"
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_form
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree
 msgid "Inventory Valuation"
-msgstr "Popis Vrednovanja"
-
-#. module: stock
-#: model:stock.location,name:stock.location_inventory
-msgid "Inventory adjustment"
-msgstr "Unos inventure"
+msgstr "Popis vrednovanja"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_form
@@ -2647,14 +2593,14 @@ msgid "Is quantity done editable"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_quant.py:265
+#: code:addons/stock/models/stock_quant.py:261
 #, python-format
 msgid ""
 "It is not possible to reserve more products of %s than you have in stock."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_quant.py:270
+#: code:addons/stock/models/stock_quant.py:266
 #, python-format
 msgid ""
 "It is not possible to unreserve more products of %s than you have in stock."
@@ -2673,30 +2619,34 @@ msgid "It specifies goods to be deliver partially or all at once"
 msgstr "Određuje proizvode za djelomičnu ili isporuku odjednom"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_lot_label
+msgid "LN/SN:"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__last_done_picking
 msgid "Last 10 Done Pickings"
 msgstr "Zadnjih 10 gotovih skladišnica"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_group____last_update
-#: model:ir.model.fields,field_description:stock.field_procurement_rule____last_update
 #: model:ir.model.fields,field_description:stock.field_product_putaway____last_update
 #: model:ir.model.fields,field_description:stock.field_product_removal____last_update
 #: model:ir.model.fields,field_description:stock.field_product_replenish____last_update
 #: model:ir.model.fields,field_description:stock.field_report_stock_forecast____last_update
+#: model:ir.model.fields,field_description:stock.field_report_stock_report_stock_rule____last_update
 #: model:ir.model.fields,field_description:stock.field_stock_backorder_confirmation____last_update
 #: model:ir.model.fields,field_description:stock.field_stock_change_product_qty____last_update
 #: model:ir.model.fields,field_description:stock.field_stock_fixed_putaway_strat____last_update
 #: model:ir.model.fields,field_description:stock.field_stock_immediate_transfer____last_update
-#: model:ir.model.fields,field_description:stock.field_stock_incoterms____last_update
 #: model:ir.model.fields,field_description:stock.field_stock_inventory____last_update
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line____last_update
 #: model:ir.model.fields,field_description:stock.field_stock_location____last_update
-#: model:ir.model.fields,field_description:stock.field_stock_location_path____last_update
 #: model:ir.model.fields,field_description:stock.field_stock_location_route____last_update
 #: model:ir.model.fields,field_description:stock.field_stock_move____last_update
 #: model:ir.model.fields,field_description:stock.field_stock_move_line____last_update
 #: model:ir.model.fields,field_description:stock.field_stock_overprocessed_transfer____last_update
+#: model:ir.model.fields,field_description:stock.field_stock_package_destination____last_update
 #: model:ir.model.fields,field_description:stock.field_stock_package_level____last_update
 #: model:ir.model.fields,field_description:stock.field_stock_picking____last_update
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type____last_update
@@ -2706,9 +2656,13 @@ msgstr "Zadnjih 10 gotovih skladišnica"
 #: model:ir.model.fields,field_description:stock.field_stock_quantity_history____last_update
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking____last_update
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking_line____last_update
+#: model:ir.model.fields,field_description:stock.field_stock_rule____last_update
+#: model:ir.model.fields,field_description:stock.field_stock_rules_report____last_update
 #: model:ir.model.fields,field_description:stock.field_stock_scheduler_compute____last_update
 #: model:ir.model.fields,field_description:stock.field_stock_scrap____last_update
 #: model:ir.model.fields,field_description:stock.field_stock_traceability_report____last_update
+#: model:ir.model.fields,field_description:stock.field_stock_track_confirmation____last_update
+#: model:ir.model.fields,field_description:stock.field_stock_track_line____last_update
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse____last_update
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint____last_update
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty____last_update
@@ -2718,7 +2672,6 @@ msgstr "Zadnja promjena"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_group__write_uid
-#: model:ir.model.fields,field_description:stock.field_procurement_rule__write_uid
 #: model:ir.model.fields,field_description:stock.field_product_putaway__write_uid
 #: model:ir.model.fields,field_description:stock.field_product_removal__write_uid
 #: model:ir.model.fields,field_description:stock.field_product_replenish__write_uid
@@ -2726,15 +2679,14 @@ msgstr "Zadnja promjena"
 #: model:ir.model.fields,field_description:stock.field_stock_change_product_qty__write_uid
 #: model:ir.model.fields,field_description:stock.field_stock_fixed_putaway_strat__write_uid
 #: model:ir.model.fields,field_description:stock.field_stock_immediate_transfer__write_uid
-#: model:ir.model.fields,field_description:stock.field_stock_incoterms__write_uid
 #: model:ir.model.fields,field_description:stock.field_stock_inventory__write_uid
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line__write_uid
 #: model:ir.model.fields,field_description:stock.field_stock_location__write_uid
-#: model:ir.model.fields,field_description:stock.field_stock_location_path__write_uid
 #: model:ir.model.fields,field_description:stock.field_stock_location_route__write_uid
 #: model:ir.model.fields,field_description:stock.field_stock_move__write_uid
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__write_uid
 #: model:ir.model.fields,field_description:stock.field_stock_overprocessed_transfer__write_uid
+#: model:ir.model.fields,field_description:stock.field_stock_package_destination__write_uid
 #: model:ir.model.fields,field_description:stock.field_stock_package_level__write_uid
 #: model:ir.model.fields,field_description:stock.field_stock_picking__write_uid
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__write_uid
@@ -2744,9 +2696,13 @@ msgstr "Zadnja promjena"
 #: model:ir.model.fields,field_description:stock.field_stock_quantity_history__write_uid
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking__write_uid
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking_line__write_uid
+#: model:ir.model.fields,field_description:stock.field_stock_rule__write_uid
+#: model:ir.model.fields,field_description:stock.field_stock_rules_report__write_uid
 #: model:ir.model.fields,field_description:stock.field_stock_scheduler_compute__write_uid
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__write_uid
 #: model:ir.model.fields,field_description:stock.field_stock_traceability_report__write_uid
+#: model:ir.model.fields,field_description:stock.field_stock_track_confirmation__write_uid
+#: model:ir.model.fields,field_description:stock.field_stock_track_line__write_uid
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__write_uid
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__write_uid
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_scrap__write_uid
@@ -2755,7 +2711,6 @@ msgstr "Promijenio"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_group__write_date
-#: model:ir.model.fields,field_description:stock.field_procurement_rule__write_date
 #: model:ir.model.fields,field_description:stock.field_product_putaway__write_date
 #: model:ir.model.fields,field_description:stock.field_product_removal__write_date
 #: model:ir.model.fields,field_description:stock.field_product_replenish__write_date
@@ -2763,15 +2718,14 @@ msgstr "Promijenio"
 #: model:ir.model.fields,field_description:stock.field_stock_change_product_qty__write_date
 #: model:ir.model.fields,field_description:stock.field_stock_fixed_putaway_strat__write_date
 #: model:ir.model.fields,field_description:stock.field_stock_immediate_transfer__write_date
-#: model:ir.model.fields,field_description:stock.field_stock_incoterms__write_date
 #: model:ir.model.fields,field_description:stock.field_stock_inventory__write_date
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line__write_date
 #: model:ir.model.fields,field_description:stock.field_stock_location__write_date
-#: model:ir.model.fields,field_description:stock.field_stock_location_path__write_date
 #: model:ir.model.fields,field_description:stock.field_stock_location_route__write_date
 #: model:ir.model.fields,field_description:stock.field_stock_move__write_date
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__write_date
 #: model:ir.model.fields,field_description:stock.field_stock_overprocessed_transfer__write_date
+#: model:ir.model.fields,field_description:stock.field_stock_package_destination__write_date
 #: model:ir.model.fields,field_description:stock.field_stock_package_level__write_date
 #: model:ir.model.fields,field_description:stock.field_stock_picking__write_date
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__write_date
@@ -2781,9 +2735,13 @@ msgstr "Promijenio"
 #: model:ir.model.fields,field_description:stock.field_stock_quantity_history__write_date
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking__write_date
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking_line__write_date
+#: model:ir.model.fields,field_description:stock.field_stock_rule__write_date
+#: model:ir.model.fields,field_description:stock.field_stock_rules_report__write_date
 #: model:ir.model.fields,field_description:stock.field_stock_scheduler_compute__write_date
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__write_date
 #: model:ir.model.fields,field_description:stock.field_stock_traceability_report__write_date
+#: model:ir.model.fields,field_description:stock.field_stock_track_confirmation__write_date
+#: model:ir.model.fields,field_description:stock.field_stock_track_line__write_date
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__write_date
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__write_date
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_scrap__write_date
@@ -2791,7 +2749,7 @@ msgid "Last Updated on"
 msgstr "Vrijeme promjene"
 
 #. module: stock
-#: code:addons/stock/models/stock_picking.py:71
+#: code:addons/stock/models/stock_picking.py:69
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 #, python-format
@@ -2806,7 +2764,7 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_late
 msgid "Late Transfers"
-msgstr "Prijenosi sa kašnjenjem"
+msgstr "Prijenosi s kašnjenjem"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__lead_days
@@ -2819,7 +2777,7 @@ msgid "Lead Type"
 msgstr "Vrsta potencijala"
 
 #. module: stock
-#: selection:procurement.rule,group_propagation_option:0
+#: selection:stock.rule,group_propagation_option:0
 msgid "Leave Empty"
 msgstr "Ostavite prazno"
 
@@ -2827,6 +2785,11 @@ msgstr "Ostavite prazno"
 #: model:ir.model.fields,help:stock.field_stock_location_route__company_id
 msgid "Leave this field empty if this route is shared between all companies"
 msgstr "Ostavite ovo polje prazno ako se ova ruta dijeli među svim tvrtkama"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
+msgid "Legend"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__company_id
@@ -2855,8 +2818,7 @@ msgid "Locate"
 msgstr "Lociraj"
 
 #. module: stock
-#: code:addons/stock/models/barcode.py:12 selection:barcode.rule,type:0
-#: model:ir.model.fields,field_description:stock.field_product_product__location_id
+#: selection:barcode.rule,type:0
 #: model:ir.model.fields,field_description:stock.field_product_template__location_id
 #: model:ir.model.fields,field_description:stock.field_stock_change_product_qty__location_id
 #: model:ir.model.fields,field_description:stock.field_stock_fixed_putaway_strat__fixed_location_id
@@ -2870,9 +2832,9 @@ msgstr "Lociraj"
 #: model_terms:ir.ui.view,arch_db:stock.quant_package_search_view
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
 #: model_terms:ir.ui.view,arch_db:stock.stock_scrap_search_view
+#: model_terms:ir.ui.view,arch_db:stock.view_location_tree2
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
 #: model_terms:ir.ui.view,arch_db:stock.warehouse_orderpoint_search
-#, python-format
 msgid "Location"
 msgstr "Lokacija"
 
@@ -2885,12 +2847,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_location__name
 msgid "Location Name"
 msgstr "Naziv lokacije"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.stock_location_path_form
-#: model_terms:ir.ui.view,arch_db:stock.stock_location_path_tree
-msgid "Location Paths"
-msgstr "Putanje između lokacija"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__lot_stock_id
@@ -2911,7 +2867,6 @@ msgstr "Lokacija gotovih proizvoda"
 #: model:ir.actions.act_window,name:stock.action_location_form
 #: model:ir.ui.menu,name:stock.menu_action_location_form
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
-#: model_terms:ir.ui.view,arch_db:stock.stock_location_path_form
 #: model_terms:ir.ui.view,arch_db:stock.view_move_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse
@@ -2930,17 +2885,10 @@ msgid "Logistics"
 msgstr "Logistika"
 
 #. module: stock
-#: code:addons/stock/models/barcode.py:13 selection:barcode.rule,type:0
-#: model:ir.model.fields,field_description:stock.field_stock_move_line__lot_id
+#: selection:barcode.rule,type:0
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__lot_id
-#, python-format
 msgid "Lot"
 msgstr "Lot"
-
-#. module: stock
-#: model:ir.actions.report,name:stock.action_report_lot_barcode
-msgid "Lot Barcode"
-msgstr ""
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_production_lot
@@ -2959,22 +2907,31 @@ msgid "Lot/Serial :"
 msgstr ""
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_change_product_qty__lot_id
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line__prod_lot_id
-#: model:ir.model.fields,field_description:stock.field_stock_move_line__lot_name
+#: model:ir.model.fields,field_description:stock.field_stock_move_line__lot_id
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot__name
 #: model:ir.model.fields,field_description:stock.field_stock_quant__lot_id
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
-#: model_terms:ir.ui.view,arch_db:stock.report_lot_barcode
+#: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
 msgid "Lot/Serial Number"
 msgstr "Lot/Serijski broj"
 
 #. module: stock
+#: model:ir.actions.report,name:stock.action_report_lot_label
+msgid "Lot/Serial Number (PDF)"
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_tree
 msgid "Lot/Serial Number Inventory"
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_move_line__lot_name
+msgid "Lot/Serial Number Name"
 msgstr ""
 
 #. module: stock
@@ -2983,8 +2940,18 @@ msgid "Lots & Serial Numbers"
 msgstr ""
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+msgid "Lots &amp; Serial numbers will appear on the delivery slip"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__lots_visible
 msgid "Lots Visible"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_track_confirmation
+msgid "Lots or serial numbers were not provided to tracked products"
 msgstr ""
 
 #. module: stock
@@ -2997,62 +2964,50 @@ msgid "Lots/Serial Numbers"
 msgstr "Lotovi/Serijski brojevi"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:547
-#, python-format
-msgid "MTO"
-msgstr "MTO"
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__mto_pull_id
 msgid "MTO rule"
 msgstr "MTO pravilo"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:479
+#: model:ir.model.fields,field_description:stock.field_stock_picking__message_main_attachment_id
+#: model:ir.model.fields,field_description:stock.field_stock_production_lot__message_main_attachment_id
+msgid "Main Attachment"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/stock_warehouse.py:288
+#: code:addons/stock/models/stock_warehouse.py:629
 #: model:stock.location.route,name:stock.route_warehouse0_mto
 #, python-format
 msgid "Make To Order"
 msgstr "Kreiraj narudžbu - MTO"
 
 #. module: stock
-#: selection:stock.warehouse,delivery_steps:0
-msgid ""
-"Make packages into a dedicated location, then bring them to the output "
-"location for shipping (Pick + Pack + Ship)"
-msgstr ""
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_res_users__has_group_tracking_owner
 #: model:res.groups,name:stock.group_tracking_owner
 msgid "Manage Different Stock Owners"
 msgstr "Upravljaj različitim vlasnicima skladišta"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_res_users__has_group_production_lot
 #: model:res.groups,name:stock.group_production_lot
 msgid "Manage Lots / Serial Numbers"
 msgstr "Upravljanje lotovima / Serijskim brojevima"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_res_users__has_group_stock_multi_locations
 #: model:res.groups,name:stock.group_stock_multi_locations
 msgid "Manage Multiple Stock Locations"
 msgstr ""
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_res_users__has_group_stock_multi_warehouses
 #: model:res.groups,name:stock.group_stock_multi_warehouses
 msgid "Manage Multiple Warehouses"
 msgstr ""
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_res_users__has_group_tracking_lot
 #: model:res.groups,name:stock.group_tracking_lot
 msgid "Manage Packages"
 msgstr "Upravljanje paketima"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_res_users__has_group_adv_location
 #: model:res.groups,name:stock.group_adv_location
 msgid "Manage Push and Pull inventory flows"
 msgstr "Upravljanje \"push i pull\" pravilima na skladištu"
@@ -3073,7 +3028,7 @@ msgid "Manager"
 msgstr "Voditelj"
 
 #. module: stock
-#: selection:stock.location.path,auto:0
+#: selection:stock.rule,auto:0
 msgid "Manual Operation"
 msgstr "Ručna operacija"
 
@@ -3083,7 +3038,7 @@ msgid "Manually or based on automatic scheduler"
 msgstr ""
 
 #. module: stock
-#: selection:procurement.rule,action:0
+#: selection:stock.rule,action:0
 msgid "Manufacture"
 msgstr "Proizvodnja"
 
@@ -3120,7 +3075,6 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_partner__picking_warn_msg
-#: model:ir.model.fields,field_description:stock.field_res_users__picking_warn_msg
 msgid "Message for Stock Picking"
 msgstr "Poruka za skladišnicu"
 
@@ -3194,12 +3148,8 @@ msgid "Move Entire Packages"
 msgstr ""
 
 #. module: stock
-#: selection:procurement.rule,action:0
-msgid "Move From Another Location"
-msgstr "Premjesti s nekog drugog mjesta"
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__move_line_ids
+#: model:ir.model.fields,field_description:stock.field_stock_package_destination__move_line_ids
 #: model:ir.model.fields,field_description:stock.field_stock_package_level__move_line_ids
 msgid "Move Line"
 msgstr "Stavka temeljnice"
@@ -3216,7 +3166,7 @@ msgid "Move Lines"
 msgstr "stavke"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_procurement_rule__procure_method
+#: model:ir.model.fields,field_description:stock.field_stock_rule__procure_method
 msgid "Move Supply Method"
 msgstr ""
 
@@ -3248,8 +3198,8 @@ msgstr "Temeljnice"
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__group_id
 msgid ""
 "Moves created through this orderpoint will be put in this procurement group."
-" If none is given, the moves generated by procurement rules will be grouped "
-"into one big picking."
+" If none is given, the moves generated by stock rules will be grouped into "
+"one big picking."
 msgstr ""
 
 #. module: stock
@@ -3268,31 +3218,35 @@ msgid "My Activities"
 msgstr "Moje aktivnosti"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_procurement_rule__name
 #: model:ir.model.fields,field_description:stock.field_product_putaway__name
 #: model:ir.model.fields,field_description:stock.field_product_removal__name
-#: model:ir.model.fields,field_description:stock.field_stock_incoterms__name
+#: model:ir.model.fields,field_description:stock.field_stock_rule__name
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__name
 msgid "Name"
 msgstr "Naziv"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_search_form_view_stock
+#: model_terms:ir.ui.view,arch_db:stock.stock_product_search_form_view
+msgid "Negative Forecasted Quantity"
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
 msgid "Negative Stock"
 msgstr "Negativna zaliha"
 
 #. module: stock
-#: code:addons/stock/models/stock_scrap.py:24
-#: code:addons/stock/models/stock_scrap.py:68
-#: code:addons/stock/models/stock_scrap.py:69 selection:stock.move,state:0
+#: code:addons/stock/models/stock_scrap.py:25
+#: code:addons/stock/models/stock_scrap.py:69
+#: code:addons/stock/models/stock_scrap.py:70 selection:stock.move,state:0
 #: selection:stock.package_level,state:0
 #, python-format
 msgid "New"
 msgstr "Novi"
 
 #. module: stock
-#: code:addons/stock/models/stock_move_line.py:168
+#: code:addons/stock/models/stock_move_line.py:169
 #: code:addons/stock/models/stock_picking.py:612
 #, python-format
 msgid "New Move:"
@@ -3310,16 +3264,19 @@ msgstr "Novi prijenos"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__activity_date_deadline
+#: model:ir.model.fields,field_description:stock.field_stock_production_lot__activity_date_deadline
 msgid "Next Activity Deadline"
 msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__activity_summary
+#: model:ir.model.fields,field_description:stock.field_stock_production_lot__activity_summary
 msgid "Next Activity Summary"
 msgstr "Sažetak sljedeće aktivnosti"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__activity_type_id
+#: model:ir.model.fields,field_description:stock.field_stock_production_lot__activity_type_id
 msgid "Next Activity Type"
 msgstr ""
 
@@ -3354,7 +3311,7 @@ msgid "No inventory found"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move_line.py:402
+#: code:addons/stock/models/stock_move_line.py:408
 #, python-format
 msgid "No negative quantities allowed"
 msgstr "Negativne količine nisu dozvoljene"
@@ -3365,14 +3322,15 @@ msgid "No operation made on this lot."
 msgstr "Na ovom lotu još nije bilo operacija."
 
 #. module: stock
-#: code:addons/stock/models/procurement.py:184
+#: code:addons/stock/models/stock_rule.py:305
 #, python-format
 msgid ""
-"No procurement rule found. Please verify the configuration of your routes"
+"No procurement rule found in location \"%s\" for product \"%s\".\n"
+" Check routes configuration."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/wizard/stock_picking_return.py:58
+#: code:addons/stock/wizard/stock_picking_return.py:59
 #, python-format
 msgid ""
 "No products to return (only lines in Done state and not fully returned yet "
@@ -3380,9 +3338,9 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/procurement.py:67
+#: code:addons/stock/models/stock_rule.py:172
 #, python-format
-msgid "No source location defined on procurement rule: %s!"
+msgid "No source location defined on stock rule: %s!"
 msgstr ""
 
 #. module: stock
@@ -3393,7 +3351,12 @@ msgstr "Normalan"
 #. module: stock
 #: selection:stock.move,priority:0 selection:stock.picking,priority:0
 msgid "Not urgent"
-msgstr "Not urgent"
+msgstr "Nije hitno"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_form
+msgid "Note"
+msgstr "Bilješka"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__note
@@ -3403,7 +3366,7 @@ msgid "Notes"
 msgstr "Bilješke"
 
 #. module: stock
-#: code:addons/stock/models/stock_picking.py:563
+#: code:addons/stock/models/stock_picking.py:562
 #, python-format
 msgid "Nothing to check the availability for."
 msgstr "Dostupnost se nema za što provjeriti."
@@ -3415,21 +3378,11 @@ msgid "Number of Actions"
 msgstr "Broj akcija"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_procurement_rule__delay
-msgid "Number of Days"
-msgstr "Broj dana"
-
-#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__lead_days
 msgid ""
 "Number of days after the orderpoint is triggered to receive the products or "
 "to order to the vendor"
 msgstr ""
-
-#. module: stock
-#: model:ir.model.fields,help:stock.field_stock_location_path__delay
-msgid "Number of days needed to transfer the goods"
-msgstr "Broj dana potrebnih za prijenos robe"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__message_has_error_counter
@@ -3456,14 +3409,12 @@ msgid "Number of unread messages"
 msgstr "Broj nepročitanih poruka"
 
 #. module: stock
-#: code:addons/stock/models/stock_picking.py:75
+#: code:addons/stock/models/stock_picking.py:73
 #, python-format
 msgid "OK"
 msgstr "U redu"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
-#: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree
 msgid "On Hand"
 msgstr "Dostupno"
@@ -3482,55 +3433,45 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_inventory.py:120
+#: code:addons/stock/models/stock_inventory.py:121
 #, python-format
 msgid "One Lot/Serial Number"
 msgstr "Jedan lot/Serijski broj"
 
 #. module: stock
-#: code:addons/stock/models/stock_inventory.py:118
+#: code:addons/stock/models/stock_inventory.py:119
 #, python-format
 msgid "One owner only"
 msgstr "Samo jedan vlasnik"
 
 #. module: stock
-#: code:addons/stock/models/stock_inventory.py:113
+#: code:addons/stock/models/stock_inventory.py:114
 #, python-format
 msgid "One product category"
 msgstr "Jedna grupa proizvoda"
 
 #. module: stock
-#: code:addons/stock/models/stock_inventory.py:118
+#: code:addons/stock/models/stock_inventory.py:119
 #, python-format
 msgid "One product for a specific owner"
 msgstr "Jedan proizvod za određenog vlasnika"
 
 #. module: stock
-#: code:addons/stock/models/stock_inventory.py:114
+#: code:addons/stock/models/stock_inventory.py:115
 #, python-format
 msgid "One product only"
 msgstr "Samo jedan proizvod"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_location_path__name
-msgid "Operation Name"
-msgstr "Naziv radnje"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_procurement_rule__picking_type_id
-#: model:ir.model.fields,field_description:stock.field_stock_location_path__picking_type_id
+#: code:addons/stock/models/stock_rule.py:97
 #: model:ir.model.fields,field_description:stock.field_stock_move__picking_type_id
 #: model:ir.model.fields,field_description:stock.field_stock_picking__picking_type_id
+#: model:ir.model.fields,field_description:stock.field_stock_picking_type__name
+#: model:ir.model.fields,field_description:stock.field_stock_rule__picking_type_id
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 #: model_terms:ir.ui.view,arch_db:stock.view_pickingtype_filter
+#, python-format
 msgid "Operation Type"
-msgstr ""
-
-#. module: stock
-#: model:ir.model.fields,help:stock.field_procurement_rule__picking_type_id
-msgid ""
-"Operation Type determines the way the picking should be shown in the view, "
-"reports, ..."
 msgstr ""
 
 #. module: stock
@@ -3547,8 +3488,8 @@ msgid "Operation Types"
 msgstr "Vrste operacija"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_picking_type__name
-msgid "Operation Types Name"
+#: model:ir.actions.report,name:stock.action_report_picking_type_label
+msgid "Operation type (PDF)"
 msgstr ""
 
 #. module: stock
@@ -3561,6 +3502,7 @@ msgid "Operations"
 msgstr "Operacije"
 
 #. module: stock
+#: model:ir.actions.act_window,name:stock.action_picking_type_list
 #: model:ir.ui.menu,name:stock.menu_pickingtype
 msgid "Operations Types"
 msgstr "Vrste operacija"
@@ -3602,20 +3544,14 @@ msgid "Optional: previous stock move when chaining them"
 msgstr ""
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_rule_form
+msgid "Options"
+msgstr "Opcije"
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Order Date"
 msgstr "Datum narudžbe"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_move__ordered_qty
-#: model:ir.model.fields,field_description:stock.field_stock_move_line__ordered_qty
-msgid "Ordered Quantity"
-msgstr "Naručene količine"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.view_move_search
-msgid "Orders processed today or scheduled for today"
-msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_form
@@ -3657,12 +3593,11 @@ msgstr "Odlazno"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__delivery_steps
-msgid "Outgoing Shippings"
-msgstr "Odlazna otprema"
+msgid "Outgoing Shipments"
+msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:99
-#: model:stock.location,name:stock.stock_location_output
+#: code:addons/stock/models/stock_warehouse.py:446
 #, python-format
 msgid "Output"
 msgstr "Izlaz"
@@ -3674,12 +3609,19 @@ msgstr "Izlazna lokacija"
 
 #. module: stock
 #: selection:stock.picking,activity_state:0
+#: selection:stock.production.lot,activity_state:0
 msgid "Overdue"
 msgstr "Dospjelo"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_overprocessed_transfer__overprocessed_product_name
 msgid "Overprocessed Product Name"
+msgstr ""
+
+#. module: stock
+#: model:ir.ui.menu,name:stock.stock_picking_type_menu
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_rules_report
+msgid "Overview"
 msgstr ""
 
 #. module: stock
@@ -3716,7 +3658,7 @@ msgid "Owner of the quants"
 msgstr "Vlasnik količine"
 
 #. module: stock
-#: code:addons/stock/models/product.py:336
+#: code:addons/stock/models/product.py:340
 #, python-format
 msgid "P&L Qty"
 msgstr "P&L kol."
@@ -3729,7 +3671,7 @@ msgid "PRINT"
 msgstr "ISPIS"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:220
+#: code:addons/stock/models/stock_warehouse.py:742
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line__package_id
 #, python-format
 msgid "Pack"
@@ -3741,7 +3683,12 @@ msgid "Pack Type"
 msgstr "Tip pakiranja"
 
 #. module: stock
-#: code:addons/stock/models/barcode.py:14 selection:barcode.rule,type:0
+#: selection:stock.warehouse,delivery_steps:0
+msgid "Pack goods, send goods in output and then deliver (3 steps)"
+msgstr ""
+
+#. module: stock
+#: selection:barcode.rule,type:0
 #: model:ir.model.fields,field_description:stock.field_stock_package_level__package_id
 #: model:ir.model.fields,field_description:stock.field_stock_quant__package_id
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__package_id
@@ -3750,18 +3697,17 @@ msgstr "Tip pakiranja"
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 #: model_terms:ir.ui.view,arch_db:stock.view_quant_package_form
 #: model_terms:ir.ui.view,arch_db:stock.view_quant_package_tree
-#, python-format
 msgid "Package"
 msgstr "Paket"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_quant_package_barcode_small
-msgid "Package Barcode"
+msgid "Package Barcode (PDF)"
 msgstr ""
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_quant_package_barcode
-msgid "Package Barcode with Contents"
+msgid "Package Barcode with Content"
 msgstr ""
 
 #. module: stock
@@ -3815,15 +3761,12 @@ msgstr ""
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_package_view
+#: model:ir.model,name:stock.model_stock_quant_package
 #: model:ir.ui.menu,name:stock.menu_package
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid "Packages"
 msgstr "Paketi"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
-msgid "Packages & Traceability"
-msgstr ""
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_package_view
@@ -3846,13 +3789,7 @@ msgid "Packing Location"
 msgstr "Lokacija pakiranja"
 
 #. module: stock
-#: model:ir.model,name:stock.model_stock_move_line
-msgid "Packing Operation"
-msgstr "Operacija pakiranja"
-
-#. module: stock
-#: code:addons/stock/models/stock_warehouse.py:100
-#: model:stock.location,name:stock.location_pack_zone
+#: code:addons/stock/models/stock_warehouse.py:447
 #, python-format
 msgid "Packing Zone"
 msgstr "Zona pakiranja"
@@ -3867,7 +3804,7 @@ msgstr "Parametri"
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking__parent_location_id
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
 msgid "Parent Location"
-msgstr "Parent Location"
+msgstr "Nadređena lokacija"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__parent_path
@@ -3892,14 +3829,9 @@ msgid "Partner"
 msgstr "Partner"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_procurement_rule__partner_address_id
+#: model:ir.model.fields,field_description:stock.field_stock_rule__partner_address_id
 msgid "Partner Address"
-msgstr "Partner Address"
-
-#. module: stock
-#: model:stock.location,name:stock.stock_location_locations_partner
-msgid "Partner Locations"
-msgstr "Lokacije partnera"
+msgstr "Adresa partnera"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_filter
@@ -3907,34 +3839,12 @@ msgid "Physical Inventories by Date"
 msgstr ""
 
 #. module: stock
-#: model:stock.location,name:stock.stock_location_locations
-msgid "Physical Locations"
-msgstr "Fizičke lokacije"
-
-#. module: stock
-#: model:ir.model,name:stock.model_stock_quant_package
-msgid "Physical Packages"
-msgstr "Fizički paketi"
-
-#. module: stock
-#: code:addons/stock/models/stock_warehouse.py:228
+#: code:addons/stock/models/stock_warehouse.py:751
 #: model:ir.model.fields,field_description:stock.field_stock_backorder_confirmation__pick_ids
 #: model:ir.model.fields,field_description:stock.field_stock_immediate_transfer__pick_ids
 #, python-format
 msgid "Pick"
 msgstr ""
-
-#. module: stock
-#: code:addons/stock/models/stock_warehouse.py:439
-#, python-format
-msgid "Pick + Pack + Ship"
-msgstr "Odaberi + Pakiraj + Šalji"
-
-#. module: stock
-#: code:addons/stock/models/stock_warehouse.py:438
-#, python-format
-msgid "Pick + Ship"
-msgstr "Odaberi + Šalji"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__pick_type_id
@@ -3943,6 +3853,7 @@ msgstr "Tip odabira"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_overprocessed_transfer__picking_id
+#: model:ir.model.fields,field_description:stock.field_stock_package_destination__picking_id
 #: model:ir.model.fields,field_description:stock.field_stock_package_level__picking_id
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking__picking_id
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__picking_id
@@ -3969,6 +3880,11 @@ msgstr ""
 #: model:ir.actions.report,name:stock.action_report_picking
 msgid "Picking Operations"
 msgstr ""
+
+#. module: stock
+#: model:ir.model,name:stock.model_stock_picking_type
+msgid "Picking Type"
+msgstr "Vrsta dokumenta"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.vpicktree
@@ -4002,6 +3918,7 @@ msgstr "Pivot"
 
 #. module: stock
 #: selection:stock.picking,activity_state:0
+#: selection:stock.production.lot,activity_state:0
 msgid "Planned"
 msgstr "Planirano"
 
@@ -4017,7 +3934,7 @@ msgid "Please add some items to move."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/wizard/stock_picking_return.py:131
+#: code:addons/stock/wizard/stock_picking_return.py:132
 #, python-format
 msgid "Please specify at least one non-zero quantity."
 msgstr "Molimo navedite barem jednu količinu različitu od nule."
@@ -4092,36 +4009,12 @@ msgid "Procurement"
 msgstr "Nabava"
 
 #. module: stock
+#: model:ir.model,name:stock.model_procurement_group
 #: model:ir.model.fields,field_description:stock.field_stock_move__group_id
 #: model:ir.model.fields,field_description:stock.field_stock_picking__group_id
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__group_id
-#: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Procurement Group"
 msgstr "Grupa nabave"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_procurement_rule__location_id
-msgid "Procurement Location"
-msgstr "Lokacija nabave"
-
-#. module: stock
-#: model:ir.model,name:stock.model_procurement_group
-msgid "Procurement Requisition"
-msgstr "Zahtjevnica nabave"
-
-#. module: stock
-#: model:ir.model,name:stock.model_procurement_rule
-#: model:ir.model.fields,field_description:stock.field_stock_move__rule_id
-#: model_terms:ir.ui.view,arch_db:stock.view_procurement_rule_form
-msgid "Procurement Rule"
-msgstr "Pravilo nabave"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_location_route__pull_ids
-#: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
-#: model_terms:ir.ui.view,arch_db:stock.view_procurement_rule_tree
-msgid "Procurement Rules"
-msgstr "Pravila nabave"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.procurement_group_form_view
@@ -4136,17 +4029,12 @@ msgid "Procurement: run scheduler"
 msgstr ""
 
 #. module: stock
-#: model:stock.location,name:stock.location_procurement
-msgid "Procurements"
-msgstr "Nabava"
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__produce_line_ids
 msgid "Produce Line"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/product.py:346
+#: code:addons/stock/models/product.py:350
 #, python-format
 msgid "Produced Qty"
 msgstr "Proizvedena kol."
@@ -4164,23 +4052,25 @@ msgstr "Proizvedena kol."
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot__product_id
 #: model:ir.model.fields,field_description:stock.field_stock_quant__product_id
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking_line__product_id
+#: model:ir.model.fields,field_description:stock.field_stock_rules_report__product_id
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__product_id
+#: model:ir.model.fields,field_description:stock.field_stock_track_line__product_id
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__product_id
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty__product_id
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_scrap__product_id
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
-#: model_terms:ir.ui.view,arch_db:stock.report_lot_barcode
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_body_print
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_inventory
 #: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
+#: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
 #: model_terms:ir.ui.view,arch_db:stock.stock_scrap_search_view
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
 msgid "Product"
 msgstr "Proizvod"
 
 #. module: stock
-#: code:addons/stock/models/stock_location.py:190
+#: code:addons/stock/models/stock_location.py:187
 #: model:ir.model.fields,field_description:stock.field_stock_location_route__categ_ids
 #: model:ir.ui.menu,name:stock.menu_product_category_config_stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
@@ -4219,9 +4109,25 @@ msgid "Product Moves"
 msgstr ""
 
 #. module: stock
+#: model:ir.model,name:stock.model_stock_move_line
+msgid "Product Moves (Stock Move Line)"
+msgstr ""
+
+#. module: stock
 #: model:ir.ui.menu,name:stock.menu_product_packagings
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Product Packagings"
+msgstr ""
+
+#. module: stock
+#: model:ir.model,name:stock.model_product_replenish
+msgid "Product Replenish"
+msgstr ""
+
+#. module: stock
+#: model:ir.actions.report,name:stock.action_report_stock_rule
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_rules_report
+msgid "Product Routes Report"
 msgstr ""
 
 #. module: stock
@@ -4234,6 +4140,7 @@ msgstr "Predložak proizvoda"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__product_tmpl_id
+#: model:ir.model.fields,field_description:stock.field_stock_rules_report__product_tmpl_id
 msgid "Product Tmpl"
 msgstr ""
 
@@ -4251,6 +4158,7 @@ msgid "Product Unit of Measure"
 msgstr "JM proizvoda"
 
 #. module: stock
+#: model:ir.actions.act_window,name:stock.stock_product_normal_action
 #: model:ir.ui.menu,name:stock.product_product_menu
 msgid "Product Variants"
 msgstr "Varijante proizvoda"
@@ -4269,19 +4177,17 @@ msgid "Product with Tracking"
 msgstr "Proizvod s praćenjem"
 
 #. module: stock
-#: model:stock.location,name:stock.location_production
 #: selection:stock.location,usage:0
 msgid "Production"
 msgstr "Proizvodnja"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_product_product__property_stock_production
 #: model:ir.model.fields,field_description:stock.field_product_template__property_stock_production
 msgid "Production Location"
 msgstr "Lokacija proizvodnje"
 
 #. module: stock
-#: code:addons/stock/models/stock_location.py:180
+#: code:addons/stock/models/stock_location.py:177
 #: code:addons/stock/wizard/stock_quantity_history.py:29
 #: model:ir.actions.act_window,name:stock.act_product_location_open
 #: model:ir.actions.act_window,name:stock.product_template_action_product
@@ -4296,48 +4202,55 @@ msgid "Products"
 msgstr "Proizvodi"
 
 #. module: stock
-#: code:addons/stock/models/product.py:309
+#: code:addons/stock/models/product.py:313
 #, python-format
 msgid "Products: "
 msgstr "Proizvodi: "
 
 #. module: stock
-#: selection:procurement.rule,group_propagation_option:0
+#: selection:stock.rule,group_propagation_option:0
 msgid "Propagate"
 msgstr "Propagiraj"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_procurement_rule__propagate
-#: model:ir.model.fields,field_description:stock.field_stock_location_path__propagate
 #: model:ir.model.fields,field_description:stock.field_stock_move__propagate
+#: model:ir.model.fields,field_description:stock.field_stock_rule__propagate
 msgid "Propagate cancel and split"
 msgstr "Propagiraj otkazivanje i razdiobu"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.view_procurement_rule_form
-msgid "Propagation Options"
-msgstr "Opcije propagiranja"
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_rule_form
+msgid "Propagation"
+msgstr ""
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_procurement_rule__group_propagation_option
+#: model:ir.model.fields,field_description:stock.field_stock_rule__group_propagation_option
 msgid "Propagation of Procurement Group"
 msgstr "Propagiranje grupne nabave"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_move__push_rule_id
+#: selection:stock.rule,action:0
+msgid "Pull & Push"
+msgstr ""
+
+#. module: stock
+#: selection:stock.rule,action:0
+msgid "Pull From"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
+msgid "Pull Rule"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
 msgid "Push Rule"
 msgstr ""
 
 #. module: stock
-#: model:ir.actions.act_window,name:stock.stolocpath
-#: model:ir.model.fields,field_description:stock.field_stock_location_route__push_ids
-#: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
-msgid "Push Rules"
-msgstr ""
-
-#. module: stock
-#: model:ir.model,name:stock.model_stock_location_path
-msgid "Pushed Flow"
+#: selection:stock.rule,action:0
+msgid "Push To"
 msgstr ""
 
 #. module: stock
@@ -4368,9 +4281,14 @@ msgid "Putaway"
 msgstr "Odloži"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
+msgid "Putaway:"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__qty_multiple
 msgid "Qty Multiple"
-msgstr "Moltiplikator količine"
+msgstr "Multiplikator količine"
 
 #. module: stock
 #: sql_constraint:stock.warehouse.orderpoint:0
@@ -4378,7 +4296,7 @@ msgid "Qty Multiple must be greater than or equal to zero."
 msgstr "Multiplikator količine mora biti veći ili jednak nuli."
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:98
+#: code:addons/stock/models/stock_warehouse.py:445
 #, python-format
 msgid "Quality Control"
 msgstr "Kontrola kvalitete"
@@ -4415,6 +4333,7 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__quantity_done
+#: model_terms:ir.ui.view,arch_db:stock.view_move_kandan
 #: model_terms:ir.ui.view,arch_db:stock.view_move_line_form
 #: model_terms:ir.ui.view,arch_db:stock.view_move_line_tree
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_line_kanban
@@ -4441,13 +4360,13 @@ msgid "Quantity Reserved"
 msgstr "Rezervirana količina"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_change_product_qty.py:80
+#: code:addons/stock/wizard/stock_change_product_qty.py:74
 #, python-format
 msgid "Quantity cannot be negative."
 msgstr "Količine nemogu biti negativne"
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:654
+#: code:addons/stock/models/stock_move.py:643
 #, python-format
 msgid "Quantity decreased!"
 msgstr ""
@@ -4549,25 +4468,8 @@ msgid "Receipt Route"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:436
-#, python-format
-msgid "Receipt in 1 step"
-msgstr ""
-
-#. module: stock
-#: code:addons/stock/models/stock_warehouse.py:436
-#, python-format
-msgid "Receipt in 2 steps"
-msgstr ""
-
-#. module: stock
-#: code:addons/stock/models/stock_warehouse.py:437
-#, python-format
-msgid "Receipt in 3 steps"
-msgstr ""
-
-#. module: stock
-#: code:addons/stock/models/stock_warehouse.py:206
+#: code:addons/stock/models/stock_warehouse.py:726
+#: model:stock.picking.type,name:stock.chi_picking_type_in
 #: model:stock.picking.type,name:stock.picking_type_in
 #, python-format
 msgid "Receipts"
@@ -4575,11 +4477,39 @@ msgstr "Primke"
 
 #. module: stock
 #: selection:stock.warehouse,reception_steps:0
-msgid "Receive goods directly in stock (1 step)"
-msgstr "Zaprimi proizvode direktno na zalihu ( 1 korak)"
+msgid "Receive goods directly (1 step)"
+msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/product.py:323
+#: selection:stock.warehouse,reception_steps:0
+msgid "Receive goods in input and then stock (2 steps)"
+msgstr ""
+
+#. module: stock
+#: selection:stock.warehouse,reception_steps:0
+msgid "Receive goods in input, then quality and then stock (3 steps)"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/stock_warehouse.py:524
+#, python-format
+msgid "Receive in 1 step (stock)"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/stock_warehouse.py:524
+#, python-format
+msgid "Receive in 2 steps (input + stock)"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/stock_warehouse.py:525
+#, python-format
+msgid "Receive in 3 steps (input + quality + stock)"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/product.py:327
 #, python-format
 msgid "Received Qty"
 msgstr "Zaprimljena kol."
@@ -4751,25 +4681,30 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_product_product__responsible_id
 #: model:ir.model.fields,field_description:stock.field_product_template__responsible_id
 msgid "Responsible"
 msgstr "Odgovoran"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__activity_user_id
+#: model:ir.model.fields,field_description:stock.field_stock_production_lot__activity_user_id
 msgid "Responsible User"
 msgstr "Odgovorna osoba"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_warehouse__resupply_route_ids
-msgid "Resupply Routes"
-msgstr "Rute popunjivanja"
+#: model_terms:ir.ui.view,arch_db:stock.view_warehouse
+msgid "Resupply"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__resupply_wh_ids
-msgid "Resupply Warehouses"
-msgstr "Skladišta popunjivanja"
+msgid "Resupply From"
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_warehouse__resupply_route_ids
+msgid "Resupply Routes"
+msgstr "Rute popunjavanja"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quantity_history
@@ -4780,7 +4715,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_return_picking_form
 msgid "Return"
-msgstr "Potvrdi"
+msgstr "Storno"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking__location_id
@@ -4793,13 +4728,18 @@ msgid "Return Picking"
 msgstr "Povrat robe"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_picking_return.py:102
+#: model:ir.model,name:stock.model_stock_return_picking_line
+msgid "Return Picking Line"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/wizard/stock_picking_return.py:103
 #, python-format
 msgid "Return of %s"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/wizard/stock_picking_return.py:152
+#: code:addons/stock/wizard/stock_picking_return.py:153
 #, python-format
 msgid "Returned Picking"
 msgstr "Vraćena skladišnica"
@@ -4810,28 +4750,22 @@ msgid "Reverse Transfer"
 msgstr "Obrnuti prijenos"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_procurement_rule__route_id
-#: model:ir.model.fields,field_description:stock.field_stock_location_path__route_id
+#: model:ir.model.fields,field_description:stock.field_stock_location_route__name
+#: model:ir.model.fields,field_description:stock.field_stock_rule__route_id
 #: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
 #: model_terms:ir.ui.view,arch_db:stock.stock_location_route_view_search
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_rule_filter
 msgid "Route"
 msgstr "Smjer"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_location_route__name
-msgid "Route Name"
-msgstr "Naziv rute"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_procurement_rule__route_sequence
-#: model:ir.model.fields,field_description:stock.field_stock_location_path__route_sequence
+#: model:ir.model.fields,field_description:stock.field_stock_rule__route_sequence
 msgid "Route Sequence"
 msgstr "Brojevni krug rute"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_routes_form
 #: model:ir.model.fields,field_description:stock.field_product_category__route_ids
-#: model:ir.model.fields,field_description:stock.field_product_product__route_ids
 #: model:ir.model.fields,field_description:stock.field_product_template__route_ids
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__route_ids
 #: model:ir.ui.menu,name:stock.menu_routes_config
@@ -4843,6 +4777,13 @@ msgid "Routes"
 msgstr "Rute"
 
 #. module: stock
+#: model:ir.model.fields,help:stock.field_stock_warehouse__resupply_wh_ids
+msgid ""
+"Routes will be created automatically to resupply this warehouse from the "
+"warehouses ticked"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse__resupply_route_ids
 msgid ""
 "Routes will be created for these resupply warehouses and you can select them"
@@ -4850,6 +4791,17 @@ msgid ""
 msgstr ""
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_rule__rule_message
+msgid "Rule Message"
+msgstr ""
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.action_rules_form
+#: model:ir.model.fields,field_description:stock.field_stock_location_route__rule_ids
+#: model:ir.ui.menu,name:stock.menu_action_rules_form
+#: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_rule_form
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_rule_tree
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_form
 msgid "Rules"
 msgstr "Pravila"
@@ -4857,6 +4809,7 @@ msgstr "Pravila"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_procurement_compute
 #: model:ir.ui.menu,name:stock.menu_procurement_compute
+#: model_terms:ir.ui.view,arch_db:stock.view_procurement_compute_wizard
 msgid "Run Scheduler"
 msgstr ""
 
@@ -4866,18 +4819,15 @@ msgid "Run Scheduler Manually"
 msgstr ""
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.view_procurement_compute_wizard
-msgid "Run Schedulers"
-msgstr "Pokreni zakazane radnje"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.view_move_search
-msgid "Scheduled"
-msgstr "Zakazano"
+#: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_form
+msgid "Run the scheduler"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__date_planned
 #: model:ir.model.fields,field_description:stock.field_stock_picking__scheduled_date
+#: model_terms:ir.ui.view,arch_db:stock.view_move_search
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Scheduled Date"
 msgstr "Planirani datum"
 
@@ -4885,6 +4835,11 @@ msgstr "Planirani datum"
 #: model:ir.model.fields,help:stock.field_stock_move__date_expected
 msgid "Scheduled date for the processing of this move"
 msgstr "Odabrani datum za obradu ovog događaja"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_move_search
+msgid "Scheduled or processing date"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__scheduled_date
@@ -4897,7 +4852,8 @@ msgstr ""
 "skladišne prijenose."
 
 #. module: stock
-#: code:addons/stock/models/stock_picking.py:1043
+#: code:addons/stock/models/stock_picking.py:1062
+#: model:ir.model,name:stock.model_stock_scrap
 #: model:ir.model.fields,field_description:stock.field_stock_move__scrap_ids
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_scrap__scrap_id
 #: model:ir.ui.menu,name:stock.menu_stock_scrap
@@ -4931,7 +4887,6 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__scrapped
-#: model:stock.location,name:stock.stock_location_scrapped
 msgid "Scrapped"
 msgstr "Otpisano"
 
@@ -4958,7 +4913,7 @@ msgid "Search Inventory Lines"
 msgstr ""
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.view_procurement_rule_filter
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_rule_filter
 msgid "Search Procurement"
 msgstr "Pretraži nabave"
 
@@ -4968,12 +4923,7 @@ msgid "Search Scrap"
 msgstr "Pretraži otpise"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.stock_location_path_filter
-msgid "Search Stock Location Paths"
-msgstr ""
-
-#. module: stock
-#: code:addons/stock/models/stock_inventory.py:115
+#: code:addons/stock/models/stock_inventory.py:116
 #, python-format
 msgid "Select products manually"
 msgstr "Ručno odaberite proizvode"
@@ -4985,7 +4935,6 @@ msgstr "Odaberite mjesta gdje se ova ruta može odabrati"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_partner__picking_warn
-#: model:ir.model.fields,help:stock.field_res_users__picking_warn
 msgid ""
 "Selecting the \"Warning\" option will notify user with the message, "
 "Selecting \"Blocking Message\" will throw an exception with the message and "
@@ -4993,7 +4942,7 @@ msgid ""
 msgstr ""
 "Odabirom opcije \"Upozorenje\" obavijestit ćete korisnika porukom, odabirom "
 "opcije \"Blokiranje poruke\" učinit ćete izuzetak s porukom i blokirati tok."
-" Poruku treba napisati u slijedećem polju."
+" Poruku treba napisati u sljedećem polju."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -5001,48 +4950,48 @@ msgid "Sell and purchase products in different units of measure"
 msgstr ""
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_procurement_rule__sequence
-#: model:ir.model.fields,field_description:stock.field_stock_location_path__sequence
+#: selection:stock.warehouse,delivery_steps:0
+msgid "Send goods in output and then deliver (2 steps)"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_route__sequence
 #: model:ir.model.fields,field_description:stock.field_stock_move__sequence
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__sequence
+#: model:ir.model.fields,field_description:stock.field_stock_rule__sequence
 #: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_rule_form
 msgid "Sequence"
 msgstr "Sekvenca"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:698
+#: code:addons/stock/models/stock_warehouse.py:777
 #, python-format
 msgid "Sequence in"
 msgstr "Slijed u"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:702
+#: code:addons/stock/models/stock_warehouse.py:797
 #, python-format
 msgid "Sequence internal"
 msgstr "Unutarnji slijed"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:699
+#: code:addons/stock/models/stock_warehouse.py:782
 #, python-format
 msgid "Sequence out"
 msgstr "Slijed iz"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:700
+#: code:addons/stock/models/stock_warehouse.py:787
 #, python-format
 msgid "Sequence packing"
 msgstr "Slijed pakiranja"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:701
+#: code:addons/stock/models/stock_warehouse.py:792
 #, python-format
 msgid "Sequence picking"
-msgstr ""
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_procurement_rule__warehouse_id
-msgid "Served Warehouse"
 msgstr ""
 
 #. module: stock
@@ -5101,7 +5050,7 @@ msgstr ""
 #: model:ir.ui.menu,name:stock.menu_stock_general_settings
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "Settings"
-msgstr "Postave"
+msgstr "Postavke"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__posy
@@ -5109,15 +5058,9 @@ msgid "Shelves (Y)"
 msgstr "Police (Y)"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:438
-#, python-format
-msgid "Ship Only"
-msgstr "Samo isporuka"
-
-#. module: stock
-#: selection:stock.warehouse,delivery_steps:0
-msgid "Ship directly from stock (Ship only)"
-msgstr "Isporuka direktno sa skladišta ( samo isporuka)"
+#: model_terms:ir.ui.view,arch_db:stock.view_warehouse
+msgid "Shipments"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -5185,6 +5128,11 @@ msgid "Show Reserved"
 msgstr ""
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_warehouse__show_resupply
+msgid "Show Resupply"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__show_validate
 msgid "Show Validate"
 msgstr ""
@@ -5195,13 +5143,24 @@ msgid "Show all records which has next action date is before today"
 msgstr ""
 
 #. module: stock
+#: model:ir.model.fields,help:stock.field_stock_rules_report__warehouse_ids
+msgid "Show the routes that apply on selected warehouses."
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__string_availability_info
 msgid "Show various information on stock availability for this move"
 msgstr "Prikaži razne informacije o dostupnosti zaliha za ovaj prijenos"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_track_confirmation
+msgid ""
+"Some products of the inventory adjustment are tracked. Are you sure you "
+"don't want to specify a serial or lot number for them?"
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
-#: model_terms:ir.ui.view,arch_db:stock.view_move_search
 msgid "Source"
 msgstr "Izvor"
 
@@ -5213,11 +5172,13 @@ msgid "Source Document"
 msgstr "Izvorni dokument"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_procurement_rule__location_src_id
-#: model:ir.model.fields,field_description:stock.field_stock_location_path__location_from_id
+#: code:addons/stock/models/stock_rule.py:95
 #: model:ir.model.fields,field_description:stock.field_stock_move__location_id
 #: model:ir.model.fields,field_description:stock.field_stock_package_level__picking_source_location
 #: model:ir.model.fields,field_description:stock.field_stock_picking__location_id
+#: model:ir.model.fields,field_description:stock.field_stock_rule__location_src_id
+#: model_terms:ir.ui.view,arch_db:stock.view_move_search
+#, python-format
 msgid "Source Location"
 msgstr "Izvorna lokacija"
 
@@ -5238,46 +5199,36 @@ msgid "Source Package :"
 msgstr ""
 
 #. module: stock
-#: model:ir.model.fields,help:stock.field_procurement_rule__location_src_id
-msgid "Source location is action=move"
-msgstr "Izvorna lokacija je akcija=prijenos"
-
-#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory__lot_id
 msgid ""
 "Specify Lot/Serial Number to focus your inventory on a particular Lot/Serial"
 " Number."
 msgstr ""
-"Navedite lot/serijski broj kako biste usmjerili svoju inventuru na određeni "
-"lot/serijski broj."
+"Navedite šaržu/serijski broj kako biste zalihu usmjerili na određenu "
+"šaržu/serijski broj."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory__partner_id
 msgid "Specify Owner to focus your inventory on a particular Owner."
-msgstr ""
-"Navedite vlasnika kako biste usmjerili svoju inventuru na određenog "
-"vlasnika."
+msgstr "Navedite vlasnika kako biste zalihu usmjerili na određenog vlasnika."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory__package_id
 msgid "Specify Pack to focus your inventory on a particular Pack."
-msgstr ""
-"Navedite pakiranje kako biste usmjerili svoju inventuru na određeno "
-"pakiranje."
+msgstr "Navedite pakiranje kako biste zalihu usmjerili na određeno pakiranje."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory__category_id
 msgid ""
 "Specify Product Category to focus your inventory on a particular Category."
 msgstr ""
-"Navedite kategoriju proizvoda kako biste usmjerili inventuru na određenu "
+"Navedite kategoriju proizvoda kako biste zalihu usmjerili na određenu "
 "kategoriju."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory__product_id
 msgid "Specify Product to focus your inventory on a particular Product."
-msgstr ""
-"Navedite proizvod kako biste usmjerili svoju inventuru na određeni proizvod."
+msgstr "Navedite proizvod kako biste zalihu usmjerili na određeni proizvod."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_form
@@ -5305,6 +5256,7 @@ msgstr "Status"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__activity_state
+#: model:ir.model.fields,help:stock.field_stock_production_lot__activity_state
 msgid ""
 "Status based on activities\n"
 "Overdue: Due date is already passed\n"
@@ -5313,16 +5265,20 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:96
-#: model:stock.location,name:stock.stock_location_stock
+#: code:addons/stock/models/stock_warehouse.py:443
 #, python-format
 msgid "Stock"
 msgstr "Zaliha"
 
 #. module: stock
+#: model:ir.model,name:stock.model_report_stock_forecast
+msgid "Stock Forecast Report"
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
 msgid "Stock Inventory"
-msgstr "Stock Inventory"
+msgstr "Inventura zalihe"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_line_tree
@@ -5358,7 +5314,7 @@ msgstr "Skladišne lokacije"
 #: model:ir.model.fields,field_description:stock.field_product_product__stock_move_ids
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__move_id
 msgid "Stock Move"
-msgstr "Skladišni prenos"
+msgstr "Skladišni prijenos"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.stock_move_action
@@ -5392,13 +5348,17 @@ msgid "Stock Operation"
 msgstr "Operacija skladišta"
 
 #. module: stock
-#: model:ir.actions.act_window,name:stock.action_picking_tree_all
-msgid "Stock Operations"
-msgstr "Operacija skladišta"
+#: model:ir.model,name:stock.model_stock_package_destination
+msgid "Stock Package Destination"
+msgstr ""
+
+#. module: stock
+#: model:ir.model,name:stock.model_stock_package_level
+msgid "Stock Package Level"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_partner__picking_warn
-#: model:ir.model.fields,field_description:stock.field_res_users__picking_warn
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__picking_id
 msgid "Stock Picking"
 msgstr "Skladišnica"
@@ -5412,6 +5372,32 @@ msgstr ""
 #. module: stock
 #: model:ir.model,name:stock.model_stock_quantity_history
 msgid "Stock Quantity History"
+msgstr ""
+
+#. module: stock
+#: model:ir.model,name:stock.model_stock_rule
+#: model:ir.model.fields,field_description:stock.field_stock_move__rule_id
+msgid "Stock Rule"
+msgstr ""
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.action_stock_rules_report
+msgid "Stock Rules Report"
+msgstr ""
+
+#. module: stock
+#: model:ir.model,name:stock.model_stock_rules_report
+msgid "Stock Rules report"
+msgstr ""
+
+#. module: stock
+#: model:ir.model,name:stock.model_stock_track_confirmation
+msgid "Stock Track Confirmation"
+msgstr ""
+
+#. module: stock
+#: model:ir.model,name:stock.model_stock_track_line
+msgid "Stock Track Line"
 msgstr ""
 
 #. module: stock
@@ -5435,14 +5421,14 @@ msgid "Stock moves that have been processed"
 msgstr "Obrađeni skladišni prijenosi"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.quant_search_view
-msgid "Stockable"
-msgstr "Uskladištiv"
+#: model:ir.model,name:stock.model_report_stock_report_stock_rule
+msgid "Stock rule report"
+msgstr ""
 
 #. module: stock
 #: selection:product.template,type:0
-msgid "Stockable Product"
-msgstr "Uskladištivi proizvod"
+msgid "Storable Product"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_multi_locations
@@ -5473,7 +5459,7 @@ msgid "Supplying Warehouse"
 msgstr "Opskrba skladišta"
 
 #. module: stock
-#: selection:procurement.rule,procure_method:0
+#: selection:stock.rule,procure_method:0
 msgid "Take From Stock"
 msgstr "Uzmi sa skladišta"
 
@@ -5557,7 +5543,7 @@ msgid "Template"
 msgstr "Predložak"
 
 #. module: stock
-#: model:ir.model.fields,help:stock.field_stock_location_path__auto
+#: model:ir.model.fields,help:stock.field_stock_rule__auto
 msgid ""
 "The 'Manual Operation' value will create a stock move after the current one."
 " With 'Automatic No Step Added', the location is replaced in the original "
@@ -5565,7 +5551,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_picking.py:826
+#: code:addons/stock/models/stock_picking.py:824
 #, python-format
 msgid ""
 "The backorder <a href=# data-oe-model=stock.picking data-oe-id=%d>%s</a> has"
@@ -5593,51 +5579,16 @@ msgid "The company is automatically set from your user preferences."
 msgstr "Tvrtka je automatski postavljena iz Vaših korisničkih preferencija."
 
 #. module: stock
-#: model:ir.model.fields,help:stock.field_stock_inventory__date
+#: model:ir.model.fields,help:stock.field_stock_rule__delay
 msgid ""
-"The date that will be used for the stock level check of the products and the"
-" validation of the stock move related to this inventory."
-msgstr ""
-
-#. module: stock
-#: code:addons/stock/models/stock_warehouse.py:143
-#, python-format
-msgid "The default resupply warehouse should be different than itself."
-msgstr ""
-
-#. module: stock
-#: model:ir.model.fields,help:stock.field_stock_location_route__pull_ids
-msgid ""
-"The demand represented by a procurement from e.g. a sale order, a reordering"
-" rule, another move, needs to be solved by applying a procurement rule. "
-"Depending on the action on the procurement rule,this triggers a purchase "
-"order, manufacturing order or another move. This way we create chains in the"
-" reverse order from the endpoint with the original demand to the starting "
-"point. That way, it is always known where we need to go and that is why they"
-" are preferred over push rules."
-msgstr ""
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.product_category_form_view_inherit
-msgid ""
-"The following routes will apply to the products in this category taking into"
-" account parent categories:"
+"The expected date of the created transfer will be computed based on this "
+"delay."
 msgstr ""
 
 #. module: stock
 #: sql_constraint:stock.warehouse:0
 msgid "The name of the warehouse must be unique per company!"
 msgstr "Naziv skladišta mora biti jedinstven za tvrtku!"
-
-#. module: stock
-#: model:ir.model.fields,help:stock.field_stock_location_path__location_dest_id
-msgid "The new location where the goods need to go"
-msgstr "Nova lokacija kamo roba treba ići"
-
-#. module: stock
-#: model:ir.model,name:stock.model_stock_picking_type
-msgid "The operation type determines the picking view"
-msgstr ""
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_picking_type_action
@@ -5668,22 +5619,12 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: model:ir.model.fields,help:stock.field_stock_move__rule_id
-msgid "The procurement rule that created this stock move"
-msgstr "Pravilo nabave koje je kreiralo ovaj skladišni prijenos"
-
-#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
 msgid "The product"
 msgstr ""
 
 #. module: stock
-#: model:ir.model.fields,help:stock.field_stock_move__push_rule_id
-msgid "The push rule that created this stock move"
-msgstr ""
-
-#. module: stock
-#: code:addons/stock/models/stock_move_line.py:371
+#: code:addons/stock/models/stock_move_line.py:377
 #, python-format
 msgid ""
 "The quantity done for the product \"%s\" doesn't respect the rounding "
@@ -5694,8 +5635,8 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:286
-#: code:addons/stock/models/stock_move_line.py:81
+#: code:addons/stock/models/stock_move.py:284
+#: code:addons/stock/models/stock_move_line.py:82
 #, python-format
 msgid ""
 "The requested operation cannot be processed because of a programming error "
@@ -5710,28 +5651,40 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_inventory.py:157
+#: code:addons/stock/models/stock_inventory.py:160
 #, python-format
 msgid ""
 "The selected inventory options are not coherent, the package doesn't exist."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_inventory.py:153
+#: code:addons/stock/models/stock_inventory.py:156
 #, python-format
 msgid "The selected lot number doesn't exist."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_inventory.py:155
+#: code:addons/stock/models/stock_inventory.py:158
 #, python-format
 msgid "The selected owner doesn't have the proprietary of that product."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_inventory.py:151
+#: code:addons/stock/models/stock_inventory.py:154
 #, python-format
 msgid "The selected product doesn't belong to that owner.."
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_res_partner__property_stock_customer
+msgid ""
+"The stock location used as destination when sending goods to this contact."
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_res_partner__property_stock_supplier
+msgid ""
+"The stock location used as source when receiving goods from this contact."
 msgstr ""
 
 #. module: stock
@@ -5740,12 +5693,19 @@ msgid "The stock operation where the packing has been made"
 msgstr ""
 
 #. module: stock
-#: model:ir.model.fields,help:stock.field_procurement_rule__warehouse_id
-msgid "The warehouse this rule is for"
-msgstr "Skladište za koje je ovo pravilo"
+#: model:ir.model.fields,help:stock.field_stock_move__rule_id
+msgid "The stock rule that created this stock move"
+msgstr ""
 
 #. module: stock
-#: model:ir.model.fields,help:stock.field_procurement_rule__propagate_warehouse_id
+#: model_terms:ir.ui.view,arch_db:stock.view_procurement_compute_wizard
+msgid ""
+"The stock will be reserved for operations waiting for availability and the "
+"reordering rules will be triggered."
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_rule__propagate_warehouse_id
 msgid ""
 "The warehouse to propagate on the created move/procurement, which can be "
 "different of the warehouse this rule is for (e.g for resupplying rules from "
@@ -5772,7 +5732,7 @@ msgstr ""
 "i njihove trenutne skladišne vrijednosti."
 
 #. module: stock
-#: model:ir.model.fields,help:stock.field_procurement_rule__name
+#: model:ir.model.fields,help:stock.field_stock_rule__name
 msgid "This field will fill the packing origin and the name of its moves"
 msgstr ""
 
@@ -5799,11 +5759,6 @@ msgstr ""
 msgid ""
 "This is the list of all the production lots you recorded. When\n"
 "            you select a lot, you can get the traceability of the products contained in lot."
-msgstr ""
-
-#. module: stock
-#: model:ir.model.fields,help:stock.field_stock_location_path__picking_type_id
-msgid "This is the operation type that will be put on the stock moves"
 msgstr ""
 
 #. module: stock
@@ -5838,6 +5793,12 @@ msgstr ""
 #, python-format
 msgid ""
 "This location's usage cannot be changed to view as it contains products."
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/stock_move_line.py:74
+#, python-format
+msgid "This lot %s is incompatible with this product %s"
 msgstr ""
 
 #. module: stock
@@ -5886,34 +5847,6 @@ msgid ""
 msgstr "Ova količina je izražena u zadanoj jedinici mjere za ovaj proizvod."
 
 #. module: stock
-#: model:ir.model.fields,help:stock.field_stock_location_path__location_from_id
-msgid ""
-"This rule can be applied when a move is confirmed that has this location as "
-"destination location"
-msgstr ""
-
-#. module: stock
-#: model:ir.model.fields,help:stock.field_res_partner__property_stock_customer
-#: model:ir.model.fields,help:stock.field_res_users__property_stock_customer
-msgid ""
-"This stock location will be used, instead of the default one, as the "
-"destination location for goods you send to this partner"
-msgstr ""
-"Ova skladišna lokacija će se koristiti, umjesto uobičajene, kao odredišna "
-"lokacija za robu koju šaljete ovom partneru"
-
-#. module: stock
-#: model:ir.model.fields,help:stock.field_res_partner__property_stock_supplier
-#: model:ir.model.fields,help:stock.field_res_users__property_stock_supplier
-msgid ""
-"This stock location will be used, instead of the default one, as the source "
-"location for goods you receive from the current partner"
-msgstr ""
-"Ova lokacija zalihe se koristi umjesto uobičajene kao ulazna lokacija za "
-"robu koju nabavljate od ovog partnera"
-
-#. module: stock
-#: model:ir.model.fields,help:stock.field_product_product__property_stock_production
 #: model:ir.model.fields,help:stock.field_product_template__property_stock_production
 msgid ""
 "This stock location will be used, instead of the default one, as the source "
@@ -5921,7 +5854,6 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: model:ir.model.fields,help:stock.field_product_product__property_stock_inventory
 #: model:ir.model.fields,help:stock.field_product_template__property_stock_inventory
 msgid ""
 "This stock location will be used, instead of the default one, as the source "
@@ -5931,7 +5863,6 @@ msgstr ""
 "za skladišne prijenose koji se generiraju prilikom izrade inventure."
 
 #. module: stock
-#: model:ir.model.fields,help:stock.field_product_product__responsible_id
 #: model:ir.model.fields,help:stock.field_product_template__responsible_id
 msgid ""
 "This user will be responsible of the next activities related to logistic "
@@ -5943,31 +5874,26 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_package_level__location_dest_id
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_body_print
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_inventory
+#: model_terms:ir.ui.view,arch_db:stock.view_inventory_form
 #: model_terms:ir.ui.view,arch_db:stock.view_move_tree
 msgid "To"
-msgstr "za"
+msgstr "Do"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_ready
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
-#: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
 msgid "To Do"
 msgstr "Za napraviti"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_move_line__to_loc
-msgid "To Loc"
+#: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
+msgid "To Process"
 msgstr ""
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
-msgid "To Receive"
-msgstr "Za zaprimanje"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.view_move_search
 #: selection:stock.picking,activity_state:0
+#: selection:stock.production.lot,activity_state:0
 msgid "Today"
 msgstr "Danas"
 
@@ -5988,12 +5914,14 @@ msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "Traceability"
 msgstr "Sljedivost"
 
 #. module: stock
 #: model:ir.actions.client,name:stock.action_stock_report
+#: model:ir.model,name:stock.model_stock_traceability_report
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_body_print
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_inventory
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -6022,11 +5950,34 @@ msgid "Track product location in your warehouse"
 msgstr ""
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_product_product__tracking
+#: code:addons/stock/models/stock_inventory.py:173
+#, python-format
+msgid "Tracked Products in Inventory Adjustment"
+msgstr ""
+
+#. module: stock
+#: selection:stock.track.line,tracking:0
+msgid "Tracked by lot"
+msgstr ""
+
+#. module: stock
+#: selection:stock.track.line,tracking:0
+msgid "Tracked by serial number"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_template__tracking
+#: model:ir.model.fields,field_description:stock.field_stock_inventory_line__product_tracking
+#: model:ir.model.fields,field_description:stock.field_stock_move_line__tracking
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__tracking
+#: model:ir.model.fields,field_description:stock.field_stock_track_line__tracking
 msgid "Tracking"
 msgstr "Praćenje"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_track_confirmation__tracking_line_ids
+msgid "Tracking Line"
+msgstr ""
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_picking
@@ -6037,7 +5988,12 @@ msgstr "Prijenos"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__picking_partner_id
 msgid "Transfer Destination Address"
-msgstr "Odredišna adresa "
+msgstr "Transferna adresa "
+
+#. module: stock
+#: model:ir.model,name:stock.model_stock_overprocessed_transfer
+msgid "Transfer Over Processed Stock"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__picking_id
@@ -6046,8 +6002,8 @@ msgstr "Broj dokumenta"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree
+#: model:ir.actions.act_window,name:stock.action_picking_tree_all
 #: model:ir.ui.menu,name:stock.all_picking
-#: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "Transfers"
 msgstr "Prijenosi"
 
@@ -6062,6 +6018,12 @@ msgid "Transit Locations"
 msgstr "Tranzitne lokacije"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
+#: selection:stock.rule,procure_method:0
+msgid "Trigger Another Rule"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_barcode_rule__type
 msgid "Type"
 msgstr "Vrsta"
@@ -6070,6 +6032,7 @@ msgstr "Vrsta"
 #: model:ir.model.fields,field_description:stock.field_stock_move__picking_code
 #: model:ir.model.fields,field_description:stock.field_stock_picking__picking_type_code
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__code
+#: model_terms:ir.ui.view,arch_db:stock.view_pickingtype_filter
 msgid "Type of Operation"
 msgstr "Tip operacije"
 
@@ -6082,6 +6045,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_usps
 msgid "USPS Connector"
 msgstr ""
+
+#. module: stock
+#. openerp-web
+#: code:addons/stock/static/src/xml/stock_traceability_report_line.xml:10
+#: code:addons/stock/static/src/xml/stock_traceability_report_line.xml:36
+#, python-format
+msgid "Unfold"
+msgstr "Raširi"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_production_lot__name
@@ -6146,28 +6117,16 @@ msgid "Unity of measure"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_picking.py:887
+#: code:addons/stock/models/stock_picking.py:885
 #, python-format
 msgid "Unknow stream."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_quant.py:336
+#: code:addons/stock/models/stock_quant.py:348
 #, python-format
 msgid "Unknown Pack"
 msgstr "Nepoznat paket"
-
-#. module: stock
-#: selection:stock.warehouse,reception_steps:0
-msgid "Unload in input location then go to stock (2 steps)"
-msgstr ""
-
-#. module: stock
-#: selection:stock.warehouse,reception_steps:0
-msgid ""
-"Unload in input location, go through a quality control before being admitted"
-" in stock (3 steps)"
-msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -6180,7 +6139,7 @@ msgid "Unpack"
 msgstr "Raspakiraj"
 
 #. module: stock
-#: code:addons/stock/models/product.py:341
+#: code:addons/stock/models/product.py:345
 #, python-format
 msgid "Unplanned Qty"
 msgstr "Neplanirana kol."
@@ -6215,7 +6174,11 @@ msgid "UoM Categories"
 msgstr ""
 
 #. module: stock
-#: model:ir.actions.act_window,name:stock.action_view_change_product_quantity
+#: model:ir.model.fields,field_description:stock.field_stock_inventory_line__product_uom_category_id
+msgid "Uom category"
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_change_product_quantity
 msgid "Update Product Quantity"
 msgstr "Ažuriraj količine proizvoda"
@@ -6228,11 +6191,18 @@ msgid "Update Qty On Hand"
 msgstr "Ažuriraj dostupne količine"
 
 #. module: stock
+#: code:addons/stock/models/product.py:563
+#, python-format
+msgid "Update quantity on hand"
+msgstr ""
+
+#. module: stock
 #: selection:stock.move,priority:0 selection:stock.picking,priority:0
 msgid "Urgent"
 msgstr "Hitno"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_move_line__picking_type_use_existing_lots
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__use_existing_lots
 msgid "Use Existing Lots/Serial Numbers"
 msgstr "Koristi postojeće lotove/serijske brojeve"
@@ -6261,11 +6231,6 @@ msgid "User"
 msgstr "Korisnik"
 
 #. module: stock
-#: model:ir.model,name:stock.model_res_users
-msgid "Users"
-msgstr "Korisnici"
-
-#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_scrap_form_view
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Validate"
@@ -6277,6 +6242,7 @@ msgid "Validate Inventory"
 msgstr "Validate Inventory"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_inventory_filter
 #: selection:stock.inventory,state:0
 msgid "Validated"
 msgstr "Provjereno"
@@ -6293,7 +6259,6 @@ msgstr "Dobavljač"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_partner__property_stock_supplier
-#: model:ir.model.fields,field_description:stock.field_res_users__property_stock_supplier
 #: selection:stock.location,usage:0
 msgid "Vendor Location"
 msgstr "Lokacija dobavljača"
@@ -6304,7 +6269,6 @@ msgid "Vendor Locations"
 msgstr "Lokacije dobavljača"
 
 #. module: stock
-#: model:stock.location,name:stock.stock_location_suppliers
 #: selection:stock.picking.type,code:0
 msgid "Vendors"
 msgstr "Dobavljači"
@@ -6317,7 +6281,7 @@ msgstr "Vrlo hitno"
 #. module: stock
 #: selection:stock.location,usage:0
 msgid "View"
-msgstr "Pogled"
+msgstr "Pogledaj"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__view_location_id
@@ -6325,16 +6289,11 @@ msgid "View Location"
 msgstr "Pregled lokacije"
 
 #. module: stock
-#: model:stock.location,name:stock.stock_location_locations_virtual
-msgid "Virtual Locations"
-msgstr "Virtualne lokacije"
-
-#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 #: selection:stock.picking,state:0
 msgid "Waiting"
-msgstr "Waiting"
+msgstr "Na čekanju"
 
 #. module: stock
 #: selection:stock.move,state:0
@@ -6363,16 +6322,18 @@ msgstr "Čeka prenose"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_warehouse
-#: model:ir.model.fields,field_description:stock.field_product_product__warehouse_id
 #: model:ir.model.fields,field_description:stock.field_product_replenish__warehouse_id
 #: model:ir.model.fields,field_description:stock.field_product_template__warehouse_id
-#: model:ir.model.fields,field_description:stock.field_stock_location_path__warehouse_id
 #: model:ir.model.fields,field_description:stock.field_stock_move__warehouse_id
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__warehouse_id
+#: model:ir.model.fields,field_description:stock.field_stock_rule__warehouse_id
+#: model:ir.model.fields,field_description:stock.field_stock_warehouse__name
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__warehouse_id
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:stock.stock_warehouse_view_search
 #: model_terms:ir.ui.view,arch_db:stock.view_partner_stock_form
+#: model_terms:ir.ui.view,arch_db:stock.view_pickingtype_filter
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_rule_filter
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_tree
 #: model_terms:ir.ui.view,arch_db:stock.warehouse_orderpoint_search
@@ -6385,22 +6346,22 @@ msgid "Warehouse Configuration"
 msgstr "Postavke skladišta"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_warehouse__warehouse_count
+msgid "Warehouse Count"
+msgstr ""
+
+#. module: stock
 #: model:ir.ui.menu,name:stock.menu_warehouse_config
 msgid "Warehouse Management"
 msgstr "Upravljanje skladištem"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_warehouse__name
-msgid "Warehouse Name"
-msgstr "Naziv skladišta"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_procurement_rule__propagate_warehouse_id
+#: model:ir.model.fields,field_description:stock.field_stock_rule__propagate_warehouse_id
 msgid "Warehouse to Propagate"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:724
+#: code:addons/stock/models/stock_warehouse.py:827
 #, python-format
 msgid "Warehouse's Routes"
 msgstr "Rute u skladištu"
@@ -6408,6 +6369,7 @@ msgstr "Rute u skladištu"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_warehouse_form
 #: model:ir.model.fields,field_description:stock.field_stock_location_route__warehouse_ids
+#: model:ir.model.fields,field_description:stock.field_stock_rules_report__warehouse_ids
 #: model:ir.ui.menu,name:stock.menu_action_warehouse_form
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
@@ -6415,8 +6377,18 @@ msgid "Warehouses"
 msgstr "Skladišta"
 
 #. module: stock
-#: code:addons/stock/models/stock_move_line.py:128
-#: code:addons/stock/models/stock_move_line.py:140
+#: model:ir.model,name:stock.model_stock_warn_insufficient_qty
+msgid "Warn Insufficient Quantity"
+msgstr ""
+
+#. module: stock
+#: model:ir.model,name:stock.model_stock_warn_insufficient_qty_scrap
+msgid "Warn Insufficient Scrap Quantity"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/stock_move_line.py:129
+#: code:addons/stock/models/stock_move_line.py:141
 #: selection:res.partner,picking_warn:0
 #, python-format
 msgid "Warning"
@@ -6428,7 +6400,7 @@ msgid "Warning on the Picking"
 msgstr "Upozorenje na skladišnicama"
 
 #. module: stock
-#: code:addons/stock/models/product.py:302
+#: code:addons/stock/models/product.py:306
 #, python-format
 msgid "Warning!"
 msgstr "Upozorenje!"
@@ -6456,20 +6428,9 @@ msgid "Website communication history"
 msgstr "Povijest komunikacije Web stranice"
 
 #. module: stock
-#: code:addons/stock/models/barcode.py:11 selection:barcode.rule,type:0
-#, python-format
+#: selection:barcode.rule,type:0
 msgid "Weighted Product"
 msgstr "Vagani proizvod"
-
-#. module: stock
-#: model:ir.model.fields,help:stock.field_stock_location_route__push_ids
-msgid ""
-"When a move is foreseen to a location, the push rule will automatically "
-"create a move to a next location after. This is mainly only needed when "
-"creating manual operations e.g. 2/3 step manual purchase order or 2/3 step "
-"finished product manual manufacturing order. In other cases, it is important"
-" to use pull rules where you know where you are going based on a demand."
-msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_route__warehouse_selectable
@@ -6497,6 +6458,22 @@ msgstr ""
 msgid ""
 "When checked, the route will be selectable on the Product Category.  It will"
 " take priority over the Warehouse route. "
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/stock_rule.py:113
+#, python-format
+msgid ""
+"When products are needed in <b>%s</b>, <br/> <b>%s</b> are created from "
+"<b>%s</b> to fulfill the need."
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/stock_rule.py:114
+#, python-format
+msgid ""
+"When products arrive in <b>%s</b>, <br/> <b>%s</b> are created to send them "
+"in <b>%s</b>."
 msgstr ""
 
 #. module: stock
@@ -6529,17 +6506,10 @@ msgstr ""
 "maksimalna količina."
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.view_procurement_compute_wizard
+#: model:ir.model.fields,help:stock.field_stock_rule__propagate
 msgid ""
-"When you run the schedulers, Odoo tries to reserve the available stock to fulfill the existing pickings\n"
-"                and verify if some reordering rules should be triggered."
-msgstr ""
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.view_change_product_quantity
-msgid ""
-"When you select a serial number (lot), the quantity is corrected with respect to\n"
-"                            the quantity of that serial number (lot) and not to the total quantity of the product."
+"When ticked, if the move is splitted or cancelled, the next move will be "
+"too."
 msgstr ""
 
 #. module: stock
@@ -6549,11 +6519,12 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking_line__wizard_id
+#: model:ir.model.fields,field_description:stock.field_stock_track_line__wizard_id
 msgid "Wizard"
 msgstr "Čarobnjak"
 
 #. module: stock
-#: code:addons/stock/models/stock_production_lot.py:45
+#: code:addons/stock/models/stock_production_lot.py:44
 #, python-format
 msgid ""
 "You are not allowed to change the product linked to a serial or lot number "
@@ -6562,13 +6533,23 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_production_lot.py:37
+#: code:addons/stock/models/stock_production_lot.py:36
 #, python-format
-msgid "You are not allowed to create a lot for this operation type."
+msgid ""
+"You are not allowed to create a lot or serial number with this operation "
+"type. To change this, go on the operation type and tick the box \"Create New"
+" Lots/Serial Numbers\"."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:679
+#: model_terms:ir.ui.view,arch_db:stock.stock_package_destination_form_view
+msgid ""
+"You are trying to put products going to different locations into the same "
+"package"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/stock_move.py:668
 #, python-format
 msgid ""
 "You are using a unit of measure smaller than the one you are using in order "
@@ -6593,7 +6574,7 @@ msgid "You can delete lines to ignore some products."
 msgstr "Možete izbrisati stavke kako biste ignorirali neke proizvode."
 
 #. module: stock
-#: code:addons/stock/models/product.py:521
+#: code:addons/stock/models/product.py:545
 #, python-format
 msgid ""
 "You can not change the type of a product that is currently reserved on a "
@@ -6602,19 +6583,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/product.py:512
-#, python-format
-msgid ""
-"You can not change the unit of measure of a product that has already been "
-"used in a done stock move. If you need to change the unit of measure, you "
-"may deactivate this product."
-msgstr ""
-"Ne možete mijenjati jedinicu mjere na proizvodu koji je korišten u završenom"
-" prijenosu. Ako trebate promijeniti jedinicu mjere, morate deaktivirati "
-"proizvod."
-
-#. module: stock
-#: code:addons/stock/models/stock_move_line.py:333
+#: code:addons/stock/models/stock_move_line.py:338
 #, python-format
 msgid ""
 "You can not delete product moves if the picking is done. You can only "
@@ -6622,31 +6591,31 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move_line.py:146
+#: code:addons/stock/models/stock_move_line.py:147
 #, python-format
 msgid "You can not enter negative quantities."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_inventory.py:388
+#: code:addons/stock/models/stock_inventory.py:426
 #, python-format
-msgid "You can only adjust stockable products."
+msgid "You can only adjust storable products."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:1152
+#: code:addons/stock/models/stock_move.py:1149
 #, python-format
 msgid "You can only delete draft moves."
 msgstr "Možete izbrisati samo transakcije u nacrtu."
 
 #. module: stock
-#: code:addons/stock/models/stock_move_line.py:139
+#: code:addons/stock/models/stock_move_line.py:140
 #, python-format
 msgid "You can only process 1.0 %s of products with unique serial number."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:1016
+#: code:addons/stock/models/stock_move.py:1014
 #, python-format
 msgid "You cannot cancel a stock move that has been set to 'Done'."
 msgstr ""
@@ -6661,7 +6630,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/product.py:605
+#: code:addons/stock/models/product.py:647
 #, python-format
 msgid ""
 "You cannot change the ratio of this unit of mesure as some products with "
@@ -6669,29 +6638,38 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_scrap.py:75
+#: code:addons/stock/models/product.py:536
+#, python-format
+msgid ""
+"You cannot change the unit of measure as there are already stock moves for "
+"this product. If you want to change the unit of measure, you should rather "
+"archive this product and create a new one."
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/stock_scrap.py:76
 #, python-format
 msgid "You cannot delete a scrap which is done."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_inventory.py:104
+#: code:addons/stock/models/stock_inventory.py:105
 #, python-format
 msgid "You cannot delete a validated inventory adjustement."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_inventory.py:376
+#: code:addons/stock/models/stock_inventory.py:415
 #, python-format
 msgid ""
-"You cannot have two inventory adjustments in progress for the same product "
-"(%s) in the same location, for the same package, the same owner and the same"
-" lot number. Please validate or cancel the first inventory adjustment before"
-" creating a new one."
+"You cannot have two inventory adjustments in state 'In Progress' with the "
+"same product (%s), same location, same package, same owner and same lot. "
+"Please first validate the first inventory adjustment before creating another"
+" one."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:1136
+#: code:addons/stock/models/stock_move.py:1134
 #, python-format
 msgid ""
 "You cannot move the same package content more than once in the same transfer"
@@ -6699,7 +6677,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:341
+#: code:addons/stock/models/stock_move.py:339
 #, python-format
 msgid ""
 "You cannot perform the move because the unit of measure has a different "
@@ -6707,7 +6685,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_inventory.py:166
+#: code:addons/stock/models/stock_inventory.py:186
 #, python-format
 msgid ""
 "You cannot set a negative product quantity in an inventory line:\n"
@@ -6715,13 +6693,13 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:1183
+#: code:addons/stock/models/stock_move.py:1180
 #, python-format
 msgid "You cannot split a draft move. It needs to be confirmed first."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:1179
+#: code:addons/stock/models/stock_move.py:1176
 #, python-format
 msgid "You cannot split a stock move that has been set to 'Done'."
 msgstr ""
@@ -6735,14 +6713,14 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:502
+#: code:addons/stock/models/stock_move.py:501
 #, python-format
 msgid "You cannot unreserve a stock move that has been set to 'Done'."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move_line.py:121
-#: code:addons/stock/models/stock_move_line.py:125
+#: code:addons/stock/models/stock_move_line.py:122
+#: code:addons/stock/models/stock_move_line.py:126
 #, python-format
 msgid ""
 "You cannot use the same serial number twice. Please correct the serial "
@@ -6758,15 +6736,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_picking.py:714
-#, python-format
-msgid ""
-"You cannot validate a transfer if you have not processed any quantity for "
-"%s."
-msgstr ""
-
-#. module: stock
-#: code:addons/stock/wizard/stock_picking_return.py:111
+#: code:addons/stock/wizard/stock_picking_return.py:112
 #, python-format
 msgid ""
 "You have manually created product lines, please delete them to proceed."
@@ -6792,7 +6762,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/product.py:303
+#: code:addons/stock/models/product.py:307
 #, python-format
 msgid ""
 "You have products in stock that have no lot number.  You can assign serial "
@@ -6802,14 +6772,14 @@ msgstr ""
 "broj radeći inventuru."
 
 #. module: stock
-#: code:addons/stock/models/stock_picking.py:871
+#: code:addons/stock/models/stock_picking.py:869
 #, python-format
 msgid ""
 "You have to define a groupby and sorted method and pass them as arguments."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:808
+#: code:addons/stock/models/stock_warehouse.py:911
 #, python-format
 msgid ""
 "You have to select a product unit of measure that is in the same category "
@@ -6823,13 +6793,13 @@ msgid "You have to set a name for this location."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/wizard/stock_picking_return.py:46
+#: code:addons/stock/wizard/stock_picking_return.py:47
 #, python-format
 msgid "You may only return Done pickings."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/wizard/stock_picking_return.py:37
+#: code:addons/stock/wizard/stock_picking_return.py:38
 #, python-format
 msgid "You may only return one picking at a time."
 msgstr ""
@@ -6841,25 +6811,30 @@ msgid "You must define a warehouse for the company: %s."
 msgstr "Morate definirati skladište za tvrtku: %s."
 
 #. module: stock
-#: code:addons/stock/models/stock_picking.py:1029
+#: code:addons/stock/models/stock_picking.py:1045
 #, python-format
 msgid "You must first set the quantity you will put in the pack."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move_line.py:400
+#: code:addons/stock/models/stock_move_line.py:406
 #: code:addons/stock/models/stock_picking.py:712
 #, python-format
 msgid "You need to supply a Lot/Serial number for product %s."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/product.py:370
-#: code:addons/stock/models/product.py:514
+#: code:addons/stock/models/product.py:394
+#: code:addons/stock/models/product.py:538
 #, python-format
 msgid ""
 "You still have some active reordering rules on this product. Please archive "
 "or delete them first."
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
+msgid "]<br/>min:"
 msgstr ""
 
 #. module: stock
@@ -6875,18 +6850,11 @@ msgid "_Cancel"
 msgstr "_Cancel"
 
 #. module: stock
-#: model:ir.model,name:stock.model_barcode_rule
-msgid "barcode.rule"
-msgstr "barcode.rule"
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_bpost
 msgid "bpost Connector"
 msgstr ""
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.stock_location_path_form
-#: model_terms:ir.ui.view,arch_db:stock.view_procurement_rule_form
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "days"
 msgstr "dana"
@@ -6900,11 +6868,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "e.g. Annual inventory"
 msgstr "npr. godišnja inventura"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.view_procurement_rule_form
-msgid "e.g. Buy"
-msgstr "npr. Kupi"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_form
@@ -6928,6 +6891,19 @@ msgid "is not available in sufficient quantity"
 msgstr ""
 
 #. module: stock
+#: model:product.product,uom_name:stock.product_cable_management_box
+#: model:product.product,weight_uom_name:stock.product_cable_management_box
+#: model:product.template,uom_name:stock.product_cable_management_box_product_template
+#: model:product.template,weight_uom_name:stock.product_cable_management_box_product_template
+msgid "kg"
+msgstr "kg"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_form
+msgid "manually to trigger the reordering rules right now."
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
 msgid "of"
 msgstr "od"
@@ -6935,61 +6911,6 @@ msgstr "od"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
 msgid "processed instead of"
-msgstr ""
-
-#. module: stock
-#: model:ir.model,name:stock.model_product_replenish
-msgid "product.replenish"
-msgstr ""
-
-#. module: stock
-#: model:ir.model,name:stock.model_report_stock_forecast
-msgid "report.stock.forecast"
-msgstr "report.stock.forecast"
-
-#. module: stock
-#: model:ir.model,name:stock.model_res_config_settings
-msgid "res.config.settings"
-msgstr "res.config.settings"
-
-#. module: stock
-#: model:ir.model,name:stock.model_stock_fixed_putaway_strat
-msgid "stock.fixed.putaway.strat"
-msgstr "stock.fixed.putaway.strat"
-
-#. module: stock
-#: model:ir.model,name:stock.model_stock_overprocessed_transfer
-msgid "stock.overprocessed.transfer"
-msgstr ""
-
-#. module: stock
-#: model:ir.model,name:stock.model_stock_package_level
-msgid "stock.package_level"
-msgstr ""
-
-#. module: stock
-#: model:ir.model,name:stock.model_stock_return_picking_line
-msgid "stock.return.picking.line"
-msgstr "stock.return.picking.line"
-
-#. module: stock
-#: model:ir.model,name:stock.model_stock_scrap
-msgid "stock.scrap"
-msgstr "stock.scrap"
-
-#. module: stock
-#: model:ir.model,name:stock.model_stock_traceability_report
-msgid "stock.traceability.report"
-msgstr ""
-
-#. module: stock
-#: model:ir.model,name:stock.model_stock_warn_insufficient_qty
-msgid "stock.warn.insufficient.qty"
-msgstr ""
-
-#. module: stock
-#: model:ir.model,name:stock.model_stock_warn_insufficient_qty_scrap
-msgid "stock.warn.insufficient.qty.scrap"
 msgstr ""
 
 #. module: stock

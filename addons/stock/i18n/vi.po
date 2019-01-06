@@ -2119,7 +2119,7 @@ msgstr "Có dịch chuyển phế liệu"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__has_tracking
 msgid "Has Tracking"
-msgstr ""
+msgstr "Đã theo dõi"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__product_has_variants
@@ -2264,6 +2264,8 @@ msgid ""
 "If the picking is unlocked you can edit initial demand (for a draft picking)"
 " or done quantities (for a done picking)."
 msgstr ""
+"Nếu việc lấy hàng được mở khóa, bạn có thể chỉnh sửa nhu cầu ban đầu (đối "
+"với việc chọn bản nháp) hoặc số lượng thực hiện (đối với việc chọn xong)."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__show_reserved
@@ -2282,6 +2284,9 @@ msgid ""
 " operations. If not, the picking lines will represent an aggregate of "
 "detailed stock operations."
 msgstr ""
+"Nếu hộp kiểm này được đánh dấu, các dòng chọn sẽ đại diện cho các hoạt động "
+"chứng khoán chi tiết. Nếu không, các dòng chọn sẽ đại diện cho tổng hợp các "
+"hoạt động chứng khoán chi tiết."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_line__picking_type_use_create_lots
@@ -6695,6 +6700,9 @@ msgid ""
 "if some stock moves have already been created with that number. This would "
 "lead to inconsistencies in your stock."
 msgstr ""
+"Bạn không được phép thay đổi sản phẩm được liên kết với số sê-ri hoặc số lô "
+"nếu một số di chuyển chứng khoán đã được tạo với số đó. Điều này sẽ dẫn đến "
+"sự không nhất quán trong cổ phiếu của bạn."
 
 #. module: stock
 #: code:addons/stock/models/stock_production_lot.py:36
@@ -6797,6 +6805,9 @@ msgid ""
 "You cannot change the location type or its use as a scrap location as there "
 "are products reserved in this location. Please unreserve the products first."
 msgstr ""
+"Bạn không thể thay đổi loại vị trí hoặc sử dụng làm vị trí phế liệu vì có "
+"những sản phẩm được dành riêng ở vị trí này. Xin vui lòng bỏ qua các sản "
+"phẩm đầu tiên."
 
 #. module: stock
 #: code:addons/stock/models/product.py:647
@@ -6805,6 +6816,8 @@ msgid ""
 "You cannot change the ratio of this unit of mesure as some products with "
 "this UoM have already been moved or are currently reserved."
 msgstr ""
+"Bạn không thể thay đổi tỷ lệ của đơn vị đo này vì một số sản phẩm có đơn vị "
+"này đã được di chuyển hoặc hiện đang được xí trước."
 
 #. module: stock
 #: code:addons/stock/models/product.py:536
@@ -6826,7 +6839,7 @@ msgstr ""
 #: code:addons/stock/models/stock_inventory.py:105
 #, python-format
 msgid "You cannot delete a validated inventory adjustement."
-msgstr ""
+msgstr "Bạn không thể xóa một điều chỉnh hàng tồn kho được xác nhận."
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:415

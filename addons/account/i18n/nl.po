@@ -13,7 +13,7 @@
 # Cas Vissers <casvissers@brahoo.nl>, 2018
 # dpms <pieter.van.de.wygaert@telenet.be>, 2018
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2018
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2018
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
 # 
 msgid ""
 msgstr ""
@@ -21,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-12-19 08:20+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2018\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2019\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -10786,16 +10786,6 @@ msgstr ""
 "informatie over de rekening en de bijbehorende kenmerken."
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1439
-#, python-format
-msgid ""
-"This %s has been created from: <a href=# data-oe-model=account.invoice data-"
-"oe-id=%d>%s</a><br>Reason: %s"
-msgstr ""
-"Deze %s werden aangemaakt van: <a href=# data-oe-model=account.invoice data-"
-"oe-id=%d>%s</a><br>Reden: %s"
-
-#. module: account
 #: code:addons/account/models/account_journal_dashboard.py:100
 #, python-format
 msgid "This Week"
@@ -10879,6 +10869,16 @@ msgstr ""
 "koop en verkoop tarieven in te geven of van een lijst van BTW te kiezen. Bij"
 " de laatste keuze wordt ervan uitgegaan dat de set van de BTW's gedefinieerd"
 " op dit sjabloon is voltooid"
+
+#. module: account
+#: code:addons/account/models/account_invoice.py:1458
+#, python-format
+msgid ""
+"This customer invoice credit note has been created from: <a href=# data-oe-"
+"model=account.invoice data-oe-id=%d>%s</a><br>Reason: %s"
+msgstr ""
+"Deze creditfactuur is gemaakt van: <a href=# data-oe-model=account.invoice "
+"data-oe-id=%d>%s</a><br>Reden: %s"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -11034,6 +11034,16 @@ msgstr ""
 "Dit technisch veld kan bij het maken van een regel op een afschrift worden "
 "gebruikt om het proces van afletteren te vermijden. Het afschrift zal gewoon"
 " een tegeboeking maken op deze rekening"
+
+#. module: account
+#: code:addons/account/models/account_invoice.py:1460
+#, python-format
+msgid ""
+"This vendor bill credit note has been created from: <a href=# data-oe-"
+"model=account.invoice data-oe-id=%d>%s</a><br>Reason: %s"
+msgstr ""
+"Deze leverancierscreditfactuur is gemaakt van: <a href=# data-oe-"
+"model=account.invoice data-oe-id=%d>%s</a><br>Reden: %s"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_validate_account_move

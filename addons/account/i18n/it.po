@@ -25,7 +25,7 @@
 # Léonie Bouchat <lbo@odoo.com>, 2018
 # Lorenzo Battistini <lorenzo.battistini@agilebg.com>, 2018
 # Martin Trigaux, 2018
-# Sergio Zanchetta <primes2h@gmail.com>, 2018
+# Sergio Zanchetta <primes2h@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -33,7 +33,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-12-19 08:20+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2018\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2019\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -240,7 +240,7 @@ msgstr ""
 "        per un importo pari a <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
 "        da ${object.company_id.name}.\n"
 "        % if object.state=='paid':\n"
-"            La fattura è già stata pagata.\n"
+"            La fattura risulta già pagata.\n"
 "        % else:\n"
 "            La preghiamo di provvedere quanto prima al pagamento.\n"
 "        % endif\n"
@@ -270,7 +270,8 @@ msgstr "<i class=\"fa fa-fw fa-comments\"/><b>Invia messaggio</b>"
 msgid ""
 "<i class=\"fa fa-fw o_button_icon fa-arrow-right\"/> Configure Email Servers"
 msgstr ""
-"<i class=\"fa fa-fw o_button_icon fa-arrow-right\"/> Configura server email"
+"<i class=\"fa fa-fw o_button_icon fa-arrow-right\"/> Configura server di "
+"posta"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
@@ -447,7 +448,7 @@ msgstr "<span name=\"button_import_placeholder\"/> estratti conto"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span role=\"separator\">New</span>"
-msgstr "<span>Nuovo/a</span>"
+msgstr "<span>Nuovo</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -462,12 +463,12 @@ msgstr "<span role=\"separator\">Vista</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span title=\"Balance in Odoo\">Balance in General Ledger</span>"
-msgstr "<span title=\"Bilancio su Odoo\">Saldo del libro mastro</span>"
+msgstr "<span title=\"Bilancio su Odoo\">Saldo libro mastro</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span title=\"Latest Statement\">Latest Statement</span>"
-msgstr "<span title=\"Latest Statement\">ultima chiusura</span>"
+msgstr "<span title=\"Latest Statement\">Ultimo estratto conto</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
@@ -532,7 +533,7 @@ msgstr "<span>Nuova fattura</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>New</span>"
-msgstr "<span>Nuovo</span>"
+msgstr "<span>Nuova</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -891,7 +892,7 @@ msgstr "Valuta del conto"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account_template__account_dest_id
 msgid "Account Destination"
-msgstr "Destinazione contabile"
+msgstr "Destinazione conto"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -2015,12 +2016,12 @@ msgstr "Avatar Autore"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.invoice_supplier_form
 msgid "Auto-Complete"
-msgstr "Autocompilazione"
+msgstr "Autocompletamento"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice__vendor_bill_id
 msgid "Auto-complete from a past bill."
-msgstr "Compilazione automatica da una fattura precedente."
+msgstr "Completamento automatico da una fattura precedente."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.invoice_supplier_form
@@ -2036,7 +2037,7 @@ msgstr "Validare automaticamente"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Autocomplete Vendor Bills (OCR + AI)"
-msgstr "Compilazione automatica fatture fornitori (OCR + AI)"
+msgstr "Completamento automatico fatture fornitori (OCR + AI)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_invoice_extract
@@ -3606,7 +3607,7 @@ msgstr "Nota di credito  - %s"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Credit Note Bill"
-msgstr "Fattura nota di credito"
+msgstr "Nota di credito fattura"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_refund__date_invoice
@@ -4440,7 +4441,7 @@ msgstr "Email predefinita"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Email your Vendor Bills"
-msgstr "Invio fatture fornitore via email"
+msgstr "Fatture fornitore via email"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_common_journal_report__date_to
@@ -7533,7 +7534,7 @@ msgstr "Dall'esterno"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__mail_server_id
 msgid "Outgoing mail server"
-msgstr "Server email in uscita"
+msgstr "Server posta in uscita"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__property_stock_account_output_categ_id
@@ -9264,7 +9265,7 @@ msgstr "Imposta il piano dei conti e registra i saldi iniziali."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.dashboard_onboarding_company_step
 msgid "Setup your company's data for reports headers."
-msgstr "Imposta le informazioni aziendali per le intestazioni dei rendiconti."
+msgstr "Imposta le informazioni aziendali per le intestazioni dei documenti."
 
 #. module: account
 #: model:ir.actions.server,name:account.model_account_invoice_action_share
@@ -10403,7 +10404,7 @@ msgid ""
 "The last line's computation type should be \"Balance\" to ensure that the "
 "whole amount will be allocated."
 msgstr ""
-"Per garantire l'assegnazione dell'intero importo la tipologia impostata "
+"Per garantire l'assegnazione dell'intero importo, la tipologia impostata "
 "nell'ultima riga deve essere \"Saldo\"."
 
 #. module: account
@@ -10437,8 +10438,8 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_journal__refund_sequence_number_next
 msgid "The next sequence number will be used for the next credit note."
 msgstr ""
-"Il prossimo numero sequenziale verrà usato per la nota di credito "
-"successiva."
+"Per la prossima nota di credito verrà utilizzato il seguente numero di "
+"sequenza."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__sequence_number_next
@@ -10740,16 +10741,6 @@ msgstr ""
 "informazioni sul conto e le sue caratteristiche."
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1439
-#, python-format
-msgid ""
-"This %s has been created from: <a href=# data-oe-model=account.invoice data-"
-"oe-id=%d>%s</a><br>Reason: %s"
-msgstr ""
-"Questa %s è stata creata da: <a href=# data-oe-model=account.invoice data-"
-"oe-id=%d>%s</a><br>Motivo: %s"
-
-#. module: account
 #: code:addons/account/models/account_journal_dashboard.py:100
 #, python-format
 msgid "This Week"
@@ -10829,6 +10820,16 @@ msgstr ""
 "fissare le aliquote per vendita e acquisto o scegliere da una lista di "
 "imposte. Quest'ultima opzione assume che l'insieme delle imposte definite in"
 " questo modello sia completa."
+
+#. module: account
+#: code:addons/account/models/account_invoice.py:1458
+#, python-format
+msgid ""
+"This customer invoice credit note has been created from: <a href=# data-oe-"
+"model=account.invoice data-oe-id=%d>%s</a><br>Reason: %s"
+msgstr ""
+"Questa nota di credito per la fattura cliente è stata creata da: <a href=# "
+"data-oe-model=account.invoice data-oe-id=%d>%s</a><br>Motivo: %s"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -10985,6 +10986,16 @@ msgstr ""
 "riga di estratto conto per evitare il seguente processo di riconciliazione. "
 "La riga di estratto conto creera' semplicemente una contropartita su questo "
 "conto. "
+
+#. module: account
+#: code:addons/account/models/account_invoice.py:1460
+#, python-format
+msgid ""
+"This vendor bill credit note has been created from: <a href=# data-oe-"
+"model=account.invoice data-oe-id=%d>%s</a><br>Reason: %s"
+msgstr ""
+"Questa nota di credito per la fattura fornitore è stata creata da: <a href=#"
+" data-oe-model=account.invoice data-oe-id=%d>%s</a><br>Motivo: %s"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_validate_account_move
