@@ -3,28 +3,29 @@
 # * sale
 # 
 # Translators:
-# Viktor Pogrebniak <vp@aifil.ru>, 2017
-# Martin Trigaux, 2017
-# Sergey Vilizhanin, 2017
-# Максим Дронь <dronmax@gmail.com>, 2017
-# Collex100, 2017
-# Aider Kerimov <lorri.aaargh@gmail.com>, 2017
-# sergeiruzkiicode <sergei.ruzki@icode.by>, 2017
-# Denis Baranov <baranov@itlibertas.com>, 2017
-# Артур Чеботарь <artcha.chebotar@gmail.com>, 2017
 # Русский «kolobok2048» Ивашка <kolobok2048@gmail.com>, 2017
 # Max Belyanin <maxbelyanin@gmail.com>, 2017
+# Aider Kerimov <lorri.aaargh@gmail.com>, 2017
+# Denis Baranov <baranov@itlibertas.com>, 2017
 # Gennady Marchenko <gennadym@gmail.com>, 2017
-# Evgeny <transingularity@gmail.com>, 2017
+# Артур Чеботарь <artcha.chebotar@gmail.com>, 2017
 # Masha Koc <mariya.kos.ua@gmail.com>, 2017
+# Evgeny <transingularity@gmail.com>, 2017
+# Максим Дронь <dronmax@gmail.com>, 2017
+# Viktor Pogrebniak <vp@aifil.ru>, 2017
+# Collex100, 2017
 # Dmitry sky <d.v.selitsky@gmail.com>, 2017
+# Sergey Vilizhanin, 2018
+# sergeiruzkiicode <sergei.ruzki@icode.by>, 2018
+# Martin Trigaux, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-27 11:56+0000\n"
-"PO-Revision-Date: 2018-07-27 11:56+0000\n"
-"Last-Translator: Dmitry sky <d.v.selitsky@gmail.com>, 2017\n"
+"POT-Creation-Date: 2019-01-03 15:07+0000\n"
+"PO-Revision-Date: 2017-09-20 10:23+0000\n"
+"Last-Translator: Martin Trigaux, 2019\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -246,6 +247,13 @@ msgstr ""
 "<i>Пример: предоплаченные сервисные предложения, для которых клиент должен \n"
 "                купить дополнительный пакет часов, потому что он использовал все свои\n"
 "                часы поддержки.</i>"
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
+msgstr ""
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_my_orders
@@ -1851,6 +1859,11 @@ msgid "Product Catalog"
 msgstr "Каталог товаров"
 
 #. module: sale
+#: model:ir.ui.menu,name:sale.menu_product_category_config_sale
+msgid "Product Categories"
+msgstr "Категории продуктов"
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales_categ_id
 #: model:ir.model.fields,field_description:sale.field_sale_report_categ_id
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
@@ -2505,15 +2518,29 @@ msgid "Terms and conditions"
 msgstr "Условия"
 
 #. module: sale
-#: code:addons/sale/models/analytic.py:129
-#: code:addons/sale/models/analytic.py:143
+#: code:addons/sale/models/analytic.py:134
 #, python-format
 msgid ""
-"The Sales Order %s linked to the Analytic Account must be validated before "
-"registering expenses."
+"The Sales Order %s linked to the Analytic Account %s is cancelled. You "
+"cannot register an expense on a cancelled Sales Order."
 msgstr ""
-"Заказ, связанный счетом аналитики %s должен быть подтвержден перед "
-"регистрацией расходов."
+
+#. module: sale
+#: code:addons/sale/models/analytic.py:133
+#, python-format
+msgid ""
+"The Sales Order %s linked to the Analytic Account %s is currently locked. "
+"You cannot register an expense on a locked Sales Order. Please create a new "
+"SO linked to this Analytic Account."
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/models/analytic.py:129
+#, python-format
+msgid ""
+"The Sales Order %s linked to the Analytic Account %s must be validated "
+"before registering expenses."
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv_amount

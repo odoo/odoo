@@ -3,29 +3,30 @@
 # * mail
 # 
 # Translators:
-# Martin Trigaux, 2017
-# Masha Koc <mariya.kos.ua@gmail.com>, 2017
-# Collex100, 2017
-# Sergey Vilizhanin, 2017
-# Gennady Marchenko <gennadym@gmail.com>, 2017
-# Максим Дронь <dronmax@gmail.com>, 2017
-# sergeiruzkiicode <sergei.ruzki@icode.by>, 2017
 # Denis Baranov <baranov@itlibertas.com>, 2017
-# Alex Puchkov <ap@alteco.co>, 2017
-# Viktor Pogrebniak <vp@aifil.ru>, 2017
-# Max Belyanin <maxbelyanin@gmail.com>, 2017
 # Русский «kolobok2048» Ивашка <kolobok2048@gmail.com>, 2017
 # Владимир Куряев <istercul@gmail.com>, 2017
-# Denis Trepalin <zekarious@gmail.com>, 2017
 # OstapYakovenko <Ostap.Yakovenko@gmail.com>, 2017
+# Denis Trepalin <zekarious@gmail.com>, 2017
+# Max Belyanin <maxbelyanin@gmail.com>, 2017
+# Максим Дронь <dronmax@gmail.com>, 2017
+# Alex Puchkov <ap@alteco.co>, 2017
+# Sergey Vilizhanin, 2017
+# Collex100, 2017
+# Viktor Pogrebniak <vp@aifil.ru>, 2017
+# Masha Koc <mariya.kos.ua@gmail.com>, 2017
+# Martin Trigaux, 2017
 # VItaly Skopin <skopin@lab49.ru>, 2017
+# sergeiruzkiicode <sergei.ruzki@icode.by>, 2018
+# Gennady Marchenko <gennadym@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-27 11:55+0000\n"
-"PO-Revision-Date: 2018-07-27 11:55+0000\n"
-"Last-Translator: VItaly Skopin <skopin@lab49.ru>, 2017\n"
+"POT-Creation-Date: 2019-01-03 15:06+0000\n"
+"PO-Revision-Date: 2017-09-20 10:19+0000\n"
+"Last-Translator: Gennady Marchenko <gennadym@gmail.com>, 2018\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -147,6 +148,18 @@ msgstr ""
 "or (object.parent_id and object.parent_id.subject and 'Re: %s' % "
 "object.parent_id.subject) or (object.parent_id and "
 "object.parent_id.record_name and 'Re: %s' % object.parent_id.record_name)}"
+
+#. module: mail
+#: code:addons/mail/wizard/invite.py:29
+#, python-format
+msgid "%(user_name)s invited you to follow %(document)s document: %(title)s"
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/wizard/invite.py:31
+#, python-format
+msgid "%(user_name)s invited you to follow a new document."
+msgstr ""
 
 #. module: mail
 #. openerp-web
@@ -293,24 +306,6 @@ msgid ""
 msgstr ""
 "<div class=\"o_mail_notification\">осталось <a href=\"#\" "
 "class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
-
-#. module: mail
-#: code:addons/mail/wizard/invite.py:23
-#, python-format
-msgid ""
-"<div><p>Hello,</p><p>%s invited you to follow %s document: %s.</p></div>"
-msgstr ""
-"<div><p>Здравствуйте,</p><p>%s предлагает вам подписаться на %s документ: "
-"%s.</p></div>"
-
-#. module: mail
-#: code:addons/mail/wizard/invite.py:26
-#, python-format
-msgid ""
-"<div><p>Hello,</p><p>%s invited you to follow a new document.</p></div>"
-msgstr ""
-"<div><p>Здравствуйте,</p><p>%s предлагает вам подписаться на новый "
-"документ.</p></div>"
 
 #. module: mail
 #. openerp-web
@@ -2167,6 +2162,12 @@ msgstr "Есть вложения"
 #: model:ir.ui.view,arch_db:mail.view_mail_form
 msgid "Headers"
 msgstr "Заголовки"
+
+#. module: mail
+#: code:addons/mail/wizard/invite.py:35
+#, python-format
+msgid "Hello,"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype_hidden

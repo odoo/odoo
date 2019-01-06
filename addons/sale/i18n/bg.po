@@ -3,24 +3,25 @@
 # * sale
 # 
 # Translators:
-# Martin Trigaux, 2017
-# Boris Stefanov <borkata@gmail.com>, 2017
 # B Dochev, 2017
 # Ivan Ivanov, 2017
-# aleksandar ivanov, 2018
-# Albena Mincheva <albena_vicheva@abv.bg>, 2018
 # Chudomir Monevski <cm@plana.solutions>, 2018
-# Kaloyan Naumov <kaloyan@lumnus.net>, 2018
+# Martin Trigaux, 2018
 # Vihren Kanev <vihren.kanev@gmail.com>, 2018
-# Maria Boyadjieva <marabo2000@gmail.com>, 2018
+# Albena Mincheva <albena_vicheva@abv.bg>, 2018
+# Kaloyan Naumov <kaloyan@lumnus.net>, 2018
+# Boris Stefanov <borkata@gmail.com>, 2018
 # Igor Sheludko <igor.sheludko@gmail.com>, 2018
+# aleksandar ivanov, 2018
+# Maria Boyadjieva <marabo2000@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-27 11:56+0000\n"
-"PO-Revision-Date: 2018-07-27 11:56+0000\n"
-"Last-Translator: Igor Sheludko <igor.sheludko@gmail.com>, 2018\n"
+"POT-Creation-Date: 2019-01-03 15:07+0000\n"
+"PO-Revision-Date: 2017-09-20 10:23+0000\n"
+"Last-Translator: Maria Boyadjieva <marabo2000@gmail.com>, 2019\n"
 "Language-Team: Bulgarian (https://www.transifex.com/odoo/teams/41243/bg/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -242,6 +243,13 @@ msgstr ""
 "<i>Пример: предплатени оферти за услуги, за които клиентът трябва\n"
 "                да купи допълнителен пакет часове, тъй като е исползвал всичките си часове\n"
 "                за поддръжка.</i>"
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
+msgstr ""
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_my_orders
@@ -1834,6 +1842,11 @@ msgid "Product Catalog"
 msgstr "Продуктов Каталог"
 
 #. module: sale
+#: model:ir.ui.menu,name:sale.menu_product_category_config_sale
+msgid "Product Categories"
+msgstr "Продуктови категории"
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales_categ_id
 #: model:ir.model.fields,field_description:sale.field_sale_report_categ_id
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
@@ -2488,13 +2501,37 @@ msgid "Terms and conditions"
 msgstr "Срокове и условия"
 
 #. module: sale
-#: code:addons/sale/models/analytic.py:129
-#: code:addons/sale/models/analytic.py:143
+#: code:addons/sale/models/analytic.py:134
 #, python-format
 msgid ""
-"The Sales Order %s linked to the Analytic Account must be validated before "
-"registering expenses."
+"The Sales Order %s linked to the Analytic Account %s is cancelled. You "
+"cannot register an expense on a cancelled Sales Order."
 msgstr ""
+"Поръчката за продажби %s, свързана с аналитичната сметка, %s е отменена. Не "
+"можете да регистрирате разход за отменена поръчка за продажби."
+
+#. module: sale
+#: code:addons/sale/models/analytic.py:133
+#, python-format
+msgid ""
+"The Sales Order %s linked to the Analytic Account %s is currently locked. "
+"You cannot register an expense on a locked Sales Order. Please create a new "
+"SO linked to this Analytic Account."
+msgstr ""
+"Поръчката за продажби %s, свързана с аналитичната сметка, %s по настоящем е "
+"заключена. Не можете да регистрирате разход по заключена поръчка за "
+"продажба. Моля, създайте нова поръчка за продажби, свързана с тази "
+"аналитична сметка."
+
+#. module: sale
+#: code:addons/sale/models/analytic.py:129
+#, python-format
+msgid ""
+"The Sales Order %s linked to the Analytic Account %s must be validated "
+"before registering expenses."
+msgstr ""
+"Поръчката за продажби %s, свързана с аналитичната сметка, %s трябва да се "
+"валидира преди разходите да се регистрират."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv_amount

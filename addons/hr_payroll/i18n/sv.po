@@ -3,22 +3,23 @@
 # * hr_payroll
 # 
 # Translators:
-# Martin Trigaux, 2017
 # Martin Wilderoth <martin.wilderoth@linserv.se>, 2017
-# Anders Wallenquist <anders.wallenquist@vertel.se>, 2017
-# Kristoffer Grundström <kristoffer.grundstrom1983@gmail.com>, 2017
 # Kim Asplund <kim.asplund@gmail.com>, 2017
-# Patrik Lermon <patrik.lermon@gmail.com>, 2017
 # Haojun Zou <apollo_zhj@msn.com>, 2017
 # Daniel Forslund <daniel.forslund@gmail.com>, 2017
+# Patrik Lermon <patrik.lermon@gmail.com>, 2017
+# Kristoffer Grundström <hamnisdude@gmail.com>, 2017
+# Martin Trigaux, 2017
 # Peter Wickenberg <peter@wickenberg.nu>, 2018
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2018
 # Chrille Hedberg <hedberg.chrille@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-06-27 15:42+0000\n"
-"PO-Revision-Date: 2018-06-27 15:42+0000\n"
+"POT-Creation-Date: 2019-01-03 15:06+0000\n"
+"PO-Revision-Date: 2017-09-20 10:18+0000\n"
 "Last-Translator: Chrille Hedberg <hedberg.chrille@gmail.com>, 2018\n"
 "Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
@@ -701,6 +702,12 @@ msgid "Get 1% of sales"
 msgstr ""
 
 #. module: hr_payroll
+#: code:addons/hr_payroll/models/hr_payslip.py:183
+#, python-format
+msgid "Global Leaves"
+msgstr ""
+
+#. module: hr_payroll
 #: model:hr.salary.rule,name:hr_payroll.hr_rule_taxable
 #: model:hr.salary.rule.category,name:hr_payroll.GROSS
 msgid "Gross"
@@ -1297,16 +1304,9 @@ msgstr "Löneuträkning"
 #: model:ir.actions.act_window,name:hr_payroll.action_hr_salary_rule_category
 #: model:ir.ui.menu,name:hr_payroll.menu_hr_salary_rule_category
 #: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_category_tree
-#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_category_tree_view
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_salary_rule_category_filter
 msgid "Salary Rule Categories"
 msgstr "Lön Rule Kategorier"
-
-#. module: hr_payroll
-#: model:ir.actions.act_window,name:hr_payroll.action_hr_salary_rule_category_tree_view
-#: model:ir.ui.menu,name:hr_payroll.menu_hr_salary_rule_category_tree_view
-msgid "Salary Rule Categories Hierarchy"
-msgstr "Lön Regel Kategorier Hierarki"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_salary_rule_category

@@ -3,50 +3,51 @@
 # * mail
 # 
 # Translators:
-# Martin Trigaux, 2017
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2017
-# Daniel Santibáñez Polanco <dansanti@gmail.com>, 2017
-# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2017
-# Ivan Nieto <ivan.n.s@tuta.io>, 2017
-# RGB Consulting <odoo@rgbconsulting.com>, 2017
-# Nicolás Broggi <rnbroggi@gmail.com>, 2017
-# Rick Hunter <rick_hunter_ec@yahoo.com>, 2017
-# Gelo Joga Landoo <gj@landoo.es>, 2017
-# Ana Juaristi <ajuaristio@gmail.com>, 2017
-# Antonio Trueba, 2017
-# Inigo Zuluaga <inigo_zuluaga@yahoo.es>, 2017
 # Juan José Scarafía <scarafia.juanjose@gmail.com>, 2017
-# Daniel Blanco <daniel@blancomartin.com.ar>, 2017
-# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2017
-# José Vicente <txusev@gmail.com>, 2017
-# David Perez <david@closemarketing.es>, 2017
-# Gustavo Valverde, 2017
-# Jesus Zapata <jesus@vauxoo.com>, 2017
 # Leonardo Chianea <noamixcontenidos@gmail.com>, 2017
-# e2f_EPV Translator <e2f_EPV@outlook.com>, 2017
-# Javier Ramirez <elbomba887@gmail.com>, 2017
 # Alejandro Santana <alejandrosantana@anubia.es>, 2017
 # Cristóbal Martí Oliver <info@moblesmarti.com>, 2017
-# oihane <oihanecruce@gmail.com>, 2017
-# Miguel Orueta <mo@landoo.es>, 2017
+# Ana Juaristi <ajuaristio@gmail.com>, 2017
+# Ivan Nieto <ivan.n.s@tuta.io>, 2017
 # Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2017
+# Gustavo Valverde, 2017
+# Jesus Zapata <jesus@vauxoo.com>, 2017
+# David Perez <david@closemarketing.es>, 2017
+# Daniel Blanco <daniel@blancomartin.com.ar>, 2017
 # Sergio Flores <vitavitae1@gmail.com>, 2017
+# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2017
+# Gelo Joga Landoo <gj@landoo.es>, 2017
+# Javier Ramirez <elbomba887@gmail.com>, 2017
+# Inigo Zuluaga <inigo_zuluaga@yahoo.es>, 2017
 # David de León <leceda09@gmail.com>, 2017
+# Miguel Orueta <mo@landoo.es>, 2017
+# Rick Hunter <rick_hunter_ec@yahoo.com>, 2017
 # Cristian Salamea <ovnicraft@gmail.com>, 2017
+# José Vicente <txusev@gmail.com>, 2017
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2017
+# Antonio Trueba, 2017
+# Daniel Santibáñez Polanco <dansanti@gmail.com>, 2017
+# Martin Trigaux, 2017
 # e2f_es_ t6 <e2f_es_t6@outlook.com>, 2017
+# RGB Consulting <odoo@rgbconsulting.com>, 2017
 # Pierre-Antoine Magnet <pma@odoo.com>, 2017
 # Fernando San Martín Woerner <fsnmartin@gmail.com>, 2017
 # Christopher Ormaza <chris.ormaza@gmail.com>, 2017
+# oihane <oihanecruce@gmail.com>, 2017
 # Eduardo Magdalena <emagdalena@close2circle.com>, 2017
-# e2f <projects@e2f.com>, 2018
+# Nicolás Broggi <rnbroggi@gmail.com>, 2017
+# e2f_EPV Translator <e2f_EPV@outlook.com>, 2018
 # ES R1 <e2fes@hotmail.com>, 2018
+# e2f <projects@e2f.com>, 2018
+# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-27 11:55+0000\n"
-"PO-Revision-Date: 2018-07-27 11:55+0000\n"
-"Last-Translator: ES R1 <e2fes@hotmail.com>, 2018\n"
+"POT-Creation-Date: 2019-01-03 15:06+0000\n"
+"PO-Revision-Date: 2017-09-20 10:19+0000\n"
+"Last-Translator: Luis M. Ontalba <luis.martinez@tecnativa.com>, 2018\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -256,6 +257,18 @@ msgstr ""
 "object.parent_id.record_name and 'Re: %s' % object.parent_id.record_name)}"
 
 #. module: mail
+#: code:addons/mail/wizard/invite.py:29
+#, python-format
+msgid "%(user_name)s invited you to follow %(document)s document: %(title)s"
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/wizard/invite.py:31
+#, python-format
+msgid "%(user_name)s invited you to follow a new document."
+msgstr ""
+
+#. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/chat_manager.js:63
 #, python-format
@@ -400,22 +413,6 @@ msgid ""
 msgstr ""
 "<div class=\"o_mail_notification\">ha dejado <a href=\"#\" "
 "class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
-
-#. module: mail
-#: code:addons/mail/wizard/invite.py:23
-#, python-format
-msgid ""
-"<div><p>Hello,</p><p>%s invited you to follow %s document: %s.</p></div>"
-msgstr ""
-"<div><p>Hola,</p><p>%s lo ha invitado a seguir el documento %s: %s.<p></div>"
-
-#. module: mail
-#: code:addons/mail/wizard/invite.py:26
-#, python-format
-msgid ""
-"<div><p>Hello,</p><p>%s invited you to follow a new document.</p></div>"
-msgstr ""
-"<div><p>Hola,</p><p>%s lo ha invitado a seguir un nuevo documento.</p></div>"
 
 #. module: mail
 #. openerp-web
@@ -2288,6 +2285,12 @@ msgstr "Tiene adjuntos"
 #: model:ir.ui.view,arch_db:mail.view_mail_form
 msgid "Headers"
 msgstr "Cabeceras"
+
+#. module: mail
+#: code:addons/mail/wizard/invite.py:35
+#, python-format
+msgid "Hello,"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype_hidden
