@@ -3,21 +3,22 @@
 # * base_geolocalize
 # 
 # Translators:
-# Martin Trigaux, 2017
 # Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2017
 # Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2017
 # gezgin biri <gezginbiri@hotmail.com>, 2017
 # Murat Kaplan <muratk@projetgrup.com>, 2017
 # Matanat Ahmadova <ahmadova.matanat01@gmail.com>, 2017
+# Martin Trigaux, 2017
 # Umur Akın <umura@projetgrup.com>, 2018
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2018
 # Abdullah onur uğur <aonurugur@outlook.com>, 2018
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"POT-Creation-Date: 2019-01-03 15:06+0000\n"
+"PO-Revision-Date: 2017-09-20 10:15+0000\n"
 "Last-Translator: Abdullah onur uğur <aonurugur@outlook.com>, 2018\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
@@ -42,7 +43,18 @@ msgid "<span> ;  Long:  </span>"
 msgstr "<span> ;  Uzun:  </span>"
 
 #. module: base_geolocalize
-#: code:addons/base_geolocalize/models/res_partner.py:18
+#: code:addons/base_geolocalize/models/res_partner.py:19
+#, python-format
+msgid ""
+"API key for GeoCoding (Places) required.\n"
+"\n"
+"                          Save this key in System Parameters with key: google.api_key_geocode, value: <your api key>\n"
+"                          Visit https://developers.google.com/maps/documentation/geocoding/get-api-key for more information.\n"
+"                          "
+msgstr ""
+
+#. module: base_geolocalize
+#: code:addons/base_geolocalize/models/res_partner.py:28
 #, python-format
 msgid ""
 "Cannot contact geolocation servers. Please make sure that your Internet "

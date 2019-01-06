@@ -3,46 +3,47 @@
 # * mail
 # 
 # Translators:
-# Martin Trigaux, 2017
-# Anja Funk <anja.funk@afimage.de>, 2017
-# Tina Rittmüller <tr@ife.de>, 2017
-# Wolfgang Taferner, 2017
-# Markus Menner <markus.menner@axxelia.com>, 2017
-# Thorsten Vocks <thorsten.vocks@openbig.org>, 2017
-# Ralf Hilgenstock <rh@dialoge.info>, 2017
-# Ermin Trevisan <trevi@twanda.com>, 2017
-# Thomas Neu <t.neu@runbox.com>, 2017
-# Andi, 2017
-# darenkster <inactive+darenkster@transifex.com>, 2017
-# Renzo Meister, 2017
-# JackTheHunter <Maximilian.N98@gmail.com>, 2017
-# Martin K <martinkuenz@gmail.com>, 2017
-# Niki Waibel, 2017
 # Marvin Elia Hoppe <marvin_elia@web.de>, 2017
 # Gab_Odoo <gab@odoo.com>, 2017
-# key six <mobile.umts@gmail.com>, 2017
-# Bülent Tiknas <btiknas@googlemail.com>, 2017
-# Walter Müller <inactive+WILL.I.AM@transifex.com>, 2017
+# Niki Waibel, 2017
 # Christian Körner <fipes.de@gmail.com>, 2017
+# JackTheHunter <Maximilian.N98@gmail.com>, 2017
+# Martin K <martinkuenz@gmail.com>, 2017
+# Thomas Neu <t.neu@runbox.com>, 2017
 # Tom, 2017
+# Walter Müller <inactive+WILL.I.AM@transifex.com>, 2017
+# Tina Rittmüller <tr@ife.de>, 2017
+# Bülent Tiknas <btiknas@googlemail.com>, 2017
 # Dejan Dinic, 2017
 # Henry Mineehen <info@mineehen.de>, 2017
+# key six <mobile.umts@gmail.com>, 2017
 # Mathias Neef <mn@copado.de>, 2017
-# Katharina Moritz <kmo@e2f.com>, 2017
+# Renzo Meister, 2017
+# Wolfgang Taferner, 2017
+# Thorsten Vocks <thorsten.vocks@openbig.org>, 2017
+# Ermin Trevisan <trevi@twanda.com>, 2017
+# Martin Trigaux, 2017
+# Markus Menner <markus.menner@axxelia.com>, 2017
+# darenkster <inactive+darenkster@transifex.com>, 2017
 # brokemeister <work@maltejansen.de>, 2017
-# AppleMentalist <felix.schnatbaum@gmail.com>, 2017
+# Ralf Hilgenstock <rh@dialoge.info>, 2017
 # Till Stone <benzi95@web.de>, 2017
+# AppleMentalist <felix.schnatbaum@gmail.com>, 2017
+# Andi, 2017
 # Constantin Ehrenstein <transifex@skiller.eu>, 2017
 # DE R1 <e2fes1@hotmail.com>, 2017
 # DE T1 <e2f8846@yahoo.com>, 2017
+# Katharina Moritz <kmo@e2f.com>, 2018
 # e2f <projects@e2f.com>, 2018
+# Anja Funk <anja.funk@afimage.de>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-27 11:55+0000\n"
-"PO-Revision-Date: 2018-07-27 11:55+0000\n"
-"Last-Translator: e2f <projects@e2f.com>, 2018\n"
+"POT-Creation-Date: 2019-01-03 15:06+0000\n"
+"PO-Revision-Date: 2017-09-20 10:19+0000\n"
+"Last-Translator: Anja Funk <anja.funk@afimage.de>, 2018\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -253,6 +254,18 @@ msgstr ""
 "object.parent_id.record_name)}"
 
 #. module: mail
+#: code:addons/mail/wizard/invite.py:29
+#, python-format
+msgid "%(user_name)s invited you to follow %(document)s document: %(title)s"
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/wizard/invite.py:31
+#, python-format
+msgid "%(user_name)s invited you to follow a new document."
+msgstr ""
+
+#. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/chat_manager.js:63
 #, python-format
@@ -398,24 +411,6 @@ msgid ""
 msgstr ""
 "<div class=\"o_mail_notification\">verließ <a href=\"#\" "
 "class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
-
-#. module: mail
-#: code:addons/mail/wizard/invite.py:23
-#, python-format
-msgid ""
-"<div><p>Hello,</p><p>%s invited you to follow %s document: %s.</p></div>"
-msgstr ""
-"<div><p>Hallo,</p><p>%s hat Sie eingeladen dem Dokument %s zu folgen: "
-"%s.</p></div>"
-
-#. module: mail
-#: code:addons/mail/wizard/invite.py:26
-#, python-format
-msgid ""
-"<div><p>Hello,</p><p>%s invited you to follow a new document.</p></div>"
-msgstr ""
-"<div><p>Guten Tag,</p><p>%s hat Sie zur Beobachtung eines neuen Dokuments "
-"eingeladen.</p></div>"
 
 #. module: mail
 #. openerp-web
@@ -2288,6 +2283,12 @@ msgstr "Enthält Anhänge"
 #: model:ir.ui.view,arch_db:mail.view_mail_form
 msgid "Headers"
 msgstr "Kopftexte"
+
+#. module: mail
+#: code:addons/mail/wizard/invite.py:35
+#, python-format
+msgid "Hello,"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype_hidden

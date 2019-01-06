@@ -3,41 +3,44 @@
 # * stock
 # 
 # Translators:
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2017
-# e2f_cn c7 <e2f_cn_c7@outlook.com>, 2017
-# e2f_cn r14 <e2f_cn_r14@outlook.com>, 2017
-# Martin Trigaux, 2017
-# Rona Lin <ssauapw@qq.com>, 2017
-# Gary Wei <Gary.wei@elico-corp.com>, 2017
-# 卓忆科技 <zhanghao@jointd.com>, 2017
-# e2f_cn c5 <jarvisn@ecinnovations.com>, 2017
-# liAnGjiA <liangjia@qq.com>, 2017
-# waveyeung <waveyeung@qq.com>, 2017
-# liulixia <liu.lixia@elico-corp.com>, 2017
-# v2exerer <9010446@qq.com>, 2017
-# fausthuang, 2017
 # xiaobin wu <bd5dml@gmail.com>, 2017
-# Yaorong Li <55yaorong.li@gmail.com>, 2017
-# Yuan Xulei <hi@yxl.name>, 2017
 # zpq001 <zpq001@live.com>, 2017
-# 老窦 北京 <2662059195@qq.com>, 2017
 # Wei "oldrev" Li <liwei@sandwych.com>, 2017
 # Michael Chong <michaelchong2005@gmail.com>, 2017
-# 苏州远鼎 <tiexinliu@126.com>, 2017
 # Si Ling Lau <happy8645@hotmail.com>, 2017
-# Henry Zhou <zhouhenry@live.com>, 2017
+# 老窦 北京 <2662059195@qq.com>, 2017
+# Yaorong Li <55yaorong.li@gmail.com>, 2017
+# waveyeung <waveyeung@qq.com>, 2017
+# Yuan Xulei <hi@yxl.name>, 2017
+# liulixia <liu.lixia@elico-corp.com>, 2017
+# v2exerer <9010446@qq.com>, 2017
+# 卓忆科技 <zhanghao@jointd.com>, 2017
+# fausthuang, 2017
 # glovebx <ruinning@163.com>, 2017
+# Gary Wei <Gary.wei@elico-corp.com>, 2017
+# Rona Lin <ssauapw@qq.com>, 2017
 # Jeff Yu - Elico Corp <jeff.yu@elico-corp.com>, 2017
+# 苏州远鼎 <tiexinliu@126.com>, 2017
+# Martin Trigaux, 2017
+# e2f_cn r14 <e2f_cn_r14@outlook.com>, 2018
+# Henry Zhou <zhouhenry@live.com>, 2018
+# e2f_cn c7 <e2f_cn_c7@outlook.com>, 2018
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2018
-# Jackie Zhang <jzh@odoo.com>, 2018
+# e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
+# JZH-Odoo <jzh@odoo.com>, 2018
 # roye w <159820@qq.com>, 2018
+# liAnGjiA <liangjia@qq.com>, 2018
+# 广州救火 <7017511@qq.com>, 2019
+# inspur qiuguodong <qiuguodong@inspur.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-27 11:55+0000\n"
-"PO-Revision-Date: 2018-07-27 11:55+0000\n"
-"Last-Translator: roye w <159820@qq.com>, 2018\n"
+"POT-Creation-Date: 2019-01-03 15:06+0000\n"
+"PO-Revision-Date: 2017-09-20 10:24+0000\n"
+"Last-Translator: inspur qiuguodong <qiuguodong@inspur.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -746,6 +749,12 @@ msgstr "动作"
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint_active
 msgid "Active"
 msgstr "有效"
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.view_picking_form
+msgid ""
+"Add an internal note that will be printed on the Picking Operations sheet"
+msgstr "添加将在“拣配操作”工作表上打印的内部注释"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_config_settings_group_stock_adv_location
@@ -3491,7 +3500,6 @@ msgid "Locate"
 msgstr "定位"
 
 #. module: stock
-#: code:addons/stock/models/barcode.py:12
 #: model:ir.model.fields,field_description:stock.field_product_product_location_id
 #: model:ir.model.fields,field_description:stock.field_product_template_location_id
 #: model:ir.model.fields,field_description:stock.field_stock_change_product_qty_location_id
@@ -3510,7 +3518,6 @@ msgstr "定位"
 #: model:ir.ui.view,arch_db:stock.stock_scrap_search_view
 #: model:ir.ui.view,arch_db:stock.view_move_search
 #: model:ir.ui.view,arch_db:stock.warehouse_orderpoint_search
-#, python-format
 msgid "Location"
 msgstr "位置"
 
@@ -3570,10 +3577,8 @@ msgid "Logistics"
 msgstr "物流"
 
 #. module: stock
-#: code:addons/stock/models/barcode.py:13
 #: model:ir.model.fields,field_description:stock.field_stock_move_line_lot_id
 #: model:ir.model.fields,field_description:stock.field_stock_scrap_lot_id
-#, python-format
 msgid "Lot"
 msgstr "批次"
 
@@ -4014,6 +4019,11 @@ msgid "Not urgent"
 msgstr "不紧急"
 
 #. module: stock
+#: model:ir.ui.view,arch_db:stock.view_picking_form
+msgid "Note"
+msgstr "备注"
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_note
 #: model:ir.model.fields,field_description:stock.field_stock_picking_note
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
@@ -4382,7 +4392,6 @@ msgid "Pack Type"
 msgstr "包裹类型"
 
 #. module: stock
-#: code:addons/stock/models/barcode.py:14
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_id
 #: model:ir.model.fields,field_description:stock.field_stock_scrap_package_id
 #: model:ir.ui.view,arch_db:stock.quant_package_search_view
@@ -4391,7 +4400,6 @@ msgstr "包裹类型"
 #: model:ir.ui.view,arch_db:stock.view_quant_package_form
 #: model:ir.ui.view,arch_db:stock.view_quant_package_picking_tree
 #: model:ir.ui.view,arch_db:stock.view_quant_package_tree
-#, python-format
 msgid "Package"
 msgstr "包裹"
 
@@ -6294,13 +6302,6 @@ msgstr ""
 " 这样，我们总是知道需要去哪里，也就是为什么它们比推式规则更受欢迎。"
 
 #. module: stock
-#: model:ir.ui.view,arch_db:stock.product_category_form_view_inherit
-msgid ""
-"The following routes will apply to the products in this category taking into"
-" account parent categories:"
-msgstr "考虑到其上级类别，下面的路线将应用到这个类别的产品："
-
-#. module: stock
 #: sql_constraint:stock.warehouse:0
 msgid "The name of the warehouse must be unique per company!"
 msgstr "每个公司的仓库名称必须唯一!"
@@ -7162,12 +7163,6 @@ msgid "We hope this guide helped you implement Odoo Inventory."
 msgstr "我们希望这个向导能够帮你执行Odoo的盘点。"
 
 #. module: stock
-#: code:addons/stock/models/barcode.py:11
-#, python-format
-msgid "Weighted Product"
-msgstr "称重的产品"
-
-#. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Welcome"
 msgstr "欢迎"
@@ -7494,15 +7489,7 @@ msgid ""
 msgstr "您不能使用两次相同的序列号。 请更正序列号编码。"
 
 #. module: stock
-#: code:addons/stock/models/stock_picking.py:723
-#, python-format
-msgid ""
-"You cannot validate a transfer if you have not processed any quantity for "
-"%s."
-msgstr "如果您尚未处理%s的数量，则无法验证转移。"
-
-#. module: stock
-#: code:addons/stock/models/stock_picking.py:707
+#: code:addons/stock/models/stock_picking.py:709
 #, python-format
 msgid ""
 "You cannot validate a transfer if you have not processed any quantity. You "

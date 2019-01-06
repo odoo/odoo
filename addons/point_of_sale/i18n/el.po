@@ -3,20 +3,21 @@
 # * point_of_sale
 # 
 # Translators:
-# Kostas Goutoudis <goutoudis@gmail.com>, 2017
-# Martin Trigaux, 2017
-# George Tarasidis <george_tarasidis@yahoo.com>, 2017
-# Costas Pittalis <cpittalis@gmail.com>, 2017
-# Giota Dandidou <giotadandidou@gmail.com>, 2017
-# Stefanos Nikou <stefanos.nikou@gmail.com>, 2017
 # Timos Zacharatos <kokkinopioupiou@hotmail.com>, 2017
+# Costas Pittalis <cpittalis@gmail.com>, 2017
+# Stefanos Nikou <stefanos.nikou@gmail.com>, 2017
+# Martin Trigaux, 2017
+# Giota Dandidou <giotadandidou@gmail.com>, 2017
+# George Tarasidis <george_tarasidis@yahoo.com>, 2017
+# Kostas Goutoudis <goutoudis@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-30 08:47+0000\n"
-"PO-Revision-Date: 2018-07-30 08:47+0000\n"
-"Last-Translator: Timos Zacharatos <kokkinopioupiou@hotmail.com>, 2017\n"
+"POT-Creation-Date: 2019-01-03 15:06+0000\n"
+"PO-Revision-Date: 2017-09-20 10:21+0000\n"
+"Last-Translator: Kostas Goutoudis <goutoudis@gmail.com>, 2018\n"
 "Language-Team: Greek (https://www.transifex.com/odoo/teams/41243/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -703,12 +704,6 @@ msgid "Cashdrawer"
 msgstr "Συρτάρι μετρητών"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/barcode_rule.py:16
-#, python-format
-msgid "Cashier"
-msgstr "Ταμίας"
-
-#. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.pos_config_menu_catalog
 msgid "Catalog"
 msgstr "Κατάλογος"
@@ -879,12 +874,6 @@ msgstr "Κάντε κλικ για να καθορίσετε μια νέα κα�
 #: model:ir.actions.act_window,help:point_of_sale.action_pos_session
 msgid "Click to start a new session."
 msgstr "Επέλεξε για να ξεκινήσεις μια Βάρδια"
-
-#. module: point_of_sale
-#: code:addons/point_of_sale/models/barcode_rule.py:15
-#, python-format
-msgid "Client"
-msgstr "Πελάτης"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1249,12 +1238,6 @@ msgstr "Σημείωμα Έκπτωσης"
 #, python-format
 msgid "Discount:"
 msgstr "Έκπτωση:"
-
-#. module: point_of_sale
-#: code:addons/point_of_sale/models/barcode_rule.py:14
-#, python-format
-msgid "Discounted Product"
-msgstr "Είδος με Έκπτωση"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2060,13 +2043,6 @@ msgid "Name"
 msgstr "Περιγραφή"
 
 #. module: point_of_sale
-#. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1937
-#, python-format
-msgid "Negative Bank Payment"
-msgstr "Αρνητική Τραπεζική Πληρωμή"
-
-#. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
 #: selection:pos.order,state:0 selection:report.pos.order,state:0
 msgid "New"
@@ -2816,14 +2792,8 @@ msgid "Price Unit"
 msgstr "Τιμή Μονάδας"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/barcode_rule.py:13
-#, python-format
-msgid "Priced Product"
-msgstr "Τιμολογούμενο Είδος"
-
-#. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:2194
+#: code:addons/point_of_sale/static/src/js/screens.js:2230
 #: code:addons/point_of_sale/static/src/xml/pos.xml:388
 #: code:addons/point_of_sale/static/src/xml/pos.xml:461
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_pricelist_id
@@ -2881,10 +2851,27 @@ msgstr "Εκτυπωτής"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/devices.js:432
+#: code:addons/point_of_sale/static/src/js/devices.js:437
 #, python-format
 msgid "Printing Error: "
 msgstr "Σφάλμα Εκτύπωσης:"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/screens.js:1569
+#, python-format
+msgid "Printing is not supported on some android browsers"
+msgstr ""
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/screens.js:1570
+#, python-format
+msgid ""
+"Printing is not supported on some android browsers due to no default "
+"printing protocol is available. It is possible to print your tickets by "
+"making use of an IoT Box."
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_product_product
@@ -4217,12 +4204,6 @@ msgid "Weighing"
 msgstr "Ζύγισμα"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/barcode_rule.py:12
-#, python-format
-msgid "Weighted Product"
-msgstr "Ζυγισμένο Είδος"
-
-#. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid ""
 "Whenever you close a session, one entry is generated in the following "
@@ -4285,6 +4266,7 @@ msgstr ""
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/product.py:21
+#: code:addons/point_of_sale/models/product.py:38
 #, python-format
 msgid ""
 "You cannot delete a product saleable in point of sale while a session is "
@@ -4292,17 +4274,6 @@ msgid ""
 msgstr ""
 "Δεν μπορείτε να διαγράψετε ένα είδος εμπορεύσιμο στο POS ενώ μια βάρδια "
 "εξακολουθεί να είναι ανοιχτή."
-
-#. module: point_of_sale
-#. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1938
-#, python-format
-msgid ""
-"You cannot have a negative amount in a Bank payment. Use a cash payment "
-"method to return money to the customer."
-msgstr ""
-"Δεν μπορείτε να έχετε αρνητικό ποσό σε μια τραπεζική πληρωμή. Χρησιμοποιήστε"
-" μια μέθοδο πληρωμής σε μετρητά για να επιστρέψτε τα χρήματα στον πελάτη."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:299
