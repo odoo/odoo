@@ -3,24 +3,25 @@
 # * mail
 # 
 # Translators:
-# Martin Trigaux, 2017
 # Pornvibool Tippayawat <pornvibool.t@gmail.com>, 2018
 # Potsawat Manuthamathorn <firmpotsawat@hotmail.com>, 2018
 # gsong <gsong2014@foxmail.com>, 2018
 # Somchart Jabsung <jabsung.s@gmail.com>, 2018
-# นัจ-ณวัสน์ เอกสิรินิธิพล <nawhath.aek@hotmail.com>, 2018
-# Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2018
 # monchai7 <montchye@gmail.com>, 2018
-# Seksan Poltree <seksan.poltree@gmail.com>, 2018
 # LAO <sumonchai@gmail.com>, 2018
 # Ekasit Saichompu <ekasitb@gmail.com>, 2018
+# นัจ-ณวัสน์ เอกสิรินิธิพล <nawhath.aek@hotmail.com>, 2018
+# Seksan Poltree <seksan.poltree@gmail.com>, 2018
+# Martin Trigaux, 2018
+# Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-27 11:55+0000\n"
-"PO-Revision-Date: 2018-07-27 11:55+0000\n"
-"Last-Translator: Ekasit Saichompu <ekasitb@gmail.com>, 2018\n"
+"POT-Creation-Date: 2019-01-03 15:06+0000\n"
+"PO-Revision-Date: 2017-09-20 10:19+0000\n"
+"Last-Translator: Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2018\n"
 "Language-Team: Thai (https://www.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -142,6 +143,18 @@ msgstr ""
 "or (object.parent_id and object.parent_id.subject and 'ตอบ: %s' % "
 "object.parent_id.subject) or (object.parent_id and "
 "object.parent_id.record_name and 'ตอบ: %s' % object.parent_id.record_name)}"
+
+#. module: mail
+#: code:addons/mail/wizard/invite.py:29
+#, python-format
+msgid "%(user_name)s invited you to follow %(document)s document: %(title)s"
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/wizard/invite.py:31
+#, python-format
+msgid "%(user_name)s invited you to follow a new document."
+msgstr ""
 
 #. module: mail
 #. openerp-web
@@ -275,21 +288,6 @@ msgid ""
 "<div class=\"o_mail_notification\">left <a href=\"#\" "
 "class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
 msgstr ""
-
-#. module: mail
-#: code:addons/mail/wizard/invite.py:23
-#, python-format
-msgid ""
-"<div><p>Hello,</p><p>%s invited you to follow %s document: %s.</p></div>"
-msgstr ""
-"<div><p>สวัสดี</p><p>%s ได้เรียนเชิญให้คุณติดตาม %s เอกสาร: %s</p></div>"
-
-#. module: mail
-#: code:addons/mail/wizard/invite.py:26
-#, python-format
-msgid ""
-"<div><p>Hello,</p><p>%s invited you to follow a new document.</p></div>"
-msgstr "<div><p>สวัสดี</p><p>%s ได้เรียนเชิญให้คุณติดตามเอกสารใหม่</p></div>"
 
 #. module: mail
 #. openerp-web
@@ -2091,6 +2089,12 @@ msgstr "มีเอกสารแนบมา"
 #: model:ir.model.fields,field_description:mail.field_mail_mail_headers
 #: model:ir.ui.view,arch_db:mail.view_mail_form
 msgid "Headers"
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/wizard/invite.py:35
+#, python-format
+msgid "Hello,"
 msgstr ""
 
 #. module: mail

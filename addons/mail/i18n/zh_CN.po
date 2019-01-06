@@ -3,44 +3,45 @@
 # * mail
 # 
 # Translators:
-# e2f_cn c7 <e2f_cn_c7@outlook.com>, 2017
-# Martin Trigaux, 2017
-# v2exerer <9010446@qq.com>, 2017
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2017
-# xiaobin wu <bd5dml@gmail.com>, 2017
-# 卓忆科技 <zhanghao@jointd.com>, 2017
-# Gary Wei <Gary.wei@elico-corp.com>, 2017
-# Joray <13637815@qq.com>, 2017
-# liAnGjiA <liangjia@qq.com>, 2017
-# e2f_cn r14 <e2f_cn_r14@outlook.com>, 2017
-# liulixia <liu.lixia@elico-corp.com>, 2017
-# niulin lnc. <admin@niulin.net>, 2017
 # Eddie Lim <bhweelim@yahoo.com>, 2017
-# mrshelly <mrshelly@hotmail.com>, 2017
 # 木头 <mynameisshiy@gmail.com>, 2017
 # Zamba Lee <zambalee@gmail.com>, 2017
-# 苏州远鼎 <tiexinliu@126.com>, 2017
-# Michael Chong <michaelchong2005@gmail.com>, 2017
-# waveyeung <waveyeung@qq.com>, 2017
-# 厦门-许舟 <windedge99@gmail.com>, 2017
+# xiaobin wu <bd5dml@gmail.com>, 2017
 # Rona Lin <ssauapw@qq.com>, 2017
+# 卓忆科技 <zhanghao@jointd.com>, 2017
+# 苏州远鼎 <tiexinliu@126.com>, 2017
 # Xu Lei <xulei8@qq.com>, 2017
 # Si Ling Lau <happy8645@hotmail.com>, 2017
-# 老窦 北京 <2662059195@qq.com>, 2017
+# niulin lnc. <admin@niulin.net>, 2017
+# liulixia <liu.lixia@elico-corp.com>, 2017
+# waveyeung <waveyeung@qq.com>, 2017
+# Joray <13637815@qq.com>, 2017
 # Yaorong Li <55yaorong.li@gmail.com>, 2017
-# e2f_cn c5 <jarvisn@ecinnovations.com>, 2017
+# e2f_cn r14 <e2f_cn_r14@outlook.com>, 2017
+# mrshelly <mrshelly@hotmail.com>, 2017
+# v2exerer <9010446@qq.com>, 2017
 # Crazee ZHANG <15702414328@163.com>, 2017
+# Michael Chong <michaelchong2005@gmail.com>, 2017
 # Wei "oldrev" Li <liwei@sandwych.com>, 2017
 # fausthuang, 2017
+# 厦门-许舟 <windedge99@gmail.com>, 2017
+# Gary Wei <Gary.wei@elico-corp.com>, 2017
 # Jeff Yu - Elico Corp <jeff.yu@elico-corp.com>, 2017
+# e2f_cn c7 <e2f_cn_c7@outlook.com>, 2017
+# 老窦 北京 <2662059195@qq.com>, 2018
+# Martin Trigaux, 2018
 # e2f <projects@e2f.com>, 2018
+# e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
+# liAnGjiA <liangjia@qq.com>, 2018
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
 # Emily JIA <eji@odoo.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-27 11:55+0000\n"
-"PO-Revision-Date: 2018-07-27 11:55+0000\n"
+"POT-Creation-Date: 2019-01-03 15:06+0000\n"
+"PO-Revision-Date: 2017-09-20 10:19+0000\n"
 "Last-Translator: Emily JIA <eji@odoo.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -251,6 +252,18 @@ msgstr ""
 " 以及 'Re: %s' % object.parent_id.record_name)}"
 
 #. module: mail
+#: code:addons/mail/wizard/invite.py:29
+#, python-format
+msgid "%(user_name)s invited you to follow %(document)s document: %(title)s"
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/wizard/invite.py:31
+#, python-format
+msgid "%(user_name)s invited you to follow a new document."
+msgstr ""
+
+#. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/chat_manager.js:63
 #, python-format
@@ -396,20 +409,6 @@ msgid ""
 msgstr ""
 "<div class=\"o_mail_notification\">离开 <a href=\"#\" "
 "class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
-
-#. module: mail
-#: code:addons/mail/wizard/invite.py:23
-#, python-format
-msgid ""
-"<div><p>Hello,</p><p>%s invited you to follow %s document: %s.</p></div>"
-msgstr "<div><p>你好,</p><p>%s 邀请你关注%s单据: %s.</p></div>"
-
-#. module: mail
-#: code:addons/mail/wizard/invite.py:26
-#, python-format
-msgid ""
-"<div><p>Hello,</p><p>%s invited you to follow a new document.</p></div>"
-msgstr "<div><p>你好，</p><p>%s 邀请你关注新单据。</p></div>"
 
 #. module: mail
 #. openerp-web
@@ -2235,6 +2234,12 @@ msgstr "有附件"
 #: model:ir.ui.view,arch_db:mail.view_mail_form
 msgid "Headers"
 msgstr "标题"
+
+#. module: mail
+#: code:addons/mail/wizard/invite.py:35
+#, python-format
+msgid "Hello,"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype_hidden

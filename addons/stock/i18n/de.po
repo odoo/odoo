@@ -3,51 +3,52 @@
 # * stock
 # 
 # Translators:
-# aNj <anj2j@yahoo.de>, 2017
-# Martin Trigaux, 2017
-# Wolfgang Taferner, 2017
-# Alexander Klockhaus <a.klockhaus@gmail.com>, 2017
-# Bülent Tiknas <btiknas@googlemail.com>, 2017
-# Henry Mineehen <info@mineehen.de>, 2017
-# Anja Funk <anja.funk@afimage.de>, 2017
-# Rudolf Schnapka <rs@techno-flex.de>, 2017
-# darenkster <inactive+darenkster@transifex.com>, 2017
-# Thorsten Vocks <thorsten.vocks@openbig.org>, 2017
-# Niki Waibel, 2017
 # Akim Juillerat <akim.juillerat@camptocamp.com>, 2017
-# JackTheHunter <Maximilian.N98@gmail.com>, 2017
-# Tina Rittmüller <tr@ife.de>, 2017
-# Ermin Trevisan <trevi@twanda.com>, 2017
-# Renzo Meister, 2017
-# Ralf Hilgenstock <rh@dialoge.info>, 2017
 # Gab_Odoo <gab@odoo.com>, 2017
 # David Lehov <KHottend@gmx.de>, 2017
 # Andreas Stauder <andreas.stauder@brain-tec.ch>, 2017
 # dd5cd5bab88c61e9dedf84f5ea59b147, 2017
 # Marvin Elia Hoppe <marvin_elia@web.de>, 2017
-# Andi, 2017
-# Silvan Wyden <silvan.wyden@braintec-group.com>, 2017
-# brokemeister <work@maltejansen.de>, 2017
 # Torsten Wichmann <t.wichmann@intero-technologies.de>, 2017
 # Stefan Hartenfels <stefan.hartenfels@camptocamp.com>, 2017
+# aNj <anj2j@yahoo.de>, 2017
+# Silvan Wyden <silvan.wyden@braintec-group.com>, 2017
+# Niki Waibel, 2017
+# Anja Funk <anja.funk@afimage.de>, 2017
+# Alexander Klockhaus <a.klockhaus@gmail.com>, 2017
 # key six <mobile.umts@gmail.com>, 2017
 # Philipp Hug <philipp@hug.cx>, 2017
-# Mathias Neef <mn@copado.de>, 2017
+# Henry Mineehen <info@mineehen.de>, 2017
+# JackTheHunter <Maximilian.N98@gmail.com>, 2017
+# Tina Rittmüller <tr@ife.de>, 2017
+# Renzo Meister, 2017
+# darenkster <inactive+darenkster@transifex.com>, 2017
 # Jan Meyer, 2017
+# brokemeister <work@maltejansen.de>, 2017
+# Ralf Hilgenstock <rh@dialoge.info>, 2017
+# Thorsten Vocks <thorsten.vocks@openbig.org>, 2017
+# Mathias Neef <mn@copado.de>, 2017
 # Constantin Ehrenstein <transifex@skiller.eu>, 2017
 # AppleMentalist <felix.schnatbaum@gmail.com>, 2017
 # DE R1 <e2fes1@hotmail.com>, 2017
-# Katharina Moritz <kmo@e2f.com>, 2017
 # DE T1 <e2f8846@yahoo.com>, 2017
+# Andi, 2017
+# Katharina Moritz <kmo@e2f.com>, 2018
 # e2f <projects@e2f.com>, 2018
+# Ermin Trevisan <trevi@twanda.com>, 2018
+# Wolfgang Taferner, 2018
+# Rudolf Schnapka <rs@techno-flex.de>, 2018
 # Johannes Croe <jcr@odoo.com>, 2018
+# Martin Trigaux, 2019
+# Bülent Tiknas <btiknas@googlemail.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-27 11:55+0000\n"
-"PO-Revision-Date: 2018-07-27 11:55+0000\n"
-"Last-Translator: Johannes Croe <jcr@odoo.com>, 2018\n"
+"POT-Creation-Date: 2019-01-03 15:06+0000\n"
+"PO-Revision-Date: 2017-09-20 10:24+0000\n"
+"Last-Translator: Bülent Tiknas <btiknas@googlemail.com>, 2019\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -817,6 +818,14 @@ msgstr "Aktion"
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint_active
 msgid "Active"
 msgstr "Aktiv"
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.view_picking_form
+msgid ""
+"Add an internal note that will be printed on the Picking Operations sheet"
+msgstr ""
+"Fügen Sie eine interne Notiz hinzu, die auf dem Kommissionierauftrag mit "
+"ausgedruckt wird"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_config_settings_group_stock_adv_location
@@ -3697,7 +3706,6 @@ msgid "Locate"
 msgstr "Ort"
 
 #. module: stock
-#: code:addons/stock/models/barcode.py:12
 #: model:ir.model.fields,field_description:stock.field_product_product_location_id
 #: model:ir.model.fields,field_description:stock.field_product_template_location_id
 #: model:ir.model.fields,field_description:stock.field_stock_change_product_qty_location_id
@@ -3716,7 +3724,6 @@ msgstr "Ort"
 #: model:ir.ui.view,arch_db:stock.stock_scrap_search_view
 #: model:ir.ui.view,arch_db:stock.view_move_search
 #: model:ir.ui.view,arch_db:stock.warehouse_orderpoint_search
-#, python-format
 msgid "Location"
 msgstr "Lagerort"
 
@@ -3776,10 +3783,8 @@ msgid "Logistics"
 msgstr "Logistik"
 
 #. module: stock
-#: code:addons/stock/models/barcode.py:13
 #: model:ir.model.fields,field_description:stock.field_stock_move_line_lot_id
 #: model:ir.model.fields,field_description:stock.field_stock_scrap_lot_id
-#, python-format
 msgid "Lot"
 msgstr "Fertigungslos"
 
@@ -4233,6 +4238,11 @@ msgid "Not urgent"
 msgstr "Nicht dringend"
 
 #. module: stock
+#: model:ir.ui.view,arch_db:stock.view_picking_form
+msgid "Note"
+msgstr "Notiz"
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_note
 #: model:ir.model.fields,field_description:stock.field_stock_picking_note
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
@@ -4616,7 +4626,6 @@ msgid "Pack Type"
 msgstr "Verpackungstyp"
 
 #. module: stock
-#: code:addons/stock/models/barcode.py:14
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_id
 #: model:ir.model.fields,field_description:stock.field_stock_scrap_package_id
 #: model:ir.ui.view,arch_db:stock.quant_package_search_view
@@ -4625,7 +4634,6 @@ msgstr "Verpackungstyp"
 #: model:ir.ui.view,arch_db:stock.view_quant_package_form
 #: model:ir.ui.view,arch_db:stock.view_quant_package_picking_tree
 #: model:ir.ui.view,arch_db:stock.view_quant_package_tree
-#, python-format
 msgid "Package"
 msgstr "Verpackung"
 
@@ -6625,15 +6633,6 @@ msgstr ""
 "gegenüber Push-Regeln bevorzugt."
 
 #. module: stock
-#: model:ir.ui.view,arch_db:stock.product_category_form_view_inherit
-msgid ""
-"The following routes will apply to the products in this category taking into"
-" account parent categories:"
-msgstr ""
-"Die folgenden Routen können zu Produkten und Kategorien unter "
-"Berücksichtigung übergeordneter Produktkategorien zugewiesenen werden."
-
-#. module: stock
 #: sql_constraint:stock.warehouse:0
 msgid "The name of the warehouse must be unique per company!"
 msgstr "Der Name eines Lagers muss innerhalb eines Unternehmens klar sein"
@@ -7559,12 +7558,6 @@ msgstr ""
 "Lagerverwaltung geholfen."
 
 #. module: stock
-#: code:addons/stock/models/barcode.py:11
-#, python-format
-msgid "Weighted Product"
-msgstr "Gewogenes Produkt"
-
-#. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Welcome"
 msgstr "Willkommen"
@@ -7948,17 +7941,7 @@ msgstr ""
 "die codierten Seriennummern."
 
 #. module: stock
-#: code:addons/stock/models/stock_picking.py:723
-#, python-format
-msgid ""
-"You cannot validate a transfer if you have not processed any quantity for "
-"%s."
-msgstr ""
-"Sie können keine Übertragung validieren, wenn Sie keine Menge für %s "
-"bearbeitet haben."
-
-#. module: stock
-#: code:addons/stock/models/stock_picking.py:707
+#: code:addons/stock/models/stock_picking.py:709
 #, python-format
 msgid ""
 "You cannot validate a transfer if you have not processed any quantity. You "

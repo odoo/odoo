@@ -3,33 +3,34 @@
 # * account
 # 
 # Translators:
-# Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2017
-# Martin Trigaux, 2017
-# Jakobus Buntownikus <buntownix@gmail.com>, 2017
-# Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2017
-# zbik2607 <darek@krokus.com.pl>, 2017
-# Piotr Szlązak <szlazakpiotr@gmail.com>, 2017
-# Paweł Michoń <michon.pawel@wp.pl>, 2017
-# Monika Motyczyńska <m.monia@op.pl>, 2017
-# 8cells Team <admin@8cells.com>, 2017
 # Mikołaj Dziurzyński <mikolaj.dziurzynski@openglobe.pl>, 2017
-# Marcin Młynarczyk <mlynarczyk@gmail.com>, 2017
 # Mariusz, 2017
+# Monika Motyczyńska <m.monia@op.pl>, 2017
 # Zdzisław Krajewski <zdzichucb@gmail.com>, 2017
+# 8cells Team <admin@8cells.com>, 2017
+# Piotr Szlązak <szlazakpiotr@gmail.com>, 2017
+# Jakobus Buntownikus <buntownix@gmail.com>, 2017
+# Marcin Młynarczyk <mlynarczyk@gmail.com>, 2017
 # Patryk Openglobe <patryk.walentowicz@openglobe.pl>, 2017
+# Paweł Michoń <michon.pawel@wp.pl>, 2017
+# Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2017
 # Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2017
 # Monika Grzelak <m.e.grzelak@gmail.com>, 2017
+# zbik2607 <darek@krokus.com.pl>, 2017
+# Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2017
 # Tomasz Leppich <t.leppich@gmail.com>, 2018
+# Martin Trigaux, 2018
 # taksun <taksun@o2.pl>, 2018
 # Piotr Cierkosz <piotr.w.cierkosz@gmail.com>, 2018
 # Maja Stawicka <mjstwck@wp.pl>, 2018
 # Paweł Wodyński <pw@myodoo.pl>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-27 11:55+0000\n"
-"PO-Revision-Date: 2018-07-27 11:55+0000\n"
+"POT-Creation-Date: 2019-01-03 15:06+0000\n"
+"PO-Revision-Date: 2017-09-20 10:13+0000\n"
 "Last-Translator: Paweł Wodyński <pw@myodoo.pl>, 2018\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
@@ -439,6 +440,13 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "<span class=\"fa fa-arrow-circle-o-down\"/> Install Now"
 msgstr "<span class=\"fa fa-arrow-circle-o-down\"/> Zainstaluj teraz"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -3933,11 +3941,19 @@ msgid "Currency as per company's country."
 msgstr "Waluta jak w kraju firmy"
 
 #. module: account
-#: code:addons/account/models/account_move.py:1609
-#: code:addons/account/models/account_move.py:1621
+#: code:addons/account/models/account_move.py:1663
+#: code:addons/account/models/account_move.py:1675
 #, python-format
 msgid "Currency exchange rate difference"
 msgstr "Różnica kursowa"
+
+#. module: account
+#: code:addons/account/models/account.py:451
+#, python-format
+msgid ""
+"Currency field should only be set if the journal's currency is different "
+"from the company's. Leave the field blank to use company currency."
+msgstr ""
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_current_assets
@@ -11011,6 +11027,7 @@ msgstr "Raport bilansu próbnego"
 #: model:ir.model.fields,field_description:account.field_account_account_user_type_id
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_journal_type
 #: model:ir.model.fields,field_description:account.field_account_financial_report_type
+#: model:ir.model.fields,field_description:account.field_account_invoice_line_invoice_type
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_type
 #: model:ir.model.fields,field_description:account.field_account_invoice_type
 #: model:ir.model.fields,field_description:account.field_account_journal_type
@@ -11834,7 +11851,7 @@ msgstr ""
 "został zaksięgowany."
 
 #. module: account
-#: code:addons/account/models/account.py:253
+#: code:addons/account/models/account.py:261
 #, python-format
 msgid ""
 "You cannot remove/deactivate an account which is set on a customer or "
@@ -11844,13 +11861,21 @@ msgstr ""
 "dostawcy."
 
 #. module: account
-#: code:addons/account/models/account_move.py:1330
+#: code:addons/account/models/account.py:249
+#, python-format
+msgid ""
+"You cannot set a currency on this account as it already has some journal "
+"entries having a different foreign currency."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:1368
 #, python-format
 msgid "You cannot use deprecated account."
 msgstr "Nie możesz użyć starego konta."
 
 #. module: account
-#: code:addons/account/models/account_move.py:1250
+#: code:addons/account/models/account_move.py:1283
 #, python-format
 msgid ""
 "You cannot use this general account in this journal, check the tab 'Entry "
@@ -11861,7 +11886,7 @@ msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:74
-#: code:addons/account/models/account_invoice.py:777
+#: code:addons/account/models/account_invoice.py:780
 #, python-format
 msgid ""
 "You cannot validate an invoice with a negative total amount. You should "
@@ -12268,11 +12293,3 @@ msgstr "wizard.multi.charts.accounts"
 #: model:ir.ui.view,arch_db:account.view_bank_statement_form
 msgid "→ Count"
 msgstr "→ Liczba"
-
-#. module: account
-#: code:addons/account/models/account.py:309
-#, python-format
-msgid ""
-"Currency field should only be set if the journal's currency is different "
-"from the company's. Leave the field blank to use company currency."
-msgstr ""

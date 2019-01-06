@@ -3,39 +3,41 @@
 # * sale
 # 
 # Translators:
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2017
-# v2exerer <9010446@qq.com>, 2017
-# guohuadeng <guohuadeng@hotmail.com>, 2017
-# 苏州远鼎 <tiexinliu@126.com>, 2017
-# Luke <cialuo@qq.com>, 2017
-# Yuan Xulei <hi@yxl.name>, 2017
-# e2f_cn c7 <e2f_cn_c7@outlook.com>, 2017
-# liAnGjiA <liangjia@qq.com>, 2017
-# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2017
 # 卓忆科技 <zhanghao@jointd.com>, 2017
 # Seven Floor <my7floor@gmail.com>, 2017
 # Li Xiang <lvx5013@foxmail.com>, 2017
-# Martin Trigaux, 2017
-# waveyeung <waveyeung@qq.com>, 2017
-# Henry Zhou <zhouhenry@live.com>, 2017
 # Ted Wang <feiyuwang2012@gmail.com>, 2017
-# Gary Wei <Gary.wei@elico-corp.com>, 2017
 # xiaobin wu <bd5dml@gmail.com>, 2017
-# Skyy rao <raozhangshun@163.com>, 2017
+# Skyy <raozhangshun@163.com>, 2017
+# Gary Wei <Gary.wei@elico-corp.com>, 2017
+# waveyeung <waveyeung@qq.com>, 2017
 # liulixia <liu.lixia@elico-corp.com>, 2017
+# v2exerer <9010446@qq.com>, 2017
 # Si Ling Lau <happy8645@hotmail.com>, 2017
-# Jeff Yu - Elico Corp <jeff.yu@elico-corp.com>, 2017
+# Luke <cialuo@qq.com>, 2017
+# guohuadeng <guohuadeng@hotmail.com>, 2017
+# Yuan Xulei <hi@yxl.name>, 2017
 # 老窦 北京 <2662059195@qq.com>, 2017
-# e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
+# 苏州远鼎 <tiexinliu@126.com>, 2017
+# Henry Zhou <zhouhenry@live.com>, 2017
+# e2f_cn c7 <e2f_cn_c7@outlook.com>, 2017
+# Jeff Yu - Elico Corp <jeff.yu@elico-corp.com>, 2017
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2018
 # e2f <projects@e2f.com>, 2018
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
+# liAnGjiA <liangjia@qq.com>, 2018
 # niulin lnc. <admin@niulin.net>, 2018
+# e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
+# Martin Trigaux, 2019
+# snow wang <147156565@qq.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-27 11:56+0000\n"
-"PO-Revision-Date: 2018-07-27 11:56+0000\n"
-"Last-Translator: niulin lnc. <admin@niulin.net>, 2018\n"
+"POT-Creation-Date: 2019-01-03 15:07+0000\n"
+"PO-Revision-Date: 2017-09-20 10:23+0000\n"
+"Last-Translator: snow wang <147156565@qq.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -371,6 +373,13 @@ msgid ""
 "                to buy an extra pack of hours, because he used all his support\n"
 "                hours.</i>"
 msgstr "<i>示例：预付费服务提供给那些不得不购买额外时间包的客户，由于他之前的所有支持。</i>"
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
+msgstr ""
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_my_orders
@@ -1943,6 +1952,11 @@ msgid "Product Catalog"
 msgstr "产品目录"
 
 #. module: sale
+#: model:ir.ui.menu,name:sale.menu_product_category_config_sale
+msgid "Product Categories"
+msgstr "产品类别"
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales_categ_id
 #: model:ir.model.fields,field_description:sale.field_sale_report_categ_id
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
@@ -2589,13 +2603,29 @@ msgid "Terms and conditions"
 msgstr "条款和条件"
 
 #. module: sale
-#: code:addons/sale/models/analytic.py:129
-#: code:addons/sale/models/analytic.py:143
+#: code:addons/sale/models/analytic.py:134
 #, python-format
 msgid ""
-"The Sales Order %s linked to the Analytic Account must be validated before "
-"registering expenses."
-msgstr "销售订单%s关联的分析帐户之前必须验证注册费用。"
+"The Sales Order %s linked to the Analytic Account %s is cancelled. You "
+"cannot register an expense on a cancelled Sales Order."
+msgstr "销售订单%s关联的分析账户%s被取消。你不能在取消的销售订单上登记费用。"
+
+#. module: sale
+#: code:addons/sale/models/analytic.py:133
+#, python-format
+msgid ""
+"The Sales Order %s linked to the Analytic Account %s is currently locked. "
+"You cannot register an expense on a locked Sales Order. Please create a new "
+"SO linked to this Analytic Account."
+msgstr "销售订单%s关联的分析账户%s当前被锁定。你不能在锁定的销售订单上登记费用。请创建新的销售订单关联这个分析账户。"
+
+#. module: sale
+#: code:addons/sale/models/analytic.py:129
+#, python-format
+msgid ""
+"The Sales Order %s linked to the Analytic Account %s must be validated "
+"before registering expenses."
+msgstr "销售订单%s关联的分析账户%s在登记费用前必须被验证。"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv_amount

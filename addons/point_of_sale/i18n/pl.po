@@ -3,28 +3,29 @@
 # * point_of_sale
 # 
 # Translators:
-# Martin Trigaux, 2017
-# Piotr Szlązak <szlazakpiotr@gmail.com>, 2017
+# Mariusz, 2017
+# Paweł Michoń <michon.pawel@wp.pl>, 2017
+# Marcin Młynarczyk <mlynarczyk@gmail.com>, 2017
+# Slawomir Adamus <melthalion@gmail.com>, 2017
 # zbik2607 <darek@krokus.com.pl>, 2017
 # Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2017
-# Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2017
-# Mariusz, 2017
-# Marcin Młynarczyk <mlynarczyk@gmail.com>, 2017
-# Paweł Michoń <michon.pawel@wp.pl>, 2017
-# Slawomir Adamus <melthalion@gmail.com>, 2017
+# Piotr Szlązak <szlazakpiotr@gmail.com>, 2017
+# Martin Trigaux, 2017
 # Monika Grzelak <m.e.grzelak@gmail.com>, 2017
 # Andrzej Donczew <a.donczew@hadron.eu.com>, 2017
+# Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2017
 # Piotr Cierkosz <piotr.w.cierkosz@gmail.com>, 2018
-# Tomasz Leppich <t.leppich@gmail.com>, 2018
 # Radosław Biegalski <radoslaw.biegalski@openglobe.pl>, 2018
+# Tomasz Leppich <t.leppich@gmail.com>, 2018
 # Wiktor Kaźmierczak <wik92tor@wp.pl>, 2018
 # Paweł Wodyński <pw@myodoo.pl>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-30 08:47+0000\n"
-"PO-Revision-Date: 2018-07-30 08:47+0000\n"
+"POT-Creation-Date: 2019-01-03 15:06+0000\n"
+"PO-Revision-Date: 2017-09-20 10:21+0000\n"
 "Last-Translator: Paweł Wodyński <pw@myodoo.pl>, 2018\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
@@ -730,12 +731,6 @@ msgid "Cashdrawer"
 msgstr "Kasa"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/barcode_rule.py:16
-#, python-format
-msgid "Cashier"
-msgstr "Kasjer"
-
-#. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.pos_config_menu_catalog
 msgid "Catalog"
 msgstr "Katalog"
@@ -912,12 +907,6 @@ msgstr "Kliknij tutaj, by zdefiniować nową kategorię."
 #: model:ir.actions.act_window,help:point_of_sale.action_pos_session
 msgid "Click to start a new session."
 msgstr "Kliknij, aby rozpocząć nową sesję."
-
-#. module: point_of_sale
-#: code:addons/point_of_sale/models/barcode_rule.py:15
-#, python-format
-msgid "Client"
-msgstr "Klient"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1286,12 +1275,6 @@ msgstr "Notatka upustu"
 #, python-format
 msgid "Discount:"
 msgstr "Upust:"
-
-#. module: point_of_sale
-#: code:addons/point_of_sale/models/barcode_rule.py:14
-#, python-format
-msgid "Discounted Product"
-msgstr "Produkt upustowy"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2113,13 +2096,6 @@ msgid "Name"
 msgstr "Nazwa"
 
 #. module: point_of_sale
-#. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1937
-#, python-format
-msgid "Negative Bank Payment"
-msgstr "Ujemna płatność bankowa"
-
-#. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
 #: selection:pos.order,state:0 selection:report.pos.order,state:0
 msgid "New"
@@ -2878,14 +2854,8 @@ msgid "Price Unit"
 msgstr "Cena jednostkowa"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/barcode_rule.py:13
-#, python-format
-msgid "Priced Product"
-msgstr "Produkt wyceniany"
-
-#. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:2194
+#: code:addons/point_of_sale/static/src/js/screens.js:2230
 #: code:addons/point_of_sale/static/src/xml/pos.xml:388
 #: code:addons/point_of_sale/static/src/xml/pos.xml:461
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_pricelist_id
@@ -2943,10 +2913,27 @@ msgstr "Drukarka"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/devices.js:432
+#: code:addons/point_of_sale/static/src/js/devices.js:437
 #, python-format
 msgid "Printing Error: "
 msgstr "Błąd drukowania:"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/screens.js:1569
+#, python-format
+msgid "Printing is not supported on some android browsers"
+msgstr ""
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/screens.js:1570
+#, python-format
+msgid ""
+"Printing is not supported on some android browsers due to no default "
+"printing protocol is available. It is possible to print your tickets by "
+"making use of an IoT Box."
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_product_product
@@ -4315,12 +4302,6 @@ msgid "Weighing"
 msgstr "Ważenie"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/barcode_rule.py:12
-#, python-format
-msgid "Weighted Product"
-msgstr "Produkt ważony"
-
-#. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid ""
 "Whenever you close a session, one entry is generated in the following "
@@ -4386,6 +4367,7 @@ msgstr "Nie możesz mieć dwóch aktywnych sesji dla tego samego Sprzedawcy!"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/product.py:21
+#: code:addons/point_of_sale/models/product.py:38
 #, python-format
 msgid ""
 "You cannot delete a product saleable in point of sale while a session is "
@@ -4393,17 +4375,6 @@ msgid ""
 msgstr ""
 "Nie można usunąć produktu, który można sprzedawać w punkcie sprzedaży, gdy "
 "sesja jest nadal otwarta."
-
-#. module: point_of_sale
-#. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1938
-#, python-format
-msgid ""
-"You cannot have a negative amount in a Bank payment. Use a cash payment "
-"method to return money to the customer."
-msgstr ""
-"Nie możesz mieć ujemnej kwoty w płatności bankowej. Użyj metody płatności "
-"gotówkowej, aby zwrócić pieniądze klientowi."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:299

@@ -3,23 +3,24 @@
 # * mail
 # 
 # Translators:
-# Martin Trigaux, 2017
 # aleksandar ivanov, 2018
-# Albena Mincheva <albena_vicheva@abv.bg>, 2018
+# Vladimir Dachev <v.dachev@dalkomotors.com>, 2018
 # kalatchev, 2018
+# Vladimir Petrov <vladimir.petrov@gmail.com>, 2018
+# Albena Mincheva <albena_vicheva@abv.bg>, 2018
 # preslav <hackerz99999@gmail.com>, 2018
+# kirily <kiril@teracomp.eu>, 2018
+# Martin Trigaux, 2018
 # Kaloyan Naumov <kaloyan@lumnus.net>, 2018
 # Anton Vassilev, 2018
-# Vladimir Dachev <v.dachev@dalkomotors.com>, 2018
-# Vladimir Petrov <vladimir.petrov@gmail.com>, 2018
-# kirily <kiril@teracomp.eu>, 2018
 # Maria Boyadjieva <marabo2000@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-27 11:55+0000\n"
-"PO-Revision-Date: 2018-07-27 11:55+0000\n"
+"POT-Creation-Date: 2019-01-03 15:06+0000\n"
+"PO-Revision-Date: 2017-09-20 10:19+0000\n"
 "Last-Translator: Maria Boyadjieva <marabo2000@gmail.com>, 2018\n"
 "Language-Team: Bulgarian (https://www.transifex.com/odoo/teams/41243/bg/)\n"
 "MIME-Version: 1.0\n"
@@ -144,6 +145,18 @@ msgstr ""
 "или (object.parent_id and object.parent_id.subject and 'Re: %s' % "
 "object.parent_id.subject) или (object.parent_id и "
 "object.parent_id.record_name и 'Re: %s' % object.parent_id.record_name)}"
+
+#. module: mail
+#: code:addons/mail/wizard/invite.py:29
+#, python-format
+msgid "%(user_name)s invited you to follow %(document)s document: %(title)s"
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/wizard/invite.py:31
+#, python-format
+msgid "%(user_name)s invited you to follow a new document."
+msgstr ""
 
 #. module: mail
 #. openerp-web
@@ -294,22 +307,6 @@ msgid ""
 msgstr ""
 "<div class=\"o_mail_notification\">ляв <a href=\"#\" "
 "class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
-
-#. module: mail
-#: code:addons/mail/wizard/invite.py:23
-#, python-format
-msgid ""
-"<div><p>Hello,</p><p>%s invited you to follow %s document: %s.</p></div>"
-msgstr ""
-"<div><p>Привет,</p><p>%s Ви покани да последвате %s документ: %s.</p></div>"
-
-#. module: mail
-#: code:addons/mail/wizard/invite.py:26
-#, python-format
-msgid ""
-"<div><p>Hello,</p><p>%s invited you to follow a new document.</p></div>"
-msgstr ""
-"<div><p>Привет,</p><p>%s Ви покани да последвате нов документ.</p></div>"
 
 #. module: mail
 #. openerp-web
@@ -2170,6 +2167,12 @@ msgstr "Има прикачени файлове"
 #: model:ir.ui.view,arch_db:mail.view_mail_form
 msgid "Headers"
 msgstr "Горни колонтитули"
+
+#. module: mail
+#: code:addons/mail/wizard/invite.py:35
+#, python-format
+msgid "Hello,"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype_hidden

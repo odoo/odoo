@@ -3,48 +3,49 @@
 # * account
 # 
 # Translators:
-# Martin Trigaux, 2017
-# grazziano <gra.negocia@gmail.com>, 2017
-# Mateus Lopes <mateus1@gmail.com>, 2017
-# Luciano Giacomazzi <lucianogiacomazzi@gmail.com>, 2017
-# Franciele Neiva <franciele.neiva@br.ey.com>, 2017
-# zimbora <alexandre.ruffer@tkobr.com>, 2017
-# Rodrigo de Almeida Sottomaior Macedo <rmsolucoeseminformatic4@gmail.com>, 2017
 # Fernanda Gauss Pereira <nanda.gauss@gmail.com>, 2017
-# falexandresilva <falexandresilva@gmail.com>, 2017
-# Manel Tinoco <maneltinoco@gmail.com>, 2017
-# Adriel Kotviski <kotviski@gmail.com>, 2017
-# Luiz Carlos de Lima <luiz.carlos@akretion.com.br>, 2017
-# danimaribeiro <danimaribeiro@gmail.com>, 2017
-# Silmar <pinheirosilmar@gmail.com>, 2017
-# Fábio Novais <fabionovais@aptu.com.br>, 2017
-# Raphael Mendonça, 2017
-# Marina Jacques <marinajacques@gmail.com>, 2017
-# Gideoni Silva <gd.willian@gmail.com>, 2017
-# Juliene Gomes <juliene_faria@hotmail.com>, 2017
+# Franciele Neiva <franciele.neiva@br.ey.com>, 2017
 # Maicon Grahl <maicongrahl@hotmail.com>, 2017
+# Juliene Gomes <juliene_faria@hotmail.com>, 2017
 # Cesar Silveira <cesar.consultant@gmail.com>, 2017
-# Cezar José Sant Anna Junior <cezar.santanna@gmail.com>, 2017
 # Anderson Fratuci <ander.frat@gmail.com>, 2017
-# Thiago MACÊDO <thiago95macedo@gmail.com>, 2017
+# Marina Jacques <marinajacques@gmail.com>, 2017
 # Kayky de Brito <kayky_debritodossantos@hotmail.com>, 2017
+# Luiz Carlos de Lima <luiz.carlos@akretion.com.br>, 2017
+# Cezar José Sant Anna Junior <cezar.santanna@gmail.com>, 2017
 # Ademílson F. Tonato <apraqueisso@gmail.com>, 2017
+# Raphael Mendonça, 2017
+# Thiago MACÊDO <thiago95macedo@gmail.com>, 2017
 # André Augusto Firmino Cordeiro <a.cordeito@gmail.com>, 2017
+# falexandresilva <falexandresilva@gmail.com>, 2017
+# Adriel Kotviski <kotviski@gmail.com>, 2017
+# danimaribeiro <danimaribeiro@gmail.com>, 2017
+# Rodrigo de Almeida Sottomaior Macedo <rmsolucoeseminformatic4@gmail.com>, 2017
 # Luiz Carlos Zancanella Junior <junior@zancanella.com.br>, 2017
-# Yannick Belot <yannickbh@gmail.com>, 2017
-# Diego Bittencourt <diegomb86@gmail.com>, 2017
+# Fábio Novais <fabionovais@aptu.com.br>, 2017
+# Manel Tinoco <maneltinoco@gmail.com>, 2017
+# Martin Trigaux, 2017
+# zimbora <alexandre.ruffer@tkobr.com>, 2017
+# Mateus Lopes <mateus1@gmail.com>, 2017
 # nle_odoo, 2017
+# Luciano Giacomazzi <lucianogiacomazzi@gmail.com>, 2017
 # mariana rodrigues <mariana12v@gmail.com>, 2017
+# grazziano <gra.negocia@gmail.com>, 2018
 # Raphael Rodrigues <raphael0608@gmail.com>, 2018
+# Silmar <pinheirosilmar@gmail.com>, 2018
 # Hildeberto Abreu Magalhães <hildeberto@gmail.com>, 2018
-# Thiago Alves Cavalcante <tkramer.tk@gmail.com>, 2018
+# Diego Bittencourt <diegomb86@gmail.com>, 2018
+# Thiago Alves Cavalcante <thiagoalcav@gmail.com>, 2018
+# Gideoni Silva <gd.willian@gmail.com>, 2018
+# Yannick Belot <yannickbh@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-27 11:55+0000\n"
-"PO-Revision-Date: 2018-07-27 11:55+0000\n"
-"Last-Translator: Thiago Alves Cavalcante <tkramer.tk@gmail.com>, 2018\n"
+"POT-Creation-Date: 2019-01-03 15:06+0000\n"
+"PO-Revision-Date: 2017-09-20 10:13+0000\n"
+"Last-Translator: Yannick Belot <yannickbh@gmail.com>, 2018\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -387,6 +388,13 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "<span class=\"fa fa-arrow-circle-o-down\"/> Install Now"
 msgstr "<span class=\"fa fa-arrow-circle-o-down\"/> Instalar Agora"
+
+#. module: account
+#: model:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -3893,11 +3901,19 @@ msgid "Currency as per company's country."
 msgstr "Moeda por país da empresa."
 
 #. module: account
-#: code:addons/account/models/account_move.py:1609
-#: code:addons/account/models/account_move.py:1621
+#: code:addons/account/models/account_move.py:1663
+#: code:addons/account/models/account_move.py:1675
 #, python-format
 msgid "Currency exchange rate difference"
 msgstr "Diferença de taxa de câmbio"
+
+#. module: account
+#: code:addons/account/models/account.py:451
+#, python-format
+msgid ""
+"Currency field should only be set if the journal's currency is different "
+"from the company's. Leave the field blank to use company currency."
+msgstr ""
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_current_assets
@@ -11023,6 +11039,7 @@ msgstr "Relatório de Balancete"
 #: model:ir.model.fields,field_description:account.field_account_account_user_type_id
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_journal_type
 #: model:ir.model.fields,field_description:account.field_account_financial_report_type
+#: model:ir.model.fields,field_description:account.field_account_invoice_line_invoice_type
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_type
 #: model:ir.model.fields,field_description:account.field_account_invoice_type
 #: model:ir.model.fields,field_description:account.field_account_journal_type
@@ -11856,7 +11873,7 @@ msgstr ""
 "está fechado."
 
 #. module: account
-#: code:addons/account/models/account.py:253
+#: code:addons/account/models/account.py:261
 #, python-format
 msgid ""
 "You cannot remove/deactivate an account which is set on a customer or "
@@ -11866,13 +11883,21 @@ msgstr ""
 "fornecedor."
 
 #. module: account
-#: code:addons/account/models/account_move.py:1330
+#: code:addons/account/models/account.py:249
+#, python-format
+msgid ""
+"You cannot set a currency on this account as it already has some journal "
+"entries having a different foreign currency."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:1368
 #, python-format
 msgid "You cannot use deprecated account."
 msgstr "Você não pode usar conta obsoleta."
 
 #. module: account
-#: code:addons/account/models/account_move.py:1250
+#: code:addons/account/models/account_move.py:1283
 #, python-format
 msgid ""
 "You cannot use this general account in this journal, check the tab 'Entry "
@@ -11883,7 +11908,7 @@ msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:74
-#: code:addons/account/models/account_invoice.py:777
+#: code:addons/account/models/account_invoice.py:780
 #, python-format
 msgid ""
 "You cannot validate an invoice with a negative total amount. You should "
@@ -12296,11 +12321,3 @@ msgstr "wizard.multi.charts.accounts"
 #: model:ir.ui.view,arch_db:account.view_bank_statement_form
 msgid "→ Count"
 msgstr "→ Contar"
-
-#. module: account
-#: code:addons/account/models/account.py:309
-#, python-format
-msgid ""
-"Currency field should only be set if the journal's currency is different "
-"from the company's. Leave the field blank to use company currency."
-msgstr ""

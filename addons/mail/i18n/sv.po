@@ -3,26 +3,27 @@
 # * mail
 # 
 # Translators:
-# Kristoffer Grundström <kristoffer.grundstrom1983@gmail.com>, 2017
-# Martin Trigaux, 2017
-# Anders Wallenquist <anders.wallenquist@vertel.se>, 2017
-# Martin Wilderoth <martin.wilderoth@linserv.se>, 2017
 # Christelle Wehbe <libanon_cristelle@hotmail.com>, 2017
-# Haojun Zou <apollo_zhj@msn.com>, 2017
-# Patrik Lermon <patrik.lermon@gmail.com>, 2017
 # Frida E, 2017
-# Daniel Forslund <daniel.forslund@gmail.com>, 2017
 # Kim Asplund <kim.asplund@gmail.com>, 2017
 # lasch a <bmail440@gmail.com>, 2017
 # Stephen Schmidt <stephen.schmidt@linserv.se>, 2017
+# Haojun Zou <apollo_zhj@msn.com>, 2017
+# Daniel Forslund <daniel.forslund@gmail.com>, 2017
 # Robert Frykelius <robert.frykelius@linserv.se>, 2017
+# Martin Wilderoth <martin.wilderoth@linserv.se>, 2017
+# Patrik Lermon <patrik.lermon@gmail.com>, 2017
+# Kristoffer Grundström <hamnisdude@gmail.com>, 2017
+# Martin Trigaux, 2017
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2017
 # Chrille Hedberg <hedberg.chrille@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-27 11:55+0000\n"
-"PO-Revision-Date: 2018-07-27 11:55+0000\n"
+"POT-Creation-Date: 2019-01-03 15:06+0000\n"
+"PO-Revision-Date: 2017-09-20 10:19+0000\n"
 "Last-Translator: Chrille Hedberg <hedberg.chrille@gmail.com>, 2018\n"
 "Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
@@ -142,6 +143,18 @@ msgid ""
 "or (object.parent_id and object.parent_id.subject and 'Re: %s' % "
 "object.parent_id.subject) or (object.parent_id and "
 "object.parent_id.record_name and 'Re: %s' % object.parent_id.record_name)}"
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/wizard/invite.py:29
+#, python-format
+msgid "%(user_name)s invited you to follow %(document)s document: %(title)s"
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/wizard/invite.py:31
+#, python-format
+msgid "%(user_name)s invited you to follow a new document."
 msgstr ""
 
 #. module: mail
@@ -282,21 +295,6 @@ msgid ""
 msgstr ""
 "<div class=\"o_mail_notification\">kvar <a href=\"#\" "
 "class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
-
-#. module: mail
-#: code:addons/mail/wizard/invite.py:23
-#, python-format
-msgid ""
-"<div><p>Hello,</p><p>%s invited you to follow %s document: %s.</p></div>"
-msgstr ""
-
-#. module: mail
-#: code:addons/mail/wizard/invite.py:26
-#, python-format
-msgid ""
-"<div><p>Hello,</p><p>%s invited you to follow a new document.</p></div>"
-msgstr ""
-"<div><p>Hej,</p><p>%s bjöd in dig att följa ett nytt dokument.</p></div>"
 
 #. module: mail
 #. openerp-web
@@ -2107,6 +2105,12 @@ msgstr "Har bilagor"
 #: model:ir.ui.view,arch_db:mail.view_mail_form
 msgid "Headers"
 msgstr "Sidhuvuden"
+
+#. module: mail
+#: code:addons/mail/wizard/invite.py:35
+#, python-format
+msgid "Hello,"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype_hidden
