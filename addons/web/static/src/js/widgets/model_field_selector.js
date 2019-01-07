@@ -71,8 +71,8 @@ var ModelFieldSelector = Widget.extend({
      *                   the fields itself)
      * @param {boolean|function} [options.followRelations=true]
      *                  true if can follow relation when building the chain
-     * @param {boolean} [options.showSearchInput=false]
-     *                  true to show a search input to filter displayed fields
+     * @param {boolean} [options.showSearchInput=true]
+     *                  false to hide a search input to filter displayed fields
      * @param {boolean} [options.debugMode=false]
      *                  true if the widget is in debug mode, false otherwise
      */
@@ -89,7 +89,7 @@ var ModelFieldSelector = Widget.extend({
             filter: function () {return true;},
             followRelations: true,
             debugMode: false,
-            showSearchInput: false,
+            showSearchInput: true,
         }, options || {});
         this.options.filters = _.extend({
             searchable: true,

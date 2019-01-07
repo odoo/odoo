@@ -192,7 +192,7 @@ QUnit.module('ModelFieldSelector', {
         fieldSelector.destroy();
     });
 
-    QUnit.test("use the `showSearchInput` option", function (assert) {
+    QUnit.test("default `showSearchInput` option", function (assert) {
         assert.expect(6);
 
         var $target = $("#qunit-fixture");
@@ -200,7 +200,6 @@ QUnit.module('ModelFieldSelector', {
         // Create the field selector and its mock environment
         var fieldSelector = new ModelFieldSelector(null, "partner", [], {
             readonly: false,
-            showSearchInput: true,
         });
         testUtils.mock.addMockEnvironment(fieldSelector, {data: this.data});
         fieldSelector.appendTo($target);
@@ -219,6 +218,27 @@ QUnit.module('ModelFieldSelector', {
         $searchInput.val('Pro').trigger('keyup');
         assert.strictEqual($fieldSelectorPopover.find("li").length, 1, "there should only be one element");
         assert.strictEqual($fieldSelectorPopover.find("li").text().trim().replace(/\s+/g, ' '), "Product", "the available field should be the Product");
+
+        fieldSelector.destroy();
+    });
+
+    QUnit.test("false `showSearchInput` option", function (assert) {
+        assert.expect(1);
+
+        var $target = $("#qunit-fixture");
+
+        // Create the field selector and its mock environment
+        var fieldSelector = new ModelFieldSelector(null, "partner", [], {
+            readonly: false,
+            showSearchInput: false,
+        });
+        testUtils.mock.addMockEnvironment(fieldSelector, { data: this.data });
+        fieldSelector.appendTo($target);
+
+        fieldSelector.$el.trigger('focusin');
+        var $fieldSelectorPopover = fieldSelector.$(".o_field_selector_popover:visible");
+        var $searchInput = $fieldSelectorPopover.find(".o_field_selector_search input");
+        assert.strictEqual($searchInput.length, 0, "there should be no search input");
 
         fieldSelector.destroy();
     });
