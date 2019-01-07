@@ -427,27 +427,27 @@ Automated Actions (``ir.cron``)
 
 Triggers action automatically on a predefined frequency.
 
-''name''
+``name``
     Name of the automated action (Mainly used in log display)
 
-''interval_number''
+``interval_number``
     Number of *interval_type* uom between two executions of the action
 
-''interval_type''
+``interval_type``
     Unit of measure of frequency interval
 
-''numbercall''
+``numbercall``
     Number of times this action has to be run
-    If the action is expected to run indefinitely, set to ''-1''.
+    If the action is expected to run indefinitely, set to ``-1``.
 
-''doall''
+``doall``
     Boolean precising whether the missed actions have to be executed in case of
     server restarts.
 
-''model_id''
+``model_id``
     Model on which this action will be called
 
-''code''
+``code``
     Code content of the action.
     Can be a simple call to the model's method :
 
@@ -455,5 +455,5 @@ Triggers action automatically on a predefined frequency.
 
       model.<method_name>
 
-''nextcall''
+``nextcall``
     Next planned execution date of this action (date/time format)
