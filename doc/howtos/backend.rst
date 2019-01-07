@@ -28,8 +28,12 @@ necessary:
 
     odoo-bin
 
-The server is stopped by hitting ``Ctrl-C`` twice from the terminal, or by
-killing the corresponding OS process.
+.. note:: The server is stopped by hitting ``Ctrl-C`` once from the terminal.
+
+    Hitting ``Ctrl-C`` a second time (or killing the corresponding OS process)
+    will force the shutdown.
+
+    Additional information on odoo-bin usage can be found :ref:`here <reference/cmdline>`:
 
 Build an Odoo module
 ====================
@@ -84,7 +88,7 @@ A module is also a
 with a ``__init__.py`` file, containing import instructions for various Python
 files in the module.
 
-For instance, if the module has a single ``mymodule.py`` file ``__init__.py``
+For instance, if the module has a single ``mymodule.py``, file ``__init__.py``
 might contain::
 
     from . import mymodule
@@ -325,7 +329,7 @@ used (so the lowest-priority view of each type is the default view for that
 type).
 
 :ref:`View inheritance <reference/views/inheritance>` allows altering views
-declared elsewhere (adding or removing content).
+declared elsewhere (adding, removing or altering content).
 
 Generic view declaration
 ------------------------
@@ -1460,7 +1464,7 @@ for editing and merging PO/POT files.
          | - pt_BR.po # Brazilian Portuguese translation
          | (...)
 
-.. tip:: 
+.. tip::
 
    By default Odoo's POT export only extracts labels inside XML files or
    inside field definitions in Python code, but any Python string can be
@@ -1509,7 +1513,7 @@ Printed reports
 ---------------
 
 Odoo uses a report engine based on :ref:`reference/qweb`,
-`Twitter Bootstrap`_ and Wkhtmltopdf_. 
+`Twitter Bootstrap`_ and Wkhtmltopdf_.
 
 A report is a combination two elements:
 
