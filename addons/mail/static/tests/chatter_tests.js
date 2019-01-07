@@ -27,6 +27,18 @@ QUnit.module('Chatter', {
 
         this.services = mailTestUtils.getMailServices();
         this.data = {
+            'res.partner': {
+                fields: {
+                    im_status: {
+                        string: "im_status",
+                        type: "char",
+                    }
+                },
+                records: [{
+                    id: 1,
+                    im_status: 'online',
+                }]
+            },
             partner: {
                 fields: {
                     display_name: { string: "Displayed name", type: "char" },
@@ -772,7 +784,7 @@ QUnit.test('chatter: post, receive and star messages', function (assert) {
             }
             if (args.method === 'get_mention_suggestions') {
                 getSuggestionsDef.resolve();
-                return $.when([{email: "test@odoo.com", id: 1, name: "Test User"}]);
+                return $.when([[{email: "test@odoo.com", id: 1, name: "Test User"}], []]);
             }
             if (args.method === 'message_post') {
                 var lastMessageData = _.max(this.data['mail.message'].records, function (messageData) {
@@ -1308,7 +1320,7 @@ QUnit.test('chatter: discard changes on message post with post_refresh "recipien
             }
             if (args.method === 'get_mention_suggestions') {
                 getSuggestionsDef.resolve();
-                return $.when([{email: "me@odoo.com", id: 42, name: "Me"}]);
+                return $.when([[{email: "me@odoo.com", id: 42, name: "Me"}], []]);
             }
             if (args.method === 'message_format') {
                 var requested_msgs = _.filter(messages, function (msg) {

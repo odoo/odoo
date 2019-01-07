@@ -26,8 +26,14 @@ var DMChat = TwoUserChannel.extend({
 
         this._directPartnerID = data.direct_partner[0].id;
         this._name = data.custom_channel_name || data.direct_partner[0].name;
-        this._status = data.direct_partner[0].im_status;
+        this._outOfOfficeMessage = data.direct_partner[0].out_of_office_message;
+        this._outOfOfficeDateEnd = data.direct_partner[0].out_of_office_date_end;
         this._type = 'dm_chat';
+
+        this.call('mail_service', 'updateImStatus', [{
+            id: this._directPartnerID,
+            im_status: data.direct_partner[0].im_status
+        }]);
     },
 
     //--------------------------------------------------------------------------
@@ -53,10 +59,11 @@ var DMChat = TwoUserChannel.extend({
         return result;
     },
     /**
-     * @param {string} newStatus
+     * @override
+     * @return {string}
      */
-    setStatus: function (newStatus) {
-        this._status = newStatus;
+    getStatus: function () {
+        return this.call('mail_service', 'getImStatus', { partnerID: this._directPartnerID });
     },
 });
 
