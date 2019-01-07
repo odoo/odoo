@@ -75,6 +75,22 @@ var AbstractThread = Class.extend(Mixins.EventDispatcherMixin, {
         return this._name;
     },
     /**
+     * By default, threads do not have out-of-office feature
+     *
+     * @return {string|undefined}
+     */
+    getOutOfOfficeInfo: function () {
+        return undefined;
+    },
+    /**
+     * By default, threads do not have out-of-office feature
+     *
+     * @return {string|undefined}
+     */
+    getOutOfOfficeMessage: function () {
+        return undefined;
+    },
+    /**
      * Get the status of the thread (e.g. 'online', 'offline', etc.)
      *
      * @returns {string}
