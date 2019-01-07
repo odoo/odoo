@@ -1429,8 +1429,16 @@ class Root(object):
         #   (the one using the cookie). That is a special feature of the Session Javascript class.
         # - It could allow session fixation attacks.
         if not explicit_session and hasattr(response, 'set_cookie'):
+            max_age = 90
+            if request.httprequest.path != '/web/database/drop' and request.session.db:
+                configured_max_age = request.env['ir.config_parameter'].sudo().get_param('session.max_age')
+                if configured_max_age:
+                    try:
+                        max_age = int(configured_max_age)
+                    except:
+                        pass
             response.set_cookie(
-                'session_id', httprequest.session.sid, max_age=90 * 24 * 60 * 60, httponly=True)
+                'session_id', httprequest.session.sid, max_age=max_age * 24 * 60 * 60, httponly=True)
 
         return response
 
