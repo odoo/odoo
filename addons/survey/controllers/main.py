@@ -49,7 +49,7 @@ class Survey(http.Controller):
         return None
 
     @http.route('/survey/test/<model("survey.survey"):survey>', type='http', auth='user', website=True)
-    def survey_test(self, survey, token=None):
+    def survey_test(self, survey, token=None, **kwargs):
         """ Test mode for surveys: create a test answer, only for managers or officers
         testing their surveys """
         if request.env.user.has_group('survey.group_survey_manager') or \
