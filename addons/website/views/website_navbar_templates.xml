@@ -32,9 +32,9 @@
                     </li>
                 </ul>
 
-                <button type="button" class="fa fa-bars float-right d-block d-md-none o_mobile_menu_toggle" aria-label="Menu" title="Menu"/>
+                <button type="button" class="fa fa-bars float-right d-block d-md-none o_mobile_menu_toggle" aria-label="Menu" title="Menu" data-toggle="collapse" data-target="#o_website_menu" aria-controls="o_website_menu" aria-expanded="false"/>
 
-                <ul class="o_menu_sections" groups="website.group_website_designer">
+                <ul class="o_menu_sections navbar-collapse collapse" groups="website.group_website_designer" id="o_website_menu">
                     <!-- Content -->
                     <li t-if="editable" class="dropdown" id="content-menu">
                         <a id="content-menu-button" class="dropdown-toggle o-no-caret waves" data-toggle="dropdown" data-display="static" href="#">Pages</a>
