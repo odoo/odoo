@@ -416,46 +416,12 @@ var ThemeCustomizeDialog = Dialog.extend({
      * @private
      */
     _makeSCSSCusto: function (url, values) {
-        var self = this;
-        return this._rpc({ // TODO improve to be more efficient
-            route: '/web_editor/get_assets_editor_resources',
+        return this._rpc({
+            route: '/website/make_scss_custo',
             params: {
-                'key': 'website.layout',
-                'get_views': false,
-                'get_scss': true,
-                'get_js': false,
-                'bundles': false,
-                'bundles_restriction': [],
-                'only_user_custom_files': false,
+                'url': url,
+                'values': values,
             },
-        }).then(function (data) {
-            var file = _.find(data.scss[0][1], function (file) {
-                return file.url === url;
-            });
-
-            var updatedFileContent = file.arch;
-            _.each(values, function (value, name) {
-                var pattern = _.str.sprintf("'%s': %%s,\n", name);
-                var regex = new RegExp(_.str.sprintf(pattern, ".+"));
-                var replacement = _.str.sprintf(pattern, value);
-                if (regex.test(updatedFileContent)) {
-                    updatedFileContent = updatedFileContent
-                        .replace(regex, replacement);
-                } else {
-                    updatedFileContent = updatedFileContent
-                        .replace(/( *)(.*hook.*)/, _.str.sprintf('$1%s$1$2', replacement));
-                }
-            });
-
-            return self._rpc({
-                route: '/web_editor/save_scss_or_js',
-                params: {
-                    'url': file.url,
-                    'bundle_xmlid': 'web.assets_common',
-                    'content': updatedFileContent,
-                    'file_type': 'scss',
-                },
-            });
         });
     },
     /**
