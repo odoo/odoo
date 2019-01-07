@@ -191,7 +191,7 @@ To declare a record in XML, the **record** notation (using *<record>*) is recomm
         </field>
     </record>
 
-Odoo supports :ref:`custom tags <reference/data/shortcuts>` custom tags acting as syntactic sugar:
+Odoo supports :ref:`custom tags <reference/data/shortcuts>` acting as syntactic sugar:
 
 - menuitem: use it as a shortcut to declare a ``ir.ui.menu``
 - template: use it to declare a QWeb View requiring only the ``arch`` section of the view.
@@ -305,8 +305,10 @@ Python
 PEP8 options
 ------------
 
-Using a linter can help show syntax and semantic warnings or errors. Odoo
-source code tries to respect Python standard, but some of them can be ignored.
+Using a linter can help show syntax and semantic warnings or errors.
+We recommend `flake8 <https://pypi.python.org/pypi/flake8>`_ for Python and
+`jshint <http://jshint.com/install/>`_ for JavaScript.
+Odoo source code tries to respect Python standard, but some of them can be ignored.
 
 - E501: line too long
 - E301: expected 1 blank line, found 0
