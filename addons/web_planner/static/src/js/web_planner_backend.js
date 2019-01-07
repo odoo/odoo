@@ -16,6 +16,7 @@ var PlannerLauncher = planner.PlannerLauncher.extend({
         return this._rpc({
                 model: 'web.planner',
                 method: 'search_read',
+                kwargs: {context: session.user_context},
             })
             .then(function (records) {
                 _.each(records, function (planner) {

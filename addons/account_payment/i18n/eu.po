@@ -5,19 +5,25 @@
 # Translators:
 # Martin Trigaux, 2017
 # Naomi Hidalgo <naomihid96@gmail.com>, 2018
+# Mikel Lizarralde <mikellizarralde@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 13:43+0000\n"
-"PO-Revision-Date: 2018-02-19 13:43+0000\n"
-"Last-Translator: Naomi Hidalgo <naomihid96@gmail.com>, 2018\n"
+"POT-Creation-Date: 2018-07-27 11:55+0000\n"
+"PO-Revision-Date: 2018-07-27 11:55+0000\n"
+"Last-Translator: Mikel Lizarralde <mikellizarralde@gmail.com>, 2018\n"
 "Language-Team: Basque (https://www.transifex.com/odoo/teams/41243/eu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: eu\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: account_payment
+#: model:ir.ui.view,arch_db:account_payment.payment_confirmation_status
+msgid "&amp;times;"
+msgstr ""
 
 #. module: account_payment
 #: code:addons/account_payment/models/payment.py:61
@@ -60,6 +66,13 @@ msgid "<i class=\"fa fa-check-circle\"/> Pending"
 msgstr ""
 
 #. module: account_payment
+#: model:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
+msgid ""
+"<i class=\"fa fa-info\"/> You have credits card registered, you can log-in "
+"to be able to use them."
+msgstr ""
+
+#. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_report
 msgid ""
 "<span class=\"label label-info orders_label_text_align\"><i class=\"fa fa-fw"
@@ -74,11 +87,13 @@ msgid ""
 "<span class=\"label label-success orders_label_text_align\"><i class=\"fa "
 "fa-fw fa-check\"/> Done</span>"
 msgstr ""
+"<span class=\"label label-success orders_label_text_align\"><i class=\"fa "
+"fa-fw fa-check\"/> Eginda</span>"
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_report
 msgid "<strong>Transactions</strong>"
-msgstr ""
+msgstr "<strong>Transakzioak</strong>"
 
 #. module: account_payment
 #: code:addons/account_payment/models/payment.py:80
@@ -87,7 +102,7 @@ msgid "Amount Mismatch (%s)"
 msgstr ""
 
 #. module: account_payment
-#: code:addons/account_payment/controllers/payment.py:52
+#: code:addons/account_payment/controllers/payment.py:50
 #, python-format
 msgid ""
 "If we store your payment information on our server, subscription payments "
@@ -103,7 +118,7 @@ msgstr "Invoice"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_invoice_payment_tx_id
 msgid "Last Transaction"
-msgstr ""
+msgstr "Azken transakzioa"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_invoice_payment_tx_count
@@ -111,13 +126,13 @@ msgid "Number of payment transactions"
 msgstr ""
 
 #. module: account_payment
-#: code:addons/account_payment/controllers/payment.py:50
+#: code:addons/account_payment/controllers/payment.py:47
 #, python-format
 msgid "Pay & Confirm"
 msgstr "Ordaindu eta baieztatu "
 
 #. module: account_payment
-#: code:addons/account_payment/models/payment.py:119
+#: code:addons/account_payment/models/payment.py:131
 #: model:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
 #, python-format
 msgid "Pay Now"
@@ -126,7 +141,7 @@ msgstr "Ordaindu orain "
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
 msgid "Pay with"
-msgstr ""
+msgstr "Honekin ordaindu"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_invoice_payment_acquirer_id
@@ -205,7 +220,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_payment.field_account_invoice_payment_tx_ids
 #: model:ir.ui.view,arch_db:account_payment.account_invoice_view_form_inherit_payment
 msgid "Transactions"
-msgstr ""
+msgstr "Transakzioak"
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.payment_confirmation_status

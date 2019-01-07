@@ -3,27 +3,30 @@
 # * point_of_sale
 # 
 # Translators:
-# Martin Trigaux, 2017
 # Saba Khmaladze <skhmaladze@uglt.org>, 2018
 # Giorgi Melitauri <gmelitauri@live.com>, 2018
 # Gizo Kobakhidze <040168@gmail.com>, 2018
+# Dachi Darchiashvili <darcho.dd@gmail.com>, 2018
+# Martin Trigaux, 2018
+# Temur, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-08 10:30+0000\n"
-"PO-Revision-Date: 2018-01-08 10:30+0000\n"
-"Last-Translator: Gizo Kobakhidze <040168@gmail.com>, 2018\n"
+"POT-Creation-Date: 2019-01-03 15:06+0000\n"
+"PO-Revision-Date: 2017-09-20 10:21+0000\n"
+"Last-Translator: Temur, 2018\n"
 "Language-Team: Georgian (https://www.transifex.com/odoo/teams/41243/ka/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: ka\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
+"Plural-Forms: nplurals=2; plural=(n!=1);\n"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:807
-#: code:addons/point_of_sale/models/pos_order.py:816
+#: code:addons/point_of_sale/models/pos_order.py:880
+#: code:addons/point_of_sale/models/pos_order.py:889
 #, python-format
 msgid " REFUND"
 msgstr ""
@@ -62,7 +65,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1474
 #, python-format
 msgid "% discount"
-msgstr ""
+msgstr "% ფასდაკლება"
 
 #. module: point_of_sale
 #. openerp-web
@@ -70,10 +73,10 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1643
 #, python-format
 msgid "&nbsp;"
-msgstr ""
+msgstr "&nbsp;"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:83
+#: code:addons/point_of_sale/models/pos_order.py:85
 #, python-format
 msgid "(RESCUE FOR %(session)s)"
 msgstr ""
@@ -81,7 +84,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "(update)"
-msgstr ""
+msgstr "(განახლება)"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
@@ -245,17 +248,17 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1975
+#: code:addons/point_of_sale/static/src/js/screens.js:2012
 #, python-format
 msgid "? Clicking \"Confirm\" will validate the payment."
 msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1242
+#: code:addons/point_of_sale/static/src/js/screens.js:1260
 #, python-format
 msgid "A Customer Name Is Required"
-msgstr ""
+msgstr "კლიენტის სახელი აუცილებელია"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_users_pos_security_pin
@@ -357,7 +360,7 @@ msgstr "აქტიური"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1821
+#: code:addons/point_of_sale/static/src/js/screens.js:1862
 #, python-format
 msgid "Add Tip"
 msgstr ""
@@ -423,7 +426,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_make_payment_amount
 #: model:ir.ui.view,arch_db:point_of_sale.report_statement
 msgid "Amount"
-msgstr ""
+msgstr "სულ"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_journal_amount_authorized_diff
@@ -433,6 +436,15 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_order_tree
 msgid "Amount total"
+msgstr "მთლიანი რაოდენობა"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/models.js:1244
+#, python-format
+msgid ""
+"An error occurred when loading product prices. Make sure all pricelists are "
+"available in the POS."
 msgstr ""
 
 #. module: point_of_sale
@@ -454,7 +466,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1967
+#: code:addons/point_of_sale/static/src/js/screens.js:2004
 #, python-format
 msgid "Are you sure that the customer wants to  pay"
 msgstr ""
@@ -515,7 +527,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_average_price
 msgid "Average Price"
-msgstr ""
+msgstr "საშუალო ფასი"
 
 #. module: point_of_sale
 #. openerp-web
@@ -523,7 +535,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:646
 #, python-format
 msgid "Back"
-msgstr ""
+msgstr "უკან"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_bank_statement
@@ -583,10 +595,10 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:938
+#: code:addons/point_of_sale/static/src/js/screens.js:949
 #, python-format
 msgid "Button"
-msgstr ""
+msgstr "ღილაკი"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_print_via_proxy
@@ -624,7 +636,7 @@ msgstr "გაუქმებულია"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1956
+#: code:addons/point_of_sale/static/src/js/screens.js:1993
 #, python-format
 msgid "Cannot return change without a cash payment method"
 msgstr ""
@@ -675,12 +687,6 @@ msgid "Cashdrawer"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/barcode_rule.py:16
-#, python-format
-msgid "Cashier"
-msgstr ""
-
-#. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.pos_config_menu_catalog
 msgid "Catalog"
 msgstr ""
@@ -688,7 +694,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Categories"
-msgstr ""
+msgstr "კატეგორიები"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,help:point_of_sale.product_pos_category_action
@@ -707,25 +713,25 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:552
 #, python-format
 msgid "Change"
-msgstr ""
+msgstr "ცვლილება"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/chrome.js:103
+#: code:addons/point_of_sale/static/src/js/chrome.js:104
 #, python-format
 msgid "Change Cashier"
 msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1187
+#: code:addons/point_of_sale/static/src/js/screens.js:1205
 #, python-format
 msgid "Change Customer"
 msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1821
+#: code:addons/point_of_sale/static/src/js/screens.js:1862
 #, python-format
 msgid "Change Tip"
 msgstr ""
@@ -780,7 +786,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:2014
+#: code:addons/point_of_sale/static/src/js/screens.js:2053
 #, python-format
 msgid "Check your internet connection and try again."
 msgstr ""
@@ -788,7 +794,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category_child_id
 msgid "Children Categories"
-msgstr ""
+msgstr "ქვეკატეგორიები"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -813,7 +819,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:352
 #, python-format
 msgid "City"
-msgstr ""
+msgstr "ქალაქი"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,help:point_of_sale.product_product_action
@@ -846,14 +852,8 @@ msgid "Click to start a new session."
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/barcode_rule.py:15
-#, python-format
-msgid "Client"
-msgstr ""
-
-#. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/chrome.js:461
+#: code:addons/point_of_sale/static/src/js/chrome.js:462
 #, python-format
 msgid "Client Screen Unsupported. Please upgrade the PosBox"
 msgstr ""
@@ -927,11 +927,11 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1059
 #, python-format
 msgid "Confirm"
-msgstr ""
+msgstr "დამოწმება"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/chrome.js:454
+#: code:addons/point_of_sale/static/src/js/chrome.js:455
 #, python-format
 msgid "Connected, Not Owned"
 msgstr ""
@@ -960,7 +960,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1339
+#: code:addons/point_of_sale/static/src/js/screens.js:1363
 #, python-format
 msgid "Could Not Read Image"
 msgstr ""
@@ -970,7 +970,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:359
 #, python-format
 msgid "Country"
-msgstr ""
+msgstr "ქვეყანა"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category_create_uid
@@ -1022,7 +1022,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1832
+#: code:addons/point_of_sale/static/src/js/screens.js:1873
 #: code:addons/point_of_sale/static/src/xml/pos.xml:145
 #: code:addons/point_of_sale/static/src/xml/pos.xml:676
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_partner_id
@@ -1043,8 +1043,8 @@ msgid "Customer Facing Display"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:486
-#: code:addons/point_of_sale/models/pos_order.py:537
+#: code:addons/point_of_sale/models/pos_order.py:559
+#: code:addons/point_of_sale/models/pos_order.py:610
 #, python-format
 msgid "Customer Invoice"
 msgstr ""
@@ -1129,7 +1129,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/chrome.js:262
+#: code:addons/point_of_sale/static/src/js/chrome.js:263
 #, python-format
 msgid "Delete Paid Orders ?"
 msgstr ""
@@ -1143,21 +1143,21 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/chrome.js:272
+#: code:addons/point_of_sale/static/src/js/chrome.js:273
 #, python-format
 msgid "Delete Unpaid Orders ?"
 msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1190
+#: code:addons/point_of_sale/static/src/js/screens.js:1208
 #, python-format
 msgid "Deselect Customer"
 msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/chrome.js:54
+#: code:addons/point_of_sale/static/src/js/chrome.js:55
 #, python-format
 msgid "Destroy Current Order ?"
 msgstr ""
@@ -1188,7 +1188,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/chrome.js:459
+#: code:addons/point_of_sale/static/src/js/chrome.js:460
 #, python-format
 msgid "Disconnected"
 msgstr ""
@@ -1211,13 +1211,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1504
 #, python-format
 msgid "Discount:"
-msgstr ""
-
-#. module: point_of_sale
-#: code:addons/point_of_sale/models/barcode_rule.py:14
-#, python-format
-msgid "Discounted Product"
-msgstr ""
+msgstr "ფასდაკლება:"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1277,7 +1271,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
 msgid "Done"
-msgstr ""
+msgstr "დასრულებულია"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_vkeyboard
@@ -1340,18 +1334,18 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:423
 #, python-format
 msgid "Email"
-msgstr ""
+msgstr "ელ.ფოსტა"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1927
+#: code:addons/point_of_sale/static/src/js/screens.js:1975
 #, python-format
 msgid "Empty Order"
 msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:440
+#: code:addons/point_of_sale/static/src/js/screens.js:449
 #, python-format
 msgid "Empty Serial/Lot Number"
 msgstr ""
@@ -1399,7 +1393,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1268
+#: code:addons/point_of_sale/static/src/js/screens.js:1292
 #, python-format
 msgid "Error: Could not Save Changes"
 msgstr ""
@@ -1438,7 +1432,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "Extra Info"
-msgstr ""
+msgstr "დამატებითი ინფორმაცია"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.customer_facing_display_html
@@ -1641,7 +1635,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category_image
 msgid "Image"
-msgstr ""
+msgstr "გამოსახულება"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1668,7 +1662,7 @@ msgid "In Progress"
 msgstr "მიმდინარე"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:468
+#: code:addons/point_of_sale/models/pos_order.py:541
 #, python-format
 msgid "In order to delete a sale, it must be new or cancelled."
 msgstr ""
@@ -1769,7 +1763,7 @@ msgstr ""
 #: model:ir.model,name:point_of_sale.model_account_journal
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_journal_id
 msgid "Journal"
-msgstr ""
+msgstr "ჟურნალი"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -1871,11 +1865,11 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/models.js:518
+#: code:addons/point_of_sale/static/src/js/models.js:531
 #: code:addons/point_of_sale/static/src/xml/pos.xml:38
 #, python-format
 msgid "Loading"
-msgstr ""
+msgstr "იტვირთება"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_location_id
@@ -1902,7 +1896,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/models.js:2339
+#: code:addons/point_of_sale/static/src/js/models.js:2371
 #, python-format
 msgid "Lot/Serial Number(s) Required"
 msgstr ""
@@ -1965,13 +1959,13 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:553
 #, python-format
 msgid "Method"
-msgstr ""
+msgstr "მეთოდი"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.product_product_consumable
 #: model:product.template,name:point_of_sale.product_product_consumable_product_template
 msgid "Miscellaneous"
-msgstr ""
+msgstr "სხვადასხვაგვარი"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
@@ -2007,17 +2001,10 @@ msgid "Name"
 msgstr "სახელი"
 
 #. module: point_of_sale
-#. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1937
-#, python-format
-msgid "Negative Bank Payment"
-msgstr ""
-
-#. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
 #: selection:pos.order,state:0 selection:report.pos.order,state:0
 msgid "New"
-msgstr ""
+msgstr "ახალი"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -2032,7 +2019,13 @@ msgid "Next Order"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:140
+#: code:addons/point_of_sale/models/pos_order.py:1089
+#, python-format
+msgid "No Taxes"
+msgstr ""
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_order.py:142
 #, python-format
 msgid ""
 "No cash statement found for this session. Unable to record returned cash."
@@ -2052,11 +2045,11 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:2067
+#: code:addons/point_of_sale/static/src/js/screens.js:2106
 #: code:addons/point_of_sale/static/src/xml/pos.xml:361
 #, python-format
 msgid "None"
-msgstr ""
+msgstr "არცერთი"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
@@ -2073,7 +2066,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "Notes"
-msgstr ""
+msgstr "ჩანაწერები"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_nb_print
@@ -2088,7 +2081,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/chrome.js:401
+#: code:addons/point_of_sale/static/src/js/chrome.js:402
 #, python-format
 msgid "Offline"
 msgstr ""
@@ -2113,11 +2106,11 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1236
 #, python-format
 msgid "Ok"
-msgstr ""
+msgstr "ოკ"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:441
+#: code:addons/point_of_sale/static/src/js/screens.js:450
 #, python-format
 msgid "One or more product(s) required serial/lot number."
 msgstr ""
@@ -2138,7 +2131,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1325
+#: code:addons/point_of_sale/static/src/js/screens.js:1349
 #, python-format
 msgid "Only web-compatible Image formats such as .png or .jpeg are supported"
 msgstr ""
@@ -2146,7 +2139,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_search
 msgid "Open"
-msgstr ""
+msgstr "ღია"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_open_statement
@@ -2203,7 +2196,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session_start_at
 msgid "Opening Date"
-msgstr ""
+msgstr "გახსნის თარიღ"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.account_cashbox_line_action
@@ -2244,8 +2237,8 @@ msgstr "შეკვეთა"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/models.js:1922
-#: code:addons/point_of_sale/static/src/js/models.js:1962
+#: code:addons/point_of_sale/static/src/js/models.js:1946
+#: code:addons/point_of_sale/static/src/js/models.js:1986
 #, python-format
 msgid "Order "
 msgstr ""
@@ -2299,7 +2292,7 @@ msgid "Order Sequence Number"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:498
+#: code:addons/point_of_sale/models/pos_order.py:571
 #, python-format
 msgid "Order is not paid."
 msgstr ""
@@ -2336,7 +2329,7 @@ msgid "POS Journals"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_config.py:335
+#: code:addons/point_of_sale/models/pos_config.py:341
 #, python-format
 msgid "POS Order %s"
 msgstr ""
@@ -2367,7 +2360,7 @@ msgid "POS Sales"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_config.py:344
+#: code:addons/point_of_sale/models/pos_config.py:350
 #, python-format
 msgid "POS order line %s"
 msgstr ""
@@ -2391,7 +2384,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category_parent_id
 msgid "Parent Category"
-msgstr ""
+msgstr "მშობელი კატეგორია"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_statement
@@ -2507,7 +2500,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:512
 #, python-format
 msgid "Phone"
-msgstr ""
+msgstr "ტელეფონი"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2533,19 +2526,19 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1966
+#: code:addons/point_of_sale/static/src/js/screens.js:2003
 #, python-format
 msgid "Please Confirm Large Amount"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:296
+#: code:addons/point_of_sale/models/pos_order.py:344
 #, python-format
 msgid "Please define income account for this product: \"%s\" (id:%d)."
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:514
+#: code:addons/point_of_sale/models/pos_order.py:587
 #, python-format
 msgid "Please provide a partner for the sale."
 msgstr ""
@@ -2559,7 +2552,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:2005
+#: code:addons/point_of_sale/static/src/js/screens.js:2044
 #, python-format
 msgid "Please select the Customer"
 msgstr ""
@@ -2753,14 +2746,8 @@ msgid "Price Unit"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/barcode_rule.py:13
-#, python-format
-msgid "Priced Product"
-msgstr ""
-
-#. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:2149
+#: code:addons/point_of_sale/static/src/js/screens.js:2230
 #: code:addons/point_of_sale/static/src/xml/pos.xml:388
 #: code:addons/point_of_sale/static/src/xml/pos.xml:461
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_pricelist_id
@@ -2811,19 +2798,37 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/chrome.js:389
+#: code:addons/point_of_sale/static/src/js/chrome.js:390
 #, python-format
 msgid "Printer"
 msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/devices.js:430
+#: code:addons/point_of_sale/static/src/js/devices.js:437
 #, python-format
 msgid "Printing Error: "
 msgstr ""
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/screens.js:1569
+#, python-format
+msgid "Printing is not supported on some android browsers"
+msgstr ""
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/screens.js:1570
+#, python-format
+msgid ""
+"Printing is not supported on some android browsers due to no default "
+"printing protocol is available. It is possible to print your tickets by "
+"making use of an IoT Box."
+msgstr ""
+
+#. module: point_of_sale
+#: model:ir.model,name:point_of_sale.model_product_product
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line_product_id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_pack_operation_lot_product_id
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_product_id
@@ -2836,7 +2841,7 @@ msgstr "პროდუქტი"
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_product_categ_id
 #: model:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
 msgid "Product Category"
-msgstr ""
+msgstr "პროდუქტის კატეგორია"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -2851,13 +2856,13 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_product_qty
 msgid "Product Quantity"
-msgstr ""
+msgstr "პროდუქტის რაოდენობა"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_product_template
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_product_tmpl_id
 msgid "Product Template"
-msgstr ""
+msgstr "პროდუქტის შაბლონი"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_product_uom
@@ -2997,7 +3002,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session_user_id
 msgid "Responsible"
-msgstr ""
+msgstr "პასუხისმგებელი"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_restrict_price_control
@@ -3015,7 +3020,7 @@ msgid "Resume"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:823
+#: code:addons/point_of_sale/models/pos_order.py:896
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 #, python-format
 msgid "Return Products"
@@ -3078,7 +3083,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/chrome.js:397
+#: code:addons/point_of_sale/static/src/js/chrome.js:398
 #, python-format
 msgid "Scale"
 msgstr ""
@@ -3104,7 +3109,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/chrome.js:380
+#: code:addons/point_of_sale/static/src/js/chrome.js:381
 #, python-format
 msgid "Scanner"
 msgstr ""
@@ -3155,20 +3160,20 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:2137
+#: code:addons/point_of_sale/static/src/js/screens.js:2182
 #, python-format
 msgid "Select pricelist"
 msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:2078
+#: code:addons/point_of_sale/static/src/js/screens.js:2117
 #, python-format
 msgid "Select tax"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:236
+#: code:addons/point_of_sale/models/pos_order.py:249
 #, python-format
 msgid "Selected orders do not have the same session!"
 msgstr ""
@@ -3199,13 +3204,13 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:2018
+#: code:addons/point_of_sale/static/src/js/screens.js:2057
 #, python-format
 msgid "Server Error"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_config.py:447
+#: code:addons/point_of_sale/models/pos_config.py:454
 #: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_pos_session_id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_make_payment_session_id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_session_id
@@ -3244,7 +3249,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1185
+#: code:addons/point_of_sale/static/src/js/screens.js:1203
 #, python-format
 msgid "Set Customer"
 msgstr ""
@@ -3298,7 +3303,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:42
 #, python-format
 msgid "Skip"
-msgstr ""
+msgstr "გამოტოვება"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_print_skip_screen
@@ -3385,7 +3390,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:348
 #, python-format
 msgid "Street"
-msgstr ""
+msgstr "ქუჩა"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.limon
@@ -3399,7 +3404,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line_price_subtotal_incl
 #, python-format
 msgid "Subtotal"
-msgstr ""
+msgstr "ქვეჯამი"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line_price_subtotal
@@ -3461,11 +3466,11 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/models/pos_order.py:325
-#: code:addons/point_of_sale/static/src/js/screens.js:2091
+#: code:addons/point_of_sale/models/pos_order.py:376
+#: code:addons/point_of_sale/static/src/js/screens.js:2136
 #, python-format
 msgid "Tax"
-msgstr ""
+msgstr "გადასახადი"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_saledetails
@@ -3483,7 +3488,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:452
 #, python-format
 msgid "Tax ID"
-msgstr ""
+msgstr "საგადასახადო იდენტიფიკატორი"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_tax_regime
@@ -3509,10 +3514,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_amount_tax
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line_tax_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line_tax_ids_after_fiscal_position
+#: model:ir.ui.menu,name:point_of_sale.menu_action_tax_form_open
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 #: model:ir.ui.view,arch_db:point_of_sale.report_saledetails
 msgid "Taxes"
-msgstr ""
+msgstr "გადასახადები"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3527,7 +3533,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:748
 #, python-format
 msgid "Tel:"
-msgstr ""
+msgstr "ტელ:"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3537,7 +3543,7 @@ msgid "Tendered"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:284
+#: code:addons/point_of_sale/models/pos_order.py:332
 #, python-format
 msgid "The POS order must have lines when calling this method"
 msgstr ""
@@ -3613,14 +3619,14 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:2013
+#: code:addons/point_of_sale/static/src/js/screens.js:2052
 #, python-format
 msgid "The order could not be sent"
 msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:2024
+#: code:addons/point_of_sale/static/src/js/screens.js:2063
 #, python-format
 msgid "The order could not be sent to the server due to an unknown error"
 msgstr ""
@@ -3659,7 +3665,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1340
+#: code:addons/point_of_sale/static/src/js/screens.js:1364
 #, python-format
 msgid "The provided file could not be read due to an unknown error"
 msgstr ""
@@ -3677,8 +3683,16 @@ msgid "The receipt will automatically be printed at the end of each order."
 msgstr ""
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_config.py:248
+#, python-format
+msgid ""
+"The selected pricelists must belong to no company or the company of the "
+"point of sale."
+msgstr ""
+
+#. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:2019
+#: code:addons/point_of_sale/static/src/js/screens.js:2058
 #, python-format
 msgid "The server encountered an error while receiving your order."
 msgstr ""
@@ -3714,7 +3728,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1957
+#: code:addons/point_of_sale/static/src/js/screens.js:1994
 #, python-format
 msgid ""
 "There is no cash payment method available in this point of sale to handle the change.\n"
@@ -3729,7 +3743,7 @@ msgid "There is no cash register for this PoS Session"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:764
+#: code:addons/point_of_sale/models/pos_order.py:837
 #, python-format
 msgid ""
 "There is no receivable account defined to make payment for the partner: "
@@ -3737,14 +3751,14 @@ msgid ""
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:762
+#: code:addons/point_of_sale/models/pos_order.py:835
 #, python-format
 msgid "There is no receivable account defined to make payment."
 msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1928
+#: code:addons/point_of_sale/static/src/js/screens.js:1976
 #, python-format
 msgid ""
 "There must be at least one product in your order before it can be validated"
@@ -3788,7 +3802,7 @@ msgid ""
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:522
+#: code:addons/point_of_sale/models/pos_order.py:595
 #, python-format
 msgid ""
 "This invoice has been created from the point of sale session: <a href=# "
@@ -3804,7 +3818,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/chrome.js:273
+#: code:addons/point_of_sale/static/src/js/chrome.js:274
 #, python-format
 msgid ""
 "This operation will destroy all unpaid orders in the browser. You will lose "
@@ -3814,7 +3828,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/chrome.js:263
+#: code:addons/point_of_sale/static/src/js/chrome.js:264
 #, python-format
 msgid ""
 "This operation will permanently destroy all paid orders from the local "
@@ -3841,7 +3855,7 @@ msgid ""
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:626
+#: code:addons/point_of_sale/models/pos_order.py:699
 #, python-format
 msgid ""
 "This transfer has been created from the point of sale session: <a href=# "
@@ -3879,7 +3893,7 @@ msgid "To Weigh With Scale"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:803
+#: code:addons/point_of_sale/models/pos_order.py:876
 #, python-format
 msgid ""
 "To return product(s), you need to open a session that will be used to "
@@ -3895,7 +3909,7 @@ msgstr "დღეს"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_amount_total
 #: model:ir.ui.view,arch_db:point_of_sale.report_saledetails
 msgid "Total"
-msgstr ""
+msgstr "ჯამი"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session_cash_register_total_entry_encoding
@@ -3947,10 +3961,10 @@ msgstr ""
 #: model:ir.ui.view,arch_db:point_of_sale.report_saledetails
 #, python-format
 msgid "Total:"
-msgstr ""
+msgstr "ჯამი:"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:345
+#: code:addons/point_of_sale/models/pos_order.py:396
 #, python-format
 msgid "Trade Receivables"
 msgstr ""
@@ -3966,7 +3980,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line_price_unit
 msgid "Unit Price"
-msgstr ""
+msgstr "ერთეულის ფასი"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3977,14 +3991,14 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:2061
+#: code:addons/point_of_sale/static/src/js/screens.js:2062
 #, python-format
 msgid "Unknown Error"
 msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1337
+#: code:addons/point_of_sale/static/src/js/screens.js:1348
 #, python-format
 msgid "Unsupported File Format"
 msgstr ""
@@ -4098,7 +4112,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_stock_location_id
 msgid "Warehouse"
-msgstr ""
+msgstr "საწყობი"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.customer_facing_display_html
@@ -4111,12 +4125,6 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1366
 #, python-format
 msgid "Weighing"
-msgstr ""
-
-#. module: point_of_sale
-#: code:addons/point_of_sale/models/barcode_rule.py:12
-#, python-format
-msgid "Weighted Product"
 msgstr ""
 
 #. module: point_of_sale
@@ -4154,7 +4162,7 @@ msgid ""
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:458
+#: code:addons/point_of_sale/models/pos_order.py:531
 #, python-format
 msgid ""
 "You cannot change the partner of a POS order for which an invoice has "
@@ -4177,19 +4185,11 @@ msgstr ""
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/product.py:21
+#: code:addons/point_of_sale/models/product.py:38
 #, python-format
 msgid ""
 "You cannot delete a product saleable in point of sale while a session is "
 "still opened."
-msgstr ""
-
-#. module: point_of_sale
-#. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1938
-#, python-format
-msgid ""
-"You cannot have a negative amount in a Bank payment. Use a cash payment "
-"method to return money to the customer."
 msgstr ""
 
 #. module: point_of_sale
@@ -4213,19 +4213,19 @@ msgid ""
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:778
+#: code:addons/point_of_sale/models/pos_order.py:851
 #, python-format
 msgid "You have to open at least one cashbox."
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:926
+#: code:addons/point_of_sale/models/pos_order.py:999
 #, python-format
 msgid "You have to select a pricelist in the sale form !"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:912
+#: code:addons/point_of_sale/models/pos_order.py:985
 #, python-format
 msgid ""
 "You have to select a pricelist in the sale form !\n"
@@ -4259,7 +4259,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:2006
+#: code:addons/point_of_sale/static/src/js/screens.js:2045
 #, python-format
 msgid "You need to select the customer before you can invoice an order."
 msgstr ""
@@ -4272,14 +4272,14 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/chrome.js:55
+#: code:addons/point_of_sale/static/src/js/chrome.js:56
 #, python-format
 msgid "You will lose any data associated with the current order"
 msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1269
+#: code:addons/point_of_sale/static/src/js/screens.js:1286
 #, python-format
 msgid "Your Internet connection is probably down."
 msgstr ""
@@ -4305,7 +4305,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:356
 #, python-format
 msgid "ZIP"
-msgstr ""
+msgstr "ZIP"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.courgette
@@ -4376,7 +4376,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1292
 #, python-format
 msgid "discount"
-msgstr ""
+msgstr "ფასდაკლება"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -4397,20 +4397,20 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1971
+#: code:addons/point_of_sale/static/src/js/screens.js:2008
 #, python-format
 msgid "for an order of"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_config.py:323
+#: code:addons/point_of_sale/models/pos_config.py:329
 #, python-format
 msgid "not used"
 msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/chrome.js:292
+#: code:addons/point_of_sale/static/src/js/chrome.js:293
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1216
 #, python-format
 msgid "paid orders"
@@ -4443,7 +4443,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/models/pos_order.py:145
+#: code:addons/point_of_sale/models/pos_order.py:147
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1590
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1645
 #, python-format
@@ -4467,7 +4467,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/chrome.js:284
+#: code:addons/point_of_sale/static/src/js/chrome.js:285
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1217
 #, python-format
 msgid "unpaid orders"

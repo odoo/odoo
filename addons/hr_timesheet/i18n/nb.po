@@ -7,13 +7,14 @@
 # Jorunn D. Newth, 2017
 # Viktor Basso <viktor@voit.no>, 2017
 # Jan Pedro Tumusok <jpt@eyenetworks.no>, 2017
+# Aleksander, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 13:42+0000\n"
-"PO-Revision-Date: 2018-02-19 13:42+0000\n"
-"Last-Translator: Jan Pedro Tumusok <jpt@eyenetworks.no>, 2017\n"
+"POT-Creation-Date: 2018-08-16 14:27+0000\n"
+"PO-Revision-Date: 2018-08-16 14:27+0000\n"
+"Last-Translator: Aleksander, 2018\n"
 "Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -66,7 +67,7 @@ msgstr "Tillat timelister"
 #. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_form
 msgid "Analytic Entry"
-msgstr ""
+msgstr "Analytiske registrering"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_account_analytic_line
@@ -81,7 +82,7 @@ msgstr "Apple App Store"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user_hours_delay
 msgid "Avg. Plan.-Eff."
-msgstr ""
+msgstr "Gj.snitt effektivitet"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings_module_project_timesheet_synchro
@@ -91,7 +92,7 @@ msgstr "Awesome Timesheet"
 #. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
 msgid "Billing"
-msgstr ""
+msgstr "Fakturering"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_report
@@ -131,11 +132,13 @@ msgid ""
 "Computed as difference between planned hours by the project manager and the "
 "total hours of the task."
 msgstr ""
+"Beregnet som: Total tid - estimert tid. Det gir differansen mellom tiden "
+"estimert av prosjektlederen og den reelle tiden det tok å fullføre oppgaven."
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task_total_hours
 msgid "Computed as: Time Spent + Remaining Time."
-msgstr ""
+msgstr "Beregnet som: Tid brukt + gjenstående tid."
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task_total_hours_spent
@@ -145,7 +148,7 @@ msgstr ""
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task_effective_hours
 msgid "Computed using the sum of the task work done."
-msgstr ""
+msgstr "Beregnet ved sum av oppgaver fullført."
 
 #. module: hr_timesheet
 #: model:ir.ui.menu,name:hr_timesheet.hr_timesheet_menu_configuration
@@ -161,7 +164,7 @@ msgstr "Dato"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task_delay_hours
 msgid "Delay Hours"
-msgstr ""
+msgstr "Timer forsinket"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line_department_id
@@ -210,6 +213,11 @@ msgstr "Grupper etter"
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task_effective_hours
 msgid "Hours Spent"
 msgstr "Timer brukt"
+
+#. module: hr_timesheet
+#: model:ir.ui.view,arch_db:hr_timesheet.view_task_tree2_inherited
+msgid "Initially Planned Hours"
+msgstr "Opprinnelig planlagte timer"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings_module_project_timesheet_holidays

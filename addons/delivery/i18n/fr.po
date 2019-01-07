@@ -20,7 +20,7 @@
 # Florian Hatat, 2017
 # Tony Galmiche <tony.galmiche@infosaone.com>, 2017
 # Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2017
-# lap.odoo <lap@odoo.com>, 2017
+# Laura Piraux <lap@odoo.com>, 2017
 # Xavier Symons <xsy@openerp.com>, 2017
 # Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2017
 # Not Telling <levequevincel2@gmail.com>, 2017
@@ -471,6 +471,13 @@ msgid "Error: no matching grid."
 msgstr "Erreur : aucune grille tarifaire correspondante."
 
 #. module: delivery
+#: code:addons/delivery/models/delivery_carrier.py:206
+#: code:addons/delivery/models/delivery_grid.py:50
+#, python-format
+msgid "Error: this delivery method is not available for this address."
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_delivery_price
 msgid "Estimated Delivery Price"
 msgstr "Prix de livraison estimé"
@@ -498,6 +505,7 @@ msgid "Fixed Price"
 msgstr "Forfait"
 
 #. module: delivery
+#: model:delivery.carrier,name:delivery.free_delivery_carrier
 #: model:product.product,name:delivery.product_product_delivery
 #: model:product.template,name:delivery.product_product_delivery_product_template
 msgid "Free delivery charges"
@@ -690,6 +698,7 @@ msgstr ""
 " les frais de livraison."
 
 #. module: delivery
+#: model:delivery.carrier,name:delivery.normal_delivery_carrier
 #: model:product.product,name:delivery.product_product_delivery_normal
 #: model:product.template,name:delivery.product_product_delivery_normal_product_template
 msgid "Normal Delivery Charges"
@@ -881,7 +890,7 @@ msgstr "Poids d'expédition"
 #: model:ir.ui.view,arch_db:delivery.report_package_barcode_delivery
 #: model:ir.ui.view,arch_db:delivery.report_package_barcode_small_delivery
 msgid "Shipping Weight:"
-msgstr ""
+msgstr "Poids de livraison:"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_product_product_hs_code
@@ -902,6 +911,7 @@ msgid "Stock Move"
 msgstr "Mouvement de stock"
 
 #. module: delivery
+#: model:delivery.carrier,name:delivery.delivery_carrier
 #: model:product.product,name:delivery.product_product_delivery_poste
 #: model:product.template,name:delivery.product_product_delivery_poste_product_template
 msgid "The Poste"

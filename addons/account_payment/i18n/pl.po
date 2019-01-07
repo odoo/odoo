@@ -9,13 +9,15 @@
 # zbik2607 <darek@krokus.com.pl>, 2017
 # Patryk Openglobe <patryk.walentowicz@openglobe.pl>, 2017
 # Tomasz Leppich <t.leppich@gmail.com>, 2018
+# Paweł Wodyński <pw@myodoo.pl>, 2018
+# Maksym <ms@myodoo.pl>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 13:43+0000\n"
-"PO-Revision-Date: 2018-02-19 13:43+0000\n"
-"Last-Translator: Tomasz Leppich <t.leppich@gmail.com>, 2018\n"
+"POT-Creation-Date: 2018-07-27 11:55+0000\n"
+"PO-Revision-Date: 2018-07-27 11:55+0000\n"
+"Last-Translator: Maksym <ms@myodoo.pl>, 2018\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,10 +26,15 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
 
 #. module: account_payment
+#: model:ir.ui.view,arch_db:account_payment.payment_confirmation_status
+msgid "&amp;times;"
+msgstr "&amp;times;"
+
+#. module: account_payment
 #: code:addons/account_payment/models/payment.py:61
 #, python-format
 msgid "<%s>  transaction (%s) invoice confirmation failed : <%s>"
-msgstr ""
+msgstr "<%s> Transakcja (%s) nie powiodła się : <%s>"
 
 #. module: account_payment
 #: code:addons/account_payment/models/payment.py:45
@@ -39,7 +46,7 @@ msgstr "<%s> Transakcja (%s) nie powiodła się : <%s>"
 #: code:addons/account_payment/models/payment.py:52
 #, python-format
 msgid "<%s> transaction (%s) invalid state : %s"
-msgstr ""
+msgstr "<%s> transakcja (%s) nieprawidłowy stan : %s"
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
@@ -64,6 +71,15 @@ msgstr "<i class=\"fa fa-check-circle\"/> Zapłacone"
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
 msgid "<i class=\"fa fa-check-circle\"/> Pending"
 msgstr "<i class=\"fa fa-check-circle\"/> Oczekujące"
+
+#. module: account_payment
+#: model:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
+msgid ""
+"<i class=\"fa fa-info\"/> You have credits card registered, you can log-in "
+"to be able to use them."
+msgstr ""
+"<i class=\"fa fa-info\"/> Masz zarejestrowaną kartę kredytową, możesz się "
+"zalogować, aby móc z niej korzystać."
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_report
@@ -92,15 +108,17 @@ msgstr "<b>Transakcje</b>"
 #: code:addons/account_payment/models/payment.py:80
 #, python-format
 msgid "Amount Mismatch (%s)"
-msgstr ""
+msgstr "Niedopasowanie ilości (%s)"
 
 #. module: account_payment
-#: code:addons/account_payment/controllers/payment.py:52
+#: code:addons/account_payment/controllers/payment.py:50
 #, python-format
 msgid ""
 "If we store your payment information on our server, subscription payments "
 "will be made automatically."
 msgstr ""
+"Jeśli przechowujemy informacje dotyczące płatności na naszym serwerze, "
+"płatności za subskrypcję będą dokonywane automatycznie."
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_invoice
@@ -119,13 +137,13 @@ msgid "Number of payment transactions"
 msgstr "Liczba transakcji płatniczych"
 
 #. module: account_payment
-#: code:addons/account_payment/controllers/payment.py:50
+#: code:addons/account_payment/controllers/payment.py:47
 #, python-format
 msgid "Pay & Confirm"
 msgstr "Zapłać i potwierdź"
 
 #. module: account_payment
-#: code:addons/account_payment/models/payment.py:119
+#: code:addons/account_payment/models/payment.py:131
 #: model:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
 #, python-format
 msgid "Pay Now"
@@ -164,6 +182,8 @@ msgid ""
 "The invoice was not confirmed despite response from the acquirer (%s): "
 "invoice amount is %r but acquirer replied with %r."
 msgstr ""
+"Faktura nie została potwierdzona pomimo odpowiedzi od nabywcy (%s): kwota "
+"faktury wynosi %r ale nabywca odpowiedział %r."
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_error

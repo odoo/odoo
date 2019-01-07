@@ -5,19 +5,22 @@
 # Translators:
 # Yihya Hugirat <hugirat@gmail.com>, 2017
 # שהאב חוסיין <shhab89@gmail.com>, 2018
+# Martin Trigaux, 2018
+# ExcaliberX <excaliberx@gmail.com>, 2018
+# Leandro Noijovich <eliel.sorcerer@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-02-19 13:43+0000\n"
 "PO-Revision-Date: 2018-02-19 13:43+0000\n"
-"Last-Translator: שהאב חוסיין <shhab89@gmail.com>, 2018\n"
+"Last-Translator: Leandro Noijovich <eliel.sorcerer@gmail.com>, 2018\n"
 "Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: he\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: (n % 10 == 0 && n % 1 == 0 && n > 10) ? 2 : 3;\n"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_help
@@ -27,7 +30,7 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_name
 msgid "Action Name"
-msgstr ""
+msgstr "שם פעולה"
 
 #. module: base_automation
 #: model:ir.model,name:base_automation.model_base_automation_line_test
@@ -42,12 +45,12 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_state
 msgid "Action To Do"
-msgstr ""
+msgstr "מטלה לביצוע"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_type
 msgid "Action Type"
-msgstr ""
+msgstr "סוג פעולה"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_active
@@ -63,7 +66,7 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_partner_ids
 msgid "Add Followers"
-msgstr ""
+msgstr "הוסף עוקבים"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_filter_domain
@@ -84,12 +87,12 @@ msgstr ""
 #: model:ir.actions.act_window,name:base_automation.base_automation_act
 #: model:ir.ui.menu,name:base_automation.menu_base_automation_form
 msgid "Automated Actions"
-msgstr ""
+msgstr "פעולות אוטומטיות"
 
 #. module: base_automation
 #: model:ir.ui.view,arch_db:base_automation.view_base_automation_tree
 msgid "Automation"
-msgstr ""
+msgstr "אוטומציה"
 
 #. module: base_automation
 #: model:ir.actions.server,name:base_automation.ir_cron_data_base_automation_check_ir_actions_server
@@ -189,7 +192,7 @@ msgstr ""
 #. module: base_automation
 #: selection:base.automation.lead.test,state:0
 msgid "Closed"
-msgstr ""
+msgstr "סגור"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation_on_change_fields
@@ -218,12 +221,12 @@ msgstr "נוצר ב-"
 #. module: base_automation
 #: selection:base.automation,trg_date_range_type:0
 msgid "Days"
-msgstr ""
+msgstr "ימים"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test_deadline
 msgid "Deadline"
-msgstr ""
+msgstr "תאריך יעד"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation_trg_date_range
@@ -253,12 +256,12 @@ msgstr "השם המוצג"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_template_id
 msgid "Email Template"
-msgstr ""
+msgstr "תבנית דוא\"ל"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_xml_id
 msgid "External ID"
-msgstr ""
+msgstr "ID חיצוני"
 
 #. module: base_automation
 #: selection:base.automation,trg_date_range_type:0
@@ -299,7 +302,7 @@ msgstr "סמן כלקוח"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test_date_action_last
 msgid "Last Action"
-msgstr ""
+msgstr "פעולה אחרונה"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation___last_update
@@ -425,7 +428,7 @@ msgstr "שותף"
 #. module: base_automation
 #: selection:base.automation.lead.test,state:0
 msgid "Pending"
-msgstr ""
+msgstr "ממתינה"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test_priority
@@ -574,4 +577,4 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model,name:base_automation.model_ir_actions_server
 msgid "ir.actions.server"
-msgstr ""
+msgstr "ir.actions.server"

@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import contextlib
-import io
+import tempfile
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError
@@ -30,7 +29,7 @@ class BaseUpdateTranslations(models.TransientModel):
     def act_update(self):
         this = self[0]
         lang_name = self._get_lang_name(this.lang)
-        with contextlib.closing(io.BytesIO()) as buf:
-            tools.trans_export(this.lang, ['all'], buf, 'csv', self._cr)
-            tools.trans_load_data(self._cr, buf, 'csv', this.lang, lang_name=lang_name)
+        with tempfile.NamedTemporaryFile() as buf:
+            tools.trans_export(this.lang, ['all'], buf, 'po', self._cr)
+            tools.trans_load_data(self._cr, buf, 'po', this.lang, lang_name=lang_name)
         return {'type': 'ir.actions.act_window_close'}

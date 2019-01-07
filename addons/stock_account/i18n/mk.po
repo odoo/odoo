@@ -5,13 +5,14 @@
 # Translators:
 # Martin Trigaux, 2017
 # Aleksandar Vangelovski <aleksandarv@hbee.eu>, 2017
+# Anica Milanova, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-30 13:11+0000\n"
-"PO-Revision-Date: 2017-11-30 13:11+0000\n"
-"Last-Translator: Aleksandar Vangelovski <aleksandarv@hbee.eu>, 2017\n"
+"POT-Creation-Date: 2018-07-27 11:55+0000\n"
+"PO-Revision-Date: 2018-07-27 11:55+0000\n"
+"Last-Translator: Anica Milanova, 2018\n"
 "Language-Team: Macedonian (https://www.transifex.com/odoo/teams/41243/mk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,7 +23,7 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_move
 msgid "Account Entry"
-msgstr ""
+msgstr "Внес на сметка"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move_account_move_ids
@@ -32,17 +33,17 @@ msgstr ""
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_category_property_form
 msgid "Account Stock Properties"
-msgstr ""
+msgstr "Својства на сметката за залиха"
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_move_form_inherit
 msgid "Accounting Entries"
-msgstr ""
+msgstr "Сметководствени внесови"
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_location_form_inherit
 msgid "Accounting Information"
-msgstr ""
+msgstr "Сметководствени информации"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_res_config_settings_module_stock_landed_costs
@@ -65,11 +66,12 @@ msgstr ""
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
+#: model:ir.ui.view,arch_db:stock_account.view_stock_quantity_history
 msgid "Cancel"
 msgstr "Откажи"
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:452
+#: code:addons/stock_account/models/stock.py:501
 #, python-format
 msgid ""
 "Cannot find a stock input account for the product %s. You must define one on"
@@ -77,7 +79,7 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:454
+#: code:addons/stock_account/models/stock.py:503
 #, python-format
 msgid ""
 "Cannot find a stock output account for the product %s. You must define one "
@@ -88,17 +90,17 @@ msgstr ""
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
 msgid "Change Price"
-msgstr ""
+msgstr "Промени цена"
 
 #. module: stock_account
 #: model:ir.actions.act_window,name:stock_account.action_view_change_standard_price
 #: model:ir.model,name:stock_account.model_stock_change_standard_price
 #: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
 msgid "Change Standard Price"
-msgstr ""
+msgstr "Промени стандардна цена"
 
 #. module: stock_account
-#: code:addons/stock_account/models/product.py:243
+#: code:addons/stock_account/models/product.py:404
 #, python-format
 msgid ""
 "Changing your cost method is an important change that will impact your "
@@ -111,14 +113,17 @@ msgid ""
 "Choose the accounting date at which you want to value the stock moves "
 "created by the inventory instead of the default one (the inventory end date)"
 msgstr ""
+"Изберете го сметководствениот датум на кој сакате да се вреднуваат движењата"
+" на залихата креирани од пописот, наместо предвидениот (крајниот датум на "
+"пописот)"
 
 #. module: stock_account
-#: model:ir.actions.act_window,help:stock_account.stock_move_valuation_action
-msgid "Click to create a stock movement."
-msgstr ""
+#: model:ir.ui.view,arch_db:stock_account.view_stock_quantity_history
+msgid "Choose your date"
+msgstr "Изберете го вашиот датум"
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:523
+#: code:addons/stock_account/models/stock.py:566
 #, python-format
 msgid ""
 "Configuration error. Please configure the price difference account on the "
@@ -128,7 +133,7 @@ msgstr ""
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
 msgid "Cost"
-msgstr ""
+msgstr "Трошок"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product_cost_method
@@ -146,7 +151,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_account.field_product_product_property_cost_method
 #: model:ir.model.fields,field_description:stock_account.field_product_template_property_cost_method
 msgid "Costing Method"
-msgstr ""
+msgstr "Метод на чинење"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_counterpart_account_id
@@ -182,7 +187,7 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_inventory_accounting_date
 msgid "Force Accounting Date"
-msgstr ""
+msgstr "Наметнат сметководствен датум"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_id
@@ -195,6 +200,8 @@ msgid ""
 "If cost price is increased, stock variation account will be debited and stock output account will be credited with the value = (difference of amount * quantity available).\n"
 "If cost price is decreased, stock variation account will be creadited and stock input account will be debited."
 msgstr ""
+"Доколку цената на чинење е зголемена, сметката за варијација на залиха ќе биде задолжена и сметката за излез на залиха ќе има побарување со вредност = (разлика на износ * расположлива количина).\n"
+"Доколку цената на чинење е намалена, сметката за варијација на залиха ќе има побарување и сметката за влез на залиха ќе биде задолжена."
 
 #. module: stock_account
 #: model:ir.actions.act_window,help:stock_account.product_valuation_action
@@ -209,23 +216,21 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_inventory
 msgid "Inventory"
-msgstr ""
+msgstr "Попис/Залиха"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_location
 msgid "Inventory Locations"
-msgstr ""
+msgstr "Локации на залихи"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category_property_valuation
 #: model:ir.model.fields,field_description:stock_account.field_product_product_property_valuation
 #: model:ir.model.fields,field_description:stock_account.field_product_template_property_valuation
 #: model:ir.ui.menu,name:stock_account.menu_valuation
-#: model:ir.ui.view,arch_db:stock_account.product_template_valuation_form_view
-#: model:ir.ui.view,arch_db:stock_account.product_valuation_form_view
 #: model:ir.ui.view,arch_db:stock_account.view_category_property_form
 msgid "Inventory Valuation"
-msgstr ""
+msgstr "Проценка на залиха"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_invoice
@@ -240,7 +245,7 @@ msgstr "Ставка од фактура"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_res_config_settings_module_stock_landed_costs
 msgid "Landed Costs"
-msgstr ""
+msgstr "Дополнителни трошоци"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price___last_update
@@ -260,7 +265,7 @@ msgstr "Последно ажурирање на"
 #. module: stock_account
 #: selection:product.category,property_valuation:0
 msgid "Manual"
-msgstr ""
+msgstr "Раководник"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product_property_valuation
@@ -279,20 +284,15 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
-#: model:ir.ui.view,arch_db:stock_account.view_move_tree_valuation
-msgid "Moves"
-msgstr ""
-
-#. module: stock_account
 #: code:addons/stock_account/models/product.py:128
 #, python-format
 msgid "No difference between standard price and new price!"
-msgstr ""
+msgstr "Нема разлика помеѓу стандардната и новата цена!"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_move_line
 msgid "Packing Operation"
-msgstr ""
+msgstr "Операција на пакување"
 
 #. module: stock_account
 #: selection:product.template,property_valuation:0
@@ -312,11 +312,10 @@ msgstr "Цена"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_procurement_group
 msgid "Procurement Requisition"
-msgstr ""
+msgstr "Барање за набавка"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_product
-#: model:ir.ui.view,arch_db:stock_account.product_valuation_tree
 msgid "Product"
 msgstr "Производ"
 
@@ -336,24 +335,26 @@ msgid "Product Valuation"
 msgstr ""
 
 #. module: stock_account
-#: model:ir.ui.view,arch_db:stock_account.view_move_tree_valuation
-msgid "Qty"
+#: code:addons/stock_account/wizard/stock_quantity_history.py:24
+#, python-format
+msgid "Products"
+msgstr "Производи"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_product_qty_at_date
+#: model:ir.ui.view,arch_db:stock_account.view_move_tree_valuation_at_date
+msgid "Quantity"
 msgstr "Количина"
 
 #. module: stock_account
-#: model:ir.ui.view,arch_db:stock_account.product_valuation_tree
-msgid "Quantity on Hand"
-msgstr ""
-
-#. module: stock_account
-#: model:ir.ui.view,arch_db:stock_account.view_move_tree_valuation
+#: model:ir.ui.view,arch_db:stock_account.view_move_tree_valuation_at_date
 msgid "Reference"
-msgstr ""
+msgstr "Референца"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move_remaining_qty
 msgid "Remaining Qty"
-msgstr ""
+msgstr "Останата количина"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move_remaining_value
@@ -361,9 +362,14 @@ msgid "Remaining Value"
 msgstr ""
 
 #. module: stock_account
+#: model:ir.ui.view,arch_db:stock_account.view_stock_quantity_history
+msgid "Retrieve the inventory valuation"
+msgstr ""
+
+#. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_return_picking
 msgid "Return Picking"
-msgstr ""
+msgstr "Врати требување"
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.product_variant_easy_edit_view_inherit
@@ -374,11 +380,11 @@ msgstr ""
 #: selection:product.category,property_cost_method:0
 #: selection:product.template,property_cost_method:0
 msgid "Standard Price"
-msgstr ""
+msgstr "Стандардна цена"
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:145
-#: code:addons/stock_account/models/product.py:150
+#: code:addons/stock_account/models/product.py:151
 #, python-format
 msgid "Standard Price changed  - %s"
 msgstr ""
@@ -402,40 +408,50 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_product_stock_fifo_manual_move_ids
+msgid "Stock Fifo Manual Move"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_product_stock_fifo_real_time_aml_ids
+msgid "Stock Fifo Real Time Aml"
+msgstr ""
+
+#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category_property_stock_account_input_categ_id
 #: model:ir.model.fields,field_description:stock_account.field_product_product_property_stock_account_input
 #: model:ir.model.fields,field_description:stock_account.field_product_template_property_stock_account_input
 msgid "Stock Input Account"
-msgstr ""
+msgstr "Конто Влез на залиха"
 
 #. module: stock_account
 #: code:addons/stock_account/models/account_chart_template.py:15
 #: model:ir.model.fields,field_description:stock_account.field_product_category_property_stock_journal
 #, python-format
 msgid "Stock Journal"
-msgstr ""
+msgstr "Дневник залиха"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_move
 #: model:ir.model.fields,field_description:stock_account.field_account_move_stock_move_id
 msgid "Stock Move"
-msgstr ""
-
-#. module: stock_account
-#: model:ir.actions.act_window,name:stock_account.stock_move_valuation_action
-msgid "Stock Moves"
-msgstr ""
+msgstr "Движење на залиха"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category_property_stock_account_output_categ_id
 #: model:ir.model.fields,field_description:stock_account.field_product_product_property_stock_account_output
 #: model:ir.model.fields,field_description:stock_account.field_product_template_property_stock_account_output
 msgid "Stock Output Account"
+msgstr "Конто Излез на залиха"
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_stock_quantity_history
+msgid "Stock Quantity History"
 msgstr ""
 
 #. module: stock_account
-#: model:ir.ui.view,arch_db:stock_account.product_valuation_tree
-#: model:ir.ui.view,arch_db:stock_account.view_move_tree_valuation
+#: model:ir.ui.view,arch_db:stock_account.view_move_tree_valuation_at_date
+#: model:ir.ui.view,arch_db:stock_account.view_stock_product_tree2
 #: model:ir.ui.view,arch_db:stock_account.view_template_property_form
 msgid "Stock Valuation"
 msgstr ""
@@ -443,30 +459,25 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category_property_stock_valuation_account_id
 msgid "Stock Valuation Account"
-msgstr ""
+msgstr "Сметка за вреднување на залихата"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_location_valuation_in_account_id
 msgid "Stock Valuation Account (Incoming)"
-msgstr ""
+msgstr "Сметка за вреднување на залихата (Влезно)"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_location_valuation_out_account_id
 msgid "Stock Valuation Account (Outgoing)"
-msgstr ""
-
-#. module: stock_account
-#: model:ir.actions.server,name:stock_account.action_stock_account_valuation_report
-msgid "Stock Valuation Report"
-msgstr ""
+msgstr "Сметка за вреднување на залихата (Излезно)"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_chart_template
 msgid "Templates for Account Chart"
-msgstr ""
+msgstr "Урнеци за контен план"
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:478
+#: code:addons/stock_account/models/stock.py:532
 #, python-format
 msgid ""
 "The cost of %s is currently equal to 0. Change the cost or the configuration"
@@ -474,7 +485,7 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:309
+#: code:addons/stock_account/models/stock.py:349
 #, python-format
 msgid ""
 "The move lines are not in a consistent state: some are entering and other "
@@ -482,7 +493,7 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:320
+#: code:addons/stock_account/models/stock.py:360
 #, python-format
 msgid ""
 "The move lines are not in a consistent states: they are doing an "
@@ -491,7 +502,7 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:318
+#: code:addons/stock_account/models/stock.py:358
 #, python-format
 msgid ""
 "The move lines are not in a consistent states: they do not share the same "
@@ -505,11 +516,6 @@ msgid "To Refund (update SO/PO)"
 msgstr ""
 
 #. module: stock_account
-#: model:ir.ui.view,arch_db:stock_account.product_valuation_tree
-msgid "Total Value"
-msgstr ""
-
-#. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_move_to_refund
 #: model:ir.model.fields,help:stock_account.field_stock_return_picking_line_to_refund
 msgid ""
@@ -518,7 +524,7 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
-#: model:ir.ui.view,arch_db:stock_account.view_move_tree_valuation
+#: model:ir.ui.view,arch_db:stock_account.view_move_tree_valuation_at_date
 msgid "Unit of Measure"
 msgstr "Единица мерка"
 
@@ -536,6 +542,11 @@ msgid ""
 "generic Stock Output Account set on the product. This has no effect for "
 "internal locations."
 msgstr ""
+"Се користи за вреднување на залихата во реално време. Кога е поставено на "
+"виртуелна локација (не внатрешен тип), оваа сметка ќе се користи за "
+"зачувување на вредноста на производите што се преместуваат од внатрешна "
+"локација на оваа локација, наместо во стандардната Сметка за Излез на Залиха"
+" поставена на производот. Ова нема влијание за внатрешните локации."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location_valuation_out_account_id
@@ -546,6 +557,11 @@ msgid ""
 "the generic Stock Output Account set on the product. This has no effect for "
 "internal locations."
 msgstr ""
+"Се користи за вреднување на стоката во реално време. Кога е поставено на "
+"виртуелна локација (не внатрешен тип), оваа сметка ќе се користи за "
+"зачувување на вредноста на производите што се преместуваат од таа локација "
+"на внатрешна локација, наместо во стандардната Сметка за Излез на Залиха "
+"поставена на производот. Ова нема влијание за внатрешните локации."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product_valuation
@@ -554,13 +570,25 @@ msgid "Valuation"
 msgstr ""
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_product_stock_value
-#: model:ir.model.fields,field_description:stock_account.field_stock_move_value
-msgid "Value"
+#: model:ir.actions.act_window,name:stock_account.action_stock_inventory_valuation
+msgid "Valuation Report"
 msgstr ""
 
 #. module: stock_account
-#: code:addons/stock_account/models/product.py:242
+#: code:addons/stock_account/models/product.py:245
+#, python-format
+msgid "Valuation at date"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_product_stock_value
+#: model:ir.model.fields,field_description:stock_account.field_stock_move_value
+#: model:ir.ui.view,arch_db:stock_account.view_stock_account_aml
+msgid "Value"
+msgstr "Вредност"
+
+#. module: stock_account
+#: code:addons/stock_account/models/product.py:403
 #, python-format
 msgid "Warning"
 msgstr "Внимание"
@@ -574,6 +602,11 @@ msgid ""
 "value for all products in this category. It can also directly be set on each"
 " product"
 msgstr ""
+"При вршење на вреднување на залихата во реално време, копиите на ставките од"
+" налогот за движењето на влезната залиха ќе се запишуваат на оваа сметка, "
+"освен ако нема одредена сметка за вреднување на изворната локација. Оваа е "
+"стандардната вредност за сите производи во оваа категорија. Може директно да"
+" се внесе за секој производ."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product_property_stock_account_input
@@ -584,6 +617,10 @@ msgid ""
 "specific valuation account set on the source location. When not set on the "
 "product, the one from the product category is used."
 msgstr ""
+"При вршење на вреднување на залихата во реално време, копиите од ставките на"
+" налогот за движењето на влезната залиха ќе се запишуваат на оваа сметка, "
+"освен ако нема одредена сметка за вреднување на изворната локација. Кога не "
+"е назначена на производот, се користи таа од категоријата на производот."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category_property_stock_account_output_categ_id
@@ -594,6 +631,11 @@ msgid ""
 "default value for all products in this category. It can also directly be set"
 " on each product"
 msgstr ""
+"При вршење на вреднување на залихата во реално време, копиите на ставките од"
+" налогот за движењето на влезната залиха ќе се запишуваат на оваа сметка, "
+"освен ако нема одредена сметка за вреднување на изворната локација. Оваа е "
+"стандардната вредност за сите производи во оваа категорија. Може директно да"
+" се внесе за секој производ."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product_property_stock_account_output
@@ -604,6 +646,10 @@ msgid ""
 "specific valuation account set on the destination location. When not set on "
 "the product, the one from the product category is used."
 msgstr ""
+"При вршење на вреднување на залихата во реално време, копиите од ставките на"
+" налогот за движењето на излезната залиха ќе се запишуваат на оваа сметка, "
+"освен ако нема одредена сметка за вреднување на целната локација. Кога не е "
+"назначена на производот, се користи таа од категоријата на производот."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category_property_stock_journal
@@ -611,6 +657,8 @@ msgid ""
 "When doing real-time inventory valuation, this is the Accounting Journal in "
 "which entries will be automatically posted when stock moves are processed."
 msgstr ""
+"При вреднување на залихата во реално време, оваа е записничката сметка во "
+"која записите автоматски се внесуваат со процесирањето."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category_property_stock_valuation_account_id
@@ -618,9 +666,11 @@ msgid ""
 "When real-time inventory valuation is enabled on a product, this account "
 "will hold the current value of the products."
 msgstr ""
+"Со вклучување на вреднувањето на производите во реално време, оваа сметка ќе"
+" ја содржи моменталната вредност на производите."
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:450
+#: code:addons/stock_account/models/stock.py:499
 #, python-format
 msgid ""
 "You don't have any stock journal defined on your product category, check if "
@@ -629,7 +679,7 @@ msgstr ""
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:130
-#: code:addons/stock_account/models/stock.py:456
+#: code:addons/stock_account/models/stock.py:505
 #, python-format
 msgid ""
 "You don't have any stock valuation account defined on your product category."
@@ -639,7 +689,7 @@ msgstr ""
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
 msgid "_Apply"
-msgstr ""
+msgstr "_Примени"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_res_config_settings

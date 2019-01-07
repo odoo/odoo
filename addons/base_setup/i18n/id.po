@@ -3,27 +3,33 @@
 # * base_setup
 # 
 # Translators:
-# Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2017
-# Muhammad Syarif <mhdsyarif.ms@gmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
-# William Surya Permana <zarambie_game@yahoo.com>, 2017
 # Deddy Ddr <deddy.ddr@gmail.com>, 2017
-# Bonny Useful <bonny.useful@gmail.com>, 2017
+# Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2017
+# Martin Trigaux, 2017
+# William Surya Permana <zarambie_game@yahoo.com>, 2017
 # Gusti Rini <gustirini@gmail.com>, 2017
-# Ryanto The <ry.the77@gmail.com>, 2017
+# Ryanto The <ry.the77@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-16 08:08+0000\n"
-"PO-Revision-Date: 2017-11-16 08:08+0000\n"
-"Last-Translator: Ryanto The <ry.the77@gmail.com>, 2017\n"
+"POT-Creation-Date: 2019-01-03 15:07+0000\n"
+"PO-Revision-Date: 2017-09-20 10:15+0000\n"
+"Last-Translator: Ryanto The <ry.the77@gmail.com>, 2018\n"
 "Language-Team: Indonesian (https://www.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: id\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: base_setup
+#: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
+msgstr ""
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -41,23 +47,25 @@ msgstr "Hak akses"
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings_module_google_calendar
 msgid "Allow the users to synchronize their calendar  with Google Calendar"
-msgstr "Mengizikan sinkronisasi kalender dengan Goolgle Calendar"
+msgstr ""
+"Mengizinkan pengguna untuk sinkronisasi kalender mereka dengan Goolgle "
+"Calendar"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings_module_base_import
 #: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Allow users to import data from CSV/XLS/XLSX/ODS files"
-msgstr "Memungkinkan pengguna untuk mengimpor data dari file CSV/XLS/XLSX/BPO"
+msgstr "Mengizinkan pengguna untuk mengimpor data dari file CSV/XLS/XLSX/BPO"
 
 #. module: base_setup
 #: model:ir.model.fields,help:base_setup.field_res_config_settings_group_multi_currency
 msgid "Allows to work in a multi currency environment"
-msgstr "Memungkinkan untuk bekerja dengan banyak mata uang"
+msgstr "Memungkinkan untuk bekerja dengan beberapa mata uang"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings_module_voip
 msgid "Asterisk (VoIP)"
-msgstr ""
+msgstr "Asterisk (VoIP)"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings_module_google_drive
@@ -67,12 +75,12 @@ msgstr "Melampirkan dokumen Google pada setiap record"
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Automate inter-company transactions"
-msgstr ""
+msgstr "Otomatiskan transaksi internal perusahaan"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Business Documents"
-msgstr ""
+msgstr "Dokumen Bisnis"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -85,7 +93,7 @@ msgstr ""
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Change Document Template"
-msgstr ""
+msgstr "Ganti Templete Dokumen"
 
 #. module: base_setup
 #: code:addons/base_setup/models/res_config_settings.py:100
@@ -96,7 +104,7 @@ msgstr "Pilih Tata Letak Dokumen Anda"
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Choose your document's header and footer layout"
-msgstr ""
+msgstr "Pilih header dan footer dokumen Anda"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings_module_pad
@@ -106,7 +114,7 @@ msgstr ""
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Common Contact Book"
-msgstr ""
+msgstr "Buku Kontak Umum"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -124,23 +132,26 @@ msgid ""
 "Configure company rules to automatically create SO/PO when one of your "
 "company sells/buys to another of your company."
 msgstr ""
+"Konfigurasi aturan perusahaan agar secara otomatis membuat SO/PO ketika "
+"salah satu dari perusahaan Anda menjual/membeli ke perusahaan Anda yang "
+"lain."
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Create and attach Google Drive documents to any record"
-msgstr ""
+msgstr "Buat dan lampirkan dokumen Google Drive ke data manapun"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings_default_custom_report_footer
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings_report_footer
 msgid "Custom Report Footer"
-msgstr ""
+msgstr "Laporan Footer Kustom"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings_default_user_rights
 #: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Default Access Rights"
-msgstr ""
+msgstr "Hak Akses Standar"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings_external_report_layout
@@ -151,22 +162,22 @@ msgstr "Contoh Dokumen"
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Edit Header"
-msgstr ""
+msgstr "Sunting Header"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings_default_external_email_server
 msgid "External Email Servers"
-msgstr ""
+msgstr "Server Email Eksternal"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Extract and analyze Odoo data from Google Spreadsheet"
-msgstr ""
+msgstr "Ambil dan analisa data Odoo dari Google Spreadsheet"
 
 #. module: base_setup
 #: model:ir.model.fields,help:base_setup.field_res_config_settings_report_footer
 msgid "Footer text displayed at the bottom of all reports."
-msgstr ""
+msgstr "Teks footer yang ditampilkan pada bagian bawah semua laporan."
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -182,7 +193,7 @@ msgstr "Pengaturan Umum"
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Gengo Translations"
-msgstr ""
+msgstr "Terjemahan"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -197,58 +208,58 @@ msgstr "Google Drive"
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings_module_google_spreadsheet
 msgid "Google Spreadsheet"
-msgstr ""
+msgstr "Google Spreadsheet"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Import & Export"
-msgstr ""
+msgstr "Impor & Ekspor"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Integrations"
-msgstr ""
+msgstr "Integrasi"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Inter-Company Transactions"
-msgstr ""
+msgstr "Transaksi Antar Perusahaan"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings_module_auth_ldap
 #: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "LDAP Authentication"
-msgstr ""
+msgstr "Otentifikasi LDAP"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings_module_inter_company_rules
 msgid "Manage Inter Company"
-msgstr "Mengelola Inter perusahaan"
+msgstr "Mengelola Antar Perusahaan"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings_group_multi_company
 msgid "Manage multiple companies"
-msgstr "Mengatur multi-perusahaan"
+msgstr "Mengelola beberapa perusahaan"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Manage multiple legal entities with separate accounting"
-msgstr ""
+msgstr "Mengelola beberapa entitas legal dengan akuntansi terpisah"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings_group_multi_currency
 msgid "Multi-Currencies"
-msgstr "Multi Mata Uang"
+msgstr "Beberapa Mata Uang"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Multi-company"
-msgstr ""
+msgstr "Beberapa Perusahaan"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "OAuth Authentication"
-msgstr ""
+msgstr "Otentikasi OAuth"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings_paperformat_id
@@ -258,17 +269,17 @@ msgstr "Format kertas"
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Preview Document"
-msgstr ""
+msgstr "Pratinjau Dokumen"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Set custom access rights for new users"
-msgstr ""
+msgstr "Atur hak akses kustom untuk pengguna baru"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Set the paper format of printed documents"
-msgstr ""
+msgstr "Atur format kertas untuk dokumen cetak"
 
 #. module: base_setup
 #: model:ir.actions.act_window,name:base_setup.action_general_configuration
@@ -278,7 +289,7 @@ msgstr "Pengaturan"
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings_company_share_partner
 msgid "Share partners to all companies"
-msgstr "Mitra berbagi untuk semua perusahaan"
+msgstr "Bagikan data rekanan untuk semua perusahaan"
 
 #. module: base_setup
 #: model:ir.model.fields,help:base_setup.field_res_config_settings_company_share_partner
@@ -287,14 +298,14 @@ msgid ""
 " * Checked : Partners are visible for every companies, even if a company is defined on the partner.\n"
 " * Unchecked : Each company can see only its partner (partners where company is defined). Partners not related to a company are visible for all companies."
 msgstr ""
-"Berbagi mitra Anda untuk semua perusahaan yang didefinisikan dalam contoh Anda.\n"
-" * Memeriksa: Mitra terlihat untuk setiap perusahaan, bahkan jika perusahaan didefinisikan pada partner.\n"
-" * Dicentang: Masing-masing perusahaan dapat melihat hanya mitra (mitra mana perusahaan didefinisikan). Mitra yang tidak terkait dengan perusahaan terlihat untuk semua perusahaan."
+"Berbagi rekanan Anda untuk semua perusahaan yang didefinisikan pada contoh Anda.\n"
+" * Dicentang: Rekanan terlihat untuk setiap perusahaan, bahkan jika perusahaan didefinisikan pada rekanan.\n"
+" * Tidak Dicentang: Masing-masing perusahaan hanya dapat melihat rekanan mereka masing-masing (rekanan di mana perusahaan didefinisikan). Mitra yang tidak terkait dengan perusahaan akan terlihat untuk semua perusahaan."
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Synchronize your calendar with Google Calendar"
-msgstr ""
+msgstr "Sinkronisasi kalendar Anda dengan Google Calendar"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -304,27 +315,27 @@ msgstr "Contoh"
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings_module_base_gengo
 msgid "Translate Your Website with Gengo"
-msgstr ""
+msgstr "Terjemahkan Situs Web Anda dengan Gengo"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Translate your website with Gengo"
-msgstr ""
+msgstr "Terjemahkan situs web Anda dengan Gengo"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Use LDAP credentials to log in"
-msgstr ""
+msgstr "Gunakan akun LDAP untuk log masuk"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Use external accounts to log in (Google, Facebook, etc.)"
-msgstr ""
+msgstr "Gunakan akun eksternal untuk log masuk (Google, Facebook, dll)"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings_module_auth_oauth
 msgid "Use external authentication providers (OAuth)"
-msgstr ""
+msgstr "Gunakan penyedia otentikasi eksternal (OAuth)"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.res_config_settings_view_form

@@ -192,11 +192,15 @@ var ProxyDevice  = core.Class.extend(mixins.PropertiesMixin,{
             // try harder when we remember a good proxy url
             found_url = this.try_hard_to_connect(localStorage.hw_proxy_url, options)
                 .then(null,function(){
-                    return self.find_proxy(options);
+                    if (window.location.protocol != 'https:'){
+                        return self.find_proxy(options);
+                    }
                 });
         }else{
             // just find something quick
-            found_url = this.find_proxy(options);
+            if (window.location.protocol != 'https:'){
+                found_url = this.find_proxy(options);
+            }
         }
 
         success = found_url.then(function(url){
@@ -215,7 +219,7 @@ var ProxyDevice  = core.Class.extend(mixins.PropertiesMixin,{
         var self = this;
 
         function status(){
-            self.connection.rpc('/hw_proxy/status_json',{},{timeout:2500})
+            self.connection.rpc('/hw_proxy/status_json',{},{shadow: true, timeout:2500})
                 .then(function(driver_status){
                     self.set_connection_status('connected',driver_status);
                 },function(){
@@ -239,7 +243,7 @@ var ProxyDevice  = core.Class.extend(mixins.PropertiesMixin,{
             callbacks[i](params);
         }
         if(this.get('status').status !== 'disconnected'){
-            return this.connection.rpc('/hw_proxy/' + name, params || {});
+            return this.connection.rpc('/hw_proxy/' + name, params || {}, {shadow: true});
         }else{
             return (new $.Deferred()).reject();
         }
@@ -248,16 +252,17 @@ var ProxyDevice  = core.Class.extend(mixins.PropertiesMixin,{
     // try several time to connect to a known proxy url
     try_hard_to_connect: function(url,options){
         options   = options || {};
-        var port  = ':' + (options.port || '8069');
+        var protocol = window.location.protocol;
+        var port = ( !options.port && protocol == "https:") ? ':443' : ':' + (options.port || '8069');
 
         this.set_connection_status('connecting');
 
         if(url.indexOf('//') < 0){
-            url = 'http://'+url;
+            url = protocol + '//' + url;
         }
 
         if(url.indexOf(':',5) < 0){
-            url = url+port;
+            url = url + port;
         }
 
         // try real hard to connect to url, with a 1sec timeout and up to 'retries' retries
@@ -273,11 +278,11 @@ var ProxyDevice  = core.Class.extend(mixins.PropertiesMixin,{
             .done(function(){
                 done.resolve(url);
             })
-            .fail(function(){
+            .fail(function(resp){
                 if(retries > 0){
                     try_real_hard_to_connect(url,retries-1,done);
                 }else{
-                    done.reject();
+                    done.reject(resp.statusText, url);
                 }
             });
             return done;
@@ -588,7 +593,7 @@ var BarcodeReader = core.Class.extend({
         this.remote_active = 1;
 
         function waitforbarcode(){
-            return self.proxy.connection.rpc('/hw_proxy/scanner',{},{timeout:7500})
+            return self.proxy.connection.rpc('/hw_proxy/scanner',{},{shadow: true, timeout:7500})
                 .then(function(barcode){
                     if(!self.remote_scanning){
                         self.remote_active = 0;

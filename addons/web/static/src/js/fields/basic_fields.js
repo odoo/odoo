@@ -404,6 +404,10 @@ var FieldDate = InputField.extend({
         this._super.apply(this, arguments);
         // use the session timezone when formatting dates
         this.formatOptions.timezone = true;
+        this.datepickerOptions = _.defaults(
+            this.nodeOptions.datepicker || {},
+            {defaultDate: this.value}
+        );
     },
     /**
      * In edit mode, instantiates a DateWidget datepicker and listen to changes.
@@ -417,7 +421,7 @@ var FieldDate = InputField.extend({
             this.datewidget = this._makeDatePicker();
             this.datewidget.on('datetime_changed', this, function () {
                 var value = this._getValue();
-                if ((!value && this.value) || (value && !value.isSame(this.value))) {
+                if ((!value && this.value) || (value && !this._isSameValue(value))) {
                     this._setValue(value);
                 }
             });
@@ -468,7 +472,7 @@ var FieldDate = InputField.extend({
      * @private
      */
     _makeDatePicker: function () {
-        return new datepicker.DateWidget(this, {defaultDate: this.value});
+        return new datepicker.DateWidget(this, this.datepickerOptions);
     },
 
     /**
@@ -486,6 +490,17 @@ var FieldDate = InputField.extend({
 var FieldDateTime = FieldDate.extend({
     supportedFieldTypes: ['datetime'],
 
+    /**
+     * @override
+     */
+    init: function () {
+        this._super.apply(this, arguments);
+        if (this.value) {
+            var offset = this.getSession().getTZOffset(this.value);
+            var displayedValue = this.value.clone().add(offset, 'minutes');
+            this.datepickerOptions.defaultDate = displayedValue;
+        }
+    },
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
@@ -516,10 +531,8 @@ var FieldDateTime = FieldDate.extend({
      * @private
      */
     _makeDatePicker: function () {
-        var value = this.value && this.value.clone().add(this.getSession().getTZOffset(this.value), 'minutes');
-        return new datepicker.DateTimeWidget(this, {defaultDate: value});
+        return new datepicker.DateTimeWidget(this, this.datepickerOptions);
     },
-
     /**
      * Set the datepicker to the right value rather than the default one.
      *
@@ -912,6 +925,9 @@ var HandleWidget = AbstractField.extend({
 
 var FieldEmail = InputField.extend({
     className: 'o_field_email',
+    events: _.extend({}, InputField.prototype.events, {
+        'click': '_onClick',
+    }),
     prefix: 'mailto',
     supportedFieldTypes: ['char'],
 
@@ -952,7 +968,21 @@ var FieldEmail = InputField.extend({
         this.$el.text(this.value)
             .addClass('o_form_uri o_text_overflow')
             .attr('href', this.prefix + ':' + this.value);
-    }
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Prevent the URL click from opening the record (when used on a list).
+     *
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onClick: function (ev) {
+        ev.stopPropagation();
+    },
 });
 
 var FieldPhone = FieldEmail.extend({
@@ -1044,6 +1074,9 @@ var FieldPhone = FieldEmail.extend({
 
 var UrlWidget = InputField.extend({
     className: 'o_field_url',
+    events: _.extend({}, InputField.prototype.events, {
+        'click': '_onClick',
+    }),
     supportedFieldTypes: ['char'],
 
     /**
@@ -1085,7 +1118,21 @@ var UrlWidget = InputField.extend({
             .addClass('o_form_uri o_text_overflow')
             .attr('target', '_blank')
             .attr('href', this.value);
-    }
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Prevent the URL click from opening the record (when used on a list).
+     *
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onClick: function (ev) {
+        ev.stopPropagation();
+    },
 });
 
 var AbstractFieldBinary = AbstractField.extend({
@@ -1753,7 +1800,7 @@ var StatInfo = AbstractField.extend({
      */
     _render: function () {
         var options = {
-            value: this.value || 0,
+            value: this._formatValue(this.value || 0),
         };
         if (! this.attrs.nolabel) {
             if (this.nodeOptions.label_field && this.recordData[this.nodeOptions.label_field]) {
@@ -1967,6 +2014,18 @@ var FieldProgressBar = AbstractField.extend({
             this.$('.o_progressbar_value').focus().select();
         }
     },
+    /**
+     * The progress bar has more than one field/value to deal with
+     * i.e. max_value
+     *
+     * @override
+     * @private
+     */
+    _reset: function () {
+        this._super.apply(this, arguments);
+        var new_max_value = this.recordData[this.nodeOptions.max_value];
+        this.max_value =  new_max_value !== undefined ? new_max_value : this.max_value;
+    },
     isSet: function () {
         return true;
     },
@@ -2049,7 +2108,7 @@ var JournalDashboardGraph = AbstractField.extend({
         return this._super.apply(this, arguments);
     },
     destroy: function () {
-        if ('nv' in window) {
+        if ('nv' in window && nv.utils && nv.utils.offWindowResize) {
             // if the widget is destroyed before the lazy loaded libs (nv) are
             // actually loaded (i.e. after the widget has actually started),
             // nv is undefined, but the handler isn't bound yet anyway
@@ -2258,19 +2317,18 @@ var FieldDomain = AbstractField.extend({
 
         // Convert char value to array value
         var value = this.value || "[]";
-        var domain = Domain.prototype.stringToArray(value);
 
         // Create the domain selector or change the value of the current one...
         var def;
         if (!this.domainSelector) {
-            this.domainSelector = new DomainSelector(this, this._domainModel, domain, {
+            this.domainSelector = new DomainSelector(this, this._domainModel, value, {
                 readonly: this.mode === "readonly" || this.inDialog,
                 filters: this.fsFilters,
                 debugMode: session.debug,
             });
             def = this.domainSelector.prependTo(this.$el);
         } else {
-            def = this.domainSelector.setDomain(domain);
+            def = this.domainSelector.setDomain(value);
         }
         // ... then replace the other content (matched records, etc)
         return def.then(this._replaceContent.bind(this));
@@ -2426,6 +2484,21 @@ var AceEditor = DebouncedField.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * Format value
+     *
+     * Note: We have to overwrite this method to always return a string.
+     * AceEditor works with string and not boolean value.
+     *
+     * @override
+     * @private
+     * @param {boolean|string} value
+     * @returns {string}
+     */
+    _formatValue: function (value) {
+        return this._super.apply(this, arguments) || '';
+    },
+
+    /**
      * @override
      * @private
      */
@@ -2447,6 +2520,7 @@ var AceEditor = DebouncedField.extend({
             this.aceSession.setValue(newValue);
         }
     },
+
     /**
      * Starts the ace library on the given DOM element. This initializes the
      * ace editor option according to the edit/readonly mode and binds ace

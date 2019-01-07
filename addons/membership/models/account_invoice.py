@@ -22,6 +22,15 @@ class Invoice(models.Model):
         ]).write({'date_cancel': fields.Date.today()})
         return super(Invoice, self).action_cancel()
 
+    @api.multi
+    def write(self, vals):
+        '''Change the partner on related membership_line'''
+        if 'partner_id' in vals:
+            self.env['membership.membership_line'].search([
+                ('account_invoice_line', 'in', self.mapped('invoice_line_ids').ids)
+            ]).write({'partner': vals['partner_id']})
+        return super(Invoice, self).write(vals)
+
 
 class AccountInvoiceLine(models.Model):
     _inherit = 'account.invoice.line'

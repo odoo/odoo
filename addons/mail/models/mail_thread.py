@@ -126,7 +126,8 @@ class MailThread(models.AbstractModel):
         followers = self.env['mail.followers'].sudo().search([
             ('res_model', '=', self._name),
             ('partner_id', operator, operand)])
-        return [('id', 'in', followers.mapped('res_id'))]
+        # using read() below is much faster than followers.mapped('res_id')
+        return [('id', 'in', [res['res_id'] for res in followers.read(['res_id'])])]
 
     @api.model
     def _search_follower_channels(self, operator, operand):
@@ -139,7 +140,8 @@ class MailThread(models.AbstractModel):
         followers = self.env['mail.followers'].sudo().search([
             ('res_model', '=', self._name),
             ('channel_id', operator, operand)])
-        return [('id', 'in', followers.mapped('res_id'))]
+        # using read() below is much faster than followers.mapped('res_id')
+        return [('id', 'in', [res['res_id'] for res in followers.read(['res_id'])])]
 
     @api.multi
     @api.depends('message_follower_ids')
@@ -149,7 +151,8 @@ class MailThread(models.AbstractModel):
             ('res_id', 'in', self.ids),
             ('partner_id', '=', self.env.user.partner_id.id),
             ])
-        following_ids = followers.mapped('res_id')
+        # using read() below is much faster than followers.mapped('res_id')
+        following_ids = [res['res_id'] for res in followers.read(['res_id'])]
         for record in self:
             record.message_is_follower = record.id in following_ids
 
@@ -161,9 +164,11 @@ class MailThread(models.AbstractModel):
             ])
         # Cases ('message_is_follower', '=', True) or  ('message_is_follower', '!=', False)
         if (operator == '=' and operand) or (operator == '!=' and not operand):
-            return [('id', 'in', followers.mapped('res_id'))]
+            # using read() below is much faster than followers.mapped('res_id')
+            return [('id', 'in', [res['res_id'] for res in followers.read(['res_id'])])]
         else:
-            return [('id', 'not in', followers.mapped('res_id'))]
+            # using read() below is much faster than followers.mapped('res_id')
+            return [('id', 'not in', [res['res_id'] for res in followers.read(['res_id'])])]
 
     @api.multi
     def _get_message_unread(self):
@@ -191,6 +196,8 @@ class MailThread(models.AbstractModel):
     @api.multi
     def _get_message_needaction(self):
         res = dict((res_id, 0) for res_id in self.ids)
+        if not res:
+            return
 
         # search for unread messages, directly in SQL to improve performances
         self._cr.execute(""" SELECT msg.res_id FROM mail_message msg
@@ -344,7 +351,9 @@ class MailThread(models.AbstractModel):
                         'email_link': email_link
                     }
                 }
-            return "%(static_help)s<p>%(dyn_help)s" % {
+            # do not add alias two times if it was added previously
+            if not help or help.find("oe_view_nocontent_alias") == -1:
+                return '%(static_help)s<p class="oe_view_nocontent_alias">%(dyn_help)s</p>' % {
                     'static_help': help or '',
                     'dyn_help': _("You could also add a new %(document)s by sending an email to: %(email_link)s.") %  {
                         'document': document_name,
@@ -1204,6 +1213,7 @@ class MailThread(models.AbstractModel):
                     # if a new thread is created, parent is irrelevant
                     message_dict.pop('parent_id', None)
                     thread = MessageModel.message_new(message_dict, custom_values)
+                    thread_id = thread.id
             else:
                 if thread_id:
                     raise ValueError("Posting a message without model should be with a null res_id, to create a private message.")
@@ -1373,7 +1383,13 @@ class MailThread(models.AbstractModel):
         located in tools. """
         if not body:
             return body, attachments
-        root = lxml.html.fromstring(body)
+        try:
+            root = lxml.html.fromstring(body)
+        except ValueError:
+            # In case the email client sent XHTML, fromstring will fail because 'Unicode strings
+            # with encoding declaration are not supported'.
+            root = lxml.html.fromstring(body.encode('utf-8'))
+
         postprocessed = False
         to_remove = []
         for node in root.iter():
@@ -1732,6 +1748,8 @@ class MailThread(models.AbstractModel):
                 continue
             if isinstance(content, pycompat.text_type):
                 content = content.encode('utf-8')
+            elif content is None:
+                continue
             data_attach = {
                 'name': name,
                 'datas': base64.b64encode(content),
@@ -1757,7 +1775,8 @@ class MailThread(models.AbstractModel):
                     if not attachment:
                         attachment = fname_mapping.get(node.get('data-filename'), '')
                     if attachment:
-                        node.set('src', '/web/image/%s' % attachment.id)
+                        attachment.generate_access_token()
+                        node.set('src', '/web/image/%s?access_token=%s' % (attachment.id, attachment.access_token))
                         postprocessed = True
             if postprocessed:
                 body = lxml.html.tostring(root, pretty_print=False, encoding='UTF-8')

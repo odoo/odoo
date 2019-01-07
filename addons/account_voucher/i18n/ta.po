@@ -1,31 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * account_voucher
-#
-# Translators:
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
-"PO-Revision-Date: 2016-02-11 13:20+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Tamil (http://www.transifex.com/odoo/odoo-9/language/ta/)\n"
-"Language: ta\n"
+"POT-Creation-Date: 2018-07-27 11:55+0000\n"
+"PO-Revision-Date: 2018-07-27 11:55+0000\n"
+"Language-Team: Tamil (https://www.transifex.com/odoo/teams/41243/ta/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ta\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_state
 msgid ""
-" * The 'Draft' status is used when a user is encoding a new and unconfirmed "
-"Voucher.\n"
-" * The 'Pro-forma' status is used when the voucher does not have a voucher "
-"number.\n"
-" * The 'Posted' status is used when user create voucher,a voucher number is "
-"generated and voucher entries are created in account.\n"
+" * The 'Draft' status is used when a user is encoding a new and unconfirmed Voucher.\n"
+" * The 'Pro-forma' status is used when the voucher does not have a voucher number.\n"
+" * The 'Posted' status is used when user create voucher,a voucher number is generated and voucher entries are created in account.\n"
 " * The 'Cancelled' status is used when user cancel voucher."
 msgstr ""
 
@@ -41,6 +36,11 @@ msgid "Account Date"
 msgstr ""
 
 #. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_account_date
+msgid "Accounting Date"
+msgstr ""
+
+#. module: account_voucher
 #: model:ir.model,name:account_voucher.model_account_voucher
 msgid "Accounting Voucher"
 msgstr ""
@@ -48,7 +48,7 @@ msgstr ""
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_price_subtotal
 msgid "Amount"
-msgstr "தொகை"
+msgstr ""
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_account_analytic_id
@@ -62,7 +62,9 @@ msgid "Are you sure you want to cancel this receipt?"
 msgstr ""
 
 #. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_date
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Bill Date"
 msgstr ""
 
@@ -79,7 +81,7 @@ msgstr ""
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 msgid "Cancel"
-msgstr "ரத்து"
+msgstr ""
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
@@ -92,7 +94,7 @@ msgid "Cancelled"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:147
+#: code:addons/account_voucher/models/account_voucher.py:185
 #, python-format
 msgid "Cannot delete voucher(s) which are already opened or paid."
 msgstr ""
@@ -111,7 +113,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_company_id
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_company_id
 msgid "Company"
-msgstr "நிறுவனம்"
+msgstr ""
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_company_id
@@ -123,21 +125,19 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_create_uid
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_create_uid
 msgid "Created by"
-msgstr "உருவாக்கியவர்"
+msgstr ""
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_create_date
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_create_date
 msgid "Created on"
 msgstr ""
-"உருவாக்கப்பட்ட \n"
-"தேதி"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_currency_id
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_currency_id
 msgid "Currency"
-msgstr "நாணயம்"
+msgstr ""
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
@@ -147,22 +147,20 @@ msgid "Customer"
 msgstr ""
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_date
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
-#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Date"
-msgstr "தேதி"
+msgstr ""
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_name
 msgid "Description"
-msgstr "விளக்கம்"
+msgstr ""
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_display_name
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_display_name
 msgid "Display Name"
-msgstr "காட்சி பெயர்"
+msgstr ""
 
 #. module: account_voucher
 #: selection:account.voucher,state:0
@@ -185,7 +183,7 @@ msgid "Due Date"
 msgstr ""
 
 #. module: account_voucher
-#: model:ir.model.fields,help:account_voucher.field_account_voucher_date
+#: model:ir.model.fields,help:account_voucher.field_account_voucher_account_date
 msgid "Effective date for accounting entries"
 msgstr ""
 
@@ -205,7 +203,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_id
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_id
 msgid "ID"
-msgstr "ID"
+msgstr ""
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_tax_correction
@@ -242,19 +240,19 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher___last_update
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line___last_update
 msgid "Last Modified on"
-msgstr "கடைசியாக திருத்திய"
+msgstr ""
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_write_uid
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_write_uid
 msgid "Last Updated by"
-msgstr "கடைசியாக புதுப்பிக்கப்பட்டது"
+msgstr ""
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_write_date
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_write_date
 msgid "Last Updated on"
-msgstr "கடைசியாக புதுப்பிக்கப்பட்டது"
+msgstr ""
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_narration
@@ -264,7 +262,7 @@ msgstr ""
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_number
 msgid "Number"
-msgstr "எண்"
+msgstr ""
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_line_tax_ids
@@ -280,7 +278,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_partner_id
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
 msgid "Partner"
-msgstr "கூட்டாளி"
+msgstr ""
 
 #. module: account_voucher
 #: selection:account.voucher,pay_now:0
@@ -298,18 +296,23 @@ msgid "Payment"
 msgstr ""
 
 #. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_payment_journal_id
+msgid "Payment Method"
+msgstr ""
+
+#. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_name
 msgid "Payment Reference"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:183
+#: code:addons/account_voucher/models/account_voucher.py:222
 #, python-format
 msgid "Please activate the sequence of selected journal !"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:186
+#: code:addons/account_voucher/models/account_voucher.py:225
 #, python-format
 msgid "Please define a sequence on the journal."
 msgstr ""
@@ -337,7 +340,7 @@ msgstr ""
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_product_id
 msgid "Product"
-msgstr "தயாரிப்பு"
+msgstr ""
 
 #. module: account_voucher
 #: selection:account.voucher,voucher_type:0
@@ -363,12 +366,12 @@ msgstr ""
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_quantity
 msgid "Quantity"
-msgstr "அளவு"
+msgstr ""
 
 #. module: account_voucher
 #: selection:account.voucher,voucher_type:0
 msgid "Sale"
-msgstr "விற்பனை"
+msgstr ""
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
@@ -396,7 +399,7 @@ msgstr ""
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_sequence
 msgid "Sequence"
-msgstr "வரிசை"
+msgstr ""
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
@@ -425,16 +428,16 @@ msgstr ""
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_tax_ids
 msgid "Tax"
-msgstr "வரி"
+msgstr ""
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_tax_amount
-msgid "Tax amount"
+msgid "Tax Amount"
 msgstr ""
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_tax_correction
-msgid "Tax correction"
+msgid "Tax Correction"
 msgstr ""
 
 #. module: account_voucher
@@ -471,12 +474,12 @@ msgstr ""
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_voucher_type
 msgid "Type"
-msgstr "வகை"
+msgstr ""
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_price_unit
 msgid "Unit Price"
-msgstr "அலகு விலை"
+msgstr ""
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
@@ -497,7 +500,7 @@ msgid "Vendor Voucher"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:31
+#: code:addons/account_voucher/models/account_voucher.py:100
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_voucher_id
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
@@ -548,7 +551,7 @@ msgid ""
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:348
+#: code:addons/account_voucher/models/account_voucher.py:438
 #, python-format
 msgid "You must first select a partner!"
 msgstr ""

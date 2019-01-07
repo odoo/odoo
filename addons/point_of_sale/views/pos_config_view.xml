@@ -160,7 +160,7 @@
                                 <field name="barcode_scanner"/>
                             </div>
                             <div class="o_setting_right_pane">
-                                <label for="barcode_nomenclature_id" string="Barcode Scanner"/>
+                                <label for="barcode_scanner" string="Barcode Scanner"/>
                                 <div class="text-muted">
                                     Set barcodes to scan products, customer cards, etc.
                                 </div>
@@ -178,7 +178,7 @@
                                 <field name="tax_regime_selection"/>
                             </div>
                             <div class="o_setting_right_pane">
-                                <label for="fiscal_position_ids" string="Fiscal Position per Order"/>
+                                <label for="tax_regime_selection" string="Fiscal Position per Order"/>
                                 <div class="text-muted">
                                     Choose among several tax regimes when processing an order
                                 </div>
@@ -197,7 +197,7 @@
                                 <field name="tax_regime"/>
                             </div>
                             <div class="o_setting_right_pane">
-                                <label for="default_fiscal_position_id" string="Fiscal Position"/>
+                                <label for="tax_regime" string="Fiscal Position"/>
                                 <div class="text-muted">
                                     Use a default specific tax regime
                                 </div>
@@ -391,7 +391,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-xs-12 col-md-6 o_setting_box" id="auto_printing" attrs="{'invisible': [('is_posbox', '=', False)]}">
+                        <div class="col-xs-12 col-md-6 o_setting_box" id="auto_printing">
                             <div class="o_setting_left_pane">
                                 <field name="iface_print_auto"/>
                             </div>
@@ -400,7 +400,7 @@
                                 <div class="text-muted">
                                     Print receipts automatically once the payment registered
                                 </div>
-                                <div class="content-group mt16" attrs="{'invisible' : [('iface_print_auto', '=', False)]}">
+                                <div class="content-group mt16" attrs="{'invisible' : ['|', ('iface_print_auto', '=', False), ('is_posbox', '=', False)]}">
                                     <div>
                                         <field name="iface_print_skip_screen" class="oe_inline"/><span class="oe_inline"><b>Skip Preview Screen</b></span>
                                     </div>
@@ -435,7 +435,8 @@
                                 <div class="content-group mt16" attrs="{'invisible': [('iface_invoicing', '=', False)]}">
                                     <div class="row mt16">
                                         <label string="Invoice Journal" for="invoice_journal_id" class="col-md-3 o_light_label"/>
-                                        <field name="invoice_journal_id"/>
+                                        <field name="invoice_journal_id"
+                                               attrs="{'required': [('iface_invoicing', '=', True)]}"/>
                                     </div>
                                 </div>
                             </div>
@@ -450,7 +451,7 @@
                                     Operation type used to record product pickings
                                 </div>
                                 <div class="content-group mt16">
-                                    <field name="picking_type_id"/>
+                                    <field name="picking_type_id" required="1"/>
                                 </div>
                             </div>
                         </div>

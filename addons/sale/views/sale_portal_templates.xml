@@ -237,12 +237,13 @@
               </div>
               <t t-foreach="order.order_line" t-as="ol">
                 <div class="row orders_vertical_align">
-                    <div class="visible-lg col-lg-1 text-center">
+                    <div t-if="not request.env.user._is_public()" class="visible-lg col-lg-1 text-center">
                       <span t-field="ol.product_image" t-options="{'widget': 'image', 'class': 'img-rounded', 'style':'width: 48px;height:48px'}" />
                     </div>
                     <div id='product_name' class="col-lg-4 col-sm-6 col-xs-3">
                       <span t-esc="ol.product_id.name"/>
                     </div>
+                    <div t-if="request.env.user._is_public()" class="visible-lg col-lg-1 text-center" /> <!-- Just for alignment -->
                   <div class="col-xs-3 text-right">
                     <span t-field="ol.price_unit" t-options='{"widget": "monetary", "display_currency": order.pricelist_id.currency_id}'/>
                   </div>

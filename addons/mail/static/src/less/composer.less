@@ -136,7 +136,7 @@
 
         &.o_chat_inline_composer {
             .o_composer_container {
-                .o-flex(1, 0, auto);
+                .o-flex(1, 1, auto);
             }
             .o_composer {
                 padding: @o-mail-chatter-gap @o-mail-chatter-gap 0 @o-mail-chatter-gap;
@@ -339,6 +339,7 @@
 }
 
 .o_modal_fullscreen {
+    z-index: @o-chat-window-zindex + 1; // To overlap chat window
     .o_viewer_content {
         width: 100%;
         height: 100%;

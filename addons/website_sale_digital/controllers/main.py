@@ -36,6 +36,10 @@ class WebsiteSaleDigital(CustomerPortal):
         order = response.qcontext['order']
         invoiced_lines = request.env['account.invoice.line'].sudo().search([('invoice_id', 'in', order.invoice_ids.ids), ('invoice_id.state', '=', 'paid')])
         products = invoiced_lines.mapped('product_id') | order.order_line.filtered(lambda r: not r.price_subtotal).mapped('product_id')
+        if not order.amount_total:
+            # in that case, we should add all download links to the products
+            # since there is nothing to pay, so we shouldn't wait for an invoice
+            products = order.order_line.mapped('product_id')
 
         purchased_products_attachments = {}
         for product in products:
@@ -44,7 +48,7 @@ class WebsiteSaleDigital(CustomerPortal):
             product_id = product.id
             template = product.product_tmpl_id
             att = Attachment.search_read(
-                domain=['|', '&', ('res_model', '=', product._name), ('res_id', '=', product_id), '&', ('res_model', '=', template._name), '&', ('res_id', '=', template.id), ('product_downloadable', '=', True)],
+                domain=['|', '&', ('res_model', '=', product._name), ('res_id', '=', product_id), '&', ('res_model', '=', template._name), ('res_id', '=', template.id), ('product_downloadable', '=', True)],
                 fields=['name', 'write_date'],
                 order='write_date desc',
             )

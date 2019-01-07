@@ -136,7 +136,7 @@ class HrPayslipRun(models.Model):
                         'company_id': company.id,
                         'name': run.name,
                         'date': run.date_end,
-                        'bank_id': company.partner_id.bank_ids and company.partner_id.bank_ids[0].id or False
+                        'bank_id': company.partner_id.bank_ids and company.partner_id.bank_ids[0].bank_id.id or False
                     })
             for slip in run.slip_ids:
                 # TODO is it necessary to interleave the calls ?

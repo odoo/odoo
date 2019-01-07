@@ -217,7 +217,7 @@ msgstr "<strong>Przewoźnik</strong>"
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.report_delivery_document2
 msgid "<strong>Tracking Number</strong>"
-msgstr "Numer przesyłki"
+msgstr "<strong>Numer przesyłki</strong>"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.report_delivery_document2
@@ -452,6 +452,13 @@ msgid "Error: no matching grid."
 msgstr ""
 
 #. module: delivery
+#: code:addons/delivery/models/delivery_carrier.py:206
+#: code:addons/delivery/models/delivery_grid.py:50
+#, python-format
+msgid "Error: this delivery method is not available for this address."
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_delivery_price
 msgid "Estimated Delivery Price"
 msgstr "Szacowany Koszt Dostawy"
@@ -477,6 +484,7 @@ msgid "Fixed Price"
 msgstr "Cena stała"
 
 #. module: delivery
+#: model:delivery.carrier,name:delivery.free_delivery_carrier
 #: model:product.product,name:delivery.product_product_delivery
 #: model:product.template,name:delivery.product_product_delivery_product_template
 msgid "Free delivery charges"
@@ -662,6 +670,7 @@ msgid "No price rule matching this order; delivery cost cannot be computed."
 msgstr ""
 
 #. module: delivery
+#: model:delivery.carrier,name:delivery.normal_delivery_carrier
 #: model:product.product,name:delivery.product_product_delivery_normal
 #: model:product.template,name:delivery.product_product_delivery_normal_product_template
 msgid "Normal Delivery Charges"
@@ -867,6 +876,7 @@ msgid "Stock Move"
 msgstr "Przesunięcie zapasu"
 
 #. module: delivery
+#: model:delivery.carrier,name:delivery.delivery_carrier
 #: model:product.product,name:delivery.product_product_delivery_poste
 #: model:product.template,name:delivery.product_product_delivery_poste_product_template
 msgid "The Poste"
@@ -899,7 +909,7 @@ msgstr "Śledzenie"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_carrier_tracking_ref
 msgid "Tracking Reference"
-msgstr "kod przesyłki"
+msgstr "Odnośnik przesyłki"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_carrier_tracking_url

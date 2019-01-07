@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: uk\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: hr_gamification
 #: model:ir.actions.act_window,help:hr_gamification.goals_menu_groupby_action2
@@ -103,7 +103,7 @@ msgstr "Опишіть, що вони зробили і чому це важли
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_direct_badge_ids
 msgid "Direct Badge"
-msgstr ""
+msgstr "Особистий значок"
 
 #. module: hr_gamification
 #: model:ir.model,name:hr_gamification.model_hr_employee
@@ -120,7 +120,7 @@ msgstr "Значки працівників"
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_goal_ids
 msgid "Employee HR Goals"
-msgstr ""
+msgstr "Цілі персоналу відділу кадрів"
 
 #. module: hr_gamification
 #: model:ir.model,name:hr_gamification.model_gamification_badge
@@ -135,7 +135,7 @@ msgstr "Значок користувача геміфікації"
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_res_users_goal_ids
 msgid "Goal"
-msgstr ""
+msgstr "Ціль"
 
 #. module: hr_gamification
 #: model:ir.actions.act_window,name:hr_gamification.goals_menu_groupby_action2
@@ -156,12 +156,12 @@ msgstr "Надіслано"
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge_granted_employees_count
 msgid "Granted Employees Count"
-msgstr ""
+msgstr "Наданий рахунок працівникам"
 
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_has_badges
 msgid "Has Badges"
-msgstr ""
+msgstr "Має значок"
 
 #. module: hr_gamification
 #: model:ir.ui.view,arch_db:hr_gamification.hr_hr_employee_view_form

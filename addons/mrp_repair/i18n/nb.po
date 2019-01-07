@@ -3,15 +3,15 @@
 # * mrp_repair
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
-# Jorunn D. Newth <jdn@eyenetworks.no>, 2017
+# Martin Trigaux, 2017
+# Jorunn D. Newth, 2017
 # Viktor Basso <viktor@voit.no>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:27+0000\n"
-"PO-Revision-Date: 2017-10-02 11:27+0000\n"
+"POT-Creation-Date: 2018-04-27 14:52+0000\n"
+"PO-Revision-Date: 2018-04-27 14:52+0000\n"
 "Last-Translator: Viktor Basso <viktor@voit.no>, 2017\n"
 "Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
@@ -63,27 +63,13 @@ msgid ""
 "                (with reference: ${object.origin} )\n"
 "                % endif\n"
 "                % if object.invoice_method != 'none':\n"
-"                amounting in <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}.</strong>\n"
+"                amounting in <strong>${format_amount(object.amount_total, object.pricelist_id.currency_id)}.</strong>\n"
 "                % endif\n"
 "                </p>\n"
 "                <p>You can reply to this email if you have any questions.</p>\n"
 "                <p>Thank you,</p>\n"
 "            </data>"
 msgstr ""
-"<?xml version=\"1.0\"?>\n"
-"<data><p>Kjære ${object.partner_id.name}</p>\n"
-"                <p>\n"
-"                Til reparasjonsordren din, her er  ${doc_name} <strong>${object.name}</strong>\n"
-"                % if object.origin:\n"
-"                (with reference: ${object.origin} )\n"
-"                % endif\n"
-"                % if object.invoice_method != 'none':\n"
-"                amounting in <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}.</strong>\n"
-"                % endif\n"
-"                </p>\n"
-"                <p>Du kan svare på denne epostmeldingen med spørsmål du måtte ha.</p>\n"
-"                <p>Takk,</p>\n"
-"            </data>"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
@@ -298,7 +284,7 @@ msgstr "Beskrivelse"
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_location_dest_id
 msgid "Dest. Location"
-msgstr ""
+msgstr "Dest. plassering"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_cancel_display_name
@@ -413,7 +399,7 @@ msgstr "Faktura"
 #. module: mrp_repair
 #: selection:mrp.repair,state:0
 msgid "Invoice Exception"
-msgstr ""
+msgstr "Fakturaavvik"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_invoice_line_id
@@ -808,7 +794,7 @@ msgstr "Vis alle oppføringer som har en neste handling-dato før dagen i dag"
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_location_id
 msgid "Source Location"
-msgstr ""
+msgstr "Kildelokasjon"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
@@ -825,7 +811,7 @@ msgstr "Status"
 #. module: mrp_repair
 #: model:ir.model,name:mrp_repair.model_stock_move
 msgid "Stock Move"
-msgstr ""
+msgstr "Lagerflytting"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_price_subtotal

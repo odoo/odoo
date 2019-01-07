@@ -213,7 +213,7 @@ class Inventory(models.Model):
     def _get_inventory_lines_values(self):
         # TDE CLEANME: is sql really necessary ? I don't think so
         locations = self.env['stock.location'].search([('id', 'child_of', [self.location_id.id])])
-        domain = ' location_id in %s'
+        domain = ' location_id in %s AND active = TRUE'
         args = (tuple(locations.ids),)
 
         vals = []
@@ -254,6 +254,8 @@ class Inventory(models.Model):
 
         self.env.cr.execute("""SELECT product_id, sum(quantity) as product_qty, location_id, lot_id as prod_lot_id, package_id, owner_id as partner_id
             FROM stock_quant
+            LEFT JOIN product_product
+            ON product_product.id = stock_quant.product_id
             WHERE %s
             GROUP BY product_id, location_id, lot_id, package_id, partner_id """ % domain, args)
 
@@ -332,7 +334,7 @@ class InventoryLine(models.Model):
     # TDE FIXME: necessary ? -> replace by location_id
     prodlot_name = fields.Char(
         'Serial Number Name',
-        related='prod_lot_id.name', store=True)
+        related='prod_lot_id.name', store=True, readonly=True)
     company_id = fields.Many2one(
         'res.company', 'Company', related='inventory_id.company_id',
         index=True, readonly=True, store=True)
@@ -404,7 +406,7 @@ class InventoryLine(models.Model):
         """
         for line in self:
             if line.product_id.type != 'product':
-                raise UserError(_("You can only adjust stockable products."))
+                raise UserError(_("You can only adjust stockable products.") + '\n\n%s -> %s' % (line.product_id.display_name, line.product_id.type))
 
     def _get_quants(self):
         return self.env['stock.quant'].search([

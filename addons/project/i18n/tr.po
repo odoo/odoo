@@ -17,13 +17,14 @@
 # Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2017
 # Levent Karakaş <levent@mektup.at>, 2018
 # Umur Akın <umura@projetgrup.com>, 2018
+# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-30 13:11+0000\n"
-"PO-Revision-Date: 2017-11-30 13:11+0000\n"
-"Last-Translator: Umur Akın <umura@projetgrup.com>, 2018\n"
+"POT-Creation-Date: 2018-07-27 11:55+0000\n"
+"PO-Revision-Date: 2018-07-27 11:55+0000\n"
+"Last-Translator: Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2018\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -119,7 +120,7 @@ msgid ""
 "                                <span>We would be delighted to assist you along the way. Contact us through our\n"
 "                                <a href=\"https://www.odoo.com/help\">support form</a> if you have any question.\n"
 "                                You can also discover how to get the best out of Odoo Project with our </span>\n"
-"                                <a target=\"_blank\" href=\"https://www.odoo.com/documentation/user/10.0/project.html\">\n"
+"                                <a target=\"_blank\" href=\"https://www.odoo.com/documentation/user/11.0/project.html\">\n"
 "                                <span style=\"text-decoration:underline;\">User Documentation</span></a>\n"
 "                                </span><span> or with our </span>\n"
 "                                <a target=\"_blank\" href=\"https://www.odoo.com/documentation\">\n"
@@ -166,12 +167,12 @@ msgstr "Görev #"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_working_days_open
 msgid "# Working Days to Assign"
-msgstr ""
+msgstr "# Atanacak İş Günleri"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_working_days_close
 msgid "# Working Days to Close"
-msgstr ""
+msgstr "# Kapatılacak Çalışma Günleri"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_nbr
@@ -180,7 +181,7 @@ msgstr "# nın Görevleri"
 
 #. module: project
 #: code:addons/project/models/project.py:244
-#: code:addons/project/models/project.py:533
+#: code:addons/project/models/project.py:542
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopya)"
@@ -202,7 +203,7 @@ msgstr "- Odoo Ekibi"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "1. Learn about Tasks and Timesheets."
-msgstr ""
+msgstr "1. Görevler ve Zaman Çizelgesi hakkında bilgi edinin."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -964,6 +965,10 @@ msgid ""
 " * Red indicates something is preventing the progress of this task\n"
 " * Green indicates the task is ready to be pulled to the next stage"
 msgstr ""
+"Bir görev kanban durumu, onu etkileyen özel durumları gösterir:\n"
+"* Gri, varsayılan durum\n"
+"* Kırmızı, bir şey bu görevin işlemesini engellediğini gösterir\n"
+"* Yeşil, görev bir sonraki aşamaya çekilmeye hazır olduğunu gösterir. "
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -1062,7 +1067,7 @@ msgid "Aliased Model"
 msgstr "Rumuzlama Modeli"
 
 #. module: project
-#: code:addons/project/controllers/portal.py:89
+#: code:addons/project/controllers/portal.py:92
 #, python-format
 msgid "All"
 msgstr "Hepsi"
@@ -1116,6 +1121,10 @@ msgid ""
 " a Task is created, and can  manually decide if you want to be notified for "
 "its other events too."
 msgstr ""
+"Bildirimlerin sayısını kısıtlamanın bir başka iyi yolu da sadece sizin "
+"projenizin 'Atanmış Görev' etkinliğini takip etmek. Daha sonra görev "
+"oluşturulduğunda bildirim alacaksınız ve eğer diğer etkinliklerden de "
+"bildirim almak isterseniz manuel olarak karar verebileceksiniz."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
@@ -1126,7 +1135,7 @@ msgstr "Arşivlendi"
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_form2
 msgid "Assign to Me"
-msgstr ""
+msgstr "Bana Ata"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_date_start
@@ -1180,7 +1189,7 @@ msgstr "Ek"
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_attachment_ids
 msgid "Attachment that don't come from message."
-msgstr ""
+msgstr "Mesajdan gelmeyen ek."
 
 #. module: project
 #: code:addons/project/models/project.py:109
@@ -1237,6 +1246,7 @@ msgstr ""
 "sürmeye tutmaya çalışın."
 
 #. module: project
+#: code:addons/project/models/project.py:29
 #: model:project.task,legend_blocked:project.project_task_15
 #: model:project.task,legend_blocked:project.project_task_16
 #: model:project.task,legend_blocked:project.project_task_18
@@ -1263,6 +1273,7 @@ msgstr ""
 #: model:project.task.type,legend_blocked:project.project_stage_data_1
 #: model:project.task.type,legend_blocked:project.project_stage_data_2
 #: selection:report.project.task.user,state:0
+#, python-format
 msgid "Blocked"
 msgstr "Engellendi"
 
@@ -1484,7 +1495,7 @@ msgstr "Reklam Yazarlığı / Tasarım"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_displayed_image_id
 msgid "Cover Image"
-msgstr ""
+msgstr "Kapak Resmi"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_project_view_form_simplified
@@ -1521,7 +1532,7 @@ msgstr "- Yeni bir proje oluştur"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_merge_wizard_create_new_task
 msgid "Create a new task"
-msgstr ""
+msgstr "Yeni görev oluştur"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1612,7 +1623,7 @@ msgid "Currently there are not any activity scheduled."
 msgstr "Mevcutta planlanan herhangi bir aktivite yok."
 
 #. module: project
-#: code:addons/project/models/project.py:818
+#: code:addons/project/models/project.py:836
 #: model:ir.model.fields,field_description:project.field_project_project_partner_id
 #: model:ir.model.fields,field_description:project.field_project_task_partner_id
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -1621,7 +1632,8 @@ msgid "Customer"
 msgstr "Müşteri"
 
 #. module: project
-#: code:addons/project/models/project.py:818
+#: code:addons/project/models/project.py:836
+#: code:addons/project/models/project.py:839
 #, python-format
 msgid "Customer Email"
 msgstr "Müşteri Epostası"
@@ -1720,6 +1732,10 @@ msgid ""
 "ways to work with Odoo. First, decide if you want to think in terms of "
 "tasks. Then, activate the Timesheets app if you need it."
 msgstr ""
+"Neye ihtiyacınız olduğuna ve nasıl yönetmeye çalıştığınıza bağlı olarak, "
+"Odoo ile çalışmanın bir çok yolu var. Öncelikle, görevler açısından düşünmek"
+" istiyorsanız karar verin. Daha sonra ihtiyacınız varsa Zaman Çizelgesi "
+"uygulamasını etkinleştirin."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1891,6 +1907,12 @@ msgid "Ending Date"
 msgstr "Bitiş Tarihi"
 
 #. module: project
+#: code:addons/project/models/project.py:556
+#, python-format
+msgid "Error! You cannot create recursive hierarchy of task(s)."
+msgstr ""
+
+#. module: project
 #: sql_constraint:project.project:0
 msgid "Error! project start-date must be lower than project end-date."
 msgstr "Hata! Proje başlangıç tarihi proje bitiş tarihinden küçük olmalıdır."
@@ -1945,6 +1967,8 @@ msgid ""
 "Explanation text to help users using the star on tasks or issues in this "
 "stage."
 msgstr ""
+"Açıklama metni, bu aşamadaki görev ya da olaylardaki yıldızı kullanan "
+"kullanıcılara yardım eder."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
@@ -2005,6 +2029,8 @@ msgid ""
 "For example, risk and task owners should come prepared to share the status "
 "of their item and, ideally, a path to resolution."
 msgstr ""
+"Örneğin, risk ve görev sahibi öğelerin durumunu ve ideal olarak çözüm yolunu"
+" paylaşmaya hazır olmalıdır."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2100,7 +2126,7 @@ msgstr "Yeşil"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_legend_done
 msgid "Green Kanban Label"
-msgstr ""
+msgstr "Yeşil Kanban Etiketi"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2112,12 +2138,12 @@ msgstr ""
 #. module: project
 #: selection:project.task,kanban_state:0
 msgid "Grey"
-msgstr ""
+msgstr "Gri"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_legend_normal
 msgid "Grey Kanban Label"
-msgstr ""
+msgstr "Gri Kanban Etiketi"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2169,7 +2195,7 @@ msgid "Hours"
 msgstr "Saatl "
 
 #. module: project
-#: code:addons/project/models/project.py:730
+#: code:addons/project/models/project.py:745
 #, python-format
 msgid "I take it"
 msgstr "Ben alıyorum"
@@ -2282,6 +2308,7 @@ msgid "Improve collaboration with customers"
 msgstr "Müşteriler ile işbirliğini geliştirmek"
 
 #. module: project
+#: code:addons/project/models/project.py:35
 #: model:project.task,legend_normal:project.project_task_1
 #: model:project.task,legend_normal:project.project_task_10
 #: model:project.task,legend_normal:project.project_task_11
@@ -2330,6 +2357,7 @@ msgstr "Müşteriler ile işbirliğini geliştirmek"
 #: model:project.task.type,legend_normal:project.project_stage_data_2
 #: model:project.task.type,name:project.project_stage_1
 #: selection:report.project.task.user,state:0
+#, python-format
 msgid "In Progress"
 msgstr "Sürüyor..."
 
@@ -2441,6 +2469,9 @@ msgid ""
 "Here are some KPIs you should take a look at. Ask yourself 'How can they be "
 "improved?'"
 msgstr ""
+"Görevlerinizi yılda bir kez analiz etmek için zaman ayırmak genellikle iyi "
+"bir fikirdir. İşte bakmanız gereken bazı KPI'lar. Kendinize 'Nasıl "
+"geliştirilebilir?' diye sorun."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_legend_blocked
@@ -2500,7 +2531,7 @@ msgid "Last Modified on"
 msgstr "Son Güncelleme"
 
 #. module: project
-#: code:addons/project/controllers/portal.py:86
+#: code:addons/project/controllers/portal.py:89
 #: model:ir.model.fields,field_description:project.field_project_task_date_last_stage_update
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_date_last_stage_update
 #, python-format
@@ -2535,6 +2566,8 @@ msgid ""
 "Learn how to better organize your company using Projects, Tasks and "
 "Timesheets."
 msgstr ""
+"Projeler, Görevler ve Zaman Çizelgesini kullanarak şirketinizi nasıl daha "
+"iyi organize edebileceğinizi öğrenin."
 
 #. module: project
 #. openerp-web
@@ -2549,6 +2582,8 @@ msgid ""
 "Lets the company customize which Pad installation should be used to link to "
 "new pads (for example: http://etherpad.com/)."
 msgstr ""
+"Şirketin yeni pedlere bağlantı kurmak için hangi Pad kurulumunun "
+"kullanılması gerektiğini özelleştirir (örneğin: http://etherpad.com/)."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_analytic_account_id
@@ -2575,12 +2610,12 @@ msgstr "Düşük"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_attachment_ids
 msgid "Main Attachments"
-msgstr ""
+msgstr "Ana Ekler"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Manage your resources with Gantt charts"
-msgstr ""
+msgstr "Gantt çizelgesi ile kaynaklarınızı yönetin"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
@@ -2633,17 +2668,17 @@ msgstr "Üyeler"
 #. module: project
 #: model:ir.actions.act_window,name:project.project_task_actions_act_window_merge_tasks
 msgid "Merge Selected Tasks"
-msgstr ""
+msgstr "Seçilmiş Görevleri Birleştir"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_task_merge_wizard_form
 msgid "Merge Tasks"
-msgstr ""
+msgstr "Görevleri Birleştir"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_merge_wizard_target_task_id
 msgid "Merge into an existing task"
-msgstr ""
+msgstr "Mevcut bir görev içinde birleştir"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2663,7 +2698,7 @@ msgstr "Favorilerim"
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "My Followed Tasks"
-msgstr ""
+msgstr "Takip Ettiğim Görevler"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_task_action_activity
@@ -2676,9 +2711,10 @@ msgid "My Tasks"
 msgstr "Görevlerim"
 
 #. module: project
-#: code:addons/project/controllers/portal.py:31
+#: code:addons/project/controllers/portal.py:35
 #: model:ir.model.fields,field_description:project.field_project_tags_name
 #: model:ir.ui.view,arch_db:project.portal_my_projects
+#: model:ir.ui.view,arch_db:project.portal_my_tasks
 #, python-format
 msgid "Name"
 msgstr "İsim"
@@ -2686,7 +2722,7 @@ msgstr "İsim"
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
 msgid "Name of the tasks :"
-msgstr ""
+msgstr "Görevlerin adı:"
 
 #. module: project
 #: model:project.task,legend_blocked:project.project_task_10
@@ -2725,11 +2761,11 @@ msgstr "Yeni onarım eklendi"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_merge_wizard_target_task_name
 msgid "New task name"
-msgstr ""
+msgstr "Yeni görev adı"
 
 #. module: project
-#: code:addons/project/controllers/portal.py:30
-#: code:addons/project/controllers/portal.py:83
+#: code:addons/project/controllers/portal.py:34
+#: code:addons/project/controllers/portal.py:86
 #, python-format
 msgid "Newest"
 msgstr "En yeni"
@@ -2741,10 +2777,16 @@ msgid "Next Activities"
 msgstr "Sonraki Aktiviteler"
 
 #. module: project
-#: code:addons/project/models/project.py:775
+#: code:addons/project/models/project.py:792
 #, python-format
 msgid "No Subject"
 msgstr "Konu Yok"
+
+#. module: project
+#: code:addons/project/controllers/portal.py:102
+#, python-format
+msgid "None"
+msgstr "Hiçbiri"
 
 #. module: project
 #: selection:project.task,priority:0
@@ -2783,12 +2825,12 @@ msgstr "Şimdi proje kuruldu, <b>birkaç görev oluşturun</b> ."
 #. module: project
 #: model:ir.model.fields,help:project.field_report_project_task_user_working_days_open
 msgid "Number of Working Days to Open the task"
-msgstr ""
+msgstr "Görevi açmak için Çalışma Günü Sayısı"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_report_project_task_user_working_days_close
 msgid "Number of Working Days to close the task"
-msgstr ""
+msgstr "Görevi kapamak için Çalışma Günü Sayısı"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_doc_count
@@ -2919,7 +2961,7 @@ msgid "Parent Record Thread ID"
 msgstr "Üst kayıt iş parçacığı kimliği"
 
 #. module: project
-#: code:addons/project/models/project.py:861
+#: code:addons/project/models/project.py:878
 #: model:ir.model.fields,field_description:project.field_project_task_parent_id
 #: model:ir.ui.view,arch_db:project.view_task_form2
 #, python-format
@@ -2948,7 +2990,7 @@ msgid "Planner"
 msgstr "Planlayıcı"
 
 #. module: project
-#: code:addons/project/models/project.py:887
+#: code:addons/project/models/project.py:918
 #, python-format
 msgid ""
 "Please remove existing tasks in the project linked to the accounts you want "
@@ -2992,7 +3034,8 @@ msgid "Product or software version"
 msgstr "Ürün veya yazılım sürümü"
 
 #. module: project
-#: code:addons/project/models/project.py:346
+#: code:addons/project/controllers/portal.py:103
+#: code:addons/project/models/project.py:355
 #: model:ir.model,name:project.model_project_project
 #: model:ir.model.fields,field_description:project.field_project_task_project_id
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_project_id
@@ -3055,6 +3098,7 @@ msgstr "Proje Görevleri"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_company_project_time_mode_id
+#: model:ir.model.fields,field_description:project.field_res_config_settings_project_time_mode_id
 #: model:ir.model.fields,field_description:project.project_time_mode_id_duplicate_xmlid
 msgid "Project Time Unit"
 msgstr "Proje Zaman Birimi"
@@ -3072,7 +3116,7 @@ msgstr "Proje görevleri"
 #. module: project
 #: model:ir.actions.server,name:project.ir_actions_server_project_sample
 msgid "Project: Activate Sample Project"
-msgstr ""
+msgstr "Proje: Örnek Projeyi Etkinleştir"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_view_project_all
@@ -3098,9 +3142,10 @@ msgstr "Projeler & Görevleri"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_config_settings_module_rating_project
 msgid "Rating on Tasks"
-msgstr ""
+msgstr "Görevler Üzerindeki Puanlama"
 
 #. module: project
+#: code:addons/project/models/project.py:32
 #: model:project.task,legend_done:project.project_task_1
 #: model:project.task,legend_done:project.project_task_12
 #: model:project.task,legend_done:project.project_task_15
@@ -3130,8 +3175,9 @@ msgstr ""
 #: model:project.task.type,legend_done:project.project_stage_data_0
 #: model:project.task.type,legend_done:project.project_stage_data_1
 #: model:project.task.type,legend_done:project.project_stage_data_2
+#, python-format
 msgid "Ready for Next Stage"
-msgstr ""
+msgstr "Bir Sonraki Aşama için Hazır"
 
 #. module: project
 #. openerp-web
@@ -3194,7 +3240,7 @@ msgstr "Konu Kayıt ID"
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Record's Colour"
-msgstr ""
+msgstr "Kayıt Rengi"
 
 #. module: project
 #: selection:project.task,kanban_state:0
@@ -3204,12 +3250,17 @@ msgstr "Kırmızı"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_legend_blocked
 msgid "Red Kanban Label"
-msgstr ""
+msgstr "Kırmızı Kanban Etiketi"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Red: the Task is blocked (there's a problem)"
 msgstr "Kırmızı: Görev engellendi (bir sorun var)"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.portal_my_tasks
+msgid "Ref"
+msgstr "Ref"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_code
@@ -3293,7 +3344,7 @@ msgid "Search"
 msgstr "Arama"
 
 #. module: project
-#: code:addons/project/controllers/portal.py:92
+#: code:addons/project/controllers/portal.py:95
 #, python-format
 msgid "Search <span class=\"nolabel\"> (in Content)</span>"
 msgstr ""
@@ -3304,28 +3355,28 @@ msgid "Search Project"
 msgstr "Proje Ara"
 
 #. module: project
-#: code:addons/project/controllers/portal.py:96
+#: code:addons/project/controllers/portal.py:99
 #, python-format
 msgid "Search in All"
 msgstr "Arama Konumu"
 
 #. module: project
-#: code:addons/project/controllers/portal.py:94
+#: code:addons/project/controllers/portal.py:97
 #, python-format
 msgid "Search in Customer"
 msgstr "Müşteri Ara"
 
 #. module: project
-#: code:addons/project/controllers/portal.py:93
+#: code:addons/project/controllers/portal.py:96
 #, python-format
 msgid "Search in Messages"
 msgstr "Mesajlarda Ara"
 
 #. module: project
-#: code:addons/project/controllers/portal.py:95
+#: code:addons/project/controllers/portal.py:98
 #, python-format
 msgid "Search in Stages"
-msgstr ""
+msgstr "Aşamalarda Ara"
 
 #. module: project
 #. openerp-web
@@ -3344,7 +3395,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "Send an automatic confirmation to all emails sent to your customer support"
-msgstr ""
+msgstr "Müşteri desteğinize gönderilen tüm epostalara otomatik onay gönder."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_sequence
@@ -3404,6 +3455,8 @@ msgid ""
 "So if you're looking for the history of a Task, or the latest message on a "
 "Task, simply go to the corresponding Document and you'll find it!"
 msgstr ""
+"Eğer görev geçmişinizi ya da görevdeki son mesajları arıyorsanız, uyuşan "
+"belgenize basitçe gidin ve onu bulun!"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3434,7 +3487,7 @@ msgstr "Görevin özellikleri belirtilmiştir"
 #. module: project
 #: model:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Split your tasks to organize your work into sub-milestones"
-msgstr ""
+msgstr "Görevinizi ayırarak alt-görevler halinde işinizi organize edin."
 
 #. module: project
 #. openerp-web
@@ -3444,7 +3497,7 @@ msgid "Sprint"
 msgstr "Sprint"
 
 #. module: project
-#: code:addons/project/controllers/portal.py:85
+#: code:addons/project/controllers/portal.py:88
 #: model:ir.model.fields,field_description:project.field_project_task_stage_id
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_stage_id
 #: model:ir.ui.view,arch_db:project.portal_my_tasks
@@ -3488,7 +3541,7 @@ msgstr "Yıldızlı"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_legend_priority
 msgid "Starred Explanation"
-msgstr ""
+msgstr "Yıldızlı Açıklama"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3541,16 +3594,15 @@ msgstr "Etiketler"
 #. module: project
 #: model:ir.model,name:project.model_project_tags
 msgid "Tags of project's tasks"
-msgstr ""
+msgstr "Proje görev etiketleri"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_merge_wizard_target_project_id
 msgid "Target Project"
-msgstr ""
+msgstr "Hedef Proje"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task
-#: model:ir.ui.view,arch_db:project.portal_my_tasks
 #: model:ir.ui.view,arch_db:project.view_task_form2
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model:ir.ui.view,arch_db:project.view_task_search_form
@@ -3576,7 +3628,7 @@ msgstr "Görev Engellendi"
 #. module: project
 #: model:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Task Management"
-msgstr ""
+msgstr "Görev Yönetimi"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_new
@@ -3713,7 +3765,7 @@ msgstr "Görevler Kullanıcı ve proje göre"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_merge_wizard_task_ids
 msgid "Tasks to Merge"
-msgstr ""
+msgstr "Birleştirilecek Görevler"
 
 #. module: project
 #. openerp-web
@@ -3756,12 +3808,12 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.mail_template_task_merge
 msgid "The following task has been merged into this one:"
-msgstr ""
+msgstr "Takip eden görev bunun içinde birleştirildi."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.mail_template_task_merge
 msgid "The following tasks have been merged into this one:"
-msgstr ""
+msgstr "Takip eden görevler bunun içinde birleştirildi."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_alias_model_id
@@ -3828,6 +3880,8 @@ msgid ""
 "These email addresses will be added to the CC field of all inbound\n"
 "        and outbound emails for this record before being sent. Separate multiple email addresses with a comma"
 msgstr ""
+"Bu e-posta adresleri, gönderilmeden önce bu kayıt için tüm gelen ve giden e-postaların CC alanına eklenecektir.\n"
+" Birden çok e-posta adresini virgülle ayırın"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_email_from
@@ -3841,6 +3895,9 @@ msgid ""
 "from customers will be transformed into a task that you'll be able to track "
 "easily!"
 msgstr ""
+"Bu, özellikle yardım ve desteği yönetmek için kullanışlıdır: Müşterilerden "
+"gelen tüm e-postalar kolayca takip edebileceğiniz bir göreve "
+"dönüştürülecektir!"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -3848,6 +3905,8 @@ msgid ""
 "This replaces task's description text field by a collaborative rich text "
 "pad. This is advised if tasks involve several people."
 msgstr ""
+"Bu, görevin açıklama metni alanını, ortaklaşa zengin bir metin pediyle "
+"değiştirir. Görevler birkaç kişi içeriyorsa bu tavsiye edilir."
 
 #. module: project
 #: model:ir.actions.act_window,help:project.action_project_task_user_tree
@@ -3874,7 +3933,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.mail_template_task_merge
 msgid "This task has been merged into the following task:"
-msgstr ""
+msgstr "Bu görev, takip eden görevle birleştirildi."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3898,6 +3957,7 @@ msgstr ""
 #: model:ir.model.fields,help:project.field_account_analytic_account_company_uom_id
 #: model:ir.model.fields,help:project.field_project_project_company_uom_id
 #: model:ir.model.fields,help:project.field_res_company_project_time_mode_id
+#: model:ir.model.fields,help:project.field_res_config_settings_project_time_mode_id
 #: model:ir.model.fields,help:project.project_time_mode_id_duplicate_xmlid
 msgid ""
 "This will set the unit of measure used in projects and tasks.\n"
@@ -3915,7 +3975,7 @@ msgstr "Görev Zaman Tahmini"
 #. module: project
 #: model:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Time Management"
-msgstr ""
+msgstr "Zaman Yönetimi"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -3949,7 +4009,7 @@ msgid "Timetable working hours to adjust the gantt diagram report"
 msgstr "Gantt çizelgesini ayarlayacak çalışma süreleri zaman tablosu"
 
 #. module: project
-#: code:addons/project/controllers/portal.py:84
+#: code:addons/project/controllers/portal.py:87
 #, python-format
 msgid "Title"
 msgstr "Başlık"
@@ -3998,7 +4058,7 @@ msgstr "Görevlerdeki müşteri memnuniyetini takip edin"
 #. module: project
 #: model:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Track time spent on projects and tasks"
-msgstr ""
+msgstr "Projelerde ve görevlerde harcanan zamanı izleyin."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
@@ -4015,7 +4075,7 @@ msgstr "Okunmamış Mesajlar"
 #. module: project
 #: model:res.groups,name:project.group_subtask_project
 msgid "Use Subtask Project"
-msgstr ""
+msgstr "Alt Görev Projesi Kullanın"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_label_tasks
@@ -4030,7 +4090,7 @@ msgstr "Zaman Çizelgelerini Kullan"
 #. module: project
 #: model:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Use collaborative rich text pads on tasks"
-msgstr ""
+msgstr "Görevlerde işbirlikçi zengin metin pedleri kullanın"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -4038,6 +4098,8 @@ msgid ""
 "Use separate meetings to solve big tasks or tasks that aren’t important for "
 "the entire team."
 msgstr ""
+"Tüm takım için önemli olmayan ya da büyük görevleri çözmek için ayrı "
+"toplantıları kullanın."
 
 #. module: project
 #. openerp-web
@@ -4060,7 +4122,7 @@ msgstr "<b>Görevlerinize dönmek için</b>Sayfa işaretleri yolunu kullanın"
 #. module: project
 #: model:project.task.type,legend_priority:project.project_stage_0
 msgid "Use the star for tasks related to gold customers"
-msgstr ""
+msgstr "Altın müşteriler ile ilgili görevlerde yıldız kullanın"
 
 #. module: project
 #: model:res.groups,name:project.group_project_user
@@ -4186,6 +4248,16 @@ msgstr ""
 "geliştirdik: <br/><br/>"
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_website_message_ids
+msgid "Website Messages"
+msgstr "Websitesi Mesajları"
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_task_website_message_ids
+msgid "Website communication history"
+msgstr "Web Sitesi iletişim geçmişi"
+
+#. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Welcome"
 msgstr "Hoş Geldiniz"
@@ -4194,11 +4266,12 @@ msgstr "Hoş Geldiniz"
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "What is the average number of working hours necessary to close a task?"
 msgstr ""
+"Görevi kapamak için gerekli çalışma saatlerinin ortalama sayısı nedir?"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "What is the average time before a task is assigned / closed?"
-msgstr ""
+msgstr "Görev kapanmadan/atanmadan önceki ortalama süre nedir?"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -4214,7 +4287,7 @@ msgstr "Son tarihi geçmişlerin sayısı nedir?"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "What is their average number of tasks worked on / closed?"
-msgstr ""
+msgstr "Çalışan /Kapanmış görevlerin ortalama sayısı nedir?"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -4241,32 +4314,32 @@ msgstr "Çalışma Süresi"
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_form2
 msgid "Working Time to Assign"
-msgstr ""
+msgstr "Atanan Çalışma Süresi"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_form2
 msgid "Working Time to Close"
-msgstr ""
+msgstr "Kapatmak İçin Çalışma Süresi"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_working_days_open
 msgid "Working days to assign"
-msgstr ""
+msgstr "Atanan Çalışma Günleri"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_working_days_close
 msgid "Working days to close"
-msgstr ""
+msgstr "Kapatmak için çalışma günleri"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_working_hours_open
 msgid "Working hours to assign"
-msgstr ""
+msgstr "Atanan Çalışma Saatleri"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_working_hours_close
 msgid "Working hours to close"
-msgstr ""
+msgstr "Kapatmak için çalışma saatleri"
 
 #. module: project
 #: model:ir.filters,name:project.filter_task_report_workload
@@ -4276,7 +4349,7 @@ msgstr "İş Yükü"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_write_date
 msgid "Write Date"
-msgstr ""
+msgstr "Yazma Tarihi"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
@@ -4338,13 +4411,16 @@ msgstr ""
 "Raporlarınızı kolayca sonra tekrar kullanabilmeniz için kaydedebilirsiniz"
 
 #. module: project
-#: code:addons/project/models/project.py:547
+#: code:addons/project/models/project.py:562
 #, python-format
 msgid ""
 "You can't define a parent task if its project is not correctly configured. "
 "The sub-task's project of the parent task's project should be this task's "
 "project"
 msgstr ""
+"Proje doğru bir şekilde yapılandırılmamışsa bir üst görevi "
+"tanımlayamazsınız. Üst görev projesinin alt görev projesi görev projesi "
+"olmalıdır."
 
 #. module: project
 #: code:addons/project/models/project.py:67
@@ -4392,6 +4468,7 @@ msgstr "Örnek bir proje etkinleştirmek"
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "and activate 'Log work activities on tasks'"
 msgstr ""
+"ve 'İş etkinliklerini görevler üzerine kaydet' seçeneğini etkinleştirin"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_project_view_form_simplified
@@ -4402,6 +4479,11 @@ msgstr "örn. Ofis Parti"
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "etc.."
 msgstr "vb.."
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.portal_my_tasks
+msgid "for project:"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_kanban
@@ -4424,7 +4506,7 @@ msgid "send us an email"
 msgstr "bize bir e-posta gönderin"
 
 #. module: project
-#: code:addons/project/models/project.py:595
+#: code:addons/project/models/project.py:610
 #, python-format
 msgid "tasks"
 msgstr "görevler"

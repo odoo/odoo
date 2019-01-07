@@ -3,17 +3,23 @@
 # * account_budget
 # 
 # Translators:
-# Martin Trigaux, 2017
-# Paolo Valier, 2018
 # Manuela Feliciani <mfeliciani@alice.it>, 2018
 # David Minneci <david@numeko.it>, 2018
+# Sergio Zanchetta <primes2h@gmail.com>, 2018
+# Francesco Garganese <francesco.garganese@aeromnia.aero>, 2018
+# Martin Trigaux, 2018
+# Giacomo Grasso <giacomo.grasso.82@gmail.com>, 2018
+# Paolo Valier, 2018
+# Léonie Bouchat <lbo@odoo.com>, 2018
+# Marco Calcagni <mcalcagni@dinamicheaziendali.it>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-10 11:34+0000\n"
-"PO-Revision-Date: 2017-10-10 11:34+0000\n"
-"Last-Translator: David Minneci <david@numeko.it>, 2018\n"
+"PO-Revision-Date: 2017-09-20 10:14+0000\n"
+"Last-Translator: Marco Calcagni <mcalcagni@dinamicheaziendali.it>, 2018\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,6 +35,10 @@ msgid ""
 "                financial accounts and/or analytic accounts (that may represent\n"
 "                projects, departments, categories of products, etc.)"
 msgstr ""
+"Un budget è una previsione di costi o ricavi della tua azienda\n"
+"attesa per un periodo futuro. Un budget è definito su alcuni conti\n"
+"finanziari e/o analitici (che possono rappresentare progetti,\n"
+"dipartimenti, categorie di prodotti, ecc.)"
 
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_account_budget_post_account_ids
@@ -39,7 +49,7 @@ msgstr "Conti"
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines_percentage
 msgid "Achievement"
-msgstr ""
+msgstr "Realizzazione"
 
 #. module: account_budget
 #: model:ir.model,name:account_budget.model_account_analytic_account
@@ -59,18 +69,18 @@ msgstr "Approva"
 #: model:ir.ui.view,arch_db:account_budget.crossovered_budget_view_tree
 #: model:ir.ui.view,arch_db:account_budget.view_crossovered_budget_search
 msgid "Budget"
-msgstr ""
+msgstr "Budget"
 
 #. module: account_budget
 #: model:ir.actions.act_window,name:account_budget.act_account_analytic_account_cb_lines
 #: model:ir.ui.view,arch_db:account_budget.view_account_analytic_account_form_inherit_budget
 msgid "Budget Items"
-msgstr ""
+msgstr "Elementi del Budget"
 
 #. module: account_budget
 #: model:ir.model,name:account_budget.model_crossovered_budget_lines
 msgid "Budget Line"
-msgstr ""
+msgstr "Riga del budget"
 
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_account_analytic_account_crossovered_budget_line
@@ -82,13 +92,13 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_search
 #: model:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_tree
 msgid "Budget Lines"
-msgstr ""
+msgstr "Righe Budget"
 
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_name
 #: model:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
 msgid "Budget Name"
-msgstr ""
+msgstr "Nome Budget"
 
 #. module: account_budget
 #: model:ir.model,name:account_budget.model_account_budget_post
@@ -97,14 +107,14 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account_budget.view_budget_post_search
 #: model:ir.ui.view,arch_db:account_budget.view_budget_post_tree
 msgid "Budgetary Position"
-msgstr ""
+msgstr "Posizione di bilancio"
 
 #. module: account_budget
 #: model:ir.actions.act_window,name:account_budget.open_budget_post_form
 #: model:ir.ui.menu,name:account_budget.menu_budget_post_form
 #: model:ir.ui.view,arch_db:account_budget.res_config_settings_view_form
 msgid "Budgetary Positions"
-msgstr ""
+msgstr "Posizioni di Bilancio"
 
 #. module: account_budget
 #: model:ir.actions.act_window,name:account_budget.act_crossovered_budget_lines_view
@@ -112,7 +122,7 @@ msgstr ""
 #: model:ir.ui.menu,name:account_budget.menu_act_crossovered_budget_lines_view
 #: model:ir.ui.menu,name:account_budget.menu_act_crossovered_budget_view
 msgid "Budgets"
-msgstr ""
+msgstr "Budget"
 
 #. module: account_budget
 #: model:ir.actions.act_window,help:account_budget.act_crossovered_budget_view
@@ -123,11 +133,16 @@ msgid ""
 "                analytic account and monitor its evolution based on the actuals\n"
 "                realised during that period."
 msgstr ""
+"Tenendo traccia di dove sta andando il tuo denaro, puoi essere meno\n"
+"                incline a spendere e raggiungerai più facilmente i tuoi obiettivi\n"
+"                finanziari. Pianifica un budget specificando le entrate previste per\n"
+"                conto analitico e monitora l'evoluzione sulla base delle spese effettive\n"
+"                sostenute durante tale periodo."
 
 #. module: account_budget
 #: model:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
 msgid "Cancel Budget"
-msgstr ""
+msgstr "Annulla budget"
 
 #. module: account_budget
 #: selection:crossovered.budget,state:0
@@ -137,7 +152,7 @@ msgstr "Annullato"
 #. module: account_budget
 #: model:ir.actions.act_window,help:account_budget.act_crossovered_budget_view
 msgid "Click to create a new budget."
-msgstr ""
+msgstr "Clicca per creare un nuovo budget."
 
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_account_budget_post_company_id
@@ -192,7 +207,7 @@ msgstr "Bozza"
 #. module: account_budget
 #: model:ir.ui.view,arch_db:account_budget.view_crossovered_budget_search
 msgid "Draft Budgets"
-msgstr ""
+msgstr "Budget in Bozza"
 
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_date_to
@@ -212,21 +227,21 @@ msgstr "ID"
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget___last_update
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines___last_update
 msgid "Last Modified on"
-msgstr "Data di ultima modifica"
+msgstr "Ultima modifica il"
 
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_account_budget_post_write_uid
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines_write_uid
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_write_uid
 msgid "Last Updated by"
-msgstr "Ultima modifica di"
+msgstr "Ultimo aggiornamento di"
 
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_account_budget_post_write_date
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines_write_date
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_write_date
 msgid "Last Updated on"
-msgstr "Ultima modifica il"
+msgstr "Ultimo aggiornamento il"
 
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_account_budget_post_name
@@ -236,7 +251,7 @@ msgstr "Nome"
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines_paid_date
 msgid "Paid Date"
-msgstr ""
+msgstr "Data di pagamento"
 
 #. module: account_budget
 #: model:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
@@ -247,19 +262,19 @@ msgstr "Periodo"
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines_planned_amount
 #: model:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
 msgid "Planned Amount"
-msgstr ""
+msgstr "Importo pianificato"
 
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines_practical_amount
 #: model:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
 #: model:ir.ui.view,arch_db:account_budget.view_account_analytic_account_form_inherit_budget
 msgid "Practical Amount"
-msgstr ""
+msgstr "Importo effettivo"
 
 #. module: account_budget
 #: model:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
 msgid "Reset to Draft"
-msgstr "Reimposta a Bozza"
+msgstr "Reimposta a bozza"
 
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_creating_user_id
@@ -270,7 +285,7 @@ msgstr "Responsabile"
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_date_from
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines_date_from
 msgid "Start Date"
-msgstr "Data d'Inizio"
+msgstr "Data inizio"
 
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_state
@@ -281,18 +296,18 @@ msgstr "Stato"
 #: code:addons/account_budget/models/account_budget.py:31
 #, python-format
 msgid "The budget must have at least one account."
-msgstr ""
+msgstr "Il budget deve avere almeno un conto. "
 
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines_theoritical_amount
 #: model:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
 msgid "Theoretical Amount"
-msgstr ""
+msgstr "Importo teorico"
 
 #. module: account_budget
 #: model:ir.ui.view,arch_db:account_budget.view_account_analytic_account_form_inherit_budget
 msgid "Theoritical Amount"
-msgstr ""
+msgstr "Importo teorico"
 
 #. module: account_budget
 #: model:ir.ui.view,arch_db:account_budget.view_crossovered_budget_search
@@ -302,9 +317,9 @@ msgstr "Da Approvare"
 #. module: account_budget
 #: model:ir.ui.view,arch_db:account_budget.view_crossovered_budget_search
 msgid "To Approve Budgets"
-msgstr ""
+msgstr "Approvazione Budgets"
 
 #. module: account_budget
 #: selection:crossovered.budget,state:0
 msgid "Validated"
-msgstr ""
+msgstr "Confermato"

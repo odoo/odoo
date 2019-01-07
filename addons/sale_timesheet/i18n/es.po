@@ -9,7 +9,6 @@
 # Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2017
 # José Vicente <txusev@gmail.com>, 2017
 # Pedro M. Baeza <pedro.baeza@gmail.com>, 2017
-# Nicolás Broggi <rnbroggi@gmail.com>, 2017
 # Antonio Trueba, 2017
 # Sergio Flores <vitavitae1@gmail.com>, 2017
 # Gelo Joga Landoo <gj@landoo.es>, 2017
@@ -22,10 +21,10 @@
 # e2f <projects@e2f.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:26+0000\n"
-"PO-Revision-Date: 2017-10-02 11:26+0000\n"
+"POT-Creation-Date: 2018-09-17 09:57+0000\n"
+"PO-Revision-Date: 2018-09-17 09:57+0000\n"
 "Last-Translator: e2f <projects@e2f.com>, 2018\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
@@ -118,7 +117,7 @@ msgstr "Por tasa de facturación"
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Cost"
-msgstr "Costo"
+msgstr "Coste"
 
 #. module: sale_timesheet
 #: model:ir.actions.act_window,name:sale_timesheet.timesheet_action_report_cost_revenue
@@ -293,7 +292,7 @@ msgstr "Proyecto asociado a esta venta"
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.view_order_form_inherit_sale_timesheet
 msgid "Project(s) Overview"
-msgstr "Información general del proyecto (o proyectos)"
+msgstr "Visión gen. proyecto(s)"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/sale_order.py:107
@@ -427,7 +426,7 @@ msgid "There is no timesheet for now."
 msgstr "No hay ningún parte de tiempo por el momento."
 
 #. module: sale_timesheet
-#: code:addons/sale_timesheet/models/sale_order.py:237
+#: code:addons/sale_timesheet/models/sale_order.py:251
 #, python-format
 msgid ""
 "This task has been created from: <a href=# data-oe-model=sale.order data-oe-"
@@ -435,11 +434,6 @@ msgid ""
 msgstr ""
 "Esta tarea ha sido creada desde: <a href=# data-oe-model=sale.order data-oe-"
 "id=%d>%s</a> (%s)"
-
-#. module: sale_timesheet
-#: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
-msgid "Time and material"
-msgstr "Tiempo y material"
 
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
@@ -465,7 +459,7 @@ msgstr "Parte de horas"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_hr_employee_timesheet_cost
 msgid "Timesheet Cost"
-msgstr "Costo del parte de horas"
+msgstr "Coste del parte de horas"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_timesheet_count
@@ -478,11 +472,12 @@ msgid "Timesheet activities associated to this sale"
 msgstr "Actividades del parte de horas asociadas a esta venta"
 
 #. module: sale_timesheet
-#: code:addons/sale_timesheet/controllers/main.py:101
-#: code:addons/sale_timesheet/controllers/main.py:130
+#: code:addons/sale_timesheet/controllers/main.py:104
+#: code:addons/sale_timesheet/controllers/main.py:133
 #: code:addons/sale_timesheet/models/account_invoice.py:26
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_invoice_timesheet_ids
 #: model:ir.ui.view,arch_db:sale_timesheet.account_invoice_view_form_inherit_sale_timesheet
+#: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 #: model:ir.ui.view,arch_db:sale_timesheet.view_order_form_inherit_sale_timesheet
 #, python-format
 msgid "Timesheets"
@@ -492,7 +487,7 @@ msgstr "Partes de horas"
 #: code:addons/sale_timesheet/models/project.py:20
 #, python-format
 msgid "Timesheets of %s"
-msgstr "Partes de tiempo de %s"
+msgstr "Partes de horas de %s"
 
 #. module: sale_timesheet
 #: selection:product.template,service_policy:0

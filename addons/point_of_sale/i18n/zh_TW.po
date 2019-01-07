@@ -4,17 +4,18 @@
 # 
 # Translators:
 # Martin Trigaux, 2017
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2017
 # Michael Yeung, 2017
 # Cécile Collart <cco@odoo.com>, 2018
 # Bill Hsu <hcm86@icloud.com>, 2018
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-08 10:30+0000\n"
-"PO-Revision-Date: 2018-01-08 10:30+0000\n"
-"Last-Translator: Bill Hsu <hcm86@icloud.com>, 2018\n"
+"POT-Creation-Date: 2019-01-03 15:06+0000\n"
+"PO-Revision-Date: 2017-09-20 10:21+0000\n"
+"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2018\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,8 +24,8 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:807
-#: code:addons/point_of_sale/models/pos_order.py:816
+#: code:addons/point_of_sale/models/pos_order.py:880
+#: code:addons/point_of_sale/models/pos_order.py:889
 #, python-format
 msgid " REFUND"
 msgstr "退貨"
@@ -74,7 +75,7 @@ msgid "&nbsp;"
 msgstr "&nbsp;"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:83
+#: code:addons/point_of_sale/models/pos_order.py:85
 #, python-format
 msgid "(RESCUE FOR %(session)s)"
 msgstr "（救援%(session)s）"
@@ -114,7 +115,7 @@ msgid ""
 " continues to run without an internet connection.</p>"
 msgstr ""
 "<p> "
-"點選啟動銷售點接口。它<b>在平板電腦</b>、筆記本電腦或工業硬體上運行。</p><p>一旦會議啟動，該系統將繼續在沒有網路連接的情況下運行。</p>"
+"點選啟動銷售點接口。它<b>在平板電腦</b>、筆記本電腦或工業硬體上運行。</p><p>一旦前台啟動，該系統將繼續在沒有網路連接的情況下運行。</p>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
@@ -252,14 +253,14 @@ msgstr "=理論的關閉餘額"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1975
+#: code:addons/point_of_sale/static/src/js/screens.js:2012
 #, python-format
 msgid "? Clicking \"Confirm\" will validate the payment."
 msgstr "? 點選 \"確認\"  將驗證付款。"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1242
+#: code:addons/point_of_sale/static/src/js/screens.js:1260
 #, python-format
 msgid "A Customer Name Is Required"
 msgstr "客戶名稱是必須的"
@@ -275,7 +276,7 @@ msgstr "一個用來在POS保護敏感功能的安全PIN"
 msgid ""
 "A globally unique identifier for this pos configuration, used to prevent "
 "conflicts in client-generated data."
-msgstr "此POS配置的全球唯一標識符，用於防止客戶生成數據的衝突。"
+msgstr "此POS配置的整體唯一標識符，用於防止客戶生成數據的衝突。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session_login_number
@@ -296,7 +297,7 @@ msgid ""
 "                you sell through the point of sale. The user has to check the\n"
 "                currencies in your cash registers at the beginning and the end\n"
 "                of each session."
-msgstr "一個會話是一段時間，通常是通過銷售點賣東西的一天。使用者需要在每一個會話的開始和結束時清點在您收款機的貨幣。"
+msgstr "一個前台是一段時間，通常是通過銷售點賣東西的一天。使用者需要在每一個前台的開始和結束時清點在您收款機的貨幣。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order_sequence_number
@@ -323,12 +324,12 @@ msgstr "ABC"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Accept payments with an integrated card reader"
-msgstr "以一個集成的讀卡器接納付款"
+msgstr "以一個整合的讀卡器接納接收付款"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_bank_statement_cashbox
 msgid "Account Bank Statement Cashbox Details"
-msgstr "帳戶的銀行對帳單零用金細節"
+msgstr "帳戶的銀行對帳單現金詳情"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -364,7 +365,7 @@ msgstr "有效"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1821
+#: code:addons/point_of_sale/static/src/js/screens.js:1862
 #, python-format
 msgid "Add Tip"
 msgstr "添加提示"
@@ -372,7 +373,7 @@ msgstr "添加提示"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_discount
 msgid "Add a Global Discount"
-msgstr "增加一個全球折扣"
+msgstr "增加一個整體折扣"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -417,7 +418,7 @@ msgstr "允許收銀櫃檯再次列印收據"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Allow global discounts on orders"
-msgstr "訂單全場折扣"
+msgstr "訂單整單折扣"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_group_sale_pricelist
@@ -445,6 +446,15 @@ msgid "Amount total"
 msgstr "總額合計"
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/models.js:1244
+#, python-format
+msgid ""
+"An error occurred when loading product prices. Make sure all pricelists are "
+"available in the POS."
+msgstr "載入產品價格時出錯。確保所有價目表都在 POS 中可用。"
+
+#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_name
 msgid "An internal identification of the point of sale."
 msgstr "銷售點的內部標識。"
@@ -453,7 +463,7 @@ msgstr "銷售點的內部標識。"
 #: code:addons/point_of_sale/models/pos_session.py:160
 #, python-format
 msgid "Another session is already opened for this point of sale."
-msgstr "已為此銷售點打開其他會話。"
+msgstr "已為此銷售點打開其他前台。"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_discount
@@ -463,7 +473,7 @@ msgstr "應用折扣"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1967
+#: code:addons/point_of_sale/static/src/js/screens.js:2004
 #, python-format
 msgid "Are you sure that the customer wants to  pay"
 msgstr "您確定客戶想要付款嗎"
@@ -543,7 +553,7 @@ msgstr "銀行對帳單"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_bank_statement_line
 msgid "Bank Statement Line"
-msgstr "銀行對帳單行"
+msgstr "銀行對帳單明細"
 
 #. module: point_of_sale
 #. openerp-web
@@ -592,7 +602,7 @@ msgstr "Boni 橙"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:938
+#: code:addons/point_of_sale/static/src/js/screens.js:949
 #, python-format
 msgid "Button"
 msgstr "按鈕"
@@ -633,7 +643,7 @@ msgstr "已取消"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1956
+#: code:addons/point_of_sale/static/src/js/screens.js:1993
 #, python-format
 msgid "Cannot return change without a cash payment method"
 msgstr "我們現金支付方法無法退還找零"
@@ -670,7 +680,7 @@ msgstr "只能在現金日記帳上適用現金控制。"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_cashbox_line
 msgid "CashBox Line"
-msgstr "零用金行"
+msgstr "CashBox明細"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.account_cashbox_line_view_tree
@@ -682,12 +692,6 @@ msgstr "零用金餘額"
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Cashdrawer"
 msgstr "收銀機"
-
-#. module: point_of_sale
-#: code:addons/point_of_sale/models/barcode_rule.py:16
-#, python-format
-msgid "Cashier"
-msgstr "收銀櫃檯"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.pos_config_menu_catalog
@@ -720,21 +724,21 @@ msgstr "找零"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/chrome.js:103
+#: code:addons/point_of_sale/static/src/js/chrome.js:104
 #, python-format
 msgid "Change Cashier"
 msgstr "更換收銀櫃檯"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1187
+#: code:addons/point_of_sale/static/src/js/screens.js:1205
 #, python-format
 msgid "Change Customer"
 msgstr "變更客戶"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1821
+#: code:addons/point_of_sale/static/src/js/screens.js:1862
 #, python-format
 msgid "Change Tip"
 msgstr "找零提示"
@@ -785,11 +789,11 @@ msgstr "如果此日記帳中定義了能夠在『POS』用的付款方式就勾
 msgid ""
 "Check this if you want to group the Journal Items by Product while closing a"
 " Session."
-msgstr "如果您想要在關閉會話時按產品分組日記帳專案，則對其進行檢查。"
+msgstr "如果您想要在關閉前台時按產品分組日記帳專案，則對其進行檢查。"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:2014
+#: code:addons/point_of_sale/static/src/js/screens.js:2053
 #, python-format
 msgid "Check your internet connection and try again."
 msgstr "請檢查您的網路連接然後重試。"
@@ -852,17 +856,11 @@ msgstr "按此以定義一個新類別。"
 #. module: point_of_sale
 #: model:ir.actions.act_window,help:point_of_sale.action_pos_session
 msgid "Click to start a new session."
-msgstr "點選開始一個新的會話。"
-
-#. module: point_of_sale
-#: code:addons/point_of_sale/models/barcode_rule.py:15
-#, python-format
-msgid "Client"
-msgstr "客戶"
+msgstr "點選開始一個新的前台。"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/chrome.js:461
+#: code:addons/point_of_sale/static/src/js/chrome.js:462
 #, python-format
 msgid "Client Screen Unsupported. Please upgrade the PosBox"
 msgstr "不支援客戶螢幕。請升級 PosBox"
@@ -940,7 +938,7 @@ msgstr "確認"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/chrome.js:454
+#: code:addons/point_of_sale/static/src/js/chrome.js:455
 #, python-format
 msgid "Connected, Not Owned"
 msgstr "已連接，非所有"
@@ -955,7 +953,7 @@ msgstr "正連接到PosBox"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_res_partner
 msgid "Contact"
-msgstr "聯繫人"
+msgstr "聯絡人"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
@@ -969,7 +967,7 @@ msgstr "在打開和關閉時控制零用金"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1339
+#: code:addons/point_of_sale/static/src/js/screens.js:1363
 #, python-format
 msgid "Could Not Read Image"
 msgstr "不能讀取圖像"
@@ -1022,16 +1020,16 @@ msgstr "貨幣"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_current_session_id
 msgid "Current Session"
-msgstr "目前會話"
+msgstr "目前前台"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_current_session_state
 msgid "Current Session State"
-msgstr "目前會話狀態"
+msgstr "目前前台狀態"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1832
+#: code:addons/point_of_sale/static/src/js/screens.js:1873
 #: code:addons/point_of_sale/static/src/xml/pos.xml:145
 #: code:addons/point_of_sale/static/src/xml/pos.xml:676
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_partner_id
@@ -1052,8 +1050,8 @@ msgid "Customer Facing Display"
 msgstr "面向客戶的顯示"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:486
-#: code:addons/point_of_sale/models/pos_order.py:537
+#: code:addons/point_of_sale/models/pos_order.py:559
+#: code:addons/point_of_sale/models/pos_order.py:610
 #, python-format
 msgid "Customer Invoice"
 msgstr "客戶發票"
@@ -1138,7 +1136,7 @@ msgstr "刪除已付款訂單"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/chrome.js:262
+#: code:addons/point_of_sale/static/src/js/chrome.js:263
 #, python-format
 msgid "Delete Paid Orders ?"
 msgstr "刪除已付款訂單？"
@@ -1152,21 +1150,21 @@ msgstr "刪除未付款訂單"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/chrome.js:272
+#: code:addons/point_of_sale/static/src/js/chrome.js:273
 #, python-format
 msgid "Delete Unpaid Orders ?"
 msgstr "刪除未付款訂單？"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1190
+#: code:addons/point_of_sale/static/src/js/screens.js:1208
 #, python-format
 msgid "Deselect Customer"
 msgstr "取消選擇客戶"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/chrome.js:54
+#: code:addons/point_of_sale/static/src/js/chrome.js:55
 #, python-format
 msgid "Destroy Current Order ?"
 msgstr "銷毀目前訂單？"
@@ -1197,7 +1195,7 @@ msgstr "折扣："
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/chrome.js:459
+#: code:addons/point_of_sale/static/src/js/chrome.js:460
 #, python-format
 msgid "Disconnected"
 msgstr "已斷開連接"
@@ -1221,12 +1219,6 @@ msgstr "折扣通告"
 #, python-format
 msgid "Discount:"
 msgstr "折扣："
-
-#. module: point_of_sale
-#: code:addons/point_of_sale/models/barcode_rule.py:14
-#, python-format
-msgid "Discounted Product"
-msgstr "折扣的產品"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1296,6 +1288,8 @@ msgid ""
 "Don’t turn this option on if you take orders on smartphones or tablets. \n"
 " Such devices already benefit from a native keyboard."
 msgstr ""
+"Don’t turn this option on if you take orders on smartphones or tablets. \n"
+" Such devices already benefit from a native keyboard."
 
 #. module: point_of_sale
 #. openerp-web
@@ -1355,14 +1349,14 @@ msgstr "電子郵箱"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1927
+#: code:addons/point_of_sale/static/src/js/screens.js:1975
 #, python-format
 msgid "Empty Order"
 msgstr "空訂單"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:440
+#: code:addons/point_of_sale/static/src/js/screens.js:449
 #, python-format
 msgid "Empty Serial/Lot Number"
 msgstr "空的批次/序列號碼"
@@ -1395,7 +1389,7 @@ msgstr "結束日期"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "End of Session"
-msgstr "會話結束"
+msgstr "前台結束"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session_cash_register_balance_end_real
@@ -1410,7 +1404,7 @@ msgstr "錯誤！您不能創建循環類別。"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1268
+#: code:addons/point_of_sale/static/src/js/screens.js:1292
 #, python-format
 msgid "Error: Could not Save Changes"
 msgstr "錯誤：不能保存更改"
@@ -1468,7 +1462,7 @@ msgstr "完成導入訂單"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_fiscal_position_id
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Fiscal Position"
-msgstr "財政狀況"
+msgstr "財政狀態"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -1530,7 +1524,7 @@ msgstr "當顯示產品列表類別時給出的序列順序。"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_module_pos_discount
 msgid "Global Discounts"
-msgstr "全局折扣"
+msgstr "整單折扣"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.pomme_golden_perlim
@@ -1561,7 +1555,7 @@ msgstr "青椒"
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_search
 #: model:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
 msgid "Group By"
-msgstr "分組按"
+msgstr "分組"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_group_by
@@ -1683,7 +1677,7 @@ msgid "In Progress"
 msgstr "進行中"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:468
+#: code:addons/point_of_sale/models/pos_order.py:541
 #, python-format
 msgid "In order to delete a sale, it must be new or cancelled."
 msgstr "只有新的或被取消的銷售流水，才可以被刪除。"
@@ -1821,12 +1815,12 @@ msgstr "最後修改時間"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_last_session_closing_cash
 msgid "Last Session Closing Cash"
-msgstr "上次會話關閉支付金額"
+msgstr "上次前台關閉支付金額"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_last_session_closing_date
 msgid "Last Session Closing Date"
-msgstr "上次會話關閉日期"
+msgstr "上次前台關閉日期"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category_write_uid
@@ -1886,7 +1880,7 @@ msgstr "出納機列表"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/models.js:518
+#: code:addons/point_of_sale/static/src/js/models.js:531
 #: code:addons/point_of_sale/static/src/xml/pos.xml:38
 #, python-format
 msgid "Loading"
@@ -1917,7 +1911,7 @@ msgstr "批次名稱"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/models.js:2339
+#: code:addons/point_of_sale/static/src/js/models.js:2371
 #, python-format
 msgid "Lot/Serial Number(s) Required"
 msgstr "必須的批次/序列號碼"
@@ -2023,13 +2017,6 @@ msgid "Name"
 msgstr "名稱"
 
 #. module: point_of_sale
-#. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1937
-#, python-format
-msgid "Negative Bank Payment"
-msgstr "負數的銀行付款"
-
-#. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
 #: selection:pos.order,state:0 selection:report.pos.order,state:0
 msgid "New"
@@ -2038,7 +2025,7 @@ msgstr "新建"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "New Session"
-msgstr "新會話"
+msgstr "新前台"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2048,7 +2035,13 @@ msgid "Next Order"
 msgstr "下一訂單"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:140
+#: code:addons/point_of_sale/models/pos_order.py:1089
+#, python-format
+msgid "No Taxes"
+msgstr "無稅"
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_order.py:142
 #, python-format
 msgid ""
 "No cash statement found for this session. Unable to record returned cash."
@@ -2068,7 +2061,7 @@ msgstr "日記帳沒有設定序列號"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:2067
+#: code:addons/point_of_sale/static/src/js/screens.js:2106
 #: code:addons/point_of_sale/static/src/xml/pos.xml:361
 #, python-format
 msgid "None"
@@ -2085,8 +2078,8 @@ msgid ""
 "Note that you may use the menu <i>Your Session</i>\n"
 "                to quickly open a new session."
 msgstr ""
-"注意您可能用到<i>您的會話</i>這個選單\n"
-"來快速的開啟一個會話"
+"注意您可能用到<i>您的前台</i>這個選單\n"
+"來快速的開啟一個前台"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -2106,7 +2099,7 @@ msgstr "Odoo 徽標"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/chrome.js:401
+#: code:addons/point_of_sale/static/src/js/chrome.js:402
 #, python-format
 msgid "Offline"
 msgstr "離線"
@@ -2135,7 +2128,7 @@ msgstr "確定"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:441
+#: code:addons/point_of_sale/static/src/js/screens.js:450
 #, python-format
 msgid "One or more product(s) required serial/lot number."
 msgstr "一個或多個產品需要的序號/批號。"
@@ -2156,7 +2149,7 @@ msgstr "僅具有 PoS 應用的管理器訪問權限的使用者能夠修改訂�
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1325
+#: code:addons/point_of_sale/static/src/js/screens.js:1349
 #, python-format
 msgid "Only web-compatible Image formats such as .png or .jpeg are supported"
 msgstr "僅僅支援與網頁兼容的圖像格式，如.png 或 .jpeg"
@@ -2198,7 +2191,7 @@ msgstr "打開銷售詳細信息報告"
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "Open Session"
-msgstr "打開會話"
+msgstr "打開前台"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.act_pos_open_statement
@@ -2262,8 +2255,8 @@ msgstr "訂單"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/models.js:1922
-#: code:addons/point_of_sale/static/src/js/models.js:1962
+#: code:addons/point_of_sale/static/src/js/models.js:1946
+#: code:addons/point_of_sale/static/src/js/models.js:1986
 #, python-format
 msgid "Order "
 msgstr "訂單"
@@ -2317,7 +2310,7 @@ msgid "Order Sequence Number"
 msgstr "訂單編號"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:498
+#: code:addons/point_of_sale/models/pos_order.py:571
 #, python-format
 msgid "Order is not paid."
 msgstr "訂單未支付。"
@@ -2354,7 +2347,7 @@ msgid "POS Journals"
 msgstr "銷售點日記帳"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_config.py:335
+#: code:addons/point_of_sale/models/pos_config.py:341
 #, python-format
 msgid "POS Order %s"
 msgstr "PoS 訂單 %s"
@@ -2385,7 +2378,7 @@ msgid "POS Sales"
 msgstr "POS 銷售"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_config.py:344
+#: code:addons/point_of_sale/models/pos_config.py:350
 #, python-format
 msgid "POS order line %s"
 msgstr "銷售點訂單明細 %s"
@@ -2492,7 +2485,7 @@ msgstr "可用支付方式"
 #: model:ir.ui.view,arch_db:point_of_sale.report_saledetails
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "Payments"
-msgstr "收付款"
+msgstr "付款"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2510,7 +2503,7 @@ msgstr "水蜜桃"
 #. module: point_of_sale
 #: model:ir.filters,name:point_of_sale.filter_orders_per_session
 msgid "Per session"
-msgstr "按會話"
+msgstr "按前台"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order_user_id
@@ -2552,19 +2545,19 @@ msgstr "揀貨錯誤"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1966
+#: code:addons/point_of_sale/static/src/js/screens.js:2003
 #, python-format
 msgid "Please Confirm Large Amount"
 msgstr "請確認大金額"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:296
+#: code:addons/point_of_sale/models/pos_order.py:344
 #, python-format
 msgid "Please define income account for this product: \"%s\" (id:%d)."
 msgstr "請為這個產品定義收益科目: \"%s\" (id:%d)。"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:514
+#: code:addons/point_of_sale/models/pos_order.py:587
 #, python-format
 msgid "Please provide a partner for the sale."
 msgstr "請提供銷售的業務夥伴。"
@@ -2578,7 +2571,7 @@ msgstr "請選擇付款方式"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:2005
+#: code:addons/point_of_sale/static/src/js/screens.js:2044
 #, python-format
 msgid "Please select the Customer"
 msgstr "請選擇客戶"
@@ -2674,7 +2667,7 @@ msgstr "POS付款"
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_search
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_tree
 msgid "Point of Sale Session"
-msgstr "POS會話"
+msgstr "POS前台"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_group_pos_user_id
@@ -2705,12 +2698,12 @@ msgstr "銷售點訂單明細"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_pos_session_state
 msgid "Pos Session State"
-msgstr "銷售點會話狀態"
+msgstr "銷售點前台狀態"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_pos_session_username
 msgid "Pos Session Username"
-msgstr "銷售點會話使用者名"
+msgstr "銷售點前台使用者名"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_is_posbox
@@ -2772,14 +2765,8 @@ msgid "Price Unit"
 msgstr "單價"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/barcode_rule.py:13
-#, python-format
-msgid "Priced Product"
-msgstr "標價產品"
-
-#. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:2149
+#: code:addons/point_of_sale/static/src/js/screens.js:2230
 #: code:addons/point_of_sale/static/src/xml/pos.xml:388
 #: code:addons/point_of_sale/static/src/xml/pos.xml:461
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_pricelist_id
@@ -2830,19 +2817,37 @@ msgstr "通過代理列印"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/chrome.js:389
+#: code:addons/point_of_sale/static/src/js/chrome.js:390
 #, python-format
 msgid "Printer"
 msgstr "列印機"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/devices.js:430
+#: code:addons/point_of_sale/static/src/js/devices.js:437
 #, python-format
 msgid "Printing Error: "
 msgstr "列印錯誤："
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/screens.js:1569
+#, python-format
+msgid "Printing is not supported on some android browsers"
+msgstr ""
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/screens.js:1570
+#, python-format
+msgid ""
+"Printing is not supported on some android browsers due to no default "
+"printing protocol is available. It is possible to print your tickets by "
+"making use of an IoT Box."
+msgstr ""
+
+#. module: point_of_sale
+#: model:ir.model,name:point_of_sale.model_product_product
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line_product_id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_pack_operation_lot_product_id
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_product_id
@@ -2881,12 +2886,12 @@ msgstr "產品模板"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_product_uom
 msgid "Product Unit of Measure"
-msgstr "產品測量單位"
+msgstr "單位"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_product_uom_categ
 msgid "Product UoM Categories"
-msgstr "產品計量單位類別"
+msgstr "產品計量單位 類別"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.product_product_action
@@ -2975,7 +2980,7 @@ msgstr "收據參考"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session_rescue
 msgid "Recovery Session"
-msgstr "恢復會話"
+msgstr "恢復前台"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.poivron_rouges
@@ -3034,7 +3039,7 @@ msgid "Resume"
 msgstr "重新開始"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:823
+#: code:addons/point_of_sale/models/pos_order.py:896
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 #, python-format
 msgid "Return Products"
@@ -3097,7 +3102,7 @@ msgstr "保存此配置以查看和編輯客戶顯示"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/chrome.js:397
+#: code:addons/point_of_sale/static/src/js/chrome.js:398
 #, python-format
 msgid "Scale"
 msgstr "比例"
@@ -3123,7 +3128,7 @@ msgstr "通過代理掃瞄"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/chrome.js:380
+#: code:addons/point_of_sale/static/src/js/chrome.js:381
 #, python-format
 msgid "Scanner"
 msgstr "掃瞄儀"
@@ -3174,23 +3179,23 @@ msgstr "選擇使用者"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:2137
+#: code:addons/point_of_sale/static/src/js/screens.js:2182
 #, python-format
 msgid "Select pricelist"
 msgstr "選擇價目表"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:2078
+#: code:addons/point_of_sale/static/src/js/screens.js:2117
 #, python-format
 msgid "Select tax"
 msgstr "選擇稅"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:236
+#: code:addons/point_of_sale/models/pos_order.py:249
 #, python-format
 msgid "Selected orders do not have the same session!"
-msgstr "選擇的訂單不在相同的會話中！"
+msgstr "選擇的訂單不在相同的前台中！"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category_sequence
@@ -3218,13 +3223,13 @@ msgstr "服務員"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:2018
+#: code:addons/point_of_sale/static/src/js/screens.js:2057
 #, python-format
 msgid "Server Error"
 msgstr "伺服器錯誤"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_config.py:447
+#: code:addons/point_of_sale/models/pos_config.py:454
 #: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_pos_session_id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_make_payment_session_id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_session_id
@@ -3232,24 +3237,24 @@ msgstr "伺服器錯誤"
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
 #, python-format
 msgid "Session"
-msgstr "會話"
+msgstr "前台"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session_name
 msgid "Session ID"
-msgstr "會話ID"
+msgstr "前台ID"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1225
 #, python-format
 msgid "Session ids:"
-msgstr "會話ID："
+msgstr "前台ID："
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "Session:"
-msgstr "會話:"
+msgstr "前台:"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.act_pos_config_sessions
@@ -3259,11 +3264,11 @@ msgstr "會話:"
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_session_all
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "Sessions"
-msgstr "會話"
+msgstr "前台"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1185
+#: code:addons/point_of_sale/static/src/js/screens.js:1203
 #, python-format
 msgid "Set Customer"
 msgstr "設定客戶"
@@ -3480,8 +3485,8 @@ msgstr "取錢"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/models/pos_order.py:325
-#: code:addons/point_of_sale/static/src/js/screens.js:2091
+#: code:addons/point_of_sale/models/pos_order.py:376
+#: code:addons/point_of_sale/static/src/js/screens.js:2136
 #, python-format
 msgid "Tax"
 msgstr "稅"
@@ -3528,6 +3533,7 @@ msgstr "含稅價格"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_amount_tax
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line_tax_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line_tax_ids_after_fiscal_position
+#: model:ir.ui.menu,name:point_of_sale.menu_action_tax_form_open
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 #: model:ir.ui.view,arch_db:point_of_sale.report_saledetails
 msgid "Taxes"
@@ -3556,7 +3562,7 @@ msgid "Tendered"
 msgstr "投標"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:284
+#: code:addons/point_of_sale/models/pos_order.py:332
 #, python-format
 msgid "The POS order must have lines when calling this method"
 msgstr "當調用此方法時，POS訂單中必須要有內容"
@@ -3624,7 +3630,7 @@ msgstr "在未設定的情況下，發票日記帳所使用幣別必須與銷售
 #. module: point_of_sale
 #: sql_constraint:pos.session:0
 msgid "The name of this POS Session must be unique !"
-msgstr "銷售會話名稱必須唯一！"
+msgstr "POS前台名稱必須唯一！"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_partner_pos_order_count
@@ -3634,14 +3640,14 @@ msgstr "與此客戶相關的銷售點訂單的數量"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:2013
+#: code:addons/point_of_sale/static/src/js/screens.js:2052
 #, python-format
 msgid "The order could not be sent"
 msgstr "訂單不能被發送"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:2024
+#: code:addons/point_of_sale/static/src/js/screens.js:2063
 #, python-format
 msgid "The order could not be sent to the server due to an unknown error"
 msgstr "因為未知錯誤，訂單不能發送到伺服器"
@@ -3680,7 +3686,7 @@ msgstr "在圖片上會顯示商品類別。"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1340
+#: code:addons/point_of_sale/static/src/js/screens.js:1364
 #, python-format
 msgid "The provided file could not be read due to an unknown error"
 msgstr " 由於未知的錯誤，提供的文件不能被讀取"
@@ -3698,8 +3704,16 @@ msgid "The receipt will automatically be printed at the end of each order."
 msgstr "在每個訂單結束時將自動列印收據。"
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_config.py:248
+#, python-format
+msgid ""
+"The selected pricelists must belong to no company or the company of the "
+"point of sale."
+msgstr "選定的價目表必須屬於沒有公司或POS的公司。"
+
+#. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:2019
+#: code:addons/point_of_sale/static/src/js/screens.js:2058
 #, python-format
 msgid "The server encountered an error while receiving your order."
 msgstr "在收到您的訂單的時候，伺服器遇到了錯誤。"
@@ -3735,7 +3749,7 @@ msgstr "資料庫中有不能保存的待命作業，您確認要退出？"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1957
+#: code:addons/point_of_sale/static/src/js/screens.js:1994
 #, python-format
 msgid ""
 "There is no cash payment method available in this point of sale to handle the change.\n"
@@ -3750,10 +3764,10 @@ msgstr ""
 #: code:addons/point_of_sale/wizard/pos_box.py:21
 #, python-format
 msgid "There is no cash register for this PoS Session"
-msgstr "此POS會話沒有現金收納機。"
+msgstr "此POS前台沒有現金收納機。"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:764
+#: code:addons/point_of_sale/models/pos_order.py:837
 #, python-format
 msgid ""
 "There is no receivable account defined to make payment for the partner: "
@@ -3761,14 +3775,14 @@ msgid ""
 msgstr "沒有定義業務夥伴付款的應收科目：\"%s\" (id:%d)。"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:762
+#: code:addons/point_of_sale/models/pos_order.py:835
 #, python-format
 msgid "There is no receivable account defined to make payment."
 msgstr "沒有為支付指定應收帳款科目。"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1928
+#: code:addons/point_of_sale/static/src/js/screens.js:1976
 #, python-format
 msgid ""
 "There must be at least one product in your order before it can be validated"
@@ -3813,12 +3827,12 @@ msgid ""
 msgstr "該字段用於將銷售點使用者組的 ID 傳遞到銷售點客戶端。"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:522
+#: code:addons/point_of_sale/models/pos_order.py:595
 #, python-format
 msgid ""
 "This invoice has been created from the point of sale session: <a href=# "
 "data-oe-model=pos.order data-oe-id=%d>%s</a>"
-msgstr "此發票已在銷售點會話中創建：<a href=# data-oe-model=pos.order data-oe-id=%d>%s</a>"
+msgstr "此發票已在銷售點前台中創建：<a href=# data-oe-model=pos.order data-oe-id=%d>%s</a>"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_fiscal_position_ids
@@ -3829,7 +3843,7 @@ msgstr "這對於提供具有特定稅率的上門服務和外賣服務的餐廳
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/chrome.js:273
+#: code:addons/point_of_sale/static/src/js/chrome.js:274
 #, python-format
 msgid ""
 "This operation will destroy all unpaid orders in the browser. You will lose "
@@ -3839,12 +3853,12 @@ msgstr "此操作將銷毀瀏覽器中的所有未支付訂單。您將丟失所
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/chrome.js:263
+#: code:addons/point_of_sale/static/src/js/chrome.js:264
 #, python-format
 msgid ""
 "This operation will permanently destroy all paid orders from the local "
 "storage. You will lose all the data. This operation cannot be undone."
-msgstr "本操作將會損壞存儲在本地的所有會話中的未付訂單您將市區所有的數據以及跳出銷售點。本操作不能恢復"
+msgstr "本操作將會損壞存儲在本地的所有前台中的未付訂單您將市區所有的數據以及跳出銷售點。本操作不能恢復"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_tip_product_id
@@ -3866,13 +3880,13 @@ msgid ""
 msgstr "這個序列號是由Odoo自動產生的，不過您可以把它改為自己定義訂單的序列號。"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:626
+#: code:addons/point_of_sale/models/pos_order.py:699
 #, python-format
 msgid ""
 "This transfer has been created from the point of sale session: <a href=# "
 "data-oe-model=pos.order data-oe-id=%d>%s</a>"
 msgstr ""
-"此庫存轉儲已在銷售點會話中創建：<a href=# data-oe-model=pos.order data-oe-id=%d>%s</a>"
+"此庫存轉儲已在銷售點前台中創建：<a href=# data-oe-model=pos.order data-oe-id=%d>%s</a>"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_product_product_pos_categ_id
@@ -3905,12 +3919,12 @@ msgid "To Weigh With Scale"
 msgstr "用秤稱重"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:803
+#: code:addons/point_of_sale/models/pos_order.py:876
 #, python-format
 msgid ""
 "To return product(s), you need to open a session that will be used to "
 "register the refund."
-msgstr "為了退回貨物，您需要打開一個會話，用來登記退款。"
+msgstr "為了退回貨物，您需要打開一個前台，用來登記退款。"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_search
@@ -3976,7 +3990,7 @@ msgid "Total:"
 msgstr "總計："
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:345
+#: code:addons/point_of_sale/models/pos_order.py:396
 #, python-format
 msgid "Trade Receivables"
 msgstr "貿易應收款"
@@ -3987,7 +4001,7 @@ msgstr "貿易應收款"
 msgid ""
 "Unable to open the session. You have to assign a sales journal to your point"
 " of sale."
-msgstr "無法打開會話。您必須向銷售點分配銷售日記帳。"
+msgstr "無法打開前台。您必須向銷售點分配銷售日記帳。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line_price_unit
@@ -4003,14 +4017,14 @@ msgstr "未知條碼"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:2061
+#: code:addons/point_of_sale/static/src/js/screens.js:2062
 #, python-format
 msgid "Unknown Error"
 msgstr "未知錯誤"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1337
+#: code:addons/point_of_sale/static/src/js/screens.js:1348
 #, python-format
 msgid "Unsupported File Format"
 msgstr "不支援的文件格式"
@@ -4061,7 +4075,7 @@ msgid ""
 "Use this menu to browse previous orders. To record new\n"
 "                orders, you may use the menu <i>Your Session</i> for\n"
 "                the touchscreen interface."
-msgstr "用此選單瀏覽之前的訂單。您可以在觸摸屏界面用<i>您的會話</i>來記錄新的訂單。"
+msgstr "用此選單瀏覽之前的訂單。您可以在觸摸屏界面用<i>您的前台</i>來記錄新的訂單。"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_search
@@ -4140,18 +4154,12 @@ msgid "Weighing"
 msgstr "稱重"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/barcode_rule.py:12
-#, python-format
-msgid "Weighted Product"
-msgstr "稱重的產品"
-
-#. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid ""
 "Whenever you close a session, one entry is generated in the following "
 "accounting journal for all the orders not invoiced. Invoices are recorded in"
 " accounting separately."
-msgstr "無論何時關閉會話，都會在所有未開立發票訂單的以下會計日記帳中生成一個分錄。發票在會計中單獨記錄。"
+msgstr "無論何時關閉前台，都會在所有未開立發票訂單的以下會計日記帳中生成一個分錄。發票在會計中單獨記錄。"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4182,7 +4190,7 @@ msgstr ""
 "                                <i>收銀機</i>選項卡上定義其他可用貨幣列表 "
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:458
+#: code:addons/point_of_sale/models/pos_order.py:531
 #, python-format
 msgid ""
 "You cannot change the partner of a POS order for which an invoice has "
@@ -4196,31 +4204,23 @@ msgid ""
 "You cannot confirm all orders of this session, because they have not the 'paid' status.\n"
 "{reference} is in state {state}, total amount: {total}, paid: {paid}"
 msgstr ""
-"您無法確認此會話的所有訂單，因為這些訂單沒有「已支付」狀態。\n"
+"您無法確認此前台的所有訂單，因為這些訂單沒有「已支付」狀態。\n"
 "{reference} 狀態為 {state}，總計金額：{total}，已付金額：{paid}"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:151
 #, python-format
 msgid "You cannot create two active sessions with the same responsible!"
-msgstr "您不能以同一個負責人來創建兩個活動銷售會話！"
+msgstr "您不能以同一個負責人來創建兩個活動銷售前台！"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/product.py:21
+#: code:addons/point_of_sale/models/product.py:38
 #, python-format
 msgid ""
 "You cannot delete a product saleable in point of sale while a session is "
 "still opened."
-msgstr "當會話仍打開時，您不能在POS中刪除一個可銷售的產品。"
-
-#. module: point_of_sale
-#. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1938
-#, python-format
-msgid ""
-"You cannot have a negative amount in a Bank payment. Use a cash payment "
-"method to return money to the customer."
-msgstr "在銀行付款單中，您不能有一個負數。使用現金付款的方法將錢款還給客戶。"
+msgstr "當前台仍打開時，您不能在POS中刪除一個可銷售的產品。"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:299
@@ -4228,7 +4228,7 @@ msgstr "在銀行付款單中，您不能有一個負數。使用現金付款的
 msgid ""
 "You cannot use the session of another user. This session is owned by %s. "
 "Please first close this one to use this point of sale."
-msgstr "您不能使用其他使用者的會話。此會話由 %s 所有。請先關閉此會話才能使用此銷售點。"
+msgstr "您不能使用其他使用者的前台。此前台由 %s 所有。請先關閉此前台才能使用此銷售點。"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_open_statement.py:18
@@ -4245,19 +4245,19 @@ msgstr ""
 "\"PoS\"選項卡中點選\"PoS付款方式\"。您也可以直接通過選單 \"PoS後台 / 配置 /付款方式\"來新建一個付款方式。"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:778
+#: code:addons/point_of_sale/models/pos_order.py:851
 #, python-format
 msgid "You have to open at least one cashbox."
 msgstr "您至少要打開一個零用金。"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:926
+#: code:addons/point_of_sale/models/pos_order.py:999
 #, python-format
 msgid "You have to select a pricelist in the sale form !"
 msgstr "您要在銷售頁面選擇一個價格表！"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:912
+#: code:addons/point_of_sale/models/pos_order.py:985
 #, python-format
 msgid ""
 "You have to select a pricelist in the sale form !\n"
@@ -4293,7 +4293,7 @@ msgstr "在銷售點界面需要定義一個能代表您所賣的每一樣東西
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:2006
+#: code:addons/point_of_sale/static/src/js/screens.js:2045
 #, python-format
 msgid "You need to select the customer before you can invoice an order."
 msgstr "如果需要為訂單開立發票，需要先選擇一個客戶。"
@@ -4302,18 +4302,18 @@ msgstr "如果需要為訂單開立發票，需要先選擇一個客戶。"
 #: code:addons/point_of_sale/models/pos_session.py:166
 #, python-format
 msgid "You should assign a Point of Sale to your session."
-msgstr "您需要為您的銷售會話指定一個POS。"
+msgstr "您需要為您的銷售前台指定一個POS。"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/chrome.js:55
+#: code:addons/point_of_sale/static/src/js/chrome.js:56
 #, python-format
 msgid "You will lose any data associated with the current order"
 msgstr "目前訂單的所有相關數據將丟失"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1269
+#: code:addons/point_of_sale/static/src/js/screens.js:1286
 #, python-format
 msgid "Your Internet connection is probably down."
 msgstr "您的網路連接可能斷開了。"
@@ -4364,7 +4364,7 @@ msgstr "barcode.rule"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1222
 #, python-format
 msgid "belong to another session:"
-msgstr "屬於另外一個會話："
+msgstr "屬於另外一個前台："
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.partner_product_8
@@ -4431,20 +4431,20 @@ msgstr "錯誤"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1971
+#: code:addons/point_of_sale/static/src/js/screens.js:2008
 #, python-format
 msgid "for an order of"
 msgstr "一個訂單"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_config.py:323
+#: code:addons/point_of_sale/models/pos_config.py:329
 #, python-format
 msgid "not used"
 msgstr "未被使用"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/chrome.js:292
+#: code:addons/point_of_sale/static/src/js/chrome.js:293
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1216
 #, python-format
 msgid "paid orders"
@@ -4477,7 +4477,7 @@ msgstr "report.point_of_sale.report_saledetails"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/models/pos_order.py:145
+#: code:addons/point_of_sale/models/pos_order.py:147
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1590
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1645
 #, python-format
@@ -4501,7 +4501,7 @@ msgstr "頁卡"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/chrome.js:284
+#: code:addons/point_of_sale/static/src/js/chrome.js:285
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1217
 #, python-format
 msgid "unpaid orders"

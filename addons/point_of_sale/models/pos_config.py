@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import uuid
+from uuid import uuid4
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
@@ -110,7 +110,7 @@ class PosConfig(models.Model):
     proxy_ip = fields.Char(string='IP Address', size=45,
         help='The hostname or ip address of the hardware proxy, Will be autodetected if left empty.')
     active = fields.Boolean(default=True)
-    uuid = fields.Char(readonly=True, default=lambda self: str(uuid.uuid4()),
+    uuid = fields.Char(readonly=True, default=lambda self: str(uuid4()),
         help='A globally unique identifier for this pos configuration, used to prevent conflicts in client-generated data.')
     sequence_id = fields.Many2one('ir.sequence', string='Order IDs Sequence', readonly=True,
         help="This sequence is automatically created by Odoo but you can change it "
@@ -242,6 +242,11 @@ class PosConfig(models.Model):
         if any(self.journal_ids.mapped(lambda journal: journal.currency_id and journal.currency_id != self.currency_id)):
             raise ValidationError(_("All payment methods must be in the same currency as the Sales Journal or the company currency if that is not set."))
 
+    @api.constrains('company_id', 'available_pricelist_ids')
+    def _check_companies(self):
+        if any(self.available_pricelist_ids.mapped(lambda pl: pl.company_id.id not in (False, self.company_id.id))):
+            raise ValidationError(_("The selected pricelists must belong to no company or the company of the point of sale."))
+
     @api.onchange('iface_print_via_proxy')
     def _onchange_iface_print_via_proxy(self):
         self.iface_print_auto = self.iface_print_via_proxy
@@ -319,10 +324,11 @@ class PosConfig(models.Model):
     def name_get(self):
         result = []
         for config in self:
-            if (not config.session_ids) or (config.session_ids[0].state == 'closed'):
+            last_session = self.env['pos.session'].search([('config_id', '=', config.id)], limit=1)
+            if (not last_session) or (last_session.state == 'closed'):
                 result.append((config.id, config.name + ' (' + _('not used') + ')'))
                 continue
-            result.append((config.id, config.name + ' (' + config.session_ids[0].user_id.name + ')'))
+            result.append((config.id, config.name + ' (' + last_session.user_id.name + ')'))
         return result
 
     @api.model
@@ -351,11 +357,12 @@ class PosConfig(models.Model):
 
     @api.multi
     def write(self, vals):
-        if (self.is_posbox or vals.get('is_posbox')) and (self.iface_customer_facing_display or vals.get('iface_customer_facing_display')):
-            facing_display = (self.customer_facing_display_html or vals.get('customer_facing_display_html') or '').strip()
-            if not facing_display:
-                vals['customer_facing_display_html'] = self._compute_default_customer_html()
         result = super(PosConfig, self).write(vals)
+
+        config_display = self.filtered(lambda c: c.is_posbox and c.iface_customer_facing_display and not (c.customer_facing_display_html or '').strip())
+        if config_display:
+            super(PosConfig, config_display).write({'customer_facing_display_html': self._compute_default_customer_html()})
+
         self.sudo()._set_fiscal_position()
         self.sudo()._check_modules_to_install()
         self.sudo()._check_groups_implied()

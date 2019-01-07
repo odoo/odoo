@@ -14,6 +14,8 @@ var BasicComposer = Composers.BasicComposer;
 var createAsyncView = testUtils.createAsyncView;
 var createView = testUtils.createView;
 
+var Activity = require('mail.Activity');
+
 QUnit.module('mail', {}, function () {
 
 QUnit.module('Chatter', {
@@ -68,6 +70,7 @@ QUnit.module('Chatter', {
                         type: 'selection',
                         selection: [['overdue', 'Overdue'], ['today', 'Today'], ['planned', 'Planned']],
                     },
+                    note : { string: "Note", type: "char" },
                 },
             },
             'mail.activity.type': {
@@ -158,6 +161,73 @@ QUnit.test('basic rendering', function (assert) {
     assert.strictEqual(count, 0, "should have done no read_followers rpc as there are no followers");
     assert.strictEqual(unwanted_read_count, 0, "followers should only be fetched with read_followers route");
     form.destroy();
+});
+
+QUnit.test('Activity Done keep feedback on blur', function (assert) {
+    assert.expect(3);
+    var done = assert.async();
+
+    this.data['mail.activity'].records = [
+        {activity_type_id: 1, id: 1, user_id: 2, state: 'today', note: 'But I\'m talkin\' about Shaft'},
+    ];
+    this.data.partner.records[0].activity_ids = [1];
+
+    var shownDef = $.Deferred();
+    var hiddenDef = $.Deferred();
+    testUtils.patch(Activity, {
+        _bindPopoverFocusout: function () {
+            this._super.apply(this, arguments);
+            shownDef.resolve();
+        },
+    });
+
+    var form = createView({
+        View: FormView,
+        model: 'partner',
+        data: this.data,
+        res_id: 2,
+        arch:'<form string="Partners">' +
+                '<div class="oe_chatter">' +
+                    '<field name="activity_ids" widget="mail_activity"/>' +
+                '</div>' +
+            '</form>',
+    });
+
+    // sanity checks
+    var $activityEl = form.$('.o_mail_activity[name=activity_ids]');
+    assert.strictEqual($activityEl.find('.o_thread_message').length, 1,
+        'There should be one activity');
+    assert.strictEqual($activityEl.find('.o_thread_message .o_thread_message_note').text().trim(),
+        'But I\'m talkin\' about Shaft', 'The activity should have the right note');
+
+    var $popoverEl = $activityEl.find('.o_thread_message_tools .o_activity_done');
+    $popoverEl.on('hidden.bs.popover', hiddenDef.resolve.bind(hiddenDef));
+
+    // open popover
+    $popoverEl.click();
+
+    shownDef.then(function () {
+        // write a feedback and focusout
+        var $feedbackPopover = $popoverEl.data('bs.popover').tip();
+        $feedbackPopover.find('#activity_feedback').val('John Shaft').focusout();
+
+        hiddenDef.then(function () {
+            shownDef = $.Deferred();
+
+            // re-open popover
+            $popoverEl.click();
+
+            shownDef.then(function () {
+                var $feedbackPopover = $popoverEl.data('bs.popover').tip();
+                assert.strictEqual($feedbackPopover.find('#activity_feedback').val(), 'John Shaft',
+                    "feedback should have been kept");
+
+                form.destroy();
+                testUtils.unpatch(Activity);
+                done();
+            });
+        });
+    });
 });
 
 QUnit.test('chatter is not rendered in mode === create', function (assert) {
@@ -552,6 +622,62 @@ QUnit.test('chatter: post, receive and star messages', function (assert) {
             form.destroy();
             done();
         });
+});
+
+QUnit.test('chatter: post a message disable the send button', function(assert) {
+    assert.expect(3);
+    var bus = new Bus();
+    var form = createView({
+        View: FormView,
+        model: 'partner',
+        data: this.data,
+        arch: '<form string="Partners">' +
+                '<sheet>' +
+                    '<field name="foo"/>' +
+                '</sheet>' +
+                '<div class="oe_chatter">' +
+                    '<field name="message_ids" widget="mail_thread"/>' +
+                '</div>' +
+            '</form>',
+        res_id: 2,
+        session: {},
+        mockRPC: function (route, args) {
+            if (args.method === 'message_get_suggested_recipients') {
+                return $.when({2: []});
+            }
+            return this._super(route, args);
+        },
+        intercepts: {
+            get_messages: function (ev) {
+                ev.stopPropagation();
+                ev.data.callback($.when([]));
+            },
+            post_message: function (ev) {
+                ev.stopPropagation();
+                assert.ok(form.$('.o_composer_button_send').prop("disabled"),
+                    "Send button should be disabled when a message is being sent");
+                bus.trigger('new_message', {
+                    id: 0,
+                    model: ev.data.options.model,
+                    res_id: ev.data.options.res_id,
+                });
+            },
+            get_bus: function (ev) {
+                ev.stopPropagation();
+                ev.data.callback(bus);
+            },
+        },
+    });
+
+    form.$('.o_chatter_button_new_message').click();
+    assert.notOk(form.$('.o_composer_button_send').prop('disabled'),
+        "Send button should be enabled when posting a message");
+    form.$('.oe_chatter .o_composer_text_field:first()').val("My first message");
+    form.$('.oe_chatter .o_composer_button_send').click();
+    form.$('.o_chatter_button_new_message').click();
+    assert.notOk(form.$('.o_composer_button_send').prop('disabled'),
+        "Send button should be enabled when posting another message");
+    form.destroy();
 });
 
 QUnit.test('chatter: post a message and switch in edit mode', function (assert) {

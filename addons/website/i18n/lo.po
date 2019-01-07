@@ -3,14 +3,16 @@
 # * website
 # 
 # Translators:
-# Martin Trigaux, 2017
+# ສີສຸວັນ ສັງບົວບຸລົມ <sisouvan@gmail.com>, 2019
+# Martin Trigaux, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 13:42+0000\n"
-"PO-Revision-Date: 2018-02-19 13:42+0000\n"
-"Last-Translator: Martin Trigaux, 2017\n"
+"POT-Creation-Date: 2019-01-03 15:06+0000\n"
+"PO-Revision-Date: 2017-09-20 10:25+0000\n"
+"Last-Translator: Martin Trigaux, 2019\n"
 "Language-Team: Lao (https://www.transifex.com/odoo/teams/41243/lo/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,14 +22,20 @@ msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/editor/snippets.options.js:724
+#: code:addons/website/static/src/js/editor/snippets.options.js:726
 #, python-format
 msgid " Add Images"
 msgstr ""
 
 #. module: website
-#: code:addons/website/models/website.py:233
-#: code:addons/website/models/website.py:302
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid "\" alert with a"
+msgstr ""
+
+#. module: website
+#: code:addons/website/models/website.py:246
+#: code:addons/website/models/website.py:315
 #, python-format
 msgid "%s (id:%s)"
 msgstr ""
@@ -145,6 +153,12 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "1s"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid "2 <span class=\"sr-only\">(current)</span>"
 msgstr ""
 
 #. module: website
@@ -374,6 +388,25 @@ msgid "<i class=\"fa fa-trash-o\"/>Remove Slide"
 msgstr ""
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.edit_website_pages
+msgid ""
+"<i title=\"Is the page included in the main menu?\" class=\"fa fa-thumb-"
+"tack\" aria-hidden=\"true\"/>"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.edit_website_pages
+msgid ""
+"<i title=\"Is the page indexed by search engines?\" class=\"fa fa-globe\" "
+"aria-hidden=\"true\"/>"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.edit_website_pages
+msgid "<i title=\"Is the page published?\" class=\"fa fa-eye\" aria-hidden=\"true\"/>"
+msgstr ""
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid ""
 "<i>\n"
@@ -431,6 +464,14 @@ msgid ""
 msgstr ""
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid ""
+"<small id=\"emailHelp\" class=\"help-block text-muted\">We'll never share "
+"your email with anyone else.</small>"
+msgstr ""
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.s_parallax_slider
 msgid "<small>Author of this quote</small>"
 msgstr ""
@@ -438,6 +479,12 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_parallax_slider
 msgid "<small>John Doe, CEO</small>"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid "<span class=\"badge mb4\">This is a badge</span>"
 msgstr ""
 
 #. module: website
@@ -495,12 +542,18 @@ msgid ""
 msgstr ""
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.layout
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
 msgid ""
 "<span class=\"sr-only\">Toggle navigation</span>\n"
-"                <span class=\"icon-bar\"/>\n"
-"                <span class=\"icon-bar\"/>\n"
-"                <span class=\"icon-bar\"/>"
+"                                                        <span class=\"icon-bar\"/>\n"
+"                                                        <span class=\"icon-bar\"/>\n"
+"                                                        <span class=\"icon-bar\"/>"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.user_navbar
+msgid "<span title=\"Mobile preview\" class=\"fa fa-mobile\"/>"
 msgstr ""
 
 #. module: website
@@ -659,7 +712,7 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "<strong>Next actions:</strong>"
-msgstr ""
+msgstr "<strong>ການດຳເນີນການຕໍ່ໄປ:</strong>"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -813,6 +866,12 @@ msgid "Account &amp; Sales management"
 msgstr ""
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid "Action"
+msgstr "ການດຳເນີນການ"
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_website_cdn_activated
 msgid "Activate CDN for assets"
 msgstr ""
@@ -821,7 +880,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website_page_active
 #: model:ir.model.fields,field_description:website.field_website_redirect_active
 msgid "Active"
-msgstr ""
+msgstr "ໃຊ້ຢູ່"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_three_columns
@@ -836,7 +895,7 @@ msgstr ""
 #: code:addons/website/static/src/xml/website.seo.xml:53
 #, python-format
 msgid "Add"
-msgstr ""
+msgstr "ເພີ່ມເຂົ້າ"
 
 #. module: website
 #. openerp-web
@@ -894,6 +953,12 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Aim for a .com and/or your country extension"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid "Alert"
 msgstr ""
 
 #. module: website
@@ -989,6 +1054,12 @@ msgid "Autoredirect Language"
 msgstr ""
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid "Autosizing"
+msgstr ""
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_ir_act_server_website_published
 msgid "Available on the Website"
 msgstr ""
@@ -1009,6 +1080,12 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.500
 msgid "Back"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid "Badge"
 msgstr ""
 
 #. module: website
@@ -1044,6 +1121,12 @@ msgid "Big"
 msgstr ""
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid "Breadcrumb"
+msgstr ""
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Build awareness and credibility"
 msgstr ""
@@ -1052,6 +1135,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "Building Profile"
 msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid "Button"
+msgstr "ກະດູມ"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -1084,6 +1173,30 @@ msgstr ""
 #, python-format
 msgid "Cancel"
 msgstr "ຍົກເລີອກ"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid "Card"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid "Card Body"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid "Card Footer"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid "Card Header"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_feature_grid
@@ -1131,7 +1244,7 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "City"
-msgstr ""
+msgstr "ນະຄອນ"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -1176,7 +1289,7 @@ msgstr ""
 #: code:addons/website/static/src/xml/website.gallery.xml:51
 #, python-format
 msgid "Close"
-msgstr ""
+msgstr "ອັດ"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -1193,7 +1306,7 @@ msgstr ""
 #. module: website
 #: model:ir.model,name:website.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "ບໍລິສັດ"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_company_id
@@ -1211,9 +1324,15 @@ msgid "Complete CRM for any size team"
 msgstr ""
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid "Components"
+msgstr ""
+
+#. module: website
 #: model:ir.ui.menu,name:website.menu_website_global_configuration
 msgid "Configuration"
-msgstr ""
+msgstr "ການກຳນົດຄ່າ"
 
 #. module: website
 #. openerp-web
@@ -1225,7 +1344,7 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Congratulations, you're done!"
-msgstr ""
+msgstr "ຊົມເຊີຍ! ທ່ານເຮັດສຳເລັດແລ້ວ!"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.footer_default
@@ -1235,13 +1354,13 @@ msgstr ""
 #. module: website
 #: model:ir.model,name:website.model_res_partner
 msgid "Contact"
-msgstr ""
+msgstr "ທີ່ຕິດຕໍ່່"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.403 model:ir.ui.view,arch_db:website.404
 #: model:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Contact Us"
-msgstr ""
+msgstr "ຕິດຕໍ່ຫາພວກເຮົາ"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.contactus
@@ -1333,7 +1452,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website_page_create_uid
 #: model:ir.model.fields,field_description:website.field_website_redirect_create_uid
 msgid "Created by"
-msgstr ""
+msgstr "ສ້າງ ໂດຍ"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_create_date
@@ -1341,7 +1460,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website_page_create_date
 #: model:ir.model.fields,field_description:website.field_website_redirect_create_date
 msgid "Created on"
-msgstr ""
+msgstr "ສ້າງ ເມື່ອ"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
@@ -1374,9 +1493,15 @@ msgid "Dashboard"
 msgstr ""
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid "Data"
+msgstr ""
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Default"
-msgstr ""
+msgstr "ຄ່າເລີ່ມຕົ້ນ"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -1454,7 +1579,7 @@ msgstr "ຄຳອະທິບາຍ"
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Design"
-msgstr ""
+msgstr "ອອກແບບ"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
@@ -1462,12 +1587,18 @@ msgid "Disable autoplay"
 msgstr ""
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid "Disabled"
+msgstr ""
+
+#. module: website
 #. openerp-web
 #: code:addons/website/static/src/js/menu/content.js:45
-#: code:addons/website/static/src/js/menu/seo.js:343
+#: code:addons/website/static/src/js/menu/seo.js:344
 #, python-format
 msgid "Discard"
-msgstr ""
+msgstr "ປະລະ"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.template_partner_comment
@@ -1487,7 +1618,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website_redirect_display_name
 #: model:ir.model.fields,field_description:website.field_website_seo_metadata_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "ຊື່ທີ່ສະແດງອອກ"
 
 #. module: website
 #. openerp-web
@@ -1556,6 +1687,12 @@ msgid "Drag the <i>Cover</i> block and drop it in your page."
 msgstr ""
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid "Dropdown"
+msgstr ""
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.s_feature_grid
 msgid "Duplicate"
 msgstr ""
@@ -1573,7 +1710,7 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.publish_management
 msgid "Edit"
-msgstr ""
+msgstr "ແກ້ໄຂ"
 
 #. module: website
 #. openerp-web
@@ -1626,6 +1763,12 @@ msgid "Editor and Designer"
 msgstr ""
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid "Email address"
+msgstr ""
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.s_comparisons
 msgid "Email support"
 msgstr ""
@@ -1633,6 +1776,12 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "End"
+msgstr "ສິ້ນສຸດ"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid "Enter email"
 msgstr ""
 
 #. module: website
@@ -1643,12 +1792,12 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.http_error_debug
 msgid "Error"
-msgstr ""
+msgstr "ພິດພາດ!"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Examples"
-msgstr ""
+msgstr "ຕົວຢ່າງ"
 
 #. module: website
 #. openerp-web
@@ -1672,6 +1821,12 @@ msgstr ""
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page_xml_id
 msgid "External ID"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid "Extra Small"
 msgstr ""
 
 #. module: website
@@ -1739,7 +1894,7 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "Fixed"
-msgstr ""
+msgstr "ກໍານົດ"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
@@ -1775,6 +1930,12 @@ msgstr ""
 msgid ""
 "For the Odoo Team,<br/>\n"
 "                            Fabien Pinckaers, Founder"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid "Form"
 msgstr ""
 
 #. module: website
@@ -1973,7 +2134,7 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.menu_search
 msgid "Group By"
-msgstr ""
+msgstr "ຈັດກຸ່ມ ໂດຍ"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page_groups_id
@@ -1993,6 +2154,48 @@ msgstr ""
 #. module: website
 #: model:ir.model,name:website.model_ir_http
 msgid "HTTP routing"
+msgstr "ຣາວຕິງ HTTP"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid "Header"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid "Headings 1"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid "Headings 2"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid "Headings 3"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid "Headings 4"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid "Headings 5"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid "Headings 6"
 msgstr ""
 
 #. module: website
@@ -2015,10 +2218,18 @@ msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.500
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
 #: model:ir.ui.view,arch_db:website.footer_default
 #: model:website.menu,name:website.menu_homepage
 #: model:website.menu,name:website.website2_menu_homepage
+#: model:website.page,arch_db:website.bs_debug_page
 msgid "Home"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid "Home <span class=\"sr-only\">(current)</span>"
 msgstr ""
 
 #. module: website
@@ -2064,7 +2275,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website_redirect_id
 #: model:ir.model.fields,field_description:website.field_website_seo_metadata_id
 msgid "ID"
-msgstr ""
+msgstr "ເລກລຳດັບ"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website_page_xml_id
@@ -2227,6 +2438,18 @@ msgid ""
 msgstr ""
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid "Item 1"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid "Item 2"
+msgstr ""
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "It’s time to grow your traffic!"
 msgstr ""
@@ -2249,6 +2472,12 @@ msgid "Keyword"
 msgstr ""
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid "Label"
+msgstr ""
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings_language_ids
 #: model:ir.model.fields,field_description:website.field_website_language_ids
 msgid "Languages"
@@ -2260,7 +2489,9 @@ msgid "Languages available on your website"
 msgstr ""
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
 #: model:ir.ui.view,arch_db:website.snippet_options
+#: model:website.page,arch_db:website.bs_debug_page
 msgid "Large"
 msgstr ""
 
@@ -2272,7 +2503,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website_redirect___last_update
 #: model:ir.model.fields,field_description:website.field_website_seo_metadata___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "ແກ້ໄຂລ້າສຸດ ເມື່ອ"
 
 #. module: website
 #. openerp-web
@@ -2287,7 +2518,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website_redirect_write_uid
 #: model:ir.model.fields,field_description:website.field_website_write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "ປັບປຸງລ້າສຸດ ໂດຍ"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_menu_write_date
@@ -2295,7 +2526,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website_redirect_write_date
 #: model:ir.model.fields,field_description:website.field_website_write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "ປັບປຸງລ້າສຸດ ເມື່ອ"
 
 #. module: website
 #. openerp-web
@@ -2346,6 +2577,12 @@ msgid "Let's start designing."
 msgstr ""
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid "Library"
+msgstr ""
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.s_comparisons
 msgid "Limited customization"
 msgstr ""
@@ -2353,8 +2590,16 @@ msgstr ""
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.contentMenu.xml:55
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
 #, python-format
 msgid "Link"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid "Link button"
 msgstr ""
 
 #. module: website
@@ -2435,7 +2680,7 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "Medium"
-msgstr ""
+msgstr "ປານກາງ"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_company_team
@@ -2447,7 +2692,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website_menu_name
 #, python-format
 msgid "Menu"
-msgstr ""
+msgstr "ລາຍການຄຳສັ່ງ"
 
 #. module: website
 #. openerp-web
@@ -2491,7 +2736,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website_page_model
 #: model:ir.model.fields,field_description:website.field_website_page_model_ids
 msgid "Model"
-msgstr ""
+msgstr "ແບບ"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page_model_data_id
@@ -2552,7 +2797,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website.res_config_settings_view_form
 #, python-format
 msgid "Name"
-msgstr ""
+msgstr "ຊື່"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -2565,8 +2810,14 @@ msgid "Namecheap"
 msgstr ""
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid "Navbar"
+msgstr ""
+
+#. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/menu/new_content.js:41
+#: code:addons/website/static/src/js/menu/new_content.js:42
 #: code:addons/website/static/src/xml/website.contentMenu.xml:58
 #: model:ir.ui.view,arch_db:website.user_navbar
 #, python-format
@@ -2584,7 +2835,9 @@ msgid "Newsletter"
 msgstr ""
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
 #: model:ir.ui.view,arch_db:website.kanban_contain
+#: model:website.page,arch_db:website.bs_debug_page
 msgid "Next"
 msgstr ""
 
@@ -2849,11 +3102,17 @@ msgid "Page URL"
 msgstr ""
 
 #. module: website
-#: code:addons/website/models/website.py:208
-#: code:addons/website/models/website.py:277
+#: code:addons/website/models/website.py:221
+#: code:addons/website/models/website.py:290
 #: model:ir.ui.menu,name:website.menu_website_pages_list
 #, python-format
 msgid "Pages"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid "Pagination"
 msgstr ""
 
 #. module: website
@@ -2866,6 +3125,14 @@ msgstr ""
 msgid ""
 "Panels are a great tool to compare offers or to emphasize on\n"
 "                key features. To compare products, use the inside columns."
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid ""
+"Paragraph with <strong>bold</strong>, <span class=\"text-"
+"muted\">muted</span> and <em>italic</em> texts"
 msgstr ""
 
 #. module: website
@@ -2896,7 +3163,7 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.template_partner_comment
 msgid "Partners"
-msgstr ""
+msgstr "ຄູ່ຄ້າ"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -2928,7 +3195,7 @@ msgstr ""
 #. module: website
 #: model:ir.model,name:website.model_web_planner
 msgid "Planner"
-msgstr ""
+msgstr "ຜູ້​ວາງ​ແຜນ"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.theme_customize
@@ -2957,6 +3224,12 @@ msgstr ""
 #: code:addons/website/static/src/xml/website.seo.xml:28
 #, python-format
 msgid "Preview"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid "Previous"
 msgstr ""
 
 #. module: website
@@ -3189,9 +3462,15 @@ msgstr ""
 #. openerp-web
 #: code:addons/website/static/src/js/backend/dashboard.js:96
 #: code:addons/website/static/src/js/menu/content.js:44
-#: code:addons/website/static/src/js/menu/seo.js:342
+#: code:addons/website/static/src/js/menu/seo.js:343
 #, python-format
 msgid "Save"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid "Search"
 msgstr ""
 
 #. module: website
@@ -3277,18 +3556,24 @@ msgid "Send us an email"
 msgstr ""
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid "Separated link"
+msgstr ""
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_website_menu_sequence
 #: model:ir.model.fields,field_description:website.field_website_page_priority
 #: model:ir.model.fields,field_description:website.field_website_redirect_sequence
 msgid "Sequence"
-msgstr ""
+msgstr "ລຳດັບ"
 
 #. module: website
 #: model:ir.actions.act_window,name:website.action_website_configuration
 #: model:ir.ui.menu,name:website.menu_website_website_settings
 #: model:ir.ui.view,arch_db:website.user_navbar
 msgid "Settings"
-msgstr ""
+msgstr "ການກໍານົດຄ່າ"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
@@ -3344,7 +3629,9 @@ msgid "Slow"
 msgstr ""
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
 #: model:ir.ui.view,arch_db:website.snippet_options
+#: model:website.page,arch_db:website.bs_debug_page
 msgid "Small"
 msgstr ""
 
@@ -3355,13 +3642,19 @@ msgid "Social Media"
 msgstr ""
 
 #. module: website
-#: code:addons/website/controllers/main.py:218
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid "Something else here"
+msgstr ""
+
+#. module: website
+#: code:addons/website/controllers/main.py:219
 #, python-format
 msgid "Sort by Name"
 msgstr ""
 
 #. module: website
-#: code:addons/website/controllers/main.py:217
+#: code:addons/website/controllers/main.py:218
 #, python-format
 msgid "Sort by Url"
 msgstr ""
@@ -3507,7 +3800,7 @@ msgstr ""
 #: model:ir.model.fields,help:website.field_website_page_website_url
 #: model:ir.model.fields,help:website.field_website_published_mixin_website_url
 msgid "The full URL to access the document through the website."
-msgstr ""
+msgstr "ທີ່ຢູ່ເຕັມ URL ເພື່ອເຂົ້າເຖິງເອກະສານຜ່ານທາງເວັບໄຊຕ໌."
 
 #. module: website
 #: model:ir.model.fields,help:website.field_ir_act_server_website_url
@@ -3589,6 +3882,12 @@ msgid "This field is used to set/get locales for user"
 msgstr ""
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid "This is a \""
+msgstr ""
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.page_404
 msgid ""
 "This page does not exist, but you can create it as you are administrator of "
@@ -3596,7 +3895,7 @@ msgid ""
 msgstr ""
 
 #. module: website
-#: code:addons/website/models/website.py:246
+#: code:addons/website/models/website.py:259
 #, python-format
 msgid "This page is in the menu <b>%s</b>"
 msgstr ""
@@ -3624,6 +3923,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid ""
 "To get an external assessment of your website, you can also submit it to"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid "Toggle <span class=\"caret\"/>"
 msgstr ""
 
 #. module: website
@@ -3690,7 +3995,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website.snippet_options
 #, python-format
 msgid "Type"
-msgstr ""
+msgstr "ປະເພດ"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.500
@@ -3793,6 +4098,12 @@ msgid ""
 msgstr ""
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid "Utilities &amp; Typography"
+msgstr ""
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "Very Fast"
 msgstr ""
@@ -3805,7 +4116,7 @@ msgstr ""
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page_view_id
 msgid "View"
-msgstr ""
+msgstr "ເບຶ່ງ"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page_arch
@@ -3846,7 +4157,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website_page_website_published
 #: model:ir.model.fields,field_description:website.field_website_published_mixin_website_published
 msgid "Visible in Website"
-msgstr ""
+msgstr "ເຫັນໄດ້ໃນເວັບໄຊຕ໌"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -4013,7 +4324,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website_page_website_url
 #: model:ir.model.fields,field_description:website.field_website_published_mixin_website_url
 msgid "Website URL"
-msgstr ""
+msgstr "ທີ່ຢູ່ເວັບໄຊຕ໌ URL"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_ir_act_server_website_url
@@ -4053,7 +4364,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website_page_website_meta_description
 #: model:ir.model.fields,field_description:website.field_website_seo_metadata_website_meta_description
 msgid "Website meta description"
-msgstr ""
+msgstr "ລາຍລະອຽດ ເມຕາ ເວັບໄຊຕ໌"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_blog_blog_website_meta_keywords
@@ -4075,7 +4386,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website_page_website_meta_keywords
 #: model:ir.model.fields,field_description:website.field_website_seo_metadata_website_meta_keywords
 msgid "Website meta keywords"
-msgstr ""
+msgstr "ຄຳໄຂລະຫັດ ເມຕາ ເວັບໄຊຕ໌"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_blog_blog_website_meta_title
@@ -4097,7 +4408,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website_page_website_meta_title
 #: model:ir.model.fields,field_description:website.field_website_seo_metadata_website_meta_title
 msgid "Website meta title"
-msgstr ""
+msgstr "ຫົວເລື່ອງ ເມຕາ ເວັບໄຊຕ໌"
 
 #. module: website
 #: model:ir.actions.server,name:website.ir_actions_server_website_dashboard
@@ -4128,7 +4439,7 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Welcome"
-msgstr ""
+msgstr "ຍິນດີຕ້ອນຮັບ"
 
 #. module: website
 #. openerp-web
@@ -4469,6 +4780,12 @@ msgid "learn how people find your website,"
 msgstr ""
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
+#: model:website.page,arch_db:website.bs_debug_page
+msgid "link"
+msgstr ""
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "make optimizations for Google referencing."
 msgstr ""
@@ -4476,7 +4793,7 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.menu_search
 msgid "name"
-msgstr ""
+msgstr "ຊື່"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar

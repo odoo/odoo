@@ -4,7 +4,6 @@
 from odoo import http, _
 from odoo.http import request
 from odoo.addons.website_sale.controllers.main import WebsiteSale
-from odoo.tools import float_repr
 
 
 class WebsiteSaleDelivery(WebsiteSale):
@@ -37,38 +36,42 @@ class WebsiteSaleDelivery(WebsiteSale):
 
     def _get_shop_payment_values(self, order, **kwargs):
         values = super(WebsiteSaleDelivery, self)._get_shop_payment_values(order, **kwargs)
-        if not order._get_delivery_methods():
+        has_stockable_products = any(line.product_id.type in ['consu', 'product'] for line in order.order_line)
+
+        if not order._get_delivery_methods() and has_stockable_products:
             values['errors'].append(
                 (_('Sorry, we are unable to ship your order'),
                  _('No shipping method is available for your current order and shipping address. '
                    'Please contact us for more information.')))
 
-        has_stockable_products = any(line.product_id.type in ['consu', 'product'] for line in order.order_line)
         if has_stockable_products:
             if order.carrier_id and not order.delivery_rating_success:
-                values['errors'].append(
-                    (_("Ouch, you cannot choose this carrier!"),
-                     _("%s does not ship to your address, please choose another one.\n(Error: %s)" % (order.carrier_id.name, order.delivery_message))))
                 order._remove_delivery_line()
 
             delivery_carriers = order._get_delivery_methods()
             values['deliveries'] = delivery_carriers.sudo()
 
+        values['delivery_has_stockable'] = has_stockable_products
         values['delivery_action_id'] = request.env.ref('delivery.action_delivery_carrier_form').id
         return values
 
-    @http.route(['/shop/update_carrier'], type='json', auth='public', methods=['POST'], website=True, csrf=False)
-    def update_eshop_carrier(self, **post):
+    def _update_website_sale_delivery(self, **post):
         order = request.website.sale_get_order()
+        carrier_id = int(post['carrier_id'])
+        if order:
+            order._check_carrier_quotation(force_carrier_id=carrier_id)
+        return self._update_website_sale_delivery_return(order, **post)
+
+    def _update_website_sale_delivery_return(self, order, **post):
         carrier_id = int(post['carrier_id'])
         currency = order.currency_id
         if order:
-            order._check_carrier_quotation(force_carrier_id=carrier_id)
             return {'status': order.delivery_rating_success,
                     'error_message': order.delivery_message,
                     'carrier_id': carrier_id,
-                    'new_amount_delivery': float_repr(currency.round(order.delivery_price), currency.decimal_places),
-                    'new_amount_untaxed': order.amount_untaxed,
-                    'new_amount_tax': order.amount_tax,
-                    'new_amount_total': order.amount_total,
+                    'new_amount_delivery': self._format_amount(order.delivery_price, currency),
+                    'new_amount_untaxed': self._format_amount(order.amount_untaxed, currency),
+                    'new_amount_tax': self._format_amount(order.amount_tax, currency),
+                    'new_amount_total': self._format_amount(order.amount_total, currency),
             }
+        return {}

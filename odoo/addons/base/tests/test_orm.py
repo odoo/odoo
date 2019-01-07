@@ -202,6 +202,30 @@ class TestORM(TransactionCase):
         group_user.write({'users': [(3, user.id)]})
         self.assertTrue(user.share)
 
+    @mute_logger('odoo.models')
+    def test_unlink_with_property(self):
+        """ Verify that unlink removes the related ir.property as unprivileged user """
+        user = self.env['res.users'].create({
+            'name': 'Justine Bridou',
+            'login': 'saucisson',
+            'groups_id': [4, self.ref('base.group_partner_manager')],
+        })
+        p1 = self.env['res.partner'].sudo(user).create({'name': 'Zorro'})
+        p1_prop = self.env['ir.property'].sudo(user).create({
+            'name': 'Slip en laine',
+            'res_id': 'res.partner,{}'.format(p1.id),
+            'fields_id': self.env['ir.model.fields'].search([
+                ('model', '=', 'res.partner'), ('name', '=', 'ref')], limit=1).id,
+            'value_text': 'Nain poilu',
+            'type': 'char',
+        })
+
+        # Unlink with unprivileged user
+        p1.unlink()
+
+        # ir.property is deleted
+        self.assertEqual(
+            p1_prop.exists(), self.env['ir.property'], 'p1_prop should have been deleted')
 
 class TestInherits(TransactionCase):
     """ test the behavior of the orm for models that use _inherits;

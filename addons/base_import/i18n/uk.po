@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: uk\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: base_import
 #. openerp-web
@@ -137,7 +137,7 @@ msgstr "Десятковий розділювач"
 #: code:addons/base_import/static/src/xml/base_import.xml:71
 #, python-format
 msgid "Defer parent/child computation"
-msgstr ""
+msgstr "Відкласти батьківське/дочірнє обчислення"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import_display_name
@@ -183,13 +183,13 @@ msgstr "Кодування:"
 #: code:addons/base_import/models/base_import.py:620
 #, python-format
 msgid "Error Parsing Date [%s:L%d]: %s"
-msgstr ""
+msgstr "Помилка аналізу дати [%s:L%d]: %s"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:227
 #, python-format
 msgid "Error cell found while reading XLS/XLSX file: %s"
-msgstr ""
+msgstr "Знайдено помилку під час читання файлу XLS/XLSX: %s"
 
 #. module: base_import
 #. openerp-web
@@ -223,21 +223,21 @@ msgstr "Тип файлу"
 #. module: base_import
 #: model:ir.model.fields,help:base_import.field_base_import_import_file
 msgid "File to check and/or import, raw binary (not base64)"
-msgstr ""
+msgstr "Файл для перевірки та/або імпорту, бінарний файл (не base64)"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:115
 #, python-format
 msgid "For CSV files, the issue could be an incorrect encoding."
-msgstr ""
+msgstr "Для файлів CSV проблема може бути некоректною кодуванням."
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:559
 #, python-format
 msgid "Get all possible values"
-msgstr ""
+msgstr "Отримайте всі можливі значення"
 
 #. module: base_import
 #. openerp-web
@@ -251,7 +251,7 @@ msgstr "Допомога"
 #: code:addons/base_import/static/src/js/import_action.js:546
 #, python-format
 msgid "Here are the possible values:"
-msgstr ""
+msgstr "Тут можливі значення:"
 
 #. module: base_import
 #. openerp-web
@@ -276,7 +276,7 @@ msgstr "Ось початок файла, який не вдалося імпо�
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_id
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview_id
 msgid "ID"
-msgstr "ІД"
+msgstr "ID"
 
 #. module: base_import
 #. openerp-web
@@ -288,6 +288,10 @@ msgid ""
 "                field corresponding to the column. This makes imports\n"
 "                simpler especially when the file has many columns."
 msgstr ""
+"Якщо файл містить\n"
+"назву стовпців, Odoo може спробувати автоматично виявляти\n"
+"поле, що відповідає колонці. Це робить імпорт\n"
+"простіше, особливо якщо файл має багато стовпчиків."
 
 #. module: base_import
 #. openerp-web
@@ -298,6 +302,9 @@ msgid ""
 "will set up subscriptions and send notifications"
 "                             during the import, but lead to a slower import."
 msgstr ""
+"Якщо модель використовує openchatter, відстеження історії встановить "
+"підписки та надсилатиме сповіщення під час імпорту, але призведе до "
+"повільного імпорту."
 
 #. module: base_import
 #. openerp-web
@@ -308,6 +315,9 @@ msgid ""
 "                      parent / child relation occurs on every line, and lead"
 " to a slower import.                     Defering it can speed up import."
 msgstr ""
+"Якщо в моделі використовуються відносини між батьківським та дочірнім, "
+"обчислення батьківського/дочірнього зв'язку відбувається на кожному рядку та"
+" призводить до повільного імпорту. Відстрочка може прискорити імпорт."
 
 #. module: base_import
 #. openerp-web
@@ -390,14 +400,14 @@ msgstr "Останнє оновлення"
 #: code:addons/base_import/static/src/xml/base_import.xml:19
 #, python-format
 msgid "Load File"
-msgstr ""
+msgstr "Завантажити файл"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:56
 #, python-format
 msgid "Map your columns to import"
-msgstr ""
+msgstr "Позначте ваші колонки для імпорту"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import_res_model
@@ -414,26 +424,26 @@ msgstr "Назва"
 #: code:addons/base_import/static/src/xml/base_import.xml:15
 #, python-format
 msgid "No file chosen..."
-msgstr ""
+msgstr "Не вибрано жодного файлу..."
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:418
 #, python-format
 msgid "Normal Fields"
-msgstr ""
+msgstr "Нормальні поля"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:30
 #, python-format
 msgid "Options…"
-msgstr ""
+msgstr "Функції…"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview_othervalue
 msgid "Other Variable"
-msgstr ""
+msgstr "Інша змінна"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child_parent_id
@@ -452,14 +462,14 @@ msgstr "Пов’язані поля"
 #: code:addons/base_import/static/src/xml/base_import.xml:24
 #, python-format
 msgid "Reload File"
-msgstr ""
+msgstr "Перезавантажити файл"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:11
 #, python-format
 msgid "Select a CSV or Excel file to import."
-msgstr ""
+msgstr "Оберіть файл CSV або Excel для імпорту."
 
 #. module: base_import
 #. openerp-web
@@ -480,7 +490,7 @@ msgstr "Роздільник:"
 #: code:addons/base_import/static/src/xml/base_import.xml:72
 #, python-format
 msgid "Show fields of relation fields (advanced)"
-msgstr ""
+msgstr "Показати поля посилань (розширений)"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview_somevalue
@@ -499,21 +509,21 @@ msgstr "Пробіл"
 #: code:addons/base_import/static/src/js/import_action.js:178
 #, python-format
 msgid "Tab"
-msgstr "табуляція"
+msgstr "Tab"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:86
 #, python-format
 msgid "Test Import"
-msgstr ""
+msgstr "Тестувати імпорт"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:52
 #, python-format
 msgid "Text Delimiter:"
-msgstr ""
+msgstr "Роздільник тексту:"
 
 #. module: base_import
 #. openerp-web
@@ -523,13 +533,15 @@ msgid ""
 "The first row\n"
 "                 contains the label of the column"
 msgstr ""
+"Перший рядок\n"
+"містить мітку стовпця"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:57
 #, python-format
 msgid "Thousands Separator:"
-msgstr ""
+msgstr "Тисячі сепараторів:"
 
 #. module: base_import
 #. openerp-web
@@ -543,6 +555,8 @@ msgstr "Історія переміщень під час імпорту"
 #, python-format
 msgid "Unable to load \"{extension}\" file: requires Python module \"{modname}\""
 msgstr ""
+"Неможливо завантажити файл \"{extension}\": потрібен модуль Python "
+"\"{modname}\""
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:193
@@ -657,4 +671,4 @@ msgstr "base_import.tests.models.preview"
 #: code:addons/base_import/static/src/js/import_action.js:531
 #, python-format
 msgid "between rows %d and %d"
-msgstr ""
+msgstr "між рядками %d та %d"

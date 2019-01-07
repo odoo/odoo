@@ -143,7 +143,7 @@ class PosOrder(models.Model):
                 cash_journal_id = cash_journal[0].id
             order.add_payment({
                 'amount': -pos_order['amount_return'],
-                'payment_date': fields.Datetime.now(),
+                'payment_date': fields.Date.context_today(self),
                 'payment_name': _('return'),
                 'journal': cash_journal_id,
             })
@@ -175,11 +175,11 @@ class PosOrder(models.Model):
             'comment': self.note or '',
             # considering partner's sale pricelist's currency
             'currency_id': self.pricelist_id.currency_id.id,
-            'user_id': self.env.uid,
+            'user_id': self.user_id.id,
         }
 
     @api.model
-    def _get_account_move_line_group_data_type_key(self, data_type, values):
+    def _get_account_move_line_group_data_type_key(self, data_type, values, options={}):
         """
         Return a tuple which will be used as a key for grouping account
         move lines in _create_account_move_line method.
@@ -192,17 +192,26 @@ class PosOrder(models.Model):
                     values['partner_id'],
                     (values['product_id'], tuple(values['tax_ids'][0][2]), values['name']),
                     values['analytic_account_id'],
-                    values['debit'] > 0)
+                    values['debit'] > 0,
+                    values.get('currency_id'))
         elif data_type == 'tax':
-            return ('tax',
-                    values['partner_id'],
-                    values['tax_line_id'],
-                    values['debit'] > 0)
+            order_id = values.pop('order_id', False)
+            tax_key = ('tax',
+                       values['partner_id'],
+                       values['tax_line_id'],
+                       values['debit'] > 0,
+                       values.get('currency_id'))
+            if options.get('rounding_method') == 'round_globally':
+                tax_key = ('tax',
+                           values['tax_line_id'],
+                           order_id)
+            return tax_key
         elif data_type == 'counter_part':
             return ('counter_part',
                     values['partner_id'],
                     values['account_id'],
-                    values['debit'] > 0)
+                    values['debit'] > 0,
+                    values.get('currency_id'))
         return False
 
     def _action_create_invoice_line(self, line=False, invoice_id=False):
@@ -307,7 +316,7 @@ class PosOrder(models.Model):
                     'move_id': move.id,
                 })
 
-                key = self._get_account_move_line_group_data_type_key(data_type, values)
+                key = self._get_account_move_line_group_data_type_key(data_type, values, {'rounding_method': rounding_method})
                 if not key:
                     return
 
@@ -321,6 +330,16 @@ class PosOrder(models.Model):
                         current_value['quantity'] = current_value.get('quantity', 0.0) + values.get('quantity', 0.0)
                         current_value['credit'] = current_value.get('credit', 0.0) + values.get('credit', 0.0)
                         current_value['debit'] = current_value.get('debit', 0.0) + values.get('debit', 0.0)
+                        if 'currency_id' in values:
+                            current_value['amount_currency'] = current_value.get('amount_currency', 0.0) + values.get('amount_currency', 0.0)
+                        if key[0] == 'tax' and rounding_method == 'round_globally':
+                            if current_value['debit'] - current_value['credit'] > 0:
+                                current_value['debit'] = current_value['debit'] - current_value['credit']
+                                current_value['credit'] = 0
+                            else:
+                                current_value['credit'] = current_value['credit'] - current_value['debit']
+                                current_value['debit'] = 0
+
                 else:
                     grouped_data[key].append(values)
 
@@ -332,8 +351,14 @@ class PosOrder(models.Model):
             assert order.lines, _('The POS order must have lines when calling this method')
             # Create an move for each order line
             cur = order.pricelist_id.currency_id
+            cur_company = order.company_id.currency_id
+            amount_cur_company = 0.0
+            date_order = (order.date_order or fields.Datetime.now())[:10]
             for line in order.lines:
-                amount = line.price_subtotal
+                if cur != cur_company:
+                    amount_subtotal = cur.with_context(date=date_order).compute(line.price_subtotal, cur_company)
+                else:
+                    amount_subtotal = line.price_subtotal
 
                 # Search for the income account
                 if line.product_id.property_account_income_id.id:
@@ -354,17 +379,22 @@ class PosOrder(models.Model):
                 # Just like for invoices, a group of taxes must be present on this base line
                 # As well as its children
                 base_line_tax_ids = _flatten_tax_and_children(line.tax_ids_after_fiscal_position).filtered(lambda tax: tax.type_tax_use in ['sale', 'none'])
-                insert_data('product', {
+                data = {
                     'name': name,
                     'quantity': line.qty,
                     'product_id': line.product_id.id,
                     'account_id': income_account,
                     'analytic_account_id': self._prepare_analytic_account(line),
-                    'credit': ((amount > 0) and amount) or 0.0,
-                    'debit': ((amount < 0) and -amount) or 0.0,
+                    'credit': ((amount_subtotal > 0) and amount_subtotal) or 0.0,
+                    'debit': ((amount_subtotal < 0) and -amount_subtotal) or 0.0,
                     'tax_ids': [(6, 0, base_line_tax_ids.ids)],
                     'partner_id': partner_id
-                })
+                }
+                if cur != cur_company:
+                    data['currency_id'] = cur.id
+                    data['amount_currency'] = -abs(line.price_subtotal) if data.get('credit') else abs(line.price_subtotal)
+                    amount_cur_company += data['credit'] - data['debit']
+                insert_data('product', data)
 
                 # Create the tax lines
                 taxes = line.tax_ids_after_fiscal_position.filtered(lambda t: t.company_id.id == current_company.id)
@@ -372,33 +402,58 @@ class PosOrder(models.Model):
                     continue
                 price = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
                 for tax in taxes.compute_all(price, cur, line.qty)['taxes']:
-                    insert_data('tax', {
+                    if cur != cur_company:
+                        round_tax = False if rounding_method == 'round_globally' else True
+                        amount_tax = cur.with_context(date=date_order).compute(tax['amount'], cur_company, round=round_tax)
+                    else:
+                        amount_tax = tax['amount']
+                    data = {
                         'name': _('Tax') + ' ' + tax['name'],
                         'product_id': line.product_id.id,
                         'quantity': line.qty,
                         'account_id': tax['account_id'] or income_account,
-                        'credit': ((tax['amount'] > 0) and tax['amount']) or 0.0,
-                        'debit': ((tax['amount'] < 0) and -tax['amount']) or 0.0,
+                        'credit': ((amount_tax > 0) and amount_tax) or 0.0,
+                        'debit': ((amount_tax < 0) and -amount_tax) or 0.0,
                         'tax_line_id': tax['id'],
-                        'partner_id': partner_id
-                    })
+                        'partner_id': partner_id,
+                        'order_id': order.id
+                    }
+                    if cur != cur_company:
+                        data['currency_id'] = cur.id
+                        data['amount_currency'] = -abs(tax['amount']) if data.get('credit') else abs(tax['amount'])
+                        amount_cur_company += data['credit'] - data['debit']
+                    insert_data('tax', data)
 
             # round tax lines per order
             if rounding_method == 'round_globally':
                 for group_key, group_value in grouped_data.items():
                     if group_key[0] == 'tax':
                         for line in group_value:
-                            line['credit'] = cur.round(line['credit'])
-                            line['debit'] = cur.round(line['debit'])
+                            line['credit'] = cur_company.round(line['credit'])
+                            line['debit'] = cur_company.round(line['debit'])
+                            if line.get('currency_id'):
+                                line['amount_currency'] = cur.round(line.get('amount_currency', 0.0))
 
             # counterpart
-            insert_data('counter_part', {
+            if cur != cur_company:
+                # 'amount_cur_company' contains the sum of the AML converted in the company
+                # currency. This makes the logic consistent with 'compute_invoice_totals' from
+                # 'account.invoice'. It ensures that the counterpart line is the same amount than
+                # the sum of the product and taxes lines.
+                amount_total = amount_cur_company
+            else:
+                amount_total = order.amount_total
+            data = {
                 'name': _("Trade Receivables"),  # order.name,
                 'account_id': order_account,
-                'credit': ((order.amount_total < 0) and -order.amount_total) or 0.0,
-                'debit': ((order.amount_total > 0) and order.amount_total) or 0.0,
+                'credit': ((amount_total < 0) and -amount_total) or 0.0,
+                'debit': ((amount_total > 0) and amount_total) or 0.0,
                 'partner_id': partner_id
-            })
+            }
+            if cur != cur_company:
+                data['currency_id'] = cur.id
+                data['amount_currency'] = -abs(order.amount_total) if data.get('credit') else abs(order.amount_total)
+            insert_data('counter_part', data)
 
             order.write({'state': 'done', 'account_move': move.id})
 
@@ -417,8 +472,10 @@ class PosOrder(models.Model):
     def _get_pos_anglo_saxon_price_unit(self, product, partner_id, quantity):
         price_unit = product._get_anglo_saxon_price_unit()
         if product._get_invoice_policy() == "delivery":
-            moves = self.filtered(lambda o: o.partner_id.id == partner_id).mapped('picking_id.move_lines').filtered(lambda m: m.product_id.id == product.id)
-            moves.sorted(lambda x: x.date)
+            moves = self.filtered(lambda o: o.partner_id.id == partner_id)\
+                .mapped('picking_id.move_lines')\
+                .filtered(lambda m: m.product_id.id == product.id)\
+                .sorted(lambda x: x.date)
             average_price_unit = product._compute_average_price(0, quantity, moves)
             price_unit = average_price_unit or price_unit
         # In the SO part, the entries will be inverted by function compute_invoice_totals
@@ -444,6 +501,12 @@ class PosOrder(models.Model):
                 # It may be interesting to have the Traceback logged anyway
                 # for debugging and support purposes
                 _logger.exception('Reconciliation did not work for order %s', order.name)
+
+    def _filtered_for_reconciliation(self):
+        filter_states = ['invoiced', 'done']
+        if self.env['ir.config_parameter'].sudo().get_param('point_of_sale.order_reconcile_mode', 'all') == 'partner_only':
+            return self.filtered(lambda order: order.state in filter_states and order.partner_id)
+        return self.filtered(lambda order: order.state in filter_states)
 
     def _default_session(self):
         return self.env['pos.session'].search([('state', '=', 'opened'), ('user_id', '=', self.env.uid)], limit=1)
@@ -806,7 +869,10 @@ class PosOrder(models.Model):
                         'lot_id': lot_id,
                     })
                 if not pack_lots and not float_is_zero(qty_done, precision_rounding=move.product_uom.rounding):
-                    move.quantity_done = qty_done
+                    if len(move._get_move_lines()) < 2:
+                        move.quantity_done = qty_done
+                    else:
+                        move._set_quantity_done(qty_done)
         return has_wrong_lots
 
     def _prepare_bank_statement_line_payment_values(self, data):

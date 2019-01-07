@@ -16,7 +16,7 @@ class StockMove(models.Model):
     _inherit = 'stock.move'
 
     purchase_line_id = fields.Many2one('purchase.order.line',
-        'Purchase Order Line', ondelete='set null', index=True, readonly=True, copy=False)
+        'Purchase Order Line', ondelete='set null', index=True, readonly=True)
     created_purchase_line_id = fields.Many2one('purchase.order.line',
         'Created Purchase Order Line', ondelete='set null', readonly=True, copy=False)
 
@@ -59,6 +59,10 @@ class StockMove(models.Model):
         vals = super(StockMove, self)._prepare_move_split_vals(uom_qty)
         vals['purchase_line_id'] = self.purchase_line_id.id
         return vals
+
+    def _clean_merged(self):
+        super(StockMove, self)._clean_merged()
+        self.write({'created_purchase_line_id': False})
 
     def _action_cancel(self):
         for move in self:
@@ -184,3 +188,12 @@ class Orderpoint(models.Model):
         result['domain'] = "[('id','in',%s)]" % (purchase_ids.ids)
 
         return result
+
+
+class PushedFlow(models.Model):
+    _inherit = "stock.location.path"
+
+    def _prepare_move_copy_values(self, move_to_copy, new_date):
+        res = super(PushedFlow, self)._prepare_move_copy_values(move_to_copy, new_date)
+        res['purchase_line_id'] = None
+        return res

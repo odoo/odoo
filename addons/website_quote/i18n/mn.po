@@ -5,13 +5,17 @@
 # Translators:
 # Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2018
 # Onii Onii <onii0223@yahoo.com>, 2018
+# Martin Trigaux, 2018
+# Otgonbayar.A <gobi.mn@gmail.com>, 2018
+# Purevsuren Demberel <purevsurento@gmail.com>, 2018
+# nasaaskii <nasaaskii@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-02-19 13:43+0000\n"
 "PO-Revision-Date: 2018-02-19 13:43+0000\n"
-"Last-Translator: Onii Onii <onii0223@yahoo.com>, 2018\n"
+"Last-Translator: nasaaskii <nasaaskii@gmail.com>, 2018\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -71,18 +75,66 @@ msgid ""
 "    </table>\n"
 "</div>"
 msgstr ""
+"\n"
+"<div summary=\"o_mail_template\" style=\"padding:0px; width:600px; margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px; border-collapse:collapse; background:inherit; color:inherit\">\n"
+"        <tbody><tr>\n"
+"            <td valign=\"center\" width=\"200\" style=\"padding:0px 10px 5px 5px;font-size: 12px\">\n"
+"                <img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\">\n"
+"            </td>\n"
+"        </tr></tbody>\n"
+"    </table>\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px; border-collapse:collapse; background:inherit; color:inherit\">\n"
+"        <tbody><tr>\n"
+"            <td valign=\"top\" style=\"width:600px; padding:0px 10px 5px 5px;\">\n"
+"                <div>\n"
+"                    <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0;margin:15px auto;padding:0\">\n"
+"                </div>\n"
+"            </td>\n"
+"        </tr></tbody>\n"
+"    </table>\n"
+"</div>\n"
+"<div style=\"padding:0px; width:600px; max-width:600px; margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px ;text-align:justify; margin:0 auto; border-collapse:collapse; background:inherit; color:inherit\">\n"
+"        <tbody><tr>\n"
+"            <td style=\"padding:0px 10px 5px 5px;font-size: 14px;\">\n"
+"                <p>Хүндэт ${object.partner_id.name},</p><br/>\n"
+"                <p>Таны захиалга <a href=\"/quote/${object.id}/${object.access_token}\">${object.name}</a> батлагдсан!</p><br/>\n"
+"                \n"
+"                % if object.partner_id.user_ids\n"
+"                <p>Та манай <a style=\"text-decoration:none; color: #875A7B;\" href=\"/my/home\">Онлайн Портал</a>- аар өөрийн үнийн санал, борлуулалтын захиалга, нэхэмжлэлийг онлайнаар үзэх боломжтой.</p><br/>\n"
+"                % endif\n"
+"\n"
+"                <p>Хэрэв танд ямар нэгэн асуулт байгаа бол эргэлзэлгүй бидэнтэй холбогдоорой.</p><br/>\n"
+"                <p>${object.company_id.name or \"Биднийг\"} сонгосонд баярлалаа!</p>\n"
+"            </td>\n"
+"        </tr><tr>\n"
+"            <td style=\"padding:0px 10px 5px 5px;font-size: 14px;\">\n"
+"                % if user.signature\n"
+"                <p style=\"font-size: 14px;\">${user.signature | safe}\n"
+"                </p>\n"
+"                % endif\n"
+"                <p style=\"font-size: 11px;\"><strong>Илгээгч\n"
+"                <a href=\"${user.company_id.website}\" style=\"text-decoration:none; color: #875A7B;\">\n"
+"                    <strong>${user.company_id.name}</strong>\n"
+"                </a> ашигласан<a href=\"www.odoo.com\" style=\"text-decoration:none; color: #875A7B;\"><strong>Odoo</strong></a>\n"
+"                </strong></p>\n"
+"            </td>\n"
+"        </tr></tbody>\n"
+"    </table>\n"
+"</div>"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.optional_products
 #: model:ir.ui.view,arch_db:website_quote.pricing
 #: model:ir.ui.view,arch_db:website_quote.report_saleorder_validity_date
 msgid "% discount"
-msgstr ""
+msgstr "% хөнгөлөлт"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.pricing
 msgid "&amp;bull;"
-msgstr ""
+msgstr "&amp;bull;"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
@@ -97,7 +149,7 @@ msgstr "&amp;nbsp;"
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 #: model:ir.ui.view,arch_db:website_quote.so_template
 msgid "&amp;times;"
-msgstr ""
+msgstr "&amp;times;"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_template
@@ -106,6 +158,9 @@ msgid ""
 "                                this content will appear on the quotation only if this\n"
 "                                product is put on the quote."
 msgstr ""
+":\n"
+"                                тус барааг үнийн саналд оруулж байж л энэ контент\n"
+"                                үнийн санал дээр гарч ирнэ."
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_template
@@ -114,36 +169,39 @@ msgid ""
 "                                this content will appear on the quotation only if this\n"
 "                                product is used in the quote."
 msgstr ""
+":\n"
+"                                тус барааг үнийн саналд ашиглаж байж л энэ контент\n"
+"                                үнийн санал дээр гарч ирнэ."
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "<i class=\"fa fa-check\"/> Accept"
-msgstr ""
+msgstr "<i class=\"fa fa-check\"/> Зөвшөөрөх"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "<i class=\"fa fa-check\"/> Accept &amp; Pay"
-msgstr ""
+msgstr "<i class=\"fa fa-check\"/> Зөвшөөрөөд Төлөх"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "<i class=\"fa fa-check\"/> Accept Order"
-msgstr ""
+msgstr "<i class=\"fa fa-check\"/> Захиалгыг зөвшөөрөх"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "<i class=\"fa fa-check\"/> Pay Now"
-msgstr ""
+msgstr "<i class=\"fa fa-check\"/> Одоо төлөх"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.chatter
 msgid "<i class=\"fa fa-comment\"/> Feedback"
-msgstr ""
+msgstr "<i class=\"fa fa-comment\"/> Санал хүсэлт"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "<i class=\"fa fa-times\"/> Reject"
-msgstr ""
+msgstr "<i class=\"fa fa-times\"/> Татгалзах"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
@@ -152,7 +210,7 @@ msgstr ""
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid ""
 "<i>You will be able to create dynamic page interacting with the ORM.</i>"
-msgstr ""
+msgstr "<i>Та ORM - тай уялдсан динамик хуудас үүсгэх боломжтой болно.</i>"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
@@ -163,6 +221,8 @@ msgid ""
 "<i>You will be able to develop a full application with backend and user "
 "interface.</i>"
 msgstr ""
+"<i>Та арын ба хэрэглэгчийн интерфэйстэй бүрэн аппликэшн хөгжүүлэх боломжтой "
+"болно.</i>"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
@@ -172,6 +232,8 @@ msgstr ""
 msgid ""
 "<i>You will be able to develop simple dynamic compenents in HTML pages.</i>"
 msgstr ""
+"<i>Та HTML хуудсууд дээр энгийн динамик хэсгүүдийг хөгжүүлэх боломжтой "
+"болно.</i>"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
@@ -184,11 +246,15 @@ msgid ""
 "development </strong>process. This course is for new developers or for IT "
 "professionals eager to learn more about technical aspects.</span>"
 msgstr ""
+"<span style=\"text-align: -webkit-center; \">Энэ курс нь <strong>бизнес "
+"аппликэшн хөгжүүлэлт</strong> -н талаар мэдлэгтэй болохыг хүссэн хөгжүүлэгч "
+"нарт зориулагдсан. Энэ курс нь шинэ хөгжүүлэгч эсвэл техник талын мэдлэгээ "
+"тэлэхийг хүссэн IT мэргэжилтнүүдэд зориулагдсан.</span>"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "<span>, for an amount of </span>"
-msgstr ""
+msgstr "<span>, дараах дүнтэй </span>"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
@@ -196,6 +262,8 @@ msgid ""
 "<span>I agree that by paying this proposal, I\n"
 "                                accept it on the behalf of </span>"
 msgstr ""
+"<span>Энэ саналын төлбөрийг төлсөнөөр би\n"
+"                                дараах нэрийн өмнөөс зөвшөөрч байна</span>"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
@@ -207,12 +275,12 @@ msgstr ""
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.report_saleorder_validity_date
 msgid "<span>Suggested Products</span>"
-msgstr ""
+msgstr "<span>Санал болгосон Бараанууд</span>"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "<span>with payment terms: </span>"
-msgstr ""
+msgstr "<span>дараах төлбөрийн нэр томъёотой: </span>"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.report_saleorder_validity_date
@@ -228,6 +296,7 @@ msgid ""
 "<strong>Having attended this course, participants should be able "
 "to:</strong>"
 msgstr ""
+"<strong>Энэ курсд сууснаар оролцогчид дараах чадварыг эзэмшинэ:</strong>"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
@@ -235,7 +304,7 @@ msgstr ""
 #: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "<strong>Objectives:</strong>"
-msgstr ""
+msgstr "<strong>Зорилгууд:</strong>"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
@@ -243,7 +312,7 @@ msgstr ""
 #: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "<strong>Our prices include:</strong>"
-msgstr ""
+msgstr "<strong>Манай үнэд багтсан зүйлс:</strong>"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
@@ -251,12 +320,12 @@ msgstr ""
 #: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "<strong>Requirements:</strong>"
-msgstr ""
+msgstr "<strong>Шаардлага:</strong>"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.pricing
 msgid "<strong>Subtotal:</strong>"
-msgstr ""
+msgstr "<strong>Дэд дүн:</strong>"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_template
@@ -265,6 +334,9 @@ msgid ""
 "                                will appear on all quotations using this\n"
 "                                template."
 msgstr ""
+"<strong>Үлгэрийн Толгой:</strong> тус контент нь\n"
+"                                энэ үлгэрийг ашиглаж буй бүх үнийн санал\n"
+"                                дээр гарна."
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_1
@@ -272,7 +344,7 @@ msgstr ""
 #: model:product.template,quote_description:website_quote.product_template_quote_1
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_1
 msgid "<strong>There are three components to the training</strong>"
-msgstr ""
+msgstr "<strong>Сургалтын гурван хэсэг бий</strong>"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
@@ -280,11 +352,13 @@ msgid ""
 "<strong>This offer expired!</strong><br/>\n"
 "                                  Contact us for new quote."
 msgstr ""
+"<strong>Энэ саналын хугацаа дууссан!</strong><br/>\n"
+"                                  Шинэ үнийн санал авах бол бидэнтэй холбогдоно уу."
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "<strong>This offer expires in</strong>"
-msgstr ""
+msgstr "<strong>Энэ саналын дуусах хугацаа</strong>"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
@@ -292,6 +366,8 @@ msgid ""
 "<strong>This quotation has been canceled.</strong> Contact us to get a new "
 "quote."
 msgstr ""
+"<strong>Энэ үнийн санал цуцлагдсан байна.</strong> Бидэнтэй холбогдож шинийг"
+" авна уу."
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.pricing
@@ -301,7 +377,7 @@ msgstr "Нийт:"
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
 msgid "About us"
-msgstr ""
+msgstr "Бидний тухай"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
@@ -318,12 +394,12 @@ msgstr ""
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_template_active
 msgid "Active"
-msgstr ""
+msgstr "Идэвхитэй"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.sale_order_form_quote
 msgid "Add to order lines"
-msgstr ""
+msgstr "Захиалгын мөр дээр нэмэх"
 
 #. module: website_quote
 #: model:product.product,name:website_quote.product_product_quote_3
@@ -331,7 +407,7 @@ msgstr ""
 #: model:product.template,name:website_quote.product_template_quote_3
 #: model:sale.quote.option,name:website_quote.website_sale_option_line_1
 msgid "Advanced CRM Functional"
-msgstr ""
+msgstr "Ахисан түвшний CRM функциональ"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
@@ -339,7 +415,7 @@ msgstr ""
 #: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Advanced JQuery"
-msgstr ""
+msgstr "Ахисан түвшний JQuery"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.pricing
@@ -349,7 +425,7 @@ msgstr "Дүн"
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_amount_undiscounted
 msgid "Amount Before Discount"
-msgstr ""
+msgstr "Хөнгөлөлтөөс өмнөх дүн"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
@@ -359,7 +435,7 @@ msgstr ""
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_search
 msgid "Archived"
-msgstr ""
+msgstr "Архивласан"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
@@ -367,7 +443,7 @@ msgstr ""
 #: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Arrays"
-msgstr ""
+msgstr "Цуваа"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
@@ -376,16 +452,18 @@ msgid ""
 "                                       we know that success is all about the\n"
 "                                       commitment we put on strong services."
 msgstr ""
+"Тэргүүлэх мэргэжлийн үйлчилгээ үзүүлэгч фирмийн хувьд бид амжилт бол "
+"хүчирхэг үйлчилгээнд бүгдийг зориулах юм гэдгийг мэднэ."
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.chatter
 msgid "Ask Changes"
-msgstr ""
+msgstr "Өөрчлөлтийг асуух"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_template
 msgid "Back"
-msgstr ""
+msgstr "Буцах"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation_content
@@ -420,12 +498,12 @@ msgstr ""
 #: model:product.template,quote_description:website_quote.product_template_quote_1
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_1
 msgid "Better comfort to facilitate your learning process"
-msgstr ""
+msgstr "Таны суралцах явцыг хөнгөвчлөнө"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation_content
 msgid "Bill To:"
-msgstr ""
+msgstr "Нэхэмжлэлийг хүлээн авагч:"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
@@ -433,7 +511,7 @@ msgstr ""
 #: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Bootstrap CSS"
-msgstr ""
+msgstr "Bootstrap CSS"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
@@ -441,7 +519,7 @@ msgstr ""
 #: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Bring your own laptop."
-msgstr ""
+msgstr "Өөрийн зөөврийн компьютерыг авчирна уу."
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
@@ -449,7 +527,7 @@ msgstr ""
 #: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Building a Full Application"
-msgstr ""
+msgstr "Бүрэн аппликэшнийг үүсгэж байна"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
@@ -457,7 +535,7 @@ msgstr ""
 #: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Calling the ORM"
-msgstr ""
+msgstr "ORM - г дуудаж байна"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
@@ -476,17 +554,17 @@ msgstr ""
 #. module: website_quote
 #: model:ir.actions.act_window,help:website_quote.action_sale_quotation_template
 msgid "Click here to create your template."
-msgstr ""
+msgstr "Энд дарж үлгэр үүсгэнэ үү."
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_form
 msgid "Confirmation"
-msgstr ""
+msgstr "Баталгаа"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_template_mail_template_id
 msgid "Confirmation Mail"
-msgstr ""
+msgstr "Баталгаажуулах Мэйл"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_require_payment
@@ -497,7 +575,7 @@ msgstr ""
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "Contact us"
-msgstr ""
+msgstr "Бидэнтэй холбогдох"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
@@ -505,7 +583,7 @@ msgstr ""
 #: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Controllers and Views"
-msgstr ""
+msgstr "Контрол ба Дэлгэцүүд"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
@@ -513,7 +591,7 @@ msgstr ""
 #: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Course Summary"
-msgstr ""
+msgstr "Курсын хураангуй"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_option_create_uid
@@ -534,7 +612,7 @@ msgstr "Үүсгэсэн"
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation_content
 msgid "Customer:"
-msgstr ""
+msgstr "Захиалагч:"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
@@ -542,7 +620,7 @@ msgstr ""
 #: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Day 1"
-msgstr ""
+msgstr "Өдөр 1"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
@@ -550,7 +628,7 @@ msgstr ""
 #: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Day 2"
-msgstr ""
+msgstr "Өдөр 2"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
@@ -558,7 +636,7 @@ msgstr ""
 #: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Day 3"
-msgstr ""
+msgstr "Өдөр 3"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_res_config_settings_default_template_id
@@ -580,13 +658,13 @@ msgstr "Гүйлгээний утга"
 #: model:ir.model.fields,field_description:website_quote.field_product_product_quote_description
 #: model:ir.model.fields,field_description:website_quote.field_product_template_quote_description
 msgid "Description for the quote"
-msgstr ""
+msgstr "Үнийн саналын тайлбар"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_product_product_website_description
 #: model:ir.model.fields,field_description:website_quote.field_product_template_website_description
 msgid "Description for the website"
-msgstr ""
+msgstr "Вэбсайтын тайлбар"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
@@ -594,12 +672,12 @@ msgstr ""
 #: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Develop a new module for a particular application."
-msgstr ""
+msgstr "Аль нэг аппликэшнд зориулж шинэ модуль хөгжүүлнэ үү."
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.pricing
 msgid "Discount"
-msgstr ""
+msgstr "Хөнгөлөлт"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_option_discount
@@ -622,27 +700,27 @@ msgstr "Дэлгэцийн Нэр"
 #: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Dive into Strings"
-msgstr ""
+msgstr "Стринг руу орох"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation_content
 msgid "Edit Quote"
-msgstr ""
+msgstr "Үнийн саналыг засах"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_form
 msgid "Edit Template"
-msgstr ""
+msgstr "Үлгэр засах"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation_content
 msgid "Expiration Date:"
-msgstr ""
+msgstr "Дуусах Огноо:"
 
 #. module: website_quote
 #: model:ir.model,name:website_quote.model_ir_model_fields
 msgid "Fields"
-msgstr ""
+msgstr "Талбарууд"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
@@ -655,7 +733,7 @@ msgstr ""
 #: model:product.template,name:website_quote.product_template_quote_1
 #: model:sale.quote.line,name:website_quote.website_sale_order_line_1
 msgid "Functional Training"
-msgstr ""
+msgstr "Функционалийн Сургалт"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
@@ -663,7 +741,7 @@ msgstr ""
 #: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Functions"
-msgstr ""
+msgstr "Функцүүд"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
@@ -674,11 +752,14 @@ msgstr ""
 #: model:ir.model.fields,help:website_quote.field_sale_quote_line_sequence
 msgid "Gives the sequence order when displaying a list of sale quote lines."
 msgstr ""
+"Борлуулалтын үнийн саналын мөрүүдийг харуулах үед дэс дарааллын эрэмбийг "
+"өгнө."
 
 #. module: website_quote
 #: model:ir.model.fields,help:website_quote.field_sale_order_option_sequence
 msgid "Gives the sequence order when displaying a list of suggested product."
 msgstr ""
+"Санал болгосон барааны жагсаалтыг харуулах үед дэс дарааллын эрэмбийг өгнө."
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
@@ -689,6 +770,11 @@ msgid ""
 "                                your references, your methodology or\n"
 "                                guarantees, your team, SLA, terms and conditions, etc."
 msgstr ""
+"Сайн үнийн саналын үлгэрүүд <strong>таны амжилтын \n"
+"түвшинг мэдэгдэхүйц өсгөнө</strong>. Эхний хэсэг нь \n"
+"ихэвчлэн таны компани, лавлагаа, арга зүй эсвэл \n"
+"баталгаа, баг, үйлчилгээний түвшний гэрээ / SLA, \n"
+"ерөнхий нөхцлүүд, г.м. талаар байдаг."
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_1
@@ -696,7 +782,7 @@ msgstr ""
 #: model:product.template,quote_description:website_quote.product_template_quote_1
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_1
 msgid "Hands-on exercises and their solutions"
-msgstr ""
+msgstr "Бодитоор хийх дасгалууд ба түүний хариултууд"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
@@ -720,12 +806,12 @@ msgstr ""
 #: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Hello World"
-msgstr ""
+msgstr "Сайн уу, дэлхий"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.chatter
 msgid "History"
-msgstr ""
+msgstr "Түүх"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
@@ -733,7 +819,7 @@ msgstr ""
 #: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "How to Debug"
-msgstr ""
+msgstr "Хэрхэн дебаг хийх"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_option_id
@@ -751,6 +837,10 @@ msgid ""
 "                        template (from the Configuration menu), all future quotations will\n"
 "                        use this modified template."
 msgstr ""
+"Хэрэв үнийн санал дээрх 'Урьдчилж харах' -аар түүнийг \n"
+"засвал зөвхөн энэ захиалагчийн үнийн саналыг шинэчлэнэ. \n"
+"Харин үнийн саналын үлгэрийг (Тохиргоо цэсээс) засвал бүх \n"
+"ирээдүйн үнийн саналууд энэ өөрчилсөн үлгэрийг ашиглах болно."
 
 #. module: website_quote
 #: model:ir.model.fields,help:website_quote.field_sale_quote_template_active
@@ -767,11 +857,13 @@ msgid ""
 "If we store your payment information on our server, subscription payments "
 "will be made automatically."
 msgstr ""
+"Хэрэв бид таны төлбөрийн мэдээллийг өөрсдийн сервер дээр хадгалвал, "
+"захиалгын төлбөр автоматаар хийгдэх болно."
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "Incl. tax)"
-msgstr ""
+msgstr "татвар орсон)"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
@@ -779,7 +871,7 @@ msgstr ""
 #: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Install and administer your own server;"
-msgstr ""
+msgstr "Өөрийн серверийг суулгаж удирдах;"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
@@ -787,12 +879,12 @@ msgstr ""
 #: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Integrated Help"
-msgstr ""
+msgstr "Нэгдсэн тусламж"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.navigation_menu
 msgid "Introduction"
-msgstr ""
+msgstr "Танилцуулга"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
@@ -800,7 +892,7 @@ msgstr ""
 #: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Introduction to JQuery"
-msgstr ""
+msgstr "JQuery - н танилцуулга"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
@@ -808,7 +900,7 @@ msgstr ""
 #: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Introduction to Javascript"
-msgstr ""
+msgstr "Javascript - н танилцуулга"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
@@ -816,7 +908,7 @@ msgstr ""
 #: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Introduction to QWeb"
-msgstr ""
+msgstr "QWeb - н танилцуулга"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
@@ -858,6 +950,9 @@ msgid ""
 "Learn directly from our team and network of Odoo experts. Choose from the "
 "available training sessions for a better functional understanding of Odoo"
 msgstr ""
+"Манай баг болон Odoo мэргэжилтнүүдийн сүлжээнээс шууд сур. Odoo -н "
+"функционалийн ойлголтоо сайжруулахын тулд боломжит сургалтын сэшнүүдээс "
+"сонгоно уу"
 
 #. module: website_quote
 #: model:product.product,description_sale:website_quote.product_product_quote_2
@@ -867,23 +962,25 @@ msgid ""
 "Learn directly from our team and network of Odoo experts. Choose from the "
 "available training sessions for a better technical understanding of Odoo"
 msgstr ""
+"Манай баг болон Odoo мэргэжилтнүүдийн сүлжээнээс шууд сур. Odoo -н техник "
+"ойлголтоо сайжруулахын тулд боломжит сургалтын сэшнүүдээс сонгоно уу"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_option_line_id
 msgid "Line"
-msgstr ""
+msgstr "Мөр"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_line_website_description
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_option_website_description
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_line_website_description
 msgid "Line Description"
-msgstr ""
+msgstr "Мөрийн тайлбар"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_form
 msgid "Lines"
-msgstr ""
+msgstr "Мөрүүд"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_1
@@ -891,7 +988,7 @@ msgstr ""
 #: model:product.template,quote_description:website_quote.product_template_quote_1
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_1
 msgid "Live Q&amp;A sessions with a trainer"
-msgstr ""
+msgstr "Сургагчтай шууд А&amp;Х сэшнүүд"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
@@ -899,7 +996,7 @@ msgstr ""
 #: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Loops"
-msgstr ""
+msgstr "Гогцоо"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_1
@@ -907,7 +1004,7 @@ msgstr ""
 #: model:product.template,quote_description:website_quote.product_template_quote_1
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_1
 msgid "Lower training budget for the same quality courses"
-msgstr ""
+msgstr "Ижил чанартай курсд бага сургалтын төсөв"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_1
@@ -915,7 +1012,7 @@ msgstr ""
 #: model:product.template,quote_description:website_quote.product_template_quote_1
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_1
 msgid "Modular approach applied to the learning method"
-msgstr ""
+msgstr "Сургалтын аргад тусгасан модуль арга барил"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
@@ -923,7 +1020,7 @@ msgstr ""
 #: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Modules"
-msgstr ""
+msgstr "Модулиуд"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_1
@@ -931,12 +1028,12 @@ msgstr ""
 #: model:product.template,quote_description:website_quote.product_template_quote_1
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_1
 msgid "New interactive learning experience"
-msgstr ""
+msgstr "Шинэ интерактив сургалтын туршлага"
 
 #. module: website_quote
 #: model:ir.model.fields,help:website_quote.field_sale_quote_template_number_of_days
 msgid "Number of days for the validity date computation of the quotation"
-msgstr ""
+msgstr "Үнийн саналын хүчинтэй хугацаа тооцооллын өдрийн тоо"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
@@ -944,7 +1041,7 @@ msgstr ""
 #: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Odoo Official Website"
-msgstr ""
+msgstr "Odoo албан ёсны вэбсайт"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
@@ -952,7 +1049,7 @@ msgstr ""
 #: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Odoo Web Client"
-msgstr ""
+msgstr "Odoo Вэб Клиент"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
@@ -982,39 +1079,39 @@ msgstr ""
 #: model:product.template,quote_description:website_quote.product_template_quote_1
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_1
 msgid "Online Training"
-msgstr ""
+msgstr "Онлайн сургалт"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_option_website_description
 msgid "Option Description"
-msgstr ""
+msgstr "Сонголтын тайлбар"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_template
 msgid "Optional Product:"
-msgstr ""
+msgstr "Нэмэлт бараа:"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_line_option_line_id
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_options
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_template_options
 msgid "Optional Products Lines"
-msgstr ""
+msgstr "Нэмэлт барааны мөрүүд"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
 msgid "Our Offer"
-msgstr ""
+msgstr "Манай Санал"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
 msgid "Our Quality"
-msgstr ""
+msgstr "Манай Чанар"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
 msgid "Our Service"
-msgstr ""
+msgstr "Манай Үйлчилгээ"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
@@ -1025,6 +1122,8 @@ msgid ""
 "Participants are expected to have some knowledge in programming. A basic "
 "knowledge of the Python programming is recommended."
 msgstr ""
+"Оролцогчид програмчлалын талаар мэдлэгтэй байх хэрэгтэй. Python "
+"програмчлалын үндсэн мэдлэгтэй байхыг зөвлөдөг."
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
@@ -1035,6 +1134,8 @@ msgid ""
 "Participants preferably have a functional knowledge of our software (see "
 "Functional Training)."
 msgstr ""
+"Оролцогчид манай програмын үйл ажиллагааны талаар мэдлэгтэй байх нь "
+"тохиромжтой (Функционалийн сургалтыг үзнэ үү)."
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
@@ -1050,7 +1151,7 @@ msgstr ""
 #: code:addons/website_quote/controllers/main.py:197
 #, python-format
 msgid "Pay & Confirm"
-msgstr ""
+msgstr "Төлөөд Батлах"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
@@ -1070,7 +1171,7 @@ msgstr ""
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.sale_order_form_quote
 msgid "Preview"
-msgstr ""
+msgstr "Урьдчилан харах"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.optional_products
@@ -1081,12 +1182,12 @@ msgstr "Үнэ"
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.pricing
 msgid "Pricing"
-msgstr ""
+msgstr "Үнэ тооцоолол"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation_content
 msgid "Print"
-msgstr ""
+msgstr "Хэвлэх"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_option_product_id
@@ -1109,11 +1210,14 @@ msgid ""
 "                                       stand on; we build it with a relentless\n"
 "                                       focus on fabric, performance and craftsmanship."
 msgstr ""
+"Бүтээгдэхүүний чанар бол бидний суурь;\n"
+"бид үүний бүтэц, гүйцэтгэл, нарийн хийц \n"
+"дээр няцашгүй төвлөрсний үндсэн дээр босгосон."
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_template
 msgid "Product:"
-msgstr ""
+msgstr "Бараа:"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.pricing
@@ -1136,7 +1240,7 @@ msgstr ""
 #: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Python Objects"
-msgstr ""
+msgstr "Python объектууд"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_option_quantity
@@ -1154,43 +1258,43 @@ msgstr "Үнийн санал"
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_template_number_of_days
 msgid "Quotation Duration"
-msgstr ""
+msgstr "Үнийн саналын Үргэлжлэх хугацаа"
 
 #. module: website_quote
 #: model:ir.model,name:website_quote.model_sale_quote_option
 msgid "Quotation Option"
-msgstr ""
+msgstr "Үнийн саналын Сонголт"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_template_id
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_template_name
 #: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_form
 msgid "Quotation Template"
-msgstr ""
+msgstr "Үнийн саналын Үлгэр"
 
 #. module: website_quote
 #: model:ir.model,name:website_quote.model_sale_quote_line
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_template_quote_line
 msgid "Quotation Template Lines"
-msgstr ""
+msgstr "Үнийн саналын Үлгэрийн Мөрүүд"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_line_quote_id
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_option_template_id
 msgid "Quotation Template Reference"
-msgstr ""
+msgstr "Үнийн саналын Үлгэрийн Код"
 
 #. module: website_quote
 #: model:ir.actions.act_window,name:website_quote.action_sale_quotation_template
 #: model:ir.ui.menu,name:website_quote.menu_sale_quote_template
 #: model:ir.ui.view,arch_db:website_quote.res_config_settings_view_form
 msgid "Quotation Templates"
-msgstr ""
+msgstr "Үнийн саналын Үлгэрүүд"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_quote_viewed
 msgid "Quotation Viewed"
-msgstr ""
+msgstr "Үзсэн Үнийн санал"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_form
@@ -1201,22 +1305,22 @@ msgstr ""
 #: code:addons/website_quote/controllers/main.py:50
 #, python-format
 msgid "Quotation viewed by customer"
-msgstr ""
+msgstr "Үнийн саналыг захиалагч үзсэн"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation_content
 msgid "Quote Date:"
-msgstr ""
+msgstr "Үнийн саналын Огноо:"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "Reject"
-msgstr ""
+msgstr "Татгалзах"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "Reject This Quote"
-msgstr ""
+msgstr "Энэ үнийн саналыг татгалзах"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
@@ -1224,7 +1328,7 @@ msgstr ""
 #: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Report Engine"
-msgstr ""
+msgstr "Тайлангийн систем"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
@@ -1232,19 +1336,19 @@ msgstr ""
 #: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Requirements"
-msgstr ""
+msgstr "Шаардлагууд"
 
 #. module: website_quote
 #: model:ir.model,name:website_quote.model_sale_order_option
 msgid "Sale Options"
-msgstr ""
+msgstr "Борлуулалтын Сонголтууд"
 
 #. module: website_quote
 #: model:ir.model,name:website_quote.model_sale_quote_template
 #: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_form
 #: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_tree
 msgid "Sale Quotation Template"
-msgstr ""
+msgstr "Борлуулалтын Үнийн саналын Үлгэр"
 
 #. module: website_quote
 #: model:ir.model,name:website_quote.model_sale_order_line
@@ -1260,7 +1364,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_quote.sale_order_form_quote
 #: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_form
 msgid "Sales Quotation Template Lines"
-msgstr ""
+msgstr "Борлуулалтын Үнийн саналын Үлгэрийн Мөрүүд"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_search
@@ -1283,7 +1387,7 @@ msgstr "Дараалал"
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation_content
 msgid "Ship To:"
-msgstr ""
+msgstr "Хүргэх хаяг:"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_1
@@ -1291,14 +1395,14 @@ msgstr ""
 #: model:product.template,quote_description:website_quote.product_template_quote_1
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_1
 msgid "Structure of the Training"
-msgstr ""
+msgstr "Сургалтын Бүтэц"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.optional_products
 #: model:ir.ui.view,arch_db:website_quote.sale_order_form_quote
 #: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_form
 msgid "Suggested Products"
-msgstr ""
+msgstr "Санал болгосон Бараанууд"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.pricing
@@ -1320,7 +1424,7 @@ msgstr "Татварууд:"
 #: model:sale.quote.line,name:website_quote.website_sale_order_line_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Technical Training"
-msgstr ""
+msgstr "Техникийн сургалт"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
@@ -1328,17 +1432,19 @@ msgid ""
 "Tell us why you are refusing this quotation, this will help us improve our "
 "services."
 msgstr ""
+"Та яагаад энэ үнийн саналыг татгалзаж буйгаа тайлбарлана уу, энэ нь биднийг "
+"үйлчилгээгээ сайжруулахад туслах болно."
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.pricing
 #: model:ir.ui.view,arch_db:website_quote.so_template
 msgid "Terms &amp; Conditions"
-msgstr ""
+msgstr "Нэр томъёо &amp; Нөхцөл"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_template_note
 msgid "Terms and conditions"
-msgstr ""
+msgstr "Заалтууд болон нөхцөлүүд"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_form
@@ -1379,6 +1485,10 @@ msgid ""
 "cloud-based labs. Many of our online learning courses also include dozens of"
 " recorded webinars and live sessions by our senior instructors."
 msgstr ""
+"Эдгээр курсүүдэд бидний уламжлалт ангийн сургалттай ижил өндөр чанартай "
+"контент бий. Мөн дээр нь модулийн сэшнүүд болон үүл-дээр суурилсан "
+"лабораториуд нэмэгдсэн. Мөн манай олон онлайн сургалтын курсүүдэд бичсэн "
+"вебинарууд болон ахлах багш нарын шууд сэшнүүд багтдаг."
 
 #. module: website_quote
 #: model:ir.model.fields,help:website_quote.field_sale_quote_template_mail_template_id
@@ -1386,6 +1496,7 @@ msgid ""
 "This e-mail template will be sent on confirmation. Leave empty to send "
 "nothing."
 msgstr ""
+"Батлах үед энэ имэйл үлгэрийг илгээнэ. Юу ч илгээхгүй бол хоосон үлдээнэ үү."
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
@@ -1395,11 +1506,14 @@ msgid ""
 "                                application, using the menu: Configuration /\n"
 "                                Quotation Templates."
 msgstr ""
+"Энэ бол <strong>жишээ үнийн саналын үлгэр</strong>. Та үүнийг \n"
+"өөрчилж өөрийн хэрэгцээнд тааруулахын тулд <i>Борлуулалт</i> \n"
+"модулийн Тохиргоо / Үнийн саналын үлгэрүүд цэсээр ороорой."
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "This order"
-msgstr ""
+msgstr "Энэ захиалга"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
@@ -1407,11 +1521,13 @@ msgid ""
 "This order has been validated. Thanks for your trust\n"
 "                          and do not hesitate to"
 msgstr ""
+"Энэ захиалгыг баталсан. Итгэл хүлээлгэсэнд \n"
+"баярлалаа, эргэлзэлгүй"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "This quotation has been rejected."
-msgstr ""
+msgstr "Энэ үнийн саналыг татгалзсан байна."
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_template
@@ -1420,6 +1536,9 @@ msgid ""
 "                                <i>Heading 2</i> will be used to generate the\n"
 "                                table of content automatically."
 msgstr ""
+"<i>Heading 1</i> ба <i>Heading 2</i> \n"
+"загвартай гарчигуудыг автоматаар гарчигийн\n"
+" жагсаалтыг гаргахад ашиглана."
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
@@ -1427,7 +1546,7 @@ msgstr ""
 #: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "To get more information, visit the"
-msgstr ""
+msgstr "Илүү мэдээллийг эндээс"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.pricing
@@ -1445,7 +1564,7 @@ msgstr ""
 #: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Training Center Module"
-msgstr ""
+msgstr "Сургалтын төвийн модуль"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
@@ -1453,7 +1572,7 @@ msgstr ""
 #: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Underscore"
-msgstr ""
+msgstr "Доогуур зураас"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
@@ -1461,7 +1580,7 @@ msgstr ""
 #: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Understand the development concepts and architecture;"
-msgstr ""
+msgstr "Хөгжүүлэлтийн ойлголтууд ба архитектурыг ойлгох;"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_option_price_unit
@@ -1477,7 +1596,7 @@ msgstr "Нэгж Үнэ"
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_line_product_uom_id
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_option_uom_id
 msgid "Unit of Measure "
-msgstr ""
+msgstr "Хэмжих нэгж "
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
@@ -1493,11 +1612,15 @@ msgid ""
 "                    Send these quotes by email and let your customers sign online.\n"
 "                    Use cross-selling and discounts to push and boost your sales."
 msgstr ""
+"Гоёмсог, мэргэжлийн үнийн саналыг хэдхэн минутын дотор үүсгэхийн тулд үлгэр ашиглаарай.\n"
+"Эдгээр үнийн саналуудыг имэйлээр илгээж, захиалагчдыг онлайнаар гарын үсэг зурах \n"
+"боломжоор хангана. Борлуулалтаа өсгөхийн тулд зөрүүлсэн борлуулалт ба хөнгөлөлтийг \n"
+"ашиглаарай."
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "Validate Order"
-msgstr ""
+msgstr "Захиалгыг батлах"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
@@ -1505,7 +1628,7 @@ msgstr ""
 #: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Variables &amp; Operators"
-msgstr ""
+msgstr "Хувьсагчууд ба Операторууд"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_1
@@ -1513,7 +1636,7 @@ msgstr ""
 #: model:product.template,quote_description:website_quote.product_template_quote_1
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_1
 msgid "Videos with detailed demos"
-msgstr ""
+msgstr "Дэлгэрэнгүй демо-той видеонууд"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
@@ -1529,16 +1652,18 @@ msgid ""
 "                                       set at a fair price so that you will be\n"
 "                                       happy to buy them."
 msgstr ""
+"Бид худалдан авагчдаа баяртай байлгахын \n"
+"тулд бараандаа шударга үнэ тогтоохыг үргэлж зорьдог."
 
 #. module: website_quote
 #: model:ir.actions.report,name:website_quote.report_web_quote
 msgid "Web Quotation"
-msgstr ""
+msgstr "Вэб Үнийн санал"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_form
 msgid "Website Description"
-msgstr ""
+msgstr "Вэбсайтын тайлбар"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
@@ -1546,7 +1671,7 @@ msgstr ""
 #: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "What you will learn?"
-msgstr ""
+msgstr "Та юу сурах вэ?"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
@@ -1554,7 +1679,7 @@ msgstr ""
 #: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Workflows"
-msgstr ""
+msgstr "Ажлын урсгалууд"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
@@ -1575,37 +1700,42 @@ msgid ""
 "                        on the left is generated automatically using the styles you\n"
 "                        used in your description (heading 1, heading 2, ...)"
 msgstr ""
+"Та <strong>бараа бүрт тайлбар хийх</strong> боломжтой. \n"
+"Санал болгосон бүх барааны тайлбарыг ашиглан \n"
+"Odoo автоматаар үнийн санал үүсгэнэ. Таны тайлбар \n"
+"дотор ашигласан загварын (heading 1, heading 2, ...) \n"
+"дагуу зүүн талд байрлах гарчигийг автоматаар боловсруулна."
 
 #. module: website_quote
 #: code:addons/website_quote/controllers/main.py:150
 #, python-format
 msgid "You cannot add options to a confirmed order."
-msgstr ""
+msgstr "Батлагдсан захиалга дээр сонголт нэмэх боломжгүй."
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation_content
 msgid "Your Contact:"
-msgstr ""
+msgstr "Таны холбогч:"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation_content
 msgid "Your Order"
-msgstr ""
+msgstr "Таны захиалга"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation_content
 msgid "Your Quotation"
-msgstr ""
+msgstr "Таны Үнийн санал"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation_content
 msgid "Your Reference:"
-msgstr ""
+msgstr "Таны сурвалж:"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "Your advantage:"
-msgstr ""
+msgstr "Таны давуу тал:"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_1
@@ -1613,37 +1743,37 @@ msgstr ""
 #: model:product.template,quote_description:website_quote.product_template_quote_1
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_1
 msgid "Your advantages"
-msgstr ""
+msgstr "Таны давуу талууд"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "Your feedback....."
-msgstr ""
+msgstr "Таны санал хүсэлт....."
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "Your message has been successfully sent!"
-msgstr ""
+msgstr "Таны зурвасыг амжилттай илгээлээ!"
 
 #. module: website_quote
 #: model:mail.template,subject:website_quote.confirmation_mail
 msgid "Your order ${object.name} is confirmed"
-msgstr ""
+msgstr "Таны захиалга ${object.name}  батлагдсан"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.payment_confirmation_status
 msgid "Your payment has been authorized."
-msgstr ""
+msgstr "Таны захиалгыг зөвшөөрсөн."
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "contact us"
-msgstr ""
+msgstr "бидэнтэй холбогдох"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "day"
-msgstr ""
+msgstr "өдөр"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
@@ -1657,7 +1787,7 @@ msgstr "өдөр"
 #: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "drinks and lunch;"
-msgstr ""
+msgstr "ундаа ба үдийн хоол;"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
@@ -1665,6 +1795,8 @@ msgid ""
 "for\n"
 "                          any question."
 msgstr ""
+"хүссэнээ \n"
+"                          асуугаарай."
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
@@ -1691,7 +1823,7 @@ msgstr ""
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "if you want a new one."
-msgstr ""
+msgstr "шинийг хүсвэл."
 
 #. module: website_quote
 #: model:ir.model,name:website_quote.model_res_config_settings
@@ -1704,4 +1836,4 @@ msgstr "res.config.settings"
 #: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "training material."
-msgstr ""
+msgstr "сургалтын материал."

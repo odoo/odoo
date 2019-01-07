@@ -3,14 +3,14 @@
 # * portal
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # Andre de Kock <adekock11@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:27+0000\n"
-"PO-Revision-Date: 2017-10-02 11:27+0000\n"
+"POT-Creation-Date: 2018-07-27 11:56+0000\n"
+"PO-Revision-Date: 2018-07-27 11:56+0000\n"
 "Last-Translator: Andre de Kock <adekock11@gmail.com>, 2017\n"
 "Language-Team: Afrikaans (https://www.transifex.com/odoo/teams/41243/af/)\n"
 "MIME-Version: 1.0\n"
@@ -53,6 +53,15 @@ msgid "<b>Sign in</b>"
 msgstr ""
 
 #. module: portal
+#: model:ir.ui.view,arch_db:portal.frontend_layout
+msgid ""
+"<span class=\"sr-only\">Toggle navigation</span>\n"
+"                                    <span class=\"icon-bar\"/>\n"
+"                                    <span class=\"icon-bar\"/>\n"
+"                                    <span class=\"icon-bar\"/>"
+msgstr ""
+
+#. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_searchbar
 msgid "<span id=\"search_label\">Search</span> <span class=\"caret\"/>"
 msgstr ""
@@ -60,12 +69,12 @@ msgstr ""
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.wizard_view
 msgid "Apply"
-msgstr ""
+msgstr "Pas toe"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_archive_groups
 msgid "Archives"
-msgstr ""
+msgstr "Argiewe"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.wizard_view
@@ -75,12 +84,12 @@ msgstr "Kanselleer"
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_layout
 msgid "Change"
-msgstr ""
+msgstr "Kleingeld"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
 msgid "City"
-msgstr ""
+msgstr "Stad"
 
 #. module: portal
 #. openerp-web
@@ -99,7 +108,7 @@ msgstr ""
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
 msgid "Company Name"
-msgstr ""
+msgstr "Maatskappy Naam"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
@@ -116,12 +125,12 @@ msgstr "Kontak"
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.wizard_view
 msgid "Contacts"
-msgstr ""
+msgstr "Kontakte"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
 msgid "Country"
-msgstr ""
+msgstr "Land"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
@@ -181,6 +190,11 @@ msgid "Group %s is not a portal"
 msgstr ""
 
 #. module: portal
+#: model:ir.model,name:portal.model_ir_http
+msgid "HTTP routing"
+msgstr "HTTP routing"
+
+#. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_mixin_id
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_id
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_id
@@ -193,7 +207,7 @@ msgid "In Portal"
 msgstr ""
 
 #. module: portal
-#: code:addons/portal/controllers/portal.py:180
+#: code:addons/portal/controllers/portal.py:200
 #, python-format
 msgid "Invalid Email! Please enter a valid email address."
 msgstr ""
@@ -264,12 +278,12 @@ msgstr ""
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
 msgid "Phone"
-msgstr ""
+msgstr "Foon"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_portal_id
 msgid "Portal"
-msgstr ""
+msgstr "Portaal"
 
 #. module: portal
 #: model:ir.actions.act_window,name:portal.partner_wizard_action
@@ -299,7 +313,7 @@ msgstr ""
 
 #. module: portal
 #. openerp-web
-#: code:addons/portal/static/src/js/portal_chatter.js:101
+#: code:addons/portal/static/src/js/portal_chatter.js:102
 #, python-format
 msgid "Published on %s"
 msgstr ""
@@ -317,7 +331,7 @@ msgstr ""
 #: code:addons/portal/static/src/xml/portal_chatter.xml:41
 #, python-format
 msgid "Send"
-msgstr ""
+msgstr "Stuur"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:106
@@ -338,7 +352,7 @@ msgid "Some contacts have the same email as an existing portal user:"
 msgstr ""
 
 #. module: portal
-#: code:addons/portal/controllers/portal.py:197
+#: code:addons/portal/controllers/portal.py:219
 #, python-format
 msgid "Some required fields are empty."
 msgstr ""
@@ -351,7 +365,7 @@ msgstr ""
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
 msgid "Street"
-msgstr ""
+msgstr "Straat"
 
 #. module: portal
 #. openerp-web
@@ -447,7 +461,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:portal.field_product_product_website_message_ids
 #: model:ir.model.fields,field_description:portal.field_product_template_website_message_ids
 #: model:ir.model.fields,field_description:portal.field_project_project_website_message_ids
-#: model:ir.model.fields,field_description:portal.field_project_task_website_message_ids
 #: model:ir.model.fields,field_description:portal.field_purchase_order_website_message_ids
 #: model:ir.model.fields,field_description:portal.field_purchase_requisition_website_message_ids
 #: model:ir.model.fields,field_description:portal.field_res_partner_website_message_ids
@@ -461,7 +474,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:portal.field_stock_production_lot_website_message_ids
 #: model:ir.model.fields,field_description:portal.field_survey_survey_website_message_ids
 msgid "Website Messages"
-msgstr ""
+msgstr "Webtuiste Boodskappe"
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_account_analytic_account_website_message_ids
@@ -509,7 +522,6 @@ msgstr ""
 #: model:ir.model.fields,help:portal.field_product_product_website_message_ids
 #: model:ir.model.fields,help:portal.field_product_template_website_message_ids
 #: model:ir.model.fields,help:portal.field_project_project_website_message_ids
-#: model:ir.model.fields,help:portal.field_project_task_website_message_ids
 #: model:ir.model.fields,help:portal.field_purchase_order_website_message_ids
 #: model:ir.model.fields,help:portal.field_purchase_requisition_website_message_ids
 #: model:ir.model.fields,help:portal.field_res_partner_website_message_ids
@@ -523,7 +535,7 @@ msgstr ""
 #: model:ir.model.fields,help:portal.field_stock_production_lot_website_message_ids
 #: model:ir.model.fields,help:portal.field_survey_survey_website_message_ids
 msgid "Website communication history"
-msgstr ""
+msgstr "Webtuiste kommunikasie geskiedenis"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_wizard_id
@@ -573,7 +585,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:portal.portal_my_details
 #, python-format
 msgid "Your Name"
-msgstr ""
+msgstr "Jou Naam"
 
 #. module: portal
 #: model:mail.template,subject:portal.mail_template_data_portal_welcome

@@ -150,11 +150,14 @@ class Warehouse(models.Model):
         # If another partner assigned
         if vals.get('partner_id'):
             warehouses._update_partner_data(vals['partner_id'], vals.get('company_id'))
+
         res = super(Warehouse, self).write(vals)
 
         # check if we need to delete and recreate route
         if vals.get('reception_steps') or vals.get('delivery_steps'):
-            warehouses._update_routes()
+            route_vals = warehouses._update_routes()
+            if route_vals:
+                self.write(route_vals)
 
         if vals.get('resupply_wh_ids') and not vals.get('resupply_route_ids'):
             for warehouse in warehouses:
@@ -175,9 +178,10 @@ class Warehouse(models.Model):
         ResCompany = self.env['res.company']
         if company_id:
             transit_loc = ResCompany.browse(company_id).internal_transit_location_id.id
+            self.env['res.partner'].browse(partner_id).with_context(force_company=company_id).write({'property_stock_customer': transit_loc, 'property_stock_supplier': transit_loc})
         else:
             transit_loc = ResCompany._company_default_get('stock.warehouse').internal_transit_location_id.id
-        self.env['res.partner'].browse(partner_id).write({'property_stock_customer': transit_loc, 'property_stock_supplier': transit_loc})
+            self.env['res.partner'].browse(partner_id).write({'property_stock_customer': transit_loc, 'property_stock_supplier': transit_loc})
 
     def create_sequences_and_picking_types(self):
         IrSequenceSudo = self.env['ir.sequence'].sudo()
@@ -280,7 +284,7 @@ class Warehouse(models.Model):
                 reception_route.pull_ids.write({'active': False})
                 reception_route.push_ids.write({'active': False})
             else:
-                reception_route = self.env['stock.location.route'].create(warehouse._get_reception_delivery_route_values(warehouse.reception_steps))
+                warehouse.reception_route_id = reception_route = self.env['stock.location.route'].create(warehouse._get_reception_delivery_route_values(warehouse.reception_steps))
             # push / procurement (pull) rules for reception
             routings = routes_data[warehouse.id][warehouse.reception_steps]
             push_rules_list, pull_rules_list = warehouse._get_push_pull_rules_values(
@@ -393,7 +397,7 @@ class Warehouse(models.Model):
 
             pull_rules_list = supplier_wh._get_supply_pull_rules_values(
                 [self.Routing(output_location, transit_location, supplier_wh.out_type_id)],
-                values={'route_id': inter_wh_route.id, 'propagate_warehouse_id': self.id})
+                values={'route_id': inter_wh_route.id})
             pull_rules_list += self._get_supply_pull_rules_values(
                 [self.Routing(transit_location, input_location, self.in_type_id)],
                 values={'route_id': inter_wh_route.id, 'propagate_warehouse_id': supplier_wh.id})
@@ -593,11 +597,18 @@ class Warehouse(models.Model):
         routes_data = self.get_routes_dict()
         # change the default source and destination location and (de)activate operation types
         self._update_picking_type()
-        self._create_or_update_delivery_route(routes_data)
-        self._create_or_update_reception_route(routes_data)
-        self._create_or_update_crossdock_route(routes_data)
-        self._create_or_update_mto_pull(routes_data)
-        return True
+        delivery_route = self._create_or_update_delivery_route(routes_data)
+        reception_route = self._create_or_update_reception_route(routes_data)
+        crossdock_route = self._create_or_update_crossdock_route(routes_data)
+        mto_pull = self._create_or_update_mto_pull(routes_data)
+
+        return {
+            'route_ids': [(4, route.id) for route in reception_route | delivery_route | crossdock_route],
+            'mto_pull_id': mto_pull.id,
+            'reception_route_id': reception_route.id,
+            'delivery_route_id': delivery_route.id,
+            'crossdock_route_id': crossdock_route.id,
+        }
 
     @api.one
     def _update_picking_type(self):
@@ -684,11 +695,31 @@ class Warehouse(models.Model):
 
     def _get_sequence_values(self):
         return {
-            'in_type_id': {'name': self.name + ' ' + _('Sequence in'), 'prefix': self.code + '/IN/', 'padding': 5},
-            'out_type_id': {'name': self.name + ' ' + _('Sequence out'), 'prefix': self.code + '/OUT/', 'padding': 5},
-            'pack_type_id': {'name': self.name + ' ' + _('Sequence packing'), 'prefix': self.code + '/PACK/', 'padding': 5},
-            'pick_type_id': {'name': self.name + ' ' + _('Sequence picking'), 'prefix': self.code + '/PICK/', 'padding': 5},
-            'int_type_id': {'name': self.name + ' ' + _('Sequence internal'), 'prefix': self.code + '/INT/', 'padding': 5},
+            'in_type_id': {
+                'name': self.name + ' ' + _('Sequence in'),
+                'prefix': self.code + '/IN/', 'padding': 5,
+                'company_id': self.company_id.id,
+            },
+            'out_type_id': {
+                'name': self.name + ' ' + _('Sequence out'),
+                'prefix': self.code + '/OUT/', 'padding': 5,
+                'company_id': self.company_id.id,
+            },
+            'pack_type_id': {
+                'name': self.name + ' ' + _('Sequence packing'),
+                'prefix': self.code + '/PACK/', 'padding': 5,
+                'company_id': self.company_id.id,
+            },
+            'pick_type_id': {
+                'name': self.name + ' ' + _('Sequence picking'),
+                'prefix': self.code + '/PICK/', 'padding': 5,
+                'company_id': self.company_id.id,
+            },
+            'int_type_id': {
+                'name': self.name + ' ' + _('Sequence internal'),
+                'prefix': self.code + '/INT/', 'padding': 5,
+                'company_id': self.company_id.id,
+            },
         }
 
     def _format_rulename(self, from_loc, dest_loc, suffix):

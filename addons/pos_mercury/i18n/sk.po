@@ -4,26 +4,27 @@
 # 
 # Translators:
 # Martin Trigaux, 2017
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-23 07:43+0000\n"
-"PO-Revision-Date: 2018-02-23 07:43+0000\n"
-"Last-Translator: Martin Trigaux, 2017\n"
+"POT-Creation-Date: 2018-07-27 11:55+0000\n"
+"PO-Revision-Date: 2018-07-27 11:55+0000\n"
+"Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2018\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: sk\n"
-"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/xml/pos_mercury.xml:75
 #, python-format
 msgid "&nbsp;&nbsp;APPROVAL CODE:"
-msgstr ""
+msgstr "&nbsp;&nbsp;KÓD SCHVÁLENIA:"
 
 #. module: pos_mercury
 #: model:ir.ui.view,arch_db:pos_mercury.pos_config_view_form_inherit_pos_mercury
@@ -39,63 +40,68 @@ msgid ""
 "                                (eg. Visa, MasterCard, Discovery, American Express, ...). After setting up this\n"
 "                                configuration you should associate it with a Point Of Sale payment method."
 msgstr ""
+"<i>Mercury konfigurácie</i> definujte aký Mercury účet bude použitý pri\n"
+"spracovaní transakcií kreditných kariet v Mieste predaja. Nastavenie Mercury\n"
+"konfigurácií vám umožní povoliť platby s rôznymi kreditnými kartami\n"
+"(napr. Visa, MasterCard, Discovery, American Express, ...). Po nastavení tejto\n"
+"konfiurácie by ste ju mali asociovať s platobnou metódou Miesta predaja."
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/xml/pos_mercury.xml:46
 #, python-format
 msgid "ABOVE AMOUNT PURSUANT"
-msgstr ""
+msgstr "NAD SLEDOVANÝM MNOŽSTVOM"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/xml/pos_mercury.xml:60
 #, python-format
 msgid "APPROVAL CODE:"
-msgstr ""
+msgstr "KÓD SCHVÁLENIA:"
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_account_bank_statement_line
 msgid "Bank Statement Line"
-msgstr ""
+msgstr "Riadok bankového výpisu"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/xml/pos_mercury.xml:45
 #, python-format
 msgid "CARDHOLDER WILL PAY CARD ISSUER"
-msgstr ""
+msgstr "DRŽITEĽ KARTY ZAPLTÍ VYDAVATEĽOVI KARTY"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_account_bank_statement_line_mercury_card_brand
 msgid "Card Brand"
-msgstr ""
+msgstr "Značka karty"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_account_bank_statement_line_mercury_card_number
 #: model:ir.model.fields,field_description:pos_mercury.field_account_bank_statement_line_mercury_prefixed_card_number
 msgid "Card Number"
-msgstr ""
+msgstr "Číslo karty"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_account_bank_statement_line_mercury_card_owner_name
 msgid "Card Owner Name"
-msgstr ""
+msgstr "Meno vlastníka karty"
 
 #. module: pos_mercury
 #: model:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
 #: model:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_tree
 msgid "Card Reader"
-msgstr ""
+msgstr "Čítačka karty"
 
 #. module: pos_mercury
 #: model:ir.actions.act_window,help:pos_mercury.action_configuration_form
 msgid "Click to configure your card reader."
-msgstr ""
+msgstr "Kliknite pre nakonfigurovanie vašej čítačky kariet."
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:351
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:360
 #, python-format
 msgid "Could not read card"
 msgstr ""
@@ -113,9 +119,19 @@ msgid "Created on"
 msgstr "Vytvorené"
 
 #. module: pos_mercury
-#: code:addons/pos_mercury/models/pos_mercury.py:15
+#: code:addons/pos_mercury/models/pos_mercury.py:16
 #, python-format
 msgid "Credit Card"
+msgstr "Kreditná karta"
+
+#. module: pos_mercury
+#. openerp-web
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:346
+#, python-format
+msgid ""
+"Credit card refunds are not supported. Instead select your credit card "
+"payment method, click 'Validate' and refund the original charge manually "
+"through the Vantiv backend."
 msgstr ""
 
 #. module: pos_mercury
@@ -129,14 +145,14 @@ msgstr "Zobraziť meno"
 #: code:addons/pos_mercury/static/src/xml/pos_mercury.xml:7
 #, python-format
 msgid "Electronic Payment"
-msgstr ""
+msgstr "Elektronická platba"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:641
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:651
 #, python-format
 msgid "Error"
-msgstr ""
+msgstr "Chyba"
 
 #. module: pos_mercury
 #: model:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
@@ -145,20 +161,23 @@ msgid ""
 "                                (without having pressed anything else) will charge the full amount of the order to\n"
 "                                the card."
 msgstr ""
+"Pre rýchle vybavovanie objednávok: stačí potiahnuť kreditnú kartu na platobnej obrazovke \n"
+"(bez stlačenia čohokoľvek iného) zaúčtuje v plnej výške sumu objednávky na\n"
+"kartu."
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:256
 #, python-format
 msgid "Go to payment screen to use cards"
-msgstr ""
+msgstr "Choďte na obrazovku platieb pre použitie kariet"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:387
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:396
 #, python-format
 msgid "Handling transaction..."
-msgstr ""
+msgstr "Spracovávanie transakcie..."
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration_id
@@ -169,7 +188,7 @@ msgstr "ID"
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_mercury_configuration_merchant_id
 msgid "ID of the merchant to authenticate him on the payment provider server"
-msgstr ""
+msgstr "ID obchodníka pre jeho autentifikáciu na serveri poskytovateľa platby"
 
 #. module: pos_mercury
 #: model:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
@@ -177,16 +196,18 @@ msgid ""
 "If you don't already have a Mercury account, contact Mercury at +1 (800) 846-4472\n"
 "                                to create one."
 msgstr ""
+"Ak ešte nemáte Mercury účet, kontaktujte Mercury na +1 (800) 846-4472\n"
+"pre jeho vytvorenie."
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_account_bank_statement_line_mercury_invoice_no
 msgid "Invoice number from Mercury Pay"
-msgstr ""
+msgstr "Číslo faktúry z Mercury Pay"
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_account_journal
 msgid "Journal"
-msgstr ""
+msgstr "Účtovná kniha"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration___last_update
@@ -209,18 +230,18 @@ msgstr "Naposledy upravované"
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration_merchant_id
 msgid "Merchant ID"
-msgstr ""
+msgstr "ID obchodníka"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration_merchant_pwd
 msgid "Merchant Password"
-msgstr ""
+msgstr "Heslo obchodníka"
 
 #. module: pos_mercury
 #: model:ir.actions.act_window,name:pos_mercury.action_configuration_form
 #: model:ir.ui.menu,name:pos_mercury.menu_pos_pos_mercury_config
 msgid "Mercury Configurations"
-msgstr ""
+msgstr "Mercury konfigurácie"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_account_journal_pos_mercury_config_id
@@ -230,27 +251,27 @@ msgstr ""
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_account_bank_statement_line_mercury_invoice_no
 msgid "Mercury invoice number"
-msgstr ""
+msgstr "Mercury číslo faktúry"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_account_bank_statement_line_mercury_record_no
 msgid "Mercury record number"
-msgstr ""
+msgstr "Mercury číslo záznamu"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_account_bank_statement_line_mercury_ref_no
 msgid "Mercury reference number"
-msgstr ""
+msgstr "Mercury referenčné číslo"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration_name
 msgid "Name"
-msgstr ""
+msgstr "Meno"
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_mercury_configuration_name
 msgid "Name of this Mercury configuration"
-msgstr ""
+msgstr "Názov Mercury konfigurácie"
 
 #. module: pos_mercury
 #: code:addons/pos_mercury/models/pos_mercury_transaction.py:33
@@ -269,133 +290,143 @@ msgstr ""
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:328
 #, python-format
 msgid "No response from Mercury (Mercury down?)"
-msgstr ""
+msgstr "Žiadna Mercury odpoveď (Mercury je dole?)"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:330
 #, python-format
 msgid "No response from server (connected to network?)"
-msgstr ""
+msgstr "Žiadna odpoveď zo serveru (peipojené do siete?)"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:414
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:567
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:423
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:577
 #, python-format
 msgid "Odoo error while processing transaction."
-msgstr ""
+msgstr "Odoo chyba pri spracovávaní transakcie."
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:642
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:652
 #, python-format
 msgid "One credit card swipe already pending."
-msgstr ""
+msgstr "Jedno potiahnutie kreditnej karty ešte nevybavené."
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:460
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:470
 #, python-format
 msgid "Partially approved"
-msgstr ""
+msgstr "Čiastočne schválené"
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_mercury_configuration_merchant_pwd
 msgid ""
 "Password of the merchant to authenticate him on the payment provider server"
 msgstr ""
+"Heslo obchodníka pre jeho autentifikáciu na serveri poskytovateľa platby"
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_account_bank_statement_line_mercury_record_no
 msgid "Payment record number from Mercury Pay"
-msgstr ""
+msgstr "Číslo zánamu platby z Mercury Pay"
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_account_bank_statement_line_mercury_ref_no
 msgid "Payment reference number from Mercury Pay"
-msgstr ""
+msgstr "Číslo referencie platby z Mercury Pay"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:407
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:416
 #, python-format
 msgid "Please setup your Mercury merchant account."
-msgstr ""
+msgstr "Prosím nastavte váš Mercury účet obchodníka."
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_order
 msgid "Point of Sale Orders"
+msgstr "Objednávky miesta predaja"
+
+#. module: pos_mercury
+#. openerp-web
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:345
+#, python-format
+msgid "Refunds not supported"
 msgstr ""
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:539
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:549
 #, python-format
 msgid "Reversal failed, sending VoidSale..."
-msgstr ""
+msgstr "Zvrátenie zlyhalo, posiela sa VoidSale..."
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:581
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:591
 #, python-format
 msgid "Reversal succeeded"
-msgstr ""
+msgstr "Zvrátenie úspešné"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:542
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:552
 #, python-format
 msgid "Sending reversal..."
-msgstr ""
+msgstr "Posielanie zvrátenia..."
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/xml/pos_mercury.xml:47
 #, python-format
 msgid "TO CARDHOLDER AGREEMENT"
-msgstr ""
+msgstr "K DOHODE DRŽITEĽA KARTY"
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_account_bank_statement_line_mercury_card_brand
 msgid "The brand of the payment card (e.g. Visa, AMEX, ...)"
-msgstr ""
+msgstr "Značka kreditnej karty (napr. Visa, AMEX, ...)"
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_account_bank_statement_line_mercury_prefixed_card_number
 msgid "The card number used for the payment."
-msgstr ""
+msgstr "Číslo karty použitej pre platbu."
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_account_journal_pos_mercury_config_id
 msgid "The configuration of Mercury used for this journal"
-msgstr ""
+msgstr "Mercury konfigurácia pouźitá pre túto účtovnú knihu"
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_account_bank_statement_line_mercury_card_number
 msgid "The last 4 numbers of the card used to pay"
-msgstr ""
+msgstr "Posledné 4 čísla karty použitej na platenie"
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_account_bank_statement_line_mercury_card_owner_name
 msgid "The name of the card owner"
-msgstr ""
+msgstr "Meno majiteľa karty"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:352
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:361
 #, python-format
 msgid ""
 "This can be caused by a badly executed swipe or by not having your keyboard "
 "layout set to US QWERTY (not US International)."
 msgstr ""
+"Toto môźe byť spôsobené zlým potiahnutím alebo iným nastavením klávesnice "
+"ako US QWERTY (nie US medzinárodné)"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:146
 #, python-format
 msgid "Transaction approved"
-msgstr ""
+msgstr "Transakcia schválená"
 
 #. module: pos_mercury
 #: model:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
@@ -405,6 +436,10 @@ msgid ""
 "                                just like on any other payment line. Whenever the payment line is set up, a card\n"
 "                                can be swiped through the card reader device."
 msgstr ""
+"Používanie Mercury integrácie pre miesto predaja je jendoduché: iba stlačte\n"
+"pridruženú platobnú metódu. Potom môže byť suma prispôsobená (napr. výdavok)\n"
+"ako na akomkoľvek riadku platby. Kedykoľvek je nastavený riadok platby, karta\n"
+"môže byť priložená na čítacie zariadenie kariet."
 
 #. module: pos_mercury
 #: model:ir.ui.view,arch_db:pos_mercury.pos_config_view_form_inherit_pos_mercury
@@ -413,17 +448,17 @@ msgstr ""
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:589
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:599
 #, python-format
 msgid "VoidSale succeeded"
-msgstr ""
+msgstr "VoidSale úspešné"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/xml/pos_mercury.xml:17
 #, python-format
 msgid "WAITING FOR SWIPE"
-msgstr ""
+msgstr "ČAKǍ SA NA PRILOŽENIE"
 
 #. module: pos_mercury
 #: model:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
@@ -431,30 +466,32 @@ msgid ""
 "We currently support the MagTek Dynamag card reader device. It can be connected\n"
 "                                directly to the Point Of Sale device or it can be connected to the POSBox."
 msgstr ""
+"V súčasnosi podporujeme čítačku kariet MagTek Dynamag. Môže byť pripojená\n"
+"priamo k zariadeniu miesta predaja alebo môže byť pripojená k POSBox-u."
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/xml/pos_mercury.xml:50
 #, python-format
 msgid "X______________________________"
-msgstr ""
+msgstr "X______________________________"
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_barcode_rule
 msgid "barcode.rule"
-msgstr ""
+msgstr "barcode.rule"
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_ir_autovacuum
 msgid "ir.autovacuum"
-msgstr ""
+msgstr "ir.autovacuum"
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_mercury_configuration
 msgid "pos_mercury.configuration"
-msgstr ""
+msgstr "pos_mercury.configuration"
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_mercury_mercury_transaction
 msgid "pos_mercury.mercury_transaction"
-msgstr ""
+msgstr "pos_mercury.mercury_transaction"

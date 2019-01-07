@@ -4,35 +4,37 @@
 # 
 # Translators:
 # Gab_Odoo <gab@odoo.com>, 2017
-# Martin Trigaux, 2017
-# Wolfgang Taferner, 2017
+# Andi, 2017
+# David Lehov <KHottend@gmx.de>, 2017
+# Anja Funk <anja.funk@afimage.de>, 2017
+# Fabian Liesch <fabian.liesch@gmail.com>, 2017
+# Renzo Meister, 2017
+# Ermin Trevisan <trevi@twanda.com>, 2017
+# Christian Körner <fipes.de@gmail.com>, 2017
+# Henry Mineehen <info@mineehen.de>, 2017
+# Ralf Hilgenstock <rh@dialoge.info>, 2017
+# Thorsten Vocks <thorsten.vocks@openbig.org>, 2017
+# JackTheHunter <Maximilian.N98@gmail.com>, 2017
+# Niki Waibel, 2017
+# darenkster <inactive+darenkster@transifex.com>, 2017
 # Philipp Hug <philipp@hug.cx>, 2017
 # Tina Rittmüller <tr@ife.de>, 2017
-# Thorsten Vocks <thorsten.vocks@openbig.org>, 2017
-# Ralf Hilgenstock <rh@dialoge.info>, 2017
-# Henry Mineehen <info@mineehen.de>, 2017
-# Ermin Trevisan <trevi@twanda.com>, 2017
-# darenkster <inactive+darenkster@transifex.com>, 2017
-# Andi, 2017
-# Rudolf Schnapka <rs@techno-flex.de>, 2017
-# Niki Waibel, 2017
 # Laurent Meuwly <laurent.meuwly@camptocamp.com>, 2017
-# Anja Funk <anja.funk@afimage.de>, 2017
-# JackTheHunter <Maximilian.N98@gmail.com>, 2017
-# Renzo Meister, 2017
-# David Lehov <KHottend@gmx.de>, 2017
-# Fabian Liesch <fabian.liesch@gmail.com>, 2017
-# Christian Körner <fipes.de@gmail.com>, 2017
+# Andreas Stauder <andreas.stauder@brain-tec.ch>, 2017
 # Stefan Hartenfels <stefan.hartenfels@camptocamp.com>, 2017
+# Wolfgang Taferner, 2017
 # e2f <projects@e2f.com>, 2018
 # Katharina Moritz <kmo@e2f.com>, 2018
+# Rudolf Schnapka <rs@techno-flex.de>, 2018
+# Martin Trigaux, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 13:43+0000\n"
-"PO-Revision-Date: 2018-02-19 13:43+0000\n"
-"Last-Translator: Katharina Moritz <kmo@e2f.com>, 2018\n"
+"POT-Creation-Date: 2019-01-03 15:06+0000\n"
+"PO-Revision-Date: 2017-09-20 10:18+0000\n"
+"Last-Translator: Martin Trigaux, 2019\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -340,7 +342,7 @@ msgstr "Buchhaltung: Buchhalter oder Berater"
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "Actual expense sheets, not the refused ones"
-msgstr "Tatsächliche Spesenabrechnungen, nicht die abgelehnten"
+msgstr "Tatsächliche Spesenabrechnungen ohne Zurückweisungen"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
@@ -650,7 +652,7 @@ msgstr "Genießen Sie die Erfahrung mit Odoo,"
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "Expense"
-msgstr "betrieblicher Aufwand"
+msgstr "Spesen"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_date
@@ -803,7 +805,7 @@ msgstr "Spesen: Manager vorlegen"
 #: model:product.product,name:hr_expense.product_product_fixed_cost
 #: model:product.template,name:hr_expense.product_product_fixed_cost_product_template
 msgid "Expenses"
-msgstr "Aufwand"
+msgstr "Spesen"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_action
@@ -1358,6 +1360,11 @@ msgid "Product Template"
 msgstr "Produktvorlage"
 
 #. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.product_product_expense_tree_view
+msgid "Product Variants"
+msgstr "Produktvarianten"
+
+#. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
 msgid ""
 "Provide your customer with detailed reports (along with copies of receipts)"
@@ -1851,7 +1858,7 @@ msgstr ""
 #, python-format
 msgid "You cannot add expense lines of another employee."
 msgstr ""
-"Sie können keine Aufwandszeilen eines anderen Mitarbeiters hinzufügen."
+"Sie können keine Spesenpositionen eines anderen Mitarbeiters hinzufügen."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:315
@@ -1877,7 +1884,7 @@ msgstr ""
 #: code:addons/hr_expense/models/hr_expense.py:602
 #, python-format
 msgid "You cannot report expenses with different payment modes."
-msgstr ""
+msgstr "Sie dürfen Auslagen nicht mit unterschiedlichen Zahlwegen angeben."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:109

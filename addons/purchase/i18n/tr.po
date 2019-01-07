@@ -4,14 +4,17 @@
 # 
 # Translators:
 # Murat Kaplan <muratk@projetgrup.com>, 2017
-# Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2017
+# Umur Akın <umura@projetgrup.com>, 2018
+# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2018
+# Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-16 08:08+0000\n"
-"PO-Revision-Date: 2017-11-16 08:08+0000\n"
-"Last-Translator: Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2017\n"
+"POT-Creation-Date: 2019-01-03 15:06+0000\n"
+"PO-Revision-Date: 2017-09-20 10:22+0000\n"
+"Last-Translator: Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2018\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,7 +27,7 @@ msgstr ""
 msgid ""
 "\n"
 "<p>Dear\n"
-"% if object.partner_id.is_company and object.child_ids:\n"
+"% if object.partner_id.is_company and object.partner_id.child_ids:\n"
 "    ${object.partner_id.child_ids[0].name}\n"
 "% else :\n"
 "    ${object.partner_id.name}\n"
@@ -37,7 +40,7 @@ msgid ""
 "% if object.origin:\n"
 "    (RFQ origin: ${object.origin})\n"
 "% endif\n"
-"amounting in <strong>${object.amount_total} ${object.currency_id.name}</strong>\n"
+"amounting in <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
 "from ${object.company_id.name}.\n"
 "</p>\n"
 "\n"
@@ -54,7 +57,7 @@ msgstr ""
 #: model:mail.template,body_html:purchase.email_template_edi_purchase_done
 msgid ""
 "\n"
-"<p>Dear ${object.partner_id.name} \n"
+"<p>Dear ${object.partner_id.name}\n"
 "% if object.partner_id.parent_id:\n"
 "    (<i>${object.partner_id.parent_id.name}</i>)\n"
 "% endif\n"
@@ -67,7 +70,7 @@ msgid ""
 "% if object.origin:\n"
 "    (RFQ origin: ${object.origin})\n"
 "% endif\n"
-"amounting <strong>${object.amount_total} ${object.currency_id.name}</strong>\n"
+"amounting <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
 "from ${object.company_id.name}.\n"
 "</p>\n"
 "\n"
@@ -76,7 +79,7 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/stock.py:79
+#: code:addons/purchase/models/stock.py:98
 #, python-format
 msgid " Buy"
 msgstr " Satınal"
@@ -135,6 +138,7 @@ msgstr "3'lü eşleştirme: alım siparişleri, malzeme kabul ve faturalar"
 msgid ""
 "<html>\n"
 "                <head></head>\n"
+"                % set company = record and record.company_id or ctx.get('company')\n"
 "                <body style=\"margin: 0; padding: 0;\">\n"
 "                <table border=\"0\" width=\"100%\" cellpadding=\"0\" bgcolor=\"#ededed\" style=\"padding: 20px; background-color: #ededed\" summary=\"o_mail_notification\">\n"
 "                    <tbody>\n"
@@ -150,7 +154,7 @@ msgid ""
 "                                  </span>\n"
 "                              </td>\n"
 "                              <td valign=\"middle\" align=\"right\">\n"
-"                                  <img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\">\n"
+"                                  <img src=\"/logo.png?company=${company.id}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${company.name}\">\n"
 "                              </td>\n"
 "                            </tr>\n"
 "                          </table>\n"
@@ -176,16 +180,16 @@ msgid ""
 "                          <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#875A7B\" style=\"min-width: 590px; background-color: rgb(135,90,123); padding: 20px;\">\n"
 "                            <tr>\n"
 "                              <td valign=\"middle\" align=\"left\" style=\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\">\n"
-"                                ${user.company_id.name}<br/>\n"
-"                                ${user.company_id.phone or ''}\n"
+"                                ${company.name}<br/>\n"
+"                                ${company.phone or ''}\n"
 "                              </td>\n"
 "                              <td valign=\"middle\" align=\"right\" style=\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\">\n"
-"                                % if user.company_id.email:\n"
-"                                <a href=\"mailto:${user.company_id.email}\" style=\"text-decoration:none; color: white;\">${user.company_id.email}</a><br/>\n"
+"                                % if company.email:\n"
+"                                <a href=\"mailto:${company.email}\" style=\"text-decoration:none; color: white;\">${company.email}</a><br/>\n"
 "                                % endif\n"
-"                                % if user.company_id.website:\n"
-"                                    <a href=\"${user.company_id.website}\" style=\"text-decoration:none; color: white;\">\n"
-"                                        ${user.company_id.website}\n"
+"                                % if company.website:\n"
+"                                    <a href=\"${company.website}\" style=\"text-decoration:none; color: white;\">\n"
+"                                        ${company.website}\n"
 "                                    </a>\n"
 "                                % endif\n"
 "                              </td>\n"
@@ -204,76 +208,14 @@ msgid ""
 "                </html>\n"
 "            "
 msgstr ""
-"<html>\n"
-"                <head></head>\n"
-"                <body style=\"margin: 0; padding: 0;\">\n"
-"                <table border=\"0\" width=\"100%\" cellpadding=\"0\" bgcolor=\"#ededed\" style=\"padding: 20px; background-color: #ededed\" summary=\"o_mail_notification\">\n"
-"                    <tbody>\n"
-"\n"
-"                      <!-- HEADER -->\n"
-"                      <tr>\n"
-"                        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"                          <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#875A7B\" style=\"min-width: 590px; background-color: rgb(135,90,123); padding: 20px;\">\n"
-"                            <tr>\n"
-"                              <td valign=\"middle\">\n"
-"                                  <span style=\"font-size:20px; color:white; font-weight: bold;\">\n"
-"                                      ${object.record_name}\n"
-"                                  </span>\n"
-"                              </td>\n"
-"                              <td valign=\"middle\" align=\"right\">\n"
-"                                  <img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\">\n"
-"                              </td>\n"
-"                            </tr>\n"
-"                          </table>\n"
-"                        </td>\n"
-"                      </tr>\n"
-"\n"
-"                      <!-- CONTENT -->\n"
-"                      <tr>\n"
-"                        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"                          <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#ffffff\" style=\"min-width: 590px; background-color: rgb(255, 255, 255); padding: 20px;\">\n"
-"                            <tbody>\n"
-"                              <td valign=\"top\" style=\"font-family:Arial,Helvetica,sans-serif; color: #555; font-size: 14px;\">\n"
-"                                ${object.body | safe}\n"
-"                              </td>\n"
-"                            </tbody>\n"
-"                          </table>\n"
-"                        </td>\n"
-"                      </tr>\n"
-"\n"
-"                      <!-- FOOTER -->\n"
-"                      <tr>\n"
-"                        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"                          <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#875A7B\" style=\"min-width: 590px; background-color: rgb(135,90,123); padding: 20px;\">\n"
-"                            <tr>\n"
-"                              <td valign=\"middle\" align=\"left\" style=\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\">\n"
-"                                ${user.company_id.name}<br/>\n"
-"                                ${user.company_id.phone or ''}\n"
-"                              </td>\n"
-"                              <td valign=\"middle\" align=\"right\" style=\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\">\n"
-"                                % if user.company_id.email:\n"
-"                                <a href=\"mailto:${user.company_id.email}\" style=\"text-decoration:none; color: white;\">${user.company_id.email}</a><br/>\n"
-"                                % endif\n"
-"                                % if user.company_id.website:\n"
-"                                    <a href=\"${user.company_id.website}\" style=\"text-decoration:none; color: white;\">\n"
-"                                        ${user.company_id.website}\n"
-"                                    </a>\n"
-"                                % endif\n"
-"                              </td>\n"
-"                            </tr>\n"
-"                          </table>\n"
-"                        </td>\n"
-"                      </tr>\n"
-"                      <tr>\n"
-"                        <td align=\"center\">\n"
-"                            Powered by <a href=\"https://www.odoo.com\">Odoo</a>.\n"
-"                        </td>\n"
-"                      </tr>\n"
-"                    </tbody>\n"
-"                </table>\n"
-"                </body>\n"
-"                </html>\n"
-"            "
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
+#: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_stock
+msgid ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
+msgstr ""
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
@@ -380,12 +322,14 @@ msgid "<strong>Your Order Reference:</strong>"
 msgstr "<strong>Sipariş Referansınız:</strong>"
 
 #. module: purchase
-#: code:addons/purchase/models/stock.py:83
+#: code:addons/purchase/models/stock.py:72
 #, python-format
 msgid ""
 "A sale order that generated this purchase order has been deleted. Check if "
 "an action is needed."
 msgstr ""
+"Bu satın alma siparişini oluşturan bir satış siparişi silindi. Bir aksiyon "
+"gerekip gerekmediğini kontrol edin."
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_warning_purchase
@@ -506,7 +450,7 @@ msgid "Blocking Message"
 msgstr "Engelleme"
 
 #. module: purchase
-#: code:addons/purchase/models/stock.py:73
+#: code:addons/purchase/models/stock.py:92
 #: model:stock.location.route,name:purchase.route_warehouse0_buy
 #, python-format
 msgid "Buy"
@@ -540,7 +484,7 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/stock.py:76
+#: code:addons/purchase/models/stock.py:95
 #, python-format
 msgid "Can't find any generic Buy route."
 msgstr "Satınalma rotasında herhangi bir tanım yok."
@@ -558,7 +502,7 @@ msgid "Cancelled"
 msgstr "İptal Edildi"
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:737
+#: code:addons/purchase/models/purchase.py:757
 #, python-format
 msgid "Cannot delete a purchase order line which is in state '%s'."
 msgstr "'%s' Durumundaki satınalma satırı silinemiyor"
@@ -729,6 +673,8 @@ msgid ""
 "Depicts the date where the Quotation should be validated and converted into "
 "a purchase order."
 msgstr ""
+"Teklifin onaylanması ve satın alma siparişine dönüştürülmesi gereken tarihi "
+"gösterir."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_name
@@ -793,6 +739,8 @@ msgid ""
 "Encoding help. When selected, the associated purchase order lines are added "
 "to the vendor bill. Several PO can be selected."
 msgstr ""
+"Kodlama yardımı. Seçildiği zaman, ilişkili satın alma sipariş satırları "
+"tedarikçi faturasına eklenir. Bir çok satınalma siparişi seçilebilir."
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
@@ -805,7 +753,7 @@ msgid "Extended Filters"
 msgstr "Genişletilmiş Filtreler"
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:577
+#: code:addons/purchase/models/purchase.py:590
 #, python-format
 msgid "Extra line with %s "
 msgstr ""
@@ -826,6 +774,7 @@ msgstr "Sonraki Aktiviteler"
 #: selection:res.company,po_double_validation:0
 msgid "Get 2 levels of approvals to confirm a purchase order"
 msgstr ""
+"Bir satın alma siparişinin onaylanması için 2 onay seviyesi almak gerekir."
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -1032,6 +981,9 @@ msgid ""
 "Orders for procuring products, they will be scheduled that many days earlier"
 " to cope with unexpected vendor delays."
 msgstr ""
+"Satıcı teslimat süreleri için hata payı. Sistem, ürün tedarik etmek için "
+"Satın Alma Siparişleri ürettiğinde, beklenmedik satıcı gecikmeleriyle başa "
+"çıkacakları günler öncesinden planlanacaktır."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_config_settings_use_po_lead
@@ -1068,7 +1020,7 @@ msgstr "Min. Envanter Kuralı"
 #: model:ir.model.fields,help:purchase.field_res_company_po_double_validation_amount
 #: model:ir.model.fields,help:purchase.field_res_config_settings_po_double_validation_amount
 msgid "Minimum amount for which a double validation is required"
-msgstr ""
+msgstr " Çift doğrulama gerektiren minimum miktar"
 
 #. module: purchase
 #: model:ir.filters,name:purchase.filter_purchase_order_monthly_purchases
@@ -1371,6 +1323,10 @@ msgid ""
 "purchase history and performance. From this menu you can track your "
 "negotiation performance, the delivery performance of your vendors, etc."
 msgstr ""
+"Satınalma Analizi, şirket satın alma geçmişinizi ve performansınızı kolayca "
+"kontrol etmenizi ve analiz etmenizi sağlar. Bu menüden görüşme "
+"performansınızı, satıcılarınızın teslim performanslarını vb. "
+"Izleyebilirsiniz."
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_account
@@ -1450,6 +1406,8 @@ msgid ""
 "Purchase Order Modification used when you want to purchase order editable "
 "after confirm"
 msgstr ""
+"Onaydan sonra satın alma siparişi vermek istediğinizde düzenlenebilir olması"
+" için Satın Alma Siparişi Değiştirme kullanılır."
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_form_action
@@ -1478,7 +1436,7 @@ msgstr "Satınalma Siparişi İstatistikleri"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Purchase orders that have been invoiced."
-msgstr ""
+msgstr "Faturalanan satın alma siparişi."
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
@@ -1510,11 +1468,18 @@ msgid "Purchases Orders"
 msgstr "Satınalma Siparişleri"
 
 #. module: purchase
+#: model:ir.model,name:purchase.model_stock_location_path
+msgid "Pushed Flow"
+msgstr "Çekme Akışı"
+
+#. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_dest_address_id
 msgid ""
 "Put an address if you want to deliver directly from the vendor to the "
 "customer. Otherwise, keep empty to deliver to your own company."
 msgstr ""
+"Eğer doğrudan tedarikçiden müşteriye teslimat olmasını istiyorsanız, adres "
+"girin. Eğer boş tutarsanız şirketinize teslimat olur."
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -1691,7 +1656,7 @@ msgstr "Satınalma Siparişi Ara"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings_use_po_lead
 msgid "Security Lead Time for Purchase"
-msgstr ""
+msgstr "Satın Alma için Teslimat Zaman Güvenliği"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_product_product_purchase_line_warn
@@ -1807,7 +1772,7 @@ msgstr "Vergiler:"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_default_location_dest_id_usage
 msgid "Technical field used to display the Drop Ship Address"
-msgstr ""
+msgstr "Teslimat Bırakma Adresini görüntülemek için kullanılan teknik alan"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_notes
@@ -1826,6 +1791,9 @@ msgid ""
 "                purchase process: prices, procurement logistics, accounting data,\n"
 "                available vendors, etc."
 msgstr ""
+"Ürün formu satın alma işleminin daha iyi olması için detaylı bilgi içerir: "
+"fiyatlar, tedarik etme lojistiği, muhasebe bilgileri, mevcut tedarikçiler "
+"vb."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.product_normal_action_puchased
@@ -1834,9 +1802,12 @@ msgid ""
 "            purchase process: prices, procurement logistics, accounting data,\n"
 "            available vendors, etc."
 msgstr ""
+"Ürün formu satın alma işleminin daha iyi olması için detaylı bilgi içerir: "
+"fiyatlar, tedarik etme lojistiği, muhasebe bilgileri, mevcut tedarikçiler "
+"vb."
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:649
+#: code:addons/purchase/models/purchase.py:662
 #, python-format
 msgid ""
 "The quantities on your purchase order indicate less than billed. You should "
@@ -1861,9 +1832,12 @@ msgid ""
 "                    converted into a purchase order, you will be able to control the receipt\n"
 "                    of the products and the vendor bill."
 msgstr ""
+"Teklif için gerekli ilk adım satın alma adımı. Satın alma siparişine "
+"dönüştürüldükten sonra, ürün makbuzunu ve tedarikçi faturasını kontrol "
+"edebileceksiniz."
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:878
+#: code:addons/purchase/models/purchase.py:898
 #, python-format
 msgid ""
 "There is no vendor associated to the product %s. Please define a vendor for "
@@ -1876,6 +1850,8 @@ msgid ""
 "This account will be used to value price difference between purchase price "
 "and accounting cost."
 msgstr ""
+"Bu hesap, satın alma fiyatı ile maliyet tutarı arasındaki fiyat farkı değeri"
+" için kullanılacaktır."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_product_product_property_account_creditor_price_difference
@@ -1928,13 +1904,13 @@ msgid "This note will show up on purchase orders."
 msgstr "Buraya yazacağınız açıklamalar satınalma siparişlerinde görünecektir."
 
 #. module: purchase
-#: code:addons/purchase/models/account_invoice.py:203
+#: code:addons/purchase/models/account_invoice.py:218
 #, python-format
 msgid "This vendor bill has been created from: %s"
-msgstr ""
+msgstr "Bu Tedarikçi Faturası üzerinden oluşturuldu: %s"
 
 #. module: purchase
-#: code:addons/purchase/models/account_invoice.py:217
+#: code:addons/purchase/models/account_invoice.py:232
 #, python-format
 msgid "This vendor bill has been modified from: %s"
 msgstr ""
@@ -1943,6 +1919,7 @@ msgstr ""
 #: model:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
 msgid "This vendor has no purchase order. Click to create a new RfQ."
 msgstr ""
+"Bu tedarikçinin hiç siparişi yok. Yeni bir RfQ oluşturmak için tıklayınız."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_picking_type_id
@@ -1990,7 +1967,7 @@ msgid "Transfer"
 msgstr "Transfer"
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:362
+#: code:addons/purchase/models/purchase.py:363
 #, python-format
 msgid ""
 "Unable to cancel purchase order %s as some receptions have already been "
@@ -1998,7 +1975,7 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:365
+#: code:addons/purchase/models/purchase.py:366
 #, python-format
 msgid ""
 "Unable to cancel this purchase order. You must first cancel related vendor "
@@ -2155,7 +2132,7 @@ msgstr "Uyarı"
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:268
-#: code:addons/purchase/models/purchase.py:808
+#: code:addons/purchase/models/purchase.py:828
 #, python-format
 msgid "Warning for %s"
 msgstr "%s için uyarı"
@@ -2217,7 +2194,7 @@ msgstr ""
 "            bir hizmet de olabilir."
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:395
+#: code:addons/purchase/models/purchase.py:408
 #, python-format
 msgid "You must set a Vendor Location for this partner %s"
 msgstr "Bu iş ortağı %s için bir tedarikçi konumu belirlemelisiniz"

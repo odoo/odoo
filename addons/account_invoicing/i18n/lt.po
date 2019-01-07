@@ -3,6 +3,7 @@
 # * account_invoicing
 # 
 # Translators:
+# Linas Versada <paulius.sladkevicius@gmail.com>, 2018
 # Silvija Butko <silvija.butko@gmail.com>, 2018
 msgid ""
 msgstr ""
@@ -16,14 +17,14 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: lt\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: account_invoicing
 #. openerp-web
 #: code:addons/account_invoicing/static/src/js/tour.js:19
 #, python-format
 msgid "Click to <b>send the invoice by email.</b>"
-msgstr "Paspauskite <b>siųsti sąskaitą el. paštu.</b>"
+msgstr "Paspauskite norėdami <b>siųsti sąskaitą el. paštu.</b>"
 
 #. module: account_invoicing
 #. openerp-web
@@ -40,5 +41,5 @@ msgid ""
 "Click to <b>validate your invoice.</b> A reference will be assigned to this "
 "invoice and you will not be able to modify it anymore."
 msgstr ""
-"Paspauskite <b>patvirtinti savo sąskaitą.</b> Bus sukurta nuoroda šiai "
-"sąskaitai ir jos daugiau nebus galima redaguoti."
+"Paspauskite norėdami <b>patvirtinti savo sąskaitą.</b> Šiai sąskaitai bus "
+"sukurta nuoroda  ir jos daugiau nebus galima redaguoti."

@@ -194,7 +194,7 @@ class MailController(http.Controller):
         comparison, record, redirect = self._check_token_and_record_or_redirect(model, int(res_id), token)
         if comparison and record:
             try:
-                record.sudo().message_subscribe_users()
+                record.sudo().message_subscribe_users(user_ids=[request.uid])
             except Exception:
                 return self._redirect_to_messaging()
         return redirect

@@ -331,14 +331,14 @@ class HrExpense(models.Model):
 
     @api.model
     def get_empty_list_help(self, help_message):
-        if help_message:
+        if help_message and help_message.find("oe_view_nocontent_create") == -1:
             use_mailgateway = self.env['ir.config_parameter'].sudo().get_param('hr_expense.use_mailgateway')
             alias_record = use_mailgateway and self.env.ref('hr_expense.mail_alias_expense') or False
             if alias_record and alias_record.alias_domain and alias_record.alias_name:
                 link = "<a id='o_mail_test' href='mailto:%(email)s?subject=Lunch%%20with%%20customer%%3A%%20%%2412.32'>%(email)s</a>" % {
                     'email': '%s@%s' % (alias_record.alias_name, alias_record.alias_domain)
                 }
-                return '<p class="oe_view_nocontent_create">%s<br/>%s</p>%s' % (
+                return '<p class="oe_view_nocontent_create oe_view_nocontent_alias">%s<br/>%s</p>%s' % (
                     _('Click to add a new expense,'),
                     _('or send receipts by email to %s.') % (link,),
                     help_message)
@@ -372,6 +372,7 @@ class HrExpense(models.Model):
             expense_description = expense_description.replace(product_code.group(), '')
             products = self.env['product.product'].search([('default_code', 'ilike', product_code.group(1))]) or default_product
             product = products.filtered(lambda p: p.default_code == product_code.group(1)) or products[0]
+        account = product.product_tmpl_id._get_product_accounts()['expense']
 
         pattern = '[-+]?(\d+(\.\d*)?|\.\d+)([eE][-+]?\d+)?'
         # Match the last occurence of a float in the string
@@ -394,10 +395,13 @@ class HrExpense(models.Model):
             'employee_id': employee.id,
             'product_id': product.id,
             'product_uom_id': product.uom_id.id,
+            'tax_ids': [(4, tax.id, False) for tax in product.supplier_taxes_id],
             'quantity': 1,
             'unit_amount': price,
             'company_id': employee.company_id.id,
         })
+        if account:
+            custom_values['account_id'] = account.id
         return super(HrExpense, self).message_new(msg_dict, custom_values)
 
 class HrExpenseSheet(models.Model):

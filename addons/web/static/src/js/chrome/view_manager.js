@@ -263,7 +263,7 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
 
             self.active_view = view;
 
-            if (!view.loaded) {
+            if (!view.loaded || view.loaded.state() === 'rejected') {
                 view_options = _.extend({}, view.options, view_options, self.env);
                 view.loaded = $.Deferred();
                 self.create_view(view, view_options).then(function(controller) {
@@ -567,7 +567,7 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
                 // Wrong group_by values will simply fail and forbid rendering of the destination view
                 var ncontext = new Context(
                     _.object(_.reject(_.pairs(self.env.context), function(pair) {
-                      return pair[0].match('^(?:(?:default_|search_default_|show_).+|.+_view_ref|group_by|group_by_no_leaf|active_id|active_ids)$') !== null;
+                      return pair[0].match('^(?:(?:default_|search_default_|show_).+|.+_view_ref|group_by|group_by_no_leaf|active_id|active_ids|orderedBy)$') !== null;
                     }))
                 );
                 ncontext.add(action_data.context || {});

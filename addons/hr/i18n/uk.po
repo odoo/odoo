@@ -3,23 +3,24 @@
 # * hr
 # 
 # Translators:
-# Bohdan Lisnenko, 2017
 # ТАрас <tratatuta@i.ua>, 2017
 # Martin Trigaux, 2017
-# Alina Semeniuk <alinasemeniuk1@gmail.com>, 2017
+# Bohdan Lisnenko, 2018
+# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 13:43+0000\n"
-"PO-Revision-Date: 2018-02-19 13:43+0000\n"
-"Last-Translator: Alina Semeniuk <alinasemeniuk1@gmail.com>, 2017\n"
+"POT-Creation-Date: 2019-01-03 15:06+0000\n"
+"PO-Revision-Date: 2017-09-20 10:17+0000\n"
+"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2018\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: uk\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: hr
 #: code:addons/hr/models/hr.py:75
@@ -36,7 +37,7 @@ msgstr "%s (копія)"
 #: model:hr.job,website_description:hr.job_marketing
 #: model:hr.job,website_description:hr.job_trainee
 msgid "<i>Work in a fun atmosphere</i>"
-msgstr ""
+msgstr "<i>Працюйте у веселій атмосфері</i>"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
@@ -65,18 +66,25 @@ msgid "<i>You easily manage them</i>"
 msgstr "<i>Ви легко керуєте ними</i>"
 
 #. module: hr
+#: model:ir.ui.view,arch_db:hr.res_config_settings_view_form
+msgid ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
+msgstr ""
+
+#. module: hr
 #: model:ir.ui.view,arch_db:hr.hr_kanban_view_employees
 msgid ""
 "<span class=\"o_unfollow\">Unfollow</span>\n"
 "                                    <span class=\"o_following\">Following</span>"
 msgstr ""
 "<span class=\"o_unfollow\">Відмовитися</span>\n"
-"                                    <span class=\"o_following\">Слідкування</span>"
+"                                    <span class=\"o_following\">Слідкувати</span>"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
 msgid "<span>Reporting</span>"
-msgstr ""
+msgstr "<span>Звітування</span>"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
@@ -117,7 +125,7 @@ msgstr ""
 #: model:hr.job,website_description:hr.job_marketing
 #: model:hr.job,website_description:hr.job_trainee
 msgid "A good job in a young and dynamic team"
-msgstr "Хороша робота в молоді і активній команді"
+msgstr "Хороша робота в молодій і активній команді"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_active
@@ -129,6 +137,8 @@ msgstr "Активно"
 #: model:hr.job,website_description:hr.job_consultant
 msgid "Analyse needs, write specification documents and quotation"
 msgstr ""
+"Проаналізуйте потреби, напишіть специфікаційні документи та комерціну "
+"пропозицію"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_department_filter
@@ -183,7 +193,7 @@ msgstr ""
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Birth"
-msgstr "Народження"
+msgstr "Поява"
 
 #. module: hr
 #: model:hr.job,name:hr.job_ceo
@@ -261,7 +271,7 @@ msgstr "Компанія"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_config_settings_resource_calendar_id
 msgid "Company Working Hours"
-msgstr ""
+msgstr "Робочі години компанії"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_complete_name
@@ -437,18 +447,20 @@ msgid ""
 "Enter here the private address of the employee, not the one linked to your "
 "company."
 msgstr ""
+"Введіть тут приватну адресу працівника, а не ту, що пов'язана з вашою "
+"компанією."
 
 #. module: hr
-#: code:addons/hr/models/hr.py:303
+#: code:addons/hr/models/hr.py:310
 #, python-format
 msgid "Error! You cannot create recursive departments."
 msgstr "Помилка! Ви не можете створити рекурсивні відділи."
 
 #. module: hr
-#: code:addons/hr/models/hr.py:184
+#: code:addons/hr/models/hr.py:187
 #, python-format
 msgid "Error! You cannot create recursive hierarchy of Employee(s)."
-msgstr "Error! You cannot create recursive hierarchy of Employee(s)."
+msgstr "Помилка! Ви не можете створити рекурсивну ієрархію працівників (ів)."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job_no_of_recruitment
@@ -459,7 +471,7 @@ msgstr "Очікувані нові співробітники"
 #: model:ir.model.fields,help:hr.field_hr_job_expected_employees
 msgid ""
 "Expected number of employees for this job position after new recruitment."
-msgstr ""
+msgstr "Очікувана кількість працівників для цієї посади після нового набору."
 
 #. module: hr
 #: model:hr.job,name:hr.job_developer
@@ -494,7 +506,7 @@ msgstr "Стать"
 #. module: hr
 #: model:hr.job,website_description:hr.job_developer
 msgid "Good knowledge of HTML and Javascript"
-msgstr ""
+msgstr "Хороші знання HTML та Javascript"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_cto
@@ -529,7 +541,7 @@ msgstr "Хороші знання веб-дизайну"
 #: model:hr.job,website_description:hr.job_developer
 #: model:hr.job,website_description:hr.job_trainee
 msgid "Good language skills in another language"
-msgstr ""
+msgstr "Хороші навички іноземної мови"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
@@ -540,17 +552,17 @@ msgstr "Групувати за"
 #. module: hr
 #: model:ir.model,name:hr.model_hr_department
 msgid "HR Department"
-msgstr "Віділ"
+msgstr "Відділ кадрів"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
 msgid "HR Settings"
-msgstr "Налаштування ЛР"
+msgstr "Налаштування Відділу кадрів"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_consultant
 msgid "Help with the configuration of the software"
-msgstr ""
+msgstr "Допомога з налаштуванням програмного забезпечення"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_hrm
@@ -565,7 +577,7 @@ msgstr "Залучіть команду чудових виконавців"
 #. module: hr
 #: model:hr.job,website_description:hr.job_marketing
 msgid "Hire a team of great marketing people"
-msgstr "Наймайте команду чудових людей з маркетингу"
+msgstr "Найміть команду чудових людей з маркетингу"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job_no_of_hired_employee
@@ -580,7 +592,7 @@ msgstr "Людські ресурси"
 #. module: hr
 #: model:hr.job,name:hr.job_hrm
 msgid "Human Resources Manager"
-msgstr "Керівник з людських ресурсів"
+msgstr "Керівник відділу кадрів"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_id
@@ -588,7 +600,7 @@ msgstr "Керівник з людських ресурсів"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_id
 #: model:ir.model.fields,field_description:hr.field_hr_job_id
 msgid "ID"
-msgstr "ІД"
+msgstr "ID"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_identification_id
@@ -633,7 +645,7 @@ msgstr "Збільшити можливості"
 #: model:hr.job,website_description:hr.job_hrm
 #: model:hr.job,website_description:hr.job_marketing
 msgid "Increase the visibility of the product"
-msgstr "Збільшити видимість продукту"
+msgstr "Збільшити видимість товару"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
@@ -668,8 +680,8 @@ msgid ""
 "                position and follow the evolution according to what you planned\n"
 "                for the future."
 msgstr ""
-"Робота Позиції використовуються для визначення робочих місць та їх вимог.\n"
-"Ви можете відслідковувати кількість співробітників, які ви маєте на робочуу\n"
+"Вакансія використовуються для визначення робочих місць та їх вимог.\n"
+"Ви можете відслідковувати кількість співробітників, які ви маєте на робочу\n"
 "позицію і слідкувати за розвитком відповідно до того, що ви планували\n"
 "для майбутнього."
 
@@ -716,12 +728,17 @@ msgstr "Запуск нових маркетингових кампаній та
 #. module: hr
 #: model:hr.job,website_description:hr.job_hrm
 msgid "Launch new products, Human Resources campaigns and offers"
-msgstr "Запуск нових продуктів, кампаній з кадрів та пропозицій"
+msgstr "Запуск нових товарів, кампаній з кадрів та пропозицій"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
 msgid "Launch new products, marketing campaigns and offers"
-msgstr ""
+msgstr "Запуск нових продуктів, маркетингових кампаній та пропозицій"
+
+#. module: hr
+#: selection:hr.employee,marital:0
+msgid "Legal Cohabitant"
+msgstr "Юрисконсульт"
 
 #. module: hr
 #: selection:hr.employee,gender:0
@@ -748,8 +765,8 @@ msgstr "Маркетинг та менеджер спільноти"
 
 #. module: hr
 #: selection:hr.employee,marital:0
-msgid "Married (or similar)"
-msgstr ""
+msgid "Married"
+msgstr "Одружений"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_cto
@@ -841,6 +858,7 @@ msgstr "Кількість працівників, які на даний мом
 msgid ""
 "Number of hired employees for this job position during recruitment phase."
 msgstr ""
+"Кількість найманих працівників для цієї посади на етапі набору персоналу."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job_no_of_recruitment
@@ -854,6 +872,9 @@ msgid ""
 "                related to employees by departments: expenses, timesheets,\n"
 "                leaves, recruitments, etc."
 msgstr ""
+"Структура відділу Odoo використовується для управління всіма документами\n"
+"                 пов'язаними з працівниками відділів: витрати, табелі,\n"
+"                 відпустки, рекрутинг та ін"
 
 #. module: hr
 #: model:res.groups,name:hr.group_hr_user
@@ -927,12 +948,12 @@ msgstr "Переважно 1 рік досвіду роботи"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_address_home_id
 msgid "Private Address"
-msgstr ""
+msgstr "Приватна адреса"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Private Information"
-msgstr ""
+msgstr "Приватна інформація"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_consultant
@@ -1013,6 +1034,8 @@ msgid ""
 "Set default calendar used to compute time allocation for leaves, timesheets,"
 " ..."
 msgstr ""
+"Встановити календар за замовчуванням, який використовується для обчислення "
+"розподілу часу для відпусток, табелів, ..."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job_state
@@ -1030,17 +1053,17 @@ msgstr "Налаштування"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_config_settings_module_hr_org_chart
 msgid "Show Organizational Chart"
-msgstr ""
+msgstr "Показати організаційні діаграми"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Show organizational chart on employee form"
-msgstr ""
+msgstr "Показати організаційну схему на формі співробітника"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Show organizational chart on employee form."
-msgstr ""
+msgstr "Показати організаційну схему на формі співробітника."
 
 #. module: hr
 #: selection:hr.employee,marital:0
@@ -1129,7 +1152,7 @@ msgstr "Командний дух і гарне спілкування"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_is_address_home_a_company
 msgid "The employee adress has a company linked"
-msgstr ""
+msgstr "Адреса працівника пов'язана з компанією"
 
 #. module: hr
 #: sql_constraint:hr.job:0
@@ -1158,8 +1181,7 @@ msgstr "Стажер"
 #. module: hr
 #: model:hr.job,website_description:hr.job_marketing
 msgid "Transform our product into a suite of well positioned business Apps"
-msgstr ""
-"Перетворення нашого продукту в набір добре розташованих бізнес-додатків"
+msgstr "Перетворення нашого товару в набір добре розташованих бізнес-додатків"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.hr_kanban_view_employees
@@ -1176,6 +1198,9 @@ msgid ""
 "                                            This private address is used in the expense report reimbursement document.\n"
 "                                            It should be different from the work address."
 msgstr ""
+"Використовуйте тут домашню адресу працівника.\n"
+"                                             Ця приватна адреса використовується у звіті про відшкодування збитку.\n"
+"                                             Він повинен відрізнятися від робочої адреси."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_user_id
@@ -1190,7 +1215,7 @@ msgstr "Користувачі"
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.hr_job_view_kanban
 msgid "Vacancies :"
-msgstr ""
+msgstr "Вакансії:"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_visa_expire
@@ -1228,7 +1253,7 @@ msgid ""
 "them."
 msgstr ""
 "Ми шукаємо пристрасного менеджера з управління персоналом, щоб допомогти нам"
-" зробити продукти, які люди люблять у використанні. Нам потрібен хтось "
+" зробити продукцію, які люди люблять у використанні. Нам потрібен хтось "
 "амбіційний, запальний, і ..... не боїться починати нові речі, багато нових "
 "речей і масштабувати їх."
 
@@ -1240,7 +1265,7 @@ msgid ""
 " not afraid to start new things, a lot of new things and scale them."
 msgstr ""
 "Ми шукаємо активного виконавчого менеджера, який допомагає нам зробити "
-"продукти, які люди люблять у використанні. Нам потрібен хтось амбіційний, "
+"продукцію, які люди люблять у використанні. Нам потрібен хтось амбіційний, "
 "пристрасний, і ..... не боїться починати нові речі, багато нових речей і "
 "масштабувати їх."
 
@@ -1252,7 +1277,7 @@ msgid ""
 " not afraid to start new things, a lot of new things and scale them."
 msgstr ""
 "Ми шукаємо пристрасного менеджера маркетингу, який допомагає нам зробити "
-"продукти, які люди люблять у використанні. Нам потрібен хтось амбіційний, "
+"продукцію, які люди люблять у використанні. Нам потрібен хтось амбіційний, "
 "пристрасний, і ..... не боїться починати нові речі, багато нових речей і "
 "масштабувати їх."
 
@@ -1313,11 +1338,14 @@ msgid ""
 "source, full featured and it’s online offer is 3 times cheaper than "
 "traditional competitors. We have 2.000.000 users, and we're growing fast."
 msgstr ""
+"З нашим продуктом, який налічує 3000 ділових додатків. Це повністю відкрите "
+"джерело, повнофункціональне та це онлайн-пропозиція в 3 рази дешевше, ніж "
+"традиційні конкуренти. У нас 2 000 000 користувачів, і ми ростемо швидко."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_address_id
 msgid "Work Address"
-msgstr ""
+msgstr "Робоча адреса"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_work_email
@@ -1327,7 +1355,7 @@ msgstr "Робоча ел. пошта"
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Work Information"
-msgstr ""
+msgstr "Робоча інформація"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_work_location
@@ -1342,7 +1370,7 @@ msgstr "Робочий мобільний"
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Work Organization"
-msgstr ""
+msgstr "Організація роботи"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
@@ -1406,7 +1434,7 @@ msgstr "Ви креативні"
 #. module: hr
 #: model:hr.job,website_description:hr.job_consultant
 msgid "You are ready to travel in US"
-msgstr ""
+msgstr "Ви готові подорожувати в США"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
@@ -1440,7 +1468,7 @@ msgstr "Ви маєте ступінь магістра з управління 
 #: model:hr.job,website_description:hr.job_consultant
 #: model:hr.job,website_description:hr.job_marketing
 msgid "You have an affinity with the IT world"
-msgstr ""
+msgstr "Ви маєте спорідненість з ІТ-світом"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
@@ -1462,7 +1490,7 @@ msgstr "Ви говорите третьою мовою"
 #. module: hr
 #: model:hr.job,website_description:hr.job_consultant
 msgid "You speak fluently French and English"
-msgstr ""
+msgstr "Ви вільно володієте французькою та англійською мовами"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_cto
@@ -1501,6 +1529,10 @@ msgid ""
 "distributed development teams for specific projects. You will become a "
 "techinical expert of the product."
 msgstr ""
+"Ви будете відповідальні за розробку та покращення комунікації з продуктами. "
+"Ви будете працювати автономно, а також координувати та контролювати невеликі"
+" розподілені групи розробників для конкретних проектів. Ви станете технічним"
+" експертом продукту."
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_cto
@@ -1517,7 +1549,7 @@ msgstr "Ви спочатку будете тренуватися зі стар�
 #. module: hr
 #: model:hr.job,website_description:hr.job_cto
 msgid "You will initially be coached by senior technical officer"
-msgstr "Ви спочатку будете тренуватися зі старшим технічним працивником"
+msgstr "Ви спочатку будете тренуватися зі старшим технічним працівником"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_trainee
@@ -1560,7 +1592,7 @@ msgid ""
 msgstr ""
 "Ваш документ не створено, оскільки ваша електронна адреса не розпізнається. "
 "Будь-ласка, надсилайте електронні листи з адресою електронної пошти, "
-"записаною на інформацію працівника, або зверніться до менеджера з персоналу."
+"записаною на інформації працівника, або зверніться до менеджера з персоналу."
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_department_form
@@ -1590,7 +1622,7 @@ msgstr "res.config.settings"
 #. module: hr
 #: model:res.groups,comment:hr.group_hr_user
 msgid "the user will be able to approve document created by employees."
-msgstr ""
+msgstr "користувач зможе схвалити документ, створений співробітниками."
 
 #. module: hr
 #: model:res.groups,comment:hr.group_hr_manager

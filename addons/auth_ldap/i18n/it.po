@@ -6,13 +6,14 @@
 # Martin Trigaux, 2017
 # Paolo Valier, 2017
 # Pietro Della Notte <pdellanotte@gmail.com>, 2017
+# mymage <stefano.consolaro@mymage.it>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-09-20 09:53+0000\n"
 "PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Pietro Della Notte <pdellanotte@gmail.com>, 2017\n"
+"Last-Translator: mymage <stefano.consolaro@mymage.it>, 2018\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,6 +27,8 @@ msgid ""
 "Automatically create local user accounts for new users authenticating via "
 "LDAP"
 msgstr ""
+"Crea automaticamente un account utente locale per ogni autenticazione via "
+"LDAP"
 
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_company
@@ -66,38 +69,38 @@ msgstr "ID"
 #: model:ir.ui.view,arch_db:auth_ldap.res_company_ldap_view_tree
 #: model:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "LDAP Configuration"
-msgstr ""
+msgstr "Configurazione LDAP"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldaps
 #: model:ir.model.fields,field_description:auth_ldap.field_res_config_settings_ldaps
 msgid "LDAP Parameters"
-msgstr ""
+msgstr "Parametri LDAP"
 
 #. module: auth_ldap
 #: model:ir.ui.view,arch_db:auth_ldap.res_config_settings_view_form
 msgid "LDAP Server"
-msgstr ""
+msgstr "Server LDAP"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_ldap_server
 msgid "LDAP Server address"
-msgstr ""
+msgstr "Indirizzo server LDAP"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_ldap_server_port
 msgid "LDAP Server port"
-msgstr ""
+msgstr "Porta server LDAP"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_ldap_base
 msgid "LDAP base"
-msgstr ""
+msgstr "LDAP base"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_ldap_binddn
 msgid "LDAP binddn"
-msgstr ""
+msgstr "LDAP binddn"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_ldap_filter
@@ -107,7 +110,7 @@ msgstr "Filtro LDAP"
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_ldap_password
 msgid "LDAP password"
-msgstr ""
+msgstr "Password LDAP"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap___last_update
@@ -132,7 +135,7 @@ msgstr "Informazioni accesso"
 #. module: auth_ldap
 #: model:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "Process Parameter"
-msgstr ""
+msgstr "Parametro Processo"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap_ldap_tls
@@ -141,6 +144,9 @@ msgid ""
 "option requires a server with STARTTLS enabled, otherwise all authentication"
 " attempts will fail."
 msgstr ""
+"Richiede criptazione sicura TLS/SSL quando si connette al server LDAP. "
+"Questa opzione richiede un server con abilitato STARTTLS, altrimenti tutti i"
+" tentativi di autenticazione falliranno."
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_sequence
@@ -150,17 +156,17 @@ msgstr "Sequenza"
 #. module: auth_ldap
 #: model:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "Server Information"
-msgstr ""
+msgstr "Informazioni sul server"
 
 #. module: auth_ldap
 #: model:ir.actions.act_window,name:auth_ldap.action_ldap_installer
 msgid "Setup your LDAP Server"
-msgstr ""
+msgstr "Crea il tuo server LDAP"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_user
 msgid "Template User"
-msgstr ""
+msgstr "Utente modello"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap_ldap_password
@@ -168,6 +174,8 @@ msgid ""
 "The password of the user account on the LDAP server that is used to query "
 "the directory."
 msgstr ""
+"La password dell'account utente sul server LDAP che viene utilizzata per "
+"interrogare la directory."
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap_ldap_binddn
@@ -175,21 +183,23 @@ msgid ""
 "The user account on the LDAP server that is used to query the directory. "
 "Leave empty to connect anonymously."
 msgstr ""
+"Account utente sul server LDAP che viene usato per interrogare la directory."
+" Lasciare vuoto per connettere anonimanente."
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_ldap_tls
 msgid "Use TLS"
-msgstr ""
+msgstr "Usa TLS"
 
 #. module: auth_ldap
 #: model:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "User Information"
-msgstr ""
+msgstr "Informazioni Utente"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap_user
 msgid "User to copy when creating new users"
-msgstr ""
+msgstr "Modello utente da copiare quando ne viene creato un nuovo"
 
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_users
@@ -199,7 +209,7 @@ msgstr "Utenti"
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_company_ldap
 msgid "res.company.ldap"
-msgstr ""
+msgstr "res.company.ldap"
 
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_config_settings

@@ -133,7 +133,7 @@ odoo.define('payment.payment_form', function (require) {
                         self.displayError(
                             _t('Server Error'),
                             _t("We are not able to add your payment method at the moment.") +
-                               data.data.message
+                               message.data.message
                         );
                     });
                 }
@@ -178,7 +178,7 @@ odoo.define('payment.payment_form', function (require) {
                             self.displayError(
                                 _t('Server Error'),
                                 _t("We are not able to redirect you to the payment form. ") +
-                                   data.data.message
+                                   message.data.message
                             );
                         });
                     }

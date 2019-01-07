@@ -44,9 +44,6 @@ class TestStockCommon(common.TransactionCase):
         self.uom_kg = self.UomObj.create({
             'name': 'Test-KG',
             'category_id': self.categ_kgm,
-            'factor_inv': 1,
-            'factor': 1,
-            'uom_type': 'reference',
             'rounding': 0.000001})
         self.uom_tone = self.UomObj.create({
             'name': 'Test-Tone',
@@ -70,8 +67,6 @@ class TestStockCommon(common.TransactionCase):
         self.uom_unit = self.UomObj.create({
             'name': 'Test-Unit',
             'category_id': self.categ_unit,
-            'factor': 1,
-            'uom_type': 'reference',
             'rounding': 1.0})
         self.uom_dozen = self.UomObj.create({
             'name': 'Test-DozenA',

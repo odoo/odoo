@@ -25,12 +25,12 @@ var MyAttendances = Widget.extend({
                 args: [[['user_id', '=', this.getSession().uid]], ['attendance_state', 'name']],
             })
             .then(function (res) {
-                if (_.isEmpty(res) ) {
-                    self.$('.o_hr_attendance_employee').append(_t("Error : Could not find employee linked to user"));
-                    return;
-                }
                 self.employee = res[0];
                 self.$el.html(QWeb.render("HrAttendanceMyMainMenu", {widget: self}));
+                if (_.isEmpty(res) ) {
+                    return;
+                }
+
             });
 
         return $.when(def, this._super.apply(this, arguments));

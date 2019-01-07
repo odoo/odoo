@@ -70,7 +70,7 @@ class AccountInvoice(models.Model):
     @api.onchange('amount_total')
     def _onchange_amount_total(self):
         for inv in self:
-            if inv.amount_total < 0:
+            if float_compare(inv.amount_total, 0.0, precision_rounding=inv.currency_id.rounding) == -1:
                 raise Warning(_('You cannot validate an invoice with a negative total amount. You should create a credit note instead.'))
 
     @api.model
@@ -223,7 +223,7 @@ class AccountInvoice(models.Model):
         for line in self.move_id.line_ids.filtered(lambda l: l.account_id.id == self.account_id.id):
             payment_lines.update(line.mapped('matched_credit_ids.credit_move_id.id'))
             payment_lines.update(line.mapped('matched_debit_ids.debit_move_id.id'))
-        self.payment_move_line_ids = self.env['account.move.line'].browse(list(payment_lines))
+        self.payment_move_line_ids = self.env['account.move.line'].browse(list(payment_lines)).sorted()
 
     name = fields.Char(string='Reference/Description', index=True,
         readonly=True, states={'draft': [('readonly', False)]}, copy=False, help='The name that will be used on account move lines')
@@ -392,7 +392,7 @@ class AccountInvoice(models.Model):
         """ computes the prefix of the number that will be assigned to the first invoice/bill/refund of a journal, in order to
         let the user manually change it.
         """
-        if not self.env.user._is_admin():
+        if not self.env.user._is_system():
             for invoice in self:
                 invoice.sequence_number_next_prefix = False
                 invoice.sequence_number_next = ''
@@ -447,6 +447,9 @@ class AccountInvoice(models.Model):
 
     @api.model
     def create(self, vals):
+        if not vals.get('journal_id') and vals.get('type'):
+            vals['journal_id'] = self.with_context(type=vals.get('type'))._default_journal().id
+
         onchanges = {
             '_onchange_partner_id': ['account_id', 'payment_term_id', 'fiscal_position_id', 'partner_bank_id'],
             '_onchange_journal_id': ['currency_id'],
@@ -548,7 +551,10 @@ class AccountInvoice(models.Model):
         """
         self.ensure_one()
         self.sent = True
-        return self.env.ref('account.account_invoices').report_action(self)
+        if self.user_has_groups('account.group_account_invoice'):
+            return self.env.ref('account.account_invoices').report_action(self)
+        else:
+            return self.env.ref('account.account_invoices_without_payment').report_action(self)
 
     @api.multi
     def action_invoice_sent(self):
@@ -588,7 +594,8 @@ class AccountInvoice(models.Model):
         for invoice in self:
             # Delete non-manual tax lines
             self._cr.execute("DELETE FROM account_invoice_tax WHERE invoice_id=%s AND manual is False", (invoice.id,))
-            self.invalidate_cache()
+            if self._cr.rowcount:
+                self.invalidate_cache()
 
             # Generate one tax line per tax, however many invoice lines it's applied to
             tax_grouped = invoice.get_taxes_values()
@@ -769,7 +776,7 @@ class AccountInvoice(models.Model):
         to_open_invoices = self.filtered(lambda inv: inv.state != 'open')
         if to_open_invoices.filtered(lambda inv: inv.state != 'draft'):
             raise UserError(_("Invoice must be in draft state in order to validate it."))
-        if to_open_invoices.filtered(lambda inv: inv.amount_total < 0):
+        if to_open_invoices.filtered(lambda inv: float_compare(inv.amount_total, 0.0, precision_rounding=inv.currency_id.rounding) == -1):
             raise UserError(_("You cannot validate an invoice with a negative total amount. You should create a credit note instead."))
         to_open_invoices.action_date_assign()
         to_open_invoices.action_move_create()
@@ -1246,6 +1253,8 @@ class AccountInvoice(models.Model):
                     values[name] = line[name]
                 elif name == 'invoice_line_tax_ids':
                     values[name] = [(6, 0, line[name].ids)]
+                elif name == 'analytic_tag_ids':
+                    values[name] = [(6, 0, line[name].ids)]
             result.append((0, 0, values))
         return result
 
@@ -1335,18 +1344,7 @@ class AccountInvoice(models.Model):
             new_invoices += refund_invoice
         return new_invoices
 
-    @api.multi
-    def pay_and_reconcile(self, pay_journal, pay_amount=None, date=None, writeoff_acc=None):
-        """ Create and post an account.payment for the invoice self, which creates a journal entry that reconciles the invoice.
-
-            :param pay_journal: journal in which the payment entry will be created
-            :param pay_amount: amount of the payment to register, defaults to the residual of the invoice
-            :param date: payment date, defaults to fields.Date.context_today(self)
-            :param writeoff_acc: account in which to create a writeoff if pay_amount < self.residual, so that the invoice is fully paid
-        """
-        if isinstance(pay_journal, pycompat.integer_types):
-            pay_journal = self.env['account.journal'].browse([pay_journal])
-        assert len(self) == 1, "Can only pay one invoice at a time."
+    def _prepare_payment_vals(self, pay_journal, pay_amount=None, date=None, writeoff_acc=None, communication=None):
         payment_type = self.type in ('out_invoice', 'in_refund') and 'inbound' or 'outbound'
         if payment_type == 'inbound':
             payment_method = self.env.ref('account.account_payment_method_manual_in')
@@ -1354,12 +1352,11 @@ class AccountInvoice(models.Model):
         else:
             payment_method = self.env.ref('account.account_payment_method_manual_out')
             journal_payment_methods = pay_journal.outbound_payment_method_ids
-        if payment_method not in journal_payment_methods:
-            raise UserError(_('No appropriate payment method enabled on journal %s') % pay_journal.name)
 
-        communication = self.type in ('in_invoice', 'in_refund') and self.reference or self.number
-        if self.origin:
-            communication = '%s (%s)' % (communication, self.origin)
+        if not communication:
+            communication = self.type in ('in_invoice', 'in_refund') and self.reference or self.number
+            if self.origin:
+                communication = '%s (%s)' % (communication, self.origin)
 
         payment_vals = {
             'invoice_ids': [(6, 0, self.ids)],
@@ -1374,7 +1371,22 @@ class AccountInvoice(models.Model):
             'payment_difference_handling': writeoff_acc and 'reconcile' or 'open',
             'writeoff_account_id': writeoff_acc and writeoff_acc.id or False,
         }
+        return payment_vals
 
+    @api.multi
+    def pay_and_reconcile(self, pay_journal, pay_amount=None, date=None, writeoff_acc=None):
+        """ Create and post an account.payment for the invoice self, which creates a journal entry that reconciles the invoice.
+
+            :param pay_journal: journal in which the payment entry will be created
+            :param pay_amount: amount of the payment to register, defaults to the residual of the invoice
+            :param date: payment date, defaults to fields.Date.context_today(self)
+            :param writeoff_acc: account in which to create a writeoff if pay_amount < self.residual, so that the invoice is fully paid
+        """
+        if isinstance(pay_journal, pycompat.integer_types):
+            pay_journal = self.env['account.journal'].browse([pay_journal])
+        assert len(self) == 1, "Can only pay one invoice at a time."
+
+        payment_vals = self._prepare_payment_vals(pay_journal, pay_amount=pay_amount, date=date, writeoff_acc=writeoff_acc)
         payment = self.env['account.payment'].create(payment_vals)
         payment.post()
 
@@ -1399,7 +1411,7 @@ class AccountInvoice(models.Model):
         res = {}
         for line in self.tax_line_ids:
             res.setdefault(line.tax_id.tax_group_id, {'base': 0.0, 'amount': 0.0})
-            res[line.tax_id.tax_group_id]['amount'] += line.amount
+            res[line.tax_id.tax_group_id]['amount'] += line.amount_total
             res[line.tax_id.tax_group_id]['base'] += line.base
         res = sorted(res.items(), key=lambda l: l[0].sequence)
         res = [(
@@ -1446,11 +1458,12 @@ class AccountInvoiceLine(models.Model):
         help="Gives the sequence of this line when displaying the invoice.")
     invoice_id = fields.Many2one('account.invoice', string='Invoice Reference',
         ondelete='cascade', index=True)
+    invoice_type = fields.Selection(related='invoice_id.type', readonly=True)
     uom_id = fields.Many2one('product.uom', string='Unit of Measure',
         ondelete='set null', index=True, oldname='uos_id')
     product_id = fields.Many2one('product.product', string='Product',
         ondelete='restrict', index=True)
-    product_image = fields.Binary('Product Image', related="product_id.image", store=False)
+    product_image = fields.Binary('Product Image', related="product_id.image", store=False, readonly=True)
     account_id = fields.Many2one('account.account', string='Account',
         required=True, domain=[('deprecated', '=', False)],
         default=_default_account,
@@ -1505,6 +1518,13 @@ class AccountInvoiceLine(models.Model):
             return accounts['income']
         return accounts['expense']
 
+    def _set_currency(self):
+        company = self.invoice_id.company_id
+        currency = self.invoice_id.currency_id
+        if company and currency:
+            if company.currency_id != currency:
+                self.price_unit = self.price_unit * currency.with_context(dict(self._context or {}, date=self.invoice_id.date_invoice)).rate
+
     def _set_taxes(self):
         """ Used in on_change to set taxes and price."""
         if self.invoice_id.type in ('out_invoice', 'out_refund'):
@@ -1523,8 +1543,10 @@ class AccountInvoiceLine(models.Model):
             prec = self.env['decimal.precision'].precision_get('Product Price')
             if not self.price_unit or float_compare(self.price_unit, self.product_id.standard_price, precision_digits=prec) == 0:
                 self.price_unit = fix_price(self.product_id.standard_price, taxes, fp_taxes)
+                self._set_currency()
         else:
             self.price_unit = fix_price(self.product_id.lst_price, taxes, fp_taxes)
+            self._set_currency()
 
     @api.onchange('product_id')
     def _onchange_product_id(self):
@@ -1573,8 +1595,6 @@ class AccountInvoiceLine(models.Model):
             domain['uom_id'] = [('category_id', '=', product.uom_id.category_id.id)]
 
             if company and currency:
-                if company.currency_id != currency:
-                    self.price_unit = self.price_unit * currency.with_context(dict(self._context or {}, date=self.invoice_id.date_invoice)).rate
 
                 if self.uom_id and self.uom_id.id != product.uom_id.id:
                     self.price_unit = product.uom_id._compute_price(self.price_unit, self.uom_id)

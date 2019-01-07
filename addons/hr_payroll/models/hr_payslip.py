@@ -180,9 +180,9 @@ class HrPayslip(models.Model):
                 for interval in day_intervals:
                     holiday = interval[2]['leaves'].holiday_id
                     current_leave_struct = leaves.setdefault(holiday.holiday_status_id, {
-                        'name': holiday.holiday_status_id.name,
+                        'name': holiday.holiday_status_id.name or _('Global Leaves'),
                         'sequence': 5,
-                        'code': holiday.holiday_status_id.name,
+                        'code': holiday.holiday_status_id.name or 'GLOBAL',
                         'number_of_days': 0.0,
                         'number_of_hours': 0.0,
                         'contract_id': contract.id,
@@ -194,7 +194,7 @@ class HrPayslip(models.Model):
                         current_leave_struct['number_of_days'] += leave_time / work_hours
 
             # compute worked days
-            work_data = contract.employee_id.get_work_days_data(day_from, day_to, calendar=contract.resource_calendar_id)
+            work_data = contract.employee_id.with_context(no_tz_convert=True).get_work_days_data(day_from, day_to, calendar=contract.resource_calendar_id)
             attendances = {
                 'name': _("Normal Working Days paid at 100%"),
                 'sequence': 1,

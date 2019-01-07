@@ -7,13 +7,15 @@
 # aleksandar ivanov, 2018
 # Kaloyan Naumov <kaloyan@lumnus.net>, 2018
 # Albena Mincheva <albena_vicheva@abv.bg>, 2018
+# Boris Stefanov <borkata@gmail.com>, 2018
+# Maria Boyadjieva <marabo2000@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 13:43+0000\n"
-"PO-Revision-Date: 2018-02-19 13:43+0000\n"
-"Last-Translator: Albena Mincheva <albena_vicheva@abv.bg>, 2018\n"
+"POT-Creation-Date: 2018-07-27 11:56+0000\n"
+"PO-Revision-Date: 2018-07-27 11:56+0000\n"
+"Last-Translator: Maria Boyadjieva <marabo2000@gmail.com>, 2018\n"
 "Language-Team: Bulgarian (https://www.transifex.com/odoo/teams/41243/bg/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,22 +29,22 @@ msgid "&amp;times;"
 msgstr "&amp;време;"
 
 #. module: sale_payment
-#: code:addons/sale_payment/models/payment.py:124
+#: code:addons/sale_payment/models/payment.py:134
 #, python-format
 msgid "<%s> transaction (%s) failed: <%s>"
-msgstr ""
+msgstr "<%s> транзакция (%s) беше неуспешна: <%s>"
 
 #. module: sale_payment
-#: code:addons/sale_payment/models/payment.py:131
+#: code:addons/sale_payment/models/payment.py:141
 #, python-format
 msgid "<%s> transaction (%s) invalid state: %s"
-msgstr ""
+msgstr "<%s> транзакция (%s) е в невалидно състояние: %s"
 
 #. module: sale_payment
-#: code:addons/sale_payment/models/payment.py:139
+#: code:addons/sale_payment/models/payment.py:149
 #, python-format
 msgid "<%s> transaction (%s) order confirmation failed: <%s>"
-msgstr ""
+msgstr "<%s> транзакция (%s) неуспешно потвържение на поръчка: <%s>"
 
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.portal_my_orders_payment
@@ -53,6 +55,13 @@ msgstr "Плати сега"
 #: model:ir.ui.view,arch_db:sale_payment.portal_my_orders_payment
 msgid "<i class=\"fa fa-check-circle\"/> Done"
 msgstr "Готово"
+
+#. module: sale_payment
+#: model:ir.ui.view,arch_db:sale_payment.portal_my_orders_payment
+msgid ""
+"<i class=\"fa fa-info\"/> You have credits card registered, you can log-in "
+"to be able to use them."
+msgstr ""
 
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.portal_my_orders_payment
@@ -78,7 +87,7 @@ msgid "<strong>Transactions</strong>"
 msgstr "<strong>Транзакции</strong>"
 
 #. module: sale_payment
-#: code:addons/sale_payment/models/payment.py:54
+#: code:addons/sale_payment/models/payment.py:55
 #, python-format
 msgid "Amount Mismatch (%s)"
 msgstr "Размер Несъответствие(%s)"
@@ -96,7 +105,7 @@ msgstr "Размер на транзакциите за улавяне"
 #. module: sale_payment
 #: model:ir.actions.act_window,name:sale_payment.payment_transaction_action_authorized
 msgid "Authorized Payment Transactions"
-msgstr ""
+msgstr "Оторизирани Платежни Нареждания"
 
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.crm_team_salesteams_view_kanban_inherit_website_portal_sale
@@ -109,12 +118,14 @@ msgid "Awaiting Payments"
 msgstr "Очаквани плащанания"
 
 #. module: sale_payment
-#: code:addons/sale_payment/controllers/payment.py:52
+#: code:addons/sale_payment/controllers/payment.py:50
 #, python-format
 msgid ""
 "If we store your payment information on our server, subscription payments "
 "will be made automatically."
 msgstr ""
+"If we store your payment information on our server, subscription payments "
+"will be made automatically."
 
 #. module: sale_payment
 #: model:ir.model.fields,field_description:sale_payment.field_sale_order_payment_tx_id
@@ -137,13 +148,13 @@ msgid "Number of transactions to capture"
 msgstr "Брой на транзакциите за улавяне"
 
 #. module: sale_payment
-#: code:addons/sale_payment/controllers/payment.py:49
+#: code:addons/sale_payment/controllers/payment.py:47
 #, python-format
 msgid "Pay"
 msgstr "Плати"
 
 #. module: sale_payment
-#: code:addons/sale_payment/models/payment.py:200
+#: code:addons/sale_payment/models/payment.py:210
 #, python-format
 msgid "Pay Now"
 msgstr "Плати сега"
@@ -159,6 +170,11 @@ msgid "Payment Acquirer"
 msgstr "Обработчик на плащането"
 
 #. module: sale_payment
+#: model:ir.ui.view,arch_db:sale_payment.res_config_settings_view_form
+msgid "Payment Acquirers"
+msgstr "Обработчици на плащане"
+
+#. module: sale_payment
 #: model:ir.model,name:sale_payment.model_payment_transaction
 msgid "Payment Transaction"
 msgstr "Платежна транзакция"
@@ -171,12 +187,12 @@ msgstr "Плащане за улавяне"
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.crm_team_salesteams_view_kanban_inherit_website_portal_sale
 msgid "Payments to Capture"
-msgstr ""
+msgstr "Платежни Нареждания за Обработка"
 
 #. module: sale_payment
 #: model:ir.actions.act_window,name:sale_payment.payment_transaction_action_pending
 msgid "Pending Payment Transactions"
-msgstr ""
+msgstr "Чакащи Платежни Нареждания"
 
 #. module: sale_payment
 #: model:ir.model,name:sale_payment.model_sale_order
@@ -199,7 +215,7 @@ msgid "Sales Order"
 msgstr "Нареждане за продажба"
 
 #. module: sale_payment
-#: code:addons/sale_payment/models/payment.py:55
+#: code:addons/sale_payment/models/payment.py:56
 #, python-format
 msgid ""
 "The sale order was not confirmed despite response from the acquirer (%s): SO"

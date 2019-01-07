@@ -14,9 +14,6 @@
         <link href="/portal/static/src/less/website.wrapwrap.less" rel="stylesheet" type="text/less"/>
         <link href="/website/static/src/less/website.snippets.less" rel="stylesheet" type="text/less"/>
 
-        <!-- TODO: Put in the right report ..? -->
-        <link href="https://fonts.googleapis.com/css?family=Work+Sans:thin,light,regular,medium,bold,semi-bold" rel="stylesheet"/>
-
         <link href="/web/static/lib/fontawesome/css/font-awesome.css" rel="stylesheet" type="text/css"/>
 
         <link href="/web/static/src/less/report.less" rel="stylesheet" type="text/less"/>
@@ -67,6 +64,12 @@
                     <t t-call-assets="web_editor.summernote" t-css="false"/>
                     <t t-call-assets="web_editor.assets_editor" t-css="false"/>
                     <t t-call-assets="web.report_assets_editor" t-css="false"/>
+
+                    <script type="text/javascript" src="/web/static/src/js/services/session.js"></script>
+                    <script type="text/javascript" src="/web_editor/static/src/js/content/body_manager.js"/>
+                    <script type="text/javascript" src="/web_editor/static/src/js/root_widget.js"/>
+                    <script type="text/javascript" src="/web_editor/static/src/js/iframe.js"></script>
+                    <script t-if="enable_editor and inline_mode" type="text/javascript" src="/web_editor/static/src/js/inline.js"></script>
                 </t>
             </head>
             <body class="container">

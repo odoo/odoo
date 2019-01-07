@@ -8,10 +8,10 @@
 # Michael Yeung, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:26+0000\n"
-"PO-Revision-Date: 2017-10-02 11:26+0000\n"
+"POT-Creation-Date: 2018-07-27 11:56+0000\n"
+"PO-Revision-Date: 2018-07-27 11:56+0000\n"
 "Last-Translator: Michael Yeung, 2017\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -166,7 +166,6 @@ msgid ""
 "    <p>\n"
 "        Your login: ${object.email}\n"
 "        <br/>\n"
-"        Your password: ${ctx['password']}\n"
 "    </p>\n"
 "    <p>\n"
 "        To gain access to your account, you can use the following link:\n"
@@ -201,22 +200,22 @@ msgstr "<strong>包含以下訂閱連結的邀請函發出：</strong>"
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.signup
 msgid "Already have an account?"
-msgstr ""
+msgstr "已經具有帳戶？"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:78
+#: code:addons/auth_signup/controllers/main.py:79
 #, python-format
 msgid "An email has been sent with credentials to reset your password"
 msgstr "一封重新設置您的密碼的驗證電子信件已經發送"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:52
+#: code:addons/auth_signup/controllers/main.py:51
 #, python-format
 msgid "Another user is already registered using this email address."
 msgstr "該電子信箱已經被註冊過了"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:133
+#: code:addons/auth_signup/controllers/main.py:136
 #, python-format
 msgid "Authentication Failed."
 msgstr "身份驗證失敗"
@@ -253,18 +252,13 @@ msgid "Contact"
 msgstr "聯絡人"
 
 #. module: auth_signup
-#: model:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
-msgid "Copy access rights from"
-msgstr ""
-
-#. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:55
+#: code:addons/auth_signup/controllers/main.py:54
 #, python-format
 msgid "Could not create a new account."
 msgstr "不能創建一個新帳號"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:80
+#: code:addons/auth_signup/controllers/main.py:83
 #, python-format
 msgid "Could not reset your password"
 msgstr "無法重設密碼"
@@ -272,7 +266,7 @@ msgstr "無法重設密碼"
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_config_settings_auth_signup_uninvited
 msgid "Customer Account"
-msgstr ""
+msgstr "顧客帳號"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
@@ -282,13 +276,18 @@ msgstr "預設訪問權限"
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.login
 msgid "Don't have an account?"
-msgstr ""
+msgstr "還沒有帳戶？"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_config_settings_auth_signup_reset_password
 #: model:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
 msgid "Enable password reset from Login page"
 msgstr "允許在登錄頁使用密碼重新設置功能"
+
+#. module: auth_signup
+#: model:ir.model,name:auth_signup.model_ir_model_fields
+msgid "Fields"
+msgstr "字段"
 
 #. module: auth_signup
 #: selection:res.config.settings,auth_signup_uninvited:0
@@ -306,7 +305,7 @@ msgid "If unchecked, only invited users may sign up."
 msgstr "如果不勾選，只有被邀請的使用者才能註冊。"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:111
+#: code:addons/auth_signup/controllers/main.py:114
 #, python-format
 msgid "Invalid signup token"
 msgstr "無效的註冊代碼"
@@ -322,10 +321,10 @@ msgid "Never Connected"
 msgstr "從未連接上"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:73
+#: code:addons/auth_signup/controllers/main.py:74
 #, python-format
 msgid "No login provided."
-msgstr ""
+msgstr "未提供登錄帳號。"
 
 #. module: auth_signup
 #: selection:res.config.settings,auth_signup_uninvited:0
@@ -340,7 +339,7 @@ msgstr "密碼"
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
 msgid "Password Reset"
-msgstr ""
+msgstr "密碼重置"
 
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.reset_password_email
@@ -348,10 +347,10 @@ msgid "Password reset"
 msgstr "密碼重置"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:121
+#: code:addons/auth_signup/controllers/main.py:124
 #, python-format
 msgid "Passwords do not match; please retype them."
-msgstr ""
+msgstr "密碼不匹配；請重新輸入密碼。"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.login
@@ -383,13 +382,13 @@ msgstr "註冊"
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_expiration
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_expiration
 msgid "Signup Expiration"
-msgstr ""
+msgstr "註冊到期"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_token
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_token
 msgid "Signup Token"
-msgstr ""
+msgstr "註冊指示物 Token"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_type
@@ -413,19 +412,19 @@ msgstr "註冊網址"
 #: code:addons/auth_signup/models/res_users.py:88
 #, python-format
 msgid "Signup is not allowed for uninvited users"
-msgstr ""
+msgstr "不允許未邀請的使用者進行註冊"
 
 #. module: auth_signup
-#: code:addons/auth_signup/models/res_partner.py:146
+#: code:addons/auth_signup/models/res_partner.py:147
 #, python-format
 msgid "Signup token '%s' is no longer valid"
-msgstr ""
+msgstr "註冊指示物 '%s' 不再有效"
 
 #. module: auth_signup
-#: code:addons/auth_signup/models/res_partner.py:142
+#: code:addons/auth_signup/models/res_partner.py:143
 #, python-format
 msgid "Signup token '%s' is not valid"
-msgstr ""
+msgstr "註冊指示物 '%s' 無效"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_state
@@ -438,10 +437,10 @@ msgid "Template user for new users created through signup"
 msgstr "用作透過註冊創建的新使用者的模板"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:119
+#: code:addons/auth_signup/controllers/main.py:122
 #, python-format
 msgid "The form was not properly filled in."
-msgstr ""
+msgstr "未正確填寫表格。"
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_users
@@ -451,7 +450,7 @@ msgstr "使用者"
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.mail_template_user_signup_account_created
 msgid "Welcome to ${object.company_id.name}!"
-msgstr ""
+msgstr "歡迎訪問 ${object.company_id.name}！"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.fields

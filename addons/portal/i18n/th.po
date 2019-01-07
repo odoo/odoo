@@ -5,13 +5,17 @@
 # Translators:
 # Martin Trigaux, 2017
 # Pornvibool Tippayawat <pornvibool.t@gmail.com>, 2018
+# Somchart Jabsung <jabsung.s@gmail.com>, 2018
+# Seksan Poltree <seksan.poltree@gmail.com>, 2018
+# Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2018
+# monchai7 <montchye@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:27+0000\n"
-"PO-Revision-Date: 2017-10-02 11:27+0000\n"
-"Last-Translator: Pornvibool Tippayawat <pornvibool.t@gmail.com>, 2018\n"
+"POT-Creation-Date: 2018-07-27 11:56+0000\n"
+"PO-Revision-Date: 2018-07-27 11:56+0000\n"
+"Last-Translator: monchai7 <montchye@gmail.com>, 2018\n"
 "Language-Team: Thai (https://www.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -53,6 +57,15 @@ msgid "<b>Sign in</b>"
 msgstr ""
 
 #. module: portal
+#: model:ir.ui.view,arch_db:portal.frontend_layout
+msgid ""
+"<span class=\"sr-only\">Toggle navigation</span>\n"
+"                                    <span class=\"icon-bar\"/>\n"
+"                                    <span class=\"icon-bar\"/>\n"
+"                                    <span class=\"icon-bar\"/>"
+msgstr ""
+
+#. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_searchbar
 msgid "<span id=\"search_label\">Search</span> <span class=\"caret\"/>"
 msgstr ""
@@ -60,12 +73,12 @@ msgstr ""
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.wizard_view
 msgid "Apply"
-msgstr ""
+msgstr "นำไปใช้"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_archive_groups
 msgid "Archives"
-msgstr ""
+msgstr "ที่เก็บถาวร"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.wizard_view
@@ -75,7 +88,7 @@ msgstr "ยกเลิก"
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_layout
 msgid "Change"
-msgstr ""
+msgstr "ทอน"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
@@ -87,7 +100,7 @@ msgstr "เขต / อำเภอ"
 #: code:addons/portal/static/src/xml/portal_signature.xml:12
 #, python-format
 msgid "Clear"
-msgstr ""
+msgstr "ล้าง"
 
 #. module: portal
 #. openerp-web
@@ -99,7 +112,7 @@ msgstr ""
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
 msgid "Company Name"
-msgstr ""
+msgstr "ชื่อบริษัท"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
@@ -111,22 +124,22 @@ msgstr ""
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_partner_id
 msgid "Contact"
-msgstr ""
+msgstr "ผู้ติดต่อ"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.wizard_view
 msgid "Contacts"
-msgstr ""
+msgstr "รายชื่อ"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
 msgid "Country"
-msgstr ""
+msgstr "ประเทศ"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
 msgid "Country..."
-msgstr ""
+msgstr "ประเทศ..."
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_create_uid
@@ -167,7 +180,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_email
 #: model:ir.ui.view,arch_db:portal.portal_my_details
 msgid "Email"
-msgstr ""
+msgstr "อีเมล"
 
 #. module: portal
 #: model:ir.model,name:portal.model_mail_thread
@@ -179,6 +192,11 @@ msgstr ""
 #, python-format
 msgid "Group %s is not a portal"
 msgstr ""
+
+#. module: portal
+#: model:ir.model,name:portal.model_ir_http
+msgid "HTTP routing"
+msgstr "การกำหนดเส้นทาง HTTP"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_mixin_id
@@ -193,7 +211,7 @@ msgid "In Portal"
 msgstr ""
 
 #. module: portal
-#: code:addons/portal/controllers/portal.py:180
+#: code:addons/portal/controllers/portal.py:200
 #, python-format
 msgid "Invalid Email! Please enter a valid email address."
 msgstr ""
@@ -201,7 +219,7 @@ msgstr ""
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_welcome_message
 msgid "Invitation Message"
-msgstr ""
+msgstr "ข้อความเชื้อเชิญ"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_mixin___last_update
@@ -237,22 +255,22 @@ msgstr ""
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.frontend_layout
 msgid "Logout"
-msgstr ""
+msgstr "ออกระบบ"
 
 #. module: portal
 #: model:ir.model,name:portal.model_mail_message
 msgid "Message"
-msgstr ""
+msgstr "ข้อความ"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.my_account_link
 msgid "My Account"
-msgstr ""
+msgstr "บัญชีของฉัน"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.pager
 msgid "Next"
-msgstr ""
+msgstr "ต่อไป"
 
 #. module: portal
 #. openerp-web
@@ -264,19 +282,19 @@ msgstr ""
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
 msgid "Phone"
-msgstr ""
+msgstr "โทรศัพท์"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_portal_id
 msgid "Portal"
-msgstr ""
+msgstr "Portal"
 
 #. module: portal
 #: model:ir.actions.act_window,name:portal.partner_wizard_action
 #: model:ir.model,name:portal.model_portal_wizard
 #: model:ir.ui.view,arch_db:portal.wizard_view
 msgid "Portal Access Management"
-msgstr ""
+msgstr "การจัดการการเข้าถึง Portal"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_account_invoice_portal_url
@@ -299,7 +317,7 @@ msgstr ""
 
 #. module: portal
 #. openerp-web
-#: code:addons/portal/static/src/js/portal_chatter.js:101
+#: code:addons/portal/static/src/js/portal_chatter.js:102
 #, python-format
 msgid "Published on %s"
 msgstr ""
@@ -317,7 +335,7 @@ msgstr ""
 #: code:addons/portal/static/src/xml/portal_chatter.xml:41
 #, python-format
 msgid "Send"
-msgstr ""
+msgstr "ส่ง"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:106
@@ -338,7 +356,7 @@ msgid "Some contacts have the same email as an existing portal user:"
 msgstr ""
 
 #. module: portal
-#: code:addons/portal/controllers/portal.py:197
+#: code:addons/portal/controllers/portal.py:219
 #, python-format
 msgid "Some required fields are empty."
 msgstr ""
@@ -346,12 +364,12 @@ msgstr ""
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
 msgid "State / Province"
-msgstr ""
+msgstr "รัฐ / จังหวัด"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
 msgid "Street"
-msgstr ""
+msgstr "ที่อยู่"
 
 #. module: portal
 #. openerp-web
@@ -394,7 +412,7 @@ msgstr ""
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_ids
 msgid "Users"
-msgstr ""
+msgstr "ผู้ใช้งาน"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
@@ -447,7 +465,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:portal.field_product_product_website_message_ids
 #: model:ir.model.fields,field_description:portal.field_product_template_website_message_ids
 #: model:ir.model.fields,field_description:portal.field_project_project_website_message_ids
-#: model:ir.model.fields,field_description:portal.field_project_task_website_message_ids
 #: model:ir.model.fields,field_description:portal.field_purchase_order_website_message_ids
 #: model:ir.model.fields,field_description:portal.field_purchase_requisition_website_message_ids
 #: model:ir.model.fields,field_description:portal.field_res_partner_website_message_ids
@@ -461,7 +478,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:portal.field_stock_production_lot_website_message_ids
 #: model:ir.model.fields,field_description:portal.field_survey_survey_website_message_ids
 msgid "Website Messages"
-msgstr ""
+msgstr "ข้อความจากเว็บไซต์"
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_account_analytic_account_website_message_ids
@@ -509,7 +526,6 @@ msgstr ""
 #: model:ir.model.fields,help:portal.field_product_product_website_message_ids
 #: model:ir.model.fields,help:portal.field_product_template_website_message_ids
 #: model:ir.model.fields,help:portal.field_project_project_website_message_ids
-#: model:ir.model.fields,help:portal.field_project_task_website_message_ids
 #: model:ir.model.fields,help:portal.field_purchase_order_website_message_ids
 #: model:ir.model.fields,help:portal.field_purchase_requisition_website_message_ids
 #: model:ir.model.fields,help:portal.field_res_partner_website_message_ids
@@ -523,12 +539,12 @@ msgstr ""
 #: model:ir.model.fields,help:portal.field_stock_production_lot_website_message_ids
 #: model:ir.model.fields,help:portal.field_survey_survey_website_message_ids
 msgid "Website communication history"
-msgstr ""
+msgstr "ประวัติการสื่อสารเว็บไซต์"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_wizard_id
 msgid "Wizard"
-msgstr ""
+msgstr "Wizard"
 
 #. module: portal
 #. openerp-web
@@ -573,7 +589,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:portal.portal_my_details
 #, python-format
 msgid "Your Name"
-msgstr ""
+msgstr "ชื่อของคุณ"
 
 #. module: portal
 #: model:mail.template,subject:portal.mail_template_data_portal_welcome
@@ -583,7 +599,7 @@ msgstr ""
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
 msgid "Zip / Postal Code"
-msgstr ""
+msgstr "รหัสไปรษณีย์"
 
 #. module: portal
 #. openerp-web
@@ -597,7 +613,7 @@ msgstr ""
 #: code:addons/portal/static/src/xml/portal_chatter.xml:8
 #, python-format
 msgid "comment"
-msgstr ""
+msgstr "ความเห็น"
 
 #. module: portal
 #. openerp-web
@@ -621,7 +637,7 @@ msgstr ""
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
 msgid "select..."
-msgstr ""
+msgstr "เลือก..."
 
 #. module: portal
 #. openerp-web

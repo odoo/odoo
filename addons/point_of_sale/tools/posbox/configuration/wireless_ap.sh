@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 FORCE_HOST_AP="${1}"
-WIRED_IP=$(ifconfig eth0 | grep "inet addr" | awk -F: '{print $2}' | awk '{print $1}';)
+WIRED_IP=$(python3 -c "import netifaces as ni; print(ni.ifaddresses('eth0').get(ni.AF_INET) and ni.ifaddresses('eth0')[ni.AF_INET][0]['addr'] or '')")
 WIFI_NETWORK_FILE="/home/pi/wifi_network.txt"
 
 # if there is no wired ip, attempt to start an AP through wireless interface

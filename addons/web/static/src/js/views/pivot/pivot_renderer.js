@@ -14,6 +14,16 @@ var PivotRenderer = AbstractRenderer.extend({
         'hover td': '_onTdHover',
     }),
 
+    /**
+     * @override
+     * @param {Object} [params.widgets] mapping (fieldName -> widget) used to
+     *  format the cells
+     */
+    init: function (parent, state, params) {
+        this._super.apply(this, arguments);
+        this.fieldWidgets = params.widgets || {};
+    },
+
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
@@ -140,7 +150,8 @@ var PivotRenderer = AbstractRenderer.extend({
                 if (value !== undefined) {
                     name = this.state.measures[j % nbrMeasures];
                     measure = this.state.fields[name];
-                    value = field_utils.format[measureTypes[j % nbrMeasures]](value, measure);
+                    var formatter = this.fieldWidgets[name] || measureTypes[j % nbrMeasures];
+                    value = field_utils.format[formatter](value, measure);
                 }
                 $cell = $('<td>')
                             .data('id', rows[i].id)

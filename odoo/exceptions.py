@@ -46,6 +46,10 @@ class RedirectWarning(Exception):
       :param string button_text: text to put on the button that will trigger
           the redirection.
     """
+    # using this RedirectWarning won't crash if used as an except_orm
+    @property
+    def name(self):
+        return self.args[0]
 
 
 class AccessDenied(Exception):

@@ -35,6 +35,7 @@ var ListView = BasicView.extend({
      */
     init: function (viewInfo, params) {
         this._super.apply(this, arguments);
+        var selectedRecords = []; // there is no selected records by default
 
         var arch = viewInfo.arch;
         var mode = arch.attrs.editable && !params.readonly ? "edit" : "readonly";
@@ -44,11 +45,13 @@ var ListView = BasicView.extend({
         this.controllerParams.toolbarActions = viewInfo.toolbar;
         this.controllerParams.noLeaf = !!this.loadParams.context.group_by_no_leaf;
         this.controllerParams.mode = mode;
+        this.controllerParams.selectedRecords = selectedRecords;
 
         this.rendererParams.arch = arch;
         this.rendererParams.hasSelectors =
                 'hasSelectors' in params ? params.hasSelectors : true;
         this.rendererParams.editable = params.readonly ? false : arch.attrs.editable;
+        this.rendererParams.selectedRecords = selectedRecords;
 
         this.loadParams.limit = this.loadParams.limit || 80;
         this.loadParams.type = 'list';

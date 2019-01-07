@@ -18,8 +18,9 @@ from odoo import http, models, fields, _
 from odoo.http import request
 from odoo.tools import pycompat, OrderedSet
 from odoo.addons.http_routing.models.ir_http import slug, _guess_mimetype
-from odoo.addons.web.controllers.main import WebClient, Binary, Home
+from odoo.addons.web.controllers.main import WebClient, Binary
 from odoo.addons.portal.controllers.portal import pager as portal_pager
+from odoo.addons.portal.controllers.web import Home
 
 logger = logging.getLogger(__name__)
 

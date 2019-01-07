@@ -4,19 +4,21 @@
 # 
 # Translators:
 # Yihya Hugirat <hugirat@gmail.com>, 2017
+# Martin Trigaux, 2018
+# ExcaliberX <excaliberx@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:26+0000\n"
-"PO-Revision-Date: 2017-10-02 11:26+0000\n"
-"Last-Translator: Yihya Hugirat <hugirat@gmail.com>, 2017\n"
+"POT-Creation-Date: 2018-07-27 11:56+0000\n"
+"PO-Revision-Date: 2018-07-27 11:56+0000\n"
+"Last-Translator: ExcaliberX <excaliberx@gmail.com>, 2018\n"
 "Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: he\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: (n % 10 == 0 && n % 1 == 0 && n > 10) ? 2 : 3;\n"
 
 #. module: auth_signup
 #: model:mail.template,body_html:auth_signup.reset_password_email
@@ -108,7 +110,6 @@ msgid ""
 "    <p>\n"
 "        Your login: ${object.email}\n"
 "        <br/>\n"
-"        Your password: ${ctx['password']}\n"
 "    </p>\n"
 "    <p>\n"
 "        To gain access to your account, you can use the following link:\n"
@@ -146,19 +147,19 @@ msgid "Already have an account?"
 msgstr ""
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:78
+#: code:addons/auth_signup/controllers/main.py:79
 #, python-format
 msgid "An email has been sent with credentials to reset your password"
 msgstr ""
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:52
+#: code:addons/auth_signup/controllers/main.py:51
 #, python-format
 msgid "Another user is already registered using this email address."
 msgstr ""
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:133
+#: code:addons/auth_signup/controllers/main.py:136
 #, python-format
 msgid "Authentication Failed."
 msgstr ""
@@ -166,7 +167,7 @@ msgstr ""
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.reset_password
 msgid "Back to Login"
-msgstr ""
+msgstr "חזרה לדף כניסה"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_users.py:137
@@ -195,18 +196,13 @@ msgid "Contact"
 msgstr "איש קשר"
 
 #. module: auth_signup
-#: model:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
-msgid "Copy access rights from"
-msgstr ""
-
-#. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:55
+#: code:addons/auth_signup/controllers/main.py:54
 #, python-format
 msgid "Could not create a new account."
 msgstr ""
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:80
+#: code:addons/auth_signup/controllers/main.py:83
 #, python-format
 msgid "Could not reset your password"
 msgstr ""
@@ -233,6 +229,11 @@ msgid "Enable password reset from Login page"
 msgstr ""
 
 #. module: auth_signup
+#: model:ir.model,name:auth_signup.model_ir_model_fields
+msgid "Fields"
+msgstr "שדות"
+
+#. module: auth_signup
 #: selection:res.config.settings,auth_signup_uninvited:0
 msgid "Free sign up (B2C)"
 msgstr ""
@@ -240,7 +241,7 @@ msgstr ""
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_ir_http
 msgid "HTTP routing"
-msgstr ""
+msgstr "ניתוב HTTP"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
@@ -248,7 +249,7 @@ msgid "If unchecked, only invited users may sign up."
 msgstr ""
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:111
+#: code:addons/auth_signup/controllers/main.py:114
 #, python-format
 msgid "Invalid signup token"
 msgstr ""
@@ -264,7 +265,7 @@ msgid "Never Connected"
 msgstr ""
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:73
+#: code:addons/auth_signup/controllers/main.py:74
 #, python-format
 msgid "No login provided."
 msgstr ""
@@ -277,7 +278,7 @@ msgstr ""
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.fields
 msgid "Password"
-msgstr ""
+msgstr "סיסמה"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
@@ -290,7 +291,7 @@ msgid "Password reset"
 msgstr ""
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:121
+#: code:addons/auth_signup/controllers/main.py:124
 #, python-format
 msgid "Passwords do not match; please retype them."
 msgstr ""
@@ -358,13 +359,13 @@ msgid "Signup is not allowed for uninvited users"
 msgstr ""
 
 #. module: auth_signup
-#: code:addons/auth_signup/models/res_partner.py:146
+#: code:addons/auth_signup/models/res_partner.py:147
 #, python-format
 msgid "Signup token '%s' is no longer valid"
 msgstr ""
 
 #. module: auth_signup
-#: code:addons/auth_signup/models/res_partner.py:142
+#: code:addons/auth_signup/models/res_partner.py:143
 #, python-format
 msgid "Signup token '%s' is not valid"
 msgstr ""
@@ -380,7 +381,7 @@ msgid "Template user for new users created through signup"
 msgstr ""
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:119
+#: code:addons/auth_signup/controllers/main.py:122
 #, python-format
 msgid "The form was not properly filled in."
 msgstr ""
@@ -404,7 +405,7 @@ msgstr ""
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.fields
 msgid "Your Name"
-msgstr ""
+msgstr "שם מלא"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.fields
@@ -414,4 +415,4 @@ msgstr ""
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_config_settings
 msgid "res.config.settings"
-msgstr ""
+msgstr "res.config.settings"

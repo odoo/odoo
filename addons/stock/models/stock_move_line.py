@@ -21,7 +21,7 @@ class StockMoveLine(models.Model):
         help='The stock operation where the packing has been made')
     move_id = fields.Many2one(
         'stock.move', 'Stock Move',
-        help="Change to a better name")
+        help="Change to a better name", index=True)
     product_id = fields.Many2one('product.product', 'Product', ondelete="cascade")
     product_uom_id = fields.Many2one('product.uom', 'Unit of Measure', required=True)
     product_qty = fields.Float(
@@ -185,6 +185,8 @@ class StockMoveLine(models.Model):
 
         ml = super(StockMoveLine, self).create(vals)
         if ml.state == 'done':
+            if 'qty_done' in vals:
+                ml.move_id.product_uom_qty = ml.move_id.quantity_done
             if ml.product_id.type == 'product':
                 Quant = self.env['stock.quant']
                 quantity = ml.product_uom_id._compute_quantity(ml.qty_done, ml.move_id.product_id.uom_id,rounding_method='HALF-UP')
@@ -268,7 +270,7 @@ class StockMoveLine(models.Model):
                             except UserError:
                                 pass
                     if new_product_qty != ml.product_qty:
-                        new_product_uom_qty = self.product_id.uom_id._compute_quantity(new_product_qty, self.product_uom_id, rounding_method='HALF-UP')
+                        new_product_uom_qty = ml.product_id.uom_id._compute_quantity(new_product_qty, ml.product_uom_id, rounding_method='HALF-UP')
                         ml.with_context(bypass_reservation_update=True).product_uom_qty = new_product_uom_qty
 
         # When editing a done move line, the reserved availability of a potential chained move is impacted. Take care of running again `_action_assign` on the concerned moves.
@@ -508,6 +510,8 @@ class StockMoveLine(models.Model):
                         candidate.product_uom_qty = 0.0
                     else:
                         candidate.unlink()
+                    if float_is_zero(quantity, precision_rounding=rounding):
+                        break
                 else:
                     # split this move line and assign the new part to our extra move
                     quantity_split = float_round(
@@ -515,8 +519,6 @@ class StockMoveLine(models.Model):
                         precision_rounding=self.product_uom_id.rounding,
                         rounding_method='UP')
                     candidate.product_uom_qty = self.product_id.uom_id._compute_quantity(quantity_split, candidate.product_uom_id, rounding_method='HALF-UP')
-                    quantity -= quantity_split
                     move_to_recompute_state |= candidate.move_id
-                if quantity == 0.0:
                     break
             move_to_recompute_state._recompute_state()

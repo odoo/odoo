@@ -3,28 +3,29 @@
 # * report_intrastat
 # 
 # Translators:
-# digitouch UAB <digitouchagencyeur@gmail.com>, 2017
 # Antanas Muliuolis <an.muliuolis@gmail.com>, 2017
+# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2017
+# digitouch UAB <digitouchagencyeur@gmail.com>, 2017
+# Šarūnas Ažna <sarunas.azna@gmail.com>, 2017
 # Audrius Palenskis <audrius.palenskis@gmail.com>, 2017
 # Martin Trigaux, 2017
-# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2017
-# Šarūnas Ažna <sarunas.azna@gmail.com>, 2017
-# Rolandas <info@paninfo.lt>, 2017
-# Monika Raciunaite <monika.raciunaite@gmail.com>, 2017
-# SButko <silvija.butko@gmail.com>, 2018
+# Silvija Butko <silvija.butko@gmail.com>, 2018
+# Eimantas <eimantas@focusate.eu>, 2018
+# Linas Versada <linaskrisiukenas@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: SButko <silvija.butko@gmail.com>, 2018\n"
+"PO-Revision-Date: 2017-09-20 10:23+0000\n"
+"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2018\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: lt\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: report_intrastat
 #: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
@@ -44,7 +45,7 @@ msgstr "<strong>Mokestinės aplinkos aprašymas:</strong>"
 #. module: report_intrastat
 #: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
 msgid "<strong>Fiscal Position:</strong>"
-msgstr ""
+msgstr "<strong>Mokestinė aplinka:</strong>"
 
 #. module: report_intrastat
 #: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
@@ -54,12 +55,12 @@ msgstr "<strong>Sąskaitos data:</strong>"
 #. module: report_intrastat
 #: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
 msgid "<strong>Partner Ref.:</strong>"
-msgstr ""
+msgstr "<strong>Partnerio nr.:</strong>"
 
 #. module: report_intrastat
 #: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
 msgid "<strong>Payment Terms:</strong>"
-msgstr "<strong>Mokėjimo terminas:</strong>"
+msgstr "<strong>Mokėjimo sąlygos:</strong>"
 
 #. module: report_intrastat
 #: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
@@ -89,7 +90,7 @@ msgstr "Rugpjūtis"
 #. module: report_intrastat
 #: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
 msgid "Cancelled Invoice"
-msgstr "ATŠAUKTA SĄSKAITA"
+msgstr "Atšaukta sąskaita"
 
 #. module: report_intrastat
 #: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat_company_id
@@ -104,12 +105,12 @@ msgstr "Valstybė"
 #. module: report_intrastat
 #: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat_code
 msgid "Country code"
-msgstr ""
+msgstr "Šalies kodas"
 
 #. module: report_intrastat
 #: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
 msgid "Credit Note"
-msgstr "Grąžinama"
+msgstr "Kreditinė sąskaita"
 
 #. module: report_intrastat
 #: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat_currency_id
@@ -139,7 +140,7 @@ msgstr "Vaizduojamas pavadinimas"
 #. module: report_intrastat
 #: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
 msgid "Draft Invoice"
-msgstr "SĄSKAITOS JUODRAŠTIS"
+msgstr "Sąskaitos juodraštis"
 
 #. module: report_intrastat
 #: selection:report.intrastat,type:0
@@ -166,7 +167,7 @@ msgstr "Importuoti"
 #: model:ir.ui.menu,name:report_intrastat.menu_report_intrastat_all
 #: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
 msgid "Intrastat"
-msgstr ""
+msgstr "Intrastat"
 
 #. module: report_intrastat
 #: model:ir.actions.act_window,name:report_intrastat.action_report_intrastat_code_tree
@@ -175,18 +176,18 @@ msgstr ""
 #: model:ir.ui.menu,name:report_intrastat.menu_report_intrastat_code
 #: model:ir.ui.view,arch_db:report_intrastat.view_report_intrastat_code_form
 msgid "Intrastat Code"
-msgstr ""
+msgstr "Intrastat kodas"
 
 #. module: report_intrastat
 #: model:ir.ui.view,arch_db:report_intrastat.view_report_intrastat_search
 #: model:ir.ui.view,arch_db:report_intrastat.view_report_intrastat_tree
 msgid "Intrastat Data"
-msgstr ""
+msgstr "Intrastat duomenys"
 
 #. module: report_intrastat
 #: model:ir.actions.report,name:report_intrastat.account_intrastatinvoices
 msgid "Intrastat Invoices"
-msgstr ""
+msgstr "Intrastat sąskaitos"
 
 #. module: report_intrastat
 #: model:ir.model,name:report_intrastat.model_report_intrastat_code
@@ -198,12 +199,12 @@ msgstr "Intrastato kodas"
 #. module: report_intrastat
 #: model:ir.model.fields,field_description:report_intrastat.field_res_country_intrastat
 msgid "Intrastat member"
-msgstr ""
+msgstr "Intrastat narys"
 
 #. module: report_intrastat
 #: model:ir.model,name:report_intrastat.model_report_intrastat
 msgid "Intrastat report"
-msgstr ""
+msgstr "Intrastat ataskaita"
 
 #. module: report_intrastat
 #: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
@@ -238,7 +239,7 @@ msgstr "Kovas"
 #. module: report_intrastat
 #: selection:report.intrastat,month:0
 msgid "May"
-msgstr "Gegužės"
+msgstr "Gegužė"
 
 #. module: report_intrastat
 #: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat_month
@@ -248,12 +249,12 @@ msgstr "Mėnuo"
 #. module: report_intrastat
 #: selection:report.intrastat,month:0
 msgid "November"
-msgstr "Lapkričio"
+msgstr "Lapkritis"
 
 #. module: report_intrastat
 #: selection:report.intrastat,month:0
 msgid "October"
-msgstr "Spalio"
+msgstr "Spalis"
 
 #. module: report_intrastat
 #: model:ir.model,name:report_intrastat.model_product_template
@@ -273,17 +274,17 @@ msgstr "Rugsėjis"
 #. module: report_intrastat
 #: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat_ref
 msgid "Source document"
-msgstr ""
+msgstr "Šaltinio dokumentas"
 
 #. module: report_intrastat
 #: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat_supply_units
 msgid "Supply Units"
-msgstr ""
+msgstr "Tiekimo vienetai"
 
 #. module: report_intrastat
 #: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
 msgid "Tax"
-msgstr "Mokestis"
+msgstr "Mokesčiai"
 
 #. module: report_intrastat
 #: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
@@ -298,12 +299,12 @@ msgstr "Tipas"
 #. module: report_intrastat
 #: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
 msgid "Unit Price"
-msgstr "Kaina"
+msgstr "Vieneto kaina"
 
 #. module: report_intrastat
 #: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
 msgid "Unit of measure"
-msgstr ""
+msgstr "Matavimo vienetas"
 
 #. module: report_intrastat
 #: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat_value
@@ -313,12 +314,12 @@ msgstr "Vertė"
 #. module: report_intrastat
 #: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
 msgid "Vendor Bill"
-msgstr "Pardavėjo sąskaita"
+msgstr "Tiekėjo sąskaita"
 
 #. module: report_intrastat
 #: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
 msgid "Vendor Credit Note"
-msgstr ""
+msgstr "Tiekėjo kreditinė sąskaita"
 
 #. module: report_intrastat
 #: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat_weight

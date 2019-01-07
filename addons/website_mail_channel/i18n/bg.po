@@ -5,13 +5,17 @@
 # Translators:
 # aleksandar ivanov, 2018
 # Albena Mincheva <albena_vicheva@abv.bg>, 2018
+# Martin Trigaux, 2018
+# Kaloyan Naumov <kaloyan@lumnus.net>, 2018
+# Anton Vassilev, 2018
+# Maria Boyadjieva <marabo2000@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-24 09:00+0000\n"
 "PO-Revision-Date: 2017-10-24 09:00+0000\n"
-"Last-Translator: Albena Mincheva <albena_vicheva@abv.bg>, 2018\n"
+"Last-Translator: Maria Boyadjieva <marabo2000@gmail.com>, 2018\n"
 "Language-Team: Bulgarian (https://www.transifex.com/odoo/teams/41243/bg/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,6 +34,13 @@ msgid ""
 "<p>If this was a mistake or you did not requested this action, please ignore this message.</p>\n"
 "</data>"
 msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<data><p>Привет,</p>\n"
+"<p>Пожелали сте да сте абонирани за пощенския списък <strong>${object.name}</strong></p>\n"
+"<p>За да потвърдите, моля посетете следния линк:</p>\n"
+"<p><strong><a href=\"${ctx['token_url']}\">${ctx['token_url']}</a></strong></p>\n"
+"<p>Ако сте сгрешили или не сте поискали това действие, моля, игнорирайте съобщението.</p>\n"
+"</data>"
 
 #. module: website_mail_channel
 #: model:mail.template,body_html:website_mail_channel.mail_template_list_unsubscribe
@@ -42,23 +53,31 @@ msgid ""
 "<p>If this was a mistake or you did not requested this action, please ignore this message.</p>\n"
 "</data>"
 msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<data><p>Привет,</p>\n"
+"<p>Заявили сте желание да бъдете отписани от пощенския списък <strong>${object.name}</strong></p>\n"
+"<p>За да потвърдите, моля посетете следния линк:</p>\n"
+"<p><strong><a href=\"${ctx['token_url']}\">${ctx['token_url']}</a></strong></p>\n"
+"<p>В случай че това е било грешка или не сте заявявали това действие, молим да пренебрегнете съобщението.</p>\n"
+"</data>"
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.subscribe
 msgid "<span class=\"oe_snippet_thumbnail_title\">Discussion Group</span>"
-msgstr ""
+msgstr "<span class=\"oe_snippet_thumbnail_title\">Дискусионна група</span>"
 
 #. module: website_mail_channel
 #. openerp-web
 #: code:addons/website_mail_channel/static/src/js/website_mail_channel.editor.js:17
 #, python-format
 msgid "Add a Subscribe Button"
-msgstr ""
+msgstr "Добавете бутон за абонамент"
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.mail_channels
 msgid "Alone we can do so little, together we can do so much"
 msgstr ""
+"Сами можем да свършим толкова малко, заедно можем да направим много повече"
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.group_messages
@@ -68,63 +87,63 @@ msgstr "Архиви"
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.group_message
 msgid "Browse archives"
-msgstr ""
+msgstr "Преглеждайте архиви"
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.group_message
 #: model:ir.ui.view,arch_db:website_mail_channel.group_messages
 msgid "By date"
-msgstr ""
+msgstr "По дата"
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.group_message
 #: model:ir.ui.view,arch_db:website_mail_channel.group_messages
 msgid "By thread"
-msgstr ""
+msgstr "По поледица"
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.subscribe
 msgid "Change Discussion List"
-msgstr ""
+msgstr "Променете списъка с дискусии"
 
 #. module: website_mail_channel
 #. openerp-web
 #: code:addons/website_mail_channel/static/src/js/website_mail_channel.editor.js:18
 #, python-format
 msgid "Discussion List"
-msgstr ""
+msgstr "Списък на дискусиите"
 
 #. module: website_mail_channel
 #: model:ir.model,name:website_mail_channel.model_mail_channel
 msgid "Discussion channel"
-msgstr ""
+msgstr "Дискусионен канал"
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.group_message
 msgid "Follow-Ups"
-msgstr ""
+msgstr "Последващи дейности"
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.invalid_token_subscription
 msgid "Invalid or expired confirmation link."
-msgstr ""
+msgstr "Невалиден или изтекъл линк за потвърждение."
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.footer_mailing_list
 msgid "Mailing List"
-msgstr ""
+msgstr "Пощенски списък"
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.group_message
 #: model:ir.ui.view,arch_db:website_mail_channel.group_messages
 msgid "Mailing Lists"
-msgstr ""
+msgstr "Пощенски списъци"
 
 #. module: website_mail_channel
 #: code:addons/website_mail_channel/models/mail_mail.py:20
 #, python-format
 msgid "Mailing-List"
-msgstr ""
+msgstr "Мейлинг списък"
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.mail_channels
@@ -132,27 +151,29 @@ msgid ""
 "Need to unsubscribe? It's right here! <span class=\"fa fa-2x fa-arrow-down "
 "pull-right\"/>"
 msgstr ""
+"Искате да се отпишете? Точно тук е мястото! <span class=\"fa fa-2x fa-arrow-"
+"down pull-right\"/>"
 
 #. module: website_mail_channel
 #: model:ir.model,name:website_mail_channel.model_mail_mail
 msgid "Outgoing Mails"
-msgstr ""
+msgstr "Изходяща поща"
 
 #. module: website_mail_channel
 #: model:mail.template,subject:website_mail_channel.mail_template_list_subscribe
 msgid "Please confirm subscription to ${object.name}"
-msgstr ""
+msgstr "Моля, потвърдете абонамента за ${object.name}"
 
 #. module: website_mail_channel
 #: model:mail.template,subject:website_mail_channel.mail_template_list_unsubscribe
 msgid "Please confirm unsubscription to ${object.name}"
-msgstr ""
+msgstr "Моля, потвърдете отказа от абонамент за ${object.name}"
 
 #. module: website_mail_channel
 #: code:addons/website_mail_channel/models/mail_mail.py:21
 #, python-format
 msgid "Post to"
-msgstr ""
+msgstr "Публикувайте в"
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.group_message
@@ -162,18 +183,18 @@ msgstr "Означение"
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.mail_channels
 msgid "Stay in touch with our Community"
-msgstr ""
+msgstr "Поддържайте връзка с нашата общност"
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.mail_channels
 #: model:ir.ui.view,arch_db:website_mail_channel.subscribe
 msgid "Subscribe"
-msgstr ""
+msgstr "Записване"
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.not_subscribed
 msgid "The address"
-msgstr ""
+msgstr "Адресът"
 
 #. module: website_mail_channel
 #: code:addons/website_mail_channel/controllers/main.py:238
@@ -182,40 +203,42 @@ msgid ""
 "The address %s is already unsubscribed or was never subscribed to any "
 "mailing list"
 msgstr ""
+"Адресатът %s вече се е отписал от абонамент или никога не е бил абониран за "
+"никакъв мейлинг списък"
 
 #. module: website_mail_channel
 #: code:addons/website_mail_channel/models/mail_mail.py:22
 #: model:ir.ui.view,arch_db:website_mail_channel.mail_channels
 #, python-format
 msgid "Unsubscribe"
-msgstr ""
+msgstr "Отказ от абонамент"
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.confirmation_subscription
 msgid "You have been correctly"
-msgstr ""
+msgstr "Правилно сте били "
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.subscribe
 msgid "a confirmation email has been sent."
-msgstr ""
+msgstr "изпратен е имейл за потвърждение."
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.mail_channels
 #: model:ir.ui.view,arch_db:website_mail_channel.subscribe
 msgid "archives"
-msgstr ""
+msgstr "архиви"
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.group_message
 msgid "attachments"
-msgstr ""
+msgstr "прикачени файлове"
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.group_message
 #: model:ir.ui.view,arch_db:website_mail_channel.messages_short
 msgid "by"
-msgstr ""
+msgstr "от"
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.not_subscribed
@@ -230,7 +253,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_mail_channel.group_message
 #: model:ir.ui.view,arch_db:website_mail_channel.group_messages
 msgid "mailing list archives"
-msgstr ""
+msgstr "архиви на мейлинг списъци"
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.mail_channels
@@ -238,56 +261,58 @@ msgid ""
 "members<br/>\n"
 "                    <i class=\"fa fa-fw fa-envelope-o\"/>"
 msgstr ""
+"членове<br/>\n"
+"                    <i class=\"fa fa-fw fa-envelope-o\"/>"
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.mail_channels
 msgid "messages / month"
-msgstr ""
+msgstr "съобщения/месец"
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.messages_short
 msgid "more replies"
-msgstr ""
+msgstr "повече отговори"
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.messages_short
 msgid "replies"
-msgstr ""
+msgstr "отговори"
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.mail_channels
 #: model:ir.ui.view,arch_db:website_mail_channel.subscribe
 msgid "send mail"
-msgstr ""
+msgstr "изпратете писмо"
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.messages_short
 msgid "show"
-msgstr ""
+msgstr "покажете"
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.confirmation_subscription
 msgid "subscribed"
-msgstr ""
+msgstr "абониран"
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.confirmation_subscription
 msgid "to the mailing list."
-msgstr ""
+msgstr "към мейлинг списъка."
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.mail_channels
 #: model:ir.ui.view,arch_db:website_mail_channel.subscribe
 msgid "unsubscribe"
-msgstr ""
+msgstr "откажете се от абонамент"
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.confirmation_subscription
 msgid "unsubscribed"
-msgstr ""
+msgstr "прекратил абонамент"
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.mail_channels
 #: model:ir.ui.view,arch_db:website_mail_channel.subscribe
 msgid "your email..."
-msgstr ""
+msgstr "вашият емейл..."

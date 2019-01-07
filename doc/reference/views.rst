@@ -808,6 +808,18 @@ element is ``<pivot>`` which can take the following attributes:
 
 The elements allowed within a pivot view are the same as for the graph view.
 
+In Pivot view a ``field`` can have a ``widget`` attribute to dictate its format.
+The widget should be a field formatter, of which the most interesting are
+``date``, ``datetime``, ``float_time``, and ``monetary``.
+
+For instance a timesheet pivot view could be defined as::
+
+    <pivot string="Timesheet">
+        <field name="employee_id" type="row"/>
+        <field name="date" interval="month" type="col"/>
+        <field name="unit_amount" type="measure" widget="float_time"/>
+    </pivot>
+
 .. _reference/views/kanban:
 
 Kanban
@@ -840,7 +852,7 @@ attributes:
 ``quick_create``
   whether it should be possible to create records without switching to the
   form view. By default, ``quick_create`` is enabled when the Kanban view is
-  grouped, and disabled when not.
+  grouped by many2one, char or boolean fields, and disabled when not.
 
   Set to ``true`` to always enable it, and to ``false`` to always disable it.
 
@@ -954,7 +966,9 @@ calendar view are:
 ``readonly_form_view_id``
     view to open in readonly mode
 ``form_view_id``
-    view to open when the user create or edit an event
+    view to open when the user create or edit an event. Note that if this attribute
+    is not set, the calendar view will fall back to the id of the form view in the
+    current action, if any.
 ``event_open_popup``
     If the option 'event_open_popup' is set to true, then the calendar view will
     open events (or records) in a FormViewDialog. Otherwise, it will open events

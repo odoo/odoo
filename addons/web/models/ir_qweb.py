@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import hashlib
+from collections import OrderedDict
 
 from odoo import api, models
 from odoo.tools import pycompat
@@ -56,6 +57,24 @@ class Image(models.AbstractModel):
         elif options.get('zoom'):
             src_zoom = options['zoom']
 
-        img = '<img class="%s" src="%s" style="%s"%s%s/>' % \
-            (classes, src, options.get('style', ''), ' alt="%s"' % alt if alt else '', ' data-zoom="1" data-zoom-image="%s"' % src_zoom if src_zoom else '')
-        return pycompat.to_text(img)
+        atts = OrderedDict()
+        atts["src"] = src
+        atts["class"] = classes
+        atts["style"] = options.get('style')
+        atts["alt"] = alt
+        atts["data-zoom"] = src_zoom and u'1' or None
+        atts["data-zoom-image"] = src_zoom
+
+        atts = self.env['ir.qweb']._post_processing_att('img', atts, options.get('template_options'))
+
+        img = ['<img']
+        for name, value in atts.items():
+            if value:
+                img.append(' ')
+                img.append(escape(pycompat.to_text(name)))
+                img.append('="')
+                img.append(escape(pycompat.to_text(value)))
+                img.append('"')
+        img.append('/>')
+
+        return u''.join(img)

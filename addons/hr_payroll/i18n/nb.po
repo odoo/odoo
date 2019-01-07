@@ -3,18 +3,20 @@
 # * hr_payroll
 # 
 # Translators:
-# Martin Trigaux, 2017
-# Jorunn D. Newth, 2017
 # Viktor Basso <viktor@voit.no>, 2017
 # Jan Pedro Tumusok <jpt@eyenetworks.no>, 2017
+# Jorunn D. Newth, 2018
 # Henrik Norlin <henrik@appstogrow.net>, 2018
+# Aleksander, 2018
+# Martin Trigaux, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-16 15:45+0000\n"
-"PO-Revision-Date: 2018-03-16 15:45+0000\n"
-"Last-Translator: Henrik Norlin <henrik@appstogrow.net>, 2018\n"
+"POT-Creation-Date: 2019-01-03 15:06+0000\n"
+"PO-Revision-Date: 2017-09-20 10:18+0000\n"
+"Last-Translator: Martin Trigaux, 2019\n"
 "Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -274,7 +276,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_children_ids
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_children_ids
 msgid "Children"
-msgstr ""
+msgstr "Underordnede"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
@@ -620,6 +622,18 @@ msgid "Error ! You cannot create a recursive Salary Structure."
 msgstr "Feil! Du kan ikke opprette en rekursiv lønnsstruktur."
 
 #. module: hr_payroll
+#: code:addons/hr_payroll/models/hr_salary_rule.py:91
+#, python-format
+msgid "Error! You cannot create recursive hierarchy of Salary Rule Category."
+msgstr ""
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/models/hr_salary_rule.py:176
+#, python-format
+msgid "Error! You cannot create recursive hierarchy of Salary Rules."
+msgstr ""
+
+#. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_register_id
 #: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_register_id
 msgid "Eventual third party involved in the salary payment of the employees."
@@ -648,7 +662,7 @@ msgstr "Skjema er tomt, denne rapporten kan ikke skrives ut."
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_res_config_settings_module_l10n_fr_hr_payroll
 msgid "French Payroll"
-msgstr ""
+msgstr "Fransk lønningsavregning"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
@@ -675,6 +689,12 @@ msgstr "Generer lønnsslipper for alle valgte ansatte"
 #: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_sales_commission
 msgid "Get 1% of sales"
 msgstr ""
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/models/hr_payslip.py:183
+#, python-format
+msgid "Global Leaves"
+msgstr "Globale fravær"
 
 #. module: hr_payroll
 #: model:hr.salary.rule,name:hr_payroll.hr_rule_taxable
@@ -731,7 +751,7 @@ msgstr ""
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_res_config_settings_module_l10n_in_hr_payroll
 msgid "Indian Payroll"
-msgstr ""
+msgstr "Indisk lønningssystem"
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_credit_note
@@ -742,14 +762,14 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Input Data"
-msgstr ""
+msgstr "Inndata"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_input_ids
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_input_ids
 #: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
 msgid "Inputs"
-msgstr ""
+msgstr "Inndata"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_note
@@ -943,7 +963,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_parent_id
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_parent_id
 msgid "Parent"
-msgstr ""
+msgstr "Overordnet"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_parent_rule_id
@@ -1006,7 +1026,7 @@ msgstr ""
 #: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_root
 #: model:ir.ui.view,arch_db:hr_payroll.res_config_settings_view_form
 msgid "Payroll"
-msgstr ""
+msgstr "Lønnsavregning"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.res_config_settings_view_form
@@ -1045,7 +1065,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_payslip_run_id
 #: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_filter
 msgid "Payslip Batches"
-msgstr ""
+msgstr "Lønnsslipp Batcher."
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.act_payslip_lines
@@ -1189,7 +1209,7 @@ msgstr "Antall"
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_contributionregister
 msgid "Quantity/Rate"
-msgstr ""
+msgstr "Kvantum/sats"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
@@ -1206,7 +1226,7 @@ msgstr "Kvartalsvis"
 #: selection:hr.payslip.line,condition_select:0
 #: selection:hr.salary.rule,condition_select:0
 msgid "Range"
-msgstr ""
+msgstr "intervall"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_condition_range
@@ -1217,7 +1237,7 @@ msgstr ""
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_rate
 msgid "Rate (%)"
-msgstr ""
+msgstr "Rate (%)"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_code
@@ -1228,7 +1248,7 @@ msgstr "Referanse"
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Refund"
-msgstr ""
+msgstr "Kreditnota"
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/models/hr_payslip.py:104
@@ -1265,16 +1285,9 @@ msgstr "Lønnsberegning"
 #: model:ir.actions.act_window,name:hr_payroll.action_hr_salary_rule_category
 #: model:ir.ui.menu,name:hr_payroll.menu_hr_salary_rule_category
 #: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_category_tree
-#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_category_tree_view
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_salary_rule_category_filter
 msgid "Salary Rule Categories"
 msgstr "Lønnsregelkategorier"
-
-#. module: hr_payroll
-#: model:ir.actions.act_window,name:hr_payroll.action_hr_salary_rule_category_tree_view
-#: model:ir.ui.menu,name:hr_payroll.menu_hr_salary_rule_category_tree_view
-msgid "Salary Rule Categories Hierarchy"
-msgstr ""
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_salary_rule_category
@@ -1455,7 +1468,7 @@ msgstr "Total"
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Total Working Days"
-msgstr ""
+msgstr "Totaly antall arbeidsdager"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template_upper_bound

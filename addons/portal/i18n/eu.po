@@ -7,13 +7,16 @@
 # Eneko <eastigarraga@codesyntax.com>, 2018
 # Mikel Lizarralde <mikellizarralde@gmail.com>, 2018
 # Naomi Hidalgo <naomihid96@gmail.com>, 2018
+# oihane <oihanecruce@gmail.com>, 2018
+# Esther Martín Menéndez <esthermartin001@gmail.com>, 2018
+# Gorka Toledo <gorka.toledo@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:27+0000\n"
-"PO-Revision-Date: 2017-10-02 11:27+0000\n"
-"Last-Translator: Naomi Hidalgo <naomihid96@gmail.com>, 2018\n"
+"POT-Creation-Date: 2018-07-27 11:56+0000\n"
+"PO-Revision-Date: 2018-07-27 11:56+0000\n"
+"Last-Translator: Gorka Toledo <gorka.toledo@gmail.com>, 2018\n"
 "Language-Team: Basque (https://www.transifex.com/odoo/teams/41243/eu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -52,6 +55,15 @@ msgstr ""
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_show_sign_in
 msgid "<b>Sign in</b>"
+msgstr "<b>Erregistratu</b>"
+
+#. module: portal
+#: model:ir.ui.view,arch_db:portal.frontend_layout
+msgid ""
+"<span class=\"sr-only\">Toggle navigation</span>\n"
+"                                    <span class=\"icon-bar\"/>\n"
+"                                    <span class=\"icon-bar\"/>\n"
+"                                    <span class=\"icon-bar\"/>"
 msgstr ""
 
 #. module: portal
@@ -62,7 +74,7 @@ msgstr ""
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.wizard_view
 msgid "Apply"
-msgstr ""
+msgstr "Aplikatu"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_archive_groups
@@ -77,19 +89,19 @@ msgstr "Ezeztatu"
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_layout
 msgid "Change"
-msgstr ""
+msgstr "Aldatu"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
 msgid "City"
-msgstr ""
+msgstr "Herria"
 
 #. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/xml/portal_signature.xml:12
 #, python-format
 msgid "Clear"
-msgstr ""
+msgstr "Garbitu"
 
 #. module: portal
 #. openerp-web
@@ -101,7 +113,7 @@ msgstr ""
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
 msgid "Company Name"
-msgstr ""
+msgstr "Enpresaren Izena"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
@@ -113,17 +125,17 @@ msgstr ""
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_partner_id
 msgid "Contact"
-msgstr ""
+msgstr "Kontaktua"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.wizard_view
 msgid "Contacts"
-msgstr ""
+msgstr "Kontaktuak"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
 msgid "Country"
-msgstr ""
+msgstr "Herrialdea"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
@@ -183,6 +195,11 @@ msgid "Group %s is not a portal"
 msgstr ""
 
 #. module: portal
+#: model:ir.model,name:portal.model_ir_http
+msgid "HTTP routing"
+msgstr "HTTP bideratzea"
+
+#. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_mixin_id
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_id
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_id
@@ -195,7 +212,7 @@ msgid "In Portal"
 msgstr ""
 
 #. module: portal
-#: code:addons/portal/controllers/portal.py:180
+#: code:addons/portal/controllers/portal.py:200
 #, python-format
 msgid "Invalid Email! Please enter a valid email address."
 msgstr "Email baliogabea! Mesedez, sar ezazu helbide elektroniko egokia."
@@ -244,17 +261,17 @@ msgstr "Saioa amaitu "
 #. module: portal
 #: model:ir.model,name:portal.model_mail_message
 msgid "Message"
-msgstr ""
+msgstr "Mezua"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.my_account_link
 msgid "My Account"
-msgstr ""
+msgstr "Nire kontua"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.pager
 msgid "Next"
-msgstr ""
+msgstr "Hurrengoa"
 
 #. module: portal
 #. openerp-web
@@ -266,7 +283,7 @@ msgstr ""
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
 msgid "Phone"
-msgstr ""
+msgstr "Telefono"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_portal_id
@@ -301,7 +318,7 @@ msgstr ""
 
 #. module: portal
 #. openerp-web
-#: code:addons/portal/static/src/js/portal_chatter.js:101
+#: code:addons/portal/static/src/js/portal_chatter.js:102
 #, python-format
 msgid "Published on %s"
 msgstr ""
@@ -319,7 +336,7 @@ msgstr ""
 #: code:addons/portal/static/src/xml/portal_chatter.xml:41
 #, python-format
 msgid "Send"
-msgstr ""
+msgstr "Bidali"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:106
@@ -340,7 +357,7 @@ msgid "Some contacts have the same email as an existing portal user:"
 msgstr ""
 
 #. module: portal
-#: code:addons/portal/controllers/portal.py:197
+#: code:addons/portal/controllers/portal.py:219
 #, python-format
 msgid "Some required fields are empty."
 msgstr "Beharrezko eremu batzuk hutsik daude."
@@ -353,7 +370,7 @@ msgstr "Estatua / Probintzia"
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
 msgid "Street"
-msgstr ""
+msgstr "Kalea"
 
 #. module: portal
 #. openerp-web
@@ -396,7 +413,7 @@ msgstr ""
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_ids
 msgid "Users"
-msgstr ""
+msgstr "Erabiltzaileak"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
@@ -449,7 +466,6 @@ msgstr "VAT zenbakia "
 #: model:ir.model.fields,field_description:portal.field_product_product_website_message_ids
 #: model:ir.model.fields,field_description:portal.field_product_template_website_message_ids
 #: model:ir.model.fields,field_description:portal.field_project_project_website_message_ids
-#: model:ir.model.fields,field_description:portal.field_project_task_website_message_ids
 #: model:ir.model.fields,field_description:portal.field_purchase_order_website_message_ids
 #: model:ir.model.fields,field_description:portal.field_purchase_requisition_website_message_ids
 #: model:ir.model.fields,field_description:portal.field_res_partner_website_message_ids
@@ -511,7 +527,6 @@ msgstr "Webgune mesuak "
 #: model:ir.model.fields,help:portal.field_product_product_website_message_ids
 #: model:ir.model.fields,help:portal.field_product_template_website_message_ids
 #: model:ir.model.fields,help:portal.field_project_project_website_message_ids
-#: model:ir.model.fields,help:portal.field_project_task_website_message_ids
 #: model:ir.model.fields,help:portal.field_purchase_order_website_message_ids
 #: model:ir.model.fields,help:portal.field_purchase_requisition_website_message_ids
 #: model:ir.model.fields,help:portal.field_res_partner_website_message_ids
@@ -525,12 +540,12 @@ msgstr "Webgune mesuak "
 #: model:ir.model.fields,help:portal.field_stock_production_lot_website_message_ids
 #: model:ir.model.fields,help:portal.field_survey_survey_website_message_ids
 msgid "Website communication history"
-msgstr ""
+msgstr "Webgunearen komunikazioen historia "
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_wizard_id
 msgid "Wizard"
-msgstr ""
+msgstr "Laguntzailea"
 
 #. module: portal
 #. openerp-web
@@ -562,7 +577,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:portal.portal_layout
 #: model:ir.ui.view,arch_db:portal.portal_my_details
 msgid "Your Details"
-msgstr ""
+msgstr "Zure datuak"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_home
@@ -575,7 +590,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:portal.portal_my_details
 #, python-format
 msgid "Your Name"
-msgstr ""
+msgstr "Zure Izena"
 
 #. module: portal
 #: model:mail.template,subject:portal.mail_template_data_portal_welcome

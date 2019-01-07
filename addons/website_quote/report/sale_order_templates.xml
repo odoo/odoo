@@ -3,6 +3,7 @@
 <template id="report_saleorder_validity_date" inherit_id="sale.report_saleorder_document">
     <xpath expr="//div[hasclass('page')]/p[@id='fiscal_position_remark']" position="after">
         <div t-if="doc.options and doc.state in ['draft', 'sent']" style="page-break-before:always;">
+            <t t-set="has_option_discount" t-value="any(doc.options.filtered(lambda o: o.discount != 0.0))" />
             <h2>
                 <span>Suggested Products</span>
             </h2>
@@ -11,7 +12,7 @@
                     <tr>
                         <th>Product</th>
                         <th>Description</th>
-                        <th groups="sale.group_discount_per_so_line"></th>
+                        <th t-if="has_option_discount" groups="sale.group_discount_per_so_line"></th>
                         <th class="text-right">Unit Price</th>
                     </tr>
                 </thead>
@@ -23,8 +24,8 @@
                         <td>
                             <span t-field="option.name"/>
                         </td>
-                        <td groups="sale.group_discount_per_so_line">
-                            <strong class="text-info">
+                        <td t-if="has_option_discount" groups="sale.group_discount_per_so_line">
+                            <strong t-if="option.discount != 0.0" class="text-info">
                                 <t t-esc="((option.discount % 1) and '%s' or '%d') % option.discount"/>% discount
                             </strong>
                         </td>

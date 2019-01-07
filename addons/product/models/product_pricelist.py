@@ -305,33 +305,42 @@ class Pricelist(models.Model):
             :param company_id: if passed, used for looking up properties,
              instead of current user's company
         """
+        res = self._get_partner_pricelist_multi([partner_id], company_id)
+        return res[partner_id].id
+
+    def _get_partner_pricelist_multi(self, partner_ids, company_id=None):
+        """ Retrieve the applicable pricelist for given partners in a given company.
+
+            :param company_id: if passed, used for looking up properties,
+                instead of current user's company
+            :return: a dict {partner_id: pricelist}
+        """
         Partner = self.env['res.partner']
         Property = self.env['ir.property'].with_context(force_company=company_id or self.env.user.company_id.id)
+        Pricelist = self.env['product.pricelist']
 
-        p = Partner.browse(partner_id)
-        pl = Property.get('property_product_pricelist', Partner._name, '%s,%s' % (Partner._name, p.id))
-        if pl:
-            pl = pl[0].id
+        # retrieve values of property
+        result = Property.get_multi('property_product_pricelist', Partner._name, partner_ids)
 
-        if not pl:
-            if p.country_id.code:
-                pls = self.env['product.pricelist'].search([('country_group_ids.country_ids.code', '=', p.country_id.code)], limit=1)
-                pl = pls and pls[0].id
+        remaining_partner_ids = [pid for pid, val in result.items() if not val]
+        if remaining_partner_ids:
+            # get fallback pricelist when no pricelist for a given country
+            pl_fallback = (
+                Pricelist.search([('country_group_ids', '=', False)], limit=1) or
+                Property.get('property_product_pricelist', 'res.partner') or
+                Pricelist.search([], limit=1)
+            )
+            # group partners by country, and find a pricelist for each country
+            domain = [('id', 'in', remaining_partner_ids)]
+            groups = Partner.read_group(domain, ['country_id'], ['country_id'])
+            for group in groups:
+                country_id = group['country_id'] and group['country_id'][0]
+                pl = Pricelist.search([('country_group_ids.country_ids', '=', country_id)], limit=1)
+                pl = pl or pl_fallback
+                for pid in Partner.search(group['__domain']).ids:
+                    result[pid] = pl
 
-        if not pl:
-            # search pl where no country
-            pls = self.env['product.pricelist'].search([('country_group_ids', '=', False)], limit=1)
-            pl = pls and pls[0].id
-
-        if not pl:
-            prop = Property.get('property_product_pricelist', 'res.partner')
-            pl = prop and prop[0].id
-
-        if not pl:
-            pls = self.env['product.pricelist'].search([], limit=1)
-            pl = pls and pls[0].id
-
-        return pl
+        return result
 
 
 class ResCountryGroup(models.Model):

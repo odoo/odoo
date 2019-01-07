@@ -15,6 +15,9 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         edit: '_startEditMode',
     }),
     custom_events: _.extend({}, websiteNavbarData.WebsiteNavbarActionWidget.custom_events || {}, {
+        content_will_be_destroyed: '_onContentWillBeDestroyed',
+        content_was_recreated: '_onContentWasRecreated',
+        snippet_cloned: '_onSnippetCloned',
         snippet_dropped: '_onSnippetDropped',
     }),
 
@@ -83,6 +86,44 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
     // Handlers
     //--------------------------------------------------------------------------
 
+    /**
+     * Called when content will be destroyed in the page. Notifies the
+     * WebsiteRoot that is should stop the animations.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onContentWillBeDestroyed: function (ev) {
+        this.trigger_up('animation_stop_demand', {
+            $target: ev.data.$target,
+        });
+    },
+    /**
+     * Called when content will be recreated in the page. Notifies the
+     * WebsiteRoot that is should start the animations.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onContentWasRecreated: function (ev) {
+        this.trigger_up('animation_start_demand', {
+            editableMode: true,
+            $target: ev.data.$target,
+        });
+    },
+    /**
+     * Called when a snippet is cloned in the page. Notifies the WebsiteRoot
+     * that is should start the animations for this snippet.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onSnippetCloned: function (ev) {
+        this.trigger_up('animation_start_demand', {
+            editableMode: true,
+            $target: ev.data.$target,
+        });
+    },
     /**
      * Called when a snippet is dropped in the page. Notifies the WebsiteRoot
      * that is should start the animations for this snippet.

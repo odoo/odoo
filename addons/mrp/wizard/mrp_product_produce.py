@@ -38,7 +38,8 @@ class MrpProductProduce(models.TransientModel):
             if 'produce_line_ids' in fields:
                 lines = []
                 for move in production.move_raw_ids.filtered(lambda x: (x.product_id.tracking != 'none') and x.state not in ('done', 'cancel') and x.bom_line_id):
-                    qty_to_consume = todo_quantity / move.bom_line_id.bom_id.product_qty * move.bom_line_id.product_qty
+                    qty_to_consume = float_round(todo_quantity / move.bom_line_id.bom_id.product_qty * move.bom_line_id.product_qty,
+                                                 precision_rounding=move.product_uom.rounding, rounding_method="UP")
                     for move_line in move.move_line_ids:
                         if float_compare(qty_to_consume, 0.0, precision_rounding=move.product_uom.rounding) <= 0:
                             break
@@ -84,7 +85,7 @@ class MrpProductProduce(models.TransientModel):
     product_uom_id = fields.Many2one('product.uom', 'Unit of Measure')
     lot_id = fields.Many2one('stock.production.lot', string='Lot')
     produce_line_ids = fields.One2many('mrp.product.produce.line', 'product_produce_id', string='Product to Track')
-    product_tracking = fields.Selection(related="product_id.tracking")
+    product_tracking = fields.Selection(related="product_id.tracking", readonly=True)
 
     @api.multi
     def do_produce(self):
@@ -99,8 +100,10 @@ class MrpProductProduce(models.TransientModel):
                 if self.product_id.tracking != 'none':
                     qty_to_add = float_round(quantity * move.unit_factor, precision_rounding=rounding)
                     move._generate_consumed_move_line(qty_to_add, self.lot_id)
-                else:
+                elif len(move._get_move_lines()) < 2:
                     move.quantity_done += float_round(quantity * move.unit_factor, precision_rounding=rounding)
+                else:
+                    move._set_quantity_done(quantity * move.unit_factor)
         for move in self.production_id.move_finished_ids:
             if move.product_id.tracking == 'none' and move.state not in ('done', 'cancel'):
                 rounding = move.product_uom.rounding
@@ -176,9 +179,9 @@ class MrpProductProduceLine(models.TransientModel):
     product_produce_id = fields.Many2one('mrp.product.produce')
     product_id = fields.Many2one('product.product', 'Product')
     lot_id = fields.Many2one('stock.production.lot', 'Lot')
-    qty_to_consume = fields.Float('To Consume')
+    qty_to_consume = fields.Float('To Consume', digits=dp.get_precision('Product Unit of Measure'))
     product_uom_id = fields.Many2one('product.uom', 'Unit of Measure')
-    qty_done = fields.Float('Done')
+    qty_done = fields.Float('Done', digits=dp.get_precision('Product Unit of Measure'))
     move_id = fields.Many2one('stock.move')
 
     @api.onchange('lot_id')

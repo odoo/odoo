@@ -3,14 +3,15 @@
 # * portal
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
+# Aleksandar Vangelovski <aleksandarv@hbee.eu>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:27+0000\n"
-"PO-Revision-Date: 2017-10-02 11:27+0000\n"
-"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
+"POT-Creation-Date: 2018-07-27 11:56+0000\n"
+"PO-Revision-Date: 2018-07-27 11:56+0000\n"
+"Last-Translator: Aleksandar Vangelovski <aleksandarv@hbee.eu>, 2018\n"
 "Language-Team: Macedonian (https://www.transifex.com/odoo/teams/41243/mk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -49,6 +50,15 @@ msgstr ""
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_show_sign_in
 msgid "<b>Sign in</b>"
+msgstr "<b>Најави се</b>"
+
+#. module: portal
+#: model:ir.ui.view,arch_db:portal.frontend_layout
+msgid ""
+"<span class=\"sr-only\">Toggle navigation</span>\n"
+"                                    <span class=\"icon-bar\"/>\n"
+"                                    <span class=\"icon-bar\"/>\n"
+"                                    <span class=\"icon-bar\"/>"
 msgstr ""
 
 #. module: portal
@@ -59,12 +69,12 @@ msgstr ""
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.wizard_view
 msgid "Apply"
-msgstr ""
+msgstr "Примени"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_archive_groups
 msgid "Archives"
-msgstr ""
+msgstr "Архиви"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.wizard_view
@@ -74,19 +84,19 @@ msgstr "Откажи"
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_layout
 msgid "Change"
-msgstr ""
+msgstr "Промени"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
 msgid "City"
-msgstr ""
+msgstr "Град"
 
 #. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/xml/portal_signature.xml:12
 #, python-format
 msgid "Clear"
-msgstr ""
+msgstr "Исчисти"
 
 #. module: portal
 #. openerp-web
@@ -98,7 +108,7 @@ msgstr ""
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
 msgid "Company Name"
-msgstr ""
+msgstr "Име на компанија"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
@@ -110,22 +120,22 @@ msgstr ""
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_partner_id
 msgid "Contact"
-msgstr ""
+msgstr "Контакт"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.wizard_view
 msgid "Contacts"
-msgstr ""
+msgstr "Контакти"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
 msgid "Country"
-msgstr ""
+msgstr "Земја"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
 msgid "Country..."
-msgstr ""
+msgstr "Земја..."
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_create_uid
@@ -166,18 +176,23 @@ msgstr ""
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_email
 #: model:ir.ui.view,arch_db:portal.portal_my_details
 msgid "Email"
-msgstr ""
+msgstr "Е-пошта"
 
 #. module: portal
 #: model:ir.model,name:portal.model_mail_thread
 msgid "Email Thread"
-msgstr ""
+msgstr "Е-mail нишка"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:130
 #, python-format
 msgid "Group %s is not a portal"
 msgstr ""
+
+#. module: portal
+#: model:ir.model,name:portal.model_ir_http
+msgid "HTTP routing"
+msgstr "HTTP рутирање"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_mixin_id
@@ -189,18 +204,18 @@ msgstr "ID"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_in_portal
 msgid "In Portal"
-msgstr ""
+msgstr "Во портал"
 
 #. module: portal
-#: code:addons/portal/controllers/portal.py:180
+#: code:addons/portal/controllers/portal.py:200
 #, python-format
 msgid "Invalid Email! Please enter a valid email address."
-msgstr ""
+msgstr "Неважечки емаил! Ве молиме внесете важечка емаил адреса."
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_welcome_message
 msgid "Invitation Message"
-msgstr ""
+msgstr "Порака за покана"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_mixin___last_update
@@ -226,7 +241,7 @@ msgstr "Последно ажурирање на"
 #: code:addons/portal/static/src/xml/portal_chatter.xml:20
 #, python-format
 msgid "Leave a comment"
-msgstr ""
+msgstr "Остави коментар"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_user_id
@@ -236,22 +251,22 @@ msgstr ""
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.frontend_layout
 msgid "Logout"
-msgstr ""
+msgstr "Одјави се"
 
 #. module: portal
 #: model:ir.model,name:portal.model_mail_message
 msgid "Message"
-msgstr ""
+msgstr "Порака"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.my_account_link
 msgid "My Account"
-msgstr ""
+msgstr "Мојата сметка"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.pager
 msgid "Next"
-msgstr ""
+msgstr "Следно"
 
 #. module: portal
 #. openerp-web
@@ -263,19 +278,19 @@ msgstr ""
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
 msgid "Phone"
-msgstr ""
+msgstr "Телефон"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_portal_id
 msgid "Portal"
-msgstr ""
+msgstr "Портал"
 
 #. module: portal
 #: model:ir.actions.act_window,name:portal.partner_wizard_action
 #: model:ir.model,name:portal.model_portal_wizard
 #: model:ir.ui.view,arch_db:portal.wizard_view
 msgid "Portal Access Management"
-msgstr ""
+msgstr "Управување со пристап на портал"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_account_invoice_portal_url
@@ -289,16 +304,16 @@ msgstr ""
 #. module: portal
 #: model:ir.model,name:portal.model_portal_wizard_user
 msgid "Portal User Config"
-msgstr ""
+msgstr "Portal User Config"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.pager
 msgid "Prev"
-msgstr ""
+msgstr "Претходно"
 
 #. module: portal
 #. openerp-web
-#: code:addons/portal/static/src/js/portal_chatter.js:101
+#: code:addons/portal/static/src/js/portal_chatter.js:102
 #, python-format
 msgid "Published on %s"
 msgstr ""
@@ -310,47 +325,51 @@ msgid ""
 "                        The email address of each selected contact must be valid and unique.\n"
 "                        If necessary, you can fix any contact's email address directly in the list."
 msgstr ""
+"Селектирајте кои контакти треба да припаднат на порталот во листата подолу.\n"
+"                        Емаил адресата на секој контакт мора да биде валидна и уникатна.\n"
+"                        Доколку е потребно, може да ја прикачите адресата на било кој контакт директно на листата.."
 
 #. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/xml/portal_chatter.xml:41
 #, python-format
 msgid "Send"
-msgstr ""
+msgstr "Испрати"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:106
 #, python-format
 msgid "Several contacts have the same email: "
-msgstr ""
+msgstr "Неколку контакти ја имаат истата е-маил адреса: "
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:103
 #, python-format
 msgid "Some contacts don't have a valid email: "
-msgstr ""
+msgstr "Некои контакти немаат валидна е-маил адреса: "
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:109
 #, python-format
 msgid "Some contacts have the same email as an existing portal user:"
 msgstr ""
+"Некои контакти имаат иста е-маил адреса со постоечки член на порталот:"
 
 #. module: portal
-#: code:addons/portal/controllers/portal.py:197
+#: code:addons/portal/controllers/portal.py:219
 #, python-format
 msgid "Some required fields are empty."
-msgstr ""
+msgstr "Некои потребни полиња се празни."
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
 msgid "State / Province"
-msgstr ""
+msgstr "Држава / Провинција"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
 msgid "Street"
-msgstr ""
+msgstr "Улица"
 
 #. module: portal
 #. openerp-web
@@ -362,7 +381,7 @@ msgstr ""
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_wizard_portal_id
 msgid "The portal that users can be added in or removed from."
-msgstr ""
+msgstr "Портал на кој може да се додаваат или отстрануваат корисници."
 
 #. module: portal
 #. openerp-web
@@ -375,11 +394,13 @@ msgstr ""
 #: model:ir.ui.view,arch_db:portal.wizard_view
 msgid "This text is included in the email sent to new portal users."
 msgstr ""
+"Овој текст е вклучен во е-поштата пратена до новите корисници на порталот."
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_wizard_welcome_message
 msgid "This text is included in the email sent to new users of the portal."
 msgstr ""
+"Текстот е вклучен во е-поштата испратена до новите корисници на порталот."
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:112
@@ -389,16 +410,19 @@ msgid ""
 "- Correct the emails of the relevant contacts\n"
 "- Grant access only to contacts with unique emails"
 msgstr ""
+"За да ја разрешите оваа грешка, можете: \n"
+"- Да ги корегирате е-маил адресите на релевантните контакти\n"
+"- Да им дозволите пристап само на контакти со уникатни е-маил адреси"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_ids
 msgid "Users"
-msgstr ""
+msgstr "Корисници"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
 msgid "VAT Number"
-msgstr ""
+msgstr "број на ДДВ обврзник"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_account_analytic_account_website_message_ids
@@ -446,7 +470,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:portal.field_product_product_website_message_ids
 #: model:ir.model.fields,field_description:portal.field_product_template_website_message_ids
 #: model:ir.model.fields,field_description:portal.field_project_project_website_message_ids
-#: model:ir.model.fields,field_description:portal.field_project_task_website_message_ids
 #: model:ir.model.fields,field_description:portal.field_purchase_order_website_message_ids
 #: model:ir.model.fields,field_description:portal.field_purchase_requisition_website_message_ids
 #: model:ir.model.fields,field_description:portal.field_res_partner_website_message_ids
@@ -460,7 +483,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:portal.field_stock_production_lot_website_message_ids
 #: model:ir.model.fields,field_description:portal.field_survey_survey_website_message_ids
 msgid "Website Messages"
-msgstr ""
+msgstr "Пораки на веб сајт"
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_account_analytic_account_website_message_ids
@@ -508,7 +531,6 @@ msgstr ""
 #: model:ir.model.fields,help:portal.field_product_product_website_message_ids
 #: model:ir.model.fields,help:portal.field_product_template_website_message_ids
 #: model:ir.model.fields,help:portal.field_project_project_website_message_ids
-#: model:ir.model.fields,help:portal.field_project_task_website_message_ids
 #: model:ir.model.fields,help:portal.field_purchase_order_website_message_ids
 #: model:ir.model.fields,help:portal.field_purchase_requisition_website_message_ids
 #: model:ir.model.fields,help:portal.field_res_partner_website_message_ids
@@ -522,26 +544,26 @@ msgstr ""
 #: model:ir.model.fields,help:portal.field_stock_production_lot_website_message_ids
 #: model:ir.model.fields,help:portal.field_survey_survey_website_message_ids
 msgid "Website communication history"
-msgstr ""
+msgstr "Историја на веб комуникација"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_wizard_id
 msgid "Wizard"
-msgstr ""
+msgstr "Волшебник"
 
 #. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/xml/portal_chatter.xml:32
 #, python-format
 msgid "Write a message..."
-msgstr ""
+msgstr "Напиши порака..."
 
 #. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/xml/portal_chatter.xml:21
 #, python-format
 msgid "You must be"
-msgstr ""
+msgstr "Морате да бидете"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:182
@@ -549,6 +571,8 @@ msgstr ""
 msgid ""
 "You must have an email address in your User Preferences to send emails."
 msgstr ""
+"Мора да имате емаил адреса во вашите Кориснички преференци за да праќате "
+"е-пошти."
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
@@ -572,7 +596,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:portal.portal_my_details
 #, python-format
 msgid "Your Name"
-msgstr ""
+msgstr "Вашето име"
 
 #. module: portal
 #: model:mail.template,subject:portal.mail_template_data_portal_welcome
@@ -582,7 +606,7 @@ msgstr ""
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
 msgid "Zip / Postal Code"
-msgstr ""
+msgstr "Поштенски код / број"
 
 #. module: portal
 #. openerp-web
@@ -596,14 +620,14 @@ msgstr ""
 #: code:addons/portal/static/src/xml/portal_chatter.xml:8
 #, python-format
 msgid "comment"
-msgstr ""
+msgstr "коментар"
 
 #. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/xml/portal_chatter.xml:9
 #, python-format
 msgid "comments"
-msgstr ""
+msgstr "коментари"
 
 #. module: portal
 #. openerp-web
@@ -620,11 +644,11 @@ msgstr ""
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
 msgid "select..."
-msgstr ""
+msgstr "изберете..."
 
 #. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/xml/portal_chatter.xml:21
 #, python-format
 msgid "to post a comment."
-msgstr ""
+msgstr "Да постирате коментар."

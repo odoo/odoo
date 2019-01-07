@@ -155,8 +155,8 @@ class XmlDeclaration(models.TransientModel):
                      OR (res_country.code is NULL AND countrypartner.code IS NOT NULL
                      AND not countrypartner.code=%s))
                 AND inv.type IN (%s, %s)
-                AND to_char(inv.date_invoice, 'YYYY')=%s
-                AND to_char(inv.date_invoice, 'MM')=%s
+                AND to_char(COALESCE(inv.date, inv.date_invoice), 'YYYY')=%s
+                AND to_char(COALESCE(inv.date, inv.date_invoice), 'MM')=%s
             """
 
         self.env.cr.execute(query, (company.id, company.partner_id.country_id.code,
@@ -177,7 +177,7 @@ class XmlDeclaration(models.TransientModel):
             if inv_line.invoice_id.intrastat_country_id:
                 excnt = inv_line.invoice_id.intrastat_country_id.code
             else:
-                excnt = inv_line.invoice_id.partner_id.country_id.code
+                excnt = inv_line.invoice_id.partner_shipping_id.country_id.code or inv_line.invoice_id.partner_id.country_id.code
 
             #Check region
             #If purchase, comes from purchase order, linked to a location,

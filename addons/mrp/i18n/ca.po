@@ -3,14 +3,18 @@
 # * mrp
 # 
 # Translators:
-# Quim - eccit <quim@eccit.com>, 2017
+# Martin Trigaux, 2018
+# RGB Consulting <odoo@rgbconsulting.com>, 2018
+# Quim - eccit <quim@eccit.com>, 2018
+# Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 13:42+0000\n"
-"PO-Revision-Date: 2018-02-19 13:42+0000\n"
-"Last-Translator: Quim - eccit <quim@eccit.com>, 2017\n"
+"POT-Creation-Date: 2019-01-03 15:06+0000\n"
+"PO-Revision-Date: 2017-09-20 10:19+0000\n"
+"Last-Translator: Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2018\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -76,7 +80,7 @@ msgid "19v,5.5 x 2.5 mm Pin Type Adapter (Power Cord Included)"
 msgstr "19v,5.5 x 2.5 mm Adaptador tipus pin (inclou cable d'alimentació) "
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_bom.py:293
+#: code:addons/mrp/models/mrp_bom.py:300
 #, python-format
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
@@ -90,6 +94,13 @@ msgstr ""
 "</p><p>\n"
 "Utilitza aquesta funció per emmagatzemar qualsevol arxiu, com dibuixos o especificacions.\n"
 "</p>"
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.res_config_settings_view_form
+msgid ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
+msgstr ""
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -253,7 +264,7 @@ msgid "<strong>WorkCenter</strong>"
 msgstr "<strong>Centre de Treball</strong>"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_workorder.py:472
+#: code:addons/mrp/models/mrp_workorder.py:509
 #, python-format
 msgid "A Manufacturing Order is already done or cancelled!"
 msgstr "Una ordre de fabricació ja està feta o cancel·lada!"
@@ -349,16 +360,16 @@ msgstr "Cost del servei de muntatge"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document_name
 msgid "Attachment Name"
-msgstr ""
+msgstr "Nom del document adjunt"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document_local_url
 #: model:ir.model.fields,field_description:mrp.field_mrp_document_website_url
 msgid "Attachment URL"
-msgstr ""
+msgstr "URL de l'adjunt"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_bom.py:285
+#: code:addons/mrp/models/mrp_bom.py:292
 #, python-format
 msgid "Attachments"
 msgstr "Adjunts"
@@ -584,7 +595,7 @@ msgid "Cancelled"
 msgstr "Cancel·lat"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_production.py:316
+#: code:addons/mrp/models/mrp_production.py:329
 #, python-format
 msgid "Cannot delete a manufacturing order not in cancel state"
 msgstr ""
@@ -624,7 +635,7 @@ msgstr "Comprova disponibilitat"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document_checksum
 msgid "Checksum/SHA1"
-msgstr ""
+msgstr "Suma verificació/SHA1"
 
 #. module: mrp
 #. openerp-web
@@ -681,6 +692,7 @@ msgstr "Clic per arrancar una nova ordre de producció."
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.action_mrp_workorder_production
+#: model:ir.actions.act_window,help:mrp.mrp_workorder_todo
 msgid "Click to start a new work order."
 msgstr "Faci clic per iniciar una nova ordre de treball."
 
@@ -848,7 +860,7 @@ msgstr "Taulell"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document_db_datas
 msgid "Database Data"
-msgstr ""
+msgstr "Dades de la Base de Dades"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.oee_search_view
@@ -1034,17 +1046,17 @@ msgstr "Duració prevista (en minuts)"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document_datas
 msgid "File Content"
-msgstr ""
+msgstr "Contingut del fitxer"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document_datas_fname
 msgid "File Name"
-msgstr ""
+msgstr "Nom del fitxer"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document_file_size
 msgid "File Size"
-msgstr ""
+msgstr "Mida del fitxer"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
@@ -1285,7 +1297,7 @@ msgstr "En curs"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document_index_content
 msgid "Indexed Content"
-msgstr ""
+msgstr "Contingut indexat"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_move_line_lot_produced_qty
@@ -1293,7 +1305,7 @@ msgid "Informative, not used in matching"
 msgstr "Informatiu, no utilitzat en la cerca"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_unbuild.py:187
+#: code:addons/mrp/models/mrp_unbuild.py:210
 #, python-format
 msgid "Insufficient Quantity"
 msgstr ""
@@ -1337,7 +1349,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document_public
 msgid "Is public document"
-msgstr ""
+msgstr "És un document públic "
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_is_user_working
@@ -1461,7 +1473,7 @@ msgid "Late Activities"
 msgstr "Darreres Activitats"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_production.py:432
+#: code:addons/mrp/models/mrp_production.py:445
 #, python-format
 msgid ""
 "Lines need to be deleted, but can not as you still have some quantities to "
@@ -1488,10 +1500,10 @@ msgstr "Ubicació on el sistema emmagatzemarà els productes finalitzats."
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Lock"
-msgstr ""
+msgstr "Bloqueja"
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss_id_8239
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss_id_8257
 #: model:ir.ui.view,arch_db:mrp.oee_search_view
 msgid "Loss Reason"
 msgstr "Motiu de la pèrdua"
@@ -1506,12 +1518,12 @@ msgstr "Lot"
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_production_lot
 msgid "Lot/Serial"
-msgstr ""
+msgstr "Lot/núm. de sèrie"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_final_lot_id
 msgid "Lot/Serial Number"
-msgstr ""
+msgstr "Lot/núm. de sèrie"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_finisehd_move_line
@@ -1708,7 +1720,7 @@ msgstr "Missatge"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document_mimetype
 msgid "Mime Type"
-msgstr ""
+msgstr "Tipus MIME"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_form_view
@@ -1771,8 +1783,8 @@ msgstr "Nom"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:46
-#: code:addons/mrp/models/mrp_production.py:302
-#: code:addons/mrp/models/mrp_production.py:306
+#: code:addons/mrp/models/mrp_production.py:315
+#: code:addons/mrp/models/mrp_production.py:319
 #: code:addons/mrp/models/mrp_routing.py:18
 #: code:addons/mrp/models/mrp_routing.py:34
 #: code:addons/mrp/models/mrp_routing.py:35
@@ -1942,7 +1954,7 @@ msgstr "Operació per consumir"
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_picking_type_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_picking_type_id
 msgid "Operation Type"
-msgstr ""
+msgstr "Tipus d'operació"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_operation_ids
@@ -1994,7 +2006,7 @@ msgstr "Eficiència global de l'equip: sense temps de treball o bloquejat."
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_move_line
 msgid "Packing Operation"
-msgstr ""
+msgstr "Operació d'empaquetatge"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_bom_id
@@ -2066,16 +2078,16 @@ msgstr "Data planificada"
 #: model:ir.ui.menu,name:mrp.mrp_planning_menu_root
 #: model:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid "Planning"
-msgstr ""
+msgstr "Planificació"
 
 #. module: mrp
-#: code:addons/mrp/wizard/mrp_product_produce.py:147
+#: code:addons/mrp/wizard/mrp_product_produce.py:150
 #, python-format
 msgid "Please enter a lot or serial number for %s !"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_workorder.py:288
+#: code:addons/mrp/models/mrp_workorder.py:304
 #, python-format
 msgid ""
 "Please set the quantity you are currently producing. It should be different "
@@ -2164,7 +2176,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_line_product_produce_id
 msgid "Product Produce"
-msgstr ""
+msgstr "Produeix producte"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_product_qty
@@ -2198,7 +2210,7 @@ msgstr "Producte a traçar"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_message_kanban
 msgid "Product:"
-msgstr ""
+msgstr "Producte:"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production
@@ -2411,7 +2423,7 @@ msgid "Record Production Line"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_bom.py:159
+#: code:addons/mrp/models/mrp_bom.py:166
 #, python-format
 msgid ""
 "Recursion error!  A product with a Bill of Material should not have itself "
@@ -2450,7 +2462,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings_module_mrp_repair
 msgid "Repair"
-msgstr ""
+msgstr "Reparació"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.res_config_settings_view_form
@@ -2471,17 +2483,17 @@ msgstr "Requereix núm. de sèrie"
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model:ir.ui.view,arch_db:mrp.view_stock_move_lots
 msgid "Reserved"
-msgstr ""
+msgstr "Reservat"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document_res_field
 msgid "Resource Field"
-msgstr ""
+msgstr "Camp del recurs "
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document_res_id
 msgid "Resource ID"
-msgstr ""
+msgstr "ID del recurs "
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_view_resource_calendar_leaves_search_mrp
@@ -2491,12 +2503,12 @@ msgstr "Absències de recursos"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document_res_model
 msgid "Resource Model"
-msgstr ""
+msgstr "Model del Recurs"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document_res_name
 msgid "Resource Name"
-msgstr ""
+msgstr "Nom del Recurs"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_pm_resources_config
@@ -2593,8 +2605,8 @@ msgid "Scheduled Month"
 msgstr "Mes planificat"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_production.py:590
-#: code:addons/mrp/models/mrp_workorder.py:481
+#: code:addons/mrp/models/mrp_production.py:609
+#: code:addons/mrp/models/mrp_workorder.py:518
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_scrap_ids
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
@@ -2803,7 +2815,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document_store_fname
 msgid "Stored Filename"
-msgstr ""
+msgstr "Nom de l'arxiu emmagatzemat"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_child_bom_id
@@ -2824,7 +2836,7 @@ msgstr "TPM Grans pèrdues"
 #: model:product.product,name:mrp.product_product_computer_desk
 #: model:product.template,name:mrp.product_product_computer_desk_product_template
 msgid "Table"
-msgstr ""
+msgstr "Taula"
 
 #. module: mrp
 #: model:product.product,name:mrp.product_product_computer_desk_head
@@ -2903,7 +2915,7 @@ msgid "Technical: used to figure out default serial number on work orders"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_bom.py:76 code:addons/mrp/models/mrp_bom.py:254
+#: code:addons/mrp/models/mrp_bom.py:76 code:addons/mrp/models/mrp_bom.py:261
 #, python-format
 msgid ""
 "The Product Unit of Measure you chose has a different category than in the "
@@ -2926,7 +2938,7 @@ msgstr "Els components de la 1a operació"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_document_res_model
 msgid "The database object this attachment will be attached to."
-msgstr ""
+msgstr "L'objecte de la base de dades al que s'adjuntarà aquest annexe."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production_routing_id
@@ -2984,7 +2996,7 @@ msgstr ""
 " tot és processa en la pròpia ordre de producció."
 
 #. module: mrp
-#: code:addons/mrp/wizard/mrp_product_produce.py:94
+#: code:addons/mrp/wizard/mrp_product_produce.py:95
 #, python-format
 msgid "The production order for '%s' has no quantity specified"
 msgstr ""
@@ -2997,7 +3009,7 @@ msgstr "La quantitat a produir ha de ser positiva!"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_document_res_id
 msgid "The record id this is attached to."
-msgstr ""
+msgstr "El id del registre està adjuntat a."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter_routing_id
@@ -3048,11 +3060,14 @@ msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for stock moves generated by manufacturing orders."
 msgstr ""
+"S'utilitzarà aquesta ubicació d'existències, en lloc de la de per defecte, "
+"com la ubicació font pels moviments d'existències generats per les ordres de"
+" fabricació."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_time_ids
 msgid "Time"
-msgstr ""
+msgstr "Temps"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_time_efficiency
@@ -3070,7 +3085,7 @@ msgid "Time Tracking"
 msgstr "Seguiment de temp"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_workorder.py:402
+#: code:addons/mrp/models/mrp_workorder.py:439
 #, python-format
 msgid "Time Tracking: "
 msgstr "Seguiment de temps:"
@@ -3103,6 +3118,11 @@ msgid ""
 msgstr ""
 "Temps en minuts. És el temps utilitzat en mode manual, o el temps estimat el"
 " primer cop, quan encara no hi ha hagut cap ordre de treball."
+
+#. module: mrp
+#: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
+msgid "Time the currently logged user spent on this workorder."
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_line_qty_to_consume
@@ -3199,7 +3219,7 @@ msgstr "Seguiment"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document_type
 msgid "Type"
-msgstr ""
+msgstr "Tipus"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
@@ -3311,7 +3331,7 @@ msgstr "Urgent"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document_url
 msgid "Url"
-msgstr ""
+msgstr "Adreça URL"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_production_lot_use_next_on_work_order_id
@@ -3402,8 +3422,8 @@ msgid "Warehouse"
 msgstr "Magatzem"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_bom.py:76 code:addons/mrp/models/mrp_bom.py:254
-#: code:addons/mrp/wizard/mrp_product_produce.py:203
+#: code:addons/mrp/models/mrp_bom.py:76 code:addons/mrp/models/mrp_bom.py:261
+#: code:addons/mrp/wizard/mrp_product_produce.py:204
 #, python-format
 msgid "Warning"
 msgstr "Avís"
@@ -3602,7 +3622,7 @@ msgid "Work Sheet"
 msgstr "Full de càlcul"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_production.py:567
+#: code:addons/mrp/models/mrp_production.py:586
 #, python-format
 msgid "Work order %s is still running"
 msgstr "L'ordre de treball %s està en marxa"
@@ -3664,9 +3684,11 @@ msgid ""
 "You can either upload a file from your computer or copy/paste an internet "
 "link to your file."
 msgstr ""
+"Pots pujar tant un fitxer del teu ordinador com copiar/pegar un enllaç "
+"d'internet al teu fitxer."
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_production.py:521
+#: code:addons/mrp/models/mrp_production.py:540
 #, python-format
 msgid ""
 "You can not cancel production order, a work order is still in progress."
@@ -3674,19 +3696,19 @@ msgstr ""
 "No pot cancel·lar l'ordre de fabricació, hi ha una ordre de treball en curs."
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_workorder.py:240
+#: code:addons/mrp/models/mrp_workorder.py:244
 #, python-format
 msgid "You can not change the finished work order."
 msgstr "No pot modificar l'ordre de treball acabada."
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_production.py:553
+#: code:addons/mrp/models/mrp_production.py:572
 #, python-format
 msgid "You can not consume without telling for which lot you consumed it"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_bom.py:91
+#: code:addons/mrp/models/mrp_bom.py:98
 #, python-format
 msgid ""
 "You can not delete a Bill of Material with running manufacturing orders.\n"
@@ -3696,13 +3718,13 @@ msgstr ""
 "producció. Si us plau, tanqui-la o cancel·li-la."
 
 #. module: mrp
-#: code:addons/mrp/wizard/mrp_product_produce.py:202
+#: code:addons/mrp/wizard/mrp_product_produce.py:203
 #, python-format
 msgid "You can only process 1.0 %s for products with unique serial number."
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/stock_move.py:136
+#: code:addons/mrp/models/stock_move.py:143
 #, python-format
 msgid ""
 "You cannot cancel a manufacturing order if you have already consumed "
@@ -3711,7 +3733,7 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/stock_move.py:202
+#: code:addons/mrp/models/stock_move.py:209
 #, python-format
 msgid ""
 "You cannot consume the same serial number twice. Please correct the serial "
@@ -3719,7 +3741,7 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/wizard/mrp_product_produce.py:129
+#: code:addons/mrp/wizard/mrp_product_produce.py:130
 #, python-format
 msgid "You cannot produce the same serial number twice."
 msgstr ""
@@ -3731,12 +3753,10 @@ msgid "You cannot unbuild a undone manufacturing order."
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/wizard/change_production_qty.py:46
+#: code:addons/mrp/wizard/change_production_qty.py:47
 #, python-format
-msgid "You have already processed %d. Please input a quantity higher than %d "
+msgid "You have already processed %s. Please input a quantity higher than %s "
 msgstr ""
-"Ja ha processat %d.\n"
-"Introdueixi una quantitat major que %d"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -3746,7 +3766,7 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_workorder.py:392
+#: code:addons/mrp/models/mrp_workorder.py:429
 #, python-format
 msgid ""
 "You need to define at least one productivity loss in the category "
@@ -3758,7 +3778,7 @@ msgstr ""
 "de productivitat."
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_workorder.py:388
+#: code:addons/mrp/models/mrp_workorder.py:425
 #, python-format
 msgid ""
 "You need to define at least one productivity loss in the category "
@@ -3770,7 +3790,7 @@ msgstr ""
 "Fabricació/Configuració/Pèrdues de productivitat."
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_workorder.py:446
+#: code:addons/mrp/models/mrp_workorder.py:483
 #, python-format
 msgid ""
 "You need to define at least one unactive productivity loss in the category "
@@ -3782,25 +3802,25 @@ msgstr ""
 "Fabricació/Configuració/Pèrdues de productivitat."
 
 #. module: mrp
-#: code:addons/mrp/wizard/mrp_product_produce.py:125
+#: code:addons/mrp/wizard/mrp_product_produce.py:126
 #, python-format
 msgid "You need to provide a lot for the finished product"
 msgstr "Necessita indicar un lot pel producte acabat"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_workorder.py:314
+#: code:addons/mrp/models/mrp_workorder.py:330
 #, python-format
 msgid "You should provide a lot/serial number for a component"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_workorder.py:291
+#: code:addons/mrp/models/mrp_workorder.py:307
 #, python-format
 msgid "You should provide a lot/serial number for the final product"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_unbuild.py:95
+#: code:addons/mrp/models/mrp_unbuild.py:99
 #, python-format
 msgid ""
 "You should specify a manufacturing order in order to find the correct "

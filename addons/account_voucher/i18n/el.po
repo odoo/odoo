@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 13:42+0000\n"
-"PO-Revision-Date: 2018-02-19 13:42+0000\n"
+"POT-Creation-Date: 2018-07-27 11:55+0000\n"
+"PO-Revision-Date: 2018-07-27 11:55+0000\n"
 "Last-Translator: Costas Pittalis <cpittalis@gmail.com>, 2017\n"
 "Language-Team: Greek (https://www.transifex.com/odoo/teams/41243/el/)\n"
 "MIME-Version: 1.0\n"
@@ -101,7 +101,7 @@ msgid "Cancelled"
 msgstr "Ακυρώθηκε"
 
 #. module: account_voucher
-#: code:addons/account_voucher/models/account_voucher.py:159
+#: code:addons/account_voucher/models/account_voucher.py:185
 #, python-format
 msgid "Cannot delete voucher(s) which are already opened or paid."
 msgstr ""
@@ -305,18 +305,23 @@ msgid "Payment"
 msgstr "Πληρωμή"
 
 #. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_payment_journal_id
+msgid "Payment Method"
+msgstr "Μέθοδος Πληρωμής"
+
+#. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_name
 msgid "Payment Reference"
 msgstr "Αναφορά Πληρωμής"
 
 #. module: account_voucher
-#: code:addons/account_voucher/models/account_voucher.py:195
+#: code:addons/account_voucher/models/account_voucher.py:222
 #, python-format
 msgid "Please activate the sequence of selected journal !"
 msgstr "Παρακαλώ ενεργοποιήστε την ακολουθία του επιλεγμένου ημερολογίου !"
 
 #. module: account_voucher
-#: code:addons/account_voucher/models/account_voucher.py:198
+#: code:addons/account_voucher/models/account_voucher.py:225
 #, python-format
 msgid "Please define a sequence on the journal."
 msgstr "Παρακαλώ ορίστε μια αλληλουχία στο ημερολόγιο."
@@ -504,7 +509,7 @@ msgid "Vendor Voucher"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/models/account_voucher.py:97
+#: code:addons/account_voucher/models/account_voucher.py:100
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_voucher_id
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
@@ -559,7 +564,7 @@ msgstr ""
 "                που σχετίζεται με αυτήν την απόδειξη πώλησης."
 
 #. module: account_voucher
-#: code:addons/account_voucher/models/account_voucher.py:377
+#: code:addons/account_voucher/models/account_voucher.py:438
 #, python-format
 msgid "You must first select a partner!"
 msgstr "Πρέπει πρώτα να επιλέξετε ένα συνεργάτη!"

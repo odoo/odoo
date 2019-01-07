@@ -37,7 +37,7 @@ def _message_post_helper(res_model='', res_id=None, message='', token='', nosubs
         access_as_sudo = _has_token_access(res_model, res_id, token=token)
         if access_as_sudo:
             record = record.sudo()
-            if request.env.user == request.env.ref('base.public_user'):
+            if request.env.user._is_public():
                 author_id = record.partner_id.id if hasattr(record, 'partner_id') else author_id
             else:
                 if not author_id:
@@ -90,8 +90,10 @@ class PortalChatter(http.Controller):
         # Only search into website_message_ids, so apply the same domain to perform only one search
         # extract domain from the 'website_message_ids' field
         field_domain = request.env[res_model]._fields['website_message_ids'].domain
-        domain += field_domain(request.env[res_model]) if callable(field_domain) else field_domain
-        domain += [('res_id', '=', res_id)]
+        if callable(field_domain):
+            field_domain = field_domain(request.env[res_model])
+        domain = expression.AND([domain, field_domain, [('res_id', '=', res_id)]])
+
         # Check access
         Message = request.env['mail.message']
         if kw.get('token'):
@@ -100,7 +102,7 @@ class PortalChatter(http.Controller):
                 raise Forbidden()
             # Non-employee see only messages with not internal subtype (aka, no internal logs)
             if not request.env['res.users'].has_group('base.group_user'):
-                domain = expression.AND([['&', '&', ('subtype_id', '!=', False), ('subtype_id.internal', '=', False)], domain])
+                domain = expression.AND([['&', ('subtype_id', '!=', False), ('subtype_id.internal', '=', False)], domain])
             Message = request.env['mail.message'].sudo()
         return {
             'messages': Message.search(domain, limit=limit, offset=offset).portal_message_format(),

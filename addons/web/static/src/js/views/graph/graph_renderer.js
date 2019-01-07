@@ -57,7 +57,7 @@ return AbstractRenderer.extend({
     on_attach_callback: function () {
         this._super.apply(this, arguments);
         this.isInDOM = true;
-        this._renderGraph();
+        this._render();
     },
     /**
      * @override
@@ -313,7 +313,7 @@ return AbstractRenderer.extend({
                     };
                 }
                 data_dict[serie].values.push({
-                    x: tick, y: this.state.data[i].value,
+                    x: tick - 1, y: this.state.data[i].value,
                 });
                 data = _.map(data_dict, identity);
             }

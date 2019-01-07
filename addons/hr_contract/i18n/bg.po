@@ -6,13 +6,16 @@
 # Martin Trigaux, 2017
 # aleksandar ivanov, 2018
 # Albena Mincheva <albena_vicheva@abv.bg>, 2018
+# Boris Stefanov <borkata@gmail.com>, 2018
+# kalatchev, 2018
+# Maria Boyadjieva <marabo2000@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-09-20 09:53+0000\n"
 "PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Albena Mincheva <albena_vicheva@abv.bg>, 2018\n"
+"Last-Translator: Maria Boyadjieva <marabo2000@gmail.com>, 2018\n"
 "Language-Team: Bulgarian (https://www.transifex.com/odoo/teams/41243/bg/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,12 +36,12 @@ msgstr ""
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_advantages
 msgid "Advantages"
-msgstr ""
+msgstr "Предимства"
 
 #. module: hr_contract
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid "Advantages..."
-msgstr ""
+msgstr "Предимства..."
 
 #. module: hr_contract
 #: selection:hr.contract,state:0
@@ -48,7 +51,7 @@ msgstr "Отказанa"
 #. module: hr_contract
 #: model:ir.actions.act_window,help:hr_contract.action_hr_contract
 msgid "Click here to create new contracts."
-msgstr ""
+msgstr "Натиснете тук, за да създадете нови договори."
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_company_id
@@ -58,13 +61,13 @@ msgstr "Фирма"
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee_vehicle
 msgid "Company Vehicle"
-msgstr ""
+msgstr "Служебно МПС"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_name
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid "Contract Reference"
-msgstr ""
+msgstr "Означение на договор"
 
 #. module: hr_contract
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
@@ -80,35 +83,36 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_type_view_tree
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Contract Type"
-msgstr ""
+msgstr "Тип на договор"
 
 #. module: hr_contract
 #: model:ir.actions.act_window,name:hr_contract.action_hr_contract_type
 #: model:ir.ui.menu,name:hr_contract.hr_menu_contract_type
 msgid "Contract Types"
-msgstr ""
+msgstr "Типове договори"
 
 #. module: hr_contract
 #: model:mail.message.subtype,description:hr_contract.mt_contract_pending
 #: model:mail.message.subtype,description:hr_contract.mt_department_contract_pending
 msgid "Contract about to expire"
-msgstr ""
+msgstr "Изтичащ Договор"
 
 #. module: hr_contract
 #: model:mail.message.subtype,description:hr_contract.mt_contract_close
 msgid "Contract expired"
-msgstr ""
+msgstr "Изтекъл Договор"
 
 #. module: hr_contract
 #: code:addons/hr_contract/models/hr_contract.py:100
 #, python-format
 msgid "Contract start date must be less than contract end date."
 msgstr ""
+"Началната дата на договора трябва да бъде преди крайната дата на договора."
 
 #. module: hr_contract
 #: model:mail.message.subtype,name:hr_contract.mt_department_contract_pending
 msgid "Contract to Renew"
-msgstr ""
+msgstr "Договор за Подновяване"
 
 #. module: hr_contract
 #: model:ir.actions.act_window,name:hr_contract.act_hr_employee_2_hr_contract
@@ -144,12 +148,12 @@ msgstr "Валута"
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 #: model:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form2
 msgid "Current Contract"
-msgstr ""
+msgstr "Текущ Договор"
 
 #. module: hr_contract
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Current Employee"
-msgstr ""
+msgstr "Текущ Служител"
 
 #. module: hr_contract
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_kanban
@@ -218,12 +222,12 @@ msgstr ""
 #: selection:hr.contract,state:0
 #: model:mail.message.subtype,name:hr_contract.mt_contract_close
 msgid "Expired"
-msgstr ""
+msgstr "Изтекъл"
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract_type_sequence
 msgid "Gives the sequence when displaying a list of Contract."
-msgstr ""
+msgstr "Дава последователност при показване на списък Договори."
 
 #. module: hr_contract
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
@@ -240,7 +244,7 @@ msgstr ""
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee_vehicle_distance
 msgid "Home-Work Dist."
-msgstr ""
+msgstr "Работа от Вкъщи %"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_id
@@ -251,17 +255,17 @@ msgstr "ID"
 #. module: hr_contract
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Important Messages"
-msgstr ""
+msgstr "Важни съобщения"
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_employee_vehicle_distance
 msgid "In kilometers"
-msgstr ""
+msgstr "В километри"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee_manager
 msgid "Is a Manager"
-msgstr ""
+msgstr "Е мениджър"
 
 #. module: hr_contract
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
@@ -294,17 +298,17 @@ msgstr "Последно обновено на"
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_employee_contract_id
 msgid "Latest contract of the employee"
-msgstr ""
+msgstr "Последен договор на служител"
 
 #. module: hr_contract
 #: model:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form2
 msgid "Medical Exam"
-msgstr ""
+msgstr "Медицински преглед"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee_medic_exam
 msgid "Medical Examination Date"
-msgstr ""
+msgstr "Дата на медицински преглед"
 
 #. module: hr_contract
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
@@ -325,7 +329,7 @@ msgstr "Бележки"
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee_children
 msgid "Number of Children"
-msgstr ""
+msgstr "Брой деца"
 
 #. module: hr_contract
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
@@ -335,12 +339,12 @@ msgstr "Друга информация"
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee_place_of_birth
 msgid "Place of Birth"
-msgstr ""
+msgstr "Месторождение"
 
 #. module: hr_contract
 #: selection:hr.contract,state:0
 msgid "Running"
-msgstr ""
+msgstr "Изпълнява се"
 
 #. module: hr_contract
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
@@ -350,12 +354,12 @@ msgstr ""
 #. module: hr_contract
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Search Contract"
-msgstr ""
+msgstr "Търси договор"
 
 #. module: hr_contract
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_type_view_search
 msgid "Search Contract Type"
-msgstr ""
+msgstr "Търси тип на договор"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_sequence
@@ -386,36 +390,36 @@ msgstr "Състояние"
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract_state
 msgid "Status of the contract"
-msgstr ""
+msgstr "Състояние на договорът"
 
 #. module: hr_contract
 #: selection:hr.contract,state:0
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 #: model:mail.message.subtype,name:hr_contract.mt_contract_pending
 msgid "To Renew"
-msgstr ""
+msgstr "За Подновяване"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_visa_expire
 msgid "Visa Expire Date"
-msgstr ""
+msgstr "Виза Валидна До"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_visa_no
 msgid "Visa No"
-msgstr ""
+msgstr "Виза Номер"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_wage
 msgid "Wage"
-msgstr ""
+msgstr "Възнаграждение"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_permit_no
 msgid "Work Permit No"
-msgstr ""
+msgstr "Разрешително за Работа Номер"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_resource_calendar_id
 msgid "Working Schedule"
-msgstr ""
+msgstr "Работно време"

@@ -3,15 +3,17 @@
 # * hr
 # 
 # Translators:
-# Martin Trigaux, 2017
 # ki dvd <soutsakhone.d@gmail.com>, 2017
+# ສີສຸວັນ ສັງບົວບຸລົມ <sisouvan@gmail.com>, 2018
+# Martin Trigaux, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 13:43+0000\n"
-"PO-Revision-Date: 2018-02-19 13:43+0000\n"
-"Last-Translator: ki dvd <soutsakhone.d@gmail.com>, 2017\n"
+"POT-Creation-Date: 2019-01-03 15:06+0000\n"
+"PO-Revision-Date: 2017-09-20 10:17+0000\n"
+"Last-Translator: Martin Trigaux, 2018\n"
 "Language-Team: Lao (https://www.transifex.com/odoo/teams/41243/lo/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -60,6 +62,13 @@ msgstr ""
 #: model:hr.job,website_description:hr.job_hrm
 #: model:hr.job,website_description:hr.job_marketing
 msgid "<i>You easily manage them</i>"
+msgstr ""
+
+#. module: hr
+#: model:ir.ui.view,arch_db:hr.res_config_settings_view_form
+msgid ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
 msgstr ""
 
 #. module: hr
@@ -114,7 +123,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_department_active
 #: model:ir.model.fields,field_description:hr.field_hr_employee_active
 msgid "Active"
-msgstr ""
+msgstr "ໃຊ້ຢູ່"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_consultant
@@ -125,7 +134,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr.view_department_filter
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Archived"
-msgstr ""
+msgstr "ສຳເນົາໄວ້ແລ້ວ"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_bank_account_id
@@ -224,12 +233,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category_color
 #: model:ir.model.fields,field_description:hr.field_hr_employee_color
 msgid "Color Index"
-msgstr ""
+msgstr "ດັດຊະນີສີ"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_department_tree
 msgid "Companies"
-msgstr ""
+msgstr "ບໍລິສັດ"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_company_id
@@ -252,7 +261,7 @@ msgstr ""
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_human_resources_configuration
 msgid "Configuration"
-msgstr ""
+msgstr "ການກຳນົດຄ່າ"
 
 #. module: hr
 #: model:hr.job,name:hr.job_consultant
@@ -262,12 +271,12 @@ msgstr ""
 #. module: hr
 #: model:ir.model,name:hr.model_res_partner
 msgid "Contact"
-msgstr ""
+msgstr "ທີ່ຕິດຕໍ່່"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Contact Information"
-msgstr ""
+msgstr "ຂໍ້ມູນຂ່າວສານການຕິດຕໍ່ພົວພັນ"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_cto
@@ -282,7 +291,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee_create_uid
 #: model:ir.model.fields,field_description:hr.field_hr_job_create_uid
 msgid "Created by"
-msgstr ""
+msgstr "ສ້າງ ໂດຍ"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_create_date
@@ -290,7 +299,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee_create_date
 #: model:ir.model.fields,field_description:hr.field_hr_job_create_date
 msgid "Created on"
-msgstr ""
+msgstr "ສ້າງ ເມື່ອ"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job_no_of_employee
@@ -321,7 +330,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
 #: model:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Department"
-msgstr ""
+msgstr "ຫ້ອງການ"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_name
@@ -341,7 +350,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee_display_name
 #: model:ir.model.fields,field_description:hr.field_hr_job_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "ຊື່ທີ່ສະແດງອອກ"
 
 #. module: hr
 #: selection:hr.employee,marital:0
@@ -420,13 +429,13 @@ msgid ""
 msgstr ""
 
 #. module: hr
-#: code:addons/hr/models/hr.py:303
+#: code:addons/hr/models/hr.py:310
 #, python-format
 msgid "Error! You cannot create recursive departments."
 msgstr ""
 
 #. module: hr
-#: code:addons/hr/models/hr.py:184
+#: code:addons/hr/models/hr.py:187
 #, python-format
 msgid "Error! You cannot create recursive hierarchy of Employee(s)."
 msgstr ""
@@ -516,7 +525,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
 #: model:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Group By"
-msgstr ""
+msgstr "ຈັດກຸ່ມ ໂດຍ"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_department
@@ -556,7 +565,7 @@ msgstr ""
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_main
 msgid "Human Resources"
-msgstr ""
+msgstr "ຊັພຍາກອນມານຸດ"
 
 #. module: hr
 #: model:hr.job,name:hr.job_hrm
@@ -569,7 +578,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee_id
 #: model:ir.model.fields,field_description:hr.field_hr_job_id
 msgid "ID"
-msgstr ""
+msgstr "ເລກລຳດັບ"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_identification_id
@@ -632,7 +641,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee_job_id
 #: model:ir.model.fields,field_description:hr.field_hr_job_name
 msgid "Job Position"
-msgstr ""
+msgstr "ຕຳແໜ່ງວຽກ"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action_hr_job
@@ -660,7 +669,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category___last_update
 #: model:ir.model.fields,field_description:hr.field_hr_job___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "ແກ້ໄຂລ້າສຸດ ເມື່ອ"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_write_uid
@@ -668,7 +677,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee_write_uid
 #: model:ir.model.fields,field_description:hr.field_hr_job_write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "ປັບປຸງລ້າສຸດ ໂດຍ"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_write_date
@@ -676,7 +685,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee_write_date
 #: model:ir.model.fields,field_description:hr.field_hr_job_write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "ປັບປຸງລ້າສຸດ ເມື່ອ"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_hr_job_form
@@ -696,6 +705,11 @@ msgstr ""
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
 msgid "Launch new products, marketing campaigns and offers"
+msgstr ""
+
+#. module: hr
+#: selection:hr.employee,marital:0
+msgid "Legal Cohabitant"
 msgstr ""
 
 #. module: hr
@@ -723,7 +737,7 @@ msgstr ""
 
 #. module: hr
 #: selection:hr.employee,marital:0
-msgid "Married (or similar)"
+msgid "Married"
 msgstr ""
 
 #. module: hr
@@ -770,7 +784,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_name
 msgid "Name"
-msgstr ""
+msgstr "ຊື່"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_country_id
@@ -796,12 +810,12 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_note
 msgid "Note"
-msgstr ""
+msgstr "ໝາຍເຫດ"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_notes
 msgid "Notes"
-msgstr ""
+msgstr "ໝາຍເຫດ"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job_no_of_employee
@@ -835,7 +849,7 @@ msgstr ""
 #. module: hr
 #: selection:hr.employee,gender:0
 msgid "Other"
-msgstr ""
+msgstr "ອື່ນໆ"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
@@ -949,7 +963,7 @@ msgstr "ບົດລາຍງານ"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job_requirements
 msgid "Requirements"
-msgstr ""
+msgstr "ຄວາມຕ້ອງການ"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
@@ -997,7 +1011,7 @@ msgstr ""
 #: model:ir.ui.menu,name:hr.hr_menu_configuration
 #: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
 msgid "Settings"
-msgstr ""
+msgstr "ການກໍານົດຄ່າ"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_config_settings_module_hr_org_chart
@@ -1078,12 +1092,12 @@ msgstr ""
 #. module: hr
 #: sql_constraint:hr.employee.category:0
 msgid "Tag name already exists !"
-msgstr ""
+msgstr "ຊື່ເປົ້າໝາຍນີ້ມີແລ້ວ!"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category_ids
 msgid "Tags"
-msgstr ""
+msgstr "ເປົ້າໝາຍ"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_consultant
@@ -1146,12 +1160,12 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_user_id
 msgid "User"
-msgstr ""
+msgstr "ຜູ້ໃຊ້"
 
 #. module: hr
 #: model:ir.model,name:hr.model_res_users
 msgid "Users"
-msgstr ""
+msgstr "ຜູ້ໃຊ້ງານ"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.hr_job_view_kanban

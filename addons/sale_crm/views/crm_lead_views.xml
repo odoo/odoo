@@ -6,7 +6,7 @@
             <field name="model">crm.lead</field>
             <field name="inherit_id" ref="crm.crm_case_form_view_oppor"/>
             <field name="arch" type="xml">
-                <xpath expr="//button[@name='action_set_won']" position="before">
+                <xpath expr="//button[@name='action_set_won_rainbowman']" position="before">
                     <button string="New Quotation" name="%(sale_action_quotations_new)d" type="action" class="oe_highlight"
                         context="{'search_default_partner_id': partner_id,
                                   'default_partner_id': partner_id,
@@ -18,7 +18,7 @@
                 <button name="toggle_active" position="before">
                     <button class="oe_stat_button" type="action"
                             name="%(sale_action_quotations)d" icon="fa-pencil-square-o"
-                            context="{'default_partner_id': partner_id, 'search_default_draft': 1}">
+                            context="{'default_partner_id': partner_id, 'search_default_draft': 1, 'search_default_sent': 1}">
                         <div class="o_stat_info">
                             <field name="sale_number" class="o_stat_value"/>
                             <span class="o_stat_text"> Quotation(s) </span>

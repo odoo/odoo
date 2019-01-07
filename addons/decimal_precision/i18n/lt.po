@@ -5,6 +5,7 @@
 # Translators:
 # Martin Trigaux, 2017
 # Audrius Palenskis <audrius.palenskis@gmail.com>, 2017
+# Linas Versada <paulius.sladkevicius@gmail.com>, 2017
 # UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2017
 # Silvija Butko <silvija.butko@gmail.com>, 2018
 msgid ""
@@ -19,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: lt\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: decimal_precision
 #: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_create_uid
@@ -64,12 +65,12 @@ msgstr "Skaičius su kableliu"
 #. module: decimal_precision
 #: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_test_float_2
 msgid "Float 2"
-msgstr ""
+msgstr "Skaičius su kableliu 2"
 
 #. module: decimal_precision
 #: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_test_float_4
 msgid "Float 4"
-msgstr ""
+msgstr "Skaičius su kableliu 4"
 
 #. module: decimal_precision
 #: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_id
@@ -98,7 +99,7 @@ msgstr "Paskutinį kartą atnaujinta"
 #. module: decimal_precision
 #: sql_constraint:decimal.precision:0
 msgid "Only one value can be defined for each given usage!"
-msgstr "Tik po vieną reikšmę galima priskirti kiekvienam panaudojimo atvejui"
+msgstr "Kiekvienam panaudojimo atvejui galima priskirti tik po vieną reikšmę!"
 
 #. module: decimal_precision
 #: model:ir.model.fields,field_description:decimal_precision.field_decimal_precision_name

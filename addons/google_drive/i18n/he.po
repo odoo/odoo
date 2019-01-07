@@ -4,19 +4,20 @@
 # 
 # Translators:
 # Yihya Hugirat <hugirat@gmail.com>, 2017
+# ExcaliberX <excaliberx@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-02 11:26+0000\n"
 "PO-Revision-Date: 2017-10-02 11:26+0000\n"
-"Last-Translator: Yihya Hugirat <hugirat@gmail.com>, 2017\n"
+"Last-Translator: ExcaliberX <excaliberx@gmail.com>, 2018\n"
 "Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: he\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: (n % 10 == 0 && n % 1 == 0 && n > 10) ? 2 : 3;\n"
 
 #. module: google_drive
 #: model:ir.ui.view,arch_db:google_drive.view_google_drive_config_form
@@ -58,7 +59,7 @@ msgstr ""
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_res_config_settings_google_drive_authorization_code
 msgid "Authorization Code"
-msgstr ""
+msgstr "קוד אישור"
 
 #. module: google_drive
 #: model:ir.model.fields,help:google_drive.field_google_drive_config_name_template
@@ -70,7 +71,7 @@ msgstr ""
 #. module: google_drive
 #: model:ir.actions.act_window,help:google_drive.action_google_drive_users_config
 msgid "Click to add a new template."
-msgstr ""
+msgstr "לחץ כאן להוספת תבנית חדשה."
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_create_uid
@@ -86,7 +87,7 @@ msgstr "נוצר ב-"
 #: code:addons/google_drive/models/google_drive.py:157
 #, python-format
 msgid "Creating google drive may only be done by one at a time."
-msgstr ""
+msgstr "יצירת Google Drive יכולה לקרות רק פעם אחת."
 
 #. module: google_drive
 #: model:ir.filters,name:google_drive.filter_partner
@@ -113,13 +114,13 @@ msgstr "לך לפאנל ההגדרות"
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_google_drive_client_id
 msgid "Google Client"
-msgstr ""
+msgstr "לקוח גוגל"
 
 #. module: google_drive
 #: model:ir.ui.view,arch_db:google_drive.view_google_drive_config_form
 #: model:ir.ui.view,arch_db:google_drive.view_google_drive_config_tree
 msgid "Google Drive Configuration"
-msgstr ""
+msgstr "הגדרות Google Drive"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_name_template
@@ -136,7 +137,7 @@ msgstr ""
 #: code:addons/google_drive/models/google_drive.py:83
 #, python-format
 msgid "Google Drive is not yet configured. Please contact your administrator."
-msgstr ""
+msgstr "Google Drive עדיין אינו מוגדר. פנה למנהל המערכת."
 
 #. module: google_drive
 #: model:ir.model,name:google_drive.model_google_drive_config
@@ -182,17 +183,17 @@ msgstr "מודל"
 #: code:addons/google_drive/models/google_drive.py:199
 #, python-format
 msgid "Please enter a valid Google Document URL."
-msgstr ""
+msgstr "אנא הכנס כתובת Google Document תקינה."
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_model
 msgid "Related Model"
-msgstr ""
+msgstr "מודל קשור"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_google_drive_resource_id
 msgid "Resource Id"
-msgstr ""
+msgstr "מזהה משאב"
 
 #. module: google_drive
 #: code:addons/google_drive/models/google_drive.py:80
@@ -205,17 +206,17 @@ msgstr ""
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_name
 msgid "Template Name"
-msgstr ""
+msgstr "שם תבנית"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_google_drive_template_url
 msgid "Template URL"
-msgstr ""
+msgstr "כתובת תבנית"
 
 #. module: google_drive
 #: model:ir.actions.act_window,name:google_drive.action_google_drive_users_config
 msgid "Templates"
-msgstr ""
+msgstr "תבניות"
 
 #. module: google_drive
 #: code:addons/google_drive/models/google_drive.py:98
@@ -248,7 +249,7 @@ msgstr ""
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_res_config_settings_google_drive_uri
 msgid "URI"
-msgstr ""
+msgstr "URI"
 
 #. module: google_drive
 #: code:addons/google_drive/models/google_drive.py:59
@@ -263,8 +264,9 @@ msgstr ""
 msgid ""
 "https://docs.google.com/document/d/1vOtpJK9scIQz6taD9tJRIETWbEw3fSiaQHArsJYcua4/edit"
 msgstr ""
+"https://docs.google.com/document/d/1vOtpJK9scIQz6taD9tJRIETWbEw3fSiaQHArsJYcua4/edit"
 
 #. module: google_drive
 #: model:ir.model,name:google_drive.model_res_config_settings
 msgid "res.config.settings"
-msgstr ""
+msgstr "res.config.settings"

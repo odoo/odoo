@@ -3,6 +3,7 @@
 
 # List of contributors:
 # Jordi Esteve <jesteve@zikzakmedia.com>
+# Ignacio Ibeas <ignacio@acysos.com>
 # Dpto. Consultoría Grupo Opentia <consultoria@opentia.es>
 # Pedro M. Baeza <pedro.baeza@tecnativa.com>
 # Carlos Liébana <carlos.liebana@factorlibre.com>

@@ -6,6 +6,7 @@ from datetime import datetime, timedelta
 
 from odoo import fields
 from odoo.tests.common import TransactionCase
+import pytz
 
 
 class TestCalendar(TransactionCase):
@@ -275,3 +276,111 @@ class TestCalendar(TransactionCase):
         self.assertEqual(test_event.res_model, test_record._name)
         self.assertEqual(test_event.res_id, test_record.id)
         self.assertEqual(len(test_record.activity_ids), 1)
+
+    def test_event_allday(self):
+        self.env.user.tz = 'Pacific/Honolulu'
+
+        event = self.CalendarEvent.create({
+            'name': 'All Day',
+            'start': "2018-10-16 00:00:00",
+            'start_date': "2018-10-16",
+            'start_datetime': False,
+            'stop': "2018-10-18 00:00:00",
+            'stop_date': "2018-10-18",
+            'stop_datetime': False,
+            'allday': True,
+        })
+
+        self.assertEqual(event.start, '2018-10-16 08:00:00')
+        self.assertEqual(event.stop, '2018-10-18 18:00:00')
+
+    def test_recurring_around_dst(self):
+        m = self.CalendarEvent.create({
+            'name': "wheee",
+            'start': '2018-10-27 14:30:00',
+            'allday': False,
+            'rrule': u'FREQ=DAILY;INTERVAL=1;COUNT=4',
+            'duration': 2,
+            'stop': '2018-10-27 16:30:00',
+        })
+
+        start_recurring_dates = m.with_context({'tz': 'Europe/Brussels'})._get_recurrent_date_by_event()
+        self.assertEqual(len(start_recurring_dates), 4)
+
+        for d in start_recurring_dates:
+            self.assertEqual(d.tzinfo, pytz.UTC)
+            if d.day < 28:  # DST switch happens between 2018-10-27 and 2018-10-28
+                self.assertEqual(d.hour, 14)
+            else:
+                self.assertEqual(d.hour, 15)
+            self.assertEqual(d.minute, 30)
+
+    def test_event_activity_timezone(self):
+        activty_type = self.env['mail.activity.type'].create({
+            'name': 'Meeting',
+            'category': 'meeting'
+        })
+
+        activity_id = self.env['mail.activity'].create({
+            'summary': 'Meeting with partner',
+            'activity_type_id': activty_type.id,
+            'res_model_id': self.env['ir.model'].search([('model', '=', 'res.partner')], limit=1).id,
+            'res_id': self.env['res.partner'].search([('name', 'ilike', 'Agrolait')], limit=1).id,
+        })
+
+        calendar_event = self.env['calendar.event'].create({
+            'name': 'Meeting with partner',
+            'activity_ids': [(6, False, activity_id.ids)],
+            'start': '2018-11-12 21:00:00',
+            'stop': '2018-11-13 00:00:00',
+        })
+
+        # Check output in UTC
+        self.assertEqual(activity_id.date_deadline, '2018-11-12')
+
+        # Check output in the user's tz
+        # write on the event to trigger sync of activities
+        calendar_event.with_context({'tz': 'Australia/Brisbane'}).write({
+            'start': '2018-11-12 21:00:00',
+        })
+
+        self.assertEqual(activity_id.date_deadline, '2018-11-13')
+
+    def test_event_allday_activity_timezone(self):
+        # Covers use case of commit eef4c3b48bcb4feac028bf640b545006dd0c9b91
+        # Also, read the comment in the code at calendar.event._inverse_dates
+        activty_type = self.env['mail.activity.type'].create({
+            'name': 'Meeting',
+            'category': 'meeting'
+        })
+
+        activity_id = self.env['mail.activity'].create({
+            'summary': 'Meeting with partner',
+            'activity_type_id': activty_type.id,
+            'res_model_id': self.env['ir.model'].search([('model', '=', 'res.partner')], limit=1).id,
+            'res_id': self.env['res.partner'].search([('name', 'ilike', 'Agrolait')], limit=1).id,
+        })
+
+        calendar_event = self.env['calendar.event'].create({
+            'name': 'All Day',
+            'start': "2018-10-16 00:00:00",
+            'start_date': "2018-10-16",
+            'start_datetime': False,
+            'stop': "2018-10-18 00:00:00",
+            'stop_date': "2018-10-18",
+            'stop_datetime': False,
+            'allday': True,
+            'activity_ids': [(6, False, activity_id.ids)],
+        })
+
+        # Check output in UTC
+        self.assertEqual(activity_id.date_deadline, '2018-10-16')
+
+        # Check output in the user's tz
+        # write on the event to trigger sync of activities
+        calendar_event.with_context({'tz': 'Pacific/Honolulu'}).write({
+            'start': '2018-10-16 00:00:00',
+            'start_date': '2018-10-16',
+        })
+
+        self.assertEqual(activity_id.date_deadline, '2018-10-16')

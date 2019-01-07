@@ -25,7 +25,7 @@
 # David Lehov <KHottend@gmx.de>, 2017
 # Martin K <martinkuenz@gmail.com>, 2017
 # Fabian Liesch <fabian.liesch@gmail.com>, 2017
-# Malte Jansen <work@maltejansen.de>, 2017
+# brokemeister <work@maltejansen.de>, 2017
 # AppleMentalist <felix.schnatbaum@gmail.com>, 2017
 # Constantin Ehrenstein <transifex@skiller.eu>, 2017
 # Katharina Moritz <kmo@e2f.com>, 2017
@@ -35,8 +35,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-30 13:11+0000\n"
-"PO-Revision-Date: 2017-11-30 13:11+0000\n"
+"POT-Creation-Date: 2018-07-27 11:55+0000\n"
+"PO-Revision-Date: 2018-07-27 11:55+0000\n"
 "Last-Translator: e2f <projects@e2f.com>, 2018\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
@@ -133,7 +133,7 @@ msgid ""
 "                                <span>We would be delighted to assist you along the way. Contact us through our\n"
 "                                <a href=\"https://www.odoo.com/help\">support form</a> if you have any question.\n"
 "                                You can also discover how to get the best out of Odoo Project with our </span>\n"
-"                                <a target=\"_blank\" href=\"https://www.odoo.com/documentation/user/10.0/project.html\">\n"
+"                                <a target=\"_blank\" href=\"https://www.odoo.com/documentation/user/11.0/project.html\">\n"
 "                                <span style=\"text-decoration:underline;\">User Documentation</span></a>\n"
 "                                </span><span> or with our </span>\n"
 "                                <a target=\"_blank\" href=\"https://www.odoo.com/documentation\">\n"
@@ -150,107 +150,6 @@ msgid ""
 "            </div>\n"
 "        </div>"
 msgstr ""
-"\n"
-"            <div style=\"margin: 10px auto;\">\n"
-"            % set last_created_project = user.env['project.project'].search([('alias_id','!=',False)], order=\"create_date desc\")[0]\n"
-"            <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:100%;\">\n"
-"                <tbody>\n"
-"                    <tr>\n"
-"                        <td style=\"padding:2px;width:30%;\">\n"
-"                            <img src=\"web/static/src/img/logo.png\"/>\n"
-"                        </td>\n"
-"                        <td style=\"vertical-align: top; padding: 8px 10px;text-align: left;font-size: 14px;\">\n"
-"                            <a href=\"web/login\" style=\"float:right ;margin:15px auto;background: #875A7B;border-radius: 5px;color: #ffffff;font-size: 16px;padding: 10px 20px 10px 20px;text-decoration: none;\">Automatische Anmeldung</a>\n"
-"                        </td>\n"
-"                    </tr>\n"
-"                </tbody>\n"
-"            </table>\n"
-"            <table style=\"width:100%;text-align:justify;margin:0 auto;border-collapse:collapse;border-top:1px solid lightgray\"\">\n"
-"                <tbody>\n"
-"                    <tr>\n"
-"                        <td style=\"padding:15px 10px;font-size:20px\">\n"
-"                            <p dir=\"ltr\" style=\"font-size:15px;margin-top:0pt;margin-bottom:0pt;\">\n"
-"                                <span>Ihre Odoo-Projektanwendung wurde gestartet und läuft.</span></p><br>\n"
-"                            <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
-"                                <span style=\"font-size:13px;font-weight:bold;\">Was kommt als Nächstes?</span></p>\n"
-"                            <ul style=\"margin-top:0pt;margin-bottom:0pt;font-size:13px;list-style-type:disc;\">\n"
-"                                % if last_created_project:\n"
-"                                    <li dir=\"ltr\">\n"
-"                                        <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
-"                                            <span>Versuchen Sie, eine Aufgabe zu erstellen mittels einer E-Mail an </span>\n"
-"                                            <a href=\"mailto:${last_created_project.alias_id.name_get()[0][1] if last_created_project.alias_id.alias_domain else user.company_id.email}\">\n"
-"                                                <span style=\"font-weight:bold; text-decoration:underline;\">${last_created_project.alias_id.name_get()[0][1] if last_created_project.alias_id.alias_domain else user.company_id.email}</span>\n"
-"                                            </a>\n"
-"                                        </p>\n"
-"                                    </li>\n"
-"                                % endif\n"
-"                                <li dir=\"ltr\">\n"
-"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
-"                                        <span><a href=\"/web#view_type=list&model=res.users&action=base.action_res_users\">\n"
-"                                            <span style=\"font-weight:bold; text-decoration:underline;\">Laden Sie neue Benutzer</span></a></span>\n"
-"                                        <span>zur Zusammenarbeit ein</span>\n"
-"                                    </p>\n"
-"                                </li>\n"
-"                            </ul> <br>\n"
-"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\">\n"
-"                                <span style=\"font-weight:bold;\">Entdecken Sie den </span>\n"
-"                                <span><a href=\"/web#view_type=kanban&model=project.project&action=project.open_view_project_all\">\n"
-"                                    <span style=\"font-weight:bold; text-decoration:underline;\">Projektplaner,</span></a></span>\n"
-"                                <span> um weitere Funktionen freizuschalten.</span>\n"
-"                                <span style=\"color:#875A7B;margin:0;font-weight:bold\">(${user.env['web.planner'].get_planner_progress('planner_project')}% done)</span>\n"
-"                            </p>\n"
-"                            <ul style=\"margin-top:0pt;margin-bottom:0pt;font-size:13px;list-style-type:disc;\">\n"
-"                                <li dir=\"ltr\">\n"
-"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
-"                                        <span>Zeichnen Sie Arbeitsstunden mit der Zeiterfassung auf.</span>\n"
-"                                    </p>\n"
-"                                </li>\n"
-"                                <li dir=\"ltr\">\n"
-"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
-"                                        <span>Planen Sie Aufgaben und Ressourcen mittels Prognosen.</span>\n"
-"                                    </p>\n"
-"                                </li>\n"
-"                                <li dir=\"ltr\">\n"
-"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
-"                                        <span>Nutzen Sie die intelligente Berichterstellung und präzise Dashboards.</span>\n"
-"                                    </p>\n"
-"                                </li>\n"
-"                                <li dir=\"ltr\">\n"
-"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
-"                                        <span>Stellen Sie Arbeitszeit für Aufgaben oder Problemlösungen in Rechnung.</span>\n"
-"                                    </p>\n"
-"                                </li>\n"
-"                                <li dir=\"ltr\">\n"
-"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
-"                                        <span>Und vieles mehr …</span>\n"
-"                                    </p>\n"
-"                                </li>\n"
-"                            </ul>\n"
-"                            <br>\n"
-"                            <p dir=\"ltr\" style=\"font-size:13px;line-height:1.3;margin-top:0pt;margin-bottom:8pt;\">\n"
-"                                <span style=\"font-weight:bold;\">Brauchen Sie Hilfe?</span>\n"
-"                                <span style=\"font-style:italic;\">Sie sind nicht allein.</span>\n"
-"                            </p>\n"
-"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\">\n"
-"                                <span>Wir freuen uns, Ihnen dabei zur Seite zu stehen. Kontaktieren Sie uns bei Fragen über unser\n"
-"                                <a href=\"https://www.odoo.com/help\">Support-Formular</a>.\n"
-"                                Zudem können Sie mit unserer </span>\n"
-"                                <a target=\"_blank\" href=\"https://www.odoo.com/documentation/user/10.0/project.html\">\n"
-"                                <span style=\"text-decoration:underline;\">Benutzer-Dokumentation</span></a> \n"
-"                                </span><span> oder </span>\n"
-"                                <a target=\"_blank\" href=\"https://www.odoo.com/documentation\">\n"
-"                                <span style=\"text-decoration:underline;\">API-Dokumentation</span></a>herausfinden, wie Sie das Beste aus Odoo Project herausholen. \n"
-"                            </p>\n"
-"                            <br>\n"
-"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\"><span>Genießen Sie Ihre Odoo-Erfahrung,</span></p>\n"
-"                        </td>\n"
-"                    </tr>\n"
-"                </tbody>\n"
-"            </table>\n"
-"            <div dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;color:grey\">\n"
-"                <span><br/>– <br/>Das Odoo-Team<br/>PS: Unsere Kunden lieben Odoo. Erfahren Sie, </span><a target=\"_blank\" href=\"https://twitter.com/odoo/favorites\"><span style=\"text-decoration:underline;\">was sie davon halten.</span></a></span>\n"
-"            </div>\n"
-"        </div>"
 
 #. module: project
 #: model:mail.template,body_html:project.mail_template_data_project_task
@@ -295,7 +194,7 @@ msgstr "# Aufgaben"
 
 #. module: project
 #: code:addons/project/models/project.py:244
-#: code:addons/project/models/project.py:533
+#: code:addons/project/models/project.py:542
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (Kopie)"
@@ -1223,7 +1122,7 @@ msgid "Aliased Model"
 msgstr "Alias-Modell"
 
 #. module: project
-#: code:addons/project/controllers/portal.py:89
+#: code:addons/project/controllers/portal.py:92
 #, python-format
 msgid "All"
 msgstr "Alle"
@@ -1402,6 +1301,7 @@ msgstr ""
 "Sie Meetings in weniger als einer Stunde zu beenden."
 
 #. module: project
+#: code:addons/project/models/project.py:29
 #: model:project.task,legend_blocked:project.project_task_15
 #: model:project.task,legend_blocked:project.project_task_16
 #: model:project.task,legend_blocked:project.project_task_18
@@ -1428,6 +1328,7 @@ msgstr ""
 #: model:project.task.type,legend_blocked:project.project_stage_data_1
 #: model:project.task.type,legend_blocked:project.project_stage_data_2
 #: selection:report.project.task.user,state:0
+#, python-format
 msgid "Blocked"
 msgstr "Blockiert"
 
@@ -1781,7 +1682,7 @@ msgid "Currently there are not any activity scheduled."
 msgstr "Derzeit sind keine Aktivitäten geplant."
 
 #. module: project
-#: code:addons/project/models/project.py:818
+#: code:addons/project/models/project.py:836
 #: model:ir.model.fields,field_description:project.field_project_project_partner_id
 #: model:ir.model.fields,field_description:project.field_project_task_partner_id
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -1790,7 +1691,8 @@ msgid "Customer"
 msgstr "Kunde"
 
 #. module: project
-#: code:addons/project/models/project.py:818
+#: code:addons/project/models/project.py:836
+#: code:addons/project/models/project.py:839
 #, python-format
 msgid "Customer Email"
 msgstr "E-Mail Kunde"
@@ -2064,6 +1966,12 @@ msgstr "Ende"
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_date_end
 msgid "Ending Date"
 msgstr "Enddatum"
+
+#. module: project
+#: code:addons/project/models/project.py:556
+#, python-format
+msgid "Error! You cannot create recursive hierarchy of task(s)."
+msgstr ""
 
 #. module: project
 #: sql_constraint:project.project:0
@@ -2352,7 +2260,7 @@ msgid "Hours"
 msgstr "Stunden"
 
 #. module: project
-#: code:addons/project/models/project.py:730
+#: code:addons/project/models/project.py:745
 #, python-format
 msgid "I take it"
 msgstr "Ich nehme es"
@@ -2471,6 +2379,7 @@ msgid "Improve collaboration with customers"
 msgstr "Verbessere die Zusammenarbeit mit Kunden"
 
 #. module: project
+#: code:addons/project/models/project.py:35
 #: model:project.task,legend_normal:project.project_task_1
 #: model:project.task,legend_normal:project.project_task_10
 #: model:project.task,legend_normal:project.project_task_11
@@ -2519,6 +2428,7 @@ msgstr "Verbessere die Zusammenarbeit mit Kunden"
 #: model:project.task.type,legend_normal:project.project_stage_data_2
 #: model:project.task.type,name:project.project_stage_1
 #: selection:report.project.task.user,state:0
+#, python-format
 msgid "In Progress"
 msgstr "In Arbeit"
 
@@ -2696,7 +2606,7 @@ msgid "Last Modified on"
 msgstr "Zuletzt geändert am"
 
 #. module: project
-#: code:addons/project/controllers/portal.py:86
+#: code:addons/project/controllers/portal.py:89
 #: model:ir.model.fields,field_description:project.field_project_task_date_last_stage_update
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_date_last_stage_update
 #, python-format
@@ -2877,9 +2787,10 @@ msgid "My Tasks"
 msgstr "Meine Aufgaben"
 
 #. module: project
-#: code:addons/project/controllers/portal.py:31
+#: code:addons/project/controllers/portal.py:35
 #: model:ir.model.fields,field_description:project.field_project_tags_name
 #: model:ir.ui.view,arch_db:project.portal_my_projects
+#: model:ir.ui.view,arch_db:project.portal_my_tasks
 #, python-format
 msgid "Name"
 msgstr "Name"
@@ -2929,8 +2840,8 @@ msgid "New task name"
 msgstr "Neuer Aufgabenname"
 
 #. module: project
-#: code:addons/project/controllers/portal.py:30
-#: code:addons/project/controllers/portal.py:83
+#: code:addons/project/controllers/portal.py:34
+#: code:addons/project/controllers/portal.py:86
 #, python-format
 msgid "Newest"
 msgstr "Aktuellste"
@@ -2942,10 +2853,16 @@ msgid "Next Activities"
 msgstr "Nächste Aktivitäten"
 
 #. module: project
-#: code:addons/project/models/project.py:775
+#: code:addons/project/models/project.py:792
 #, python-format
 msgid "No Subject"
 msgstr "Kein Betreff"
+
+#. module: project
+#: code:addons/project/controllers/portal.py:102
+#, python-format
+msgid "None"
+msgstr "Keine"
 
 #. module: project
 #: selection:project.task,priority:0
@@ -3122,7 +3039,7 @@ msgid "Parent Record Thread ID"
 msgstr "Zugehörige Diskussion"
 
 #. module: project
-#: code:addons/project/models/project.py:861
+#: code:addons/project/models/project.py:878
 #: model:ir.model.fields,field_description:project.field_project_task_parent_id
 #: model:ir.ui.view,arch_db:project.view_task_form2
 #, python-format
@@ -3151,7 +3068,7 @@ msgid "Planner"
 msgstr "Planer"
 
 #. module: project
-#: code:addons/project/models/project.py:887
+#: code:addons/project/models/project.py:918
 #, python-format
 msgid ""
 "Please remove existing tasks in the project linked to the accounts you want "
@@ -3195,7 +3112,8 @@ msgid "Product or software version"
 msgstr "Produkt- oder Softwareversion"
 
 #. module: project
-#: code:addons/project/models/project.py:346
+#: code:addons/project/controllers/portal.py:103
+#: code:addons/project/models/project.py:355
 #: model:ir.model,name:project.model_project_project
 #: model:ir.model.fields,field_description:project.field_project_task_project_id
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_project_id
@@ -3258,6 +3176,7 @@ msgstr "Projektaufgaben"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_company_project_time_mode_id
+#: model:ir.model.fields,field_description:project.field_res_config_settings_project_time_mode_id
 #: model:ir.model.fields,field_description:project.project_time_mode_id_duplicate_xmlid
 msgid "Project Time Unit"
 msgstr "Projektzeiteinheit"
@@ -3304,6 +3223,7 @@ msgid "Rating on Tasks"
 msgstr "Aufgabenbewertung"
 
 #. module: project
+#: code:addons/project/models/project.py:32
 #: model:project.task,legend_done:project.project_task_1
 #: model:project.task,legend_done:project.project_task_12
 #: model:project.task,legend_done:project.project_task_15
@@ -3333,6 +3253,7 @@ msgstr "Aufgabenbewertung"
 #: model:project.task.type,legend_done:project.project_stage_data_0
 #: model:project.task.type,legend_done:project.project_stage_data_1
 #: model:project.task.type,legend_done:project.project_stage_data_2
+#, python-format
 msgid "Ready for Next Stage"
 msgstr "Bereit für nächste Stufe"
 
@@ -3413,6 +3334,11 @@ msgstr "Rote Kanban-Kennzeichnung"
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Red: the Task is blocked (there's a problem)"
 msgstr "Rot: Die Aufgabe ist blockiert (es gibt ein Problem)"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.portal_my_tasks
+msgid "Ref"
+msgstr "Ref."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_code
@@ -3496,7 +3422,7 @@ msgid "Search"
 msgstr "Suchen"
 
 #. module: project
-#: code:addons/project/controllers/portal.py:92
+#: code:addons/project/controllers/portal.py:95
 #, python-format
 msgid "Search <span class=\"nolabel\"> (in Content)</span>"
 msgstr "Suche <span class=\"nolabel\"> (in Inhalten)</span>"
@@ -3507,25 +3433,25 @@ msgid "Search Project"
 msgstr "Projekt suchen"
 
 #. module: project
-#: code:addons/project/controllers/portal.py:96
+#: code:addons/project/controllers/portal.py:99
 #, python-format
 msgid "Search in All"
 msgstr "Alle durchsuchen"
 
 #. module: project
-#: code:addons/project/controllers/portal.py:94
+#: code:addons/project/controllers/portal.py:97
 #, python-format
 msgid "Search in Customer"
 msgstr "Kunden durchsuchen"
 
 #. module: project
-#: code:addons/project/controllers/portal.py:93
+#: code:addons/project/controllers/portal.py:96
 #, python-format
 msgid "Search in Messages"
 msgstr "Nachrichten durchsuchen"
 
 #. module: project
-#: code:addons/project/controllers/portal.py:95
+#: code:addons/project/controllers/portal.py:98
 #, python-format
 msgid "Search in Stages"
 msgstr "Stufen durchsuchen"
@@ -3654,7 +3580,7 @@ msgid "Sprint"
 msgstr "Sprint"
 
 #. module: project
-#: code:addons/project/controllers/portal.py:85
+#: code:addons/project/controllers/portal.py:88
 #: model:ir.model.fields,field_description:project.field_project_task_stage_id
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_stage_id
 #: model:ir.ui.view,arch_db:project.portal_my_tasks
@@ -3760,7 +3686,6 @@ msgstr "Zielprojekt"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task
-#: model:ir.ui.view,arch_db:project.portal_my_tasks
 #: model:ir.ui.view,arch_db:project.view_task_form2
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model:ir.ui.view,arch_db:project.view_task_search_form
@@ -4120,6 +4045,7 @@ msgstr ""
 #: model:ir.model.fields,help:project.field_account_analytic_account_company_uom_id
 #: model:ir.model.fields,help:project.field_project_project_company_uom_id
 #: model:ir.model.fields,help:project.field_res_company_project_time_mode_id
+#: model:ir.model.fields,help:project.field_res_config_settings_project_time_mode_id
 #: model:ir.model.fields,help:project.project_time_mode_id_duplicate_xmlid
 msgid ""
 "This will set the unit of measure used in projects and tasks.\n"
@@ -4170,7 +4096,7 @@ msgid "Timetable working hours to adjust the gantt diagram report"
 msgstr "Zeiterfassung Arbeitsstunden für die Ausrichtung des Gantt Charts"
 
 #. module: project
-#: code:addons/project/controllers/portal.py:84
+#: code:addons/project/controllers/portal.py:87
 #, python-format
 msgid "Title"
 msgstr "Titel"
@@ -4412,6 +4338,16 @@ msgstr ""
 "Ihnen bei der Erfassung Ihrer  Projektzeiten hilft:<br/>"
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_website_message_ids
+msgid "Website Messages"
+msgstr "Website-Nachrichten"
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_task_website_message_ids
+msgid "Website communication history"
+msgstr "Website-Kommunikationshistorie"
+
+#. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Welcome"
 msgstr "Willkommen"
@@ -4574,7 +4510,7 @@ msgstr ""
 "Sie können Berichte speichern, um Sie später einfach wiederzuverwenden. "
 
 #. module: project
-#: code:addons/project/models/project.py:547
+#: code:addons/project/models/project.py:562
 #, python-format
 msgid ""
 "You can't define a parent task if its project is not correctly configured. "
@@ -4642,6 +4578,11 @@ msgid "etc.."
 msgstr "etc.."
 
 #. module: project
+#: model:ir.ui.view,arch_db:project.portal_my_tasks
+msgid "for project:"
+msgstr ""
+
+#. module: project
 #: model:ir.ui.view,arch_db:project.view_task_kanban
 msgid "oe_kanban_text_red"
 msgstr "oe_kanban_text_red"
@@ -4662,7 +4603,7 @@ msgid "send us an email"
 msgstr "Senden Sie uns eine E-Mail"
 
 #. module: project
-#: code:addons/project/models/project.py:595
+#: code:addons/project/models/project.py:610
 #, python-format
 msgid "tasks"
 msgstr "Aufgaben"

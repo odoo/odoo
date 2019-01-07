@@ -1,20 +1,18 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * website_event_sale
-#
-# Translators:
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2016-02-11 10:09+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Tamil (http://www.transifex.com/odoo/odoo-9/language/ta/)\n"
-"Language: ta\n"
+"POT-Creation-Date: 2017-10-02 11:26+0000\n"
+"PO-Revision-Date: 2017-10-02 11:26+0000\n"
+"Language-Team: Tamil (https://www.transifex.com/odoo/teams/41243/ta/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ta\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_event_sale
@@ -33,24 +31,25 @@ msgid "<span>left</span>"
 msgstr ""
 
 #. module: website_event_sale
-#: model:ir.model.fields,field_description:website_event_sale.field_product_product_intrastat_id
-msgid "Intrastat code"
-msgstr "Intrastat குறியீடு"
-
-#. module: website_event_sale
 #: model:ir.ui.view,arch_db:website_event_sale.index
 msgid "Only"
 msgstr ""
 
 #. module: website_event_sale
-#: model:ir.ui.view,arch_db:website_event_sale.registration_template
-msgid "Order Now"
+#: model:ir.model,name:website_event_sale.model_product_product
+msgid "Product"
 msgstr ""
 
 #. module: website_event_sale
-#: model:ir.model,name:website_event_sale.model_product_product
-msgid "Product"
-msgstr "தயாரிப்பு"
+#: model:ir.model,name:website_event_sale.model_sale_order
+msgid "Quotation"
+msgstr ""
+
+#. module: website_event_sale
+#: code:addons/website_event_sale/controllers/main.py:56
+#, python-format
+msgid "Registration"
+msgstr ""
 
 #. module: website_event_sale
 #: model:ir.ui.view,arch_db:website_event_sale.index
@@ -58,13 +57,7 @@ msgid "Remaining"
 msgstr ""
 
 #. module: website_event_sale
-#: model:ir.model,name:website_event_sale.model_sale_order
-msgid "Sales Order"
-msgstr ""
-
-#. module: website_event_sale
 #: model:ir.ui.view,arch_db:website_event_sale.index
-#: model:ir.ui.view,arch_db:website_event_sale.registration_template
 msgid "Sold Out"
 msgstr ""
 
@@ -78,18 +71,12 @@ msgstr ""
 #: code:addons/website_event_sale/models/sale_order.py:77
 #, python-format
 msgid ""
-"Sorry, only %(remaining_seats)d seats are still available for the %(ticket)s "
-"ticket for the %(event)s event."
+"Sorry, only %(remaining_seats)d seats are still available for the %(ticket)s"
+" ticket for the %(event)s event."
 msgstr ""
 
 #. module: website_event_sale
-#: code:addons/website_event_sale/controllers/main.py:65
-#, python-format
-msgid "Subscription"
-msgstr ""
-
-#. module: website_event_sale
-#: code:addons/website_event_sale/models/sale_order.py:36
+#: code:addons/website_event_sale/models/sale_order.py:39
 #, python-format
 msgid "The ticket doesn't match with this product."
 msgstr ""

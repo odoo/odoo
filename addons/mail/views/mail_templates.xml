@@ -63,7 +63,7 @@
         </template>
 
         <template id="message_user_assigned">
-            <p>Dear <t t-esc="object.user_id.name"/>,</p>
+            <p>Dear <t t-esc="object.user_id.sudo().name"/>,</p>
             <p>You have been assigned to the <t t-esc="object._description.lower()"/> <t t-esc="object.name_get()[0][1]"/>.</p>
             <p>
                 <a t-att-href="'/mail/view?model=%s&amp;res_id=%s' % (object._name, object.id)"

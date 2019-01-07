@@ -61,6 +61,9 @@ var ProductComparison = Widget.extend({
                     }
                     prod = parseInt(prod, 10);
                 }
+                if (!prod) {
+                    return;
+                }
                 self.add_new_products(prod);
                 website_sale_utils.animate_clone($('#comparelist .o_product_panel_header'), $(this).closest('form'), -50, 10);
             } else {

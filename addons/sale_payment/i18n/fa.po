@@ -4,20 +4,21 @@
 # 
 # Translators:
 # Martin Trigaux, 2017
-# ifaraz ir <ifarazir@gmail.com>, 2018
+# Faraz Sadri Alamdari <ifarazir@gmail.com>, 2018
+# Hamed Mohammadi <hamed@dehongi.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 13:43+0000\n"
-"PO-Revision-Date: 2018-02-19 13:43+0000\n"
-"Last-Translator: ifaraz ir <ifarazir@gmail.com>, 2018\n"
+"POT-Creation-Date: 2018-07-27 11:56+0000\n"
+"PO-Revision-Date: 2018-07-27 11:56+0000\n"
+"Last-Translator: Hamed Mohammadi <hamed@dehongi.com>, 2018\n"
 "Language-Team: Persian (https://www.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fa\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.payment_confirmation_status
@@ -25,19 +26,19 @@ msgid "&amp;times;"
 msgstr "&amp;times;"
 
 #. module: sale_payment
-#: code:addons/sale_payment/models/payment.py:124
+#: code:addons/sale_payment/models/payment.py:134
 #, python-format
 msgid "<%s> transaction (%s) failed: <%s>"
 msgstr ""
 
 #. module: sale_payment
-#: code:addons/sale_payment/models/payment.py:131
+#: code:addons/sale_payment/models/payment.py:141
 #, python-format
 msgid "<%s> transaction (%s) invalid state: %s"
 msgstr ""
 
 #. module: sale_payment
-#: code:addons/sale_payment/models/payment.py:139
+#: code:addons/sale_payment/models/payment.py:149
 #, python-format
 msgid "<%s> transaction (%s) order confirmation failed: <%s>"
 msgstr ""
@@ -45,7 +46,7 @@ msgstr ""
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.portal_my_orders_payment
 msgid "<i class=\"fa fa-arrow-circle-right\"/> Pay Now"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-circle-right\"/> اکنون بپرداز"
 
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.portal_my_orders_payment
@@ -55,9 +56,20 @@ msgstr ""
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.portal_my_orders_payment
 msgid ""
+"<i class=\"fa fa-info\"/> You have credits card registered, you can log-in "
+"to be able to use them."
+msgstr ""
+"<i class=\"fa fa-info\"/> شما کارتهای اعتباری ثبت کرده‌اید. شما می‌توانید "
+"وارد شوید تا بتوانید از آنها استفاده کنید."
+
+#. module: sale_payment
+#: model:ir.ui.view,arch_db:sale_payment.portal_my_orders_payment
+msgid ""
 "<span class=\"label label-info orders_label_text_align\"><i class=\"fa fa-fw"
 " fa-clock-o\"/> Waiting</span>"
 msgstr ""
+"<span class=\"label label-info orders_label_text_align\"><i class=\"fa fa-fw"
+" fa-clock-o\"/> در انتظار</span>"
 
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.portal_my_orders_payment
@@ -65,17 +77,19 @@ msgid ""
 "<span class=\"label label-success orders_label_text_align\"><i class=\"fa "
 "fa-fw fa-check\"/> Done</span>"
 msgstr ""
+"<span class=\"label label-success orders_label_text_align\"><i class=\"fa "
+"fa-fw fa-check\"/> انجام شده</span>"
 
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.portal_my_orders_payment
 msgid "<strong>Transactions</strong>"
-msgstr ""
+msgstr "<strong>تراکنشها</strong>"
 
 #. module: sale_payment
-#: code:addons/sale_payment/models/payment.py:54
+#: code:addons/sale_payment/models/payment.py:55
 #, python-format
 msgid "Amount Mismatch (%s)"
-msgstr ""
+msgstr "مقدار اختلاف (%s)"
 
 #. module: sale_payment
 #: model:ir.model.fields,field_description:sale_payment.field_crm_team_pending_payment_transactions_amount
@@ -103,7 +117,7 @@ msgid "Awaiting Payments"
 msgstr ""
 
 #. module: sale_payment
-#: code:addons/sale_payment/controllers/payment.py:52
+#: code:addons/sale_payment/controllers/payment.py:50
 #, python-format
 msgid ""
 "If we store your payment information on our server, subscription payments "
@@ -113,12 +127,12 @@ msgstr ""
 #. module: sale_payment
 #: model:ir.model.fields,field_description:sale_payment.field_sale_order_payment_tx_id
 msgid "Last Transaction"
-msgstr ""
+msgstr "آخرین تراکنش"
 
 #. module: sale_payment
 #: model:ir.model.fields,field_description:sale_payment.field_sale_order_payment_transaction_count
 msgid "Number of payment transactions"
-msgstr ""
+msgstr "تعداد تراکنشهای پرداخت"
 
 #. module: sale_payment
 #: model:ir.model.fields,field_description:sale_payment.field_crm_team_pending_payment_transactions_count
@@ -131,25 +145,30 @@ msgid "Number of transactions to capture"
 msgstr ""
 
 #. module: sale_payment
-#: code:addons/sale_payment/controllers/payment.py:49
+#: code:addons/sale_payment/controllers/payment.py:47
 #, python-format
 msgid "Pay"
 msgstr ""
 
 #. module: sale_payment
-#: code:addons/sale_payment/models/payment.py:200
+#: code:addons/sale_payment/models/payment.py:210
 #, python-format
 msgid "Pay Now"
-msgstr ""
+msgstr "اکنون بپرداز"
 
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.portal_my_orders_payment
 msgid "Pay with"
-msgstr ""
+msgstr "پرداخت با"
 
 #. module: sale_payment
 #: model:ir.model.fields,field_description:sale_payment.field_sale_order_payment_acquirer_id
 msgid "Payment Acquirer"
+msgstr "دریافت کننده پرداخت"
+
+#. module: sale_payment
+#: model:ir.ui.view,arch_db:sale_payment.res_config_settings_view_form
+msgid "Payment Acquirers"
 msgstr ""
 
 #. module: sale_payment
@@ -185,7 +204,7 @@ msgstr ""
 #. module: sale_payment
 #: model:ir.model,name:sale_payment.model_crm_team
 msgid "Sales Channel"
-msgstr ""
+msgstr "کانال فروش"
 
 #. module: sale_payment
 #: model:ir.model.fields,field_description:sale_payment.field_payment_transaction_sale_order_id
@@ -193,7 +212,7 @@ msgid "Sales Order"
 msgstr "سفارش فروش"
 
 #. module: sale_payment
-#: code:addons/sale_payment/models/payment.py:55
+#: code:addons/sale_payment/models/payment.py:56
 #, python-format
 msgid ""
 "The sale order was not confirmed despite response from the acquirer (%s): SO"
@@ -253,4 +272,4 @@ msgstr "تراکنش ها"
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.payment_confirmation_status
 msgid "Your payment has been authorized."
-msgstr ""
+msgstr "این پرداخت مجاز است."

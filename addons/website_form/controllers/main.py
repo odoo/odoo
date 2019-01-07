@@ -112,6 +112,7 @@ class WebsiteForm(http.Controller):
             'record': {},        # Values to create record
             'attachments': [],  # Attached files
             'custom': '',        # Custom fields values
+            'meta': '',         # Add metadata if enabled
         }
 
         authorized_fields = model.sudo()._get_form_writable_fields()
@@ -220,10 +221,10 @@ class WebsiteForm(http.Controller):
             else:
                 orphan_attachment_ids.append(attachment_id.id)
 
-        # If some attachments didn't match a field on the model,
-        # we create a mail.message to link them to the record
-        if orphan_attachment_ids:
-            if model_name != 'mail.mail':
+        if model_name != 'mail.mail':
+            # If some attachments didn't match a field on the model,
+            # we create a mail.message to link them to the record
+            if orphan_attachment_ids:
                 values = {
                     'body': _('<p>Attached files : </p>'),
                     'model': model_name,

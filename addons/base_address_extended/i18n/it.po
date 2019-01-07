@@ -5,13 +5,16 @@
 # Translators:
 # Martin Trigaux, 2017
 # Paolo Valier, 2018
+# Léonie Bouchat <lbo@odoo.com>, 2018
+# Sergio Zanchetta <primes2h@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-09-20 09:52+0000\n"
-"PO-Revision-Date: 2017-09-20 09:52+0000\n"
-"Last-Translator: Paolo Valier, 2018\n"
+"PO-Revision-Date: 2017-09-20 10:15+0000\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2018\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,6 +28,8 @@ msgid ""
 "Change how the system computes the full street field based on the different "
 "street subfields"
 msgstr ""
+"Modificare il modo in cui il sistema calcola il campo relativo all'indirizzo"
+" completo in base ai sottocampi di indirizzo."
 
 #. module: base_address_extended
 #: model:ir.model,name:base_address_extended.model_res_company
@@ -46,7 +51,7 @@ msgstr "Nazione"
 #: model:ir.model.fields,field_description:base_address_extended.field_res_partner_street_number2
 #: model:ir.model.fields,field_description:base_address_extended.field_res_users_street_number2
 msgid "Door Number"
-msgstr ""
+msgstr "Interno abitazione"
 
 #. module: base_address_extended
 #: model:ir.model.fields,help:base_address_extended.field_res_country_street_format
@@ -58,41 +63,47 @@ msgid ""
 "%(street_number)s: the house number\n"
 "%(street_number2)s: the door number"
 msgstr ""
+"Formato da usare per indirizzi appartenenti a questo paese.\n"
+"\n"
+"È possibile usare il modello stringa di tipo python con tutti i campi dell'indirizzo (ad esempio, usare \"%(street_name)s, %(street_number)s\" per visualizzare il nome della strada, seguito da una virgola e dal numero civico)\n"
+"%(street_name)s: nome della strada\n"
+"%(street_number)s: numero civico\n"
+"%(street_number2)s: interno abitazione"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_company_street_number
 #: model:ir.model.fields,field_description:base_address_extended.field_res_partner_street_number
 #: model:ir.model.fields,field_description:base_address_extended.field_res_users_street_number
 msgid "House Number"
-msgstr ""
+msgstr "Numero civico"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_country_street_format
 msgid "Street Format"
-msgstr ""
+msgstr "Formato indirizzo"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_company_street_name
 #: model:ir.model.fields,field_description:base_address_extended.field_res_partner_street_name
 #: model:ir.model.fields,field_description:base_address_extended.field_res_users_street_name
 msgid "Street Name"
-msgstr ""
+msgstr "Nome strada"
 
 #. module: base_address_extended
 #: model:ir.ui.view,arch_db:base_address_extended.view_partner_address_structured_form
 #: model:ir.ui.view,arch_db:base_address_extended.view_partner_structured_form
 #: model:ir.ui.view,arch_db:base_address_extended.view_res_company_extended_form
 msgid "Street Name..."
-msgstr ""
+msgstr "Nome strada..."
 
 #. module: base_address_extended
 #: model:ir.ui.view,arch_db:base_address_extended.view_res_country_extended_form
 msgid "Street format..."
-msgstr ""
+msgstr "Formato indirizzo..."
 
 #. module: base_address_extended
 #: code:addons/base_address_extended/models/base_address_extended.py:60
 #: code:addons/base_address_extended/models/base_address_extended.py:126
 #, python-format
 msgid "Unrecognized field %s in street format."
-msgstr ""
+msgstr "Formato indirizzo con campo %s sconosciuto."

@@ -9,7 +9,7 @@ class AccountRegisterPayments(models.TransientModel):
     _inherit = "account.register.payments"
 
     check_amount_in_words = fields.Char(string="Amount in Words")
-    check_manual_sequencing = fields.Boolean(related='journal_id.check_manual_sequencing')
+    check_manual_sequencing = fields.Boolean(related='journal_id.check_manual_sequencing', readonly=1)
     # Note: a check_number == 0 means that it will be attributed when the check is printed
     check_number = fields.Integer(string="Check Number", readonly=True, copy=False, default=0,
         help="Number of the check corresponding to this payment. If your pre-printed check are not already numbered, "
@@ -33,7 +33,6 @@ class AccountRegisterPayments(models.TransientModel):
         if self.payment_method_id == self.env.ref('account_check_printing.account_payment_method_check'):
             res.update({
                 'check_amount_in_words': self.currency_id.amount_to_text(res['amount']) if self.multi else self.check_amount_in_words,
-                'check_manual_sequencing': self.check_manual_sequencing,
             })
         return res
 
@@ -57,7 +56,7 @@ class AccountPayment(models.Model):
     @api.onchange('amount','currency_id')
     def _onchange_amount(self):
         res = super(AccountPayment, self)._onchange_amount()
-        self.check_amount_in_words = self.currency_id.amount_to_text(self.amount)
+        self.check_amount_in_words = self.currency_id.amount_to_text(self.amount) if self.currency_id else ''
         return res
 
     def _check_communication(self, payment_method_id, communication):

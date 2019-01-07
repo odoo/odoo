@@ -145,9 +145,9 @@
                                                     <t t-esc="repartition_employee[employee_id]['total']" t-options="{'widget': 'float_time'}"/>
                                                 </td>
                                                 <td>
-                                                    <div class="progress" t-att-style="'width: ' + str(repartition_employee[employee_id]['total'] / repartition_employee_max * 100) +'%'">
+                                                    <div t-if="repartition_employee_max" class="progress" t-att-style="'width: ' + str(repartition_employee[employee_id]['total'] / repartition_employee_max * 100) +'%'">
 
-                                                        <t t-set="total" t-value="repartition_employee[employee_id]['total']" />
+                                                        <t t-set="total" t-value="repartition_employee[employee_id]['total'] or 1.0" />
                                                         <t t-set="billable_fixed" t-value="repartition_employee[employee_id]['billable_fixed']" />
                                                         <t t-set="billable_time" t-value="repartition_employee[employee_id]['billable_time']" />
                                                         <t t-set="non_billable" t-value="repartition_employee[employee_id]['non_billable']" />

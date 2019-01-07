@@ -7,13 +7,17 @@
 # Eneko <eastigarraga@codesyntax.com>, 2018
 # Mikel Lizarralde <mikellizarralde@gmail.com>, 2018
 # Naomi Hidalgo <naomihid96@gmail.com>, 2018
+# oihane <oihanecruce@gmail.com>, 2018
+# Esther Martín Menéndez <esthermartin001@gmail.com>, 2018
+# ibinka lete <ilete@fpbidasoa.net>, 2018
+# Gorka Toledo <gorka.toledo@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 13:42+0000\n"
-"PO-Revision-Date: 2018-02-19 13:42+0000\n"
-"Last-Translator: Naomi Hidalgo <naomihid96@gmail.com>, 2018\n"
+"POT-Creation-Date: 2018-07-27 11:55+0000\n"
+"PO-Revision-Date: 2018-07-27 11:55+0000\n"
+"Last-Translator: Gorka Toledo <gorka.toledo@gmail.com>, 2018\n"
 "Language-Team: Basque (https://www.transifex.com/odoo/teams/41243/eu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,7 +38,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_account_id
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_account_id
 msgid "Account"
-msgstr ""
+msgstr "Kontua"
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
@@ -44,7 +48,7 @@ msgstr ""
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_account_date
 msgid "Accounting Date"
-msgstr ""
+msgstr "Kontabilitate data"
 
 #. module: account_voucher
 #: model:ir.model,name:account_voucher.model_account_voucher
@@ -54,7 +58,7 @@ msgstr ""
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_price_subtotal
 msgid "Amount"
-msgstr ""
+msgstr "Kopurua"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_account_analytic_id
@@ -100,7 +104,7 @@ msgid "Cancelled"
 msgstr "Ezeztatua"
 
 #. module: account_voucher
-#: code:addons/account_voucher/models/account_voucher.py:159
+#: code:addons/account_voucher/models/account_voucher.py:185
 #, python-format
 msgid "Cannot delete voucher(s) which are already opened or paid."
 msgstr ""
@@ -125,7 +129,7 @@ msgstr "Enpresa"
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_company_id
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_line_company_id
 msgid "Company related to this journal"
-msgstr ""
+msgstr "Egunkari honi loturiko konpainia"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_create_uid
@@ -155,7 +159,7 @@ msgstr "Kidea"
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
 msgid "Date"
-msgstr ""
+msgstr "Data"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_name
@@ -174,7 +178,7 @@ msgstr "Izena erakutsi"
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Draft"
-msgstr ""
+msgstr "Zirriborroa"
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
@@ -186,7 +190,7 @@ msgstr ""
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_date_due
 msgid "Due Date"
-msgstr ""
+msgstr "Zorren Data"
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_account_date
@@ -221,7 +225,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 #: model:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
 msgid "Internal Notes"
-msgstr ""
+msgstr "Barne oharrak"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_journal_id
@@ -229,18 +233,18 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Journal"
-msgstr ""
+msgstr "Eguneroko"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_move_id
 msgid "Journal Entry"
-msgstr ""
+msgstr "Egunkari-sarrera"
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 #: model:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
 msgid "Journal Items"
-msgstr ""
+msgstr "Egunkari-artikuluak"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher___last_update
@@ -263,12 +267,12 @@ msgstr "Last Updated on"
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_narration
 msgid "Notes"
-msgstr ""
+msgstr "Oharrak"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_number
 msgid "Number"
-msgstr ""
+msgstr "Zenbakia "
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_line_tax_ids
@@ -278,7 +282,7 @@ msgstr ""
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_paid
 msgid "Paid"
-msgstr ""
+msgstr "Ordainduta"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_partner_id
@@ -302,18 +306,23 @@ msgid "Payment"
 msgstr "Ordainketa "
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_name
-msgid "Payment Reference"
-msgstr ""
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_payment_journal_id
+msgid "Payment Method"
+msgstr "Ordainketa metodoa "
 
 #. module: account_voucher
-#: code:addons/account_voucher/models/account_voucher.py:195
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_name
+msgid "Payment Reference"
+msgstr "Ordainketa erreferentzia"
+
+#. module: account_voucher
+#: code:addons/account_voucher/models/account_voucher.py:222
 #, python-format
 msgid "Please activate the sequence of selected journal !"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/models/account_voucher.py:198
+#: code:addons/account_voucher/models/account_voucher.py:225
 #, python-format
 msgid "Please define a sequence on the journal."
 msgstr ""
@@ -324,7 +333,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Posted"
-msgstr ""
+msgstr "Argitaratuta"
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
@@ -346,7 +355,7 @@ msgstr "Produktua"
 #. module: account_voucher
 #: selection:account.voucher,voucher_type:0
 msgid "Purchase"
-msgstr ""
+msgstr "Erosketak"
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
@@ -372,7 +381,7 @@ msgstr "Kopurua"
 #. module: account_voucher
 #: selection:account.voucher,voucher_type:0
 msgid "Sale"
-msgstr ""
+msgstr "Salmenta"
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
@@ -429,12 +438,12 @@ msgstr ""
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_tax_ids
 msgid "Tax"
-msgstr ""
+msgstr "Zerga"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_tax_amount
 msgid "Tax Amount"
-msgstr ""
+msgstr "Zerga kopurua"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_tax_correction
@@ -470,12 +479,12 @@ msgstr "Total"
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_tree
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_tree_purchase
 msgid "Total Amount"
-msgstr ""
+msgstr "Kopuru totala"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_voucher_type
 msgid "Type"
-msgstr ""
+msgstr "Mota"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_price_unit
@@ -501,7 +510,7 @@ msgid "Vendor Voucher"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/models/account_voucher.py:97
+#: code:addons/account_voucher/models/account_voucher.py:100
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_voucher_id
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
@@ -552,7 +561,7 @@ msgid ""
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/models/account_voucher.py:377
+#: code:addons/account_voucher/models/account_voucher.py:438
 #, python-format
 msgid "You must first select a partner!"
 msgstr ""

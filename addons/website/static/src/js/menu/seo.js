@@ -95,7 +95,8 @@ var SuggestionList = Widget.extend({
         var self = this;
         self.$el.empty();
         // TODO Improve algorithm + Ajust based on custom user keywords
-        var regex = new RegExp(self.root, 'gi');
+        var regex_string = this.root + '\\+?';
+        var regex = new RegExp(regex_string, 'gi');
         keywords = _.map(_.uniq(keywords), function (word) {
             return word.replace(regex, '').trim();
         });

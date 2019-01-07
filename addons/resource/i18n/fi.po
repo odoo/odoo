@@ -86,7 +86,7 @@ msgstr "Viikonpäivä"
 #: model:ir.model.fields,field_description:resource.field_res_company_resource_calendar_id
 #: model:ir.model.fields,field_description:resource.field_res_users_resource_calendar_id
 msgid "Default Working Hours"
-msgstr ""
+msgstr "Vakiotyöaika"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_hr_employee_resource_calendar_id
@@ -104,6 +104,7 @@ msgid ""
 "Define working hours and time table that could be scheduled to your project "
 "members"
 msgstr ""
+"Määrittele työaika ja aikataulu jonka voit asettaa projektin henkilöille."
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_display_name
@@ -141,19 +142,19 @@ msgstr "Perjantai"
 #: code:addons/resource/models/resource.py:74
 #, python-format
 msgid "Friday Evening"
-msgstr ""
+msgstr "Perjantai-ilta"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:73
 #, python-format
 msgid "Friday Morning"
-msgstr ""
+msgstr "Perjantaiaamu"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_global_leave_ids
 #: model:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "Global Leaves"
-msgstr ""
+msgstr "Järjestelmän laajuiset poissaolot"
 
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
@@ -264,13 +265,13 @@ msgstr "Maanantai"
 #: code:addons/resource/models/resource.py:66
 #, python-format
 msgid "Monday Evening"
-msgstr ""
+msgstr "Maanantai-ilta"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:65
 #, python-format
 msgid "Monday Morning"
-msgstr ""
+msgstr "Maanantaiaamu"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_name
@@ -389,7 +390,7 @@ msgstr "Hae työaikaa"
 #: code:addons/resource/models/res_company.py:23
 #, python-format
 msgid "Standard 40 hours/week"
-msgstr ""
+msgstr "Vakio 40 tuntia/viikko"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves_date_from
@@ -398,8 +399,10 @@ msgstr "Alkupäivä"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar_attendance_hour_from
-msgid "Start and End time of working."
-msgstr "Alku ja loppupäivä työnteolle."
+msgid ""
+"Start and End time of working.\n"
+"A specific value of 24:00 is interpreted as 23:59:59.999999."
+msgstr ""
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_date_from
@@ -446,13 +449,13 @@ msgstr "Torstai"
 #: code:addons/resource/models/resource.py:72
 #, python-format
 msgid "Thursday Evening"
-msgstr ""
+msgstr "Torstai-ilta"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:71
 #, python-format
 msgid "Thursday Morning"
-msgstr ""
+msgstr "Torstaiaamu"
 
 #. module: resource
 #: sql_constraint:resource.resource:0
@@ -467,8 +470,8 @@ msgstr "Aikavyöhyke"
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar_leaves_tz
 msgid ""
-"Timezone used when encoding the leave. It is used to correctlylocalize leave"
-" hours when computing time intervals."
+"Timezone used when encoding the leave. It is used to correctly localize "
+"leave hours when computing time intervals."
 msgstr ""
 
 #. module: resource
@@ -480,13 +483,13 @@ msgstr "Tiistai"
 #: code:addons/resource/models/resource.py:68
 #, python-format
 msgid "Tuesday Evening"
-msgstr ""
+msgstr "Tiistai-ilta"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:67
 #, python-format
 msgid "Tuesday Morning"
-msgstr ""
+msgstr "Tiistaiaamu"
 
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_resource_search
@@ -513,13 +516,13 @@ msgstr "Keskiviikko"
 #: code:addons/resource/models/resource.py:70
 #, python-format
 msgid "Wednesday Evening"
-msgstr ""
+msgstr "Keskiviikkoilta"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:69
 #, python-format
 msgid "Wednesday Morning"
-msgstr ""
+msgstr "Keskiviikkoaamu"
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_calendar_attendance
@@ -529,7 +532,7 @@ msgstr "Työn yksityiskohdat"
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "Work Resources"
-msgstr ""
+msgstr "Työresurssit"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_hour_from
@@ -556,7 +559,7 @@ msgstr "Työtunnit"
 #: code:addons/resource/models/resource.py:60
 #, python-format
 msgid "Working Hours of %s"
-msgstr ""
+msgstr "%s työaika"
 
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_resource_search

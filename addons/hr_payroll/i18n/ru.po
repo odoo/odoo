@@ -3,24 +3,25 @@
 # * hr_payroll
 # 
 # Translators:
-# Collex100, 2017
-# Max Belyanin <maxbelyanin@gmail.com>, 2017
 # Andrey Skabelin, 2017
-# Martin Trigaux, 2017
-# Sergey Vilizhanin <sv@grimmette.ru>, 2017
 # Denis Trepalin <zekarious@gmail.com>, 2017
-# Максим Дронь <dronmax@gmail.com>, 2017
 # Viktor Pogrebniak <vp@aifil.ru>, 2017
-# Masha Koc <mariya.kos.ua@gmail.com>, 2017
 # Русский «kolobok2048» Ивашка <kolobok2048@gmail.com>, 2017
+# Collex100, 2017
+# Masha Koc <mariya.kos.ua@gmail.com>, 2017
+# Max Belyanin <maxbelyanin@gmail.com>, 2017
+# Максим Дронь <dronmax@gmail.com>, 2017
+# Martin Trigaux, 2017
 # Gennady Marchenko <gennadym@gmail.com>, 2018
+# Sergey Vilizhanin, 2018
 # sergeiruzkiicode <sergei.ruzki@icode.by>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-16 15:45+0000\n"
-"PO-Revision-Date: 2018-03-16 15:45+0000\n"
+"POT-Creation-Date: 2019-01-03 15:06+0000\n"
+"PO-Revision-Date: 2017-09-20 10:18+0000\n"
 "Last-Translator: sergeiruzkiicode <sergei.ruzki@icode.by>, 2018\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -300,7 +301,7 @@ msgstr "Дочернее определение"
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.res_config_settings_view_form
 msgid "Choose a Payroll Localization"
-msgstr ""
+msgstr "Выберите локализацию расчетного листа"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,help:hr_payroll.action_contribution_register_form
@@ -331,7 +332,7 @@ msgstr "Код"
 #: model:ir.ui.view,arch_db:hr_payroll.hr_payroll_structure_view_kanban
 #: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_view_kanban
 msgid "Code:"
-msgstr ""
+msgstr "Код:"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
@@ -641,6 +642,18 @@ msgid "Error ! You cannot create a recursive Salary Structure."
 msgstr "Ошибка! Вы не можете создать рекурсивную зарплатную структуру."
 
 #. module: hr_payroll
+#: code:addons/hr_payroll/models/hr_salary_rule.py:91
+#, python-format
+msgid "Error! You cannot create recursive hierarchy of Salary Rule Category."
+msgstr ""
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/models/hr_salary_rule.py:176
+#, python-format
+msgid "Error! You cannot create recursive hierarchy of Salary Rules."
+msgstr ""
+
+#. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_register_id
 #: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_register_id
 msgid "Eventual third party involved in the salary payment of the employees."
@@ -666,7 +679,7 @@ msgstr ""
 #: code:addons/hr_payroll/report/report_contribution_register.py:34
 #, python-format
 msgid "Form content is missing, this report cannot be printed."
-msgstr ""
+msgstr "Не найдены данные в форме, отчет не сформирован"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_res_config_settings_module_l10n_fr_hr_payroll
@@ -697,6 +710,12 @@ msgstr "Сгенерировать платежные ведомости для 
 #. module: hr_payroll
 #: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_sales_commission
 msgid "Get 1% of sales"
+msgstr ""
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/models/hr_payslip.py:183
+#, python-format
+msgid "Global Leaves"
 msgstr ""
 
 #. module: hr_payroll
@@ -1046,22 +1065,22 @@ msgstr "Платёжная ведомость"
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.res_config_settings_view_form
 msgid "Payroll Entries"
-msgstr ""
+msgstr "Строки платежной ведомости"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.res_config_settings_view_form
 msgid "Payroll Rules"
-msgstr ""
+msgstr "Правила платежной ведомости"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payroll_structure_filter
 msgid "Payroll Structures"
-msgstr "Структуры платежной ведомости"
+msgstr "Структура платежной ведомости"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.res_config_settings_view_form
 msgid "Payroll rules that apply to your country"
-msgstr ""
+msgstr "Правила составления платежной ведомости в вашей стране"
 
 #. module: hr_payroll
 #: model:ir.actions.report,name:hr_payroll.action_report_payslip
@@ -1178,7 +1197,7 @@ msgstr "Период"
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.res_config_settings_view_form
 msgid "Post payroll slips in accounting"
-msgstr ""
+msgstr "Отправить расчетники в бухгалтерию"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_payslip_lines_contribution_register
@@ -1300,16 +1319,9 @@ msgstr "Вычисление заработной платы"
 #: model:ir.actions.act_window,name:hr_payroll.action_hr_salary_rule_category
 #: model:ir.ui.menu,name:hr_payroll.menu_hr_salary_rule_category
 #: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_category_tree
-#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_category_tree_view
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_salary_rule_category_filter
 msgid "Salary Rule Categories"
 msgstr "Категории правила начисления зарплаты"
-
-#. module: hr_payroll
-#: model:ir.actions.act_window,name:hr_payroll.action_hr_salary_rule_category_tree_view
-#: model:ir.ui.menu,name:hr_payroll.menu_hr_salary_rule_category_tree_view
-msgid "Salary Rule Categories Hierarchy"
-msgstr "Иерархия категорий правила начисления зарплаты"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_salary_rule_category

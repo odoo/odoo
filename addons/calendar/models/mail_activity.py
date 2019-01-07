@@ -24,7 +24,7 @@ class MailActivity(models.Model):
             'default_res_id': self.env.context.get('default_res_id'),
             'default_res_model': self.env.context.get('default_res_model'),
             'default_name': self.summary,
-            'default_description': self.note and tools.html2plaintext(self.note) or '',
+            'default_description': self.note and tools.html2plaintext(self.note).strip() or '',
             'default_activity_ids': [(6, 0, self.ids)],
         }
         return action

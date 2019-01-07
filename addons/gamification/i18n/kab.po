@@ -3,14 +3,16 @@
 # * gamification
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2018
+# MozillaKab <belkacem77@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:27+0000\n"
-"PO-Revision-Date: 2017-10-02 11:27+0000\n"
-"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
+"POT-Creation-Date: 2019-01-03 15:07+0000\n"
+"PO-Revision-Date: 2017-09-20 10:17+0000\n"
+"Last-Translator: MozillaKab <belkacem77@gmail.com>, 2018\n"
 "Language-Team: Kabyle (https://www.transifex.com/odoo/teams/41243/kab/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -349,6 +351,21 @@ msgid ""
 msgstr ""
 
 #. module: gamification
+#: model:ir.ui.view,arch_db:gamification.goal_kanban_view
+msgid "<i class=\"fa fa-clock-o fa-3x\" title=\"Goal in Progress\"/>"
+msgstr ""
+
+#. module: gamification
+#: model:ir.ui.view,arch_db:gamification.goal_kanban_view
+msgid "<i class=\"o_green fa fa-check fa-3x\" title=\"Goal Reached\"/>"
+msgstr ""
+
+#. module: gamification
+#: model:ir.ui.view,arch_db:gamification.goal_kanban_view
+msgid "<i class=\"o_red fa fa-times fa-3x\" title=\"Goal Failed\"/>"
+msgstr ""
+
+#. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid ""
 "<span class=\"o_stat_text\">Related</span>\n"
@@ -389,22 +406,22 @@ msgstr ""
 #. module: gamification
 #: selection:gamification.badge,rule_auth:0
 msgid "A selected list of users"
-msgstr ""
+msgstr "Tabdart n iseqdacen ifernen"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_action_id
 msgid "Action"
-msgstr ""
+msgstr "Tigawt"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_active
 msgid "Active"
-msgstr ""
+msgstr "Urmid"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Advanced Options"
-msgstr ""
+msgstr "Iɣewwaren leqqayen"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_rule_auth
@@ -419,7 +436,7 @@ msgstr ""
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_category
 msgid "Appears in"
-msgstr ""
+msgstr "Ad iban di"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_form_view
@@ -437,7 +454,7 @@ msgstr ""
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_rule_auth_user_ids
 msgid "Authorized Users"
-msgstr ""
+msgstr "Iseqdacen yurgen"
 
 #. module: gamification
 #: selection:gamification.goal.definition,computation_mode:0
@@ -447,7 +464,7 @@ msgstr ""
 #. module: gamification
 #: selection:gamification.goal.definition,computation_mode:0
 msgid "Automatic: number of records"
-msgstr ""
+msgstr "Awurman: amḍan n iklasen"
 
 #. module: gamification
 #: selection:gamification.goal.definition,computation_mode:0
@@ -529,12 +546,12 @@ msgstr "Sefsex"
 #. module: gamification
 #: selection:gamification.goal,state:0
 msgid "Canceled"
-msgstr ""
+msgstr "Ifsax"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Category"
-msgstr ""
+msgstr "Taggayt"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line_challenge_id
@@ -609,13 +626,13 @@ msgstr ""
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_closed
 msgid "Closed goal"
-msgstr ""
+msgstr "Iswi imedlen"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_comment
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_wizard_comment
 msgid "Comment"
-msgstr ""
+msgstr "Awennit"
 
 #. module: gamification
 #: model:gamification.challenge,name:gamification.challenge_base_discover
@@ -625,7 +642,7 @@ msgstr ""
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_completeness
 msgid "Completeness"
-msgstr ""
+msgstr "Amfiḍi n usmad"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_computation_mode
@@ -637,7 +654,7 @@ msgstr ""
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.action_new_simplified_res_users
 msgid "Create User"
-msgstr ""
+msgstr "Rnu Aseqdac"
 
 #. module: gamification
 #: model:ir.actions.act_window,help:gamification.action_new_simplified_res_users
@@ -651,7 +668,7 @@ msgstr ""
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_create_date
 msgid "Created"
-msgstr ""
+msgstr "Yerna"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_create_uid
@@ -678,17 +695,17 @@ msgstr "Yerna di"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_create_uid
 msgid "Creator"
-msgstr ""
+msgstr "Asaraw"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard_current
 msgid "Current"
-msgstr ""
+msgstr "Anazzel"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_current
 msgid "Current Value"
-msgstr ""
+msgstr "Azal Anazzel"
 
 #. module: gamification
 #: selection:gamification.challenge,period:0
@@ -699,7 +716,7 @@ msgstr ""
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "Data"
-msgstr ""
+msgstr "Isefka"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_field_date_id
@@ -722,7 +739,7 @@ msgstr ""
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_description_3119
 msgid "Definition Description"
-msgstr ""
+msgstr "Aglam n Tbadut"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_form_view
@@ -749,7 +766,7 @@ msgstr "Aglam"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_visibility_mode
 msgid "Display Mode"
-msgstr ""
+msgstr "Tarrayt n uskan"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_display_name
@@ -767,7 +784,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_display
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_display_mode
 msgid "Displayed as"
-msgstr ""
+msgstr "Sken am"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_batch_distinctive_field
@@ -786,21 +803,21 @@ msgstr ""
 #: selection:gamification.challenge,state:0
 #: model:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "Done"
-msgstr ""
+msgstr "Immed"
 
 #. module: gamification
 #: selection:gamification.challenge,state:0
 #: selection:gamification.goal,state:0
 #: model:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "Draft"
-msgstr ""
+msgstr "Arewway"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_end_date
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_end_date
 #: model:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "End Date"
-msgstr ""
+msgstr "Azemz n tagara"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition_batch_mode
@@ -815,7 +832,7 @@ msgstr ""
 #. module: gamification
 #: selection:gamification.badge,rule_auth:0
 msgid "Everyone"
-msgstr ""
+msgstr "Yal yiwen"
 
 #. module: gamification
 #: selection:gamification.goal.definition,display_mode:0
@@ -825,7 +842,7 @@ msgstr ""
 #. module: gamification
 #: selection:gamification.goal,state:0
 msgid "Failed"
-msgstr ""
+msgstr "yennegza"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_field_id
@@ -835,7 +852,7 @@ msgstr ""
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_domain
 msgid "Filter Domain"
-msgstr ""
+msgstr "Taɣult n umzizdeg"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_reward_first_id
@@ -865,7 +882,7 @@ msgstr ""
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_kanban_view
 msgid "From"
-msgstr ""
+msgstr "Si"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_full_suffix
@@ -919,7 +936,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:gamification.goal_form_view
 #: model:ir.ui.view,arch_db:gamification.view_challenge_kanban
 msgid "Goal"
-msgstr ""
+msgstr "Iswi"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line_definition_id
@@ -927,19 +944,19 @@ msgstr ""
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_name
 #: model:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "Goal Definition"
-msgstr ""
+msgstr "Tabadut n Iswi"
 
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.goal_definition_list_action
 #: model:ir.ui.menu,name:gamification.gamification_definition_menu
 #: model:ir.ui.view,arch_db:gamification.goal_definition_list_view
 msgid "Goal Definitions"
-msgstr ""
+msgstr "Tibadutin n Iswi"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_description
 msgid "Goal Description"
-msgstr ""
+msgstr "Aglam n Iswi"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_form_view
@@ -949,7 +966,7 @@ msgstr ""
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_list_view
 msgid "Goal List"
-msgstr ""
+msgstr "Tabdart n Iswi"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line_condition
@@ -968,7 +985,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:gamification.challenge_list_view
 #: model:ir.ui.view,arch_db:gamification.goal_definition_form_view
 msgid "Goal definitions"
-msgstr ""
+msgstr "Tibadutin n Iswi"
 
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.goal_list_action
@@ -976,12 +993,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:gamification.challenge_form_view
 #: model:ir.ui.view,arch_db:gamification.view_challenge_kanban
 msgid "Goals"
-msgstr ""
+msgstr "Iswiyen"
 
 #. module: gamification
 #: model:gamification.badge,name:gamification.badge_good_job
 msgid "Good Job"
-msgstr ""
+msgstr "Iggarez"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.badge_kanban_view
@@ -1035,12 +1052,12 @@ msgstr ""
 #. module: gamification
 #: model:gamification.badge,name:gamification.badge_hidden
 msgid "Hidden"
-msgstr ""
+msgstr "Iffer"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_definition_form_view
 msgid "How to compute the goal?"
-msgstr ""
+msgstr "Amek a t-siḍeneḍ iswiyen"
 
 #. module: gamification
 #: selection:gamification.challenge,category:0
@@ -1062,7 +1079,7 @@ msgstr "Asulay"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_res_id_field
 msgid "ID Field of user"
-msgstr ""
+msgstr "Urti n Usulay n useqdac"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge_remaining_sending
@@ -1077,12 +1094,12 @@ msgstr ""
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_image
 msgid "Image"
-msgstr ""
+msgstr "Tugna"
 
 #. module: gamification
 #: selection:gamification.challenge,state:0
 msgid "In Progress"
-msgstr ""
+msgstr "Anazzal"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_definition_form_view
@@ -1109,7 +1126,7 @@ msgstr ""
 #. module: gamification
 #: selection:gamification.goal,state:0
 msgid "In progress"
-msgstr ""
+msgstr "Anazzal"
 
 #. module: gamification
 #: selection:gamification.challenge,visibility_mode:0
@@ -1137,12 +1154,12 @@ msgstr "Aleqqem aneggaru di"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_last_report_date
 msgid "Last Report Date"
-msgstr ""
+msgstr "Azemez n ussaɣ aneggaru"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_last_update
 msgid "Last Update"
-msgstr ""
+msgstr "Aleqqem Aneggaru"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_wizard_write_uid
@@ -1176,22 +1193,22 @@ msgstr ""
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_rule_max_number
 msgid "Limitation Number"
-msgstr ""
+msgstr "Amḍan n talast"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Line List"
-msgstr ""
+msgstr "Tabdart n uzirig"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line_ids
 msgid "Lines"
-msgstr ""
+msgstr "Izirigen"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge_line_ids
 msgid "List of goals that will be set"
-msgstr ""
+msgstr "Tabdart n iswiyen a yeţusbedden."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge_user_ids
@@ -1207,7 +1224,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_model_id
 #: model:ir.ui.view,arch_db:gamification.goal_definition_search_view
 msgid "Model"
-msgstr ""
+msgstr "Taneɣruft"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line_definition_monetary
@@ -1223,7 +1240,7 @@ msgstr ""
 #: selection:gamification.challenge,period:0
 #: selection:gamification.challenge,report_message_frequency:0
 msgid "Monthly"
-msgstr ""
+msgstr "S waggur"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_rule_max
@@ -1238,7 +1255,7 @@ msgstr ""
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "My Goals"
-msgstr ""
+msgstr "Iswiyen-inu"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_stat_my_monthly_sending
@@ -1248,22 +1265,22 @@ msgstr ""
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_stat_my_this_month
 msgid "My Monthly Total"
-msgstr ""
+msgstr "Asemday-iw n waggur"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_stat_my
 msgid "My Total"
-msgstr ""
+msgstr "Isemday-inu"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line_name
 msgid "Name"
-msgstr ""
+msgstr "Isem"
 
 #. module: gamification
 #: selection:gamification.challenge,report_message_frequency:0
 msgid "Never"
-msgstr ""
+msgstr "weṛǧin"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge_remind_update_delay
@@ -1278,7 +1295,7 @@ msgstr ""
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_next_report_date
 msgid "Next Report Date"
-msgstr ""
+msgstr "Azemz n ussaɣ d iteddun"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.badge_form_view
@@ -1344,7 +1361,7 @@ msgstr ""
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_owner_ids
 msgid "Owners"
-msgstr ""
+msgstr "Ibabaten"
 
 #. module: gamification
 #: selection:gamification.badge,rule_auth:0
@@ -1354,7 +1371,7 @@ msgstr ""
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_search_view
 msgid "Period"
-msgstr ""
+msgstr "Tawala"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge_period
@@ -1381,7 +1398,7 @@ msgstr ""
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_compute_code
 msgid "Python Code"
-msgstr ""
+msgstr "Tangalt Python"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition_compute_code
@@ -1393,7 +1410,7 @@ msgstr ""
 #. module: gamification
 #: selection:gamification.goal,state:0
 msgid "Reached"
-msgstr ""
+msgstr "Ibbweḍ"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_form_view
@@ -1408,7 +1425,7 @@ msgstr ""
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "Reference"
-msgstr ""
+msgstr "Tamsisɣelt"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_form_view
@@ -1448,7 +1465,7 @@ msgstr ""
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_report_template_id
 msgid "Report Template"
-msgstr ""
+msgstr "Taneɣruft n ussaɣ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_rule_auth_badge_ids
@@ -1463,7 +1480,7 @@ msgstr ""
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_manager_id
 msgid "Responsible"
-msgstr ""
+msgstr "Amasay"
 
 #. module: gamification
 #: code:addons/gamification/models/challenge.py:490
@@ -1504,7 +1521,7 @@ msgstr ""
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "Running"
-msgstr ""
+msgstr "Anazal"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_search_view
@@ -1514,7 +1531,7 @@ msgstr ""
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "Schedule"
-msgstr ""
+msgstr "Ahil"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_search_view
@@ -1529,7 +1546,7 @@ msgstr ""
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "Search Goals"
-msgstr ""
+msgstr "Nnadi Iswiyen"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.badge_form_view
@@ -1541,7 +1558,7 @@ msgstr ""
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Send Report"
-msgstr ""
+msgstr "Azen Assaɣ"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_report_message_group_id
@@ -1572,13 +1589,13 @@ msgstr ""
 #: model:gamification.challenge.line,name:gamification.line_base_admin1
 #: model:gamification.goal.definition,name:gamification.definition_base_company_data
 msgid "Set your Company Data"
-msgstr ""
+msgstr "Sbed Isefka n tkebbwanit-ik"
 
 #. module: gamification
 #: model:gamification.challenge.line,name:gamification.line_base_admin2
 #: model:gamification.goal.definition,name:gamification.definition_base_company_logo
 msgid "Set your Company Logo"
-msgstr ""
+msgstr "Sebeded alugu tkebbanit-ik"
 
 #. module: gamification
 #: model:gamification.challenge.line,name:gamification.line_base_discover1
@@ -1594,7 +1611,7 @@ msgstr ""
 #. module: gamification
 #: model:gamification.challenge,name:gamification.challenge_base_configure
 msgid "Setup your Company"
-msgstr ""
+msgstr "Sebded takebbwanit-ik"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_form_view
@@ -1605,12 +1622,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_start_date
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_start_date
 msgid "Start Date"
-msgstr ""
+msgstr "Azemz n tazwara"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "Start goal"
-msgstr ""
+msgstr "Sekker iswi"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_state
@@ -1618,29 +1635,29 @@ msgstr ""
 #: model:ir.ui.view,arch_db:gamification.challenge_search_view
 #: model:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "State"
-msgstr ""
+msgstr "Aɣir(Wilaya)"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.badge_form_view
 msgid "Statistics"
-msgstr ""
+msgstr "Tiddadanin"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Subscriptions"
-msgstr ""
+msgstr "Tiggeztin"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line_definition_full_suffix
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_suffix
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_suffix_3121
 msgid "Suffix"
-msgstr ""
+msgstr "Adfir"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_invited_user_ids
 msgid "Suggest to users"
-msgstr ""
+msgstr "Ssumer i yiseqdacem"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line_target_goal
@@ -1855,12 +1872,12 @@ msgstr ""
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge_image
 msgid "This field holds the image used for the badge, limited to 256x256"
-msgstr ""
+msgstr "Urti agi igber tugna n le badge, talast-is : 256x256px."
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_kanban_view
 msgid "To"
-msgstr ""
+msgstr "Ɣer"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_target_goal
@@ -1885,18 +1902,18 @@ msgstr ""
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line_definition_suffix
 msgid "Unit"
-msgstr ""
+msgstr "Aferdis"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.view_goal_wizard_update_current
 msgid "Update"
-msgstr ""
+msgstr "Leqqem"
 
 #. module: gamification
 #: code:addons/gamification/models/goal.py:447
 #, python-format
 msgid "Update %s"
-msgstr ""
+msgstr "Leqqem %s"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_user_user_id
@@ -1904,17 +1921,17 @@ msgstr ""
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_user_id
 #: model:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "User"
-msgstr ""
+msgstr "Aseqdac"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_user_domain
 msgid "User domain"
-msgstr ""
+msgstr "Taɤult n useqdac"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_user_ids
 msgid "Users"
-msgstr ""
+msgstr "Iseqdacen"
 
 #. module: gamification
 #: selection:gamification.challenge,category:0
@@ -1925,7 +1942,7 @@ msgstr ""
 #: selection:gamification.challenge,period:0
 #: selection:gamification.challenge,report_message_frequency:0
 msgid "Weekly"
-msgstr ""
+msgstr "S dduṛt"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge_rule_auth
@@ -2019,7 +2036,7 @@ msgstr ""
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_definition_form_view
 msgid "e.g. days"
-msgstr ""
+msgstr "Amedya. Ussan"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_definition_form_view
@@ -2031,7 +2048,7 @@ msgstr ""
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_definition_form_view
 msgid "e.g. user.partner_id.id"
-msgstr ""
+msgstr "Amedya. user.partner_id.id"
 
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_badge_user_wizard
@@ -2066,4 +2083,4 @@ msgstr ""
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.badge_kanban_view
 msgid "this month"
-msgstr ""
+msgstr "Aggur agi"

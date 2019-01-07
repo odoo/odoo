@@ -4,16 +4,17 @@
 # 
 # Translators:
 # Martin Trigaux, 2017
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2017
 # Michael Yeung, 2017
 # Bill Hsu <hcm86@icloud.com>, 2018
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-16 08:08+0000\n"
-"PO-Revision-Date: 2017-11-16 08:08+0000\n"
-"Last-Translator: Bill Hsu <hcm86@icloud.com>, 2018\n"
+"POT-Creation-Date: 2019-01-03 15:06+0000\n"
+"PO-Revision-Date: 2017-09-20 10:22+0000\n"
+"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2018\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,7 +27,7 @@ msgstr ""
 msgid ""
 "\n"
 "<p>Dear\n"
-"% if object.partner_id.is_company and object.child_ids:\n"
+"% if object.partner_id.is_company and object.partner_id.child_ids:\n"
 "    ${object.partner_id.child_ids[0].name}\n"
 "% else :\n"
 "    ${object.partner_id.name}\n"
@@ -39,7 +40,7 @@ msgid ""
 "% if object.origin:\n"
 "    (RFQ origin: ${object.origin})\n"
 "% endif\n"
-"amounting in <strong>${object.amount_total} ${object.currency_id.name}</strong>\n"
+"amounting in <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
 "from ${object.company_id.name}.\n"
 "</p>\n"
 "\n"
@@ -56,7 +57,7 @@ msgstr ""
 #: model:mail.template,body_html:purchase.email_template_edi_purchase_done
 msgid ""
 "\n"
-"<p>Dear ${object.partner_id.name} \n"
+"<p>Dear ${object.partner_id.name}\n"
 "% if object.partner_id.parent_id:\n"
 "    (<i>${object.partner_id.parent_id.name}</i>)\n"
 "% endif\n"
@@ -69,36 +70,16 @@ msgid ""
 "% if object.origin:\n"
 "    (RFQ origin: ${object.origin})\n"
 "% endif\n"
-"amounting <strong>${object.amount_total} ${object.currency_id.name}</strong>\n"
+"amounting <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
 "from ${object.company_id.name}.\n"
 "</p>\n"
 "\n"
 "<p>You can reply to this email if you have any questions.</p>\n"
 "<p>Thank you,</p>\n"
 msgstr ""
-"\n"
-"<p>Dear ${object.partner_id.name} \n"
-"% if object.partner_id.parent_id:\n"
-"    (<i>${object.partner_id.parent_id.name}</i>)\n"
-"% endif\n"
-",</p>\n"
-"<p>\n"
-"Please find in attachment a <strong>${object.state in ('draft', 'sent') and 'request for quotation' or 'purchase order confirmation'} ${object.name}</strong>\n"
-"% if object.partner_ref:\n"
-"    with reference: ${object.partner_ref}\n"
-"% endif\n"
-"% if object.origin:\n"
-"    (RFQ origin: ${object.origin})\n"
-"% endif\n"
-"amounting <strong>${object.amount_total} ${object.currency_id.name}</strong>\n"
-"from ${object.company_id.name}.\n"
-"</p>\n"
-"\n"
-"<p>若有任何問題請隨時與我們聯絡!!</p>\n"
-"<p>Thank you,</p>\n"
 
 #. module: purchase
-#: code:addons/purchase/models/stock.py:79
+#: code:addons/purchase/models/stock.py:98
 #, python-format
 msgid " Buy"
 msgstr "購買"
@@ -157,6 +138,7 @@ msgstr "三方匹配：採購，收貨以及帳單"
 msgid ""
 "<html>\n"
 "                <head></head>\n"
+"                % set company = record and record.company_id or ctx.get('company')\n"
 "                <body style=\"margin: 0; padding: 0;\">\n"
 "                <table border=\"0\" width=\"100%\" cellpadding=\"0\" bgcolor=\"#ededed\" style=\"padding: 20px; background-color: #ededed\" summary=\"o_mail_notification\">\n"
 "                    <tbody>\n"
@@ -172,7 +154,7 @@ msgid ""
 "                                  </span>\n"
 "                              </td>\n"
 "                              <td valign=\"middle\" align=\"right\">\n"
-"                                  <img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\">\n"
+"                                  <img src=\"/logo.png?company=${company.id}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${company.name}\">\n"
 "                              </td>\n"
 "                            </tr>\n"
 "                          </table>\n"
@@ -198,16 +180,16 @@ msgid ""
 "                          <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#875A7B\" style=\"min-width: 590px; background-color: rgb(135,90,123); padding: 20px;\">\n"
 "                            <tr>\n"
 "                              <td valign=\"middle\" align=\"left\" style=\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\">\n"
-"                                ${user.company_id.name}<br/>\n"
-"                                ${user.company_id.phone or ''}\n"
+"                                ${company.name}<br/>\n"
+"                                ${company.phone or ''}\n"
 "                              </td>\n"
 "                              <td valign=\"middle\" align=\"right\" style=\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\">\n"
-"                                % if user.company_id.email:\n"
-"                                <a href=\"mailto:${user.company_id.email}\" style=\"text-decoration:none; color: white;\">${user.company_id.email}</a><br/>\n"
+"                                % if company.email:\n"
+"                                <a href=\"mailto:${company.email}\" style=\"text-decoration:none; color: white;\">${company.email}</a><br/>\n"
 "                                % endif\n"
-"                                % if user.company_id.website:\n"
-"                                    <a href=\"${user.company_id.website}\" style=\"text-decoration:none; color: white;\">\n"
-"                                        ${user.company_id.website}\n"
+"                                % if company.website:\n"
+"                                    <a href=\"${company.website}\" style=\"text-decoration:none; color: white;\">\n"
+"                                        ${company.website}\n"
 "                                    </a>\n"
 "                                % endif\n"
 "                              </td>\n"
@@ -226,76 +208,14 @@ msgid ""
 "                </html>\n"
 "            "
 msgstr ""
-"<html>\n"
-"                <head></head>\n"
-"                <body style=\"margin: 0; padding: 0;\">\n"
-"                <table border=\"0\" width=\"100%\" cellpadding=\"0\" bgcolor=\"#ededed\" style=\"padding: 20px; background-color: #ededed\" summary=\"o_mail_notification\">\n"
-"                    <tbody>\n"
-"\n"
-"                      <!-- HEADER -->\n"
-"                      <tr>\n"
-"                        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"                          <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#875A7B\" style=\"min-width: 590px; background-color: rgb(135,90,123); padding: 20px;\">\n"
-"                            <tr>\n"
-"                              <td valign=\"middle\">\n"
-"                                  <span style=\"font-size:20px; color:white; font-weight: bold;\">\n"
-"                                      ${object.record_name}\n"
-"                                  </span>\n"
-"                              </td>\n"
-"                              <td valign=\"middle\" align=\"right\">\n"
-"                                  <img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\">\n"
-"                              </td>\n"
-"                            </tr>\n"
-"                          </table>\n"
-"                        </td>\n"
-"                      </tr>\n"
-"\n"
-"                      <!-- CONTENT -->\n"
-"                      <tr>\n"
-"                        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"                          <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#ffffff\" style=\"min-width: 590px; background-color: rgb(255, 255, 255); padding: 20px;\">\n"
-"                            <tbody>\n"
-"                              <td valign=\"top\" style=\"font-family:Arial,Helvetica,sans-serif; color: #555; font-size: 14px;\">\n"
-"                                ${object.body | safe}\n"
-"                              </td>\n"
-"                            </tbody>\n"
-"                          </table>\n"
-"                        </td>\n"
-"                      </tr>\n"
-"\n"
-"                      <!-- FOOTER -->\n"
-"                      <tr>\n"
-"                        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"                          <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#875A7B\" style=\"min-width: 590px; background-color: rgb(135,90,123); padding: 20px;\">\n"
-"                            <tr>\n"
-"                              <td valign=\"middle\" align=\"left\" style=\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\">\n"
-"                                ${user.company_id.name}<br/>\n"
-"                                ${user.company_id.phone or ''}\n"
-"                              </td>\n"
-"                              <td valign=\"middle\" align=\"right\" style=\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\">\n"
-"                                % if user.company_id.email:\n"
-"                                <a href=\"mailto:${user.company_id.email}\" style=\"text-decoration:none; color: white;\">${user.company_id.email}</a><br/>\n"
-"                                % endif\n"
-"                                % if user.company_id.website:\n"
-"                                    <a href=\"${user.company_id.website}\" style=\"text-decoration:none; color: white;\">\n"
-"                                        ${user.company_id.website}\n"
-"                                    </a>\n"
-"                                % endif\n"
-"                              </td>\n"
-"                            </tr>\n"
-"                          </table>\n"
-"                        </td>\n"
-"                      </tr>\n"
-"                      <tr>\n"
-"                        <td align=\"center\">\n"
-"                            由 <a href=\"https://www.odoo.com\">Odoo</a> 提供技術支援。\n"
-"                        </td>\n"
-"                      </tr>\n"
-"                    </tbody>\n"
-"                </table>\n"
-"                </body>\n"
-"                </html>\n"
-"            "
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
+#: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_stock
+msgid ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
+msgstr ""
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
@@ -402,7 +322,7 @@ msgid "<strong>Your Order Reference:</strong>"
 msgstr "<strong>您的訂單參考：</strong>"
 
 #. module: purchase
-#: code:addons/purchase/models/stock.py:83
+#: code:addons/purchase/models/stock.py:72
 #, python-format
 msgid ""
 "A sale order that generated this purchase order has been deleted. Check if "
@@ -491,12 +411,12 @@ msgstr "帳單管理"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_invoice_lines
 msgid "Bill Lines"
-msgstr "帳單明細行"
+msgstr "帳單明細"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_qty_invoiced
 msgid "Billed Qty"
-msgstr "開單數量"
+msgstr "已收發票數量"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.track_po_line_template
@@ -525,7 +445,7 @@ msgid "Blocking Message"
 msgstr "阻止消息"
 
 #. module: purchase
-#: code:addons/purchase/models/stock.py:73
+#: code:addons/purchase/models/stock.py:92
 #: model:stock.location.route,name:purchase.route_warehouse0_buy
 #, python-format
 msgid "Buy"
@@ -560,7 +480,7 @@ msgstr ""
 "當您想為一組給定的產品生成報價給幾個供應商的報價時，就需要招標。如果您直接向一個供應商報價，或者您想要一個招標來比較幾個供應商的報價，您可以配置每個產品的配置。"
 
 #. module: purchase
-#: code:addons/purchase/models/stock.py:76
+#: code:addons/purchase/models/stock.py:95
 #, python-format
 msgid "Can't find any generic Buy route."
 msgstr "找不到到任何購買路線。"
@@ -578,7 +498,7 @@ msgid "Cancelled"
 msgstr "已取消"
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:737
+#: code:addons/purchase/models/purchase.py:757
 #, python-format
 msgid "Cannot delete a purchase order line which is in state '%s'."
 msgstr "無法刪除處於'%s'狀態的採購訂單行。"
@@ -822,7 +742,7 @@ msgid "Extended Filters"
 msgstr "擴展篩選"
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:577
+#: code:addons/purchase/models/purchase.py:590
 #, python-format
 msgid "Extra line with %s "
 msgstr "更多明細為%s"
@@ -864,7 +784,7 @@ msgstr "分組"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_line_search
 msgid "Hide cancelled lines"
-msgstr "隱藏已已取消的明細行"
+msgstr "隱藏已已取消的明細"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -936,7 +856,7 @@ msgstr "發票和入庫"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Invoicing"
-msgstr "開立發票"
+msgstr "收到應付憑單"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_is_shipped
@@ -1018,7 +938,7 @@ msgstr "管理供應商價格"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Manage your purchase agreements (call for tenders, blanket orders)"
-msgstr "管理您的採購協議（招標、一攬子訂單）"
+msgstr "管理您的採購協議（招標、長期訂購協議）"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_purchase_manager
@@ -1118,7 +1038,7 @@ msgstr "最新"
 #. module: purchase
 #: selection:purchase.order,invoice_status:0
 msgid "No Bill to Receive"
-msgstr "沒有收到匯票"
+msgstr "已取得帳單"
 
 #. module: purchase
 #: selection:product.template,purchase_line_warn:0
@@ -1486,12 +1406,12 @@ msgstr "採購訂單統計"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Purchase orders that have been invoiced."
-msgstr "已經開立發票的採購訂單。"
+msgstr "已經收到應付憑單的採購訂單。"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Purchase orders that include lines not invoiced."
-msgstr "包含未開立發票明細的採購單。"
+msgstr "採購單內包含未收到應付憑單的項目。"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_stock_warehouse_buy_to_resupply
@@ -1516,6 +1436,11 @@ msgstr "採購"
 #: model:ir.model,name:purchase.model_purchase_report
 msgid "Purchases Orders"
 msgstr "採購訂單"
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_stock_location_path
+msgid "Pushed Flow"
+msgstr "推式流"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_dest_address_id
@@ -1745,7 +1670,7 @@ msgstr "設定"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Shipment"
-msgstr "送貨"
+msgstr "入庫"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
@@ -1840,7 +1765,7 @@ msgstr ""
 "價格、補貨邏輯、會計信息、可用供應商等等。"
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:649
+#: code:addons/purchase/models/purchase.py:662
 #, python-format
 msgid ""
 "The quantities on your purchase order indicate less than billed. You should "
@@ -1868,7 +1793,7 @@ msgstr ""
 "轉換為採購訂單，您就能操作相關的收貨單和供應商發票。"
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:878
+#: code:addons/purchase/models/purchase.py:898
 #, python-format
 msgid ""
 "There is no vendor associated to the product %s. Please define a vendor for "
@@ -1929,13 +1854,13 @@ msgid "This note will show up on purchase orders."
 msgstr "此備註將顯示在採購訂單上。"
 
 #. module: purchase
-#: code:addons/purchase/models/account_invoice.py:203
+#: code:addons/purchase/models/account_invoice.py:218
 #, python-format
 msgid "This vendor bill has been created from: %s"
 msgstr "該供應商帳單已經從：%s創建"
 
 #. module: purchase
-#: code:addons/purchase/models/account_invoice.py:217
+#: code:addons/purchase/models/account_invoice.py:232
 #, python-format
 msgid "This vendor bill has been modified from: %s"
 msgstr "此供應商帳單已從%s修改："
@@ -1991,7 +1916,7 @@ msgid "Transfer"
 msgstr "調撥"
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:362
+#: code:addons/purchase/models/purchase.py:363
 #, python-format
 msgid ""
 "Unable to cancel purchase order %s as some receptions have already been "
@@ -1999,7 +1924,7 @@ msgid ""
 msgstr "不能取消採購訂單 %s因為有些收貨已經完成。"
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:365
+#: code:addons/purchase/models/purchase.py:366
 #, python-format
 msgid ""
 "Unable to cancel this purchase order. You must first cancel related vendor "
@@ -2157,7 +2082,7 @@ msgstr "警告"
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:268
-#: code:addons/purchase/models/purchase.py:808
+#: code:addons/purchase/models/purchase.py:828
 #, python-format
 msgid "Warning for %s"
 msgstr "%s 的警告"
@@ -2214,7 +2139,7 @@ msgstr ""
 "的服務，您都必須定義一個產品。 "
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:395
+#: code:addons/purchase/models/purchase.py:408
 #, python-format
 msgid "You must set a Vendor Location for this partner %s"
 msgstr "您必須為此合作夥伴設定一個供應商的位置%s"

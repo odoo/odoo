@@ -1,6 +1,7 @@
 odoo.define('hr_attendance.kiosk_mode', function (require) {
 "use strict";
 
+var ajax = require('web.ajax');
 var core = require('web.core');
 var Widget = require('web.Widget');
 var Session = require('web.session');
@@ -27,11 +28,14 @@ var KioskMode = Widget.extend({
                 self.$el.html(QWeb.render("HrAttendanceKioskMode", {widget: self}));
                 self.start_clock();
             });
+        // Make a RPC call every day to keep the session alive
+        self._interval = window.setInterval(this._callServer.bind(this), (60*60*1000*24));
         return $.when(def, this._super.apply(this, arguments));
     },
 
     _onBarcodeScanned: function(barcode) {
         var self = this;
+        core.bus.off('barcode_scanned', this, this._onBarcodeScanned);
         this._rpc({
                 model: 'hr.employee',
                 method: 'attendance_scan',
@@ -42,7 +46,10 @@ var KioskMode = Widget.extend({
                     self.do_action(result.action);
                 } else if (result.warning) {
                     self.do_warn(result.warning);
+                    core.bus.on('barcode_scanned', self, self._onBarcodeScanned);
                 }
+            }, function () {
+                core.bus.on('barcode_scanned', self, self._onBarcodeScanned);
             });
     },
 
@@ -55,8 +62,15 @@ var KioskMode = Widget.extend({
     destroy: function () {
         core.bus.off('barcode_scanned', this, this._onBarcodeScanned);
         clearInterval(this.clock_start);
+        clearInterval(this._interval);
         this._super.apply(this, arguments);
     },
+
+    _callServer: function () {
+        // Make a call to the database to avoid the auto close of the session
+        return ajax.rpc("/web/webclient/version_info", {});
+    },
+
 });
 
 core.action_registry.add('hr_attendance_kiosk_mode', KioskMode);

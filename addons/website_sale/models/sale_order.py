@@ -17,8 +17,9 @@ class SaleOrder(models.Model):
     _inherit = "sale.order"
 
     website_order_line = fields.One2many(
-        'sale.order.line', 'order_id',
-        string='Order Lines displayed on Website', readonly=True,
+        'sale.order.line',
+        compute='_compute_website_order_line',
+        string='Order Lines displayed on Website',
         help='Order Lines to be displayed on the website. They should not be used for computation purpose.',
     )
     cart_quantity = fields.Integer(compute='_compute_cart_info', string='Cart Quantity')
@@ -36,6 +37,10 @@ class SaleOrder(models.Model):
         for order in self:
             order.can_directly_mark_as_paid = order.state in ['sent', 'sale'] and order.payment_tx_id and order.payment_acquirer_id.provider in ['transfer', 'manual']
 
+    @api.one
+    def _compute_website_order_line(self):
+        self.website_order_line = self.order_line
+
     @api.multi
     @api.depends('website_order_line.product_uom_qty', 'website_order_line.product_id')
     def _compute_cart_info(self):
@@ -49,7 +54,7 @@ class SaleOrder(models.Model):
         abandoned_delay = float(self.env['ir.config_parameter'].sudo().get_param('website_sale.cart_abandoned_delay', '1.0'))
         abandoned_datetime = fields.Datetime.to_string(datetime.utcnow() - relativedelta(hours=abandoned_delay))
         for order in self:
-            domain = order.date_order <= abandoned_datetime and order.team_id.team_type == 'website' and order.state == 'draft' and order.partner_id.id != self.env.ref('base.public_partner').id and order.order_line
+            domain = order.date_order and order.date_order <= abandoned_datetime and order.team_id.team_type == 'website' and order.state == 'draft' and order.partner_id.id != self.env.ref('base.public_partner').id and order.order_line
             order.is_abandoned_cart = bool(domain)
 
     def _search_abandoned_cart(self, operator, value):
@@ -59,7 +64,7 @@ class SaleOrder(models.Model):
             ('date_order', '<=', abandoned_datetime),
             ('team_id.team_type', '=', 'website'),
             ('state', '=', 'draft'),
-            ('partner_id.id', '!=', self.env.ref('base.public_partner').id),
+            ('partner_id', '!=', self.env.ref('base.public_partner').id),
             ('order_line', '!=', False)
         ])
         # is_abandoned domain possibilities

@@ -3,21 +3,26 @@
 # * portal
 # 
 # Translators:
-# Martin Trigaux, 2017
 # Jan Horzinka <jan.horzinka@centrum.cz>, 2018
+# Michal Veselý <michal@veselyberanek.net>, 2018
+# Martin Trigaux, 2018
+# Chris <krystof.reklamy13@gmail.com>, 2018
+# Jaroslav Helemik Nemec <nemec@helemik.cz>, 2018
+# trendspotter <j.podhorecky@volny.cz>, 2018
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:27+0000\n"
-"PO-Revision-Date: 2017-10-02 11:27+0000\n"
-"Last-Translator: Jan Horzinka <jan.horzinka@centrum.cz>, 2018\n"
+"POT-Creation-Date: 2018-07-27 11:56+0000\n"
+"PO-Revision-Date: 2017-09-20 10:21+0000\n"
+"Last-Translator: trendspotter <j.podhorecky@volny.cz>, 2018\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: cs\n"
-"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
 #. module: portal
 #: model:mail.template,body_html:portal.mail_template_data_portal_welcome
@@ -53,6 +58,15 @@ msgid "<b>Sign in</b>"
 msgstr ""
 
 #. module: portal
+#: model:ir.ui.view,arch_db:portal.frontend_layout
+msgid ""
+"<span class=\"sr-only\">Toggle navigation</span>\n"
+"                                    <span class=\"icon-bar\"/>\n"
+"                                    <span class=\"icon-bar\"/>\n"
+"                                    <span class=\"icon-bar\"/>"
+msgstr ""
+
+#. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_searchbar
 msgid "<span id=\"search_label\">Search</span> <span class=\"caret\"/>"
 msgstr ""
@@ -60,12 +74,12 @@ msgstr ""
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.wizard_view
 msgid "Apply"
-msgstr ""
+msgstr "Použít"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_archive_groups
 msgid "Archives"
-msgstr ""
+msgstr "Archivy"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.wizard_view
@@ -75,19 +89,19 @@ msgstr "Zrušit"
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_layout
 msgid "Change"
-msgstr ""
+msgstr "Změnit"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
 msgid "City"
-msgstr ""
+msgstr "Město"
 
 #. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/xml/portal_signature.xml:12
 #, python-format
 msgid "Clear"
-msgstr ""
+msgstr "Vymazat"
 
 #. module: portal
 #. openerp-web
@@ -99,7 +113,7 @@ msgstr ""
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
 msgid "Company Name"
-msgstr ""
+msgstr "Jméno společnosti"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
@@ -116,17 +130,17 @@ msgstr "Kontakt"
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.wizard_view
 msgid "Contacts"
-msgstr ""
+msgstr "Kontakty"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
 msgid "Country"
-msgstr ""
+msgstr "Země"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
 msgid "Country..."
-msgstr ""
+msgstr "Země..."
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_create_uid
@@ -167,18 +181,23 @@ msgstr ""
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_email
 #: model:ir.ui.view,arch_db:portal.portal_my_details
 msgid "Email"
-msgstr ""
+msgstr "Email"
 
 #. module: portal
 #: model:ir.model,name:portal.model_mail_thread
 msgid "Email Thread"
-msgstr ""
+msgstr "Emailové vlákno"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:130
 #, python-format
 msgid "Group %s is not a portal"
 msgstr ""
+
+#. module: portal
+#: model:ir.model,name:portal.model_ir_http
+msgid "HTTP routing"
+msgstr "HTTP směrování"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_mixin_id
@@ -190,18 +209,18 @@ msgstr "ID"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_in_portal
 msgid "In Portal"
-msgstr ""
+msgstr "V portálu"
 
 #. module: portal
-#: code:addons/portal/controllers/portal.py:180
+#: code:addons/portal/controllers/portal.py:200
 #, python-format
 msgid "Invalid Email! Please enter a valid email address."
-msgstr ""
+msgstr "Neplatný e-mail! Prosím zadejte platnou emailovou adresu."
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_welcome_message
 msgid "Invitation Message"
-msgstr ""
+msgstr "Pozvánka"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_mixin___last_update
@@ -237,12 +256,12 @@ msgstr ""
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.frontend_layout
 msgid "Logout"
-msgstr ""
+msgstr "Odhlásit se"
 
 #. module: portal
 #: model:ir.model,name:portal.model_mail_message
 msgid "Message"
-msgstr ""
+msgstr "Zpráva"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.my_account_link
@@ -252,7 +271,7 @@ msgstr ""
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.pager
 msgid "Next"
-msgstr ""
+msgstr "Další"
 
 #. module: portal
 #. openerp-web
@@ -264,19 +283,19 @@ msgstr ""
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
 msgid "Phone"
-msgstr ""
+msgstr "Telefon"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_portal_id
 msgid "Portal"
-msgstr ""
+msgstr "Portál"
 
 #. module: portal
 #: model:ir.actions.act_window,name:portal.partner_wizard_action
 #: model:ir.model,name:portal.model_portal_wizard
 #: model:ir.ui.view,arch_db:portal.wizard_view
 msgid "Portal Access Management"
-msgstr ""
+msgstr "Správa přístupu k portálu"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_account_invoice_portal_url
@@ -290,7 +309,7 @@ msgstr ""
 #. module: portal
 #: model:ir.model,name:portal.model_portal_wizard_user
 msgid "Portal User Config"
-msgstr ""
+msgstr "Nastavení uživatele portálu"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.pager
@@ -299,7 +318,7 @@ msgstr ""
 
 #. module: portal
 #. openerp-web
-#: code:addons/portal/static/src/js/portal_chatter.js:101
+#: code:addons/portal/static/src/js/portal_chatter.js:102
 #, python-format
 msgid "Published on %s"
 msgstr ""
@@ -311,76 +330,80 @@ msgid ""
 "                        The email address of each selected contact must be valid and unique.\n"
 "                        If necessary, you can fix any contact's email address directly in the list."
 msgstr ""
+"Vyberte, které kontakty mají patřit do portálu v seznamu níže.\n"
+"                        Emailová adresa každého vybraného kontaktu musí být platná a jedinečná.\n"
+"                        Pokud je to nutné, můžete emailové adresy upravit přímo v seznamu."
 
 #. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/xml/portal_chatter.xml:41
 #, python-format
 msgid "Send"
-msgstr ""
+msgstr "Odeslat"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:106
 #, python-format
 msgid "Several contacts have the same email: "
-msgstr ""
+msgstr "Několik kontaktů má stejný e-mail:"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:103
 #, python-format
 msgid "Some contacts don't have a valid email: "
-msgstr ""
+msgstr "Některé kontakty nemají platný e-mail:"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:109
 #, python-format
 msgid "Some contacts have the same email as an existing portal user:"
-msgstr ""
+msgstr "Některé kontakty mají stejný e-mail jako stávající uživatel portálu:"
 
 #. module: portal
-#: code:addons/portal/controllers/portal.py:197
+#: code:addons/portal/controllers/portal.py:219
 #, python-format
 msgid "Some required fields are empty."
-msgstr ""
+msgstr "Některá povinná pole jsou prázdná."
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
 msgid "State / Province"
-msgstr ""
+msgstr "Stát / provincie"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
 msgid "Street"
-msgstr ""
+msgstr "ulice"
 
 #. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/xml/portal_signature.xml:25
 #, python-format
 msgid "Thank You !"
-msgstr ""
+msgstr "Děkuji !"
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_wizard_portal_id
 msgid "The portal that users can be added in or removed from."
-msgstr ""
+msgstr "Portál, z něhož nebo do nějž mohou být uživatelé přidávání/odebírání"
 
 #. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/xml/portal_chatter.xml:11
 #, python-format
 msgid "There are no comments for now."
-msgstr ""
+msgstr "Momentálně nejsou žádné komentáře."
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.wizard_view
 msgid "This text is included in the email sent to new portal users."
 msgstr ""
+"Tento text je přidán do emailu, který se odesílá novým uživatelům portálu."
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_wizard_welcome_message
 msgid "This text is included in the email sent to new users of the portal."
-msgstr ""
+msgstr "Tento text je přidán do emailu odesílaného novým uživatelům portálu."
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:112
@@ -394,12 +417,12 @@ msgstr ""
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_ids
 msgid "Users"
-msgstr ""
+msgstr "Uživatelé"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
 msgid "VAT Number"
-msgstr ""
+msgstr "DIČ"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_account_analytic_account_website_message_ids
@@ -447,7 +470,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:portal.field_product_product_website_message_ids
 #: model:ir.model.fields,field_description:portal.field_product_template_website_message_ids
 #: model:ir.model.fields,field_description:portal.field_project_project_website_message_ids
-#: model:ir.model.fields,field_description:portal.field_project_task_website_message_ids
 #: model:ir.model.fields,field_description:portal.field_purchase_order_website_message_ids
 #: model:ir.model.fields,field_description:portal.field_purchase_requisition_website_message_ids
 #: model:ir.model.fields,field_description:portal.field_res_partner_website_message_ids
@@ -461,7 +483,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:portal.field_stock_production_lot_website_message_ids
 #: model:ir.model.fields,field_description:portal.field_survey_survey_website_message_ids
 msgid "Website Messages"
-msgstr ""
+msgstr "Zprávy Webové stránky"
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_account_analytic_account_website_message_ids
@@ -509,7 +531,6 @@ msgstr ""
 #: model:ir.model.fields,help:portal.field_product_product_website_message_ids
 #: model:ir.model.fields,help:portal.field_product_template_website_message_ids
 #: model:ir.model.fields,help:portal.field_project_project_website_message_ids
-#: model:ir.model.fields,help:portal.field_project_task_website_message_ids
 #: model:ir.model.fields,help:portal.field_purchase_order_website_message_ids
 #: model:ir.model.fields,help:portal.field_purchase_requisition_website_message_ids
 #: model:ir.model.fields,help:portal.field_res_partner_website_message_ids
@@ -523,19 +544,19 @@ msgstr ""
 #: model:ir.model.fields,help:portal.field_stock_production_lot_website_message_ids
 #: model:ir.model.fields,help:portal.field_survey_survey_website_message_ids
 msgid "Website communication history"
-msgstr ""
+msgstr "Historie komunikace Webové stránky"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_wizard_id
 msgid "Wizard"
-msgstr ""
+msgstr "Průvodce"
 
 #. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/xml/portal_chatter.xml:32
 #, python-format
 msgid "Write a message..."
-msgstr ""
+msgstr "Napište zprávu..."
 
 #. module: portal
 #. openerp-web
@@ -550,6 +571,8 @@ msgstr ""
 msgid ""
 "You must have an email address in your User Preferences to send emails."
 msgstr ""
+"Pro zasílání e-mailů musíte mít nastavenu e-mailovou adresu ve vašich "
+"uživatelských předvolbách."
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
@@ -573,7 +596,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:portal.portal_my_details
 #, python-format
 msgid "Your Name"
-msgstr ""
+msgstr "Vaše jméno"
 
 #. module: portal
 #: model:mail.template,subject:portal.mail_template_data_portal_welcome
@@ -583,35 +606,35 @@ msgstr ""
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
 msgid "Zip / Postal Code"
-msgstr ""
+msgstr "PSČ"
 
 #. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/xml/portal_chatter.xml:56
 #, python-format
 msgid "avatar"
-msgstr ""
+msgstr "avatar"
 
 #. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/xml/portal_chatter.xml:8
 #, python-format
 msgid "comment"
-msgstr ""
+msgstr "komentář"
 
 #. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/xml/portal_chatter.xml:9
 #, python-format
 msgid "comments"
-msgstr ""
+msgstr "komentáře"
 
 #. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/xml/portal_chatter.xml:21
 #, python-format
 msgid "logged in"
-msgstr ""
+msgstr "přihlášen"
 
 #. module: portal
 #: model:ir.model,name:portal.model_portal_mixin
@@ -628,4 +651,4 @@ msgstr ""
 #: code:addons/portal/static/src/xml/portal_chatter.xml:21
 #, python-format
 msgid "to post a comment."
-msgstr ""
+msgstr "přidat komentář."

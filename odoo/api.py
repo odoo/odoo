@@ -982,6 +982,12 @@ class Cache(object):
         value = self._data[field][record.id].get(key, SpecialValue(None))
         return default if isinstance(value, SpecialValue) else value
 
+    def get_special(self, record, field, default=None):
+        """ Return the special value of ``field`` for ``record``. """
+        key = field.cache_key(record)
+        value = self._data[field][record.id].get(key)
+        return value.get if isinstance(value, SpecialValue) else default
+
     def set_special(self, record, field, getter):
         """ Set the value of ``field`` for ``record`` to return ``getter()``. """
         key = field.cache_key(record)
@@ -1012,6 +1018,14 @@ class Cache(object):
             if key in field_record_cache
         ]
         return model.browse(ids)
+
+    def get_missing_ids(self, records, field):
+        """ Return the ids of ``records`` that have no value for ``field``. """
+        key = field.cache_key(records)
+        field_cache = self._data[field]
+        for record_id in records._ids:
+            if key not in field_cache.get(record_id, ()):
+                yield record_id
 
     def copy(self, records, env):
         """ Copy the cache of ``records`` to ``env``. """

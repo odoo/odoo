@@ -58,7 +58,7 @@ var ListRenderer = BasicRenderer.extend({
                 return py.parse(py.tokenize(value));
             }).value();
         this.hasSelectors = params.hasSelectors;
-        this.selection = [];
+        this.selection = params.selectedRecords || [];
         this.pagers = []; // instantiated pagers (only for grouped lists)
         this.editable = params.editable;
     },
@@ -72,7 +72,9 @@ var ListRenderer = BasicRenderer.extend({
      */
     updateState: function (state, params) {
         this._processColumns(params.columnInvisibleFields || {});
-        this.selection = [];
+        if (params.selectedRecords) {
+            this.selection = params.selectedRecords;
+        }
         return this._super.apply(this, arguments);
     },
 
@@ -182,7 +184,6 @@ var ListRenderer = BasicRenderer.extend({
                 reject = columnInvisibleFields[c.attrs.name];
             }
             if (!reject && c.attrs.widget === 'handle') {
-                self.hasHandle = true;
                 self.handleField = c.attrs.name;
             }
             return reject;
@@ -647,6 +648,8 @@ var ListRenderer = BasicRenderer.extend({
         this._computeAggregates();
         $table.toggleClass('o_list_view_grouped', is_grouped);
         $table.toggleClass('o_list_view_ungrouped', !is_grouped);
+        this.hasHandle = this.state.orderedBy.length === 0 ||
+            this.state.orderedBy[0].name === this.handleField;
         if (is_grouped) {
             $table
                 .append(this._renderHeader(true))

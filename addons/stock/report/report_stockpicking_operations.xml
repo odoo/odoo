@@ -98,14 +98,16 @@
                                             <span t-field="move.product_id.description_picking"/>
                                         </td>
                                         <td>
-                                            <span t-if="move.product_qty" t-esc="move.product_qty"/>
+                                            <span t-if="move.product_qty" t-field="move.product_qty"/>
                                             <span t-if="not move.product_qty" t-esc="move.product_uom._compute_quantity(move.quantity_done, move.product_id.uom_id, rounding_method='HALF-UP')"/>
                                             <span t-field="move.product_id.uom_id" groups="product.group_uom"/>
                                         </td>
                                         <td>
                                             <t t-if="has_barcode">
                                                 <span t-if="move.product_id and move.product_id.barcode">
-                                                    <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', move.product_id.barcode, 600, 100)" style="width:100%;height:50px"/>
+                                                    <img t-if="move.product_id.barcode and len(move.product_id.barcode) == 13" t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('EAN13', move.product_id.barcode, 600, 100)" style="width:100%;height:50px"/>
+                                                    <img t-elif="move.product_id.barcode and len(move.product_id.barcode) == 8" t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('EAN8', move.product_id.barcode, 600, 100)" style="width:100%;height:50px"/>
+                                                    <img t-else="" t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', move.product_id.barcode, 600, 100)" style="width:100%;height:50px"/>
                                                 </span>
                                             </t>
                                         </td>

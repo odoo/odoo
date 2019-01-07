@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 13:43+0000\n"
-"PO-Revision-Date: 2018-02-19 13:43+0000\n"
+"POT-Creation-Date: 2018-07-27 11:56+0000\n"
+"PO-Revision-Date: 2018-07-27 11:56+0000\n"
 "Last-Translator: Kiros Haregewoine <kirosharegewoine@yahoo.com>, 2017\n"
 "Language-Team: Amharic (https://www.transifex.com/odoo/teams/41243/am/)\n"
 "MIME-Version: 1.0\n"
@@ -519,7 +519,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_active
 msgid "Active"
-msgstr ""
+msgstr "ጥቅም ላይ ማዋል"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -569,7 +569,7 @@ msgstr ""
 #. module: event
 #: model:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Attendance"
-msgstr ""
+msgstr "የሰራተኞች ሰአት መቆጣጠርያ"
 
 #. module: event
 #: selection:event.registration,state:0
@@ -718,7 +718,7 @@ msgstr "ተሰርዟል"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_event_type_id
 msgid "Category"
-msgstr ""
+msgstr "ቡድን"
 
 #. module: event
 #: model:event.event,description:event.event_2
@@ -753,7 +753,7 @@ msgid "Company"
 msgstr "ድርጅት"
 
 #. module: event
-#: code:addons/event/models/event.py:481
+#: code:addons/event/models/event.py:486
 #, python-format
 msgid "Compose Email"
 msgstr ""
@@ -771,12 +771,12 @@ msgstr ""
 #. module: event
 #: model:ir.ui.menu,name:event.menu_event_configuration
 msgid "Configuration"
-msgstr ""
+msgstr "ማስተካከያዎች"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_registration_form
 msgid "Confirm"
-msgstr ""
+msgstr "ማረጋገጫ"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_confirm
@@ -797,7 +797,7 @@ msgstr ""
 #: selection:event.event,state:0 selection:event.registration,state:0
 #: model:ir.ui.view,arch_db:event.view_event_search
 msgid "Confirmed"
-msgstr ""
+msgstr "ተረጋገጠ"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_kanban
@@ -857,13 +857,13 @@ msgid "Created on"
 msgstr "የተፈጠረበት"
 
 #. module: event
-#: code:addons/event/models/event.py:444
+#: code:addons/event/models/event.py:449
 #, python-format
 msgid "Customer"
 msgstr "ተባባሪ"
 
 #. module: event
-#: code:addons/event/models/event.py:446
+#: code:addons/event/models/event.py:451
 #, python-format
 msgid "Customer Email"
 msgstr ""
@@ -938,7 +938,7 @@ msgstr ""
 #. module: event
 #: selection:event.event,state:0
 msgid "Done"
-msgstr ""
+msgstr "ተጠናቋል"
 
 #. module: event
 #: model:event.event,description:event.event_2
@@ -967,7 +967,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_date_end
 msgid "End Date"
-msgstr ""
+msgstr "መጨረሻው ቀን"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_date_end_located
@@ -1055,6 +1055,24 @@ msgstr ""
 #: model:ir.ui.view,arch_db:event.view_event_registration_form
 #: model:ir.ui.view,arch_db:event.view_registration_search
 msgid "Event Registration"
+msgstr ""
+
+#. module: event
+#: code:addons/event/models/event_mail.py:143
+#, python-format
+msgid ""
+"Event Scheduler for:\n"
+"                              - Event: %s (%s)\n"
+"                              - Scheduled: %s\n"
+"                              - Template: %s (%s)\n"
+"\n"
+"                            Failed with error:\n"
+"                              - %s\n"
+"\n"
+"                            You receive this email because you are:\n"
+"                              - the organizer of the event,\n"
+"                              - or the responsible of the event,\n"
+"                              - or the last writer of the template."
 msgstr ""
 
 #. module: event
@@ -1197,7 +1215,7 @@ msgstr ""
 #: selection:event.mail,interval_unit:0
 #: selection:event.type.mail,interval_unit:0
 msgid "Hour(s)"
-msgstr ""
+msgstr "ሰአት"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -1349,7 +1367,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_event_address_id
 #: model:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Location"
-msgstr ""
+msgstr "አካባቢ"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -1407,7 +1425,7 @@ msgstr ""
 #. module: event
 #: model:res.groups,name:event.group_event_manager
 msgid "Manager"
-msgstr ""
+msgstr "አስተዳዳሪ"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_seats_availability
@@ -1772,7 +1790,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:event.action_event_configuration
 #: model:ir.ui.menu,name:event.menu_event_global_settings
 msgid "Settings"
-msgstr ""
+msgstr "ማስተካከያዎች"
 
 #. module: event
 #: model:event.type,name:event.event_type_3
@@ -1787,7 +1805,7 @@ msgstr "የሰነዱ ምንጭ"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_date_begin
 msgid "Start Date"
-msgstr ""
+msgstr "መጀመሪያው ቀን"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_date_begin_located
@@ -1926,7 +1944,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_mail_interval_unit
 #: model:ir.model.fields,field_description:event.field_event_type_mail_interval_unit
 msgid "Unit"
-msgstr ""
+msgstr "የአንዱ"
 
 #. module: event
 #: selection:event.event,seats_availability:0
@@ -1962,7 +1980,7 @@ msgstr ""
 #. module: event
 #: model:res.groups,name:event.group_event_user
 msgid "User"
-msgstr ""
+msgstr "ተጠቃሚ"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -1974,6 +1992,12 @@ msgstr ""
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Visibility"
+msgstr ""
+
+#. module: event
+#: code:addons/event/models/event_mail.py:130
+#, python-format
+msgid "WARNING: Event Scheduler Error for event: %s"
 msgstr ""
 
 #. module: event
@@ -2060,25 +2084,25 @@ msgid "events@odoo.com"
 msgstr ""
 
 #. module: event
-#: code:addons/event/models/event.py:503
+#: code:addons/event/models/event.py:508
 #, python-format
 msgid "in %d days"
 msgstr ""
 
 #. module: event
-#: code:addons/event/models/event.py:507
+#: code:addons/event/models/event.py:512
 #, python-format
 msgid "next month"
 msgstr ""
 
 #. module: event
-#: code:addons/event/models/event.py:505
+#: code:addons/event/models/event.py:510
 #, python-format
 msgid "next week"
 msgstr ""
 
 #. module: event
-#: code:addons/event/models/event.py:509
+#: code:addons/event/models/event.py:514
 #, python-format
 msgid "on "
 msgstr ""
@@ -2089,13 +2113,13 @@ msgid "res.config.settings"
 msgstr ""
 
 #. module: event
-#: code:addons/event/models/event.py:499
+#: code:addons/event/models/event.py:504
 #, python-format
 msgid "today"
 msgstr ""
 
 #. module: event
-#: code:addons/event/models/event.py:501
+#: code:addons/event/models/event.py:506
 #, python-format
 msgid "tomorrow"
 msgstr ""

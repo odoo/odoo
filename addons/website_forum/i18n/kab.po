@@ -3,14 +3,16 @@
 # * website_forum
 # 
 # Translators:
-# Martin Trigaux, 2017
+# Martin Trigaux, 2018
+# MozillaKab <belkacem77@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-24 09:00+0000\n"
-"PO-Revision-Date: 2017-10-24 09:00+0000\n"
-"Last-Translator: Martin Trigaux, 2017\n"
+"POT-Creation-Date: 2019-01-03 15:07+0000\n"
+"PO-Revision-Date: 2017-09-20 10:26+0000\n"
+"Last-Translator: MozillaKab <belkacem77@gmail.com>, 2018\n"
 "Language-Team: Kabyle (https://www.transifex.com/odoo/teams/41243/kab/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -72,7 +74,7 @@ msgstr ""
 #. module: website_forum
 #: model:mail.template,subject:website_forum.validation_email
 msgid "${object.company_id.name} Forums validation"
-msgstr ""
+msgstr "${object.company_id.name} Aseɣbel n Inmagaren"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.tag
@@ -273,6 +275,18 @@ msgid "<b>[Answer]</b>"
 msgstr ""
 
 #. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.edit_profile
+msgid "<i class=\"fa fa-pencil fa-1g pull-left\" title=\"Edit\"/>"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.edit_profile
+msgid ""
+"<i class=\"fa fa-trash-o fa-1g pull-right o_forum_profile_pic_clear\" "
+"title=\"Clear\"/>"
+msgstr ""
+
+#. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.badge
 msgid "<i class=\"text-muted\"> awarded users</i>"
 msgstr ""
@@ -403,12 +417,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_active
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_active
 msgid "Active"
-msgstr ""
+msgstr "Urmid"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.user_detail_full
 msgid "Activity"
-msgstr ""
+msgstr "Armud"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_answer
@@ -420,7 +434,7 @@ msgstr ""
 #: code:addons/website_forum/static/src/js/website_forum.editor.js:43
 #, python-format
 msgid "Add page in menu"
-msgstr ""
+msgstr "Rnu asebtar deg umuɣ"
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum_allow_share
@@ -434,7 +448,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_forum.forum_index
 #, python-format
 msgid "All"
-msgstr ""
+msgstr "Akkw"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_allow_bump
@@ -444,15 +458,15 @@ msgstr ""
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.display_post_question_block
 msgid "Answer"
-msgstr ""
+msgstr "Tiririt"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:499
+#: code:addons/website_forum/models/forum.py:511
 #: model:mail.message.subtype,description:website_forum.mt_answer_edit
 #: model:mail.message.subtype,name:website_forum.mt_answer_edit
 #, python-format
 msgid "Answer Edited"
-msgstr ""
+msgstr "Tiririt teẓreg"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_gen_answer_accepted
@@ -530,7 +544,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_forum.view_forum_post_form
 #: model:ir.ui.view,arch_db:website_forum.view_forum_post_search
 msgid "Answers"
-msgstr ""
+msgstr "Tiririyin"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.forum_view_search
@@ -551,7 +565,7 @@ msgstr ""
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
 msgid "Ask a Question"
-msgstr ""
+msgstr "Steqsi"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_ask
@@ -608,12 +622,12 @@ msgstr ""
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_gen_question_new
 msgid "Asking a question"
-msgstr ""
+msgstr "Steqsi"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.view_forum_post_search
 msgid "Author"
-msgstr ""
+msgstr "Ameskar"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_p_1
@@ -772,7 +786,7 @@ msgstr ""
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.edit_profile
 msgid "City"
-msgstr ""
+msgstr "Aɣrem"
 
 #. module: website_forum
 #. openerp-web
@@ -826,7 +840,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_forum.post_description_full
 #, python-format
 msgid "Close"
-msgstr ""
+msgstr "Mdel"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.close_post
@@ -836,7 +850,7 @@ msgstr ""
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_close_all
 msgid "Close all posts"
-msgstr ""
+msgstr "Mdel akk isental n wawal"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_close_own
@@ -851,12 +865,12 @@ msgstr ""
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_closed_uid
 msgid "Closed by"
-msgstr ""
+msgstr "Imdel suɣuṛ"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_closed_date
 msgid "Closed on"
-msgstr ""
+msgstr "Imdel di"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_reason_name
@@ -870,12 +884,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_forum.post_answers
 #: model:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Comment"
-msgstr ""
+msgstr "Awennit"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_comment_all
 msgid "Comment all posts"
-msgstr ""
+msgstr "Wennet akkw isental n wawal"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_comment_own
@@ -885,7 +899,7 @@ msgstr ""
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_comment
 msgid "Comment this post..."
-msgstr ""
+msgstr "Wennet aseltel agi n wawal"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_p_2
@@ -900,7 +914,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_forum.display_post_answer
 #: model:ir.ui.view,arch_db:website_forum.moderation_display_post_answer
 msgid "Comments"
-msgstr ""
+msgstr "Iwenniten"
 
 #. module: website_forum
 #: model:gamification.challenge,name:website_forum.challenge_configure_profile
@@ -925,7 +939,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_content
 #: model:ir.ui.view,arch_db:website_forum.view_forum_post_search
 msgid "Content"
-msgstr ""
+msgstr "Agbur"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_comment_convert_all
@@ -965,17 +979,17 @@ msgstr ""
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.edit_profile
 msgid "Country"
-msgstr ""
+msgstr "Tamurt"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.edit_profile
 msgid "Country..."
-msgstr ""
+msgstr "Tamurt..."
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote_create_date
 msgid "Create Date"
-msgstr ""
+msgstr "Azemz n tmerna"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_tag_create
@@ -1031,7 +1045,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_forum.post_answers
 #: model:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Delete"
-msgstr ""
+msgstr "Kkes"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_unlink_all
@@ -1105,7 +1119,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_forum.post_answers
 #: model:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Edit"
-msgstr ""
+msgstr "Ẓreg"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.edit_profile
@@ -1163,7 +1177,7 @@ msgstr ""
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.edit_profile
 msgid "Email"
-msgstr ""
+msgstr "Imayl"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_a_5
@@ -1195,7 +1209,7 @@ msgstr ""
 #: model:gamification.badge,name:website_forum.badge_q_5
 #: model:gamification.challenge,name:website_forum.challenge_favorite_question_5
 msgid "Favorite Question"
-msgstr ""
+msgstr "Asteqsi asmenyaf"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_favourite_ids
@@ -1206,29 +1220,29 @@ msgstr ""
 #: model:gamification.challenge.line,name:website_forum.line_favorite_question_1
 #: model:gamification.goal.definition,name:website_forum.definition_favorite_question_1
 msgid "Favourite Question (1)"
-msgstr ""
+msgstr "Asteqsi asmenyaf (1)"
 
 #. module: website_forum
 #: model:gamification.challenge.line,name:website_forum.line_stellar_question_25
 #: model:gamification.goal.definition,name:website_forum.definition_stellar_question_25
 msgid "Favourite Question (25)"
-msgstr ""
+msgstr "Asteqsi asmenyaf (25)"
 
 #. module: website_forum
 #: model:gamification.challenge.line,name:website_forum.line_favorite_question_5
 #: model:gamification.goal.definition,name:website_forum.definition_favorite_question_5
 msgid "Favourite Question (5)"
-msgstr ""
+msgstr "Asteqsi asmenyaf (5)"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.user_detail_full
 msgid "Favourite Questions"
-msgstr ""
+msgstr "Isteqsiyen ismenyifen"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.forum_index
 msgid "Filter on"
-msgstr ""
+msgstr "Izizdeg ɣef"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_relevancy_post_vote
@@ -1283,7 +1297,7 @@ msgstr ""
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.user_detail_full
 msgid "Followed Questions"
-msgstr ""
+msgstr "Iteqsiyen iţwaḍefren"
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
@@ -1308,7 +1322,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_forum.view_forum_post_search
 #: model:website.menu,name:website_forum.menu_questions
 msgid "Forum"
-msgstr ""
+msgstr "Anmager"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_gamification_badge_level
@@ -1331,13 +1345,13 @@ msgstr ""
 #: model:ir.model,name:website_forum.model_forum_post
 #: model:ir.ui.view,arch_db:website_forum.view_forum_post_form
 msgid "Forum Post"
-msgstr ""
+msgstr "Awennit n Unmager"
 
 #. module: website_forum
 #: model:ir.actions.act_window,name:website_forum.action_forum_post
 #: model:ir.ui.view,arch_db:website_forum.view_forum_post_list
 msgid "Forum Posts"
-msgstr ""
+msgstr "Iwenniten n Unmagar"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
@@ -1355,7 +1369,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_forum.header_footer_custom
 #: model:ir.ui.view,arch_db:website_forum.view_forum_forum_list
 msgid "Forums"
-msgstr ""
+msgstr "Inmagaren"
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_gamification_badge
@@ -1388,19 +1402,19 @@ msgstr ""
 #: model:gamification.badge,name:website_forum.badge_a_3
 #: model:gamification.challenge,name:website_forum.challenge_good_answer
 msgid "Good Answer"
-msgstr ""
+msgstr "Tiririt tgarrez"
 
 #. module: website_forum
 #: model:gamification.challenge.line,name:website_forum.line_good_answer
 #: model:gamification.goal.definition,name:website_forum.definition_good_answer
 msgid "Good Answer (6)"
-msgstr ""
+msgstr "Tiririt tgarrez (6)"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_9
 #: model:gamification.challenge,name:website_forum.challenge_good_question
 msgid "Good Question"
-msgstr ""
+msgstr "Asteqsi igarrez"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.view_forum_post_graph
@@ -1423,7 +1437,7 @@ msgstr ""
 #: model:gamification.badge,name:website_forum.badge_q_10
 #: model:gamification.challenge,name:website_forum.challenge_great_question
 msgid "Great Question"
-msgstr ""
+msgstr "Asteqsi igarrez"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.view_forum_post_search
@@ -1456,6 +1470,11 @@ msgstr ""
 #. module: website_forum
 #: model:forum.forum,name:website_forum.forum_help
 msgid "Help"
+msgstr "Tallalt"
+
+#. module: website_forum
+#: model:forum.forum,welcome_message:website_forum.forum_help
+msgid "Hide Intro"
 msgstr ""
 
 #. module: website_forum
@@ -1627,12 +1646,12 @@ msgstr "Aleqqem aneggaru di"
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.forum_index
 msgid "Last activity date"
-msgstr ""
+msgstr "Azemz n urmud aneggaru"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
 msgid "Last updated:"
-msgstr ""
+msgstr "Aleqqem aneggaru:"
 
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_25
@@ -1696,20 +1715,20 @@ msgstr ""
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_user_vote
 msgid "My Vote"
-msgstr ""
+msgstr "Tafrant-iw"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag_name
 #: model:ir.ui.view,arch_db:website_forum.view_forum_post_form
 msgid "Name"
-msgstr ""
+msgstr "Isem"
 
 #. module: website_forum
 #: model:mail.message.subtype,description:website_forum.mt_answer_new
 #: model:mail.message.subtype,name:website_forum.mt_answer_new
 #: model:mail.message.subtype,name:website_forum.mt_forum_answer_new
 msgid "New Answer"
-msgstr ""
+msgstr "Tiririt Tamaynut"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
@@ -1722,14 +1741,14 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_forum.content_new_forum
 #, python-format
 msgid "New Forum"
-msgstr ""
+msgstr "Anmager Amaynut"
 
 #. module: website_forum
 #: model:mail.message.subtype,description:website_forum.mt_question_new
 #: model:mail.message.subtype,name:website_forum.mt_forum_question_new
 #: model:mail.message.subtype,name:website_forum.mt_question_new
 msgid "New Question"
-msgstr ""
+msgstr "Asteqsi Amaynut"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.new_discussion
@@ -1759,7 +1778,7 @@ msgstr ""
 #: model:gamification.badge,name:website_forum.badge_q_8
 #: model:gamification.challenge,name:website_forum.challenge_nice_question
 msgid "Nice Question"
-msgstr ""
+msgstr "Asteqsi igarrezen"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_dofollow
@@ -1767,20 +1786,20 @@ msgid "Nofollow links"
 msgstr ""
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:868
-#: code:addons/website_forum/models/forum.py:888
+#: code:addons/website_forum/models/forum.py:880
+#: code:addons/website_forum/models/forum.py:900
 #, python-format
 msgid "Not allowed to vote for its own post"
 msgstr ""
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:932
+#: code:addons/website_forum/models/forum.py:944
 #, python-format
 msgid "Not enough karma to create a new Tag"
 msgstr ""
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:489
+#: code:addons/website_forum/models/forum.py:501
 #, python-format
 msgid "Not enough karma to retag."
 msgstr ""
@@ -1842,17 +1861,17 @@ msgstr ""
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.view_forum_forum_form
 msgid "Options"
-msgstr ""
+msgstr "Iɣewwaṛen"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.view_forum_forum_form
 msgid "Orders"
-msgstr ""
+msgstr "Tiludna"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.forum_all
 msgid "Our forums"
-msgstr ""
+msgstr "Inmagaren enneɣ"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_23
@@ -1865,12 +1884,12 @@ msgstr ""
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.moderation_queue
 msgid "Pending"
-msgstr ""
+msgstr "Iţraǧu"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
 msgid "People"
-msgstr ""
+msgstr "Imdanen"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_plain_content
@@ -1888,6 +1907,8 @@ msgid ""
 "Please enter a valid email address in order to receive notifications from "
 "answers or comments."
 msgstr ""
+"Ma ulac aɣilif, awid tansa imayl tameɣtut, iwakken ak i-d-awḍen wulɣuten n "
+"tririt, neɣ n iwenniten."
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_1
@@ -1919,7 +1940,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_forum.post_comment
 #: model:ir.ui.view,arch_db:website_forum.view_forum_post_search
 msgid "Post"
-msgstr ""
+msgstr "Siḍen"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_answer
@@ -1951,7 +1972,7 @@ msgstr ""
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.new_question
 msgid "Post Your Question"
-msgstr ""
+msgstr "Aru-d asteqsi yinek"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.new_discussion
@@ -1974,7 +1995,7 @@ msgid "Posted 100 comments"
 msgstr ""
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:433
+#: code:addons/website_forum/models/forum.py:438
 #, python-format
 msgid "Posting answer on a [Deleted] or [Closed] question is not possible"
 msgstr ""
@@ -1984,7 +2005,7 @@ msgstr ""
 #: model:ir.ui.menu,name:website_forum.menu_forum_posts
 #: model:ir.ui.view,arch_db:website_forum.forum_index
 msgid "Posts"
-msgstr ""
+msgstr "Isental n wawal"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.new_question
@@ -2027,15 +2048,15 @@ msgstr ""
 #: selection:forum.forum,default_post_type:0 selection:forum.post,post_type:0
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_parent_id
 msgid "Question"
-msgstr ""
+msgstr "Asteqsi"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:502
+#: code:addons/website_forum/models/forum.py:514
 #: model:mail.message.subtype,description:website_forum.mt_question_edit
 #: model:mail.message.subtype,name:website_forum.mt_question_edit
 #, python-format
 msgid "Question Edited"
-msgstr ""
+msgstr "Asteqsi iţuẓreg"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_gen_question_downvote
@@ -2076,7 +2097,7 @@ msgstr ""
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
 msgid "Question tools"
-msgstr ""
+msgstr "Ifecka n usteqsi"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_gen_question_upvote
@@ -2104,10 +2125,10 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_forum.user_detail_full
 #: model:ir.ui.view,arch_db:website_forum.view_forum_post_search
 msgid "Questions"
-msgstr ""
+msgstr "Isteqsiyen"
 
 #. module: website_forum
-#: code:addons/website_forum/models/forum.py:520
+#: code:addons/website_forum/models/forum.py:532
 #, python-format
 msgid "Re: %s"
 msgstr ""
@@ -2130,7 +2151,7 @@ msgstr ""
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_closed_reason_id
 msgid "Reason"
-msgstr ""
+msgstr "Motif"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_reason_reason_type
@@ -2150,6 +2171,11 @@ msgstr ""
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.display_post_question_block
 msgid "Redirect to external link"
+msgstr ""
+
+#. module: website_forum
+#: model:forum.forum,welcome_message:website_forum.forum_help
+msgid "Register"
 msgstr ""
 
 #. module: website_forum
@@ -2178,7 +2204,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_forum.post_answers
 #: model:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Reply"
-msgstr ""
+msgstr "Err"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_self_reply
@@ -2199,7 +2225,7 @@ msgstr ""
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.edit_post
 msgid "Save"
-msgstr ""
+msgstr "Kles"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_26
@@ -2212,7 +2238,7 @@ msgstr ""
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.view_forum_post_search
 msgid "Search in Post"
-msgstr ""
+msgstr "Nadi deg usentel n wawal"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_relevancy_time_decay
@@ -2259,7 +2285,7 @@ msgstr ""
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Share"
-msgstr ""
+msgstr "Bḍu"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.new_link
@@ -2297,21 +2323,21 @@ msgstr ""
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.js:100
+#: code:addons/website_forum/static/src/js/website_forum.js:101
 #, python-format
 msgid "Sorry you must be logged to flag a post"
 msgstr ""
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.js:149
+#: code:addons/website_forum/static/src/js/website_forum.js:150
 #, python-format
 msgid "Sorry you must be logged to vote"
 msgstr ""
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.js:199
+#: code:addons/website_forum/static/src/js/website_forum.js:200
 #, python-format
 msgid "Sorry, anonymous users cannot choose correct answer."
 msgstr ""
@@ -2323,7 +2349,7 @@ msgstr ""
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.js:144
+#: code:addons/website_forum/static/src/js/website_forum.js:145
 #, python-format
 msgid "Sorry, you cannot vote for your own posts"
 msgstr ""
@@ -2331,7 +2357,7 @@ msgstr ""
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.forum_index
 msgid "Sort by"
-msgstr ""
+msgstr "Trier par"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
@@ -2376,7 +2402,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_forum.forum_tag_view_list
 #: model:ir.ui.view,arch_db:website_forum.view_forum_post_search
 msgid "Tag"
-msgstr ""
+msgstr "Tabzimt"
 
 #. module: website_forum
 #: sql_constraint:forum.tag:0
@@ -2393,7 +2419,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_forum.new_question
 #: model:ir.ui.view,arch_db:website_forum.tag
 msgid "Tags"
-msgstr ""
+msgstr "Tibzimin"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_32
@@ -2429,7 +2455,7 @@ msgstr ""
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "The"
-msgstr ""
+msgstr " -"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.moderation_queue
@@ -2470,7 +2496,10 @@ msgid ""
 msgstr ""
 
 #. module: website_forum
+#: code:addons/website_forum/models/forum.py:51
 #: model:forum.forum,description:website_forum.forum_help
+#: model:forum.forum,welcome_message:website_forum.forum_help
+#, python-format
 msgid ""
 "This community is for professionals and enthusiasts of our products and "
 "services. Share and discuss the best content and new marketing ideas, build "
@@ -2493,14 +2522,14 @@ msgstr ""
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.js:110
+#: code:addons/website_forum/static/src/js/website_forum.js:111
 #, python-format
 msgid "This post can not be flagged"
 msgstr ""
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.js:105
+#: code:addons/website_forum/static/src/js/website_forum.js:106
 #, python-format
 msgid "This post is already flagged"
 msgstr ""
@@ -2525,7 +2554,7 @@ msgstr ""
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_name
 msgid "Title"
-msgstr ""
+msgstr "Tineɣremt"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.edit_post
@@ -2543,7 +2572,7 @@ msgstr ""
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote_recipient_id
 msgid "To"
-msgstr ""
+msgstr "Ɣer"
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
@@ -2565,12 +2594,12 @@ msgstr ""
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_post_type
 msgid "Type"
-msgstr ""
+msgstr "Tawsit"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_content_link
 msgid "URL"
-msgstr ""
+msgstr "URL"
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_post_content_link
@@ -2600,17 +2629,17 @@ msgstr ""
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.edit_profile
 msgid "Update"
-msgstr ""
+msgstr "Leqqem"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_write_date
 msgid "Update on"
-msgstr ""
+msgstr "Ileqqem di"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_write_uid
 msgid "Updated by"
-msgstr ""
+msgstr "Illeqqem sɣuṛ"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_upvote
@@ -2644,12 +2673,12 @@ msgstr ""
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote_user_id
 msgid "User"
-msgstr ""
+msgstr "Aseqdac"
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_res_users
 msgid "Users"
-msgstr ""
+msgstr "Iseqdacen"
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum_allow_question
@@ -2666,7 +2695,7 @@ msgstr ""
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.display_post_question_block
 msgid "View"
-msgstr ""
+msgstr "Timeẓri"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
@@ -2683,7 +2712,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote_ids
 #: model:ir.ui.view,arch_db:website_forum.user_detail_full
 msgid "Votes"
-msgstr ""
+msgstr "Tifranin"
 
 #. module: website_forum
 #: selection:forum.post,state:0
@@ -2710,21 +2739,26 @@ msgstr ""
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.edit_profile
 msgid "Website"
-msgstr ""
+msgstr "Asmel Web"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_website_message_ids
 msgid "Website Messages"
-msgstr ""
+msgstr "Iznan n n usmel  Web"
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_post_website_message_ids
 msgid "Website communication history"
-msgstr ""
+msgstr "Amazray n Taywalt n usmel  Web"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_welcome_message
 msgid "Welcome Message"
+msgstr ""
+
+#. module: website_forum
+#: model:forum.forum,welcome_message:website_forum.forum_help
+msgid "Welcome!"
 msgstr ""
 
 #. module: website_forum
@@ -2776,6 +2810,12 @@ msgid ""
 msgstr ""
 
 #. module: website_forum
+#: code:addons/website_forum/models/forum.py:428
+#, python-format
+msgid "You cannot create recursive forum posts."
+msgstr ""
+
+#. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_answer
 msgid "You cannot post an empty answer"
 msgstr ""
@@ -2817,7 +2857,7 @@ msgstr ""
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.new_question
 msgid "and"
-msgstr ""
+msgstr "d"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.close_post
@@ -2837,7 +2877,7 @@ msgstr ""
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "by"
-msgstr ""
+msgstr "s"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.forum_index
@@ -2971,7 +3011,7 @@ msgstr ""
 #: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:36
 #, python-format
 msgid "here"
-msgstr ""
+msgstr "dagi"
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
@@ -3032,7 +3072,7 @@ msgstr ""
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.user_detail_full
 msgid "last connection"
-msgstr ""
+msgstr "tuqqna taneggarut"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.user_detail_full
@@ -3065,7 +3105,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_forum.post_comment
 #: model:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "on"
-msgstr ""
+msgstr "di"
 
 #. module: website_forum
 #. openerp-web
@@ -3116,12 +3156,12 @@ msgstr ""
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
 msgid "time"
-msgstr ""
+msgstr "tikelt"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
 msgid "times"
-msgstr ""
+msgstr "tikal"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_9
@@ -3168,7 +3208,7 @@ msgstr ""
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.user_detail_full
 msgid "website"
-msgstr ""
+msgstr "asmel WEB"
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help

@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: uk\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: mrp_byproduct
 #: model:ir.model,name:mrp_byproduct.model_mrp_bom
@@ -95,7 +95,7 @@ msgstr "Товар"
 #. module: mrp_byproduct
 #: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_product_qty
 msgid "Product Qty"
-msgstr "К-сть"
+msgstr "К-сть товару"
 
 #. module: mrp_byproduct
 #: model:ir.model,name:mrp_byproduct.model_mrp_production
@@ -115,12 +115,12 @@ msgstr "Переміщення запасів"
 #. module: mrp_byproduct
 #: model:ir.model.fields,field_description:mrp_byproduct.field_stock_move_subproduct_id
 msgid "Subproduct"
-msgstr "Субпродукт"
+msgstr "Субтовар"
 
 #. module: mrp_byproduct
 #: model:ir.model.fields,help:mrp_byproduct.field_stock_move_subproduct_id
 msgid "Subproduct line that generated the move in a manufacturing order"
-msgstr "Лінія субпродукту, яка спричинила рух у виробничому замовленні"
+msgstr "Лінія субтовару, яка спричинила рух у виробничому замовленні"
 
 #. module: mrp_byproduct
 #: code:addons/mrp_byproduct/models/mrp_subproduct.py:32
@@ -129,8 +129,7 @@ msgid ""
 "The Product Unit of Measure you chose has a different category than in the "
 "product form."
 msgstr ""
-"Категорія вибраного продукту одиниці виміру відрізняється від форми "
-"продукту."
+"Категорія вибраного товару одиниці виміру відрізняється від форми товару."
 
 #. module: mrp_byproduct
 #: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_product_uom_id

@@ -107,6 +107,29 @@ var BasicView = AbstractView.extend({
                             if (_.difference(fieldViewTypes, recordViewTypes).length) {
                                 fieldNames.push(name);
                             }
+
+                            if (record.data[name].viewType === 'default') {
+                                // Use case: x2many (tags) in x2many list views
+                                // When opening the x2many record form view, the
+                                // x2many will be reloaded but it may not have
+                                // the same fields (ex: tags in list and list in
+                                // form) so we need to merge the fieldsInfo to
+                                // avoid losing the initial fields (display_name)
+                                var defaultFieldInfo = record.data[name].fieldsInfo.default;
+                                _.each(fieldViews, function (fieldView) {
+                                    _.each(fieldView.fieldsInfo, function (x2mFieldInfo) {
+                                        _.defaults(x2mFieldInfo, defaultFieldInfo);
+                                    });
+                                });
+                            }
+                        }
+                    }
+                    // Many2one: context is not the same between the different views
+                    // this means the result of a name_get could differ
+                    if (fieldType === 'many2one') {
+                        if (JSON.stringify(record.data[name].context) !==
+                                JSON.stringify(fieldInfo.context)) {
+                            fieldNames.push(name);
                         }
                     }
                 }

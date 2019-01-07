@@ -80,8 +80,6 @@ class ResConfigSettings(models.TransientModel):
         return res
 
     def set_values(self):
-        if not self.user_has_groups('website.group_website_designer'):
-            raise AccessDenied()
         super(ResConfigSettings, self).set_values()
         set_param = self.env['ir.config_parameter'].sudo().set_param
         set_param('auth_signup.allow_uninvited', repr(self.auth_signup_uninvited == 'b2c'))

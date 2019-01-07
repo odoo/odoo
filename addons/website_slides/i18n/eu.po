@@ -3,17 +3,22 @@
 # * website_slides
 # 
 # Translators:
-# Martin Trigaux, 2017
 # Eneko <eastigarraga@codesyntax.com>, 2018
-# Mikel Lizarralde <mikellizarralde@gmail.com>, 2018
+# Martin Trigaux, 2018
+# oihane <oihanecruce@gmail.com>, 2018
+# ibinka lete <ilete@fpbidasoa.net>, 2018
+# Gorka Toledo <gorka.toledo@gmail.com>, 2018
+# Esther Martín Menéndez <esthermartin001@gmail.com>, 2018
 # Naomi Hidalgo <naomihid96@gmail.com>, 2018
+# Mikel Lizarralde <mikellizarralde@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:27+0000\n"
-"PO-Revision-Date: 2017-10-02 11:27+0000\n"
-"Last-Translator: Naomi Hidalgo <naomihid96@gmail.com>, 2018\n"
+"POT-Creation-Date: 2019-01-03 15:07+0000\n"
+"PO-Revision-Date: 2017-09-20 10:28+0000\n"
+"Last-Translator: Mikel Lizarralde <mikellizarralde@gmail.com>, 2018\n"
 "Language-Team: Basque (https://www.transifex.com/odoo/teams/41243/eu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -108,6 +113,8 @@ msgid ""
 "<b class=\"oe_slide_js_embed_option_link\" data-slide-option-"
 "id=\"#slide_embed\"><i class=\"fa fa-code\"/> Embed</b>"
 msgstr ""
+"<b class=\"oe_slide_js_embed_option_link\" data-slide-option-"
+"id=\"#slide_embed\"><i class=\"fa fa-code\"/>Txertatu</b>"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.embed_slide
@@ -165,6 +172,8 @@ msgid ""
 "<i class=\"fa fa-envelope-o\"/>\n"
 "                        Send Email"
 msgstr ""
+"<i class=\"fa fa-envelope-o\"/>\n"
+"                    Eposta bidali "
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.embed_slide
@@ -216,6 +225,13 @@ msgid "<i class=\"fa fa-thumbs-up\"/> Likes"
 msgstr ""
 
 #. module: website_slides
+#: code:addons/website_slides/models/slides.py:105
+#, python-format
+msgid ""
+"<p>This channel is private and its content is restricted to some users.</p>"
+msgstr ""
+
+#. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid ""
 "<span class=\"badge\" id=\"facebook-badge\">0</span>\n"
@@ -263,7 +279,7 @@ msgstr ""
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_social_email
 msgid "<span class=\"help-block\">Send presentation through email</span>"
-msgstr ""
+msgstr "<span class=\"help-block\">Bidali aurkezpena posta elektronikoz</span>"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_social_media
@@ -271,6 +287,8 @@ msgid ""
 "<span class=\"help-block\">Use permanent link to share in social "
 "media</span>"
 msgstr ""
+"<span class=\"help-block\">Erabili lotura iraunkorra sare sozialetan "
+"partekatzeko</span>"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -280,6 +298,46 @@ msgstr ""
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slides_channel_header
 msgid "<span class=\"text-muted\">Sort by:</span>"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.embed_slide
+msgid ""
+"<span id=\"first\" title=\"First slide\">\n"
+"                                            <i class=\"fa fa-step-backward fa-2x\"/>\n"
+"                                        </span>"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.embed_slide
+msgid ""
+"<span id=\"fullscreen\" title=\"View fullscreen\">\n"
+"                                        <i class=\"fa fa-arrows-alt fa-2x\"/>\n"
+"                                    </span>"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.embed_slide
+msgid ""
+"<span id=\"last\" title=\"Last slide\" role=\"button\">\n"
+"                                            <i class=\"fa fa-step-forward fa-2x\"/>\n"
+"                                        </span>"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.embed_slide
+msgid ""
+"<span id=\"next\" title=\"Next slide\" role=\"button\">\n"
+"                                            <i class=\"fa fa-arrow-circle-right fa-2x\"/>\n"
+"                                        </span>"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.embed_slide
+msgid ""
+"<span id=\"previous\" title=\"Previous slide\" role=\"button\">\n"
+"                                            <i class=\"fa fa-arrow-circle-left fa-2x\"/>\n"
+"                                        </span>"
 msgstr ""
 
 #. module: website_slides
@@ -301,13 +359,13 @@ msgstr "Ekintzak"
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_active
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_active
 msgid "Active"
-msgstr ""
+msgstr "Gaituta"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_channel_view_search
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
 msgid "Archived"
-msgstr ""
+msgstr "Artxibatua"
 
 #. module: website_slides
 #: selection:slide.slide,download_security:0
@@ -332,7 +390,7 @@ msgstr "Ikusi daiteke"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_can_upload
 msgid "Can Upload"
-msgstr ""
+msgstr "Igo daiteke "
 
 #. module: website_slides
 #: model:ir.actions.act_window,name:website_slides.action_ir_slide_category
@@ -340,7 +398,7 @@ msgstr ""
 #: model:ir.ui.menu,name:website_slides.menu_action_ir_slide_category
 #: model:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "Categories"
-msgstr ""
+msgstr "Kategoriak"
 
 #. module: website_slides
 #. openerp-web
@@ -352,7 +410,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_slides.view_slides_category_tree
 #, python-format
 msgid "Category"
-msgstr ""
+msgstr "Kategoria"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_category_channel_id
@@ -361,7 +419,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_slides.view_slide_channel_tree
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
 msgid "Channel"
-msgstr ""
+msgstr "Kanala"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_group_ids
@@ -397,7 +455,7 @@ msgstr ""
 #: model:ir.ui.menu,name:website_slides.menu_action_slide_channels
 #: model:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "Channels"
-msgstr ""
+msgstr "Kanalak "
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_10
@@ -554,7 +612,7 @@ msgstr "Dokumentuaren URL-a"
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slides_channel_header
 msgid "Documents"
-msgstr ""
+msgstr "Dokumentuak"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.embed_slide
@@ -657,12 +715,12 @@ msgstr ""
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_can_see_full
 msgid "Full Access"
-msgstr ""
+msgstr "Sarbide osoa"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "General"
-msgstr ""
+msgstr "Orokor"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_res_config_settings_website_slide_google_app_key
@@ -708,7 +766,7 @@ msgstr "ID"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_image
 msgid "Image"
-msgstr ""
+msgstr "Irudia"
 
 #. module: website_slides
 #: selection:slide.slide,slide_type:0
@@ -784,12 +842,12 @@ msgstr ""
 #. module: website_slides
 #: model:slide.tag,name:website_slides.tag2
 msgid "Marketing"
-msgstr ""
+msgstr "Marketing"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_image_medium
 msgid "Medium"
-msgstr ""
+msgstr "Erdikoa"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel_access_error_msg
@@ -806,7 +864,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_slides.slides_channel_header
 #: selection:slide.channel,promote_strategy:0
 msgid "Most Viewed"
-msgstr ""
+msgstr "Gehien ikusitakoak "
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slides_channel_header
@@ -821,7 +879,7 @@ msgstr "Gehien bozkatutakoak "
 #: model:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "Name"
-msgstr ""
+msgstr "Izena"
 
 #. module: website_slides
 #: model:mail.template,subject:website_slides.slide_template_published
@@ -862,7 +920,7 @@ msgstr "Oraindik ez dago argitaratutako aurkezpenik."
 #: model:ir.model.fields,field_description:website_slides.field_slide_category_nbr_documents
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_nbr_documents
 msgid "Number of Documents"
-msgstr ""
+msgstr "Dokumentu kopurua "
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_category_nbr_infographics
@@ -896,7 +954,7 @@ msgstr ""
 #: model:slide.category,name:website_slides.category_2
 #: model:slide.tag,name:website_slides.tag5
 msgid "Odoo Days"
-msgstr ""
+msgstr "Odoo egunak "
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_7
@@ -938,7 +996,7 @@ msgstr ""
 #: code:addons/website_slides/static/src/xml/website_slides.xml:28
 #, python-format
 msgid "PDF or Image File"
-msgstr ""
+msgstr "PDF edo Irudi fitxategia "
 
 #. module: website_slides
 #: model:slide.channel,name:website_slides.channel_partial
@@ -1004,12 +1062,12 @@ msgstr "Kanal pribatua "
 #. module: website_slides
 #: selection:slide.channel,visibility:0
 msgid "Public"
-msgstr ""
+msgstr "Publiko"
 
 #. module: website_slides
 #: model:slide.channel,name:website_slides.channel_public
 msgid "Public Channel"
-msgstr ""
+msgstr "Kanal publikoa "
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_date_published
@@ -1106,7 +1164,7 @@ msgstr "Partekatu lagun batekin "
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_share_template_id
 msgid "Shared Template"
-msgstr ""
+msgstr "Partekatutako txantiloia "
 
 #. module: website_slides
 #: selection:slide.channel,visibility:0
@@ -1138,7 +1196,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_tree
 msgid "Slides"
-msgstr ""
+msgstr "Diapositibak "
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_category
@@ -1161,7 +1219,7 @@ msgstr ""
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.view_slide_tag_form
 msgid "Tag"
-msgstr ""
+msgstr "Etiketa"
 
 #. module: website_slides
 #. openerp-web
@@ -1173,12 +1231,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_slides.view_slide_tag_tree
 #, python-format
 msgid "Tags"
-msgstr ""
+msgstr "Etiketak"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "Tags..."
-msgstr ""
+msgstr "Etiketak..."
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.home
@@ -1208,6 +1266,7 @@ msgstr ""
 #: model:slide.channel,access_error_msg:website_slides.channel_public
 msgid "This channel is private and its content is restricted to some users."
 msgstr ""
+"Kanala pribatua da eta bere edukia erabiltzaile batzuentzat bakarrik da."
 
 #. module: website_slides
 #: code:addons/website_slides/controllers/main.py:251
@@ -1231,7 +1290,7 @@ msgstr "Miniatura "
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_name
 #, python-format
 msgid "Title"
-msgstr ""
+msgstr "Titulua"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_category_total
@@ -1253,13 +1312,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_slide_type
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
 msgid "Type"
-msgstr ""
+msgstr "Mota"
 
 #. module: website_slides
 #: code:addons/website_slides/controllers/main.py:151
 #, python-format
 msgid "Uncategorized"
-msgstr ""
+msgstr "Kategoria gabe"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.home
@@ -1280,7 +1339,7 @@ msgstr "Argitaratu gabea"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_upload_group_ids
 msgid "Upload Groups"
-msgstr ""
+msgstr "Taldeak igo "
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.home
@@ -1288,6 +1347,8 @@ msgid ""
 "Upload PDF presentations, documents, videos or infographic using the button "
 "below."
 msgstr ""
+"Kargatu PDF aurkezpenak, dokumentuak, bideoak edo infografiak beheko botoia "
+"erabiliz."
 
 #. module: website_slides
 #. openerp-web
@@ -1317,7 +1378,7 @@ msgstr ""
 #. module: website_slides
 #: selection:slide.slide,slide_type:0
 msgid "Video"
-msgstr ""
+msgstr "Bideoa"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slides_channel_header
@@ -1356,7 +1417,7 @@ msgstr ""
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "Website"
-msgstr ""
+msgstr "Webgune"
 
 #. module: website_slides
 #. openerp-web
@@ -1370,7 +1431,7 @@ msgstr "Ezin dituzu pasahitzaz babestutako fitxategiak kargatu."
 #: code:addons/website_slides/static/src/js/slides.js:65
 #, python-format
 msgid "You have already voted for this slide"
-msgstr ""
+msgstr "Dagoeneko diapositiba honengatik bozkatu duzu"
 
 #. module: website_slides
 #. openerp-web
@@ -1420,7 +1481,7 @@ msgstr "pribatua da."
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_social_email
 msgid "login"
-msgstr ""
+msgstr "hasi saioa "
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_res_config_settings
@@ -1440,7 +1501,7 @@ msgstr ""
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_social_email
 msgid "to send this"
-msgstr ""
+msgstr "hau bidaltzeko "
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_social_email

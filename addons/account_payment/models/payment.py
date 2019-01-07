@@ -50,7 +50,7 @@ class PaymentTransaction(models.Model):
             if not s2s_result or self.state != valid_state:
                 _logger.warning(
                     _("<%s> transaction (%s) invalid state : %s") %
-                    (self.acquirer_id.provider, self.id, self.state_mesage))
+                    (self.acquirer_id.provider, self.id, self.state_message))
                 return 'pay_invoice_tx_state'
 
             try:
@@ -159,7 +159,7 @@ class PaymentTransaction(models.Model):
                 'currency_id': invoice.currency_id.id,
                 'partner_id': invoice.partner_id.id,
                 'partner_country_id': invoice.partner_id.country_id.id,
-                'reference': self.get_next_reference(invoice.number),
+                'reference': self._get_next_reference(invoice.number, acquirer=acquirer),
                 'account_invoice_id': invoice.id,
             }
             if add_tx_values:

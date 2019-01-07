@@ -3,22 +3,24 @@
 # * stock
 # 
 # Translators:
+# Wanradt Koell <wanradt@gmail.com>, 2017
+# Gert Valdek <gert@airobot.ee>, 2017
 # Arma Gedonsky <armagedonsky@hot.ee>, 2017
 # Martin Trigaux, 2017
-# Egon Raamat <egon@avalah.ee>, 2017
-# Eneli Õigus <enelioigus@gmail.com>, 2017
-# Rivo Zängov <eraser@eraser.ee>, 2017
-# Marek Pontus, 2017
-# Gert Valdek <gert@airobot.ee>, 2017
-# Wanradt Koell <wanradt@gmail.com>, 2017
+# Marek Pontus, 2018
 # Ants Peetsalu <ants@avalah.ee>, 2018
+# Egon Raamat <egon@avalah.ee>, 2018
+# Rivo Zängov <eraser@eraser.ee>, 2018
+# Eneli Õigus <enelioigus@gmail.com>, 2018
+# Martin Aavastik <martin@avalah.ee>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 13:42+0000\n"
-"PO-Revision-Date: 2018-02-19 13:42+0000\n"
-"Last-Translator: Ants Peetsalu <ants@avalah.ee>, 2018\n"
+"POT-Creation-Date: 2019-01-03 15:06+0000\n"
+"PO-Revision-Date: 2017-09-20 10:24+0000\n"
+"Last-Translator: Martin Aavastik <martin@avalah.ee>, 2019\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,7 +29,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:230
+#: code:addons/stock/models/stock_move.py:340
 #, python-format
 msgid ""
 "\n"
@@ -39,7 +41,7 @@ msgstr ""
 "%s --> Toote UoM on %s (%s) - Liikumise UoM on %s (%s)"
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:231
+#: code:addons/stock/models/stock_move.py:341
 #, python-format
 msgid ""
 "\n"
@@ -51,13 +53,13 @@ msgstr ""
 "Blokeerib: %s"
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:308
+#: code:addons/stock/models/stock_move.py:328
 #, python-format
 msgid " (%s reserved)"
 msgstr " (%s reserveeritud)"
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:311
+#: code:addons/stock/models/stock_move.py:331
 #, python-format
 msgid " (reserved)"
 msgstr " (reserveeritud)"
@@ -72,6 +74,12 @@ msgid ""
 " * Done: has been processed, can't be modified or cancelled anymore.\n"
 " * Cancelled: has been cancelled, can't be confirmed anymore."
 msgstr ""
+" * Draft: not confirmed yet and will not be scheduled until confirmed.\n"
+" * Waiting Another Operation: waiting for another move to proceed before it becomes automatically available (e.g. in Make-To-Order flows).\n"
+" * Waiting: if it is not ready to be sent because the required products could not be reserved.\n"
+" * Ready: products are reserved and ready to be sent. If the shipping policy is 'As soon as possible' this happens as soon as anything is reserved.\n"
+" * Done: has been processed, can't be modified or cancelled anymore.\n"
+" * Cancelled: has been cancelled, can't be confirmed anymore."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_picking_form
@@ -79,7 +87,7 @@ msgid "#Products"
 msgstr "#Tooted"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:481
+#: code:addons/stock/models/stock_warehouse.py:486
 #, python-format
 msgid "%s: Supply Product from %s"
 msgstr "%s: Tarni toode %s"
@@ -100,6 +108,11 @@ msgid ""
 "* Available: When products are reserved, it is set to 'Available'.\n"
 "* Done: When the shipment is processed, the state is 'Done'."
 msgstr ""
+"* New: When the stock move is created and not yet confirmed.\n"
+"* Waiting Another Move: This state can be seen when a move is waiting for another one, for example in a chained flow.\n"
+"* Waiting Availability: This state is reached when the procurement resolution is not straight forward. It may need the scheduler to run, a component to be manufactured...\n"
+"* Available: When products are reserved, it is set to 'Available'.\n"
+"* Done: When the shipment is processed, the state is 'Done'."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_usage
@@ -113,11 +126,19 @@ msgid ""
 "* Production: Virtual counterpart location for production operations: this location consumes the raw material and produces finished products\n"
 "* Transit Location: Counterpart location that should be used in inter-company or inter-warehouses operations"
 msgstr ""
+"* Vendor Location: Virtual location representing the source location for products coming from your vendors\n"
+"* View: Virtual location used to create a hierarchical structures for your warehouse, aggregating its child locations ; can't directly contain products\n"
+"* Internal Location: Physical locations inside your own warehouses,\n"
+"* Customer Location: Virtual location representing the destination location for products sent to your customers\n"
+"* Inventory Loss: Virtual location serving as counterpart for inventory operations used to correct stock levels (Physical inventories)\n"
+"* Procurement: Virtual location serving as temporary counterpart for procurement operations when the source (vendor or production) is not known yet. This location should be empty when the procurement scheduler has finished running.\n"
+"* Production: Virtual counterpart location for production operations: this location consumes the raw material and produces finished products\n"
+"* Transit Location: Counterpart location that should be used in inter-company or inter-warehouses operations"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid ", if accounting or purchase is installed"
-msgstr "kui raamatupidamine või ostmine on paigaldatud"
+msgstr "kui raamatupidamine või ost on installeeritud"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -442,7 +463,7 @@ msgid ""
 "quantity does not include items already allocated to other orders or items "
 "that are in transit from a supplier"
 msgstr ""
-"<strong>Saadaval tooted</strong> on tooted, mis on hetkel kohe saadaval "
+"<strong>Saadaval olevad tooted</strong> on tooted, mis on hetkel saadaval "
 "tellimuste täitmiseks, tootmiseks ja laost väljasaatmiseks. See kogus ei "
 "sisalda juba reserveeritud ega teel olevaid kaupasid"
 
@@ -472,11 +493,6 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.report_inventory
 msgid "<strong>Date</strong>"
 msgstr "<strong>Kuupäev</strong>"
-
-#. module: stock
-#: model:ir.ui.view,arch_db:stock.report_delivery_document
-msgid "<strong>Delivered Quantity</strong>"
-msgstr "<strong>Tarnitud Kogus</strong>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -593,11 +609,6 @@ msgid "<strong>Order (Origin)</strong>"
 msgstr "<strong>Tellimus (pärinemine)</strong>"
 
 #. module: stock
-#: model:ir.ui.view,arch_db:stock.report_delivery_document
-msgid "<strong>Ordered Quantity</strong>"
-msgstr "<strong>Tellimuse kogus</strong>"
-
-#. module: stock
 #: model:ir.ui.view,arch_db:stock.report_inventory
 msgid "<strong>Package</strong>"
 msgstr "<strong>Pakend</strong>"
@@ -619,6 +630,7 @@ msgid "<strong>Qty: </strong>"
 msgstr "<strong>Kogus: </strong>"
 
 #. module: stock
+#: model:ir.ui.view,arch_db:stock.report_delivery_document
 #: model:ir.ui.view,arch_db:stock.report_inventory
 msgid "<strong>Quantity</strong>"
 msgstr "<strong>Kogus</strong>"
@@ -678,7 +690,7 @@ msgstr ""
 " class=\"fa fa-list\"/>"
 
 #. module: stock
-#: code:addons/stock/models/stock_inventory.py:115
+#: code:addons/stock/models/stock_inventory.py:122
 #, python-format
 msgid "A Pack"
 msgstr "Pakk"
@@ -694,7 +706,7 @@ msgid "A classic sales flow looks like the following:"
 msgstr "Tavapärane müügiprotsess on järgmine:"
 
 #. module: stock
-#: code:addons/stock/models/stock_move_line.py:86
+#: code:addons/stock/models/stock_move_line.py:93
 #, python-format
 msgid "A done move line should never have a reserved quantity."
 msgstr ""
@@ -708,9 +720,12 @@ msgid ""
 "                        you may find yourself out of stock) and not too high (your products occupy\n"
 "                        space and may lose value)."
 msgstr ""
+"A good inventory management aims to optimize stock levels: not too low (or\n"
+"                        you may find yourself out of stock) and not too high (your products occupy\n"
+"                        space and may lose value)."
 
 #. module: stock
-#: code:addons/stock/models/stock_quant.py:76
+#: code:addons/stock/models/stock_quant.py:80
 #, python-format
 msgid "A serial number should only be linked to a single product."
 msgstr "Seerianumber saab olla määratud üksikule tootele."
@@ -723,6 +738,10 @@ msgid ""
 "A service is a non-material product you provide.\n"
 "A digital content is a non-material product you sell online. The files attached to the products are the one that are sold on the e-commerce such as e-books, music, pictures,... The \"Digital Product\" module has to be installed."
 msgstr ""
+"A stockable product is a product for which you manage stock. The \"Inventory\" app has to be installed.\n"
+"A consumable product, on the other hand, is a product for which stock is not managed.\n"
+"A service is a non-material product you provide.\n"
+"A digital content is a non-material product you sell online. The files attached to the products are the one that are sold on the e-commerce such as e-books, music, pictures,... The \"Digital Product\" module has to be installed."
 
 #. module: stock
 #: model:res.groups,name:stock.group_warning_stock
@@ -757,11 +776,19 @@ msgid "Active"
 msgstr "Aktiivne"
 
 #. module: stock
+#: model:ir.ui.view,arch_db:stock.view_picking_form
+msgid ""
+"Add an internal note that will be printed on the Picking Operations sheet"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,help:stock.field_res_config_settings_group_stock_adv_location
 msgid ""
 "Add and customize route operations to process product moves in your warehouse(s): e.g. unload > quality control > stock for incoming products, pick > pack > ship for outgoing products. \n"
 " You can also set putaway strategies on warehouse locations in order to send incoming products into specific child locations straight away (e.g. specific bins, racks)."
 msgstr ""
+"Add and customize route operations to process product moves in your warehouse(s): e.g. unload > quality control > stock for incoming products, pick > pack > ship for outgoing products. \n"
+" You can also set putaway strategies on warehouse locations in order to send incoming products into specific child locations straight away (e.g. specific bins, racks)."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -772,6 +799,11 @@ msgid ""
 "strategies on warehouse locations in order to send incoming products into "
 "specific child locations straight away (e.g. specific bins, racks)."
 msgstr ""
+"Add and customize route operations to process product moves in your "
+"warehouse(s): e.g. unload > quality control > stock for incoming products, "
+"pick > pack > ship for outgoing products. You can also set putaway "
+"strategies on warehouse locations in order to send incoming products into "
+"specific child locations straight away (e.g. specific bins, racks)."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
@@ -812,7 +844,7 @@ msgstr "Kõik"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_type_list
 msgid "All Operations"
-msgstr "Kõik tegevused"
+msgstr "Operatsioonide tüübid"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.stock_picking_action_picking_type
@@ -833,7 +865,7 @@ msgstr ""
 "Kõiki kaupu ei saanud saata, puuduvad kaubad saadetakse esimesel võimalusel."
 
 #. module: stock
-#: code:addons/stock/models/stock_inventory.py:105
+#: code:addons/stock/models/stock_inventory.py:112
 #, python-format
 msgid "All products"
 msgstr "Kõik tooted"
@@ -850,12 +882,6 @@ msgid "Allow moving packs"
 msgstr "Luba pakkide siirded"
 
 #. module: stock
-#: code:addons/stock/models/stock_quant.py:82
-#, python-format
-msgid "An incoming date cannot be set to an untracked product."
-msgstr "Sissetuleku kuupäeva ei saa määrata mitteladustatavale tootele."
-
-#. module: stock
 #: model:stock.inventory.line,product_name:stock.stock_inventory_line_2
 msgid "Apple In-Ear Headphones"
 msgstr "Apple kõrva-sees kõrvaklapid"
@@ -868,27 +894,27 @@ msgstr "Apple juhtmevaba klaviatuur"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_location_route_form_view
 msgid "Applicable On"
-msgstr "Kohaldatav"
+msgstr "Rakendatavus"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_route_product_selectable
 msgid "Applicable on Product"
-msgstr "Kohaldatav tootel"
+msgstr "Rakendatav tootel"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_route_product_categ_selectable
 msgid "Applicable on Product Category"
-msgstr "Kohaldatav tootekategoorial"
+msgstr "Rakendatav tootekategoorial"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_route_warehouse_selectable
 msgid "Applicable on Warehouse"
-msgstr "Kohaldatav laos"
+msgstr "Rakendatav laos"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_procurement_rule_form
 msgid "Applied On"
-msgstr "Kohaldatud"
+msgstr "Rakendatavus"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_incoterms_view_search
@@ -950,12 +976,12 @@ msgstr "Atribuudid"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_path_auto
 msgid "Automatic Move"
-msgstr "Automaatne siirdamine"
+msgstr "Automaatne siire"
 
 #. module: stock
 #: selection:stock.location.path,auto:0
 msgid "Automatic No Step Added"
-msgstr "Automaatselt sammu ei lisata"
+msgstr "Asukoht asendatakse siirdel automaatselt (järgmist siiret ei lisata)"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_string_availability_info
@@ -970,52 +996,46 @@ msgstr "Saadaval"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.product_template_search_form_view_stock
 msgid "Available Products"
-msgstr "Saadaval tooted"
+msgstr "Saadaval olevad tooted"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_backorder_id
 #: model:ir.model.fields,field_description:stock.field_stock_picking_backorder_id
 msgid "Back Order of"
-msgstr "Järeltellimuses"
+msgstr "Järelsaateleht"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "Back Orders"
-msgstr "Järeltellimused"
+msgstr "Järelsaatelehed"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_backorder_confirmation.py:20
 #, python-format
 msgid "Back order <em>%s</em> <b>cancelled</b>."
-msgstr "Järeltellimus <em>%s</em> <b>tühistatud</b>."
-
-#. module: stock
-#: code:addons/stock/models/stock_picking.py:790
-#, python-format
-msgid "Back order <em>%s</em> <b>created</b>."
-msgstr "Järeltellimus <em>%s</em> <b>loodud</b>."
+msgstr "Järelsaateleht <em>%s</em> <b>tühistatud</b>."
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_backorder_confirmation
 msgid "Backorder Confirmation"
-msgstr "Järeltellimuse kinnitus"
+msgstr "Järelsaatelehe kinnitus"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_backorder_confirmation
 msgid "Backorder creation"
-msgstr "Järeltellimuse loomine"
+msgstr "Järelsaatelehe loomine"
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:73
 #, python-format
 msgid "Backorder exists"
-msgstr "Järeltellimus on olemas"
+msgstr "Järelsaateleht on olemas"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_backorder
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Backorders"
-msgstr "Järeltellimused"
+msgstr "Järelsaatelehed"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_barcode
@@ -1041,7 +1061,7 @@ msgstr "Triipkoodilugeja"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings_module_stock_picking_batch
 msgid "Batch Pickings"
-msgstr "Mass nopped"
+msgstr "Grupeeritud laokorjed"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -1058,7 +1078,7 @@ msgstr "Suured müüjad"
 #. module: stock
 #: selection:res.partner,picking_warn:0
 msgid "Blocking Message"
-msgstr "Blokeerimissõnum"
+msgstr "Veateade"
 
 #. module: stock
 #: model:stock.inventory.line,product_name:stock.stock_inventory_line_15
@@ -1068,7 +1088,7 @@ msgstr "Bose Mini Bluetooth Speaker"
 #. module: stock
 #: selection:stock.warehouse,delivery_steps:0
 msgid "Bring goods to output location before shipping (Pick + Ship)"
-msgstr "Too tooted väljastusalale ennem väljasaatmist (Nopi + Saada)"
+msgstr "Tooge tooted enne väljasaatmist väljastusalale (komplekteeri + saada)"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_quant_ids
@@ -1091,14 +1111,14 @@ msgid "By Unique Serial Number"
 msgstr "Seerianumbrite kaupa"
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:612
+#: code:addons/stock/models/stock_move.py:644
 #, python-format
 msgid ""
 "By changing this quantity here, you accept the new quantity as complete: "
 "Odoo will not automatically generate a back order."
 msgstr ""
 "Muutes kogust siin, nõustute uue kogusega: Odoo ei loo automaatselt "
-"järeltellimust."
+"järelsaatelehte."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -1135,27 +1155,27 @@ msgstr ""
 msgid ""
 "By unchecking the active field, you may hide an INCOTERM you will not use."
 msgstr ""
-"Tühjendades aktiivse välja võite ära peita INCOTERM'i mida te ei kasuta."
+"Tühjendades aktiivse välja võite ära peita INCOTERM'i, mida te ei kasuta."
 
 #. module: stock
 #: model:stock.incoterms,name:stock.incoterm_CIP
 msgid "CARRIAGE AND INSURANCE PAID TO"
-msgstr "CARRIAGE AND INSURANCE PAID TO"
+msgstr "VEDU JA KINDLUSTUS MAKSTUD KUNI"
 
 #. module: stock
 #: model:stock.incoterms,name:stock.incoterm_CPT
 msgid "CARRIAGE PAID TO"
-msgstr "CARRIAGE PAID TO"
+msgstr "VEDU MAKSTUD KUNI"
 
 #. module: stock
 #: model:stock.incoterms,name:stock.incoterm_CFR
 msgid "COST AND FREIGHT"
-msgstr "COST AND FREIGHT"
+msgstr "HIND JA PRAHIRAHA"
 
 #. module: stock
 #: model:stock.incoterms,name:stock.incoterm_CIF
 msgid "COST, INSURANCE AND FREIGHT"
-msgstr "COST, INSURANCE AND FREIGHT"
+msgstr "KULUD, KINDLUSTUS JA VEDU"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_picking_calendar
@@ -1163,13 +1183,13 @@ msgid "Calendar View"
 msgstr "Kalendrivaade"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:428
+#: code:addons/stock/models/stock_warehouse.py:432
 #, python-format
 msgid "Can't find any customer or supplier location."
 msgstr "Ei leia kliendi või tarnija asukohta."
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:476
+#: code:addons/stock/models/stock_warehouse.py:481
 #, python-format
 msgid "Can't find any generic Make To Order route."
 msgstr "Ei leia tavalist Telli Kliendile marsruuti."
@@ -1183,7 +1203,7 @@ msgstr "Ei leia tavalist Telli Kliendile marsruuti."
 #: model:ir.ui.view,arch_db:stock.view_stock_quantity_history
 #: model:ir.ui.view,arch_db:stock.view_stock_return_picking_form
 msgid "Cancel"
-msgstr "Tühista"
+msgstr "Loobu"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
@@ -1197,7 +1217,7 @@ msgid "Cancelled"
 msgstr "Tühistatud"
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:468
+#: code:addons/stock/models/stock_move.py:499
 #, python-format
 msgid "Cannot unreserve a done move"
 msgstr "Ei saa reserveeringud eemaldada tehtud staatusega siirdelt"
@@ -1287,27 +1307,27 @@ msgstr "Vali kuupäev"
 #: model:ir.actions.act_window,help:stock.action_picking_tree_waiting
 #: model:ir.actions.act_window,help:stock.stock_picking_action_picking_type
 msgid "Click here to create a new transfer."
-msgstr "Vajuta siia, et luua uus siire."
+msgstr "Kliki siia, et luua uus siire."
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_stock_scrap
 msgid "Click here to scrap products."
-msgstr "Vajuta siia, et tooted maha kanda."
+msgstr "Kliki siia, et tooted maha kanda."
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_location_form
 msgid "Click to add a location."
-msgstr "Vajuta asukoha lisamiseks."
+msgstr "Kliki asukoha lisamiseks."
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_production_lot_form
 msgid "Click to add a lot/serial number."
-msgstr "Vajuta partii/seerianumbri lisamiseks."
+msgstr "Kliki partii/seerianumbri lisamiseks."
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_orderpoint_form
 msgid "Click to add a reordering rule."
-msgstr "Vajuta kordustellimuse reegli lisamiseks."
+msgstr "Kliki kordustellimuse reegli lisamiseks."
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_routes_form
@@ -1317,42 +1337,42 @@ msgstr "Kliki marsruudi lisamiseks."
 #. module: stock
 #: model:ir.actions.act_window,help:stock.stock_picking_type_action
 msgid "Click to create a new operation type."
-msgstr "Vajuta tegevustüübi lisamiseks."
+msgstr "Kliki tegevustüübi lisamiseks."
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.stock_move_action
 msgid "Click to create a stock movement."
-msgstr "Vajuta laosiirde lisamiseks."
+msgstr "Kliki laosiirde lisamiseks."
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_picking_tree
 msgid "Click to create a stock operation."
-msgstr "Vajuta laotegevuse lisamiseks."
+msgstr "Kliki laotegevuse lisamiseks."
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.product_template_action_product
 msgid "Click to define a new product."
-msgstr "Vajuta uue toote loomiseks."
+msgstr "Loo uus toode."
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_picking_type_list
 msgid "Click to define a new transfer."
-msgstr "Vajuta uue siirde loomiseks."
+msgstr "Kliki uue siirde loomiseks."
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_warehouse_form
 msgid "Click to define a new warehouse."
-msgstr "Vajuta uue lao loomiseks."
+msgstr "Kliki uue lao loomiseks."
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_receipt_picking_move
 msgid "Click to register a product receipt."
-msgstr "Vajuta uue toote vastuvõtu registreerimiseks."
+msgstr "Kliki uue toote vastuvõtu registreerimiseks."
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_inventory_form
 msgid "Click to start an inventory."
-msgstr "Vajuta laoseisu alustamiseks."
+msgstr "Kliki laoseisu alustamiseks."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_incoterms_code
@@ -1399,27 +1419,27 @@ msgstr "Arvuta"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with DHL"
-msgstr "Arvuta transpordi hind ja saada DHLga"
+msgstr "Reaalse transpordihinna arvutamine ja saatmine DHLga."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with FedEx"
-msgstr "Arvuta transpordi hind ja saada FedEx'iga"
+msgstr "Reaalse transpordihinna arvutamine ja saatmine FedEx'iga."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with UPS"
-msgstr "Arvuta transpordi hind ja saada UPS'iga"
+msgstr "Reaalse transpordihinna arvutamine ja saatmine UPS'iga."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with USPS"
-msgstr "Arvuta transpordi hind ja saada USPS'iga"
+msgstr "Reaalse transpordihinna arvutamine ja saatmine USPS'iga."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with bpost"
-msgstr "Arvuta transpordi hind ja saada bpost'iga"
+msgstr "Reaalse transpordihinna arvutamine ja saatmine bpost'iga."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_picking_form
@@ -1456,7 +1476,7 @@ msgstr "Õnnitlused!"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings_group_stock_tracking_owner
 msgid "Consignment"
-msgstr "Konsigneerimine"
+msgstr "Kaubasaadetis"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line_consume_line_ids
@@ -1496,22 +1516,22 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_count_picking
 msgid "Count Picking"
-msgstr "Loenda nopped"
+msgstr "Loenda toodete vastuvõtmisi"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_count_picking_backorders
 msgid "Count Picking Backorders"
-msgstr "Loenda nopped järeltellimuses"
+msgstr "Loenda toodete vastuvõtmist järelsaatelehel"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_count_picking_draft
 msgid "Count Picking Draft"
-msgstr "Loenda nopped mustand staatuses"
+msgstr "Loenda toodete vastuvõtmisi mustand staatuses"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_count_picking_late
 msgid "Count Picking Late"
-msgstr "Loenda hiljaks jäänud nopped"
+msgstr "Loenda hiljaks jäänud toodete vastuvõtmisi"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_count_picking_ready
@@ -1521,23 +1541,23 @@ msgstr "Loenda noppeks valmis"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_count_picking_waiting
 msgid "Count Picking Waiting"
-msgstr "Loenda ootel nopped"
+msgstr "Loenda ootel olevaid toodete vastuvõtmisi"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "Counterpart Locations"
-msgstr "Vastasasukohad"
+msgstr "Lao asukohad"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_backorder_confirmation
 msgid "Create Backorder"
-msgstr "Loo järeltellimus"
+msgstr "Loo järelsaateleht"
 
 #. module: stock
-#: code:addons/stock/models/stock_picking.py:715
+#: code:addons/stock/models/stock_picking.py:766
 #, python-format
 msgid "Create Backorder?"
-msgstr "Loo järeltellimus?"
+msgstr "Loo järelsaateleht?"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_scrap_tree_view
@@ -1547,7 +1567,7 @@ msgstr "Loomise kuupäev"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_use_create_lots
 msgid "Create New Lots/Serial Numbers"
-msgstr "Loo partiid/seerianumbrid"
+msgstr "Loo uued partii-/seerianumbrid"
 
 #. module: stock
 #: selection:procurement.rule,procure_method:0
@@ -1557,7 +1577,7 @@ msgstr "Loo hankimine"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Create Vendors"
-msgstr "Loo müüjad"
+msgstr "Loo tarnijaid"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -1576,6 +1596,9 @@ msgid ""
 "                        products later.  Do not create a backorder if you will not\n"
 "                        supply the remaining products."
 msgstr ""
+"Loo järelsaateleht, kui sa soovid saatmata jäänud kaupa saata hiljem,\n"
+"                        Ära tee järelsaatelehte, kui sa ei soovi saatmata jäänud \n"
+"                        kaupa kliendile tarnida."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -1663,7 +1686,7 @@ msgstr "Loomise kuupäev"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_procurement_rule_form
 msgid "Creates"
-msgstr "Loob"
+msgstr "Tekitab"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_search
@@ -1683,7 +1706,7 @@ msgid "Creation Date, usually the time of the order"
 msgstr "Loomise kuupäev, tavaliselt samal ajal tellimusega"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:433
+#: code:addons/stock/models/stock_warehouse.py:437
 #, python-format
 msgid "Cross-Dock"
 msgstr "Rist-dokk"
@@ -1691,7 +1714,7 @@ msgstr "Rist-dokk"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_crossdock_route_id
 msgid "Crossdock Route"
-msgstr "Rist-dokk marsruut"
+msgstr "Rist dokkimise marsruut"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_report_stock_forecast_cumulative_quantity
@@ -1701,7 +1724,7 @@ msgstr "Kumulatiivne kogus"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_current_destination_location_id
 msgid "Current Destination Location"
-msgstr "Hetke sihtkoha asukoht"
+msgstr "Hetke sihtasukoht"
 
 #. module: stock
 #: selection:stock.quantity.history,compute_at_date:0
@@ -1721,13 +1744,13 @@ msgstr "Hetke noppe siirdekirje"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_current_source_location_id
 msgid "Current Source Location"
-msgstr "Hetke lähtekoha asukoht"
+msgstr "Hetke lähteasukoht"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.location_open_quants
 #: model:ir.ui.view,arch_db:stock.view_location_form
 msgid "Current Stock"
-msgstr "Hekte ladu"
+msgstr "Hetke laoseis"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product_qty_available
@@ -1738,6 +1761,11 @@ msgid ""
 "stored in the Stock Location of the Warehouse of this Shop, or any of its children.\n"
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
 msgstr ""
+"Current quantity of products.\n"
+"In a context with a single Stock Location, this includes goods stored at this Location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
+"stored in the Stock Location of the Warehouse of this Shop, or any of its children.\n"
+"Otherwise, this includes goods stored in any Stock Location with 'internal' type."
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:111
@@ -1750,7 +1778,7 @@ msgstr "Klient"
 #: model:ir.model.fields,field_description:stock.field_product_product_sale_delay
 #: model:ir.model.fields,field_description:stock.field_product_template_sale_delay
 msgid "Customer Lead Time"
-msgstr "Kliendi teostusaeg"
+msgstr "Kliendi ettevalmistusaeg"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_partner_property_stock_customer
@@ -1779,37 +1807,37 @@ msgstr "DATE"
 #. module: stock
 #: model:stock.incoterms,name:stock.incoterm_DAF
 msgid "DELIVERED AT FRONTIER"
-msgstr "DELIVERED AT FRONTIER"
+msgstr "TARNITUD PIIRIL"
 
 #. module: stock
 #: model:stock.incoterms,name:stock.incoterm_DAP
 msgid "DELIVERED AT PLACE"
-msgstr "DELIVERED AT PLACE"
+msgstr "TARNITUD KOHALE"
 
 #. module: stock
 #: model:stock.incoterms,name:stock.incoterm_DAT
 msgid "DELIVERED AT TERMINAL"
-msgstr "DELIVERED AT TERMINAL"
+msgstr "TARNITUD TERMINALI"
 
 #. module: stock
 #: model:stock.incoterms,name:stock.incoterm_DDP
 msgid "DELIVERED DUTY PAID"
-msgstr "DELIVERED DUTY PAID"
+msgstr "TARNITUD, TOLL TASUTUD"
 
 #. module: stock
 #: model:stock.incoterms,name:stock.incoterm_DDU
 msgid "DELIVERED DUTY UNPAID"
-msgstr "DELIVERED DUTY UNPAID"
+msgstr "TARNITUD, TOLL TASUMATA"
 
 #. module: stock
 #: model:stock.incoterms,name:stock.incoterm_DEQ
 msgid "DELIVERED EX QUAY"
-msgstr "DELIVERED EX QUAY"
+msgstr "TARNITUD KAILT"
 
 #. module: stock
 #: model:stock.incoterms,name:stock.incoterm_DES
 msgid "DELIVERED EX SHIP"
-msgstr "DELIVERED EX SHIP"
+msgstr "TARNITUD LAEVALT"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings_module_delivery_dhl
@@ -1867,11 +1895,19 @@ msgid ""
 "Thank you in advance for your cooperation.\n"
 "Best Regards,"
 msgstr ""
+"Dear Sir/Madam,\n"
+"\n"
+"Our records indicate that some payments on your account are still due. Please find details below.\n"
+"If the amount has already been paid, please disregard this notice. Otherwise, please forward us the total amount stated below.\n"
+"If you have any queries regarding your account, Please contact us.\n"
+"\n"
+"Thank you in advance for your cooperation.\n"
+"Best Regards,"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_default_location_dest_id
 msgid "Default Destination Location"
-msgstr "Vaikimisi sihtkoha asukoht"
+msgstr "Vaikimisi sihtasukoht"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_owner_id
@@ -1881,19 +1917,19 @@ msgstr "Vaikimisi omanik"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_default_resupply_wh_id
 msgid "Default Resupply Warehouse"
-msgstr "Vaikimisi täiendusladu"
+msgstr "Vaikimisi ladu laovarude täiendamiseks"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_default_location_src_id
 msgid "Default Source Location"
-msgstr "Vaikimisi lähtekoha asukoht"
+msgstr "Vaikimisi lähteasukoht"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_production_lot_product_uom_id
 #: model:ir.model.fields,help:stock.field_stock_quant_product_uom_id
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint_product_uom
 msgid "Default Unit of Measure used for all stock operation."
-msgstr "Vaikimisi mõõtühik kasutatakse kõigis lao tegevusteks."
+msgstr "Vaikimisi mõõtühik kasutatakse kõigis laooperatsioonides."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_reception_steps
@@ -1921,6 +1957,8 @@ msgid ""
 "Define routes within your warehouse according to business needs, such as "
 "Quality Control, After Sales Services or Supplier Returns"
 msgstr ""
+"Define routes within your warehouse according to business needs, such as "
+"Quality Control, After Sales Services or Supplier Returns"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_location_form
@@ -1932,6 +1970,12 @@ msgid ""
 "            the stock operations like the manufacturing orders\n"
 "            consumptions, inventories, etc."
 msgstr ""
+"Define your locations to reflect your warehouse structure and\n"
+"            organization. Odoo is able to manage physical locations\n"
+"            (warehouses, shelves, bin, etc), partner locations (customers,\n"
+"            vendors) and virtual locations which are the counterpart of\n"
+"            the stock operations like the manufacturing orders\n"
+"            consumptions, inventories, etc."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_putaway_strategy_id
@@ -1941,6 +1985,10 @@ msgid ""
 "category level, and a fallback is made on the parent locations if none is "
 "set here."
 msgstr ""
+"Defines the default method used for suggesting the exact location (shelf) "
+"where to store the products. This method can be enforced at the product "
+"category level, and a fallback is made on the parent locations if none is "
+"set here."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_removal_strategy_id
@@ -1950,6 +1998,10 @@ msgid ""
 "method can be enforced at the product category level, and a fallback is made"
 " on the parent locations if none is set here."
 msgstr ""
+"Defines the default method used for suggesting the exact location (shelf) "
+"where to take the products from, which lot etc. for this location. This "
+"method can be enforced at the product category level, and a fallback is made"
+" on the parent locations if none is set here."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_location_path_form
@@ -1963,7 +2015,7 @@ msgid "Delay (days)"
 msgstr "Viivitus (päevades)"
 
 #. module: stock
-#: code:addons/stock/models/product.py:332
+#: code:addons/stock/models/product.py:334
 #, python-format
 msgid "Delivered Qty"
 msgstr "Tarnitud kogus"
@@ -1974,17 +2026,17 @@ msgid "Deliveries"
 msgstr "Tarnetellimused"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:209
+#: code:addons/stock/models/stock_warehouse.py:213
 #: model:stock.picking.type,name:stock.chi_picking_type_out
 #: model:stock.picking.type,name:stock.picking_type_out
 #, python-format
 msgid "Delivery Orders"
-msgstr "Tarnekorraldused"
+msgstr "Kauba väljastus"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings_group_stock_tracking_lot
 msgid "Delivery Packages"
-msgstr "Tarnepakendid"
+msgstr "Pakendid"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_delivery_route_id
@@ -2008,11 +2060,13 @@ msgid ""
 "Depending on the modules installed, this will allow you to define the route "
 "of the product: whether it will be bought, manufactured, MTO/MTS,..."
 msgstr ""
+"Depending on the modules installed, this will allow you to define the route "
+"of the product: whether it will be bought, manufactured, MTO/MTS,..."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Deployment"
-msgstr ""
+msgstr "Deployment"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_name
@@ -2022,12 +2076,12 @@ msgstr "Kirjeldus"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "Description for Delivery Orders"
-msgstr "Kirjeldus tarnetellimustele"
+msgstr "Tarnetellimuste kirjeldus"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "Description for Internal Transfers"
-msgstr "Sisemiste siirete kirjeldus"
+msgstr "Ühendusesiseste ülekannete kirjeldus"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_template_property_form
@@ -2044,7 +2098,7 @@ msgstr "Kirjeldus tarnetellimustel"
 #: model:ir.model.fields,field_description:stock.field_product_product_description_picking
 #: model:ir.model.fields,field_description:stock.field_product_template_description_picking
 msgid "Description on Picking"
-msgstr "Noppe kirjeldus"
+msgstr "Toodete vastuvõtmise kirjeldus"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product_description_pickingin
@@ -2068,12 +2122,12 @@ msgstr "Sihtkoha aadress "
 #: model:ir.model.fields,field_description:stock.field_stock_move_location_dest_id
 #: model:ir.model.fields,field_description:stock.field_stock_picking_location_dest_id
 msgid "Destination Location"
-msgstr "Sihtkoha asukoht"
+msgstr "Sihtkoht"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.message_body
 msgid "Destination Location:"
-msgstr "Sihtkoha asukoht:"
+msgstr "Sihtasukoht"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_move_dest_ids
@@ -2098,7 +2152,7 @@ msgid "Destination route"
 msgstr "Sihtkoha marsruut"
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:446
+#: code:addons/stock/models/stock_move.py:468
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 #, python-format
 msgid "Detailed Operations"
@@ -2121,6 +2175,9 @@ msgid ""
 "whether it will need to 'take from the available stock' in its source "
 "location or needs to ignore its stock and create a procurement over there."
 msgstr ""
+"Determines the procurement method of the stock move that will be generated: "
+"whether it will need to 'take from the available stock' in its source "
+"location or needs to ignore its stock and create a procurement over there."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
@@ -2176,6 +2233,8 @@ msgid ""
 "Do not hesitate to send us an email to describe your experience or to "
 "suggest improvements!"
 msgstr ""
+"Do not hesitate to send us an email to describe your experience or to "
+"suggest improvements!"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line_qty_done
@@ -2187,12 +2246,12 @@ msgstr ""
 #: selection:stock.move,state:0 selection:stock.picking,state:0
 #: selection:stock.scrap,state:0
 msgid "Done"
-msgstr "Valmis"
+msgstr "Tehtud"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_done
 msgid "Done Transfers"
-msgstr "Valmis siirded"
+msgstr "Tehtud siirded"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_done_grouped
@@ -2202,7 +2261,8 @@ msgstr "Valmis siirded kuupäevakaupa"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Don’t propagate scheduling changes through chains of operations"
-msgstr "Ärge täiendage planeerimise muudatusi aheldatud tegevuste kaudu"
+msgstr ""
+"Ärge muutke planeeritud aegasid läbi seoste, kui need ei ole olulised."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -2214,7 +2274,7 @@ msgstr "Lae alla"
 #: code:addons/stock/static/src/xml/stock_traceability_report_line.xml:78
 #, python-format
 msgid "Downstream Traceability"
-msgstr "Jälgitavus"
+msgstr "Jälitatavus pärivoolu"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -2231,7 +2291,7 @@ msgstr "Mustandsiirded"
 #. module: stock
 #: model:stock.incoterms,name:stock.incoterm_EXW
 msgid "EX WORKS"
-msgstr "EX WORKS"
+msgstr "VEO KORRALDAMINE"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -2274,9 +2334,14 @@ msgid ""
 "            location to the Stock location. Each report can be performed on\n"
 "            physical, partner or virtual locations."
 msgstr ""
+"Every stock operation in Odoo moves the products from one\n"
+"            location to another one.  For instance, if you receive products\n"
+"            from a vendor, Odoo will move products from the Vendor\n"
+"            location to the Stock location. Each report can be performed on\n"
+"            physical, partner or virtual locations."
 
 #. module: stock
-#: code:addons/stock/models/stock_quant.py:407
+#: code:addons/stock/models/stock_quant.py:453
 #, python-format
 msgid "Everything inside a package should be in the same location"
 msgstr "Kõik pakendi sees peaks olema samas asukohas"
@@ -2289,7 +2354,7 @@ msgstr "Excel'i mall"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.product_template_search_form_view_stock
 msgid "Exhausted Stock"
-msgstr "Ammendatud ladu"
+msgstr "Ammendunud ladu"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_date_expected
@@ -2306,7 +2371,7 @@ msgstr "Aegumiskuupäevad"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_location_form
 msgid "External note..."
-msgstr "Väline märkus..."
+msgstr "Märkus ..."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_removal_method
@@ -2316,17 +2381,17 @@ msgstr "FIFO, LIFO..."
 #. module: stock
 #: model:stock.incoterms,name:stock.incoterm_FAS
 msgid "FREE ALONGSIDE SHIP"
-msgstr "FREE ALONGSIDE SHIP"
+msgstr "FRANKO LAEVA KÕRVAL"
 
 #. module: stock
 #: model:stock.incoterms,name:stock.incoterm_FCA
 msgid "FREE CARRIER"
-msgstr "FREE CARRIER"
+msgstr "TASUTA TARNE"
 
 #. module: stock
 #: model:stock.incoterms,name:stock.incoterm_FOB
 msgid "FREE ON BOARD"
-msgstr "FREE ON BOARD"
+msgstr "FRANKOSIHTSADAM"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings_module_delivery_fedex
@@ -2346,7 +2411,7 @@ msgstr "Fikseeritud"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_putaway
 msgid "Fixed Locations Per Categories"
-msgstr "Kategoorias fikseeritud asukohad"
+msgstr "Fikseeritud asukohad tootekategooriate lõikes"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_putaway_fixed_location_ids
@@ -2370,7 +2435,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_category_removal_strategy_id
 msgid "Force Removal Strategy"
-msgstr "Sunni eemaldamise strateegia"
+msgstr "Sundeemaldamise strateegia"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product_virtual_available
@@ -2385,9 +2450,13 @@ msgid ""
 "In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
 msgstr ""
+"Forecast quantity (computed as Quantity On Hand - Outgoing + Incoming)\n"
+"In a context with a single Stock Location, this includes goods stored in this location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
+"Otherwise, this includes goods stored in any Stock Location with 'internal' type."
 
 #. module: stock
-#: code:addons/stock/models/product.py:327
+#: code:addons/stock/models/product.py:329
 #: model:ir.model.fields,field_description:stock.field_product_template_virtual_available
 #: model:ir.model.fields,field_description:stock.field_stock_move_availability
 #, python-format
@@ -2422,31 +2491,31 @@ msgid "Future Activities"
 msgstr "Tulevased tegevused"
 
 #. module: stock
-#: code:addons/stock/models/product.py:330
+#: code:addons/stock/models/product.py:332
 #, python-format
 msgid "Future Deliveries"
 msgstr "Tulevased tarned"
 
 #. module: stock
-#: code:addons/stock/models/product.py:335
+#: code:addons/stock/models/product.py:337
 #, python-format
 msgid "Future P&L"
 msgstr "Tulevased Kasum & Kahjum"
 
 #. module: stock
-#: code:addons/stock/models/product.py:345
+#: code:addons/stock/models/product.py:347
 #, python-format
 msgid "Future Productions"
 msgstr "Tulevased tootmised"
 
 #. module: stock
-#: code:addons/stock/models/product.py:340
+#: code:addons/stock/models/product.py:342
 #, python-format
 msgid "Future Qty"
 msgstr "Tulevane kogus"
 
 #. module: stock
-#: code:addons/stock/models/product.py:322
+#: code:addons/stock/models/product.py:324
 #, python-format
 msgid "Future Receipts"
 msgstr "Tulevased vastuvõtmised"
@@ -2469,12 +2538,12 @@ msgstr "Üldised IT müüjad"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Get a full traceability from vendors to customers"
-msgstr "Saa täielik jälgitavus müüjalt kliendini"
+msgstr "Jälgi toote liikumisi täielikult alates ostust kuni müügini."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Get informative or blocking warnings on partners"
-msgstr "Saa informatsiooni või blokeeringu hoiatusi partnerite kohta"
+msgstr "Saa partneri kohta tegevusi tõkestavat informatsiooni või hoiatusi."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_fixed_putaway_strat_sequence
@@ -2482,6 +2551,8 @@ msgid ""
 "Give to the more specialized category, a higher priority to have them in top"
 " of the list."
 msgstr ""
+"Give to the more specialized category, a higher priority to have them in top"
+" of the list."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_location_path_filter
@@ -2528,6 +2599,11 @@ msgid "HDD SH-1"
 msgstr "HDD SH-1"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_move_has_move_lines
+msgid "Has Move Lines"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_move_line_exist
 msgid "Has Pack Operations"
 msgstr "On pakkimise tegevused"
@@ -2543,6 +2619,11 @@ msgid "Has Scrap Moves"
 msgstr "On maha kandmise siirded"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking_has_tracking
+msgid "Has Tracking"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_posz
 msgid "Height (Z)"
 msgstr "Kõrgus (Z)"
@@ -2553,6 +2634,8 @@ msgid ""
 "Help rental management, by generating automated return moves for rented "
 "products"
 msgstr ""
+"Help rental management, by generating automated return moves for rented "
+"products"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -2569,6 +2652,12 @@ msgid ""
 "                the purchase order reference. Then you can confirm all products\n"
 "                received using the buttons on the right of each line."
 msgstr ""
+"Here you can receive individual products, no matter what\n"
+"                purchase order or picking order they come from. You will find\n"
+"                the list of all products you are waiting for. Once you receive\n"
+"                an order, you can filter based on the name of the vendor or\n"
+"                the purchase order reference. Then you can confirm all products\n"
+"                received using the buttons on the right of each line."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -2598,7 +2687,7 @@ msgstr "Kuidas kasutada partii jälgimist:"
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_id
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot_id
 #: model:ir.model.fields,field_description:stock.field_stock_quant_id
-#: model:ir.model.fields,field_description:stock.field_stock_quant_package_id_6904
+#: model:ir.model.fields,field_description:stock.field_stock_quant_package_id_6916
 #: model:ir.model.fields,field_description:stock.field_stock_quantity_history_id
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking_id
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking_line_id
@@ -2613,7 +2702,7 @@ msgid "ID"
 msgstr "ID"
 
 #. module: stock
-#: code:addons/stock/models/stock_inventory.py:412
+#: code:addons/stock/models/stock_inventory.py:421
 #, python-format
 msgid "INV:"
 msgstr "INV:"
@@ -2788,6 +2877,9 @@ msgid ""
 "                        API</strong> to load data automatically through\n"
 "                        scripts: take a look at our"
 msgstr ""
+"If you are a developer <strong>you can use our\n"
+"                        API</strong> to load data automatically through\n"
+"                        scripts: take a look at our"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -2797,6 +2889,10 @@ msgid ""
 "                        sometimes the system can remain blocked without generating a\n"
 "                        corresponding document, usually due to a configuration problem."
 msgstr ""
+"If you configured automatic procurement, Odoo automatically generates\n"
+"                        Procurements Orders. You usually don't need to worry about them, but\n"
+"                        sometimes the system can remain blocked without generating a\n"
+"                        corresponding document, usually due to a configuration problem."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory_filter
@@ -2807,6 +2903,11 @@ msgid ""
 "the system won't propose anything.  You can also let the system propose for "
 "a single product / lot /... "
 msgstr ""
+"If you do an entire inventory, you can choose 'All Products' and it will "
+"prefill the inventory with the current stock.  If you only do some products"
+"  (e.g. Cycle Counting) you can choose 'Manual Selection of Products' and "
+"the system won't propose anything.  You can also let the system propose for "
+"a single product / lot /... "
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -2829,7 +2930,7 @@ msgid "Immediate Transfer"
 msgstr "Kohene siire"
 
 #. module: stock
-#: code:addons/stock/models/stock_picking.py:678
+#: code:addons/stock/models/stock_picking.py:729
 #, python-format
 msgid "Immediate Transfer?"
 msgstr "Kohene siire?"
@@ -2842,7 +2943,7 @@ msgstr "Kohene siire?"
 #. module: stock
 #: selection:res.config.settings,module_procurement_jit:0
 msgid "Immediately after sales order confirmation"
-msgstr "Koheselt peale müügitellimuse kinnitamist"
+msgstr "Kohe pärast müügitellimuse kinnitamist"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -2861,6 +2962,9 @@ msgid ""
 "                        Odoo will automatically propose a procurement to buy new products if you are\n"
 "                        running out of stock."
 msgstr ""
+"In Odoo, <strong>Reordering Rules</strong> are used to replenish your products.\n"
+"                        Odoo will automatically propose a procurement to buy new products if you are\n"
+"                        running out of stock."
 
 #. module: stock
 #: selection:stock.inventory,state:0
@@ -2870,7 +2974,7 @@ msgstr "Töös"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_in_type_id
 msgid "In Type"
-msgstr "Tüübiga"
+msgstr "Kauba lattu võtmine"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -2879,6 +2983,9 @@ msgid ""
 "                        to exactly one piece.  In case of lots, you need to supply the quantity\n"
 "                        for each lot when you move that product."
 msgstr ""
+"In case of unique serial numbers, each serial number corresponds\n"
+"                        to exactly one piece.  In case of lots, you need to supply the quantity\n"
+"                        for each lot when you move that product."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -2886,11 +2993,13 @@ msgid ""
 "In short, you will get a more efficient warehouse management that leads\n"
 "                        to inventory reduction and better efficiencies in your daily operations."
 msgstr ""
+"In short, you will get a more efficient warehouse management that leads\n"
+"                        to inventory reduction and better efficiencies in your daily operations."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_exhausted
 msgid "Include Exhausted Products"
-msgstr "Sisaldab kasutatud tooteid"
+msgstr "Lisage laost otsas tooted"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product_incoming_qty
@@ -2902,7 +3011,7 @@ msgstr "Sisenev"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_receipt_picking_move
 msgid "Incoming  Products"
-msgstr "Sisenevad tooted"
+msgstr "Saabuvad tooted"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_in_date
@@ -2961,10 +3070,10 @@ msgstr "Sisend"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_wh_input_stock_loc_id
 msgid "Input Location"
-msgstr "Sisend asukoht"
+msgstr "Kauba lattu võtmise asukoht"
 
 #. module: stock
-#: code:addons/stock/models/stock_scrap.py:131
+#: code:addons/stock/models/stock_scrap.py:135
 #, python-format
 msgid "Insufficient Quantity"
 msgstr "Pole vajaliku kogust"
@@ -2998,11 +3107,11 @@ msgid "Internal Reference"
 msgstr "Sisemine viide"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:231
+#: code:addons/stock/models/stock_warehouse.py:235
 #: model:stock.picking.type,name:stock.picking_type_internal
 #, python-format
 msgid "Internal Transfers"
-msgstr "Sisemised siirded"
+msgstr "Sisemised laosiirded"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company_internal_transit_location_id
@@ -3012,7 +3121,7 @@ msgstr "Sisemise siirde asukoht"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_int_type_id
 msgid "Internal Type"
-msgstr "Sisemine tüüp"
+msgstr "Sisemine liik"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_production_lot_ref
@@ -3022,22 +3131,22 @@ msgid ""
 msgstr "Sisemine viitenumber juhuks kui see erineb tootja partii/seerianumber"
 
 #. module: stock
-#: code:addons/stock/models/product.py:240
+#: code:addons/stock/models/product.py:253
 #, python-format
 msgid "Invalid domain left operand %s"
-msgstr ""
+msgstr "Invalid domain left operand %s"
 
 #. module: stock
-#: code:addons/stock/models/product.py:242
+#: code:addons/stock/models/product.py:255
 #, python-format
 msgid "Invalid domain operator %s"
-msgstr ""
+msgstr "Invalid domain operator %s"
 
 #. module: stock
-#: code:addons/stock/models/product.py:244
+#: code:addons/stock/models/product.py:257
 #, python-format
 msgid "Invalid domain right operand %s"
-msgstr ""
+msgstr "Invalid domain right operand %s"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_category_id
@@ -3091,7 +3200,7 @@ msgstr "Laoseisude kuu"
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 #: model:ir.ui.view,arch_db:stock.view_stock_quant_pivot
 msgid "Inventory"
-msgstr "Laoseis"
+msgstr "Ladu"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
@@ -3140,12 +3249,12 @@ msgstr "Lao asukoht"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_location
 msgid "Inventory Locations"
-msgstr "Lao asukohad"
+msgstr "Ladude asukohad"
 
 #. module: stock
 #: selection:stock.location,usage:0
 msgid "Inventory Loss"
-msgstr "Lao kahjum"
+msgstr "Lao puudujääk"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_filter
@@ -3156,7 +3265,7 @@ msgstr "Lao toode"
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_name
 #: model:ir.ui.view,arch_db:stock.view_inventory_filter
 msgid "Inventory Reference"
-msgstr "Lao viide"
+msgstr "Invetuuri viide"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_quantity_history
@@ -3166,7 +3275,7 @@ msgstr "Lao aruanne"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_location_route
 msgid "Inventory Routes"
-msgstr "Lao marsruudi"
+msgstr "Lao marsruudid"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -3217,12 +3326,12 @@ msgstr "Töödeldud"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_return_location
 msgid "Is a Return Location?"
-msgstr "Tagastus asukoht?"
+msgstr "Kas tegemist on tagastuste asukohaga?"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_scrap_location
 msgid "Is a Scrap Location?"
-msgstr "Praagi asukoht?"
+msgstr "Kas tegemist on praagi asukohaga?"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_is_initial_demand_editable
@@ -3245,14 +3354,14 @@ msgstr ""
 "                        Kui soovite seda teha, võtke ühendust Avatud Lahendused OÜ'ga www.avalah.ee."
 
 #. module: stock
-#: code:addons/stock/models/stock_quant.py:254
+#: code:addons/stock/models/stock_quant.py:265
 #, python-format
 msgid ""
 "It is not possible to reserve more products of %s than you have in stock."
 msgstr "Ei ole võimalik reserveerida rohkem tooteid %s kui on laos."
 
 #. module: stock
-#: code:addons/stock/models/stock_quant.py:256
+#: code:addons/stock/models/stock_quant.py:270
 #, python-format
 msgid ""
 "It is not possible to unreserve more products of %s than you have in stock."
@@ -3301,7 +3410,7 @@ msgstr "PARTII/SEERIANUMBER"
 #. module: stock
 #: model:stock.inventory.line,product_name:stock.stock_inventory_line_13
 msgid "Laptop Customized"
-msgstr ""
+msgstr "Kohandatud sülearvuti"
 
 #. module: stock
 #: model:stock.inventory.line,product_name:stock.stock_inventory_line_14
@@ -3311,7 +3420,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_last_done_picking
 msgid "Last 10 Done Pickings"
-msgstr "Viimased 10 Tehtud noppet"
+msgstr "Viimased 10 tehtud noppet"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_group___last_update
@@ -3348,7 +3457,7 @@ msgstr "Viimased 10 Tehtud noppet"
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty___last_update
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_scrap___last_update
 msgid "Last Modified on"
-msgstr "Viimati muudetud"
+msgstr "Viimati muudetud (millal)"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_group_write_uid
@@ -3383,7 +3492,7 @@ msgstr "Viimati muudetud"
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_write_uid
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_scrap_write_uid
 msgid "Last Updated by"
-msgstr "Viimati uuendatud"
+msgstr "Viimati uuendatud (kelle poolt)"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_group_write_date
@@ -3418,7 +3527,7 @@ msgstr "Viimati uuendatud"
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_write_date
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_scrap_write_date
 msgid "Last Updated on"
-msgstr "Viimati uuendatud"
+msgstr "Viimati uuendatud (millal)"
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:71
@@ -3426,17 +3535,17 @@ msgstr "Viimati uuendatud"
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
 #, python-format
 msgid "Late"
-msgstr "Ületähtaja"
+msgstr "Üle tähtaja"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Late Activities"
-msgstr "Ületähtaja tegevused"
+msgstr "Hilinenud tegevused"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_late
 msgid "Late Transfers"
-msgstr "Ületähtaja siirded"
+msgstr "Üle tähtaja siirded"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint_lead_days
@@ -3477,6 +3586,8 @@ msgid ""
 "Like with the sales flow, Odoo inventory management is\n"
 "                        fully integrated with the purchase app."
 msgstr ""
+"Like with the sales flow, Odoo inventory management is\n"
+"                        fully integrated with the purchase app."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_form
@@ -3491,7 +3602,7 @@ msgstr "Kirjete listvaade"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_location_form
 msgid "Localization"
-msgstr "Lokaliseerimine"
+msgstr "Asukoht laos"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_production_lot_form
@@ -3499,7 +3610,6 @@ msgid "Locate"
 msgstr "Leia"
 
 #. module: stock
-#: code:addons/stock/models/barcode.py:12
 #: model:ir.model.fields,field_description:stock.field_product_product_location_id
 #: model:ir.model.fields,field_description:stock.field_product_template_location_id
 #: model:ir.model.fields,field_description:stock.field_stock_change_product_qty_location_id
@@ -3518,14 +3628,13 @@ msgstr "Leia"
 #: model:ir.ui.view,arch_db:stock.stock_scrap_search_view
 #: model:ir.ui.view,arch_db:stock.view_move_search
 #: model:ir.ui.view,arch_db:stock.warehouse_orderpoint_search
-#, python-format
 msgid "Location"
 msgstr "Asukoht"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_location_barcode
 msgid "Location BarCode"
-msgstr "Asukoha triipkood"
+msgstr "Triipkood asukohale"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line_location_name
@@ -3542,7 +3651,7 @@ msgstr "Asukoha teekonnad"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_lot_stock_id
 msgid "Location Stock"
-msgstr "Asukoha ladu"
+msgstr "Lao asukoht"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_usage
@@ -3578,10 +3687,8 @@ msgid "Logistics"
 msgstr "Logistika"
 
 #. module: stock
-#: code:addons/stock/models/barcode.py:13
 #: model:ir.model.fields,field_description:stock.field_stock_move_line_lot_id
 #: model:ir.model.fields,field_description:stock.field_stock_scrap_lot_id
-#, python-format
 msgid "Lot"
 msgstr "Partii"
 
@@ -3613,7 +3720,6 @@ msgstr "Partii/Seerianumber :"
 #: model:ir.ui.view,arch_db:stock.report_lot_barcode
 #: model:ir.ui.view,arch_db:stock.report_package_barcode
 #: model:ir.ui.view,arch_db:stock.report_picking
-#: model:ir.ui.view,arch_db:stock.view_move_line_form
 #: model:res.request.link,name:stock.req_link_tracking
 msgid "Lot/Serial Number"
 msgstr "Partii/Seerianumbri number"
@@ -3626,7 +3732,7 @@ msgstr "Partii/Seerianumbri number"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings_group_stock_production_lot
 msgid "Lots & Serial Numbers"
-msgstr "Partiid & Seerianumbrid"
+msgstr "Partiid ja seerianumbrid"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line_lots_visible
@@ -3641,6 +3747,10 @@ msgid ""
 "                        The tracking can be configured on every product: not any tracing at\n"
 "                        all, tracking by lot, or tracking by unique serial number."
 msgstr ""
+"Lots can be encoded on incoming shipments, internal transfers and\n"
+"                        outgoing deliveries according to the settings in the operation type.\n"
+"                        The tracking can be configured on every product: not any tracing at\n"
+"                        all, tracking by lot, or tracking by unique serial number."
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_production_lot_form
@@ -3652,7 +3762,7 @@ msgid "Lots/Serial Numbers"
 msgstr "Partiid/Seerianumbrid"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:541
+#: code:addons/stock/models/stock_warehouse.py:547
 #, python-format
 msgid "MTO"
 msgstr "TK"
@@ -3660,14 +3770,14 @@ msgstr "TK"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_mto_pull_id
 msgid "MTO rule"
-msgstr "TK reegel"
+msgstr "Tellimuspõhine reegel"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:474
+#: code:addons/stock/models/stock_warehouse.py:479
 #: model:stock.location.route,name:stock.route_warehouse0_mto
 #, python-format
 msgid "Make To Order"
-msgstr "Telli Kliendile"
+msgstr "Telli kliendile"
 
 #. module: stock
 #: selection:stock.warehouse,delivery_steps:0
@@ -3675,8 +3785,8 @@ msgid ""
 "Make packages into a dedicated location, then bring them to the output "
 "location for shipping (Pick + Pack + Ship)"
 msgstr ""
-"Tee pakid kindlaks määratud asukohas, siis vii need väljastusalale "
-"saatmiseks (Nopi + Paki + Saada)"
+"Komplekteerige kaup kindlaks määratud asukohas, pakkige ja viige kaup "
+"väljastusalale ning seejärel saatke (komplekteeri + paki + saada)"
 
 #. module: stock
 #: model:res.groups,name:stock.group_tracking_owner
@@ -3696,7 +3806,7 @@ msgstr "Halda mitmeid lao asukohti"
 #. module: stock
 #: model:res.groups,name:stock.group_stock_multi_warehouses
 msgid "Manage Multiple Warehouses"
-msgstr "Halda mitmeid ladusid"
+msgstr "Halda mitut ladu."
 
 #. module: stock
 #: model:res.groups,name:stock.group_tracking_lot
@@ -3721,12 +3831,13 @@ msgstr "Halda toote tootmiseahelaid"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Manage product packages (e.g. pack of 6 bottles, box of 10 pieces)"
-msgstr "Halda toote pakke (nt 6-ne pakk pudeleid, 10-ne tükiga kast)"
+msgstr ""
+"Halda tooteid pakendites (nt 6-ne pakk pudeleid, 10-ne karp mune jne)."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Manage several warehouses"
-msgstr "Halda mitmeid ladusid"
+msgstr "Halda mitut ladu."
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_manager
@@ -3736,12 +3847,12 @@ msgstr "Juhataja"
 #. module: stock
 #: selection:stock.location.path,auto:0
 msgid "Manual Operation"
-msgstr "Käsitsi tehtav tegevus"
+msgstr "Manuaalne operatsioon (lisatakse uus siire)"
 
 #. module: stock
 #: selection:res.config.settings,module_procurement_jit:0
 msgid "Manually or based on automatic scheduler"
-msgstr "Käsitsi või automaatne planeerija"
+msgstr "Manuaalselt või põhinedes automaatsel planeerimisel"
 
 #. module: stock
 #: selection:procurement.rule,action:0
@@ -3777,7 +3888,7 @@ msgstr "Maksimaalne kogus"
 #: model:ir.model.fields,field_description:stock.field_res_partner_picking_warn_msg
 #: model:ir.model.fields,field_description:stock.field_res_users_picking_warn_msg
 msgid "Message for Stock Picking"
-msgstr "Sõnum laonoppele"
+msgstr "Sõnum laokorjele"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_removal_method
@@ -3795,7 +3906,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model,name:stock.model_stock_warehouse_orderpoint
 msgid "Minimum Inventory Rule"
-msgstr "Minimaalse laoseisu reegel"
+msgstr "Miinimumlao reegel"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint_product_min_qty
@@ -3819,6 +3930,9 @@ msgid ""
 "                to your preconfigured logistics rules, but you can also record\n"
 "                manual stock movements."
 msgstr ""
+"Most operations are prepared automatically by Odoo according\n"
+"                to your preconfigured logistics rules, but you can also record\n"
+"                manual stock movements."
 
 #. module: stock
 #: model:stock.inventory.line,product_name:stock.stock_inventory_line_5
@@ -3843,18 +3957,18 @@ msgstr "Siirde detailid"
 #. module: stock
 #: selection:procurement.rule,action:0
 msgid "Move From Another Location"
-msgstr "Siirda teisest asukohast"
+msgstr "Tee laosiire teisest asukohast"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_move_line_ids
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_move_line_ids
 msgid "Move Line"
-msgstr "Siirdekirje"
+msgstr "Kande rida"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_move_line_nosuggest_ids
 msgid "Move Line Nosuggest"
-msgstr "Siirdekirje"
+msgstr "Siirdekirje (ei soovita)"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_line_form
@@ -3865,7 +3979,7 @@ msgstr "Siirde kirjed"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_rule_procure_method
 msgid "Move Supply Method"
-msgstr "Siirde tarne meetod"
+msgstr "Hankimissiirde meetod"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_date
@@ -3904,12 +4018,12 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings_group_stock_adv_location
 msgid "Multi-Step Routes"
-msgstr "Mitme sammuga marsruudid"
+msgstr "Mitme etapilised marsruudid"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings_group_stock_multi_warehouses
 msgid "Multi-Warehouses"
-msgstr "Mitmed laod"
+msgstr "Mitu ladu"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -3932,16 +4046,16 @@ msgid "Negative Stock"
 msgstr "Negatiivne laoseis"
 
 #. module: stock
-#: code:addons/stock/models/stock_scrap.py:20
-#: code:addons/stock/models/stock_scrap.py:64
-#: code:addons/stock/models/stock_scrap.py:65 selection:stock.move,state:0
+#: code:addons/stock/models/stock_scrap.py:24
+#: code:addons/stock/models/stock_scrap.py:68
+#: code:addons/stock/models/stock_scrap.py:69 selection:stock.move,state:0
 #, python-format
 msgid "New"
 msgstr "Uus"
 
 #. module: stock
-#: code:addons/stock/models/stock_move_line.py:173
-#: code:addons/stock/models/stock_picking.py:597
+#: code:addons/stock/models/stock_move_line.py:174
+#: code:addons/stock/models/stock_picking.py:639
 #, python-format
 msgid "New Move:"
 msgstr "Uus siire:"
@@ -3959,7 +4073,7 @@ msgstr "Uus ülekanne"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_backorder_confirmation
 msgid "No Backorder"
-msgstr "Järeltellimust pole"
+msgstr "Järelsaatelehte pole"
 
 #. module: stock
 #: selection:res.partner,picking_warn:0
@@ -3970,15 +4084,15 @@ msgstr "Sõnum puudub"
 #: model:ir.model.fields,field_description:stock.field_res_config_settings_propagation_minimum_delta
 #: model:ir.model.fields,field_description:stock.field_res_config_settings_use_propagation_minimum_delta
 msgid "No Rescheduling Propagation"
-msgstr "Ümberplaneerimise täiendamisi ei ole"
+msgstr "Planeeritud aegade muutmine läbi seoste"
 
 #. module: stock
 #: selection:product.template,tracking:0
 msgid "No Tracking"
-msgstr "Jälgimist pole"
+msgstr "Ei jälgi"
 
 #. module: stock
-#: code:addons/stock/models/stock_move_line.py:389
+#: code:addons/stock/models/stock_move_line.py:408
 #, python-format
 msgid "No negative quantities allowed"
 msgstr "Negatiivne laoseis ei ole lubatud"
@@ -3989,14 +4103,14 @@ msgid "No operation made on this lot."
 msgstr "Ühtegi tegevust ei ole tehtud selle partiiga."
 
 #. module: stock
-#: code:addons/stock/models/procurement.py:185
+#: code:addons/stock/models/procurement.py:184
 #, python-format
 msgid ""
 "No procurement rule found. Please verify the configuration of your routes"
 msgstr "Hankimise reegleid ei leitud Palun kontrolli marsruute"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_picking_return.py:55
+#: code:addons/stock/wizard/stock_picking_return.py:58
 #, python-format
 msgid ""
 "No products to return (only lines in Done state and not fully returned yet "
@@ -4009,7 +4123,7 @@ msgstr ""
 #: code:addons/stock/models/procurement.py:67
 #, python-format
 msgid "No source location defined on procurement rule: %s!"
-msgstr "Lähtekoha asukohta ei ole defineeritud hankimise reeglis: %s!"
+msgstr "Lähteasukohta ei ole defineeritud hankimise reeglis: %s!"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_8
@@ -4027,6 +4141,11 @@ msgid "Not urgent"
 msgstr "Pole kiire"
 
 #. module: stock
+#: model:ir.ui.view,arch_db:stock.view_picking_form
+msgid "Note"
+msgstr "Märkused"
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_note
 #: model:ir.model.fields,field_description:stock.field_stock_picking_note
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
@@ -4034,7 +4153,7 @@ msgid "Notes"
 msgstr "Märkused"
 
 #. module: stock
-#: code:addons/stock/models/stock_picking.py:544
+#: code:addons/stock/models/stock_picking.py:587
 #, python-format
 msgid "Nothing to check the availability for."
 msgstr "Pole millelegi saadavust kontrollida."
@@ -4075,11 +4194,13 @@ msgid ""
 "Odoo handles <strong>advanced push/pull routes configuration</strong>, for "
 "example:"
 msgstr ""
+"Odoo handles <strong>advanced push/pull routes configuration</strong>, for "
+"example:"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Odoo has preconfigured <strong>one Warehouse</strong> for you."
-msgstr ""
+msgstr "Odoo has preconfigured <strong>one Warehouse</strong> for you."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -4088,6 +4209,9 @@ msgid ""
 "                        invoicing process. Everything is automated from the initial\n"
 "                        quotation to the delivery and the final invoice."
 msgstr ""
+"Odoo inventory management is fully integrated with sales and\n"
+"                        invoicing process. Everything is automated from the initial\n"
+"                        quotation to the delivery and the final invoice."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -4095,6 +4219,8 @@ msgid ""
 "Odoo is able to run advanced traceability by using Product Lots and Serial\n"
 "                        Numbers, usually identified by bar codes stuck on the products."
 msgstr ""
+"Odoo is able to run advanced traceability by using Product Lots and Serial\n"
+"                        Numbers, usually identified by bar codes stuck on the products."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -4103,6 +4229,9 @@ msgid ""
 "convert units within the same category, for example, liters to gallons in "
 "the volume category"
 msgstr ""
+"Of course, feel free to add your own. Please note that Odoo is able to "
+"convert units within the same category, for example, liters to gallons in "
+"the volume category"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.product_form_view_procurement_button
@@ -4128,36 +4257,44 @@ msgid ""
 "customer. It would be great if you could send us a photo of your warehouse "
 "to"
 msgstr ""
+"Once it's fully working, give us some feedback: we love to hear from our "
+"customer. It would be great if you could send us a photo of your warehouse "
+"to"
 
 #. module: stock
-#: code:addons/stock/models/stock_inventory.py:113
+#: code:addons/stock/models/stock_inventory.py:120
 #, python-format
 msgid "One Lot/Serial Number"
 msgstr "Üks partii/seerianumber"
 
 #. module: stock
-#: code:addons/stock/models/stock_inventory.py:111
+#: code:addons/stock/models/stock_inventory.py:118
 #, python-format
 msgid "One owner only"
 msgstr "Üks omanik ainult"
 
 #. module: stock
-#: code:addons/stock/models/stock_inventory.py:106
+#: code:addons/stock/models/stock_inventory.py:113
 #, python-format
 msgid "One product category"
 msgstr "Üks tootekategooria"
 
 #. module: stock
-#: code:addons/stock/models/stock_inventory.py:111
+#: code:addons/stock/models/stock_inventory.py:118
 #, python-format
 msgid "One product for a specific owner"
 msgstr "Üks toode kindlale omanikule"
 
 #. module: stock
-#: code:addons/stock/models/stock_inventory.py:107
+#: code:addons/stock/models/stock_inventory.py:114
 #, python-format
 msgid "One product only"
 msgstr "Üks toode ainult"
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.view_quant_package_form
+msgid "Ongoing Package Creation: Content"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_path_name
@@ -4172,7 +4309,7 @@ msgstr "Operatsiooni nimi"
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
 #: model:ir.ui.view,arch_db:stock.view_pickingtype_filter
 msgid "Operation Type"
-msgstr "Tegevuse tüüp"
+msgstr "Operatsiooni tüüp"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_procurement_rule_picking_type_id
@@ -4185,7 +4322,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_return_picking_type_id
 msgid "Operation Type for Returns"
-msgstr "Tegevuse tüüp tagastustel"
+msgstr "Operatsiooni tüüp tagastamisel"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_type_form
@@ -4193,12 +4330,12 @@ msgstr "Tegevuse tüüp tagastustel"
 #: model:ir.ui.view,arch_db:stock.view_picking_type_tree
 #: model:ir.ui.view,arch_db:stock.view_warehouse
 msgid "Operation Types"
-msgstr "Tegevuste tüübid"
+msgstr "Operatsioonide tüübid"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_name
 msgid "Operation Types Name"
-msgstr "Tegevuste tüübi nimi"
+msgstr "Operatsiooni nimi"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_move_line_ids
@@ -4212,7 +4349,7 @@ msgstr "Tegevused"
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_pickingtype
 msgid "Operations Types"
-msgstr "Tegevuste tüübid"
+msgstr "Operatsioonide tüübid"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_partner_id
@@ -4293,7 +4430,7 @@ msgstr "Esialgne siire"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_out_type_id
 msgid "Out Type"
-msgstr "Väljstuse tüüp"
+msgstr "Kauba väljastus"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product_outgoing_qty
@@ -4355,10 +4492,10 @@ msgstr "Asukoha omanike, kui see pole sisemine"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_line_owner_id
 msgid "Owner of the quants"
-msgstr ""
+msgstr "Owner of the quants"
 
 #. module: stock
-#: code:addons/stock/models/product.py:337
+#: code:addons/stock/models/product.py:339
 #, python-format
 msgid "P&L Qty"
 msgstr "Kasumi ja kahjumi kogus"
@@ -4377,7 +4514,7 @@ msgid "PRODUCT"
 msgstr "PRODUCT"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:216
+#: code:addons/stock/models/stock_warehouse.py:220
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line_package_id
 #, python-format
 msgid "Pack"
@@ -4386,10 +4523,9 @@ msgstr "Pakkimine"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_pack_type_id
 msgid "Pack Type"
-msgstr "Pakkimise tüüp"
+msgstr "Pakkimine"
 
 #. module: stock
-#: code:addons/stock/models/barcode.py:14
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_id
 #: model:ir.model.fields,field_description:stock.field_stock_scrap_package_id
 #: model:ir.ui.view,arch_db:stock.quant_package_search_view
@@ -4398,7 +4534,6 @@ msgstr "Pakkimise tüüp"
 #: model:ir.ui.view,arch_db:stock.view_quant_package_form
 #: model:ir.ui.view,arch_db:stock.view_quant_package_picking_tree
 #: model:ir.ui.view,arch_db:stock.view_quant_package_tree
-#, python-format
 msgid "Package"
 msgstr "Pakend"
 
@@ -4454,7 +4589,7 @@ msgstr "Pakendi tüüp:"
 #: model:ir.ui.menu,name:stock.menu_package
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Packages"
-msgstr "Pakendid"
+msgstr "Pakid"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_package_view
@@ -4465,6 +4600,11 @@ msgid ""
 " A package can also be unpacked, allowing the disposal of its former content"
 " as single units again."
 msgstr ""
+"Packages are usually created by pack operations made on transfers and can "
+"contains several different products. You can then reuse a package to move "
+"its whole content somewhere else, or to pack it into another bigger package."
+" A package can also be unpacked, allowing the disposal of its former content"
+" as single units again."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.quant_package_search_view
@@ -4479,7 +4619,7 @@ msgstr "Pakendamise asukoht"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_line
 msgid "Packing Operation"
-msgstr "Pakendamise tegevus"
+msgstr "Pakendamine"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:100
@@ -4540,6 +4680,10 @@ msgid ""
 "            the general inventory or whenever you need it, to adapt the\n"
 "            current inventory level of a product."
 msgstr ""
+"Periodical Inventories are used to count the number of products\n"
+"            available per location. You can use it once a year when you do\n"
+"            the general inventory or whenever you need it, to adapt the\n"
+"            current inventory level of a product."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -4562,7 +4706,7 @@ msgid "Physical Packages"
 msgstr "Füüsilised pakendid"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:224
+#: code:addons/stock/models/stock_warehouse.py:228
 #: model:ir.model.fields,field_description:stock.field_stock_backorder_confirmation_pick_ids
 #: model:ir.model.fields,field_description:stock.field_stock_immediate_transfer_pick_ids
 #, python-format
@@ -4570,13 +4714,13 @@ msgid "Pick"
 msgstr "Nopi"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:435
+#: code:addons/stock/models/stock_warehouse.py:439
 #, python-format
 msgid "Pick + Pack + Ship"
 msgstr "Nopi + Paki + Saada"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:434
+#: code:addons/stock/models/stock_warehouse.py:438
 #, python-format
 msgid "Pick + Ship"
 msgstr "Nopi + Saada"
@@ -4584,7 +4728,7 @@ msgstr "Nopi + Saada"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_pick_type_id
 msgid "Pick Type"
-msgstr "Noppe tüüp"
+msgstr "Laokorje"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_overprocessed_transfer_picking_id
@@ -4622,22 +4766,22 @@ msgstr "Noppeleht"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.procurement_group_form_view
 msgid "Pickings"
-msgstr "Nopped"
+msgstr "Toodete vastuvõtmised"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Pickings already processed"
-msgstr "Töödeldud nopped"
+msgstr "Vastuvõetud töödeldud tooted"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.do_view_pickings
 msgid "Pickings for Groups"
-msgstr "Nopped gruppidele"
+msgstr "Toodete vastuvõtmised gruppidele"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Pickings that are late on scheduled time"
-msgstr "Nopped, mis on ületähtaja"
+msgstr "Toodete vastuvõtmised, mis on ületanud tähtaja"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_stock_level_forecast_filter
@@ -4655,19 +4799,19 @@ msgid "Planner"
 msgstr "Planeerija"
 
 #. module: stock
-#: code:addons/stock/models/stock_picking.py:649
+#: code:addons/stock/models/stock_picking.py:699
 #, python-format
 msgid "Please add some lines to move"
 msgstr "Palun lisa siirdele mõned read"
 
 #. module: stock
-#: code:addons/stock/models/stock_picking.py:823
+#: code:addons/stock/models/stock_picking.py:868
 #, python-format
 msgid "Please process some quantities to put in the pack first!"
 msgstr "Palun töötle mõned kogused pakkimiseks!"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_picking_return.py:126
+#: code:addons/stock/wizard/stock_picking_return.py:130
 #, python-format
 msgid "Please specify at least one non-zero quantity."
 msgstr "Palun määra vähemalt üks mitte null kogus."
@@ -4716,12 +4860,12 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Process operations faster with barcodes"
-msgstr "Töötle tegevusi kiiremini triipkoodidega"
+msgstr "Kasutage töö lihtsustamiseks triipkoode ja triipkoodilugejat."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Process picking in batch per worker"
-msgstr "Töötle noppeid grupeeritult töötaja kaupa"
+msgstr "Grupeeri laokorjeid töötajatele."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_overprocessed_transfer
@@ -4754,21 +4898,21 @@ msgstr "Hankimise asukoht"
 #. module: stock
 #: model:ir.model,name:stock.model_procurement_group
 msgid "Procurement Requisition"
-msgstr "Hankimise nõuded"
+msgstr "Ostude kontroll"
 
 #. module: stock
 #: model:ir.model,name:stock.model_procurement_rule
 #: model:ir.model.fields,field_description:stock.field_stock_move_rule_id
 #: model:ir.ui.view,arch_db:stock.view_procurement_rule_form
 msgid "Procurement Rule"
-msgstr "Hankimise reegel"
+msgstr "Hankimisreeglid"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_route_pull_ids
 #: model:ir.ui.view,arch_db:stock.stock_location_route_form_view
 #: model:ir.ui.view,arch_db:stock.view_procurement_rule_tree
 msgid "Procurement Rules"
-msgstr "Hankimise reeglid"
+msgstr "Hankimisreeglid"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.procurement_group_form_view
@@ -4793,7 +4937,7 @@ msgid "Produce Line"
 msgstr "Tooda rida"
 
 #. module: stock
-#: code:addons/stock/models/product.py:347
+#: code:addons/stock/models/product.py:349
 #, python-format
 msgid "Produced Qty"
 msgstr "Toodetud kogus"
@@ -4826,7 +4970,7 @@ msgid "Product"
 msgstr "Toode"
 
 #. module: stock
-#: code:addons/stock/models/stock_location.py:180
+#: code:addons/stock/models/stock_location.py:193
 #: model:ir.model.fields,field_description:stock.field_stock_location_route_categ_ids
 #: model:ir.ui.menu,name:stock.menu_product_category_config_stock
 #: model:ir.ui.view,arch_db:stock.stock_location_route_form_view
@@ -4877,7 +5021,7 @@ msgstr "Toote nimi"
 #: model:ir.ui.menu,name:stock.menu_product_packagings
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Product Packages"
-msgstr "Toote pakid"
+msgstr "Toote pakendid"
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_template
@@ -4898,6 +5042,7 @@ msgid "Product Types"
 msgstr "Toote tüübid"
 
 #. module: stock
+#: model:ir.model,name:stock.model_product_uom
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line_product_uom_id
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint_product_uom
 msgid "Product Unit of Measure"
@@ -4936,7 +5081,7 @@ msgid "Production Location"
 msgstr "Tootmise asukoht"
 
 #. module: stock
-#: code:addons/stock/models/stock_location.py:170
+#: code:addons/stock/models/stock_location.py:183
 #: code:addons/stock/wizard/stock_quantity_history.py:29
 #: model:ir.actions.act_window,name:stock.act_product_location_open
 #: model:ir.actions.act_window,name:stock.product_template_action_product
@@ -4951,7 +5096,7 @@ msgid "Products"
 msgstr "Tooted"
 
 #. module: stock
-#: code:addons/stock/models/product.py:310
+#: code:addons/stock/models/product.py:312
 #, python-format
 msgid "Products: "
 msgstr "Tooted: "
@@ -4959,24 +5104,24 @@ msgstr "Tooted: "
 #. module: stock
 #: selection:procurement.rule,group_propagation_option:0
 msgid "Propagate"
-msgstr "Täienda"
+msgstr "Levita"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_rule_propagate
 #: model:ir.model.fields,field_description:stock.field_stock_location_path_propagate
 #: model:ir.model.fields,field_description:stock.field_stock_move_propagate
 msgid "Propagate cancel and split"
-msgstr "Tühista täiendamine ja poolita"
+msgstr "Tühista levitamine ja poolita"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_procurement_rule_form
 msgid "Propagation Options"
-msgstr "Täiendamise valikud"
+msgstr "Levitamise valikud"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_rule_group_propagation_option
 msgid "Propagation of Procurement Group"
-msgstr "Hankegruppi täiendamine"
+msgstr "Hankegrupi levitamine"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -4993,7 +5138,7 @@ msgstr "Lükkamise reegel"
 #: model:ir.model.fields,field_description:stock.field_stock_location_route_push_ids
 #: model:ir.ui.view,arch_db:stock.stock_location_route_form_view
 msgid "Push Rules"
-msgstr "Lükkamise reeglid"
+msgstr "Tõukereeglid"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_location_path
@@ -5019,7 +5164,7 @@ msgstr "Paki"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Put your products in packs (e.g. parcels, boxes) and track them"
-msgstr "Pane tooted pakenditesse ja jälgi neid"
+msgstr "Paki oma tooteid ning jälgi välja saadetud pakke."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_putaway
@@ -5113,7 +5258,7 @@ msgid "Quantity cannot be negative."
 msgstr "Kogus ei saa olla negatiivne."
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:611
+#: code:addons/stock/models/stock_move.py:643
 #, python-format
 msgid "Quantity decreased!"
 msgstr "Kogus vähenes!"
@@ -5136,6 +5281,10 @@ msgid ""
 "In a context with a single Warehouse, this includes goods arriving to the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods arriving to any Stock Location with 'internal' type."
 msgstr ""
+"Quantity of planned incoming products.\n"
+"In a context with a single Stock Location, this includes goods arriving to this Location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods arriving to the Stock Location of this Warehouse, or any of its children.\n"
+"Otherwise, this includes goods arriving to any Stock Location with 'internal' type."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product_outgoing_qty
@@ -5145,6 +5294,10 @@ msgid ""
 "In a context with a single Warehouse, this includes goods leaving the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods leaving any Stock Location with 'internal' type."
 msgstr ""
+"Quantity of planned outgoing products.\n"
+"In a context with a single Stock Location, this includes goods leaving this Location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods leaving the Stock Location of this Warehouse, or any of its children.\n"
+"Otherwise, this includes goods leaving any Stock Location with 'internal' type."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant_quantity
@@ -5174,7 +5327,7 @@ msgid "Quants"
 msgstr "Koguseosad"
 
 #. module: stock
-#: code:addons/stock/models/stock_quant.py:70
+#: code:addons/stock/models/stock_quant.py:74
 #, python-format
 msgid "Quants cannot be created for consumables or services."
 msgstr "Koguseosasid ei saa luua tarbitavatele toodete ja teenuse toodetele."
@@ -5187,12 +5340,12 @@ msgstr "RAM SR5"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_rate_picking_backorders
 msgid "Rate Picking Backorders"
-msgstr "Hinda järeltellimuste noppeid"
+msgstr "Hinda järelsaatelehe korjeid"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_rate_picking_late
 msgid "Rate Picking Late"
-msgstr "Hinda ületähtaja noppeid"
+msgstr "Hinda üle tähtaja korjeid"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_picking_type_kanban
@@ -5220,38 +5373,38 @@ msgid "Receipt Route"
 msgstr "Vastuvõtu marsruut"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:432
+#: code:addons/stock/models/stock_warehouse.py:436
 #, python-format
 msgid "Receipt in 1 step"
 msgstr "Vastuvõtt 1 sammuga"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:432
+#: code:addons/stock/models/stock_warehouse.py:436
 #, python-format
 msgid "Receipt in 2 steps"
 msgstr "Vastuvõtt 2 sammuga"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:433
+#: code:addons/stock/models/stock_warehouse.py:437
 #, python-format
 msgid "Receipt in 3 steps"
 msgstr "Vastuvõtt 3 sammuga"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:202
+#: code:addons/stock/models/stock_warehouse.py:206
 #: model:stock.picking.type,name:stock.chi_picking_type_in
 #: model:stock.picking.type,name:stock.picking_type_in
 #, python-format
 msgid "Receipts"
-msgstr "Vastuvõtud"
+msgstr "Kaup lattu"
 
 #. module: stock
 #: selection:stock.warehouse,reception_steps:0
 msgid "Receive goods directly in stock (1 step)"
-msgstr "Võta vastu tooted otse lattu (1 sammuga)"
+msgstr "Võtke tooted otse lattu (1 samm)"
 
 #. module: stock
-#: code:addons/stock/models/product.py:324
+#: code:addons/stock/models/product.py:326
 #, python-format
 msgid "Received Qty"
 msgstr "Vastuvõetud kogus"
@@ -5279,7 +5432,7 @@ msgstr "Viide"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_sequence_id
 msgid "Reference Sequence"
-msgstr "Viite järjestus"
+msgstr "Numeratsioon"
 
 #. module: stock
 #: sql_constraint:stock.picking:0
@@ -5292,6 +5445,7 @@ msgid "Reference of the document"
 msgstr "Dokumendi viide"
 
 #. module: stock
+#: model:ir.ui.view,arch_db:stock.view_move_kandan
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Register lots, packs, location"
 msgstr "Loo partiisid, pakke, asukohti"
@@ -5313,7 +5467,7 @@ msgid "Removal Strategy"
 msgstr "Eemaldamise strateegia"
 
 #. module: stock
-#: code:addons/stock/models/stock_quant.py:111
+#: code:addons/stock/models/stock_quant.py:109
 #, python-format
 msgid "Removal strategy %s not implemented."
 msgstr "Eemaldamise strateegia %s ei rakendatud."
@@ -5342,17 +5496,17 @@ msgstr "Taastellin minimaalse koguse"
 #: model:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree
 #: model:ir.ui.view,arch_db:stock.warehouse_orderpoint_search
 msgid "Reordering Rules"
-msgstr "Taastellimise reeglid"
+msgstr "Kauba tellimise automaatreeglid"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.warehouse_orderpoint_search
 msgid "Reordering Rules Search"
-msgstr "Taastellimise reeglite otsing"
+msgstr "Laovarude täiendamisreeglite otsing"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_warehouse_report
 msgid "Reporting"
-msgstr "Analüüs"
+msgstr "Aruandlus"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_config_settings_use_propagation_minimum_delta
@@ -5360,6 +5514,8 @@ msgid ""
 "Rescheduling applies to any chain of operations (e.g. Make To Order, Pick Pack Ship). In the case of MTO sales, a vendor delay (updated incoming date) impacts the expected delivery date to the customer. \n"
 " This option allows to not propagate the rescheduling if the change is not critical."
 msgstr ""
+"Rescheduling applies to any chain of operations (e.g. Make To Order, Pick Pack Ship). In the case of MTO sales, a vendor delay (updated incoming date) impacts the expected delivery date to the customer. \n"
+" This option allows to not propagate the rescheduling if the change is not critical."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -5369,6 +5525,10 @@ msgid ""
 " impacts the expected delivery date to the customer. This option allows to "
 "not propagate the rescheduling if the change is not critical."
 msgstr ""
+"Rescheduling applies to any chain of operations (e.g. Make To Order, Pick "
+"Pack Ship). In the case of MTO sales, a vendor delay (updated incoming date)"
+" impacts the expected delivery date to the customer. This option allows to "
+"not propagate the rescheduling if the change is not critical."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings_module_procurement_jit
@@ -5400,6 +5560,9 @@ msgid ""
 "is advised to better manage priorities in case of long customer lead times "
 "or/and frequent stock-outs."
 msgstr ""
+"Reserving products manually in delivery orders or by running the scheduler "
+"is advised to better manage priorities in case of long customer lead times "
+"or/and frequent stock-outs."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -5415,12 +5578,12 @@ msgstr "Vastutav"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_resupply_route_ids
 msgid "Resupply Routes"
-msgstr "Taastellimise marsruudid"
+msgstr "Laovarude täiendamise marsruudid"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_resupply_wh_ids
 msgid "Resupply Warehouses"
-msgstr "Taastellimise laod"
+msgstr "Laovarude täiendamise laod"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_stock_quantity_history
@@ -5441,24 +5604,24 @@ msgstr "Tagastuse asukoht"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_return_picking
 msgid "Return Picking"
-msgstr "Tagastuse noppimine"
+msgstr "Tagastuskorje"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_picking_return.py:97
+#: code:addons/stock/wizard/stock_picking_return.py:101
 #, python-format
 msgid "Return of %s"
 msgstr "%s tagastus"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_picking_return.py:147
+#: code:addons/stock/wizard/stock_picking_return.py:151
 #, python-format
 msgid "Returned Picking"
-msgstr "Tagastatud noppe"
+msgstr "Tagastatud korje"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_stock_return_picking
 msgid "Reverse Transfer"
-msgstr "Tagurpidi siire"
+msgstr "Tagastus"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_parent_right
@@ -5559,9 +5722,11 @@ msgid ""
 "Scheduled time for the first part of the shipment to be processed. Setting "
 "manually a value here would set it as expected date for all the stock moves."
 msgstr ""
+"Scheduled time for the first part of the shipment to be processed. Setting "
+"manually a value here would set it as expected date for all the stock moves."
 
 #. module: stock
-#: code:addons/stock/models/stock_picking.py:836
+#: code:addons/stock/models/stock_picking.py:881
 #: model:ir.model.fields,field_description:stock.field_stock_move_scrap_ids
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_scrap_scrap_id
 #: model:ir.ui.menu,name:stock.menu_stock_scrap
@@ -5600,11 +5765,13 @@ msgid ""
 "Scrapping a product will remove it from your stock. The product will\n"
 "                end up in a scrap location that can be used for reporting purpose."
 msgstr ""
+"Toote praagiks muutumisel eemaldatakse see laoseisust. Toode läheb "
+"praagilattu ja aruandlust on võimalik teha."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Scraps"
-msgstr "Praagid"
+msgstr "Praak"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_filter
@@ -5632,7 +5799,7 @@ msgid "Search Stock Location Paths"
 msgstr "Otsi lao asukohtade radasid"
 
 #. module: stock
-#: code:addons/stock/models/stock_inventory.py:108
+#: code:addons/stock/models/stock_inventory.py:115
 #, python-format
 msgid "Select products manually"
 msgstr "Vali tooded käsitsi"
@@ -5657,7 +5824,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Sell and purchase products in different units of measure"
-msgstr "Müü ja osta tooteid erinevates mõõtühikutes"
+msgstr "Kasuta erinevaid ühikuid toote ostmisel ja müümisel."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_rule_sequence
@@ -5670,34 +5837,34 @@ msgid "Sequence"
 msgstr "Järjestus"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:685
+#: code:addons/stock/models/stock_warehouse.py:699
 #, python-format
 msgid "Sequence in"
-msgstr "Vastuvõtu järjestus"
+msgstr "Vastuvõtmise järjestus"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:689
+#: code:addons/stock/models/stock_warehouse.py:719
 #, python-format
 msgid "Sequence internal"
 msgstr "Sisemise järjestus"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:686
+#: code:addons/stock/models/stock_warehouse.py:704
 #, python-format
 msgid "Sequence out"
 msgstr "Väljastuse järjestus"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:687
+#: code:addons/stock/models/stock_warehouse.py:709
 #, python-format
 msgid "Sequence packing"
 msgstr "Pakkimise järjestus"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:688
+#: code:addons/stock/models/stock_warehouse.py:714
 #, python-format
 msgid "Sequence picking"
-msgstr "Noppe järjestus"
+msgstr "korjete järjestus"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line_prodlot_name
@@ -5707,17 +5874,17 @@ msgstr "Seerianumbri nimetus"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_rule_warehouse_id
 msgid "Served Warehouse"
-msgstr "Teenindatud ladu"
+msgstr "Ladu, kus rakendatakse"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Set Putaway Strategies on Locations"
-msgstr "Määra paigutamise strateegia asukohale"
+msgstr "Määra paigutamise strateegiad asukohtadele"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Set Warehouse Routes"
-msgstr "Määra laos marsruudid"
+msgstr "Määra lao marsruudid"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_category_removal_strategy_id
@@ -5731,17 +5898,17 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Set expiration dates on lots &amp; serial numbers"
-msgstr "Määra aegumiskuupäevad partiidele ja seerianumbritele"
+msgstr "Määra aegumiskuupäevad partiidele ja seerianumbritele."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Set owner on stored products"
-msgstr "Määra hoiustatud toodetele omanik"
+msgstr "Määra hoiustatavatele toodetele omanik."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Set product attributes (e.g. color, size) to manage variants"
-msgstr "Määra variatsioonide haldamiseks toote atribuudid (nt värv, suurus)"
+msgstr "Määra tootele atribuudid (nt värv, suurus), et kasutada variatsioone."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -5770,6 +5937,8 @@ msgid ""
 "Sets a location if you produce at a fixed location. This can be a partner "
 "location if you subcontract the manufacturing operations."
 msgstr ""
+"Sets a location if you produce at a fixed location. This can be a partner "
+"location if you subcontract the manufacturing operations."
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_config_settings
@@ -5791,10 +5960,10 @@ msgstr "Riiul 2"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_posy
 msgid "Shelves (Y)"
-msgstr "Riiulid (Y)"
+msgstr "Riiul (Y)"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:434
+#: code:addons/stock/models/stock_warehouse.py:438
 #, python-format
 msgid "Ship Only"
 msgstr "Ainult saada"
@@ -5802,12 +5971,12 @@ msgstr "Ainult saada"
 #. module: stock
 #: selection:stock.warehouse,delivery_steps:0
 msgid "Ship directly from stock (Ship only)"
-msgstr "Saada otse laost (Ainult saada)"
+msgstr "Saatke otse laost välja (ainult saatmine)"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Shipping Connectors"
-msgstr "Saatmise ühendused"
+msgstr "Süsteemi ühendamine tarnefirmaga"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_move_type
@@ -5821,6 +5990,9 @@ msgid ""
 " labels and request carrier picking at your warehouse to ship to the "
 "customer. Apply shipping connector from delivery methods."
 msgstr ""
+"Ühendades süsteemi tarnefirmaga, on võimalik arvutada täpset transpordikulu,"
+" printida pakisilte ja tellida kaubale järele kulleri, kes toimetab kauba "
+"kliendini. Täpsemad seadistused leiad tarneviiside alt."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_code
@@ -5841,7 +6013,7 @@ msgstr "Näita Kontrolli saadavust"
 #: model:ir.model.fields,field_description:stock.field_stock_move_show_operations
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_show_operations
 msgid "Show Detailed Operations"
-msgstr "Näita Detailseid tegevusi"
+msgstr "Näita operatsioone detailselt"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_show_lots_text
@@ -5861,7 +6033,7 @@ msgstr "Näita Tegevused"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_show_reserved
 msgid "Show Reserved"
-msgstr "Näita Reserveeritud"
+msgstr "Näita reserveeritud"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_show_validate
@@ -5904,12 +6076,12 @@ msgstr "Alusdokument"
 #: model:ir.model.fields,field_description:stock.field_stock_move_location_id
 #: model:ir.model.fields,field_description:stock.field_stock_picking_location_id
 msgid "Source Location"
-msgstr "Lähte asukoht"
+msgstr "Lähteasukoht"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.message_body
 msgid "Source Location:"
-msgstr "Lähte asukoht:"
+msgstr "Lähteasukoht:"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line_package_id
@@ -5925,7 +6097,7 @@ msgstr "Lähte pakend :"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_procurement_rule_location_src_id
 msgid "Source location is action=move"
-msgstr "Lähtekoha asukoht on tegevus = siire"
+msgstr "Lähteasukoht on tegevus = siire"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory_lot_id
@@ -5933,32 +6105,35 @@ msgid ""
 "Specify Lot/Serial Number to focus your inventory on a particular Lot/Serial"
 " Number."
 msgstr ""
+"Specify Lot/Serial Number to focus your inventory on a particular Lot/Serial"
+" Number."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory_partner_id
 msgid "Specify Owner to focus your inventory on a particular Owner."
-msgstr ""
+msgstr "Specify Owner to focus your inventory on a particular Owner."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory_package_id
 msgid "Specify Pack to focus your inventory on a particular Pack."
-msgstr ""
+msgstr "Specify Pack to focus your inventory on a particular Pack."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory_category_id
 msgid ""
 "Specify Product Category to focus your inventory on a particular Category."
 msgstr ""
+"Specify Product Category to focus your inventory on a particular Category."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory_product_id
 msgid "Specify Product to focus your inventory on a particular Product."
-msgstr ""
+msgstr "Specify Product to focus your inventory on a particular Product."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "Start Inventory"
-msgstr "Alusta ladu"
+msgstr "Alusta inventuuri"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line_state
@@ -5972,7 +6147,7 @@ msgstr "Alusta ladu"
 #: model:ir.ui.view,arch_db:stock.view_move_search
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Status"
-msgstr "Olek"
+msgstr "Staatus"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:96
@@ -6021,7 +6196,7 @@ msgstr "Lao asukohad"
 #: model:ir.model.fields,field_description:stock.field_product_product_stock_move_ids
 #: model:ir.model.fields,field_description:stock.field_stock_move_line_move_id
 msgid "Stock Move"
-msgstr "Lao siire"
+msgstr "Laoliikumine"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.stock_move_action
@@ -6100,7 +6275,7 @@ msgstr "Ladustatav"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings_group_stock_multi_locations
 msgid "Storage Locations"
-msgstr "Laokoha asukoht"
+msgstr "Lao asukoht"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_config_settings_group_stock_multi_locations
@@ -6148,6 +6323,8 @@ msgid ""
 "Technical field depicting the warehouse to consider for the route selection "
 "on the next procurement (if any)."
 msgstr ""
+"Technical field depicting the warehouse to consider for the route selection "
+"on the next procurement (if any)."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_company_internal_transit_location_id
@@ -6155,6 +6332,8 @@ msgid ""
 "Technical field used for resupply routes between warehouses that belong to "
 "this company"
 msgstr ""
+"Technical field used for resupply routes between warehouses that belong to "
+"this company"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_show_check_availability
@@ -6162,6 +6341,8 @@ msgid ""
 "Technical field used to compute whether the check availability button should"
 " be shown."
 msgstr ""
+"Technical field used to compute whether the check availability button should"
+" be shown."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_show_mark_as_todo
@@ -6169,11 +6350,13 @@ msgid ""
 "Technical field used to compute whether the mark as todo button should be "
 "shown."
 msgstr ""
+"Technical field used to compute whether the mark as todo button should be "
+"shown."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_show_validate
 msgid "Technical field used to compute whether the validate should be shown."
-msgstr ""
+msgstr "Technical field used to compute whether the validate should be shown."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_restrict_partner_id
@@ -6181,6 +6364,8 @@ msgid ""
 "Technical field used to depict a restriction on the ownership of quants to "
 "consider when marking this move as 'done'"
 msgstr ""
+"Technical field used to depict a restriction on the ownership of quants to "
+"consider when marking this move as 'done'"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_price_unit
@@ -6189,6 +6374,9 @@ msgid ""
 "picking confirmation (when costing method used is 'average price' or "
 "'real'). Value given in company currency and in product uom."
 msgstr ""
+"Technical field used to record the product cost set by the user during a "
+"picking confirmation (when costing method used is 'average price' or "
+"'real'). Value given in company currency and in product uom."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_line_produce_line_ids
@@ -6243,19 +6431,19 @@ msgstr ""
 "tarnimise vahel. See on aeg, mida lubate oma klientidele."
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:1065
+#: code:addons/stock/models/stock_picking.py:836
 #, python-format
 msgid ""
 "The backorder <a href=# data-oe-model=stock.picking data-oe-id=%d>%s</a> has"
 " been created."
 msgstr ""
-"Loodi järeltellimus <a href=# data-oe-model=stock.picking data-oe-"
-"id=%d>%s</a>."
+"The backorder <a href=# data-oe-model=stock.picking data-oe-id=%d>%s</a> has"
+" been created."
 
 #. module: stock
 #: sql_constraint:stock.location:0
 msgid "The barcode for a location must be unique per company !"
-msgstr "Asukoha triipkood peab olema unikaalne ettevõtete lõikes !"
+msgstr "Asukoha triipkood peab olema unikaalne ettevõtete lõikes!"
 
 #. module: stock
 #: sql_constraint:stock.warehouse:0
@@ -6286,7 +6474,7 @@ msgstr ""
 msgid ""
 "The default resupply warehouse should be different than the warehouse "
 "itself!"
-msgstr "Vaikimisi taastellimise ladu peaks olema erinev laost endast!"
+msgstr "Vaikimisi laovarude täiendamise ladu peaks olema erinev laost endast!"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_route_pull_ids
@@ -6299,15 +6487,13 @@ msgid ""
 "point. That way, it is always known where we need to go and that is why they"
 " are preferred over push rules."
 msgstr ""
-
-#. module: stock
-#: model:ir.ui.view,arch_db:stock.product_category_form_view_inherit
-msgid ""
-"The following routes will apply to the products in this category taking into"
-" account parent categories:"
-msgstr ""
-"Järgmised marsruudid kehtivad sellele tootekategooriale võttes arvesse "
-"ülemkategooriaid:"
+"The demand represented by a procurement from e.g. a sale order, a reordering"
+" rule, another move, needs to be solved by applying a procurement rule. "
+"Depending on the action on the procurement rule,this triggers a purchase "
+"order, manufacturing order or another move. This way we create chains in the"
+" reverse order from the endpoint with the original demand to the starting "
+"point. That way, it is always known where we need to go and that is why they"
+" are preferred over push rules."
 
 #. module: stock
 #: sql_constraint:stock.warehouse:0
@@ -6332,6 +6518,10 @@ msgid ""
 "                On the operation type you could e.g. specify if packing is needed by default,\n"
 "                if it should show the customer."
 msgstr ""
+"The operation type system allows you to assign each stock\n"
+"                operation a specific type which will alter its views accordingly.\n"
+"                On the operation type you could e.g. specify if packing is needed by default,\n"
+"                if it should show the customer."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant_package_id
@@ -6372,12 +6562,23 @@ msgid "The push rule that created this stock move"
 msgstr "Lükkamisreegel, mis selle laosiirde tekitas"
 
 #. module: stock
+#: code:addons/stock/models/stock_move_line.py:377
+#, python-format
+msgid ""
+"The quantity done for the product \"%s\" doesn't respect the rounding "
+"precision                                   defined on the unit of measure "
+"\"%s\". Please change the quantity done or the"
+"                                   rounding precision of your unit of "
+"measure."
+msgstr ""
+
+#. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "The quotation becomes a Sales Order and a Transfer Order is created"
 msgstr "Pakkumisest saab Müügitellimuse ja selleks luuakse laosiire"
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:266
+#: code:addons/stock/models/stock_move.py:283
 #: code:addons/stock/models/stock_move_line.py:80
 #, python-format
 msgid ""
@@ -6388,10 +6589,10 @@ msgstr ""
 "'product_qty' välja 'product_uom_qty' asemel."
 
 #. module: stock
-#: code:addons/stock/models/stock_inventory.py:144
-#: code:addons/stock/models/stock_inventory.py:146
-#: code:addons/stock/models/stock_inventory.py:148
-#: code:addons/stock/models/stock_inventory.py:150
+#: code:addons/stock/models/stock_inventory.py:151
+#: code:addons/stock/models/stock_inventory.py:153
+#: code:addons/stock/models/stock_inventory.py:155
+#: code:addons/stock/models/stock_inventory.py:157
 #, python-format
 msgid "The selected inventory options are not coherent."
 msgstr "Valitud laosesu valiukud ei ole kooskasutatavad."
@@ -6413,6 +6614,9 @@ msgid ""
 "different of the warehouse this rule is for (e.g for resupplying rules from "
 "another warehouse)"
 msgstr ""
+"The warehouse to propagate on the created move/procurement, which can be "
+"different of the warehouse this rule is for (e.g for resupplying rules from "
+"another warehouse)"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line_theoretical_qty
@@ -6432,6 +6636,8 @@ msgid ""
 "This field should be completed only if everything inside the package share "
 "the same product, otherwise it doesn't really makes sense."
 msgstr ""
+"This field should be completed only if everything inside the package share "
+"the same product, otherwise it doesn't really makes sense."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_procurement_rule_name
@@ -6444,6 +6650,8 @@ msgid ""
 "This guide helps getting started with Odoo Inventory.\n"
 "                        Once you are done, you will benefit from:"
 msgstr ""
+"This guide helps getting started with Odoo Inventory.\n"
+"                        Once you are done, you will benefit from:"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -6462,7 +6670,7 @@ msgid ""
 "routes put another location. If it is empty, it will check for the customer "
 "location on the partner. "
 msgstr ""
-"See on vaikimisi sihtkoha asukoht kui te loote noppe käsitsi selle tegevuse "
+"See on vaikimisi sihtasukoht kui te loote korje käsitsi selle tegevuse "
 "tüübiga. Seda on võimalik muuta, või muuta marsruuti, et panna teise "
 "asukohta. Kui see on tühi siis kontrollib süsteem partneri asukohta partneri"
 " kaardil. "
@@ -6486,6 +6694,8 @@ msgid ""
 "This is the list of all the production lots you recorded. When\n"
 "            you select a lot, you can get the traceability of the products contained in lot."
 msgstr ""
+"This is the list of all the production lots you recorded. When\n"
+"            you select a lot, you can get the traceability of the products contained in lot."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_path_picking_type_id
@@ -6514,7 +6724,7 @@ msgstr ""
 "tuleks teha ettevaatlikult."
 
 #. module: stock
-#: code:addons/stock/models/stock_location.py:87
+#: code:addons/stock/models/stock_location.py:85
 #, python-format
 msgid ""
 "This location's usage cannot be changed to view as it contains products."
@@ -6527,6 +6737,9 @@ msgid ""
 "                operations on a specific product. You can filter on the product\n"
 "                to see all the past or future movements for the product."
 msgstr ""
+"This menu gives you the full traceability of inventory\n"
+"                operations on a specific product. You can filter on the product\n"
+"                to see all the past or future movements for the product."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_template_property_form
@@ -6534,8 +6747,8 @@ msgid ""
 "This note will show up  on internal transfer orders (e.g. where to pick the "
 "product in the warehouse)."
 msgstr ""
-"See märkus on nähtav sisemiste liikumiste tellimustel (nt kust laost võtta "
-"toode)."
+"See märkus on nähtav ühendusesiseste liikumiste tellimustel (nt millisest "
+"laost toode võtta)."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_template_property_form
@@ -6575,12 +6788,12 @@ msgid ""
 "destination location"
 msgstr ""
 "Reegel kehtestatakse kui kinnitatakse siire, millel on see asukoht kui "
-"sihtkoha asukoht"
+"sihtasukoht"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_delivery_document
 msgid "This shipment is a backorder of"
-msgstr "Saadetis on järeltellimus"
+msgstr "See on järelsaatelehe saadetis"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_partner_property_stock_customer
@@ -6640,7 +6853,7 @@ msgstr "Tegevuste vaates on näha kogu pakendi sisu"
 #: model:ir.ui.view,arch_db:stock.view_move_tree
 #: model:ir.ui.view,arch_db:stock.view_quant_package_picking_tree
 msgid "To"
-msgstr "Saaja"
+msgstr "Kuni"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_ready
@@ -6658,7 +6871,7 @@ msgstr "Asukohta"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "To Receive"
-msgstr "Vastuvõtmiseks"
+msgstr "Tegemiseks"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -6668,6 +6881,10 @@ msgid ""
 "                            Shipping area, Merchandise return, Shelf 34 etc).\n"
 "                            Do not use Locations if you do not manage inventory per zone."
 msgstr ""
+"To better organize your stock, you can create\n"
+"                            subdivisions of your Warehouse called <strong>Locations</strong> (ex:\n"
+"                            Shipping area, Merchandise return, Shelf 34 etc).\n"
+"                            Do not use Locations if you do not manage inventory per zone."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -6676,6 +6893,9 @@ msgid ""
 "                       Choose a lot in the list and click on <i>Traceability</i>i&gt;. You may also\n"
 "                       filter the Quantitative Valuation of a product with a certain lot."
 msgstr ""
+"To check the trajectory of a lot, find it back in <strong><i>Inventory Control &gt; Serial Numbers / lots</i></strong>.\n"
+"                       Choose a lot in the list and click on <i>Traceability</i>i&gt;. You may also\n"
+"                       filter the Quantitative Valuation of a product with a certain lot."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -6693,6 +6913,9 @@ msgid ""
 "products may be sold/purchased in different unit of measures (advanced)</i> "
 "in the"
 msgstr ""
+"To use more precise units like pounds or kilograms, activate<i> Some "
+"products may be sold/purchased in different unit of measures (advanced)</i> "
+"in the"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_search
@@ -6715,18 +6938,16 @@ msgid "Total routes"
 msgstr "Kogu marsruudid"
 
 #. module: stock
-#: code:addons/stock/models/stock_production_lot.py:53
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 #: model:ir.ui.view,arch_db:stock.view_template_property_form
-#, python-format
 msgid "Traceability"
-msgstr "Jälgitavus"
+msgstr "Jälitatavus"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_stock_body_print
 msgid "Traceability Report"
-msgstr "Jälgitavuse aruanne"
+msgstr "Jälitatavuse aruanne"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_config_settings_module_product_expiry
@@ -6751,7 +6972,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Track product location in your warehouse"
-msgstr "Jälgi toote asukohta laos"
+msgstr "Jälgi toodete asukohti laos."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product_tracking
@@ -6764,7 +6985,7 @@ msgstr "Jälgimine"
 #: model:ir.model,name:stock.model_stock_picking
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Transfer"
-msgstr "Siire"
+msgstr "Ülekanne"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_picking_partner_id
@@ -6786,7 +7007,7 @@ msgstr "Siirded"
 #. module: stock
 #: selection:stock.location,usage:0
 msgid "Transit Location"
-msgstr "Transiidi asukoht"
+msgstr "Transiitasukoht"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.quant_search_view
@@ -6798,7 +7019,7 @@ msgstr "Transiidi asukohad"
 #: model:ir.model.fields,field_description:stock.field_stock_picking_picking_type_code
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_code
 msgid "Type of Operation"
-msgstr "Tegevuse tüüp"
+msgstr "Operatsiooni tüüp"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings_module_delivery_ups
@@ -6865,7 +7086,7 @@ msgid "Units of Measures"
 msgstr "Mõõtühikud"
 
 #. module: stock
-#: code:addons/stock/models/stock_quant.py:321
+#: code:addons/stock/models/stock_quant.py:336
 #, python-format
 msgid "Unknown Pack"
 msgstr "Tundmatu pakk"
@@ -6882,14 +7103,16 @@ msgstr ""
 #. module: stock
 #: selection:stock.warehouse,reception_steps:0
 msgid "Unload in input location then go to stock (2 steps)"
-msgstr "Lae maha ja vii lattu (2 sammu)"
+msgstr "Laadige tooted maha vastavale alale ja viige seejärel lattu (2 sammu)"
 
 #. module: stock
 #: selection:stock.warehouse,reception_steps:0
 msgid ""
 "Unload in input location, go through a quality control before being admitted"
 " in stock (3 steps)"
-msgstr "Lao maha, kontrolli kvaliteeti, vii lattu (3 sammu)"
+msgstr ""
+"Laadige tooted maha vastaval alal, teostage kvaliteedikontroll ning seejärel"
+" viige lattu (3 sammu)"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
@@ -6902,7 +7125,7 @@ msgid "Unpack"
 msgstr "Paki lahti"
 
 #. module: stock
-#: code:addons/stock/models/product.py:342
+#: code:addons/stock/models/product.py:344
 #, python-format
 msgid "Unplanned Qty"
 msgstr "Planeerimata kogus"
@@ -6917,18 +7140,18 @@ msgstr "Vabasta reserveeringust"
 #: model:ir.ui.view,arch_db:stock.stock_inventory_line_tree2
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "UoM"
-msgstr "UoM"
+msgstr "Mõõtühikud"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_uom_categ_form_action
 msgid "UoM Categories"
-msgstr "UoN kategooriad"
+msgstr "Mõõtühikute kategooriad"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 #: model:ir.ui.view,arch_db:stock.view_production_lot_form
 msgid "Up/Down Traceability"
-msgstr "Üles/Alla jälgitavus"
+msgstr "Vastu-/pärivoolu jälitatavus"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_view_change_product_quantity
@@ -6950,7 +7173,7 @@ msgstr "Uuenda laoseisu"
 #: model:ir.ui.view,arch_db:stock.report_stock_inventory
 #, python-format
 msgid "Upstream Traceability"
-msgstr "Ülesjälgitavus"
+msgstr "Jälitamine vastuvoolu"
 
 #. module: stock
 #: selection:stock.move,priority:0 selection:stock.picking,priority:0
@@ -6960,12 +7183,12 @@ msgstr "Kiireloomuline"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_use_existing_lots
 msgid "Use Existing Lots/Serial Numbers"
-msgstr "Määra olemasolev partii/seerianumber"
+msgstr "Kasuta olemasolevaid partii-/seerianumbreid"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Use your own routes and putaway strategies"
-msgstr "Kasuta enda loodud marsruute ja paigutamise strateegiaid"
+msgstr "Kasuta enda loodud marsruute ja toodete paigutamise strateegiaid."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type_sequence
@@ -7044,7 +7267,7 @@ msgstr "Virtuaalsed asukohad"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "Volume"
-msgstr "Maht"
+msgstr "Ruumala"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_picking_type_kanban
@@ -7113,10 +7336,10 @@ msgstr "Lao nimi"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_rule_propagate_warehouse_id
 msgid "Warehouse to Propagate"
-msgstr "Ladu täiendamiseks"
+msgstr "Ladu levitamiseks"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:711
+#: code:addons/stock/models/stock_warehouse.py:744
 #, python-format
 msgid "Warehouse's Routes"
 msgstr "Lao marsruudid"
@@ -7131,7 +7354,8 @@ msgid "Warehouses"
 msgstr "Laod"
 
 #. module: stock
-#: code:addons/stock/models/stock_move_line.py:110
+#: code:addons/stock/models/stock_move_line.py:134
+#: code:addons/stock/models/stock_move_line.py:146
 #: selection:res.partner,picking_warn:0
 #, python-format
 msgid "Warning"
@@ -7143,7 +7367,7 @@ msgid "Warning on the Picking"
 msgstr "Hoiatus noppimisel"
 
 #. module: stock
-#: code:addons/stock/models/product.py:303
+#: code:addons/stock/models/product.py:305
 #, python-format
 msgid "Warning!"
 msgstr "Hoiatus!"
@@ -7161,6 +7385,10 @@ msgid ""
 "                                        manager a CSV file containing all your\n"
 "                                        data."
 msgstr ""
+"We handle the whole import process\n"
+"                                        for you: simply send your Odoo project\n"
+"                                        manager a CSV file containing all your\n"
+"                                        data."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -7170,17 +7398,15 @@ msgid ""
 "                                        manager a CSV file containing all your\n"
 "                                        products."
 msgstr ""
+"We handle the whole import process\n"
+"                                        for you: simply send your Odoo project\n"
+"                                        manager a CSV file containing all your\n"
+"                                        products."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "We hope this guide helped you implement Odoo Inventory."
 msgstr "Me loodame, et see juhend aitas Teil juurutada Odoo laomoodulit."
-
-#. module: stock
-#: code:addons/stock/models/barcode.py:11
-#, python-format
-msgid "Weighted Product"
-msgstr "Kaalutud toode"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -7239,7 +7465,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "When everything is set, click on <i>Start Inventory</i>"
-msgstr ""
+msgstr "When everything is set, click on <i>Start Inventory</i>"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_putaway_fixed_location_ids
@@ -7283,6 +7509,8 @@ msgid ""
 "When you run the schedulers, Odoo tries to reserve the available stock to fulfill the existing pickings\n"
 "                and verify if some reordering rules should be triggered."
 msgstr ""
+"When you run the schedulers, Odoo tries to reserve the available stock to fulfill the existing pickings\n"
+"                and verify if some reordering rules should be triggered."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_change_product_quantity
@@ -7290,6 +7518,8 @@ msgid ""
 "When you select a serial number (lot), the quantity is corrected with respect to\n"
 "                            the quantity of that serial number (lot) and not to the total quantity of the product."
 msgstr ""
+"When you select a serial number (lot), the quantity is corrected with respect to\n"
+"                            the quantity of that serial number (lot) and not to the total quantity of the product."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_additional
@@ -7305,7 +7535,16 @@ msgstr "Tahvel"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking_line_wizard_id
 msgid "Wizard"
-msgstr "Viisard"
+msgstr "Nõustaja"
+
+#. module: stock
+#: code:addons/stock/models/stock_production_lot.py:45
+#, python-format
+msgid ""
+"You are not allowed to change the product linked to a serial or lot number "
+"if some stock moves have already been created with that number. This would "
+"lead to inconsistencies in your stock."
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_production_lot.py:37
@@ -7314,7 +7553,7 @@ msgid "You are not allowed to create a lot for this picking type"
 msgstr "Teil ei ole lubatud luua uut partiid sellele noppe tüübile"
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:636
+#: code:addons/stock/models/stock_move.py:668
 #, python-format
 msgid ""
 "You are using a unit of measure smaller than the one you are using in order "
@@ -7335,6 +7574,10 @@ msgid ""
 "                    routes can be assigned to a product, a product category or be fixed\n"
 "                    on procurement or sales order."
 msgstr ""
+"You can define here the main routes that run through\n"
+"                    your warehouses and that define the flows of your products. These\n"
+"                    routes can be assigned to a product, a product category or be fixed\n"
+"                    on procurement or sales order."
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_orderpoint_form
@@ -7376,7 +7619,7 @@ msgstr ""
 "siirde kiiremaks kinnitamiseks."
 
 #. module: stock
-#: code:addons/stock/models/product.py:511
+#: code:addons/stock/models/product.py:522
 #, python-format
 msgid ""
 "You can not change the type of a product that is currently reserved on a "
@@ -7387,7 +7630,7 @@ msgstr ""
 "muuta tüüpi on vaja kõigepealt eemaldada reserveeringud siirdelt."
 
 #. module: stock
-#: code:addons/stock/models/product.py:502
+#: code:addons/stock/models/product.py:513
 #, python-format
 msgid ""
 "You can not change the unit of measure of a product that has already been "
@@ -7398,7 +7641,7 @@ msgstr ""
 "vaja muuta mõõtühikut, tuleb see toode deaktiveerida."
 
 #. module: stock
-#: code:addons/stock/models/stock_move_line.py:338
+#: code:addons/stock/models/stock_move_line.py:339
 #, python-format
 msgid ""
 "You can not delete product moves if the picking is done. You can only "
@@ -7408,25 +7651,25 @@ msgstr ""
 "muuta ainult Tehtud koguseid."
 
 #. module: stock
-#: code:addons/stock/models/stock_move_line.py:116
+#: code:addons/stock/models/stock_move_line.py:152
 #, python-format
 msgid "You can not enter negative quantities!"
 msgstr "Te ei saa sisestada negatiivset kogust!"
 
 #. module: stock
-#: code:addons/stock/models/stock_inventory.py:398
+#: code:addons/stock/models/stock_inventory.py:407
 #, python-format
 msgid "You can only adjust stockable products."
 msgstr "Saate muuta ainult ladustatavaid tooteid."
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:1073
+#: code:addons/stock/models/stock_move.py:1142
 #, python-format
 msgid "You can only delete draft moves."
 msgstr "Sa saad kustutada ainult mustand staatuses siirdeid."
 
 #. module: stock
-#: code:addons/stock/models/stock_move_line.py:126
+#: code:addons/stock/models/stock_move_line.py:145
 #, python-format
 msgid "You can only process 1.0 %s for products with unique serial number."
 msgstr "Te saate töödelda 1.0 %s unikaalse seerianumbriga tooteid."
@@ -7437,19 +7680,41 @@ msgid "You can review and edit the predefined units via the"
 msgstr "Te saate vaadata ja muuta eelseadistatud ühikuid läbi"
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:936
+#: code:addons/stock/models/stock_move.py:1006
 #, python-format
 msgid "You cannot cancel a stock move that has been set to 'Done'."
 msgstr "Te ei saa tühistada laosiiret 'Tehtud' staatuses."
 
 #. module: stock
-#: code:addons/stock/models/stock_scrap.py:71
+#: code:addons/stock/models/stock_location.py:96
+#, python-format
+msgid ""
+"You cannot change the location type or its use as a scrap location as there "
+"are products reserved in this location. Please unreserve the products first."
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/product.py:606
+#, python-format
+msgid ""
+"You cannot change the ratio of this unit of mesure as some products with "
+"this UoM have already been moved or are currently reserved."
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/stock_scrap.py:75
 #, python-format
 msgid "You cannot delete a scrap which is done."
 msgstr "Te ei saa 'Tehtud' mahakandmist kustutada."
 
 #. module: stock
-#: code:addons/stock/models/stock_inventory.py:386
+#: code:addons/stock/models/stock_inventory.py:104
+#, python-format
+msgid "You cannot delete a validated inventory adjustement."
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/stock_inventory.py:394
 #, python-format
 msgid ""
 "You cannot have two inventory adjustements in state 'in Progress' with the "
@@ -7463,7 +7728,7 @@ msgstr ""
 "inventuure."
 
 #. module: stock
-#: code:addons/stock/models/stock_inventory.py:159
+#: code:addons/stock/models/stock_inventory.py:166
 #, python-format
 msgid ""
 "You cannot set a negative product quantity in an inventory line:\n"
@@ -7473,20 +7738,20 @@ msgstr ""
 "\t%s - kogus: %s"
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:1101
+#: code:addons/stock/models/stock_move.py:1173
 #, python-format
 msgid "You cannot split a draft move. It needs to be confirmed first."
 msgstr ""
 "Ei saa poolitada mustand staatuses siiret. See tuleb kõigepealt kinnitada."
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:1097
+#: code:addons/stock/models/stock_move.py:1169
 #, python-format
 msgid "You cannot split a move done"
 msgstr "Ei saa poolitada Tehtud staatuses siiret"
 
 #. module: stock
-#: code:addons/stock/models/stock_quant.py:88
+#: code:addons/stock/models/stock_quant.py:86
 #, python-format
 msgid ""
 "You cannot take products from or deliver products to a location of type "
@@ -7494,8 +7759,8 @@ msgid ""
 msgstr "Ei saa võtta tooteid või tarnida tooteid 'vaade' tüüpi asukohta."
 
 #. module: stock
-#: code:addons/stock/models/stock_move_line.py:152
-#: code:addons/stock/models/stock_move_line.py:158
+#: code:addons/stock/models/stock_move_line.py:127
+#: code:addons/stock/models/stock_move_line.py:131
 #, python-format
 msgid ""
 "You cannot use the same serial number twice. Please correct the serial "
@@ -7505,18 +7770,12 @@ msgstr ""
 "seerianumbreid."
 
 #. module: stock
-#: code:addons/stock/models/stock_picking.py:672
+#: code:addons/stock/models/stock_picking.py:709
 #, python-format
 msgid ""
-"You cannot validate a transfer if you have not processed any quantity for "
-"%s."
-msgstr "Ei saa kinnitada siiret kui ei ole töödeldud koguseid tootele %s."
-
-#. module: stock
-#: code:addons/stock/models/stock_picking.py:656
-#, python-format
-msgid "You cannot validate a transfer if you have not processed any quantity."
-msgstr "Ei saa kinnitada siiret kui ei ole töödeldud koguseid."
+"You cannot validate a transfer if you have not processed any quantity. You "
+"should rather cancel the transfer."
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_picking
@@ -7524,7 +7783,7 @@ msgid ""
 "You do not have any products reserved for this picking.  Please click the 'Reserve' button\n"
 "                                to check if products are available."
 msgstr ""
-"Ei ole ühtegi reserveeritud toodet selle noppele.  Vajuta 'Reserveeri' nuppu,\n"
+"Ei ole ühtegi reserveeritud toodet selle noppele.  Kliki 'Reserveeri' nuppu,\n"
 "                                et kontrollida, kas tooted on saadaval."
 
 #. module: stock
@@ -7548,7 +7807,7 @@ msgstr ""
 "                    plaan sellele töötele"
 
 #. module: stock
-#: code:addons/stock/models/product.py:304
+#: code:addons/stock/models/product.py:306
 #, python-format
 msgid ""
 "You have products in stock that have no lot number.  You can assign serial "
@@ -7558,7 +7817,7 @@ msgstr ""
 "inventuuri tehes.  "
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:795
+#: code:addons/stock/models/stock_warehouse.py:828
 #, python-format
 msgid ""
 "You have to select a product unit of measure in the same category than the "
@@ -7568,7 +7827,7 @@ msgstr ""
 " sellel tootel"
 
 #. module: stock
-#: code:addons/stock/models/stock_location.py:98
+#: code:addons/stock/models/stock_location.py:111
 #, python-format
 msgid "You have to set a name for this location."
 msgstr "Peate sisestama nime sellele asukohale."
@@ -7583,10 +7842,10 @@ msgstr ""
 "                        siis Odoo töötleb kõik <i>reserveeritud</i> kogused."
 
 #. module: stock
-#: code:addons/stock/wizard/stock_picking_return.py:44
+#: code:addons/stock/wizard/stock_picking_return.py:46
 #, python-format
 msgid "You may only return Done pickings"
-msgstr "Tagastada saab ainult Tehtud staatuses noppeid"
+msgstr "Tagastada saab ainult \"Tehtud\" staatuses korjeid"
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:22
@@ -7595,31 +7854,31 @@ msgid "You must define a warehouse for the company: %s."
 msgstr "Pead määrama lao ettevõttele: %s."
 
 #. module: stock
-#: code:addons/stock/models/stock_move_line.py:387
-#: code:addons/stock/models/stock_picking.py:670
+#: code:addons/stock/models/stock_move_line.py:406
+#: code:addons/stock/models/stock_picking.py:721
 #, python-format
 msgid "You need to supply a lot/serial number for %s."
 msgstr "Pead määrama partii/seerianumbri tootele: %s."
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:1047
+#: code:addons/stock/models/stock_move.py:1126
 #, python-format
 msgid "You should not put the contents of a package in different locations."
 msgstr "Pakendi sisu ei tohiks panna erinevatesse asukohtadesse."
 
 #. module: stock
-#: code:addons/stock/models/product.py:369
-#: code:addons/stock/models/product.py:504
+#: code:addons/stock/models/product.py:373
+#: code:addons/stock/models/product.py:515
 #, python-format
 msgid ""
 "You still have some active reordering rules on this product. Please archive "
 "or delete them first."
 msgstr ""
-"Sellel tootel on aktiivsed taastellimise reeglid. Palun arhiveeri või "
-"kustuta need kõigepealt."
+"Sellel tootel on aktiivsed kauba tellimise automaatreeglid reeglid. Palun "
+"arhiveeri või kustuta need esmalt."
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:318
+#: code:addons/stock/models/stock_move.py:338
 #, python-format
 msgid ""
 "You try to move a product using a UoM that is not compatible with the UoM of"
@@ -7679,7 +7938,7 @@ msgstr "barcode.rule"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings_module_delivery_bpost
 msgid "bpost"
-msgstr "bpost"
+msgstr "Bpost"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -7691,12 +7950,12 @@ msgstr "seadistuste menüü"
 #: model:ir.ui.view,arch_db:stock.view_procurement_rule_form
 #: model:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "days"
-msgstr "päevad"
+msgstr "päev(a)"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "days to be propagated"
-msgstr "päevi täienemiseks"
+msgstr "päev(a), et rakenduda."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
@@ -7706,7 +7965,7 @@ msgstr "näiteks aastane inventuur"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_procurement_rule_form
 msgid "e.g. Buy"
-msgstr "näiteks Ostmine"
+msgstr "Näiteks ost"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_production_lot_form
@@ -7796,7 +8055,7 @@ msgstr "pole saadaval vajalikus koguses"
 msgid ""
 "on the purchase order form or click on <i>Receive Products</i> to see the "
 "Transfer Order"
-msgstr "ostutellimusel vajuta <i>Võta vastu</i>, et näha siirdetellimust"
+msgstr "ostutellimusel kliki <i>Võta vastu</i>, et näha siirdetellimust"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
