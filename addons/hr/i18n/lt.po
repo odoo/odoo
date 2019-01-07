@@ -13,7 +13,7 @@
 # Šarūnas Ažna <sarunas.azna@gmail.com>, 2018
 # digitouch UAB <digitouchagencyeur@gmail.com>, 2018
 # Eimantas <eimantas@focusate.eu>, 2018
-# Linas Versada <linaskrisiukenas@gmail.com>, 2018
+# Linas Versada <linaskrisiukenas@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -21,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-10-08 06:48+0000\n"
 "PO-Revision-Date: 2018-08-24 09:18+0000\n"
-"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2018\n"
+"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2019\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -49,7 +49,7 @@ msgstr "&amp;nbsp;"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "<i>Work in a fun atmosphere</i>"
-msgstr "<i>Darbas įdomioje aplinkoje</i>"
+msgstr "<i>Darbas linksmoje aplinkoje</i>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -90,7 +90,7 @@ msgstr "<span>Laukia patvirtinimo</span>"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
 msgid "<span>To Do</span>"
-msgstr "<span>Atlikti</span>"
+msgstr "<span>Reikia atlikti</span>"
 
 #. module: hr
 #: model:mail.template,body_html:hr.mail_template_data_unknown_employee_email_address
@@ -123,6 +123,33 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                    <div>\n"
+"                        Labas,<br/>\n"
+"                        Jūsų dokumentas nebuvo sukurtas, nes jūsų el. paštas neatpažintas. Siųskite laiškus iš jūsų darbuotojo informacijoje įrašyto pašto arba susisiekite su personalo skyriumi.\n"
+"                    </div>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"    </td></tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- POWERED BY -->\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"      <tr><td style=\"text-align: center; font-size: 13px;\">\n"
+"        Technologija <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=hr\" style=\"color: #875A7B;\">\"Odoo\"</a>\n"
+"      </td></tr>\n"
+"    </table>\n"
+"</td></tr>\n"
+"</table>\n"
+"            "
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -140,7 +167,7 @@ msgid ""
 msgstr ""
 "Darbas pilnu etatu su patraukliu atlyginimu, mažoje protingų žmonių "
 "komandoje. Darbą pradėsite nuo pilnų funkcinių ir techninių mokymų. Jei "
-"esate atkaklus, motyvuotas ir lankstus, aplikuokite į šią poziciją, Jūs "
+"esate atkaklus, motyvuotas ir lankstus, kandidatuokite į šią poziciją, jūs "
 "tikrai pateksite į geriausią įmonę."
 
 #. module: hr
@@ -181,12 +208,12 @@ msgstr "Veiklos būsena"
 #: model_terms:ir.actions.act_window,help:hr.act_employee_from_department
 #: model_terms:ir.actions.act_window,help:hr.open_view_employee_list_my
 msgid "Add a new employee"
-msgstr ""
+msgstr "Pridėti naują darbuotoją"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__additional_note
 msgid "Additional Note"
-msgstr ""
+msgstr "Papildoma pastaba"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_mail_alias__alias_contact
@@ -209,7 +236,7 @@ msgstr "Archyvuotas"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_attachment_count
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "Prisegtukų skaičius"
 
 #. module: hr
 #: selection:mail.alias,alias_contact:0
@@ -224,22 +251,22 @@ msgstr "Autentifikuoti partneriai"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.mail_channel_view_form_
 msgid "Auto Subscribe Departments"
-msgstr ""
+msgstr "Automatiškai prenumeruoti skyrius"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_mail_channel__subscription_department_ids
 msgid "Automatically subscribe members of those departments to the channel."
-msgstr ""
+msgstr "Automatiškai tų skyrių nariams užprenumeruoti kanalą."
 
 #. module: hr
 #: selection:hr.employee,certificate:0
 msgid "Bachelor"
-msgstr ""
+msgstr "Bakalauras"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__bank_account_id
 msgid "Bank Account Number"
-msgstr "Banko sąskaita"
+msgstr "Banko sąskaitos numeris"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
@@ -249,8 +276,8 @@ msgid ""
 "source project in a friendly and cooperative atmosphere sounds like fun to "
 "you, read on..."
 msgstr ""
-"Dėl mūsų nuolatinio augimo šiuo metu ieškome naujo žmogaus,sustiprinti mūsų "
-"entuziastingų techninių vadovų komandai. Jei darbas su atviro kodo "
+"Dėl mūsų nuolatinio augimo, šiuo metu ieškome naujo žmogaus sustiprinti mūsų"
+" entuziastingų techninių vadovų komandai. Jei darbas su atviro kodo "
 "projektais ir bendradarbiavimo atmosfera traukia jus, skaitykite toliau..."
 
 #. module: hr
@@ -264,10 +291,10 @@ msgid ""
 "our team of enthusiastic developers. So if working on an open source project"
 " in a friendly and cooperative atmosphere sounds like fun to you, read on..."
 msgstr ""
-"Dėl mūsų pastovaus augimo šiuo metu ieškome naujo žmogaus,sustiprinti mūsų "
-"entuziastingų programuotojų komandai. Jei darbas su atviro kodo projektais "
-"bei draugiška ir bendradarbiaujanti atmosfera traukia jus, skaitykite "
-"toliau..."
+"Dėl mūsų nuolatinio augimo šiuo metu ieškome naujo žmogaus, kuris "
+"sustiprintų mūsų entuziastingų programuotojų komandą. Jei darbas su atviro "
+"kodo projektais bei draugiška ir bendradarbiaujanti atmosfera traukia jus, "
+"skaitykite toliau..."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_trainee
@@ -276,10 +303,10 @@ msgid ""
 "our team of enthusiastic trainees. So if working on an open source project "
 "in a friendly and cooperative atmosphere sounds like fun to you, read on..."
 msgstr ""
-"Dėl mūsų pastovaus augimo, šiuo metu ieškome naujo žmogaus, sustiprinti mūsų"
-" entuziastingų praktikantų komandai. Jei darbas su atviro kodo projektais "
-"bei draugiška ir bendradarbiaujant atmosfera traukia jus, skaitykite "
-"toliau..."
+"Dėl mūsų nuolatinio augimo, šiuo metu ieškome naujo žmogaus, kuris "
+"sustiprintų mūsų entuziastingų praktikantų komandą. Jei darbas su atviro "
+"kodo projektais bei draugiška ir bendradarbiaujant atmosfera traukia jus, "
+"skaitykite toliau..."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -289,7 +316,7 @@ msgstr "Gimimo data"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__certificate
 msgid "Certificate Level"
-msgstr ""
+msgstr "Sertifikato lygis"
 
 #. module: hr
 #: model:hr.job,name:hr.job_ceo
@@ -362,7 +389,7 @@ msgstr "Pilnas pavadinimas"
 #. module: hr
 #: model:ir.model,name:hr.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Konfigūracijos nustatymai"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_human_resources_configuration
@@ -394,12 +421,12 @@ msgstr "Indėlis į atviro kodo projektus"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__country_of_birth
 msgid "Country of Birth"
-msgstr ""
+msgstr "Gimimo šalis"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.open_module_tree_department
 msgid "Create a new department"
-msgstr ""
+msgstr "Kurti naują skyrių"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__create_uid
@@ -432,7 +459,7 @@ msgstr "Gimimo data"
 #: model_terms:hr.job,website_description:hr.job_hrm
 #: model_terms:hr.job,website_description:hr.job_marketing
 msgid "Define a clear communication strategy"
-msgstr "Apibūdinkite aiškią komunikacijos strategiją"
+msgstr "Nustatykite aiškią komunikacijos strategiją"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__resource_calendar_id
@@ -442,7 +469,7 @@ msgstr "Nurodykite išteklių grafiką"
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
 msgid "Deliver generic Odoo functional training sessions"
-msgstr "Pristatyti Odoo bendrinių funkcinių mokymų sesijas"
+msgstr "Pristatyti \"Odoo\" bendrinių funkcinių mokymų sesijas"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__department_id
@@ -501,12 +528,12 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__emergency_contact
 msgid "Emergency Contact"
-msgstr ""
+msgstr "Nelaimės kontaktas"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__emergency_phone
 msgid "Emergency Phone"
-msgstr ""
+msgstr "Nelaimės telefonas"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_employee
@@ -522,7 +549,7 @@ msgstr "Darbuotojo kategorija"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__google_drive_link
 msgid "Employee Documents"
-msgstr ""
+msgstr "Darbuotojo dokumentai"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category__name
@@ -539,7 +566,7 @@ msgstr "Darbuotojo žymos"
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__bank_account_id
 msgid "Employee bank salary account"
-msgstr "Banko sąskaita, į kurią pervesti atlyginimą"
+msgstr "Darbuotojo atlyginimo darbo sąskaita"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -608,38 +635,38 @@ msgstr "Moteris"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__study_field
 msgid "Field of Study"
-msgstr ""
+msgstr "Studijų sritis"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
 msgid "Follow and check the development part"
-msgstr "Sekti ir tikrinti kūrimo dalį."
+msgstr "Sekti ir tikrinti programavimo dalį"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_follower_ids
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_follower_ids
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_follower_ids
 msgid "Followers"
-msgstr "Prenumeratoriai"
+msgstr "Sekėjai"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_channel_ids
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_channel_ids
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_channel_ids
 msgid "Followers (Channels)"
-msgstr "Prenumeratoriai (kanalai)"
+msgstr "Sekėjai (kanalai)"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_partner_ids
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_partner_ids
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Prenumeratoriai (partneriai)"
+msgstr "Sekėjai (partneriai)"
 
 #. module: hr
 #: selection:mail.alias,alias_contact:0
 msgid "Followers only"
-msgstr "Tik prenumeratoriams"
+msgstr "Tik sekėjams"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__gender
@@ -695,22 +722,22 @@ msgstr "Grupuoti pagal"
 #. module: hr
 #: model:ir.model,name:hr.model_hr_department
 msgid "HR Department"
-msgstr "Žmogiškųjų išteklių skyrius"
+msgstr "Personalo skyrius"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_mail_channel__subscription_department_ids
 msgid "HR Departments"
-msgstr ""
+msgstr "Personalo skyriai"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "HR Settings"
-msgstr "Žmmogiškųjų išteklių nustatymai"
+msgstr "Personalo nustatymai"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
 msgid "Help with the configuration of the software"
-msgstr "Programos konfigūravimo pagalba"
+msgstr "Padėti su programinės įrangos konfigūravimu"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_hrm
@@ -725,7 +752,7 @@ msgstr "Pasamdyti puikių vadovų komandą "
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_marketing
 msgid "Hire a team of great marketing people"
-msgstr "Pasamdykite kvalifikuotų rinkodaros specialistų"
+msgstr "Pasamdyti kvalifikuotų rinkodaros specialistų"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__no_of_hired_employee
@@ -767,14 +794,14 @@ msgstr "Jeigu pažymėta, naujiems pranešimams reikės jūsų dėmesio."
 #: model:ir.model.fields,help:hr.field_hr_employee__message_needaction
 #: model:ir.model.fields,help:hr.field_hr_job__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "Jeigu pažymėtas - naujoms žinutėms reikia jūsų dėmesio."
+msgstr "Jeigu pažymėta, naujiems pranešimams reikės jūsų dėmesio."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_department__message_has_error
 #: model:ir.model.fields,help:hr.field_hr_employee__message_has_error
 #: model:ir.model.fields,help:hr.field_hr_job__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "Jei pažymėta, yra žinučių, turinčių pristatymo klaidų."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__active
@@ -789,14 +816,14 @@ msgstr ""
 #: code:addons/hr/models/hr.py:296
 #, python-format
 msgid "Import Template for Employees"
-msgstr ""
+msgstr "Importuoti šabloną darbuotojams"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
 #: model_terms:hr.job,website_description:hr.job_hrm
 #: model_terms:hr.job,website_description:hr.job_marketing
 msgid "Improve our communication to customers"
-msgstr "Gerinkite mūsų komunikaciją su klientais."
+msgstr "Gerinkite mūsų komunikaciją su klientais"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
@@ -868,7 +895,7 @@ msgstr "Darbai"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__km_home_work
 msgid "Km home-work"
-msgstr ""
+msgstr "KM darbas-namai"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department____last_update
@@ -918,14 +945,14 @@ msgstr "Teisinis gyvenimas kartu"
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.action_hr_job
 msgid "Let's create a job position."
-msgstr ""
+msgstr "Sukurkime darbo poziciją."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_main_attachment_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_main_attachment_id
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "Pagrindinis prisegtukas"
 
 #. module: hr
 #: selection:hr.employee,gender:0
@@ -958,7 +985,7 @@ msgstr "Susituokęs/-usi"
 #. module: hr
 #: selection:hr.employee,certificate:0
 msgid "Master"
-msgstr ""
+msgstr "Magistras"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
@@ -993,14 +1020,14 @@ msgstr "Nariai"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_has_error
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "Žinutės pristatymo klaida"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_ids
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_ids
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_ids
 msgid "Messages"
-msgstr "Pranešimai"
+msgstr "Žinutės"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1016,7 +1043,7 @@ msgstr "Turi turėti ..."
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__name
 msgid "Name"
-msgstr "Pavadinimas"
+msgstr "Vardas"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__country_id
@@ -1026,17 +1053,17 @@ msgstr "Tautybė (šalis)"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr "Kitos veiklos terminas"
+msgstr "Kito veiksmo terminas"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_summary
 msgid "Next Activity Summary"
-msgstr "Kitos veiklos santrauka"
+msgstr "Kito veiksmo santrauka"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_type_id
 msgid "Next Activity Type"
-msgstr "Kitos veiklos tipas"
+msgstr "Kito veiksmo tipas"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1086,7 +1113,7 @@ msgstr "Darbuotojų, dirbančių šiose pareigose, skaičius."
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_has_error_counter
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_has_error_counter
 msgid "Number of error"
-msgstr ""
+msgstr "Klaidų skaičius"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job__no_of_hired_employee
@@ -1107,12 +1134,12 @@ msgstr "Žinučių, kurioms reikia jūsų veiksmo, skaičius"
 #: model:ir.model.fields,help:hr.field_hr_employee__message_has_error_counter
 #: model:ir.model.fields,help:hr.field_hr_job__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "Žinučių su pristatymo klaida skaičius"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job__no_of_recruitment
 msgid "Number of new employees you expect to recruit."
-msgstr "Skaičius darbuotojų, kurį planuojama įdarbinti."
+msgstr "Darbuotojų, kuriuos planuojama įdarbinti, skaičius."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_department__message_unread_counter
@@ -1128,8 +1155,8 @@ msgid ""
 "                related to employees by departments: expenses, timesheets,\n"
 "                leaves, recruitments, etc."
 msgstr ""
-"Odoo skyriaus struktūra naudojama tvarkymui dokumentų,\n"
-"kurie susiję su darbuotojais pagal skyrius: išlaidos, laiko apskaita,\n"
+"\"Odoo\" skyrių struktūra naudojama tvarkymui dokumentų,\n"
+"susijusių su darbuotojais pagal skyrius: išlaidos, laiko apskaita,\n"
 "išėjimai, įdarbinimai ir kt."
 
 #. module: hr
@@ -1161,7 +1188,7 @@ msgstr "Mūsų personalas darbe"
 #. module: hr
 #: selection:hr.employee,activity_state:0
 msgid "Overdue"
-msgstr "Pavėluotas"
+msgstr "Vėluoja"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__parent_id
@@ -1242,7 +1269,7 @@ msgstr "Privati informacija"
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
 msgid "Quantify and negotiate the resources required"
-msgstr "Nustatykite kiekį ir derėkitės dėl reikalingų resursų"
+msgstr "Nustatykite kiekį ir derėkitės dėl reikalingų išteklių"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_developer
@@ -1252,7 +1279,7 @@ msgstr "Greitas ir savarankiškas mokinys"
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.action_hr_job
 msgid "Ready to recruit more efficiently?"
-msgstr ""
+msgstr "Esate pasiruošę įdarbinti efektyviau?"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
@@ -1267,7 +1294,7 @@ msgstr "Įdarbinimas vyksta"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Related User"
-msgstr "Susietas naudotojas"
+msgstr "Susietas vartotojas"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__employee_ids
@@ -1308,17 +1335,17 @@ msgstr "Atsakomybės"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_user_id
 msgid "Responsible User"
-msgstr "Atsakingas naudotojas"
+msgstr "Atsakingas vartotojas"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__sinid
 msgid "SIN No"
-msgstr "Soc.draud.nr"
+msgstr "Soc. draud. nr"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__ssnid
 msgid "SSN No"
-msgstr "Socialinio draudimo Nr."
+msgstr "Socialinio draudimo nr."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1330,7 +1357,7 @@ msgstr "Plėskite mūsų renginių organizavimą visame pasaulyje"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__study_school
 msgid "School"
-msgstr ""
+msgstr "Mokykla"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
@@ -1338,14 +1365,14 @@ msgid ""
 "Set default calendar used to compute time allocation for leaves, timesheets,"
 " ..."
 msgstr ""
-"Nustatyti numatytąjį kalendorių laiko apskaitos, išėjimų ir kt. "
+"Nustatyti numatytąjį kalendorių laiko apskaitos, laisvadienių ir kt. "
 "skaičiavimui..."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job__state
 msgid ""
 "Set whether the recruitment process is open or closed for this job position."
-msgstr "Nustatykite, įdarbinimo procesas šiai pozicijai vyksta ar ne."
+msgstr "Nustatykite, ar įdarbinimo procesas šiai pozicijai vyksta, ar ne."
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.hr_config_settings_action
@@ -1372,7 +1399,7 @@ msgstr "Rodyti organizacinę lentelę darbuotojo formoje."
 #. module: hr
 #: selection:hr.employee,marital:0
 msgid "Single"
-msgstr "Vieniša(-s)"
+msgstr "Vieniša (-s)"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1383,7 +1410,7 @@ msgstr "Vieniša(-s)"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Skills"
-msgstr "Sugebėjimai"
+msgstr "Įgūdžiai"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__image_small
@@ -1414,12 +1441,12 @@ msgstr "Socialinio draudimo numeris"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__spouse_birthdate
 msgid "Spouse Birthdate"
-msgstr ""
+msgstr "Antrosios pusės gimimo data"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__spouse_complete_name
 msgid "Spouse Complete Name"
-msgstr ""
+msgstr "Antrosios pusės pilnas vardas"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
@@ -1449,7 +1476,7 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "Stop Recruitment"
-msgstr "Nutraukti įdarbinimą"
+msgstr "Stabdyti įdarbinimą"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.hr_employee_action_subordinate_hierachy
@@ -1479,7 +1506,7 @@ msgstr "Dalyvaukite konsultavimo paslaugose"
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_developer
 msgid "Team spirit and good communication"
-msgstr "Komandos dvasia ir puikus komunikatorius"
+msgstr "Komandos dvasia ir puikus bendravimas"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__is_address_home_a_company
@@ -1489,12 +1516,12 @@ msgstr "Darbuotojo adresas turi susietą kompaniją"
 #. module: hr
 #: sql_constraint:hr.job:0
 msgid "The name of the job position must be unique per department in company!"
-msgstr "Darbo pozicijos pavadinimas turi būti unikalus įmonėje!"
+msgstr "Darbo pozicijos pavadinimas įmonės skyriuje turi būti unikalus!"
 
 #. module: hr
 #: model:res.groups,comment:hr.group_hr_user
 msgid "The user will be able to approve document created by employees."
-msgstr ""
+msgstr "Vartotojas galės patvirtinti darbuotojų sukurtus dokumentus."
 
 #. module: hr
 #: model:res.groups,comment:hr.group_hr_manager
@@ -1502,6 +1529,8 @@ msgid ""
 "The user will have access to the human resources configuration as well as "
 "statistic reports."
 msgstr ""
+"Vartotojas turės prieigą prie žmogiškųjų išteklių konfigūracijos ir "
+"statistikos ataskaitų."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__image
@@ -1517,7 +1546,7 @@ msgstr ""
 msgid ""
 "This field is used in order to define in which timezone the resources will "
 "work."
-msgstr ""
+msgstr "Šis laukas naudojamas išteklių darbo laiko zonos nustatymui."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__tz
@@ -1532,7 +1561,7 @@ msgstr "Šiandien"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__expected_employees
 msgid "Total Forecasted Employees"
-msgstr "Prognozuojamas darbuotojų skaičius"
+msgstr "Bendras prognozuojamas darbuotojų skaičius"
 
 #. module: hr
 #: model:hr.job,name:hr.job_trainee
@@ -1553,7 +1582,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Unread Messages"
-msgstr "Neskaityti pranešimai"
+msgstr "Neskaitytos žinutės"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_unread_counter
@@ -1611,7 +1640,7 @@ msgstr ""
 "Ieškome motyvuoto ir į rezultatą orientuoto funkcinio konsultanto! Jūs "
 "dalyvausite konsultavimo paslaugose, kurias teikiame savo partneriams ir "
 "klientams funkcinėje dalyje. Jūsų darbas prasidės nuo kliento užklausos ir "
-"baigsis pristatymų klientui. Jūs klausysite kliento ir suteiksite jam "
+"baigsis pristatymu klientui. Jūs klausysite kliento ir suteiksite jam "
 "geriausias paslaugas. Būsite atskaitingas konsultavimo paslaugų vadovui ir "
 "jus mokys vyresnieji konsultantai."
 
@@ -1672,12 +1701,12 @@ msgstr "Ką mes siūlome"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "What you will do ..."
-msgstr "Tavo atsakomybės ..."
+msgstr "Ką darysite ..."
 
 #. module: hr
 #: selection:hr.employee,marital:0
 msgid "Widower"
-msgstr "Našlys/-ė"
+msgstr "Našlys (-ė)"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -1692,7 +1721,7 @@ msgid ""
 "                can easily find all the information you need for each person;\n"
 "                contact data, job position, availability, etc."
 msgstr ""
-"Vos užmetę akį į \"Odoo\" darbuotojų vaizdą jūs\n"
+"Vos užmetę akį į \"Odoo\" darbuotojų vaizdą, jūs\n"
 "                galėsite rasti visą reikiamą informaciją apie kiekvieną žmogų;\n"
 "                kontaktinius duomenis, poziciją, pasiekiamumą ir kt."
 
@@ -1751,7 +1780,7 @@ msgstr "Leidimas dirbti"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__permit_no
 msgid "Work Permit No"
-msgstr "Leidimo dirbti Nr"
+msgstr "Leidimo dirbti nr."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_phone
@@ -1786,7 +1815,7 @@ msgstr "Esate greitas ir savarankiškas mokinys"
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
 msgid "You are an excellent communicator and negotiator"
-msgstr "Esi komunikabilus bei puikus derybininkas"
+msgstr "Esate komunikabilus bei puikus derybininkas"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1798,14 +1827,14 @@ msgstr "Esate lengvai bendraujantis, nuoširdus ir linksmas komandos žaidėjas"
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
 msgid "You are available immediately"
-msgstr "Esi visada pasiekiamas"
+msgstr "Esate visada pasiekiamas"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
 #: model_terms:hr.job,website_description:hr.job_hrm
 #: model_terms:hr.job,website_description:hr.job_marketing
 msgid "You are creative"
-msgstr "Esi kūrybiškas"
+msgstr "Esate kūrybiškas"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -1823,18 +1852,18 @@ msgstr "Esate pasiruošęs dirbti dinamiškoje kompanijoje"
 #: code:addons/hr/models/hr.py:206
 #, python-format
 msgid "You cannot create a recursive hierarchy."
-msgstr ""
+msgstr "Negalite kurti pasikartojančios hierarchijos."
 
 #. module: hr
 #: code:addons/hr/models/hr.py:331
 #, python-format
 msgid "You cannot create recursive departments."
-msgstr ""
+msgstr "Negalite kurti pasikartojančių skyrių."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
 msgid "You have 2 or 3 years of experience"
-msgstr "Turi 2-3 metų patirtį"
+msgstr "Turite 2-3 metų patirtį"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -1867,7 +1896,7 @@ msgstr "Kalbate trečiąja kalba"
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
 msgid "You speak fluently French and English"
-msgstr "Nepriekaištingai kalbi prancūziškai bei angliškai"
+msgstr "Nepriekaištingai kalbate prancūziškai bei angliškai"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
@@ -1940,7 +1969,7 @@ msgstr "Bus atskaitingas R&D vadovui"
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_developer
 msgid "You will work closely with all developers"
-msgstr "Artimai dirbsite su visais vystytojais"
+msgstr "Artimai dirbsite su visais programuotojais"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
@@ -1960,14 +1989,14 @@ msgstr "Jūsų dokumentas nebuvo sukurtas"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_department_form
 msgid "department"
-msgstr "Padalinys"
+msgstr "skyrius"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "e.g. Part Time"
-msgstr "pvz. Nepilnas etatas"
+msgstr "pvz., nepilnas etatas"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "e.g. Sales Manager"
-msgstr "pvz. pardavimų vadybininkas"
+msgstr "pvz., pardavimų vadybininkas"

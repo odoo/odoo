@@ -10340,16 +10340,6 @@ msgid ""
 msgstr "根據您所在的國家定義類型，這個類型包含科目和他的特性的更多的信息."
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1439
-#, python-format
-msgid ""
-"This %s has been created from: <a href=# data-oe-model=account.invoice data-"
-"oe-id=%d>%s</a><br>Reason: %s"
-msgstr ""
-"這個 %s 已經創建自: <a href=# data-oe-model=account.invoice data-oe-"
-"id=%d>%s</a><br>原因是: %s"
-
-#. module: account
 #: code:addons/account/models/account_journal_dashboard.py:100
 #, python-format
 msgid "This Week"
@@ -10414,6 +10404,14 @@ msgid ""
 "encode the sale and purchase rates or choose from list of taxes. This last "
 "choice assumes that the set of tax defined on this template is complete"
 msgstr "這個選項用於確定您是否希望提示使用者輸入銷售和採購的稅率，或者是從下拉列表選擇稅。這是配置稅模版的最後一步。"
+
+#. module: account
+#: code:addons/account/models/account_invoice.py:1458
+#, python-format
+msgid ""
+"This customer invoice credit note has been created from: <a href=# data-oe-"
+"model=account.invoice data-oe-id=%d>%s</a><br>Reason: %s"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -10538,6 +10536,14 @@ msgid ""
 "in order to avoid the reconciliation process on it later on. The statement "
 "line will simply create a counterpart on this account"
 msgstr "這個技術字段可以用於對帳單行創建或導入時，用以避免以後在它上面的對帳過程。對帳單行僅僅是在這個科目上創建一個對方分錄"
+
+#. module: account
+#: code:addons/account/models/account_invoice.py:1460
+#, python-format
+msgid ""
+"This vendor bill credit note has been created from: <a href=# data-oe-"
+"model=account.invoice data-oe-id=%d>%s</a><br>Reason: %s"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_validate_account_move

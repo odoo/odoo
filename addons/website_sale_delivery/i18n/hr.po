@@ -3,20 +3,22 @@
 # * website_sale_delivery
 # 
 # Translators:
-# Karolina Tonković <karolina.tonkovic@storm.hr>, 2017
-# Davor Bojkić <davor.bojkic@storm.hr>, 2017
-# Martin Trigaux, 2017
-# Bole <bole@dajmi5.com>, 2017
-# Đurđica Žarković <durdica.zarkovic@storm.hr>, 2017
-# Mario Jureša <mario.juresa@uvid.hr>, 2017
-# Tina Milas, 2017
+# Martin Trigaux, 2019
+# Bole <bole@dajmi5.com>, 2019
+# Davor Bojkić <davor.bojkic@storm.hr>, 2019
+# Vladimir Olujić <olujic.vladimir@storm.hr>, 2019
+# Đurđica Žarković <durdica.zarkovic@storm.hr>, 2019
+# Karolina Tonković <karolina.tonkovic@storm.hr>, 2019
+# Mario Jureša <mario.juresa@uvid.hr>, 2019
+# Tina Milas, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:56+0000\n"
-"PO-Revision-Date: 2018-08-02 09:56+0000\n"
-"Last-Translator: Tina Milas, 2017\n"
+"POT-Creation-Date: 2018-09-21 13:18+0000\n"
+"PO-Revision-Date: 2018-08-24 09:35+0000\n"
+"Last-Translator: Tina Milas, 2019\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,9 +28,7 @@ msgstr ""
 
 #. module: website_sale_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.payment_delivery
-msgid ""
-"<span class=\"badge pull-right o_delivery_compute\">Select to compute "
-"delivery rate</span>"
+msgid "<b>Shipping Method: </b>"
 msgstr ""
 
 #. module: website_sale_delivery
@@ -38,11 +38,6 @@ msgid ""
 " This description will be copied to every Sales Order, Delivery Order and "
 "Customer Invoice/Credit Note"
 msgstr ""
-
-#. module: website_sale_delivery
-#: model:ir.model,name:website_sale_delivery.model_delivery_carrier
-msgid "Carrier"
-msgstr "Prijevoznik"
 
 #. module: website_sale_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.payment_delivery
@@ -65,6 +60,7 @@ msgid "Delivery Amount"
 msgstr "Iznos isporuke"
 
 #. module: website_sale_delivery
+#: model:ir.model,name:website_sale_delivery.model_delivery_carrier
 #: model:ir.ui.menu,name:website_sale_delivery.menu_ecommerce_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.res_config_settings_view_form
 msgid "Delivery Methods"
@@ -106,7 +102,7 @@ msgid "FedEx Delivery Methods"
 msgstr ""
 
 #. module: website_sale_delivery
-#: model_terms:ir.ui.view,arch_db:website_sale_delivery.payment_delivery
+#: model_terms:ir.ui.view,arch_db:website_sale_delivery.payment_delivery_methods
 msgid "Free"
 msgstr "Slobodan"
 
@@ -121,13 +117,18 @@ msgid "Has delivery"
 msgstr "Ima dostavu"
 
 #. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier__is_published
+msgid "Is published"
+msgstr ""
+
+#. module: website_sale_delivery
 #: code:addons/website_sale_delivery/controllers/main.py:44
 #, python-format
 msgid ""
 "No shipping method is available for your current order and shipping address."
 " Please contact us for more information."
 msgstr ""
-"Nijdna metoda dostave nije definirana za vašu trenutnu narudžbu i adresu "
+"Nijedna metoda dostave nije definirana za Vašu trenutnu narudžbu i adresu "
 "isporuke. Molimo kontaktirajte nas za više informacija."
 
 #. module: website_sale_delivery
@@ -148,15 +149,25 @@ msgid "Published"
 msgstr "Objavljeno"
 
 #. module: website_sale_delivery
+#: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier__website_id
+msgid "Restrict publishing to this website."
+msgstr ""
+
+#. module: website_sale_delivery
 #: model:ir.model,name:website_sale_delivery.model_sale_order
-msgid "Quotation"
-msgstr "Ponuda"
+msgid "Sale Order"
+msgstr "Prodajni nalog"
+
+#. module: website_sale_delivery
+#: model_terms:ir.ui.view,arch_db:website_sale_delivery.payment_delivery_methods
+msgid "Select to compute delivery rate"
+msgstr ""
 
 #. module: website_sale_delivery
 #: code:addons/website_sale_delivery/controllers/main.py:43
 #, python-format
 msgid "Sorry, we are unable to ship your order"
-msgstr "Nažalost, nismo u mogućnosti poslati vašu narudžbu"
+msgstr "Nažalost, nismo u mogućnosti poslati Vašu narudžbu"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_sale_order__amount_delivery
@@ -169,7 +180,7 @@ msgid "The full URL to access the document through the website."
 msgstr "Puni URL za pristup dokumentu putem web stranice."
 
 #. module: website_sale_delivery
-#: model_terms:ir.ui.view,arch_db:website_sale_delivery.portal_order_page_shipping_tracking
+#: model_terms:ir.ui.view,arch_db:website_sale_delivery.sale_order_portal_content_inherit_sale_stock_inherit_website_sale_delivery
 msgid "Tracking:"
 msgstr "Sljedivost:"
 
@@ -180,8 +191,13 @@ msgstr ""
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier__website_published
-msgid "Visible in Website"
-msgstr "Vidljivo na web stranicama"
+msgid "Visible on current website"
+msgstr ""
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier__website_id
+msgid "Website"
+msgstr "Web stranica"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier__website_url
