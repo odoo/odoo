@@ -85,7 +85,7 @@ Running the server
 
 .. option:: --max-cron-threads <count>
 
-    number of workers dedicated to cron jobs. Defaults to 2. The workers are
+    number of workers dedicated to :ref:`cron <reference/actions/cron>` jobs. Defaults to 2. The workers are
     threads in multi-threading mode and processes in multi-processing mode.
 
     For multi-processing mode, this is in addition to the HTTP worker
@@ -175,10 +175,10 @@ database
     listen by using the --database parameter and specifying a comma-separated
     list of databases
 
-    When combining the two parameters, db-filter superseed the comma-separated
+    When combining the two parameters, db-filter supersedes the comma-separated
     database list for restricting database list, while the comma-separated list
     is used for performing requested operations like upgrade of modules.
-    
+
     .. code-block:: bash
 
         odoo-bin --db-filter ^11.*$
@@ -190,7 +190,7 @@ database
         odoo-bin --database 11firstdatabase,11seconddatabase
 
     Restrict access to only two databases, 11firstdatabase and 11seconddatabase
-    
+
     .. code-block:: bash
 
         odoo-bin --database 11firstdatabase,11seconddatabase -u base
@@ -199,16 +199,16 @@ database
     and update base module on one database: 11firstdatabase
     If database 11seconddatabase doesn't exist, the database is created and base modules
     is installed
-    
+
     .. code-block:: bash
 
         odoo-bin --db-filter ^11.*$ --database 11firstdatabase,11seconddatabase -u base
-        
+
     Restrict access to databases whose name starts with 11,
     and update base module on one database: 11firstdatabase
     If database 11seconddatabase doesn't exist, the database is created and base modules
     is installed
-    
+
 .. option:: --db-template <template>
 
     when creating new databases from the database-management screens, use the
@@ -217,7 +217,7 @@ database
 .. option:: --no-database-list
 
     Suppresses the ability to list databases available on the system
-    
+
 .. option:: --db_sslmode
 
     Control the SSL security of the connection between Odoo and PostgreSQL.
@@ -269,7 +269,7 @@ built-in HTTP
 
 .. option:: --no-http
 
-    do not start the HTTP or long-polling workers (may still start cron
+    do not start the HTTP or long-polling workers (may still start :ref:`cron <reference/actions/cron>`
     workers)
 
     .. warning:: has no effect if :option:`--test-enable` is set, as tests
@@ -309,12 +309,12 @@ customize the amount of logging output
     enables `log rotation <https://docs.python.org/2/library/logging.handlers.html#timedrotatingfilehandler>`_
     daily, keeping 30 backups. Log rotation frequency and number of backups is
     not configurable.
-    
-    .. danger:: 
-    
+
+    .. danger::
+
         Built-in log rotation is not reliable in multi-workers scenarios
-        and may incur significant data loss. It is *strongly recommended* to 
-        use an external log rotation utility or use system loggers (--syslog) 
+        and may incur significant data loss. It is *strongly recommended* to
+        use an external log rotation utility or use system loggers (--syslog)
         instead.
 
 .. option:: --syslog

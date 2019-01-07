@@ -421,6 +421,7 @@ how the POS interface works.
 .. [#notquitem2m] technically not an M2M: adds a sequence field and may be
                   composed of just a view type, without a view id.
 
+.. _reference/actions/cron:
 
 Automated Actions (``ir.cron``)
 ======================================
