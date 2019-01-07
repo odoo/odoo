@@ -198,7 +198,7 @@ Odoo supports :ref:`custom tags <reference/data/shortcuts>` custom tags acting a
 - report: use to declare a :ref:`report action <reference/actions/report>`
 - act_window: use to declare a :ref:`window action <reference/actions/window>`
 
-The 4 first tags are prefered over the *record* notation.
+The 4 first tags are prefered over the :ref:`record <reference/data/record>` notation.
 
 
 Naming xml ids
@@ -249,13 +249,13 @@ Use the following pattern :
     />
 
     <!-- actions -->
-    <record id="model_name_action" model="ir.actions.act_window">
+    <act_window id="model_name_action">
         ...
-    </record>
+    </act_window>
 
-    <record id="model_name_action_child_list" model="ir.actions.act_window">
+    <act_window id="model_name_action_child_list">
         ...
-    </record>
+    </act_window>
 
     <!-- security -->
     <record id="module_name_group_user" model="res.groups">
