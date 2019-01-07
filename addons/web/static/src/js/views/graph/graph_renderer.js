@@ -210,6 +210,10 @@ return AbstractRenderer.extend({
           margin: {left: 80, bottom: 100, top: 80, right: 0},
           delay: 100,
           transition: 10,
+          controlLabels: {
+            'grouped': _t('Grouped'),
+            'stacked': _t('Stacked'),
+          },
           showLegend: _.size(data) <= MAX_LEGEND_LENGTH,
           showXAxis: true,
           showYAxis: true,
