@@ -15,9 +15,4 @@
             <t t-if="env and env.context.get('snailmail_layout')" t-call-assets="snailmail.report_assets_snailmail"/>
         </xpath>
     </template>
-    <template id="address_layout" inherit_id="web.address_layout">
-        <xpath expr='//div[@name="address"]' position="before">
-            <t t-set="colclass" t-value="colclass + ' recipient_address'"/>
-        </xpath>
-    </template>
 </odoo>
