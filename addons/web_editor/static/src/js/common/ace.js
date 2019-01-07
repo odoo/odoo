@@ -535,7 +535,7 @@ var ViewEditor = Widget.extend({
         } else {
             var resource = type === 'scss' ? this.scss[resID] : this.js[resID];
             return this._rpc({
-                route: '/web_editor/reset_scss_or_js',
+                route: '/web_editor/reset_asset',
                 params: {
                     url: resID,
                     bundle_xmlid: resource.bundle_xmlid,
@@ -560,7 +560,7 @@ var ViewEditor = Widget.extend({
         var bundleXmlID = sessionIdEndsWithJS ? this.js[session.id].bundle_xmlid : this.scss[session.id].bundle_xmlid;
         var fileType = sessionIdEndsWithJS ? 'js' : 'scss';
         self._rpc({
-            route: '/web_editor/save_scss_or_js',
+            route: '/web_editor/save_asset',
             params: {
                 url: session.id,
                 bundle_xmlid: bundleXmlID,

@@ -4,6 +4,7 @@ import base64
 import datetime
 import json
 import os
+import re
 import logging
 import requests
 import werkzeug.utils
@@ -367,6 +368,42 @@ class Website(Home):
     def theme_customize_reload(self, href, enable, disable, tab=0, **kwargs):
         self.theme_customize(enable and enable.split(",") or [], disable and disable.split(",") or [])
         return request.redirect(href + ("&theme=true" if "#" in href else "#theme=true") + ("&tab=" + tab))
+
+    @http.route(['/website/make_scss_custo'], type='json', auth='user', website=True)
+    def make_scss_custo(self, url, values):
+        """
+        Makes a scss customization of the given file. That file must
+        contain a scss map including a line comment containing the word 'hook',
+        to indicate the location where to write the new key,value pairs.
+
+        Params:
+            url (str):
+                the URL of the scss file to customize (supposed to be a variable
+                file which will appear in the assets_common bundle)
+
+            values (dict):
+                key,value mapping to integrate in the file's map (containing the
+                word hook). If a key is already in the file's map, its value is
+                overridden.
+        """
+        AssetsUtils = request.env['web_editor.assets']
+
+        custom_url = AssetsUtils.make_custom_asset_file_url(url, 'web.assets_common')
+        updatedFileContent = AssetsUtils.get_asset_content(custom_url) or AssetsUtils.get_asset_content(url)
+        updatedFileContent = updatedFileContent.decode('utf-8')
+        for name, value in values.items():
+            pattern = "'%s': %%s,\n" % name
+            regex = re.compile(pattern % ".+")
+            replacement = pattern % value
+            if regex.search(updatedFileContent):
+                updatedFileContent = re.sub(regex, replacement, updatedFileContent)
+            else:
+                updatedFileContent = re.sub(r'( *)(.*hook.*)', r'\1%s\1\2' % replacement, updatedFileContent)
+
+        # Bundle is 'assets_common' as this route is only meant to update
+        # variables scss files
+        AssetsUtils.save_asset(url, 'web.assets_common', updatedFileContent, 'scss')
+        return True
 
     @http.route(['/website/multi_render'], type='json', auth="public", website=True)
     def multi_render(self, ids_or_xml_ids, values=None):
