@@ -16,12 +16,7 @@ records in the database.  It is even possible to use the web client to modify
 the interface of the web client.
 
 .. note:: An html version of all docstrings in Odoo is available at:
-
-    .. toctree::
-        :maxdepth: 2
-
-        javascript_api
-
+      :ref:`JS API <reference/javascript_api/api>`
 
 Overview
 =========
@@ -1501,15 +1496,15 @@ order.
 
     - type: setting the input type (*text* by default, can be set on *number*)
 
-    On edit mode, the field is rendered as an input with the HTML attribute type 
-    setted on *number* (so user can benefit the native support, especially on 
+    On edit mode, the field is rendered as an input with the HTML attribute type
+    setted on *number* (so user can benefit the native support, especially on
     mobile). In this case, the default formatting is disabled to avoid incompability.
 
     .. code-block:: xml
 
         <field name="int_value" options='{"type": "number"}'/>
 
-    - step: set the step to the value up and down when the user click on buttons 
+    - step: set the step to the value up and down when the user click on buttons
         (only for input of type number, 1 by default)
 
     .. code-block:: xml
@@ -1533,15 +1528,15 @@ order.
 
     - type: setting the input type (*text* by default, can be set on *number*)
 
-    On edit mode, the field is rendered as an input with the HTML attribute type 
-    setted on *number* (so user can benefit the native support, especially on 
+    On edit mode, the field is rendered as an input with the HTML attribute type
+    setted on *number* (so user can benefit the native support, especially on
     mobile). In this case, the default formatting is disabled to avoid incompability.
 
     .. code-block:: xml
 
         <field name="int_value" options='{"type": "number"}'/>
 
-    - step: set the step to the value up and down when the user click on buttons 
+    - step: set the step to the value up and down when the user click on buttons
         (only for input of type number, 1 by default)
 
     .. code-block:: xml
