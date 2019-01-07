@@ -548,6 +548,7 @@ tour.register('main_flow_tour', {
     position: 'bottom',
 }, {
     trigger: '.o_data_row:has(.o_data_cell:contains("the_flow.product")):first',
+    extra_trigger: 'body:not(:has(> .o_loading:visible))',
     content: _t('Select the generated manufacturing order'),
     position: 'bottom',
 }, {
