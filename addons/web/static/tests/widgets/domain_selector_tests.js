@@ -130,7 +130,7 @@ QUnit.module('DomainSelector', {
         // field instead of "id" should rerender the widget and adapt the
         // widget suggestions
         domainSelector.$(".o_domain_debug_input").val('["&","&",["bar","=",True],"|",["foo","=","hello"],["id","=",1],["id","=",1]]').change();
-        assert.strictEqual(domainSelector.$(".o_field_selector").eq(1).find("input").val(), "foo",
+        assert.strictEqual(domainSelector.$(".o_field_selector").eq(1).find("input.o_field_selector_debug").val(), "foo",
             "the second field selector should now contain the 'foo' value");
         assert.ok(domainSelector.$(".o_domain_leaf_operator_select").eq(1).html().indexOf("contains") >= 0,
             "the second operator selector should now contain the 'contains' operator");
