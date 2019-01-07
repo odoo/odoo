@@ -144,7 +144,6 @@ var EditorMenuBar = Widget.extend({
      * @returns {Deferred}
      */
     save: function (reload) {
-        // TODO: MSH: To check
         var self = this;
         var defs = [];
         this.trigger('ready_to_save', {defs: defs});

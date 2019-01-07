@@ -181,8 +181,7 @@ var KeywordList = Widget.extend({
             });
             keyword.on('removed', self, function () {
                self.trigger('list-not-full');
-               // TODO: MSH: To check
-               self.trigger('content-updated', true);
+               self.trigger('content-updated', {isRemoved: true});
             });
             keyword.on('selected', self, function (ev) {
                 self.trigger('selected', {word: ev.data.word, language: ev.data.language || language});
@@ -226,7 +225,6 @@ var HtmlPage = Class.extend(mixins.PropertiesMixin, {
     changeTitle: function (title) {
         // TODO create tag if missing
         $('title').text(title.trim() || this.initTitle);
-        // TODO: MSH: To check
         this.trigger('title-changed', title);
     },
     description: function () {
@@ -235,7 +233,6 @@ var HtmlPage = Class.extend(mixins.PropertiesMixin, {
     changeDescription: function (description) {
         // TODO create tag if missing
         $('meta[name=description]').attr('content', description);
-        // TODO: MSH: To check
         this.trigger('description-changed', description);
     },
     keywords: function () {
@@ -456,8 +453,9 @@ var MetaKeywords = Widget.extend({
         this.keywordList.on('selected', this, function (ev) {
             self.keywordList.add(ev.data.word, ev.data.language);
         });
-        this.keywordList.on('content-updated', this, function (removed) {
-            self._updateTable(removed);
+        this.keywordList.on('content-updated', this, function (ev) {
+            debugger
+            self._updateTable(ev.data.isRemoved);
         });
         this.keywordList.insertAfter(this.$('.table thead'));
 
@@ -594,9 +592,8 @@ var MetaImageSelector = Widget.extend({
             res_model: 'ir.ui.view',
         }, null, $image);
         mediaDialog.open();
-        mediaDialog.on('save', this, function (image) {
-            // TODO: MSH: To check
-            var src = image.attr('src');
+        mediaDialog.on('save', this, function (ev) {
+            var src = ev.data.data.attr('src');
             self.activeMetaImg = src;
             self.customImgUrl = src;
             self._updateTemplateBody();

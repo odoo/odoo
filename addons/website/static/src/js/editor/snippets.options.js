@@ -773,10 +773,9 @@ options.registry.facebookPage = options.Class.extend({
      */
     fbPageOptions: function () {
         var dialog = new FacebookPageDialog(this, this.fbData).open();
-        dialog.on('save', this, function (fbData) {
-            // TODO: MSH: To check
+        dialog.on('save', this, function (ev) {
             this.$target.empty();
-            this.fbData = fbData;
+            this.fbData = ev.data.data;
             options.registry.facebookPage.prototype.markFbElement(this, this.$target, this.fbData);
         });
     },

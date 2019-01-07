@@ -571,13 +571,12 @@ var EditMenuDialog = weWidgets.Dialog.extend({
     _onAddMenuButtonClick: function () {
         var self = this;
         var dialog = new MenuEntryDialog(this, {}, undefined, {});
-        dialog.on('save', this, function (link) {
-            // TODO: MSH: To check
+        dialog.on('save', this, function (ev) {
             var new_menu = {
                 id: _.uniqueId('new-'),
-                name: link.text,
-                url: link.url,
-                new_window: link.isNewWindow,
+                name: ev.data.data.text,
+                url: ev.data.data.url,
+                new_window: ev.data.data.isNewWindow,
                 parent_id: false,
                 sequence: 0,
                 children: [],
@@ -613,14 +612,13 @@ var EditMenuDialog = weWidgets.Dialog.extend({
         var menu = self.flat[menu_id];
         if (menu) {
             var dialog = new MenuEntryDialog(this, {}, undefined, menu);
-            dialog.on('save', this, function (link) {
-                // TODO: MSH: To check
-                var id = link.id;
+            dialog.on('save', this, function (ev) {
+                var id = ev.data.data.id;
                 var menu_obj = self.flat[id];
                 _.extend(menu_obj, {
-                    'name': link.text,
-                    'url': link.url,
-                    'new_window': link.isNewWindow,
+                    'name': ev.data.data.text,
+                    'url': ev.data.data.url,
+                    'new_window': ev.data.data.isNewWindow,
                 });
                 var $menu = self.$('[data-menu-id="' + id + '"]');
                 $menu.find('.js_menu_label').first().text(menu_obj.name);

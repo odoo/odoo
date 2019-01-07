@@ -458,7 +458,6 @@ var DataSet =  Class.extend(mixins.PropertiesMixin, {
         return this._model.call('create', [data], {
             context: this.get_context()
         }).done(function () {
-            // TODO: MSH: To check
             self.trigger('dataset_changed', data, options);
         });
     },
@@ -479,7 +478,6 @@ var DataSet =  Class.extend(mixins.PropertiesMixin, {
         return this._model.call('write', [[id], data], {
             context: this.get_context(options.context)
         }).done(function () {
-            // TODO: MSH: To check
             self.trigger('dataset_changed', id, data, options);
         });
     },
@@ -493,7 +491,6 @@ var DataSet =  Class.extend(mixins.PropertiesMixin, {
         return this._model.call('unlink', [ids], {
             context: this.get_context()
         }).done(function () {
-            // TODO: MSH: To check
             self.trigger('dataset_changed', ids);
         });
     },
@@ -645,7 +642,6 @@ var DataSetStatic =  DataSet.extend({
     },
     unlink: function (ids) {
         this.set_ids(_.without.apply(null, [this.ids].concat(ids)));
-        // TODO: MSH: To check
         this.trigger('unlink', ids);
         return $.Deferred().resolve({result: true});
     },
@@ -723,7 +719,6 @@ var DataSetSearch = DataSet.extend({
         var self = this;
         return this._super(ids).done(function () {
             self.remove_ids( ids);
-            // TODO: MSH: To check
             self.trigger("dataset_changed", ids, callback, error_callback);
         });
     },

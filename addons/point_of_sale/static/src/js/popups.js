@@ -226,7 +226,6 @@ var PackLotLinePopupWidget = PopupWidget.extend({
         pack_lot_lines.remove_empty_model();
         pack_lot_lines.set_quantity_by_lot();
         this.options.order.save_to_db();
-        // TODO: MSH: To check
         this.options.order_line.trigger('change', this.options.order_line);
         this.gui.close_popup();
     },

@@ -473,7 +473,6 @@ $.summernote.pluginEvents.customColor = function (event, editor, layoutInfo, cus
     core.bus.trigger('color_picker_dialog_demand', {
         color: defaultColor === 'rgba(0, 0, 0, 0)' ? 'rgb(255, 0, 0)' : defaultColor,
         onSave: function (color) {
-            // TODO: MSH: To check
             var $palettes = $(event.currentTarget).find('.note-custom-color-palette > .note-color-row')
                 .append(('<button type="button" class="note-color-btn" data-value="' + color + '" style="background-color:' + color + ';" />'));
             $palettes.filter(':odd').find('button:not([data-event])').attr('data-event', 'backColor');

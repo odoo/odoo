@@ -463,7 +463,6 @@ PaymentScreenWidget.include({
                         self.order_changes();
                         self.reset_input();
                         self.render_paymentlines();
-                        // TODO: MSH: To check
                         order.trigger('change', order); // needed so that export_to_JSON gets triggered
 
                         if (response.message === "PARTIAL AP") {
@@ -657,7 +656,6 @@ PaymentScreenWidget.include({
                 if (order.get_due(order.selected_paymentline) > 0) {
                     order.selected_paymentline.mercury_swipe_pending = true;
                     this.render_paymentlines();
-                    // TODO: MSH: To check
                     order.trigger('change', order); // needed so that export_to_JSON gets triggered
                 }
             }

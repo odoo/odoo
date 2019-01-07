@@ -38,7 +38,6 @@ function _notify(content, callbacks) {
             c.widget.on_attach_callback(c.callback_args);
         }
     });
-    // TODO: MSH: To check
     core.bus.trigger('DOM_updated', content);
 }
 
