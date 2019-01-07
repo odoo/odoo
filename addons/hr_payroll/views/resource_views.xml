@@ -7,21 +7,38 @@
         <field name="model">resource.calendar</field>
         <field name="inherit_id" ref="resource.resource_calendar_form"/>
         <field name="arch" type="xml">
+            <xpath expr="//group[@name='resource_details']" position="inside">
+                <group>
+                    <label for="full_time_required_hours" string="Full Time"/>
+                    <div class="o_row">
+                        <field name="full_time_required_hours" nolabel="1"/>
+                        <span> hours/week</span>
+                    </div>
+                    <field name="is_fulltime" invisible="1"/>
+                </group>
+            </xpath>
             <xpath expr="//field[@name='attendance_ids']" position="replace">
                 <field name="normal_attendance_ids"/>
+                <group class="oe_subtotal_footer oe_right" style="width: 25% !important;">
+                    <label for="hours_per_week" string="Total"/>
+                    <div class="o_row">
+                        <field name="hours_per_week" nolabel="1"/>
+                        <span> hours/week</span>
+                    </div>
+                </group>
             </xpath>
             <xpath expr="//notebook" position="inside">
-                <page string="Employees Working Hours">
+                <page string="Employees Working Hours" groups="base.group_no_one">
                     <field name="extra_attendance_ids">
                         <tree string="Working Time" editable="top">
                             <field name="resource_id" string="Employee"/>
                             <field name="name"/>
                             <field name="dayofweek"/>
+                            <field name="day_period"/>
                             <field name="hour_from" widget="float_time"/>
                             <field name="hour_to" widget="float_time"/>
                             <field name="date_from"/>
                             <field name="date_to"/>
-                            <field name="day_period"/>
                         </tree>
                     </field>
                 </page>

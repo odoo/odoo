@@ -189,11 +189,11 @@
             <tree string="Working Time" editable="top">
                 <field name="name"/>
                 <field name="dayofweek"/>
+                <field name="day_period"/>
                 <field name="hour_from" widget="float_time"/>
                 <field name="hour_to" widget="float_time"/>
                 <field name="date_from"/>
                 <field name="date_to"/>
-                <field name="day_period"/>
             </tree>
         </field>
     </record>
@@ -241,7 +241,7 @@
                         <button name="%(resource_calendar_leaves_action_from_calendar)d" type="action"
                                 string="Leaves" icon="fa-calendar-times-o"
                                 class="oe_stat_button"
-                                groups="base.group_user"/>
+                                groups="base.group_no_one"/>
                         <button name="%(resource_resource_action_from_calendar)d" type="action"
                                 string="Work Resources" icon="fa-cogs"
                                 class="oe_stat_button"
@@ -251,9 +251,11 @@
                         <field name="name"/>
                     </h1>
                     <group name="resource_details">
-                        <field name="company_id" groups="base.group_multi_company"/>
-                        <field name="hours_per_day"/>
-                        <field name="tz"/>
+                        <group>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="hours_per_day"/>
+                            <field name="tz"/>
+                        </group>
                     </group>
                     <notebook>
                         <page string="Working Hours" name="working_hours">

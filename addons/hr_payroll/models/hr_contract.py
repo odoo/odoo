@@ -21,6 +21,10 @@ class HrContract(models.Model):
     help="Defines the frequency of the wage payment.")
     resource_calendar_id = fields.Many2one(required=True, help="Employee's working schedule.")
 
+    hours_per_week = fields.Float(related='resource_calendar_id.hours_per_week')
+    full_time_required_hours = fields.Float(related='resource_calendar_id.full_time_required_hours')
+    is_fulltime = fields.Boolean(related='resource_calendar_id.is_fulltime')
+
     @api.multi
     def get_all_structures(self):
         """
