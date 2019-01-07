@@ -4,10 +4,12 @@
 Customizing the web client
 =============================
 
-Note: this section is really really out of date. It will be updated someday,
-but meanwhile, this tutorial will probably be frustrating to follow, since it
-was written a long time ago.
-
+.. warning:: this section is really really out of date. It will be updated someday,
+  but meanwhile, this tutorial will probably be frustrating to follow, since it
+  was written a long time ago.
+  
+  Please Refer to the :ref:`Javascript CheatSheet <reference/jscs>`
+  for up to date information until a future rework of this tutorial.
 
 .. highlight:: javascript
 
