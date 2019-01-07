@@ -179,7 +179,7 @@ class ResourceCalendar(models.Model):
         'resource.calendar.leaves', 'calendar_id', 'Global Leaves',
         domain=[('resource_id', '=', False)]
         )
-    hours_per_day = fields.Float("Average hour per day", default=HOURS_PER_DAY,
+    hours_per_day = fields.Float("Average Hour per Day", default=HOURS_PER_DAY,
                                  help="Average hours per day a resource is supposed to work with this calendar.")
     tz = fields.Selection(
         _tz_get, string='Timezone', required=True,
