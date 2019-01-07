@@ -378,7 +378,8 @@ Programming in Odoo
   the Odoo API.
 - As in python, use ``filtered``, ``mapped``, ``sorted``, ... :ref:`ORM <reference/orm>` methods to
   ease code reading and performance.
-
+- Don't reinvent the wheel : Use or extend existing functionalities when you need them.
+    Use :ref:` Odoo Mixins <reference/mixins/` to integrate interesting functionalities easily.
 
 Make your method work in batch
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
