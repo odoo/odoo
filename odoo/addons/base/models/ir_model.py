@@ -1539,7 +1539,8 @@ class IrModelData(models.Model):
             raise AccessError(_('Administrator access is required to uninstall a module'))
 
         # enable model/field deletion
-        self = self.with_context(**{MODULE_UNINSTALL_FLAG: True})
+        # we deactivate prefetching to not try to read a column that has been deleted
+        self = self.with_context(**{MODULE_UNINSTALL_FLAG: True, 'prefetch_fields': False})
 
         datas = self.search([('module', 'in', modules_to_remove)])
         to_unlink = tools.OrderedSet()
