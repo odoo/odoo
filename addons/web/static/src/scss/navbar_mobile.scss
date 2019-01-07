@@ -23,7 +23,6 @@
 
         position: relative;
         height: $o-navbar-height;
-        overflow: hidden;
 
         > ul {
             > li {
@@ -39,6 +38,7 @@
 
             &.o_menu_sections {
                 width: 100%;
+                display: none;
 
                 .dropdown-menu.show {
                     position: static;
@@ -82,6 +82,9 @@
     body.o_mobile_menu_opened > .o_main_navbar {
         height: 100%;
         overflow: auto;
+        .o_menu_sections {
+            display: block;
+        }
     }
 }
 
