@@ -1,8 +1,10 @@
 odoo.define('mail.model.DMChat', function (require) {
 "use strict";
 
-var core = require('web.core');
 var TwoUserChannel = require('mail.model.TwoUserChannel');
+
+var core = require('web.core');
+
 var _t = core._t;
 
 /**
@@ -20,7 +22,8 @@ var DMChat = TwoUserChannel.extend({
      * @param {integer} params.data.direct_partner[0].id
      * @param {string} params.data.direct_partner[0].im_status
      * @param {string} params.data.direct_partner[0].name
-     * @param {string} [params.data.direct_partner[0].out_of_office_message='']
+     * @param {string} [params.data.direct_partner[0].out_of_office_message]
+     * @param {string} [params.data.direct_partner[0].out_of_office_date_end]
      */
     init: function (params) {
         this._super.apply(this, arguments);
@@ -54,14 +57,31 @@ var DMChat = TwoUserChannel.extend({
         return this._directPartnerID;
     },
     /**
+    * Get the out of office info
+    *
+    * @override {mail.model.AbstractThread}
+    * @returns {string|undefined}
+    */
+    getOutOfOfficeInfo: function () {
+        if (!this._outOfOfficeDateEnd) {
+            return undefined;
+        }
+        var currentDate = new Date();
+        var date = new Date(this._outOfOfficeDateEnd);
+        var options = { day: 'numeric', month: 'short' };
+        if (currentDate.getFullYear() !== date.getFullYear()) {
+            options.year = 'numeric';
+        }
+        var formattedDate = date.toLocaleDateString(window.navigator.language, options);
+        return _.str.sprintf(_t("Out of office until %s"), formattedDate);
+    },
+    /**
     * Get the out of office message of the thread
     *
+    * @override {mail.model.AbstractThread}
     * @returns {string}
     */
    getOutOfOfficeMessage: function () {
-        if (this._outOfOfficeMessage === '') {
-            return undefined;
-        }
         return this._outOfOfficeMessage;
     },
     /**
