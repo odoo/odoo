@@ -52,13 +52,6 @@ class MrpProductProduce(models.TransientModel):
             remaining_qty = product_produce._get_todo(product_produce.production_id)
             product_produce.is_pending_production = remaining_qty - product_produce.qty_producing > 0.0
 
-    def _generate_lines_values(self, move, qty_to_consume):
-        res = super(MrpProductProduce, self)._generate_lines_values(move, qty_to_consume)
-        # prefill the qty done in the wizard to speed up the process
-        for line in res:
-            line['qty_done'] = line['qty_to_consume']
-        return res
-
     def continue_production(self):
         """ Save current wizard and directly opens a new. """
         self.ensure_one()

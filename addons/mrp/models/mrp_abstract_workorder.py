@@ -106,6 +106,7 @@ class MrpAbstractWorkorder(models.AbstractModel):
         to consume but without lot or serial number.
         """
         lines = []
+        is_tracked = move.product_id.tracking != 'none'
         for move_line in move.move_line_ids:
             if float_compare(qty_to_consume, 0.0, precision_rounding=move.product_uom.rounding) <= 0:
                 break
@@ -129,6 +130,7 @@ class MrpAbstractWorkorder(models.AbstractModel):
                 'qty_to_consume': to_consume_in_line,
                 'qty_reserved': move_line.product_uom_qty,
                 'lot_id': move_line.lot_id.id,
+                'qty_done': is_tracked and 0 or to_consume_in_line
             }
             lines.append(line)
             qty_to_consume -= to_consume_in_line
@@ -146,8 +148,8 @@ class MrpAbstractWorkorder(models.AbstractModel):
                 line = {
                     'move_id': move.id,
                     'qty_to_consume': qty_to_consume,
+                    'qty_done': is_tracked and 0 or qty_to_consume
                 }
-
                 lines.append(line)
         return lines
 
@@ -295,7 +297,12 @@ class MrpAbstractWorkorderLine(models.AbstractModel):
             # reservation is made, so it is still possible to change it afterwards.
             vals_list = []
             quants = self.env['stock.quant']._gather(self.product_id, self.move_id.location_id, lot_id=self.lot_id, strict=False)
-            for quant in quants.filtered(lambda r: r.quantity > 0):
+            for quant in quants:
+                quantity = quant.reserved_quantity - quant.quantity
+                rounding = quant.product_uom_id.rounding
+                if (float_compare(quant.quantity, 0, precision_rounding=rounding) <= 0 or
+                        float_compare(quantity, 0, precision_rounding=rounding) <= 0):
+                    continue
                 vals = {
                     'move_id': self.move_id.id,
                     'product_id': self.product_id.id,
@@ -303,7 +310,7 @@ class MrpAbstractWorkorderLine(models.AbstractModel):
                     'location_dest_id': self.move_id.location_dest_id.id,
                     'product_uom_qty': 0,
                     'product_uom_id': self.product_uom_id.id,
-                    'qty_done': min(quant.quantity, self.qty_done),
+                    'qty_done': min(quantity, self.qty_done),
                     'lot_produced_id': self.workorder_id.final_lot_id.id,
                 }
                 if self.lot_id:

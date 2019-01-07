@@ -196,21 +196,6 @@ class MrpWorkorder(models.Model):
             line_values = self._generate_lines_values(move, qty_to_consume)
             self.workorder_line_ids |= self.env['mrp.workorder.line'].create(line_values)
 
-    def _generate_lines_values(self, move, qty_to_consume):
-        """ In case of non tracked component without 'register component' step,
-        we need to fill the qty_done at this step"""
-        lines = super(MrpWorkorderLine, self)._generate_lines_values(move, qty_to_consume)
-        step = self.env['quality.point'].search([
-            ('test_type', '=', 'register_consumed_materials'),
-            ('component_id', '=', self.product_id.id),
-            ('product_id', '=', self.workorder_id.production_id.product_id.id),
-            ('operation_id', 'in', self.workorder_id.production_id.routing_id.operation_ids)
-        ])
-        for line in lines:
-            if line.product_id.tracking == 'none' and not step:
-                line['qty_done'] = line['qty_to_consume']
-        return lines
-
     def _assign_default_final_lot_id(self):
         self.final_lot_id = self.env['stock.production.lot'].search([('use_next_on_work_order_id', '=', self.id)],
                                                                     order='create_date, id', limit=1)
@@ -246,16 +231,6 @@ class MrpWorkorder(models.Model):
         # TODO: should be same as checking if for every workorder something has been done?
         if not self.next_work_order_id:
             self._update_finished_move(True)
-
-            for by_product_move in self.production_id.move_finished_ids.filtered(lambda x: (x.product_id.id != self.production_id.product_id.id) and (x.state not in ('done', 'cancel'))):
-                if by_product_move.has_tracking != 'serial':
-                    values = self._get_byproduct_move_line(by_product_move, self.qty_producing * by_product_move.unit_factor)
-                    self.env['stock.move.line'].create(values)
-                elif by_product_move.has_tracking == 'serial':
-                    qty_todo = by_product_move.product_uom._compute_quantity(self.qty_producing * by_product_move.unit_factor, by_product_move.product_id.uom_id)
-                    for i in range(0, int(float_round(qty_todo, precision_digits=0))):
-                        values = self._get_byproduct_move_line(by_product_move, 1)
-                        self.env['stock.move.line'].create(values)
 
         # Transfer quantities from temporary to final move line or make them final
         self._update_raw_moves()
