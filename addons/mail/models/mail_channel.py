@@ -579,6 +579,10 @@ class Channel(models.Model):
                                           .channel_partner_ids
                                           .filtered(lambda p: p.id != self.env.user.partner_id.id)
                                           .read(['id', 'name', 'im_status']))
+                for direct_partner in info['direct_partner']:
+                    users = self.env['res.partner'].browse(direct_partner['id']).user_ids
+                    if users:
+                        direct_partner['out_of_office_message'] = users[0].out_of_office_message
 
             # add last message preview (only used in mobile)
             if self._context.get('isMobile', False):

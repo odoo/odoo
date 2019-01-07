@@ -68,6 +68,19 @@
             margin-top: 2px;
             text-align: center;
             font-size: smaller;
+            .o_thread_message_sidebar_image {
+                position: relative;
+                height: $o-mail-thread-avatar-size;
+
+                .o_updatable_im_status {
+                    width: $o-mail-thread-avatar-size;
+                }
+                .o_mail_user_status {
+                    position: absolute;
+                    bottom: 0;
+                    right: 0;
+                }
+            }
 
             @include media-breakpoint-down(sm) {
                 margin-top: 4px;

@@ -6,6 +6,9 @@
     -->
     <t t-name="mail.ThreadWindow" t-extend="mail.AbstractThreadWindow">
         <t t-jquery=".o_thread_window_header" t-operation="after">
+            <div class="o_out_of_office" t-if="widget.getOutOfOfficeMessage() !== undefined">
+                <div class="o_out_of_office_text" t-esc="widget.getOutOfOfficeMessage()"/>
+            </div>
             <div t-if="!widget.hasThread()" class="o_thread_search_input">
                 <span> To: </span>
                 <input type="text" placeholder="User name"/>
