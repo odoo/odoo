@@ -348,166 +348,41 @@ Inside these 3 groups, the imported lines are alphabetically sorted.
     from odoo.addons.web.controllers.main import login_redirect
 
 
-Idiomatics Python Programming
------------------------------
+Idiomatics of Programming (Python)
+----------------------------------
 
-- Each python file should have ``# -*- coding: utf-8 -*-`` as first line.
 - Always favor *readability* over *conciseness* or using the language features or idioms.
-- Don't use ``.clone()``
 
-.. code-block:: python
+- Think about *performance* and :ref:`*security* <reference/security/guidelines>` all along the development process.
 
-    # bad
-    new_dict = my_dict.clone()
-    new_list = old_list.clone()
-    # good
-    new_dict = dict(my_dict)
-    new_list = list(old_list)
-
-- Python dictionary : creation and update
-
-.. code-block:: python
-
-    # -- creation empty dict
-    my_dict = {}
-    my_dict2 = dict()
-
-    # -- creation with values
-    # bad
-    my_dict = {}
-    my_dict['foo'] = 3
-    my_dict['bar'] = 4
-    # good
-    my_dict = {'foo': 3, 'bar': 4}
-
-    # -- update dict
-    # bad
-    my_dict['foo'] = 3
-    my_dict['bar'] = 4
-    my_dict['baz'] = 5
-    # good
-    my_dict.update(foo=3, bar=4, baz=5)
-    my_dict = dict(my_dict, **my_dict2)
-
-- Use meaningful variable/class/method names
-- Useless variable : Temporary variables can make the code clearer by giving
-  names to objects, but that doesn't mean you should create temporary variables
-  all the time:
-
-.. code-block:: python
-
-    # pointless
-    schema = kw['schema']
-    params = {'schema': schema}
-    # simpler
-    params = {'schema': kw['schema']}
-
-- Multiple return points are OK, when they're simpler
-
-.. code-block:: python
-
-    # a bit complex and with a redundant temp variable
-    def axes(self, axis):
-            axes = []
-            if type(axis) == type([]):
-                    axes.extend(axis)
-            else:
-                    axes.append(axis)
-            return axes
-
-     # clearer
-    def axes(self, axis):
-            if type(axis) == type([]):
-                    return list(axis) # clone the axis
-            else:
-                    return [axis] # single-element list
-
-- Know your builtins : You should at least have a basic understanding of all
-  the Python builtins (http://docs.python.org/library/functions.html)
-
-.. code-block:: python
-
-    value = my_dict.get('key', None) # very very redundant
-    value = my_dict.get('key') # good
-
-Also, ``if 'key' in my_dict`` and ``if my_dict.get('key')`` have very different
-meaning, be sure that you're using the right one.
-
-- Learn list comprehensions : Use list comprehension, dict comprehension, and
-  basic manipulation using ``map``, ``filter``, ``sum``, ... They make the code
-  easier to read.
-
-.. code-block:: python
-
-    # not very good
-    cube = []
-    for i in res:
-            cube.append((i['id'],i['name']))
-    # better
-    cube = [(i['id'], i['name']) for i in res]
-
-- Collections are booleans too : In python, many objects have "boolean-ish" value
-  when evaluated in a boolean context (such as an if). Among these are collections
-  (lists, dicts, sets, ...) which are "falsy" when empty and "truthy" when containing
-  items:
-
-.. code-block:: python
-
-    bool([]) is False
-    bool([1]) is True
-    bool([False]) is True
-
-So, you can write ``if some_collection:`` instead of ``if len(some_collection):``.
-
-
-- Iterate on iterables
-
-.. code-block:: python
-
-    # creates a temporary list and looks bar
-    for key in my_dict.keys():
-            "do something..."
-    # better
-    for key in my_dict:
-            "do something..."
-    # accessing the key,value pair
-    for key, value in my_dict.items():
-            "do something..."
-
-- Use dict.setdefault
-
-.. code-block:: python
-
-    # longer.. harder to read
-    values = {}
-    for element in iterable:
-        if element not in values:
-            values[element] = []
-        values[element].append(other_value)
-
-    # better.. use dict.setdefault method
-    values = {}
-    for element in iterable:
-        values.setdefault(element, []).append(other_value)
-
-- As a good developper, document your code (docstring on methods, simple
+- As a good developper, document your code (docstrings on methods, simple
   comments for tricky part of code)
-- In additions to these guidelines, you may also find the following link
-  interesting: https://david.goodger.org/projects/pycon/2007/idiomatic/handout.html
-  (a little bit outdated, but quite relevant)
+
+- As python is the main language of Odoo models, know it =) :
+
+  - Know your builtins : You should at least have a basic understanding of all
+    the Python builtins (http://docs.python.org/library/functions.html)
+
+  - Learn list/dict comprehensions : Use list comprehension, dict comprehension, and
+    basic manipulation using ``map``, ``filter``, ``sum``, ... They make the code
+    easier to read.
+
+  - Don't hesitate to refresh your knowledge (http://learnxinyminutes.com/docs/python/) or
+    to get more familiar with Python (https://docs.python.org/3/tutorial/)
+
 
 Programming in Odoo
 -------------------
 
 - Avoid to create generators and decorators: only use the ones provided by
   the Odoo API.
-- As in python, use ``filtered``, ``mapped``, ``sorted``, ... methods to
+- As in python, use ``filtered``, ``mapped``, ``sorted``, ... :ref:`ORM <reference/orm>` methods to
   ease code reading and performance.
 
 
 Make your method work in batch
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-When adding a function, make sure it can process multiple records. Typically,
+When adding a function, make sure it can process multiple records (:ref:`recordsets <reference/orm>`). Typically,
 such methods are decorated with the ``api.multi`` decorator. Then you will have
 to iterate on ``self`` to treat each record.
 
