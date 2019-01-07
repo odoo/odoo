@@ -66,27 +66,51 @@ class SaleOrder(models.Model):
         for possible refunds created directly from existing invoices. This is necessary since such a
         refund is not directly linked to the SO.
         """
-        for order in self:
-            invoice_ids = order.order_line.mapped('invoice_lines.invoice_id').filtered(lambda r: r.type in ['out_invoice', 'out_refund'])
 
-            # Ignore the status of the deposit product
-            deposit_product_id = self.env['sale.advance.payment.inv']._default_product_id()
-            line_invoice_status = [line.invoice_status for line in order.order_line if line.product_id != deposit_product_id]
+        invoice_ids_per_sale_order = {}
+        if self.ids:
+            query = self.env['account.invoice']._where_calc([
+                ('type', 'in', ('out_invoice', 'out_refund')),
+            ])
+            self.env['account.invoice']._apply_ir_rules(query, 'read')
+            _, where_clause, where_clause_args = query.get_sql()
+            select_query = """
+                SELECT sale_order_line.order_id, ARRAY_AGG(DISTINCT account_invoice.id)
+                FROM sale_order_line
+                LEFT JOIN sale_order_line_invoice_rel rel on rel.order_line_id = sale_order_line.id
+                LEFT JOIN account_invoice_line inv_l ON inv_l.id = rel.invoice_line_id
+                LEFT JOIN account_invoice ON inv_l.invoice_id = account_invoice.id
+                WHERE sale_order_line.order_id IN (%s) AND (%s)
+                GROUP BY sale_order_line.order_id
+            """ % (','.join(str(id) for id in self.ids), where_clause)
+            self.env.cr.execute(select_query, where_clause_args)
+            invoice_ids = self.env.cr.dictfetchall()
+            for invoice_id in invoice_ids:
+                invoice_ids_per_sale_order[invoice_id['order_id']] = invoice_id['array_agg']
+
+        deposit_product_id = self.env['sale.advance.payment.inv']._default_product_id()
+        for order in self:
+            # some tests depend on this order (id desc)
+            invoice_ids = sorted(invoice_ids_per_sale_order.get(order.id, []))
+            invoice_ids.reverse()
 
             if order.state not in ('sale', 'done'):
                 invoice_status = 'no'
-            elif any(invoice_status == 'to invoice' for invoice_status in line_invoice_status):
-                invoice_status = 'to invoice'
-            elif all(invoice_status == 'invoiced' for invoice_status in line_invoice_status):
-                invoice_status = 'invoiced'
-            elif all(invoice_status in ['invoiced', 'upselling'] for invoice_status in line_invoice_status):
-                invoice_status = 'upselling'
             else:
-                invoice_status = 'no'
+                # Ignore the status of the deposit product
+                line_invoice_status = [line.invoice_status for line in order.order_line if line.product_id != deposit_product_id]
+                if any(invoice_status == 'to invoice' for invoice_status in line_invoice_status):
+                    invoice_status = 'to invoice'
+                elif all(invoice_status == 'invoiced' for invoice_status in line_invoice_status):
+                    invoice_status = 'invoiced'
+                elif all(invoice_status in ['invoiced', 'upselling'] for invoice_status in line_invoice_status):
+                    invoice_status = 'upselling'
+                else:
+                    invoice_status = 'no'
 
             order.update({
-                'invoice_count': len(set(invoice_ids.ids)),
-                'invoice_ids': invoice_ids.ids,
+                'invoice_count': len(invoice_ids),
+                'invoice_ids': invoice_ids,
                 'invoice_status': invoice_status
             })
 
