@@ -280,10 +280,12 @@ Use the following pattern :
 Inherited XML
 ~~~~~~~~~~~~~
 
-The naming pattern of inherited view is
+The naming pattern of inherited view is :
 
-#. Extension mode: Use the same xml id than the original view you are extending, and suffix it by :samp:`{_inherit}` . For instance, the view :samp:`project.project_view_form` can be extended by :samp:`project_forecast.project_view_form_inherit`.
-#. Primary mode: Keep the original xml id.
+#. **Extension mode**:
+    Use the same xml id than the original view you are extending, and suffix it by :samp:`{_inherit}` .
+    For instance, the view :samp:`project.project_view_form` can be extended by :samp:`project_forecast.project_view_form_inherit`.
+#. **Primary mode**: Keep the original xml id.
 
 
 .. code-block:: xml
@@ -516,9 +518,9 @@ to iterate on ``self`` to treat each record.
         for record in self:
             record.do_cool_stuff()
 
-Avoid to use ``api.one``  decorator : this will probably not do what you expected,
-and extending a such method is not as easy than a *api.multi* method, since it
-returns a list of result (ordered by recordset ids).
+.. note :: Avoid to use ``api.one``  decorator : this will probably not do what you expected,
+              and extending a such method is not as easy than a *api.multi* method, since it
+              returns a list of result (ordered by recordset ids).
 
 For performance issue, when developping a 'stat button' (for instance), do not
 perform a ``search`` or a ``search_count`` in a loop in a ``api.multi`` method. It
@@ -545,12 +547,12 @@ a different context, the ``with_context`` method should be used :
     records.with_context(new_context).do_stuff() # all the context is replaced
     records.with_context(**additionnal_context).do_other_stuff() # additionnal_context values override native context ones
 
-Passing parameter in context can have dangerous side-effects. Since the values
-are propagated automatically, some behavior can appears. Calling ``create()``
-method of a model with *default_my_field* key in context will set the default
-value of *my_field* for the concerned model. But if curing this creation, other
-object (such as sale.order.line, on sale.order creation) having a field
-name *my_field*, their default value will be set too.
+.. note :: Passing parameter in context can have dangerous side-effects. Since the values
+      are propagated automatically, some behavior can appears. Calling ``create()``
+      method of a model with *default_my_field* key in context will set the default
+      value of *my_field* for the concerned model. But if curing this creation, other
+      object (such as sale.order.line, on sale.order creation) having a field
+      name *my_field*, their default value will be set too.
 
 If you need to create a key context influencing the behavior of some object,
 choose a good name, and eventually prefix it by the name of the module to
