@@ -5164,7 +5164,7 @@ QUnit.module('basic_fields', {
     });
 
     QUnit.test('basic domain field usage is ok', function (assert) {
-        assert.expect(6);
+        assert.expect(7);
 
         this.data.partner.records[0].foo = "[]";
 
@@ -5204,6 +5204,9 @@ QUnit.module('basic_fields', {
         var $fieldSelectorPopover = $fieldSelector.find(".o_field_selector_popover");
         assert.ok($fieldSelectorPopover.is(":visible"),
             "field selector popover should be visible");
+
+        assert.containsOnce($fieldSelectorPopover, '.o_field_selector_search input',
+            "field selector popover should contain a search input");
 
         // The popover should contain the list of partner_type fields and so
         // there should be the "Color index" field
