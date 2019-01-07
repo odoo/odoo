@@ -134,7 +134,11 @@ Best Regards,'''))
         last_month = self.fiscalyear_last_month
         last_day = self.fiscalyear_last_day
         if (date.month < last_month or (date.month == last_month and date.day <= last_day)):
-            date = date.replace(month=last_month, day=last_day)
+            # FORWARD-PORT UP TO v11
+            if last_month == 2 and last_day == 29 and date.year % 4 != 0:
+                date = date.replace(month=last_month, day=28)
+            else:
+                date = date.replace(month=last_month, day=last_day)
         else:
             if last_month == 2 and last_day == 29 and (date.year + 1) % 4 != 0:
                 date = date.replace(month=last_month, day=28, year=date.year + 1)
