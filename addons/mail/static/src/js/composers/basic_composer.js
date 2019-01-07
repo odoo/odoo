@@ -371,7 +371,15 @@ var BasicComposer = Widget.extend({
                     { limit: limit, search: search }
                 );
             }
-            return suggestions;
+            return $.when(suggestions).then(function (suggestions) {
+                //add im_status on suggestions
+                _.each(suggestions, function (suggestionsSet) {
+                    _.each(suggestionsSet, function (suggestion) {
+                        suggestion.im_status = self.call('mail_service', 'getImStatus', { partnerID: suggestion.id });
+                    });
+                });
+                return suggestions;
+            });
         });
     },
     /**
