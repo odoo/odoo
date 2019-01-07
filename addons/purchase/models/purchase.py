@@ -307,6 +307,7 @@ class PurchaseOrder(models.Model):
             'default_template_id': template_id,
             'default_composition_mode': 'comment',
             'custom_layout': "purchase.mail_template_data_notification_email_purchase_order",
+            'purchase_mark_rfq_sent': True,
             'force_email': True
         })
         return {
@@ -1122,7 +1123,7 @@ class MailComposeMessage(models.TransientModel):
 
     @api.multi
     def mail_purchase_order_on_send(self):
-        if not self.filtered('subtype_id.internal'):
+        if self._context.get('purchase_mark_rfq_sent'):
             order = self.env['purchase.order'].browse(self._context['default_res_id'])
             if order.state == 'draft':
                 order.state = 'sent'
