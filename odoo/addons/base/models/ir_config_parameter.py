@@ -48,7 +48,7 @@ class IrConfigParameter(models.Model):
         """
         for key, func in _default_parameters.items():
             # force=True skips search and always performs the 'if' body (because ids=False)
-            params = self.sudo().search([('key', '=', key)])
+            params = self.sudo().search([('key', '=', key)], limit=1)
             if force or not params:
                 params.set_param(key, func())
 
@@ -79,7 +79,7 @@ class IrConfigParameter(models.Model):
                  not exist.
         :rtype: string
         """
-        param = self.search([('key', '=', key)])
+        param = self.search([('key', '=', key)], limit=1)
         if param:
             old = param.value
             if value is not False and value is not None:
