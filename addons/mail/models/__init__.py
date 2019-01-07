@@ -24,5 +24,6 @@ from . import ir_action_act_window
 from . import ir_actions
 from . import ir_attachment
 from . import ir_autovacuum
+from . import ir_http
 from . import ir_model
 from . import ir_ui_view
