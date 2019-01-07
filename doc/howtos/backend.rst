@@ -84,7 +84,7 @@ An Odoo module is declared by its :ref:`manifest <reference/module/manifest>`.
 See the :ref:`manifest documentation <reference/module/manifest>` about it.
 
 A module is also a
-`Python package <http://docs.python.org/2/tutorial/modules.html#packages>`_
+`Python package <https://docs.python.org/3/tutorial/modules.html#packages>`_
 with a ``__init__.py`` file, containing import instructions for various Python
 files in the module.
 

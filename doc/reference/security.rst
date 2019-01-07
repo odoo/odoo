@@ -97,7 +97,7 @@ access to the field:
     read/write...
 
 .. _foo: http://google.com
-.. _time module: https://docs.python.org/2/library/time.html
+.. _time module: https://docs.python.org/3/library/time.html
 
 .. _reference/security/guidelines:
 

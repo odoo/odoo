@@ -9,7 +9,7 @@ Building a Website
 .. warning::
 
     * This guide assumes `basic knowledge of Python
-      <http://docs.python.org/2/tutorial/>`_
+      <http://docs.python.org/3/tutorial/>`_
     * This guide assumes :ref:`an installed Odoo <setup/install>`
 
 Creating a basic module

@@ -2327,4 +2327,4 @@ the most useful being:
 .. _PostgreSQL: http://en.wikipedia.org/wiki/PostgreSQL
 .. _positional arguments:
 .. _keyword arguments:
-    https://docs.python.org/2/glossary.html#term-argument
+    https://docs.python.org/3/glossary.html#term-argument

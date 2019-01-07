@@ -301,12 +301,12 @@ customize the amount of logging output
 
     sends logging output to the specified file instead of stdout. On Unix, the
     file `can be managed by external log rotation programs
-    <https://docs.python.org/2/library/logging.handlers.html#watchedfilehandler>`_
+    <https://docs.python.org/3/library/logging.handlers.html#watchedfilehandler>`_
     and will automatically be reopened when replaced
 
 .. option:: --logrotate
 
-    enables `log rotation <https://docs.python.org/2/library/logging.handlers.html#timedrotatingfilehandler>`_
+    enables `log rotation <https://docs.python.org/3/library/logging.handlers.html#timedrotatingfilehandler>`_
     daily, keeping 30 backups. Log rotation frequency and number of backups is
     not configurable.
 
@@ -319,8 +319,8 @@ customize the amount of logging output
 
 .. option:: --syslog
 
-    logs to the system's event logger: `syslog on unices <https://docs.python.org/2/library/logging.handlers.html#sysloghandler>`_
-    and `the Event Log on Windows <https://docs.python.org/2/library/logging.handlers.html#nteventloghandler>`_.
+    logs to the system's event logger: `syslog on unices <https://docs.python.org/3/library/logging.handlers.html#sysloghandler>`_
+    and `the Event Log on Windows <https://docs.python.org/3/library/logging.handlers.html#nteventloghandler>`_.
 
     Neither is configurable
 
@@ -480,13 +480,13 @@ can be overridden using :option:`--config <odoo-bin -c>`. Specifying
 to that file.
 
 .. _jinja2: http://jinja.pocoo.org
-.. _regular expression: https://docs.python.org/2/library/re.html
+.. _regular expression: https://docs.python.org/3/library/re.html
 .. _password authentication:
     http://www.postgresql.org/docs/9.3/static/auth-methods.html#AUTH-PASSWORD
 .. _template database:
     http://www.postgresql.org/docs/9.3/static/manage-ag-templatedbs.html
 .. _level:
-    https://docs.python.org/2/library/logging.html#logging.Logger.setLevel
+    https://docs.python.org/3/library/logging.html#logging.Logger.setLevel
 .. _a PostgreSQL URI:
     http://www.postgresql.org/docs/9.2/static/libpq-connect.html#AEN38208
 .. _Werkzeug's proxy support:

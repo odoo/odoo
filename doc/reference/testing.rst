@@ -111,7 +111,7 @@ Odoo server.
 As of Odoo 8, running tests outside of the install/update cycle is not
 supported.
 
-.. _unittest documentation: https://docs.python.org/2/library/unittest.html
+.. _unittest documentation: https://docs.python.org/3/library/unittest.html
 
 Test selection
 --------------
