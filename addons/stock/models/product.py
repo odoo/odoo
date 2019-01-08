@@ -444,6 +444,10 @@ class ProductTemplate(models.Model):
         relation="stock.location.route", string="Category Routes",
         related='categ_id.total_route_ids')
 
+    @api.depends(
+        'product_variant_ids',
+        'product_variant_ids.stock_quant_ids',
+    )
     def _compute_quantities(self):
         res = self._compute_quantities_dict()
         for template in self:
