@@ -244,6 +244,9 @@
                         <t t-if="question.child_count&lt;=1">Answer</t>
                         <t t-else="">Answers</t>
                     </a>
+                    <a t-attf-href="/forum/#{ slug(forum) }/question/#{ slug(question) }">
+                        <span class="ml-4 mr-1 fa fa-star"></span><span t-field="question.favourite_count"/> <t t-if="question.views&lt;=1">Favorite</t><t t-else="">Favorites</t>
+                    </a>
                     <t t-if="question.state == 'flagged'" class="text-black">
                         <i class="fa fa-flag ml-4 mr4"/>
                         Flagged
@@ -665,7 +668,8 @@
                         <t t-set="post" t-value="question"/>
                         <div class="mt-1">
                             <a t-attf-data-href="/forum/#{slug(question.forum_id)}/question/#{slug(question)}/toggle_favourite" aria-label="Toggle favorite status" title="Toggle favorite status"
-                                t-attf-class="favourite_question no-decoration fa fa-star #{question.user_favourite and 'forum_favourite_question' or ''}"/>
+                                t-attf-class="favourite_question no-decoration fa fa-star #{question.user_favourite and 'forum_favourite_question' or ''}"/><br/>
+                            <t t-esc="question.favourite_count"/>
                         </div>
                     </t>
                 </div>
