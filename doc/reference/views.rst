@@ -1646,9 +1646,10 @@ On creation/edit, display selection field choices as radio buttons.
     :class: img-responsive
 
 .. note:: This section is Work In Progress
-  ..TODO remove
 
-.. todo::Relational Fields display
+.. TODO remove
+
+.. TODO::Relational Fields display
   -------------------------
 
 .. _accesskey: http://www.w3.org/TR/html5/editing.html#the-accesskey-attribute
