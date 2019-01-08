@@ -1,22 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record model="ir.actions.server" id="generate_benefit">
-        <field name="name">Generate Benefit</field>
-        <field name="model_id" ref="hr.model_hr_employee"/>
-        <field name="binding_model_id" ref="hr.model_hr_employee"/>
-        <field name="state">code</field>
-        <field name="code">
-if records:
-    records.generate_benefit()
-        </field>
-    </record>
-
     <record id="hr_benefit_action" model="ir.actions.act_window">
         <field name="name">Benefit</field>
         <field name="res_model">hr.benefit</field>
         <field name="view_type">form</field>
-        <field name="view_mode">calendar,tree,form</field>
+        <field name="view_mode">calendar,tree,form,pivot</field>
     </record>
 
     <record id="hr_benefit_calendar" model="ir.ui.view">
@@ -24,6 +13,7 @@ if records:
         <field name="model">hr.benefit</field>
         <field name="arch" type="xml">
             <calendar string="Benefit"
+                js_class="benefits_calendar"
                 date_start="date_start"
                 date_stop="date_stop"
                 mode="month"
@@ -31,14 +21,13 @@ if records:
                 color="benefit_type_id"
                 event_limit="5">
                 <field name="state" invisible="1"/>
-                <field name="employee_id" invisible="1"/>
                 <field name="display_warning" invisible="1"/>
-                <field name="name"/>
+                <!-- Sidebar favorites filters -->
+                <field name="employee_id" write_model="hr.user.benefit.employee" write_field="employee_id" avatar_field="image_small"/>
                 <templates>
                     <t t-name="calendar-box">
                         <t t-set="color" t-value="widget.getColor(event.color_index)"/>
                         <div t-att-style="typeof color === 'string' ? ('background-color:'+color)+';' : ''" t-attf-class="#{record.is_highlighted &amp;&amp; record.is_highlighted.value ? 'o_event_hightlight' : ''} #{typeof color === 'number' ? 'o_calendar_color_'+color : ''}">
-                            <field name="name"/>
                             <div class="fc-time"/>
                             <div class="o_fields">
                                 <t t-if="record.display_warning">
@@ -99,7 +88,10 @@ if records:
                         <group>
                             <field name="date_start" attrs="{'readonly': [('state', '!=', 'draft')]}" />
                             <field name="date_stop" attrs="{'readonly': [('state', '!=', 'draft')]}" />
-                            <field name="duration" attrs="{'readonly': [('state', '!=', 'draft')]}" />
+                            <label for="duration" string="Period"/>
+                            <div>
+                                <field name="duration" nolabel="1" attrs="{'readonly': [('state', '!=', 'draft')]}" /><span class="ml8">Hours</span>
+                            </div>
                         </group>
                     </group>
                 </sheet>
@@ -115,6 +107,8 @@ if records:
                 <field name="employee_id"/>
                 <field name="name"/>
                 <filter string="My Benefits" domain="[('employee_id.user_id','=',uid)]" name="my_benefits"/>
+                <filter string="With error" domain="[('display_warning','=', True)]" name="benefits_error"/>
+                <filter name="date_filter" string="Date" date="date_start"/>
                 <filter name="group_employee" string="Employee" context="{'group_by':'employee_id'}"/>
             </search>
         </field>
@@ -145,19 +139,20 @@ if records:
         </field>
     </record>
 
-    <menuitem
-        id="hr_menu_benefit_menu" name="Benefits" action="hr_benefit_action" parent="menu_hr_payroll_root" sequence="25"/>
+    <record model="ir.actions.server" id="action_generate_payslips_from_benefits">
+            <field name="name">Generate payslips</field>
+            <field name="model_id" ref="model_hr_payslip_employees"/>
+            <field name="binding_model_id" ref="model_hr_payslip_employees" />
+            <field name="state">code</field>
+            <field name="code">
+                action = env['hr.payslip.employees'].create({}).compute_sheet()
+            </field>
+        </record>
 
     <record id="action_view_hr_benefit_type" model="ir.actions.act_window">
         <field name="name">Benefit Types</field>
         <field name="res_model">hr.benefit.type</field>
         <field name="view_mode">tree,kanban,form</field>
     </record>
-    <menuitem
-        id="menu_hr_benefit_type_view"
-        action="action_view_hr_benefit_type"
-        parent="menu_hr_payroll_configuration"
-        sequence="25"
-    />
 
 </odoo>

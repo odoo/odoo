@@ -23,8 +23,6 @@ class TestHrPayrollAccount(common.TransactionCase):
 
         self._load('account', 'test', 'account_minimal_test.xml')
 
-        self.payslip_action_id = self.ref('hr_payroll.menu_department_tree')
-
         self.res_partner_bank = self.env['res.partner.bank'].create({
             'acc_number': '001-9876543-21',
             'partner_id': self.ref('base.res_partner_12'),
@@ -93,7 +91,7 @@ class TestHrPayrollAccount(common.TransactionCase):
         self.assertEqual(self.hr_payslip.state, 'draft', 'State not changed!')
 
         # I click on "Compute Sheet" button.
-        context = {"lang": "en_US", "tz": False, "active_model": 'hr.payslip', "department_id": False, "active_ids": [self.payslip_action_id], "section_id": False, "active_id": self.payslip_action_id}
+        context = {"lang": "en_US", "tz": False, "active_model": 'hr.payslip', "department_id": False, "section_id": False}
         self.hr_payslip.with_context(context).compute_sheet()
 
         # I want to check cancel button. So I first cancel the sheet then make it set to draft.
