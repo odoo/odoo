@@ -36,6 +36,7 @@ class MailActivityType(models.Model):
     summary = fields.Char('Summary', translate=True)
     sequence = fields.Integer('Sequence', default=10)
     active = fields.Boolean(default=True)
+    create_uid = fields.Many2one('res.users', index=True)
     delay_count = fields.Integer(
         'After', default=0, oldname='days',
         help='Number of days/week/month before executing the action. It allows to plan the action deadline.')
