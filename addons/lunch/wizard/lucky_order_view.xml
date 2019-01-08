@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+
+        <record id="view_lunch_order_line_lucky" model="ir.ui.view">
+              <field name="name">view.lunch.order.line.lucky</field>
+              <field name="model">lunch.order.line.lucky</field>
+              <field name="arch" type="xml">
+                <form string="I'm feeling lucky today !">
+                    <group string="Select your vendor">
+                        <field name="is_max_budget"/>
+                        <field name="max_budget" attrs="{'required': [('is_max_budget', '=', True)], 'invisible': [('is_max_budget', '=', False)]}"/>
+                        <field name="supplier_ids" widget="many2many_checkboxes"/>
+                    </group>
+                    <footer>
+                        <button name="random_pick" string="I'm feeling lucky"  type="object" class="oe_highlight"/>
+                        <button string="Cancel" class="btn btn-secondary" special="cancel" />
+                    </footer>
+                </form>
+              </field>
+        </record>
+
+        <record id="action_lunch_order_line_lucky" model="ir.actions.act_window">
+            <field name="name">I'm feeling lucky today !</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">lunch.order.line.lucky</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_lunch_order_line_lucky"/>
+            <field name="context">{'record_id' : active_id}</field>
+            <field name="target">new</field>
+        </record>
+
+</data>
+</odoo>
