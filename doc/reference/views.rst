@@ -1578,26 +1578,41 @@ attributes:
 Widgets
 =======
 
-Chatter (Mail mixin)
---------------------
+Chatter
+-------
 
-Gauge (fields.Float)
---------------------
+:ref:`Mail mixin <reference/mixins/mail>`
 
-Handle
-------
+Fields Display
+--------------
+
+Gauge (fields.Float / Integer)
+''''''''''''''''''''''''''''''
+
+Displays a rate as a "Car" **gauge**
+
+.. code-block:: xml
+
+        <field name="progress_rate" widget="gauge" style="width:120px;height:90px;cursor:pointer;"
+                   options="{'max_field': 'maximum_rate'}">
+                           Progress
+        </field>
 
 Image (fields.Binary)
----------------------
+'''''''''''''''''''''
 
-Percentpie (fields.Float)
--------------------------
+Allows the display of an Image, saved as Binary field
 
-Radio
------
+Percentpie (fields.Float / Integer)
+'''''''''''''''''''''''''''''''''''
+
+Display an Integer/Float as a percentpie.  Event if the field is a float, the max percentage is 100.0
+
+.. image:: images/percentpie_widget.png
+    :class: img-responsive
 
 Statusbar (fields.Selection)
-----------------------------
+''''''''''''''''''''''''''''
 
 .. image:: forms/status1.png
    :class: img-responsive
@@ -1614,9 +1629,27 @@ attribute ``statusbar_visible``.
     <field name="state" widget="statusbar"
         statusbar_visible="draft,sent,progress,invoiced,done" />
 
+Fields Manipulation
+-------------------
 
-Relational Fields display
--------------------------
+Handle (fields.Integer)
+'''''''''''''''''''''''
+
+Based on a sequence field, allows the users to drag and drop items in a list view and displays a drag&drop icon
+
+Radio (fields.Selection)
+''''''''''''''''''''''''
+
+On creation/edit, display selection field choices as radio buttons.
+
+.. image:: images/radio_widget.png
+    :class: img-responsive
+
+.. note:: This section is Work In Progress
+  ..TODO remove
+
+.. todo::Relational Fields display
+  -------------------------
 
 .. _accesskey: http://www.w3.org/TR/html5/editing.html#the-accesskey-attribute
 .. _CSS color unit: http://www.w3.org/TR/css3-color/#colorunits
