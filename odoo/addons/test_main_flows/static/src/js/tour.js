@@ -513,14 +513,7 @@ tour.register('main_flow_tour', {
     content: _t("Register Payment"),
     position: "bottom",
 }, {
-    trigger: "select.o_field_widget[name=journal_id]",
-    extra_trigger: ".modal-dialog",
-    content: _t("Select Journal"),
-    position: "bottom",
-    run: 'text(Bank (USD))',
-}, {
     trigger: ".modal-footer .btn-primary",
-    extra_trigger: ".o_field_widget[name=payment_method_id]", // FIXME: Wait onchange
     content: _t("Validate"),
     position: "bottom",
 }, {
