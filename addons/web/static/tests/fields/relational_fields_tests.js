@@ -11863,6 +11863,39 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('many2many read, field context is properly sent', function (assert) {
+        assert.expect(4);
+
+        this.data.partner.fields.timmy.context = {hello: 'world'};
+        this.data.partner.records[0].timmy = [12];
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="timmy" widget="many2many_tags"/>' +
+                '</form>',
+            res_id: 1,
+            mockRPC: function (route, args) {
+                if (args.method === 'read' && args.model === 'partner_type') {
+                    assert.step(args.kwargs.context.hello);
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        assert.verifySteps(['world']);
+
+        form.$buttons.find('.o_form_button_edit').click();
+        var $m2mInput = form.$('.o_field_many2manytags input');
+        $m2mInput.click();
+        $m2mInput.autocomplete('widget').find('li:first()').click();
+        assert.verifySteps(['world', 'world']);
+
+        form.destroy();
+    });
+
     QUnit.module('FieldStatus');
 
     QUnit.test('static statusbar widget on many2one field', function (assert) {
