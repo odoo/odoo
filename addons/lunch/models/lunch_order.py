@@ -123,8 +123,8 @@ class LunchOrderLine(models.Model):
 
     name = fields.Char(related='product_id.name', string="Product Name", readonly=True)
     order_id = fields.Many2one('lunch.order', 'Order', ondelete='cascade', required=True)
-    topping_ids = fields.Many2many('lunch.topping', string='Toppings')
-    product_id = fields.Many2one('lunch.product', string="Product", required=True)
+    topping_ids = fields.Many2many('lunch.product', string='Toppings')
+    product_id = fields.Many2one('lunch.product', string="Product", domain=[('is_topping', '=', False)], required=True)
     category_id = fields.Many2one('lunch.product.category', string='Product Category',
                                   related='product_id.category_id', readonly=True, store=True)
     date = fields.Date(string='Date', related='order_id.date', readonly=True, store=True)
@@ -147,7 +147,7 @@ class LunchOrderLine(models.Model):
     @api.depends('topping_ids', 'product_id', 'quantity')
     def _compute_total_price(self):
         for line in self:
-            line.price = line.quantity * (line.product_id.price + sum(line.topping_ids.mapped('price')))
+            line.price = line.quantity * sum(product.price for product in line.product_id | line.topping_ids)
 
     def update_quantity(self, increment):
         for line in self:

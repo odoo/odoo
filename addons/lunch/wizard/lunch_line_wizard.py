@@ -10,20 +10,11 @@ class LunchOrderLineWizard(models.TransientModel):
     _name = 'lunch.order.line.temp'
     _description = 'Lunch Order Line Temp'
 
-    def _default_topping_ids(self):
-        last_time_ordered = self.env['lunch.order.line'].search([('product_id', '=', self.env.context.get('default_product_id', 0))],
-                                                                order="date desc", limit=1)
-        return last_time_ordered.topping_ids
-
-    currency_id = fields.Many2one('res.currency', default=lambda self: self.env.user.company_id.currency_id)
-
     product_id = fields.Many2one('lunch.product', string='Product ID')
     product_description = fields.Text('Description', related='product_id.description')
     product_name = fields.Char('Product', related='product_id.name')
-    product_category = fields.Many2one('lunch.product.category', related='product_id.category_id')
-    topping_ids = fields.Many2many('lunch.topping', string="Extra Garniture", domain="[('category_id', '=', product_category)]", default=_default_topping_ids)
-
-    available_toppings = fields.Boolean(help='Are toppings available for this product', compute='_compute_available_toppings')
+    product_supplier = fields.Many2one('lunch.supplier', related='product_id.supplier_id')
+    topping_ids = fields.Many2many('lunch.product', string="Extra Garniture", domain="[('is_topping', '=', True), ('supplier_id', '=', product_supplier)]")
 
     quantity = fields.Float('Quantity', default=1)
     price_total = fields.Float('Total Price', compute='_compute_price_total')
@@ -31,15 +22,10 @@ class LunchOrderLineWizard(models.TransientModel):
 
     user_id = fields.Many2one('res.users', default=lambda self: self.env.user.id)
 
-    @api.depends('product_id')
-    def _compute_available_toppings(self):
-        for wizard in self:
-            wizard.available_toppings = bool(wizard.env['lunch.topping'].search_count([('category_id', '=', wizard.product_category.id)]))
-
     @api.depends('product_id', 'topping_ids', 'quantity')
     def _compute_price_total(self):
         for wizard in self:
-            wizard.price_total = wizard.quantity * (wizard.product_id.price + sum(wizard.topping_ids.mapped('price')))
+            wizard.price_total = wizard.quantity * sum(record.price for record in (wizard.product_id | wizard.topping_ids))
 
     def find_current_order(self):
         order_id = self.env['lunch.order'].search([('state', '!=', 'cancel'),

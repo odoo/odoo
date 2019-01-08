@@ -1,108 +1,101 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
-    <div t-name="LunchKanbanWidget">
-        <div class="o_lunch_widget">
-            <div class="o_lunch_widget_info d-flex flex-row">
+    <div class="o_lunch_widget" t-name="LunchKanbanWidget">
+        <div class="o_lunch_widget_info d-flex flex-row">
+            <div>
+                <img class="rounded-circle" t-attf-src="{{ widget.data.userimage }}"/>
+            </div>
+            <div class="w-50 ml-2 py-3">
                 <div>
-                    <img class="rounded-circle" t-attf-src="{{ widget.data.userimage }}"/>
-                </div>
-                <div class="w-50 ml-2 py-3">
-                    <div>
-                        <t t-if="widget.data.is_manager">
-                            <select class="o_input">
-                                <t t-foreach="widget.data.users" t-as="user">
-                                    <option t-attf-data-user-id="{{ user.id }}" t-attf-value="{{ user.name }}"><t t-esc="user.name"/></option>
-                                </t>
-                            </select>
-                        </t>
-                        <t t-else="">
-                            <t t-esc="widget.data.username"/>
-                        </t>
-                    </div>
-                    <div class="d-flex flex-row">
-                        <span class="flex-grow-1">
-                            <i class="fa fa-money"/>
-                            <t t-call="currency_field">
-                                <t t-set="value" t-value="widget.data.wallet"/>
-                                <t t-set="currency" t-value="widget.currency"/>
+                    <t t-if="widget.data.is_manager">
+                        <select class="o_input">
+                            <t t-foreach="widget.data.users" t-as="user">
+                                <option t-attf-data-user-id="{{ user.id }}" t-attf-value="{{ user.name }}"><t t-esc="user.name"/></option>
                             </t>
-                        </span>
-                        <span>
-                            <a class="o_add_money" href="#">Add money</a>
-                        </span>
-                    </div>
+                        </select>
+                    </t>
+                    <t t-else="">
+                        <t t-esc="widget.data.username"/>
+                    </t>
                 </div>
-            </div>
-            <div class="o_lunch_widget_info">
-                <t t-if="widget.data.order">
-                    <t t-if="widget.data.state == 'ordered'">
-                        <t t-set="state_class" t-value="'o_lunch_ordered'"/>
-                    </t>
-                    <t t-else="widget.data.state == 'confirmed'">
-                        <t t-set="state_class" t-value="'o_lunch_confirmed'"/>
-                    </t>
-                    <div class="d-flex flex-row">
-                        <div class="flex-grow-1">
-                            <span class="o_lunch_widget_title">Your order</span>
-                            <a href="#"><i t-if="widget.data.state != 'confirmed'" class="fa fa-trash o_lunch_widget_unlink"/></a>
-                            <a t-if="widget.data.state == 'ordered' &amp;&amp; !widget.data.edit" href="#" class="o_lunch_widget_edit">Edit</a>
-                            <a t-if="widget.data.state == 'ordered' &amp;&amp; widget.data.edit" href="#" class="o_lunch_widget_save">Save</a>
-                        </div>
-                        <div t-if="widget.data.state != 'new'" t-esc="widget.data.state" t-attf-class="flex-grow-0 {{ state_class }}"/>
-                    </div>
-                    <div t-foreach="widget.data.lines" t-as="line">
-                        <div class="d-flex flex-row">
-                            <div class="flex-grow-0">
-                                <a class="o_remove_product" t-if="widget.data.state == 'new' || widget.data.edit" t-attf-data-id="{{ line.id }}" href="#"><i class="fa fa-minus-circle"/></a>
-                                <span t-esc="line.quantity"/>
-                                <a class="o_add_product" t-if="widget.data.state == 'new' || widget.data.edit" t-attf-data-id="{{ line.id }}" href="#"><i class="fa fa-plus-circle"/></a>
-                            </div>
-                            <div class="flex-grow-1 pl-2">
-                                <span t-esc="line.product[0]"/>
-                            </div>
-                            <div class="flex-grow-0">
-                                <t t-call="currency_field">
-                                    <t t-set="value" t-value="line.product[1]"/>
-                                    <t t-set="currency" t-value="widget.currency"/>
-                                </t>
-                            </div>
-                        </div>
-                        <div t-foreach="line.toppings" t-as="topping" class="d-flex flex-row">
-                            <div class="flex-grow-1 pl-5 ml-5">
-                                <span>+ <t t-esc="topping[0]"/></span>
-                            </div>
-                            <div class="flex-grow-0">
-                                <t t-call="currency_field">
-                                    <t t-set="value" t-value="topping[1]"/>
-                                    <t t-set="currency" t-value="widget.currency"/>
-                                </t>
-                            </div>
-                        </div>
-                    </div>
-                </t>
-            </div>
-            <div class="o_lunch_widget_info">
-                <t t-if="widget.data.order &amp;&amp; widget.data.state == 'new'">
-                    <div class="d-flex flex-row">
-                        <div class="o_lunch_widget_title flex-grow-1">
-                            Total
-                        </div>
-                        <div class="flex-grow-0 pr-1">
-                            <t t-call="currency_field">
-                                <t t-set="value" t-value="widget.data.total"/>
-                                <t t-set="currency" t-value="widget.currency"/>
-                            </t>
-                        </div>
-                    </div>
-                    <button class="btn btn-primary o_lunch_widget_order_button" t-attf-data-order-id="{{ widget.data.order }}">ORDER NOW</button>
-                </t>
+                <div class="d-flex flex-row">
+                    <span class="flex-grow-1">
+                        <i class="fa fa-money"/>
+                        <t t-call="currency_field">
+                            <t t-set="value" t-value="widget.data.wallet"/>
+                            <t t-set="currency" t-value="widget.currency"/>
+                        </t>
+                    </span>
+                    <span>
+                        <a class="o_add_money" href="#">Add money</a>
+                    </span>
+                </div>
             </div>
         </div>
-        <t t-foreach="widget.data.alerts" t-as="alert">
-            <div class="alert alert-danger" role="alert">
-                <t t-esc="alert.message"/>
-            </div>
-        </t>
+        <div class="o_lunch_widget_info">
+            <t t-if="widget.data.order">
+                <t t-if="widget.data.state == 'ordered'">
+                    <t t-set="state_class" t-value="'o_lunch_ordered'"/>
+                </t>
+                <t t-else="widget.data.state == 'confirmed'">
+                    <t t-set="state_class" t-value="'o_lunch_confirmed'"/>
+                </t>
+                <div class="d-flex flex-row">
+                    <div class="flex-grow-1">
+                        <span class="o_lunch_widget_title">Your order</span>
+                        <a href="#"><i t-if="widget.data.state != 'confirmed'" class="fa fa-trash o_lunch_widget_unlink"/></a>
+                        <a t-if="widget.data.state == 'ordered' &amp;&amp; !widget.data.edit" href="#" class="o_lunch_widget_edit">Edit</a>
+                        <a t-if="widget.data.state == 'ordered' &amp;&amp; widget.data.edit" href="#" class="o_lunch_widget_save">Save</a>
+                    </div>
+                    <div t-if="widget.data.state != 'new'" t-esc="widget.data.state" t-attf-class="flex-grow-0 {{ state_class }}"/>
+                </div>
+                <div t-foreach="widget.data.lines" t-as="line">
+                    <div class="d-flex flex-row">
+                        <div class="flex-grow-0">
+                            <a class="o_remove_product" t-if="widget.data.state == 'new' || widget.data.edit" t-attf-data-id="{{ line.id }}" href="#"><i class="fa fa-minus-circle"/></a>
+                            <span t-esc="line.quantity"/>
+                            <a class="o_add_product" t-if="widget.data.state == 'new' || widget.data.edit" t-attf-data-id="{{ line.id }}" href="#"><i class="fa fa-plus-circle"/></a>
+                        </div>
+                        <div class="flex-grow-1 pl-2">
+                            <span t-esc="line.product[0]"/>
+                        </div>
+                        <div class="flex-grow-0">
+                            <t t-call="currency_field">
+                                <t t-set="value" t-value="line.product[1]"/>
+                                <t t-set="currency" t-value="widget.currency"/>
+                            </t>
+                        </div>
+                    </div>
+                    <div t-foreach="line.toppings" t-as="topping" class="d-flex flex-row">
+                        <div class="flex-grow-1 pl-5 ml-5">
+                            <span>+ <t t-esc="topping[0]"/></span>
+                        </div>
+                        <div class="flex-grow-0">
+                            <t t-call="currency_field">
+                                <t t-set="value" t-value="topping[1]"/>
+                                <t t-set="currency" t-value="widget.currency"/>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </div>
+        <div class="o_lunch_widget_info">
+            <t t-if="widget.data.order &amp;&amp; widget.data.state == 'new'">
+                <div class="d-flex flex-row">
+                    <div class="o_lunch_widget_title flex-grow-1">
+                        Total
+                    </div>
+                    <div class="flex-grow-0 pr-1">
+                        <t t-call="currency_field">
+                            <t t-set="value" t-value="widget.data.total"/>
+                            <t t-set="currency" t-value="widget.currency"/>
+                        </t>
+                    </div>
+                </div>
+                <button class="btn btn-primary o_lunch_widget_order_button" t-attf-data-order-id="{{ widget.data.order }}">ORDER NOW</button>
+            </t>
+        </div>
     </div>
 
     <t t-name="currency_field">
