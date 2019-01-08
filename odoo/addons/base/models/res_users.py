@@ -236,11 +236,14 @@ class Users(models.Model):
 
     @api.model
     def _get_company(self):
-        return self.env.user.company_id
+        return self.env['res.company']._get_current_company()
 
     # Special behavior for this field: res.company.search() will only return the companies
     # available to the current user (should be the user's companies?), when the user_preference
     # context is set.
+    # When you want to use the value of this field, you should strongly consider
+    # to use the `res.company` method _get_current_company() to get the correct
+    # behavior even on the context of a website.
     company_id = fields.Many2one('res.company', string='Company', required=True, default=_get_company,
         help='The company this user is currently working for.', context={'user_preference': True})
     company_ids = fields.Many2many('res.company', 'res_company_users_rel', 'user_id', 'cid',
@@ -720,7 +723,7 @@ class Users(models.Model):
 
     @api.model
     def get_company_currency_id(self):
-        return self.env.user.company_id.currency_id.id
+        return self.env['res.company']._get_current_company().currency_id.id
 
     def _crypt_context(self):
         """ Passlib CryptContext instance used to encrypt and verify

@@ -13,7 +13,7 @@ class TestReInvoice(TestExpenseCommon, TestCommonSaleNoChart):
 
         cls.setUpExpenseProducts()
 
-        cls.env.ref('product.list0').currency_id = cls.env.user.company_id.currency_id
+        cls.env.ref('product.list0').currency_id = cls.env['res.company']._get_current_company().currency_id
 
         # partner and SO
         cls.partner_customer = cls.env['res.partner'].create({

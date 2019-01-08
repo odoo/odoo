@@ -15,7 +15,7 @@ class TestReInvoice(TestCommonSaleTimesheetNoChart):
         cls.setUpAdditionalAccounts()
         cls.setUpAccountJournal()
 
-        cls.env.ref('product.list0').currency_id = cls.env.user.company_id.currency_id
+        cls.env.ref('product.list0').currency_id = cls.env['res.company']._get_current_company().currency_id
 
         # patch expense products to make them services creating task/project
         service_values = {
@@ -51,7 +51,7 @@ class TestReInvoice(TestCommonSaleTimesheetNoChart):
             'partner_id': cls.partner_customer_usd.id,
             'account_id': cls.account_payable.id,
             'journal_id': cls.journal_purchase.id,
-            'currency_id': cls.env.user.company_id.currency_id.id,
+            'currency_id': cls.env['res.company']._get_current_company().currency_id.id,
         })
         cls.invoiceB = Invoice.create({
             'name': 'Test Invoice 2',
@@ -59,7 +59,7 @@ class TestReInvoice(TestCommonSaleTimesheetNoChart):
             'partner_id': cls.partner_customer_usd.id,
             'account_id': cls.account_payable.id,
             'journal_id': cls.journal_purchase.id,
-            'currency_id': cls.env.user.company_id.currency_id.id,
+            'currency_id': cls.env['res.company']._get_current_company().currency_id.id,
         })
 
     def test_at_cost(self):

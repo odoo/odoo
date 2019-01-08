@@ -76,13 +76,13 @@ class TestAccountNoChartCommon(SavepointCase):
             'name': 'Purchase Journal - Test',
             'code': 'AJ-PURC',
             'type': 'purchase',
-            'company_id': cls.env.user.company_id.id,
+            'company_id': cls.env['res.company']._get_current_company().id,
         })
         cls.journal_sale = cls.env['account.journal'].create({
             'name': 'Sale Journal - Test',
             'code': 'AJ-SALE',
             'type': 'sale',
-            'company_id': cls.env.user.company_id.id,
+            'company_id': cls.env['res.company']._get_current_company().id,
         })
 
     @classmethod

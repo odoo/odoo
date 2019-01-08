@@ -21,7 +21,7 @@ class PadCommon(models.AbstractModel):
 
     @api.model
     def pad_is_configured(self):
-        return bool(self.env.user.company_id.pad_server)
+        return bool(self.env['res.company']._get_current_company().pad_server)
 
     @api.model
     def pad_generate_url(self):

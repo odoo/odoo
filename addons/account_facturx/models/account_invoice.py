@@ -114,7 +114,7 @@ class AccountInvoice(models.Model):
                 if elements[0].attrib.get('currencyID'):
                     currency_str = elements[0].attrib['currencyID']
                     currency = self.env.ref('base.%s' % currency_str.upper(), raise_if_not_found=False)
-                    if currency != self.env.user.company_id.currency_id and currency.active:
+                    if currency != self.env['res.company']._get_current_company().currency_id and currency.active:
                         invoice_form.currency_id = currency
 
                     # Store xml total amount.

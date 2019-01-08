@@ -75,7 +75,7 @@ class Contract(models.Model):
         ('cancel', 'Cancelled')
     ], string='Status', group_expand='_expand_states',
        track_visibility='onchange', help='Status of the contract', default='draft')
-    company_id = fields.Many2one('res.company', default=lambda self: self.env.user.company_id)
+    company_id = fields.Many2one('res.company', default=lambda self: self.env['res.company']._get_current_company())
     currency_id = fields.Many2one(string="Currency", related='company_id.currency_id', readonly=True)
     permit_no = fields.Char('Work Permit No', related="employee_id.permit_no", readonly=False)
     visa_no = fields.Char('Visa No', related="employee_id.visa_no", readonly=False)

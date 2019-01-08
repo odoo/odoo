@@ -1206,7 +1206,7 @@ class Message(models.Model):
             if self.env.user.partner_id.email:
                 email_from = formataddr((self.env.user.partner_id.name, self.env.user.partner_id.email))
             else:
-                email_from = self.env.user.company_id.catchall
+                email_from = self.env['res.company']._get_current_company().catchall
 
             body_html = tools.append_content_to_html('<div>%s</div>' % tools.ustr(comment), msg.body)
             vals = {

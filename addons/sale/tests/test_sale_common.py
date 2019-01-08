@@ -79,7 +79,7 @@ class TestCommonSaleNoChart(TestAccountNoChartCommon):
             'name': 'USD pricelist',
             'active': True,
             'currency_id': cls.env.ref('base.USD').id,
-            'company_id': cls.env.user.company_id.id,
+            'company_id': cls.env['res.company']._get_current_company().id,
         })
 
     @classmethod

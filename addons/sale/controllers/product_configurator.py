@@ -85,7 +85,7 @@ class ProductConfiguratorController(http.Controller):
 
         add_qty = int(kw.get('add_qty', 1))
         to_currency = (pricelist or product).currency_id
-        company = request.env['res.company'].browse(request.env.context.get('company_id')) or request.env['res.users']._get_company()
+        company = request.env['res.company']._get_current_company()
         date = request.env.context.get('date') or fields.Date.today()
 
         def compute_currency(price):

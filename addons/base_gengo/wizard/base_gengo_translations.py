@@ -79,14 +79,14 @@ class BaseGengoTranslations(models.TransientModel):
             by the cron) or in a dialog box (if requested by the user), thus it's important to return it
             translated.
         '''
-        user = self.env.user
-        if not user.company_id.gengo_public_key or not user.company_id.gengo_private_key:
+        company = self.env['res.company']._get_current_company()
+        if not company.gengo_public_key or not company.gengo_private_key:
             return (False, _("Gengo `Public Key` or `Private Key` are missing. Enter your Gengo authentication parameters under `Settings > Companies > Gengo Parameters`."))
         try:
             gengo = Gengo(
-                public_key=user.company_id.gengo_public_key.encode('ascii'),
-                private_key=user.company_id.gengo_private_key.encode('ascii'),
-                sandbox=user.company_id.gengo_sandbox,
+                public_key=company.gengo_public_key.encode('ascii'),
+                private_key=company.gengo_private_key.encode('ascii'),
+                sandbox=company.gengo_sandbox,
             )
             gengo.getAccountStats()
             return (True, gengo)
@@ -209,11 +209,11 @@ class BaseGengoTranslations(models.TransientModel):
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         IrTranslation = self.env['ir.translation']
         jobs = {}
-        user = self.env.user
-        auto_approve = 1 if user.company_id.gengo_auto_approve else 0
+        company = self.env['res.company']._get_current_company()
+        auto_approve = 1 if company.gengo_auto_approve else 0
         for term in term_ids:
             if re.search(r"\w", term.src or ""):
-                comment = user.company_id.gengo_comment or ''
+                comment = company.gengo_comment or ''
                 if term.gengo_comment:
                     comment += '\n' + term.gengo_comment
                 jobs[time.strftime('%Y%m%d%H%M%S') + '-' + str(term.id)] = {

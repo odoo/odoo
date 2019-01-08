@@ -50,7 +50,7 @@ class HrPayrollAdvice(models.Model):
     chaque_nos = fields.Char(string='Cheque Numbers')
     neft = fields.Boolean(string='NEFT Transaction', help='Check this box if your company use online transfer for salary')
     company_id = fields.Many2one('res.company', string='Company', required=True, readonly=True,
-        states={'draft': [('readonly', False)]}, default=lambda self: self.env.user.company_id)
+        states={'draft': [('readonly', False)]}, default=lambda self: self.env['res.company']._get_current_company())
     bank_id = fields.Many2one('res.bank', string='Bank', readonly=True, states={'draft': [('readonly', False)]},
         help='Select the Bank from which the salary is going to be paid')
     batch_id = fields.Many2one('hr.payslip.run', string='Batch', readonly=True)
@@ -131,7 +131,7 @@ class HrPayslipRun(models.Model):
         for run in self:
             if run.available_advice:
                 raise UserError(_("Payment advice already exists for %s, 'Set to Draft' to create a new advice.") % (run.name,))
-            company = self.env.user.company_id
+            company = self.env['res.company']._get_current_company()
             advice = self.env['hr.payroll.advice'].create({
                         'batch_id': run.id,
                         'company_id': company.id,

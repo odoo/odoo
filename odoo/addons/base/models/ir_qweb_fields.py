@@ -417,7 +417,7 @@ class MonetaryConverter(models.AbstractModel):
             if company_id:
                 company = self.env['res.company'].browse(company_id)
             else:
-                company = self.env.user.company_id
+                company = self.env['res.company']._get_current_company()
             value = options['from_currency']._convert(value, display_currency, company, date)
 
         lang = self.user_lang()

@@ -36,17 +36,18 @@ class Partner(models.Model):
     @api.model
     def _notify_prepare_template_context(self, message, record, model_description=False, mail_auto_delete=True):
         # compute send user and its related signature
+        company = record.company_id.sudo() if record and 'company_id' in record else False
         signature = ''
         if message.author_id and message.author_id.user_ids:
             user = message.author_id.user_ids[0]
+            company = company or user.company_id
             if message.add_sign:
                 signature = user.signature
         else:
-            user = self.env.user
+            company = company or self.env['res.company']._get_current_company()
             if message.add_sign:
                 signature = "<p>-- <br/>%s</p>" % message.author_id.name
 
-        company = record.company_id.sudo() if record and 'company_id' in record else user.company_id
         if company.website:
             website_url = 'http://%s' % company.website if not company.website.lower().startswith(('http:', 'https:')) else company.website
         else:

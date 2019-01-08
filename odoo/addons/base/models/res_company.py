@@ -154,7 +154,7 @@ class Company(models.Model):
             # select only the currently visible companies (according to rules,
             # which are probably to allow to see the child companies) even if
             # she belongs to some other companies.
-            companies = self.env.user.company_id + self.env.user.company_ids
+            companies = self.env['res.company']._get_current_company() + self.env.user.company_ids
             args = (args or []) + [('id', 'in', companies.ids)]
             newself = newself.sudo()
         return super(Company, newself.with_context(context))._name_search(name=name, args=args, operator=operator, limit=limit, name_get_uid=name_get_uid)
@@ -166,7 +166,7 @@ class Company(models.Model):
         The 'object' and 'field' arguments are ignored but left here for
         backward compatibility and potential override.
         """
-        return self.env['res.users']._get_company()
+        return self._get_current_company()
 
     @api.model
     @tools.ormcache('self.env.uid', 'company')
@@ -266,7 +266,7 @@ class Company(models.Model):
     def action_open_base_onboarding_company(self):
         """ Onboarding step for company basic information. """
         action = self.env.ref('base.action_open_base_onboarding_company').read()[0]
-        action['res_id'] = self.env.user.company_id.id
+        action['res_id'] = self.env['res.company']._get_current_company().id
         return action
 
     def set_onboarding_step_done(self, step_name):
@@ -305,3 +305,24 @@ class Company(models.Model):
             main_company = self.env['res.company'].sudo().search([], limit=1, order="id")
 
         return main_company
+
+    def _get_current_company(self):
+        """Get the current company.
+
+        First check the context, and if not set get it from the current user.
+
+        :return: the current company
+        :rtype: recordset of one `res.company`
+        """
+        return self._get_current_company_from_context() or self.env.user.company_id
+
+    @api.model
+    def _get_current_company_from_context(self):
+        """Get the current company from the context.
+
+        :return: the company defined on the context
+        :rtype: recordset of zero or one `res.company`
+        """
+        Company = self.env['res.company']
+        company_id = self.env.context.get('company_id')
+        return Company.browse(company_id) if company_id else Company

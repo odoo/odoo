@@ -73,7 +73,7 @@ class PaymentAcquirer(models.Model):
         default='manual', required=True)
     company_id = fields.Many2one(
         'res.company', 'Company',
-        default=lambda self: self.env.user.company_id.id, required=True)
+        default=lambda self: self.env['res.company']._get_current_company().id, required=True)
     view_template_id = fields.Many2one(
         'ir.ui.view', 'Form Button Template', required=True,
         default=_get_default_view_template_id)
@@ -266,7 +266,7 @@ class PaymentAcquirer(models.Model):
         acquirer_names = [a.name.split('_')[1] for a in acquirer_modules]
 
         # Search for acquirers having no journal
-        company = company or self.env.user.company_id
+        company = company or self.env['res.company']._get_current_company()
         acquirers = self.env['payment.acquirer'].search(
             [('provider', 'in', acquirer_names), ('journal_id', '=', False), ('company_id', '=', company.id)])
 
@@ -314,7 +314,7 @@ class PaymentAcquirer(models.Model):
          * pms: record set of stored credit card data (aka payment.token)
                 connected to a given partner to allow customers to reuse them """
         if not company:
-            company = self.env.user.company_id
+            company = self.env['res.company']._get_current_company()
         if not partner:
             partner = self.env.user.partner_id
         active_acquirers = self.sudo().search([('website_published', '=', True), ('company_id', '=', company.id)])
@@ -366,7 +366,7 @@ class PaymentAcquirer(models.Model):
         if currency_id:
             currency = self.env['res.currency'].browse(currency_id)
         else:
-            currency = self.env.user.company_id.currency_id
+            currency = self.env['res.company']._get_current_company().currency_id
         values['currency'] = currency
 
         # Fill partner_* using values['partner_id'] or partner_id argument

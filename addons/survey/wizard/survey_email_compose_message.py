@@ -127,7 +127,7 @@ class SurveyMailComposeMessage(models.TransientModel):
                     template_ctx = {
                         'message': self.env['mail.message'].sudo().new(dict(body=values['body_html'], record_name=wizard.survey_id.title)),
                         'model_description': self.env['ir.model']._get('survey.survey').display_name,
-                        'company': self.env.user.company_id,
+                        'company': self.env['res.company']._get_current_company(),
                     }
                     body = template.render(template_ctx, engine='ir.qweb', minimal_qcontext=True)
                     values['body_html'] = self.env['mail.thread']._replace_local_links(body)

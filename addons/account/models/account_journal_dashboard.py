@@ -238,7 +238,7 @@ class account_journal(models.Model):
         rslt_sum = 0.0
         for result in results_dict:
             cur = self.env['res.currency'].browse(result.get('currency'))
-            company = self.env['res.company'].browse(result.get('company_id')) or self.env.user.company_id
+            company = self.env['res.company'].browse(result.get('company_id')) or self.env['res.company']._get_current_company()
             rslt_count += 1
             type_factor = result.get('type') in ('in_refund', 'out_refund') and -1 or 1
             rslt_sum += type_factor * cur._convert(

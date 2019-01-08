@@ -65,7 +65,7 @@ class AccountFrFec(models.TransientModel):
             sql_query += '''
             AND am.state = 'posted'
             '''
-        company = self.env.user.company_id
+        company = self.env['res.company']._get_current_company()
         formatted_date_from = fields.Date.to_string(self.date_from).replace('-', '')
         date_from = self.date_from
         formatted_date_year = date_from.year
@@ -108,7 +108,7 @@ class AccountFrFec(models.TransientModel):
             u'Idevise',        # 17
             ]
 
-        company = self.env.user.company_id
+        company = self.env['res.company']._get_current_company()
         if not company.vat:
             raise Warning(
                 _("Missing VAT number for company %s") % company.name)

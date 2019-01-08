@@ -273,7 +273,7 @@ class HolidaysRequest(models.Model):
             self.date_to = False
             return
 
-        domain = [('calendar_id', '=', self.employee_id.resource_calendar_id.id or self.env.user.company_id.resource_calendar_id.id)]
+        domain = [('calendar_id', '=', self.employee_id.resource_calendar_id.id or self.env['res.company']._get_current_company().resource_calendar_id.id)]
         attendances = self.env['resource.calendar.attendance'].search(domain, order='dayofweek, day_period DESC')
 
         # find first attendance coming after first_day
@@ -334,7 +334,7 @@ class HolidaysRequest(models.Model):
             self.category_id = False
         elif self.holiday_type == 'company' and not self.mode_company_id:
             self.employee_id = False
-            self.mode_company_id = self.env.user.company_id.id
+            self.mode_company_id = self.env['res.company']._get_current_company().id
             self.category_id = False
         elif self.holiday_type == 'department' and not self.department_id:
             self.employee_id = False
@@ -369,7 +369,7 @@ class HolidaysRequest(models.Model):
     @api.depends('number_of_days')
     def _compute_number_of_hours_display(self):
         for holiday in self:
-            calendar = holiday.employee_id.resource_calendar_id or self.env.user.company_id.resource_calendar_id
+            calendar = holiday.employee_id.resource_calendar_id or self.env['res.company']._get_current_company().resource_calendar_id
             if holiday.date_from and holiday.date_to:
                 number_of_hours = calendar.get_work_hours_count(holiday.date_from, holiday.date_to)
                 holiday.number_of_hours_display = number_of_hours or (holiday.number_of_days * HOURS_PER_DAY)
@@ -571,7 +571,7 @@ class HolidaysRequest(models.Model):
     @api.multi
     def _prepare_holidays_meeting_values(self):
         self.ensure_one()
-        calendar = self.employee_id.resource_calendar_id or self.env.user.company_id.resource_calendar_id
+        calendar = self.employee_id.resource_calendar_id or self.env['res.company']._get_current_company().resource_calendar_id
         meeting_values = {
             'name': self.display_name,
             'categ_ids': [(6, 0, [

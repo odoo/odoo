@@ -16,7 +16,7 @@ class TestReporting(TestCommonSaleTimesheetNoChart):
         cls.setUpAccountJournal()
 
         # tweak demo data: force currency and remove confusing rates
-        company_currency = cls.env.user.company_id.currency_id
+        company_currency = cls.env['res.company']._get_current_company().currency_id
         cls.env.ref('product.list0').currency_id = company_currency
 
         # expense product
@@ -121,7 +121,7 @@ class TestReporting(TestCommonSaleTimesheetNoChart):
     def test_profitability_report(self):
 
         # this test suppose everything is in the same currency as the current one
-        currency = self.env.user.company_id.currency_id
+        currency = self.env['res.company']._get_current_company().currency_id
         rounding = currency.rounding
 
         project_global_stat = self.env['project.profitability.report'].search([('project_id', '=', self.project_global.id)]).read()[0]

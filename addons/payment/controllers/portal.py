@@ -120,10 +120,11 @@ class WebsitePayment(http.Controller):
         env = request.env
         user = env.user.sudo()
 
+        company = user.env['res.company']._get_current_company()
         # Default values
         values = {
             'amount': 0.0,
-            'currency': user.company_id.currency_id,
+            'currency': company.currency_id,
         }
 
         # Check sale order
@@ -164,7 +165,7 @@ class WebsitePayment(http.Controller):
         if acquirer_id:
             acquirers = env['payment.acquirer'].browse(int(acquirer_id))
         if not acquirers:
-            acquirers = env['payment.acquirer'].search([('website_published', '=', True), ('company_id', '=', user.company_id.id)])
+            acquirers = env['payment.acquirer'].search([('website_published', '=', True), ('company_id', '=', company.id)])
 
         # Check partner
         partner_id = user.partner_id.id if not user._is_public() else False

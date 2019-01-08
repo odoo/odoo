@@ -51,7 +51,7 @@ class StockRule(models.Model):
             cache[domain] = po
         if not po:
             vals = self._prepare_purchase_order(product_id, product_qty, product_uom, origin, values, partner)
-            company_id = values.get('company_id') and values['company_id'].id or self.env.user.company_id.id
+            company_id = values.get('company_id') and values['company_id'].id or self.env['res.company']._get_current_company().id
             po = self.env['purchase.order'].with_context(force_company=company_id).sudo().create(vals)
             cache[domain] = po
         elif not po.origin or origin not in po.origin.split(', '):
@@ -168,7 +168,7 @@ class StockRule(models.Model):
             'partner_id': partner.id,
             'picking_type_id': self.picking_type_id.id,
             'company_id': values['company_id'].id,
-            'currency_id': partner.with_context(force_company=values['company_id'].id).property_purchase_currency_id.id or self.env.user.company_id.currency_id.id,
+            'currency_id': partner.with_context(force_company=values['company_id'].id).property_purchase_currency_id.id or self.env['res.company']._get_current_company().currency_id.id,
             'dest_address_id': values.get('partner_id', False),
             'origin': origin,
             'payment_term_id': partner.with_context(force_company=values['company_id'].id).property_supplier_payment_term_id.id,

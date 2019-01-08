@@ -25,16 +25,16 @@ class SaleOrder(models.Model):
 
     def _default_validity_date(self):
         if self.env['ir.config_parameter'].sudo().get_param('sale.use_quotation_validity_days'):
-            days = self.env.user.company_id.quotation_validity_days
+            days = self.env['res.company']._get_current_company().quotation_validity_days
             if days > 0:
                 return fields.Date.to_string(datetime.now() + timedelta(days))
         return False
 
     def _get_default_require_signature(self):
-        return self.env.user.company_id.portal_confirmation_sign
+        return self.env['res.company']._get_current_company().portal_confirmation_sign
 
     def _get_default_require_payment(self):
-        return self.env.user.company_id.portal_confirmation_pay
+        return self.env['res.company']._get_current_company().portal_confirmation_pay
 
     @api.depends('order_line.price_total')
     def _amount_all(self):
@@ -109,7 +109,7 @@ class SaleOrder(models.Model):
 
     @api.model
     def _default_note(self):
-        return self.env['ir.config_parameter'].sudo().get_param('sale.use_sale_note') and self.env.user.company_id.sale_note or ''
+        return self.env['ir.config_parameter'].sudo().get_param('sale.use_sale_note') and self.env['res.company']._get_current_company().sale_note or ''
 
     @api.model
     def _get_default_team(self):
@@ -313,8 +313,8 @@ class SaleOrder(models.Model):
             'partner_shipping_id': addr['delivery'],
             'user_id': self.partner_id.user_id.id or self.env.uid
         }
-        if self.env['ir.config_parameter'].sudo().get_param('sale.use_sale_note') and self.env.user.company_id.sale_note:
-            values['note'] = self.with_context(lang=self.partner_id.lang).env.user.company_id.sale_note
+        if self.env['ir.config_parameter'].sudo().get_param('sale.use_sale_note') and self.env['res.company']._get_current_company().sale_note:
+            values['note'] = self.with_context(lang=self.partner_id.lang).env['res.company']._get_current_company().sale_note
 
         if self.partner_id.team_id:
             values['team_id'] = self.partner_id.team_id.id
@@ -630,7 +630,7 @@ class SaleOrder(models.Model):
     def message_post(self, **kwargs):
         if self.env.context.get('mark_so_as_sent'):
             self.filtered(lambda o: o.state == 'draft').with_context(tracking_disable=True).write({'state': 'sent'})
-            self.env.user.company_id.set_onboarding_step_done('sale_onboarding_sample_quotation_state')
+            self.env['res.company']._get_current_company().set_onboarding_step_done('sale_onboarding_sample_quotation_state')
         return super(SaleOrder, self.with_context(mail_post_autofollow=True)).message_post(**kwargs)
 
     @api.multi
@@ -1536,7 +1536,7 @@ class SaleOrderLine(models.Model):
                 product_currency = pricelist_item.base_pricelist_id.currency_id
             currency_id = pricelist_item.pricelist_id.currency_id
 
-        product_currency = product_currency or(product.company_id and product.company_id.currency_id) or self.env.user.company_id.currency_id
+        product_currency = product_currency or(product.company_id and product.company_id.currency_id) or self.env['res.company']._get_current_company().currency_id
         if not currency_id:
             currency_id = product_currency
             cur_factor = 1.0

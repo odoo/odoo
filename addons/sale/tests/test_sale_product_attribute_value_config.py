@@ -25,7 +25,7 @@ class TestSaleProductAttributeValueSetup(TestProductAttributeValueSetup):
         non-reliant on demo data."""
         name = fields.Date.today()
         currency_id = currency.id
-        company_id = self.env.user.company_id.id
+        company_id = self.env['res.company']._get_current_company().id
 
         CurrencyRate = self.env['res.currency.rate']
 
@@ -368,6 +368,23 @@ class TestSaleProductAttributeValueConfig(TestSaleProductAttributeValueSetup):
 
         # CASE: the variant already exists, so it should return it
         self.assertEqual(variant, self.computer._create_product_variant(combination))
+
+    def test_06_multi_company_currency(self):
+        """The goal is to make sure currencies are converted correctly when
+        using a multi-company setup."""
+
+        # product without company
+        self.computer.company_id = False
+
+        # set base currency rate to 1
+
+        # set company 1 currency rate to 2
+
+        # set company 2 currency rate to 3
+
+        # the pricelist must have a different currency than the product
+
+        # call _get_combination_info with pricelist
 
     def _add_keyboard_attribute(self):
         self.keyboard_attribute = self.env['product.attribute'].create({

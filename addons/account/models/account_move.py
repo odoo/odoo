@@ -65,12 +65,12 @@ class AccountMove(models.Model):
     @api.one
     @api.depends('company_id')
     def _compute_currency(self):
-        self.currency_id = self.company_id.currency_id or self.env.user.company_id.currency_id
+        self.currency_id = self.company_id.currency_id or self.env['res.company']._get_current_company().currency_id
 
     @api.multi
     def _get_default_journal(self):
         if self.env.context.get('default_journal_type'):
-            return self.env['account.journal'].search([('company_id', '=', self.env.user.company_id.id), ('type', '=', self.env.context['default_journal_type'])], limit=1).id
+            return self.env['account.journal'].search([('company_id', '=', self.env['res.company']._get_current_company().id), ('type', '=', self.env.context['default_journal_type'])], limit=1).id
 
     @api.multi
     @api.depends('line_ids.partner_id')
@@ -377,7 +377,7 @@ class AccountMove(models.Model):
     def assert_balanced(self):
         if not self.ids:
             return True
-        prec = self.env.user.company_id.currency_id.decimal_places
+        prec = self.env['res.company']._get_current_company().currency_id.decimal_places
 
         self._cr.execute("""\
             SELECT      move_id
@@ -448,7 +448,7 @@ class AccountMove(models.Model):
             ('reverse_entry_id', '=', False)])
         for move in records:
             date = None
-            if move.reverse_date and (not self.env.user.company_id.period_lock_date or move.reverse_date > self.env.user.company_id.period_lock_date):
+            if move.reverse_date and (not self.env['res.company']._get_current_company().period_lock_date or move.reverse_date > self.env['res.company']._get_current_company().period_lock_date):
                 date = move.reverse_date
             move.reverse_moves(date=date, auto=True)
 
@@ -1210,8 +1210,7 @@ class AccountMoveLine(models.Model):
         amount_currency = False
         currency_id = False
         date = self.env.context.get('date') or fields.Date.today()
-        company = self.env.context.get('company_id')
-        company = self.env['res.company'].browse(company) if company else self.env.user.company_id
+        company = self.env['res.company']._get_current_company()
         if src_currency and src_currency != company_currency:
             amount_currency = amount
             amount = src_currency._convert(amount, company_currency, company, date)
@@ -1258,7 +1257,7 @@ class AccountMoveLine(models.Model):
             'move_id': self.id,
             'user_id': self.invoice_id.user_id.id or self._uid,
             'partner_id': self.partner_id.id,
-            'company_id': self.analytic_account_id.company_id.id or self.env.user.company_id.id,
+            'company_id': self.analytic_account_id.company_id.id or self.env['res.company']._get_current_company().id,
         }
 
     def _prepare_analytic_distribution_line(self, distribution):
@@ -1282,7 +1281,7 @@ class AccountMoveLine(models.Model):
             'ref': self.ref,
             'move_id': self.id,
             'user_id': self.invoice_id.user_id.id or self._uid,
-            'company_id': distribution.account_id.company_id.id or self.env.user.company_id.id,
+            'company_id': distribution.account_id.company_id.id or self.env['res.company']._get_current_company().id,
         }
 
     @api.model

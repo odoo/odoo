@@ -18,34 +18,34 @@ class l10n_eu_service(models.TransientModel):
         return eu_group
 
     def _get_default_company_id(self):
-        return self.env.user.company_id.id
+        return self.env['res.company']._get_current_company().id
 
     def _default_fiscal_position_id(self):
-        user = self.env.user
+        company = self.env['res.company']._get_current_company()
         eu_id = self._get_eu_res_country_group()
         return self.env['account.fiscal.position'].search(
-            [('company_id', '=', user.company_id.id), ('vat_required', '=', True),
+            [('company_id', '=', company.id), ('vat_required', '=', True),
              ('country_group_id.id', '=', eu_id.id)], limit=1)
 
     def _default_tax_id(self):
-        user = self.env.user
+        company = self.env['res.company']._get_current_company()
         return self.env['account.tax'].search(
-            [('company_id', '=', user.company_id.id), ('type_tax_use', '=', 'sale'),
+            [('company_id', '=', company.id), ('type_tax_use', '=', 'sale'),
              ('amount_type', '=', 'percent'), ('account_id', '!=', False)], limit=1, order='amount desc')
 
     def _default_done_country_ids(self):
-        user = self.env.user
+        company = self.env['res.company']._get_current_company()
         eu_country_group = self._get_eu_res_country_group()
-        return eu_country_group.country_ids - self._default_todo_country_ids() - user.company_id.country_id
+        return eu_country_group.country_ids - self._default_todo_country_ids() - company.country_id
 
     def _default_todo_country_ids(self):
-        user = self.env.user
+        company = self.env['res.company']._get_current_company()
         eu_country_group = self._get_eu_res_country_group()
         eu_fiscal = self.env['account.fiscal.position'].search(
             [('country_id', 'in', eu_country_group.country_ids.ids),
              ('vat_required', '=', False), ('auto_apply', '=', True),
-             ('company_id', '=', user.company_id.id)])
-        return eu_country_group.country_ids - eu_fiscal.mapped('country_id') - user.company_id.country_id
+             ('company_id', '=', company.id)])
+        return eu_country_group.country_ids - eu_fiscal.mapped('country_id') - company.country_id
 
     company_id = fields.Many2one(
         'res.company', string='Company', required=True, default=_get_default_company_id)

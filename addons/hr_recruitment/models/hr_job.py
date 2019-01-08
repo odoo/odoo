@@ -9,7 +9,7 @@ class Job(models.Model):
 
     @api.model
     def _default_address_id(self):
-        return self.env.user.company_id.partner_id
+        return self.env['res.company']._get_current_company().partner_id
 
     address_id = fields.Many2one(
         'res.partner', "Job Location", default=_default_address_id,

@@ -131,7 +131,7 @@ class AccountBankStatementImport(models.TransientModel):
         """ Look for a res.currency and account.journal using values extracted from the
             statement and make sure it's consistent.
         """
-        company_currency = self.env.user.company_id.currency_id
+        company_currency = self.env['res.company']._get_current_company().currency_id
         journal_obj = self.env['account.journal']
         currency = None
         sanitized_account_number = sanitize_account_number(account_number)

@@ -41,18 +41,18 @@ class PosConfig(models.Model):
 
     def _default_sale_journal(self):
         journal = self.env.ref('point_of_sale.pos_sale_journal', raise_if_not_found=False)
-        if journal and journal.sudo().company_id == self.env.user.company_id:
+        if journal and journal.sudo().company_id == self.env['res.company']._get_current_company():
             return journal
         return self._default_invoice_journal()
 
     def _default_invoice_journal(self):
-        return self.env['account.journal'].search([('type', '=', 'sale'), ('company_id', '=', self.env.user.company_id.id)], limit=1)
+        return self.env['account.journal'].search([('type', '=', 'sale'), ('company_id', '=', self.env['res.company']._get_current_company().id)], limit=1)
 
     def _default_pricelist(self):
-        return self.env['product.pricelist'].search([('currency_id', '=', self.env.user.company_id.currency_id.id)], limit=1)
+        return self.env['product.pricelist'].search([('currency_id', '=', self.env['res.company']._get_current_company().currency_id.id)], limit=1)
 
     def _get_default_location(self):
-        return self.env['stock.warehouse'].search([('company_id', '=', self.env.user.company_id.id)], limit=1).lot_stock_id
+        return self.env['stock.warehouse'].search([('company_id', '=', self.env['res.company']._get_current_company().id)], limit=1).lot_stock_id
 
     def _get_group_pos_manager(self):
         return self.env.ref('point_of_sale.group_pos_manager')
@@ -135,7 +135,7 @@ class PosConfig(models.Model):
         help="The pricelist used if no customer is selected or if the customer has no Sale Pricelist configured.")
     available_pricelist_ids = fields.Many2many('product.pricelist', string='Available Pricelists', default=_default_pricelist,
         help="Make several pricelists available in the Point of Sale. You can also apply a pricelist to specific customers from their contact form (in Sales tab). To be valid, this pricelist must be listed here as an available pricelist. Otherwise the default pricelist will apply.")
-    company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.user.company_id)
+    company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env['res.company']._get_current_company())
     barcode_nomenclature_id = fields.Many2one('barcode.nomenclature', string='Barcode Nomenclature',
         help='Defines what kind of barcodes are available and how they are assigned to products, customers and cashiers.')
     group_pos_manager_id = fields.Many2one('res.groups', string='Point of Sale Manager Group', default=_get_group_pos_manager,
@@ -174,7 +174,7 @@ class PosConfig(models.Model):
             if pos_config.journal_id:
                 pos_config.currency_id = pos_config.journal_id.currency_id.id or pos_config.journal_id.company_id.currency_id.id
             else:
-                pos_config.currency_id = self.env.user.company_id.currency_id.id
+                pos_config.currency_id = self.env['res.company']._get_current_company().currency_id.id
 
     @api.depends('session_ids')
     def _compute_current_session(self):
@@ -292,7 +292,7 @@ class PosConfig(models.Model):
     @api.onchange('barcode_scanner')
     def _onchange_barcode_scanner(self):
         if self.barcode_scanner:
-            self.barcode_nomenclature_id = self.env.user.company_id.nomenclature_id
+            self.barcode_nomenclature_id = self.env['res.company']._get_current_company().nomenclature_id
         else:
             self.barcode_nomenclature_id = False
 

@@ -277,7 +277,7 @@ class IrSequence(models.Model):
         self.check_access_rights('read')
         force_company = self._context.get('force_company')
         if not force_company:
-            force_company = self.env.user.company_id.id
+            force_company = self.env['res.company']._get_current_company().id
         seq_ids = self.search([('code', '=', sequence_code), ('company_id', 'in', [force_company, False])], order='company_id')
         if not seq_ids:
             _logger.debug("No ir.sequence has been found for code '%s'. Please make sure a sequence is set for current company." % sequence_code)

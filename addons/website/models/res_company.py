@@ -33,3 +33,19 @@ class Company(models.Model):
                 'company_id': self.id,
                 'company_ids': [(6, 0, [self.id])],
             })
+
+    @api.model
+    def _get_current_company(self):
+        """Website override.
+
+        When in the context of a website, the current company should be the
+        company of the website and not the company of the current user.
+
+        Indeed multi-company is not supported on the website. Each website
+        always has exactly one company.
+        """
+        # TODO SEB check security
+        # make sure no manual context allow the user to acess data he shouldn't
+        if not self._get_current_company_from_context() and self.env.context.get('website_id'):
+            return self.env['website'].get_current_website().company_id
+        return super(Company, self)._get_current_company()

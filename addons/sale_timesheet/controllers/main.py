@@ -33,7 +33,7 @@ class SaleTimesheetController(http.Controller):
 
     def _plan_prepare_values(self, projects):
 
-        currency = request.env.user.company_id.currency_id
+        currency = request.env['res.company']._get_current_company().currency_id
         uom_hour = request.env.ref('uom.product_uom_hour')
         hour_rounding = uom_hour.rounding
         billable_types = ['non_billable', 'non_billable_project', 'billable_time', 'billable_fixed']

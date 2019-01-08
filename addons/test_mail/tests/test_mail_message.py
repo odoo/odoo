@@ -61,7 +61,7 @@ class TestMessageValues(common.BaseFunctionalTest, common.MockEmails):
 
         msg = self.Message.create({})
         self.assertIn('-private', msg.message_id, 'mail_message: message_id for a void message should be a "private" one')
-        self.assertEqual(msg.reply_to, '%s <%s@%s>' % (self.env.user.company_id.name, alias_catchall, alias_domain))
+        self.assertEqual(msg.reply_to, '%s <%s@%s>' % (self.env['res.company']._get_current_company().name, alias_catchall, alias_domain))
         self.assertEqual(msg.email_from, '%s <%s>' % (self.user_employee.name, self.user_employee.email))
 
     def test_mail_message_values_document_no_alias(self):
@@ -86,7 +86,7 @@ class TestMessageValues(common.BaseFunctionalTest, common.MockEmails):
             'res_id': self.alias_record.id
         })
         self.assertIn('-openerp-%d-mail.test' % self.alias_record.id, msg.message_id)
-        self.assertEqual(msg.reply_to, '%s %s <%s@%s>' % (self.env.user.company_id.name, self.alias_record.name, self.alias_record.alias_name, alias_domain))
+        self.assertEqual(msg.reply_to, '%s %s <%s@%s>' % (self.env['res.company']._get_current_company().name, self.alias_record.name, self.alias_record.alias_name, alias_domain))
         self.assertEqual(msg.email_from, '%s <%s>' % (self.user_employee.name, self.user_employee.email))
 
     def test_mail_message_values_document_alias_catchall(self):
@@ -100,7 +100,7 @@ class TestMessageValues(common.BaseFunctionalTest, common.MockEmails):
             'res_id': self.alias_record.id
         })
         self.assertIn('-openerp-%d-mail.test' % self.alias_record.id, msg.message_id)
-        self.assertEqual(msg.reply_to, '%s %s <%s@%s>' % (self.env.user.company_id.name, self.alias_record.name, self.alias_record.alias_name, alias_domain))
+        self.assertEqual(msg.reply_to, '%s %s <%s@%s>' % (self.env['res.company']._get_current_company().name, self.alias_record.name, self.alias_record.alias_name, alias_domain))
         self.assertEqual(msg.email_from, '%s <%s>' % (self.user_employee.name, self.user_employee.email))
 
     def test_mail_message_values_no_auto_thread(self):
@@ -445,4 +445,4 @@ class TestMessageModeration(common.Moderation):
         msg_emp_pending_c2 = self._create_new_message(self.channel_2.id, status='pending_moderation', author=self.partner_employee)
 
         self.env['mail.message']._notify_moderators()
-        self.assertEmails(False, self.partner_employee | self.partner_employee_2, subject='Message are pending moderation', email_from=self.env.user.company_id.catchall or self.env.user.company_id.email)
+        self.assertEmails(False, self.partner_employee | self.partner_employee_2, subject='Message are pending moderation', email_from=self.env['res.company']._get_current_company().catchall or self.env['res.company']._get_current_company().email)

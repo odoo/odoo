@@ -78,7 +78,7 @@ class ResPartnerBank(models.Model):
     bank_bic = fields.Char(related='bank_id.bic', readonly=False)
     sequence = fields.Integer()
     currency_id = fields.Many2one('res.currency', string='Currency')
-    company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env.user.company_id, ondelete='cascade')
+    company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env['res.company']._get_current_company(), ondelete='cascade')
     qr_code_valid = fields.Boolean(string="Has all required arguments", compute="_validate_qr_code_arguments")
 
     _sql_constraints = [

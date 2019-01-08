@@ -159,7 +159,7 @@ class StockMove(models.Model):
         domain = [
             ('state', '=', 'done'),
             ('location_id.company_id', '=', False),
-            ('location_dest_id.company_id', '=', company_id or self.env.user.company_id.id)
+            ('location_dest_id.company_id', '=', company_id or self.env['res.company']._get_current_company().id)
         ]
         return domain
 
@@ -170,9 +170,9 @@ class StockMove(models.Model):
             '|',
                 '&',
                     ('location_id.company_id', '=', False),
-                    ('location_dest_id.company_id', '=', company_id or self.env.user.company_id.id),
+                    ('location_dest_id.company_id', '=', company_id or self.env['res.company']._get_current_company().id),
                 '&',
-                    ('location_id.company_id', '=', company_id or self.env.user.company_id.id),
+                    ('location_id.company_id', '=', company_id or self.env['res.company']._get_current_company().id),
                     ('location_dest_id.company_id', '=', False)
         ]
         return domain

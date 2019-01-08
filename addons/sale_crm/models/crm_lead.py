@@ -18,7 +18,7 @@ class CrmLead(models.Model):
         for lead in self:
             total = 0.0
             nbr = 0
-            company_currency = lead.company_currency or self.env.user.company_id.currency_id
+            company_currency = lead.company_currency or self.env['res.company']._get_current_company().currency_id
             for order in lead.order_ids:
                 if order.state in ('draft', 'sent', 'sale'):
                     nbr += 1

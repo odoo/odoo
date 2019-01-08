@@ -52,7 +52,7 @@ class account_abstract_payment(models.AbstractModel):
     partner_id = fields.Many2one('res.partner', string='Partner')
 
     amount = fields.Monetary(string='Payment Amount', required=True)
-    currency_id = fields.Many2one('res.currency', string='Currency', required=True, default=lambda self: self.env.user.company_id.currency_id)
+    currency_id = fields.Many2one('res.currency', string='Currency', required=True, default=lambda self: self.env['res.company']._get_current_company().currency_id)
     payment_date = fields.Date(string='Payment Date', default=fields.Date.context_today, required=True, copy=False)
     communication = fields.Char(string='Memo')
     journal_id = fields.Many2one('account.journal', string='Payment Journal', required=True, domain=[('type', 'in', ('bank', 'cash'))])
@@ -241,7 +241,7 @@ class account_abstract_payment(models.AbstractModel):
             if payment_currency == currency:
                 total += amount_total
             else:
-                total += payment_currency._convert(amount_total, currency, self.env.user.company_id, self.payment_date or fields.Date.today())
+                total += payment_currency._convert(amount_total, currency, self.env['res.company']._get_current_company(), self.payment_date or fields.Date.today())
         return total
 
 

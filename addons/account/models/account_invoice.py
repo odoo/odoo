@@ -48,7 +48,7 @@ class AccountInvoice(models.Model):
 
 
     def _get_default_incoterm(self):
-        return self.env.user.company_id.incoterm_id
+        return self.env['res.company']._get_current_company().incoterm_id
 
     @api.one
     @api.depends('invoice_line_ids.price_subtotal', 'tax_line_ids.amount', 'tax_line_ids.amount_rounding',
@@ -81,7 +81,7 @@ class AccountInvoice(models.Model):
             return self.env['account.journal'].browse(self._context.get('default_journal_id'))
         inv_type = self._context.get('type', 'out_invoice')
         inv_types = inv_type if isinstance(inv_type, list) else [inv_type]
-        company_id = self._context.get('company_id', self.env.user.company_id.id)
+        company_id = self._context.get('company_id', self.env['res.company']._get_current_company().id)
         domain = [
             ('type', 'in', [TYPE2JOURNAL[ty] for ty in inv_types if ty in TYPE2JOURNAL]),
             ('company_id', '=', company_id),
@@ -95,7 +95,7 @@ class AccountInvoice(models.Model):
     @api.model
     def _default_currency(self):
         journal = self._default_journal()
-        return journal.currency_id or journal.company_id.currency_id or self.env.user.company_id.currency_id
+        return journal.currency_id or journal.company_id.currency_id or self.env['res.company']._get_current_company().currency_id
 
     @api.one
     @api.depends(
@@ -635,7 +635,7 @@ class AccountInvoice(models.Model):
     def message_post(self, **kwargs):
         if self.env.context.get('mark_invoice_as_sent'):
             self.filtered(lambda inv: not inv.sent).write({'sent': True})
-            self.env.user.company_id.set_onboarding_step_done('account_onboarding_sample_invoice_state')
+            self.env['res.company']._get_current_company().set_onboarding_step_done('account_onboarding_sample_invoice_state')
         return super(AccountInvoice, self.with_context(mail_post_autofollow=True)).message_post(**kwargs)
 
     @api.model
@@ -1570,7 +1570,7 @@ class AccountInvoiceLine(models.Model):
         if self.invoice_id.currency_id and self.invoice_id.currency_id != self.invoice_id.company_id.currency_id:
             currency = self.invoice_id.currency_id
             date = self.invoice_id._get_currency_rate_date()
-            price_subtotal_signed = currency._convert(price_subtotal_signed, self.invoice_id.company_id.currency_id, self.company_id or self.env.user.company_id, date or fields.Date.today())
+            price_subtotal_signed = currency._convert(price_subtotal_signed, self.invoice_id.company_id.currency_id, self.company_id or self.env['res.company']._get_current_company(), date or fields.Date.today())
         sign = self.invoice_id.type in ['in_refund', 'out_refund'] and -1 or 1
         self.price_subtotal_signed = price_subtotal_signed * sign
 
@@ -1673,7 +1673,7 @@ class AccountInvoiceLine(models.Model):
             taxes = self.product_id.supplier_taxes_id or self.account_id.tax_ids or self.invoice_id.company_id.account_purchase_tax_id
 
         # Keep only taxes of the company
-        company_id = self.company_id or self.env.user.company_id
+        company_id = self.company_id or self.env['res.company']._get_current_company()
         taxes = taxes.filtered(lambda r: r.company_id == company_id)
 
         self.invoice_line_tax_ids = fp_taxes = self.invoice_id.fiscal_position_id.map_tax(taxes, self.product_id, self.invoice_id.partner_id)
@@ -1905,7 +1905,7 @@ class AccountPaymentTerm(models.Model):
     active = fields.Boolean(default=True, help="If the active field is set to False, it will allow you to hide the payment terms without removing it.")
     note = fields.Text(string='Description on the Invoice', translate=True)
     line_ids = fields.One2many('account.payment.term.line', 'payment_id', string='Terms', copy=True, default=_default_line_ids)
-    company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.user.company_id)
+    company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env['res.company']._get_current_company())
     sequence = fields.Integer(required=True, default=10)
 
     @api.constrains('line_ids')
@@ -1927,7 +1927,7 @@ class AccountPaymentTerm(models.Model):
         if self.env.context.get('currency_id'):
             currency = self.env['res.currency'].browse(self.env.context['currency_id'])
         else:
-            currency = self.env.user.company_id.currency_id
+            currency = self.env['res.company']._get_current_company().currency_id
         for line in self.line_ids:
             if line.value == 'fixed':
                 amt = sign * currency.round(line.value_amount)

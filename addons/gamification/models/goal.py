@@ -67,7 +67,7 @@ class GoalDefinition(models.Model):
             items = []
 
             if goal.monetary:
-                items.append(self.env.user.company_id.currency_id.symbol or u'¤')
+                items.append(self.env['res.company']._get_current_company().currency_id.symbol or u'¤')
             if goal.suffix:
                 items.append(goal.suffix)
 

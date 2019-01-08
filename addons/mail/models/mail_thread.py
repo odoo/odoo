@@ -858,7 +858,7 @@ class MailThread(models.AbstractModel):
                     result_email.update(dict((rid, '%s@%s' % (catchall, alias_domain)) for rid in left_ids))
 
             # compute name of reply-to - TDE tocheck: quotes and stuff like that
-            company_name = company.name if company else self.env.user.company_id.name
+            company_name = company.name if company else self.env['res.company']._get_current_company().name
             for res_id in result_email.keys():
                 name = '%s%s%s' % (company_name, ' ' if doc_names.get(res_id) else '', doc_names.get(res_id, ''))
                 result[res_id] = formataddr((name, result_email[res_id]))
@@ -1251,7 +1251,7 @@ class MailThread(models.AbstractModel):
                 body = self.env.ref('mail.mail_bounce_catchall').render({
                     'message': message,
                 }, engine='ir.qweb')
-                self._routing_create_bounce_email(email_from, body, message, reply_to=self.env.user.company_id.email)
+                self._routing_create_bounce_email(email_from, body, message, reply_to=self.env['res.company']._get_current_company().email)
                 return []
 
             dest_aliases = Alias.search([('alias_name', 'in', rcpt_tos_localparts)])

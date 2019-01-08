@@ -25,7 +25,7 @@ class FinancialYearOpeningWizard(models.TransientModel):
 
     @api.multi
     def action_save_onboarding_fiscal_year(self):
-        self.env.user.company_id.set_onboarding_step_done('account_setup_fy_data_state')
+        self.env['res.company']._get_current_company().set_onboarding_step_done('account_setup_fy_data_state')
 
 
 class SetupBarBankConfigWizard(models.TransientModel):
@@ -54,7 +54,7 @@ class SetupBarBankConfigWizard(models.TransientModel):
         company, so we always inject the corresponding partner when creating
         the model.
         """
-        vals['partner_id'] = self.env.user.company_id.partner_id.id
+        vals['partner_id'] = self.env['res.company']._get_current_company().partner_id.id
         return super(SetupBarBankConfigWizard, self).create(vals)
 
     @api.depends('linked_journal_id')
@@ -89,4 +89,4 @@ class SetupBarBankConfigWizard(models.TransientModel):
         """ Called by the validation button of this wizard. Serves as an
         extension hook in account_bank_statement_import.
         """
-        self.env.user.company_id.set_onboarding_step_done('account_setup_bank_data_state')
+        self.env['res.company']._get_current_company().set_onboarding_step_done('account_setup_bank_data_state')

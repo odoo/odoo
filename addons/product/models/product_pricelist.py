@@ -17,7 +17,7 @@ class Pricelist(models.Model):
     _order = "sequence asc, id desc"
 
     def _get_default_currency_id(self):
-        return self.env.user.company_id.currency_id.id
+        return self.env['res.company']._get_current_company().currency_id.id
 
     def _get_default_item_ids(self):
         ProductPricelistItem = self.env['product.pricelist.item']
@@ -208,7 +208,7 @@ class Pricelist(models.Model):
 
                 if rule.base == 'pricelist' and rule.base_pricelist_id:
                     price_tmp = rule.base_pricelist_id._compute_price_rule([(product, qty, partner)])[product.id][0]  # TDE: 0 = price, 1 = rule
-                    price = rule.base_pricelist_id.currency_id._convert(price_tmp, self.currency_id, self.env.user.company_id, date, round=False)
+                    price = rule.base_pricelist_id.currency_id._convert(price_tmp, self.currency_id, self.env['res.company']._get_current_company(), date, round=False)
                 else:
                     # if base option is public price take sale price else cost price of product
                     # price_compute returns the price in the context UoM, i.e. qty_uom_id
@@ -243,7 +243,7 @@ class Pricelist(models.Model):
                 break
             # Final price conversion into pricelist currency
             if suitable_rule and suitable_rule.compute_price != 'fixed' and suitable_rule.base != 'pricelist':
-                price = product.currency_id._convert(price, self.currency_id, self.env.user.company_id, date, round=False)
+                price = product.currency_id._convert(price, self.currency_id, self.env['res.company']._get_current_company(), date, round=False)
 
             results[product.id] = (price, suitable_rule and suitable_rule.id or False)
 
@@ -318,7 +318,7 @@ class Pricelist(models.Model):
             :return: a dict {partner_id: pricelist}
         """
         Partner = self.env['res.partner']
-        Property = self.env['ir.property'].with_context(force_company=company_id or self.env.user.company_id.id)
+        Property = self.env['ir.property'].with_context(force_company=company_id or self.env['res.company']._get_current_company().id)
         Pricelist = self.env['product.pricelist']
 
         # retrieve values of property

@@ -23,12 +23,12 @@ class SnailmailLetter(models.Model):
     res_id = fields.Integer('Document ID', required=True)
     partner_id = fields.Many2one('res.partner', string='Recipient', required=True)
     company_id = fields.Many2one('res.company', string='Company', required=True, readonly=True,
-        default=lambda self: self.env.user.company_id.id)
+        default=lambda self: self.env['res.company']._get_current_company().id)
     report_template = fields.Many2one('ir.actions.report', 'Optional report to print and attach')
 
     attachment_id = fields.Many2one('ir.attachment', string='Attachment', ondelete='cascade')
-    color = fields.Boolean(string='Color', default=lambda self: self.env.user.company_id.snailmail_color)
-    duplex = fields.Boolean(string='Both side', default=lambda self: self.env.user.company_id.snailmail_duplex)
+    color = fields.Boolean(string='Color', default=lambda self: self.env['res.company']._get_current_company().snailmail_color)
+    duplex = fields.Boolean(string='Both side', default=lambda self: self.env['res.company']._get_current_company().snailmail_duplex)
     state = fields.Selection([
         ('draft', 'Draft'),
         ('pending', 'In Queue'),

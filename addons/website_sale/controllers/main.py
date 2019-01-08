@@ -387,7 +387,7 @@ class WebsiteSale(ProductConfiguratorController):
             from_currency = order.company_id.currency_id
             to_currency = order.pricelist_id.currency_id
             compute_currency = lambda price: from_currency._convert(
-                price, to_currency, request.env.user.company_id, fields.Date.today())
+                price, to_currency, request.env['res.company']._get_current_company(), fields.Date.today())
         else:
             compute_currency = lambda price: price
 

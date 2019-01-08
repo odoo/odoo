@@ -1151,7 +1151,7 @@ def formatLang(env, value, digits=None, grouping=True, monetary=False, dp=False,
     if isinstance(value, pycompat.string_types) and not value:
         return ''
 
-    lang = env.context.get('lang') or env.user.company_id.partner_id.lang or 'en_US'
+    lang = env.context.get('lang') or env['res.company']._get_current_company().partner_id.lang or 'en_US'
     lang_obj = env['res.lang']._lang_get(lang)
 
     res = lang_obj.format('%.' + str(digits) + 'f', value, grouping=grouping, monetary=monetary)

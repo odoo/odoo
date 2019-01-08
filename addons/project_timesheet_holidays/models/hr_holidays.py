@@ -9,11 +9,11 @@ class HolidaysType(models.Model):
     _inherit = "hr.leave.type"
 
     def _default_project_id(self):
-        company = self.company_id if self.company_id else self.env.user.company_id
+        company = self.company_id if self.company_id else self.env['res.company']._get_current_company()
         return company.leave_timesheet_project_id.id
 
     def _default_task_id(self):
-        company = self.company_id if self.company_id else self.env.user.company_id
+        company = self.company_id if self.company_id else self.env['res.company']._get_current_company()
         return company.leave_timesheet_task_id.id
 
     timesheet_generate = fields.Boolean('Generate Timesheet', default=True, help="If checked, when validating a leave, timesheet will be generated in the Vacation Project of the company.")
@@ -23,7 +23,7 @@ class HolidaysType(models.Model):
     @api.onchange('timesheet_generate')
     def _onchange_timesheet_generate(self):
         if self.timesheet_generate:
-            company = self.company_id if self.company_id else self.env.user.company_id
+            company = self.company_id if self.company_id else self.env['res.company']._get_current_company()
             self.timesheet_project_id = company.leave_timesheet_project_id
             self.timesheet_task_id = company.leave_timesheet_task_id
         else:

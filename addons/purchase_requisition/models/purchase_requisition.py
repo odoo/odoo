@@ -77,7 +77,7 @@ class PurchaseRequisition(models.Model):
     picking_type_id = fields.Many2one('stock.picking.type', 'Operation Type', required=True, default=_get_picking_in)
     is_quantity_copy = fields.Selection(related='type_id.quantity_copy', readonly=True)
     currency_id = fields.Many2one('res.currency', 'Currency', required=True,
-        default=lambda self: self.env.user.company_id.currency_id.id)
+        default=lambda self: self.env['res.company']._get_current_company().currency_id.id)
 
     @api.depends('state')
     def _set_state(self):
