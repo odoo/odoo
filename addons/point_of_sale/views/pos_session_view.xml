@@ -125,6 +125,9 @@
                         </tree>
                     </field>
                 </sheet>
+                <div class="oe_chatter">
+                    <field name="activity_ids" widget="mail_activity"/>
+                </div>
             </form>
         </field>
     </record>
@@ -217,10 +220,34 @@
         </field>
     </record>
 
+    <record id="mail_activity_unconfirmed_stock_moves" model="mail.activity.type">
+        <field name="name">some delivery orders could not be confirmed</field>
+        <field name="summary">note</field>
+        <field name="category">default</field>
+        <field name="res_model_id" ref="model_pos_session"/>
+        <field name="icon">fa-tasks</field>
+        <field name="delay_count">0</field>
+    </record>
+
     <menuitem
         id="menu_pos_session_all"
         parent="menu_point_of_sale"
         action="action_pos_session"
         sequence="2"
         groups="group_pos_manager"/>
+
+    <template id="exception_stock_moves_confirmation" name="Message: Alert on stock pickings not confirmed">
+        <div>
+            <p>
+                Some operations could not be confirmed due to exceptions:
+            </p>
+            <div class="mt16">
+                <ul t-foreach="stock_pickings" t-as="stock_picking">
+                    <li>
+                        <a href="#" data-oe-model="stock.picking" t-att-data-oe-id="stock_picking.id"><t t-esc="stock_picking.name"/></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </template>
 </odoo>

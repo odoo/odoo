@@ -2,7 +2,7 @@ odoo.define('point_of_sale.popups', function (require) {
 "use strict";
 
 // This file contains the Popups.
-// Popups must be loaded and named in chrome.js. 
+// Popups must be loaded and named in chrome.js.
 // They are instanciated / destroyed with the .gui.show_popup()
 // and .gui.close_popup() methods.
 
@@ -25,12 +25,12 @@ var PopupWidget = PosBaseWidget.extend({
         'click .mode-button':    'click_numpad',
     },
 
-    // show the popup !  
+    // show the popup !
     show: function(options){
         if(this.$el){
             this.$el.removeClass('oe_hidden');
         }
-        
+
         if (typeof options === 'string') {
             this.options = {title: options};
         } else {
@@ -39,7 +39,7 @@ var PopupWidget = PosBaseWidget.extend({
 
         this.renderElement();
 
-        // popups block the barcode reader ... 
+        // popups block the barcode reader ...
         if (this.pos.barcode_reader) {
             this.pos.barcode_reader.save_callbacks();
             this.pos.barcode_reader.reset_action_callbacks();
@@ -47,7 +47,7 @@ var PopupWidget = PosBaseWidget.extend({
     },
 
     // called before hide, when a popup is closed.
-    // extend this if you want a custom action when the 
+    // extend this if you want a custom action when the
     // popup is closed.
     close: function(){
         if (this.pos.barcode_reader) {
@@ -55,8 +55,8 @@ var PopupWidget = PosBaseWidget.extend({
         }
     },
 
-    // hides the popup. keep in mind that this is called in 
-    // the initialization pass of the pos instantiation, 
+    // hides the popup. keep in mind that this is called in
+    // the initialization pass of the pos instantiation,
     // so you don't want to do anything fancy in here
     hide: function(){
         if (this.$el) {
@@ -202,6 +202,31 @@ var TextAreaPopupWidget = TextInputPopupWidget.extend({
 });
 gui.define_popup({name:'textarea', widget: TextAreaPopupWidget});
 
+var PackLotLinesRejectedPopupWidget = PopupWidget.extend({
+    template: 'PackLotLinesRejectedPopupWidget',
+    events: _.extend({}, PopupWidget.prototype.events, {
+        'click .cancel': 'click_back',
+    }),
+
+    show: function(options){
+        this._super(options);
+        //this.focus();
+    },
+    click_confirm: function(){
+        this.gui.close_popup();
+    },
+    click_back: function(){
+        //this.pos.gui.show_popup('packlotline', this.options.packlotlinespopup.options);
+        this.pos.gui.show_popup('packlotline', {
+            'title': _t('Lot/Serial Number(s) Required'),
+            'pack_lot_lines': this.options.pack_lot_lines,
+            'order_line': this.options.order_line,
+            'order': this.options.order,
+        });
+    },
+});
+gui.define_popup({name:'packlotlinesrejected', widget: PackLotLinesRejectedPopupWidget});
+
 var PackLotLinePopupWidget = PopupWidget.extend({
     template: 'PackLotLinePopupWidget',
     events: _.extend({}, PopupWidget.prototype.events, {
@@ -216,36 +241,57 @@ var PackLotLinePopupWidget = PopupWidget.extend({
     },
 
     click_confirm: function(){
+
+        var self = this;
         var pack_lot_lines = this.options.pack_lot_lines;
-        this.$('.packlot-line-input').each(function(index, el){
-            var cid = $(el).attr('cid'),
-                lot_name = $(el).val();
-            var pack_line = pack_lot_lines.get({cid: cid});
-            pack_line.set_lot_name(lot_name);
+        var order_line = this.options.order_line;
+        order_line.product.get_lots(this.pos.config.stock_location_id[0]).then(function(db_lots){
+            var lot_lines = []
+            self.$('.packlot-line-input').each(function(index, el){
+                var cid = $(el).attr('cid'),
+                    lot_name = $(el).val();
+                if (!pack_lot_lines.line_exists(cid, lot_name)) {
+                    lot_lines.push({cid: cid, lot_name: lot_name, el: el});
+                }
+            });
+            var lots_nok = order_line.get_invalid_lot_lines(db_lots, lot_lines);
+            if (lots_nok.length == 0) {
+                self.confirm_and_close(lot_lines);
+            } else {
+                self.pos.gui.show_popup('packlotlinesrejected', {
+                    'title': _t('Lot/Serial-numbers did not match'),
+                    'lots_nok': lots_nok,
+                    'lot_lines': lot_lines,
+                    'order_line': order_line, 
+                    'pack_lot_lines': pack_lot_lines,
+                    'order': self.options.order,
+                });
+            }
         });
-        pack_lot_lines.remove_empty_model();
-        pack_lot_lines.set_quantity_by_lot();
+    },
+    confirm_and_close: function(lot_lines) {
+        this.options.pack_lot_lines.set_changed_lines(lot_lines);
         this.options.order.save_to_db();
         this.options.order_line.trigger('change', this.options.order_line);
         this.gui.close_popup();
     },
-
     add_lot: function(ev) {
+        var self = this;
         if (ev.keyCode === $.ui.keyCode.ENTER && this.options.order_line.product.tracking == 'serial'){
-            var pack_lot_lines = this.options.pack_lot_lines,
-                $input = $(ev.target),
-                cid = $input.attr('cid'),
-                lot_name = $input.val();
+            this.options.order_line.product.get_lots(this.pos.config.stock_location_id[0]).then(function(db_lots){
+                var pack_lot_lines = self.options.pack_lot_lines,
+                    cid = $(ev.target).attr('cid'),
+                    lot_name = $(ev.target).val();
 
-            var lot_model = pack_lot_lines.get({cid: cid});
-            lot_model.set_lot_name(lot_name);  // First set current model then add new one
-            if(!pack_lot_lines.get_empty_model()){
-                var new_lot_model = lot_model.add();
-                this.focus_model = new_lot_model;
-            }
-            pack_lot_lines.set_quantity_by_lot();
-            this.renderElement();
-            this.focus();
+                var lot_model = pack_lot_lines.get({cid: cid});
+                if(!pack_lot_lines.get_empty_model()){
+                    var new_lot_model = lot_model.add();
+                    self.focus_model = new_lot_model;
+                }
+                pack_lot_lines.set_quantity_by_lot();
+                self.renderElement();
+                self.focus();
+            });
         }
     },
 
@@ -286,12 +332,12 @@ var NumberPopupWidget = PopupWidget.extend({
     },
     click_numpad: function(event){
         var newbuf = this.gui.numpad_input(
-            this.inputbuffer, 
-            $(event.target).data('action'), 
+            this.inputbuffer,
+            $(event.target).data('action'),
             {'firstinput': this.firstinput});
 
         this.firstinput = (newbuf.length === 0);
-        
+
         if (newbuf !== this.inputbuffer) {
             this.inputbuffer = newbuf;
             this.$('.value').text(this.inputbuffer);

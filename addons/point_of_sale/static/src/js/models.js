@@ -997,6 +997,23 @@ exports.PosModel = Backbone.Model.extend({
         }
         return true;
     },
+    
+    is_serial_used: function(serial, cid) {
+        // Check if a unique serial number is already in use in all open orders
+        // disregard pack_lot_line with cid
+        return this.get_order_list().some(function(order) {
+            return order.is_serial_used(serial, cid);
+        });
+    },
+    get_lot_count: function(lot_name, cid) {
+        // return the quantity of articles of a pack reserved in all open orders
+        // disregard pack_lot_line with cid
+        var count = 0;
+        this.get_order_list().forEach(function(order) {
+            count += order.get_lot_count(lot_name, cid);
+        });
+        return count;
+    },
 
     // Exports the paid orders (the ones waiting for internet connection)
     export_paid_orders: function() {
@@ -1213,6 +1230,26 @@ exports.load_models = function(models,options) {
 exports.Product = Backbone.Model.extend({
     initialize: function(attr, options){
         _.extend(this, options);
+    },
+    get_lots: function(location_id){
+        var self = this;
+        var done = new $.Deferred();
+        var product_lots = {};
+        var domain = [["location_id", "=", location_id], ["lot_id", "!=", false], ["product_id", '=', this.id]];
+        var fields = ['lot_id', 'quantity'];
+        rpc.query({
+                model: "stock.quant",
+                method: "search_read",
+                args: [domain, fields]
+            }).then(function (result) {
+                result.forEach(function(lot){
+                    product_lots[lot.lot_id[1]] = lot.quantity;
+                });
+                done.resolve(product_lots);
+                }, function() { 
+                    done.resolve(false);
+                });
+        return done;
     },
 
     // Port of get_product_price on product.pricelist.
@@ -1468,9 +1505,39 @@ exports.Orderline = Backbone.Model.extend({
     has_valid_product_lot: function(){
         if(!this.has_product_lot){
             return true;
+        } else {
+            var valid_product_lot = this.pack_lot_lines.get_valid_lots();
+            return this.get_required_number_of_lots() === valid_product_lot.length;
         }
-        var valid_product_lot = this.pack_lot_lines.get_valid_lots();
-        return this.get_required_number_of_lots() === valid_product_lot.length;
+    },
+
+    get_invalid_lot_lines: function(db_lots, pack_lot_lines) {
+        var self = this;
+        if (db_lots === false) return [];
+        var db_lots_set = new Set(Object.keys(db_lots));
+
+        var pack_lot_lines_nok = [];
+        function nok(cid, lot_name, reason, el) {
+            pack_lot_lines_nok.push({cid: cid, lot_name: lot_name, reason: reason, el: el});
+        };
+
+        pack_lot_lines.forEach(function(pack_lot_line){
+            var lot_name = pack_lot_line["lot_name"], 
+                cid = pack_lot_line["cid"],
+                el = pack_lot_line["el"];
+            if (lot_name !=="") {
+                if (!db_lots_set.has(lot_name)) {
+                    nok(cid, lot_name, "Not found", el);
+                } else if (self.product.tracking === "lot" 
+                        && (self.quantity + self.pos.get_lot_count(lot_name, cid))> db_lots[lot_name]) {
+                    nok(cid, lot_name, "Quantity", el);
+                } else if (self.product.tracking === "serial"
+                        && self.pos.is_serial_used(lot_name, cid)) {
+                    nok(cid, lot_name, "Taken", el);
+                }
+            }
+        });
+        return pack_lot_lines_nok;
     },
 
     // return the unit of measure of the product
@@ -1869,6 +1936,9 @@ exports.Packlotline = Backbone.Model.extend({
     },
 
     remove: function(){
+        if (this.collection.length === 1){
+            this.add();
+        }
         this.collection.remove(this);
     }
 });
@@ -1896,8 +1966,22 @@ var PacklotlineCollection = Backbone.Collection.extend({
     set_quantity_by_lot: function() {
         if (this.order_line.product.tracking == 'serial') {
             var valid_lots = this.get_valid_lots();
-            this.order_line.set_quantity(valid_lots.length);
+            this.order_line.set_quantity(valid_lots.length >= 1 ? valid_lots.length : 1);
         }
+    },
+
+    set_changed_lines: function(lots) {
+        var self = this;
+        lots.forEach(function(lot){
+            self.get({cid: lot["cid"]}).set_lot_name(lot["lot_name"]);
+        })
+        this.remove_empty_model();
+        this.set_quantity_by_lot();
+    },
+
+    line_exists: function(cid, lot_name) {
+        var to_return = this.get({cid: cid})["lot_name"] === _.str.trim(lot_name);
+        return to_return;
     }
 });
 
@@ -2435,6 +2519,41 @@ exports.Order = Backbone.Model.extend({
                 'order': this,
             });
         }
+    },
+
+    get_lot_count: function(lot_name, cid) {
+        // return the quantity of articles of a pack reserved in the order
+        // disregard pack_lot_line with cid
+        var self = this;
+        var order_lines = this.get_orderlines();
+        var count = 0;
+        order_lines.forEach(function(order_line) {
+            if (order_line.pack_lot_lines) {
+                var pack_lot_line = order_line.pack_lot_lines.models[0]
+                if (order_line.product.tracking === "lot" 
+                        && pack_lot_line
+                        && pack_lot_line.cid !== cid 
+                        && pack_lot_line.attributes.lot_name === lot_name) {
+                    count += order_line.quantity;
+                }
+            }
+        });
+        return count;
+    },
+
+    is_serial_used: function(serial, cid) {
+        // Check if a unique serial number is already in use in the order
+        // disregard pack_lot_line with cid
+        var self = this;
+        var order_lines = this.get_orderlines();
+        return order_lines.some(function(order_line) {
+            if (order_line.product.tracking === "serial") {
+                return order_line.pack_lot_lines.models.some(function(pack_lot_line) {
+                    return (pack_lot_line.cid !== cid && pack_lot_line.attributes.lot_name === serial);
+                });
+            }
+            return false;
+        });
     },
 
     /* ---- Payment Lines --- */

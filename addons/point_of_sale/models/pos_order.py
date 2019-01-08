@@ -705,6 +705,7 @@ class PosOrder(models.Model):
         existing_references = set([o['pos_reference'] for o in existing_orders])
         orders_to_save = [o for o in orders if o['data']['name'] not in existing_references]
         order_ids = []
+        wrong_stock_pickings = dict()
 
         for tmp_order in orders_to_save:
             to_invoice = tmp_order['to_invoice']
@@ -715,7 +716,11 @@ class PosOrder(models.Model):
             order_ids.append(pos_order.id)
 
             try:
-                pos_order.action_pos_order_paid()
+                for session_id, value in pos_order.action_pos_order_paid().items():
+                    if session_id in wrong_stock_pickings:
+                        wrong_stock_pickings[session_id].extend(value)
+                    else:
+                        wrong_stock_pickings[session_id] = value
             except psycopg2.OperationalError:
                 # do not hide transactional errors, the order(s) won't be saved!
                 raise
@@ -726,6 +731,10 @@ class PosOrder(models.Model):
                 pos_order.action_pos_order_invoice()
                 pos_order.invoice_id.sudo().action_invoice_open()
                 pos_order.account_move = pos_order.invoice_id.move_id
+        if wrong_stock_pickings:
+            for session_id, stock_pickings in wrong_stock_pickings.items():
+                session = self.env['pos.session'].browse(session_id) 
+                session.alert_wrong_lots(stock_pickings)
         return order_ids
 
     def test_paid(self):
@@ -744,6 +753,7 @@ class PosOrder(models.Model):
         Picking = self.env['stock.picking']
         Move = self.env['stock.move']
         StockWarehouse = self.env['stock.warehouse']
+        wrong_stock_pickings = dict()
         for order in self:
             if not order.lines.filtered(lambda l: l.product_id.type in ['product', 'consu']):
                 continue
@@ -808,24 +818,33 @@ class PosOrder(models.Model):
             order.write({'picking_id': order_picking.id or return_picking.id})
 
             if return_picking:
-                order._force_picking_done(return_picking)
+                for session_id, value in order._force_picking_done(return_picking).items():
+                    if session_id in wrong_stock_pickings:
+                        wrong_stock_pickings[session_id].append(value)
+                    else:
+                        wrong_stock_pickings[session_id] = [value]
             if order_picking:
-                order._force_picking_done(order_picking)
+                for session_id, value in order._force_picking_done(order_picking).items():
+                    if session_id in wrong_stock_pickings:
+                        wrong_stock_pickings[session_id].extend(value)
+                    else:
+                        wrong_stock_pickings[session_id] = value
 
             # when the pos.config has no picking_type_id set only the moves will be created
             if moves and not return_picking and not order_picking:
                 moves._action_assign()
                 moves.filtered(lambda m: m.product_id.tracking == 'none')._action_done()
 
-        return True
+        return wrong_stock_pickings
 
     def _force_picking_done(self, picking):
         """Force picking in order to be set as done."""
         self.ensure_one()
         picking.action_assign()
-        wrong_lots = self.set_pack_operation_lot(picking)
-        if not wrong_lots:
+        wrong_stock_pickings = self.set_pack_operation_lot(picking)
+        if not wrong_stock_pickings:
             picking.action_done()
+        return wrong_stock_pickings
 
     def set_pack_operation_lot(self, picking=None):
         """Set Serial/Lot number in pack operations to mark the pack operation done."""
@@ -833,6 +852,7 @@ class PosOrder(models.Model):
         StockProductionLot = self.env['stock.production.lot']
         PosPackOperationLot = self.env['pos.pack.operation.lot']
         has_wrong_lots = False
+        wrong_stock_pickings = dict()
         for order in self:
             for move in (picking or self.picking_id).move_lines:
                 picking_type = (picking or self.picking_id).picking_type_id
@@ -858,6 +878,10 @@ class PosOrder(models.Model):
                             pack_lots.append({'lot_id': stock_production_lot.id, 'qty': qty})
                         else:
                             has_wrong_lots = True
+                            if not order.session_id.id in wrong_stock_pickings:
+                                wrong_stock_pickings[order.session_id.id] = [picking.id or self.picking_id.id]
+                            else:
+                                wrong_stock_pickings[order.session_id.id].append(picking.id or self.picking_id.id)
                 elif move.product_id.tracking == 'none' or not lots_necessary:
                     qty_done = move.product_uom_qty
                 else:
@@ -878,7 +902,7 @@ class PosOrder(models.Model):
                         move.quantity_done = qty_done
                     else:
                         move._set_quantity_done(qty_done)
-        return has_wrong_lots
+        return wrong_stock_pickings
 
     def _prepare_bank_statement_line_payment_values(self, data):
         """Create a new payment for the order"""

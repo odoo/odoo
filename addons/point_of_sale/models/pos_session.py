@@ -9,6 +9,7 @@ class PosSession(models.Model):
     _name = 'pos.session'
     _order = 'id desc'
     _description = 'Point of Sale Session'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
 
     POS_SESSION_STATE = [
         ('opening_control', 'Opening Control'),  # method action_pos_session_open
@@ -334,3 +335,17 @@ class PosSession(models.Model):
             action['res_id'] = cashbox_id
 
         return action
+
+    """
+    Next activities
+    """
+    def alert_wrong_lots(self, stock_picking_ids):
+        stock_pickings = self.env['stock.picking'].search([('id', 'in', stock_picking_ids)])
+        self.activity_schedule_with_view('mail.mail_activity_data_warning',
+                user_id=self.user_id.id,
+                views_or_xmlid='point_of_sale.exception_stock_moves_confirmation',
+                render_context={
+                    'stock_pickings': stock_pickings,
+                    }
+                )
+
