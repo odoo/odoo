@@ -7,6 +7,8 @@
     'sequence': 38,
     'summary': 'Manage your employee payroll records',
     'description': "",
+    'installable': True,
+    'application': True,
     'depends': [
         'hr_contract',
         'hr_holidays',
@@ -32,7 +34,7 @@
         'views/hr_leave_views.xml',
         'views/resource_views.xml',
         'views/hr_benefit_template.xml',
-        'wizard/hr_benefit_employee_views.xml',
+        'views/hr_payroll_menu.xml',
     ],
     'demo': ['data/hr_payroll_demo.xml'],
     'qweb': [

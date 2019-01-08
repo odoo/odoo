@@ -25,15 +25,36 @@ class HrEmployee(models.Model):
         for employee in self:
             employee.payslip_count = len(employee.slip_ids)
 
+    def has_non_validated_benefits(self, date_from, date_to):
+        return bool(self.env['hr.benefit'].search_count([
+            ('employee_id', 'in', self.ids),
+            ('date_start', '<=', date_to),
+            ('date_stop', '>=', date_from),
+            ('state', 'in', ['draft', 'confirmed'])
+        ]))
 
-    @api.multi
+
+
+
+    @api.model
     def generate_benefit(self, date_start, date_stop):
 
-        date_start = date_start.replace(tzinfo=pytz.utc)
-        date_stop = date_stop.replace(tzinfo=pytz.utc)
+        def _format_datetime(date):
+            fmt = '%Y-%m-%d %H:%M:%S'
+            date = datetime.strptime(date, fmt) if isinstance(date, str) else date
+            return date.replace(tzinfo=pytz.utc) if not date.tzinfo else date
 
-        for employee in self:
+        date_start = _format_datetime(date_start)
+        date_stop = _format_datetime(date_stop)
 
+        current_contracts = self.env['hr.employee']._get_contracts(date_start, date_stop)
+        current_employees = current_contracts.mapped('employee_id')
+        mapped_data = dict.fromkeys(current_employees, self.env['hr.contract'])
+
+        for contract in current_contracts:
+            mapped_data[contract.employee_id] |= contract
+
+        for employee, contracts in mapped_data.items():
             # Approved leaves
             emp_leaves = employee.resource_calendar_id.leave_ids.filtered(
                 lambda r:
@@ -47,7 +68,7 @@ class HrEmployee(models.Model):
                 hr_leave.copy_to_benefits()
 
             new_benefits = self.env['hr.benefit']
-            for contract in employee._get_contracts(date_start, date_stop):
+            for contract in contracts:
 
                 date_start_benefits = max(date_start, datetime.combine(contract.date_start, datetime.min.time()).replace(tzinfo=pytz.utc))
                 date_stop_benefits = min(date_stop, datetime.combine(contract.date_end or datetime.max.date(), datetime.max.time()).replace(tzinfo=pytz.utc))

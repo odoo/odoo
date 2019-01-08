@@ -11,7 +11,7 @@ class HrPayslipEmployees(models.TransientModel):
     _description = 'Generate payslips for all selected employees'
 
     def _get_available_contracts_domain(self):
-        return [('contract_ids.state', 'in', ('open', 'pending')), ('company_id', '=', self.env.user.company_id.id)]
+        return [('contract_ids.state', 'in', ('open', 'pending', 'close')), ('company_id', '=', self.env.user.company_id.id)]
 
     def _get_employees(self):
         return self.env['hr.employee'].search(self._get_available_contracts_domain())
@@ -39,7 +39,7 @@ class HrPayslipEmployees(models.TransientModel):
 
         payslips = self.env['hr.payslip']
         Payslip = self.env['hr.payslip']
-        for employee in self.employee_ids:
+        for employee in self.employee_ids.filtered(lambda e: not e.has_non_validated_benefits(payslip_run.date_start, payslip_run.date_end)):
             values = Payslip.default_get(Payslip.fields_get())
             values.update({
                 'employee_id': employee.id,
