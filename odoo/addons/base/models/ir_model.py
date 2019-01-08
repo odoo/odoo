@@ -1624,6 +1624,16 @@ class IrModelData(models.Model):
         for (id, xmlid, model, res_id) in self._cr.fetchall():
             if xmlid not in loaded_xmlids:
                 if model in self.env:
+                    if self.search_count([
+                        ("model", "=", model),
+                        ("res_id", "=", res_id),
+                        ("id", "!=", id),
+                        ("id", "not in", bad_imd_ids),
+                    ]):
+                        # another external id is still linked to the same record, only deleting the old imd
+                        bad_imd_ids.append(id)
+                        continue
+
                     _logger.info('Deleting %s@%s (%s)', res_id, model, xmlid)
                     record = self.env[model].browse(res_id)
                     if record.exists():
