@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
-from odoo.tools import float_round
 
 
 class LunchCashMove(models.Model):
@@ -15,14 +14,10 @@ class LunchCashMove(models.Model):
     date = fields.Date('Date', required=True, default=fields.Date.context_today)
     amount = fields.Float('Amount', required=True, help='Can be positive (payment) or negative (order or payment if user wants to get his money back)')
     description = fields.Text('Description', help='Can be an order or a payment')
-    order_line_id = fields.Many2one('lunch.order.line', 'Order', ondelete='cascade')
+    order_id = fields.Many2one('lunch.order.line', 'Order', ondelete='cascade')
     state = fields.Selection([('order', 'Order'), ('payment', 'Payment')],
                              'Is an order or a payment', default='payment')
 
     @api.multi
     def name_get(self):
         return [(cashmove.id, '%s %s' % (_('Lunch Cashmove'), '#%d' % cashmove.id)) for cashmove in self]
-
-    @api.model
-    def get_wallet_balance(self, user):
-        return float_round(sum(move['amount'] for move in self.search_read([('user_id', '=', user.id)], ['amount'])), precision_digits=2)
