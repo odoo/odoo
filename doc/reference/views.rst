@@ -9,11 +9,28 @@ Views
 
 .. _reference/views/structure:
 
+  Views govern the majority of Odoo's UI.
+
 Common Structure
 ================
 
 View objects expose a number of fields, they are optional unless specified
 otherwise.
+Basic views are generally defined with :
+
+.. code-block:: XML
+
+    <record id="<model>_view_<type>" model="ir.ui.view">
+      <field name="name"> </field>
+      <field name="model"> </field>
+      <field name="<optional_field>"> </field>
+      <field name="arch">
+        <<view_type>>
+
+
+        <</view_type>>
+      </field>
+    </record>
 
 ``name`` (mandatory)
     only useful as a mnemonic/description of the view when looking for one in
