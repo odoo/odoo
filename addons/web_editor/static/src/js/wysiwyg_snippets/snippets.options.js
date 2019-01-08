@@ -835,6 +835,32 @@ registry.background = SnippetOption.extend({
         }
     },
     /**
+     * Handles a background video change.
+     *
+     * @param {object} data
+     */
+    backgroundVideo: function (previewMode, data) {
+        if (previewMode === 'reset' && data === undefined) {
+            // No background has been selected and we want to reset back to the
+            // original custom video
+            this._setCustomVideo(this.__customVideoData);
+            return;
+        }
+
+        if (data) {
+            var src = $(data).find('iframe').attr('src');
+            var opacity = $(data).attr('data-opacity');
+            this.$target.attr({'src': src, 'opacity': opacity});
+            this.$target.addClass('o_video_background o_video');
+            $(this.$target.children().first()).addClass('o_video_bg');
+            var param = $.deparam(src.split('?')[1]);
+            this.$target.attr({'muted': param.mute, 'loop': param.loop, 'controls': param.controls, 'autoplay': param.autoplay});
+            this._refreshPublicWidgets();
+        } else {
+            this._removeVideo();
+        }
+    },
+    /**
      * @override
      */
     selectClass: function (previewMode, value, $opt) {
@@ -850,16 +876,35 @@ registry.background = SnippetOption.extend({
         // Put fake image in the DOM, edit it and use it as background-image
         var $image = $('<img/>', {class: 'd-none', src: value === 'true' ? '' : value}).appendTo(this.$target);
 
+        // In case of background video, we want to see that already set video
+        var video = false;
+        if (this.$target.hasClass('o_video_background')) {
+            video = this.$target.find('iframe.playerBox');
+            video.data({'src': this.$target.attr('src'), 'opacity': this.$target.attr('opacity')});
+        }
         var $editable = this.$target.closest('.o_editable');
         var _editor = new weWidgets.MediaDialog(this, {
-            onlyImages: true,
+            noDocuments: true,
+            noIcons: true,
             firstFilters: ['background'],
             res_model: $editable.data('oe-model'),
             res_id: $editable.data('oe-id'),
+            background_video_options: true,
+            video: video,
         }, $image[0]).open();
 
-        _editor.on('save', this, function () {
-            this._setCustomBackground($image.attr('src'));
+        _editor.on('save', this, function (data) {
+            $image.remove();
+            if ($(data).is('img')) {
+                this._removeVideo();
+                this._setCustomBackground($image.attr('src'));
+            } else {
+                if ($(data).find('iframe').attr('src') === '') {
+                    this._removeVideo();
+                    return;
+                }
+                this._setCustomVideo(data);
+            }
             this.$target.trigger('content_changed');
         });
         _editor.on('closed', this, function () {
@@ -885,8 +930,10 @@ registry.background = SnippetOption.extend({
                 if (e.currentTarget !== e.target) return;
                 if (previewMode === false) {
                     this.__customImageSrc = undefined;
+                    this.__customVideoData = undefined;
                 }
                 this.background(previewMode);
+                this.backgroundVideo(previewMode);
             }).bind(this));
     },
     /**
@@ -919,6 +966,18 @@ registry.background = SnippetOption.extend({
         return value && value.replace(srcValueWrapper, '') || '';
     },
     /**
+     * Removes all background video related classes and iframe from the target element.
+     *
+     * @private
+     */
+    _removeVideo: function () {
+        this.$('.yt_video_container').remove();
+        this.$('iframe.o_iframe_position').remove();
+        this.$target.removeAttr('src opacity autoplay controls loop muted');
+        this.$target.removeClass('o_video_background o_video');
+        this.$target.children().first().removeClass('o_video_bg');
+    },
+    /**
      * @override
      */
     _setActive: function () {
@@ -946,6 +1005,17 @@ registry.background = SnippetOption.extend({
         this.background(false, this.__customImageSrc);
         this.$target.addClass('oe_custom_bg');
         this._setActive();
+        this.$target.trigger('snippet-option-change', [this]);
+    },
+    /**
+     * Sets the given data as custom background video.
+     *
+     * @private
+     * @param {object} data
+     */
+    _setCustomVideo: function (data) {
+        this.__customVideoData = data;
+        this.backgroundVideo(false, this.__customVideoData);
         this.$target.trigger('snippet-option-change', [this]);
     },
 });

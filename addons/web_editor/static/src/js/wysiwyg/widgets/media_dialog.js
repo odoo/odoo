@@ -65,7 +65,8 @@ var MediaDialog = Dialog.extend({
             this.iconDialog.tabToShow = 'icon';
         }
         if (!this.noVideos) {
-            this.videoDialog = new MediaModules.VideoWidget(this, this.media, options);
+            var videoMediaEl = options.video && options.video[0] || this.media;
+            this.videoDialog = new MediaModules.VideoWidget(this, videoMediaEl, options);
             this.videoDialog.tabToShow = 'video';
         }
         if (!this.noImages) {

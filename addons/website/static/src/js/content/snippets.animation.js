@@ -499,6 +499,281 @@ registry.slider = publicWidget.Widget.extend({
     },
 });
 
+registry.backgroundVideo = Animation.extend({
+    selector: '.o_video_background',
+    jsLibs: [
+        '/website/static/lib/YTPlayer/jquery.mb.YTPlayer.js',
+    ],
+    disabledInEditableMode: false,
+
+    /**
+     * @override
+     */
+    start: function () {
+        this._startVideo();
+        return this._super.apply(this, arguments);
+    },
+    /**
+     * @override
+     */
+    destroy: function () {
+        this._stopVideo();
+        this._super.apply(this, arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * When user provides video this method will update the video type according 
+     * to the input.
+     *
+     * @private
+     */
+    _updateVideoType: function () {
+        var regexUrl = '((?:https?:)?//([^\\s\'"<>\\\\/]+)/([^\\s\'"<>\\\\]+))';
+        var match = this.src.match(new RegExp('\\ssrc=[\'"]?' + regexUrl));
+        match = match || this.src.match(new RegExp('^\\s*' + regexUrl));
+        if (!match) {
+            this.videoType = "image";
+            this.src = "";
+            return;
+        }
+
+        var url = match[1];
+        var domain = match[2];
+        var path = match[3];
+
+        match = undefined;
+
+        var servicesPrefix = {
+            youtube: 'https://youtu.be/',
+            vimeo: 'https://vimeo.com/',
+            dailymotion: 'http://dai.ly/',
+        };
+
+        if (/\.youtube(-nocookie)?\./.test(domain)) {
+            this.videoType = 'Youtube';
+            match = path.match(/^(?:embed\/|watch\?v=)?([^\/?&#]+)/i);
+        } else if (domain === "youtu.be") {
+            this.videoType = 'Youtube';
+            match = path.match(/^([^\/?&#]+)/);
+        } else if (_.str.include(domain, "vimeo.")) {
+            this.videoType = 'vimeo';
+            match = path.match(/^(?:video\/)?([^?&#]+)/i);
+        } else if (_.str.include(domain, ".dailymotion.")) {
+            this.videoType = "dailymotion";
+            match = path.match(/(?:embed\/)?(?:video\/)?([^\/?&#_]+)/i);
+        } else if (domain === "dai.ly") {
+            this.videoType = "dailymotion";
+            match = path.match(/^([^\/?&#]+)/);
+        }
+
+        if (match) {
+            this.src = servicesPrefix[this.videoType] + match[1];
+        } else if (!/\ssrc=/.test(this.src)) {
+            this.src = url;
+            this.videoType = 'html5';
+        } else {
+            this.videoType = 'other';
+        }
+
+        this.$target.data('video-type', this.videoType);
+    },
+
+    /**
+     * When user provides video this method will be called first.
+     *
+     * @private
+     */
+    _startVideo: function () {
+        var self = this;
+        var videoUrl;
+
+        if (!this.videoType || this.src !== this.$target.attr('src')) {
+            this.src = this.$target.attr('src');
+            if (!this.src) {
+                return;
+            }
+            this._updateVideoType();
+        }
+        var params = _.chain(['muted', 'loop', 'autoplay', 'controls']).map(function (attribute) {
+            var value = self.$target.attr(attribute);
+            return [attribute, value ? 1 : value];
+        }).object().value();
+        videoUrl = this.$target.attr('src');
+
+        var whenPlayerReady = (this['_create' + this.videoType + 'Video'] || this['_createVideo']).call(this, self.$target, videoUrl, params);
+
+        whenPlayerReady.then(function ($player) {
+            $player.parentsUntil(self.$target).css({width: '100%', height: 'auto'});
+            if ($player.is('iframe')) {
+                $player.css({width: '100%', height: '100%'});
+                self.ratio = 16 / 9;
+                if ($player.width() / $player.height() < self.ratio) {
+                    $player.width($player.height() * self.ratio);
+                    $player.height($player.height());
+                } else {
+                    $player.width($player.width());
+                    $player.height($player.width() / self.ratio);
+                }
+            } else {
+                $player.css({width: '100%', height: 'auto'});
+            }
+            $(window).trigger('resize');
+        });
+    },
+
+    /**
+     * When user removes snippet or change the video url, the video will
+     * be removed by this method.
+     *
+     * @private
+     */
+    _stopVideo: function () {
+        this.$target.find('.yt_video_container').remove();
+    },
+
+    /**
+     * When type of video is not youtube this method will create video
+     * for other supported types.
+     *
+     * @private
+     * @param {object} $container
+     * @param {string} videoUrl
+     * @param {object} params
+     */
+    _createVideo: function ($container, videoUrl, params) {
+        var def = new Promise(function (resolve, reject) {
+            var $iframe;
+            var opacity = $container.attr('opacity');
+            if (videoUrl) {
+                $container.children().first().removeClass('o_video_bg');
+                if ($container.find('iframe').length) {
+                    $container.find('iframe').remove();
+                }
+                $iframe = $('<iframe/>', {
+                    frameborder: "0",
+                    class: "playerBox o_iframe_position",
+                    allowfullscreen: "",
+                    src: 'https:' + videoUrl + '&muted=1&controls=0&title=0&byline=0&portrait=0&badge=0&autopause=0',
+                });
+            } else {
+                $iframe = $('<div/>').html(this.src).find('iframe:first').css({
+                    height: "100%", width: "100%", top: 0, position: "absolute",
+                });
+                if ($iframe.length) {
+                    $container.css('max-height', '');
+                } else {
+                    reject();
+                }
+            }
+            $iframe.fadeTo(0, 0);
+            $iframe.on('load', function () {
+                resolve($iframe);
+            });
+            $iframe.fadeTo(0, opacity);
+            $container.append($iframe);
+        });
+        return def;
+    },
+
+    /**
+     * When type of video is youtube this method will be called.
+     *
+     * @private
+     * @param {object} $container
+     * @param {string} videoUrl
+     * @param {object} _params
+     */
+    _createYoutubeVideo: function ($container, videoUrl, _params) {
+        $container.find('iframe.o_iframe_position').remove();
+        var videoId = this.$target.attr('src').split('/')[4].split('?')[0];
+        var params = _.mapObject(_params, function (v) { return !!v; });
+        var opacity = this.$target.attr('opacity');
+
+        var timeStamp = Date.now();
+
+        var $videoContainer = $('<div/>', {
+            class: 'yt_video_container ',
+            id: 's_video_block_' + timeStamp,
+        });
+        var playerParams = {
+            videoURL: videoId, containment: '#s_video_block_' + timeStamp, mute: params['muted'], loop: params['loop'],
+            stopMovieOnBlur: false, autoPlay: params['autoplay'], showYTLogo: false, opacity: opacity, showControls: false,
+        };
+        var $el = $('<div/>', {'class': 'player', 'data-property': JSON.stringify(playerParams)});
+        var $loader = $("<span class='yt-loader'><span/></span>");
+        $videoContainer.append($el).append($loader);
+
+        var interval = null;
+        if ($("#oe_main_menu_navbar").length > 0) {
+            $loader.css("top", $("#oe_main_menu_navbar").outerHeight()+1);
+        }
+        $loader.animate({width: "45%"}, 800, function () {
+            var el = $loader;
+            interval = setInterval(function () { timer(); }, 300);
+            function timer() { var w =  el.width(); el.width(w + 5); }
+        });
+
+        if (!params['autoplay']) {
+            $el.one('YTPStart', function () {
+                $el.YTPPause();
+            });
+        }
+
+        var def = new Promise(function (resolve, reject) {
+            $el.on('YTPReady', function () {
+                clearInterval(interval);
+                $loader.css("width", "100%").fadeOut(500);
+
+                resolve($videoContainer.find('iframe'));
+
+                if (!params['controls'] && params['autoplay']) {
+                    return;
+                }
+
+                var $controls = $("<span/>", {'class': 'controls'}).appendTo($videoContainer);
+
+                var $btnplay = $("<span/>", {'class': 'fa fa-fw'}).appendTo($controls);
+                var playing = params['autoplay'];
+                $btnplay.toggleClass("fa-pause", playing).toggleClass("fa-play", !playing);
+                $btnplay.on("click", playCallback);
+                if (!params['controls']) {
+                    $btnplay.one('click', function () {
+                        $controls.remove();
+                    });
+                }
+
+                if (!params['muted'] && params['controls']) {
+                    var $btnMute = $("<span/>", {'class': 'fa fa-fw fa-volume-up'}).appendTo($controls);
+                    $btnMute.on("click", muteCallback);
+                }
+
+                function playCallback() {
+                    if (playing) {
+                        $el.YTPPause();
+                    } else {
+                        $el.YTPPlay();
+                    }
+                    playing = !playing;
+
+                    $btnplay.toggleClass("fa-pause", playing).toggleClass("fa-play", !playing);
+                }
+                function muteCallback() {
+                    $el.YTPToggleVolume();
+                    $btnMute.toggleClass("fa-volume-up").toggleClass("fa-volume-off");
+                }
+            });
+
+            $container.append($videoContainer);
+            $el.YTPlayer();
+        });
+        return def;
+    },
+}),
+
 registry.parallax = Animation.extend({
     selector: '.parallax',
     effects: [{
