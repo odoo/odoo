@@ -405,6 +405,7 @@ class StockMove(models.Model):
             # Use do_not_unreserve = True flag to avoid unreserving stock for
             # partially available moves
             next_move.with_context(do_not_unreserve=True).write(vals)
+            next_move._recompute_state()
 
     def write(self, vals):
         # FIXME: pim fix your crap
