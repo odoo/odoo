@@ -92,9 +92,14 @@ result = contract.wage_with_holidays
         <field name="code">GROSSIP</field>
     </record>
 
+    <record id="hr_payroll_head_dp" model="hr.salary.rule.category">
+        <field name="name">Double Holiday Pay</field>
+        <field name="code">DP</field>
+    </record>
+
 <!-- HR SALARY RULES-->
     <record id="hr_payroll_rules_maj" model="hr.salary.rule">
-        <field name="category_id" ref="hr_payroll_head_salary"/> 
+        <field name="category_id" ref="hr_payroll_head_salary"/>
         <field name="name">Worker Salary. Premium pay of 108%</field>
         <field name="code">SALARY</field>
         <field name="condition_select">none</field>
@@ -102,7 +107,7 @@ result = contract.wage_with_holidays
         <field name="amount_python_compute">result = categories.BASIC * 1.08</field>
     </record>
     <record id="hr_payroll_rules_employee" model="hr.salary.rule">
-        <field name="category_id" ref="hr_payroll_head_salary"/> 
+        <field name="category_id" ref="hr_payroll_head_salary"/>
         <field name="name">Gross Salary</field>
         <field name="code">SALARY</field>
         <field name="condition_select">none</field>
@@ -118,7 +123,7 @@ if contract.mobile:
         <field name="appears_on_payslip" eval="False"/>
     </record>
     <record id="hr_payroll_rules_onss_rule" model="hr.salary.rule">
-        <field name="category_id" ref="hr_payroll_head_onss"/> 
+        <field name="category_id" ref="hr_payroll_head_onss"/>
         <field name="name">Social contribution</field>
         <field name="code">ONSS</field>
         <field name="sequence">41</field>
@@ -129,12 +134,12 @@ if contract.mobile:
         <field name="register_id" ref="contrib_register_onss"/>
     </record>
     <record id="hr_salary_rule_employment_bonus_employees" model="hr.salary.rule">
-        <field name="category_id" ref="hr_payroll_head_employment_bonus"/> 
+        <field name="category_id" ref="hr_payroll_head_employment_bonus"/>
         <field name="name">Employment Bonus</field>
         <field name="code">EmpBonus.1</field>
         <field name="sequence">42</field>
         <field name="condition_select">python</field>
-        <field name="condition_python">result = categories.BRUT &lt;= 2560.57</field> 
+        <field name="condition_python">result = categories.BRUT &lt;= 2560.57</field>
         <field name="amount_select">code</field>
         <field name="amount_python_compute">
 salary = categories.BRUT
@@ -145,12 +150,12 @@ elif salary &lt;= 2560.57:
         </field>
     </record>
     <record id="hr_salary_rule_employment_bonus_workers" model="hr.salary.rule">
-        <field name="category_id" ref="hr_payroll_head_employment_bonus"/> 
+        <field name="category_id" ref="hr_payroll_head_employment_bonus"/>
         <field name="name">Employment Bonus</field>
         <field name="code">EmpBonus.2</field>
         <field name="sequence">42</field>
         <field name="condition_select">python</field>
-        <field name="condition_python">result = categories.BRUT + &lt;= 2560.57</field> 
+        <field name="condition_python">result = categories.BRUT + &lt;= 2560.57</field>
         <field name="amount_select">code</field>
         <field name="amount_python_compute">
 salary = categories.BRUT
@@ -222,7 +227,7 @@ elif employee.marital in ['married', 'cohabitant'] and employee.spouse_fiscal_st
     else:
         result = -51.64
         </field>
-    </record> 
+    </record>
     <record id="hr_payroll_rules_bareme" model="hr.salary.rule">
         <field name="category_id" ref="hr_payroll_head_pp"/>
         <field name="name">Withholding Tax</field>
@@ -264,7 +269,7 @@ if employee.resident_bool:
     basic_bareme = compute_basic_bareme(yearly_net_taxable_revenue)
     withholding_tax_amount = convert_to_month(basic_bareme)
 else:
-    # BAREME I: Isolated or spouse with income 
+    # BAREME I: Isolated or spouse with income
     if employee.marital in ['divorced', 'single', 'widower'] or (employee.marital in ['married', 'cohabitant'] and employee.spouse_fiscal_status=='with income'):
         basic_bareme = max(compute_basic_bareme(yearly_net_taxable_revenue) - 2065.1, 0.0)
         withholding_tax_amount = convert_to_month(basic_bareme)
@@ -325,6 +330,85 @@ result = - max(withholding_tax_amount, 0.0)
 
         </field>
     </record>
+
+    <record id="hr_salary_rule_double_holiday_pay_p_p" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_head_pp"/>
+        <field name="name">Withholding Tax</field>
+        <field name="code">P.P</field>
+        <field name="sequence">102</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+taux = [(8460.0, 0), (10830.0, 0.1917),
+        (13775.0, 0.2120), (16520.0, 0.2625),
+        (18690.0, 0.3130), (20870.0, 0.3433),
+        (25230.0, 0.3634), (27450.0, 0.3937),
+        (36360.0, 0.4239), (47480.0, 0.4744)]
+
+def find_taux(x):
+    for a, b in taux:
+        if x &lt;= a:
+            return b
+    return 0.535
+
+# Up to 12 children
+children_exoneration = [0.0, 13329.0, 16680.0, 21820.0, 27560.0, 33300.0, 39040.0, 44780.0, 50520.0, 56260.0, 62000.0, 67740.0, 73480.0]
+# Only if no more than 5 children
+children_reduction = [(0, 0), (22940.0, 0.075), (22940.0, 0.2), (25235.0, 0.35), (29825.0, 0.55), (32120.0, 0.75)]
+
+n = employee.dependent_children
+yearly_revenue = categories.GROSS * 12.0
+
+if 0 &lt; n &lt; 13 and yearly_revenue &lt;= children_exoneration[n]:
+    yearly_revenue = yearly_revenue - (children_exoneration[n] - yearly_revenue)
+
+if n &lt;= 5 and yearly_revenue &lt;= children_reduction[n][0]:
+    withholding_tax_amount = yearly_revenue * find_taux(yearly_revenue) * (1 - children_reduction[n][1])
+else:
+    withholding_tax_amount = yearly_revenue * find_taux(yearly_revenue)
+result = -withholding_tax_amount / 12.0
+        </field>
+    </record>
+
+    <record id="hr_salary_rule_bonus_pay_p_p" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_head_pp"/>
+        <field name="name">Withholding Tax</field>
+        <field name="code">P.P</field>
+        <field name="sequence">102</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+taux = [(8460.0, 0), (10830.0, 0.2322),
+        (13775.0, 0.2523), (16520.0, 0.3028),
+        (18690.0, 0.2533), (20870.0, 0.3836),
+        (25230.0, 0.4038), (27450.0, 0.4341),
+        (36360.0, 0.4644), (47480.0, 0.5148)]
+
+def find_taux(x):
+    for a, b in taux:
+        if x &lt;= a:
+            return b
+    return 0.535
+
+# Up to 12 children
+children_exoneration = [0.0, 13329.0, 16680.0, 21820.0, 27560.0, 33300.0, 39040.0, 44780.0, 50520.0, 56260.0, 62000.0, 67740.0, 73480.0]
+# Only if no more than 5 children
+children_reduction = [(0, 0), (22940.0, 0.075), (22940.0, 0.2), (25235.0, 0.35), (29825.0, 0.55), (32120.0, 0.75)]
+
+n = employee.dependent_children
+yearly_revenue = categories.GROSS * 12.0
+
+if 0 &lt; n &lt; 13 and yearly_revenue &lt;= children_exoneration[n]:
+    yearly_revenue = yearly_revenue - (children_exoneration[n] - yearly_revenue)
+
+if n &lt;= 5 and yearly_revenue &lt;= children_reduction[n][0]:
+    withholding_tax_amount = yearly_revenue * find_taux(yearly_revenue) * (1 - children_reduction[n][1])
+else:
+    withholding_tax_amount = yearly_revenue * find_taux(yearly_revenue)
+result = -withholding_tax_amount / 12.0
+        </field>
+    </record>
+
     <record id="hr_payroll_rules_parent_company_car" model="hr.salary.rule">
         <field name="category_id" ref="hr_payroll_head_div_impos"/>
         <field name="name">ATN Company Car</field>
@@ -463,7 +547,7 @@ if ip_amount &gt;= 0.0 and ip_amount &lt;= 15660:
     tax_rate = tax_rate / 2.0
 elif ip_amount &gt; 15660 and ip_amount &lt;=31320:
     tax_rate = tax_rate * 3.0 / 4.0
-result = -min(ip_amount * tax_rate, 11745) 
+result = -min(ip_amount * tax_rate, 11745)
         </field>
     </record>
     <record id="hr_payroll_rules_suppl_net" model="hr.salary.rule">
@@ -486,6 +570,50 @@ result = -min(ip_amount * tax_rate, 11745)
         <field name="condition_python">result = bool(contract.retained_net_amount)</field>
         <field name="amount_python_compute">result = -contract.retained_net_amount</field>
     </record>
+
+    <!-- 92% of monthly gross salary -->
+    <record id="hr_salary_rule_double_holiday_pay_basic" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_head_dp"/>
+        <field name="name">Double Holiday Pay</field>
+        <field name="code">D.P</field>
+        <field name="sequence">2</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = categories.BASIC * 0.92</field>
+    </record>
+
+    <!-- 85% of monthly gross salary is used to compute social contributions -->
+    <record id="hr_salary_rule_double_holiday_pay_salary" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll_head_salary"/>
+        <field name="name">Gross Salary</field>
+        <field name="code">SALARY</field>
+        <field name="sequence">21</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = SALARY * 0.85</field>
+        <field name="appears_on_payslip" eval="False"/>
+    </record>
+
+    <record id="hr_salary_rule_double_holiday_pay_gross" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.GROSS"/>
+        <field name="name">Gross</field>
+        <field name="code">GROSS</field>
+        <field name="sequence">101</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = categories.DP + categories.ALW</field>
+    </record>
+
+    <record id="hr_salary_rule_double_holiday_pay_net" model="hr.salary.rule">
+        <field name="category_id" ref="hr_payroll.NET"/>
+        <field name="name">Net</field>
+        <field name="code">NET</field>
+        <field name="sequence">201</field>
+        <field name="condition_select">none</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = categories.DP + categories.ALW + categories.DED</field>
+    </record>
+
     <record id="hr_payroll_salary_structure_employee" model="hr.payroll.structure">
         <field name="code">CP 200</field>
         <field name="name">Belgian Employee</field>
@@ -531,16 +659,61 @@ result = -min(ip_amount * tax_rate, 11745)
         ])]" name="rule_ids"/>
         <field name="country_id" ref="base.be"/>
         <field name="parent_id" ref="hr_payroll.structure_base"/>
-        </record>
+    </record>
 
-        <!-- Default advantage values -->
-        <function model="ir.default" name="set" eval="('hr.contract', 'holidays', 0.0)"/>
-        <function model="ir.default" name="set" eval="('hr.contract', 'commission_on_target', 0.0)"/>
-        <function model="ir.default" name="set" eval="('hr.contract', 'fuel_card', 150.0)"/>
-        <function model="ir.default" name="set" eval="('hr.contract', 'representation_fees', 150.0)"/>
-        <function model="ir.default" name="set" eval="('hr.contract', 'internet', 38.0)"/>
-        <function model="ir.default" name="set" eval="('hr.contract', 'mobile', 30.0)"/>
-        <function model="ir.default" name="set" eval="('hr.contract', 'mobile_plus', 50.0)"/>
-        <function model="ir.default" name="set" eval="('hr.contract', 'meal_voucher_amount', 7.45)"/>
-        <function model="ir.default" name="set" eval="('hr.contract', 'eco_checks', 250.0)"/>
+    <record id="hr_payroll_salary_structure_double_holiday_pay" model="hr.payroll.structure">
+        <field name="code">CP 200 DH</field>
+        <field name="name">Double Holidays Belgian Employee</field>
+        <field eval="[(6, 0, [
+            ref('hr_salary_rule_atn_mobile_2'),
+            ref('hr_salary_rule_atn_internet_2'),
+            ref('hr_salary_rule_atn_internet'),
+            ref('hr_salary_rule_atn_mobile'),
+            ref('hr_salary_rule_double_holiday_pay_basic'),
+            ref('hr_salary_rule_double_holiday_pay_gross'),
+            ref('hr_payroll_rules_employee'),
+            ref('hr_salary_rule_double_holiday_pay_salary'),
+            ref('hr_payroll_rules_onss_rule'),
+            ref('hr_salary_rule_double_holiday_pay_p_p'),
+            ref('hr_payroll_rules_suppl_net'),
+            ref('hr_payroll_rules_retained_net'),
+            ref('hr_salary_rule_ip'),
+            ref('hr_salary_rule_ip_deduction'),
+            ref('hr_salary_rule_ip_part'),
+            ref('hr_salary_rule_gross_with_ip'),
+            ref('hr_payroll_rules_reim_travel'),
+            ref('hr_salary_rule_employment_bonus_employees'),
+            ref('hr_salary_rule_double_holiday_pay_net'),
+        ])]" name="rule_ids"/>
+        <field name="country_id" ref="base.be"/>
+        <field name="parent_id" ref="hr_payroll.structure_base"/>
+        <field name="report_id" ref="l10n_be_hr_payroll.action_report_double_holiday_13th_month"/>
+        <field name="payslip_name">Double Holidays Slip</field>
+    </record>
+
+    <record id="hr_payroll_salary_structure_end_of_year_bonus" model="hr.payroll.structure">
+        <field name="code">CP 200 EOYB</field>
+        <field name="name">13th Month</field>
+        <field eval="[(6, 0, [
+            ref('hr_payroll_rules_onss_rule'),
+            ref('hr_payroll_rules_employee'),
+            ref('hr_salary_rule_bonus_pay_p_p'),
+            ref('hr_payroll_rules_mis_ex_onss'),
+        ])]" name="rule_ids"/>
+        <field name="country_id" ref="base.be"/>
+        <field name="parent_id" ref="hr_payroll.structure_base"/>
+        <field name="report_id" ref="l10n_be_hr_payroll.action_report_double_holiday_13th_month"/>
+        <field name="payslip_name">13th Month Slip</field>
+    </record>
+
+    <!-- Default advantage values -->
+    <function model="ir.default" name="set" eval="('hr.contract', 'holidays', 0.0)"/>
+    <function model="ir.default" name="set" eval="('hr.contract', 'commission_on_target', 0.0)"/>
+    <function model="ir.default" name="set" eval="('hr.contract', 'fuel_card', 150.0)"/>
+    <function model="ir.default" name="set" eval="('hr.contract', 'representation_fees', 150.0)"/>
+    <function model="ir.default" name="set" eval="('hr.contract', 'internet', 38.0)"/>
+    <function model="ir.default" name="set" eval="('hr.contract', 'mobile', 30.0)"/>
+    <function model="ir.default" name="set" eval="('hr.contract', 'mobile_plus', 50.0)"/>
+    <function model="ir.default" name="set" eval="('hr.contract', 'meal_voucher_amount', 7.45)"/>
+    <function model="ir.default" name="set" eval="('hr.contract', 'eco_checks', 250.0)"/>
 </odoo>

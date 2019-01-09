@@ -81,6 +81,7 @@ class TestHrPayrollAccount(common.TransactionCase):
         self.hr_payslip.date_to = str(datetime.now() + relativedelta.relativedelta(months=+1, day=1, days=-1))[:10]
         self.hr_payslip.onchange_employee()
         self.hr_payslip.onchange_contract()
+        self.hr_payslip._onchange_struct_id()
 
         # I assign the amount to Input data.
         payslip_input = self.env['hr.payslip.input'].search([('payslip_id', '=', self.hr_payslip.id)])
