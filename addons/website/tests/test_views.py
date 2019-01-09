@@ -622,6 +622,21 @@ class TestCowViewSaving(common.TransactionCase):
         views = View.with_context(website_id=1).get_related_views('B')
         self.assertEqual(views.mapped('key'), ['B', 'I', 'II'], "Should only return the specific tree")
 
+    def test_cow_inherit_children_order(self):
+        """ COW method should loop on inherit_children_ids in correct order
+            when copying them on the new specific tree.
+            Correct order is the same as the one when applying view arch:
+            PRIORITY, ID
+            And not the default one from ir.ui.view (NAME, PRIORIRTY, ID).
+        """
+        self.inherit_view.copy({
+            'name': 'alphabetically before "Extension"',
+            'key': '_test.alphabetically_first',
+            'arch': '<div position="replace"><p>COMPARE</p></div>',
+        })
+        # Next line should not crash, COW loop on inherit_children_ids should be sorted correctly
+        self.base_view.with_context(website_id=1).write({'name': 'Product (W1)'})
+
 
 class Crawler(HttpCase):
     def setUp(self):
