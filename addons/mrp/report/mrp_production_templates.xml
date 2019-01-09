@@ -142,6 +142,56 @@
     </t>
 </template>
 
+<template id="label_production_view_pdf">
+    <t t-call="web.basic_layout">
+        <t t-foreach="docs" t-as="o">
+            <div class="page">
+                <table class="table table-condensed" style="border-bottom: 0px solid white !important;width: 3in;" t-if="o.move_finished_ids">
+                    <t t-set="lines" t-value="o.move_finished_ids"/>
+                    <t t-foreach="lines" t-as="line">
+                        <t t-set="move_lines" t-value="line.move_line_ids.filtered(lambda x: x.state != 'done' and x.product_qty)"/>
+                        <t t-if="o.state == 'done'">
+                            <t t-set="move_lines" t-value="line.move_line_ids.filtered(lambda x: x.state == 'done' and x.qty_done)"/>
+                        </t>
+                        <t t-foreach="move_lines" t-as="ml">
+                            <tr>
+                                <th style="text-align: left;">
+                                    <span t-field="line.product_id"/>
+                                </th>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Quantity:
+                                    <span t-esc="ml.product_uom_qty" t-if="ml.state !='done'"/>
+                                    <span t-esc="ml.qty_done"  t-if="ml.state =='done'"/>
+                                    <span t-field="ml.product_uom_id" groups="uom.group_uom"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: center; vertical-align: middle;" class="col-5">
+                                    <t t-if="ml.lot_id">
+                                        <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', ml.lot_id.name, 600, 100)" style="width:100%;height:35px" alt="Barcode"/>
+                                        <span t-field="ml.lot_id.name"/>
+                                    </t>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: center; vertical-align: middle;" class="col-5">
+                                    <t t-if="line.product_id.barcode and not ml.lot_id">
+                                        <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', line.product_id.barcode, 600, 100)" style="width:100%;height:20%;" alt="Barcode"/>
+                                        <span t-field="line.product_id.barcode"/>
+                                    </t>
+                                </td>
+                            </tr>
+                        </t>
+                    </t>
+                </table>
+                <div class="oe_structure"/>
+            </div>
+        </t>
+    </t>
+</template>
+
 <template id="production_message">
     <t t-if="move.move_id.raw_material_production_id">
         <t t-set="message">Consumed</t>
