@@ -47,7 +47,110 @@ class TestSaleMrpFlow(common.TransactionCase):
             'uom_type': 'bigger',
             'rounding': 0.001})
 
-    def create_product(self, name, uom_id, routes=()):
+        # Creating all components
+        self.component_a = self._create_product('Comp A', self.uom_unit)
+        self.component_b = self._create_product('Comp B', self.uom_unit)
+        self.component_c = self._create_product('Comp C', self.uom_unit)
+        self.component_d = self._create_product('Comp D', self.uom_unit)
+        self.component_e = self._create_product('Comp E', self.uom_unit)
+        self.component_f = self._create_product('Comp F', self.uom_unit)
+        self.component_g = self._create_product('Comp G', self.uom_unit)
+
+        # Create a kit 'kit_1' :
+        # -----------------------
+        #
+        # kit_1 --|- component_a   x2
+        #         |- component_b   x1
+        #         |- component_c   x3
+
+        self.kit_1 = self._create_product('Kit 1', self.uom_unit)
+
+        self.bom_kit_1 = self.env['mrp.bom'].create({
+            'product_tmpl_id': self.kit_1.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'type': 'phantom'})
+
+        BomLine = self.env['mrp.bom.line']
+        BomLine.create({
+            'product_id': self.component_a.id,
+            'product_qty': 2.0,
+            'bom_id': self.bom_kit_1.id})
+        BomLine.create({
+            'product_id': self.component_b.id,
+            'product_qty': 1.0,
+            'bom_id': self.bom_kit_1.id})
+        BomLine.create({
+            'product_id': self.component_c.id,
+            'product_qty': 3.0,
+            'bom_id': self.bom_kit_1.id})
+
+        # Create a kit 'kit_parent' :
+        # ---------------------------
+        #
+        # kit_parent --|- kit_2 x2 --|- component_d x1
+        #              |             |- kit_1 x2 -------|- component_a   x2
+        #              |                                |- component_b   x1
+        #              |                                |- component_c   x3
+        #              |
+        #              |- kit_3 x1 --|- component_f x1
+        #              |             |- component_g x2
+        #              |
+        #              |- component_e x1
+
+        # Creating all kits
+        self.kit_2 = self._create_product('Kit 2', self.uom_unit)
+        self.kit_3 = self._create_product('kit 3', self.uom_unit)
+        self.kit_parent = self._create_product('Kit Parent', self.uom_unit)
+
+        # Linking the kits and the components via some 'phantom' BoMs
+        bom_kit_2 = self.env['mrp.bom'].create({
+            'product_tmpl_id': self.kit_2.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'type': 'phantom'})
+
+        BomLine.create({
+            'product_id': self.component_d.id,
+            'product_qty': 1.0,
+            'bom_id': bom_kit_2.id})
+        BomLine.create({
+            'product_id': self.kit_1.id,
+            'product_qty': 2.0,
+            'bom_id': bom_kit_2.id})
+
+        bom_kit_parent = self.env['mrp.bom'].create({
+            'product_tmpl_id': self.kit_parent.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'type': 'phantom'})
+
+        BomLine.create({
+            'product_id': self.component_e.id,
+            'product_qty': 1.0,
+            'bom_id': bom_kit_parent.id})
+        BomLine.create({
+            'product_id': self.kit_2.id,
+            'product_qty': 2.0,
+            'bom_id': bom_kit_parent.id})
+
+        bom_kit_3 = self.env['mrp.bom'].create({
+            'product_tmpl_id': self.kit_3.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'type': 'phantom'})
+
+        BomLine.create({
+            'product_id': self.component_f.id,
+            'product_qty': 1.0,
+            'bom_id': bom_kit_3.id})
+        BomLine.create({
+            'product_id': self.component_g.id,
+            'product_qty': 2.0,
+            'bom_id': bom_kit_3.id})
+
+        BomLine.create({
+            'product_id': self.kit_3.id,
+            'product_qty': 2.0,
+            'bom_id': bom_kit_parent.id})
+
+    def _create_product(self, name, uom_id, routes=()):
         p = Form(self.env['product.product'])
         p.name = name
         p.type = 'product'
@@ -58,6 +161,58 @@ class TestSaleMrpFlow(common.TransactionCase):
             p.route_ids.add(r)
         return p.save()
 
+        # Helper to process quantities based on a dict following this structure :
+        #
+        # qty_to_process = {
+        #     product_id: qty
+        # }
+
+    def _process_quantities(self, moves, quantities_to_process):
+        """ Helper to process quantities based on a dict following this structure :
+            qty_to_process = {
+                product_id: qty
+            }
+        """
+        moves_to_process = moves.filtered(lambda m: m.product_id in quantities_to_process.keys())
+        for move in moves_to_process:
+            move.write({'quantity_done': quantities_to_process[move.product_id]})
+
+    def _assert_quantities(self, moves, quantities_to_process):
+        """ Helper to check expected quantities based on a dict following this structure :
+            qty_to_process = {
+                product_id: qty
+                ...
+            }
+        """
+        moves_to_process = moves.filtered(lambda m: m.product_id in quantities_to_process.keys())
+        for move in moves_to_process:
+            self.assertEquals(move.product_uom_qty, quantities_to_process[move.product_id])
+
+    def _create_move_quantities(self, qty_to_process, components, warehouse):
+        """ Helper to creates moves in order to update the quantities of components
+        on a specific warehouse. This ensure that all compute fields are triggered.
+        The structure of qty_to_process should be the following :
+
+         qty_to_process = {
+            component: (qty, uom),
+            ...
+        }
+        """
+        for comp in components:
+            f = Form(self.env['stock.move'])
+            f.name = 'Test Receipt Components'
+            f.location_id = self.env.ref('stock.stock_location_suppliers')
+            f.location_dest_id = warehouse.lot_stock_id
+            f.product_id = comp
+            f.product_uom = qty_to_process[comp][1]
+            f.product_uom_qty = qty_to_process[comp][0]
+            move = f.save()
+            move._action_confirm()
+            move._action_assign()
+            move_line = move.move_line_ids[0]
+            move_line.qty_done = qty_to_process[comp][0]
+            move._action_done()
+
     def test_00_sale_mrp_flow(self):
         """ Test sale to mrp flow with diffrent unit of measure."""
 
@@ -66,10 +221,10 @@ class TestSaleMrpFlow(common.TransactionCase):
         # --------------------------
         route_manufacture = self.warehouse.manufacture_pull_id.route_id
         route_mto = self.warehouse.mto_pull_id.route_id
-        product_a = self.create_product('Product A', self.uom_unit, routes=[route_manufacture, route_mto])
-        product_c = self.create_product('Product C', self.uom_kg)
-        product_b = self.create_product('Product B', self.uom_dozen, routes=[route_manufacture, route_mto])
-        product_d = self.create_product('Product D', self.uom_unit, routes=[route_manufacture, route_mto])
+        product_a = self._create_product('Product A', self.uom_unit, routes=[route_manufacture, route_mto])
+        product_c = self._create_product('Product C', self.uom_kg)
+        product_b = self._create_product('Product B', self.uom_dozen, routes=[route_manufacture, route_mto])
+        product_d = self._create_product('Product D', self.uom_unit, routes=[route_manufacture, route_mto])
 
         # ------------------------------------------------------------------------------------------
         # Bill of materials for product A, B, D.
@@ -493,7 +648,665 @@ class TestSaleMrpFlow(common.TransactionCase):
         self.assertEqual(aml_expense.debit, 100, "Cost of Good Sold entry missing or mismatching")
         self.assertEqual(aml_output.credit, 100, "Cost of Good Sold entry missing or mismatching")
 
+    def test_03_sale_mrp_simple_kit_qty_delivered(self):
+        """ Test that the quantities delivered are correct when
+        a simple kit is ordered with multiple backorders
+        """
+
+        # kit_1 structure:
+        # ================
+
+        # kit_1 ---|- component_a  x2
+        #          |- component_b  x1
+        #          |- component_c  x3
+
+        # Updating the quantities in stock to prevent
+        # a 'Not enough inventory' warning message.
+        stock_location = self.env.ref('stock.stock_location_stock')
+        self.env['stock.quant']._update_available_quantity(self.component_a, stock_location, 20)
+        self.env['stock.quant']._update_available_quantity(self.component_b, stock_location, 10)
+        self.env['stock.quant']._update_available_quantity(self.component_c, stock_location, 30)
+
+        # Creation of a sale order for x10 kit_1
+        partner = self.env.ref('base.res_partner_1')
+        f = Form(self.env['sale.order'])
+        f.partner_id = partner
+        with f.order_line.new() as line:
+            line.product_id = self.kit_1
+            line.product_uom_qty = 10.0
+
+        # Confirming the SO to trigger the picking creation
+        so = f.save()
+        so.action_confirm()
+
+        # Check picking creation
+        self.assertEquals(len(so.picking_ids), 1)
+        picking_original = so.picking_ids[0]
+        move_lines = picking_original.move_lines
+
+        # Check if the correct amount of stock.moves are created
+        self.assertEquals(len(move_lines), 3)
+
+        # Check if BoM is created and is for a 'Kit'
+        bom_from_k1 = self.env['mrp.bom']._bom_find(product=self.kit_1)
+        self.assertEquals(self.bom_kit_1.id, bom_from_k1.id)
+        self.assertEquals(bom_from_k1.type, 'phantom')
+
+        # Check there's only 1 order line on the SO and it's for x10 'kit_1'
+        order_lines = so.order_line
+        self.assertEquals(len(order_lines), 1)
+        order_line = order_lines[0]
+        self.assertEquals(order_line.product_id.id, self.kit_1.id)
+        self.assertEquals(order_line.product_uom_qty, 10.0)
+
+        # Check if correct qty is ordered for each component of the kit
+        expected_quantities = {
+            self.component_a: 20,
+            self.component_b: 10,
+            self.component_c: 30,
+        }
+        self._assert_quantities(move_lines, expected_quantities)
+
+        # Process only x1 of the first component then create a backorder for the missing components
+        picking_original.move_lines[0].write({'quantity_done': 1})
+        backorder_wizard = self.env['stock.backorder.confirmation'].create({'pick_ids': [(4, so.picking_ids[0].id)]})
+        backorder_wizard.process()
+
+        # Check that the backorder was created, no kit should be delivered at this point
+        self.assertEquals(len(so.picking_ids), 2)
+        backorder_1 = so.picking_ids - picking_original
+        self.assertEquals(backorder_1.backorder_id.id, picking_original.id)
+        self.assertEquals(order_line.qty_delivered, 0)
+
+        # Process only x6 each componenent in the picking
+        # Then create a backorder for the missing components
+        backorder_1.move_lines.write({'quantity_done': 6})
+        backorder_wizard = self.env['stock.backorder.confirmation'].create({'pick_ids': [(4, backorder_1.id)]})
+        backorder_wizard.process()
+
+        # Check that a backorder is created
+        self.assertEquals(len(so.picking_ids), 3)
+        backorder_2 = so.picking_ids - picking_original - backorder_1
+        self.assertEquals(backorder_2.backorder_id.id, backorder_1.id)
+
+        # With x6 unit of each components, we can only make 2 kits.
+        # So only 2 kits should be delivered
+        self.assertEquals(order_line.qty_delivered, 2)
+
+        # Process x3 more unit of each components :
+        # - Now only 3 kits should be delivered
+        # - A backorder will be created, the SO should have 3 picking_ids linked to it.
+        backorder_2.move_lines.write({'quantity_done': 3})
+
+        backorder_wizard = self.env['stock.backorder.confirmation'].create({'pick_ids': [(4, backorder_2.id)]})
+        backorder_wizard.process()
+
+        self.assertEquals(len(so.picking_ids), 4)
+        backorder_3 = so.picking_ids - picking_original - backorder_2 - backorder_1
+        self.assertEquals(backorder_3.backorder_id.id, backorder_2.id)
+        self.assertEquals(order_line.qty_delivered, 3)
+
+        # Adding missing components
+        qty_to_process = {
+            self.component_a: 10,
+            self.component_b: 1,
+            self.component_c: 21,
+        }
+        self._process_quantities(backorder_3.move_lines, qty_to_process)
+
+        # Validating the last backorder now it's complete
+        backorder_3.button_validate()
+        order_line._compute_qty_delivered()
+
+        # All kits should be delivered
+        self.assertEquals(order_line.qty_delivered, 10)
+
+    def test_04_sale_mrp_kit_qty_delivered(self):
+        """ Test that the quantities delivered are correct when
+        a kit with subkits is ordered with multiple backorders and returns
+        """
+
+        # 'kit_parent' structure:
+        # ---------------------------
+        #
+        # kit_parent --|- kit_2 x2 --|- component_d x1
+        #              |             |- kit_1 x2 -------|- component_a   x2
+        #              |                                |- component_b   x1
+        #              |                                |- component_c   x3
+        #              |
+        #              |- kit_3 x1 --|- component_f x1
+        #              |             |- component_g x2
+        #              |
+        #              |- component_e x1
+
+        # Updating the quantities in stock to prevent
+        # a 'Not enough inventory' warning message.
+        stock_location = self.env.ref('stock.stock_location_stock')
+        self.env['stock.quant']._update_available_quantity(self.component_a, stock_location, 56)
+        self.env['stock.quant']._update_available_quantity(self.component_b, stock_location, 28)
+        self.env['stock.quant']._update_available_quantity(self.component_c, stock_location, 84)
+        self.env['stock.quant']._update_available_quantity(self.component_d, stock_location, 14)
+        self.env['stock.quant']._update_available_quantity(self.component_e, stock_location, 7)
+        self.env['stock.quant']._update_available_quantity(self.component_f, stock_location, 14)
+        self.env['stock.quant']._update_available_quantity(self.component_g, stock_location, 28)
+
+        # Creation of a sale order for x7 kit_parent
+        partner = self.env.ref('base.res_partner_1')
+        f = Form(self.env['sale.order'])
+        f.partner_id = partner
+        with f.order_line.new() as line:
+            line.product_id = self.kit_parent
+            line.product_uom_qty = 7.0
+
+        so = f.save()
+        so.action_confirm()
+
+        # Check picking creation, its move lines should concern
+        # only components. Also checks that the quantities are corresponding
+        # to the SO
+        self.assertEquals(len(so.picking_ids), 1)
+        order_line = so.order_line[0]
+        picking_original = so.picking_ids[0]
+        move_lines = picking_original.move_lines
+        products = move_lines.mapped('product_id')
+        kits = [self.kit_parent, self.kit_3, self.kit_2, self.kit_1]
+        components = [self.component_a, self.component_b, self.component_c, self.component_d, self.component_e, self.component_f, self.component_g]
+        expected_quantities = {
+            self.component_a: 56.0,
+            self.component_b: 28.0,
+            self.component_c: 84.0,
+            self.component_d: 14.0,
+            self.component_e: 7.0,
+            self.component_f: 14.0,
+            self.component_g: 28.0
+        }
+
+        self.assertEquals(len(move_lines), 7)
+        self.assertTrue(not any(kit in products for kit in kits))
+        self.assertTrue(all(component in products for component in components))
+        self._assert_quantities(move_lines, expected_quantities)
+
+        # Process only 7 units of each component
+        qty_to_process = 7
+        move_lines.write({'quantity_done': qty_to_process})
+
+        # Create a backorder for the missing componenents
+        backorder_wizard = self.env['stock.backorder.confirmation'].create({'pick_ids': [(4, so.picking_ids[0].id)]})
+        backorder_wizard.process()
+
+        # Check that a backorded is created
+        self.assertEquals(len(so.picking_ids), 2)
+        backorder_1 = so.picking_ids - picking_original
+        self.assertEquals(backorder_1.backorder_id.id, picking_original.id)
+
+        # Even if some components are delivered completely,
+        # no KitParent should be delivered
+        self.assertEquals(order_line.qty_delivered, 0)
+
+        # Process just enough components to make 1 kit_parent
+        qty_to_process = {
+            self.component_a: 1,
+            self.component_c: 5,
+        }
+        self._process_quantities(backorder_1.move_lines, qty_to_process)
+
+        # Create a backorder for the missing componenents
+        backorder_wizard = self.env['stock.backorder.confirmation'].create({'pick_ids': [(4, backorder_1.id)]})
+        backorder_wizard.process()
+
+        # Only 1 kit_parent should be delivered at this point
+        self.assertEquals(order_line.qty_delivered, 1)
+
+        # Check that the second backorder is created
+        self.assertEquals(len(so.picking_ids), 3)
+        backorder_2 = so.picking_ids - picking_original - backorder_1
+        self.assertEquals(backorder_2.backorder_id.id, backorder_1.id)
+
+        # Set the components quantities that backorder_2 should have
+        expected_quantities = {
+            self.component_a: 48,
+            self.component_b: 21,
+            self.component_c: 72,
+            self.component_d: 7,
+            self.component_f: 7,
+            self.component_g: 21
+        }
+
+        # Check that the computed quantities are matching the theorical ones.
+        # Since component_e was totally processed, this componenent shouldn't be
+        # present in backorder_2
+        self.assertEquals(len(backorder_2.move_lines), 6)
+        move_comp_e = backorder_2.move_lines.filtered(lambda m: m.product_id.id == self.component_e.id)
+        self.assertFalse(move_comp_e)
+        self._assert_quantities(backorder_2.move_lines, expected_quantities)
+
+        # Process enough components to make x3 kit_parents
+        qty_to_process = {
+            self.component_a: 16,
+            self.component_b: 5,
+            self.component_c: 24,
+            self.component_g: 5
+        }
+        self._process_quantities(backorder_2.move_lines, qty_to_process)
+
+        # Create a backorder for the missing componenents
+        backorder_wizard = self.env['stock.backorder.confirmation'].create({'pick_ids': [(4, backorder_2.id)]})
+        backorder_wizard.process()
+
+        # Check that x3 kit_parents are indeed delivered
+        self.assertEquals(order_line.qty_delivered, 3)
+
+        # Check that the third backorder is created
+        self.assertEquals(len(so.picking_ids), 4)
+        backorder_3 = so.picking_ids - (picking_original + backorder_1 + backorder_2)
+        self.assertEquals(backorder_3.backorder_id.id, backorder_2.id)
+
+        # Check the components quantities that backorder_3 should have
+        expected_quantities = {
+            self.component_a: 32,
+            self.component_b: 16,
+            self.component_c: 48,
+            self.component_d: 7,
+            self.component_f: 7,
+            self.component_g: 16
+        }
+        self._assert_quantities(backorder_3.move_lines, expected_quantities)
+
+        # Process all missing components
+        self._process_quantities(backorder_3.move_lines, expected_quantities)
+
+        # Validating the last backorder now it's complete.
+        # All kits should be delivered
+        backorder_3.button_validate()
+        self.assertEquals(order_line.qty_delivered, 7.0)
+
+        # Return all components processed by backorder_3
+        StockReturnPicking = self.env['stock.return.picking']
+        default_data = StockReturnPicking.with_context(active_ids=backorder_3.ids, active_id=backorder_3.ids[0]).default_get(
+            ['move_dest_exists', 'original_location_id', 'product_return_moves', 'parent_location_id', 'location_id'])
+        return_wiz = StockReturnPicking.with_context(active_ids=backorder_3.ids, active_id=backorder_3.ids[0]).create(default_data)
+        for return_move in return_wiz.product_return_moves:
+            return_move.write({
+                'quantity': expected_quantities[return_move.product_id],
+                'to_refund': True
+            })
+        res = return_wiz.create_returns()
+        return_pick = self.env['stock.picking'].browse(res['res_id'])
+
+        # Process all components and validate the picking
+        wiz_act = return_pick.button_validate()
+        wiz = self.env[wiz_act['res_model']].browse(wiz_act['res_id'])
+        wiz.process()
+
+        # Now quantity delivered should be 3 again
+        self.assertEquals(order_line.qty_delivered, 3)
+
+        default_data = StockReturnPicking.with_context(active_ids=return_pick.ids, active_id=return_pick.ids[0]).default_get(
+            ['move_dest_exists', 'original_location_id', 'product_return_moves', 'parent_location_id', 'location_id'])
+        return_wiz = StockReturnPicking.with_context(active_ids=return_pick.ids, active_id=return_pick.ids[0]).create(
+            default_data)
+        for move in return_wiz.product_return_moves:
+            move.quantity = expected_quantities[move.product_id]
+        res = return_wiz.create_returns()
+        return_of_return_pick = self.env['stock.picking'].browse(res['res_id'])
+
+        # Process all components except one of each
+        for move in return_of_return_pick.move_lines:
+            move.write({
+                'quantity_done': expected_quantities[move.product_id] - 1,
+                'to_refund': False
+            })
+
+        backorder_wizard = self.env['stock.backorder.confirmation'].create({'pick_ids': [(4, return_of_return_pick.id)]})
+        backorder_wizard.process()
+
+        # As one of each component is missing, only 6 kit_parents should be delivered
+        self.assertEquals(order_line.qty_delivered, 6)
+
+        # Check that the 4th backorder is created.
+        self.assertEquals(len(so.picking_ids), 7)
+        backorder_4 = so.picking_ids - (picking_original + backorder_1 + backorder_2 + backorder_3 + return_of_return_pick + return_pick)
+        self.assertEquals(backorder_4.backorder_id.id, return_of_return_pick.id)
+
+        # Check the components quantities that backorder_4 should have
+        for move in backorder_4.move_lines:
+            self.assertEquals(move.product_qty, 1)
+
     @mute_logger('odoo.tests.common.onchange')
+    def test_05_mrp_sale_kit_availability(self):
+        """
+        Check that the 'Not enough inventory' warning message shows correct
+        informations when a kit is ordered
+        """
+
+        warehouse_1 = self.env['stock.warehouse'].create({
+            'name': 'Warehouse 1',
+            'code': 'WH1'
+        })
+        warehouse_2 = self.env['stock.warehouse'].create({
+            'name': 'Warehouse 2',
+            'code': 'WH2'
+        })
+
+        # Those are all componenents needed to make kit_parents
+        components = [self.component_a, self.component_b, self.component_c, self.component_d, self.component_e,
+                      self.component_f, self.component_g]
+
+        # Set enough quantities to make 1 kit_uom_in_kit in WH1
+        self.env['stock.quant']._update_available_quantity(self.component_a, warehouse_1.lot_stock_id, 8)
+        self.env['stock.quant']._update_available_quantity(self.component_b, warehouse_1.lot_stock_id, 4)
+        self.env['stock.quant']._update_available_quantity(self.component_c, warehouse_1.lot_stock_id, 12)
+        self.env['stock.quant']._update_available_quantity(self.component_d, warehouse_1.lot_stock_id, 2)
+        self.env['stock.quant']._update_available_quantity(self.component_e, warehouse_1.lot_stock_id, 1)
+        self.env['stock.quant']._update_available_quantity(self.component_f, warehouse_1.lot_stock_id, 2)
+        self.env['stock.quant']._update_available_quantity(self.component_g, warehouse_1.lot_stock_id, 4)
+
+        # Set quantities on WH2, but not enough to make 1 kit_parent
+        self.env['stock.quant']._update_available_quantity(self.component_a, warehouse_2.lot_stock_id, 7)
+        self.env['stock.quant']._update_available_quantity(self.component_b, warehouse_2.lot_stock_id, 3)
+        self.env['stock.quant']._update_available_quantity(self.component_c, warehouse_2.lot_stock_id, 12)
+        self.env['stock.quant']._update_available_quantity(self.component_d, warehouse_2.lot_stock_id, 1)
+        self.env['stock.quant']._update_available_quantity(self.component_e, warehouse_2.lot_stock_id, 1)
+        self.env['stock.quant']._update_available_quantity(self.component_f, warehouse_2.lot_stock_id, 1)
+        self.env['stock.quant']._update_available_quantity(self.component_g, warehouse_2.lot_stock_id, 4)
+
+        # Creation of a sale order for x7 kit_parent
+        qty_ordered = 7
+        f = Form(self.env['sale.order'])
+        f.partner_id = self.env.ref('base.res_partner_1')
+        f.warehouse_id = warehouse_2
+        with f.order_line.new() as line:
+            line.product_id = self.kit_parent
+            line.product_uom_qty = qty_ordered
+        so = f.save()
+        order_line = so.order_line[0]
+
+        # Check that not enough enough quantities are available in the warehouse set in the SO
+        # but there are enough quantities in Warehouse 1 for 1 kit_parent
+        kit_parent_wh_order = self.kit_parent.with_context(warehouse=so.warehouse_id.id)
+        kit_parent_wh1 = self.kit_parent.with_context(warehouse=warehouse_1.id)
+
+        # Check that not enough enough quantities are available in the warehouse set in the SO
+        # but there are enough quantities in Warehouse 1 for 1 kit_parent
+        self.assertEquals(kit_parent_wh_order.virtual_available, 0)
+        self.assertEquals(kit_parent_wh1.virtual_available, 1)
+
+        # A warning message should be returned as there arn't enough quantities available for the sale order
+        warning = order_line._onchange_product_id_check_availability()
+        self.assertTrue(warning)
+
+        # We receive enoug of each component in Warehouse 2 to make 3 kit_parent
+        qty_to_process = {
+            self.component_a: (17, self.uom_unit),
+            self.component_b: (12, self.uom_unit),
+            self.component_c: (25, self.uom_unit),
+            self.component_d: (5, self.uom_unit),
+            self.component_e: (2, self.uom_unit),
+            self.component_f: (5, self.uom_unit),
+            self.component_g: (8, self.uom_unit),
+        }
+        self._create_move_quantities(qty_to_process, components, warehouse_2)
+
+        # As 'Warehouse 2' is the warehouse linked to the SO, 3 kits should be available
+        # But the quantity available in Warehouse 1 should stay 1
+        kit_parent_wh_order = self.kit_parent.with_context(warehouse=so.warehouse_id.id)
+        kit_parent_wh1 = self.kit_parent.with_context(warehouse=warehouse_1.id)
+        self.assertEquals(kit_parent_wh_order.virtual_available, 3)
+        self.assertEquals(kit_parent_wh1.virtual_available, 1)
+
+        # A warning message should be returned as there arn't enough quantities available for the sale order
+        warning = order_line._onchange_product_id_check_availability()
+        self.assertTrue(warning)
+
+        # We receive enough of each component in Warehouse 2 to make 7 kit_parent
+        qty_to_process = {
+            self.component_a: (32, self.uom_unit),
+            self.component_b: (16, self.uom_unit),
+            self.component_c: (48, self.uom_unit),
+            self.component_d: (8, self.uom_unit),
+            self.component_e: (4, self.uom_unit),
+            self.component_f: (8, self.uom_unit),
+            self.component_g: (16, self.uom_unit),
+        }
+        self._create_move_quantities(qty_to_process, components, warehouse_2)
+
+        # Enough quantities should be available, no warning message should be displayed
+        kit_parent_wh_order = self.kit_parent.with_context(warehouse=so.warehouse_id.id)
+        self.assertEquals(kit_parent_wh_order.virtual_available, 7)
+
+        # Some cache issue prevents the following to work in a test
+        #warning = order_line._onchange_product_id_check_availability()
+        #self.assertFalse(warning)
+
+    def test_06_kit_qty_delivered_mixed_uom(self):
+        """
+        Check that the quantities delivered are correct when a kit involves
+        multiple UoMs on its components
+        """
+        # Create some components
+        component_uom_unit = self._create_product('Comp Unit', self.uom_unit)
+        component_uom_dozen = self._create_product('Comp Dozen', self.uom_dozen)
+        component_uom_kg = self._create_product('Comp Kg', self.uom_kg)
+
+        # Create a kit 'kit_uom_1' :
+        # -----------------------
+        #
+        # kit_uom_1 --|- component_uom_unit    x2 Test-Dozen
+        #             |- component_uom_dozen   x1 Test-Dozen
+        #             |- component_uom_kg      x3 Test-G
+
+        kit_uom_1 = self._create_product('Kit 1', self.uom_unit)
+
+        bom_kit_uom_1 = self.env['mrp.bom'].create({
+            'product_tmpl_id': kit_uom_1.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'type': 'phantom'})
+
+        BomLine = self.env['mrp.bom.line']
+        BomLine.create({
+            'product_id': component_uom_unit.id,
+            'product_qty': 2.0,
+            'product_uom_id': self.uom_dozen.id,
+            'bom_id': bom_kit_uom_1.id})
+        BomLine.create({
+            'product_id': component_uom_dozen.id,
+            'product_qty': 1.0,
+            'product_uom_id': self.uom_dozen.id,
+            'bom_id': bom_kit_uom_1.id})
+        BomLine.create({
+            'product_id': component_uom_kg.id,
+            'product_qty': 3.0,
+            'product_uom_id': self.uom_gm.id,
+            'bom_id': bom_kit_uom_1.id})
+
+        # Updating the quantities in stock to prevent
+        # a 'Not enough inventory' warning message.
+        stock_location = self.env.ref('stock.stock_location_stock')
+        self.env['stock.quant']._update_available_quantity(component_uom_unit, stock_location, 240)
+        self.env['stock.quant']._update_available_quantity(component_uom_dozen, stock_location, 10)
+        self.env['stock.quant']._update_available_quantity(component_uom_kg, stock_location, 0.03)
+
+        # Creation of a sale order for x10 kit_1
+        partner = self.env.ref('base.res_partner_1')
+        f = Form(self.env['sale.order'])
+        f.partner_id = partner
+        with f.order_line.new() as line:
+            line.product_id = kit_uom_1
+            line.product_uom_qty = 10.0
+
+        so = f.save()
+        so.action_confirm()
+
+        picking_original = so.picking_ids[0]
+        move_lines = picking_original.move_lines
+        order_line = so.order_line[0]
+
+        # Check that the quantities on the picking are the one expected for each components
+        for ml in move_lines:
+            corr_bom_line = bom_kit_uom_1.bom_line_ids.filtered(lambda b: b.product_id.id == ml.product_id.id)
+            computed_qty = ml.product_uom._compute_quantity(ml.product_uom_qty, corr_bom_line.product_uom_id)
+            self.assertEquals(computed_qty, order_line.product_uom_qty * corr_bom_line.product_qty)
+
+        # Processe enough componenents in the picking to make 2 kit_uom_1
+        # Then create a backorder for the missing components
+        qty_to_process = {
+            component_uom_unit: 48,
+            component_uom_dozen: 3,
+            component_uom_kg: 0.006
+        }
+        self._process_quantities(move_lines, qty_to_process)
+        backorder_wizard = self.env['stock.backorder.confirmation'].create(
+            {'pick_ids': [(4, so.picking_ids[0].id)]})
+        backorder_wizard.process()
+
+        # Check that a backorder is created
+        self.assertEquals(len(so.picking_ids), 2)
+        backorder_1 = so.picking_ids - picking_original
+        self.assertEquals(backorder_1.backorder_id.id, picking_original.id)
+
+        # Only 2 kits should be delivered
+        self.assertEquals(order_line.qty_delivered, 2)
+
+        # Adding missing components
+        qty_to_process = {
+            component_uom_unit: 192,
+            component_uom_dozen: 7,
+            component_uom_kg: 0.024
+        }
+        self._process_quantities(backorder_1.move_lines, qty_to_process)
+
+        # Validating the last backorder now it's complete
+        backorder_1.button_validate()
+        order_line._compute_qty_delivered()
+        # All kits should be delivered
+        self.assertEquals(order_line.qty_delivered, 10)
+
+    @mute_logger('odoo.tests.common.onchange')
+    def test_07_kit_availability_mixed_uom(self):
+        """
+        Check that the 'Not enough inventory' warning message displays correct
+        informations when a kit with multiple UoMs on its components is ordered
+        """
+
+        # Create some components
+        component_uom_unit = self._create_product('Comp Unit', self.uom_unit)
+        component_uom_dozen = self._create_product('Comp Dozen', self.uom_dozen)
+        component_uom_kg = self._create_product('Comp Kg', self.uom_kg)
+        component_uom_gm = self._create_product('Comp g', self.uom_gm)
+        components = [component_uom_unit, component_uom_dozen, component_uom_kg, component_uom_gm]
+
+        # Create a kit 'kit_uom_in_kit' :
+        # -----------------------
+        # kit_uom_in_kit --|- component_uom_gm  x3 Test-KG
+        #                  |- kit_uom_1         x2 Test-Dozen --|- component_uom_unit    x2 Test-Dozen
+        #                                                       |- component_uom_dozen   x1 Test-Dozen
+        #                                                       |- component_uom_kg      x3 Test-G
+
+        kit_uom_1 = self._create_product('Sub Kit 1', self.uom_unit)
+        kit_uom_in_kit = self._create_product('Parent Kit', self.uom_unit)
+
+        bom_kit_uom_1 = self.env['mrp.bom'].create({
+            'product_tmpl_id': kit_uom_1.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'type': 'phantom'})
+
+        BomLine = self.env['mrp.bom.line']
+        BomLine.create({
+            'product_id': component_uom_unit.id,
+            'product_qty': 2.0,
+            'product_uom_id': self.uom_dozen.id,
+            'bom_id': bom_kit_uom_1.id})
+        BomLine.create({
+            'product_id': component_uom_dozen.id,
+            'product_qty': 1.0,
+            'product_uom_id': self.uom_dozen.id,
+            'bom_id': bom_kit_uom_1.id})
+        BomLine.create({
+            'product_id': component_uom_kg.id,
+            'product_qty': 3.0,
+            'product_uom_id': self.uom_gm.id,
+            'bom_id': bom_kit_uom_1.id})
+
+        bom_kit_uom_in_kit = self.env['mrp.bom'].create({
+            'product_tmpl_id': kit_uom_in_kit.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'type': 'phantom'})
+
+        BomLine.create({
+            'product_id': component_uom_gm.id,
+            'product_qty': 3.0,
+            'product_uom_id': self.uom_kg.id,
+            'bom_id': bom_kit_uom_in_kit.id})
+        BomLine.create({
+            'product_id': kit_uom_1.id,
+            'product_qty': 2.0,
+            'product_uom_id': self.uom_dozen.id,
+            'bom_id': bom_kit_uom_in_kit.id})
+
+        # Create a simple warehouse to receives some products
+        warehouse_1 = self.env['stock.warehouse'].create({
+            'name': 'Warehouse 1',
+            'code': 'WH1'
+        })
+
+        # Set enough quantities to make 1 kit_uom_in_kit in WH1
+        self.env['stock.quant']._update_available_quantity(component_uom_unit, warehouse_1.lot_stock_id, 576)
+        self.env['stock.quant']._update_available_quantity(component_uom_dozen, warehouse_1.lot_stock_id, 24)
+        self.env['stock.quant']._update_available_quantity(component_uom_kg, warehouse_1.lot_stock_id, 0.072)
+        self.env['stock.quant']._update_available_quantity(component_uom_gm, warehouse_1.lot_stock_id, 3000)
+
+        # Creation of a sale order for x5 kit_uom_in_kit
+        qty_ordered = 5
+        f = Form(self.env['sale.order'])
+        f.partner_id = self.env.ref('base.res_partner_1')
+        f.warehouse_id = warehouse_1
+        with f.order_line.new() as line:
+            line.product_id = kit_uom_in_kit
+            line.product_uom_qty = qty_ordered
+
+        so = f.save()
+        order_line = so.order_line[0]
+
+        # Check that not enough enough quantities are available in the warehouse set in the SO
+        # but there are enough quantities in Warehouse 1 for 1 kit_parent
+        kit_uom_in_kit.with_context(warehouse=warehouse_1.id)._compute_quantities()
+        virtual_available_wh_order = kit_uom_in_kit.virtual_available
+        self.assertEquals(virtual_available_wh_order, 1)
+
+        # A warning message should be returned as there arn't enough quantities available for the sale order
+        warning = order_line._onchange_product_id_check_availability()
+        self.assertTrue(warning)
+
+        # We receive enough of each component in Warehouse 1 to make 3 kit_uom_in_kit.
+        # Moves are created instead of only updating the quant quantities in order to trigger every compute fields.
+        qty_to_process = {
+            component_uom_unit: (1152, self.uom_unit),
+            component_uom_dozen: (48, self.uom_dozen),
+            component_uom_kg: (0.144, self.uom_kg),
+            component_uom_gm: (6000, self.uom_gm)
+        }
+        self._create_move_quantities(qty_to_process, components, warehouse_1)
+
+        # Enough quantities should be available to make 3 kit_uom_in_kit and a warning message should be displayed
+        warning = order_line._onchange_product_id_check_availability()
+        self.assertTrue(warning)
+        kit_uom_in_kit.with_context(warehouse=warehouse_1.id)._compute_quantities()
+        virtual_available_wh_order = kit_uom_in_kit.virtual_available
+        self.assertEquals(virtual_available_wh_order, 3)
+
+        # We process enough quantities to have enough kit_uom_in_kit available for the sale order.
+        self._create_move_quantities(qty_to_process, components, warehouse_1)
+
+        # We check that enough quantities were processed to sell 5 kit_uom_in_kit
+        kit_uom_in_kit.with_context(warehouse=warehouse_1.id)._compute_quantities()
+        self.assertEquals(kit_uom_in_kit.virtual_available, 5)
+
+        # Some cache issue prevents the following to work in a test
+
+        # No warning should be raised
+        # warning = order_line._onchange_product_id_check_availability()
+        # self.assertFalse(warning)
+
     def test_10_sale_mrp_kits_routes(self):
 
         # Create a kit 'kit_1' :
@@ -502,9 +1315,9 @@ class TestSaleMrpFlow(common.TransactionCase):
         # kit_1 --|- component_shelf1   x3
         #         |- component_shelf2   x2
 
-        kit_1 = self.create_product('Kit1', self.uom_unit)
-        component_shelf1 = self.create_product('Comp Shelf1', self.uom_unit)
-        component_shelf2 = self.create_product('Comp Shelf2', self.uom_unit)
+        kit_1 = self._create_product('Kit1', self.uom_unit)
+        component_shelf1 = self._create_product('Comp Shelf1', self.uom_unit)
+        component_shelf2 = self._create_product('Comp Shelf2', self.uom_unit)
 
         with Form(self.env['mrp.bom']) as bom:
             bom.product_tmpl_id = kit_1.product_tmpl_id
@@ -550,6 +1363,10 @@ class TestSaleMrpFlow(common.TransactionCase):
         component_shelf2.write({
             'route_ids': [(4, route_shelf2.id)]})
 
+        # Set enough quantities to make 1 kit_uom_in_kit in WH1
+        self.env['stock.quant']._update_available_quantity(component_shelf1, self.env.ref('stock.warehouse0').lot_stock_id, 15)
+        self.env['stock.quant']._update_available_quantity(component_shelf2, self.env.ref('stock.warehouse0').lot_stock_id, 10)
+
         # Creating a sale order for 5 kits and confirming it
         order_form = Form(self.env['sale.order'])
         order_form.partner_id = self.env.ref('base.res_partner_2')
@@ -573,7 +1390,6 @@ class TestSaleMrpFlow(common.TransactionCase):
         self.assertEquals(move_shelf2.location_id.id, self.ref('stock.stock_location_14'))
         self.assertEquals(move_shelf2.location_dest_id.id, self.ref('stock.stock_location_customers'))
 
-    @mute_logger('odoo.tests.common.onchange')
     def test_11_sale_mrp_explode_kits_uom_quantities(self):
 
         # Create a kit 'kit_1' :
@@ -582,9 +1398,9 @@ class TestSaleMrpFlow(common.TransactionCase):
         # 2x Dozens kit_1 --|- component_unit   x6 Units
         #                   |- component_kg     x7 Kg
 
-        kit_1 = self.create_product('Kit1', self.uom_unit)
-        component_unit = self.create_product('Comp Unit', self.uom_unit)
-        component_kg = self.create_product('Comp Kg', self.uom_kg)
+        kit_1 = self._create_product('Kit1', self.uom_unit)
+        component_unit = self._create_product('Comp Unit', self.uom_unit)
+        component_kg = self._create_product('Comp Kg', self.uom_kg)
 
         with Form(self.env['mrp.bom']) as bom:
             bom.product_tmpl_id = kit_1.product_tmpl_id
@@ -600,9 +1416,19 @@ class TestSaleMrpFlow(common.TransactionCase):
                 line.product_qty = 7
                 line.product_uom_id = self.uom_kg
 
+        # Create a simple warehouse to receives some products
+        warehouse_1 = self.env['stock.warehouse'].create({
+            'name': 'Warehouse 1',
+            'code': 'WH1'
+        })
+        # Set enough quantities to make 1 Test-Dozen kit_uom_in_kit
+        self.env['stock.quant']._update_available_quantity(component_unit, warehouse_1.lot_stock_id, 12)
+        self.env['stock.quant']._update_available_quantity(component_kg, warehouse_1.lot_stock_id, 14)
+
         # Creating a sale order for 3 Units of kit_1 and confirming it
         order_form = Form(self.env['sale.order'])
         order_form.partner_id = self.env.ref('base.res_partner_2')
+        order_form.warehouse_id = warehouse_1
         with order_form.order_line.new() as line:
             line.product_id = kit_1
             line.product_uom = self.uom_unit
@@ -620,4 +1446,3 @@ class TestSaleMrpFlow(common.TransactionCase):
         move_component_kg = order.picking_ids[0].move_lines - move_component_unit
         self.assertEquals(move_component_unit.product_uom_qty, 0.5)
         self.assertEquals(move_component_kg.product_uom_qty, 0.583)
-

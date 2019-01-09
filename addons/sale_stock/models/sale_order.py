@@ -256,29 +256,41 @@ class SaleOrderLine(models.Model):
         if not self.product_id or not self.product_uom_qty or not self.product_uom:
             self.product_packaging = False
             return {}
-        if self.product_id.type == 'product':
+        return self._check_availability(self.product_id)
+
+    def _check_availability(self, product_id):
+        """ The purpose of this method is only to be overriden if
+        'product_id' is a kit
+        """
+        product_qty = self.product_uom._compute_quantity(self.product_uom_qty, self.product_id.uom_id)
+        return self._check_availability_warning(product_id, product_qty)
+
+    def _check_availability_warning(self, product_id, product_qty, ignore_warehouse=False):
+        if product_id.type == 'product':
             precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
-            product = self.product_id.with_context(
+            product_by_wh = product_id.with_context(
                 warehouse=self.order_id.warehouse_id.id,
                 lang=self.order_id.partner_id.lang or self.env.user.lang or 'en_US'
             )
-            product_qty = self.product_uom._compute_quantity(self.product_uom_qty, self.product_id.uom_id)
-            if float_compare(product.virtual_available, product_qty, precision_digits=precision) == -1:
-                is_available = self._check_routing()
+            if float_compare(product_by_wh.virtual_available, product_qty, precision_digits=precision) == -1:
+                is_available = self._check_routing(product_id)
                 if not is_available:
-                    message =  _('You plan to sell %s %s of %s but you only have %s %s available in %s warehouse.') % \
-                            (self.product_uom_qty, self.product_uom.name, self.product_id.name, product.virtual_available, product.uom_id.name, self.order_id.warehouse_id.name)
+                    message = _('You plan to sell %s %s of %s but you only have %s %s available in %s warehouse.') % \
+                              (self.product_uom_qty, self.product_uom.name, product_id.name,
+                               product_by_wh.virtual_available,
+                               product_by_wh.uom_id.name, self.order_id.warehouse_id.name)
                     # We check if some products are available in other warehouses.
-                    if float_compare(product.virtual_available, self.product_id.virtual_available, precision_digits=precision) == -1:
+                    if not ignore_warehouse and float_compare(product_by_wh.virtual_available, product_id.virtual_available,
+                                     precision_digits=precision) == -1:
                         message += _('\nThere are %s %s available across all warehouses.\n\n') % \
-                                (self.product_id.virtual_available, product.uom_id.name)
+                                   (product_id.virtual_available, product_by_wh.uom_id.name)
                         for warehouse in self.env['stock.warehouse'].search([]):
-                            quantity = self.product_id.with_context(warehouse=warehouse.id).virtual_available
+                            quantity = product_id.with_context(warehouse=warehouse.id).virtual_available
                             if quantity > 0:
-                                message += "%s: %s %s\n" % (warehouse.name, quantity, self.product_id.uom_id.name)
+                                message += "%s: %s %s\n" % (warehouse.name, quantity, product_id.uom_id.name)
                     warning_mess = {
                         'title': _('Not enough inventory!'),
-                        'message' : message
+                        'message': message
                     }
                     return {'warning': warning_mess}
         return {}
@@ -399,14 +411,13 @@ class SaleOrderLine(models.Model):
             }
         return {}
 
-
-    def _check_routing(self):
+    def _check_routing(self, product_id):
         """ Verify the route of the product based on the warehouse
             return True if the product availibility in stock does not need to be verified,
             which is the case in MTO, Cross-Dock or Drop-Shipping
         """
         is_available = False
-        product_routes = self.route_id or (self.product_id.route_ids + self.product_id.categ_id.total_route_ids)
+        product_routes = self.route_id or (product_id.route_ids + product_id.categ_id.total_route_ids)
 
         # Check MTO
         wh_mto_route = self.order_id.warehouse_id.mto_pull_id.route_id
