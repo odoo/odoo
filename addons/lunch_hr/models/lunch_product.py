@@ -18,6 +18,7 @@ class LunchProduct(models.Model):
             product.is_available_at = False
 
     def _search_is_available_at(self, operator, value):
+        location_ids = None
         if operator in ['=', '!=', 'ilike', 'not ilike'] and isinstance(value, str):
             location_ids = self.env['res.partner'].search([('name', operator, value)]).ids
 
