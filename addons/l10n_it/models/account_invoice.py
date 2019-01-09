@@ -77,6 +77,8 @@ class AccountInvoice(models.Model):
     def invoice_validate(self):
         super(AccountInvoice, self).invoice_validate()
         for invoice in self:
+            if invoice.company.country_id != self.env.ref('base.it'):
+                continue
             if invoice.type == 'in_invoice' or invoice.type == 'in_refund':
                 invoice.l10n_it_send_state = "other"
                 continue
@@ -337,7 +339,7 @@ class AccountTax(models.Model):
         ("D", "[D] IVA ad esigibilità differita"),
         ("S", "[S] Scissione dei pagamenti")], default="I", string="VAT due date")
 
-    l10n_it_has_exoneration = fields.Boolean(string="Has exoneration of tax", help="Tax has a tax exoneration.")
+    l10n_it_has_exoneration = fields.Boolean(string="Has exoneration of tax (Italy)", help="Tax has a tax exoneration.")
     l10n_it_kind_exoneration = fields.Selection(selection=[
             ("N1", "[N1] Escluse ex art. 15"),
             ("N2", "[N2] Non soggette"),
