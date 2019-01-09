@@ -259,7 +259,7 @@ class ProductTemplate(models.Model):
         if pricelist and pricelist.currency_id != product_template.currency_id:
             company = product_template.company_id
             if not company:
-                company = self.env.user.company_id
+                company = pricelist.company_id or self.env.user.company_id
             list_price = product_template.currency_id._convert(
                 list_price, pricelist.currency_id, company,
                 fields.Date.today()
