@@ -286,6 +286,14 @@ class ProductTemplate(models.Model):
         """
         return self._create_product_variant(self._get_first_possible_combination(), log_warning)
 
+    @api.multi
+    def _get_current_company_fallback(self, **kwargs):
+        """Override: if a website is set on the product or given, fallback to
+        the company of the website. Otherwise use the one from parent method."""
+        res = super(ProductTemplate, self)._get_current_company_fallback(**kwargs)
+        website = self.website_id or kwargs.get('website')
+        return website and website.company_id or res
+
     def _default_website_sequence(self):
         self._cr.execute("SELECT MIN(website_sequence) FROM %s" % self._table)
         min_sequence = self._cr.fetchone()[0]

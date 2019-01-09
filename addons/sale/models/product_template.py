@@ -258,7 +258,7 @@ class ProductTemplate(models.Model):
 
         if pricelist and pricelist.currency_id != product_template.currency_id:
             list_price = product_template.currency_id._convert(
-                list_price, pricelist.currency_id, product_template.company_id,
+                list_price, pricelist.currency_id, product_template._get_current_company(pricelist=pricelist),
                 fields.Date.today()
             )
 
@@ -293,3 +293,11 @@ class ProductTemplate(models.Model):
             return False
         combination = self._get_first_possible_combination(parent_combination)
         return True if combination else self._is_combination_possible(combination, parent_combination)
+
+    @api.multi
+    def _get_current_company_fallback(self, **kwargs):
+        """Override: if a pricelist is given, fallback to the company of the
+        pricelist if it is set, otherwise use the one from parent method."""
+        res = super(ProductTemplate, self)._get_current_company_fallback(**kwargs)
+        pricelist = kwargs.get('pricelist')
+        return pricelist and pricelist.company_id or res

@@ -909,6 +909,36 @@ class ProductTemplate(models.Model):
                 return result
             combination = combination[:-1]
 
+    @api.multi
+    def _get_current_company(self, **kwargs):
+        """Get the most appropriate company for this product.
+
+        If the company is set on the product, directly return it. Otherwise,
+        fallback to a contextual company.
+
+        :param kwargs: kwargs forwarded to the fallback method.
+
+        :return: the most appropriate company for this product
+        :rtype: recordset of one `res.company`
+        """
+        self.ensure_one()
+        return self.company_id or self._get_current_company_fallback(**kwargs)
+
+    @api.multi
+    def _get_current_company_fallback(self, **kwargs):
+        """Fallback to get the most appropriate company for this product.
+
+        This should only be called from `_get_current_company` but is defined
+        separately to allow override.
+
+        The final fallback will be the current user's company.
+
+        :return: the fallback company for this product
+        :rtype: recordset of one `res.company`
+        """
+        self.ensure_one()
+        return self.env.user.company_id
+
     @api.model
     def get_empty_list_help(self, help):
         self = self.with_context(
