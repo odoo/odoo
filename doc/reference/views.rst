@@ -149,20 +149,20 @@ There are three types of element locators for matching a target element:
 The inheritance spec may have an optional ``position`` attribute specifying
 how the matched node should be altered:
 
-``inside`` (default)
+``position="inside"`` (default)
     the content of the inheritance spec is appended to the matched node
-``replace``
+``position="replace"``
     the content of the inheritance spec replaces the matched node.
     Any text node containing only ``$0`` within the contents of the spec will
     be replaced  by a complete copy of the matched node, effectively wrapping
     the matched node.
-``after``
+``position="after"``
     the content of the inheritance spec is added to the matched node's
     parent, after the matched node
-``before``
+``position="before"``
     the content of the inheritance spec is added to the matched node's
     parent, before the matched node
-``attributes``
+``position="attributes"``
     the content of the inheritance spec should be ``attribute`` elements
     with a ``name`` attribute and an optional body:
 
@@ -190,10 +190,13 @@ to move a node.
 
 A view's specs are applied sequentially.
 
+Views
+=====
+
 .. _reference/views/calendar:
 
 Calendar
-========
+--------
 
 Calendar views display records as events in a daily, weekly or monthly
 calendar. Their root element is ``<calendar>``. Available attributes on the
@@ -283,7 +286,7 @@ calendar view are:
 .. _reference/views/diagram:
 
 Diagram
-=======
+-------
 
 The diagram view can be used to display directed graphs of records. The root
 element is ``<diagram>`` and takes no attributes.
@@ -328,14 +331,14 @@ Possible children of the diagram view are:
 .. _reference/views/form:
 
 Form
-====
+----
 
 Form views are used to display the data from a single record. Their root
 element is ``<form>``. They are composed of regular HTML_ with additional
 structural and semantic components.
 
 Structural components
----------------------
+'''''''''''''''''''''
 
 Structural components provide structure or "visual" features with little
 logic. They are used as elements or sets of elements in form views.
@@ -381,7 +384,7 @@ logic. They are used as elements or sets of elements in form views.
   itself, generally used to display workflow buttons and status widgets
 
 Semantic components
--------------------
+'''''''''''''''''''
 
 Semantic components tie into and allow interaction with the Odoo
 system. Available semantic components are:
@@ -494,7 +497,7 @@ system. Available semantic components are:
 .. _reference/views/gantt:
 
 Gantt
-=====
+-----
 
 Gantt views appropriately display Gantt charts (for scheduling).
 
@@ -558,7 +561,7 @@ take the following attributes:
 .. _reference/views/graph:
 
 Graphs
-======
+------
 
 The graph view is used to visualize aggregations over a number of records or
 record groups. Its root element is ``<graph>`` which can take the following
@@ -609,7 +612,7 @@ sorted on the string of the field.
 .. _reference/views/kanban:
 
 Kanban
-======
+------
 
 The kanban view is a `kanban board`_ visualisation: it displays records as
 "cards", halfway between a :ref:`list view <reference/views/list>` and a
@@ -737,7 +740,7 @@ If you need to extend the Kanban view, see :js:class::`the JS API <KanbanRecord>
 .. _reference/views/list:
 
 List
-====
+----
 
 The root element of list views is ``<tree>``\ [#treehistory]_. The list view's
 root can have the following attributes:
@@ -965,7 +968,7 @@ Possible children elements of the list view are:
 .. _reference/views/pivot:
 
 Pivots
-======
+------
 
 The pivot view is used to visualize aggregations as a `pivot table`_. Its root
 element is ``<pivot>`` which can take the following attributes:
@@ -1040,7 +1043,7 @@ For instance a timesheet pivot view could be defined as::
 .. _reference/views/qweb:
 
 QWeb
-====
+----
 
 QWeb views are standard :ref:`reference/qweb` templates inside a view's
 ``arch``. They don't have a specific root element.
@@ -1065,7 +1068,7 @@ views.
 .. _reference/views/search:
 
 Search
-======
+------
 
 Search views are a break from previous view types in that they don't display
 *content*: although they apply to a specific model, they are used to filter
@@ -1266,7 +1269,7 @@ Possible children elements of the search view are:
 .. _reference/views/search/defaults:
 
 Search defaults
----------------
+'''''''''''''''
 
 Search fields and filters can be configured through the action's ``context``
 using :samp:`search_default_{name}` keys. For *fields*, the value should be the
@@ -1291,7 +1294,7 @@ will automatically enable the ``bar`` filter and search the ``foo`` field for
 .. _reference/views/dashboard:
 
 Dashboard
-=========
+---------
 
 Like pivot and graph view, The dashboard view is used to display aggregate data.
 However, the dashboard can embed sub views, which makes it possible to have a
@@ -1486,7 +1489,7 @@ There are 5 possible type of tags in a dashboard view:
 .. _reference/views/cohort:
 
 Cohort
-======
+------
 
 The cohort view is used to display and understand the way some data changes over
 a period of time.  For example, imagine that for a given business, clients can
@@ -1549,7 +1552,7 @@ attributes:
 
 
 Activity
-========
+--------
 
 The Activity view is used to display the activities linked to the records. The
 data are displayed in a chart with the records forming the rows and the activity
@@ -1559,7 +1562,8 @@ activities of the same type for the record is displayed.
 .. warning::
 
    The Activity view is only available when the ``mail`` module is installed,
-   and for the models that inherit from the ``mail.activity.mixin``.
+   and for the models that inherit from the :ref:`Activity mixin
+   <reference/mixins/mail/activities>` : ``mail.activity.mixin``.
 
 For example, here is a very simple Activity view:
 
@@ -1578,16 +1582,32 @@ attributes:
 Widgets
 =======
 
+.. _reference/views/widgets/chatter:
+
 Chatter
 -------
 
-:ref:`Mail mixin <reference/mixins/mail>`
+Needs the model to inherit from the :ref:`Mail mixin <reference/mixins/mail>`.
+Displays a chat on the right side of the form view.
+By convention, it is placed after closing the ``</sheet>`` tag in the form view.
+
+.. todo:: Is the chatter available in other forms???
+
+.. code-block:: xml
+
+        <div class="oe_chatter">
+          <field name="message_follower_ids" widget="mail_followers"/>
+          <field name="activity_ids" widget="mail_activity"/>
+          <field name="message_ids" widget="mail_thread"/>
+        </div>
 
 Fields Display
 --------------
 
-Gauge (fields.Float / Integer)
-''''''''''''''''''''''''''''''
+Gauge (Float / Integer)
+'''''''''''''''''''''''
+
+``widget="gauge"``
 
 Displays a rate as a "Car" **gauge**
 
@@ -1598,27 +1618,46 @@ Displays a rate as a "Car" **gauge**
                            Progress
         </field>
 
-Image (fields.Binary)
-'''''''''''''''''''''
+.. _reference/views/widgets/image:
 
-Allows the display of an Image, saved as Binary field
+Image (Binary)
+''''''''''''''
 
-Percentpie (fields.Float / Integer)
-'''''''''''''''''''''''''''''''''''
+``widget="image"``
+
+Allows the display of an image, saved as Binary field
+
+.. _reference/views/widgets/percentpie:
+
+Percentpie (Float / Integer)
+''''''''''''''''''''''''''''
+
+``widget="percentpie"``
 
 Display an Integer/Float as a percentpie.  Event if the field is a float, the max percentage is 100.0
 
-.. image:: images/percentpie_widget.png
+.. image:: images/widgets/percentpie.png
     :class: img-responsive
 
-Statusbar (fields.Selection)
-''''''''''''''''''''''''''''
 
-.. image:: forms/status1.png
-   :class: img-responsive
+Progressbar (Float)
+'''''''''''''''''''
 
-.. image:: forms/status2.png
-   :class: img-responsive
+``widget="progressbar"``
+
+Display a Float as a progressbar
+
+.. image:: images/widgets/progressbar.png
+    :class: img-responsive
+
+.. TODO : only float?
+
+.. _reference/views/widgets/statusbar:
+
+Statusbar (Selection)
+'''''''''''''''''''''
+
+``widget="statusbar"``
 
 The states are shown following the order used in the field (the list in a
 selection field, etc). States that are always visible are specified with the
@@ -1629,28 +1668,129 @@ attribute ``statusbar_visible``.
     <field name="state" widget="statusbar"
         statusbar_visible="draft,sent,progress,invoiced,done" />
 
+
+.. image:: images/widgets/statusbar.png
+    :class: img-responsive
+
+
+.. Relational fields Display
+.. -------------------------
+
+.. One2many
+.. ''''''''
+
+.. ``one2many_list`` == pointing to same class as default one2many widget
+
+Many2many displays
+''''''''''''''''''
+
+``widget="many2many_binary"``
+
+  must be a many2many field with a relation to 'ir.attachment' model.
+
+``widget="many2many_tags"``
+
+.. image:: images/widgets/many2manytags_read.png
+    :class: img-responsive
+
+.. image:: images/widgets/many2manytags_edit.png
+    :class: img-responsive
+
+``widget="many2many_checkboxes"``
+
+.. image:: images/widgets/many2manycheckboxes.png
+    :class: img-responsive
+
+.. note:: Relational fields can be displayed on custom through internal xml.
+    For example, you can display a many2many as customized kanban boxes :
+
+    .. code-block:: xml
+
+        <field name="many2manyfield">
+          <kanban>
+            <templates>
+              <t t-name="kanban-box">
+                <div class="oe_kanban_global_click" style="position: relative">
+                  <field name="many2manyfield.fieldname"/>
+                </div>
+              </t>
+            </templates>
+          </kanban>
+        </field>
+
+    For more precisions and customizations of kanban views, take a look at the
+      :ref:`Kanban Documentation <reference/views/kanban>`
+
+Fields Formatting
+-----------------
+
+
+``widget="email"`` (Char)
+
+Displays an email address such that on click, a mail building request is displayed
+if accepted by the navigator.
+
+``widget="float_time"`` (Float)
+
+Display a Float field as a time value.
+
+``widget="monetary"`` (Float / Monetary)
+
+Default display of a Monetary field, it can also display a Float field as a monetary one.
+
+.. todo:: currency_field usage + other arguments ?
+
+``widget="phone"`` (Char)
+
+Displays a phone number such that on click, user is redirected to available related
+application
+
+.. TODO add
+
+``widget="percentage"`` (Float)
+
+Format a ``[0,1]`` Float field as a percentage.
+
+``widget="url"`` (Char)
+
+Displays a clickable url link.
+
 Fields Manipulation
 -------------------
 
-Handle (fields.Integer)
-'''''''''''''''''''''''
+``widget="handle"`` (Integer)
 
 Based on a sequence field, allows the users to drag and drop items in a list view and displays a drag&drop icon
 
-Radio (fields.Selection)
-''''''''''''''''''''''''
+``widget="html"`` (Text / Html)
+
+Default display of a html field, it can also be used on Text fields to enable
+text enhancement through a widget enabling bullet points, highlights, links, images, ...
+
+.. image:: images/widgets/html.png
+    :class: img-responsive
+
+``widget="radio" (Selection)``
 
 On creation/edit, display selection field choices as radio buttons.
 
-.. image:: images/radio_widget.png
+.. image:: images/widgets/radio.png
     :class: img-responsive
 
-.. note:: This section is Work In Progress
+``widget="selection" (Selection / Many2one)``
 
-.. TODO remove
+Default widget for selection fields, it is rarely used as other widgets have
+a more user-friendly interface (radio, statusbar).  It can also be used for
+Many2one fields.
+On creation/edit, shows possible value choices.
 
-.. TODO::Relational Fields display
-  -------------------------
+.. note::
+
+   Avoid to use this widget for many2one fields.
+   If you want to avoid creation when proposing choices, use the options
+   no_quick_create, no_create_edit and no_create instead.
+
+
 
 .. _accesskey: http://www.w3.org/TR/html5/editing.html#the-accesskey-attribute
 .. _CSS color unit: http://www.w3.org/TR/css3-color/#colorunits
