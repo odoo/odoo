@@ -132,19 +132,33 @@ class ImLivechatChannel(models.Model):
         return self.user_ids.filtered(lambda user: user.im_status == 'online')
 
     @api.multi
-    def _get_mail_channel(self, anonymous_name, user_id=None, country_id=None):
+    def _get_mail_channel(self, anonymous_name, previous_operator_id=None, user_id=None, country_id=None):
         """ Return a mail.channel given a livechat channel. It creates one with a connected operator, or return false otherwise
             :param anonymous_name : the name of the anonymous person of the channel
+            :param previous_operator_id : partner_id.id of the previous operator that this visitor had in the past
             :param user_id : the id of the logged in visitor, if any
             :param country_code : the country of the anonymous person of the channel
             :type anonymous_name : str
             :return : channel header
             :rtype : dict
+
+            If this visitor already had an operator within the last 7 days (information stored with the 'im_livechat_previous_operator_pid' cookie),
+            the system will first try to assign that operator if he's available (to improve user experience).
         """
         self.ensure_one()
-        operator = self._get_random_operator()
+
+        operator = False
+        if previous_operator_id:
+            available_users = self._get_available_users()
+            # previous_operator_id is the partner_id of the previous operator, need to convert to user
+            if previous_operator_id in available_users.mapped('partner_id').ids:
+                operator = next(available_user for available_user in available_users if available_user.partner_id.id == previous_operator_id)
         if not operator:
+            operator = self._get_random_operator()
+        if not operator:
+            # no one available
             return False
+
         operator_partner_id = operator.partner_id.id
         # partner to add to the mail.channel
         channel_partner_to_add = [(4, operator_partner_id)]
