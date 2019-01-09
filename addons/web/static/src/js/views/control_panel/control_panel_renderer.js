@@ -102,7 +102,7 @@ var ControlPanelRenderer = Renderer.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * @returns {Object}
+     * @returns {Object|undefined}
      */
     getLastFacet: function () {
         return this.state.facets.slice(-1)[0];

@@ -57,8 +57,21 @@ var ListView = BasicView.extend({
 
     //--------------------------------------------------------------------------
     // Private
-    //---
+    //--------------------------------------------------------------------------
 
+    /**
+     * @override
+     */
+    _extractParamsFromAction: function (action) {
+        var params = this._super.apply(this, arguments);
+        var inDialog = action.target === 'new';
+        var inline = action.target === 'inline';
+        params.hasSidebar = !inDialog && !inline;
+        return params;
+    },
+    /**
+     * @override
+     */
     _updateMVCParams: function () {
         this._super.apply(this, arguments);
         this.controllerParams.noLeaf = !!this.loadParams.context.group_by_no_leaf;

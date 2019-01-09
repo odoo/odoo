@@ -87,6 +87,13 @@ ul.flex-column > li > a {
     padding: 2px 15px;
 }
 
+// Link without text but an icon
+a, .btn-link {
+    &.fa:hover {
+        text-decoration: $o-theme-btn-icon-hover-decoration;
+    }
+}
+
 // Odoo options classes
 .jumbotron {
     margin-bottom: 0;
@@ -161,7 +168,7 @@ hr {
 .input-group {
     flex-flow: row nowrap;
 }
-.list-group-item:not([class*="list-group-item-"]) {
+.list-group-item:not([class*="list-group-item-"]):not(.active) {
     color: color-yiq($list-group-bg);
 }
 

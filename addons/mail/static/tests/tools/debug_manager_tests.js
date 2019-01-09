@@ -14,6 +14,10 @@ QUnit.module('Mail DebugManager', {}, function () {
             intercepts: {
                 do_action: function (event) {
                     assert.deepEqual(event.data.action, {
+                      context: {
+                        default_res_model: "testModel",
+                        default_res_id: 5,
+                      },
                         res_model: 'mail.message',
                         name: "Manage Messages",
                         views: [[false, 'list'], [false, 'form']],

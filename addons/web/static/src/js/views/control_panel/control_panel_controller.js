@@ -160,12 +160,11 @@ var ControlPanelController = mvc.Controller.extend({
      */
     _onFacetRemoved: function (ev) {
         ev.stopPropagation();
-        var group = ev.data.group;
-        if (!group) {
-            group = this.renderer.getLastFacet();
+        var group = ev.data.group || this.renderer.getLastFacet();
+        if (group) {
+            this.model.deactivateGroup(group.id);
+            this._reportNewQueryAndRender();
         }
-        this.model.deactivateGroup(group.id);
-        this._reportNewQueryAndRender();
     },
     /**
      * @private

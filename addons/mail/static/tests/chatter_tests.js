@@ -292,7 +292,7 @@ QUnit.test('Activity Done keep feedback on blur', function (assert) {
 });
 
 QUnit.test('attachmentBox basic rendering', function (assert) {
-    assert.expect(11);
+    assert.expect(19);
     this.data.partner.records.push({
         id: 7,
         display_name: "attachment_test",
@@ -334,6 +334,19 @@ QUnit.test('attachmentBox basic rendering', function (assert) {
     assert.containsOnce(form, '.o_attachment_image', "there should be an image preview");
     assert.containsOnce(form, '.o_attachments_previews', "there should be a list of previews");
     assert.containsOnce(form, '.o_attachments_list', "there should be a list of non previewable attachments");
+    assert.containsOnce(form, '.o_upload_attachments_button', "there should be an 'Add Attachments' button");
+    assert.containsOnce(form, '.o_form_binary_form', "there should be a binary form");
+
+    assert.containsOnce(form, 'input[name="model"]', "there should be an model input");
+    var $modelInput = form.$('input[name="model"]');
+    assert.hasAttrValue($modelInput, 'value', 'partner');
+    assert.hasAttrValue($modelInput, 'type', 'hidden');
+
+    assert.containsOnce(form, 'input[name="model"]', "there should be an id input");
+    var $resIdInput = form.$('input[name="id"]');
+    assert.hasAttrValue($resIdInput, 'value', '7');
+    assert.hasAttrValue($resIdInput, 'type', 'hidden');
+
     assert.strictEqual(form.$('.o_attachment_title').text(), 'name1',
         "the image name should be correct");
     // since there are two elements "Download name2"; one "name" and the other "txt" as text content, the following test
@@ -1463,6 +1476,55 @@ QUnit.test('chatter: Attachment viewer', function (assert) {
         "Modal popup should open with the pdf preview");
     // close attachment popup
     testUtils.dom.click($('.o_modal_fullscreen .o_viewer-header .o_close_btn'));
+    form.destroy();
+});
+
+QUnit.test('chatter: keep context when sending a message', function(assert) {
+    assert.expect(1);
+    var form = createView({
+        View: FormView,
+        model: 'partner',
+        data: this.data,
+        services: this.services,
+        arch: '<form string="Partners">' +
+                '<sheet>' +
+                    '<field name="foo"/>' +
+                '</sheet>' +
+                '<div class="oe_chatter">' +
+                    '<field name="message_ids" widget="mail_thread"/>' +
+                '</div>' +
+            '</form>',
+        res_id: 2,
+        session: {
+            user_context: {lang: 'en_US'},
+        },
+        mockRPC: function (route, args) {
+            if (args.method === 'message_get_suggested_recipients') {
+                return $.when({2: []});
+            }
+            if (args.method === 'message_post') {
+                assert.deepEqual(args.kwargs.context, {
+                        default_model: "partner",
+                        default_res_id: 2,
+                        lang: "en_US",
+                        mail_post_autofollow: true,
+                    },
+                    "the context is incorrect");
+                return $.when(57923);
+            }
+            if (args.method === 'message_format') {
+                return $.when([{
+                    author_id: [42, "Me"],
+                    model: 'partner',
+                }]);
+            }
+            return this._super(route, args);
+        },
+    });
+
+    testUtils.dom.click(form.$('.o_chatter_button_new_message'));
+    testUtils.fields.editInput(form.$('.oe_chatter .o_composer_text_field:first()'), 'Pouet');
+    testUtils.dom.click(form.$('.oe_chatter .o_composer_button_send'));
     form.destroy();
 });
 

@@ -120,6 +120,7 @@ QUnit.module('Views', {
         assert.deepEqual(
             controlPanelFactory.loadParams.groups,
             [[{
+                context: {},
                 description: "Hello",
                 groupNumber: 2,
                 domain: "[]",
@@ -198,6 +199,7 @@ QUnit.module('Views', {
             controlPanelFactory.loadParams.groups,
             [[
                 {
+                  "context": {},
                   "description": "Hello One",
                   "domain": "[]",
                   "groupNumber": 2,
@@ -205,6 +207,7 @@ QUnit.module('Views', {
                   "type": "filter"
                 },
                 {
+                  "context": {},
                   "description": "Hello Two",
                   "domain": "[('bar', '=', 3)]",
                   "groupNumber": 2,
@@ -233,6 +236,7 @@ QUnit.module('Views', {
             [
                 [
                     {
+                      context: {},
                       description: "Hello One",
                       domain: "[]",
                       groupNumber: 2,
@@ -242,6 +246,7 @@ QUnit.module('Views', {
                 ],
                 [
                     {
+                      context: {},
                       description: "Hello Two",
                       domain: "[('bar', '=', 3)]",
                       groupNumber: 4,
@@ -267,6 +272,7 @@ QUnit.module('Views', {
             [
                 [
                     {
+                        context: {},
                         description: "Hello",
                         domain: "[]",
                         groupNumber: 2,
@@ -329,6 +335,62 @@ QUnit.module('Views', {
             ],
             "there should be two groups of a single field"
         );
+    });
+
+    QUnit.module('Control Panel Rendering');
+
+    QUnit.test('invisible filters are not rendered', async function (assert) {
+        assert.expect(2);
+        var controlPanel = await createControlPanel({
+            model: 'partner',
+            arch: "<search>" +
+                        "<filter name=\"filterA\" string=\"A\" domain=\"[]\"/>" +
+                        "<filter name=\"filterB\" string=\"B\" invisible=\"1\" domain=\"[]\"/>" +
+                    "</search>",
+            data: this.data,
+            searchMenuTypes: ['filter'],
+            context: {
+                search_disable_custom_filters: true,
+            },
+        });
+        testUtils.dom.click(controlPanel.$('.o_filters_menu_button'));
+        assert.containsOnce(controlPanel, '.o_menu_item a:contains("A")');
+        assert.containsNone(controlPanel, '.o_menu_item a:contains("B")');
+
+        controlPanel.destroy();
+    });
+
+    QUnit.module('Control Panel behaviour');
+
+    QUnit.test('remove a facet with backspace', async function (assert) {
+        assert.expect(2);
+
+        var controlPanel = await createControlPanel({
+            model: 'partner',
+            arch: "<search><filter name=\"filterA\" string=\"A\" domain=\"[]\"/></search>",
+            data: this.data,
+            searchMenuTypes: ['filter'],
+        });
+        testUtils.dom.click(controlPanel.$('.o_filters_menu_button'));
+        testUtils.dom.click($('.o_menu_item a'));
+        assert.strictEqual($('.o_searchview .o_searchview_facet .o_facet_values span').text().trim(), 'A',
+            'should have a facet with A');
+
+        // delete a facet
+        controlPanel.$('input.o_searchview_input').trigger($.Event('keydown', {
+            which: $.ui.keyCode.BACKSPACE,
+            keyCode: $.ui.keyCode.BACKSPACE,
+        }));
+        assert.strictEqual($('.o_searchview .o_searchview_facet .o_facet_values span').length, 0,
+            'there should be no facet');
+
+        // delete nothing (should not crash)
+        controlPanel.$('input.o_searchview_input').trigger($.Event('keydown', {
+            which: $.ui.keyCode.BACKSPACE,
+            keyCode: $.ui.keyCode.BACKSPACE,
+        }));
+
+        controlPanel.destroy();
     });
 
     QUnit.module('Control Panel Rendering');

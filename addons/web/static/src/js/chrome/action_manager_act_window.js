@@ -93,7 +93,7 @@ ActionManager.include({
                 action = state.action;
                 options = _.extend(options, {
                     additional_context: context,
-                    resID: state.id,
+                    resID: state.id || undefined,  // empty string with bbq
                     viewType: state.view_type,
                 });
             }
@@ -396,7 +396,7 @@ ActionManager.include({
         var inline = action.target === 'inline';
         var options = {
             action_id: action.id,
-            toolbar: inDialog && inline,
+            toolbar: !inDialog && !inline,
         };
         var views = action.views.slice();
         if (!inline && !(inDialog && action.views[0][1] === 'form')) {
@@ -635,7 +635,7 @@ ActionManager.include({
                     _.object(_.reject(_.pairs(env.context), function (pair) {
                         return pair[0].match('^(?:(?:default_|search_default_|show_).+|' +
                                              '.+_view_ref|group_by|group_by_no_leaf|active_id|' +
-                                             'active_ids)$') !== null;
+                                             'active_ids|orderedBy)$') !== null;
                     }))
                 );
                 ctx.add(actionData.context || {});

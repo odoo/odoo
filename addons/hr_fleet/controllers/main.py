@@ -19,11 +19,11 @@ class HrFleet(Controller):
             return request.not_found()
 
         employee = request.env['hr.employee'].search([('id', '=', employee_id)], limit=1)
-        partner_id = employee.user_id.partner_id.id
-        if not employee or not partner_id:
+        partner_ids = (employee.user_id.partner_id | employee.address_home_id).ids
+        if not employee or not partner_ids:
             return request.not_found()
 
-        car_assignation_logs = request.env['fleet.vehicle.assignation.log'].search([('driver_id', '=', partner_id)])
+        car_assignation_logs = request.env['fleet.vehicle.assignation.log'].search([('driver_id', 'in', partner_ids)])
         doc_list = request.env['ir.attachment'].search([
             ('res_model', '=', 'fleet.vehicle.assignation.log'),
             ('res_id', 'in', car_assignation_logs.ids)], order='create_date')

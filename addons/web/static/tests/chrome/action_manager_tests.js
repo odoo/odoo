@@ -735,6 +735,37 @@ QUnit.module('ActionManager', {
         actionManager.destroy();
     });
 
+    QUnit.test('properly load default record', function (assert) {
+        assert.expect(5);
+
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            mockRPC: function (route, args) {
+                assert.step(args.method || route);
+                return this._super.apply(this, arguments);
+            },
+        });
+        actionManager.loadState({
+            action: 3,
+            id: "",  // might happen with bbq and id=& in URL
+            model: 'partner',
+            view_type: 'form',
+        });
+
+        assert.containsOnce(actionManager, '.o_form_view',
+            "should have rendered a form view");
+
+        assert.verifySteps([
+            '/web/action/load',
+            'load_views',
+            'default_get',
+        ]);
+
+        actionManager.destroy();
+    });
+
     QUnit.test('load requested view for act window actions', function (assert) {
         assert.expect(6);
 
@@ -2095,6 +2126,39 @@ QUnit.module('ActionManager', {
         actionManager.destroy();
     });
 
+    QUnit.test('sidebar is present in list view', function (assert) {
+        assert.expect(5);
+
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            mockRPC: function (route, args) {
+                var res = this._super.apply(this, arguments);
+                if (args.method === 'load_views') {
+                    assert.strictEqual(args.kwargs.options.toolbar, true,
+                        "should ask for toolbar information");
+                    return res.then(function (fieldsViews) {
+                        fieldsViews.list.toolbar = {
+                            print: [{name: "Print that record"}],
+                        };
+                        return fieldsViews;
+                    });
+                }
+                return res;
+            },
+        });
+        actionManager.doAction(3);
+
+        assert.isNotVisible(actionManager.$('.o_cp_sidebar button.o_dropdown_toggler_btn:contains("Print")'));
+        assert.isNotVisible(actionManager.$('.o_cp_sidebar button.o_dropdown_toggler_btn:contains("Action")'));
+        testUtils.dom.clickFirst(actionManager.$('input.custom-control-input'));
+        assert.isVisible(actionManager.$('.o_cp_sidebar button.o_dropdown_toggler_btn:contains("Print")'));
+        assert.isVisible(actionManager.$('.o_cp_sidebar button.o_dropdown_toggler_btn:contains("Action")'));
+
+        actionManager.destroy();
+    });
+
     QUnit.test('can switch between views', function (assert) {
         assert.expect(18);
 
@@ -2151,6 +2215,62 @@ QUnit.module('ActionManager', {
             'read', // form
             '/web/dataset/search_read', // list
         ]);
+
+        actionManager.destroy();
+    });
+
+    QUnit.test('orderedBy in context is not propagated when executing another action', function (assert) {
+        assert.expect(6);
+
+        this.data.partner.fields.foo.sortable = true,
+
+        this.archs['partner,false,form'] = '<header>' +
+                                                '<button name="8" string="Execute action" type="action"/>' +
+                                            '</header>';
+
+        var searchReadCount = 1;
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/search_read') {
+                    if (searchReadCount === 1) {
+                        assert.strictEqual(args.model, 'partner');
+                        assert.notOk(args.sort);
+                    }
+                    if (searchReadCount === 2) {
+                        assert.strictEqual(args.model, 'partner');
+                        assert.strictEqual(args.sort, "foo ASC");
+                    }
+                    if (searchReadCount === 3) {
+                        assert.strictEqual(args.model, 'pony');
+                        assert.notOk(args.sort);
+                    }
+                    searchReadCount += 1;
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+        actionManager.doAction(3);
+
+        // Simulate the activation of a filter
+        var searchData = {
+            domains: [[["foo", "=", "yop"]]],
+            contexts: [{
+                orderedBy: [],
+            }],
+        };
+        actionManager.trigger_up('search', searchData);
+
+        // Sort records
+        actionManager.$('.o_list_view th.o_column_sortable').click();
+
+        // get to the form view of the model, on the first record
+        actionManager.$('.o_data_cell:first').click();
+
+        // Change model by clicking on the button within the form
+        actionManager.$('.o_form_view button').click();
 
         actionManager.destroy();
     });
@@ -3310,6 +3430,79 @@ QUnit.module('ActionManager', {
             '/web/dataset/search_read',
             'toggle_fullscreen',
         ]);
+
+        actionManager.destroy();
+    });
+
+    QUnit.test('fullscreen on action change: back to a "current" action', function (assert) {
+        assert.expect(3);
+
+        this.actions[0].target = 'fullscreen';
+        this.archs['partner,false,form'] = '<form>' +
+                                            '<button name="1" type="action" class="oe_stat_button" />' +
+                                        '</form>';
+
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            intercepts: {
+                toggle_fullscreen: function (ev) {
+                    var fullscreen = ev.data.fullscreen;
+
+                    switch (toggleFullscreenCalls) {
+                        case 0:
+                            assert.strictEqual(fullscreen, false);
+                            break;
+                        case 1:
+                            assert.strictEqual(fullscreen, true);
+                            break;
+                        case 2:
+                            assert.strictEqual(fullscreen, false);
+                            break;
+                    }
+                },
+            },
+
+        });
+
+        var toggleFullscreenCalls = 0;
+        actionManager.doAction(6);
+
+        toggleFullscreenCalls = 1;
+        actionManager.$('button[name=1]').click();
+
+        toggleFullscreenCalls = 2;
+        $('.breadcrumb li a:first').click();
+
+        actionManager.destroy();
+    });
+
+    QUnit.test('fullscreen on action change: all "fullscreen" actions', function (assert) {
+        assert.expect(3);
+
+        this.actions[5].target = 'fullscreen';
+        this.archs['partner,false,form'] = '<form>' +
+                                            '<button name="1" type="action" class="oe_stat_button" />' +
+                                        '</form>';
+
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            intercepts: {
+                toggle_fullscreen: function (ev) {
+                    var fullscreen = ev.data.fullscreen;
+                    assert.strictEqual(fullscreen, true);
+                },
+            },
+        });
+
+        actionManager.doAction(6);
+
+        actionManager.$('button[name=1]').click();
+
+        $('.breadcrumb li a:first').click();
 
         actionManager.destroy();
     });

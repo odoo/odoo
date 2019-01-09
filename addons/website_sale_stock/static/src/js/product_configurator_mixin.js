@@ -27,9 +27,16 @@ var xml_load = ajax.loadXML(
  * @param {Array} combination
  */
 ProductConfiguratorMixin._onChangeCombinationStock = function (ev, $parent, combination) {
+    var product_id = 0;
+    // needed for list view of variants
+    if ($parent.find('input.product_id:checked').length) {
+        product_id = $parent.find('input.product_id:checked').val();
+    } else {
+        product_id = $parent.find('.product_id').val();
+    }
     var isMainProduct = combination.product_id &&
         ($parent.is('.js_main_product') || $parent.is('.main_product')) &&
-        combination.product_id === parseInt($parent.find('.product_id').val());
+        combination.product_id === parseInt(product_id);
 
     if (!this.isWebsite || !isMainProduct){
         return;

@@ -86,6 +86,6 @@ class SaleOrderLine(models.Model):
                 lang=self.order_id.partner_id.lang,
             )
 
-            return ticket.get_ticket_multiline_description_sale()
+            return ticket.get_ticket_multiline_description_sale() + self._get_sale_order_line_multiline_description_variants()
         else:
             return super(SaleOrderLine, self).get_sale_order_line_multiline_description_sale(product)

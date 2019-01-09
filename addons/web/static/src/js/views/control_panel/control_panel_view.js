@@ -141,6 +141,7 @@ var ControlPanelView = Factory.extend({
                                 'Ω';
         if (filter.type === 'filter') {
             filter.domain = attrs.domain;
+            filter.context = pyUtils.eval('context', attrs.context);
             if (attrs.date) {
                 filter.fieldName = attrs.date;
                 filter.fieldType = this.fields[attrs.date].type;
@@ -195,6 +196,7 @@ var ControlPanelView = Factory.extend({
         var currentGroup = [];
         var groupOfGroupBys = [];
         var groupNumber = 1;
+
 
         _.each(preFilters, function (preFilter) {
             if (preFilter.attrs && preFilter.attrs.invisible) {

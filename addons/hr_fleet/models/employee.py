@@ -12,7 +12,7 @@ class Employee(models.Model):
     def action_open_employee_cars(self):
         self.ensure_one()
         cars = self.env['fleet.vehicle.assignation.log'].search([
-            ('driver_id', '=', self.user_id.partner_id.id)]).mapped('vehicle_id')
+            ('driver_id', 'in', (self.user_id.partner_id | self.address_home_id).ids)]).mapped('vehicle_id')
 
         return {
             "type": "ir.actions.act_window",
@@ -23,12 +23,12 @@ class Employee(models.Model):
         }
 
     def _compute_employee_cars_count(self):
-        driver_ids = self.mapped('user_id.partner_id').ids
+        driver_ids = (self.mapped('user_id.partner_id') | self.mapped('address_home_id')).ids
         fleet_data = self.env['fleet.vehicle.assignation.log'].read_group(
             domain=[('driver_id', 'in', driver_ids)], fields=['driver_id'], groupby=['driver_id'])
         mapped_data = dict([(m['driver_id'][0], m['driver_id_count']) for m in fleet_data])
         for employee in self:
-            employee.employee_cars_count = mapped_data.get(employee.user_id.partner_id.id, 0)
+            employee.employee_cars_count = mapped_data.get(employee.user_id.partner_id.id, 0) + mapped_data.get(employee.address_home_id.id, 0)
 
     def action_get_claim_report(self):
         self.ensure_one()
