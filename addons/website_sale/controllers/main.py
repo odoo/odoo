@@ -151,7 +151,7 @@ class WebsiteSale(ProductConfiguratorController):
 
     def _get_compute_currency(self, pricelist, product=None):
         company = product and product._get_current_company(pricelist=pricelist, website=request.website) or pricelist.company_id or request.website.company_id
-        from_currency = (product or company).currency_id
+        from_currency = (product or request.env['res.company']._get_main_company()).currency_id
         to_currency = pricelist.currency_id
         return lambda price: from_currency._convert(price, to_currency, company, fields.Date.today())
 
