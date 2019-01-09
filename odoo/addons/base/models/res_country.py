@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import re
+import itertools
 import logging
 from odoo import api, fields, models
 from psycopg2 import IntegrityError
@@ -123,8 +124,26 @@ class CountryState(models.Model):
             args = []
         if self.env.context.get('country_id'):
             args = args + [('country_id', '=', self.env.context.get('country_id'))]
-        first_state_ids = self._search([('code', '=ilike', name)] + args, limit=limit, access_rights_uid=name_get_uid)
-        search_domain = [('name', operator, name)]
+        regex = re.compile('^(?P<state>.+?)?\s*(?:\((?P<country>[A-Z]{,2})\)?)?$')
+        names = regex.match(name).groupdict()
+        first_state_ids = self._search([('code', '=ilike', names['state'])] + args, limit=limit, access_rights_uid=name_get_uid)
+        search_domain = [('name', operator, names['state'] or '')]
+        if names['country']:
+            search_domain.append(('country_id.code', operator, names['country']))
         search_domain.append(('id', 'not in', first_state_ids))
         state_ids = first_state_ids + self._search(search_domain + args, limit=limit, access_rights_uid=name_get_uid)
         return [(state.id, state.display_name) for state in self.browse(state_ids)]
+
+    @api.multi
+    @api.depends('name')
+    def name_get(self):
+        result = []
+        for name,ids in itertools.groupby(self, lambda r:r.name):
+            ids = list(ids)
+            if len(ids) == 1:
+                result.append((ids[0].id, name))
+            else:
+                for id in ids:
+                    code = self.env['res.country.state'].browse(id.id).country_id.code
+                    result.append((id.id, "{} ({})".format(name, code)))
+        return result
