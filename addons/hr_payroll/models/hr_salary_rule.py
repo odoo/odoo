@@ -34,6 +34,8 @@ class HrPayrollStructure(models.Model):
     rule_ids = fields.Many2many('hr.salary.rule', 'hr_structure_salary_rule_rel', 'struct_id', 'rule_id', string='Salary Rules')
     report_id = fields.Many2one('ir.actions.report',
         string="Report", required=True, domain="[('model','=','hr.payslip'),('report_type','=','qweb-pdf')]", default=_get_default_report_id)
+    payslip_name = fields.Char(string="Payslip Name", translate=True,
+        help="Name to be set on a payslip. Example: 'End of the year bonus'. If not set, the default value is 'Salary Slip'")
 
     @api.constrains('parent_id')
     def _check_parent_id(self):

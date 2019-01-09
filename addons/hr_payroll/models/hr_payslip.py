@@ -275,9 +275,6 @@ class HrPayslip(models.Model):
         date_from = self.date_from
         date_to = self.date_to
 
-        ttyme = datetime.combine(fields.Date.from_string(date_from), time.min)
-        locale = self.env.context.get('lang') or 'en_US'
-        self.name = _('Salary Slip of %s for %s') % (employee.name, tools.ustr(babel.dates.format_date(date=ttyme, format='MMMM-y', locale=locale)))
         self.company_id = employee.company_id
 
         contracts = self.env['hr.contract']
@@ -298,7 +295,12 @@ class HrPayslip(models.Model):
             worked_days_lines += worked_days_lines.new(r)
         self.worked_days_line_ids = worked_days_lines
 
-        return
+    @api.onchange('struct_id')
+    def _onchange_struct_id(self):
+        ttyme = datetime.combine(fields.Date.from_string(self.date_from), time.min)
+        locale = self.env.context.get('lang') or 'en_US'
+        payslip_name = self.struct_id.payslip_name or _('Salary Slip')
+        self.name = '%s - %s - %s' % (payslip_name, self.employee_id.name, tools.ustr(babel.dates.format_date(date=ttyme, format='MMMM-y', locale=locale)))
 
     @api.onchange('contract_id')
     def onchange_contract(self):
