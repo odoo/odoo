@@ -610,7 +610,7 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
                 _logger.warning(_('Methods that start with `set_` are deprecated. Override `set_values` instead (Method %s)') % method)
 
     @api.multi
-    def execute(self):
+    def execute(self, kwargs={}):
         self.ensure_one()
         if not self.env.user._is_admin() and not self.env.user.has_group('base.group_system'):
             raise AccessError(_("Only administrators can change the settings"))
@@ -641,6 +641,9 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
             # are no longer valid. So we reset the environment.
             self.env.reset()
             self = self.env()[self._name]
+
+        if not kwargs.get('reload', True):
+            return True
 
         # pylint: disable=next-method-called
         config = self.env['res.config'].next() or {}

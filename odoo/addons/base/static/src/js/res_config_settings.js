@@ -353,6 +353,28 @@ var BaseSettingController = FormController.extend({
     willRestore: function () {
         this.mode = 'edit';
     },
+    /**
+     * Save settings before open actions in settings, so first we save settings
+     * and then peform action so we have to override default behaviour
+     *
+     * @override
+     */
+    _callButtonAction: function (attrs, record) {
+        var self = this;
+        var _super = this._super;
+        var args = arguments;
+        if (attrs.type === 'action') {
+            var saveAttrs = {
+                type: 'object',
+                args: '{ "reload": false }',
+                name: 'execute',
+            };
+            return _super.call(this, saveAttrs, record).then(function () {
+                return _super.apply(self, args)
+            });
+        }
+        return _super.apply(this, args);
+    },
 });
 
 var BaseSettingsModel = BasicModel.extend({
