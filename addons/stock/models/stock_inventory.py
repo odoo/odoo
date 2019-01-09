@@ -267,7 +267,7 @@ class Inventory(models.Model):
             args += (self.package_id.id,)
         #case 5: Filter on One product category + Exahausted Products
         if self.category_id:
-            categ_products = Product.search([('categ_id', '=', self.category_id.id)])
+            categ_products = Product.search([('categ_id', 'child_of', self.category_id.id)])
             domain += ' AND product_id = ANY (%s)'
             args += (categ_products.ids,)
             products_to_filter |= categ_products
