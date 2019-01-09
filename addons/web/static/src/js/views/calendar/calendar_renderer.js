@@ -112,11 +112,13 @@ var SidebarFilter = Widget.extend(FieldManagerMixin, {
     _onFieldChanged: function (event) {
         var self = this;
         event.stopPropagation();
+        var createValues = {'user_id': session.uid};
         var value = event.data.changes[this.write_field].id;
+        createValues[this.write_field] = value;
         this._rpc({
                 model: this.write_model,
                 method: 'create',
-                args: [{'user_id': session.uid,'partner_id': value,}],
+                args: [createValues],
             })
             .then(function () {
                 self.trigger_up('changeFilter', {
