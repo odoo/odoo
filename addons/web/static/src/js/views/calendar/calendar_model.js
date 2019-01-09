@@ -244,17 +244,17 @@ return AbstractModel.extend({
         this.setDate(this.data.target_date.clone().add(-1, this.data.scale));
     },
     /**
-     * @todo: this should not work. it ignores the domain/context
-     *
      * @override
-     * @param {any} _handle ignored
-     * @param {Object} params
+     * @param {Object} [params.context]
      * @param {Array} [params.domain]
      * @returns {Deferred}
      */
-    reload: function (_handle, params) {
+    reload: function (handle, params) {
         if (params.domain) {
             this.data.domain = params.domain;
+        }
+        if (params.context) {
+            this.data.context = params.context;
         }
         return this._loadCalendar();
     },
@@ -385,6 +385,9 @@ return AbstractModel.extend({
      * @returns {Object}
      */
     _getFullCalendarOptions: function () {
+        var week_start = _t.database.parameters.week_start || 0;
+        // calendar uses index 0 for Sunday but Odoo stores it as 7
+        week_start = week_start % 7;
         return {
             defaultView: (this.mode === "month")? "month" : ((this.mode === "week")? "agendaWeek" : ((this.mode === "day")? "agendaDay" : "agendaWeek")),
             header: false,
@@ -404,7 +407,7 @@ return AbstractModel.extend({
             monthNamesShort: moment.monthsShort(),
             dayNames: moment.weekdays(),
             dayNamesShort: moment.weekdaysShort(),
-            firstDay: _t.database.parameters.week_start,
+            firstDay: week_start,
             slotLabelFormat: _t.database.parameters.time_format.search("%H") != -1 ? 'H:mm': 'h(:mm)a',
         };
     },

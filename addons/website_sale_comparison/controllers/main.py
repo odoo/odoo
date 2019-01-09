@@ -19,7 +19,7 @@ class WebsiteSaleProductComparison(WebsiteSale):
 
         res = {}
         for num, product in enumerate(products):
-            for var in product.attribute_line_ids:
+            for var in product.product_tmpl_id._get_valid_product_template_attribute_lines():
                 cat_name = var.attribute_id.category_id.name or _('Uncategorized')
                 att_name = var.attribute_id.name
                 if not product.attribute_value_ids: # create_variant = False
@@ -29,14 +29,15 @@ class WebsiteSaleProductComparison(WebsiteSale):
                 if val:
                     res[cat_name][att_name][num] = val[0].name
         values['specs'] = res
-        values['compute_currency'] = self._get_compute_currency_and_context()[0]
+        values['compute_currency'] = self._get_compute_currency_and_context(products[:1])[0]
         return request.render("website_sale_comparison.product_compare", values)
 
     @http.route(['/shop/get_product_data'], type='json', auth="public", website=True)
     def get_product_data(self, product_ids, cookies=None):
         ret = {}
-        compute_currency, pricelist_context, _ = self._get_compute_currency_and_context()
+        pricelist_context, pricelist = self._get_pricelist_context()
         prods = request.env['product.product'].with_context(pricelist_context, display_default_code=False).search([('id', 'in', product_ids)])
+        compute_currency = self._get_compute_currency(pricelist, prods[:1])
 
         if cookies is not None:
             ret['cookies'] = json.dumps(request.env['product.product'].search([('id', 'in', list(set(product_ids + cookies)))]).ids)

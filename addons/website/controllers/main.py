@@ -283,6 +283,7 @@ class Website(Home):
     @http.route("/website/get_switchable_related_views", type="json", auth="user", website=True)
     def get_switchable_related_views(self, key):
         views = request.env["ir.ui.view"].get_related_views(key, bundles=False).filtered(lambda v: v.customize_show)
+        views = views.sorted(key=lambda v: (v.inherit_id.id, v.name))
         return views.read(['name', 'id', 'key', 'xml_id', 'arch', 'active', 'inherit_id'])
 
     @http.route('/website/reset_templates', type='http', auth='user', methods=['POST'], website=True)

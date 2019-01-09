@@ -290,6 +290,8 @@ class AccountAccount(models.Model):
 
         Note that it is disallowed if some lines are partially reconciled.
         '''
+        if not self.ids:
+            return None
         partial_lines_count = self.env['account.move.line'].search_count([
             ('account_id', 'in', self.ids),
             ('full_reconcile_id', '=', False),

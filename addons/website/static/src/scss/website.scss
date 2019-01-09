@@ -1070,3 +1070,8 @@ table.table_desc tr td {
 @each $media, $color in $o-social-colors {
     @include text-emphasis-variant(".text-#{$media}", $color);
 }
+
+// TODO: Will be handled properly in master/saas-12.2, temp fix for website_event.registration_attendee_details
+.modal-footer > .float-left {
+    margin-right: auto;
+}

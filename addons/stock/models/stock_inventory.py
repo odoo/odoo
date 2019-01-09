@@ -425,7 +425,7 @@ class InventoryLine(models.Model):
         """
         for line in self:
             if line.product_id.type != 'product':
-                raise UserError(_("You can only adjust storable products."))
+                raise UserError(_("You can only adjust storable products.") + '\n\n%s -> %s' % (line.product_id.display_name, line.product_id.type))
 
     def _get_move_values(self, qty, location_id, location_dest_id, out):
         self.ensure_one()
