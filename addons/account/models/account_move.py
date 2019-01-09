@@ -1457,6 +1457,9 @@ class AccountPartialReconcile(models.Model):
         '''
         return tax.cash_basis_base_account_id or line.account_id
 
+    def _get_amount_tax_cash_basis(self, amount, line):
+        return line.company_id.currency_id.round(amount)
+
     def create_tax_cash_basis_entry(self, percentage_before_rec):
         self.ensure_one()
         move_date = self.debit_move_id.date
@@ -1471,7 +1474,7 @@ class AccountPartialReconcile(models.Model):
                     percentage_after = line._get_matched_percentage()[move.id]
                     #amount is the current cash_basis amount minus the one before the reconciliation
                     amount = line.balance * percentage_after - line.balance * percentage_before
-                    rounded_amt = line.company_id.currency_id.round(amount)
+                    rounded_amt = self._get_amount_tax_cash_basis(amount, line)
                     if float_is_zero(rounded_amt, precision_rounding=line.company_id.currency_id.rounding):
                         continue
                     if line.tax_line_id and line.tax_line_id.tax_exigibility == 'on_payment':
@@ -1486,7 +1489,7 @@ class AccountPartialReconcile(models.Model):
                             'analytic_account_id': line.analytic_account_id.id,
                             'analytic_tag_ids': line.analytic_tag_ids.ids,
                             'tax_exigible': True,
-                            'amount_currency': self.amount_currency and line.currency_id.round(-line.amount_currency * amount / line.balance) or 0.0,
+                            'amount_currency': line.amount_currency and line.currency_id.round(-line.amount_currency * amount / line.balance) or 0.0,
                             'currency_id': line.currency_id.id,
                             'move_id': newly_created_move.id,
                             'partner_id': line.partner_id.id,
@@ -1501,7 +1504,7 @@ class AccountPartialReconcile(models.Model):
                             'analytic_tag_ids': line.analytic_tag_ids.ids,
                             'tax_line_id': line.tax_line_id.id,
                             'tax_exigible': True,
-                            'amount_currency': self.amount_currency and line.currency_id.round(line.amount_currency * amount / line.balance) or 0.0,
+                            'amount_currency': line.amount_currency and line.currency_id.round(line.amount_currency * amount / line.balance) or 0.0,
                             'currency_id': line.currency_id.id,
                             'move_id': newly_created_move.id,
                             'partner_id': line.partner_id.id,

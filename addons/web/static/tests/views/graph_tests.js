@@ -785,13 +785,40 @@ QUnit.module('Views', {
                 '</graph>',
         });
 
-        assert.strictEqual(graph.$("svg.nvd3-svg:contains('Undefined')").length, 0);
-        assert.strictEqual(graph.$("svg.nvd3-svg:contains('March')").length, 1);
-
-        testUtils.dom.click(graph.$buttons.find('.o_graph_button[data-mode=bar]'));
-        assert.strictEqual(graph.$("svg.nvd3-svg:contains('Undefined')").length, 1);
+        assert.strictEqual(graph.$("svg.nvd3-svg .nv-x:contains('Undefined')").length, 0);
         assert.strictEqual(graph.$("svg.nvd3-svg:contains('January')").length, 1);
 
+        testUtils.dom.click(graph.$buttons.find('.o_graph_button[data-mode=bar]'));
+        assert.strictEqual(graph.$("svg.nvd3-svg .nv-x:contains('Undefined')").length, 1);
+        assert.strictEqual(graph.$("svg.nvd3-svg:contains('January')").length, 1);
+
+        graph.destroy();
+    });
+
+    QUnit.test('Undefined should appear in bar, pie graph but not in line graph with multiple groupbys', function (assert) {
+        assert.expect(6);
+
+        var graph = createView({
+            View: GraphView,
+            model: "foo",
+            groupBy:['date', 'color_id'],
+            data: this.data,
+            arch: '<graph string="Partners" type="line">' +
+                        '<field name="bar"/>' +
+                '</graph>',
+        });
+
+        assert.strictEqual(graph.$("svg.nvd3-svg .nv-x:contains('Undefined')").length, 0);
+        assert.strictEqual(graph.$("svg.nvd3-svg:contains('January')").length, 1);
+
+        graph.$buttons.find('.o_graph_button[data-mode=bar]').click();
+        assert.strictEqual(graph.$("svg.nvd3-svg .nv-x:contains('Undefined')").length, 1);
+        assert.strictEqual(graph.$("svg.nvd3-svg:contains('January')").length, 1);
+
+        // Undefined should not appear after switching back to line chart
+        graph.$buttons.find('.o_graph_button[data-mode=line]').click();
+        assert.strictEqual(graph.$("svg.nvd3-svg .nv-x:contains('Undefined')").length, 0);
+        assert.strictEqual(graph.$("svg.nvd3-svg:contains('January')").length, 1);
         graph.destroy();
     });
 });

@@ -29,7 +29,7 @@ msgstr ""
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:371
 #, python-format
 msgid " already out"
-msgstr " already out"
+msgstr "вже вийшло"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__account_id
@@ -39,12 +39,12 @@ msgstr "Рахунок"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__account_journal_id
 msgid "Account Journal"
-msgstr "Журнал бухобліку"
+msgstr "Журнал проведень"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_needaction
 msgid "Action Needed"
-msgstr "Дія необхідна"
+msgstr "Необхідна дія"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__additional_landed_cost
@@ -134,7 +134,7 @@ msgstr ""
 #. module: stock_landed_costs
 #: model_terms:ir.actions.act_window,help:stock_landed_costs.action_stock_landed_cost
 msgid "Create a new landed cost"
-msgstr ""
+msgstr "Створити нові додаткові витрати"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__create_uid
@@ -159,7 +159,7 @@ msgstr "Дата"
 #. module: stock_landed_costs
 #: model_terms:ir.actions.act_window,help:stock_landed_costs.stock_landed_cost_type_action
 msgid "Define a new kind of landed cost"
-msgstr ""
+msgstr "Визначте новий вид додаткових витрат"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__name
@@ -269,7 +269,7 @@ msgstr "Якщо позначено, деякі повідомлення маю�
 #: model:ir.model.fields,help:stock_landed_costs.field_product_product__landed_cost_ok
 #: model:ir.model.fields,help:stock_landed_costs.field_product_template__landed_cost_ok
 msgid "Indicates whether the product is a landed cost."
-msgstr ""
+msgstr "Вказує, чи є товар додатковою витратою."
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_type_form
@@ -295,7 +295,7 @@ msgstr "Є додатковими витратами"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__description
 msgid "Item Description"
-msgstr "Опис пункту"
+msgstr "Опис елементу"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__account_move_id
@@ -339,12 +339,12 @@ msgstr "Додаткові витрати"
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Landed cost are computed based on the purchase unit of measure."
-msgstr "Додаткові витрати обчислюються на основі одиниці виміру закупівлі."
+msgstr "Додаткові витрати обчислюються на основі одиниці вимірювання купівлі."
 
 #. module: stock_landed_costs
 #: model:mail.message.subtype,description:stock_landed_costs.mt_stock_landed_cost_open
 msgid "Landed cost validated"
-msgstr "додаткові витрати підтверджені"
+msgstr "Додаткові витрати підтверджені"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost____last_update
@@ -497,7 +497,7 @@ msgstr "Додаткові витарти запасів"
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_stock_landed_cost_lines
 msgid "Stock Landed Cost Line"
-msgstr ""
+msgstr "Рядок складських додаткових витрат"
 
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_stock_move
@@ -543,7 +543,7 @@ msgstr ""
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_stock_valuation_adjustment_lines
 msgid "Valuation Adjustment Lines"
-msgstr ""
+msgstr "Рядки коригування собівартості"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__valuation_adjustment_lines
@@ -559,7 +559,7 @@ msgstr "Об'єм"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__website_message_ids
 msgid "Website Messages"
-msgstr "Повідомлення з вебсайту"
+msgstr "Повідомлення з веб-сайту"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__website_message_ids
@@ -579,6 +579,9 @@ msgid ""
 "only be applied for products with automated inventory valuation and FIFO "
 "costing method."
 msgstr ""
+"Ви не можете застосувати додаткові витрати на вибрані переміщення. Додаткові"
+" витрати можуть застосовуватися тільки для товарів з автоматичною оцінкою "
+"запасу та методом калькулювання FIFO."
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_type_form

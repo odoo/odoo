@@ -168,6 +168,8 @@ class CustomerPortal(CustomerPortal):
             'partner_id': order_sudo.partner_id.id,
             'report_type': 'html',
         }
+        if order_sudo.company_id:
+            values['res_company'] = order_sudo.company_id
 
         if order_sudo.has_to_be_paid():
             domain = expression.AND([

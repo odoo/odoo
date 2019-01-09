@@ -33,7 +33,7 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"%s --> Товар UoM є %s (%s) - Переміщення UoM є %s (%s)"
+"%s --> Одиниця вимірювання товару є %s (%s) - Переміщення одиниці вимірювання є %s (%s)"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:342
@@ -548,7 +548,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_rule_form
 msgid "Applicability"
-msgstr "застосовність"
+msgstr "Застосовність"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
@@ -717,17 +717,17 @@ msgstr "Штрих-код"
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_wms_barcode_nomenclature_all
 msgid "Barcode Nomenclatures"
-msgstr "Номенклатура штрихкодів"
+msgstr "Номенклатура штрих-кодів"
 
 #. module: stock
 #: model:ir.model,name:stock.model_barcode_rule
 msgid "Barcode Rule"
-msgstr "Правило штрихкоду"
+msgstr "Правило штрих-коду"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_stock_barcode
 msgid "Barcode Scanner"
-msgstr "Сканер штрихкодів"
+msgstr "Сканер штрих-кодів"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_stock_picking_batch
@@ -752,12 +752,12 @@ msgstr "Придбати"
 #. module: stock
 #: selection:product.template,tracking:0
 msgid "By Lots"
-msgstr "По партіях"
+msgstr "За партіями"
 
 #. module: stock
 #: selection:product.template,tracking:0
 msgid "By Unique Serial Number"
-msgstr "По унікальному серійному номеру"
+msgstr "За унікальним серійним номером"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:644
@@ -778,11 +778,12 @@ msgid ""
 "current stock) to gather products. If we want to chain moves and have this "
 "one to wait for the previous, this second option should be chosen."
 msgstr ""
-"Зазвичай система бере з запасів початкового розташування та пасивно чекає їх"
-" наявності. Іншим способом можна напряму створити замовлення на забезпечення"
-" для початкового розташування (ігноруючи поточну наявність запасів) щоб "
-"забрати товари. Якщо ми хочемо щоб переміщення відбувались по ланцюжку і щоб"
-" це переміщення чекало на попереднє, то потрібно обрати другий спосіб."
+"Зазвичай система бере із запасів початкового розташування та пасивно чекає "
+"їх наявності. Іншим способом можна напряму створити замовлення на "
+"забезпечення для початкового розташування (ігноруючи поточну наявність "
+"запасів) щоб забрати товари. Якщо ми хочемо щоб переміщення відбувались по "
+"ланцюжку і щоб це переміщення чекало на попереднє, то потрібно обрати другий"
+" спосіб."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__active
@@ -906,8 +907,8 @@ msgstr "Перевірте наявність операції пакуванн�
 #: model:ir.model.fields,help:stock.field_stock_location__return_location
 msgid "Check this box to allow using this location as a return location."
 msgstr ""
-"Позначте цей прапорець, щоб дозволити використовувати це місцеположення як "
-"місце повернення."
+"Позначте цей прапорець, щоб дозволити використовувати це місцезнаходження як"
+" місцезнаходження повернення."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__scrap_location
@@ -1309,12 +1310,12 @@ msgstr "Кредитна карта"
 #: code:addons/stock/models/stock_warehouse.py:525
 #, python-format
 msgid "Cross-Dock"
-msgstr "Борт-до-борту"
+msgstr "Крос-докінг:"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__crossdock_route_id
 msgid "Crossdock Route"
-msgstr "Маршрут борт-до-борту"
+msgstr "Маршрут крос-докінгу"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_report_stock_forecast__cumulative_quantity
@@ -1344,7 +1345,7 @@ msgstr ""
 "Поточна кількість товару.\n"
 "В контексті розташування запасів буде включено запаси по цьому розташуванню та по всіх підпорядкованих розташуваннях.\n"
 "В контексті складу, буде включено запаси на всіх розташуваннях запасів цього складу та на всіх підпорядкованих до нього.\n"
-"В інших випадках буде по казано запаси по всіх  складах з типом 'Внутрішній'."
+"В інших випадках включені товари складуються на будь-якому місцехнаходженні складу з типом 'Внутрішній'."
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:109
@@ -1356,7 +1357,7 @@ msgstr "Клієнт"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_template__sale_delay
 msgid "Customer Lead Time"
-msgstr "Термін поставки"
+msgstr "Час виконання клієнтом"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_partner__property_stock_customer
@@ -1472,8 +1473,8 @@ msgstr "Маршрут для видачі за замовчуванням"
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__product_uom
 msgid "Default unit of measure used for all stock operations."
 msgstr ""
-"Стандартна одиниця вимірювання, що використовується для всіх операцій з "
-"акціями."
+"Стандартна одиниця вимірювання, що використовується для всіх складських "
+"операцій."
 
 #. module: stock
 #: selection:stock.move,procure_method:0
@@ -2561,7 +2562,7 @@ msgstr "Корегування залишків"
 #: model:ir.ui.menu,name:stock.menu_action_inventory_form
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "Inventory Adjustments"
-msgstr "Корегування залишків"
+msgstr "Коригування залишків"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory__date

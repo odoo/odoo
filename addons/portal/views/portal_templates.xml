@@ -28,7 +28,7 @@
                     <nav class="navbar navbar-expand-md navbar-light bg-light">
                         <div class="container">
                             <a href="/" class="navbar-brand logo">
-                                <span t-field="res_company.logo" t-options="{'widget': 'image'}" t-att-alt="'Logo of %s' % res_company.name" t-att-title="res_company.name"/>
+                                <img t-att-src="'/logo.png?company=%s' % res_company.id" t-att-alt="'Logo of %s' % res_company.name" t-att-title="res_company.name"/>
                             </a>
                             <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#top_menu_collapse">
                                 <span class="navbar-toggler-icon"/>

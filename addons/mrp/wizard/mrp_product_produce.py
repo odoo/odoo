@@ -43,7 +43,7 @@ class MrpProductProduce(models.TransientModel):
     product_uom_id = fields.Many2one('uom.uom', 'Unit of Measure')
     lot_id = fields.Many2one('stock.production.lot', string='Lot/Serial Number')
     produce_line_ids = fields.One2many('mrp.product.produce.line', 'product_produce_id', string='Product to Track')
-    product_tracking = fields.Selection(related="product_id.tracking", readonly=False)
+    product_tracking = fields.Selection(related="product_id.tracking", readonly=True)
     is_pending_production = fields.Boolean(compute='_compute_pending_production')
 
     @api.depends('product_qty')

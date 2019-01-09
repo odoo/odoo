@@ -261,7 +261,7 @@ sAnimations.registry.websiteForum = sAnimations.Class.extend({
         ev.preventDefault();
         var $link = $(ev.currentTarget);
         this._rpc({
-            route: $link.data('href') || $link.attr('href') || $link.attr('action'),
+            route: $link.data('href') || ($link.attr('href') !== '#' && $link.attr('href')) || $link.attr('action'),
         }).then(function (data) {
             if (data.error) {
                 var $warning;

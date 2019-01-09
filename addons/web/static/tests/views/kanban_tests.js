@@ -465,7 +465,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('quick create record with quick_create_view', function (assert) {
-        assert.expect(17);
+        assert.expect(19);
 
         var kanban = createView({
             View: KanbanView,
@@ -497,6 +497,7 @@ QUnit.module('Views', {
             },
         });
 
+        assert.containsOnce(kanban, '.o_cp_controller', 'should have one control panel');
         assert.containsOnce(kanban, '.o_kanban_group:first .o_kanban_record',
             "first column should contain one record");
 
@@ -508,6 +509,7 @@ QUnit.module('Views', {
             "should have a quick create element in the first column");
         assert.strictEqual($quickCreate.find('.o_form_view.o_xxs_form_view').length, 1,
             "should have rendered an XXS form view");
+        assert.containsOnce(kanban, '.o_cp_controller', 'should not have instantiated an extra control panel');
         assert.strictEqual($quickCreate.find('input').length, 2,
             "should have two inputs");
         assert.strictEqual($quickCreate.find('.o_field_widget').length, 3,
@@ -2376,8 +2378,59 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('wait x2manys batch fetches to re-render', function (assert) {
+        assert.expect(4);
+        var done = assert.async();
+
+        var def;
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test">' +
+                        '<field name="product_id"/>' +
+                        '<templates><t t-name="kanban-box">' +
+                            '<div>' +
+                                '<field name="category_ids" widget="many2many_tags"/>' +
+                            '</div>' +
+                        '</t></templates>' +
+                    '</kanban>',
+            groupBy: ['product_id'],
+            mockRPC: function (route, args) {
+                var result = this._super(route, args);
+                if (args.method === 'read') {
+                    return $.when(def).then(function() {
+                        return result;
+                    });
+                }
+                return result;
+            },
+        });
+
+        def = $.Deferred();
+        assert.containsN(kanban, '.o_tag', 2);
+        kanban.update({groupBy: ['state']});
+
+        def.resolve().then(function () {
+            assert.containsN(kanban, '.o_tag', 2,
+                'Should display 2 tags after update');
+            assert.strictEqual(kanban.$('.o_kanban_group:eq(1) .o_tag').text(),
+                'gold', 'First category should be \'gold\'');
+            assert.strictEqual(kanban.$('.o_kanban_group:eq(2) .o_tag').text(),
+                'silver', 'Second category should be \'silver\'');
+            kanban.destroy();
+            done();
+        });
+    });
+
     QUnit.test('can drag and drop a record from one column to the next', function (assert) {
         assert.expect(9);
+
+        // @todo: remove this resequenceDef whenever the jquery upgrade branch
+        // is merged.  This is currently necessary to simulate the reality: we
+        // need the click handlers to be executed after the end of the drag and
+        // drop operation, not before.
+        var resequenceDef = $.Deferred();
 
         var envIDs = [1, 3, 2, 4]; // the ids that should be in the environment during this test
         this.data.partner.fields.sequence = {type: 'number', string: "Sequence"};
@@ -2388,7 +2441,7 @@ QUnit.module('Views', {
             arch: '<kanban class="o_kanban_test" on_create="quick_create">' +
                         '<field name="product_id"/>' +
                         '<templates><t t-name="kanban-box">' +
-                            '<div><field name="foo"/>' +
+                            '<div class="oe_kanban_global_click"><field name="foo"/>' +
                                 '<t t-if="widget.editable"><span class="thisiseditable">edit</span></t>' +
                             '</div>' +
                         '</t></templates>' +
@@ -2397,7 +2450,7 @@ QUnit.module('Views', {
             mockRPC: function (route, args) {
                 if (route === '/web/dataset/resequence') {
                     assert.ok(true, "should call resequence");
-                    return $.when(true);
+                    return resequenceDef.then(_.constant(true));
                 }
                 return this._super(route, args);
             },
@@ -2410,13 +2463,15 @@ QUnit.module('Views', {
         var $record = kanban.$('.o_kanban_group:nth-child(1) .o_kanban_record:first');
         var $group = kanban.$('.o_kanban_group:nth-child(2)');
         envIDs = [3, 2, 4, 1]; // first record of first column moved to the bottom of second column
-        testUtils.dom.dragAndDrop($record, $group);
+        testUtils.dom.dragAndDrop($record, $group, {withTrailingClick: true});
 
+        resequenceDef.resolve();
         assert.containsOnce(kanban, '.o_kanban_group:nth-child(1) .o_kanban_record');
         assert.containsN(kanban, '.o_kanban_group:nth-child(2) .o_kanban_record', 3);
         assert.containsN(kanban, '.thisiseditable', 4);
         assert.deepEqual(kanban.exportState().resIds, envIDs);
 
+        resequenceDef.resolve();
         kanban.destroy();
     });
 

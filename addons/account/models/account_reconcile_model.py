@@ -84,7 +84,8 @@ class AccountReconcileModel(models.Model):
     amount = fields.Float(string='Write-off Amount', digits=0, required=True, default=100.0, help="Fixed amount will count as a debit if it is negative, as a credit if it is positive.")
     tax_id = fields.Many2one('account.tax', string='Tax', ondelete='restrict')
     analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', ondelete='set null')
-    analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags')
+    analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags',
+                                        relation='account_reconcile_model_analytic_tag_rel')
 
     # Second part fields.
     has_second_line = fields.Boolean(string='Add a second line', default=False)
@@ -104,7 +105,8 @@ class AccountReconcileModel(models.Model):
     second_amount = fields.Float(string='Second Write-off Amount', digits=0, required=True, default=100.0, help="Fixed amount will count as a debit if it is negative, as a credit if it is positive.")
     second_tax_id = fields.Many2one('account.tax', string='Second Tax', ondelete='restrict', domain=[('type_tax_use', '=', 'purchase')])
     second_analytic_account_id = fields.Many2one('account.analytic.account', string='Second Analytic Account', ondelete='set null')
-    second_analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Second Analytic Tags')
+    second_analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Second Analytic Tags',
+                                               relation='account_reconcile_model_second_analytic_tag_rel')
 
     @api.onchange('name')
     def onchange_name(self):
@@ -392,17 +394,17 @@ class AccountReconcileModel(models.Model):
                 aml.date_maturity                   AS aml_date_maturity,
                 aml.amount_residual                 AS aml_amount_residual,
                 aml.amount_residual_currency        AS aml_amount_residual_currency,
-                CASE WHEN TRIM(REGEXP_REPLACE(move.name, '[^0-9]', '', 'g')) = '' THEN FALSE
-                    ELSE
-                        TRIM(REGEXP_REPLACE(move.name, '[^0-9]', '', 'g'))
-                            = ANY(regexp_split_to_array(REGEXP_REPLACE(st_line.name, '[^(0-9|\s)]', '', 'g'), '\s+'))
-                        OR (
-                            move.ref IS NOT NULL
-                            AND TRIM(REGEXP_REPLACE(move.ref, '[^0-9]', '', 'g')) != ''
-                            AND TRIM(REGEXP_REPLACE(move.ref, '[^0-9]', '', 'g'))
-                                = ANY(regexp_split_to_array(REGEXP_REPLACE(st_line.name, '[^(0-9|\s)]', '', 'g'), '\s+'))
-                        )
-                END                                 AS communication_flag
+
+                -- Determine a matching or not with the statement line communication using the move.name or move.ref.
+                regexp_split_to_array(TRIM(REGEXP_REPLACE(move.name, '[^0-9|^\s]', '', 'g')),'\s+')
+                && regexp_split_to_array(TRIM(REGEXP_REPLACE(st_line.name, '[^0-9|^\s]', '', 'g')), '\s+')
+                OR
+                (
+                    move.ref IS NOT NULL
+                    AND
+                        regexp_split_to_array(TRIM(REGEXP_REPLACE(move.ref, '[^0-9|^\s]', '', 'g')),'\s+')
+                        && regexp_split_to_array(TRIM(REGEXP_REPLACE(st_line.name, '[^0-9|^\s]', '', 'g')), '\s+')
+                )                                   AS communication_flag
             FROM account_bank_statement_line st_line
             LEFT JOIN account_journal journal       ON journal.id = st_line.journal_id
             LEFT JOIN jnl_precision                 ON jnl_precision.journal_id = journal.id
@@ -427,24 +429,30 @@ class AccountReconcileModel(models.Model):
 
                 -- if there is a partner, propose all aml of the partner, otherwise propose only the ones
                 -- matching the statement line communication
-                AND CASE WHEN line_partner.partner_id != 0 THEN
+                AND 
+                (
+                    (
+                        line_partner.partner_id != 0
+                        AND
                         aml.partner_id = line_partner.partner_id
-                    ELSE
-                        ( 
-                            CASE WHEN TRIM(REGEXP_REPLACE(move.name, '[^0-9]', '', 'g')) = '' THEN FALSE
-                            ELSE
-                                TRIM(REGEXP_REPLACE(move.name, '[^0-9]', '', 'g'))
-                                    = ANY(regexp_split_to_array(REGEXP_REPLACE(st_line.name, '[^(0-9|\s)]', '', 'g'), '\s+'))
-                                OR (
-                                    move.ref IS NOT NULL
-                                    AND TRIM(REGEXP_REPLACE(move.ref, '[^0-9]', '', 'g')) != ''
-                                    AND TRIM(REGEXP_REPLACE(move.ref, '[^0-9]', '', 'g'))
-                                        = ANY(regexp_split_to_array(REGEXP_REPLACE(st_line.name, '[^(0-9|\s)]', '', 'g'), '\s+'))
-                                )
-                            END
+                    )
+                    OR
+                    (
+                        line_partner.partner_id = 0
+                        AND
+                        (
+                            regexp_split_to_array(TRIM(REGEXP_REPLACE(move.name, '[^0-9|^\s]', '', 'g')),'\s+')
+                            && regexp_split_to_array(TRIM(REGEXP_REPLACE(st_line.name, '[^0-9|^\s]', '', 'g')), '\s+')
+                            OR
+                            (
+                                move.ref IS NOT NULL
+                                AND
+                                    regexp_split_to_array(TRIM(REGEXP_REPLACE(move.ref, '[^0-9|^\s]', '', 'g')),'\s+')
+                                    && regexp_split_to_array(TRIM(REGEXP_REPLACE(st_line.name, '[^0-9|^\s]', '', 'g')), '\s+')
+                            )
                         )
-                    END
-
+                    )
+                )
                 AND
                 (
                     (

@@ -773,16 +773,6 @@ class Field(MetaField('DummyField', (object,), {})):
     # Conversion of values
     #
 
-    def cache_key(self, record):
-        """ Return the key to get/set the value of ``self`` on ``record`` in
-            cache, the full cache key being ``(self, record.id, key)``.
-        """
-        env = record.env
-        # IMPORTANT: odoo.api.Cache.get_records() depends on the fact that the
-        # result does not depend on record.id. If you ever make the following
-        # dependent on record.id, don't forget to fix the other method!
-        return env if self.context_dependent else (env.cr, env.uid)
-
     def null(self, record):
         """ Return the null value for this field in the record format. """
         return False
@@ -1726,6 +1716,7 @@ class Datetime(Field):
     def convert_to_export(self, value, record):
         if not value:
             return ''
+        value = self.convert_to_display_name(value, record)
         return self.from_string(value) if record._context.get('export_raw_data') else ustr(value)
 
     def convert_to_display_name(self, value, record):
@@ -2553,6 +2544,8 @@ class Many2many(_RelationalMulti):
                     self.column2 = '%s_id' % comodel._table
             # check validity of table name
             check_pg_name(self.relation)
+        else:
+            self.relation = self.column1 = self.column2 = None
 
     def _setup_regular_full(self, model):
         super(Many2many, self)._setup_regular_full(model)

@@ -233,14 +233,14 @@ elif employee.marital in ['married', 'cohabitant'] and employee.spouse_fiscal_st
         <field name="amount_select">code</field>
         <field name="amount_python_compute">
 def compute_basic_bareme(value):
-    if value &lt;= 12600.0:
+    if value &lt;= 12860.0:
         basic_bareme = value * 0.2675
-    elif value &lt;= 18610.0:
-        basic_bareme = 3370.5 + 0.428 * (value - 12600.0)
-    elif value &lt;= 39660.0:
-        basic_bareme = 5942.78 + 0.4815 * (value - 18610.0)
+    elif value &lt;= 19630.0:
+        basic_bareme = 3440.05 + 0.428 * (value - 12860.00)
+    elif value &lt;= 40470.00:
+        basic_bareme = 6337.61 + 0.4815 * (value - 19630.00)
     else:
-        basic_bareme = 16078.36 + 0.535 * (value - 39660.0)
+        basic_bareme = 16372.07 + 0.535 * (value - 40470.0)
     return float_round(basic_bareme, precision_rounding=0.01)
 
 def convert_to_month(value):
@@ -254,10 +254,10 @@ lower_bound = categories.GROSS - categories.GROSS % 15
 yearly_gross_revenue = lower_bound * 12.0
 
 # yearly_net_taxable_amount = Revenu Annuel Net Imposable
-if yearly_gross_revenue &lt;= 15733.33:
+if yearly_gross_revenue &lt;= 16033.33:
     yearly_net_taxable_revenue = yearly_gross_revenue * (1.0 - 0.3)
 else:
-    yearly_net_taxable_revenue = yearly_gross_revenue - 4720.0
+    yearly_net_taxable_revenue = yearly_gross_revenue - 4810.0
 
 # BAREME III: Non resident
 if employee.resident_bool:
@@ -266,39 +266,39 @@ if employee.resident_bool:
 else:
     # BAREME I: Isolated or spouse with income 
     if employee.marital in ['divorced', 'single', 'widower'] or (employee.marital in ['married', 'cohabitant'] and employee.spouse_fiscal_status=='with income'):
-        basic_bareme = max(compute_basic_bareme(yearly_net_taxable_revenue) - 1690.6, 0.0)
+        basic_bareme = max(compute_basic_bareme(yearly_net_taxable_revenue) - 2065.1, 0.0)
         withholding_tax_amount = convert_to_month(basic_bareme)
 
     # BAREME II: spouse without income
     if employee.marital in ['married', 'cohabitant'] and employee.spouse_fiscal_status=='without income':
-        yearly_net_taxable_revenue_for_spouse = min(yearly_net_taxable_revenue * 0.3, 10710.0)
+        yearly_net_taxable_revenue_for_spouse = min(yearly_net_taxable_revenue * 0.3, 10930.0)
         basic_bareme_1 = compute_basic_bareme(yearly_net_taxable_revenue_for_spouse)
         basic_bareme_2 = compute_basic_bareme(yearly_net_taxable_revenue - yearly_net_taxable_revenue_for_spouse)
-        withholding_tax_amount = convert_to_month(max(basic_bareme_1 + basic_bareme_2 - 3381.2, 0))
+        withholding_tax_amount = convert_to_month(max(basic_bareme_1 + basic_bareme_2 - 4130.20, 0))
 
 # Reduction for isolated people and for other family charges
 if employee.marital in ['divorced', 'single', 'widower'] or (employee.spouse_net_revenue &gt; 0.0 or employee.spouse_other_net_revenue &gt; 0.0):
     if employee.marital in ['divorced', 'single', 'widower']:
-        withholding_tax_amount -= 25.0
+        withholding_tax_amount -= 26.0
     if employee.marital == 'widower' or (employee.marital in ['divorced', 'single', 'widower'] and employee.dependent_children):
         withholding_tax_amount -= 36.0
     if employee.disabled:
         withholding_tax_amount -= 36.0
     if employee.other_dependent_people and employee.dependent_seniors:
-        withholding_tax_amount -= 73.0 * employee.dependent_seniors
+        withholding_tax_amount -= 80 * employee.dependent_seniors
     if employee.other_dependent_people and employee.dependent_juniors:
         withholding_tax_amount -= 36.0 * employee.dependent_juniors
-    if employee.marital in ['married', 'cohabitant'] and employee.spouse_fiscal_status=='with income' and employee.spouse_net_revenue &lt;= 225.0:
-        withholding_tax_amount -= 112.5
-    if employee.marital in ['married', 'cohabitant'] and employee.spouse_fiscal_status=='with income' and not employee.spouse_net_revenue and employee.spouse_other_net_revenue &lt;= 450.0:
-        withholding_tax_amount -= 225.0
-if employee.spouse_net_revenue == 0.0 and employee.spouse_other_net_revenue == 0.0:
+    if employee.marital in ['married', 'cohabitant'] and employee.spouse_fiscal_status=='with income' and employee.spouse_net_revenue &lt;= 230.0:
+        withholding_tax_amount -= 115.0
+    if employee.marital in ['married', 'cohabitant'] and employee.spouse_fiscal_status=='with income' and not employee.spouse_net_revenue and employee.spouse_other_net_revenue &lt;= 459.0:
+        withholding_tax_amount -= 229.5
+if employee.marital in ['married', 'cohabitant'] and employee.spouse_net_revenue == 0.0 and employee.spouse_other_net_revenue == 0.0:
     if employee.disabled:
         withholding_tax_amount -= 36.0
     if employee.disabled_spouse_bool:
         withholding_tax_amount -= 36.0
     if employee.other_dependent_people and employee.dependent_seniors:
-        withholding_tax_amount -= 73.0 * employee.dependent_seniors
+        withholding_tax_amount -= 80.0 * employee.dependent_seniors
     if employee.other_dependent_people and employee.dependent_juniors:
         withholding_tax_amount -= 36.0 * employee.dependent_juniors
 
@@ -307,19 +307,19 @@ if employee.dependent_children:
     if employee.dependent_children == 1:
         withholding_tax_amount -= 36.0
     if employee.dependent_children == 2:
-        withholding_tax_amount -= 97.0
+        withholding_tax_amount -= 104.0
     if employee.dependent_children == 3:
-        withholding_tax_amount -= 253.0
+        withholding_tax_amount -= 275.0
     if employee.dependent_children == 4:
-        withholding_tax_amount -= 454.0
+        withholding_tax_amount -= 483.0
     if employee.dependent_children == 5:
-        withholding_tax_amount -= 677.0
+        withholding_tax_amount -= 713.0
     if employee.dependent_children == 6:
-        withholding_tax_amount -= 902.0
+        withholding_tax_amount -= 944.0
     if employee.dependent_children == 7:
-        withholding_tax_amount -= 1128.0
+        withholding_tax_amount -= 1174.0
     if employee.dependent_children &gt;= 8:
-        withholding_tax_amount -= 1371.0 + (employee.dependent_children - 8) * 251.0
+        withholding_tax_amount -= 1428.0 + (employee.dependent_children - 8) * 256.0
 
 result = - max(withholding_tax_amount, 0.0)
 

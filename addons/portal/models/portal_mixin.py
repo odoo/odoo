@@ -80,7 +80,7 @@ class PortalMixin(models.AbstractModel):
                     'has_button_access': False,
                     'button_access': {
                         'url': access_link,
-                        'title': ('View %s') % self.env['ir.model']._get(message.model).display_name,
+                        'title': _('View %s') % self.env['ir.model']._get(message.model).display_name,
                     },
                 })
             ]
