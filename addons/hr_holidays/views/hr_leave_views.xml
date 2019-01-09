@@ -33,6 +33,7 @@
                 <filter string="My Department Leaves" name="department" domain="[('department_id.member_ids.user_id', '=', uid)]" help="My Department Leaves"/>
                 <filter string="People I Manage" name="managed_people" domain="[('employee_id.parent_id.user_id', '=', uid)]" help="Leaves of people you are manager of"/>
                 <filter string="My Team Leaves" name="my_team_leaves" domain="[('employee_id.leave_manager_id', '=', uid)]" groups="hr_holidays.group_hr_holidays_team_leader" help="Leaves of Your Team Members"/>
+                <filter string="My Leaves" name="my_leaves" domain="[('employee_id.user_id', '=', uid)]"/>
                 <separator/>
                 <filter string="To Report in Payslip" name="gray" domain="[('payslip_status', '=', False)]" groups="hr_holidays.group_hr_holidays_manager"/>
                 <separator/>
@@ -40,8 +41,6 @@
                 <separator/>
                 <filter name="year" string="Current Year"
                     domain="[('holiday_status_id.active', '=', True)]" help="Active Leaves"/>
-                <separator/>
-                <filter string="My Leaves" name="my_leaves" domain="[('employee_id.user_id', '=', uid)]"/>
                 <separator/>
                 <filter string="Late Activities" name="activities_overdue"
                     domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
@@ -350,7 +349,7 @@
         <field name="res_model">hr.leave</field>
         <field name="view_type">form</field>
         <field name="view_mode">calendar</field>
-        <field name="context">{'search_default_year': 1, 'search_default_group_employee': 1}</field>
+        <field name="context">{'search_default_year': 1, 'search_default_group_employee': 1, 'search_default_managed_people': 1, 'search_default_my_leaves': 1}</field>
         <field name="domain">[('holiday_type','=','employee'), ('state', '!=', 'refuse')]</field>
         <field name="search_view_id" ref="view_hr_holidays_filter"/>
     </record>
