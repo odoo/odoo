@@ -11,7 +11,7 @@ var _t = core._t;
 var AttachDocument = Widget.extend({
     template: 'AttachDocument',
     events: {
-        'click span.o_attach_document': '_onClickAttachDocument',
+        'click': '_onClickAttachDocument',
         'change input.o_input_file': '_onFileChanged',
     },
     /**
@@ -76,6 +76,9 @@ var AttachDocument = Widget.extend({
      * @param {Event} ev
      */
     _onClickAttachDocument: function (ev) {
+        if ($(ev.target).is('input.o_input_file')) {
+            return;
+        }
         var fieldNames = this.getParent().canBeSaved(this.state.id);
         if (fieldNames.length) {
             return this._notifyInvalidFields(fieldNames);

@@ -114,13 +114,21 @@ var KanbanColumn = Widget.extend({
                 revert: 0,
                 delay: 0,
                 items: '> .o_kanban_record:not(.o_updating)',
-                helper: 'clone',
                 cursor: 'move',
                 over: function () {
                     self.$el.addClass('o_kanban_hover');
                 },
                 out: function () {
                     self.$el.removeClass('o_kanban_hover');
+                },
+                start: function (event, ui) {
+                    ui.item.addClass('o_currently_dragged');
+                },
+                stop: function (event, ui) {
+                    var item = ui.item;
+                    setTimeout(function () {
+                        item.removeClass('o_currently_dragged');
+                    });
                 },
                 update: function (event, ui) {
                     var record = ui.item.data('record');

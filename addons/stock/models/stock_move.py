@@ -512,7 +512,7 @@ class StockMove(models.Model):
             rules = self.env['procurement.group']._search_rule(move.route_ids, move.product_id, warehouse_id, domain)
 
             # Make sure it is not returning the return
-            if rules and (not move.origin_returned_move_id or move.origin_returned_move_id.location_dest_id.id != rules.location_dest_id.id):
+            if rules and (not move.origin_returned_move_id or move.origin_returned_move_id.location_dest_id.id != rules.location_id.id):
                 rules._run_push(move)
 
     def _merge_moves_fields(self):

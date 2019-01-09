@@ -1,3 +1,4 @@
+
 odoo.define('web_tour.RunningTourActionHelper', function (require) {
 "use strict";
 
@@ -20,6 +21,9 @@ var RunningTourActionHelper = core.Class.extend({
     },
     tripleclick: function (element) {
         this._click(this._get_action_values(element), 3);
+    },
+    clicknoleave: function (element) {
+        this._click(this._get_action_values(element), 1, false);
     },
     text: function (text, element) {
         this._text(this._get_action_values(element), text);
@@ -50,7 +54,7 @@ var RunningTourActionHelper = core.Class.extend({
             consume_event: consume_event,
         };
     },
-    _click: function (values, nb) {
+    _click: function (values, nb, leave) {
         trigger_mouse_event(values.$element, "mouseover");
         values.$element.trigger("mouseenter");
         for (var i = 1 ; i <= (nb || 1) ; i++) {
@@ -61,8 +65,10 @@ var RunningTourActionHelper = core.Class.extend({
                 trigger_mouse_event(values.$element, "dblclick");
             }
         }
-        trigger_mouse_event(values.$element, "mouseout");
-        values.$element.trigger("mouseleave");
+        if (leave !== false) {
+            trigger_mouse_event(values.$element, "mouseout");
+            values.$element.trigger("mouseleave");
+        }
 
         function trigger_mouse_event($element, type, count) {
             var e = document.createEvent("MouseEvents");

@@ -17,6 +17,10 @@ odoo.define('web.test_utils_dom', function () {
  * events, but it is enough to help test drag and drop operations with jqueryUI
  * sortable.
  *
+ * @todo: remove the withTrailingClick option when the jquery update branch is
+ *   merged.  This is not the default as of now, because handlers are triggered
+ *   synchronously, which is not the same as the 'reality'.
+ *
  * @param {jqueryElement} $el
  * @param {jqueryElement} $to
  * @param {Object} [options]
@@ -27,9 +31,13 @@ odoo.define('web.test_utils_dom', function () {
  * @param {boolean} [options.continueMove=false] whether to trigger the
  *   mousedown action (will only work after another call of this function with
  *   without this option)
+ * @param {boolean} [options.withTrailingClick=false] if true, this utility
+ *   function will also trigger a click on the target after the mouseup event
+ *   (this is actually what happens when a drag and drop operation is done)
  */
 function dragAndDrop($el, $to, options) {
-    var position = (options && options.position) || 'center';
+    options = options || {};
+    var position = options.position || 'center';
     var elementCenter = $el.offset();
     var toOffset = $to.offset();
 
@@ -58,7 +66,7 @@ function dragAndDrop($el, $to, options) {
         toOffset.top += bound.top;
     }
     $el.trigger($.Event("mouseenter"));
-    if (!(options && options.continueMove)) {
+    if (!(options.continueMove)) {
         elementCenter.left += $el.outerWidth() / 2;
         elementCenter.top += $el.outerHeight() / 2;
 
@@ -75,12 +83,15 @@ function dragAndDrop($el, $to, options) {
         pageY: toOffset.top
     }));
 
-    if (!(options && options.disableDrop)) {
+    if (!options.disableDrop) {
         $el.trigger($.Event("mouseup", {
             which: 1,
             pageX: toOffset.left,
             pageY: toOffset.top
         }));
+        if (options.withTrailingClick) {
+            $el.click();
+        }
     } else {
         // It's impossible to drag another element when one is already
         // being dragged. So it's necessary to finish the drop when the test is

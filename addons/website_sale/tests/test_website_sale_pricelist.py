@@ -52,7 +52,7 @@ class TestWebsitePriceList(TransactionCase):
         )
         return pls
 
-    def _test_get_pricelist_available_show(self):
+    def test_get_pricelist_available_show(self):
         show = True
         current_pl = False
 
@@ -68,7 +68,7 @@ class TestWebsitePriceList(TransactionCase):
             self.assertEquals(len(set(pls.mapped('name')) & set(result)), len(pls), 'Test failed for %s (%s %s vs %s %s)'
                               % (country, len(pls), pls.mapped('name'), len(result), result))
 
-    def _test_get_pricelist_available_not_show(self):
+    def test_get_pricelist_available_not_show(self):
         show = False
         current_pl = False
 
@@ -85,7 +85,7 @@ class TestWebsitePriceList(TransactionCase):
             self.assertEquals(len(set(pls.mapped('name')) & set(result)), len(pls), 'Test failed for %s (%s %s vs %s %s)'
                               % (country, len(pls), pls.mapped('name'), len(result), result))
 
-    def _test_get_pricelist_available_promocode(self):
+    def test_get_pricelist_available_promocode(self):
         christmas_pl = self.ref('website_sale.list_christmas')
         public_pl = self.ref('product.list0')
         self.args = {

@@ -3434,6 +3434,79 @@ QUnit.module('ActionManager', {
         actionManager.destroy();
     });
 
+    QUnit.test('fullscreen on action change: back to a "current" action', function (assert) {
+        assert.expect(3);
+
+        this.actions[0].target = 'fullscreen';
+        this.archs['partner,false,form'] = '<form>' +
+                                            '<button name="1" type="action" class="oe_stat_button" />' +
+                                        '</form>';
+
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            intercepts: {
+                toggle_fullscreen: function (ev) {
+                    var fullscreen = ev.data.fullscreen;
+
+                    switch (toggleFullscreenCalls) {
+                        case 0:
+                            assert.strictEqual(fullscreen, false);
+                            break;
+                        case 1:
+                            assert.strictEqual(fullscreen, true);
+                            break;
+                        case 2:
+                            assert.strictEqual(fullscreen, false);
+                            break;
+                    }
+                },
+            },
+
+        });
+
+        var toggleFullscreenCalls = 0;
+        actionManager.doAction(6);
+
+        toggleFullscreenCalls = 1;
+        actionManager.$('button[name=1]').click();
+
+        toggleFullscreenCalls = 2;
+        $('.breadcrumb li a:first').click();
+
+        actionManager.destroy();
+    });
+
+    QUnit.test('fullscreen on action change: all "fullscreen" actions', function (assert) {
+        assert.expect(3);
+
+        this.actions[5].target = 'fullscreen';
+        this.archs['partner,false,form'] = '<form>' +
+                                            '<button name="1" type="action" class="oe_stat_button" />' +
+                                        '</form>';
+
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            intercepts: {
+                toggle_fullscreen: function (ev) {
+                    var fullscreen = ev.data.fullscreen;
+                    assert.strictEqual(fullscreen, true);
+                },
+            },
+        });
+
+        actionManager.doAction(6);
+
+        actionManager.$('button[name=1]').click();
+
+        $('.breadcrumb li a:first').click();
+
+        actionManager.destroy();
+    });
+
     QUnit.module('"ir.actions.act_window_close" actions');
 
     QUnit.test('close the currently opened dialog', function (assert) {
