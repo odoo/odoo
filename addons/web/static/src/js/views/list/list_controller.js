@@ -71,15 +71,9 @@ var ListController = BasicController.extend({
         // TODO: this method should be synchronous...
         var self = this;
         if (this.$('thead .o_list_record_selector input').prop('checked')) {
-            var searchData = this.searchView.build_search_data();
-            var userContext = this.getSession().user_context;
-            var results = pyUtils.eval_domains_and_contexts({
-                domains: searchData.domains,
-                contexts: [userContext].concat(searchData.contexts),
-                group_by_seq: searchData.groupbys || []
-            });
+            var searchQuery = this._controlPanel ? this._controlPanel.getSearchQuery() : {};
             var record = self.model.get(self.handle, {raw: true});
-            return $.when(record.getDomain().concat(results.domain || []));
+            return $.when(record.getDomain().concat(searchQuery.domain || []));
         } else {
             return $.Deferred().resolve();
         }
