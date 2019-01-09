@@ -173,7 +173,6 @@ class Website(models.Model):
         default_menu = self.env.ref('website.main_menu')
         self.copy_menu_hierarchy(default_menu)
 
-    @api.model
     def copy_menu_hierarchy(self, top_menu):
         def copy_menu(menu, t_menu):
             new_menu = menu.copy({
@@ -280,11 +279,6 @@ class Website(models.Model):
             inc += 1
             key_copy = string + (inc and "-%s" % inc or "")
         return key_copy
-
-    def key_to_view_id(self, view_id):
-        return self.env['ir.ui.view'].search([
-            ('id', '=', view_id), ('type', '=', 'qweb')
-        ] + self.env['website'].website_domain(self._context.get('website_id')))
 
     @api.model
     def page_search_dependencies(self, page_id=False):
@@ -504,6 +498,42 @@ class Website(models.Model):
     @api.model
     def is_public_user(self):
         return request.env.user.id == request.website.user_id.id
+
+    @api.model
+    def viewref(self, view_id, raise_if_not_found=True):
+        ''' Given an xml_id or a view_id, return the corresponding view record.
+            In case of website context, return the most specific one.
+            :param view_id: either a string xml_id or an integer view_id
+            :param raise_if_not_found: should the method raise an error if no view found
+            :return: The view record or empty recordset
+        '''
+        View = self.env['ir.ui.view']
+        view = None
+        if isinstance(view_id, str):
+            if 'website_id' in self._context:
+                domain = [('key', '=', view_id)] + self.env['website'].website_domain(self._context.get('website_id'))
+                order = 'website_id'
+            else:
+                domain = [('key', '=', view_id)]
+                order = View._order
+            views = View.with_context(active_test=False).search(domain, order=order)
+            if views:
+                view = views.filter_duplicate()
+            else:
+                view = self.env.ref(view_id)
+                # self.env.ref might return something else than an ir.ui.view (eg: a theme.ir.ui.view)
+                if view._name != 'ir.ui.view':
+                    view = None
+        elif isinstance(view_id, int):
+            view = View.browse(view_id)
+        else:
+            raise ValueError('Expecting a string or an integer, not a %s.' % (type(view_id)))
+
+        if view:
+            return view
+        if raise_if_not_found:
+            raise ValueError('No record found for unique ID %s. It may have been deleted.' % (view_id))
+        return None
 
     @api.model
     def get_template(self, template):

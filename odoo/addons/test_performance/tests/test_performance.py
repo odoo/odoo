@@ -116,7 +116,7 @@ class TestPerformance(TransactionCase):
 
         # link N lines from rec1 to rec2: O(1) queries
         rec1.invalidate_cache()
-        with self.assertQueryCount(13):
+        with self.assertQueryCount(14):
             rec2.write({'line_ids': [(4, line.id) for line in lines[0]]})
         self.assertEqual(rec1.line_ids, lines[1:])
         self.assertEqual(rec2.line_ids, lines[0])
@@ -153,7 +153,7 @@ class TestPerformance(TransactionCase):
 
         # set N lines in rec2: O(1) queries
         rec1.invalidate_cache()
-        with self.assertQueryCount(14):
+        with self.assertQueryCount(15):
             rec2.write({'line_ids': [(6, 0, lines[0].ids)]})
         self.assertEqual(rec1.line_ids, lines[1:])
         self.assertEqual(rec2.line_ids, lines[0])
