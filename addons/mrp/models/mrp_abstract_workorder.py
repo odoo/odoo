@@ -146,6 +146,7 @@ class MrpAbstractWorkorder(models.AbstractModel):
                     line = {
                         'move_id': move.id,
                         'qty_to_consume': 1,
+                        'qty_done': 1,
                     }
                     lines.append(line)
                     qty_to_consume -= 1

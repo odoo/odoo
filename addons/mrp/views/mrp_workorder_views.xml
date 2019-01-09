@@ -158,7 +158,7 @@
                             <field name="product_id"/>
                             <field name="product_tracking" invisible="1"/>
                             <field name="lot_id" attrs="{'readonly': [('product_tracking', '=', 'none')]}" domain="[('product_id', '=', product_id)]" context="{'default_product_id': product_id}"/>
-                            <field name="qty_done"/>
+                            <field name="qty_done" string="Done"/>
                             <field name="product_uom_id" invisible="1"/>
                             <field name="move_id" invisible="1"/>
                         </tree>
