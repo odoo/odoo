@@ -454,7 +454,7 @@ Triggers action automatically on a predefined frequency.
 
     .. code-block:: python
 
-      model.<method_name>
+      model.<method_name>()
 
 ``nextcall``
     Next planned execution date of this action (date/time format)
