@@ -128,9 +128,9 @@ var ThreadWindow = AbstractThreadWindow.extend({
      *
      * Do not display the input in the following cases:
      *
-     *      - no thread related to this window
-     *      - window of a mailbox (temp: let us have mailboxes in window mode)
-     *      - window of a thread with mass mailing
+     * - no thread related to this window
+     * - window of a mailbox (temp: let us have mailboxes in window mode)
+     * - window of a thread with mass mailing
      *
      * Any other threads show the input in the window.
      *
