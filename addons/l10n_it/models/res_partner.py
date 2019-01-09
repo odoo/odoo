@@ -8,27 +8,27 @@ class ResPartner(models.Model):
     _name = 'res.partner'
     _inherit = 'res.partner'
 
-    pec_email = fields.Char(string="PEC e-mail")
-    codice_fiscale = fields.Char(string="Codice Fiscale", size=16)
-    pa_index = fields.Char(string="PA index",
+    l10n_it_pec_email = fields.Char(string="PEC e-mail")
+    l10n_it_codice_fiscale = fields.Char(string="Codice Fiscale", size=16)
+    l10n_it_pa_index = fields.Char(string="PA index",
                            size=7,
                            help="Must contain the 6-character (or 7) code, present in the PA\
                                    Index in the information relative to the electronic invoicing service,\
                                    associated with the office which, within the addressee administration, deals\
                                    with receiving (and processing) the invoice.")
 
-    @api.constrains('codice_fiscale')
+    @api.constrains('l10n_it_codice_fiscale')
     def _check_codice_fiscale(self):
         for record in self:
-            if not record.codice_fiscale:
+            if not record.l10n_it_codice_fiscale:
                 continue
-            if len(record.codice_fiscale) < 11:
+            if len(record.l10n_it_codice_fiscale) < 11:
                 raise ValidationError("Codice fiscale must have between 11 and 16 characters.")
 
-    @api.constrains('pa_index')
-    def _check_pa_index(self):
+    @api.constrains('l10n_it_pa_index')
+    def _check_l10n_it_pa_index(self):
         for record in self:
-            if not record.pa_index:
+            if not record.l10n_it_pa_index:
                 continue
-            if len(record.pa_index) < 6:
+            if len(record.l10n_it_pa_index) < 6:
                 raise ValidationError("PA index must have between 6 and 7 characters.")

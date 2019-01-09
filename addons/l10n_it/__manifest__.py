@@ -20,7 +20,6 @@ Italian accounting chart and localization.
     'website': 'http://www.openerp-italia.org/',
     'data': [
         'security/ir.model.access.csv',
-        'security/account_security.xml',
         'data/l10n_it_chart_data.xml',
         'data/account.account.template.csv',
         'data/account.tax.group.csv',

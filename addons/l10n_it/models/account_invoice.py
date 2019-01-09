@@ -5,6 +5,7 @@ import base64
 import zipfile
 import io
 import logging
+import re
 
 from datetime import date, datetime
 
@@ -46,7 +47,7 @@ class AccountInvoice(models.Model):
     _inherit = 'account.invoice'
     _name = 'account.invoice'
 
-    send_state = fields.Selection([
+    l10n_it_send_state = fields.Selection([
         ('new', 'New'),
         ('other', 'Other'),
         ('to_send', 'Not yet send'),
@@ -60,60 +61,53 @@ class AccountInvoice(models.Model):
                         could not be delivered to the addressee') # ok we must do nothing
     ], default='to_send')
 
-    stamp_duty = fields.Float(default=0, string="Dati Bollo", size=15, readonly=True, states={'draft': [('readonly', False)]})
+    l10n_it_stamp_duty = fields.Float(default=0, string="Dati Bollo", size=15, readonly=True, states={'draft': [('readonly', False)]})
 
-    document_order_data_line_ids = fields.One2many('document.order.data', 'invoice_id', string='Document order',
+    l10n_it_document_order_ids = fields.One2many('document.order.data', 'l10n_it_invoice_id', string='Document order',
                                                    readonly=True, states={'draft': [('readonly', False)]}, copy=True)
 
-    ddt_id = fields.Many2one('l10n.it.ddt', string='DDT', readonly=True, states={'draft': [('readonly', False)]})
+    l10n_it_ddt_id = fields.Many2one('l10n.it.ddt', string='DDT', readonly=True, states={'draft': [('readonly', False)]})
 
-    document_unique_seq = fields.Char(help="Unique sequence use to send this document to government", readonly=True)
-    doc_unique_name = fields.Char(readonly=True)
+    l10n_it_progressive_number = fields.Char(help="Unique sequence use to send this document to government", readonly=True)
+    l10n_it_einvoice_name = fields.Char(readonly=True)
 
-    @api.onchange('ddt_id')
-    def onchange_ddt_id(self):
-        for line in self.invoice_line_ids:
-            line.ddt_line_ids = self.ddt_id
+    l10n_it_einvoice_id = fields.Many2one('ir.attachment', string="Electronic invoice")
+
 
     @api.multi
     def invoice_validate(self):
         super(AccountInvoice, self).invoice_validate()
         for invoice in self:
             if invoice.type == 'in_invoice' or invoice.type == 'in_refund':
-                invoice.send_state = "other"
+                invoice.l10n_it_send_state = "other"
                 continue
 
             invoice._check_before_xml_exporting()
 
-            if not invoice.document_unique_seq:
-                invoice.document_unique_seq = invoice.env['ir.sequence'].next_by_code('account.it.invoice')
+            if not invoice.l10n_it_progressive_number:
+                invoice.l10n_it_progressive_number = invoice.env['ir.sequence'].next_by_code('account.it.invoice')
 
             invoice.invoice_generate_xml()
-            invoice.send_state = "to_send"
+            invoice.l10n_it_send_state = "to_send"
             invoice.send_pec_mail()
 
     @api.multi
     def invoice_generate_xml(self):
         for invoice in self:
-            attachment = self.env['ir.attachment'].search([
-                ('res_id', 'in', invoice.ids),
-                ('res_model', '=', invoice._name),
-                ('mimetype', 'ilike', 'xml')
-            ])
-            if attachment and invoice.send_state not in ['invalid', 'to_send']:
+            if invoice.l10n_it_einvoice_id and invoice.l10n_it_send_state not in ['invalid', 'to_send']:
                 raise UserError(_("You can't regenerate an E-Invoice when the first one is sent and there are no errors"))
-            if attachment:
-                attachment.unlink()
+            if invoice.l10n_it_einvoice_id:
+                invoice.l10n_it_einvoice_id.unlink()
             report_name = '%(country_code)s%(codice)s_%(progressive_number)s.xml' % {
                 'country_code': invoice.company_id.country_id.code,
-                'codice': invoice.company_id.codice_fiscale,
-                'progressive_number': invoice.document_unique_seq,
+                'codice': invoice.company_id.l10n_it_codice_fiscale,
+                'progressive_number': invoice.l10n_it_progressive_number,
                 }
-            self.doc_unique_name = report_name
+            invoice.l10n_it_einvoice_name = report_name
 
             data = b"<?xml version='1.0' encoding='UTF-8'?>" + invoice._export_as_xml()
             description = _('Italian invoice: %s') % invoice.type
-            self.env['ir.attachment'].create({
+            invoice.l10n_it_einvoice_id = self.env['ir.attachment'].create({
                 'name': report_name,
                 'res_id': invoice.id,
                 'res_model': invoice._name,
@@ -142,11 +136,11 @@ class AccountInvoice(models.Model):
             raise UserError(_("The maximum length for VAT number is 30. %s have a VAT number too long: %s.") % (seller.display_name, seller.vat))
 
         # <1.2.1.2>
-        if not seller.codice_fiscale:
+        if not seller.l10n_it_codice_fiscale:
             raise UserError(_("%s must have a codice fiscale number") % (seller.display_name))
 
         # <1.2.1.8>
-        if not seller.tax_system:
+        if not seller.l10n_it_tax_system:
             raise UserError("The seller's company must have a tax system.")
 
         # <1.2.2>
@@ -162,9 +156,8 @@ class AccountInvoice(models.Model):
             raise UserError(_("%s must have a country.") % (seller.display_name))
 
         # <1.4.1>
-        if not buyer.vat and not buyer.codice_fiscale:
+        if not buyer.vat and not buyer.l10n_it_codice_fiscale:
             raise UserError(_("The buyer, %s, or his company must have either a VAT number either a tax code (Codice Fiscale).") % (buyer.display_name))
-
 
         # <1.4.2>
         if not buyer.street and not buyer.street2:
@@ -179,21 +172,25 @@ class AccountInvoice(models.Model):
             raise UserError(_("%s must have a country.") % (buyer.display_name))
 
         # <2.2.1>
-        for record in self.invoice_line_ids:
-            if len(record.invoice_line_tax_ids) != 1:
+        for invoice_line in self.invoice_line_ids:
+            if len(invoice_line.invoice_line_tax_ids) != 1:
                 raise UserError(_("You must select one and only one tax by line."))
 
         # <2.4.2.2>
         if self.partner_bank_id and self.partner_bank_id.acc_number:
             if len(self.partner_bank_id.acc_number) < 15 or len(self.partner_bank_id.acc_number) > 34:
                 raise UserError(_("IBAN is incorrect."))
-        elif self.payment_term_id and self.payment_term_id.payment_method == 'MP05':
+        elif self.payment_term_id and self.payment_term_id.l10n_it_payment_method == 'MP05':
             raise UserError(_("Your company need an IBAN."))
         if self.partner_bank_id and self.partner_bank_id.bank_id.bic:
             if len(self.partner_bank_id.bank_id.bic) < 8 or len(self.partner_bank_id.bank_id.bic) > 11:
                 raise UserError(_("BIC is incorrect."))
-        elif self.payment_term_id and self.payment_term_id.payment_method == 'MP05':
+        elif self.payment_term_id and self.payment_term_id.l10n_it_payment_method == 'MP05':
             raise UserError(_("Your company need a BIC."))
+
+        for tax_line in self.tax_line_ids:
+            if not tax_line.tax_id.l10n_it_has_exoneration and tax_line.tax_id.amount == 0:
+                raise ValidationError(_("%s has an amount of 0.0, you must indicate the kind of exoneration." % tax_line.name))
 
     def _export_as_xml(self):
         ''' Create the xml file content.
@@ -244,18 +241,9 @@ class AccountInvoice(models.Model):
         def get_vat_country(vat):
             return vat[:2].upper()
 
-
         formato_trasmissione = "FPR12"
-        if len(self.commercial_partner_id.pa_index or '1') == 6 or self.commercial_partner_id.country_id.code != 'IT':
+        if len(self.commercial_partner_id.l10n_it_pa_index or '1') == 6 or self.commercial_partner_id.country_id.code != 'IT':
             formato_trasmissione = "FPA12"
-
-        date_invoice = self.date_invoice or date.today()
-        if self.date_due == date_invoice:
-            payment_terms = "TP02"
-        elif self.date_due < date_invoice:
-            payment_terms = "TP03"
-        else:
-            payment_terms = "TP01"
 
         if self.type == 'out_invoice':
             document_type = 'TD01'
@@ -264,22 +252,14 @@ class AccountInvoice(models.Model):
         else:
             document_type = 'TD0X'
 
-        if self.payment_term_id and self.payment_term_id.payment_method:
-            payment_method = self.payment_term_id.payment_method
+        if self.payment_term_id and self.payment_term_id.l10n_it_payment_method:
+            payment_method = self.payment_term_id.l10n_it_payment_method
         else:
             payment_method = False
 
-        ddt_dict = {}
-        line_count = 1
-        for line in self.invoice_line_ids.filtered(lambda l: not l.display_type):
-            for ddt in line.ddt_line_ids:
-                if ddt not in ddt_dict:
-                    ddt_dict[ddt] = []
-                ddt_dict[ddt].append(line_count)
-            line_count += 1
-        for ddt in ddt_dict:
-            if len(ddt_dict[ddt]) == line_count-1:
-                ddt_dict[ddt] = []
+        pdf = self.env.ref('account.account_invoices').render_qweb_pdf(self.id)[0]
+        pdf = base64.b64encode(pdf)
+        pdf_name = re.sub(r'\W+', '', self.number) + '.pdf'
 
         # Create file content.
         template_values = {
@@ -294,10 +274,10 @@ class AccountInvoice(models.Model):
             'get_vat_country': get_vat_country,
             'abs': abs,
             'formato_trasmissione': formato_trasmissione,
-            'payment_terms': payment_terms,
             'document_type': document_type,
             'payment_method': payment_method,
-            'ddt_dict': ddt_dict,
+            'pdf': pdf,
+            'pdf_name': pdf_name,
         }
         content = self.env.ref('l10n_it.account_invoice_it_FatturaPA_export').render(template_values)
         return content
@@ -312,36 +292,30 @@ class AccountInvoice(models.Model):
 
     @api.multi
     def send_pec_mail(self):
+        self.ensure_one()
         allowed_state = ['to_send', 'invalid']
-        for invoice in self:
-            if invoice.send_state not in allowed_state:
-                raise UserError(_("%s isn't in a right state. It must be in a 'Not yet send' or 'Invalid' state.") % (invoice.display_name))
 
-        if not self.company_id.mail_pec_server_id or not self.company_id.address_send_fatturapa:
-            for invoice in self:
-                invoice.message_post(
-                    body=(_("Error when sending mail with E-Invoice: Your company must have a mail PEC server and must indicate the mail PEC that will send electronic invoice."))
-                    )
-                invoice.send_state = ('invalid')
+        if not self.company_id.l10n_it_mail_pec_server_id or not self.company_id.l10n_it_address_send_fatturapa:
+            self.message_post(
+                body=(_("Error when sending mail with E-Invoice: Your company must have a mail PEC server and must indicate the mail PEC that will send electronic invoice."))
+                )
+            self.l10n_it_send_state = ('invalid')
             return
 
-        attachment = self.env['ir.attachment'].search([
-            ('res_id', 'in', self.ids),
-            ('res_model', '=', self._name),
-            ('mimetype', 'ilike', 'xml')
-        ])
+        if self.l10n_it_send_state not in allowed_state:
+            raise UserError(_("%s isn't in a right state. It must be in a 'Not yet send' or 'Invalid' state.") % (self.display_name))
 
         message = self.env['mail.message'].create({
-            'subject': _('Sending file: %s') % (' '.join(attachment.mapped('name'))),
-            'body': _('Sending file: %s to ES: %s') % (' '.join(attachment.mapped('name')), self.env.user.company_id.address_recipient_fatturapa),
-            'email_from': self.env.user.company_id.address_send_fatturapa,
-            'mail_server_id': self.env.user.company_id.mail_pec_server_id.id,
-            'attachment_ids': [(6, 0, attachment.ids)],
+            'subject': _('Sending file: %s') % (self.l10n_it_einvoice_id.name),
+            'body': _('Sending file: %s to ES: %s') % (self.l10n_it_einvoice_id.name, self.env.user.company_id.l10n_it_address_recipient_fatturapa),
+            'email_from': self.env.user.company_id.l10n_it_address_send_fatturapa,
+            'mail_server_id': self.env.user.company_id.l10n_it_mail_pec_server_id.id,
+            'attachment_ids': [(6, 0, self.l10n_it_einvoice_id.ids)],
         })
 
         mail_fattura = self.env['mail.mail'].create({
             'mail_message_id': message.id,
-            'email_to': self.env.user.company_id.address_recipient_fatturapa,
+            'email_to': self.env.user.company_id.l10n_it_address_recipient_fatturapa,
         })
         try:
             mail_fattura.send(raise_exception=True)
@@ -349,59 +323,71 @@ class AccountInvoice(models.Model):
                 invoice.message_post(
                     body=(_("Mail sent on %s by %s") % (fields.Datetime.now(), self.env.user.display_name))
                     )
-                invoice.send_state = ('sent')
+                invoice.l10n_it_send_state = ('sent')
         except MailDeliveryException as error:
             for invoice in self:
                 invoice.message_post(
                     body=(_("Error when sending mail with E-Invoice: %s") % (error.args[0]))
                     )
-                invoice.send_state = ('invalid')
+                invoice.l10n_it_send_state = ('invalid')
 
 class AccountInvoiceLine(models.Model):
     _inherit = 'account.invoice.line'
     _name = 'account.invoice.line'
 
-    ddt_line_ids = fields.Many2many('l10n.it.ddt', string='DDT', compute='_compute_ddt_ids')
+    l10n_it_ddt_line_ids = fields.Many2many('l10n.it.ddt', string='DDT', compute='_compute_l10n_it_ddt_ids')
 
-    @api.depends('invoice_id.ddt_id')
-    def _compute_ddt_ids(self):
+    @api.depends('invoice_id.l10n_it_ddt_id')
+    def _compute_l10n_it_ddt_ids(self):
         for line in self:
-            line.ddt_line_ids = line.invoice_id.ddt_id
+            line.l10n_it_ddt_line_ids = line.invoice_id.l10n_it_ddt_id
 
 
 class AccountTax(models.Model):
     _name = "account.tax"
     _inherit = "account.tax"
 
-    VAT_due_date = fields.Selection([
+    l10n_it_vat_due_date = fields.Selection([
         ("I", "[I] IVA ad esigibilità immediata"),
         ("D", "[D] IVA ad esigibilità differita"),
         ("S", "[S] Scissione dei pagamenti")], default="I", string="VAT due date")
 
-    has_exoneration = fields.Boolean(string="Has exoneration of tax", help="Tax has a tax exoneration.")
-    kind_exoneration = fields.Char(string="Exoneration", size=2, help="Exoneration type: First letter must be a N, second must be a integer. For example: N1 or N6", default="N1")
-    law_reference = fields.Char(string="Law Reference", size=100, default="Law ...")
+    l10n_it_has_exoneration = fields.Boolean(string="Has exoneration of tax", help="Tax has a tax exoneration.")
+    l10n_it_kind_exoneration = fields.Selection(selection=[
+            ("N1", "[N1] Escluse ex art. 15"),
+            ("N2", "[N2] Non soggette"),
+            ("N3", "[N3] Non imponibili"),
+            ("N4", "[N4] Esenti"),
+            ("N5", "[N5] Regime del margine / IVA non esposta in fattura"),
+            ("N6", "[N6] Inversione contabile (per le operazioni in reverse charge ovvero nei casi di autofatturazione per acquisti extra UE di servizi ovvero per importazioni di beni nei soli casi previsti)"),
+            ("N7", "[N7] IVA assolta in altro stato UE (vendite a distanza ex art. 40 c. 3 e 4 e art. 41 c. 1 lett. b,  DL 331/93; prestazione di servizi di telecomunicazioni, tele-radiodiffusione ed elettronici ex art. 7-sexies lett. f, g, art. 74-sexies DPR 633/72)")],
+        string="Exoneration",
+        help="Exoneration type",
+        default="N1")
+    l10n_it_law_reference = fields.Char(string="Law Reference", size=100)
 
-    @api.constrains('has_exoneration',
-                    'kind_exoneration',
-                    'law_reference',
+    @api.constrains('l10n_it_has_exoneration',
+                    'l10n_it_kind_exoneration',
+                    'l10n_it_law_reference',
                     'amount',
-                    'VAT_due_date')
+                    'l10n_it_vat_due_date')
     def _check_exoneration_with_no_tax(self):
-        for record in self:
-            if record.has_exoneration:
-                if not record.kind_exoneration or not record.law_reference or record.amount != 0:
+        for tax in self:
+            if tax.l10n_it_has_exoneration:
+                if not tax.l10n_it_kind_exoneration or not tax.l10n_it_law_reference or tax.amount != 0:
                     raise ValidationError("If the tax has exoneration, you must enter a kind of exoneration, a law reference and the amount of the tax must be 0.0.")
-                if len(record.kind_exoneration) != 2 or record.kind_exoneration[0] != 'N' or not record.kind_exoneration[1].isdigit():
-                    raise ValidationError("The format of the kind of exoneration is not correct. Example of correct format: 'N1' or 'N6' ")
-                if record.kind_exoneration == 'N6' and record.VAT_due_date == 'S':
+                if tax.l10n_it_kind_exoneration == 'N6' and tax.l10n_it_vat_due_date == 'S':
                     raise UserError(_("'Scissione dei pagamenti' is not compatible with exoneration of kind 'N6'"))
-            if not record.has_exoneration and record.amount == 0:
-                raise ValidationError("Is the tax has an amount of 0.0, you must indicate the kind of exoneration.")
 
 class AccountPaymentTerm(models.Model):
     _name = "account.payment.term"
     _inherit = "account.payment.term"
 
-    payment_method = fields.Selection(selection=PAYMENT_METHODS,
-                                      string="Payment Method")
+    l10n_it_payment_method = fields.Selection(selection=PAYMENT_METHODS,
+                                              string="Payment Method")
+
+    l10n_it_condition = fields.Selection(selection=[
+            ("TP01", "[TP01] Pagamento a rate"),
+            ("TP02", "[TP02] Pagamento completo"),
+            ("TP03", "[TP03] Anticipo")],
+        string="payment condition", required="True", default="TP01")

@@ -61,7 +61,7 @@ class MailThread(models.AbstractModel):
         return super(MailThread, self).message_route(message, message_dict, model=model, thread_id=thread_id, custom_values=custom_values)
 
     def _create_invoice_from_mail(self, message_dict, attachment):
-        if self.env['account.invoice'].search([('doc_unique_name', '=', attachment.fname)], limit=1):
+        if self.env['account.invoice'].search([('l10n_it_einvoice_name', '=', attachment.fname)], limit=1):
             # invoice already exist
             _logger.info('E-invoice already exist: %s', attachment.fname)
             return
@@ -72,8 +72,8 @@ class MailThread(models.AbstractModel):
         self = self.with_context(default_journal_id=(self.env['account.journal'].search([('type', '=', 'purchase')], limit=1)).id)
         invoice_form = Form(self.env['account.invoice'], view='account.invoice_supplier_form')
         invoice = invoice_form.save()
-        invoice.doc_unique_name = attachment.fname
-        invoice.send_state = "new"
+        invoice.l10n_it_einvoice_name = attachment.fname
+        invoice.l10n_it_send_state = "new"
 
         message_dict['res_id'] = invoice.id
         _, attachment_id = self._message_post_process_attachments([attachment], [], message_dict)[0]
@@ -86,7 +86,7 @@ class MailThread(models.AbstractModel):
     def _create_invoice_from_mail_with_zip(self, message_dict, attachment_zip):
         with zipfile.ZipFile(io.BytesIO(attachment_zip.content)) as z:
             for attachment_name in z.namelist():
-                if self.env['account.invoice'].search([('doc_unique_name', '=', attachment_name)], limit=1):
+                if self.env['account.invoice'].search([('l10n_it_einvoice_name', '=', attachment_name)], limit=1):
                     # invoice already exist
                     _logger.info('E-invoice in zip file (%s) already exist: %s', attachment_zip.fname, attachment_name)
                     continue
@@ -98,8 +98,8 @@ class MailThread(models.AbstractModel):
                 self = self.with_context(default_journal_id=(self.env['account.journal'].search([('type', '=', 'purchase')], limit=1)).id)
                 invoice_form = Form(self.env['account.invoice'], view='account.invoice_supplier_form')
                 invoice = invoice_form.save()
-                invoice.doc_unique_name = attachment.fname
-                invoice.send_state = "new"
+                invoice.l10n_it_einvoice_name = attachment.fname
+                invoice.l10n_it_send_state = "new"
 
                 message_dict['res_id'] = invoice.id
                 _, attachment_id = self._message_post_process_attachments(
@@ -135,12 +135,12 @@ class MailThread(models.AbstractModel):
                         return
 
                     related_invoice = self.env['account.invoice'].search([
-                        ('doc_unique_name', '=', filename)])
+                        ('l10n_it_einvoice_name', '=', filename)])
                     if not related_invoice:
                         _logger.info('Error: invoice not found for receipt file: %s', filename)
                         return
 
-                    related_invoice.send_state = 'failed_delivery'
+                    related_invoice.l10n_it_send_state = 'failed_delivery'
                     info = self._return_multi_line_xml(tree, ['//IdentificativoSdI', '//DataOraRicezione', '//MessageId', '//PecMessageId', '//Note'])
                     related_invoice.message_post(
                         body=(_("ES certify that it has received the invoice and that the file \
@@ -165,12 +165,12 @@ class MailThread(models.AbstractModel):
             # This is the receipt sent by the ES to the transmitting subject to communicate
             # delivery of the file to the addressee
             related_invoice = self.env['account.invoice'].search([
-                ('doc_unique_name', '=', filename),
-                ('send_state', '=', 'sent')])
+                ('l10n_it_einvoice_name', '=', filename),
+                ('l10n_it_send_state', '=', 'sent')])
             if not related_invoice:
                 _logger.info('Error: invoice not found for receipt file: %s', attachment.fname)
                 return
-            related_invoice.send_state = 'delivered'
+            related_invoice.l10n_it_send_state = 'delivered'
             info = self._return_multi_line_xml(tree, ['//IdentificativoSdI', '//DataOraRicezione', '//DataOraConsegna', '//Note'])
             related_invoice.message_post(
                 body=(_("E-Invoice is delivery to the destinatory:<br/>%s") % (info))
@@ -181,12 +181,12 @@ class MailThread(models.AbstractModel):
             # This is the receipt sent by the ES to the transmitting subject if one or more of
             # the checks carried out by the ES on the file received do not have a successful result.
             related_invoice = self.env['account.invoice'].search([
-                ('doc_unique_name', '=', filename),
-                ('send_state', '=', 'sent')])
+                ('l10n_it_einvoice_name', '=', filename),
+                ('l10n_it_send_state', '=', 'sent')])
             if not related_invoice:
                 _logger.info('Error: invoice not found for receipt file: %s', attachment.fname)
                 return
-            related_invoice.send_state = 'invalid'
+            related_invoice.l10n_it_send_state = 'invalid'
             error = self._return_error_xml(tree)
             related_invoice.message_post(
                 body=(_("Errors in the E-Invoice :<br/>%s") % (error))
@@ -202,8 +202,8 @@ class MailThread(models.AbstractModel):
             # This is the receipt sent by the ES to the transmitting subject if the file is not
             # delivered to the addressee.
             related_invoice = self.env['account.invoice'].search([
-                ('doc_unique_name', '=', filename),
-                ('send_state', '=', 'sent')])
+                ('l10n_it_einvoice_name', '=', filename),
+                ('l10n_it_send_state', '=', 'sent')])
             if not related_invoice:
                 _logger.info('Error: invoice not found for receipt file: %s', attachment.fname)
                 return
@@ -227,17 +227,17 @@ class MailThread(models.AbstractModel):
             # (acceptance or refusal of the invoice) of the checks carried out on the document by
             # the addressee.
             related_invoice = self.env['account.invoice'].search([
-                ('doc_unique_name', '=', filename),
-                ('send_state', '=', 'delivered')])
+                ('l10n_it_einvoice_name', '=', filename),
+                ('l10n_it_send_state', '=', 'delivered')])
             if not related_invoice:
                 _logger.info('Error: invoice not found for receipt file: %s', attachment.fname)
                 return
             elements = tree.xpath('//Esito', namespaces=tree.nsmap)
             if elements and elements[0].text:
                 if elements[0].text == 'EC01':
-                    related_invoice.send_state = 'delivered_accepted'
+                    related_invoice.l10n_it_send_state = 'delivered_accepted'
                 elif elements[0].text == 'EC02':
-                    related_invoice.send_state = 'delivered_refused'
+                    related_invoice.l10n_it_send_state = 'delivered_refused'
 
             info = self._return_multi_line_xml(tree,
                                                ['//Esito',
@@ -248,9 +248,9 @@ class MailThread(models.AbstractModel):
                                                 '//Note'
                                                ])
             related_invoice.message_post(
-                body=(_("Outcome notice: %s<br/>%s") % (related_invoice.send_state, info))
+                body=(_("Outcome notice: %s<br/>%s") % (related_invoice.l10n_it_send_state, info))
             )
-            if related_invoice.send_state == 'delivered_refused':
+            if related_invoice.l10n_it_send_state == 'delivered_refused':
                 activity_vals = {
                     'activity_type_id': self.env.ref('mail.mail_activity_data_todo').id,
                     'user_id': related_invoice.user_id.id if related_invoice.user_id else self.env.user.id
@@ -274,11 +274,11 @@ class MailThread(models.AbstractModel):
             # addressee to communicate the expiry of the maximum term for communication of
             # acceptance/refusal.
             related_invoice = self.env['account.invoice'].search([
-                ('doc_unique_name', '=', filename), ('send_state', '=', 'delivered')])
+                ('l10n_it_einvoice_name', '=', filename), ('l10n_it_send_state', '=', 'delivered')])
             if not related_invoice:
                 _logger.info('Error: invoice not found for receipt file: %s', attachment.fname)
                 return
-            related_invoice.send_state = 'delivered_expired'
+            related_invoice.l10n_it_send_state = 'delivered_expired'
             info = self._return_multi_line_xml(tree, [
                 '//Descrizione',
                 '//IdentificativoSdI',

@@ -9,10 +9,10 @@
         <data>
             <xpath expr="//page" position="inside">
                 <group>
-                    <field name="VAT_due_date"/>
-                    <field name="has_exoneration" readonly="False"/>
-                    <field name="kind_exoneration" attrs="{'invisible': [('has_exoneration', '=', False)]}"/>
-                    <field name="law_reference" attrs="{'invisible': [('has_exoneration', '=', False)]}"/>
+                    <field name="l10n_it_vat_due_date"/>
+                    <field name="l10n_it_has_exoneration" readonly="False"/>
+                    <field name="l10n_it_kind_exoneration" attrs="{'invisible': [('l10n_it_has_exoneration', '=', False)]}"/>
+                    <field name="l10n_it_law_reference" attrs="{'invisible': [('l10n_it_has_exoneration', '=', False)]}"/>
                 </group>
             </xpath>
         </data>
@@ -27,9 +27,9 @@
         <field name="arch" type="xml">
         <data>
             <xpath expr="//field[@name='category_id']" position="after">
-                <field name="pec_email" attrs="{'invisible': [('parent_id', '!=', False)]}"/>
-                <field name="codice_fiscale" attrs="{'invisible': [('parent_id', '!=', False)]}"/>
-                <field name="pa_index" attrs="{'invisible': [('parent_id', '!=', False)]}"/>
+                <field name="l10n_it_pec_email" attrs="{'invisible': [('parent_id', '!=', False)]}"/>
+                <field name="l10n_it_codice_fiscale" attrs="{'invisible': [('parent_id', '!=', False)]}"/>
+                <field name="l10n_it_pa_index" attrs="{'invisible': [('parent_id', '!=', False)]}"/>
             </xpath>
         </data>
         </field>
@@ -43,13 +43,13 @@
         <field name="arch" type="xml">
         <data>
             <xpath expr="//div[hasclass('o_address_format')]" position="after">
-                <field name="mail_pec_server_id"/>
-                <field name="address_send_fatturapa"/>
-                <field name="address_recipient_fatturapa"/>
+                <field name="l10n_it_mail_pec_server_id"/>
+                <field name="l10n_it_address_send_fatturapa"/>
+                <field name="l10n_it_address_recipient_fatturapa"/>
             </xpath>
             <xpath expr="//field[@name='vat']" position="after">
-                <field name="codice_fiscale"/>
-                <field name="tax_system"/>
+                <field name="l10n_it_codice_fiscale"/>
+                <field name="l10n_it_tax_system"/>
             </xpath>
             <xpath expr="//page" position="after">
                 <page string="Electronic Invoicing">
@@ -61,14 +61,14 @@
                             Civil Code)
                         </div>
                         <group>
-                            <field name="has_eco_admin_index" string="Company listed on the register of companies"/>
+                            <field name="l10n_it_has_eco_index" string="Company listed on the register of companies"/>
                         </group>
-                        <group attrs="{'invisible': [('has_eco_admin_index', '=', False)]}">
-                            <field name="eco_admin_index_office"/>
-                            <field name="eco_admin_index_number"/>
-                            <field name="eco_admin_index_share_capital"/>
-                            <field name="eco_admin_index_sole_shareholder"/>
-                            <field name="eco_admin_index_liquidation_state"/>
+                        <group attrs="{'invisible': [('l10n_it_has_eco_index', '=', False)]}">
+                            <field name="l10n_it_eco_index_office"/>
+                            <field name="l10n_it_eco_index_number"/>
+                            <field name="l10n_it_eco_index_share_capital"/>
+                            <field name="l10n_it_eco_index_sole_shareholder"/>
+                            <field name="l10n_it_eco_index_liquidation_state"/>
                         </group>
                     </group>
                     <group>
@@ -78,10 +78,10 @@
                             with relevance for VAT purposes and which takes avail of a tax representative in Italy
                         </div>
                         <group>
-                            <field name="has_tax_representative" string="Company have a tax representative"/>
+                            <field name="l10n_it_has_tax_representative" string="Company have a tax representative"/>
                         </group>
-                        <group attrs="{'invisible': [('has_tax_representative', '=', False)]}">
-                            <field name="tax_representative_partner_id"/>
+                        <group attrs="{'invisible': [('l10n_it_has_tax_representative', '=', False)]}">
+                            <field name="l10n_it_tax_representative_partner_id"/>
                         </group>
                     </group>
                 </page>
@@ -98,12 +98,12 @@
         <field name="arch" type="xml">
         <data>
             <xpath expr="//field[@name='type']" position="after">
-                <field name="send_state" invisible="1" widget="label_selection" options="{'classes': {'to_send': 'default', 'invalid': 'danger', 'sent': 'warning',
+                <field name="l10n_it_send_state" invisible="1" widget="label_selection" options="{'classes': {'to_send': 'default', 'invalid': 'danger', 'sent': 'warning',
                                             'delivered': 'success', 'delivered_accepted': 'success', 'delivered_refused': 'success', 'delivered_expired': 'success', 'failed_delivery': 'success'}}"/>
 
-                <button icon="fa-paper-plane-o" class="btn-outline-warning disabled" aria-label="Sent" title="Sent" attrs="{'invisible': [('send_state', '!=', 'sent')]}"/>
-                <button icon="fa-exclamation-triangle" class="btn-outline-danger disabled" aria-label="Error" title="Error" attrs="{'invisible': [('send_state', '!=', 'invalid')]}"/>
-                <button icon="fa-check" class="btn-outline-success disabled" aria-label="Delivered" title="Delivered" attrs="{'invisible': [('send_state', 'not in', ['delivered', 'delivered_accepted', 'delivered_refused', 'delivered_expired', 'failed_delivery'])]}"/>
+                <button icon="fa-paper-plane-o" class="btn-outline-warning disabled" aria-label="Sent" title="Sent" attrs="{'invisible': [('l10n_it_send_state', '!=', 'sent')]}"/>
+                <button icon="fa-exclamation-triangle" class="btn-outline-danger disabled" aria-label="Error" title="Error" attrs="{'invisible': [('l10n_it_send_state', '!=', 'invalid')]}"/>
+                <button icon="fa-check" class="btn-outline-success disabled" aria-label="Delivered" title="Delivered" attrs="{'invisible': [('l10n_it_send_state', 'not in', ['delivered', 'delivered_accepted', 'delivered_refused', 'delivered_expired', 'failed_delivery'])]}"/>
             </xpath>
         </data>
         </field>
@@ -117,14 +117,14 @@
         <field name="arch" type="xml">
         <data>
             <xpath expr="//field[@name='currency_id']" position="after">
-                <field name="send_state"/>
+                <field name="l10n_it_send_state"/>
             </xpath>
 
             <xpath expr="//div[hasclass('o_kanban_record_headings')]" position="inside">
-                <i class="text-success fa fa-plus-circle" t-if="record.send_state.raw_value == 'new'"/>
-                <i class="text-warning fa fa-paper-plane-o" t-if="record.send_state.raw_value == 'sent'"/>
-                <i class="text-danger fa fa-exclamation-triangle" t-if="record.send_state.raw_value == 'invalid'"/>
-                <i class="text-success fa fa-check" t-if="['delivered', 'delivered_accepted', 'delivered_refused', 'delivered_expired', 'failed_delivery'].indexOf(record.send_state.raw_value) >= 0" />
+                <i class="text-success fa fa-plus-circle" t-if="record.l10n_it_send_state.raw_value == 'new'"/>
+                <i class="text-warning fa fa-paper-plane-o" t-if="record.l10n_it_send_state.raw_value == 'sent'"/>
+                <i class="text-danger fa fa-exclamation-triangle" t-if="record.l10n_it_send_state.raw_value == 'invalid'"/>
+                <i class="text-success fa fa-check" t-if="['delivered', 'delivered_accepted', 'delivered_refused', 'delivered_expired', 'failed_delivery'].indexOf(record.l10n_it_send_state.raw_value) >= 0" />
             </xpath>
         </data>
         </field>
@@ -138,17 +138,17 @@
         <field name="arch" type="xml">
         <data>
             <xpath expr="//button[@name='preview_invoice']" position="after">
-                <button name="invoice_validate" type="object" icon="fa-envelope-o" attrs="{'invisible': [('send_state', '!=', 'invalid')]}" class="btn btn-primary" string="Resend"/>
-                <button name="invoice_validate" type="object" icon="fa-envelope-o" attrs="{'invisible': ['|',('state', 'in', ['draft', 'cancel']),('send_state', 'not in', ['to_send', False])]}" class="btn btn-primary" string="Send"/>
+                <button name="invoice_validate" type="object" icon="fa-envelope-o" attrs="{'invisible': [('l10n_it_send_state', '!=', 'invalid')]}" class="btn btn-primary" string="Resend"/>
+                <button name="invoice_validate" type="object" icon="fa-envelope-o" attrs="{'invisible': ['|',('state', 'in', ['draft', 'cancel']),('l10n_it_send_state', 'not in', ['to_send', False])]}" class="btn btn-primary" string="Send"/>
             </xpath>
             <xpath expr="//field[@name='type']" position="before">
-                <div class="alert alert-success" role="alert" attrs="{'invisible': [('send_state', 'not in', ['delivered', 'delivered_accepted', 'delivered_refused', 'delivered_expired', 'failed_delivery'])]}">
-                    <i class="fa fa-check" aria-label="Delivered" title="Delivered"></i> <field name="send_state" readonly="1"/>
+                <div class="alert alert-success" role="alert" attrs="{'invisible': [('l10n_it_send_state', 'not in', ['delivered', 'delivered_accepted', 'delivered_refused', 'delivered_expired', 'failed_delivery'])]}">
+                    <i class="fa fa-check" aria-label="Delivered" title="Delivered"></i> <field name="l10n_it_send_state" readonly="1"/>
                 </div>
-                <div class="alert alert-warning" role="alert" attrs="{'invisible': [('send_state', '!=', 'sent')]}">
+                <div class="alert alert-warning" role="alert" attrs="{'invisible': [('l10n_it_send_state', '!=', 'sent')]}">
                     <i class="fa fa-paper-plane-o"/> E-Invoice sent, waiting for a response
                 </div>
-                <div class="alert alert-danger" role="alert" attrs="{'invisible': [('send_state', '!=', 'invalid')]}">
+                <div class="alert alert-danger" role="alert" attrs="{'invisible': [('l10n_it_send_state', '!=', 'invalid')]}">
                     <i class="fa fa-exclamation-triangle"/> E-Invoice check failed. You can modify the invoice, and resend it.
                 </div>
             </xpath>
@@ -156,20 +156,20 @@
                 <page string="Electronic Invoicing">
                     <group>
                         <group>
-                            <field name="stamp_duty"/>
+                            <field name="l10n_it_stamp_duty"/>
                         </group>
                         <group>
-                            <field name="ddt_id"/>
+                            <field name="l10n_it_ddt_id"/>
                         </group>
                     </group>
                     <group>
-                        <field name="document_order_data_line_ids" nolabel="1" widget="one2many_list" mode="tree">
+                        <field name="l10n_it_document_order_ids" nolabel="1" widget="one2many_list" mode="tree">
                             <tree string="Invoice Lines" editable="top" create="true" delete="true">
-                                <field name="document_order_data"/>
-                                <field name="document_id"/>
-                                <field name="date_document_id"/>
-                                <field name="document_project_code_cup"/>
-                                <field name="document_tender_code_cig"/>
+                                <field name="l10n_it_document_order"/>
+                                <field name="l10n_it_name"/>
+                                <field name="l10n_it_date"/>
+                                <field name="l10n_it_cup"/>
+                                <field name="l10n_it_cig"/>
                             </tree>
                         </field>
                     </group>
@@ -193,17 +193,17 @@
                 <page string="Electronic Invoicing">
                     <group>
                         <group>
-                            <field name="stamp_duty"/>
+                            <field name="l10n_it_stamp_duty"/>
                         </group>
                     </group>
                     <group>
-                        <field name="document_order_data_line_ids" nolabel="1" widget="one2many_list" mode="tree">
+                        <field name="l10n_it_document_order_ids" nolabel="1" widget="one2many_list" mode="tree">
                             <tree string="Invoice Lines" editable="top" create="true" delete="true">
-                                <field name="document_order_data"/>
-                                <field name="document_id"/>
-                                <field name="date_document_id"/>
-                                <field name="document_project_code_cup"/>
-                                <field name="document_tender_code_cig"/>
+                                <field name="l10n_it_document_order"/>
+                                <field name="l10n_it_name"/>
+                                <field name="l10n_it_date"/>
+                                <field name="l10n_it_cup"/>
+                                <field name="l10n_it_cig"/>
                             </tree>
                         </field>
                     </group>
@@ -220,13 +220,13 @@
         <field name="arch" type="xml">
             <xpath expr="//filter[@name='late']" position="after">
                 <separator/>
-                <filter name="error" string="E-invoice error" domain="[('send_state', '=', 'invalid')]"/>
-                <filter name="sent" string="E-invoice sent" domain="[('send_state', '=', 'sent')]"/>
-                <filter name="no_sent" string="E-invoice to send" domain="[('send_state', 'in', ['to_send',False])]"/>
-                <filter name="delivered" string="E-invoice delivered" domain="[('send_state', 'in', ['delivered', 'delivered_accepted', 'delivered_refused', 'delivered_expired', 'failed_delivery'])]"/>
+                <filter name="error" string="E-invoice error" domain="[('l10n_it_send_state', '=', 'invalid')]"/>
+                <filter name="sent" string="E-invoice sent" domain="[('l10n_it_send_state', '=', 'sent')]"/>
+                <filter name="no_sent" string="E-invoice to send" domain="[('l10n_it_send_state', 'in', ['to_send',False])]"/>
+                <filter name="delivered" string="E-invoice delivered" domain="[('l10n_it_send_state', 'in', ['delivered', 'delivered_accepted', 'delivered_refused', 'delivered_expired', 'failed_delivery'])]"/>
             </xpath>
             <xpath expr="//filter[@name='status']" position="after">
-                <filter name="send_status" string="Send status" context="{'group_by':'send_state'}"/>
+                <filter name="send_status" string="Send status" context="{'group_by':'l10n_it_send_state'}"/>
             </xpath>
         </field>
     </record>
@@ -239,7 +239,8 @@
         <field name="arch" type="xml">
         <data>
             <xpath expr="//field[@name='name']" position="after">
-                <field name="payment_method"/>
+                <field name="l10n_it_payment_method"/>
+                <field name="l10n_it_condition"/>
             </xpath>
         </data>
         </field>
@@ -253,7 +254,8 @@
         <field name="arch" type="xml">
         <data>
             <xpath expr="//field[@name='name']" position="after">
-                <field name="payment_method"/>
+                <field name="l10n_it_payment_method"/>
+                <field name="l10n_it_condition"/>
             </xpath>
         </data>
         </field>
@@ -267,10 +269,11 @@
         <field name="arch" type="xml">
         <data>
             <xpath expr="//field[@name='name']" position="after">
-                <field name="payment_method"/>
+                <field name="l10n_it_payment_method"/>
+                <field name="l10n_it_condition"/>
             </xpath>
             <xpath expr="//div//div" position="after">
-                <t t-esc="record.payment_method.value"/>
+                <t t-esc="record.l10n_it_payment_method.value"/>
             </xpath>
         </data>
         </field>
@@ -282,8 +285,8 @@
         <field name="arch" type="xml">
             <form>
                 <group>
-                    <field name="name"/>
-                    <field name="transport_document_date"/>
+                    <field name="l10n_it_name"/>
+                    <field name="l10n_it_date"/>
                 </group>
             </form>
         </field>
@@ -294,8 +297,8 @@
       <field name="model">l10n.it.ddt</field>
       <field name="arch" type="xml">
         <tree>
-          <field name="name"/>
-          <field name="transport_document_date"/>
+          <field name="l10n_it_name"/>
+          <field name="l10n_it_date"/>
         </tree>
       </field>
     </record>
