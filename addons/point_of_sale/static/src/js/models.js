@@ -1564,6 +1564,10 @@ exports.Packlotline = Backbone.Model.extend({
     },
 
     remove: function(){
+        // prevent removing all serials/lots, instead replace the last one with an empty one
+        if (this.collection.length === 1) {
+            this.add();
+        }
         this.collection.remove(this);
     }
 });
@@ -1590,7 +1594,8 @@ var PacklotlineCollection = Backbone.Collection.extend({
 
     set_quantity_by_lot: function() {
         var valid_lots = this.get_valid_lots();
-        this.order_line.set_quantity(valid_lots.length);
+        // Set orderline quantity to number of serialnumbers, if no serialnumbers exist, set the quantity to 1
+        this.order_line.set_quantity(valid_lots.length >= 1 ? valid_lots.length : 1);
     }
 });
 
