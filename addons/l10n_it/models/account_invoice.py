@@ -73,7 +73,6 @@ class AccountInvoice(models.Model):
 
     l10n_it_einvoice_id = fields.Many2one('ir.attachment', string="Electronic invoice")
 
-
     @api.multi
     def invoice_validate(self):
         super(AccountInvoice, self).invoice_validate()
@@ -299,7 +298,7 @@ class AccountInvoice(models.Model):
             self.message_post(
                 body=(_("Error when sending mail with E-Invoice: Your company must have a mail PEC server and must indicate the mail PEC that will send electronic invoice."))
                 )
-            self.l10n_it_send_state = ('invalid')
+            self.l10n_it_send_state = 'invalid'
             return
 
         if self.l10n_it_send_state not in allowed_state:
@@ -319,29 +318,15 @@ class AccountInvoice(models.Model):
         })
         try:
             mail_fattura.send(raise_exception=True)
-            for invoice in self:
-                invoice.message_post(
-                    body=(_("Mail sent on %s by %s") % (fields.Datetime.now(), self.env.user.display_name))
-                    )
-                invoice.l10n_it_send_state = ('sent')
+            self.message_post(
+                body=(_("Mail sent on %s by %s") % (fields.Datetime.now(), self.env.user.display_name))
+                )
+            self.l10n_it_send_state = 'sent'
         except MailDeliveryException as error:
-            for invoice in self:
-                invoice.message_post(
-                    body=(_("Error when sending mail with E-Invoice: %s") % (error.args[0]))
-                    )
-                invoice.l10n_it_send_state = ('invalid')
-
-class AccountInvoiceLine(models.Model):
-    _inherit = 'account.invoice.line'
-    _name = 'account.invoice.line'
-
-    l10n_it_ddt_line_ids = fields.Many2many('l10n.it.ddt', string='DDT', compute='_compute_l10n_it_ddt_ids')
-
-    @api.depends('invoice_id.l10n_it_ddt_id')
-    def _compute_l10n_it_ddt_ids(self):
-        for line in self:
-            line.l10n_it_ddt_line_ids = line.invoice_id.l10n_it_ddt_id
-
+            self.message_post(
+                body=(_("Error when sending mail with E-Invoice: %s") % (error.args[0]))
+                )
+            self.l10n_it_send_state = 'invalid'
 
 class AccountTax(models.Model):
     _name = "account.tax"
