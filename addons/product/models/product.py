@@ -332,7 +332,7 @@ class ProductProduct(models.Model):
             # Check if the product is last product of this template
             other_products = self.search([
                 ('product_tmpl_id', '=', product.product_tmpl_id.id), 
-                ('id', '!=', self.ids),
+                ('id', 'not in', self.ids),
                 '|', ('active', '=', False), ('active', '=', True)])
             if not other_products:
                 unlink_templates |= product.product_tmpl_id
