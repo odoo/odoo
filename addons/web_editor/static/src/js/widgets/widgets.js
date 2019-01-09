@@ -716,6 +716,7 @@ var IconWidget = MediaWidget.extend({
      * @override
      */
     search: function (needle) {
+        var def = new $.Deferred();
         var iconsParser = this.iconsParser;
         if (needle && needle.length) {
             iconsParser = [];
@@ -736,6 +737,7 @@ var IconWidget = MediaWidget.extend({
         this.$('div.font-icons-icons').html(
             QWeb.render('web_editor.dialog.font-icons.icons', {iconsParser: iconsParser})
         );
+        return def.resolve();
     },
 
     //--------------------------------------------------------------------------
