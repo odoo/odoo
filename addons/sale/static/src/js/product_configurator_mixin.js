@@ -281,6 +281,7 @@ var ProductConfiguratorMixin = {
 
     /**
      * Will return a deferred:
+     *
      * - If the product already exists, immediately resolves it with the product_id
      * - If the product does not exist yet ("dynamic" variant creation), this method will
      *   create the product first and then resolve the deferred with the created product's id
