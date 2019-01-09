@@ -206,11 +206,11 @@ class HrContract(models.Model):
         for contract in self:
             contract.monthly_yearly_costs = contract.final_yearly_costs / 12.0
 
-    @api.depends('wage')
+    @api.depends('wage_with_holidays')
     def _compute_holidays_advantages(self):
         for contract in self:
-            contract.double_holidays = contract.wage * 0.92
-            contract.thirteen_month = contract.wage
+            contract.double_holidays = contract.wage_with_holidays * 0.92
+            contract.thirteen_month = contract.wage_with_holidays
 
     @api.onchange('transport_mode_car', 'transport_mode_public', 'transport_mode_others')
     def _onchange_transport_mode(self):
