@@ -357,7 +357,8 @@ class ProductProduct(models.Model):
             if not product.exists():
                 continue
             # Check if the product is last product of this template...
-            other_products = self.search([('product_tmpl_id', '=', product.product_tmpl_id.id), ('id', '!=', product.id)])
+            other_products = self.env['product.product'].with_context(active_test=False).\
+                                    search([('product_tmpl_id', '=', product.product_tmpl_id.id), ('id', 'not in', self.ids)])
             # ... and do not delete product template if it's configured to be created "on demand"
             if not other_products and not product.product_tmpl_id.has_dynamic_attributes():
                 unlink_templates |= product.product_tmpl_id
