@@ -32,5 +32,6 @@ class BaseUpdateTranslations(models.TransientModel):
         lang_name = self._get_lang_name(this.lang)
         with tempfile.NamedTemporaryFile() as buf:
             tools.trans_export(this.lang, ['all'], buf, 'po', self._cr)
-            tools.trans_load_data(self._cr, buf, 'po', this.lang, lang_name=lang_name)
+            context = {'create_empty_translation': True}
+            tools.trans_load_data(self._cr, buf, 'po', this.lang, lang_name=lang_name, context=context)
         return {'type': 'ir.actions.act_window_close'}

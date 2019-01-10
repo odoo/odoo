@@ -153,10 +153,7 @@ class ProductTemplate(models.Model):
 
     @api.multi
     def _compute_currency_id(self):
-        try:
-            main_company = self.sudo().env.ref('base.main_company')
-        except ValueError:
-            main_company = self.env['res.company'].sudo().search([], limit=1, order="id")
+        main_company = self.env['res.company']._get_main_company()
         for template in self:
             template.currency_id = template.company_id.sudo().currency_id.id or main_company.currency_id.id
 
@@ -908,6 +905,36 @@ class ProductTemplate(models.Model):
             if result or not combination:
                 return result
             combination = combination[:-1]
+
+    @api.multi
+    def _get_current_company(self, **kwargs):
+        """Get the most appropriate company for this product.
+
+        If the company is set on the product, directly return it. Otherwise,
+        fallback to a contextual company.
+
+        :param kwargs: kwargs forwarded to the fallback method.
+
+        :return: the most appropriate company for this product
+        :rtype: recordset of one `res.company`
+        """
+        self.ensure_one()
+        return self.company_id or self._get_current_company_fallback(**kwargs)
+
+    @api.multi
+    def _get_current_company_fallback(self, **kwargs):
+        """Fallback to get the most appropriate company for this product.
+
+        This should only be called from `_get_current_company` but is defined
+        separately to allow override.
+
+        The final fallback will be the current user's company.
+
+        :return: the fallback company for this product
+        :rtype: recordset of one `res.company`
+        """
+        self.ensure_one()
+        return self.env.user.company_id
 
     @api.model
     def get_empty_list_help(self, help):

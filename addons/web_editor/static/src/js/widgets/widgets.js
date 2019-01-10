@@ -1288,6 +1288,7 @@ var MediaDialog = Dialog.extend({
      * @private
      */
     _onPagerClick: function (ev) {
+        ev.preventDefault();
         this.active.goToPage(this.active.page + ($(ev.currentTarget).hasClass('previous') ? -1 : 1));
         this._updateControlPanel();
     },

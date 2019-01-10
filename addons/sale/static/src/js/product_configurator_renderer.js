@@ -28,6 +28,7 @@ var ProductConfiguratorFormRenderer = FormRenderer.extend(ProductConfiguratorMix
      * Renders the product configurator within the form
      *
      * Will also:
+     *
      * - add events handling for variant changes
      * - trigger variant change to compute the price and other
      *   variant specific changes
