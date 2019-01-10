@@ -10,6 +10,10 @@
                     <CodiceTipo>EAN</CodiceTipo>
                     <CodiceValore t-esc="line.product_id.barcode"/>
                 </CodiceArticolo>
+                 <CodiceArticolo t-if="line.product_id.default_code">
+                    <CodiceTipo>INTERNAL</CodiceTipo>
+                    <CodiceValore t-esc="line.product_id.default_code"/>
+                </CodiceArticolo>
                 <Descrizione>
                     <t t-esc="line.name[:1000]"/>
                     <t t-if="not line.name" t-esc="'NO NAME'"/>
