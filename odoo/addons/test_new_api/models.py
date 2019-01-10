@@ -516,3 +516,11 @@ class FieldWithCaps(models.Model):
     _description = 'Model with field defined with capital letters'
 
     pArTneR_321_id = fields.Many2one('res.partner')
+
+
+class RequiredM2O(models.Model):
+    _name = 'test_new_api.req_m2o'
+    _description = 'Required Many2one'
+
+    foo = fields.Many2one('res.currency', required=True, ondelete='cascade')
+    bar = fields.Many2one('res.country', required=True)
