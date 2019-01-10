@@ -47,14 +47,9 @@ tour.register('shop_wishlist', {
             },
         },
         {
-            content: "check that logged in and search for Customizable Desk",
-            extra_trigger: "li span:contains('Mitchell Admin')",
-            trigger: 'form input[name="search"]',
-            run: "text Customizable Desk",
-        },
-        {
-            content: "submit search",
-            trigger: 'form:has(input[name="search"]) .oe_search_button',
+            content: "check that logged in",
+            trigger: "li span:contains('Mitchell Admin')",
+            run: function () {},
         },
         {
             content: "click on Customizable Desk",
