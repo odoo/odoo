@@ -3,8 +3,6 @@
         <t t-set="_id" t-value="_.uniqueId('export')"/>
         <form action="" method="post" enctype="multipart/form-data" class="oe_import">
             <input type="hidden" name="csrf_token" t-att-value="csrf_token"/>
-            <input type="hidden" name="session_id"
-               t-att-value="widget.session.session_id"/>
             <input type="hidden" name="import_id"/>
             <div class="oe_import_box col-lg-12 d-none">
                 <input accept=".csv, .xls, .xlsx, .xlsm, .ods" t-attf-id="file_#{_id}"
