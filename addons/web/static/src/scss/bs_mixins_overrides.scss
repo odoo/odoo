@@ -5,9 +5,9 @@
 
 // Override color-yiq function to handle the alpha component of colors and
 // automatic threshold
-@function color-yiq($color, $background: $body-bg, $cross-mix: true) {
+@function color-yiq($color, $dark: $yiq-text-dark, $light: $yiq-text-light, $background: $body-bg, $cross-mix: true) {
     $threshold: if($yiq-contrasted-threshold != false, $yiq-contrasted-threshold / 255 * 100%, false);
-    @return o-get-most-contrast($color, $yiq-text-light, $yiq-text-dark, $background, $threshold, $cross-mix);
+    @return o-get-most-contrast($color, $light, $dark, $background, $threshold, $cross-mix);
 }
 
 @mixin o-bg-color($color, $text-color: null, $with-muted: true) {
