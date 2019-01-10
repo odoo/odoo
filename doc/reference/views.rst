@@ -1582,6 +1582,16 @@ attributes:
 Widgets
 =======
 
+Fields are displayed inside views through widgets.
+Each type of field has a default widget used for rendering but specific widgets
+can be chosen with the ``widget=" "`` attribute.
+
+Below are listed the main widgets available in Odoo by default.  For complete
+information on Odoo available widgets, refer to the :ref:`Javascript Widget Reference <reference/js/widgets>`.
+
+Of course, Odoo allows the development and integration of personal, customized
+widgets.  For this purpose, take a look at the :ref:`JavaScript cheatsheet <reference/jscs>`.
+
 .. _reference/views/widgets/chatter:
 
 Chatter
@@ -1604,104 +1614,68 @@ By convention, it is placed after closing the ``</sheet>`` tag in the form view.
 Fields Display
 --------------
 
-Gauge (Float / Integer)
-'''''''''''''''''''''''
+Boolean Widgets
+'''''''''''''''
 
-``widget="gauge"``
+* ``widget="boolean_button"``
+    Display a button with the current state of a boolean field allowing to
+    switch the field's value when clicking on it.
 
-Displays a rate as a "Car" **gauge**
+  .. warning::
+
+     The user can change the field value even in readonly mode !
+
+
+* ``widget="boolean_favorite"``
+    Display a boolean field as an empty (or not) star.
+
+  .. warning::
+
+     Can also be edited in readonly mode
+
+* ``widget="boolean_toggle"``
+    Display a boolean as a toggle switch.
+
+Gauge
+'''''
+
+``widget="gauge"`` (Float / Integer)
+    Display a rate as a "Car" **gauge**.
 
 .. code-block:: xml
 
-        <field name="progress_rate" widget="gauge" style="width:120px;height:90px;cursor:pointer;"
-                   options="{'max_field': 'maximum_rate'}">
-                           Progress
-        </field>
+        <field name="progress_rate" widget="gauge"
+            style="width:120px;height:90px;cursor:pointer;"
+            options="{'max_field': 'maximum_rate'}"/>
 
 .. _reference/views/widgets/image:
 
-Image (Binary)
-''''''''''''''
+Image
+'''''
 
-``widget="image"``
+``widget="image"`` (Binary)
+    Display of an image, saved as Binary field.
 
-Allows the display of an image, saved as Binary field
+Many2many Widgets
+'''''''''''''''''
 
-.. _reference/views/widgets/percentpie:
+* ``widget="many2many_binary"``
+    Must be a many2many field with a relation to 'ir.attachment' model.
 
-Percentpie (Float / Integer)
-''''''''''''''''''''''''''''
+* ``widget="many2many_tags"``
 
-``widget="percentpie"``
+  .. image:: images/widgets/many2manytags_read.png
+      :class: img-responsive
 
-Display an Integer/Float as a percentpie.  Event if the field is a float, the max percentage is 100.0
+  .. image:: images/widgets/many2manytags_edit.png
+      :class: img-responsive
 
-.. image:: images/widgets/percentpie.png
-    :class: img-responsive
+* ``widget="many2many_checkboxes"``
 
+  .. image:: images/widgets/many2manycheckboxes.png
+      :class: img-responsive
 
-Progressbar (Float)
-'''''''''''''''''''
-
-``widget="progressbar"``
-
-Display a Float as a progressbar
-
-.. image:: images/widgets/progressbar.png
-    :class: img-responsive
-
-.. TODO : only float?
-
-.. _reference/views/widgets/statusbar:
-
-Statusbar (Selection)
-'''''''''''''''''''''
-
-``widget="statusbar"``
-
-The states are shown following the order used in the field (the list in a
-selection field, etc). States that are always visible are specified with the
-attribute ``statusbar_visible``.
-
-.. code-block:: xml
-
-    <field name="state" widget="statusbar"
-        statusbar_visible="draft,sent,progress,invoiced,done" />
-
-
-.. image:: images/widgets/statusbar.png
-    :class: img-responsive
-
-
-.. Relational fields Display
-.. -------------------------
-
-.. One2many
-.. ''''''''
-
-.. ``one2many_list`` == pointing to same class as default one2many widget
-
-Many2many displays
-''''''''''''''''''
-
-``widget="many2many_binary"``
-
-  must be a many2many field with a relation to 'ir.attachment' model.
-
-``widget="many2many_tags"``
-
-.. image:: images/widgets/many2manytags_read.png
-    :class: img-responsive
-
-.. image:: images/widgets/many2manytags_edit.png
-    :class: img-responsive
-
-``widget="many2many_checkboxes"``
-
-.. image:: images/widgets/many2manycheckboxes.png
-    :class: img-responsive
-
-.. note:: Relational fields can be displayed on custom through internal xml.
+.. note:: Relational fields can also be displayed on custom through internal xml.
     For example, you can display a many2many as customized kanban boxes :
 
     .. code-block:: xml
@@ -1721,76 +1695,114 @@ Many2many displays
     For more precisions and customizations of kanban views, take a look at the
       :ref:`Kanban Documentation <reference/views/kanban>`
 
+.. _reference/views/widgets/percentpie:
+
+Percentpie
+''''''''''
+
+``widget="percentpie"`` (Float / Integer)
+    Display an Integer or Float as a percentpie.
+    Note that the expected field value is a percentage,
+    not a float between 0 and 1.
+
+  .. image:: images/widgets/percentpie.png
+      :class: img-responsive
+
+.. _reference/views/widgets/progressbar:
+
+Progressbar
+'''''''''''
+
+``widget="progressbar"``  (Float / Integer)
+    Display a Float or Integer as a progressbar.
+
+.. image:: images/widgets/progressbar.png
+    :class: img-responsive
+
+
+.. _reference/views/widgets/statusbar:
+
+Statusbar
+'''''''''
+
+``widget="statusbar"`` (Selection)
+    The states are shown following the order used in the field (the list in a
+    selection field, etc). States that are always visible are specified with the
+    attribute ``statusbar_visible``.
+
+.. code-block:: xml
+
+    <field name="state" widget="statusbar"
+        statusbar_visible="draft,sent,progress,invoiced,done" />
+
+
+.. image:: images/widgets/statusbar.png
+    :class: img-responsive
+
+
+.. Relational fields Display
+.. -------------------------
+
+.. One2many
+.. ''''''''
+
+.. ``one2many_list`` == pointing to same class as default one2many widget
+
+
 Fields Formatting
 -----------------
 
 
 ``widget="email"`` (Char)
-
-Displays an email address such that on click, a mail building request is displayed
-if accepted by the navigator.
+    Display an email address such that on click, a mail building request is displayed
+    if accepted by the navigator.
 
 ``widget="float_time"`` (Float)
-
-Display a Float field as a time value.
+    Display a Float field as a time value.
 
 ``widget="monetary"`` (Float / Monetary)
-
-Default display of a Monetary field, it can also display a Float field as a monetary one.
+    Default display of a Monetary field, it can also display a Float field as a monetary one.
 
 .. todo:: currency_field usage + other arguments ?
 
 ``widget="phone"`` (Char)
-
-Displays a phone number such that on click, user is redirected to available related
-application
-
-.. TODO add
+    Display a phone number such that on click, user is redirected to available related
+    application.
 
 ``widget="percentage"`` (Float)
-
-Format a ``[0,1]`` Float field as a percentage.
+    Format a ``[0,1]`` Float field as a percentage.
 
 ``widget="url"`` (Char)
-
-Displays a clickable url link.
+    Displays a clickable url link.
 
 Fields Manipulation
 -------------------
 
 ``widget="handle"`` (Integer)
-
-Based on a sequence field, allows the users to drag and drop items in a list view and displays a drag&drop icon
+    Based on a sequence field, allows the users to drag and drop items
+    in a list view and displays a drag&drop icon
 
 ``widget="html"`` (Text / Html)
+    Default display of a html field, it can also be used on Text fields to enable
+    text enhancement through a widget enabling bullet points, highlights, links, images, ...
 
-Default display of a html field, it can also be used on Text fields to enable
-text enhancement through a widget enabling bullet points, highlights, links, images, ...
+  .. image:: images/widgets/html.png
+      :class: img-responsive
 
-.. image:: images/widgets/html.png
-    :class: img-responsive
+``widget="priority"`` (Selection)
+    Display a selection as a set of stars on which the user can click to change
+    the field value
 
-``widget="radio" (Selection)``
+  .. warning::
 
-On creation/edit, display selection field choices as radio buttons.
-
-.. image:: images/widgets/radio.png
-    :class: img-responsive
-
-``widget="selection" (Selection / Many2one)``
-
-Default widget for selection fields, it is rarely used as other widgets have
-a more user-friendly interface (radio, statusbar).  It can also be used for
-Many2one fields.
-On creation/edit, shows possible value choices.
-
-.. note::
-
-   Avoid to use this widget for many2one fields.
-   If you want to avoid creation when proposing choices, use the options
-   no_quick_create, no_create_edit and no_create instead.
+     Field value can also be changed in readonly mode !
 
 
+``widget="radio"`` (Selection)
+    On creation/edit, display selection field choices as radio buttons.
+
+  .. image:: images/widgets/radio.png
+      :class: img-responsive
 
 .. _accesskey: http://www.w3.org/TR/html5/editing.html#the-accesskey-attribute
 .. _CSS color unit: http://www.w3.org/TR/css3-color/#colorunits

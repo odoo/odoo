@@ -1424,6 +1424,8 @@ the AbstractView, AbstractController, AbstractRenderer and AbstractModel classes
     context of a view manager/action manager.  They could be used in a client action,
     or, they could be displayed in the public website (with some work on the assets).
 
+.. _reference/js/widgets:
+
 Field Widgets
 =============
 
