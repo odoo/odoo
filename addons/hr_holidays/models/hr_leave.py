@@ -431,7 +431,7 @@ class HolidaysRequest(models.Model):
             employee = self.env['hr.employee'].browse(employee_id)
             return employee.get_work_days_data(date_from, date_to)['days']
 
-        return self.env.user.company_id.resource_calendar_id.get_work_hours_count() / HOURS_PER_DAY
+        return self.env.user.company_id.resource_calendar_id.get_work_hours_count(date_from, date_to) / HOURS_PER_DAY
 
     ####################################################
     # ORM Overrides methods
