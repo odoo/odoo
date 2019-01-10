@@ -139,7 +139,6 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
             if (!result.uid) {
                 return $.Deferred().reject();
             }
-            delete result.session_id;
             _.extend(self, result);
         });
     },
@@ -290,7 +289,6 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
      */
     session_reload: function () {
         var result = _.extend({}, window.odoo.session_info);
-        delete result.session_id;
         _.extend(this, result);
         return $.when();
     },
