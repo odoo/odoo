@@ -9,3 +9,4 @@ Tutorials
     howtos/website
     howtos/backend
     howtos/profilecode
+    reference/javascript_cheatsheet

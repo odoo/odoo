@@ -12,6 +12,7 @@ Reference
     reference/controllers
     reference/data
     reference/guidelines
+    reference/javascript_reference
     reference/mixins
     reference/mobile
     reference/module
@@ -22,7 +23,3 @@ Reference
     reference/translations
     reference/testing
     reference/views
-
-
-    reference/javascript_cheatsheet
-    reference/javascript_reference

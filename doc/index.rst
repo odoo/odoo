@@ -17,6 +17,7 @@ Index
     webservices
     setup
     reference
+    api
 
 .. ifconfig:: todo_include_todos
 
