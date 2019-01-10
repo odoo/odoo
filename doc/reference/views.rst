@@ -889,6 +889,7 @@ Possible children elements of the list view are:
         used by e.g. ``@colors``
     ``groups``
         lists the groups which should be able to see the field
+        Please take a look at the :ref:`Security Documentation <reference/security>`
     ``widget``
         alternate representations for a field's display. Possible list view
         values are:

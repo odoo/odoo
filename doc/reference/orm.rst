@@ -482,10 +482,10 @@ added.
     ``onchange`` methods work on virtual records assignment on these records
     is not written to the database, just used to know which value to send back
     to the client
-    
+
 .. warning::
 
-    It is not possible for a ``one2many`` or ``many2many`` field to modify 
+    It is not possible for a ``one2many`` or ``many2many`` field to modify
     itself via onchange. This is a webclient limitation - see `#2693 <https://github.com/odoo/odoo/issues/2693>`_.
 
 Low-level SQL
@@ -654,7 +654,7 @@ Model Reference
 
         If set to ``False``, override :meth:`.init` to create the database
         table
-        
+
      .. tip:: To create a model without any table, inherit
               from ``odoo.models.AbstractModel``
 
@@ -865,25 +865,44 @@ Basic fields
 
 .. autoclass:: odoo.fields.Field
 
-.. autoclass:: odoo.fields.Char
-    :show-inheritance:
+.. _reference/orm/fields/boolean:
 
 .. autoclass:: odoo.fields.Boolean
     :show-inheritance:
 
-.. autoclass:: odoo.fields.Integer
+.. _reference/orm/fields/char:
+
+.. autoclass:: odoo.fields.Char
     :show-inheritance:
+
+.. _reference/orm/fields/float:
 
 .. autoclass:: odoo.fields.Float
     :show-inheritance:
 
-.. autoclass:: odoo.fields.Text
+.. _reference/orm/fields/integer:
+
+.. autoclass:: odoo.fields.Integer
     :show-inheritance:
+
+.. _reference/orm/fields/html:
+
+.. autoclass:: odoo.fields.Html
+    :show-inheritance:
+
+.. _reference/orm/fields/monetary:
+
+.. autoclass:: odoo.fields.Monetary
+    :show-inheritance:
+
+.. _reference/orm/fields/selection:
 
 .. autoclass:: odoo.fields.Selection
     :show-inheritance:
 
-.. autoclass:: odoo.fields.Html
+.. _reference/orm/fields/text:
+
+.. autoclass:: odoo.fields.Text
     :show-inheritance:
 
 .. _reference/orm/fields/date_datetime:
@@ -943,14 +962,22 @@ These helpers are also available by importing `odoo.tools.date_utils`.
 Relational fields
 -----------------
 
+.. _reference/orm/fields/many2one:
+
 .. autoclass:: odoo.fields.Many2one
     :show-inheritance:
+
+.. _reference/orm/fields/one2many:
 
 .. autoclass:: odoo.fields.One2many
     :show-inheritance:
 
+.. _reference/orm/fields/many2many:
+
 .. autoclass:: odoo.fields.Many2many
     :show-inheritance:
+
+.. _reference/orm/fields/reference:
 
 .. autoclass:: odoo.fields.Reference
     :show-inheritance:
