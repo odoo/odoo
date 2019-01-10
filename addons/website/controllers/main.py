@@ -276,10 +276,6 @@ class Website(Home):
             return werkzeug.utils.redirect('/web#id=' + str(page.get('view_id')) + '&view_type=form&model=ir.ui.view')
         return werkzeug.utils.redirect(url + "?enable_editor=1")
 
-    @http.route(['/website/snippets'], type='json', auth="user", website=True)
-    def snippets(self):
-        return request.env['ir.ui.view'].render_template('website.snippets')
-
     @http.route("/website/get_switchable_related_views", type="json", auth="user", website=True)
     def get_switchable_related_views(self, key):
         views = request.env["ir.ui.view"].get_related_views(key, bundles=False).filtered(lambda v: v.customize_show)

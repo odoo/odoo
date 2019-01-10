@@ -129,7 +129,8 @@ var ProductConfiguratorFormController = FormController.extend({
                 pricelistId: self.renderer.pricelistId,
                 okButtonText: _t('Confirm'),
                 cancelButtonText: _t('Back'),
-                title: _t('Configure')
+                title: _t('Configure'),
+                context: self.initialState.context,
             }).open();
 
             self.optionalProductsModal.on('options_empty', null,

@@ -1,7 +1,7 @@
-odoo.define('website.editor', function (require) {
+odoo.define('website.editor.link', function (require) {
 'use strict';
 
-var weWidgets = require('web_editor.widget');
+var weWidgets = require('wysiwyg.widgets');
 var wUtils = require('website.utils');
 
 weWidgets.LinkDialog.include({

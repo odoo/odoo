@@ -3,6 +3,7 @@
 <!-- Snippets & Themes Menu -->
 <template id="email_designer_snippets" inherit_id="web_editor.snippets" primary="True">
     <xpath expr="//h2[@id='snippets_menu']" position="replace">
+        <t t-set="company_id" t-value="res_company"/>
         <h2 id="snippets_menu">Select a template</h2>
     </xpath>
     <xpath expr="//div[@id='o_scroll']" position="replace">

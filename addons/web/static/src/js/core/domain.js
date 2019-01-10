@@ -104,8 +104,13 @@ var Domain = collections.Tree.extend({
                     );
                 case "like":
                     return (fieldValue.toLowerCase().indexOf(this._data[2].toLowerCase()) >= 0);
+                case "=like":
+                    var regExp = new RegExp(this._data[2].toLowerCase().replace(/([.\[\]\{\}\+\*])/g, '\\\$1').replace(/%/g, '.*'));
+                    return regExp.test(fieldValue.toLowerCase());
                 case "ilike":
                     return (fieldValue.indexOf(this._data[2]) >= 0);
+                case "=ilike":
+                    return new RegExp(this._data[2].replace(/%/g, '.*'), 'i').test(fieldValue);
                 default:
                     throw new Error(_.str.sprintf(
                         "Domain %s uses an unsupported operator",

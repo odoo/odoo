@@ -478,7 +478,7 @@ class IrActionsReport(models.Model):
         if values is None:
             values = {}
 
-        context = dict(self.env.context, inherit_branding=values.get('enable_editor'))
+        context = dict(self.env.context, inherit_branding=False)
 
         # Browse the user instead of using the sudo self.env.user
         user = self.env['res.users'].browse(self.env.uid)
@@ -492,7 +492,6 @@ class IrActionsReport(models.Model):
         values.update(
             time=time,
             context_timestamp=lambda t: fields.Datetime.context_timestamp(self.with_context(tz=user.tz), t),
-            editable=values.get('enable_editor'),
             user=user,
             res_company=user.company_id,
             website=website,
@@ -609,9 +608,6 @@ class IrActionsReport(models.Model):
     def render_qweb_pdf(self, res_ids=None, data=None):
         if not data:
             data = {}
-
-        # remove editor feature in pdf generation
-        data.update(enable_editor=False)
 
         # In case of test environment without enough workers to perform calls to wkhtmltopdf,
         # fallback to render_html.

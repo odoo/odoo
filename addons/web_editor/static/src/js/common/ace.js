@@ -5,7 +5,6 @@ var ajax = require('web.ajax');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var Widget = require('web.Widget');
-var weContext = require('web_editor.context');
 var localStorage = require('web.local_storage');
 var session = require('web.session');
 
@@ -156,6 +155,8 @@ var ViewEditor = Widget.extend({
      */
     init: function (parent, viewKey, options) {
         this._super.apply(this, arguments);
+
+        this.context = options.context;
 
         this.viewKey = viewKey;
         this.options = _.defaults({}, options, {
