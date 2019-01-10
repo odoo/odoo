@@ -25,23 +25,10 @@
             <script type="text/javascript" src="/point_of_sale/static/src/js/tests.js"></script>
         </template>
 
-    <template id="FieldTextHtml">
-        <t t-set="head">
-            <t t-raw="head"/>
-            <t t-if="enable_editor">
-                <link rel="stylesheet" href="/point_of_sale/static/src/css/customer_facing_display_editor_thumb.css" type="text/css"/>
-            </t>
-        </t>
-        <t t-call="web_editor.layout">
-            <div id="editable_area"
-                 class="o_editable"
-                 t-att-data-oe-model="model"
-                 t-att-data-oe-field="field"
-                 t-att-data-oe-id="res_id"
-                 data-oe-type="html">
-                <t t-raw="content" />
-            </div>
-        </t>
+    <template id="wysiwyg_iframe_css_assets" name="CSS assets for wysiwyg iframe content">
+        <t t-call-assets="web.assets_common" t-js="false"/>
+        <t t-call-assets="web.assets_backend" t-js="false"/>
+        <link rel="stylesheet" href="/point_of_sale/static/src/css/customer_facing_display_editor_thumb.css" type="text/css"/>
     </template>
 
     <template id="customer_facing_display_html" >

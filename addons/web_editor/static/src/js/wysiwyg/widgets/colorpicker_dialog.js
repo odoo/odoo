@@ -1,4 +1,4 @@
-odoo.define('web.colorpicker', function (require) {
+odoo.define('wysiwyg.widgets.ColorpickerDialog', function (require) {
 'use strict';
 
 var core = require('web.core');
@@ -7,11 +7,11 @@ var Dialog = require('web.Dialog');
 
 var _t = core._t;
 
-var Colorpicker = Dialog.extend({
+var ColorpickerDialog = Dialog.extend({
     xmlDependencies: (Dialog.prototype.xmlDependencies || [])
-        .concat(['/web/static/src/xml/colorpicker.xml']),
+        .concat(['/web_editor/static/src/xml/wysiwyg_colorpicker.xml']),
 
-    template: 'web.colorpicker',
+    template: 'wysiwyg.widgets.ColorpickerDialog',
     events: _.extend({}, Dialog.prototype.events || {}, {
         'mousedown .o_color_pick_area': '_onMouseDownPicker',
         'mousedown .o_color_slider': '_onMouseDownSlider',
@@ -36,6 +36,13 @@ var Colorpicker = Dialog.extend({
                 {text: _t('Discard'), close: true},
             ],
         }, options));
+
+        this.trigger_up('getRecordInfo', {
+            recordInfo: options,
+            callback: function (recordInfo) {
+                _.defaults(options, recordInfo);
+            },
+        });
 
         this.pickerFlag = false;
         this.sliderFlag = false;
@@ -69,15 +76,9 @@ var Colorpicker = Dialog.extend({
         this.$opacitySliderPointer = this.$('.o_opacity_pointer');
 
         var defaultColor = this.options.defaultColor || '#FF0000';
-        var rgba = defaultColor.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+(?:\.\d+)?))?\)$/);
+        var rgba = ColorpickerDialog.convertColorToRgba(defaultColor);
         if (rgba) {
-            if (rgba[4] === undefined) {
-                rgba[4] = 1;
-            }
-            this._updateRgba(parseInt(rgba[1]), parseInt(rgba[2]), parseInt(rgba[3]), Math.round(parseFloat(rgba[4] * 100)));
-        } else {
-            this._updateHex(defaultColor);
-            this._updateOpacity(100);
+            this._updateRgba(rgba.red, rgba.green, rgba.blue, rgba.opacity);
         }
         this.opened().then(this._updateUI.bind(this));
 
@@ -140,14 +141,14 @@ var Colorpicker = Dialog.extend({
      * @param {string} hex - hexadecimal code
      */
     _updateHex: function (hex) {
-        var rgb = Colorpicker.prototype.convertHexToRgb(hex);
+        var rgb = ColorpickerDialog.convertHexToRgba(hex);
         if (!rgb) {
             return;
         }
         _.extend(this.colorComponents,
             {hex: hex},
             rgb,
-            Colorpicker.prototype.convertRgbToHsl(rgb.red, rgb.green, rgb.blue)
+            ColorpickerDialog.convertRgbToHsl(rgb.red, rgb.green, rgb.blue)
         );
         this._updateCssColor();
     },
@@ -161,7 +162,7 @@ var Colorpicker = Dialog.extend({
      * @param {integer} [a]
      */
     _updateRgba: function (r, g, b, a) {
-        var hex = Colorpicker.prototype.convertRgbToHex(r, g, b);
+        var hex = ColorpickerDialog.convertRgbToHex(r, g, b);
         if (!hex) {
             return;
         }
@@ -169,7 +170,7 @@ var Colorpicker = Dialog.extend({
             {red: r, green: g, blue: b},
             a === undefined ? {} : {opacity: a},
             hex,
-            Colorpicker.prototype.convertRgbToHsl(r, g, b)
+            ColorpickerDialog.convertRgbToHsl(r, g, b)
         );
         this._updateCssColor();
     },
@@ -182,14 +183,14 @@ var Colorpicker = Dialog.extend({
      * @param {integer} l
      */
     _updateHsl: function (h, s, l) {
-        var rgb = Colorpicker.prototype.convertHslToRgb(h, s, l);
+        var rgb = ColorpickerDialog.convertHslToRgb(h, s, l);
         if (!rgb) {
             return;
         }
         _.extend(this.colorComponents,
             {hue: h, saturation: s, lightness: l},
             rgb,
-            Colorpicker.prototype.convertRgbToHex(rgb.red, rgb.green, rgb.blue)
+            ColorpickerDialog.convertRgbToHex(rgb.red, rgb.green, rgb.blue)
         );
         this._updateCssColor();
     },
@@ -214,17 +215,8 @@ var Colorpicker = Dialog.extend({
      * @private
      */
     _updateCssColor: function () {
-        var cssColor = this.colorComponents.hex;
-        if (this.colorComponents.opacity !== 100) {
-            cssColor = _.str.sprintf('rgba(%s, %s, %s, %s)',
-                this.colorComponents.red,
-                this.colorComponents.green,
-                this.colorComponents.blue,
-                this.colorComponents.opacity / 100
-            );
-        }
         _.extend(this.colorComponents,
-            {cssColor: cssColor}
+            {cssColor: ColorpickerDialog.formatColor(this.colorComponents)}
         );
     },
 
@@ -358,140 +350,214 @@ var Colorpicker = Dialog.extend({
     _onFinalPick: function () {
         this.trigger_up('colorpicker:saved', this.colorComponents);
     },
-
-    //--------------------------------------------------------------------------
-    // Static
-    //--------------------------------------------------------------------------
-
-    /**
-     * Converts Hexadecimal code to RGB.
-     *
-     * @static
-     * @param {string} hex - hexadecimal code
-     * @returns {Object|false} contains red, green and blue
-     */
-    convertHexToRgb: function (hex) {
-        if (!/^#[0-9A-F]{6}$/i.test(hex)) {
-            return false;
-        }
-
-        return {
-            red: parseInt(hex.substr(1, 2), 16),
-            green: parseInt(hex.substr(3, 2), 16),
-            blue: parseInt(hex.substr(5, 2), 16),
-        };
-    },
-    /**
-     * Converts RGB color to HSL.
-     *
-     * @static
-     * @param {integer} r
-     * @param {integer} g
-     * @param {integer} b
-     * @returns {Object|false} contains hue, saturation and lightness
-     */
-    convertRgbToHsl: function (r, g, b) {
-        if (typeof(r) !== 'number' || isNaN(r) || r < 0 || r > 255 ||
-            typeof(g) !== 'number' || isNaN(g) || g < 0 || g > 255 ||
-            typeof(b) !== 'number' || isNaN(b) || b < 0 || b > 255) {
-            return false;
-        }
-
-        var red = r / 255;
-        var green = g / 255;
-        var blue = b / 255;
-        var maxColor = Math.max(red, green, blue);
-        var minColor = Math.min(red, green, blue);
-        var delta = maxColor - minColor;
-        var hue = 0;
-        var saturation = 0;
-        var lightness = (maxColor + minColor) / 2;
-        if (delta) {
-            if (maxColor === red) {
-                hue = (green - blue) / delta;
-            }
-            if (maxColor === green) {
-                hue = 2 + (blue - red) / delta;
-            }
-            if (maxColor === blue) {
-                hue = 4 + (red - green) / delta;
-            }
-            if (maxColor) {
-                saturation = delta / (1 - Math.abs(2 * lightness - 1));
-            }
-        }
-        hue = 60 * hue | 0;
-        return {
-            hue: hue < 0 ? hue += 360 : hue,
-            saturation: (saturation * 100) | 0,
-            lightness: (lightness * 100) | 0,
-        };
-    },
-    /**
-     * Converts HSL color to RGB.
-     *
-     * @static
-     * @param {integer} h
-     * @param {integer} s
-     * @param {integer} l
-     * @returns {Object|false} contains red, green and blue
-     */
-    convertHslToRgb: function (h, s, l) {
-        if (typeof(h) !== 'number' || isNaN(h) || h < 0 || h > 360 ||
-            typeof(s) !== 'number' || isNaN(s) || s < 0 || s > 100 ||
-            typeof(l) !== 'number' || isNaN(l) || l < 0 || l > 100) {
-            return false;
-        }
-        var huePrime = h / 60;
-        var saturation = s / 100;
-        var lightness = l / 100;
-        var chroma = saturation * (1 - Math.abs(2 * lightness - 1));
-        var secondComponent = chroma * (1 - Math.abs(huePrime % 2 - 1));
-        var lightnessAdjustment = lightness - chroma/2;
-        var precision = 255;
-        chroma = (chroma + lightnessAdjustment) * precision | 0;
-        secondComponent = (secondComponent + lightnessAdjustment) * precision | 0;
-        lightnessAdjustment = lightnessAdjustment * precision | 0;
-        if (huePrime >= 0 && huePrime < 1) {
-            return {red: chroma, green: secondComponent, blue: lightnessAdjustment};
-        }
-        if (huePrime >= 1 && huePrime < 2) {
-            return {red: secondComponent, green: chroma, blue: lightnessAdjustment};
-        }
-        if (huePrime >= 2 && huePrime < 3) {
-            return {red: lightnessAdjustment, green: chroma, blue: secondComponent};
-        }
-        if (huePrime >= 3 && huePrime < 4) {
-            return {red: lightnessAdjustment, green: secondComponent, blue: chroma};
-        }
-        if (huePrime >= 4 && huePrime < 5) {
-            return {red: secondComponent, green: lightnessAdjustment, blue: chroma};
-        }
-        if (huePrime >= 5 && huePrime <= 6) {
-            return {red: chroma, green: lightnessAdjustment, blue: secondComponent};
-        }
-    },
-    /**
-     * Converts RGB color to Hexadecimal code.
-     *
-     * @static
-     * @param {integer} r
-     * @param {integer} g
-     * @param {integer} b
-     * @returns {Object|false} contains hexadecimal code
-     */
-    convertRgbToHex: function (r, g, b) {
-        if (typeof(r) !== 'number' || isNaN(r) || r < 0 || r > 255 ||
-            typeof(g) !== 'number' || isNaN(g) || g < 0 || g > 255 ||
-            typeof(b) !== 'number' || isNaN(b) || b < 0 || b > 255) {
-            return false;
-        }
-        var red = r < 16 ? '0' + r.toString(16) : r.toString(16);
-        var green = g < 16 ? '0' + g.toString(16) : g.toString(16);
-        var blue = b < 16 ? '0' + b.toString(16) : b.toString(16);
-        return {hex: _.str.sprintf('#%s%s%s', red, green, blue)};
-    },
 });
 
-return Colorpicker;
+//--------------------------------------------------------------------------
+// Static
+//--------------------------------------------------------------------------
+
+/**
+ * Converts any color to string RGBA.
+ *
+ * @static
+ * @param {Object|string} color
+ * @returns {string} rgba (red, green, blue, opacity)
+ */
+ColorpickerDialog.formatColor = function (color) {
+    if (typeof color === 'string') {
+        color = ColorpickerDialog.convertColorToRgba(color);
+    }
+    if (!color) {
+        return '';
+    }
+    if (color.opacity === 100) {
+        return ColorpickerDialog.convertRgbToHex(color.red, color.green, color.blue).hex;
+    }
+    return _.str.sprintf('rgba(%s, %s, %s, %s)',
+        color.red,
+        color.green,
+        color.blue,
+        color.opacity / 100
+    );
+};
+/**
+ * Converts any color to  code to RGBA.
+ *
+ * @static
+ * @param {string} color
+ * @returns {Object|false} contains red, green, blue, opacity
+ */
+ColorpickerDialog.convertColorToRgba = function (color) {
+    var rgba = color.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+(?:\.\d+)?))?\)$/);
+    if (rgba) {
+        if (rgba[4] === undefined) {
+            rgba[4] = 100;
+        }
+        return {
+            red: parseInt(rgba[1]),
+            green: parseInt(rgba[2]),
+            blue: parseInt(rgba[3]),
+            opacity: parseInt(rgba[4]),
+        };
+    } else {
+        return ColorpickerDialog.convertHexToRgba(color);
+    }
+};
+/**
+ * Converts Hexadecimal code to RGB.
+ *
+ * @static
+ * @param {string} hex - hexadecimal code
+ * @returns {Object|false} contains red, green and blue
+ */
+ColorpickerDialog.convertHexToRgba = function (hex) {
+    if (!/^#([0-9A-F]{6}|[0-9A-F]{8})$/i.test(hex)) {
+        return false;
+    }
+
+    return {
+        red: parseInt(hex.substr(1, 2), 16),
+        green: parseInt(hex.substr(3, 2), 16),
+        blue: parseInt(hex.substr(5, 2), 16),
+        opacity: hex.length === 9 ? parseInt(hex.substr(7, 2), 16) : 100,
+    };
+};
+/**
+ * Converts RGB color to HSL.
+ *
+ * @static
+ * @param {integer} r
+ * @param {integer} g
+ * @param {integer} b
+ * @returns {Object|false} contains hue, saturation and lightness
+ */
+ColorpickerDialog.convertRgbToHsl = function (r, g, b) {
+    if (typeof (r) !== 'number' || isNaN(r) || r < 0 || r > 255 ||
+        typeof (g) !== 'number' || isNaN(g) || g < 0 || g > 255 ||
+        typeof (b) !== 'number' || isNaN(b) || b < 0 || b > 255) {
+        return false;
+    }
+
+    var red = r / 255;
+    var green = g / 255;
+    var blue = b / 255;
+    var maxColor = Math.max(red, green, blue);
+    var minColor = Math.min(red, green, blue);
+    var delta = maxColor - minColor;
+    var hue = 0;
+    var saturation = 0;
+    var lightness = (maxColor + minColor) / 2;
+    if (delta) {
+        if (maxColor === red) {
+            hue = (green - blue) / delta;
+        }
+        if (maxColor === green) {
+            hue = 2 + (blue - red) / delta;
+        }
+        if (maxColor === blue) {
+            hue = 4 + (red - green) / delta;
+        }
+        if (maxColor) {
+            saturation = delta / (1 - Math.abs(2 * lightness - 1));
+        }
+    }
+    hue = 60 * hue | 0;
+    return {
+        hue: hue < 0 ? hue += 360 : hue,
+        saturation: (saturation * 100) | 0,
+        lightness: (lightness * 100) | 0,
+    };
+};
+/**
+ * Converts HSL color to RGB.
+ *
+ * @static
+ * @param {integer} h
+ * @param {integer} s
+ * @param {integer} l
+ * @returns {Object|false} contains red, green and blue
+ */
+ColorpickerDialog.convertHslToRgb = function (h, s, l) {
+    if (typeof (h) !== 'number' || isNaN(h) || h < 0 || h > 360 ||
+        typeof (s) !== 'number' || isNaN(s) || s < 0 || s > 100 ||
+        typeof (l) !== 'number' || isNaN(l) || l < 0 || l > 100) {
+        return false;
+    }
+    var huePrime = h / 60;
+    var saturation = s / 100;
+    var lightness = l / 100;
+    var chroma = saturation * (1 - Math.abs(2 * lightness - 1));
+    var secondComponent = chroma * (1 - Math.abs(huePrime % 2 - 1));
+    var lightnessAdjustment = lightness - chroma / 2;
+    var precision = 255;
+    chroma = (chroma + lightnessAdjustment) * precision | 0;
+    secondComponent = (secondComponent + lightnessAdjustment) * precision | 0;
+    lightnessAdjustment = lightnessAdjustment * precision | 0;
+    if (huePrime >= 0 && huePrime < 1) {
+        return {
+            red: chroma,
+            green: secondComponent,
+            blue: lightnessAdjustment,
+        };
+    }
+    if (huePrime >= 1 && huePrime < 2) {
+        return {
+            red: secondComponent,
+            green: chroma,
+            blue: lightnessAdjustment,
+        };
+    }
+    if (huePrime >= 2 && huePrime < 3) {
+        return {
+            red: lightnessAdjustment,
+            green: chroma,
+            blue: secondComponent,
+        };
+    }
+    if (huePrime >= 3 && huePrime < 4) {
+        return {
+            red: lightnessAdjustment,
+            green: secondComponent,
+            blue: chroma,
+        };
+    }
+    if (huePrime >= 4 && huePrime < 5) {
+        return {
+            red: secondComponent,
+            green: lightnessAdjustment,
+            blue: chroma,
+        };
+    }
+    if (huePrime >= 5 && huePrime <= 6) {
+        return {
+            red: chroma,
+            green: lightnessAdjustment,
+            blue: secondComponent,
+        };
+    }
+};
+/**
+ * Converts RGB color to Hexadecimal code.
+ *
+ * @static
+ * @param {integer} r
+ * @param {integer} g
+ * @param {integer} b
+ * @returns {Object|false} contains hexadecimal code
+ */
+ColorpickerDialog.convertRgbToHex = function (r, g, b) {
+    if (typeof (r) !== 'number' || isNaN(r) || r < 0 || r > 255 ||
+        typeof (g) !== 'number' || isNaN(g) || g < 0 || g > 255 ||
+        typeof (b) !== 'number' || isNaN(b) || b < 0 || b > 255) {
+        return false;
+    }
+    var red = r < 16 ? '0' + r.toString(16) : r.toString(16);
+    var green = g < 16 ? '0' + g.toString(16) : g.toString(16);
+    var blue = b < 16 ? '0' + b.toString(16) : b.toString(16);
+    return {
+        hex: _.str.sprintf('#%s%s%s', red, green, blue)
+    };
+};
+
+return ColorpickerDialog;
 });

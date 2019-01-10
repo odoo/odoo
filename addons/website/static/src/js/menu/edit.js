@@ -3,7 +3,7 @@ odoo.define('website.editMenu', function (require) {
 
 var core = require('web.core');
 var weContext = require('web_editor.context');
-var editor = require('web_editor.editor');
+var EditorMenu = require('website.editor.menu');
 var websiteNavbarData = require('website.navbar');
 
 var _t = core._t;
@@ -22,6 +22,8 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         content_was_recreated: '_onContentWasRecreated',
         snippet_cloned: '_onSnippetCloned',
         snippet_dropped: '_onSnippetDropped',
+        edition_will_stopped: '_onEditionWillStop',
+        edition_was_stopped: '_onEditionWasStopped',
     }),
 
     /**
@@ -39,22 +41,17 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
     start: function () {
         var def = this._super.apply(this, arguments);
 
-        // If we auto start the editor, do not show a welcome message
-        if (this._editorAutoStart) {
-            this._startEditMode();
-            return def;
-        }
-
         // Check that the page is empty
-        var $wrap = $('#wrapwrap.homepage #wrap'); // TODO find this element another way
-        if (!$wrap.length || $wrap.html().trim() !== '') {
-            return def;
-        }
+        var $wrap = this._targetForEdition().find('#wrap');
+        this.$wrap = $wrap;
 
-        // If readonly empty page, show the welcome message
-        this.$welcomeMessage = $(core.qweb.render('website.homepage_editor_welcome_message'));
-        this.$welcomeMessage.css('min-height', $wrap.parent('main').height() - ($wrap.outerHeight(true) - $wrap.height()));
-        $wrap.empty().append(this.$welcomeMessage);
+        if ($wrap.length && $wrap.html().trim() === '') {
+            // If readonly empty page, show the welcome message
+            this.$welcomeMessage = $(core.qweb.render('website.homepage_editor_welcome_message'));
+            this.$welcomeMessage.addClass('o_homepage_editor_welcome_message');
+            this.$welcomeMessage.css('min-height', $wrap.parent('main').height() - ($wrap.outerHeight(true) - $wrap.height()));
+            $wrap.empty().append(this.$welcomeMessage);
+        }
 
         setTimeout(function () {
             if ($('.o_tooltip.o_animated').length) {
@@ -62,6 +59,10 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
             }
         }, 1000); // ugly hack to wait that tooltip is loaded
 
+        // If we auto start the editor, do not show a welcome message
+        if (this._editorAutoStart) {
+            return $.when(def, this._startEditMode());
+        }
         return def;
     },
 
@@ -78,11 +79,17 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
      */
     _startEditMode: function () {
         var self = this;
-        return (new (editor.Class)(this)).prependTo(document.body).then(function () {
+        this.trigger_up('animation_stop_demand', {
+            $target: this._targetForEdition(),
+        });
+        if (this.$welcomeMessage) {
+            this.$welcomeMessage.detach(); // detach from the readonly rendering before the clone by summernote
+        }
+        return new EditorMenu(this).prependTo(document.body).then(function () {
             if (self.$welcomeMessage) {
-                self.$welcomeMessage.remove();
+                self.$wrap.append(self.$welcomeMessage); // reappend if the user cancel the edition
             }
-            var $wrapwrap = $('#wrapwrap'); // TODO find this element another way
+            var $wrapwrap = self._targetForEdition();
             var $htmlEditable = $wrapwrap.find('.oe_structure.oe_empty, [data-oe-type="html"]').not('[data-editor-message]');
             $htmlEditable.attr('data-editor-message', _t('DRAG BUILDING BLOCKS HERE'));
             var def = $.Deferred();
@@ -109,6 +116,21 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
     _onSave: function () {},
 
     //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Returns the target for edition.
+     *
+     * @private
+     * @returns {JQuery}
+     */
+    _targetForEdition: function () {
+        // in edit mode, we have .note-editable className
+        return $('#wrapwrap:not(.note-editable), #wrapwrap.note-editable');
+    },
+
+    //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
 
@@ -125,7 +147,7 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         });
     },
     /**
-     * Called when content will be recreated in the page. Notifies the
+     * Called when content was recreated in the page. Notifies the
      * WebsiteRoot that is should start the animations.
      *
      * @private
@@ -135,6 +157,33 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         this.trigger_up('animation_start_demand', {
             editableMode: true,
             $target: ev.data.$target,
+        });
+    },
+    /**
+     * Called when edition will stop. Notifies the
+     * WebsiteRoot that is should stop the animations.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onEditionWillStop: function (ev) {
+        var $target = this._targetForEdition();
+        $target.find('[data-editor-message]').removeAttr('data-editor-message');
+        this.trigger_up('animation_stop_demand', {
+            $target: $target,
+        });
+    },
+    /**
+     * Called when edition was stopped. Notifies the
+     * WebsiteRoot that is should start the animations.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onEditionWasStopped: function (ev) {
+        var $target = this._targetForEdition();
+        this.trigger_up('animation_start_demand', {
+            $target: $target,
         });
     },
     /**

@@ -44,5 +44,8 @@
     'demo': [
         'data/mass_mailing_demo.xml',
     ],
+    'qweb': [
+        'static/src/xml/*.xml',
+    ],
     'application': True,
 }

@@ -1,0 +1,42 @@
+// Mixins for buttons with alpha bg-color
+@mixin o-alpha-button-preview {
+    position: relative;
+    z-index: 1;
+
+    // Place an overlay that inherit the button's bg-color.
+    &::before {
+        content: "";
+        @include o-position-absolute(0, 0, 0, 0);
+        background-color: inherit;
+    }
+
+    &::after {
+        content: "";
+        @include o-position-absolute(0, 0, 0, 0);
+        z-index: -1;
+        background-image: url('/web_editor/static/src/img/transparent.png');
+        background-size: 10px auto;
+    }
+}
+
+$o-wysiwyg-zindex: 1000;
+
+$o-wysiwyg-md-ease: cubic-bezier(0.19, 1, 0.22, 1) !default;
+
+$o-wysiwyg-font-family: Roboto,
+"Montserrat",
+"Segoe UI",
+"Helvetica Neue",
+Helvetica,
+Arial,
+sans-serif;
+
+$o-wysiwyg-toolbar-height: 32px;
+
+$o-wysiwyg-color: #212629 !default;
+$o-wysiwyg-color-light: #616669 !default;
+$o-wysiwyg-color-danger: #912629 !default;
+$o-wysiwyg-color-success: #219629 !default;
+$o-wysiwyg-bg-color: #f7f7f7 !default;
+$o-wysiwyg-bg-color-dark: #a7a7a7 !default;
+$o-wysiwyg-border-color: #a9a9a9 !default;

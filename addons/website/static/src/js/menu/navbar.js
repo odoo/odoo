@@ -17,6 +17,7 @@ var WebsiteNavbar = rootWidget.RootWidget.extend({
     custom_events: _.extend({}, rootWidget.RootWidget.prototype.custom_events || {}, {
         action_demand: '_onActionDemand',
         edit_mode: '_onEditMode',
+        readonly_mode: '_onReadonlyMode',
         ready_to_save: '_onSave',
     }),
 
@@ -141,11 +142,8 @@ var WebsiteNavbar = rootWidget.RootWidget.extend({
      * @private
      */
     _onEditMode: function () {
-        var self = this;
         this.$el.addClass('editing_mode');
-        _.delay(function () {
-            self.do_hide();
-        }, 800);
+        this.do_hide();
     },
     /**
      * Called when a submenu is hovered -> automatically opens it if another
@@ -169,6 +167,15 @@ var WebsiteNavbar = rootWidget.RootWidget.extend({
      */
     _onMobileMenuToggleClick: function () {
         this.$el.parent().toggleClass('o_mobile_menu_opened');
+    },
+    /**
+     * Called in response to edit mode activation -> hides the navbar.
+     *
+     * @private
+     */
+    _onReadonlyMode: function () {
+        this.$el.removeClass('editing_mode');
+        this.do_show();
     },
     /**
      * Called in response to edit mode saving -> checks if action-capable

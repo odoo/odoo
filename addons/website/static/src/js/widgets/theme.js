@@ -3,9 +3,10 @@ odoo.define('website.theme', function (require) {
 
 var config = require('web.config');
 var core = require('web.core');
-var ColorpickerDialog = require('web.colorpicker');
+var ColorpickerDialog = require('wysiwyg.widgets.ColorpickerDialog');
 var Dialog = require('web.Dialog');
-var widgets = require('web_editor.widget');
+var weContext = require('web_editor.context');
+var widgets = require('wysiwyg.widgets');
 var websiteNavbarData = require('website.navbar');
 
 var _t = core._t;
@@ -43,7 +44,7 @@ var ThemeCustomizeDialog = Dialog.extend({
             templateDef = this._rpc({
                 model: 'ir.ui.view',
                 method: 'read_template',
-                args: ['website.theme_customize'],
+                args: ['website.theme_customize', weContext.get()],
             }).then(function (data) {
                 return core.qweb.add_template(data);
             });
@@ -285,6 +286,7 @@ var ThemeCustomizeDialog = Dialog.extend({
                         data[1],
                         '#wrapwrap { background-image: url("' + src + '"); }',
                         '//style',
+                        weContext.get(),
                     ],
                 });
             }).then(function () {
@@ -472,7 +474,7 @@ var ThemeCustomizeDialog = Dialog.extend({
                 });
 
                 var colors = {};
-                colors[colorName] = ev.data.cssColor;
+                colors[colorName] = ev.data.hex;
                 if (colorName === 'alpha') {
                     colors['beta'] = 'null';
                     colors['gamma'] = 'null';

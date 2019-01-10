@@ -6,8 +6,7 @@ var core = require('web.core');
 var Dialog = require('web.Dialog');
 var Widget = require('web.Widget');
 var weContext = require('web_editor.context');
-require('web_editor.editor');
-var translate = require('web_editor.translate');
+var WysiwygTranslate = require('web_editor.wysiwyg.multizone.translate');
 
 var qweb = core.qweb;
 var _t = core._t;
@@ -19,8 +18,8 @@ if (!weContext.getExtra().edit_translations) {
 
 ajax.loadXML('/website_gengo/static/src/xml/website.gengo.xml', qweb);
 
-translate.Class.include({
-    events: _.extend({}, translate.Class.prototype.events, {
+WysiwygTranslate.include({
+    events: _.extend({}, WysiwygTranslate.prototype.events, {
         'click a[data-action=translation_gengo_post]': 'translation_gengo_post',
         'click a[data-action=translation_gengo_info]': 'translation_gengo_info',
     }),

@@ -8,7 +8,7 @@ var mixins = require('web.mixins');
 var rpc = require('web.rpc');
 var Widget = require('web.Widget');
 var weContext = require('web_editor.context');
-var weWidgets = require('web_editor.widget');
+var weWidgets = require('wysiwyg.widgets');
 var websiteNavbarData = require('website.navbar');
 
 var _t = core._t;
