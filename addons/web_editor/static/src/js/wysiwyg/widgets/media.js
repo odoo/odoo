@@ -1,111 +1,15 @@
-odoo.define('web_editor.widget', function (require) {
+odoo.define('wysiwyg.widgets.media', function (require) {
 'use strict';
 
-var ajax = require('web.ajax');
-var base = require('web_editor.base');
 var core = require('web.core');
-var DialogBase = require('web.Dialog');
+var Dialog = require('web.Dialog');
+var fonts = require('wysiwyg.fonts');
 var Widget = require('web.Widget');
-var weContext = require("web_editor.context");
+var concurrency = require('web.concurrency');
 
 var QWeb = core.qweb;
-var range = $.summernote.core.range;
-var dom = $.summernote.core.dom;
 
 var _t = core._t;
-
-/**
- * @todo we should either get rid of this or move it somewhere else
- */
-function simulateMouseEvent(el, type) {
-    var evt = document.createEvent("MouseEvents");
-    evt.initMouseEvent(type, true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, el);
-    el.dispatchEvent(evt);
-}
-
-/**
- * Extend Dialog class to handle save/cancel of edition components.
- */
-var Dialog = DialogBase.extend({
-    /**
-     * @constructor
-     */
-    init: function (parent, options) {
-        options = options || {};
-        this._super(parent, _.extend({}, {
-            buttons: [
-                {text: options.save_text || _t("Save"), classes: 'btn-primary', click: this.save},
-                {text: _t("Discard"), close: true}
-            ]
-        }, options));
-
-        this.destroyAction = 'cancel';
-
-        var self = this;
-        this.opened().then(function () {
-            self.$('input:first').focus();
-        });
-        this.on('closed', this, function () {
-            this.trigger(this.destroyAction, this.final_data || null);
-        });
-    },
-
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
-    /**
-     * Called when the dialog is saved. Set the destroy action type to "save"
-     * and should set the final_data variable correctly before closing.
-     */
-    save: function () {
-        this.destroyAction = "save";
-        this.close();
-    },
-});
-
-/**
- * Let users change the alt & title of a media.
- */
-var AltDialog = Dialog.extend({
-    template: 'web_editor.dialog.alt',
-    xmlDependencies: Dialog.prototype.xmlDependencies.concat(
-        ['/web_editor/static/src/xml/editor.xml']
-    ),
-
-    /**
-     * @constructor
-     */
-    init: function (parent, options, $editable, media) {
-        this._super(parent, _.extend({}, {
-            title: _t("Change media description and tooltip")
-        }, options));
-        this.$editable = $editable;
-        this.media = media;
-        this.alt = ($(this.media).attr('alt') || "").replace(/&quot;/g, '"');
-        this.tag_title = ($(this.media).attr('title') || "").replace(/&quot;/g, '"');
-    },
-
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    save: function () {
-        var self = this;
-        range.createFromNode(this.media).select();
-        this.$editable.data('NoteHistory').recordUndo();
-        var alt = this.$('#alt').val();
-        var title = this.$('#title').val();
-        $(this.media).attr('alt', alt ? alt.replace(/"/g, "&quot;") : null).attr('title', title ? title.replace(/"/g, "&quot;") : null);
-        _.defer(function () {
-            simulateMouseEvent(self.media, 'mouseup');
-        });
-        return this._super.apply(this, arguments);
-    },
-});
 
 var MediaWidget = Widget.extend({
     xmlDependencies: ['/web_editor/static/src/xml/editor.xml'],
@@ -156,14 +60,6 @@ var MediaWidget = Widget.extend({
      * @abstract
      */
     _clear: function () {},
-    /**
-     * @private
-     */
-    _replaceMedia: function ($media) {
-        this.$media.replaceWith($media);
-        this.$media = $media;
-        this.media = $media[0];
-    },
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -182,13 +78,13 @@ var MediaWidget = Widget.extend({
  * Let users choose an image, including uploading a new image in odoo.
  */
 var ImageWidget = MediaWidget.extend({
-    template: 'web_editor.dialog.image',
+    template: 'wysiwyg.widgets.image',
     events: _.extend({}, MediaWidget.prototype.events || {}, {
         'click .o_upload_media_button': '_onUploadButtonClick',
         'click .o_upload_media_button_no_optimization': '_onUploadButtonNoOptimizationClick',
         'change input[type=file]': '_onImageSelection',
         'click .o_upload_media_url_button': '_onUploadURLButtonClick',
-        'input input.o_we_url_input': '_onURLInputChange',
+        'input input[name="url"]': '_onURLInputChange',
         'click .existing-attachments [data-src]': '_onImageClick',
         'dblclick .existing-attachments [data-src]': '_onImageDblClick',
         'click .o_existing_attachment_remove': '_onRemoveClick',
@@ -203,21 +99,14 @@ var ImageWidget = MediaWidget.extend({
      */
     init: function (parent, media, options) {
         this._super.apply(this, arguments);
+        this._mutex = new concurrency.Mutex();
 
         this.imagesRows = this.IMAGES_ROWS;
         this.IMAGES_DISPLAYED_TOTAL = this.IMAGES_PER_ROW * this.imagesRows;
 
         this.options = options;
+        this.context = options.context;
         this.accept = options.accept || (options.document ? '*/*' : 'image/*');
-        if (options.domain) {
-            this.domain = typeof options.domain === 'function' ? options.domain() : options.domain;
-        } else if (options.res_id) {
-            this.domain = ['|',
-                '&', ['res_model', '=', options.res_model], ['res_id', '=', options.res_id],
-                ['res_model', '=', 'ir.ui.view']];
-        } else {
-            this.domain = [['res_model', '=', 'ir.ui.view']];
-        }
 
         this.multiImages = options.multiImages;
 
@@ -269,75 +158,7 @@ var ImageWidget = MediaWidget.extend({
      * @override
      */
     save: function () {
-        var self = this;
-        if (this.multiImages) {
-            return this.images;
-        }
-
-        var img = this.images[0];
-        if (!img) {
-            return this.media;
-        }
-
-        var def = $.when();
-        if (!img.access_token) {
-            def = this._rpc({
-                model: 'ir.attachment',
-                method: 'generate_access_token',
-                args: [[img.id]]
-            }).then(function (access_token) {
-                img.access_token = access_token[0];
-            });
-        }
-
-        return def.then(function () {
-            if (!img.isDocument) {
-                if (img.access_token && self.options.res_model !== 'ir.ui.view') {
-                    img.src += _.str.sprintf('?access_token=%s', img.access_token);
-                }
-                if (!self.$media.is('img')) {
-                    // Note: by default the images receive the bootstrap opt-in
-                    // img-fluid class. We cannot make them all responsive
-                    // by design because of libraries and client databases img.
-                    self._replaceMedia($('<img/>', {class: 'img-fluid o_we_custom_image'}));
-                }
-                self.$media.attr('src', img.src);
-
-            } else {
-                if (!self.$media.is('a')) {
-                    $('.note-control-selection').hide();
-                    self._replaceMedia($('<a/>'));
-                }
-                var href = '/web/content/' + img.id + '?';
-                if (img.access_token && self.options.res_model !== 'ir.ui.view') {
-                    href += _.str.sprintf('access_token=%s&', img.access_token);
-                }
-                href += 'unique=' + img.checksum + '&download=true';
-                self.$media.attr('href', href);
-                self.$media.addClass('o_image').attr('title', img.name).attr('data-mimetype', img.mimetype);
-            }
-
-            self.$media.attr('alt', img.alt);
-            var style = self.style;
-            if (style) {
-                self.$media.css(style);
-            }
-
-            if (self.options.onUpload) {
-                // We consider that when selecting an image it is as if we upload it in the html content.
-                self.options.onUpload([img]);
-            }
-
-            // Remove crop related attributes
-            if (self.$media.attr('data-aspect-ratio')) {
-                var attrs = ['aspect-ratio', 'x', 'y', 'width', 'height', 'rotate', 'scale-x', 'scale-y'];
-                _.each(attrs, function (attr) {
-                    self.$media.removeData(attr);
-                    self.$media.removeAttr('data-' + attr);
-                });
-            }
-            return self.media;
-        });
+        return this._mutex.exec(this._save.bind(this));
     },
     /**
      * @override
@@ -347,21 +168,15 @@ var ImageWidget = MediaWidget.extend({
         if (!noRender) {
             this.$('input.o_we_url_input').val('').trigger('input').trigger('change');
         }
-        // TODO: Expand this for adding SVG
-        var domain = this.domain.concat(['|', ['mimetype', '=', false], ['mimetype', this.options.document ? 'not in' : 'in', ['image/gif', 'image/jpe', 'image/jpeg', 'image/jpg', 'image/gif', 'image/png']]]);
-        if (needle && needle.length) {
-            domain.push('|', ['datas_fname', 'ilike', needle], ['name', 'ilike', needle]);
-        }
-        domain.push('|', ['datas_fname', '=', false], '!', ['datas_fname', '=like', '%.crop'], '!', ['name', '=like', '%.crop']);
         return this._rpc({
             model: 'ir.attachment',
             method: 'search_read',
             args: [],
             kwargs: {
-                domain: domain,
+                domain: this._getAttachmentsDomain(needle),
                 fields: ['name', 'datas_fname', 'mimetype', 'checksum', 'url', 'type', 'res_id', 'res_model', 'access_token'],
                 order: [{name: 'id', asc: false}],
-                context: weContext.get(),
+                context: this.context,
             },
         }).then(function (records) {
             self.records = _.chain(records)
@@ -415,7 +230,62 @@ var ImageWidget = MediaWidget.extend({
      * @override
      */
     _clear: function () {
-        this.media.className = this.media.className.replace(/(^|\s+)((img(\s|$)|img-(?!circle|rounded|thumbnail))[^\s]*)/g, ' ');
+        if (!this.$media.is('img')) {
+            return;
+        }
+        var allImgClasses = /(^|\s+)((img(\s|$)|img-(?!circle|rounded|thumbnail))[^\s]*)/g;
+        var allImgClassModifiers = /(^|\s+)(rounded-circle|shadow|rounded|img-thumbnail|mx-auto)([^\s]*)/g;
+        this.media.className = this.media.className && this.media.className
+            .replace('o_we_custom_image', '')
+            .replace(allImgClasses, ' ')
+            .replace(allImgClassModifiers, ' ');
+    },
+    /**
+     * Returns the domain for attachments used in media dialog.
+     * We look for attachments related to the current document. If there is a value for the model
+     * field, it is used to search attachments, and the attachments from the current document are
+     * filtered to display only user-created documents.
+     * In the case of a wizard such as mail, we have the documents uploaded and those of the model
+     *
+     * @private
+     * @params {string} needle
+     * @returns {Array} "ir.attachment" odoo domain.
+     */
+    _getAttachmentsDomain: function (needle) {
+        var domain = this.options.attachmentIDs && this.options.attachmentIDs.length ? ['|', ['id', 'in', this.options.attachmentIDs]] : [];
+
+        var attachedDocumentDomain = [
+            '&',
+            ['res_model', '=', this.options.res_model],
+            ['res_id', '=', this.options.res_id|0]
+        ];
+        // if the document is not yet created, do not see the documents of other users
+        if (!this.options.res_id) {
+            attachedDocumentDomain.unshift('&');
+            attachedDocumentDomain.push(['create_uid', '=', this.options.user_id]);
+        }
+        if (this.options.data_res_model) {
+            var relatedDomain = ['&',
+                ['res_model', '=', this.options.data_res_model],
+                ['res_id', '=', this.options.data_res_id|0]];
+            if (!this.options.data_res_id) {
+                relatedDomain.unshift('&');
+                relatedDomain.push(['create_uid', '=', session.uid]);
+            }
+            domain = domain.concat(['|'], attachedDocumentDomain, relatedDomain);
+        } else {
+            domain = domain.concat(attachedDocumentDomain);
+        }
+        domain = ['|', ['public', '=', true]].concat(domain);
+
+        domain.push('|',
+            ['mimetype', '=', false],
+            ['mimetype', this.options.document ? 'not in' : 'in', ['image/gif', 'image/jpe', 'image/jpeg', 'image/jpg', 'image/gif', 'image/png']]);
+        if (needle && needle.length) {
+            domain.push('|', ['datas_fname', 'ilike', needle], ['name', 'ilike', needle]);
+        }
+        domain.push('|', ['datas_fname', '=', false], '!', ['datas_fname', '=like', '%.crop'], '!', ['name', '=like', '%.crop']);
+        return domain;
     },
     /**
      * @private
@@ -458,9 +328,9 @@ var ImageWidget = MediaWidget.extend({
 
         this.$('.form-text').empty();
 
-        // Render menu & content
+       // Render menu & content
         this.$('.existing-attachments').replaceWith(
-            QWeb.render('web_editor.dialog.files.existing.content', {
+            QWeb.render('wysiwyg.widgets.files.existing.content', {
                 rows: rows,
                 isDocument: this.options.document,
                 withEffect: withEffect,
@@ -493,12 +363,88 @@ var ImageWidget = MediaWidget.extend({
     /**
      * @private
      */
+    _save: function () {
+        var self = this;
+        if (this.multiImages) {
+            return this.images;
+        }
+
+        var img = this.images[0];
+        if (!img) {
+            return this.media;
+        }
+
+        var def = $.when();
+        if (!img.access_token) {
+            def = this._rpc({
+                model: 'ir.attachment',
+                method: 'generate_access_token',
+                args: [[img.id]]
+            }).then(function (access_token) {
+                img.access_token = access_token[0];
+            });
+        }
+
+        return def.then(function () {
+            if (!img.isDocument) {
+                if (img.access_token && self.options.res_model !== 'ir.ui.view') {
+                    img.src += _.str.sprintf('?access_token=%s', img.access_token);
+                }
+                if (!self.$media.is('img')) {
+                    // Note: by default the images receive the bootstrap opt-in
+                    // img-fluid class. We cannot make them all responsive
+                    // by design because of libraries and client databases img.
+                    self.$media = $('<img/>', {class: 'img-fluid o_we_custom_image'});
+                    self.media = self.$media[0];
+                }
+                self.$media.attr('src', img.src);
+
+            } else {
+                if (!self.$media.is('a')) {
+                    $('.note-control-selection').hide();
+                    self.$media = $('<a/>');
+                    self.media = self.$media[0];
+                }
+                var href = '/web/content/' + img.id + '?';
+                if (img.access_token && self.options.res_model !== 'ir.ui.view') {
+                    href += _.str.sprintf('access_token=%s&', img.access_token);
+                }
+                href += 'unique=' + img.checksum + '&download=true';
+                self.$media.attr('href', href);
+                self.$media.addClass('o_image').attr('title', img.name).attr('data-mimetype', img.mimetype);
+            }
+
+            self.$media.attr('alt', img.alt);
+            var style = self.style;
+            if (style) {
+                self.$media.css(style);
+            }
+
+            if (self.options.onUpload) {
+                // We consider that when selecting an image it is as if we upload it in the html content.
+                self.options.onUpload([img]);
+            }
+
+            // Remove crop related attributes
+            if (self.$media.attr('data-aspect-ratio')) {
+                var attrs = ['aspect-ratio', 'x', 'y', 'width', 'height', 'rotate', 'scale-x', 'scale-y'];
+                _.each(attrs, function (attr) {
+                    self.$media.removeData(attr);
+                    self.$media.removeAttr('data-' + attr);
+                });
+            }
+            return self.media;
+        });
+    },
+    /**
+     * @private
+     */
     _toggleImage: function (attachment, clearSearch, forceSelect) {
         if (this.multiImages) {
             var img = _.select(this.images, function (v) { return v.id === attachment.id; });
             if (img.length) {
                 if (!forceSelect) {
-                    this.images.splice(this.images.indexOf(img[0]), 1);
+                    this.images.splice(this.images.indexOf(img[0]),1);
                 }
             } else {
                 this.images.push(attachment);
@@ -516,16 +462,20 @@ var ImageWidget = MediaWidget.extend({
      * @private
      */
     _uploadFile: function () {
+        return this._mutex.exec(this._uploadImageIframe.bind(this));
+    },
+    _uploadImageIframe: function () {
         var self = this;
-
+        var def = $.Deferred();
         /**
          * @todo file upload cannot be handled with _rpc smoothly. This uses the
          * form posting in iframe trick to handle the upload.
          */
-        var $iframe = this.$('.o_file_upload_iframe');
+        var $iframe = this.$('iframe');
         $iframe.on('load', function () {
             var iWindow = $iframe[0].contentWindow;
-            var attachments = iWindow.attachments;
+
+            var attachments = iWindow.attachments || [];
             var error = iWindow.error;
 
             self.$('.well > span').remove();
@@ -538,7 +488,7 @@ var ImageWidget = MediaWidget.extend({
                 _processFile(null, error || !attachments.length);
             }
             self.images = attachments;
-            for (var i = 0; i < attachments.length; i++) {
+            for (var i = 0 ; i < attachments.length ; i++) {
                 _processFile(attachments[i], error);
             }
 
@@ -546,20 +496,31 @@ var ImageWidget = MediaWidget.extend({
                 self.options.onUpload(attachments);
             }
 
+            def.resolve();
+
             function _processFile(attachment, error) {
+                var $button = self.$('.o_upload_image_button');
                 if (!error) {
+                    $button.addClass('btn-success');
                     self._toggleImage(attachment, true);
                 } else {
+                    $button.addClass('btn-danger');
                     self.$el.addClass('o_has_error').find('.form-control, .custom-select').addClass('is-invalid');
                     self.$el.find('.form-text').text(error);
+                }
+
+                if (!self.multiImages) {
+                    self.trigger_up('save_request');
                 }
             }
         });
         this.$el.submit();
 
-        // Empty file input
         this.$('.o_file_input').val('');
+
+        return def;
     },
+
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -568,12 +529,12 @@ var ImageWidget = MediaWidget.extend({
     /**
      * @private
      */
-    _onImageClick: function (ev, forceSelect) {
+    _onImageClick: function (ev, force_select) {
         var $img = $(ev.currentTarget);
         var attachment = _.find(this.records, function (record) {
             return record.id === $img.data('id');
         });
-        this._toggleImage(attachment, false, forceSelect);
+        this._toggleImage(attachment, false, force_select);
     },
     /**
      * @private
@@ -598,14 +559,13 @@ var ImageWidget = MediaWidget.extend({
      */
     _onRemoveClick: function (ev) {
         var self = this;
-        DialogBase.confirm(this, _t("Are you sure you want to delete this file ?"), {
+        Dialog.confirm(this, _t("Are you sure you want to delete this file ?"), {
             confirm_callback: function () {
                 var $helpBlock = this.$('.form-text').empty();
                 var $a = $(ev.currentTarget);
                 var id = parseInt($a.data('id'), 10);
                 var attachment = _.findWhere(this.records, {id: id});
-
-                return self._rpc({
+                 return self._rpc({
                     route: '/web_editor/attachment/remove',
                     params: {
                         ids: [id],
@@ -613,10 +573,10 @@ var ImageWidget = MediaWidget.extend({
                 }).then(function (prevented) {
                     if (_.isEmpty(prevented)) {
                         self.records = _.without(self.records, attachment);
-                        self.search('');
+                        self._renderImages();
                         return;
                     }
-                    $helpBlock.replaceWith(QWeb.render('web_editor.dialog.image.existing.error', {
+                    $helpBlock.replaceWith(QWeb.render('wysiwyg.widgets.image.existing.error', {
                         views: prevented[id],
                     }));
                 });
@@ -690,7 +650,7 @@ var ImageWidget = MediaWidget.extend({
  * css files.
  */
 var IconWidget = MediaWidget.extend({
-    template: 'web_editor.dialog.font-icons',
+    template: 'wysiwyg.widgets.font-icons',
     events: _.extend({}, MediaWidget.prototype.events || {}, {
         'click .font-icons-icon': '_onIconClick',
         'dblclick .font-icons-icon': '_onIconDblClick',
@@ -702,8 +662,8 @@ var IconWidget = MediaWidget.extend({
     init: function (parent, media) {
         this._super.apply(this, arguments);
 
-        base.computeFonts();
-        this.iconsParser = base.fontIcons;
+        fonts.computeFonts();
+        this.iconsParser = fonts.fontIcons;
         this.alias = _.flatten(_.map(this.iconsParser, function (data) {
             return data.alias;
         }));
@@ -721,7 +681,7 @@ var IconWidget = MediaWidget.extend({
                 this._highlightSelectedIcon();
             }
         }
-        this.nonIconClasses = _.without(classes, this.selectedIcon);
+        this.nonIconClasses = _.without(classes, 'media_iframe_video', this.selectedIcon);
 
         return this._super.apply(this, arguments);
     },
@@ -740,12 +700,13 @@ var IconWidget = MediaWidget.extend({
         if (!this.$media.is('span')) {
             var $span = $('<span/>');
             $span.data(this.$media.data());
-            this._replaceMedia($span);
+            this.$media = $span;
+            this.media = this.$media[0];
             style = style.replace(/\s*width:[^;]+/, '');
         }
         this.$media.attr({
             class: _.compact(finalClasses).join(' '),
-            style: style,
+            style: style || null,
         });
         return this.media;
     },
@@ -771,7 +732,7 @@ var IconWidget = MediaWidget.extend({
             });
         }
         this.$('div.font-icons-icons').html(
-            QWeb.render('web_editor.dialog.font-icons.icons', {iconsParser: iconsParser})
+            QWeb.render('wysiwyg.widgets.font-icons.icons', {iconsParser: iconsParser})
         );
     },
 
@@ -783,7 +744,8 @@ var IconWidget = MediaWidget.extend({
      * @override
      */
     _clear: function () {
-        this.media.className = this.media.className.replace(/(^|\s)(fa(\s|$)|fa-[^\s]*)/g, ' ');
+        var allFaClasses = /(^|\s)(fa(\s|$)|fa-[^\s]*)/g;
+        this.media.className = this.media.className && this.media.className.replace(allFaClasses, ' ');
     },
     /**
      * @private
@@ -845,7 +807,7 @@ var IconWidget = MediaWidget.extend({
  * Let users choose a video, support all summernote video, and embed iframe.
  */
 var VideoWidget = MediaWidget.extend({
-    template: 'web_editor.dialog.video',
+    template: 'wysiwyg.widgets.video',
     events: _.extend({}, MediaWidget.prototype.events || {}, {
         'change .o_video_dialog_options input': '_onUpdateVideoOption',
         'input textarea#o_video_text': '_onVideoCodeInput',
@@ -865,8 +827,8 @@ var VideoWidget = MediaWidget.extend({
     start: function () {
         this.$content = this.$('.o_video_dialog_iframe');
 
-        var $media = $(this.media);
-        if ($media.hasClass('media_iframe_video')) {
+        if (this.media) {
+            var $media = $(this.media);
             var src = $media.data('oe-expression') || $media.data('src') || '';
             this.$('textarea#o_video_text').val(src);
 
@@ -894,13 +856,14 @@ var VideoWidget = MediaWidget.extend({
     save: function () {
         this._updateVideo();
         if (this.$('.o_video_dialog_iframe').is('iframe')) {
-            this._replaceMedia($(
+            this.$media = $(
                 '<div class="media_iframe_video" data-oe-expression="' + this.$content.attr('src') + '">' +
                     '<div class="css_editable_mode_display">&nbsp;</div>' +
                     '<div class="media_iframe_video_size" contenteditable="false">&nbsp;</div>' +
                     '<iframe src="' + this.$content.attr('src') + '" frameborder="0" contenteditable="false"></iframe>' +
                 '</div>'
-            ));
+            );
+            this.media = this.$media[0];
         }
         return this.media;
     },
@@ -920,7 +883,9 @@ var VideoWidget = MediaWidget.extend({
                 this.media.dataset.src = undefined;
             }
         }
-        this.media.className = this.media.className.replace(/(^|\s)media_iframe_video(\s|$)/g, ' ');
+        var allVideoClasses = /(^|\s)media_iframe_video(\s|$)/g;
+        this.media.className = this.media.className && this.media.className.replace(allVideoClasses, ' ');
+        this.media.innerHTML = '';
     },
     /**
      * Creates a video node according to the given URL and options. If not
@@ -1123,673 +1088,10 @@ var VideoWidget = MediaWidget.extend({
     },
 });
 
-/**
- * MediaDialog widget. Lets users change a media, including uploading a
- * new image, font awsome or video and can change a media into an other
- * media.
- */
-var MediaDialog = Dialog.extend({
-    template: 'web_editor.dialog.media',
-    xmlDependencies: Dialog.prototype.xmlDependencies.concat(
-        ['/web_editor/static/src/xml/editor.xml']
-    ),
-    events: _.extend({}, Dialog.prototype.events, {
-        'shown.bs.tab a[data-toggle="tab"]': '_onTabChange',
-    }),
-    custom_events: _.extend({}, Dialog.prototype.custom_events || {}, {
-        save_request: '_onSaveRequest',
-    }),
-
-    /**
-     * @constructor
-     */
-    init: function (parent, options, $editable, media) {
-        var self = this;
-        this._super(parent, _.extend({}, {
-            title: _t("Select a Media"),
-            save_text: _t("Add"),
-        }, options));
-
-        if ($editable) {
-            this.$editable = $editable;
-            this.rte = this.$editable.rte || this.$editable.data('rte');
-        }
-
-        this.media = media;
-        this.$media = $(media);
-        this.range = range.create();
-
-        this.multiImages = options.multiImages;
-        var onlyImages = options.onlyImages || this.multiImages || (this.media && (this.$media.parent().data('oeField') === 'image' || this.$media.parent().data('oeType') === 'image'));
-        this.noImages = options.noImages;
-        this.noDocuments = onlyImages || options.noDocuments;
-        this.noIcons = onlyImages || options.noIcons;
-        this.noVideos = onlyImages || options.noVideos;
-
-        if (!this.noImages) {
-            this.imageDialog = new ImageWidget(this, this.media, options);
-        }
-        if (!this.noDocuments) {
-            this.documentDialog = new ImageWidget(this, this.media, _.extend({}, options, {document: true}));
-        }
-        if (!this.noIcons) {
-            this.iconDialog = new IconWidget(this, this.media, options);
-        }
-        if (!this.noVideos) {
-            this.videoDialog = new VideoWidget(this, this.media, options);
-        }
-
-        this.opened(function () {
-            var tabToShow = 'icon';
-            if (!self.media || self.$media.is('img')) {
-                tabToShow = 'image';
-            } else if (self.$media.is('a.o_image')) {
-                tabToShow = 'document';
-            } else if (self.$media.attr('class').match(/(^|\s)media_iframe_video($|\s)/)) {
-                tabToShow = 'video';
-            } else if (self.$media.parent().attr('class').match(/(^|\s)media_iframe_video($|\s)/)) {
-                self.$media = self.$media.parent();
-                self.media = self.$media[0];
-                tabToShow = 'video';
-            }
-            self.$('[href="#editor-media-' + tabToShow + '"]').tab('show');
-        });
-    },
-    /**
-     * @override
-     */
-    start: function () {
-        var self = this;
-        var defs = [this._super.apply(this, arguments)];
-        this.$modal.addClass('note-image-dialog');
-        this.$modal.find('.modal-dialog').addClass('o_select_media_dialog');
-
-        if (this.imageDialog) {
-            defs.push(this.imageDialog.appendTo(this.$("#editor-media-image")));
-        }
-        if (this.documentDialog) {
-            defs.push(this.documentDialog.appendTo(this.$("#editor-media-document")));
-        }
-        if (this.iconDialog) {
-            defs.push(this.iconDialog.appendTo(this.$("#editor-media-icon")));
-        }
-        if (this.videoDialog) {
-            defs.push(this.videoDialog.appendTo(this.$("#editor-media-video")));
-        }
-
-        return $.when.apply($, defs).then(function () {
-            self._setActive(self.imageDialog);
-        });
-    },
-
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    save: function () {
-        var self = this;
-        var args = arguments;
-        var _super = this._super;
-        if (this.multiImages) {
-            // In the case of multi images selection we suppose this was not to
-            // replace an old media, so we only retrieve the images and save.
-            return $.when(this.active.save()).then(function (data) {
-                self.final_data = data;
-                return _super.apply(self, args);
-            });
-        }
-
-        if (this.rte) {
-            this.range.select();
-            this.rte.historyRecordUndo(this.media);
-        }
-
-        if (this.media) {
-            this.$media.html('');
-            _.each(['imageDialog', 'documentDialog', 'iconDialog', 'videoDialog'], function (v) {
-                // Note: hack since imageDialog is the same type as the documentDialog
-                if (self[v] && self.active._clear.toString() !== self[v]._clear.toString()) {
-                    self[v].clear();
-                }
-            });
-        }
-
-        return $.when(this.active.save()).then(function (media) {
-            if (!self.media && media) {
-                self.range.insertNode(media, true);
-            }
-            self.media = media;
-            self.$media = $(media);
-
-            self.final_data = self.media;
-            $(self.final_data).trigger('input').trigger('save');
-            $(document.body).trigger("media-saved", self.final_data); // TODO get rid of this
-
-            // Update editor bar after image edition (in case the image change to icon or other)
-            _.defer(function () {
-                if (!self.media || !self.media.parentNode) {
-                    return;
-                }
-                range.createFromNode(self.media).select();
-                simulateMouseEvent(self.media, 'mousedown');
-                simulateMouseEvent(self.media, 'mouseup');
-            });
-            return _super.apply(self, args);
-        });
-    },
-
-    //--------------------------------------------------------------------------
-    //
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     */
-    _setActive: function (widget) {
-        this.active = widget;
-    },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     */
-    _onSaveRequest: function (ev) {
-        ev.stopPropagation();
-        this.save();
-    },
-    /**
-     * @private
-     */
-    _onTabChange: function (ev) {
-        var $target = $(ev.target);
-        if ($target.is('[href="#editor-media-image"]')) {
-            this._setActive(this.imageDialog);
-        } else if ($target.is('[href="#editor-media-document"]')) {
-            this._setActive(this.documentDialog);
-        } else if ($target.is('[href="#editor-media-icon"]')) {
-            this._setActive(this.active = this.iconDialog);
-        } else if ($target.is('[href="#editor-media-video"]')) {
-            this._setActive(this.active = this.videoDialog);
-        }
-    },
-});
-
-/**
- * Allows to customize link content and style.
- */
-var LinkDialog = Dialog.extend({
-    template: 'web_editor.dialog.link',
-    xmlDependencies: Dialog.prototype.xmlDependencies.concat(
-        ['/web_editor/static/src/xml/editor.xml']
-    ),
-    events: _.extend({}, Dialog.prototype.events || {}, {
-        'input': '_onAnyChange',
-        'change': '_onAnyChange',
-        'input input[name="url"]': '_onURLInput',
-    }),
-
-    /**
-     * @constructor
-     */
-    init: function (parent, options, editable, linkInfo) {
-        this._super(parent, _.extend({
-            title: _t("Link to"),
-        }, options || {}));
-
-        this.editable = editable;
-        this.data = linkInfo || {};
-
-        this.data.className = "";
-
-        var r = this.data.range;
-        this.needLabel = !r || (r.sc === r.ec && r.so === r.eo);
-
-        if (this.data.range) {
-            this.data.iniClassName = $(this.data.range.sc).filter("a").attr("class") || "";
-            this.data.className = this.data.iniClassName.replace(/(^|\s+)btn(-[a-z0-9_-]*)?/gi, ' ');
-
-            var isLink = this.data.range.isOnAnchor();
-
-            var sc = r.sc;
-            var so = r.so;
-            var ec = r.ec;
-            var eo = r.eo;
-
-            var nodes;
-            if (!isLink) {
-                if (sc.tagName) {
-                    sc = dom.firstChild(so ? sc.childNodes[so] : sc);
-                    so = 0;
-                } else if (so !== sc.textContent.length) {
-                    if (sc === ec) {
-                        ec = sc = sc.splitText(so);
-                        eo -= so;
-                    } else {
-                        sc = sc.splitText(so);
-                    }
-                    so = 0;
-                }
-                if (ec.tagName) {
-                    ec = dom.lastChild(eo ? ec.childNodes[eo - 1] : ec);
-                    eo = ec.textContent.length;
-                } else if (eo !== ec.textContent.length) {
-                    ec.splitText(eo);
-                }
-
-                nodes = dom.listBetween(sc, ec);
-
-                // browsers can't target a picture or void node
-                if (dom.isVoid(sc) || dom.isImg(sc)) {
-                    so = dom.listPrev(sc).length - 1;
-                    sc = sc.parentNode;
-                }
-                if (dom.isBR(ec)) {
-                    eo = dom.listPrev(ec).length - 1;
-                    ec = ec.parentNode;
-                } else if (dom.isVoid(ec) || dom.isImg(sc)) {
-                    eo = dom.listPrev(ec).length;
-                    ec = ec.parentNode;
-                }
-
-                this.data.range = range.create(sc, so, ec, eo);
-                this.data.range.select();
-            } else {
-                nodes = dom.ancestor(sc, dom.isAnchor).childNodes;
-            }
-
-            if (dom.isImg(sc) && nodes.indexOf(sc) === -1) {
-                nodes.push(sc);
-            }
-            if (nodes.length > 1 || dom.ancestor(nodes[0], dom.isImg)) {
-                var text = "";
-                this.data.images = [];
-                for (var i = 0; i < nodes.length; i++) {
-                    if (dom.ancestor(nodes[i], dom.isImg)) {
-                        this.data.images.push(dom.ancestor(nodes[i], dom.isImg));
-                        text += '[IMG]';
-                    } else if (!isLink && nodes[i].nodeType === 1) {
-                        // just use text nodes from listBetween
-                    } else if (!isLink && i === 0) {
-                        text += nodes[i].textContent.slice(so, Infinity);
-                    } else if (!isLink && i === nodes.length - 1) {
-                        text += nodes[i].textContent.slice(0, eo);
-                    } else {
-                        text += nodes[i].textContent;
-                    }
-                }
-                this.data.text = text;
-            }
-        }
-
-        this.data.text = this.data.text.replace(/[ \t\r\n]+/g, ' ');
-
-        this._onURLInput = _.debounce(this._onURLInput, 400);
-    },
-    /**
-     * @override
-     */
-    start: function () {
-        var self = this;
-
-        this.$('input.link-style').prop('checked', false).first().prop('checked', true);
-        if (this.data.iniClassName) {
-            _.each(this.$('input.link-style, select.link-style > option'), function (el) {
-                var $option = $(el);
-                if ($option.val() && self.data.iniClassName.indexOf($option.val()) >= 0) {
-                    if ($option.is("input")) {
-                        $option.prop("checked", true);
-                    } else {
-                        $option.parent().val($option.val());
-                    }
-                }
-            });
-        }
-        if (this.data.url) {
-            var match = /mailto:(.+)/.exec(this.data.url);
-            this.$('input[name="url"]').val(match ? match[1] : this.data.url);
-        }
-
-        // Hide the duplicate color buttons (most of the times, primary = alpha
-        // and secondary = beta for example but this may depend on the theme)
-        this.opened().then(function () {
-            var colors = [];
-            _.each(self.$('.o_btn_preview.o_link_dialog_color_item'), function (btn) {
-                var $btn = $(btn);
-                var color = $btn.css('background-color');
-                if (_.contains(colors, color)) {
-                    $btn.hide(); // Not remove to be able to edit buttons with those styles
-                } else {
-                    colors.push(color);
-                }
-            });
-        });
-
-        this._adaptPreview();
-
-        this.$('input:visible:first').focus();
-
-        return this._super.apply(this, arguments);
-    },
-
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    save: function () {
-        var data = this._getData();
-        if (data === null) {
-            var $url = this.$('input[name="url"]');
-            $url.closest('.form-group').addClass('o_has_error').find('.form-control, .custom-select').addClass('is-invalid');
-            $url.focus();
-            return $.Deferred().reject();
-        }
-        this.data.text = data.label;
-        this.data.url = data.url;
-        this.data.className = data.classes.replace(/\s+/gi, ' ').replace(/^\s+|\s+$/gi, '');
-        if (data.classes.replace(/(^|[ ])(btn-secondary|btn-success|btn-primary|btn-info|btn-warning|btn-danger)([ ]|$)/gi, ' ')) {
-            this.data.style = {'background-color': '', 'color': ''};
-        }
-        this.data.isNewWindow = data.isNewWindow;
-        this.final_data = this.data;
-        return this._super.apply(this, arguments);
-    },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     */
-    _adaptPreview: function () {
-        var $preview = this.$("#link-preview");
-        var data = this._getData();
-        if (data === null) {
-            return;
-        }
-        $preview.attr({
-            target: data.isNewWindow ? '_blank' : '',
-            href: data.url && data.url.length ? data.url : '#',
-            class: data.classes.replace(/float-\w+/, '') + ' o_btn_preview',
-        }).html((data.label && data.label.length) ? data.label : data.url);
-    },
-    /**
-     * @private
-     */
-    _getData: function () {
-        var $url = this.$('input[name="url"]');
-        var url = $url.val();
-        var label = this.$('input[name="label"]').val() || url;
-
-        if (label && this.data.images) {
-            for (var i = 0; i < this.data.images.length; i++) {
-                label = label.replace(/</, "&lt;").replace(/>/, "&gt;").replace(/\[IMG\]/, this.data.images[i].outerHTML);
-            }
-        }
-
-        if ($url.prop('required') && (!url || !$url[0].checkValidity())) {
-            return null;
-        }
-
-        var style = this.$('input[name="link_style_color"]:checked').val() || '';
-        var shape = this.$('select[name="link_style_shape"]').val() || '';
-        var size = this.$('select[name="link_style_size"]').val() || '';
-        var shapes = shape.split(',');
-        var outline = shapes[0] === 'outline';
-        shape = shapes.slice(outline ? 1 : 0).join(' ');
-        var classes = (this.data.className || '')
-            + (style ? (' btn btn-' + (outline ? 'outline-' : '') + style) : '')
-            + (shape ? (' ' + shape) : '')
-            + (size ? (' btn-' + size) : '');
-        var isNewWindow = this.$('input[name="is_new_window"]').prop('checked');
-
-        if (url.indexOf('@') >= 0 && url.indexOf('mailto:') < 0 && !url.match(/^http[s]?/i)) {
-            url = ('mailto:' + url);
-        }
-        return {
-            label: label,
-            url: url,
-            classes: classes,
-            isNewWindow: isNewWindow,
-        };
-    },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     */
-    _onAnyChange: function () {
-        this._adaptPreview();
-    },
-    /**
-     * @private
-     */
-    _onURLInput: function () {
-        var $linkUrlInput = this.$('#o_link_dialog_url_input');
-        $linkUrlInput.closest('.form-group').removeClass('o_has_error').find('.form-control, .custom-select').removeClass('is-invalid');
-        var isLink = $linkUrlInput.val().indexOf('@') < 0;
-        this.$('input[name="is_new_window"]').closest('.form-group').toggleClass('d-none', !isLink);
-    },
-});
-
-/**
- * CropImageDialog widget. Let users crop an image.
- */
-var CropImageDialog = Dialog.extend({
-    template: 'web_editor.dialog.crop_image',
-    xmlDependencies: Dialog.prototype.xmlDependencies.concat(
-        ['/web_editor/static/src/xml/editor.xml']
-    ),
-    jsLibs: [
-        '/web_editor/static/lib/cropper/js/cropper.js',
-    ],
-    cssLibs: [
-        '/web_editor/static/lib/cropper/css/cropper.css',
-    ],
-    events: _.extend({}, Dialog.prototype.events, {
-        'click .o_crop_options [data-event]': '_onCropOptionClick',
-    }),
-
-    /**
-     * @constructor
-     */
-    init: function (parent, options, $editable, media) {
-        this.media = media;
-        this.$media = $(this.media);
-        var src = this.$media.attr('src').split('?')[0];
-        this.aspectRatioList = [
-            [_t("Free"), '0/0', 0],
-            ["16:9", '16/9', 16 / 9],
-            ["4:3", '4/3', 4 / 3],
-            ["1:1", '1/1', 1],
-            ["2:3", '2/3', 2 / 3],
-        ];
-        this.imageData = {
-            imageSrc: src,
-            originalSrc: this.$media.data('crop:originalSrc') || src, // the original src for cropped DB images will be fetched later
-            mimetype: this.$media.data('crop:mimetype') || (_.str.endsWith(src, '.png') ? 'image/png' : 'image/jpeg'), // the mimetype for DB images will be fetched later
-            aspectRatio: this.$media.data('aspectRatio') || this.aspectRatioList[0][1],
-            isExternalImage: src.substr(0, 5) !== 'data:' && src[0] !== '/' && src.indexOf(window.location.host) < 0,
-        };
-        this.options = _.extend({
-            title: _t("Crop Image"),
-            buttons: this.imageData.isExternalImage ? [{
-                text: _t("Close"),
-                close: true,
-            }] : [{
-                text: _t("Save"),
-                classes: 'btn-primary',
-                click: this.save,
-            }, {
-                text: _t("Discard"),
-                close: true,
-            }],
-        }, options || {});
-        this._super(parent, this.options);
-    },
-    /**
-     * @override
-     */
-    willStart: function () {
-        var self = this;
-        var def = this._super.apply(this, arguments);
-        if (this.imageData.isExternalImage) {
-            return def;
-        }
-
-        var defs = [def, ajax.loadLibs(this)];
-        var params = {};
-        var isDBImage = false;
-        var matchImageID = this.imageData.imageSrc.match(/^\/web\/image\/(\d+)/);
-        if (matchImageID) {
-            params['image_id'] = parseInt(matchImageID[1]);
-            isDBImage = true;
-        } else {
-            var matchXmlID = this.imageData.imageSrc.match(/^\/web\/image\/([^/?]+)/);
-            if (matchXmlID) {
-                params['xml_id'] = matchXmlID[1];
-                isDBImage = true;
-            }
-        }
-        if (isDBImage) {
-            defs.push(this._rpc({
-                route: '/web_editor/get_image_info',
-                params: params,
-            }).then(function (res) {
-                _.extend(self.imageData, res);
-            }));
-        }
-        return $.when.apply($, defs);
-    },
-    /**
-     * @override
-     */
-    start: function () {
-        this.$cropperImage = this.$('.o_cropper_image');
-        if (this.$cropperImage.length) {
-            var data = this.$media.data();
-            var ratio = 0;
-            for (var i = 0; i < this.aspectRatioList.length; i++) {
-                if (this.aspectRatioList[i][1] === data.aspectRatio) {
-                    ratio = this.aspectRatioList[i][2];
-                    break;
-                }
-            }
-            this.$cropperImage.cropper({
-                viewMode: 1,
-                autoCropArea: 1,
-                aspectRatio: ratio,
-                data: _.pick(data, 'x', 'y', 'width', 'height', 'rotate', 'scaleX', 'scaleY')
-            });
-        }
-        return this._super.apply(this, arguments);
-     },
-    /**
-     * @override
-     */
-    destroy: function () {
-        if (this.$cropperImage.length) {
-            this.$cropperImage.cropper('destroy');
-        }
-        this._super.apply(this, arguments);
-    },
-    /**
-     * Updates the DOM image with cropped data and associates required
-     * information for a potential future save (where required cropped data
-     * attachments will be created).
-     *
-     * @override
-     */
-    save: function () {
-        var self = this;
-        var cropperData = this.$cropperImage.cropper('getData');
-
-        // Mark the media for later creation of required cropped attachments...
-        this.$media.addClass('o_cropped_img_to_save');
-
-        // ... and attach required data
-        this.$media.data('crop:resModel', this.options.res_model);
-        this.$media.data('crop:resID', this.options.res_id);
-        this.$media.data('crop:id', this.imageData.id);
-        this.$media.data('crop:mimetype', this.imageData.mimetype);
-        this.$media.data('crop:originalSrc', this.imageData.originalSrc);
-
-        // Mark the media with the cropping information which is required for
-        // a future crop edition
-        this.$media
-            .attr('data-aspect-ratio', this.imageData.aspectRatio)
-            .data('aspectRatio', this.imageData.aspectRatio);
-        _.each(cropperData, function (value, key) {
-            key = _.str.dasherize(key);
-            self.$media.attr('data-' + key, value);
-            self.$media.data(key, value);
-        });
-
-        // Update the media with base64 source for preview before saving
-        var canvas = this.$cropperImage.cropper('getCroppedCanvas', {
-            width: cropperData.width,
-            height: cropperData.height,
-        });
-        this.$media.attr('src', canvas.toDataURL(this.imageData.mimetype));
-
-        this.$media.trigger('content_changed');
-
-        return this._super.apply(this, arguments);
-    },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * Called when a crop option is clicked -> change the crop area accordingly.
-     *
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onCropOptionClick: function (ev) {
-        var $option = $(ev.currentTarget);
-        var opt = $option.data('event');
-        var value = $option.data('value');
-        switch (opt) {
-            case 'ratio':
-                this.$cropperImage.cropper('reset');
-                this.imageData.aspectRatio = $option.data('label');
-                this.$cropperImage.cropper('setAspectRatio', value);
-                break;
-            case 'zoom':
-            case 'rotate':
-            case 'reset':
-                this.$cropperImage.cropper(opt, value);
-                break;
-            case 'flip':
-                var direction = value === 'horizontal' ? 'x' : 'y';
-                var scaleAngle = -$option.data(direction);
-                $option.data(direction, scaleAngle);
-                this.$cropperImage.cropper('scale' + direction.toUpperCase(), scaleAngle);
-                break;
-        }
-    },
-});
-
 return {
-    Dialog: Dialog,
-    AltDialog: AltDialog,
-    MediaDialog: MediaDialog,
-    LinkDialog: LinkDialog,
-    CropImageDialog: CropImageDialog,
+    MediaWidget: MediaWidget,
     ImageWidget: ImageWidget,
+    IconWidget: IconWidget,
+    VideoWidget: VideoWidget,
 };
 });

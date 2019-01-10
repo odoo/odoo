@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+<template id="iframe_css_assets_edit" name="CSS assets for wysiwyg iframe content for popup">
+    <t t-call-assets="web.assets_common" t-js="false"/>
+    <t t-call-assets="web.assets_frontend" t-js="false"/>
+    <link rel="stylesheet" href="/website_mass_mailing/static/src/css/website_mass_mailing_popup.css" type="text/css"/>
+</template>
+
 <template id="remove_external_snippets" inherit_id="website.external_snippets">
     <xpath expr="//t[@t-install='mass_mailing']" position="replace"/>
 </template>
@@ -32,7 +38,7 @@
         <div class="alert alert-warning alert-dismissible fade show css_non_editable_mode_hidden o_not_editable" role="status">
             <strong>Newsletter Popup!</strong> The newsletter popup snippet effect is active on this page. Click <a id="edit_dialog" href="#">Here To Edit Dialog Content</a>
         </div>
-        <div role="dialog" class="modal modal-dialog modal-md fade fade-custom" id="o_newsletter_popup" tabindex="-1">
+        <div role="dialog" class="modal modal-dialog modal-md fade-custom" id="o_newsletter_popup" tabindex="-1">
             <div class="modal-content o_popup_modal_content">
                 <a role="button" href="#" class="o_popup_btn_close o_not_editable" data-dismiss="modal">&amp;times;</a>
 
@@ -69,6 +75,9 @@
 
 <!-- Extend default mass_mailing snippets with website feature -->
 <template id="social_links">
+    <t t-if="not website">
+        <t t-set="website" t-value="request.env['website'].search([], limit=1)"/>
+    </t>
     <t t-if="website.social_facebook">
         <a t-att-href="website.social_facebook" aria-label="Facebook" title="Facebook">
           <span class="fa fa-facebook"></span>

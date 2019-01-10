@@ -456,7 +456,9 @@ class MassMailing(models.Model):
         default=lambda self: self.env['mail.message']._get_default_from())
     sent_date = fields.Datetime(string='Sent Date', oldname='date', copy=False)
     schedule_date = fields.Datetime(string='Schedule in the Future')
-    body_html = fields.Html(string='Body', sanitize_attributes=False)
+    # don't translate 'body_arch', the translations are only on 'body_html'
+    body_arch = fields.Html(string='Body', translate=False)
+    body_html = fields.Html(string='Body converted to be send by mail', sanitize_attributes=False)
     attachment_ids = fields.Many2many('ir.attachment', 'mass_mailing_ir_attachments_rel',
         'mass_mailing_id', 'attachment_id', string='Attachments')
     keep_archives = fields.Boolean(string='Keep Archives')
@@ -621,7 +623,6 @@ class MassMailing(models.Model):
         else:
             mailing_domain.append((0, '=', 1))
         self.mailing_domain = repr(mailing_domain)
-        self.body_html = "on_change_model_and_list"
 
     @api.onchange('subject')
     def _onchange_subject(self):
