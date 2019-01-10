@@ -134,6 +134,14 @@ class TestExpression(TransactionCase):
         cats = Category.search([('id', 'child_of', categ_1.ids)])
         self.assertEqual(len(cats), 1)
 
+        # test hierarchical search in m2m with child ids (nonsense name)
+        cats = Category.search([('id', 'child_of', 'nonsense name')])
+        self.assertEqual(len(cats), 0)
+
+        # test hierarchical search in m2m with child ids (empty list)
+        cats = Category.search([('id', 'child_of', [])])
+        self.assertEqual(len(cats), 0)
+
         # test hierarchical search in m2m with parent id (list of ids)
         cats = Category.search([('id', 'parent_of', categ_1.ids)])
         self.assertEqual(len(cats), 3)
@@ -153,6 +161,14 @@ class TestExpression(TransactionCase):
         # test hierarchical search in m2m with parent ids
         cats = Category.search([('id', 'parent_of', categ_root.ids)])
         self.assertEqual(len(cats), 1)
+
+        # test hierarchical search in m2m with child ids (nonsense name)
+        cats = Category.search([('id', 'parent_of', 'nonsense name')])
+        self.assertEqual(len(cats), 0)
+
+        # test hierarchical search in m2m with child ids (empty list)
+        cats = Category.search([('id', 'parent_of', [])])
+        self.assertEqual(len(cats), 0)
 
     def test_10_equivalent_id(self):
         # equivalent queries

@@ -1001,6 +1001,8 @@ class expression(object):
                     # rewrite condition in terms of ids2
                     if comodel == model:
                         push(create_substitution_leaf(leaf, ('id', 'in', ids2), model))
+                    elif not ids2:
+                        push(create_substitution_leaf(leaf, FALSE_LEAF))
                     else:
                         subquery = 'SELECT "%s" FROM "%s" WHERE "%s" IN %%s' % (rel_id1, rel_table, rel_id2)
                         push(create_substitution_leaf(leaf, ('id', 'inselect', (subquery, [tuple(ids2)])), internal=True))
