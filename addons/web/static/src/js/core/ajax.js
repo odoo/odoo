@@ -113,8 +113,6 @@ function jsonpRpc(url, fct_name, params, settings) {
         var payload_url = $.param({r:payload_str});
         var force2step = settings.force2step || false;
         delete settings.force2step;
-        var session_id = settings.session_id || null;
-        delete settings.session_id;
         if (payload_url.length < 2000 && ! force2step) {
             return $.ajax(url, _.extend({}, settings, {
                 url: url,
@@ -122,10 +120,10 @@ function jsonpRpc(url, fct_name, params, settings) {
                 jsonp: 'jsonp',
                 type: 'GET',
                 cache: false,
-                data: {r: payload_str, session_id: session_id}
+                data: {r: payload_str}
             }));
         } else {
-            var args = {session_id: session_id, id: data.id};
+            var args = {id: data.id};
             var ifid = _.uniqueId('oe_rpc_iframe');
             var html = "<iframe src='javascript:false;' name='" + ifid + "' id='" + ifid + "' style='display:none'></iframe>";
             var $iframe = $(html);
@@ -156,7 +154,7 @@ function jsonpRpc(url, fct_name, params, settings) {
                         jsonp: 'jsonp',
                         type: 'GET',
                         cache: false,
-                        data: {session_id: session_id, id: data.id}
+                        data: {id: data.id}
                     }).always(function() {
                         cleanUp();
                     }).done(function() {
