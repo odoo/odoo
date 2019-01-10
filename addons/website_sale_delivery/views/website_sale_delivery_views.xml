@@ -6,6 +6,9 @@
         <field name="model">delivery.carrier</field>
         <field name="inherit_id" ref="delivery.view_delivery_carrier_form"/>
         <field name="arch" type="xml">
+            <field name="company_id" position='after'>
+                <field name="website_id" groups="website.group_multi_website" options="{'no_open': True, 'no_create_edit': True}"/>
+            </field>
             <xpath expr="//page[@name='destination']" position='after'>
                 <page string="Description">
                     <field name="website_description"  placeholder="Description displayed on the eCommerce and on online quotations."/>
@@ -26,6 +29,7 @@
         <field name="arch" type="xml">
             <field name="delivery_type" position="after">
                 <field name="website_published"/>
+                <field name="website_id" groups="website.group_multi_website"/>
             </field>
         </field>
     </record>
