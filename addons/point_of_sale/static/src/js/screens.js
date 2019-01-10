@@ -1959,16 +1959,11 @@ var PaymentScreenWidget = ScreenWidget.extend({
         $('body').keypress(this.keyboard_handler);
         // that one comes from the pos, but we prefer to cover all the basis
         $('body').keydown(this.keyboard_keydown_handler);
-        // legacy vanilla JS listeners
-        window.document.body.addEventListener('keypress',this.keyboard_handler);
-        window.document.body.addEventListener('keydown',this.keyboard_keydown_handler);
         this._super();
     },
     hide: function(){
         $('body').off('keypress', this.keyboard_handler);
         $('body').off('keydown', this.keyboard_keydown_handler);
-        window.document.body.removeEventListener('keypress',this.keyboard_handler);
-        window.document.body.removeEventListener('keydown',this.keyboard_keydown_handler);
         this._super();
     },
     // sets up listeners to watch for order changes
