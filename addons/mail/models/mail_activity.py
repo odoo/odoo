@@ -59,7 +59,7 @@ class MailActivityType(models.Model):
         help='Specify a model if the activity should be specific to a model'
              ' and not available when managing activities for other models.')
     superseed_type_id = fields.Many2one(
-        'mail.activity.type', string='Superseeds', domain=[('res_model_id', '=', False)],
+        'mail.activity.type', string='Override', domain=[('res_model_id', '=', False)],
         help='Replaces this generic activity type by a model-specific one.')
     is_superseeded = fields.Integer(
         'Overriden', compute='_compute_is_superseeded', search='_search_is_superseeded',
