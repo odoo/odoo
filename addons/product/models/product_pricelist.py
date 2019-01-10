@@ -461,12 +461,13 @@ class PricelistItem(models.Model):
         else:
             self.name = _("All Products")
 
+        p = str(self.env['decimal.precision'].precision_get('Product Price'))
         if self.compute_price == 'fixed':
-            self.price = ("%s %s") % (self.fixed_price, self.pricelist_id.currency_id.name)
+            self.price = ("%."+p+"g %s") % (self.fixed_price, self.pricelist_id.currency_id.name)
         elif self.compute_price == 'percentage':
             self.price = _("%s %% discount") % (self.percent_price)
         else:
-            self.price = _("%s %% discount and %s surcharge") % (self.price_discount, self.price_surcharge)
+            self.price = _("%.2g %% discount and %s surcharge") % (self.price_discount, self.price_surcharge)
 
     @api.onchange('applied_on')
     def _onchange_applied_on(self):
