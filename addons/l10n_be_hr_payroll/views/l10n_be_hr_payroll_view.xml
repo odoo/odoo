@@ -106,16 +106,6 @@
                         <field name="eco_checks" nolabel="1"/>
                         <span>/ year</span>
                     </div>
-                    <label for="thirteen_month"/>
-                    <div class="o_row">
-                        <field name="thirteen_month" nolabel="1"/>
-                        <span>/ year</span>
-                    </div>
-                    <label for="double_holidays"/>
-                    <div class="o_row">
-                        <field name="double_holidays" nolabel="1"/>
-                        <span>/ year</span>
-                    </div>
                     <label for="holidays"/>
                     <div class="o_row">
                         <field name="holidays" nolabel="1"/>
@@ -133,10 +123,10 @@
             <field name="priority">30</field>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='vehicle']" position="after">
-                    <field name="resident_bool" eval="False"/> 
+                    <field name="resident_bool" eval="False"/>
                 </xpath>
                 <xpath expr="//field[@name='marital']" position="after">
-                    <field name="spouse_fiscal_status" attrs="{'invisible': [('marital', 'not in', ['married', 'cohabitant'])], 'required': [('marital', 'in', ['married', 'cohabitant'])]}" colspan="1" help="if spouse has professionnel income or not"/> 
+                    <field name="spouse_fiscal_status" attrs="{'invisible': [('marital', 'not in', ['married', 'cohabitant'])], 'required': [('marital', 'in', ['married', 'cohabitant'])]}" colspan="1" help="if spouse has professionnel income or not"/>
                     <field name="disabled_spouse_bool" attrs="{'invisible': [('marital', 'not in', ['married', 'cohabitant'])]}" colspan="1"/>
                 </xpath>
                 <xpath expr="//field[@name='gender']" position="after">
