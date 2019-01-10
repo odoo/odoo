@@ -554,8 +554,14 @@ var ThemeCustomizeDialog = Dialog.extend({
         _.each(this.$('[data-depends]'), function (hidden) {
             var $hidden = $(hidden);
             var depends = $hidden.data('depends');
-            var nbDependencies = depends ? depends.split(',').length : 0;
-            var enabled = self._getInputs(depends).filter(':checked').length === nbDependencies;
+            var dependencies = depends ? depends.split(/\s*,\s*/g) : [];
+            var enabled = _.all(dependencies, function (dep) {
+                var toBeChecked = (dep[0] !== '!');
+                if (!toBeChecked) {
+                    dep = dep.substr(1);
+                }
+                return self._getInputs(dep).is(':checked') === toBeChecked;
+            });
             $hidden.toggleClass('d-none', !enabled);
         });
     },
