@@ -1,0 +1,54 @@
+language: python
+sudo: false
+cache:
+  apt: true
+  directories:
+    - $HOME/.cache/pip
+
+python:
+  - "3.5"
+
+addons:
+  apt:
+    packages:
+      - expect-dev  # provides unbuffer utility
+
+env:
+  global:
+  - VERSION="12.0" ODOO_REPO="OCA/OCB" LINT_CHECK="0" WEBSITE_REPO="1"
+  - EXCLUDE="hw_escpos,hw_scanner,theme_bootswatch"
+  - WKHTMLTOPDF_VERSION="0.12.5"
+  matrix:
+  - INCLUDE="applications"
+  - INCLUDE="no_applications" TESTS="1"
+  - INCLUDE="localization"
+
+before_install:
+  - "export DISPLAY=:99.0"
+  - "sh -e /etc/init.d/xvfb start"
+
+install:
+  - git clone --depth=1 https://github.com/OCA/maintainer-quality-tools.git ${HOME}/maintainer-quality-tools
+  - sed -i "s/'phantomjs'/'disable_phantomjs'/g" ${TRAVIS_BUILD_DIR}/odoo/tests/common.py
+  - export PATH=${HOME}/maintainer-quality-tools/travis:${PATH}
+  - travis_install_nightly
+  - rm -rf ${HOME}/${ODOO_REPO#*/}-${VERSION}; ln -s ${TRAVIS_BUILD_DIR} ${HOME}/${ODOO_REPO#*/}-${VERSION}
+  - pip install gengo
+  - cp ${HOME}/maintainer-quality-tools/cfg/.coveragerc .
+
+script:
+  - if [ $INCLUDE = 'applications' ]; then
+        sed -i "s/self.url_open(url)/self.url_open(url, timeout=100)/g" ${TRAVIS_BUILD_DIR}/addons/website/tests/test_crawl.py;
+        export INCLUDE=$(getaddons.py -m --only-applications ${TRAVIS_BUILD_DIR}/odoo/addons ${TRAVIS_BUILD_DIR}/addons);
+    elif [ $INCLUDE = 'no_applications' ]; then
+        export INCLUDE=$(getaddons.py -m --exclude-applications --exclude-localization ${TRAVIS_BUILD_DIR}/addons);
+    elif [ $INCLUDE = 'localization' ]; then
+        export INCLUDE=$(getaddons.py -m --only-localization ${TRAVIS_BUILD_DIR}/odoo/addons ${TRAVIS_BUILD_DIR}/addons);
+        sed -i "/'_auto_install_l10n'/d" ${TRAVIS_BUILD_DIR}/addons/account/__manifest__.py  ;
+    fi
+  - SERVER_PATH=${HOME}/${ODOO_REPO#*/}-${VERSION}
+  - export TRAVIS_BUILD_DIR=${SERVER_PATH}/odoo/addons
+  - travis_run_tests
+
+after_success:
+  - travis_after_tests_success
