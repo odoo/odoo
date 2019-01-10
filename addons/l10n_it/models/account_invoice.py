@@ -377,4 +377,4 @@ class AccountPaymentTerm(models.Model):
             ("TP01", "[TP01] Pagamento a rate"),
             ("TP02", "[TP02] Pagamento completo"),
             ("TP03", "[TP03] Anticipo")],
-        string="payment condition", required="True", default="TP01")
+        string="Payment Condition", required="True", default="TP01")
