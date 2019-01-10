@@ -9,8 +9,8 @@ odoo.define("website_sale.tour_shop_custom_attribute_value", function (require) 
         test: true,
         wait_for: base.ready()
     }, [{
-        trigger: 'img[src*="/product.product/10"]',
-        run: 'click'
+        content: "click on Customizable Desk",
+        trigger: '.oe_product_cart a:contains("Customizable Desk")',
     }, {
         trigger: 'li.js_attribute_value span:contains(Custom)',
         extra_trigger: 'li.js_attribute_value',
