@@ -20,12 +20,39 @@
     </record>
 
     <record id="mail_template_demo_crm_lead" model="mail.template">
-        <field name="name">Reminder</field>
+        <field name="name">Welcome</field>
         <field name="model_id" ref="crm.model_crm_lead"/>
         <field name="partner_to">${object.partner_id.id if object.partner_id else False}</field>
         <field name="email_to">${(object.email_from if not object.partner_id else '')|safe}</field>
-        <field name="body_html" type="html"><p>Hello</p></field>
+        <field name="body_html" type="html">
+<div style="margin: 0px; padding: 0px;">
+    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+        Hi ${object.partner_name or ''},
+        <br/><br/>
+        Welcome to ${object.company_id.name}. It's great to meet you! Now that you're on board
+        you'll discover what ${object.company_id.name} has to offer. My name is
+        ${object.user_id.name} and I'll help you get the most out of Odoo.
+        Could we plan a quick demo soon? 
+        <br/><br/>
+        Feel free to reach out at any time!
+        <br/>
+        Best,
+        % set user = object.user_id or object.env.user
+        % if user:
+        <br/>--<br/>
+        ${user.name}
+        % if user.email:
+        <br/>Email: ${user.email}
+        % endif
+        % if user.phone:
+        <br/>Phone: ${user.phone}
+        % endif
+        % endif
+    </p>
+</div>
+        </field>
         <field name="auto_delete" eval="True"/>
+        <field name="user_signature" eval="False"/>
     </record>
     <record id="mail_activity_data_crm_email" model="mail.activity.type">
         <field name="mail_template_ids" eval="[(4, ref('crm.mail_template_demo_crm_lead'))]"/>
