@@ -488,6 +488,8 @@ class IrTranslation(models.Model):
             for translation in translations:
                 if translation.src == translation.value:
                     discarded += translation
+                    # consider it done to avoid being matched against another term
+                    done.add((translation.src, translation.lang))
                 elif translation.src in terms:
                     done.add((translation.src, translation.lang))
                 else:
