@@ -386,13 +386,16 @@
                 </div>
                 <div class="row">
                     <div class="col-lg-6">
-                        <strong class="d-block mb-1">Invoicing Address</strong>
+                        <strong t-if="sale_order.partner_shipping_id == sale_order.partner_invoice_id" class="d-block mb-1">Invoicing and Shipping Address</strong>
+                        <strong t-if="sale_order.partner_shipping_id != sale_order.partner_invoice_id" class="d-block mb-1">Invoicing Address</strong>
                         <address t-field="sale_order.partner_invoice_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
                     </div>
-                    <div id="shipping_address" class="col-lg-6" groups="sale.group_delivery_invoice_address">
-                        <strong class="d-block mb-1">Shipping Address</strong>
-                        <address t-field="sale_order.partner_shipping_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
-                    </div>
+                     <t t-if="sale_order.partner_shipping_id != sale_order.partner_invoice_id">
+                        <div id="shipping_address" class="col-lg-6">
+                            <strong class="d-block mb-1">Shipping Address</strong>
+                            <address t-field="sale_order.partner_shipping_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
+                        </div>
+                    </t>
                 </div>
 
                 <t t-set="invoices" t-value="[i for i in sale_order.invoice_ids if i.state not in ['draft', 'cancel']]"/>
