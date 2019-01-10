@@ -196,13 +196,13 @@
         .o_dropdown_kanban {
             @include o-position-absolute($o-kanban-inside-vgutter, $o-kanban-inside-hgutter);
             visibility: hidden;
+            margin: (-$o-kanban-inside-vgutter) (-$o-kanban-inside-hgutter) 0 0;
             @include media-breakpoint-down(sm) {
                 visibility: visible;
             }
 
             .dropdown-toggle {
                 @include o-kanban-dropdown;
-                margin: (-$o-kanban-inside-vgutter - 1px) (-$o-kanban-inside-hgutter - 1px) 0 0;
             }
             &.show .dropdown-toggle {
                 @include o-kanban-dropdown-open;
