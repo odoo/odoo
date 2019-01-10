@@ -1593,6 +1593,15 @@ information on Odoo available widgets, refer to the :ref:`Javascript Widget Refe
 Of course, Odoo allows the development and integration of personal, customized
 widgets.  For this purpose, take a look at the :ref:`JavaScript cheatsheet <reference/jscs>`.
 
+.. note:: Some widgets supports custom attributes or display options.
+  Options are provided through the attribute ``options={'option1': 'value1', ...}``
+  in the field xml definition.  Unless specified otherwise, parameters below are all
+  given as options to their widget.
+
+.. warning:: Views don't have access to the data of fields not declared inside
+  (invisible if needed).  Make sure to load the fields you use in domains,
+  attributes or options.
+
 .. _reference/views/widgets/chatter:
 
 Chatter
@@ -1601,8 +1610,10 @@ Chatter
 Needs the model to inherit from the :ref:`Mail mixin <reference/mixins/mail>`.
 Displays a chat on the right side of the form view.
 By convention, it is placed after closing the ``</sheet>`` tag in the form view.
+When also using the :ref:`Activity mixin <reference/mixins/mail/activities>`,
+the ``mail_activity`` is also included inside the ``oe_chatter`` div.
 
-.. todo:: Is the chatter available in other forms???
+.. todo:: Can the chatter be displayed in other views???
 
 .. code-block:: xml
 
@@ -1619,8 +1630,35 @@ Boolean Widgets
 '''''''''''''''
 
 * ``widget="boolean_button"``
-    Display a button with the current state of a boolean field allowing to
-    switch the field's value when clicking on it.
+  Display a button with the current state of a boolean field allowing to
+  switch the field's value when clicking on it.
+
+  ``terminology``
+
+    3 terminology templates are available : ``active | archive | close``.
+
+    If you want to precisely specify the displayed text, you can define
+    the following attributes as terminology dictionary:
+
+    ``string_true``
+    ``string_false``
+    ``hover_true``
+    ``hover_false``
+
+  For example, this is the code used in Odoo to allow activation/desactivation
+  of records depending on their Boolean field *active*.
+
+  .. code-block:: xml
+
+    <div class="oe_button_box" name="button_box" groups="base.group_user">
+      <button name="toggle_active"
+         type="object"
+         class="oe_stat_button"
+         icon="fa-archive">
+         <field name="active" widget="boolean_button"
+             options='{"terminology": "archive"}'/>
+      </button>
+    </div>
 
   .. warning::
 
@@ -1640,8 +1678,21 @@ Boolean Widgets
 Gauge
 '''''
 
+Defined in ``web_kanban_gauge`` addon.
+
 ``widget="gauge"`` (Float / Integer)
     Display a rate as a "Car" **gauge**.
+
+    ``max_field``
+      Field containing the maximum value of the Gauge
+    ``max_value``
+      Fixed max value of the Gauge (default = 100)
+    ``label_field``
+      Field containing the String label of the gauge
+    ``label``
+      String label
+    ``title``
+      Title of the Gauge (default = field string value)
 
 .. code-block:: xml
 
@@ -1664,6 +1715,10 @@ Many2many Widgets
     Must be a many2many field with a relation to 'ir.attachment' model.
 
 * ``widget="many2many_tags"``
+
+  ``color_field``
+    Name of a numeric field, which should be present in the view.
+    A color will be chosen depending on its value.
 
   .. image:: images/widgets/many2manytags_read.png
       :class: img-responsive
@@ -1702,9 +1757,9 @@ Percentpie
 ''''''''''
 
 ``widget="percentpie"`` (Float / Integer)
-    Display an Integer or Float as a percentpie.
-    Note that the expected field value is a percentage,
-    not a float between 0 and 1.
+  Display an Integer or Float as a percentpie.
+  Note that the expected field value is a percentage,
+  not a float between 0 and 1.
 
   .. image:: images/widgets/percentpie.png
       :class: img-responsive
@@ -1716,6 +1771,20 @@ Progressbar
 
 ``widget="progressbar"``  (Float / Integer)
     Display a Float or Integer as a progressbar.
+
+    ``editable``:
+      boolean if value is editable
+    ``current_value``:
+      get the current_value from the field that must be present in the view
+    ``max_value``:
+      get the max_value from the field that must be present in the view
+    ``edit_max_value``:
+      boolean if the max_value is editable
+    ``title``:
+      title of the bar, displayed on top of the bar
+
+    .. note:: The title option is not translated, use title parameter instead of
+      option if you want the title to be translated.
 
 .. image:: images/widgets/progressbar.png
     :class: img-responsive
@@ -1780,19 +1849,19 @@ Fields Manipulation
 -------------------
 
 ``widget="handle"`` (Integer)
-    Based on a sequence field, allows the users to drag and drop items
-    in a list view and displays a drag&drop icon
+  Based on a sequence field, allows the users to drag and drop items
+  in a list view and displays a drag&drop icon
 
 ``widget="html"`` (Text / Html)
-    Default display of a html field, it can also be used on Text fields to enable
-    text enhancement through a widget enabling bullet points, highlights, links, images, ...
+  Default display of a html field, it can also be used on Text fields to enable
+  text enhancement through a widget enabling bullet points, highlights, links, images, ...
 
   .. image:: images/widgets/html.png
       :class: img-responsive
 
 ``widget="priority"`` (Selection)
-    Display a selection as a set of stars on which the user can click to change
-    the field value
+  Display a selection as a set of stars on which the user can click to change
+  the field value
 
   .. warning::
 
@@ -1800,7 +1869,10 @@ Fields Manipulation
 
 
 ``widget="radio"`` (Selection)
-    On creation/edit, display selection field choices as radio buttons.
+  On creation/edit, display selection field choices as radio buttons.
+
+  ``horizontal``
+    if true, radio buttons will be displayed horizontally.
 
   .. image:: images/widgets/radio.png
       :class: img-responsive
