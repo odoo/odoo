@@ -1447,3 +1447,25 @@ class TestParentStore(common.TransactionCase):
         """ Move multiple nodes to create a cycle. """
         with self.assertRaises(UserError):
             self.cats(1, 3).write({'parent': self.cats(9).id})
+
+
+class TestRequiredMany2one(common.TransactionCase):
+
+    def test_explicit_ondelete(self):
+        field = self.env['test_new_api.req_m2o']._fields['foo']
+        self.assertEqual(field.ondelete, 'cascade')
+
+    def test_implicit_ondelete(self):
+        field = self.env['test_new_api.req_m2o']._fields['bar']
+        self.assertEqual(field.ondelete, 'restrict')
+
+    def test_explicit_set_null(self):
+        Model = self.env['test_new_api.req_m2o']
+        field = Model._fields['foo']
+
+        # invalidate registry to redo the setup afterwards
+        self.registry.registry_invalidated = True
+        self.patch(field, 'ondelete', 'set null')
+
+        with self.assertRaises(ValueError):
+            field._setup_regular_base(Model)

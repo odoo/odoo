@@ -2052,7 +2052,7 @@ class Many2one(_Relational):
     type = 'many2one'
     column_type = ('int4', 'int4')
     _slots = {
-        'ondelete': 'set null',         # what to do when value is deleted
+        'ondelete': None,               # what to do when value is deleted
         'auto_join': False,             # whether joins are generated upon search
         'delegate': False,              # whether self implements delegation
     }
@@ -2065,6 +2065,22 @@ class Many2one(_Relational):
         # determine self.delegate
         if not self.delegate:
             self.delegate = name in model._inherits.values()
+
+    def _setup_regular_base(self, model):
+        super()._setup_regular_base(model)
+        # 3 cases:
+        # 1) The ondelete attribute is not defined, we assign it a sensible default
+        # 2) The ondelete attribute is defined and its definition makes sense
+        # 3) The ondelete attribute is explicitly defined as 'set null' for a required m2o,
+        #    this is considered a programming error.
+        if not self.ondelete:
+            self.ondelete = 'restrict' if self.required else 'set null'
+        if self.ondelete == 'set null' and self.required:
+            raise ValueError(
+                "The m2o field %s of model %s is required but declares its ondelete policy "
+                "as being 'set null'. Only 'restrict' and 'cascade' make sense."
+                % (self.name, model._name)
+            )
 
     def update_db(self, model, columns):
         comodel = model.env[self.comodel_name]
