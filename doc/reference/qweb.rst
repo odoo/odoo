@@ -542,6 +542,8 @@ Helpers
     :js:func:`core.qweb.render <QWeb2.Engine.render>` can be used to
     easily render basic module templates
 
+.. _reference/qweb/api:
+
 API
 ---
 

@@ -8,6 +8,7 @@ ODOO API
     :titlesonly:
 
     reference/javascript_api
+    reference/orm
 
 
 .. TODO python_api

@@ -16,7 +16,6 @@ Reference
     reference/mixins
     reference/mobile
     reference/module
-    reference/orm
     reference/qweb
     reference/reports
     reference/security
