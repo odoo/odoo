@@ -438,10 +438,6 @@ return AbstractRenderer.extend({
                     self.trigger_up('openEvent', event);
                 });
             },
-            // Dirty hack to ensure a correct first render
-            eventAfterAllRender: function (view) {
-                $(window).trigger('resize');
-            },
             viewRender: function (view) {
                 // compute mode from view.name which is either 'month', 'agendaWeek' or 'agendaDay'
                 var mode = view.name === 'month' ? 'month' : (view.name === 'agendaWeek' ? 'week' : 'day');
@@ -449,6 +445,9 @@ return AbstractRenderer.extend({
                     mode: mode,
                     title: view.title,
                 });
+            },
+            windowResize: function(view) {
+                self._render();
             },
             views: {
                 day: {
@@ -458,7 +457,7 @@ return AbstractRenderer.extend({
                     columnFormat: 'ddd D'
                 },
                 month: {
-                    columnFormat: 'dddd'
+                    columnFormat: config.device.isMobile ? 'ddd' : 'dddd'
                 }
             },
             height: 'parent',
@@ -507,6 +506,7 @@ return AbstractRenderer.extend({
      * @returns {Deferred}
      */
     _render: function () {
+        var $container = this.$el;
         var $calendar = this.$calendar;
         var $fc_view = $calendar.find('.fc-view');
         var scrollPosition = $fc_view.scrollLeft();
@@ -534,21 +534,24 @@ return AbstractRenderer.extend({
             case 'day': $a = this.$small_calendar.find('a.ui-state-active'); break;
         }
         $a.addClass('o_selected_range');
-        setTimeout(function () {
-            $a.not('.ui-state-active').addClass('o_color');
-        });
 
         $fc_view.scrollLeft(scrollPosition);
 
         this._renderFilters();
-        this.$calendar.appendTo('body');
+
         if (scrollTop) {
             this.$calendar.fullCalendar('reinitView');
-        } else {
-            this.$calendar.fullCalendar('render');
         }
-        this._renderEvents();
+
         this.$calendar.prependTo(this.$('.o_calendar_view'));
+        this._disposePopovers();
+        this._renderEvents();
+
+        _.defer(function () {
+            $container.height(config.device.isMobile ? $(window).height() - $container.offset().top : '');
+            $calendar.fullCalendar('render');
+            $a.not('.ui-state-active').addClass('o_color');
+        });
 
         return this._super.apply(this, arguments);
     },
