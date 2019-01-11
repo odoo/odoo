@@ -8,7 +8,7 @@
                     <field name="name"/>
                     <field name="zipcode"/>
                     <field name="country_id"/>
-                    <field name="state_id"/>
+                    <field name="state_id" context="{'default_country_id': country_id}"/>
                 </tree>
             </field>
         </record>
