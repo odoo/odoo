@@ -181,23 +181,25 @@ class ProductProduct(models.Model):
         StockMove = self.env['stock.move']
         to_date = self.env.context.get('to_date')
 
-        self.env['account.move.line'].check_access_rights('read')
-        fifo_automated_values = {}
-        query = """SELECT aml.product_id, aml.account_id, sum(aml.debit) - sum(aml.credit), sum(quantity), array_agg(aml.id)
-                     FROM account_move_line AS aml
-                    WHERE aml.product_id IS NOT NULL AND aml.company_id=%%s %s
-                 GROUP BY aml.product_id, aml.account_id"""
-        params = (self.env.user.company_id.id,)
-        if to_date:
-            query = query % ('AND aml.date <= %s',)
-            params = params + (to_date,)
-        else:
-            query = query % ('',)
-        self.env.cr.execute(query, params=params)
+        real_time_product_ids = [product.id for product in self if product.product_tmpl_id.valuation == 'real_time']
+        if real_time_product_ids:
+            self.env['account.move.line'].check_access_rights('read')
+            fifo_automated_values = {}
+            query = """SELECT aml.product_id, aml.account_id, sum(aml.debit) - sum(aml.credit), sum(quantity), array_agg(aml.id)
+                         FROM account_move_line AS aml
+                        WHERE aml.product_id IN %%s AND aml.company_id=%%s %s
+                     GROUP BY aml.product_id, aml.account_id"""
+            params = (tuple(real_time_product_ids), self.env.user.company_id.id)
+            if to_date:
+                query = query % ('AND aml.date <= %s',)
+                params = params + (to_date,)
+            else:
+                query = query % ('',)
+            self.env.cr.execute(query, params=params)
 
-        res = self.env.cr.fetchall()
-        for row in res:
-            fifo_automated_values[(row[0], row[1])] = (row[2], row[3], list(row[4]))
+            res = self.env.cr.fetchall()
+            for row in res:
+                fifo_automated_values[(row[0], row[1])] = (row[2], row[3], list(row[4]))
 
         product_values = {product: 0 for product in self}
         product_move_ids = {product: [] for product in self}
