@@ -9,6 +9,11 @@ class SomeObj(models.Model):
 
     val = fields.Integer()
     company_id = fields.Many2one('res.company')
+    forbidden = fields.Integer(
+        groups='test_access_rights.test_group,!base.group_no_one,base.group_user,!base.group_public',
+        default=5
+    )
+    forbidden2 = fields.Integer(groups='test_access_rights.test_group')
 
 class Container(models.Model):
     _name = 'test_access_right.container'
