@@ -1016,12 +1016,42 @@ var ProductScreenWidget = ScreenWidget.extend({
         if (this.pos.config.iface_vkeyboard && this.chrome.widget.keyboard) {
             this.chrome.widget.keyboard.connect($(this.el.querySelector('.searchbox input')));
         }
+        $(document).on('keydown.productscreen',this._onKeypadKeyDown.bind(this));
     },
 
     close: function(){
         this._super();
         if(this.pos.config.iface_vkeyboard && this.chrome.widget.keyboard){
             this.chrome.widget.keyboard.hide();
+        }
+        $(document).off('keydown.productscreen',this._onKeypadKeyDown.bind(this));
+    },
+
+    _onKeypadKeyDown: function (ev) {
+        //prevent input and textarea keydown event
+        if(!_.contains(["INPUT", "TEXTAREA"], $(ev.target).prop('tagName'))) {
+            if ((ev.key >= "0" && ev.key <= "9") || ev.key === "."){
+                this.numpad.state.appendNewChar(ev.key)
+            }
+            else {
+                switch (ev.key){
+                    case "Backspace":
+                        this.numpad.state.deleteLastChar();
+                        break;
+                    case "Delete":
+                        this.numpad.state.resetValue();
+                        break;
+                    case ",":
+                        this.numpad.state.appendNewChar(".");
+                        break;
+                    case "+":
+                        this.numpad.state.positiveSign();
+                        break;
+                    case "-":
+                        this.numpad.state.negativeSign();
+                        break;
+                }
+            }
         }
     },
 });

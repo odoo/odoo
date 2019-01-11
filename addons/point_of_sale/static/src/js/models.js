@@ -2717,6 +2717,22 @@ exports.NumpadState = Backbone.Model.extend({
         });
         this.trigger('set_value',this.get('buffer'));
     },
+    positiveSign: function() {
+        var oldBuffer;
+        oldBuffer = this.get('buffer');
+        if (oldBuffer[0] === '-'){
+            this.set({buffer: oldBuffer.substr(1)});
+            this.trigger('set_value',this.get('buffer'));
+        }
+    },
+    negativeSign: function() {
+        var oldBuffer;
+        oldBuffer = this.get('buffer');
+        if (oldBuffer[0] !== '-'){
+            this.set({buffer: "-" + oldBuffer});
+            this.trigger('set_value',this.get('buffer'));
+        }
+    },
     changeMode: function(newMode) {
         this.set({
             buffer: "0",
@@ -2730,7 +2746,13 @@ exports.NumpadState = Backbone.Model.extend({
         });
     },
     resetValue: function(){
-        this.set({buffer:'0'});
+        if(this.get('buffer') === "") {
+            this.trigger('set_value','remove');
+        }
+        else {
+            this.set({ buffer: "" });
+            this.trigger('set_value',this.get('buffer'));
+        }
     },
 });
 
