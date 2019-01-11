@@ -91,6 +91,11 @@ class ResConfigSettings(models.TransientModel):
     invoice_is_print = fields.Boolean(string='Print', related='company_id.invoice_is_print', readonly=False)
     invoice_is_email = fields.Boolean(string='Send Email', related='company_id.invoice_is_email', readonly=False)
     incoterm_id = fields.Many2one('account.incoterms', string='Default incoterm', related='company_id.incoterm_id', help='International Commercial Terms are a series of predefined commercial terms used in international transactions.', readonly=False)
+    invoice_terms = fields.Text(related='company_id.invoice_terms', string="Terms & Conditions", readonly=False)
+    use_invoice_terms = fields.Boolean(
+        string='Default Terms & Conditions',
+        oldname='default_use_sale_note',
+        config_parameter='account.use_invoice_terms')
 
     @api.multi
     def set_values(self):
