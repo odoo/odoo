@@ -49,10 +49,10 @@
                             t-att-checked="(filter.active ? true : undefined)"/>
                         <label t-att-for="id_for_label"
                             class="custom-control-label">
-                            <t t-if="filter.value == 'all'">
+                            <t t-if="filter.value == false">
                                 <span><i class="fa fa-users fa-fw o_cal_avatar" role="img" aria-label="Avatar" title="Avatar"/></span>
                             </t>
-                            <t t-if="widget.avatar_field &amp;&amp; (filter.value &amp;&amp; filter.value != 'all')">
+                            <t t-if="widget.avatar_field &amp;&amp; (filter.value &amp;&amp; filter.value != false)">
                                 <img t-attf-src="/web/image/#{widget.avatar_model}/#{filter.value}/#{widget.avatar_field}" class="o_cal_avatar" alt="Avatar"/>
                             </t>
                             <t t-set="color" t-value="widget.getColor(filter.color_index)"/>
