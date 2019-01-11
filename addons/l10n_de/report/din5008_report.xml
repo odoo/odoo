@@ -34,6 +34,7 @@
             <t t-if="not o or not 'company_id' in o">
                 <t t-set="company" t-value="res_company"/>
             </t>
+            <t t-set="partner_header" t-value="company.partner_id"/>
             <div>
                 <div class="header din">
                     <div class="float-right">
@@ -51,9 +52,9 @@
                         </t>
                         <div class="company_address">
                             <div>
-                                <strong t-field="company.partner_id.name"/>
+                                <strong t-esc="partner_header.name"/>
                             </div>
-                            <span t-field="company.partner_id"
+                            <span t-esc="partner_header"
                                 t-options='{"widget": "contact", "fields": ["address"], "no_marker": true}'/>
                             <t t-if="information_block">
                                 <div class="address">
@@ -76,10 +77,10 @@
                     </div>
                     <div class="text-center">
                         <ul class="list-inline">
-                            <li t-if="company.phone"><i class="fa fa-phone"/> <span t-field="company.phone"/></li>
-                            <li t-if="company.email"><i class="fa fa-at"/> <span t-field="company.email"/></li>
-                            <li t-if="company.website"><i class="fa fa-globe"/> <span t-field="company.website"/></li>
-                            <li t-if="company.vat"><i class="fa fa-building-o"/><t t-esc="company.country_id.vat_label or 'Tax ID'"/>: <span t-field="company.vat"/></li>
+                            <li t-if="partner_header.phone"><i class="fa fa-phone"/> <span t-field="partner_header.phone"/></li>
+                            <li t-if="partner_header.email"><i class="fa fa-at"/> <span t-field="partner_header.email"/></li>
+                            <li t-if="partner_header.website"><i class="fa fa-globe"/> <span t-field="partner_header.website"/></li>
+                            <li t-if="partner_header.vat"><i class="fa fa-building-o"/><t t-esc="partner_header.country_id.vat_label or 'Tax ID'"/>: <span t-field="partner_header.vat"/></li>
                         </ul>
                         <div t-field="company.report_footer"/>
                     </div>
