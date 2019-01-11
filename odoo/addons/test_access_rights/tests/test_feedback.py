@@ -227,3 +227,46 @@ Note: this might be a multi-company issue.
 
 (records: [%s], uid: %d)""" % (self.record.id, self.user.id)
         )
+
+class TestFieldGroupFeedback(Feedback):
+
+    def setUp(self):
+        super().setUp()
+        self.record = self.env['test_access_right.some_obj'].create({
+            'val': 0,
+        }).sudo(self.user)
+
+
+    def test_read(self):
+        self.env.ref('base.group_no_one').write(
+            {'users': [(4, self.user.id)]})
+        with self.assertRaises(AccessError) as ctx:
+            _ = self.record.forbidden
+
+        self.assertEqual(
+            ctx.exception.args[0],
+            """The requested operation can not be completed due to security restrictions.
+
+Document type: Object For Test Access Right (test_access_right.some_obj)
+Operation: read
+Fields:
+- forbidden (allowed for groups 'User types / Internal User', 'Test Group'; forbidden for groups 'Extra Rights / Technical Features', 'User types / Public')"""
+        )
+
+    def test_write(self):
+        self.env.ref('base.group_no_one').write(
+            {'users': [(4, self.user.id)]})
+
+        with self.assertRaises(AccessError) as ctx:
+            self.record.write({'forbidden': 1, 'forbidden2': 2})
+
+        self.assertEqual(
+            ctx.exception.args[0],
+            """The requested operation can not be completed due to security restrictions.
+
+Document type: Object For Test Access Right (test_access_right.some_obj)
+Operation: write
+Fields:
+- forbidden (allowed for groups 'User types / Internal User', 'Test Group'; forbidden for groups 'Extra Rights / Technical Features', 'User types / Public')
+- forbidden2 (allowed for groups 'Test Group')"""
+        )
