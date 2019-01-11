@@ -8,6 +8,7 @@ import logging
 
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.osv import expression
 from odoo.tools.translate import _
 from odoo.tools.float_utils import float_round
 
@@ -204,9 +205,18 @@ class HolidaysType(models.Model):
 
     @api.multi
     def _compute_group_days_allocation(self):
+        domain = [
+            ('holiday_status_id', 'in', self.ids),
+            ('holiday_type', '!=', 'employee'),
+            ('state', '=', 'validate'),
+        ]
+        domain2 = [
+            '|',
+            ('date_from', '>=', fields.Datetime.to_string(datetime.datetime.now().replace(month=1, day=1, hour=0, minute=0, second=0, microsecond=0))),
+            ('date_from', '=', False),
+        ]
         grouped_res = self.env['hr.leave.allocation'].read_group(
-            [('holiday_status_id', 'in', self.ids), ('holiday_type', '!=', 'employee'), ('state', '=', 'validate'),
-             ('date_from', '>=', fields.Datetime.to_string(datetime.datetime.now().replace(month=1, day=1, hour=0, minute=0, second=0, microsecond=0)))],
+            expression.AND([domain, domain2]),
             ['holiday_status_id', 'number_of_days'],
             ['holiday_status_id'],
         )
@@ -267,11 +277,16 @@ class HolidaysType(models.Model):
     def action_see_days_allocated(self):
         self.ensure_one()
         action = self.env.ref('hr_holidays.hr_leave_allocation_action_all').read()[0]
-        action['domain'] = [
+        domain = [
+            ('holiday_status_id', 'in', self.ids),
             ('holiday_type', '!=', 'employee'),
-            ('holiday_status_id', '=', self.ids[0]),
-            ('date_from', '>=', fields.Datetime.to_string(datetime.datetime.now().replace(month=1, day=1, hour=0, minute=0, second=0, microsecond=0)))
         ]
+        domain2 = [
+            '|',
+            ('date_from', '>=', fields.Datetime.to_string(datetime.datetime.now().replace(month=1, day=1, hour=0, minute=0, second=0, microsecond=0))),
+            ('date_from', '=', False),
+        ]
+        action['domain'] = expression.AND([domain, domain2])
         action['context'] = {
             'default_holiday_type': 'department',
             'default_holiday_status_id': self.ids[0],
