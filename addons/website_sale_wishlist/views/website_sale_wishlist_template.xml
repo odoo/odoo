@@ -60,6 +60,14 @@
                         <table class="table table-bordered table-striped table-hover text-center mt16 table-comparator " style="table-layout:auto" id="o_comparelist_table">
                             <body>
                                 <t t-foreach="wishes" t-as="wish">
+                                    <t t-set="attribe_val" t-value="'attrib='"/>
+                                    <t t-foreach="wish.product_id.product_template_attribute_value_ids" t-as="attribute">
+                                        <t t-set="attribe_val" t-value="attribe_val + str(wish.product_id.product_tmpl_id.id) + '-' + str(attribute.id)"/>
+                                        <t t-if="len(wish.product_id.attribute_value_ids) != attribute_index + 1">
+                                            <t t-set="attribe_val" t-value="attribe_val + '&amp;attrib='"/>
+                                        </t>
+                                    </t>
+
                                     <tr t-att-data-wish-id='wish.id' t-att-data-product-id='wish.product_id.id'>
                                         <td class='td-img'>
                                             <a t-att-href="'/shop/product/%s' % slug(wish.product_id.product_tmpl_id)">
@@ -67,7 +75,7 @@
                                             </a>
                                         </td>
                                         <td class='text-left'>
-                                            <strong><a t-att-href="'/shop/product/%s' % slug(wish.product_id.product_tmpl_id)"><t t-esc="wish.product_id.display_name" /></a></strong>
+                                            <strong><a t-att-href="'/shop/product/%s?%s' % (slug(wish.product_id.product_tmpl_id), attribe_val)"><t t-esc="wish.product_id.display_name" /></a></strong>
                                             <small class='d-none d-md-block'><p t-field="wish.product_id.description_sale" class="text-muted"/></small>
                                             <button type="button" class="btn btn-link o_wish_rm no-decoration"><small><i class='fa fa-trash-o'></i> Remove</small></button>
                                         </td>
@@ -89,4 +97,12 @@
         </t>
     </template>
 
+    <template id="variants" inherit_id="sale.variants">
+        <xpath expr="//t[@t-set='attribute_exclusions']" position="after">
+            <!-- if redirect shop page from to wishlist items set first combination product -->
+            <t t-if="attrib_set">
+                <t t-set="combination" t-value="product._get_selected_wishlist_product(attrib_set)"/>
+            </t>
+        </xpath>
+    </template>
 </odoo>
