@@ -105,6 +105,7 @@
                         <group>
                             <field name="date_planned_start"/>
                             <field name="date_planned_finished" invisible="1"/>
+                            <field name="date_start_wo" attrs="{'invisible': ['|', ('routing_id', '=', False), ('state', 'not in', ['draft', 'confirmed'])]}"/>
                             <label for="date_planned_start_wo" string="Scheduled Date" attrs="{'invisible': [('date_planned_start_wo', '=', False)]}"/>
                             <div class="o_row" attrs="{'invisible': [('date_planned_start_wo', '=', False)]}">
                                 <field name="date_planned_start_wo" attrs="{'readonly': [('move_raw_ids', '!=', [])]}"/>
