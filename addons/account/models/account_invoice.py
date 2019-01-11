@@ -486,12 +486,12 @@ class AccountInvoice(models.Model):
                 msg = _('Cannot find a chart of accounts for this company, You should configure it. \nPlease go to Account Configuration.')
                 raise RedirectWarning(msg, action.id, _('Go to the configuration panel'))
 
-            if type in ('out_invoice', 'out_refund'):
-                account_id = rec_account.id
-                payment_term_id = p.property_payment_term_id.id
-            else:
+            if type in ('in_invoice', 'in_refund'):
                 account_id = pay_account.id
                 payment_term_id = p.property_supplier_payment_term_id.id
+            else:
+                account_id = rec_account.id
+                payment_term_id = p.property_payment_term_id.id
 
             delivery_partner_id = self.get_delivery_partner_id()
             fiscal_position = self.env['account.fiscal.position'].get_fiscal_position(self.partner_id.id, delivery_id=delivery_partner_id)
