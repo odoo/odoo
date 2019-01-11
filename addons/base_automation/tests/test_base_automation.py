@@ -131,3 +131,37 @@ class base_automation_test(common.TransactionCase):
         self.assertEqual(lead.user_id, self.user_demo, "Responsible should change on creation of Lead test line.")
         self.assertEqual(len(lead.line_ids), 1, "New test line is not created")
         self.assertEqual(lead.line_ids.user_id, self.user_demo, "Responsible should be change on creation of Lead test line.")
+
+    def test_21_trigger_fields(self):
+        """
+        Check that the rule with trigger is executed only once per pertinent update.
+        """
+        lead = self.create_lead(name="X")
+        lead.priority = True
+        partner1 = self.env.ref('base.res_partner_1')
+        lead.partner_id = partner1.id
+        self.assertEqual(lead.name, 'X', "No update until now.")
+
+        lead.state = 'open'
+        self.assertEqual(lead.name, 'XX', "One update should have happened.")
+        lead.state = 'done'
+        self.assertEqual(lead.name, 'XXX', "One update should have happened.")
+        lead.state = 'done'
+        self.assertEqual(lead.name, 'XXX', "No update should have happened.")
+        lead.state = 'cancel'
+        self.assertEqual(lead.name, 'XXXX', "One update should have happened.")
+
+        # change the rule to trigger on partner_id
+        rule = self.env.ref('base_automation.test_rule_with_trigger')
+        rule.trigger_field_ids = self.env.ref('base_automation.field_base_automation_lead_test__partner_id')
+
+        partner2 = self.env.ref('base.res_partner_2')
+        lead.name = 'X'
+        lead.state = 'open'
+        self.assertEqual(lead.name, 'X', "No update should have happened.")
+        lead.partner_id = partner2
+        self.assertEqual(lead.name, 'XX', "One update should have happened.")
+        lead.partner_id = partner2
+        self.assertEqual(lead.name, 'XX', "No update should have happened.")
+        lead.partner_id = partner1
+        self.assertEqual(lead.name, 'XXX', "One update should have happened.")

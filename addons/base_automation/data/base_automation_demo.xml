@@ -71,4 +71,17 @@ if 'user_id' in env.context['old_values'][record.id]:
             </field>
         </record>
 
+        <record id="test_rule_with_trigger" model="base.automation">
+            <field name="name">Base Automation: test rule with trigger</field>
+            <field name="model_id" ref="base_automation.model_base_automation_lead_test"/>
+            <field name="trigger_field_ids" eval="[(4,ref('base_automation.field_base_automation_lead_test__state'))]"/>
+            <field name="trigger">on_write</field>
+            <field name="active" eval="True"/>
+            <field name="state">code</field>
+            <field name="code">
+record = model.browse(env.context['active_id'])
+record['name'] = record.name + 'X'
+            </field>
+        </record>
+
 </odoo>
