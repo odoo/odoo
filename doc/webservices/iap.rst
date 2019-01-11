@@ -549,6 +549,7 @@ care how they are implemented.
     pending transactions/existing holds).
 
 .. exception:: odoo.exceptions.AccessError
+    :noindex:
 
     Raised by:
 
@@ -556,8 +557,9 @@ care how they are implemented.
     * any failure in an inter-server call. (typically, in :func:`~odoo.addons.iap.jsonrpc`).
 
 .. exception:: odoo.exceptions.UserError
+    :noindex:
 
-    Raised by any unexpeted behaviour at the discretion of the App developer (*you*).
+    Raised by any unexpected behaviour at the discretion of the App developer (*you*).
 
 
 Test the API

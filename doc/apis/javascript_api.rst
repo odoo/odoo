@@ -5,7 +5,7 @@
 
 .. default-domain:: js
 
-.. _reference/javascript_api/api:
+.. _api/js:
 
 ==============
 Javascript API

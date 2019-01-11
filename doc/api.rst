@@ -7,8 +7,8 @@ ODOO API
 .. toctree::
     :titlesonly:
 
-    reference/javascript_api
-    reference/orm
+    apis/javascript_api
+    apis/orm_api
 
 
 .. TODO python_api

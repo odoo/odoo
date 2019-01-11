@@ -2,9 +2,9 @@
 
 .. _reference/orm:
 
-=======
-ORM API
-=======
+===
+ORM
+===
 
 Recordsets
 ==========
@@ -620,7 +620,7 @@ Model Reference
 .. currentmodule:: odoo.models
 
 .. autoclass:: odoo.models.Model
-
+  :noindex:
     .. rubric:: Structural attributes
 
     .. attribute:: _name
@@ -846,6 +846,7 @@ Method decorators
 .. automodule:: odoo.api
     :members: multi, model, depends, constrains, onchange, returns,
               one, v7, v8
+    :noindex:
 
 .. _reference/orm/fields:
 
@@ -864,46 +865,55 @@ Basic fields
    (because we don't support pluggable field types) (or do we?)
 
 .. autoclass:: odoo.fields.Field
+    :noindex:
 
 .. _reference/orm/fields/boolean:
 
 .. autoclass:: odoo.fields.Boolean
     :show-inheritance:
+    :noindex:
 
 .. _reference/orm/fields/char:
 
 .. autoclass:: odoo.fields.Char
     :show-inheritance:
+    :noindex:
 
 .. _reference/orm/fields/float:
 
 .. autoclass:: odoo.fields.Float
     :show-inheritance:
+    :noindex:
 
 .. _reference/orm/fields/integer:
 
 .. autoclass:: odoo.fields.Integer
     :show-inheritance:
+    :noindex:
 
 .. _reference/orm/fields/html:
 
 .. autoclass:: odoo.fields.Html
     :show-inheritance:
+    :noindex:
 
 .. _reference/orm/fields/monetary:
 
 .. autoclass:: odoo.fields.Monetary
     :show-inheritance:
+    :noindex:
 
 .. _reference/orm/fields/selection:
 
 .. autoclass:: odoo.fields.Selection
     :show-inheritance:
+    :noindex:
 
 .. _reference/orm/fields/text:
 
 .. autoclass:: odoo.fields.Text
     :show-inheritance:
+    :noindex:
 
 .. _reference/orm/fields/date_datetime:
 
@@ -966,21 +976,25 @@ Relational fields
 
 .. autoclass:: odoo.fields.Many2one
     :show-inheritance:
+    :noindex:
 
 .. _reference/orm/fields/one2many:
 
 .. autoclass:: odoo.fields.One2many
     :show-inheritance:
+    :noindex:
 
 .. _reference/orm/fields/many2many:
 
 .. autoclass:: odoo.fields.Many2many
     :show-inheritance:
+    :noindex:
 
 .. _reference/orm/fields/reference:
 
 .. autoclass:: odoo.fields.Reference
     :show-inheritance:
+    :noindex:
 
 .. _reference/orm/inheritance:
 

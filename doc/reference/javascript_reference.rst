@@ -16,7 +16,7 @@ records in the database.  It is even possible to use the web client to modify
 the interface of the web client.
 
 .. note:: An html version of all docstrings in Odoo is available at:
-      :ref:`JS API <reference/javascript_api/api>`
+      :ref:`JS API <api/js>`
 
 Overview
 =========

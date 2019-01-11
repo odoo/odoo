@@ -70,69 +70,69 @@ class Cursor(object):
        acting as a lightweight wrapper around psycopg2's
        ``cursor`` objects.
 
-        ``Cursor`` is the object behind the ``cr`` variable used all
-        over the OpenERP code.
+    ``Cursor`` is the object behind the ``cr`` variable used all
+    over the OpenERP code.
 
-        .. rubric:: Transaction Isolation
+    .. rubric:: Transaction Isolation
 
-        One very important property of database transactions is the
-        level of isolation between concurrent transactions.
-        The SQL standard defines four levels of transaction isolation,
-        ranging from the most strict *Serializable* level, to the least
-        strict *Read Uncommitted* level. These levels are defined in
-        terms of the phenomena that must not occur between concurrent
-        transactions, such as *dirty read*, etc.
-        In the context of a generic business data management software
-        such as OpenERP, we need the best guarantees that no data
-        corruption can ever be cause by simply running multiple
-        transactions in parallel. Therefore, the preferred level would
-        be the *serializable* level, which ensures that a set of
-        transactions is guaranteed to produce the same effect as
-        running them one at a time in some order.
+    One very important property of database transactions is the
+    level of isolation between concurrent transactions.
+    The SQL standard defines four levels of transaction isolation,
+    ranging from the most strict *Serializable* level, to the least
+    strict *Read Uncommitted* level. These levels are defined in
+    terms of the phenomena that must not occur between concurrent
+    transactions, such as *dirty read*, etc.
+    In the context of a generic business data management software
+    such as OpenERP, we need the best guarantees that no data
+    corruption can ever be cause by simply running multiple
+    transactions in parallel. Therefore, the preferred level would
+    be the *serializable* level, which ensures that a set of
+    transactions is guaranteed to produce the same effect as
+    running them one at a time in some order.
 
-        However, most database management systems implement a limited
-        serializable isolation in the form of
-        `snapshot isolation <http://en.wikipedia.org/wiki/Snapshot_isolation>`_,
-        providing most of the same advantages as True Serializability,
-        with a fraction of the performance cost.
-        With PostgreSQL up to version 9.0, this snapshot isolation was
-        the implementation of both the ``REPEATABLE READ`` and
-        ``SERIALIZABLE`` levels of the SQL standard.
-        As of PostgreSQL 9.1, the previous snapshot isolation implementation
-        was kept for ``REPEATABLE READ``, while a new ``SERIALIZABLE``
-        level was introduced, providing some additional heuristics to
-        detect a concurrent update by parallel transactions, and forcing
-        one of them to rollback.
+    However, most database management systems implement a limited
+    serializable isolation in the form of
+    `snapshot isolation <http://en.wikipedia.org/wiki/Snapshot_isolation>`_,
+    providing most of the same advantages as True Serializability,
+    with a fraction of the performance cost.
+    With PostgreSQL up to version 9.0, this snapshot isolation was
+    the implementation of both the ``REPEATABLE READ`` and
+    ``SERIALIZABLE`` levels of the SQL standard.
+    As of PostgreSQL 9.1, the previous snapshot isolation implementation
+    was kept for ``REPEATABLE READ``, while a new ``SERIALIZABLE``
+    level was introduced, providing some additional heuristics to
+    detect a concurrent update by parallel transactions, and forcing
+    one of them to rollback.
 
-        OpenERP implements its own level of locking protection
-        for transactions that are highly likely to provoke concurrent
-        updates, such as stock reservations or document sequences updates.
-        Therefore we mostly care about the properties of snapshot isolation,
-        but we don't really need additional heuristics to trigger transaction
-        rollbacks, as we are taking care of triggering instant rollbacks
-        ourselves when it matters (and we can save the additional performance
-        hit of these heuristics).
+    OpenERP implements its own level of locking protection
+    for transactions that are highly likely to provoke concurrent
+    updates, such as stock reservations or document sequences updates.
+    Therefore we mostly care about the properties of snapshot isolation,
+    but we don't really need additional heuristics to trigger transaction
+    rollbacks, as we are taking care of triggering instant rollbacks
+    ourselves when it matters (and we can save the additional performance
+    hit of these heuristics).
 
-        As a result of the above, we have selected ``REPEATABLE READ`` as
-        the default transaction isolation level for OpenERP cursors, as
-        it will be mapped to the desired ``snapshot isolation`` level for
-        all supported PostgreSQL version (8.3 - 9.x).
+    As a result of the above, we have selected ``REPEATABLE READ`` as
+    the default transaction isolation level for OpenERP cursors, as
+    it will be mapped to the desired ``snapshot isolation`` level for
+    all supported PostgreSQL version (8.3 - 9.x).
 
-        Note: up to psycopg2 v.2.4.2, psycopg2 itself remapped the repeatable
-        read level to serializable before sending it to the database, so it would
-        actually select the new serializable mode on PostgreSQL 9.1. Make
-        sure you use psycopg2 v2.4.2 or newer if you use PostgreSQL 9.1 and
-        the performance hit is a concern for you.
+    Note: up to psycopg2 v.2.4.2, psycopg2 itself remapped the repeatable
+    read level to serializable before sending it to the database, so it would
+    actually select the new serializable mode on PostgreSQL 9.1. Make
+    sure you use psycopg2 v2.4.2 or newer if you use PostgreSQL 9.1 and
+    the performance hit is a concern for you.
 
-        .. attribute:: cache
+    .. attribute:: cache
 
-            Cache dictionary with a "request" (-ish) lifecycle, only lives as
-            long as the cursor itself does and proactively cleared when the
-            cursor is closed.
+        Cache dictionary with a "request" (-ish) lifecycle, only lives as
+        long as the cursor itself does and proactively cleared when the
+        cursor is closed.
 
-            This cache should *only* be used to store repeatable reads as it
-            ignores rollbacks and savepoints, it should not be used to store
-            *any* data which may be modified during the life of the cursor.
+        This cache should *only* be used to store repeatable reads as it
+        ignores rollbacks and savepoints, it should not be used to store
+        *any* data which may be modified during the life of the cursor.
 
     """
     IN_MAX = 1000   # decent limit on size of IN queries - guideline = Oracle limit
@@ -428,18 +428,17 @@ class TestCursor(object):
         the transaction open across requests, and simulates committing, rolling
         back, and closing:
 
-              test cursor           | queries on actual cursor
-            ------------------------+---------------------------------------
-              cr = TestCursor(...)  | SAVEPOINT test_cursor_N
-                                    |
-              cr.execute(query)     | query
-                                    |
-              cr.commit()           | SAVEPOINT test_cursor_N
-                                    |
-              cr.rollback()         | ROLLBACK TO SAVEPOINT test_cursor_N
-                                    |
-              cr.close()            | ROLLBACK TO SAVEPOINT test_cursor_N
-                                    |
+        .. table::
+
+            ====================    ========================
+            Test cursor             Queries on actual cursor
+            ====================    ========================
+            cr = TestCursor(...)    SAVEPOINT test_cursor_N
+            cr.execute(query)       query
+            cr.commit()             SAVEPOINT test_cursor_N
+            cr.rollback()           ROLLBACK TO SAVEPOINT test_cursor_N
+            cr.close()              ROLLBACK TO SAVEPOINT test_cursor_N
+            ====================    ========================
 
     """
     _savepoint_seq = itertools.count()
@@ -673,6 +672,7 @@ def connection_info_for(db_or_uri):
 
     :param str db_or_uri: database name or postgres dsn
     :rtype: (str, dict)
+    :return: (dbname, connection_params)
     """
     if db_or_uri.startswith(('postgresql://', 'postgres://')):
         # extract db from uri
@@ -706,7 +706,7 @@ def db_connect(to, allow_uri=False):
     return Connection(_Pool, db, info)
 
 def close_db(db_name):
-    """ You might want to call odoo.modules.registry.Registry.delete(db_name) along this function."""
+    """ You might want to call :meth:`odoo.modules.registry.Registry.delete` along this function."""
     global _Pool
     if _Pool:
         _Pool.close_all(connection_info_for(db_name)[1])
