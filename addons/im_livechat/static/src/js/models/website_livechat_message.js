@@ -39,7 +39,7 @@ var WebsiteLivechatMessage =  AbstractMessage.extend({
     getAvatarSource: function () {
         var source = this._serverURL;
         if (this.hasAuthor()) {
-            source += '/web/image/res.partner/' + this.getAuthorID() + '/image_small';
+            source += '/im_livechat/partner_image/' + this.getAuthorID() + '/avatar';
         } else {
             source += '/mail/static/src/img/smiley/avatar.jpg';
         }

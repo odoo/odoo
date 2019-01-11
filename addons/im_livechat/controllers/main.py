@@ -2,10 +2,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
+import os
+import odoo
+import werkzeug
 
-from odoo import http, _
+from odoo import http, modules, _
 from odoo.http import request
 from odoo.addons.base.models.assetsbundle import AssetsBundle
+from odoo.tools.mimetypes import guess_mimetype
 
 
 class LivechatController(http.Controller):
@@ -131,3 +135,23 @@ class LivechatController(http.Controller):
         Channel = request.env['mail.channel']
         channel = Channel.sudo().search([('uuid', '=', uuid)], limit=1)
         channel.notify_typing(is_typing=is_typing, is_website_user=True)
+
+    @http.route(['/im_livechat/partner_image/<int:partner_id>/avatar'], type='http', auth="public")
+    def partner_image(self, partner_id=0, **kw):
+        status, headers, content = request.env['ir.http'].sudo().binary_content(
+            model='res.partner', id=partner_id, field='image_small', default_mimetype='image/png')
+
+        if not content:
+            img_path = modules.get_module_resource('mail', 'static/src/img/smiley', 'avatar.jpg')
+            with open(img_path, 'rb') as f:
+                image = f.read()
+            content = base64.b64encode(image)
+
+        if status == 304:
+            return werkzeug.wrappers.Response(status=304)
+
+        image_base64 = base64.b64decode(content)
+        headers.append(('Content-Length', len(image_base64)))
+        response = request.make_response(image_base64, headers)
+        response.status = str(status)
+        return response
