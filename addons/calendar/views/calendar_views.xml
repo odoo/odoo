@@ -25,7 +25,7 @@
         <field name="model">calendar.alarm</field>
         <field name="arch" type="xml">
             <tree string="Calendar Alarm" editable="bottom">
-                <field name="name"/>
+                <field name="name" invisible="1"/>
                 <field name="alarm_type"/>
                 <field name="duration"/>
                 <field name="interval"/>
@@ -40,8 +40,8 @@
                 <form string="Calendar Alarm">
                  <group>
                     <group>
-                        <field name="name"/>
-                        <field name="alarm_type" groups="base.group_no_one"/>
+                        <field name="name" invisible="1"/>
+                        <field name="alarm_type"/>
                     </group>
                     <group>
                         <label for="duration"/>
