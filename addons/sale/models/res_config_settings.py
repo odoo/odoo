@@ -7,11 +7,6 @@ from odoo import api, fields, models
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
-    sale_note = fields.Text(related='company_id.sale_note', string="Terms & Conditions", readonly=False)
-    use_sale_note = fields.Boolean(
-        string='Default Terms & Conditions',
-        oldname='default_use_sale_note',
-        config_parameter='sale.use_sale_note')
     group_discount_per_so_line = fields.Boolean("Discounts", implied_group='sale.group_discount_per_so_line')
     module_sale_margin = fields.Boolean("Margins")
     quotation_validity_days = fields.Integer(related='company_id.quotation_validity_days', string="Default Quotation Validity (Days)", readonly=False)

@@ -97,6 +97,11 @@ class AccountInvoice(models.Model):
         journal = self._default_journal()
         return journal.currency_id or journal.company_id.currency_id or self.env.user.company_id.currency_id
 
+    def _default_comment(self):
+        invoice_type = self.env.context.get('type', 'out_invoice')
+        if invoice_type == 'out_invoice' and self.env['ir.config_parameter'].sudo().get_param('account.use_invoice_terms'):
+            return self.env.user.company_id.invoice_terms
+
     @api.one
     @api.depends(
         'state', 'currency_id', 'invoice_line_ids.price_subtotal',
@@ -255,7 +260,7 @@ class AccountInvoice(models.Model):
         help="Technical field holding the number given to the invoice, automatically set when the invoice is validated then stored to set the same number again if the invoice is cancelled, set to draft and re-validated.")
     reference = fields.Char(string='Payment Ref.', copy=False, readonly=True, states={'draft': [('readonly', False)]},
         help='The payment communication that will be automatically populated once the invoice validation. You can also write a free communication.')
-    comment = fields.Text('Additional Information', readonly=True, states={'draft': [('readonly', False)]})
+    comment = fields.Text('Additional Information', readonly=True, states={'draft': [('readonly', False)]}, default=_default_comment)
 
     state = fields.Selection([
             ('draft','Draft'),

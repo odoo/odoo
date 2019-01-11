@@ -101,7 +101,7 @@ class SaleOrder(models.Model):
 
     @api.model
     def _default_note(self):
-        return self.env['ir.config_parameter'].sudo().get_param('sale.use_sale_note') and self.env.user.company_id.sale_note or ''
+        return self.env['ir.config_parameter'].sudo().get_param('account.use_invoice_terms') and self.env.user.company_id.invoice_terms or ''
 
     @api.model
     def _get_default_team(self):
@@ -306,8 +306,8 @@ class SaleOrder(models.Model):
             'partner_shipping_id': addr['delivery'],
             'user_id': self.partner_id.user_id.id or self.env.uid
         }
-        if self.env['ir.config_parameter'].sudo().get_param('sale.use_sale_note') and self.env.user.company_id.sale_note:
-            values['note'] = self.with_context(lang=self.partner_id.lang).env.user.company_id.sale_note
+        if self.env['ir.config_parameter'].sudo().get_param('account.use_invoice_terms') and self.env.user.company_id.invoice_terms:
+            values['note'] = self.with_context(lang=self.partner_id.lang).env.user.company_id.invoice_terms
 
         # Use team of saleman before to fallback on team of partner.
         values['team_id'] = self.partner_id.user_id and self.partner_id.user_id.sale_team_id.id or self.partner_id.team_id.id

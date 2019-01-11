@@ -11,13 +11,7 @@ class AccountInvoice(models.Model):
     def _get_default_team(self):
         return self.env['crm.team']._get_default_team_id()
 
-    def _default_comment(self):
-        invoice_type = self.env.context.get('type', 'out_invoice')
-        if invoice_type == 'out_invoice' and self.env['ir.config_parameter'].sudo().get_param('sale.use_sale_note'):
-            return self.env.user.company_id.sale_note
-
     team_id = fields.Many2one('crm.team', string='Sales Team', default=_get_default_team, oldname='section_id')
-    comment = fields.Text(default=_default_comment)
     partner_shipping_id = fields.Many2one(
         'res.partner',
         string='Delivery Address',
@@ -48,7 +42,7 @@ class AccountInvoice(models.Model):
         self.partner_shipping_id = addr and addr.get('delivery')
         if self.env.context.get('type', 'out_invoice') == 'out_invoice':
             company = self.company_id or self.env.user.company_id
-            self.comment = company.with_context(lang=self.partner_id.lang).sale_note
+            self.comment = company.with_context(lang=self.partner_id.lang).invoice_terms
 
     @api.multi
     def action_invoice_open(self):
