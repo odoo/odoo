@@ -1347,7 +1347,10 @@
 
 <t t-name="MobileSearchView">
     <div class="o_searchview" role="search" aria-autocomplete="list">
-        <button class="o_enable_searchview btn fa fa-search"/>
+        <div class="o_mobile_quick_search">
+            <button class="o_enable_searchview btn fa fa-search"/>
+            <button class="o_toggle_searchview_full o_hidden btn fa fa-filter"/>
+        </div>
         <div class="o_mobile_search o_hidden">
             <div class="o_mobile_search_header">
                 <span class="o_mobile_search_close float-left mt16 mb16 mr8 ml16">
