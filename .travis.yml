@@ -1,0 +1,33 @@
+dist: xenial
+language: python
+python:
+  - "3.6"
+addons:
+  apt:
+    packages:
+      - build-essential
+      - libxslt-dev
+      - libzip-dev
+      - libldap2-dev
+      - libsasl2-dev
+  sauce_connect: true
+  hosts:
+    - odoo
+services:
+  - postgresql
+env:
+  global:
+    - SELENIUM_URL=http://$SAUCE_USERNAME:$SAUCE_ACCESS_KEY@localhost:4445/wd/hub
+    - DRIVER_NAME=remote
+    - BASE_URL=http://odoo:8069
+install:
+  - pip install -r requirements.txt
+  - pip install -r test-requirements.txt
+before_script:
+  - ./odoo-bin start -i base --logfile=server.log &
+  - until curl -s odoo:8069; do sleep 5; done
+script:
+  - cd $TRAVIS_BUILD_DIR/acceptance && behave --stage=ui
+after_script:
+  - cat $TRAVIS_BUILD_DIR/server.log
+cache: pip
