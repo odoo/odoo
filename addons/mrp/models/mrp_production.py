@@ -99,6 +99,11 @@ class MrpProduction(models.Model):
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
     date_start = fields.Datetime('Start Date', copy=False, index=True, readonly=True)
     date_finished = fields.Datetime('End Date', copy=False, index=True, readonly=True)
+    date_start_wo = fields.Datetime(
+        'Planning Start Date', copy=False, readonly=True,
+        states={'draft': [('readonly', False)], 'confirmed': [('readonly', False)]},
+        help="The work orders will be planned based on the availability of the work centers starting from "
+        "this date. If emtpy, the work orders are planned as soon as possible.")
     bom_id = fields.Many2one(
         'mrp.bom', 'Bill of Material',
         readonly=True, states={'draft': [('readonly', False)]},
@@ -615,7 +620,7 @@ class MrpProduction(models.Model):
         return True
 
     def _get_start_date(self):
-        return datetime.now()
+        return self.date_start_wo or datetime.now()
 
     def plan_workorders(self):
         WorkOrder = self.env['mrp.workorder']
@@ -661,7 +666,11 @@ class MrpProduction(models.Model):
                         start_date = from_date + relativedelta(minutes=duration)
 
     def button_unplan(self):
-        self.mapped('workorder_ids').write({'date_planned_start': False, 'date_planned_finished': False})
+        if any(wo.state == 'done' for wo in self.workorder_ids):
+            raise UserError(_("Some work orders are already done, you cannot unplan this manufacturing order."))
+        elif any(wo.state == 'progress' for wo in self.workorder_ids):
+            raise UserError(_("Some work orders have already started, you cannot unplan this manufacturing order."))
+        self.workorder_ids.unlink()
 
     @api.multi
     def _generate_workorders(self, exploded_boms):
