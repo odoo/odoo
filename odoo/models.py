@@ -2734,10 +2734,53 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             invalid_fields = {name for name in fields if not valid(name)}
             if invalid_fields:
                 _logger.info('Access Denied by ACLs for operation: %s, uid: %s, model: %s, fields: %s',
-                    operation, self._uid, self._name, ', '.join(invalid_fields))
-                raise AccessError(_('The requested operation cannot be completed due to security restrictions. '
-                                    'Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % \
-                                  (self._description, operation))
+                             operation, self._uid, self._name, ', '.join(invalid_fields))
+
+                description = self.env['ir.model']._get(self._name).name
+                if not self.env.user.has_group('base.group_no_one'):
+                    raise AccessError(
+                        _('The requested operation cannot be completed due to security restrictions. '
+                          'Please contact your system administrator.\n\n(Document type: %(document_kind)s (%(document_model)s), Operation: %(operation)s)') % {
+                        'document_kind': description,
+                        'document_model': self._name,
+                        'operation': operation,
+                    })
+
+                def format_groups(field):
+                    anyof = self.env['res.groups']
+                    noneof = self.env['res.groups']
+                    for g in field.groups.split(','):
+                        if g.startswith('!'):
+                            noneof |= self.env.ref(g[1:])
+                        else:
+                            anyof |= self.env.ref(g)
+                    strs = []
+                    if anyof:
+                        strs.append(_("allowed for groups %s") % ', '.join(
+                            anyof.sorted(lambda g: g.id)
+                                 .mapped(lambda g: repr(g.display_name))
+                        ))
+                    if noneof:
+                        strs.append(_("forbidden for groups %s") % ', '.join(
+                            noneof.sorted(lambda g: g.id)
+                                  .mapped(lambda g: repr(g.display_name))
+                        ))
+                    return '; '.join(strs)
+
+                raise AccessError(_("""The requested operation can not be completed due to security restrictions.
+
+Document type: %(document_kind)s (%(document_model)s)
+Operation: %(operation)s
+Fields:
+%(fields_list)s""") % {
+                    'document_model': self._name,
+                    'document_kind': description or self._name,
+                    'operation': operation,
+                    'fields_list': '\n'.join(
+                        '- %s (%s)' % (f, format_groups(self._fields[f]))
+                        for f in sorted(invalid_fields)
+                    )
+                })
 
         return fields
 
