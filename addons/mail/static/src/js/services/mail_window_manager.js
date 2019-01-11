@@ -532,9 +532,6 @@ MailManager.include({
      * @private
      */
     _repositionThreadWindows: function () {
-        if (this._areAllThreadWindowsHidden()) {
-            return;
-        }
         this._computeAvailableSlotsForThreadWindows();
 
         this._repositionVisibleThreadWindows();
@@ -576,9 +573,6 @@ MailManager.include({
      *   the focus is on the thread window.
      */
     _updateThreadWindowsFromMessage: function (message, options) {
-        if (this._areAllThreadWindowsHidden()) {
-            return;
-        }
         _.each(this._threadWindows, function (threadWindow) {
             if (_.contains(message.getThreadIDs(), threadWindow.getID())) {
                 threadWindow.update(options);
