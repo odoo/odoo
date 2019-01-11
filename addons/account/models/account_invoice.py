@@ -992,6 +992,7 @@ class AccountInvoice(models.Model):
     @api.multi
     def get_taxes_values(self):
         tax_grouped = {}
+        round_curr = self.currency_id.round
         for line in self.invoice_line_ids:
             if not line.account_id:
                 continue
@@ -1003,9 +1004,10 @@ class AccountInvoice(models.Model):
 
                 if key not in tax_grouped:
                     tax_grouped[key] = val
+                    tax_grouped[key]['base'] = round_curr(val['base'])
                 else:
                     tax_grouped[key]['amount'] += val['amount']
-                    tax_grouped[key]['base'] += val['base']
+                    tax_grouped[key]['base'] += round_curr(val['base'])
         return tax_grouped
 
     @api.multi
