@@ -6,6 +6,7 @@ from dateutil import relativedelta
 from odoo.exceptions import UserError
 
 from odoo import api, fields, models, _
+from odoo.osv import expression
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 
@@ -114,9 +115,12 @@ class Location(models.Model):
     @api.model
     def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
         """ search full name and barcode """
-        if args is None:
-            args = []
-        location_ids = self._search(['|', ('barcode', operator, name), ('complete_name', operator, name)] + args, limit=limit, access_rights_uid=name_get_uid)
+        args = args or []
+        if operator == 'ilike' and not (name or '').strip():
+            domain = []
+        else:
+            domain = ['|', ('barcode', operator, name), ('complete_name', operator, name)]
+        location_ids = self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
         return self.browse(location_ids).name_get()
 
     def get_putaway_strategy(self, product):
