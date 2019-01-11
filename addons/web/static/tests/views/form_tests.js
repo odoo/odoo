@@ -7406,6 +7406,40 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test("one2many create record dialog shouldn't have a 'remove' button", function (assert) {
+        assert.expect(2);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<field name="p">' +
+                        '<kanban>' +
+                            '<templates>' +
+                                '<t t-name="kanban-box">' +
+                                    '<field name="foo"/>' +
+                                '</t>' +
+                            '</templates>' +
+                        '</kanban>' +
+                        '<form>' +
+                            '<field name="foo"/>' +
+                        '</form>' +
+                    '</field>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        testUtils.form.clickCreate(form);
+        form.$('.o-kanban-button-new').click();
+
+        assert.containsOnce(document.body, '.modal');
+        assert.strictEqual($('.modal .modal-footer .o_btn_remove').length, 0,
+            "shouldn't have a 'remove' button on new records");
+
+        form.destroy();
+    });
+
     QUnit.module('FormViewTABMainButtons');
 
     QUnit.test('using tab in an empty required string field should not move to the next field',function(assert) {
