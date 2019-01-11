@@ -492,10 +492,11 @@ class Alarm(models.Model):
     interval = fields.Selection(list(_interval_selection.items()), 'Unit', required=True, default='hours')
     duration_minutes = fields.Integer('Duration in minutes', compute='_compute_duration_minutes', store=True, help="Duration in minutes")
 
-    @api.onchange('duration', 'interval')
+    @api.onchange('duration', 'interval', 'alarm_type')
     def _onchange_duration_interval(self):
         display_interval = self._interval_selection.get(self.interval, '')
-        self.name = str(self.duration) + ' ' + display_interval
+        display_alarm_type = {key: value for key, value in self._fields['alarm_type']._description_selection(self.env)}[self.alarm_type]
+        self.name = "%s - %s %s" % (display_alarm_type, self.duration, display_interval)
 
     def _update_cron(self):
         try:
