@@ -22,6 +22,7 @@ var map_title ={
 var CrashManager = core.Class.extend({
     init: function() {
         this.active = true;
+        this.isConnected = true;
     },
     enable: function () {
         this.active = true;
@@ -29,8 +30,29 @@ var CrashManager = core.Class.extend({
     disable: function () {
         this.active = false;
     },
-    rpc_error: function(error) {
+    handleLostConnection: function () {
         var self = this;
+        if (!this.isConnected) {
+            // already handled, nothing to do.  This can happen when several
+            // rpcs are done in parallel and fail because of a lost connection.
+            return;
+        }
+        this.isConnected = false;
+        var delay = 2000;
+        core.bus.trigger('connection_lost');
+
+        setTimeout(function checkConnection() {
+            ajax.jsonRpc('/web/webclient/version_info', 'call', {}, {shadow:true}).then(function () {
+                core.bus.trigger('connection_restored');
+                self.isConnected = true;
+            }).fail(function () {
+                // exponential backoff, with some jitter
+                delay = (delay * 1.5) + 500*Math.random();
+                setTimeout(checkConnection, delay);
+            });
+        }, delay);
+    },
+    rpc_error: function(error) {
         if (!this.active) {
             return;
         }
@@ -38,16 +60,7 @@ var CrashManager = core.Class.extend({
             return;
         }
         if (error.code === -32098) {
-            core.bus.trigger('connection_lost');
-            this.connection_lost = true;
-            var timeinterval = setInterval(function() {
-                var options = {shadow: true};
-                ajax.jsonRpc('/web/webclient/version_info', 'call', {}, options).then(function () {
-                    clearInterval(timeinterval);
-                    core.bus.trigger('connection_restored');
-                    self.connection_lost = false;
-                });
-            }, 2000);
+            this.handleLostConnection();
             return;
         }
         var handler = core.crash_registry.get(error.data.name, true);
