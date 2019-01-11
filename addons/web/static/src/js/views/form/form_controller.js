@@ -619,7 +619,7 @@ var FormController = BasicController.extend({
             on_remove: data.on_remove,
             parentID: data.parentID,
             readonly: data.readonly,
-            deletable: data.deletable,
+            deletable: record ? data.deletable : false,
             recordID: record && record.id,
             res_id: record && record.res_id,
             res_model: data.field.relation,

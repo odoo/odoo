@@ -104,6 +104,7 @@ var FormViewDialog = ViewDialog.extend({
         this.readonly = options.readonly;
         this.deletable = options.deletable;
         this.disable_multiple_selection = options.disable_multiple_selection;
+        var oBtnRemove = 'o_btn_remove';
 
         var multi_select = !_.isNumber(options.res_id) && !options.disable_multiple_selection;
         var readonly = _.isNumber(options.res_id) && options.readonly;
@@ -136,7 +137,19 @@ var FormViewDialog = ViewDialog.extend({
                         text: _t("Save & New"),
                         classes: "btn-primary",
                         click: function () {
-                            this._save().then(self.form_view.createRecord.bind(self.form_view, self.parentID));
+                            this._save()
+                                .then(self.form_view.createRecord.bind(self.form_view, self.parentID))
+                                .then(function () {
+                                    if (!self.deletable) {
+                                        return;
+                                    }
+                                    self.deletable = false;
+                                    self.buttons = self.buttons.filter(function (button) {
+                                        return button.classes.split(' ').indexOf(oBtnRemove) < 0;
+                                    });
+                                    self.set_buttons(self.buttons);
+                                    self.set_title(_t("Create ") + _.str.strRight(self.title, _t("Open: ")));
+                                });
                         },
                     });
                 }
@@ -145,7 +158,7 @@ var FormViewDialog = ViewDialog.extend({
                 if (!multi && this.deletable) {
                     options.buttons.push({
                         text: _t("Remove"),
-                        classes: 'btn-secondary o_btn_remove',
+                        classes: 'btn-secondary ' + oBtnRemove,
                         click: this._remove.bind(this),
                     });
                 }
