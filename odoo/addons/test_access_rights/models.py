@@ -8,7 +8,7 @@ class SomeObj(models.Model):
     _description = 'Object For Test Access Right'
 
     val = fields.Integer()
-
+    company_id = fields.Many2one('res.company')
 
 class Container(models.Model):
     _name = 'test_access_right.container'

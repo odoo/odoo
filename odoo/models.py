@@ -2943,14 +2943,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             # mark non-existing records in missing
             forbidden = missing.exists()
             if forbidden:
-                _logger.info(
-                    _('The requested operation cannot be completed due to record rules: Document type: %s, Operation: %s, Records: %s, User: %s') % \
-                    (self._name, 'read', ','.join([str(r.id) for r in self][:6]), self._uid))
-                # store an access error exception in existing records
-                exc = AccessError(
-                    _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % \
-                    (self._name, 'read')
-                )
+                exc = self.env['ir.rule']._make_access_error('read', forbidden)
                 self.env.cache.set_failed(forbidden, self._fields.values(), exc)
 
     @api.multi
@@ -3037,10 +3030,8 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             # the invalid records are (partially) hidden by access rules
             if self.is_transient():
                 raise AccessError(_('For this kind of document, you may only access records you created yourself.\n\n(Document type: %s)') % (self._description,))
-            else:
-                _logger.info('Access Denied by record rules for operation: %s on record ids: %r, uid: %s, model: %s', operation, forbidden.ids, self._uid, self._name)
-                raise AccessError(_('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % \
-                                  (self._description, operation))
+
+            raise self.env['ir.rule']._make_access_error(operation, forbidden)
 
         # If we get here, the invalid records are not in the database.
         if operation in ('read', 'unlink'):
