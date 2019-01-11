@@ -736,6 +736,7 @@ var IconWidget = MediaWidget.extend({
         this.$('div.font-icons-icons').html(
             QWeb.render('web_editor.dialog.font-icons.icons', {iconsParser: iconsParser})
         );
+        return $.when();
     },
 
     //--------------------------------------------------------------------------
