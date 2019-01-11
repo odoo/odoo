@@ -171,7 +171,10 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
             if (this.running_tour && this.running_tour_timeout === undefined) {
                 this._set_running_tour_timeout(this.running_tour, this.active_tooltips[this.running_tour]);
             }
-            this._check_for_tooltip(this.active_tooltips[tour_name], tour_name);
+            var self = this;
+            setTimeout(function () {
+                self._check_for_tooltip(self.active_tooltips[tour_name], tour_name);
+            });
         } else {
             for (var tourName in this.active_tooltips) {
                 var tip = this.active_tooltips[tourName];
