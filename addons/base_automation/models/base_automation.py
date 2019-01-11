@@ -61,6 +61,9 @@ class BaseAutomation(models.Model):
     filter_domain = fields.Char(string='Apply on', help="If present, this condition must be satisfied before executing the action rule.")
     last_run = fields.Datetime(readonly=True, copy=False)
     on_change_fields = fields.Char(string="On Change Fields Trigger", help="Comma-separated list of field names that triggers the onchange.")
+    trigger_field_ids = fields.Many2many('ir.model.fields', string='Watched fields',
+                                        help="The action will be triggered if and only if one of these fields is updated."
+                                             "If empty, all fields are watched.")
 
     # which fields have an impact on the registry
     CRITICAL_FIELDS = ['model_id', 'active', 'trigger', 'on_change_fields']
@@ -193,8 +196,32 @@ class BaseAutomation(models.Model):
         # execute server actions
         if self.action_server_id:
             for record in records:
-                ctx = {'active_model': record._name, 'active_ids': record.ids, 'active_id': record.id}
-                self.action_server_id.with_context(**ctx).run()
+                # we process the action if any watched field has been modified
+                if self._check_trigger_fields(record):
+                    ctx = {'active_model': record._name, 'active_ids': record.ids, 'active_id': record.id}
+                    self.action_server_id.with_context(**ctx).run()
+
+    def _check_trigger_fields(self, record):
+        """ Return whether any of the trigger fields has been modified on ``record``. """
+        if not self.trigger_field_ids:
+            # all fields are implicit triggers
+            return True
+
+        if not self._context.get('old_values'):
+            # this is a create: all fields are considered modified
+            return True
+
+        # Note: old_vals are in the format of read()
+        old_vals = self._context['old_values'].get(record.id, {})
+
+        def differ(name):
+            field = record._fields[name]
+            return (
+                name in old_vals and
+                field.convert_to_cache(record[name], record, validate=False) !=
+                field.convert_to_cache(old_vals[name], record, validate=False)
+            )
+        return any(differ(field.name) for field in self.trigger_field_ids)
 
     @api.model_cr
     def _register_hook(self):
