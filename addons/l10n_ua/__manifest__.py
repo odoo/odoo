@@ -7,23 +7,18 @@
     'website': 'https://erp.co.ua',
     'version': '1.3',
     'description': """
-Ukrainian Accounting.
-=====================
-
-This is base module for Ukrainian accounting.
-
-Charts of Accounts is provided by dedicated module:
----------------------------------------------------
-
-    * l10n_ua_psbo - for COA based on national standards.
-
-    * l10n_ua_ifrs - for COA based on IFRS.
+Ukraine - Chart of accounts.
+============================
     """,
     'category': 'Localization',
     'depends': ['account'],
     'data': [
+        'data/account_chart_template.xml',
+        'data/account.account.template.csv',
         'data/account_account_tag_data.xml',
         'data/account_tax_tag_data.xml',
         'data/account_tax_group_data.xml',
+        'data/account_tax_template.xml',
+        'data/account_chart_template_config.xml',
     ],
 }
