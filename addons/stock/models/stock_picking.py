@@ -862,6 +862,15 @@ class Picking(models.Model):
         """ If no pack operation, we do simple action_done of the picking.
         Otherwise, do the pack operations. """
         # TDE CLEAN ME: reclean me, please
+
+        # Double check that the pick is in the state that allows processing
+        # to avoid the creation of unintended Extra Moves
+        for pick in self:
+            if pick.state == 'done':
+                raise UserError(_('The pick is already validated'))
+            if pick.state == 'cancel':
+                raise UserError(_('The pick has been cancelled'))
+
         self._create_lots_for_picking()
 
         no_pack_op_pickings = self.filtered(lambda picking: not picking.pack_operation_ids)
