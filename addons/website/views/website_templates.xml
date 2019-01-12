@@ -844,7 +844,7 @@
     <div class="container accordion mb32 mt32" id="debug_infos">
         <div class="card" t-if="exception">
             <h4 class="card-header">
-                <a data-toggle="collapse" data-parent="#debug_infos" href="#error_main">Error</a>
+                <a data-toggle="collapse" href="#error_main">Error</a>
             </h4>
             <div id="error_main" class="collapse in">
                 <div class="card-body">
@@ -858,7 +858,7 @@
         </div>
         <div class="card" t-if="qweb_exception">
             <h4 class="card-header">
-                <a data-toggle="collapse" data-parent="#adebug_infos" href="#error_qweb">QWeb</a>
+                <a data-toggle="collapse" href="#error_qweb">QWeb</a>
             </h4>
             <div id="error_qweb" class="collapse">
                 <div class="card-body">
@@ -878,7 +878,7 @@
         </div>
         <div class="card" t-if="traceback">
             <h4 class="card-header">
-                <a data-toggle="collapse" data-parent="#adebug_infos" href="#error_traceback">Traceback</a>
+                <a data-toggle="collapse" href="#error_traceback">Traceback</a>
             </h4>
             <div id="error_traceback" class="collapse">
                 <div class="card-body">

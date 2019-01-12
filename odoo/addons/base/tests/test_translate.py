@@ -406,3 +406,31 @@ class TestXMLTranslation(TransactionCase):
         self.assertEqual(view.with_env(env_en).arch_db, archf % terms_en)
         self.assertEqual(view.with_env(env_fr).arch_db, archf % terms_fr)
         self.assertEqual(view.with_env(env_nl).arch_db, archf % terms_nl)
+
+    def test_sync_update(self):
+        """ Check translations after minor change in source terms. """
+        archf = '<form string="X"><div>%s</div><div>%s</div></form>'
+        terms_src = ('Subtotal', 'Subtotal:')
+        terms_en = ('Subtotal', 'Sub total:')
+        view = self.create_view(archf, terms_src, en_US=terms_en)
+
+        translations = self.env['ir.translation'].search([
+            ('type', '=', 'model_terms'),
+            ('name', '=', "ir.ui.view,arch_db"),
+            ('res_id', '=', view.id),
+        ])
+        self.assertEqual(len(translations), 2)
+
+        # modifying the arch should sync existing translations without errors
+        view.write({
+            "arch": archf % ('Subtotal', 'Subtotal:<br/>')
+        })
+
+        translations = self.env['ir.translation'].search([
+            ('type', '=', 'model_terms'),
+            ('name', '=', "ir.ui.view,arch_db"),
+            ('res_id', '=', view.id),
+        ])
+        # 'Subtotal' being src==value, it will be discared
+        # 'Subtotal:' will be discarded as it match 'Subtotal' instead of 'Subtotal:<br/>'
+        self.assertEqual(len(translations), 0)
