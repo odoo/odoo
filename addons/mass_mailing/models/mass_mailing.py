@@ -558,6 +558,12 @@ class MassMailing(models.Model):
         failed_mails = self.env['mail.mail'].search([('mailing_id', 'in', self.ids), ('state', '=', 'exception')])
         failed_mails.mapped('statistics_ids').unlink()
         failed_mails.sudo().unlink()
+        res_ids = self.get_recipients()
+        except_mailed = self.env['mail.mail.statistics'].search([
+            ('model', '=', self.mailing_model_real),
+            ('res_id', 'in', res_ids),
+            ('exception', '!=', False),
+            ('mass_mailing_id', '=', self.id)]).unlink()
         self.write({'state': 'in_queue'})
 
     #------------------------------------------------------
