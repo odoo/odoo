@@ -7,9 +7,9 @@ from odoo import http
 
 class HrHolidaysController(http.Controller):
 
-    @http.route('/hr_holidays/validate', type='http', auth='user', methods=['GET'])
-    def hr_holidays_validate(self, res_id, token):
-        comparison, record, redirect = MailController._check_token_and_record_or_redirect('hr.holidays', int(res_id), token)
+    @http.route('/leave/validate', type='http', auth='user', methods=['GET'])
+    def hr_holidays_request_validate(self, res_id, token):
+        comparison, record, redirect = MailController._check_token_and_record_or_redirect('hr.leave', int(res_id), token)
         if comparison and record:
             try:
                 record.action_approve()
@@ -17,9 +17,29 @@ class HrHolidaysController(http.Controller):
                 return MailController._redirect_to_messaging()
         return redirect
 
-    @http.route('/hr_holidays/refuse', type='http', auth='user', methods=['GET'])
-    def hr_holidays_refuse(self, res_id, token):
-        comparison, record, redirect = MailController._check_token_and_record_or_redirect('hr.holidays', int(res_id), token)
+    @http.route('/leave/refuse', type='http', auth='user', methods=['GET'])
+    def hr_holidays_request_refuse(self, res_id, token):
+        comparison, record, redirect = MailController._check_token_and_record_or_redirect('hr.leave', int(res_id), token)
+        if comparison and record:
+            try:
+                record.action_refuse()
+            except Exception:
+                return MailController._redirect_to_messaging()
+        return redirect
+
+    @http.route('/allocation/validate', type='http', auth='user', methods=['GET'])
+    def hr_holidays_allocation_validate(self, res_id, token):
+        comparison, record, redirect = MailController._check_token_and_record_or_redirect('hr.leave.allocation', int(res_id), token)
+        if comparison and record:
+            try:
+                record.action_approve()
+            except Exception:
+                return MailController._redirect_to_messaging()
+        return redirect
+
+    @http.route('/allocation/refuse', type='http', auth='user', methods=['GET'])
+    def hr_holidays_allocation_refuse(self, res_id, token):
+        comparison, record, redirect = MailController._check_token_and_record_or_redirect('hr.leave.allocation', int(res_id), token)
         if comparison and record:
             try:
                 record.action_refuse()

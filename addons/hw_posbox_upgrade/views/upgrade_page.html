@@ -1,0 +1,72 @@
+{% extends "layout.html" %}
+{% macro loading_block_ui(message) %}
+<div class="loading-block o_hide">
+    <div class="loading-message-block">
+        <div style="height: 50px">
+            <img src="/web/static/src/img/spin.png" style="animation: spin 4s infinite linear;" alt="Loading...">
+        </div>
+        <br>
+        <div class="loading-message">
+            <span class="message-title">Please wait..</span><br>
+            <span class="message-status">{{ message }}</span>
+        </div>
+    </div>
+</div>
+{% endmacro %}
+{% block head %}
+    <script type="text/javascript" src="/web/static/lib/jquery/jquery.js"></script>
+    <script>
+        $(function(){
+            var upgrading = false;
+            $('#upgrade').click(function(){
+                if(!upgrading){
+                    upgrading = true;
+                    $('.loading-block').removeClass('o_hide');
+                    $.ajax({
+                        url:'/hw_proxy/perform_upgrade/'
+                    }).done(function(status){
+                        $('.message-title').text('Upgrade successful');
+                        var cpt = 110;
+                        setInterval(function(){
+                            --cpt;
+                            if(cpt==0){location.reload();}
+                            $('.message-status').text('Restarting the IoTBox.  Available in ' + cpt);
+                        } , 1000);
+                    }).fail(function(){
+                        $('.error-message').text('Upgrade Failed');
+                    });
+                }
+            });
+        });
+    </script>
+    <style>
+        .commit-details {
+            background: #f1f1f1;
+            padding: 10px 10px 0 10px;
+            border-radius: 5px;
+        }
+    </style>
+{% endblock %}
+{% block content %}
+    <h2 class="text-center">IoT Box Software Upgrade</h2>
+    <p>
+        This tool will help you perform an upgrade of the IoTBox's software over the internet.
+        However the preferred method to upgrade the IoTBox is to flash the sd-card with
+        the <a href='http://nightly.odoo.com/trunk/posbox/'>latest image</a>. The upgrade
+        procedure is explained into to the
+        <a href='https://www.odoo.com/documentation/user/point_of_sale/posbox/index.html'>IoTBox manual</a>
+    </p>
+    <p>
+        To upgrade the IoTBox, click on the upgrade button. The upgrade will take a few minutes. <b>Do not reboot</b> the IoTBox during the upgrade.
+    </p>
+    <div class="commit-details">
+        <div style="padding-bottom: 5px; font-weight: bold;">
+            Latest patch:
+        </div>
+        <pre style="margin: 0;padding: 15px 0;">{{ commit|safe }}</pre>
+    </div>
+    <div class="text-center" style="margin: 15px auto;">
+        <a class="btn" href='#' id='upgrade'>Upgrade</a>
+    </div>
+    {{ loading_block_ui(loading_message) }}
+{% endblock %}

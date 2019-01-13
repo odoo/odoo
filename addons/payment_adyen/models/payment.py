@@ -14,7 +14,7 @@ from werkzeug import urls
 from odoo import api, fields, models, tools, _
 from odoo.addons.payment.models.payment_acquirer import ValidationError
 from odoo.addons.payment_adyen.controllers.main import AdyenController
-from odoo.tools.pycompat import to_native
+from odoo.tools.pycompat import to_text
 
 _logger = logging.getLogger(__name__)
 
@@ -193,7 +193,7 @@ class TxAdyen(models.Model):
             shasign_check = tx.acquirer_id._adyen_generate_merchant_sig_sha256('out', data)
         else:
             shasign_check = tx.acquirer_id._adyen_generate_merchant_sig('out', data)
-        if to_native(shasign_check) != to_native(data.get('merchantSig')):
+        if to_text(shasign_check) != to_text(data.get('merchantSig')):
             error_msg = _('Adyen: invalid merchantSig, received %s, computed %s') % (data.get('merchantSig'), shasign_check)
             _logger.warning(error_msg)
             raise ValidationError(error_msg)
@@ -218,24 +218,16 @@ class TxAdyen(models.Model):
     def _adyen_form_validate(self, data):
         status = data.get('authResult', 'PENDING')
         if status == 'AUTHORISED':
-            self.write({
-                'state': 'done',
-                'acquirer_reference': data.get('pspReference'),
-                # 'date_validate': data.get('payment_date', fields.datetime.now()),
-                # 'paypal_txn_type': data.get('express_checkout')
-            })
+            self.write({'acquirer_reference': data.get('pspReference')})
+            self._set_transaction_done()
             return True
         elif status == 'PENDING':
-            self.write({
-                'state': 'pending',
-                'acquirer_reference': data.get('pspReference'),
-            })
+            self.write({'acquirer_reference': data.get('pspReference')})
+            self._set_transaction_pending()
             return True
         else:
             error = _('Adyen: feedback error')
             _logger.info(error)
-            self.write({
-                'state': 'error',
-                'state_message': error
-            })
+            self.write({'state_message': error})
+            self._set_transaction_cancel()
             return False

@@ -60,7 +60,7 @@ FormController.include({
      */
     _barcodeAddX2MQuantity: function (barcode, activeBarcode) {
         if (this.mode === 'readonly') {
-            this.do_warn(_t('Error : Document not editable'),
+            this.do_warn(_t('Error: Document not editable'),
                 _t('To modify this document, please first start edition.'));
             return new $.Deferred().reject();
         }
@@ -91,6 +91,10 @@ FormController.include({
     _barcodePagerFirst: function () {
         var self = this;
         return this.mutex.exec(function () {}).then(function () {
+            if (!self.pager) {
+                self.do_warn(_t('Error: Pager not available'));
+                return;
+            }
             self.pager.updateState({
                 current_min: 1,
             }, {notifyChange: true});
@@ -102,6 +106,10 @@ FormController.include({
     _barcodePagerLast: function () {
         var self = this;
         return this.mutex.exec(function () {}).then(function () {
+            if (!self.pager) {
+                self.do_warn(_t('Error: Pager not available'));
+                return;
+            }
             var state = self.model.get(self.handle, {raw: true});
             self.pager.updateState({
                 current_min: state.count,
@@ -112,13 +120,27 @@ FormController.include({
      * @private
      */
     _barcodePagerNext: function () {
-        return this.mutex.exec(function () {}).then(this.pager.next.bind(this.pager));
+        var self = this;
+        return this.mutex.exec(function () {}).then(function () {
+            if (!self.pager) {
+                self.do_warn(_t('Error: Pager not available'));
+                return;
+            }
+            self.pager.next();
+        });
     },
     /**
      * @private
      */
     _barcodePagerPrevious: function () {
-        return this.mutex.exec(function () {}).then(this.pager.previous.bind(this.pager));
+        var self = this;
+        return this.mutex.exec(function () {}).then(function () {
+            if (!self.pager) {
+                self.do_warn(_t('Error: Pager not available'));
+                return;
+            }
+            self.pager.previous();
+        });
     },
     /**
      * Returns true iff the given barcode matches the given record (candidate).
@@ -301,7 +323,7 @@ FormController.include({
                 }
             }
             if (prefixed && !hasCommand) {
-                self.do_warn(_t('Error : Barcode command is undefined'), barcode);
+                self.do_warn(_t('Error: Barcode command is undefined'), barcode);
             }
             return self.alive($.when.apply($, defs)).then(function () {
                 if (!prefixed) {
@@ -337,7 +359,7 @@ FormController.include({
         }
 
         if (!_.compact(_.pluck(barcodeInfos, 'candidate')).length) {
-            return this.do_warn(_t('Error : No last scanned barcode'),
+            return this.do_warn(_t('Error: No last scanned barcode'),
                 _t('To set the quantity please scan a barcode first.'));
         }
 
@@ -406,8 +428,13 @@ FormRenderer.include({
             }
             return $.when();
         };
+        var name = node.attrs.name;
+        if (node.attrs.string) {
+            name = name + '_' + node.attrs.string;
+        }
+
         this.trigger_up('activeBarcode', {
-            name: node.attrs.name,
+            name: name,
             commands: commands
         });
     },

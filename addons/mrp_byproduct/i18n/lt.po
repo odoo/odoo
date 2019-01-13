@@ -3,10 +3,9 @@
 # * mrp_byproduct
 # 
 # Translators:
-# Martin Trigaux, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
 # digitouch UAB <digitouchagencyeur@gmail.com>, 2017
 # UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2017
-# Linas Versada <paulius.sladkevicius@gmail.com>, 2017
 # Audrius Palenskis <audrius.palenskis@gmail.com>, 2017
 msgid ""
 msgstr ""
@@ -20,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: lt\n"
-"Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. module: mrp_byproduct
 #: model:ir.model,name:mrp_byproduct.model_mrp_bom
@@ -35,18 +34,18 @@ msgstr "KS"
 #. module: mrp_byproduct
 #: model:ir.model,name:mrp_byproduct.model_mrp_subproduct
 msgid "Byproduct"
-msgstr "Subproduktas"
+msgstr ""
 
 #. module: mrp_byproduct
 #: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_bom_sub_products
-#: model:ir.ui.view,arch_db:mrp_byproduct.mrp_subproduct_view
+#: model_terms:ir.ui.view,arch_db:mrp_byproduct.mrp_subproduct_view
 msgid "Byproducts"
-msgstr "Subproduktai"
+msgstr ""
 
 #. module: mrp_byproduct
 #: model:ir.model,name:mrp_byproduct.model_change_production_qty
 msgid "Change Quantity of Products"
-msgstr "Keisti produktų kiekį"
+msgstr "Pakeisti produktų kiekį"
 
 #. module: mrp_byproduct
 #: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_create_uid
@@ -86,7 +85,7 @@ msgstr "Paskutinį kartą atnaujinta"
 #. module: mrp_byproduct
 #: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_operation_id
 msgid "Produced at Operation"
-msgstr "Pagamintas operacijoje"
+msgstr ""
 
 #. module: mrp_byproduct
 #: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_product_id
@@ -106,7 +105,7 @@ msgstr "Gamyba"
 #. module: mrp_byproduct
 #: model:ir.model,name:mrp_byproduct.model_mrp_product_produce
 msgid "Record Production"
-msgstr "Įrašyti produkciją"
+msgstr ""
 
 #. module: mrp_byproduct
 #: model:ir.model,name:mrp_byproduct.model_stock_move
@@ -121,7 +120,7 @@ msgstr "Subproduktas"
 #. module: mrp_byproduct
 #: model:ir.model.fields,help:mrp_byproduct.field_stock_move_subproduct_id
 msgid "Subproduct line that generated the move in a manufacturing order"
-msgstr "Subproduktų eilutė, kuri sugeneravo perkėlimą gamybos užsakyme"
+msgstr ""
 
 #. module: mrp_byproduct
 #: code:addons/mrp_byproduct/models/mrp_subproduct.py:32

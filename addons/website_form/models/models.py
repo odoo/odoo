@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import itertools
-
 from odoo import models, fields, api
 from odoo.http import request
 
@@ -10,7 +8,7 @@ from odoo.http import request
 class website_form_config(models.Model):
     _inherit = 'website'
 
-    website_form_enable_metadata = fields.Boolean('Write metadata', help="Enable writing metadata on form submit.")
+    website_form_enable_metadata = fields.Boolean('Technical data on contact form', help="You can choose to log technical data like IP, User Agent ,...")
 
     def _website_form_last_record(self):
         if request and request.session.form_builder_model_model:
@@ -18,8 +16,14 @@ class website_form_config(models.Model):
         return False
 
 
+class ResConfigSettings(models.TransientModel):
+    _inherit = 'res.config.settings'
+    website_form_enable_metadata = fields.Boolean(related="website_id.website_form_enable_metadata", readonly=False)
+
+
 class website_form_model(models.Model):
     _name = 'ir.model'
+    _description = 'Models'
     _inherit = 'ir.model'
 
     website_form_access = fields.Boolean('Allowed to use in forms', help='Enable the form builder feature for this model.')
@@ -71,6 +75,7 @@ class website_form_model(models.Model):
 class website_form_model_fields(models.Model):
     """ fields configuration for form builder """
     _name = 'ir.model.fields'
+    _description = 'Fields'
     _inherit = 'ir.model.fields'
 
     @api.model_cr

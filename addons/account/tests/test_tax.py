@@ -1,7 +1,9 @@
 from odoo.addons.account.tests.account_test_users import AccountTestUsers
 import time
+from odoo.tests import tagged
 
 
+@tagged('post_install', '-at_install')
 class TestTax(AccountTestUsers):
 
     def setUp(self):
@@ -60,6 +62,21 @@ class TestTax(AccountTestUsers):
                 (4, self.group_tax.id, 0),
                 (4, self.group_tax_bis.id, 0)
             ]
+        })
+        self.tax_with_no_account = self.tax_model.create({
+            'name': "Tax with no account",
+            'amount_type': 'fixed',
+            'amount': 0,
+            'sequence': 8,
+        })
+        some_account = self.env['account.account'].search([], limit=1)
+        self.tax_with_account = self.tax_model.create({
+            'name': "Tax with account",
+            'amount_type': 'fixed',
+            'account_id': some_account.id,
+            'refund_account_id': some_account.id,
+            'amount': 0,
+            'sequence': 8,
         })
         self.bank_journal = self.env['account.journal'].search([('type', '=', 'bank'), ('company_id', '=', self.account_manager.company_id.id)])[0]
         self.bank_account = self.bank_journal.default_debit_account_id
@@ -127,45 +144,14 @@ class TestTax(AccountTestUsers):
         res = self.division_tax.compute_all(200.0, currency=self.env.ref('base.VEF'))
         self.assertAlmostEqual(res['total_included'], 235.2941)
 
-    def test_tax_move_lines_creation(self):
-        """ Test that creating a move.line with tax_ids generates the tax move lines and adjust line amount when a tax is price_include """
+    def test_tax_with_no_account(self):
+        self.tax_with_no_account.amount = 10.0
+        res = self.tax_with_no_account.compute_all(200.0)
+        self.assertEquals(res['total_included'], 210)
+        self.assertEquals(res['total_void'], 210)
 
-        self.fixed_tax.price_include = True
-        self.fixed_tax.include_base_amount = True
-        company_id = self.env['res.users'].browse(self.env.uid).company_id.id
-        vals = {
-            'date': time.strftime('%Y-01-01'),
-            'journal_id': self.bank_journal.id,
-            'name': 'Test move',
-            'line_ids': [(0, 0, {
-                    'account_id': self.bank_account.id,
-                    'debit': 235,
-                    'credit': 0,
-                    'name': 'Bank Fees',
-                    'partner_id': False,
-                }), (0, 0, {
-                    'account_id': self.expense_account.id,
-                    'debit': 0,
-                    'credit': 200,
-                    'date': time.strftime('%Y-01-01'),
-                    'name': 'Bank Fees',
-                    'partner_id': False,
-                    'tax_ids': [(4, self.group_tax.id), (4, self.fixed_tax_bis.id)]
-                })],
-            'company_id': company_id,
-        }
-        move = self.env['account.move'].with_context(apply_taxes=True).create(vals)
-
-        aml_fixed_tax = move.line_ids.filtered(lambda l: l.tax_line_id.id == self.fixed_tax.id)
-        aml_percent_tax = move.line_ids.filtered(lambda l: l.tax_line_id.id == self.percent_tax.id)
-        aml_fixed_tax_bis = move.line_ids.filtered(lambda l: l.tax_line_id.id == self.fixed_tax_bis.id)
-        self.assertEquals(len(aml_fixed_tax), 1)
-        self.assertEquals(aml_fixed_tax.credit, 10)
-        self.assertEquals(len(aml_percent_tax), 1)
-        self.assertEquals(aml_percent_tax.credit, 20)
-        self.assertEquals(len(aml_fixed_tax_bis), 1)
-        self.assertEquals(aml_fixed_tax_bis.credit, 15)
-
-        aml_with_taxes = move.line_ids.filtered(lambda l: set(l.tax_ids.ids) == set([self.group_tax.id, self.fixed_tax_bis.id]))
-        self.assertEquals(len(aml_with_taxes), 1)
-        self.assertEquals(aml_with_taxes.credit, 190)
+    def test_tax_with_account(self):
+        self.tax_with_account.amount = 10.0
+        res = self.tax_with_account.compute_all(200.0)
+        self.assertEquals(res['total_included'], 210)
+        self.assertEquals(res['total_void'], 200)

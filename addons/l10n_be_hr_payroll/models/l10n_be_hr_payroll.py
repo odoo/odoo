@@ -9,12 +9,9 @@ from odoo.exceptions import ValidationError
 class HrContract(models.Model):
     _inherit = 'hr.contract'
 
-    transport_mode = fields.Selection([
-        ('company_car', 'Company car'),
-        ('public_transport', 'Public Transport'),
-        ('others', 'Other'),
-    ], string="Transport", default='company_car',
-    help="Transport mode the employee uses to go to work.")
+    transport_mode_car = fields.Boolean('Uses company car')
+    transport_mode_public = fields.Boolean('Uses public transportation')
+    transport_mode_others = fields.Boolean('Uses another transport mode')
     car_atn = fields.Monetary(string='ATN Company Car')
     public_transport_employee_amount = fields.Monetary('Paid by the employee (Monthly)')
     thirteen_month = fields.Monetary(compute='_compute_holidays_advantages', string='13th Month',
@@ -24,9 +21,10 @@ class HrContract(models.Model):
     warrant_value_employee = fields.Monetary(compute='_compute_warrants_cost', string="Warrant value for the employee")
 
     # Employer costs fields
-    final_yearly_costs = fields.Monetary(compute='_compute_final_yearly_costs', readonly=False,
-        string='Total Employee Cost', groups="hr.group_hr_manager",
-        track_visibility="onchange",
+    final_yearly_costs = fields.Monetary(compute='_compute_final_yearly_costs',
+        readonly=False, store=True,
+        string="Employee Budget",
+        tracking=True,
         help="Total yearly cost of the employee for the employer.")
     monthly_yearly_costs = fields.Monetary(compute='_compute_monthly_yearly_costs', string='Monthly Equivalent Cost', readonly=True,
         help="Total monthly cost of the employee for the employer.")
@@ -37,54 +35,53 @@ class HrContract(models.Model):
     company_car_total_depreciated_cost = fields.Monetary()
     public_transport_reimbursed_amount = fields.Monetary(string='Reimbursed amount',
         compute='_compute_public_transport_reimbursed_amount', readonly=False, store=True)
-    others_reimbursed_amount = fields.Monetary(string='Reimbursed amount')
+    others_reimbursed_amount = fields.Monetary(string='Other Reimbursed amount')
     transport_employer_cost = fields.Monetary(compute='_compute_transport_employer_cost', string="Employer cost from employee transports")
     warrants_cost = fields.Monetary(compute='_compute_warrants_cost')
 
     # Advantages
     commission_on_target = fields.Monetary(string="Commission on Target",
-        default=lambda self: self.get_attribute('commission_on_target', 'default_value'),
-        track_visibility="onchange",
+        tracking=True,
         help="Monthly gross amount that the employee receives if the target is reached.")
     fuel_card = fields.Monetary(string="Fuel Card",
-        default=lambda self: self.get_attribute('fuel_card', 'default_value'),
-        track_visibility="onchange",
+        tracking=True,
         help="Monthly amount the employee receives on his fuel card.")
     internet = fields.Monetary(string="Internet",
-        default=lambda self: self.get_attribute('internet', 'default_value'),
-        track_visibility="onchange",
+        tracking=True,
         help="The employee's internet subcription will be paid up to this amount.")
     representation_fees = fields.Monetary(string="Representation Fees",
-        default=lambda self: self.get_attribute('representation_fees', 'default_value'),
-        track_visibility="onchange",
+        tracking=True,
         help="Monthly net amount the employee receives to cover his representation fees.")
     mobile = fields.Monetary(string="Mobile",
-        default=lambda self: self.get_attribute('mobile', 'default_value'),
-        track_visibility="onchange",
+        tracking=True,
         help="The employee's mobile subscription will be paid up to this amount.")
     mobile_plus = fields.Monetary(string="International Communication",
-        default=lambda self: self.get_attribute('mobile_plus', 'default_value'),
-        track_visibility="onchange",
+        tracking=True,
         help="The employee's mobile subscription for international communication will be paid up to this amount.")
     meal_voucher_amount = fields.Monetary(string="Meal Vouchers",
-        default=lambda self: self.get_attribute('meal_voucher_amount', 'default_value'),
-        track_visibility="onchange",
+        tracking=True,
         help="Amount the employee receives in the form of meal vouchers per worked day.")
     holidays = fields.Float(string='Legal Leaves',
-        default=lambda self: self.get_attribute('holidays', 'default_value'),
         help="Number of days of paid leaves the employee gets per year.")
     holidays_editable = fields.Boolean(string="Editable Leaves", default=True)
     holidays_compensation = fields.Monetary(compute='_compute_holidays_compensation', string="Holidays Compensation")
-    wage_with_holidays = fields.Monetary(compute='_compute_wage_with_holidays', inverse='_inverse_wage_with_holidays', string="Wage update with holidays retenues")
+    wage_with_holidays = fields.Monetary(compute='_compute_wage_with_holidays', inverse='_inverse_wage_with_holidays',
+        tracking=True, string="Wage update with holidays retenues")
     additional_net_amount = fields.Monetary(string="Net Supplements",
-        track_visibility="onchange",
+        tracking=True,
         help="Monthly net amount the employee receives.")
     retained_net_amount = fields.Monetary(sting="Net Retained",
-        track_visibility="onchange",
+        tracking=True,
         help="Monthly net amount that is retained on the employee's salary.")
     eco_checks = fields.Monetary("Eco Vouchers",
-        default=lambda self: self.get_attribute('eco_checks', 'default_value'),
         help="Yearly amount the employee receives in the form of eco vouchers.")
+    ip = fields.Boolean(default=False, tracking=True)
+    ip_wage_rate = fields.Float(string="IP percentage", help="Should be between 0 and 100 %")
+
+    @api.constrains('ip_wage_rate')
+    def _check_ip_wage_rate(self):
+        if self.filtered(lambda contract: contract.ip_wage_rate < 0 or contract.ip_wage_rate > 100):
+            raise ValidationError(_('The IP rate on wage should be between 0 and 100'))
 
     @api.depends('holidays', 'wage', 'final_yearly_costs')
     def _compute_wage_with_holidays(self):
@@ -112,21 +109,24 @@ class HrContract(models.Model):
             else:
                 contract.wage = contract.wage_with_holidays
 
-    @api.depends('transport_mode', 'company_car_total_depreciated_cost',
-        'public_transport_reimbursed_amount', 'others_reimbursed_amount')
+    @api.depends('transport_mode_car', 'transport_mode_public', 'transport_mode_others',
+        'company_car_total_depreciated_cost', 'public_transport_reimbursed_amount', 'others_reimbursed_amount')
     def _compute_transport_employer_cost(self):
+        # Don't call to super has we ovewrite the method
         for contract in self:
-            if contract.transport_mode == 'company_car':
-                contract.transport_employer_cost = contract.company_car_total_depreciated_cost
-            elif contract.transport_mode == 'public_transport':
-                contract.transport_employer_cost = contract.public_transport_reimbursed_amount
-            elif contract.transport_mode == 'others':
-                contract.transport_employer_cost = contract.others_reimbursed_amount
+            transport_employer_cost = 0.0
+            if contract.transport_mode_car:
+                transport_employer_cost += contract.company_car_total_depreciated_cost
+            if contract.transport_mode_public:
+                transport_employer_cost += contract.public_transport_reimbursed_amount
+            if contract.transport_mode_others:
+                transport_employer_cost += contract.others_reimbursed_amount
+            contract.transport_employer_cost = transport_employer_cost
 
     @api.depends('commission_on_target')
     def _compute_warrants_cost(self):
         for contract in self:
-            contract.warrants_cost = contract.commission_on_target * 1.326 * 1.05 * 12.0
+            contract.warrants_cost = contract.commission_on_target * 1.326 / 1.05 * 12.0
             contract.warrant_value_employee = contract.commission_on_target * 1.326 * (1.00 - 0.535) * 12.0
 
     @api.depends('wage', 'fuel_card', 'representation_fees', 'transport_employer_cost',
@@ -203,34 +203,27 @@ class HrContract(models.Model):
             contract.double_holidays = contract.wage * 0.92
             contract.thirteen_month = contract.wage
 
-    @api.onchange('transport_mode')
+    @api.onchange('transport_mode_car', 'transport_mode_public', 'transport_mode_others')
     def _onchange_transport_mode(self):
-        if self.transport_mode != 'company_car':
+        if not self.transport_mode_car:
             self.fuel_card = 0
             self.company_car_total_depreciated_cost = 0
-        if self.transport_mode != 'others':
+        if not self.transport_mode_others:
             self.others_reimbursed_amount = 0
-        if self.transport_mode != 'public_transports':
+        if not self.transport_mode_public:
             self.public_transport_reimbursed_amount = 0
 
     @api.onchange('mobile', 'mobile_plus')
     def _onchange_mobile(self):
         if self.mobile_plus and not self.mobile:
-            raise ValidationError(_('You should have a mobile subscription to select an international communication amount!'))
-
-    def _get_internet_amount(self, has_internet):
-        if has_internet:
-            return self.get_attribute('internet', 'default_value')
-        else:
-            return 0.0
+            raise ValidationError(_('You should have a mobile subscription to select an international communication amount.'))
 
     def _get_mobile_amount(self, has_mobile, international_communication):
         if has_mobile and international_communication:
-            return self.get_attribute('mobile', 'default_value') + self.get_attribute('mobile_plus', 'default_value')
-        elif has_mobile:
-            return self.get_attribute('mobile', 'default_value')
-        else:
-            return 0.0
+            return self.env['ir.default'].sudo().get('hr.contract', 'mobile') + self.env['ir.default'].sudo().get('hr.contract', 'mobile_plus')
+        if has_mobile:
+            return self.env['ir.default'].sudo().get('hr.contract', 'mobile')
+        return 0.0
 
     def _get_gross_from_employer_costs(self, yearly_cost):
         contract = self

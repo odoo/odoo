@@ -3,17 +3,17 @@
 # * hr_payroll
 # 
 # Translators:
-# Martin Trigaux, 2017
-# Link Up링크업 <linkup.way@gmail.com>, 2018
-# Mark Lee <odoos@soti.33mail.com>, 2018
+# Martin Trigaux, 2018
 # 최재호 <hwangtog@gmail.com>, 2018
+# Link Up링크업 <linkup.way@gmail.com>, 2018
 # Linkup <link-up@naver.com>, 2018
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 11.0\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-06-27 15:42+0000\n"
-"PO-Revision-Date: 2018-06-27 15:42+0000\n"
+"POT-Creation-Date: 2018-10-08 06:48+0000\n"
+"PO-Revision-Date: 2018-08-24 09:19+0000\n"
 "Last-Translator: Linkup <link-up@naver.com>, 2018\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
@@ -23,13 +23,13 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_salary_rule.py:41
+#: code:addons/hr_payroll/models/hr_salary_rule.py:42
 #, python-format
 msgid "%s (copy)"
-msgstr "%s (복사)"
+msgstr "%s (사본)"
 
 #. module: hr_payroll
-#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_state
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip__state
 msgid ""
 "* When the payslip is created the status is 'Draft'\n"
 "                \n"
@@ -41,117 +41,140 @@ msgid ""
 msgstr ""
 
 #. module: hr_payroll
-#: model:ir.ui.view,arch_db:hr_payroll.report_payslip
-#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+#: model_terms:ir.ui.view,arch_db:hr_payroll.res_config_settings_view_form
+msgid "<span class=\"o_form_label\">Payroll Rules</span>"
+msgstr ""
+
+#. module: hr_payroll
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_by_employees
+msgid ""
+"<span colspan=\"4\" nolabel=\"1\">This wizard will generate payslips for all"
+" selected employee(s) based on the dates and credit note specified on "
+"Payslips Run.</span>"
+msgstr ""
+
+#. module: hr_payroll
+#: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslip
+#: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "<strong>Address</strong>"
 msgstr ""
 
 #. module: hr_payroll
-#: model:ir.ui.view,arch_db:hr_payroll.report_payslip
-#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+#: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslip
+#: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "<strong>Authorized signature</strong>"
 msgstr ""
 
 #. module: hr_payroll
-#: model:ir.ui.view,arch_db:hr_payroll.report_payslip
-#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+#: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslip
+#: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "<strong>Bank Account</strong>"
 msgstr ""
 
 #. module: hr_payroll
-#: model:ir.ui.view,arch_db:hr_payroll.report_contributionregister
+#: model_terms:ir.ui.view,arch_db:hr_payroll.report_contributionregister
 msgid "<strong>Date From:</strong>"
 msgstr ""
 
 #. module: hr_payroll
-#: model:ir.ui.view,arch_db:hr_payroll.report_payslip
-#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+#: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslip
+#: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "<strong>Date From</strong>"
 msgstr ""
 
 #. module: hr_payroll
-#: model:ir.ui.view,arch_db:hr_payroll.report_contributionregister
+#: model_terms:ir.ui.view,arch_db:hr_payroll.report_contributionregister
 msgid "<strong>Date To:</strong>"
 msgstr ""
 
 #. module: hr_payroll
-#: model:ir.ui.view,arch_db:hr_payroll.report_payslip
-#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+#: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslip
+#: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "<strong>Date To</strong>"
 msgstr ""
 
 #. module: hr_payroll
-#: model:ir.ui.view,arch_db:hr_payroll.report_payslip
-#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+#: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslip
+#: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "<strong>Designation</strong>"
 msgstr ""
 
 #. module: hr_payroll
-#: model:ir.ui.view,arch_db:hr_payroll.report_payslip
-#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+#: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslip
+#: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "<strong>Email</strong>"
 msgstr ""
 
 #. module: hr_payroll
-#: model:ir.ui.view,arch_db:hr_payroll.report_payslip
-#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+#: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslip
+#: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "<strong>Identification No</strong>"
 msgstr ""
 
 #. module: hr_payroll
-#: model:ir.ui.view,arch_db:hr_payroll.report_payslip
-#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+#: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslip
+#: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "<strong>Name</strong>"
 msgstr ""
 
 #. module: hr_payroll
-#: model:ir.ui.view,arch_db:hr_payroll.report_payslip
-#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+#: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslip
+#: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "<strong>Reference</strong>"
 msgstr ""
 
 #. module: hr_payroll
-#: model:ir.ui.view,arch_db:hr_payroll.report_contributionregister
+#: model_terms:ir.ui.view,arch_db:hr_payroll.report_contributionregister
 msgid "<strong>Register Name:</strong>"
 msgstr ""
 
 #. module: hr_payroll
-#: model:ir.ui.view,arch_db:hr_payroll.report_contributionregister
+#: model_terms:ir.ui.view,arch_db:hr_payroll.report_contributionregister
 msgid "<strong>Total</strong>"
 msgstr "<strong>합계</strong>"
 
 #. module: hr_payroll
-#: model:ir.actions.act_window,help:hr_payroll.action_contribution_register_form
+#: model_terms:ir.actions.act_window,help:hr_payroll.action_contribution_register_form
 msgid ""
 "A contribution register is a third party involved in the salary\n"
 "            payment of the employees. It can be the social security, the\n"
-"            estate or anyone that collect or inject money on payslips."
+"            state or anyone that collect or inject money on payslips."
 msgstr ""
 
 #. module: hr_payroll
-#: model:ir.ui.view,arch_db:hr_payroll.res_config_settings_view_form
-#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+#: model:ir.model.fields,field_description:hr_payroll.field_res_config_settings__module_account_accountant
+msgid "Account Accountant"
+msgstr ""
+
+#. module: hr_payroll
+#: model_terms:ir.ui.view,arch_db:hr_payroll.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Accounting"
 msgstr "회계"
 
 #. module: hr_payroll
-#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Accounting Information"
 msgstr "회계 정보"
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_active
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_active
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__active
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__active
 msgid "Active"
-msgstr "활성화"
+msgstr "활성"
 
 #. module: hr_payroll
-#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+#: model_terms:ir.actions.act_window,help:hr_payroll.action_contribution_register_form
+msgid "Add a new contribution register"
+msgstr ""
+
+#. module: hr_payroll
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Add an internal note..."
-msgstr "내부 노트 추가..."
+msgstr "내부 메모 추가..."
 
 #. module: hr_payroll
-#: model:ir.ui.view,arch_db:hr_payroll.hr_contract_advantage_template_view_form
+#: model_terms:ir.ui.view,arch_db:hr_payroll.hr_contract_advantage_template_view_form
 msgid "Advantage Name"
 msgstr ""
 
@@ -172,18 +195,18 @@ msgid "Always True"
 msgstr "항상 참"
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input_amount
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_amount
-#: model:ir.ui.view,arch_db:hr_payroll.report_contributionregister
-#: model:ir.ui.view,arch_db:hr_payroll.report_payslip
-#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input__amount
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__amount
+#: model_terms:ir.ui.view,arch_db:hr_payroll.report_contributionregister
+#: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslip
+#: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "Amount"
 msgstr "금액"
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_amount_select
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_amount_select
-#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_filter
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__amount_select
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__amount_select
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_filter
 msgid "Amount Type"
 msgstr "금액 유형"
 
@@ -193,14 +216,14 @@ msgid "Annually"
 msgstr "매년"
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_appears_on_payslip
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_appears_on_payslip
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__appears_on_payslip
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__appears_on_payslip
 msgid "Appears on Payslip"
 msgstr "급여 명세서에 표시"
 
 #. module: hr_payroll
-#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_condition_python
-#: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_condition_python
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line__condition_python
+#: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule__condition_python
 msgid ""
 "Applied this rule for calculation if condition is true. You can specify "
 "condition like basic > 1000."
@@ -209,7 +232,7 @@ msgstr "이 규칙이 계산에 적용되면 조건은 참입니다. 귀하는 �
 #. module: hr_payroll
 #: model:hr.salary.rule.category,name:hr_payroll.BASIC
 msgid "Basic"
-msgstr "기준"
+msgstr "기본"
 
 #. module: hr_payroll
 #: model:hr.salary.rule,name:hr_payroll.hr_rule_basic
@@ -217,7 +240,7 @@ msgid "Basic Salary"
 msgstr ""
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_res_config_settings_module_l10n_be_hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_res_config_settings__module_l10n_be_hr_payroll
 msgid "Belgium Payroll"
 msgstr ""
 
@@ -232,148 +255,148 @@ msgid "Bi-weekly"
 msgstr "격주"
 
 #. module: hr_payroll
-#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_form
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_form
 msgid "Calculations"
 msgstr "계산"
 
 #. module: hr_payroll
-#: model:ir.ui.view,arch_db:hr_payroll.view_payslip_lines_contribution_register
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_payslip_lines_contribution_register
 msgid "Cancel"
 msgstr "취소"
 
 #. module: hr_payroll
-#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Cancel Payslip"
 msgstr "급여 명세서 취소"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payslip.py:98
+#: code:addons/hr_payroll/models/hr_payslip.py:96
 #, python-format
 msgid "Cannot cancel a payslip that is done."
 msgstr ""
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_category_id
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_id_7804
-#: model:ir.ui.view,arch_db:hr_payroll.view_hr_rule_filter
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__category_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__category_id
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_rule_filter
 msgid "Category"
 msgstr "분류"
 
 #. module: hr_payroll
-#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
+#: model_terms:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
 msgid "Child Rules"
 msgstr "하위 규칙"
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_child_ids
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_child_ids
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__child_ids
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__child_ids
 msgid "Child Salary Rule"
 msgstr "하위 월급 규칙"
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_children_ids
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_children_ids
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure__children_ids
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category__children_ids
 msgid "Children"
-msgstr "하위 요소"
+msgstr "아동"
 
 #. module: hr_payroll
-#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
+#: model_terms:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
 msgid "Children Definition"
 msgstr "하위 정의"
 
 #. module: hr_payroll
-#: model:ir.ui.view,arch_db:hr_payroll.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:hr_payroll.res_config_settings_view_form
 msgid "Choose a Payroll Localization"
 msgstr ""
 
 #. module: hr_payroll
-#: model:ir.actions.act_window,help:hr_payroll.action_contribution_register_form
-msgid "Click to add a new contribution register."
-msgstr ""
-
-#. module: hr_payroll
 #: selection:hr.payslip.run,state:0
-#: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_form
+#: model_terms:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_form
 msgid "Close"
-msgstr "닫기"
+msgstr "마감"
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template_code
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input_code
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_code
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days_code
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_rule_input_code
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_code
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_code
-#: model:ir.ui.view,arch_db:hr_payroll.report_contributionregister
-#: model:ir.ui.view,arch_db:hr_payroll.report_payslip
-#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template__code
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input__code
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__code
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days__code
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_rule_input__code
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__code
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category__code
+#: model_terms:ir.ui.view,arch_db:hr_payroll.report_contributionregister
+#: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslip
+#: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "Code"
 msgstr "코드"
 
 #. module: hr_payroll
-#: model:ir.ui.view,arch_db:hr_payroll.hr_payroll_structure_view_kanban
-#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr_payroll.hr_payroll_structure_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_view_kanban
 msgid "Code:"
 msgstr ""
 
 #. module: hr_payroll
-#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
 msgid "Companies"
-msgstr "회사"
+msgstr "회사들"
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register_company_id
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_company_id
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_company_id
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_company_id
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_company_id
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_company_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register__company_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure__company_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__company_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__company_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__company_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category__company_id
 msgid "Company"
 msgstr "회사"
 
 #. module: hr_payroll
 #: model:hr.salary.rule.category,name:hr_payroll.COMP
-#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
+#: model_terms:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
 msgid "Company Contribution"
 msgstr "회사 공제분"
 
 #. module: hr_payroll
-#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
+#: model_terms:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
 msgid "Computation"
 msgstr "계산"
 
 #. module: hr_payroll
-#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Compute Sheet"
 msgstr "명세서 계산"
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_condition_select
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_condition_select
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__condition_select
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__condition_select
 msgid "Condition Based on"
 msgstr "기준 조건"
 
 #. module: hr_payroll
-#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
+#: model_terms:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
 msgid "Conditions"
 msgstr "조건"
 
 #. module: hr_payroll
-#: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_configuration
-msgid "Configuration"
-msgstr "환경 설정"
+#: model:ir.model,name:hr_payroll.model_res_config_settings
+msgid "Config Settings"
+msgstr ""
 
 #. module: hr_payroll
-#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+#: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_configuration
+msgid "Configuration"
+msgstr "구성"
+
+#. module: hr_payroll
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Confirm"
 msgstr "확인"
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_contract_id
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input_contract_id
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_contract_id
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days_contract_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__contract_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input__contract_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__contract_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days__contract_id
 msgid "Contract"
 msgstr "계약"
 
@@ -384,28 +407,28 @@ msgid "Contract Advantage Templates"
 msgstr ""
 
 #. module: hr_payroll
-#: model:ir.ui.view,arch_db:hr_payroll.hr_contribution_register_form
+#: model_terms:ir.ui.view,arch_db:hr_payroll.hr_contribution_register_form
 msgid "Contribution"
 msgstr "공제"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_contribution_register
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_register_id
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_register_id
-#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_filter
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__register_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__register_id
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_filter
 msgid "Contribution Register"
 msgstr "공제 항목"
 
 #. module: hr_payroll
-#: model:ir.ui.view,arch_db:hr_payroll.view_payslip_lines_contribution_register
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_payslip_lines_contribution_register
 msgid "Contribution Register's Payslip Lines"
 msgstr "공제 항목 급여 명세"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_contribution_register_form
 #: model:ir.ui.menu,name:hr_payroll.menu_action_hr_contribution_register_form
-#: model:ir.ui.view,arch_db:hr_payroll.hr_contribution_register_filter
-#: model:ir.ui.view,arch_db:hr_payroll.hr_contribution_register_tree
+#: model_terms:ir.ui.view,arch_db:hr_payroll.hr_contribution_register_filter
+#: model_terms:ir.ui.view,arch_db:hr_payroll.hr_contribution_register_tree
 msgid "Contribution Registers"
 msgstr "공제 항목"
 
@@ -420,56 +443,56 @@ msgid "Conveyance Allowance For Gravie"
 msgstr ""
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template_create_uid
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register_create_uid
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_create_uid
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_create_uid
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_employees_create_uid
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input_create_uid
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_create_uid
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run_create_uid
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days_create_uid
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_rule_input_create_uid
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_create_uid
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_create_uid
-#: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register_create_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template__create_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register__create_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure__create_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__create_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_employees__create_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input__create_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__create_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run__create_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days__create_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_rule_input__create_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__create_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category__create_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register__create_uid
 msgid "Created by"
 msgstr "작성자"
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template_create_date
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register_create_date
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_create_date
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_create_date
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_employees_create_date
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input_create_date
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_create_date
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run_create_date
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days_create_date
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_rule_input_create_date
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_create_date
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_create_date
-#: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register_create_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template__create_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register__create_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure__create_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__create_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_employees__create_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input__create_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__create_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run__create_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days__create_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_rule_input__create_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__create_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category__create_date
+#: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register__create_date
 msgid "Created on"
 msgstr "작성일"
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_credit_note
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run_credit_note
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__credit_note
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run__credit_note
 msgid "Credit Note"
-msgstr "대변 노트"
+msgstr "신용 전표"
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_date_from
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run_date_start
-#: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register_date_from
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__date_from
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run__date_start
+#: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register__date_from
 msgid "Date From"
 msgstr "시작일"
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_date_to
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run_date_end
-#: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register_date_to
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__date_to
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run__date_end
+#: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register__date_to
 msgid "Date To"
 msgstr "종료일"
 
@@ -479,17 +502,17 @@ msgid "Deduction"
 msgstr ""
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template_default_value
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template__default_value
 msgid "Default value for this advantage"
 msgstr ""
 
 #. module: hr_payroll
-#: model:ir.model.fields,help:hr_payroll.field_hr_contract_schedule_pay
+#: model:ir.model.fields,help:hr_payroll.field_hr_contract__schedule_pay
 msgid "Defines the frequency of the wage payment."
 msgstr ""
 
 #. module: hr_payroll
-#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_struct_id
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip__struct_id
 msgid ""
 "Defines the rules that have to be applied to this payslip, accordingly to "
 "the contract chosen. If you let empty the field contract, this field isn't "
@@ -498,99 +521,99 @@ msgid ""
 msgstr ""
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register_note
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_note
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input_name
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_note
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days_name
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_rule_input_name
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_note
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_note
-#: model:ir.ui.view,arch_db:hr_payroll.hr_contribution_register_form
-#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register__note
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure__note
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input__name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__note
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days__name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_rule_input__name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__note
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category__note
+#: model_terms:ir.ui.view,arch_db:hr_payroll.hr_contribution_register_form
+#: model_terms:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
 msgid "Description"
-msgstr "설명"
+msgstr "내용"
 
 #. module: hr_payroll
-#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Details By Salary Rule Category"
 msgstr "월급 규칙 분류의 세부사항"
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_details_by_salary_rule_category
-#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__details_by_salary_rule_category
+#: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "Details by Salary Rule Category"
 msgstr "월급 규칙 분류의 세부사항"
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template_display_name
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register_display_name
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_display_name
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_display_name
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_employees_display_name
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input_display_name
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_display_name
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run_display_name
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days_display_name
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_rule_input_display_name
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_display_name
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_display_name
-#: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register_display_name
-#: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_contributionregister_display_name
-#: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_payslipdetails_display_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template__display_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register__display_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure__display_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__display_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_employees__display_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input__display_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__display_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run__display_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days__display_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_rule_input__display_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__display_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category__display_name
+#: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register__display_name
+#: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_contributionregister__display_name
+#: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_payslipdetails__display_name
 msgid "Display Name"
-msgstr "표시 이름"
+msgstr "이름 표시"
 
 #. module: hr_payroll
 #: selection:hr.payslip,state:0
-#: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_filter
-#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
+#: model_terms:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_filter
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
 msgid "Done"
 msgstr "완료"
 
 #. module: hr_payroll
-#: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_filter
+#: model_terms:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_filter
 msgid "Done Payslip Batches"
 msgstr "급여 명세서 일괄 작업 완료"
 
 #. module: hr_payroll
-#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
 msgid "Done Slip"
 msgstr "명세서 완료"
 
 #. module: hr_payroll
 #: selection:hr.payslip,state:0 selection:hr.payslip.run,state:0
-#: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_filter
-#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
+#: model_terms:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_filter
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
 msgid "Draft"
-msgstr "기안"
+msgstr "임시"
 
 #. module: hr_payroll
-#: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_filter
+#: model_terms:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_filter
 msgid "Draft Payslip Batches"
 msgstr "급여 명세서 일괄 작업 기안"
 
 #. module: hr_payroll
-#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
 msgid "Draft Slip"
 msgstr "명세서 기안"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_employee
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_employee_id
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_employee_id
-#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__employee_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__employee_id
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Employee"
 msgstr "임직원"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_contract
 msgid "Employee Contract"
-msgstr "직원 계약"
+msgstr "근로계약서"
 
 #. module: hr_payroll
-#: model:ir.ui.view,arch_db:hr_payroll.view_hr_employee_grade_form
-#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payroll_structure_list_view
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_employee_grade_form
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payroll_structure_list_view
 msgid "Employee Function"
 msgstr "임직원 기능"
 
@@ -606,82 +629,81 @@ msgid "Employee's Advantage on Contract"
 msgstr ""
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_employees_employee_ids
-#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_by_employees
-#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
-#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_filter
+#: model:ir.model.fields,help:hr_payroll.field_hr_contract__resource_calendar_id
+msgid "Employee's working schedule."
+msgstr ""
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_employees__employee_ids
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_by_employees
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_filter
 msgid "Employees"
 msgstr "임직원"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_salary_rule.py:36
-#, python-format
-msgid "Error ! You cannot create a recursive Salary Structure."
-msgstr "오류! 월급 구조를 재귀적으로 만들 수 없습니다."
-
-#. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_salary_rule.py:91
+#: code:addons/hr_payroll/models/hr_salary_rule.py:92
 #, python-format
 msgid "Error! You cannot create recursive hierarchy of Salary Rule Category."
 msgstr ""
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_salary_rule.py:176
+#: code:addons/hr_payroll/models/hr_salary_rule.py:179
 #, python-format
 msgid "Error! You cannot create recursive hierarchy of Salary Rules."
 msgstr ""
 
 #. module: hr_payroll
-#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_register_id
-#: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_register_id
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line__register_id
+#: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule__register_id
 msgid "Eventual third party involved in the salary payment of the employees."
 msgstr ""
 
 #. module: hr_payroll
 #: selection:hr.payslip.line,amount_select:0
 #: selection:hr.salary.rule,amount_select:0
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_amount_fix
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_amount_fix
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__amount_fix
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__amount_fix
 msgid "Fixed Amount"
-msgstr "고정금액"
+msgstr "고정 금액"
 
 #. module: hr_payroll
-#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_amount_percentage
-#: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_amount_percentage
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line__amount_percentage
+#: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule__amount_percentage
 msgid "For example, enter 50.0 to apply a percentage of 50%"
 msgstr "예를 들면 50%의 비율을 적용하려면 50.0을 입력합니다"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/report/report_contribution_register.py:34
+#: code:addons/hr_payroll/report/report_contribution_register.py:35
 #, python-format
 msgid "Form content is missing, this report cannot be printed."
 msgstr "양식 내용이 누락되어서 이 보고서를 인쇄할 수 없습니다."
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_res_config_settings_module_l10n_fr_hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_res_config_settings__module_l10n_fr_hr_payroll
 msgid "French Payroll"
 msgstr ""
 
 #. module: hr_payroll
-#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
+#: model_terms:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
 msgid "General"
 msgstr "일반"
 
 #. module: hr_payroll
-#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_by_employees
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_by_employees
 msgid "Generate"
 msgstr "생성"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_hr_payslip_by_employees
-#: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_form
+#: model_terms:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_form
 msgid "Generate Payslips"
 msgstr "급여 명세서 생성"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payslip_employees
 msgid "Generate payslips for all selected employees"
-msgstr "선택한 모든 임직원의 급여 명세서 생성"
+msgstr "선택한 직원의 급여명세서 일괄 생성"
 
 #. module: hr_payroll
 #: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_sales_commission
@@ -695,11 +717,11 @@ msgid "Gross"
 msgstr ""
 
 #. module: hr_payroll
-#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
-#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_filter
-#: model:ir.ui.view,arch_db:hr_payroll.view_hr_rule_filter
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_filter
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_rule_filter
 msgid "Group By"
-msgstr "그룹화"
+msgstr "그룹별"
 
 #. module: hr_payroll
 #: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_houserentallowance1
@@ -707,74 +729,74 @@ msgid "House Rent Allowance"
 msgstr ""
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template_id
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register_id
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_id
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_employees_id
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_id
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input_id
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_id
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run_id
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days_id
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_rule_input_id
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_id
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_id
-#: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register_id
-#: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_contributionregister_id
-#: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_payslipdetails_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template__id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register__id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure__id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_employees__id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input__id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run__id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days__id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_rule_input__id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category__id
+#: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register__id
+#: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_contributionregister__id
+#: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_payslipdetails__id
 msgid "ID"
 msgstr "ID"
 
 #. module: hr_payroll
-#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_run_credit_note
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_run__credit_note
 msgid ""
 "If its checked, indicates that all payslips generated from here are refund "
 "payslips."
 msgstr "선택하면 여기에서 생성된 모든 급여 명세서는 환불 급여 명세서로 표시됩니다."
 
 #. module: hr_payroll
-#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_active
-#: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_active
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line__active
+#: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule__active
 msgid ""
 "If the active field is set to false, it will allow you to hide the salary "
 "rule without removing it."
 msgstr "사용중인 필드를 아니오로 설정하면 제거하지 않고 월급 규칙을 숨길 수 있습니다."
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_res_config_settings_module_l10n_in_hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_res_config_settings__module_l10n_in_hr_payroll
 msgid "Indian Payroll"
 msgstr ""
 
 #. module: hr_payroll
-#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_credit_note
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip__credit_note
 msgid "Indicates this payslip has a refund of another"
 msgstr "이 급여 명세서가 다른 환불을 나타냅니다"
 
 #. module: hr_payroll
-#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
-#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+#: model_terms:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Input Data"
 msgstr "입력 데이터"
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_input_ids
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_input_ids
-#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__input_ids
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__input_ids
+#: model_terms:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
 msgid "Inputs"
 msgstr "입력"
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_note
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__note
 msgid "Internal Note"
-msgstr "내부 노트"
+msgstr "내부 메모"
 
 #. module: hr_payroll
-#: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_view_kanban
 msgid "Is a Blocking Reason?"
 msgstr ""
 
 #. module: hr_payroll
-#: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_quantity
+#: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule__quantity
 msgid ""
 "It is used in computation for percentage and fixed amount. For e.g. A rule "
 "for Meal Voucher having fixed amount of 1€ per worked day can have its "
@@ -782,7 +804,7 @@ msgid ""
 msgstr ""
 
 #. module: hr_payroll
-#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_input_amount
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_input__amount
 msgid ""
 "It is used in computation. For e.g. A rule for sales having 1% commission of"
 " basic salary for per product can defined in expression like result = "
@@ -790,77 +812,77 @@ msgid ""
 msgstr ""
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template___last_update
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register___last_update
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure___last_update
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip___last_update
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_employees___last_update
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input___last_update
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line___last_update
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run___last_update
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days___last_update
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_rule_input___last_update
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule___last_update
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category___last_update
-#: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register___last_update
-#: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_contributionregister___last_update
-#: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_payslipdetails___last_update
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template____last_update
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register____last_update
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure____last_update
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip____last_update
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_employees____last_update
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input____last_update
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line____last_update
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run____last_update
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days____last_update
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_rule_input____last_update
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule____last_update
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category____last_update
+#: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register____last_update
+#: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_contributionregister____last_update
+#: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_payslipdetails____last_update
 msgid "Last Modified on"
 msgstr "최근 수정"
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template_write_uid
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register_write_uid
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_write_uid
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_employees_write_uid
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input_write_uid
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_write_uid
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run_write_uid
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days_write_uid
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_write_uid
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_rule_input_write_uid
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_write_uid
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_write_uid
-#: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register_write_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template__write_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register__write_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure__write_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__write_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_employees__write_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input__write_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__write_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run__write_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days__write_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_rule_input__write_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__write_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category__write_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register__write_uid
 msgid "Last Updated by"
 msgstr "최근 갱신한 사람"
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template_write_date
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register_write_date
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_write_date
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_employees_write_date
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input_write_date
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_write_date
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run_write_date
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days_write_date
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_write_date
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_rule_input_write_date
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_write_date
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_write_date
-#: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register_write_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template__write_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register__write_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure__write_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__write_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_employees__write_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input__write_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__write_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run__write_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days__write_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_rule_input__write_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__write_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category__write_date
+#: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register__write_date
 msgid "Last Updated on"
 msgstr "최근 갱신 날짜"
 
 #. module: hr_payroll
-#: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_category_parent_id
+#: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_category__parent_id
 msgid ""
 "Linking a salary category to its parent is used only for the reporting "
 "purpose."
 msgstr "보고 목적으로만 사용되는 상위 요소에 월급 분류 연결하기."
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template_lower_bound
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template__lower_bound
 msgid "Lower Bound"
 msgstr ""
 
 #. module: hr_payroll
-#: model:ir.model.fields,help:hr_payroll.field_hr_contract_advantage_template_lower_bound
+#: model:ir.model.fields,help:hr_payroll.field_hr_contract_advantage_template__lower_bound
 msgid "Lower bound authorized by the employer for this advantage"
 msgstr ""
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_paid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__paid
 msgid "Made Payment Order ? "
 msgstr "지급 명령 만들기 ? "
 
@@ -870,8 +892,8 @@ msgid "Manager"
 msgstr "관리자"
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_condition_range_max
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_condition_range_max
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__condition_range_max
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__condition_range_max
 msgid "Maximum Range"
 msgstr "최대 범위"
 
@@ -881,13 +903,13 @@ msgid "Meal Voucher"
 msgstr ""
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_condition_range_min
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_condition_range_min
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__condition_range_min
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__condition_range_min
 msgid "Minimum Range"
 msgstr "최소 범위"
 
 #. module: hr_payroll
-#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Miscellaneous"
 msgstr "기타"
 
@@ -897,16 +919,16 @@ msgid "Monthly"
 msgstr "월간"
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template_name
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register_name
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_name
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_name
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run_name
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_name
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_name
-#: model:ir.ui.view,arch_db:hr_payroll.report_contributionregister
-#: model:ir.ui.view,arch_db:hr_payroll.report_payslip
-#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template__name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register__name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure__name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run__name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category__name
+#: model_terms:ir.ui.view,arch_db:hr_payroll.report_contributionregister
+#: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslip
+#: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "Name"
 msgstr "이름"
 
@@ -921,23 +943,23 @@ msgid "Net Salary"
 msgstr ""
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payslip.py:199
+#: code:addons/hr_payroll/models/hr_payslip.py:201
 #, python-format
 msgid "Normal Working Days paid at 100%"
 msgstr "정상 근무일은 100 % 지급"
 
 #. module: hr_payroll
-#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_category_form
+#: model_terms:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_category_form
 msgid "Notes"
-msgstr "노트"
+msgstr "메모"
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days_number_of_days
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days__number_of_days
 msgid "Number of Days"
-msgstr "일 수"
+msgstr "일수"
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days_number_of_hours
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days__number_of_hours
 msgid "Number of Hours"
 msgstr "시간"
 
@@ -947,39 +969,39 @@ msgid "Officer"
 msgstr ""
 
 #. module: hr_payroll
-#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Other Inputs"
 msgstr "다른 입력"
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_parent_id
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_parent_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure__parent_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category__parent_id
 msgid "Parent"
-msgstr "상위 요소"
+msgstr "상위"
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_parent_rule_id
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_parent_rule_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__parent_rule_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__parent_rule_id
 msgid "Parent Salary Rule"
 msgstr "상위 월급 규칙"
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register_partner_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register__partner_id
 msgid "Partner"
-msgstr "파트너"
+msgstr "협력사"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payslip
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input_payslip_id
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_slip_id
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days_payslip_id
-#: model:ir.ui.view,arch_db:hr_payroll.report_payslip
-#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input__payslip_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__slip_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days__payslip_id
+#: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslip
+#: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "Pay Slip"
 msgstr "급여명세서"
 
 #. module: hr_payroll
-#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
 msgid "PaySlip Batch"
 msgstr "급여 명세서 일괄 작업"
 
@@ -999,72 +1021,77 @@ msgid "PaySlip Lines By Conribution Register"
 msgstr "공제 항목별 급여 명세"
 
 #. module: hr_payroll
-#: model:ir.ui.view,arch_db:hr_payroll.report_contributionregister
+#: model_terms:ir.ui.view,arch_db:hr_payroll.report_contributionregister
 msgid "PaySlip Lines by Contribution Register"
 msgstr "공제 항목별 급여 명세"
 
 #. module: hr_payroll
-#: model:ir.model,name:hr_payroll.model_payslip_lines_contribution_register
-msgid "PaySlip Lines by Contribution Registers"
-msgstr "공제 항목별 급여 명세"
-
-#. module: hr_payroll
-#: model:ir.ui.view,arch_db:hr_payroll.report_contributionregister
+#: model_terms:ir.ui.view,arch_db:hr_payroll.report_contributionregister
 msgid "PaySlip Name"
 msgstr "급여 명세 항목"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.open_payroll_modules
 #: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_root
-#: model:ir.ui.view,arch_db:hr_payroll.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:hr_payroll.res_config_settings_view_form
 msgid "Payroll"
 msgstr "급여"
 
 #. module: hr_payroll
-#: model:ir.ui.view,arch_db:hr_payroll.res_config_settings_view_form
+#: model:ir.model,name:hr_payroll.model_report_hr_payroll_report_contributionregister
+msgid "Payroll Contribution Register Report"
+msgstr ""
+
+#. module: hr_payroll
+#: model_terms:ir.ui.view,arch_db:hr_payroll.res_config_settings_view_form
 msgid "Payroll Entries"
 msgstr ""
 
 #. module: hr_payroll
-#: model:ir.ui.view,arch_db:hr_payroll.res_config_settings_view_form
-msgid "Payroll Rules"
-msgstr ""
-
-#. module: hr_payroll
-#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payroll_structure_filter
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payroll_structure_filter
 msgid "Payroll Structures"
 msgstr "급여 구조"
 
 #. module: hr_payroll
-#: model:ir.ui.view,arch_db:hr_payroll.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:hr_payroll.res_config_settings_view_form
 msgid "Payroll rules that apply to your country"
 msgstr ""
 
 #. module: hr_payroll
 #: model:ir.actions.report,name:hr_payroll.action_report_payslip
-#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Payslip"
 msgstr "급여 명세서"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payslip.py:84
+#: code:addons/hr_payroll/models/hr_payslip.py:82
 #, python-format
-msgid "Payslip 'Date From' must be before 'Date To'."
-msgstr "급여 명세서의 '시작일'은 '마감일'보다 앞서야 합니다."
+msgid "Payslip 'Date From' must be earlier 'Date To'."
+msgstr ""
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payslip_run
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_payslip_run_id
-#: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_filter
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__payslip_run_id
+#: model_terms:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_filter
 msgid "Payslip Batches"
 msgstr "급여명세서 일괄 처리"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.act_payslip_lines
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_payslip_count
-#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__payslip_count
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Payslip Computation Details"
 msgstr "급여 명세서 계산 세부사항"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_employee__payslip_count
+msgid "Payslip Count"
+msgstr ""
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_report_hr_payroll_report_payslipdetails
+msgid "Payslip Details Report"
+msgstr ""
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payslip_input
@@ -1072,93 +1099,97 @@ msgid "Payslip Input"
 msgstr "급여 명세서 입력"
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input_line_ids
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__input_line_ids
 msgid "Payslip Inputs"
 msgstr "급여 명세서 입력"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payslip_line
-#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
-#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_form
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_form
 msgid "Payslip Line"
-msgstr "급여 명세"
+msgstr "급여명세서 라인"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.act_contribution_reg_payslip_lines
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_ids
-#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
-#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_filter
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__line_ids
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_filter
 msgid "Payslip Lines"
 msgstr "급여 명세"
 
 #. module: hr_payroll
-#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+#: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "Payslip Lines by Contribution Register"
 msgstr "공제 항목별 급여 명세"
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_name
+#: model:ir.model,name:hr_payroll.model_payslip_lines_contribution_register
+msgid "Payslip Lines by Contribution Registers"
+msgstr ""
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__name
 msgid "Payslip Name"
 msgstr "급여 명세 항목"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payslip_worked_days
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days_line_ids
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__worked_days_line_ids
 msgid "Payslip Worked Days"
 msgstr "급여 명세서 근무일"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.act_hr_employee_payslip_list
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_employee_payslip_count
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_employee_slip_ids
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run_slip_ids
-#: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_form
-#: model:ir.ui.view,arch_db:hr_payroll.payroll_hr_employee_view_form
-#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
-#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_tree
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_employee__slip_ids
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run__slip_ids
+#: model_terms:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_form
+#: model_terms:ir.ui.view,arch_db:hr_payroll.payroll_hr_employee_view_form
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_tree
 msgid "Payslips"
 msgstr "급여 명세서 이름"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_hr_payslip_run_tree
 #: model:ir.ui.menu,name:hr_payroll.menu_hr_payslip_run
-#: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_form
-#: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_tree
+#: model_terms:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_form
+#: model_terms:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_tree
 msgid "Payslips Batches"
 msgstr "급여 명세서 일괄 작업"
 
 #. module: hr_payroll
-#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_by_employees
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_by_employees
 msgid "Payslips by Employees"
 msgstr "임직원별 급여 명세서"
 
 #. module: hr_payroll
 #: selection:hr.payslip.line,amount_select:0
 #: selection:hr.salary.rule,amount_select:0
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_amount_percentage
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_amount_percentage
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__amount_percentage
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__amount_percentage
 msgid "Percentage (%)"
 msgstr "요율(%)"
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_amount_percentage_base
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_amount_percentage_base
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__amount_percentage_base
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__amount_percentage_base
 msgid "Percentage based on"
 msgstr "기준 요율(%)"
 
 #. module: hr_payroll
-#: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_form
-#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+#: model_terms:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_form
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Period"
 msgstr "기간"
 
 #. module: hr_payroll
-#: model:ir.ui.view,arch_db:hr_payroll.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:hr_payroll.res_config_settings_view_form
 msgid "Post payroll slips in accounting"
 msgstr ""
 
 #. module: hr_payroll
-#: model:ir.ui.view,arch_db:hr_payroll.view_payslip_lines_contribution_register
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_payslip_lines_contribution_register
 msgid "Print"
 msgstr "인쇄"
 
@@ -1175,14 +1206,14 @@ msgstr ""
 #. module: hr_payroll
 #: selection:hr.payslip.line,amount_select:0
 #: selection:hr.salary.rule,amount_select:0
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_amount_python_compute
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_amount_python_compute
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__amount_python_compute
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__amount_python_compute
 msgid "Python Code"
 msgstr "파이썬 코드"
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_condition_python
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_condition_python
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__condition_python
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__condition_python
 msgid "Python Condition"
 msgstr "파이썬 조건"
 
@@ -1193,19 +1224,19 @@ msgid "Python Expression"
 msgstr "파이썬 표현식"
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_quantity
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_quantity
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__quantity
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__quantity
 msgid "Quantity"
 msgstr "수량"
 
 #. module: hr_payroll
-#: model:ir.ui.view,arch_db:hr_payroll.report_contributionregister
+#: model_terms:ir.ui.view,arch_db:hr_payroll.report_contributionregister
 msgid "Quantity/Rate"
 msgstr "수량/비율"
 
 #. module: hr_payroll
-#: model:ir.ui.view,arch_db:hr_payroll.report_payslip
-#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+#: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslip
+#: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "Quantity/rate"
 msgstr "수량/비율"
 
@@ -1221,111 +1252,109 @@ msgid "Range"
 msgstr "범위"
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_condition_range
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_condition_range
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__condition_range
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__condition_range
 msgid "Range Based on"
 msgstr "기준 범위"
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_rate
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__rate
 msgid "Rate (%)"
 msgstr "비율 (%)"
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_code
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_number
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure__code
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__number
 msgid "Reference"
 msgstr "참조"
 
 #. module: hr_payroll
-#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Refund"
 msgstr "환불"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payslip.py:104
+#: code:addons/hr_payroll/models/hr_payslip.py:102
 #, python-format
 msgid "Refund: "
 msgstr "환불 : "
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register_register_line_ids
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register__register_line_ids
 msgid "Register Line"
 msgstr "등록 명세"
 
 #. module: hr_payroll
 #: selection:hr.payslip,state:0
 msgid "Rejected"
-msgstr "거부됨"
+msgstr "거절됨"
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_salary_rule_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__salary_rule_id
 msgid "Rule"
 msgstr "규칙"
 
 #. module: hr_payroll
-#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_category_form
+#: model_terms:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_category_form
 msgid "Salary Categories"
 msgstr "월급 분류"
 
 #. module: hr_payroll
-#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Salary Computation"
 msgstr "월급 계산"
 
 #. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_hr_salary_rule
+msgid "Salary Rule"
+msgstr ""
+
+#. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_hr_salary_rule_category
 #: model:ir.ui.menu,name:hr_payroll.menu_hr_salary_rule_category
-#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_category_tree
-#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_category_tree_view
-#: model:ir.ui.view,arch_db:hr_payroll.view_hr_salary_rule_category_filter
+#: model_terms:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_category_tree
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_salary_rule_category_filter
 msgid "Salary Rule Categories"
 msgstr "월급 규칙 분류"
 
 #. module: hr_payroll
-#: model:ir.actions.act_window,name:hr_payroll.action_hr_salary_rule_category_tree_view
-#: model:ir.ui.menu,name:hr_payroll.menu_hr_salary_rule_category_tree_view
-msgid "Salary Rule Categories Hierarchy"
-msgstr "월급 규칙 분류 계층 구조"
-
-#. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_salary_rule_category
-#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
-#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_filter
+#: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_filter
 msgid "Salary Rule Category"
 msgstr "월급 규칙 분류"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_rule_input
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_rule_input_input_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_rule_input__input_id
 msgid "Salary Rule Input"
 msgstr "월급 규칙 입력"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_salary_rule_form
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_rule_ids
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure__rule_ids
 #: model:ir.ui.menu,name:hr_payroll.menu_action_hr_salary_rule_form
-#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
-#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_list
-#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_tree
-#: model:ir.ui.view,arch_db:hr_payroll.view_hr_employee_grade_form
-#: model:ir.ui.view,arch_db:hr_payroll.view_hr_rule_filter
+#: model_terms:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
+#: model_terms:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_list
+#: model_terms:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_tree
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_employee_grade_form
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_rule_filter
 msgid "Salary Rules"
 msgstr "월급 규칙"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payslip.py:396
-#: code:addons/hr_payroll/models/hr_payslip.py:446
+#: code:addons/hr_payroll/models/hr_payslip.py:403
+#: code:addons/hr_payroll/models/hr_payslip.py:453
 #, python-format
 msgid "Salary Slip of %s for %s"
 msgstr "%s에 대한 %s의 월급 명세"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payroll_structure
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_struct_id
-#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payroll_structure_tree
-#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
-#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_tree
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contract__struct_id
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payroll_structure_tree
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_tree
 msgid "Salary Structure"
 msgstr "월급 구조"
 
@@ -1336,27 +1365,27 @@ msgid "Salary Structures"
 msgstr "월급 구조"
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_schedule_pay
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contract__schedule_pay
 msgid "Scheduled Pay"
 msgstr "예약 지불"
 
 #. module: hr_payroll
-#: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_filter
+#: model_terms:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_filter
 msgid "Search Payslip Batches"
 msgstr "급여 명세서 일괄 작업 검색"
 
 #. module: hr_payroll
-#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_filter
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_filter
 msgid "Search Payslip Lines"
 msgstr "급여 명세 검색"
 
 #. module: hr_payroll
-#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
 msgid "Search Payslips"
 msgstr "급여 명세서 검색"
 
 #. module: hr_payroll
-#: model:ir.ui.view,arch_db:hr_payroll.view_hr_rule_filter
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_rule_filter
 msgid "Search Salary Rule"
 msgstr "월급 규칙 검색"
 
@@ -1366,18 +1395,18 @@ msgid "Semi-annually"
 msgstr "반기"
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input_sequence
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_sequence
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days_sequence
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_sequence
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input__sequence
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__sequence
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days__sequence
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule__sequence
 msgid "Sequence"
-msgstr "순서"
+msgstr "순차적"
 
 #. module: hr_payroll
-#: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_form
-#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+#: model_terms:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_form
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Set to Draft"
-msgstr "기안으로 설정"
+msgstr "초안으로 설정"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_hr_payroll_configuration
@@ -1386,63 +1415,63 @@ msgid "Settings"
 msgstr "설정"
 
 #. module: hr_payroll
-#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
 msgid "States"
 msgstr "상태"
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run_state
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_state
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__state
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run__state
 msgid "Status"
 msgstr "상태"
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_struct_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip__struct_id
 msgid "Structure"
 msgstr "구조"
 
 #. module: hr_payroll
-#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_code
-#: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_code
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line__code
+#: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule__code
 msgid ""
 "The code of salary rules can be used as reference in computation of other "
 "rules. In that case, it is case sensitive."
 msgstr ""
 
 #. module: hr_payroll
-#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_input_code
-#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_worked_days_code
-#: model:ir.model.fields,help:hr_payroll.field_hr_rule_input_code
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_input__code
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_worked_days__code
+#: model:ir.model.fields,help:hr_payroll.field_hr_rule_input__code
 msgid "The code that can be used in the salary rules"
 msgstr ""
 
 #. module: hr_payroll
-#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_amount_select
-#: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_amount_select
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line__amount_select
+#: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule__amount_select
 msgid "The computation method for the rule amount."
 msgstr ""
 
 #. module: hr_payroll
-#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_input_contract_id
-#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_worked_days_contract_id
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_input__contract_id
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_worked_days__contract_id
 msgid "The contract for which applied this input"
 msgstr ""
 
 #. module: hr_payroll
-#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_condition_range_max
-#: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_condition_range_max
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line__condition_range_max
+#: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule__condition_range_max
 msgid "The maximum amount, applied for this rule."
 msgstr ""
 
 #. module: hr_payroll
-#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_condition_range_min
-#: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_condition_range_min
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line__condition_range_min
+#: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule__condition_range_min
 msgid "The minimum amount, applied for this rule."
 msgstr ""
 
 #. module: hr_payroll
-#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_condition_range
-#: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_condition_range
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line__condition_range
+#: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule__condition_range
 msgid ""
 "This will be used to compute the % fields values; in general it is on basic,"
 " but you can also use categories code fields in lowercase as a variable "
@@ -1450,51 +1479,44 @@ msgid ""
 msgstr ""
 
 #. module: hr_payroll
-#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_by_employees
-msgid ""
-"This wizard will generate payslips for all selected employee(s) based on the"
-" dates and credit note specified on Payslips Run."
-msgstr ""
-
-#. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_total
-#: model:ir.ui.view,arch_db:hr_payroll.report_contributionregister
-#: model:ir.ui.view,arch_db:hr_payroll.report_payslip
-#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line__total
+#: model_terms:ir.ui.view,arch_db:hr_payroll.report_contributionregister
+#: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslip
+#: model_terms:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "Total"
-msgstr "총계"
+msgstr "합계"
 
 #. module: hr_payroll
-#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Total Working Days"
 msgstr "총 근무일"
 
 #. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template_upper_bound
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template__upper_bound
 msgid "Upper Bound"
 msgstr ""
 
 #. module: hr_payroll
-#: model:ir.model.fields,help:hr_payroll.field_hr_contract_advantage_template_upper_bound
+#: model:ir.model.fields,help:hr_payroll.field_hr_contract_advantage_template__upper_bound
 msgid "Upper bound authorized by the employer for this advantage"
 msgstr ""
 
 #. module: hr_payroll
-#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_sequence
-#: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_sequence
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line__sequence
+#: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule__sequence
 msgid "Use to arrange calculation sequence"
 msgstr "계산 순서를 정렬하는 데 사용합니다"
 
 #. module: hr_payroll
-#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_appears_on_payslip
-#: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_appears_on_payslip
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line__appears_on_payslip
+#: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule__appears_on_payslip
 msgid "Used to display the salary rule on payslip."
 msgstr "급여 명세서에 급여 규칙을 표시하는 데 사용됩니다."
 
 #. module: hr_payroll
 #: selection:hr.payslip,state:0
 msgid "Waiting"
-msgstr "대기"
+msgstr "대기중"
 
 #. module: hr_payroll
 #: selection:hr.contract,schedule_pay:0
@@ -1502,52 +1524,63 @@ msgid "Weekly"
 msgstr "매주"
 
 #. module: hr_payroll
-#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Worked Day"
 msgstr "근무일"
 
 #. module: hr_payroll
-#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Worked Days"
 msgstr "근무일"
 
 #. module: hr_payroll
-#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+#: model_terms:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Worked Days & Inputs"
 msgstr "근무일 및 입력"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_salary_rule.py:198
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contract__resource_calendar_id
+msgid "Working Schedule"
+msgstr "근무 일정"
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/models/hr_salary_rule.py:211
 #, python-format
 msgid "Wrong percentage base or quantity defined for salary rule %s (%s)."
 msgstr ""
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_salary_rule.py:204
+#: code:addons/hr_payroll/models/hr_salary_rule.py:217
 #, python-format
 msgid "Wrong python code defined for salary rule %s (%s)."
 msgstr ""
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_salary_rule.py:227
+#: code:addons/hr_payroll/models/hr_salary_rule.py:240
 #, python-format
 msgid "Wrong python condition defined for salary rule %s (%s)."
 msgstr ""
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_salary_rule.py:191
+#: code:addons/hr_payroll/models/hr_salary_rule.py:204
 #, python-format
 msgid "Wrong quantity defined for salary rule %s (%s)."
 msgstr ""
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_salary_rule.py:221
+#: code:addons/hr_payroll/models/hr_salary_rule.py:234
 #, python-format
 msgid "Wrong range condition defined for salary rule %s (%s)."
 msgstr ""
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payslip.py:128
+#: code:addons/hr_payroll/models/hr_salary_rule.py:36
+#, python-format
+msgid "You cannot create a recursive salary structure."
+msgstr ""
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/models/hr_payslip.py:127
 #, python-format
 msgid "You cannot delete a payslip which is not draft or cancelled!"
 msgstr ""
@@ -1559,33 +1592,13 @@ msgid "You must select employee(s) to generate payslip(s)."
 msgstr ""
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payslip.py:517
+#: code:addons/hr_payroll/models/hr_payslip.py:525
 #, python-format
 msgid "You must set a contract to create a payslip line."
 msgstr ""
 
 #. module: hr_payroll
-#: model:ir.model,name:hr_payroll.model_hr_salary_rule
-msgid "hr.salary.rule"
-msgstr "hr.salary.rule"
-
-#. module: hr_payroll
-#: model:ir.model,name:hr_payroll.model_report_hr_payroll_report_contributionregister
-msgid "report.hr_payroll.report_contributionregister"
-msgstr ""
-
-#. module: hr_payroll
-#: model:ir.model,name:hr_payroll.model_report_hr_payroll_report_payslipdetails
-msgid "report.hr_payroll.report_payslipdetails"
-msgstr ""
-
-#. module: hr_payroll
-#: model:ir.model,name:hr_payroll.model_res_config_settings
-msgid "res.config.settings"
-msgstr "res.config.settings"
-
-#. module: hr_payroll
-#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_amount_percentage_base
-#: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_amount_percentage_base
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line__amount_percentage_base
+#: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule__amount_percentage_base
 msgid "result will be affected to a variable"
 msgstr "결과는 변수에 영향을 받을 것입니다"

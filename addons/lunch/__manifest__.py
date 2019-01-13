@@ -4,9 +4,9 @@
     'name': 'Lunch',
     'sequence': 120,
     'version': '1.0',
-    'depends': ['base', 'web', 'decimal_precision'],
+    'depends': ['decimal_precision', 'mail'],
     'category': 'Human Resources',
-    'summary': 'Lunch Order, Meal, Food',
+    'summary': 'Handle lunch orders of your employees',
     'description': """
 The base module to manage lunch.
 ================================
@@ -28,6 +28,10 @@ If you want to save your employees' time and avoid them to always have coins in 
         'report/lunch_order_templates.xml',
         'views/lunch_templates.xml',
         'wizard/lucky_order_view.xml',
+        'views/lunch_alert_views.xml',
+        'views/lunch_cashmove_views.xml',
+        'views/lunch_orders_views.xml',
+        'views/lunch_product_views.xml',
         'views/lunch_views.xml',
         'data/lunch_data.xml',
     ],

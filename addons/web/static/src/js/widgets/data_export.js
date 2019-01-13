@@ -6,7 +6,7 @@ var crash_manager = require('web.crash_manager');
 var data = require('web.data');
 var Dialog = require('web.Dialog');
 var framework = require('web.framework');
-var pyeval = require('web.pyeval');
+var pyUtils = require('web.py_utils');
 
 var QWeb = core.qweb;
 var _t = core._t;
@@ -14,7 +14,7 @@ var _t = core._t;
 var DataExport = Dialog.extend({
     template: 'ExportDialog',
     events: {
-        'click .o_expand_parent': function(e) {
+        'click .o_expand': function(e) {
             this.on_expand_action(this.records[$(e.target).closest('.o_export_tree_item').data('id')]);
         },
         'click .o_export_tree_item': function(e) {
@@ -49,17 +49,26 @@ var DataExport = Dialog.extend({
 
             function process_children() {
                 var $this = $(this);
-                if($this.hasClass('open')) {
+                if($this.hasClass('show')) {
                     $this.children('.o_export_tree_item')
                          .addClass('o_selected')
                          .each(process_children);
                 }
             }
         },
-        'dblclick .o_export_tree_item': function(e) {
-            var $elem = $(e.currentTarget);
-            $elem.removeClass('o_selected');
-            this.add_field($elem.data('id'), $elem.find('.o_tree_column').first().text());
+        'dblclick .o_export_tree_item:not(.haschild)': function(e) {
+            var self = this;
+            function addElement(el) {
+                self.add_field(el.getAttribute('data-id'), el.querySelector('.o_tree_column').textContent);
+            }
+            var target = e.currentTarget;
+            target.classList.remove('o_selected');
+            // Add parent fields to export
+            [].reverse.call($(target).parents('.o_export_tree_item')).each(function () {
+                addElement(this);
+            });
+            // add field itself
+            addElement(target);
         },
         'keydown .o_export_tree_item': function(e) {
             e.stopPropagation();
@@ -68,19 +77,19 @@ var DataExport = Dialog.extend({
 
             switch(e.keyCode || e.which) {
                 case $.ui.keyCode.LEFT:
-                    if ($elem.hasClass('open')) {
+                    if ($elem.hasClass('show')) {
                         this.on_expand_action(record);
                     }
                     break;
                 case $.ui.keyCode.RIGHT:
-                    if (!$elem.hasClass('open')) {
+                    if (!$elem.hasClass('show')) {
                         this.on_expand_action(record);
                     }
                     break;
                 case $.ui.keyCode.UP:
                     var $prev = $elem.prev('.o_export_tree_item');
                     if($prev.length === 1) {
-                        while($prev.hasClass('open')) {
+                        while($prev.hasClass('show')) {
                             $prev = $prev.children('.o_export_tree_item').last();
                         }
                     } else {
@@ -95,7 +104,7 @@ var DataExport = Dialog.extend({
                     break;
                 case $.ui.keyCode.DOWN:
                     var $next;
-                    if($elem.hasClass('open')) {
+                    if($elem.hasClass('show')) {
                         $next = $elem.children('.o_export_tree_item').first();
                     } else {
                         $next = $elem.next('.o_export_tree_item');
@@ -195,7 +204,7 @@ var DataExport = Dialog.extend({
             });
         },
     },
-    init: function(parent, record) {
+    init: function(parent, record, defaultExportFields) {
         var options = {
             title: _t("Export Data"),
             buttons: [
@@ -206,6 +215,7 @@ var DataExport = Dialog.extend({
         this._super(parent, options);
         this.records = {};
         this.record = record;
+        this.defaultExportFields = defaultExportFields;
         this.exports = new data.DataSetSearch(this, 'ir.exports', this.record.getContext());
 
         this.row_index = 0;
@@ -217,7 +227,7 @@ var DataExport = Dialog.extend({
 
         // The default for the ".modal_content" element is "max-height: 100%;"
         // but we want it to always expand to "height: 100%;" for this modal.
-        // This can be achieved thanks to LESS modification without touching
+        // This can be achieved thanks to CSS modification without touching
         // the ".modal-content" rules... but not with Internet explorer (11).
         this.$modal.find(".modal-content").css("height", "100%");
 
@@ -228,13 +238,14 @@ var DataExport = Dialog.extend({
 
         var got_fields = new $.Deferred();
         this.$import_compat_radios.change(function(e) {
+            self.isCompatibleMode = !!$(e.target).val();
             self.$('.o_field_tree_structure').remove();
 
             self._rpc({
                     route: '/web/export/get_fields',
                     params: {
                         model: self.record.model,
-                        import_compat: !!$(e.target).val(),
+                        import_compat: self.isCompatibleMode,
                     },
                 })
                 .done(function (records) {
@@ -250,6 +261,15 @@ var DataExport = Dialog.extend({
                         .remove();
                     got_fields.resolve();
                     self.on_show_data(records);
+                    // In compatible mode add ID field as first field to export
+                    if (self.isCompatibleMode) {
+                        self.$('.o_fields_list').prepend(new Option(_('External ID'), 'id'));
+                    }
+                    _.each(records, function (record) {
+                        if (_.contains(self.defaultExportFields, record.id)) {
+                            self.add_field(record.id, record.string);
+                        }
+                    });
                 });
         }).eq(0).change();
         waitFor.push(got_fields);
@@ -262,10 +282,15 @@ var DataExport = Dialog.extend({
                 self.ids_to_export = false;
                 self.domain = domain;
             }
-            self.on_show_domain();
         }));
 
-        waitFor.push(this.show_exports_list());
+        waitFor.push(this.show_exports_list().then(function () {
+            _.each(self.records, function (record, key) {
+                if (_.contains(self.defaultExportFields, key)) {
+                    self.add_field(key, record.string);
+                }
+            });
+        }));
 
         return $.when.apply($, waitFor);
 
@@ -274,14 +299,15 @@ var DataExport = Dialog.extend({
 
             _.each(formats, function(format, i) {
                 var $radio = $('<input/>', {type: 'radio', value: format.tag, name: 'o_export_format_name'});
-                var $label = $('<label/>', {html: format.label});
+                var $label = $('<span/>', {html: format.label});
 
                 if (format.error) {
                     $radio.prop('disabled', true);
                     $label.html(_.str.sprintf("%s — %s", format.label, format.error));
                 }
 
-                $fmts.append($("<div/>").append($radio, $label));
+                var $radioButton = $('<label/>').append($radio, $label);
+                $fmts.append($("<div class='radio'></div>").append($radioButton));
             });
 
             self.$export_format_inputs = $fmts.find('input');
@@ -366,7 +392,8 @@ var DataExport = Dialog.extend({
                         parent_name: name,
                         import_compat: !!this.$import_compat_radios.filter(':checked').val(),
                         parent_field_type : record['field_type'],
-                        exclude: exclude_fields
+                        parent_field: record['params']['parent_field'],
+                        exclude: exclude_fields,
                     },
                 })
                 .done(function(results) {
@@ -377,17 +404,13 @@ var DataExport = Dialog.extend({
             this.show_content(record.id);
         }
     },
-    on_show_domain: function() {
-        this.$('p').first()
-                   .after(QWeb.render('Export.DomainMessage', {record: this}));
-    },
     on_show_data: function(records, expansion) {
         var self = this;
         if(expansion) {
             this.$('.o_export_tree_item[data-id="' + expansion + '"]')
-                .addClass('open')
+                .addClass('show')
                 .find('.o_expand_parent')
-                .toggleClass('fa-plus fa-minus')
+                .toggleClass('fa-chevron-right fa-chevron-down')
                 .next()
                 .after(QWeb.render('Export.TreeItems', {'fields': records, 'debug': this.getSession().debug}));
         } else {
@@ -406,10 +429,10 @@ var DataExport = Dialog.extend({
     },
     show_content: function(id) {
         var $this = this.$('.o_export_tree_item[data-id="' + id + '"]');
-        $this.toggleClass('open');
-        var is_open = $this.hasClass('open');
+        $this.toggleClass('show');
+        var is_open = $this.hasClass('show');
 
-        $this.children('.o_expand_parent').toggleClass('fa-minus', !!is_open).toggleClass('fa-plus', !is_open);
+        $this.children('.o_expand_parent').toggleClass('fa-chevron-down', !!is_open).toggleClass('fa-chevron-right', !is_open);
 
         var $child_field = $this.find('.o_export_tree_item');
         var child_len = (id.split("/")).length + 1;
@@ -418,9 +441,9 @@ var DataExport = Dialog.extend({
             if(!is_open) {
                 $child.hide();
             } else if(child_len === $child_field.eq(i).data('id').split("/").length) {
-                if ($child.hasClass('open')) {
-                    $child.removeClass('open');
-                    $child.children('.o_expand_parent').removeClass('fa-minus').addClass('fa-plus');
+                if ($child.hasClass('show')) {
+                    $child.removeClass('show');
+                    $child.children('.o_expand_parent').removeClass('fa-chevron-down').addClass('fa-chevron-right');
                 }
                 $child.show();
             }
@@ -455,7 +478,9 @@ var DataExport = Dialog.extend({
             Dialog.alert(this, _t("Please select fields to export..."));
             return;
         }
-        exported_fields.unshift({name: 'id', label: _t('External ID')});
+        if (!this.isCompatibleMode) {
+            exported_fields.unshift({name: 'id', label: _t('External ID')});
+        }
 
         var export_format = this.$export_format_inputs.filter(':checked').val();
 
@@ -467,7 +492,7 @@ var DataExport = Dialog.extend({
                 fields: exported_fields,
                 ids: this.ids_to_export,
                 domain: this.domain,
-                context: pyeval.eval('contexts', [this.record.getContext()]),
+                context: pyUtils.eval('contexts', [this.record.getContext()]),
                 import_compat: !!this.$import_compat_radios.filter(':checked').val(),
             })},
             complete: framework.unblockUI,

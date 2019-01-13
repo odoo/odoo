@@ -2,8 +2,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.account.tests.account_test_classes import AccountingTestCase
+from odoo.tests import tagged
 
-
+@tagged('post_install', '-at_install')
 class TestStockValuation(AccountingTestCase):
     def setUp(self):
         super(TestStockValuation, self).setUp()
@@ -107,9 +108,9 @@ class TestStockValuation(AccountingTestCase):
     # -------------------------------------------------------------------------
     def test_dropship_standard_perpetual_continental_ordered(self):
         self.env.user.company_id.anglo_saxon_accounting = False
-        self.product1.product_tmpl_id.cost_method = 'standard'
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'standard'
         self.product1.product_tmpl_id.standard_price = 10
-        self.product1.product_tmpl_id.valuation = 'real_time'
+        self.product1.product_tmpl_id.categ_id.property_valuation = 'real_time'
         self.product1.product_tmpl_id.invoice_policy = 'order'
 
         all_amls = self._dropship_product1()
@@ -125,9 +126,9 @@ class TestStockValuation(AccountingTestCase):
 
     def test_dropship_standard_perpetual_continental_delivered(self):
         self.env.user.company_id.anglo_saxon_accounting = False
-        self.product1.product_tmpl_id.cost_method = 'standard'
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'standard'
         self.product1.product_tmpl_id.standard_price = 10
-        self.product1.product_tmpl_id.valuation = 'real_time'
+        self.product1.product_tmpl_id.categ_id.property_valuation = 'real_time'
         self.product1.product_tmpl_id.invoice_policy = 'delivery'
 
         all_amls = self._dropship_product1()
@@ -143,9 +144,9 @@ class TestStockValuation(AccountingTestCase):
 
     def test_dropship_fifo_perpetual_continental_ordered(self):
         self.env.user.company_id.anglo_saxon_accounting = False
-        self.product1.product_tmpl_id.cost_method = 'fifo'
+        self.product1.product_tmpl_id.categ_id.proprty_cost_method = 'fifo'
         self.product1.product_tmpl_id.standard_price = 10
-        self.product1.product_tmpl_id.valuation = 'real_time'
+        self.product1.product_tmpl_id.categ_id.property_valuation = 'real_time'
         self.product1.product_tmpl_id.invoice_policy = 'order'
 
         all_amls = self._dropship_product1()
@@ -162,9 +163,9 @@ class TestStockValuation(AccountingTestCase):
     def test_dropship_fifo_perpetual_continental_delivered(self):
         self.env.user.company_id.anglo_saxon_accounting = False
 
-        self.product1.product_tmpl_id.cost_method = 'fifo'
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'fifo'
         self.product1.product_tmpl_id.standard_price = 10
-        self.product1.product_tmpl_id.valuation = 'real_time'
+        self.product1.product_tmpl_id.categ_id.property_valuation = 'real_time'
         self.product1.product_tmpl_id.invoice_policy = 'delivery'
 
         all_amls = self._dropship_product1()
@@ -183,9 +184,9 @@ class TestStockValuation(AccountingTestCase):
     # -------------------------------------------------------------------------
     def test_dropship_standard_perpetual_anglosaxon_ordered(self):
         self.env.user.company_id.anglo_saxon_accounting = True
-        self.product1.product_tmpl_id.cost_method = 'standard'
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'standard'
         self.product1.product_tmpl_id.standard_price = 10
-        self.product1.product_tmpl_id.valuation = 'real_time'
+        self.product1.product_tmpl_id.categ_id.property_valuation = 'real_time'
         self.product1.product_tmpl_id.invoice_policy = 'order'
 
         all_amls = self._dropship_product1()
@@ -206,9 +207,9 @@ class TestStockValuation(AccountingTestCase):
 
     def test_dropship_standard_perpetual_anglosaxon_delivered(self):
         self.env.user.company_id.anglo_saxon_accounting = True
-        self.product1.product_tmpl_id.cost_method = 'standard'
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'standard'
         self.product1.product_tmpl_id.standard_price = 10
-        self.product1.product_tmpl_id.valuation = 'real_time'
+        self.product1.product_tmpl_id.categ_id.property_valuation = 'real_time'
         self.product1.product_tmpl_id.invoice_policy = 'delivery'
 
         all_amls = self._dropship_product1()
@@ -229,9 +230,9 @@ class TestStockValuation(AccountingTestCase):
 
     def test_dropship_fifo_perpetual_anglosaxon_ordered(self):
         self.env.user.company_id.anglo_saxon_accounting = True
-        self.product1.product_tmpl_id.cost_method = 'fifo'
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'fifo'
         self.product1.product_tmpl_id.standard_price = 10
-        self.product1.product_tmpl_id.valuation = 'real_time'
+        self.product1.product_tmpl_id.categ_id.property_valuation = 'real_time'
         self.product1.product_tmpl_id.invoice_policy = 'order'
 
         all_amls = self._dropship_product1()
@@ -249,9 +250,9 @@ class TestStockValuation(AccountingTestCase):
 
     def test_dropship_fifo_perpetual_anglosaxon_delivered(self):
         self.env.user.company_id.anglo_saxon_accounting = True
-        self.product1.product_tmpl_id.cost_method = 'fifo'
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'fifo'
         self.product1.product_tmpl_id.standard_price = 10
-        self.product1.product_tmpl_id.valuation = 'real_time'
+        self.product1.product_tmpl_id.categ_id.property_valuation = 'real_time'
         self.product1.product_tmpl_id.invoice_policy = 'delivery'
 
         all_amls = self._dropship_product1()
@@ -271,7 +272,7 @@ class TestStockValuation(AccountingTestCase):
         self.env.user.company_id.anglo_saxon_accounting = True
         self.product1.product_tmpl_id.cost_method = 'standard'
         self.product1.product_tmpl_id.standard_price = 10
-        self.product1.product_tmpl_id.valuation = 'real_time'
+        self.product1.product_tmpl_id.categ_id.property_valuation = 'real_time'
         self.product1.product_tmpl_id.invoice_policy = 'order'
 
         all_amls = self._dropship_product1()
@@ -283,7 +284,7 @@ class TestStockValuation(AccountingTestCase):
         stock_return_picking_action = stock_return_picking.create_returns()
         return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
         return_pick.move_lines[0].move_line_ids[0].qty_done = 1.0
-        return_pick.do_transfer()
+        return_pick.action_done()
         self.assertEqual(return_pick.move_lines._is_dropshipped_returned(), True)
 
         all_amls_return = self.vendor_bill1.move_id.line_ids + self.customer_invoice1.move_id.line_ids

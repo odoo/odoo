@@ -34,7 +34,6 @@ same *conversation* document.
 For more specific needs, you may also assign custom-defined actions
 (technically: Server Actions) to be triggered for each incoming mail.
     """,
-    'website': 'https://www.odoo.com/page/mailing',
     'data': [
         'data/fetchmail_data.xml',
         'security/ir.model.access.csv',

@@ -1,9 +1,10 @@
 odoo.define('web_editor.BodyManager', function (require) {
 'use strict';
 
-var mixins = require('web.mixins');
-var session = require('web.session');
+var weContext = require('web_editor.context');
 var rootWidget = require('web_editor.root_widget');
+var ServiceProviderMixin = require('web.ServiceProviderMixin');
+var session = require('web.session');
 
 /**
  * Element which is designed to be unique and that will be the top-most element
@@ -11,13 +12,13 @@ var rootWidget = require('web_editor.root_widget');
  * this Class instance. Its main role will be to retrieve RPC demands from its
  * children and handle them.
  */
-var BodyManager = rootWidget.RootWidget.extend(mixins.ServiceProvider, {
+var BodyManager = rootWidget.RootWidget.extend(ServiceProviderMixin, {
     /**
      * @constructor
      */
     init: function () {
-        mixins.ServiceProvider.init.call(this);
         this._super.apply(this, arguments);
+        ServiceProviderMixin.init.call(this);
     },
     /**
      * @override
@@ -27,6 +28,32 @@ var BodyManager = rootWidget.RootWidget.extend(mixins.ServiceProvider, {
             this._super.apply(this, arguments),
             session.is_bound
         );
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Automatically add the web_editor context.
+     *
+     * @override
+     */
+    _call_service: function (event) {
+        if (event.data.service === 'ajax' && event.data.method === 'rpc') {
+            var route = event.data.args[0];
+            if (_.str.startsWith(route, '/web/dataset/call_kw/')) {
+                var params = event.data.args[1];
+                var options = event.data.args[2];
+                params.kwargs.context = _.extend({}, weContext.get(), params.kwargs.context || {});
+                if (options) {
+                    params.kwargs.context = _.omit(params.kwargs.context, options.noContextKeys);
+                    event.data.args[2] = _.omit(options, 'noContextKeys');
+                }
+                params.kwargs.context = JSON.parse(JSON.stringify(params.kwargs.context));
+            }
+        }
+        return ServiceProviderMixin._call_service.apply(this, arguments);
     },
 });
 return BodyManager;

@@ -68,32 +68,6 @@ var ScreenWidget = PosBaseWidget.extend({
             this.barcode_error_action(code);
         }
     },
-
-    // what happens when a cashier id barcode is scanned.
-    // the default behavior is the following : 
-    // - if there's a user with a matching barcode, put it as the active 'cashier', go to cashier mode, and return true
-    // - else : do nothing and return false. You probably want to extend this to show and appropriate error popup... 
-    barcode_cashier_action: function(code){
-        var self = this;
-        var users = this.pos.users;
-        for(var i = 0, len = users.length; i < len; i++){
-            if(users[i].barcode === code.code){
-                if (users[i].id !== this.pos.get_cashier().id && users[i].pos_security_pin) {
-                    return this.gui.ask_password(users[i].pos_security_pin).then(function(){
-                        self.pos.set_cashier(users[i]);
-                        self.chrome.widget.username.renderElement();
-                        return true;
-                    });
-                } else {
-                    this.pos.set_cashier(users[i]);
-                    this.chrome.widget.username.renderElement();
-                    return true;
-                }
-            }
-        }
-        this.barcode_error_action(code);
-        return false;
-    },
     
     // what happens when a client id barcode is scanned.
     // the default behavior is the following : 
@@ -139,7 +113,6 @@ var ScreenWidget = PosBaseWidget.extend({
         }
 
         this.pos.barcode_reader.set_action_callback({
-            'cashier': _.bind(self.barcode_cashier_action, self),
             'product': _.bind(self.barcode_product_action, self),
             'weight': _.bind(self.barcode_product_action, self),
             'price': _.bind(self.barcode_product_action, self),
@@ -841,6 +814,16 @@ var ProductListWidget = PosBaseWidget.extend({
             options.click_product_action(product);
         };
 
+        this.keypress_product_handler = function(ev){
+            if (ev.which != 13 && ev.which != 32) {
+                // Key is not space or enter
+                return;
+            }
+            ev.preventDefault();
+            var product = self.pos.db.get_product_by_id(this.dataset.productId);
+            options.click_product_action(product);
+        };
+
         this.product_list = options.product_list || [];
         this.product_cache = new DomCache();
 
@@ -913,6 +896,7 @@ var ProductListWidget = PosBaseWidget.extend({
         for(var i = 0, len = this.product_list.length; i < len; i++){
             var product_node = this.render_product(this.product_list[i]);
             product_node.addEventListener('click',this.click_product_handler);
+            product_node.addEventListener('keypress',this.keypress_product_handler);
             list_container.appendChild(product_node);
         }
     },
@@ -2245,7 +2229,7 @@ define_action_button({
     'name': 'set_pricelist',
     'widget': set_pricelist_button,
     'condition': function(){
-        return this.pos.pricelists.length > 1;
+        return this.pos.config.use_pricelist && this.pos.pricelists.length > 1;
     },
 });
 

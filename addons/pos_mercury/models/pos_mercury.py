@@ -19,6 +19,7 @@ class BarcodeRule(models.Model):
 
 class PosMercuryConfiguration(models.Model):
     _name = 'pos_mercury.configuration'
+    _description = 'Point of Sale Mercury Configuration'
 
     name = fields.Char(required=True, help='Name of this Mercury configuration')
     merchant_id = fields.Char(string='Merchant ID', required=True, help='ID of the merchant to authenticate him on the payment provider server')
@@ -29,7 +30,7 @@ class AccountBankStatementLine(models.Model):
     _inherit = "account.bank.statement.line"
 
     mercury_card_number = fields.Char(string='Card Number', help='The last 4 numbers of the card used to pay')
-    mercury_prefixed_card_number = fields.Char(string='Card Number', compute='_compute_prefixed_card_number', help='The card number used for the payment.')
+    mercury_prefixed_card_number = fields.Char(string='Card Number Prefix', compute='_compute_prefixed_card_number', help='The card number used for the payment.')
     mercury_card_brand = fields.Char(string='Card Brand', help='The brand of the payment card (e.g. Visa, AMEX, ...)')
     mercury_card_owner_name = fields.Char(string='Card Owner Name', help='The name of the card owner')
     mercury_ref_no = fields.Char(string='Mercury reference number', help='Payment reference number from Mercury Pay')

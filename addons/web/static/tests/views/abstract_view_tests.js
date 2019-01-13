@@ -5,6 +5,7 @@ var AbstractView = require('web.AbstractView');
 var ajax = require('web.ajax');
 var testUtils = require('web.test_utils');
 
+var createActionManager = testUtils.createActionManager;
 var createAsyncView = testUtils.createAsyncView;
 
 QUnit.module('Views', {
@@ -13,6 +14,16 @@ QUnit.module('Views', {
             fake_model: {
                 fields: {},
                 record: [],
+            },
+            foo: {
+                fields: {
+                    foo: {string: "Foo", type: "char"},
+                    bar: {string: "Bar", type: "boolean"},
+                },
+                records: [
+                    {id: 1, bar: true, foo: "yop"},
+                    {id: 2, bar: true, foo: "blip"},
+                ]
             },
         };
     },
@@ -100,5 +111,38 @@ QUnit.module('Views', {
             "should load 'c' when 'a' and 'b' are loaded");
         defs.c.resolve();
     });
+
+    QUnit.test('group_by from context can be a string, instead of a list of strings', function (assert) {
+        assert.expect(1);
+
+        var actionManager = createActionManager({
+            actions: [{
+                id: 1,
+                name: 'Foo',
+                res_model: 'foo',
+                type: 'ir.actions.act_window',
+                views: [[false, 'list']],
+                context: {
+                    group_by: 'bar',
+                },
+            }],
+            archs: {
+                'foo,false,list': '<tree><field name="foo"/><field name="bar"/></tree>',
+                'foo,false,search': '<search></search>',
+            },
+            data: this.data,
+            mockRPC: function(route, args) {
+                if (args.method === 'read_group') {
+                    assert.deepEqual(args.kwargs.groupby, ['bar']);
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        actionManager.doAction(1);
+
+        actionManager.destroy();
+    });
+
 });
 });

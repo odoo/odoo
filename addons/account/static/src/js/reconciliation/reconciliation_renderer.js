@@ -7,6 +7,7 @@ var relational_fields = require('web.relational_fields');
 var basic_fields = require('web.basic_fields');
 var core = require('web.core');
 var time = require('web.time');
+var session = require('web.session');
 var qweb = core.qweb;
 var _t = core._t;
 
@@ -18,11 +19,11 @@ var _t = core._t;
 var StatementRenderer = Widget.extend(FieldManagerMixin, {
     template: 'reconciliation.statement',
     events: {
-        'click div:first button.o_automatic_reconciliation': '_onAutoReconciliation',
         'click div:first h1.statement_name': '_onClickStatementName',
-        'click div:first h1.statement_name_edition button': '_onValidateName',
         "click *[rel='do_action']": "_onDoAction",
         'click button.js_load_more': '_onLoadMore',
+        'blur .statement_name_edition > input': '_onValidateName',
+        'keyup .statement_name_edition > input': '_onKeyupInput'
     },
     /**
      * @override
@@ -64,16 +65,7 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
             defs.push(def);
         }
 
-        this.$('h1.statement_name').text(this._initialState.title);
-
-        delete this._initialState;
-
-        this.enterHandler = function (e) {
-            if ((e.which === 13 || e.which === 10) && (e.ctrlKey || e.metaKey)) {
-                this.trigger_up('validate_all_balanced');
-            }
-        }.bind(this);
-        $('body').on('keyup', this.enterHandler);
+        this.$('h1.statement_name').text(this._initialState.title || _t('No Title'));
 
         return $.when.apply($, defs);
     },
@@ -90,8 +82,36 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
     /*
      * hide the button to load more statement line
      */
-    hideLoadMoreButton: function () {
-        this.$('.js_load_more').hide();
+    hideLoadMoreButton: function (show) {
+        if (!show) {
+            this.$('.js_load_more').show();
+        }
+        else {
+            this.$('.js_load_more').hide();
+        }
+    },
+    showRainbowMan: function (state) {
+        var dt = Date.now()-this.time;
+        var $done = $(qweb.render("reconciliation.done", {
+            'duration': moment(dt).utc().format(time.getLangTimeFormat()),
+            'number': state.valuenow,
+            'timePerTransaction': Math.round(dt/1000/state.valuemax),
+            'context': state.context,
+        }));
+        $done.find('.button_close_statement').click(this._onCloseBankStatement.bind(this));
+        $done.find('.button_back_to_statement').click(this._onGoToBankStatement.bind(this));
+        this.$el.children().hide();
+        // display rainbowman after full reconciliation
+        if (session.show_effect) {
+            this.trigger_up('show_effect', {
+                type: 'rainbow_man',
+                fadeout: 'no',
+                message: $done,
+            });
+            this.$el.css('min-height', '450px');
+        } else {
+            $done.appendTo(this.$el);
+        }
     },
     /**
      * update the statement rendering
@@ -112,31 +132,15 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
             .css('width', (state.valuenow/state.valuemax*100) + '%');
 
         if (state.valuenow === state.valuemax && !this.$('.done_message').length) {
-            var dt = Date.now()-this.time;
-            var $done = $(qweb.render("reconciliation.done", {
-                'duration': moment(dt).utc().format(time.getLangTimeFormat()),
-                'number': state.valuenow,
-                'timePerTransaction': Math.round(dt/1000/state.valuemax),
-                'context': state.context,
-            }));
-            $done.find('.button_close_statement').click(this._onCloseBankStatement.bind(this));
-            $done.find('.button_back_to_statement').click(this._onGoToBankStatement.bind(this));
-            this.$el.children().hide();
-            // display rainbowman after full reconciliation
-            this.trigger_up('show_effect', {
-                type: 'rainbow_man',
-                fadeout: 'no',
-                message: $done,
-                click_close: false,
-            });
-            this.$el.css('min-height', '450px');
+            this.showRainbowMan(state);
         }
 
         if (state.notifications) {
             this._renderNotifications(state.notifications);
         }
 
-        this.$('h1.statement_name').text(state.title);
+        this.$('.statement_name, .statement_name_edition').toggle();
+        this.$('h1.statement_name').text(state.title || _t('No Title'));
     },
 
     //--------------------------------------------------------------------------
@@ -150,11 +154,7 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
     _renderNotifications: function(notifications) {
         this.$(".notification_area").empty();
         for (var i=0; i<notifications.length; i++) {
-            var $notification = $(qweb.render("reconciliation.notification", {
-                type: notifications[i].type,
-                message: notifications[i].message,
-                details: notifications[i].details,
-            })).hide();
+            var $notification = $(qweb.render("reconciliation.notification", notifications[i])).hide();
             $notification.appendTo(this.$(".notification_area")).slideDown(300);
         }
     },
@@ -166,15 +166,10 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
     /**
      * @private
      */
-    _onAutoReconciliation: function () {
-        this.trigger_up('auto_reconciliation');
-    },
-    /**
-     * @private
-     */
     _onClickStatementName: function () {
-        if (this.clickStatementName) {
+        if (this._initialState.bank_statement_id) {
             this.$('.statement_name, .statement_name_edition').toggle();
+            this.$('.statement_name_edition input').focus();
         }
     },
     /**
@@ -237,9 +232,19 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
      * @private
      */
     _onValidateName: function () {
-        var name = this.model.get(this.handleNameRecord).data.name;
+        var name = this.$('.statement_name_edition input').val().trim();
         this.trigger_up('change_name', {'data': name});
-        this.$('.statement_name, .statement_name_edition').toggle();
+    },
+    /**
+     * Save title on enter key pressed
+     *
+     * @private
+     * @param {KeyboardEvent} event
+     */
+    _onKeyupInput: function (event) {
+        if (event.which === $.ui.keyCode.ENTER) {
+            this.$('.statement_name_edition input').blur();
+        }
     },
 });
 
@@ -254,15 +259,13 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
         'click .accounting_view caption .o_buttons button': '_onValidate',
         'click .accounting_view thead td': '_onTogglePanel',
         'click .accounting_view tfoot td:not(.cell_left,.cell_right)': '_onShowPanel',
-        'click tfoot .cell_left, tfoot .cell_right': '_onSearchBalanceAmount',
+        'click .cell': '_onEditAmount',
         'input input.filter': '_onFilterChange',
-        'click .match_controls .fa-chevron-left:not(.disabled)': '_onPrevious',
-        'click .match_controls .fa-chevron-right:not(.disabled)': '_onNext',
+        'click .match .load-more a': '_onLoadMore',
         'click .match .mv_line td': '_onSelectMoveLine',
         'click .accounting_view tbody .mv_line td': '_onSelectProposition',
         'click .o_reconcile_models button': '_onQuickCreateProposition',
         'click .create .add_line': '_onCreateProposition',
-        'click .accounting_view .line_info_button.fa-exclamation-triangle': '_onTogglePartialReconcile',
         'click .reconcile_model_create': '_onCreateReconcileModel',
         'click .reconcile_model_edit': '_onEditReconcileModel',
         'keyup input': '_onInputKeyup',
@@ -285,7 +288,6 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
         this.model = model;
         this._initialState = state;
     },
-
     /**
      * @override
      */
@@ -303,7 +305,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
                     }
                 )
             };
-            self.fields.partner_id.appendTo(self.$('.accounting_view caption'));
+            self.fields.partner_id.insertAfter(self.$('.accounting_view caption .o_buttons'));
         });
         $('<span class="line_info_button fa fa-info-circle"/>')
             .appendTo(this.$('thead .cell_info_popover'))
@@ -333,9 +335,9 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
     update: function (state) {
         var self = this;
         // isValid
-        this.$('caption .o_buttons button.o_validate').toggleClass('hidden', !!state.balance.type);
-        this.$('caption .o_buttons button.o_reconcile').toggleClass('hidden', state.balance.type <= 0);
-        this.$('caption .o_buttons .o_no_valid').toggleClass('hidden', state.balance.type >= 0);
+        this.$('caption .o_buttons button.o_validate').toggleClass('d-none', !!state.balance.type);
+        this.$('caption .o_buttons button.o_reconcile').toggleClass('d-none', state.balance.type <= 0);
+        this.$('caption .o_buttons .o_no_valid').toggleClass('d-none', state.balance.type >= 0);
 
         // partner_id
         this._makePartnerRecord(state.st_line.partner_id, state.st_line.partner_name).then(function (recordID) {
@@ -364,57 +366,32 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
         // reconciliation_proposition
         var $props = this.$('.accounting_view tbody').empty();
 
-        // loop state propositions
+        // Search propositions that could be a partial credit/debit.
         var props = [];
-        var partialDebitProps = 0;
-        var partialCreditProps = 0;
+        var balance = state.balance.amount_currency;
         _.each(state.reconciliation_proposition, function (prop) {
             if (prop.display) {
                 props.push(prop);
-                if (prop.amount > 0 && prop.amount > state.st_line.amount) {
-                    partialDebitProps++;
-                } else if (prop.amount < 0 && prop.amount < state.st_line.amount) {
-                    partialCreditProps++;
-                }
-
             }
         });
 
-        var targetLineAmount = state.st_line.amount;
         _.each(props, function (line) {
-            var $line = $(qweb.render("reconciliation.line.mv_line", {'line': line, 'state': state}));
+            var $line = $(qweb.render("reconciliation.line.mv_line", {'line': line, 'state': state, 'proposition': true}));
             if (!isNaN(line.id)) {
                 $('<span class="line_info_button fa fa-info-circle"/>')
                     .appendTo($line.find('.cell_info_popover'))
                     .attr("data-content", qweb.render('reconciliation.line.mv_line.details', {'line': line}));
             }
-            if (line.already_paid === false &&
-                (((state.balance.amount_currency < 0 || line.partial_reconcile)
-                    && line.amount > 0 && state.st_line.amount > 0 && targetLineAmount < line.amount && partialDebitProps <= 1) ||
-                ((state.balance.amount_currency > 0 || line.partial_reconcile)
-                    && line.amount < 0 && state.st_line.amount < 0 && targetLineAmount > line.amount && partialCreditProps <= 1))) {
-                var $cell = $line.find(line.amount > 0 ? '.cell_right' : '.cell_left');
-                var text;
-                if (line.partial_reconcile) {
-                    text = _t("Undo the partial reconciliation.");
-                    $cell.text(line.write_off_amount_str);
-                } else {
-                    text = _t("This move's amount is higher than the transaction's amount. Click to register a partial payment and keep the payment balance open.");
-                }
-
-                $('<span class="do_partial_reconcile_'+(!line.partial_reconcile)+' line_info_button fa fa-exclamation-triangle"/>')
-                    .prependTo($cell)
-                    .attr("data-content", text);
-            }
-            targetLineAmount -= line.amount;
-
             $props.append($line);
         });
 
         // mv_lines
-        var $mv_lines = this.$('.match table tbody').empty();
         var stateMvLines = state.mv_lines || [];
-        _.each(stateMvLines.slice(0, state.limitMoveLines), function (line) {
+        var recs_count = stateMvLines.length > 0 ? stateMvLines[0].recs_count : 0;
+        var remaining = recs_count - stateMvLines.length;
+        var $mv_lines = this.$('.match table tbody').empty();
+
+        _.each(stateMvLines, function (line) {
             var $line = $(qweb.render("reconciliation.line.mv_line", {'line': line, 'state': state}));
             if (!isNaN(line.id)) {
                 $('<span class="line_info_button fa fa-info-circle"/>')
@@ -423,8 +400,8 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
             }
             $mv_lines.append($line);
         });
-        this.$('.match .fa-chevron-right').toggleClass('disabled', stateMvLines.length <= state.limitMoveLines);
-        this.$('.match .fa-chevron-left').toggleClass('disabled', !state.offset);
+        this.$('.match div.load-more').toggle(remaining > 0);
+        this.$('.match div.load-more span').text(remaining);
         this.$('.match').css('max-height', !stateMvLines.length && !state.filter.length ? '0px' : '');
 
         // balance
@@ -443,17 +420,47 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
             }
             var data = this.model.get(this.handleCreateRecord).data;
             this.model.notifyChanges(this.handleCreateRecord, state.createForm).then(function () {
-                var record = self.model.get(self.handleCreateRecord);
-                _.each(self.fields, function (field, fieldName) {
-                    if (self._avoidFieldUpdate[fieldName]) return;
-                    if (fieldName === "partner_id") return;
-                    if ((data[fieldName] || state.createForm[fieldName]) && !_.isEqual(state.createForm[fieldName], data[fieldName])) {
-                        field.reset(record);
-                    }
+                // FIXME can't it directly written REPLACE_WITH ids=state.createForm.analytic_tag_ids
+                self.model.notifyChanges(self.handleCreateRecord, {analytic_tag_ids: {operation: 'REPLACE_WITH', ids: []}}).then(function (){
+                    var defs = [];
+                    _.each(state.createForm.analytic_tag_ids, function (tag) {
+                        defs.push(self.model.notifyChanges(self.handleCreateRecord, {analytic_tag_ids: {operation: 'ADD_M2M', ids: tag}}));
+                    });
+                    $.when.apply($, defs).then(function () {
+                        var record = self.model.get(self.handleCreateRecord);
+                        _.each(self.fields, function (field, fieldName) {
+                            if (self._avoidFieldUpdate[fieldName]) return;
+                            if (fieldName === "partner_id") return;
+                            if ((data[fieldName] || state.createForm[fieldName]) && !_.isEqual(state.createForm[fieldName], data[fieldName])) {
+                                field.reset(record);
+                            }
+                            if (fieldName === 'tax_id') {
+                                if (!state.createForm[fieldName] || state.createForm[fieldName].amount_type === "group") {
+                                    $('.create_force_tax_included').addClass('d-none');
+                                }
+                                else {
+                                    $('.create_force_tax_included').removeClass('d-none');
+                                }
+                            } 
+                        });
+                    });
                 });
             });
+            if(state.createForm.tax_id){
+                // Set the 'Tax Include' field editable or not depending of the 'price_include' value.
+                this.$('.create_force_tax_included input').attr('disabled', state.createForm.tax_id.price_include);
+            }
         }
         this.$('.create .add_line').toggle(!!state.balance.amount_currency);
+    },
+
+    updatePartialAmount: function(line_id, amount) {
+        var $line = $('.mv_line[data-line-id='+line_id+']');
+        $line.find('.edit_amount').addClass('d-none');
+        $line.find('.edit_amount_input').removeClass('d-none');
+        $line.find('.edit_amount_input').focus();
+        $line.find('.edit_amount_input').val(amount.toFixed(2));
+        $line.find('.line_amount').addClass('d-none');
     },
 
     //--------------------------------------------------------------------------
@@ -467,7 +474,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
     _destroyPopover: function ($el) {
         var popover = $el.data('bs.popover');
         if (popover) {
-            popover.destroy();
+            popover.dispose();
         }
     },
     /**
@@ -496,7 +503,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
     },
 
     /**
-     * create account_id, tax_id, analytic_account_id, label and amount field
+     * create account_id, tax_id, analytic_account_id, analytic_tag_ids, label and amount fields
      *
      * @private
      * @param {object} state - statement line
@@ -507,18 +514,28 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
             relation: 'account.account',
             type: 'many2one',
             name: 'account_id',
+            domain: [['company_id', '=', state.st_line.company_id]],
         }, {
             relation: 'account.journal',
             type: 'many2one',
             name: 'journal_id',
+            domain: [['company_id', '=', state.st_line.company_id]],
         }, {
             relation: 'account.tax',
             type: 'many2one',
             name: 'tax_id',
+            domain: [['company_id', '=', state.st_line.company_id]],
         }, {
             relation: 'account.analytic.account',
             type: 'many2one',
             name: 'analytic_account_id',
+        }, {
+            relation: 'account.analytic.tag',
+            type: 'many2many',
+            name: 'analytic_tag_ids',
+        }, {
+            type: 'boolean',
+            name: 'force_tax_included',
         }, {
             type: 'char',
             name: 'label',
@@ -540,10 +557,16 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
                 'journal_id', record, {mode: 'edit'});
 
             self.fields.tax_id = new relational_fields.FieldMany2One(self,
-                'tax_id', record, {mode: 'edit'});
+                'tax_id', record, {mode: 'edit', additionalContext: {append_type_to_tax_name: true}});
 
             self.fields.analytic_account_id = new relational_fields.FieldMany2One(self,
                 'analytic_account_id', record, {mode: 'edit'});
+
+            self.fields.analytic_tag_ids = new relational_fields.FieldMany2ManyTags(self,
+                'analytic_tag_ids', record, {mode: 'edit'});
+
+            self.fields.force_tax_included = new basic_fields.FieldBoolean(self,
+                'force_tax_included', record, {mode: 'edit'});
 
             self.fields.label = new basic_fields.FieldChar(self,
                 'label', record, {mode: 'edit'});
@@ -557,6 +580,8 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
             self.fields.journal_id.appendTo($create.find('.create_journal_id .o_td_field'));
             self.fields.tax_id.appendTo($create.find('.create_tax_id .o_td_field'));
             self.fields.analytic_account_id.appendTo($create.find('.create_analytic_account_id .o_td_field'));
+            self.fields.analytic_tag_ids.appendTo($create.find('.create_analytic_tag_ids .o_td_field'));
+            self.fields.force_tax_included.appendTo($create.find('.create_force_tax_included .o_td_field'))
             self.fields.label.appendTo($create.find('.create_label .o_td_field'))
                 .then(addRequiredStyle.bind(self, self.fields.label));
             self.fields.amount.appendTo($create.find('.create_amount .o_td_field'))
@@ -579,12 +604,31 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
      */
     _onCreateReconcileModel: function (event) {
         event.preventDefault();
+        var self = this;
         this.do_action({
             type: 'ir.actions.act_window',
             res_model: 'account.reconcile.model',
             views: [[false, 'form']],
             target: 'current'
+        }, 
+        {
+            on_reverse_breadcrumb: function() {self.trigger_up('reload');},
         });
+    },
+    _editAmount: function (event) {
+        event.stopPropagation();
+        var $line = $(event.target);
+        var moveLineId = $line.closest('.mv_line').data('line-id');
+        this.trigger_up('partial_reconcile', {'data': {mvLineId: moveLineId, 'amount': $line.val()}});
+    },
+    _onEditAmount: function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+        // Don't call when clicking inside the input field
+        if (! $(event.target).hasClass('edit_amount_input')){
+            var $line = $(event.target);
+            this.trigger_up('getPartialAmount', {'data': $line.closest('.mv_line').data('line-id')});
+        }
     },
     /**
      * @private
@@ -592,6 +636,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
      */
     _onEditReconcileModel: function (event) {
         event.preventDefault();
+        var self = this;
         this.do_action({
             type: 'ir.actions.act_window',
             res_model: 'account.reconcile.model',
@@ -599,6 +644,9 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
             view_type: "list",
             view_mode: "list",
             target: 'current'
+        },
+        {
+            on_reverse_breadcrumb: function() {self.trigger_up('reload');},
         });
     },
     /**
@@ -628,18 +676,13 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
     /**
      * @private
      */
-    _onSearchBalanceAmount: function () {
-        this.trigger_up('search_balance_amount');
-    },
-    /**
-     * @private
-     */
     _onShowPanel: function () {
         var mode = (this.$el.data('mode') === 'inactive' || this.$el.data('mode') === 'match') ? 'create' : 'match';
         this.trigger_up('change_mode', {'data': mode});
     },
     /**
      * @private
+     * @param {input event} event
      */
     _onFilterChange: function (event) {
         this.trigger_up('change_filter', {'data': _.str.strip($(event.target).val())});
@@ -654,11 +697,23 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
             return;
         }
         if(event.keyCode === 13) {
+            if ($(event.target).hasClass('edit_amount_input')) {
+                this.$(event.target).blur();
+                return;
+            }
             var created_lines = _.findWhere(this.model.lines, {mode: 'create'});
             if (created_lines && created_lines.balance.amount) {
                 this._onCreateProposition();
             }
             return;
+        }
+        if ($(event.target).hasClass('edit_amount_input')) {
+            if (event.type === 'keyup') {
+                return;
+            }
+            else {
+                return this._editAmount(event);
+            }
         }
 
         var self = this;
@@ -678,13 +733,8 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
     /**
      * @private
      */
-    _onPrevious: function () {
-        this.trigger_up('change_offset', {'data': -1});
-    },
-    /**
-     * @private
-     */
-    _onNext: function () {
+    _onLoadMore: function (ev) {
+        ev.preventDefault();
         this.trigger_up('change_offset', {'data': 1});
     },
     /**
@@ -692,7 +742,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
      * @param {MouseEvent} event
      */
     _onSelectMoveLine: function (event) {
-        var $el = $(event.target)
+        var $el = $(event.target);
         this._destroyPopover($el);
         var moveLineId = $el.closest('.mv_line').data('line-id');
         this.trigger_up('add_proposition', {'data': moveLineId});
@@ -702,7 +752,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
      * @param {MouseEvent} event
      */
     _onSelectProposition: function (event) {
-        var $el = $(event.target)
+        var $el = $(event.target);
         this._destroyPopover($el);
         var moveLineId = $el.closest('.mv_line').data('line-id');
         this.trigger_up('remove_proposition', {'data': moveLineId});
@@ -727,7 +777,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
             }
         });
         if (invalid.length) {
-            this.do_warn(_("Some fields are undefined"), invalid.join(', '));
+            this.do_warn(_t("Some fields are undefined"), invalid.join(', '));
             return;
         }
         this.trigger_up('create_proposition');
@@ -737,16 +787,6 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
      */
     _onValidate: function () {
         this.trigger_up('validate');
-    },
-    /**
-     * @private
-     * @param {MouseEvent} event
-     */
-    _onTogglePartialReconcile: function (e) {
-        e.stopPropagation();
-        var popover = $(e.target).data('bs.popover');
-        popover && popover.destroy();
-        this.trigger_up('toggle_partial_reconcile');
     }
 });
 
@@ -823,10 +863,10 @@ var ManualLineRenderer = LineRenderer.extend({
 
             return $.when.apply($, defs).then(function () {
                 if (!self.fields.title_account_id) {
-                    self.fields.partner_id.$el.prependTo(self.$('.accounting_view thead td:eq(1) span:first'));
+                    return self.fields.partner_id.prependTo(self.$('.accounting_view thead td:eq(1) span:first'));
                 } else {
                     self.fields.partner_id.destroy();
-                    self.fields.title_account_id.appendTo(self.$('.accounting_view thead td:eq(1) span:first'));
+                    return self.fields.title_account_id.appendTo(self.$('.accounting_view thead td:eq(1) span:first'));
                 }
             });
         });

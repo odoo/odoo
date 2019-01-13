@@ -2,10 +2,12 @@
 
 from odoo.addons.account.tests.account_test_classes import AccountingTestCase
 from odoo.exceptions import ValidationError
+from odoo.tests import tagged
 
 import time
 
 
+@tagged('post_install', '-at_install')
 class TestAccountInvoiceRounding(AccountingTestCase):
 
     def setUp(self):
@@ -33,7 +35,6 @@ class TestAccountInvoiceRounding(AccountingTestCase):
         """ Returns an open invoice """
         invoice_id = self.env['account.invoice'].create({
             'partner_id': self.env.ref("base.res_partner_2").id,
-            'reference_type': 'none',
             'currency_id': self.env.ref('base.USD').id,
             'name': 'invoice test rounding',
             'account_id': self.account_receivable.id,

@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from odoo import exceptions
+from odoo import exceptions, _
 from odoo.http import Controller, request, route
 from odoo.addons.bus.models.bus import dispatch
-
-from odoo.tools import pycompat
 
 
 class BusController(Controller):
@@ -16,7 +14,7 @@ class BusController(Controller):
 
     @route('/longpolling/send', type="json", auth="public")
     def send(self, channel, message):
-        if not isinstance(channel, pycompat.string_types):
+        if not isinstance(channel, str):
             raise Exception("bus.Bus only string channels are allowed.")
         return request.env['bus.bus'].sendone(channel, message)
 
@@ -35,8 +33,8 @@ class BusController(Controller):
             options = {}
         if not dispatch:
             raise Exception("bus.Bus unavailable")
-        if [c for c in channels if not isinstance(c, pycompat.string_types)]:
+        if [c for c in channels if not isinstance(c, str)]:
             raise Exception("bus.Bus only string channels are allowed.")
         if request.registry.in_test_mode():
-            raise exceptions.UserError("bus.Bus not available in test mode")
+            raise exceptions.UserError(_("bus.Bus not available in test mode"))
         return self._poll(request.db, channels, last, options)

@@ -1,0 +1,67 @@
+// Default chatter layout.
+// Extended in enterprise by form_view.less to achieve the side-chatter
+.o_chatter {
+    width: 100%;
+    padding-top: 0!important;
+
+    .o_attachment_delete_cross {
+        @include o-position-absolute($right: 6px, $top:7px);
+        cursor: pointer;
+    }
+
+    .o_spinner {
+        text-align: center;
+        font-size: large;
+    }
+
+    .o_chatter_topbar {
+        height: $o-statusbar-height;
+        position: relative;
+        margin: $grid-gutter-width*0.5 0 0;
+        padding: 0;
+        display: flex;
+
+        > .o_topbar_right_area {
+            border-bottom: 1px solid transparent;
+            position: relative;
+            float: right;
+            flex: 1 1 auto;
+
+            .o_chatter_button_attachment {
+                height: $o-statusbar-height - 2px;
+                float: right;
+                padding: 0px;
+                margin-right: 25px;
+
+                .fa-paperclip, .o_chatter_attachment_button_count {
+                    font-weight: bold;
+                }
+            }
+            .o_followers {
+                height: $o-statusbar-height + 1;
+                border-bottom: 1px solid transparent;
+                flex: 0 1 auto;
+            }
+        }
+        > .btn {
+            height: $o-statusbar-height + 1;
+            border: 1px solid transparent;
+        }
+
+    }
+
+    &.o_chatter_composer_active .o_chatter_topbar {
+        > .btn, > .o_followers, > .o_topbar_right_area{
+            border-radius: $border-radius-sm $border-radius-sm 0 0;
+            border-width: 0 0 1px;
+            border-bottom-color: gray('300');
+
+            &.o_active {
+                color: $o-brand-odoo;
+                background-color: theme-color('light');
+                border-color: gray('300');
+                border-width: 1px 1px 0;
+            }
+        }
+    }
+}

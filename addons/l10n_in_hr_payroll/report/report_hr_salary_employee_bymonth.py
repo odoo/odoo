@@ -9,6 +9,7 @@ from odoo.exceptions import UserError
 
 class ReportHrSalaryEmployeeBymonth(models.AbstractModel):
     _name = 'report.l10n_in_hr_payroll.report_hrsalarybymonth'
+    _description = "Indian Salary by Month Report"
 
     def get_periods(self, form):
         #       Get start year-month-date and end year-month-date
@@ -93,7 +94,7 @@ class ReportHrSalaryEmployeeBymonth(models.AbstractModel):
         return self.total
 
     @api.model
-    def get_report_values(self, docids, data=None):
+    def _get_report_values(self, docids, data=None):
         if not data.get('form') or not self.env.context.get('active_model') or not self.env.context.get('active_id'):
             raise UserError(_("Form content is missing, this report cannot be printed."))
 

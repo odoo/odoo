@@ -7,13 +7,14 @@
 # Bole <bole@dajmi5.com>, 2017
 # Jasmina Otročak <jasmina@uvid.hr>, 2017
 # Vladimir Olujić <olujic.vladimir@storm.hr>, 2017
+# Martin Trigaux, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Vladimir Olujić <olujic.vladimir@storm.hr>, 2017\n"
+"POT-Creation-Date: 2018-08-02 09:12+0000\n"
+"PO-Revision-Date: 2018-08-02 09:12+0000\n"
+"Last-Translator: Martin Trigaux, 2018\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,13 +23,13 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 
 #. module: account_tax_python
-#: model:ir.model.fields,field_description:account_tax_python.field_account_tax_python_applicable
-#: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template_python_applicable
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax__python_applicable
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template__python_applicable
 msgid "Applicable Code"
 msgstr "Primjenjiva šifra"
 
 #. module: account_tax_python
-#: model:ir.model.fields,help:account_tax_python.field_account_tax_python_compute
+#: model:ir.model.fields,help:account_tax_python.field_account_tax__python_compute
 msgid ""
 "Compute the amount of the tax by setting the variable 'result'.\n"
 "\n"
@@ -49,7 +50,7 @@ msgstr ""
 ":parametar partner: res.partner zapis tablice ili None"
 
 #. module: account_tax_python
-#: model:ir.model.fields,help:account_tax_python.field_account_tax_template_python_compute
+#: model:ir.model.fields,help:account_tax_python.field_account_tax_template__python_compute
 msgid ""
 "Compute the amount of the tax by setting the variable 'result'.\n"
 "\n"
@@ -68,7 +69,7 @@ msgstr ""
 ":parametar partner: res.partner zapis tablice ili None"
 
 #. module: account_tax_python
-#: model:ir.model.fields,help:account_tax_python.field_account_tax_python_applicable
+#: model:ir.model.fields,help:account_tax_python.field_account_tax__python_applicable
 msgid ""
 "Determine if the tax will be applied by setting the variable 'result' to True or False.\n"
 "\n"
@@ -87,7 +88,7 @@ msgstr ""
 ":parametar partner: res.partner zapis tablice ili None"
 
 #. module: account_tax_python
-#: model:ir.model.fields,help:account_tax_python.field_account_tax_template_python_applicable
+#: model:ir.model.fields,help:account_tax_python.field_account_tax_template__python_applicable
 msgid ""
 "Determine if the tax will be applied by setting the variable 'result' to True or False.\n"
 "\n"
@@ -104,8 +105,34 @@ msgstr ""
 ":parametar partner: res.partner zapis tablice ili None"
 
 #. module: account_tax_python
-#: model:ir.model.fields,field_description:account_tax_python.field_account_tax_python_compute
-#: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template_python_compute
+#: selection:account.tax,amount_type:0
+#: selection:account.tax.template,amount_type:0
+msgid "Fixed"
+msgstr "Fiksno"
+
+#. module: account_tax_python
+#: selection:account.tax,amount_type:0
+#: selection:account.tax.template,amount_type:0
+msgid "Group of Taxes"
+msgstr "Grupa poreza"
+
+#. module: account_tax_python
+#: selection:account.tax,amount_type:0
+#: selection:account.tax.template,amount_type:0
+msgid "Percentage of Price"
+msgstr "Postotak cijene"
+
+#. module: account_tax_python
+#: selection:account.tax,amount_type:0
+#: selection:account.tax.template,amount_type:0
+msgid "Percentage of Price Tax Included"
+msgstr "Postotak poreza uljučen"
+
+#. module: account_tax_python
+#: selection:account.tax,amount_type:0
+#: selection:account.tax.template,amount_type:0
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax__python_compute
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template__python_compute
 msgid "Python Code"
 msgstr "Python kod"
 
@@ -113,6 +140,12 @@ msgstr "Python kod"
 #: model:ir.model,name:account_tax_python.model_account_tax
 msgid "Tax"
 msgstr "Porez"
+
+#. module: account_tax_python
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax__amount_type
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template__amount_type
+msgid "Tax Computation"
+msgstr "Izračun poreza"
 
 #. module: account_tax_python
 #: model:ir.model,name:account_tax_python.model_account_tax_template

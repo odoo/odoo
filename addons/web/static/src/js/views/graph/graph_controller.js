@@ -4,13 +4,13 @@ odoo.define('web.GraphController', function (require) {
  * Odoo Graph view
  *---------------------------------------------------------*/
 
-var AbstractController = require('web.AbstractController');
 var core = require('web.core');
+var AbstractController = require('web.AbstractController');
+var GroupByMenuMixin = require('web.GroupByMenuMixin');
 
 var qweb = core.qweb;
 
-var GraphController = AbstractController.extend({
-    className: 'o_graph',
+var GraphController = AbstractController.extend(GroupByMenuMixin,{
     /**
      * @override
      * @param {Widget} parent
@@ -18,10 +18,28 @@ var GraphController = AbstractController.extend({
      * @param {GraphRenderer} renderer
      * @param {Object} params
      * @param {string[]} params.measures
+     * @param {boolean} params.isEmbedded
+     * @param {string[]} params.groupableFields,
      */
     init: function (parent, model, renderer, params) {
+        GroupByMenuMixin.init.call(this);
         this._super.apply(this, arguments);
         this.measures = params.measures;
+        // this parameter condition the appearance of a 'Group By'
+        // button in the control panel owned by the graph view.
+        this.isEmbedded = params.isEmbedded;
+
+        // this parameter determines what is the list of fields
+        // that may be used within the groupby menu available when
+        // the view is embedded
+        this.groupableFields = params.groupableFields;
+    },
+    /**
+     * @override
+     */
+    start: function () {
+        this.$el.addClass('o_graph_controller');
+        return this._super.apply(this, arguments);
     },
     /**
      * @todo check if this can be removed (mostly duplicate with
@@ -30,7 +48,7 @@ var GraphController = AbstractController.extend({
     destroy: function () {
         if (this.$buttons) {
             // remove jquery's tooltip() handlers
-            this.$buttons.find('button').off().tooltip('destroy');
+            this.$buttons.find('button').off().tooltip('dispose');
         }
         this._super.apply(this, arguments);
     },
@@ -47,12 +65,20 @@ var GraphController = AbstractController.extend({
      * @override
      * @returns {Object}
      */
-    getContext: function () {
+    getOwnedQueryParams: function () {
         var state = this.model.get();
         return {
-            graph_measure: state.measure,
-            graph_mode: state.mode,
-            graph_groupbys: state.groupedBy,
+            context: {
+                graph_measure: state.measure,
+                graph_mode: state.mode,
+                graph_groupbys: state.groupedBy,
+                // this parameter is not used anywher for now
+                // the idea would be to seperate intervals from
+                // fieldnames in groupbys. This could be done
+                // in graph view only or everywhere but this is
+                // a big refactoring.
+                graph_intervalMapping: state.intervalMapping,
+            }
         };
     },
     /**
@@ -66,13 +92,18 @@ var GraphController = AbstractController.extend({
      */
     renderButtons: function ($node) {
         if ($node) {
-            var context = {measures: _.pairs(_.omit(this.measures, '__count__'))};
+            var context = {
+                measures: _.sortBy(_.pairs(_.omit(this.measures, '__count__')), function (x) { return x[1].string.toLowerCase(); }),
+            };
             this.$buttons = $(qweb.render('GraphView.buttons', context));
             this.$measureList = this.$buttons.find('.o_graph_measures_list');
             this.$buttons.find('button').tooltip();
             this.$buttons.click(this._onButtonClick.bind(this));
             this._updateButtons();
             this.$buttons.appendTo($node);
+            if (this.isEmbedded) {
+                this._addGroupByMenu($node, this.groupableFields);
+            }
         }
     },
 
@@ -80,9 +111,21 @@ var GraphController = AbstractController.extend({
     // Private
     //--------------------------------------------------------------------------
 
+    /*
+     * override
+     *
+     * @private
+     * @param {string[]} groupBys
+     */
+    _setGroupby: function (groupBys) {
+        this.update({groupBy: groupBys});
+    },
+
     /**
      * @todo remove this and directly calls update. Update should be overridden
      * and modified to call _updateButtons
+     *
+     * private
      *
      * @param {string} mode one of 'pie', 'line' or 'bar'
      */
@@ -102,6 +145,8 @@ var GraphController = AbstractController.extend({
         });
     },
     /**
+     * override
+     *
      * @private
      */
     _update: function () {
@@ -121,8 +166,9 @@ var GraphController = AbstractController.extend({
         this.$buttons
             .find('.o_graph_button[data-mode="' + state.mode + '"]')
             .addClass('active');
-        this.$measureList.find('li').each(function (index, li) {
-            $(li).toggleClass('selected', $(li).data('field') === state.measure);
+        _.each(this.$measureList.find('.dropdown-item'), function (item) {
+            var $item = $(item);
+            $item.toggleClass('selected', $item.data('field') === state.measure);
         });
     },
 
@@ -133,17 +179,18 @@ var GraphController = AbstractController.extend({
     /**
      * Do what need to be done when a button from the control panel is clicked.
      *
-     * @param {MouseEvent} event
+     * @private
+     * @param {MouseEvent} ev
      */
-    _onButtonClick: function (event) {
-        var $target = $(event.target);
+    _onButtonClick: function (ev) {
+        var $target = $(ev.target);
+        var field;
         if ($target.hasClass('o_graph_button')) {
             this._setMode($target.data('mode'));
         } else if ($target.parents('.o_graph_measures_list').length) {
-            event.preventDefault();
-            event.stopPropagation();
-            var parent = $target.parent();
-            var field = parent.data('field');
+            ev.preventDefault();
+            ev.stopPropagation();
+            field = $target.data('field');
             this._setMeasure(field);
         }
     },

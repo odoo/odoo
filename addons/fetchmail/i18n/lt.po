@@ -3,38 +3,36 @@
 # * fetchmail
 # 
 # Translators:
-# Antanas Muliuolis <an.muliuolis@gmail.com>, 2017
-# Audrius Palenskis <audrius.palenskis@gmail.com>, 2017
-# Anatolij, 2017
-# Rolandas <info@paninfo.lt>, 2017
-# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2017
 # digitouch UAB <digitouchagencyeur@gmail.com>, 2017
-# Martin Trigaux, 2017
-# Linas Versada <linaskrisiukenas@gmail.com>, 2018
-# 
+# Antanas Muliuolis <an.muliuolis@gmail.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Audrius Palenskis <audrius.palenskis@gmail.com>, 2017
+# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2017
+# Anatolij <an@cq.lt>, 2017
+# Rolandas <info@paninfo.lt>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 10:17+0000\n"
-"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2018\n"
+"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"Last-Translator: Rolandas <info@paninfo.lt>, 2017\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: lt\n"
-"Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.view_email_server_tree
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_tree
 msgid "# of emails"
 msgstr "# el. laiškų"
 
 #. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Actions to Perform on Incoming Mails"
-msgstr "Veiksmai, atliekami gautiems laiškams"
+msgstr "Veiksmai, atliekami gautuose laiškuose"
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_active
@@ -42,18 +40,18 @@ msgid "Active"
 msgstr "Aktyvus"
 
 #. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Advanced"
-msgstr "Papildoma"
+msgstr "Išsamūs"
 
 #. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Advanced Options"
-msgstr "Papildomi pasirinkimai"
+msgstr "Išsamūs pasirinkimai"
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_configuration
-#: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Configuration"
 msgstr "Nustatymai"
 
@@ -74,7 +72,7 @@ msgid ""
 "Connections are encrypted with SSL/TLS through a dedicated port (default: "
 "IMAPS=993, POP3S=995)"
 msgstr ""
-"Ryšiai yra užšifruoti su SSL/TLS per priskirtą prievadą (numatytasis: "
+"Ryšiai yra užšifruoti su SSL/TLS per tam tikrą prievadą (numatytasis: "
 "IMAPS=993, POP3S=995)"
 
 #. module: fetchmail
@@ -96,7 +94,7 @@ msgstr "Sukurta"
 #: model:ir.model.fields,help:fetchmail.field_fetchmail_server_priority
 msgid "Defines the order of processing, lower values mean higher priority"
 msgstr ""
-"Apibrėžiama apdorojimo tvarka, mažesnės vertės reiškia aukštesnį prioritetą."
+"Apibrėžiama proceso tvarka, mažesnės vertės reiškia aukštesnį prioritetą."
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_display_name
@@ -104,14 +102,14 @@ msgid "Display Name"
 msgstr "Vaizduojamas pavadinimas"
 
 #. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Fetch Now"
-msgstr "Paimti dabar"
+msgstr "Užeiti dabar"
 
 #. module: fetchmail
 #: model:ir.model.fields,help:fetchmail.field_fetchmail_server_server
 msgid "Hostname or IP of the mail server"
-msgstr "Pašto serverio IP arba serverio pavadinimas"
+msgstr "Pagrindinio kompiuterio vardas arba pašto serverio IP"
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_id
@@ -119,7 +117,7 @@ msgid "ID"
 msgstr "ID"
 
 #. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_search
 msgid "IMAP"
 msgstr "IMAP"
 
@@ -129,31 +127,31 @@ msgid "IMAP Server"
 msgstr "IMAP serveris"
 
 #. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_search
 msgid "If SSL required."
-msgstr "Jeigu reikalingas SSL."
+msgstr "Jeigu SSL reikalingas."
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_mail_mail_fetchmail_server_id
 msgid "Inbound Mail Server"
-msgstr "Įeinančio pašto serveris"
+msgstr "Gaunamas pašto serveris"
 
 #. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:fetchmail.res_config_settings_view_form
 msgid "Incoming Email Servers"
-msgstr "Įeinančių el. laiškų serveriai"
+msgstr ""
 
 #. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
-#: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_form
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_search
 msgid "Incoming Mail Server"
-msgstr "Įeinančio pašto serveris"
+msgstr "Gaunamas pašto serveris"
 
 #. module: fetchmail
 #: model:ir.actions.act_window,name:fetchmail.action_email_server_tree
 #: model:ir.ui.menu,name:fetchmail.menu_action_fetchmail_server_tree
 msgid "Incoming Mail Servers"
-msgstr "Įeinančio pašto serveriai"
+msgstr "Gaunami pašto serveriai"
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_attach
@@ -168,7 +166,7 @@ msgstr "Pasilikti originalą"
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_date
 msgid "Last Fetch Date"
-msgstr "Paskutinio paėmimo data"
+msgstr "Paskutinio lankymosi data"
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server___last_update
@@ -191,7 +189,7 @@ msgid "Local Server"
 msgstr "Vietinis serveris"
 
 #. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Login Information"
 msgstr "Prisijungimo informacija"
 
@@ -200,7 +198,7 @@ msgstr "Prisijungimo informacija"
 #: model:ir.cron,cron_name:fetchmail.ir_cron_mail_gateway_action
 #: model:ir.cron,name:fetchmail.ir_cron_mail_gateway_action
 msgid "Mail: Fetchmail Service"
-msgstr "El. paštas: Laiškų paėmimo paslauga"
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.actions.act_window,name:fetchmail.act_server_history
@@ -224,13 +222,11 @@ msgid ""
 "Optional custom server action to trigger for each incoming mail, on the "
 "record that was created or updated by this mail"
 msgstr ""
-"Papildomas serverio veiksmas, iššaukiamas kiekvienam gaunamam el. laiškui, "
-"kuris buvo sukurtas ar atnaujintas šio pašto"
 
 #. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:fetchmail.res_config_settings_view_form
 msgid "Outgoing Email Servers"
-msgstr "Išeinančių el. laiškų serveriai"
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.model,name:fetchmail.model_mail_mail
@@ -238,14 +234,14 @@ msgid "Outgoing Mails"
 msgstr "Išeinantis paštas"
 
 #. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_search
 msgid "POP"
 msgstr "POP"
 
 #. module: fetchmail
 #: selection:fetchmail.server,type:0
 msgid "POP Server"
-msgstr "POP serveris"
+msgstr "POP serveros"
 
 #. module: fetchmail
 #: model:ir.model,name:fetchmail.model_fetchmail_server
@@ -253,7 +249,7 @@ msgid "POP/IMAP Server"
 msgstr "POP/IMAP serveris"
 
 #. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.view_email_server_tree
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_tree
 msgid "POP/IMAP Servers"
 msgstr "POP/IMAP serveriai"
 
@@ -274,17 +270,17 @@ msgid ""
 "document type. This will create new documents for new conversations, or "
 "attach follow-up emails to the existing conversations (documents)."
 msgstr ""
-"Apdoroti kiekviena gaunamą el. laišką kaip pokalbio dalį, atitinkančią šį "
-"dokumento tipą. Tai sukurs naujus dokumentus naujiems pokalbiams arba "
-"prisegs priminimo el. laiškus egzistuojantiems pokalbiams (dokumentams)."
+"Apdoroti kiekviena gaunamą el. laišką kaip pokalbio dalį, atliktą šiai "
+"dokumento rūšiai. Tai sukurs naujus dokumentus naujiems arba prisegs "
+"priminimo al. laiškus egzistuojantiems pokalbiams (dokumentams)."
 
 #. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Reset Confirmation"
 msgstr "Atkurti patvirtinimą"
 
 #. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_search
 msgid "SSL"
 msgstr "SSL"
 
@@ -296,15 +292,15 @@ msgstr "SSL/TLS"
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_script
 msgid "Script"
-msgstr "Skriptas"
+msgstr "Scenarijus"
 
 #. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_search
 msgid "Search Incoming Mail Servers"
-msgstr "Ieškoti įeinančio pašto serveriuose"
+msgstr "Ieškoti gaunamų pašto serverių"
 
 #. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Server & Login"
 msgstr "Serveris ir prisijungimas"
 
@@ -314,14 +310,14 @@ msgid "Server Action"
 msgstr "Serverio veiksmas"
 
 #. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Server Information"
 msgstr "Serverio informacija"
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_server
 msgid "Server Name"
-msgstr "Serverio pavadinimas"
+msgstr "Serverio vardas"
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_priority
@@ -334,12 +330,12 @@ msgid "Server Type"
 msgstr "Serverio tipas"
 
 #. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_search
 msgid "Server type IMAP."
 msgstr "Serverio tipas IMAP."
 
 #. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_search
 msgid "Server type POP."
 msgstr "Serverio tipas POP."
 
@@ -349,14 +345,14 @@ msgid "Status"
 msgstr "Būsena"
 
 #. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Test & Confirm"
 msgstr "Tikrinti & patvirtinti"
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_user
 msgid "Username"
-msgstr "Vartotojo vardas"
+msgstr "Naudotojo vardas"
 
 #. module: fetchmail
 #: model:ir.model.fields,help:fetchmail.field_fetchmail_server_original
@@ -365,9 +361,9 @@ msgid ""
 "attached to each processed message. This will usually double the size of "
 "your message database."
 msgstr ""
-"Ar kiekvieno laiško pilna kopija turėtų būti pasiliekama ateičiai ir "
-"prisegama prie kiekvienos apdorotos žinutės? Tai paprastai padvigubina "
-"pranešimo dydį duomenų bazėje."
+"Ar kiekvieno el. pašto pilna originali  kopija turi būti pasilikta nurodant "
+"ir prisegant prie kiekvienos apdorotos žinutės? Tai paprastai padvigubina "
+"žinutės duomenų bazėje dydį."
 
 #. module: fetchmail
 #: model:ir.model.fields,help:fetchmail.field_fetchmail_server_attach
@@ -375,5 +371,3 @@ msgid ""
 "Whether attachments should be downloaded. If not enabled, incoming emails "
 "will be stripped of any attachments before being processed"
 msgstr ""
-"Ar prisegtukai turėtų būti parsisiunčiami. Jei neįjungta, visi priedai bus "
-"pašalinti prieš apdorojimo procesą."

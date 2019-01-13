@@ -9,8 +9,7 @@ class SaleReport(models.Model):
 
     warehouse_id = fields.Many2one('stock.warehouse', 'Warehouse', readonly=True)
 
-    def _select(self):
-        return super(SaleReport, self)._select() + ", s.warehouse_id as warehouse_id"
-
-    def _group_by(self):
-        return super(SaleReport, self)._group_by() + ", s.warehouse_id"
+    def _query(self, with_clause='', fields={}, groupby='', from_clause=''):
+        fields['warehouse_id'] = ", s.warehouse_id as warehouse_id"
+        groupby += ', s.warehouse_id'
+        return super(SaleReport, self)._query(with_clause, fields, groupby, from_clause)

@@ -7,10 +7,11 @@ from odoo import api, fields, models
 class RestaurantFloor(models.Model):
 
     _name = 'restaurant.floor'
+    _description = 'Restaurant Floor'
 
     name = fields.Char('Floor Name', required=True, help='An internal identification of the restaurant floor')
     pos_config_id = fields.Many2one('pos.config', string='Point of Sale')
-    background_image = fields.Binary('Background Image', attachment=True, help='A background image used to display a floor layout in the point of sale interface')
+    background_image = fields.Binary('Background Image', help='A background image used to display a floor layout in the point of sale interface')
     background_color = fields.Char('Background Color', help='The background color of the floor layout, (must be specified in a html-compatible format)', default='rgb(210, 210, 210)')
     table_ids = fields.One2many('restaurant.table', 'floor_id', string='Tables', help='The list of tables in this floor')
     sequence = fields.Integer('Sequence', help='Used to sort Floors', default=1)
@@ -19,6 +20,7 @@ class RestaurantFloor(models.Model):
 class RestaurantTable(models.Model):
 
     _name = 'restaurant.table'
+    _description = 'Restaurant Table'
 
     name = fields.Char('Table Name', required=True, help='An internal identification of a table')
     floor_id = fields.Many2one('restaurant.floor', string='Floor')
@@ -54,6 +56,7 @@ class RestaurantTable(models.Model):
 class RestaurantPrinter(models.Model):
 
     _name = 'restaurant.printer'
+    _description = 'Restaurant Printer'
 
     name = fields.Char('Printer Name', required=True, default='Printer', help='An internal identification of the printer')
     proxy_ip = fields.Char('Proxy IP Address', help="The IP Address or hostname of the Printer's hardware proxy")

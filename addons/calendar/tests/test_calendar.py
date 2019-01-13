@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import datetime
 
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, time
 
 from odoo import fields
 from odoo.tests.common import TransactionCase
@@ -35,7 +35,7 @@ class TestCalendar(TransactionCase):
         })
 
         self.assertEqual(
-            (m.start_datetime, m.stop_datetime),
+            (str(m.start_datetime), str(m.stop_datetime)),
             (u'2017-07-12 14:30:00', u'2017-07-12 15:00:00'),
             "Sanity check"
         )
@@ -94,7 +94,7 @@ class TestCalendar(TransactionCase):
             'name': '1 Day before event starts',
             'duration': 1,
             'interval': 'days',
-            'type': 'notification'
+            'alarm_type': 'notification'
         })
 
         # Now I will assign this reminder to all day event|
@@ -103,8 +103,8 @@ class TestCalendar(TransactionCase):
         # I create a recuring rule for my event
         calendar_event_sprint_review = self.CalendarEvent.create({
             'name': 'Begin of month meeting',
-            'start': fields.Date.today() + ' 12:00:00',
-            'stop': fields.Date.today() + ' 18:00:00',
+            'start': datetime.combine(fields.Date.today(), time(12, 0)),
+            'stop': datetime.combine(fields.Date.today(), time(18, 0)),
             'recurrency': True,
             'rrule': 'FREQ=MONTHLY;INTERVAL=1;COUNT=12;BYDAY=1MO'
         })
@@ -131,7 +131,7 @@ class TestCalendar(TransactionCase):
             'stop': '2017-07-12 15:00:00',
         })
         self.assertEqual(
-            (m.start_datetime, m.stop_datetime),
+            (str(m.start_datetime), str(m.stop_datetime)),
             (u'2017-07-12 14:30:00', u'2017-07-12 15:00:00'),
             "Sanity check"
         )
@@ -155,11 +155,11 @@ class TestCalendar(TransactionCase):
 
         records = m.detach_recurring_event(values)
         self.assertEqual(
-            (m.start_datetime, m.stop_datetime),
-            (u'2017-07-12 14:30:00', u'2017-07-12 15:00:00'),
+            (str(m.start_datetime), str(m.stop_datetime)),
+            ('2017-07-12 14:30:00', u'2017-07-12 15:00:00'),
         )
         self.assertEquals(
-            (records.start_datetime, records.stop_datetime),
+            (str(records.start_datetime), str(records.stop_datetime)),
             (u'2017-07-10 15:30:00', u'2017-07-10 16:00:00'),
         )
 
@@ -244,7 +244,7 @@ class TestCalendar(TransactionCase):
         self.assertEqual(test_record.activity_ids.summary, test_name)
         self.assertEqual(test_record.activity_ids.note, test_description)
         self.assertEqual(test_record.activity_ids.user_id, self.env.user)
-        self.assertEqual(test_record.activity_ids.date_deadline, fields.Date.to_string((now + timedelta(days=-1)).date()))
+        self.assertEqual(test_record.activity_ids.date_deadline, (now + timedelta(days=-1)).date())
 
         # updating event should update activity
         test_event.write({
@@ -256,7 +256,7 @@ class TestCalendar(TransactionCase):
         self.assertEqual(test_record.activity_ids.summary, '%s2' % test_name)
         self.assertEqual(test_record.activity_ids.note, test_description2)
         self.assertEqual(test_record.activity_ids.user_id, test_user)
-        self.assertEqual(test_record.activity_ids.date_deadline, fields.Date.to_string((now + timedelta(days=-2)).date()))
+        self.assertEqual(test_record.activity_ids.date_deadline, (now + timedelta(days=-2)).date())
 
         # deleting meeting should delete its activity
         test_record.activity_ids.unlink()
@@ -269,8 +269,8 @@ class TestCalendar(TransactionCase):
         ).create({
             'name': test_name,
             'description': test_description,
-            'start': fields.Datetime.to_string(now + timedelta(days=-1)),
-            'stop': fields.Datetime.to_string(now + timedelta(hours=2)),
+            'start': now + timedelta(days=-1),
+            'stop': now + timedelta(hours=2),
             'user_id': self.env.user.id,
         })
         self.assertEqual(test_event.res_model, test_record._name)
@@ -291,8 +291,8 @@ class TestCalendar(TransactionCase):
             'allday': True,
         })
 
-        self.assertEqual(event.start, '2018-10-16 08:00:00')
-        self.assertEqual(event.stop, '2018-10-18 18:00:00')
+        self.assertEqual(str(event.start), '2018-10-16 08:00:00')
+        self.assertEqual(str(event.stop), '2018-10-18 18:00:00')
 
     def test_recurring_around_dst(self):
         m = self.CalendarEvent.create({
@@ -325,7 +325,7 @@ class TestCalendar(TransactionCase):
             'summary': 'Meeting with partner',
             'activity_type_id': activty_type.id,
             'res_model_id': self.env['ir.model'].search([('model', '=', 'res.partner')], limit=1).id,
-            'res_id': self.env['res.partner'].search([('name', 'ilike', 'Agrolait')], limit=1).id,
+            'res_id': self.env['res.partner'].search([('name', 'ilike', 'Deco Addict')], limit=1).id,
         })
 
         calendar_event = self.env['calendar.event'].create({
@@ -336,7 +336,7 @@ class TestCalendar(TransactionCase):
         })
 
         # Check output in UTC
-        self.assertEqual(activity_id.date_deadline, '2018-11-12')
+        self.assertEqual(str(activity_id.date_deadline), '2018-11-12')
 
         # Check output in the user's tz
         # write on the event to trigger sync of activities
@@ -344,7 +344,7 @@ class TestCalendar(TransactionCase):
             'start': '2018-11-12 21:00:00',
         })
 
-        self.assertEqual(activity_id.date_deadline, '2018-11-13')
+        self.assertEqual(str(activity_id.date_deadline), '2018-11-13')
 
     def test_event_allday_activity_timezone(self):
         # Covers use case of commit eef4c3b48bcb4feac028bf640b545006dd0c9b91
@@ -358,7 +358,7 @@ class TestCalendar(TransactionCase):
             'summary': 'Meeting with partner',
             'activity_type_id': activty_type.id,
             'res_model_id': self.env['ir.model'].search([('model', '=', 'res.partner')], limit=1).id,
-            'res_id': self.env['res.partner'].search([('name', 'ilike', 'Agrolait')], limit=1).id,
+            'res_id': self.env['res.partner'].search([('name', 'ilike', 'Deco Addict')], limit=1).id,
         })
 
         calendar_event = self.env['calendar.event'].create({
@@ -374,7 +374,7 @@ class TestCalendar(TransactionCase):
         })
 
         # Check output in UTC
-        self.assertEqual(activity_id.date_deadline, '2018-10-16')
+        self.assertEqual(str(activity_id.date_deadline), '2018-10-16')
 
         # Check output in the user's tz
         # write on the event to trigger sync of activities
@@ -383,4 +383,4 @@ class TestCalendar(TransactionCase):
             'start_date': '2018-10-16',
         })
 
-        self.assertEqual(activity_id.date_deadline, '2018-10-16')
+        self.assertEqual(str(activity_id.date_deadline), '2018-10-16')

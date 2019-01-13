@@ -1,0 +1,184 @@
+:root {
+    font-size: $o-root-font-size;
+}
+
+// ------------------------------------------------------------------
+//  General
+// ------------------------------------------------------------------
+.o_web_client {
+    direction: ltr;
+    position: relative; // normally useless but required by bootstrap-datepicker
+    background-color: $o-webclient-background-color;
+}
+
+// ------------------------------------------------------------------
+// Misc. widgets
+// ------------------------------------------------------------------
+.o_notification_manager {
+    width: 300px;
+    max-width: 100%;
+
+    @include o-position-absolute($nav-link-height, 0);
+    z-index: 1100; // Bootstrap modal z-index is 1050
+
+    .o_notification {
+        padding: 0;
+        margin: 5px 0 0 0;
+
+        opacity: 0;
+
+        background-color: $o-notification-info-bg-color;
+        box-shadow: 0px 0px 5px 1px $o-main-text-color;
+
+        position: relative;
+        .o_close {
+            @include o-position-absolute(5px, 5px);
+            color: rgba(0, 0, 0, 0.3);
+            text-decoration: none;
+        }
+
+        .o_notification_title {
+            display: flex;
+            align-items: center;
+
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            padding: 10px 10px 10px 20px;
+
+            font-weight: bold;
+
+            .o_icon {
+                display: inline-block;
+                margin-right: 20px;
+                color: rgba(0, 0, 0, 0.3);
+            }
+        }
+
+        .o_notification_content {
+            padding: 10px;
+        }
+
+        &.o_error {
+            color: white;
+            background-color: $o-notification-error-bg-color;
+        }
+    }
+}
+
+// Buttons
+.o_icon_button {
+    background-color: transparent;
+    border: 0;
+    padding: 0;
+    outline: none;
+}
+
+// Boolean Toggle widget
+div.o_boolean_toggle.custom-control.custom-checkbox {
+    $line-height-computed: $line-height-base * $font-size-base;
+    $slider-width: $line-height-computed * 1.5;
+    $circle-width: $line-height-computed * 0.6;
+
+    display: inline-block;
+    padding-left: $slider-width + 0.25rem;
+
+    > label.custom-control-label {
+        &::before, &::after {
+            content: "";
+            top: 0;
+            left: -($slider-width + 0.25rem);
+        }
+        &::before {
+            width: $slider-width;
+            height: 100%;
+            background-color: #a0a0a0 !important;
+            border-radius: 100px;
+            outline: none !important;
+        }
+        &::after {
+            transform: translate($line-height-computed * 0.2, $line-height-computed * 0.2);
+            width: ceil($circle-width / 1rem * $o-root-font-size);
+            height: ceil($circle-width / 1rem * $o-root-font-size);
+            border-radius: 100px;
+            background-color: $white;
+            cursor: pointer;
+        }
+    }
+    > input.custom-control-input:checked + label.custom-control-label {
+        &::before {
+            background-color: $o-brand-primary !important;
+        }
+        &::after {
+            transform: translate($slider-width - $circle-width - $line-height-computed * 0.2, $line-height-computed * 0.2);
+            background-image: none;
+        }
+    }
+}
+
+// Full bg colors (bootstrap extension)
+.bg-success-full {
+    background-color: theme-color('success');
+}
+.bg-warning-full {
+    background-color: theme-color('warning');
+}
+.bg-danger-full {
+    background-color: theme-color('danger');
+}
+.bg-info-full {
+    background-color: theme-color('info');
+}
+
+.o_web_accesskey_overlay {
+    font-family: $font-family-sans-serif;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    background-color: rgba(0,0,0,.6);
+    color: #FFFFFF;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+}
+
+// Decorations
+.text-bf {
+    font-weight: bold;
+}
+.text-it {
+    font-style: italic;
+}
+
+//== Badges
+.badge {
+    margin: 1px 2px 1px 0;
+}
+
+// Btn-link variations
+.btn-link {
+    font-weight: $btn-font-weight;
+
+    &.btn-secondary {
+        @include o-btn-link-variant($body-color, $headings-color);
+    }
+    &.btn-success, &.text-success {
+        @include o-btn-link-variant($body-color, theme-color('success'));
+    }
+    &.btn-warning, &.text-warning {
+        @include o-btn-link-variant($body-color, theme-color('warning'));
+    }
+    &.btn-danger, &.text-danger {
+        @include o-btn-link-variant($body-color, theme-color('danger'));
+    }
+    &.btn-info, &.text-info {
+        @include o-btn-link-variant($body-color, darken(theme-color('info'), 20%));
+    }
+}
+
+//== Printing improvements
+@media print {
+    .table-responsive {
+        overflow-x: initial;
+    }
+}

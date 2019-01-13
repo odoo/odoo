@@ -1,7 +1,9 @@
 from odoo.addons.account.tests.account_test_users import AccountTestUsers
 import datetime
+from odoo.tests import tagged
 
 
+@tagged('post_install', '-at_install')
 class TestAccountCustomerInvoice(AccountTestUsers):
 
     def test_customer_invoice(self):
@@ -46,7 +48,6 @@ class TestAccountCustomerInvoice(AccountTestUsers):
 
         self.account_invoice_customer0 = self.account_invoice_obj.sudo(self.account_user.id).create(dict(
             name="Test Customer Invoice",
-            reference_type="none",
             payment_term_id=self.payment_term.id,
             journal_id=self.journalrec.id,
             partner_id=self.partner3.id,
@@ -88,6 +89,7 @@ class TestAccountCustomerInvoice(AccountTestUsers):
         # I verify that invoice is now in Paid state
         assert (self.account_invoice_customer0.state == 'paid'), "Invoice is not in Paid state"
 
+        self.partner3.invalidate_cache(ids=self.partner3.ids)
         total_after_confirm = self.partner3.total_invoiced
         self.assertEquals(total_after_confirm - total_before_confirm, self.account_invoice_customer0.amount_untaxed_signed)
 

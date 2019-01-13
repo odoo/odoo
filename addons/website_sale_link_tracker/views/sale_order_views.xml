@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sale_order_from_website_link_tracker" model="ir.ui.view">
+        <field name="name">sale.order.form.inherit.sale</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='utm_link']" position="replace">
+                <group string="Marketing" name="utm_link" groups="base.group_no_one">
+                    <field name="campaign_id"/>
+                    <field name="medium_id"/>
+                    <field name="source_id"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="sale_report_view_search_website_inherit" model="ir.ui.view">
+        <field name="name">sale.report.view.search.inherit</field>
+        <field name="model">sale.report</field>
+        <field name="inherit_id" ref="website_sale.sale_report_view_search_website"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='country_id']" position="after">
+                <field name="campaign_id"/>
+                <field name="medium_id"/>
+                <field name="source_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_order_product_search_inherit" model="ir.ui.view">
+        <field name="name">sale.report.search.inherit</field>
+        <field name="model">sale.report</field>
+        <field name="inherit_id" ref="sale.view_order_product_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='country_id']" position="after">
+                <field name="campaign_id"/>
+                <field name="medium_id"/>
+                <field name="source_id"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

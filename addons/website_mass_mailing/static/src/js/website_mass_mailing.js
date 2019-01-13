@@ -10,7 +10,7 @@ sAnimation.registry.subscribe = sAnimation.Class.extend({
         var self = this;
 
         // set value and display button
-        self.$target.find("input").removeClass("hidden");
+        self.$target.find("input").removeClass('d-none');
         this._rpc({
             route: '/website_mass_mailing/is_subscriber',
             params: {
@@ -23,15 +23,15 @@ sAnimation.registry.subscribe = sAnimation.Class.extend({
             self.$target.attr("data-subscribe", data.is_subscriber ? 'on' : 'off');
             self.$target.find('a.js_subscribe_btn')
                 .attr("disabled", data.is_subscriber && data.email.length ? "disabled" : false);
-            self.$target.removeClass("hidden");
-            self.$target.find('.js_subscribe_btn').toggleClass('hidden', !!data.is_subscriber);
-            self.$target.find('.js_subscribed_btn').toggleClass('hidden', !data.is_subscriber);
+            self.$target.removeClass('d-none');
+            self.$target.find('.js_subscribe_btn').toggleClass('d-none', !!data.is_subscriber);
+            self.$target.find('.js_subscribed_btn').toggleClass('d-none', !data.is_subscriber);
         });
 
         // not if editable mode to allow designer to edit alert field
         if (!this.editableMode) {
-            $('.js_subscribe > .alert').addClass("hidden");
-            $('.js_subscribe > .input-group-btn.hidden').removeClass("hidden");
+            $('.js_subscribe > .alert').addClass('d-none');
+            $('.js_subscribe > .input-group-append.d-none').removeClass('d-none');
             this.$target.find('.js_subscribe_btn').on('click', function (event) {
                 event.preventDefault();
                 self._onClick();
@@ -43,10 +43,10 @@ sAnimation.registry.subscribe = sAnimation.Class.extend({
         var $email = this.$target.find(".js_subscribe_email:visible");
 
         if ($email.length && !$email.val().match(/.+@.+/)) {
-            this.$target.addClass('has-error');
+            this.$target.addClass('o_has_error').find('.form-control, .custom-select').addClass('is-invalid');
             return false;
         }
-        this.$target.removeClass('has-error');
+        this.$target.removeClass('o_has_error').find('.form-control, .custom-select').removeClass('is-invalid');
 
         this._rpc({
             route: '/website_mass_mailing/subscribe',
@@ -55,8 +55,8 @@ sAnimation.registry.subscribe = sAnimation.Class.extend({
                 'email': $email.length ? $email.val() : false,
             },
         }).then(function (subscribe) {
-            self.$target.find(".js_subscribe_email, .input-group-btn").addClass("hidden");
-            self.$target.find(".alert").removeClass("hidden");
+            self.$target.find(".js_subscribe_email, .input-group-append").addClass('d-none');
+            self.$target.find(".alert").removeClass('d-none');
             self.$target.find('input.js_subscribe_email').attr("disabled", subscribe ? "disabled" : false);
             self.$target.attr("data-subscribe", subscribe ? 'on' : 'off');
         });
@@ -67,8 +67,23 @@ sAnimation.registry.newsletter_popup = sAnimation.Class.extend({
     selector: ".o_newsletter_popup",
     start: function () {
         var self = this;
+
+        // Compatibility: rebuilding a correct modal from user database
+        // content. Since the first version, the modal is saved in databases
+        // directly but has never used a correct structure. While it was working
+        // with BS3, it is not with BS4.
+        // TODO review the newsletter popup creation, save and loading.
+        var $modal = this.$('.modal');
+        if ($modal.is('.modal-dialog')) {
+            $modal.removeClass('modal-md modal-dialog');
+            var $modalContent = $modal.find('.modal-content');
+            $modalContent.wrapAll($('<div/>', {class: 'modal-dialog'}));
+        }
+
         var popupcontent = self.$target.find(".o_popup_content_dev").empty();
-        if (!self.$target.data('list-id')) return;
+        if (!self.$target.data('list-id')) {
+            return;
+        }
 
         this._rpc({
             route: '/website_mass_mailing/get_content',
@@ -96,10 +111,10 @@ sAnimation.registry.newsletter_popup = sAnimation.Class.extend({
         var $email = self.$target.find(".popup_subscribe_email:visible");
 
         if ($email.length && !$email.val().match(/.+@.+/)) {
-            this.$target.addClass('has-error');
+            this.$target.addClass('o_has_error').find('.form-control, .custom-select').addClass('is-invalid');
             return false;
         }
-        this.$target.removeClass('has-error');
+        this.$target.removeClass('o_has_error').find('.form-control, .custom-select').removeClass('is-invalid');
 
         this._rpc({
             route: '/website_mass_mailing/subscribe',
@@ -130,45 +145,4 @@ sAnimation.registry.newsletter_popup = sAnimation.Class.extend({
         }
     }
 });
-});
-
-//==============================================================================
-
-odoo.define('mass_mailing.unsubscribe', function (require) {
-    'use strict';
-
-    var ajax = require('web.ajax');
-    var core = require('web.core');
-    require('web.dom_ready');
-
-    var _t = core._t;
-
-    if (!$('.o_unsubscribe_form').length) {
-        return $.Deferred().reject("DOM doesn't contain '.o_unsubscribe_form'");
-    }
-
-    $('#unsubscribe_form').on('submit', function (e) {
-        e.preventDefault();
-
-        var email = $("input[name='email']").val();
-        var mailing_id = parseInt($("input[name='mailing_id']").val());
-
-        var checked_ids = [];
-        $("input[type='checkbox']:checked").each(function (i){
-          checked_ids[i] = parseInt($(this).val());
-        });
-
-        var unchecked_ids = [];
-        $("input[type='checkbox']:not(:checked)").each(function (i){
-          unchecked_ids[i] = parseInt($(this).val());
-        });
-
-        ajax.jsonRpc('/mail/mailing/unsubscribe', 'call', {'opt_in_ids': checked_ids, 'opt_out_ids': unchecked_ids, 'email': email, 'mailing_id': mailing_id})
-            .then(function (result) {
-                $('.alert-info').html(_t('Your changes have been saved.')).removeClass('alert-info').addClass('alert-success');
-            })
-            .fail(function () {
-                $('.alert-info').html(_t('Your changes have not been saved, try again later.')).removeClass('alert-info').addClass('alert-warning');
-            });
-    });
 });

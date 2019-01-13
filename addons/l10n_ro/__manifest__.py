@@ -28,7 +28,7 @@ Romanian accounting chart and localization.
              'data/account_data.xml',
              'data/account_tax_data.xml',
              'data/account_fiscal_position_data.xml',
-             'data/account_chart_template_data.yml',
+             'data/account_chart_template_data.xml',
              'data/res.country.state.csv',
              'data/res.bank.csv',
              ],

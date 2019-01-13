@@ -15,7 +15,7 @@ odoo.define('website_form.animation', function (require) {
         willStart: function () {
             var def;
             if (!$.fn.datetimepicker) {
-                def = ajax.loadJS("/web/static/lib/bootstrap-datetimepicker/src/js/bootstrap-datetimepicker.js");
+                def = ajax.loadJS("/web/static/lib/tempusdominus/tempusdominus.js");
             }
             return $.when(this._super.apply(this, arguments), def);
         },
@@ -150,7 +150,7 @@ odoo.define('website_form.animation', function (require) {
             // Loop on all fields
             this.$target.find('.form-field').each(function (k, field){
                 var $field = $(field);
-                var field_name = $field.find('.control-label').attr('for');
+                var field_name = $field.find('.col-form-label').attr('for');
 
                 // Validate inputs for this field
                 var inputs = $field.find('.o_website_form_input:not(#editable_select)');
@@ -183,9 +183,9 @@ odoo.define('website_form.animation', function (require) {
                 });
 
                 // Update field color if invalid or erroneous
-                $field.removeClass('has-error');
+                $field.removeClass('o_has_error').find('.form-control, .custom-select').removeClass('is-invalid');
                 if (invalid_inputs.length || error_fields[field_name]){
-                    $field.addClass('has-error');
+                    $field.addClass('o_has_error').find('.form-control, .custom-select').addClass('is-invalid')
                     if (_.isString(error_fields[field_name])){
                         $field.popover({content: error_fields[field_name], trigger: 'hover', container: 'body', placement: 'top'});
                         // update error message and show it.

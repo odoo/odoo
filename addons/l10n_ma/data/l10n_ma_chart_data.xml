@@ -8,22 +8,13 @@
       --> 
     <menuitem id="account_reports_ma_statements_menu" name="Morocco" parent="account.menu_finance_reports" sequence="0" groups="account.group_account_user"/>
 
-    <record id="pcg_5115" model="account.account.template">
-      <field name="name">Virement de fonds</field>
-      <field name="code">5115</field>
-      <field name="reconcile" eval='True'/>
-      <field name="user_type_id" ref="account.data_account_type_current_assets"/>
-    </record>
     <record id="l10n_kzc_temp_chart" model="account.chart.template">
         <field name="name">Plan comptable marocain</field>
         <field name="code_digits">6</field>
         <field name="currency_id" ref="base.MAD"/>
         <field name="bank_account_code_prefix">5141</field>
         <field name="cash_account_code_prefix">5161</field>
-        <field name="transfer_account_id" ref="pcg_5115"/>
-    </record>
-    <record id="pcg_5115" model="account.account.template">
-        <field name="chart_template_id" ref="l10n_kzc_temp_chart"/>
+        <field name="transfer_account_code_prefix">5115</field>
     </record>
 
   <record id="pcg_1111" model="account.account.template">

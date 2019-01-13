@@ -14,11 +14,30 @@ class Website(models.Model):
     _inherit = 'website'
 
     pricelist_id = fields.Many2one('product.pricelist', compute='_compute_pricelist_id', string='Default Pricelist')
-    currency_id = fields.Many2one('res.currency', related='pricelist_id.currency_id', related_sudo=False, string='Default Currency')
+    currency_id = fields.Many2one('res.currency', related='pricelist_id.currency_id', related_sudo=False, string='Default Currency', readonly=False)
     salesperson_id = fields.Many2one('res.users', string='Salesperson')
-    salesteam_id = fields.Many2one('crm.team', string='Sales Channel')
+
+    def _get_default_website_team(self):
+        try:
+            team = self.env.ref('sales_team.salesteam_website_sales')
+            return team if team.active else None
+        except ValueError:
+            return None
+
+    salesteam_id = fields.Many2one('crm.team', 
+        string='Sales Team', 
+        default=_get_default_website_team)
     pricelist_ids = fields.One2many('product.pricelist', compute="_compute_pricelist_ids",
                                     string='Price list available for this Ecommerce/Website')
+
+    def _default_recovery_mail_template(self):
+        try:
+            return self.env.ref('website_sale.mail_template_sale_cart_recovery').id
+        except ValueError:
+            return False
+
+    cart_recovery_mail_template_id = fields.Many2one('mail.template', string='Cart Recovery Email', default=_default_recovery_mail_template, domain="[('model', '=', 'sale.order')]")
+    cart_abandoned_delay = fields.Float("Abandoned Delay", default=1.0)
 
     @api.one
     def _compute_pricelist_ids(self):
@@ -86,14 +105,14 @@ class Website(models.Model):
                 website = len(self) == 1 and self or self.search([], limit=1)
         isocountry = request and request.session.geoip and request.session.geoip.get('country_code') or False
         partner = self.env.user.partner_id
-        order_pl = partner.last_website_so_id and partner.last_website_so_id.state == 'draft' and partner.last_website_so_id.pricelist_id
+        last_order_pl = partner.last_website_so_id.pricelist_id
         partner_pl = partner.property_product_pricelist
         pricelists = website._get_pl_partner_order(isocountry, show_visible,
                                                    website.user_id.sudo().partner_id.property_product_pricelist.id,
                                                    request and request.session.get('website_sale_current_pl') or None,
                                                    website.pricelist_ids,
                                                    partner_pl=partner_pl and partner_pl.id or None,
-                                                   order_pl=order_pl and order_pl.id or None)
+                                                   order_pl=last_order_pl and last_order_pl.id or None)
         return self.env['product.pricelist'].browse(pricelists)
 
     def is_pricelist_available(self, pl_id):
@@ -123,9 +142,8 @@ class Website(models.Model):
                 pl = None
                 request.session.pop('website_sale_current_pl')
         if not pl:
-            # If the user has a saved cart, it take the pricelist of this cart, except if
-            # the order is no longer draft (It has already been confirmed, or cancelled, ...)
-            pl = partner.last_website_so_id.state == 'draft' and partner.last_website_so_id.pricelist_id
+            # If the user has a saved cart, it take the pricelist of this last unconfirmed cart
+            pl = partner.last_website_so_id.pricelist_id
             if not pl:
                 # The pricelist of the user set on its partner form.
                 # If the user is not signed in, it's the public user pricelist
@@ -145,7 +163,7 @@ class Website(models.Model):
 
     @api.multi
     def sale_product_domain(self):
-        return [("sale_ok", "=", True)]
+        return [("sale_ok", "=", True)] + self.get_current_website().website_domain()
 
     @api.model
     def sale_get_payment_term(self, partner):
@@ -160,16 +178,21 @@ class Website(models.Model):
         self.ensure_one()
         affiliate_id = request.session.get('affiliate_id')
         salesperson_id = affiliate_id if self.env['res.users'].sudo().browse(affiliate_id).exists() else request.website.salesperson_id.id
-        addr = partner.address_get(['delivery', 'invoice'])
+        addr = partner.address_get(['delivery'])
+        if not request.website.is_public_user():
+            last_sale_order = self.env['sale.order'].search([('partner_id', '=', partner.id)], limit=1, order="date_order desc, id desc")
+            if last_sale_order:  # first = me
+                addr['delivery'] = last_sale_order.partner_shipping_id.id
         default_user_id = partner.parent_id.user_id.id or partner.user_id.id
         values = {
             'partner_id': partner.id,
             'pricelist_id': pricelist.id,
             'payment_term_id': self.sale_get_payment_term(partner),
             'team_id': self.salesteam_id.id or partner.parent_id.team_id.id or partner.team_id.id,
-            'partner_invoice_id': addr['invoice'],
+            'partner_invoice_id': partner.id,
             'partner_shipping_id': addr['delivery'],
             'user_id': salesperson_id or self.salesperson_id.id or default_user_id,
+            'website_id': self._context.get('website_id'),
         }
         company = self.company_id or pricelist.company_id
         if company:
@@ -193,8 +216,8 @@ class Website(models.Model):
         if not sale_order_id:
             last_order = partner.last_website_so_id
             available_pricelists = self.get_pricelist_available()
-            # Do not reload the cart of this user last visit if the cart is no longer draft or uses a pricelist no longer available.
-            sale_order_id = last_order.state == 'draft' and last_order.pricelist_id in available_pricelists and last_order.id
+            # Do not reload the cart of this user last visit if the cart uses a pricelist no longer available.
+            sale_order_id = last_order.pricelist_id in available_pricelists and last_order.id
 
         pricelist_id = request.session.get('website_sale_current_pl') or self.get_current_pricelist().id
 
@@ -231,9 +254,6 @@ class Website(models.Model):
 
             request.session['sale_order_id'] = sale_order.id
 
-            if request.website.partner_id.id != partner.id:
-                partner.write({'last_website_so_id': sale_order.id})
-
         if sale_order:
             # case when user emptied the cart
             if not request.session.get('sale_order_id'):
@@ -252,6 +272,7 @@ class Website(models.Model):
                 # change the partner, and trigger the onchange
                 sale_order.write({'partner_id': partner.id})
                 sale_order.onchange_partner_id()
+                sale_order.write({'partner_invoice_id': partner.id})
                 sale_order.onchange_partner_shipping_id() # fiscal position
                 sale_order['payment_term_id'] = self.sale_get_payment_term(partner)
 
@@ -300,28 +321,9 @@ class Website(models.Model):
 
         return sale_order
 
-    def sale_get_transaction(self):
-        tx_id = request.session.get('sale_transaction_id')
-        if tx_id:
-            transaction = self.env['payment.transaction'].sudo().browse(tx_id)
-            # Ugly hack for SIPS: SIPS does not allow to reuse a payment reference, even if the
-            # payment was not not proceeded. For example:
-            # - Select SIPS for payment
-            # - Be redirected to SIPS website
-            # - Go back to eCommerce without paying
-            # - Be redirected to SIPS website again => error
-            # Since there is no link module between 'website_sale' and 'payment_sips', we prevent
-            # here to reuse any previous transaction for SIPS.
-            if transaction.state != 'cancel' and transaction.acquirer_id.provider != 'sips':
-                return transaction
-            else:
-                request.session['sale_transaction_id'] = False
-        return False
-
     def sale_reset(self):
         request.session.update({
             'sale_order_id': False,
-            'sale_transaction_id': False,
             'website_sale_current_pl': False,
         })
 

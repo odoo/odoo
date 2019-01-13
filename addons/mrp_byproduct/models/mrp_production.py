@@ -27,19 +27,22 @@ class MrpProduction(models.Model):
                 'location_dest_id': production.location_dest_id.id,
                 'operation_id': sub_product.operation_id.id,
                 'production_id': production.id,
+                'warehouse_id': production.location_dest_id.get_warehouse().id,
                 'origin': production.name,
                 'unit_factor': qty1 / (production.product_qty - production.qty_produced),
+                'propagate': self.propagate,
+                'group_id': self.move_dest_ids and self.move_dest_ids.mapped('group_id')[0].id or self.procurement_group_id.id,
                 'subproduct_id': sub_product.id
             }
             move = Move.create(data)
             move._action_confirm()
 
     @api.multi
-    def _generate_moves(self):
+    def _generate_finished_moves(self):
         """ Generates moves and work orders
         @return: Newly generated picking Id.
         """
-        res = super(MrpProduction, self)._generate_moves()
+        res = super(MrpProduction, self)._generate_finished_moves()
         for production in self.filtered(lambda production: production.bom_id):
             for sub_product in production.bom_id.sub_products:
                 production._create_byproduct_move(sub_product)

@@ -1,0 +1,141 @@
+// Systray icon and dropdown
+.o_mail_systray_item {
+    > a {
+        opacity: 1;
+        > i {
+            font-size: larger;
+        }
+    }
+    &.o_no_notification > a {
+        opacity: 0.5;
+        > i {
+            transform: translateY(0px);
+        }
+        .o_notification_counter {
+            display: none;
+        }
+    }
+    &.show .o_mail_systray_dropdown {
+        display: flex;
+        flex-flow: column nowrap;
+    }
+    .o_notification_counter {
+        margin-top: -0.8rem;
+        margin-right: 0;
+        margin-left: -0.6rem;
+        background: #00A09D;
+        color: white;
+        vertical-align: super;
+        font-size: 0.7em;
+    }
+    .o_mail_systray_dropdown {
+        direction: ltr;
+        width: 350px;
+        padding: 0;
+
+        .o_spinner {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: $o-main-text-color;
+            height: 50px;
+        }
+
+        .o_mail_systray_dropdown_top {
+            display: flex;
+            flex: 0 0 auto;
+            justify-content: space-between;
+            border-bottom: 1px solid gray('400');
+            box-shadow: 0 0 2px gray('400');
+            .o_filter_button, .o_new_message {
+                padding: 5px;
+            }
+            .o_filter_button {
+                color: $o-main-color-muted;
+                &:hover, &.active {
+                    color: $o-brand-primary;
+                }
+                &.active {
+                    cursor: default;
+                    font-weight: bold;
+                }
+            }
+        }
+
+        .o_mail_systray_dropdown_items {
+            flex: 0 1 auto;
+            max-height: 400px;
+            min-height: 50px;
+            overflow-y: auto;
+
+            @include media-breakpoint-up(md) {
+                .o_mail_preview {
+                    min-height: 50px;
+                    padding: 5px;
+                    .o_mail_preview_image {
+                        width: 40px;
+                        height: 40px;
+                    }
+                    .o_preview_info {
+                        margin-left: 10px;
+                        .o_preview_title {
+                            .o_last_message_date {
+                                padding-top: 2px;
+                                font-size: x-small;
+                                margin-left: 10px;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        .o_activity_filter_button {
+            padding: 2px;
+        }
+        .o_no_activity {
+            cursor: initial;
+            align-items: center;
+            color: grey;
+            opacity: 0.5;
+            padding: 3px;
+        }
+    }
+}
+
+.o_no_thread_window .o_mail_systray_dropdown .o_new_message {
+    display: none;  // hide 'new message' button if chat windows are disabled
+}
+
+// Mobile rules
+// Goal: mock the design of Discuss in mobile
+@include media-breakpoint-down(sm) {
+    .o_mail_systray_item {
+        .o_notification_counter {
+            top: 10%;
+        }
+        .o_mail_systray_dropdown {
+            position: relative;
+            .o_mail_systray_dropdown_top {
+                padding: 5px;
+            }
+            .o_mail_systray_mobile_header {
+                padding: 5px;
+                height: 44px;
+                border-bottom: 1px solid #ebebeb;
+                box-shadow: 0 0 2px gray('400');
+            }
+            .o_mail_systray_dropdown_items {
+                max-height: none;
+                padding-bottom: 52px; // leave space for tabs
+            }
+            .o_mail_mobile_tabs {
+                position: fixed;
+                bottom: 0px;
+                left: 0px;
+                right: 0px;
+                background-color: white;
+                color: $o-main-text-color;
+            }
+        }
+    }
+}

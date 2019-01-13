@@ -11,6 +11,7 @@ class m(models.Model):
         resource' and 'a lot of resource'.
     """
     _name = 'test.limits.model'
+    _description = 'Test Limits Model'
 
     @api.model
     def consume_nothing(self):

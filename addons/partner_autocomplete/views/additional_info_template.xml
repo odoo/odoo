@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="additional_info_template">
+        <p>Partner created by Odoo Partner Autocomplete Service</p>
+        <div class="bg-white mt-3 mb-3 p-5 mr-5">
+            <h4>
+                <span class="mr-3" t-esc="name"/>
+                <a t-if="twitter" class="ml-2" target="_blank" t-attf-href="http://www.twitter.com/{{twitter}}">
+                    <img width="18px" height="18px" src="/partner_autocomplete/static/img/twitter.ico"/>
+                </a>
+                <a t-if="facebook" class="ml-2" target="_blank" t-attf-href="http://www.facebook.com/{{facebook}}">
+                    <img width="18px" height="18px" src="/partner_autocomplete/static/img/facebook.ico"/>
+                </a>
+                <a t-if="linkedin" class="ml-2" target="_blank" t-attf-href="https://www.linkedin.com/{{linkedin}}">
+                    <img width="18px" height="18px" src="/partner_autocomplete/static/img/linkedin.ico"/>
+                </a>
+                <a t-if="crunchbase" class="ml-2" target="_blank" t-attf-href="https://www.crunchbase.com/{{crunchbase}}">
+                    <img width="18px" height="18px" src="/partner_autocomplete/static/img/crunchbase.ico"/>
+                </a>
+            </h4>
+            <p t-esc="description"/>
+            <hr/>
+
+            <p t-if="company_type">
+                <i class="fa fa-fw mr-2 fa-building text-primary"/>
+                <b>Company type:</b>
+                <t t-esc="company_type"/>
+            </p>
+            <p t-if="founded_year">
+                <i class="fa fa-fw mr-2 fa-calendar text-primary"/>
+                <b>Founded:</b>
+                <t t-esc="founded_year"/>
+            </p>
+            <p t-if="sector">
+                <i class="fa fa-fw mr-2 fa-industry text-primary"/>
+                <b>Sector:</b>
+                <t t-foreach="sector" t-as="s">
+                    <label t-esc="s" style="font-weight:normal;padding: 2px 10px; background-color: #eeeeee; margin: 0 0 4px 2px; border-radius: 13px;"/>
+                </t>
+            </p>
+            <p t-if="employees">
+                <i class="fa fa-fw mr-2 fa-users text-primary"/>
+                <b>Employees:</b>
+                <t t-esc="employees"/>
+            </p>
+            <p t-if="annual_revenue">
+                <i class="fa fa-fw mr-2 fa-money text-primary"/>
+                <b>Annual revenue:</b>
+                <t t-esc="annual_revenue"/>
+            </p>
+            <p t-if="estimated_annual_revenue">
+                <i class="fa fa-fw mr-2 fa-money text-primary"/>
+                <b>Estimated annual revenue:</b>
+                <t t-esc="estimated_annual_revenue"/>
+            </p>
+            <p t-if="twitter_bio">
+                <i class="fa fa-fw mr-2 fa-twitter text-primary"/>
+                <b>
+                    Twitter :
+                    <span t-if="twitter_followers">(<t t-esc="twitter_followers"/> followers)</span>
+                </b>
+                <t t-esc="twitter_bio"/>
+                <br/>
+            </p>
+
+            <p t-if="timezone">
+                <i class="fa fa-fw mr-2 fa-globe text-primary"/>
+                <b>Timezone :</b>
+                <t t-esc="timezone"/>
+                <a target="_blank" t-att-href="timezone_url">(Time Now)</a>
+            </p>
+            <p t-if="phones">
+                <i class="fa fa-fw mr-2 fa-phone text-primary"/>
+                <b>Phone :</b>
+                <t t-foreach="phones" t-as="phone_number">
+                    <a class="mr-3" t-attf-href="tel:{{phone_number}}" t-esc="phone_number"/>
+                </t>
+            </p>
+            <p t-if="emails">
+                <i class="fa fa-fw mr-2 fa-envelope text-primary"/>
+                <b>Email :</b>
+                <t t-foreach="emails" t-as="email">
+                    <span style="margin:0 5px;">
+                        <a class="mr-3" target="_top" t-attf-href="mailto:{{email}}" t-esc="email"/>
+                    </span>
+                </t>
+            </p>
+            <p t-if="tech">
+                <i class="fa fa-fw mr-2 fa-cube text-primary"/>
+                <b>Technology Used :</b>
+                <t t-foreach="tech" t-as="t">
+                    <label t-esc="t" style="font-weight:normal; padding: 2px 10px; background-color: #eeeeee; margin: 0 0 4px 2px; border-radius: 13px;"/>
+                </t>
+            </p>
+        </div>
+    </template>
+</odoo>

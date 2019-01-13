@@ -36,16 +36,15 @@ Here is how it works:
         'data/account_data.xml',
         'data/account_vat2011_data.xml',
         'data/account_fiscal_position_data.xml',
-        'data/account_chart_template_data.yml',
+        'data/account_chart_template_data.xml',
         'report/isr_report.xml',
+        'report/swissqr_report.xml',
         'views/res_bank_view.xml',
         'views/account_invoice_view.xml',
         'views/res_config_settings_views.xml',
     ],
 
     'demo': [
-        '../account/demo/account_bank_statement.yml',
-        '../account/demo/account_invoice_demo.yml',
         'demo/account_cash_rounding.xml',
     ],
     'post_init_hook': 'post_init',

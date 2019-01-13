@@ -1,0 +1,90 @@
+.o_pivot {
+    overflow: auto;
+
+    // Inform the user that he may click on a cell to be redirected to a list view of the
+    // items corresponding to the clicked cell
+    &.o_enable_linking {
+        .o_pivot_cell_value:hover {
+            color: $o-brand-primary;
+            cursor: pointer;
+
+        }
+    }
+    .o_pivot_cell_value {
+        font-size: 1em;
+        .o_comparison {
+            font-size: 0.61em;
+        }
+        .o_variation {
+            &.o_positive {
+                color: green;
+            }
+            &.o_negative {
+                color: red;
+            }
+        }
+    }
+
+    table {
+        background-color: $o-view-background-color;
+        width: auto;  // bootstrap override
+
+        thead th:not(.o_pivot_header_cell_closed):not(.o_pivot_header_cell_opened) {
+            text-align: center;
+        }
+
+        th {
+            font-weight: normal;  // bootstrap override
+            background-color: lighten($o-brand-secondary, 40%);
+        }
+
+        @mixin o-pivot-header-cell {
+            background-color: lighten($o-brand-secondary, 40%);
+            cursor: pointer;
+            white-space: nowrap;
+            user-select: none;
+            &:hover {
+                background-color: lighten($o-brand-secondary, 30%);
+            }
+        }
+
+        .o_pivot_measure_row {
+            @include o-pivot-header-cell;
+        }
+
+        .o_pivot_header_cell_closed {
+            @include o-pivot-header-cell;
+            &::before {
+                font-family: FontAwesome;
+                content: "";
+                margin-right: 8px;
+            }
+        }
+
+        .o_pivot_header_cell_opened {
+            @include o-pivot-header-cell;
+            &::before {
+                font-family: FontAwesome;
+                content: "";
+                margin-right: 8px;
+            }
+        }
+
+        .o_pivot_measure_row_sorted_asc::after {
+            @include o-caret-down;
+            margin-left: 5px;
+        }
+
+        .o_pivot_measure_row_sorted_desc::after {
+            @include o-caret-up;
+            margin-left: 5px;
+        }
+    }
+
+    .o_pivot_field_selection::after {
+        @include o-caret-right;
+        position: absolute;
+        right: 6px;
+        top: 9px;
+    }
+}

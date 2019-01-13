@@ -3,14 +3,14 @@
 # * pos_discount
 # 
 # Translators:
-# Bohdan Lisnenko, 2017
+# Martin Trigaux, 2018
 # Alina Lisnenko <alinasemeniuk1@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:52+0000\n"
-"PO-Revision-Date: 2017-09-20 09:52+0000\n"
+"POT-Creation-Date: 2018-09-21 13:16+0000\n"
+"PO-Revision-Date: 2018-09-21 13:16+0000\n"
 "Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2018\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: pos_discount
-#: model:ir.model.fields,help:pos_discount.field_pos_config_iface_discount
+#: model:ir.model.fields,help:pos_discount.field_pos_config__iface_discount
 msgid "Allow the cashier to give discounts on the whole order."
 msgstr "Дозволити касиру робити знижку на все замовлення."
 
@@ -32,21 +32,21 @@ msgid "Discount"
 msgstr "Знижка"
 
 #. module: pos_discount
-#: model:ir.ui.view,arch_db:pos_discount.pos_config_view_form_inherit_pos_discount
+#: model_terms:ir.ui.view,arch_db:pos_discount.pos_config_view_form_inherit_pos_discount
 msgid "Discount %"
 msgstr "Знижка %"
 
 #. module: pos_discount
 #. openerp-web
 #: code:addons/pos_discount/static/src/js/discount.js:14
-#: model:ir.model.fields,field_description:pos_discount.field_pos_config_discount_pc
+#: model:ir.model.fields,field_description:pos_discount.field_pos_config__discount_pc
 #, python-format
 msgid "Discount Percentage"
 msgstr "Відсоток знижки"
 
 #. module: pos_discount
-#: model:ir.model.fields,field_description:pos_discount.field_pos_config_discount_product_id
-#: model:ir.ui.view,arch_db:pos_discount.pos_config_view_form_inherit_pos_discount
+#: model:ir.model.fields,field_description:pos_discount.field_pos_config__discount_product_id
+#: model_terms:ir.ui.view,arch_db:pos_discount.pos_config_view_form_inherit_pos_discount
 msgid "Discount Product"
 msgstr "Товар знижки"
 
@@ -58,12 +58,17 @@ msgid "No discount product found"
 msgstr "Не знайдено товару зі знижкою"
 
 #. module: pos_discount
-#: model:ir.model.fields,field_description:pos_discount.field_pos_config_iface_discount
+#: model:ir.model.fields,field_description:pos_discount.field_pos_config__iface_discount
 msgid "Order Discounts"
 msgstr "Знижки на замовлення"
 
 #. module: pos_discount
-#: model:ir.model.fields,help:pos_discount.field_pos_config_discount_pc
+#: model:ir.model,name:pos_discount.model_pos_config
+msgid "Point of Sale Configuration"
+msgstr "Налаштування касового терміналу"
+
+#. module: pos_discount
+#: model:ir.model.fields,help:pos_discount.field_pos_config__discount_pc
 msgid "The default discount percentage"
 msgstr "Типовий відсоток знижки"
 
@@ -79,11 +84,6 @@ msgstr ""
 "\"Можна продати\" та \"Доступно в точці продажу\"."
 
 #. module: pos_discount
-#: model:ir.model.fields,help:pos_discount.field_pos_config_discount_product_id
+#: model:ir.model.fields,help:pos_discount.field_pos_config__discount_product_id
 msgid "The product used to model the discount."
 msgstr "Товар використовується для моделювання знижки."
-
-#. module: pos_discount
-#: model:ir.model,name:pos_discount.model_pos_config
-msgid "pos.config"
-msgstr "pos.config"

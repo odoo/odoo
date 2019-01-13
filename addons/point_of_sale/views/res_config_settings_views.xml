@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.point_of_sale</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="95"/>
+        <field name="inherit_id" ref="base.res_config_settings_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('settings')]" position="inside">
+                <div class="app_settings_block" data-string="Point of sale" string="Point of Sale" data-key="point_of_sale" groups="point_of_sale.group_pos_manager">
+                    <h2>Taxes</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-12 col-lg-6 o_setting_box" title="This tax is applied to any new product created in the catalog.">
+                            <div class="o_setting_right_pane">
+                                <div>
+                                    <label string="Default Sales Tax" for="sale_tax_id"/>
+                                    <div class="text-muted">
+                                        Default sales tax for products
+                                    </div>
+                                    <div class="content-group mt16">
+                                        <field name="sale_tax_id" colspan="4" nolabel="1" domain="[('type_tax_use', 'in', ('sale', 'all')), ('company_id', '=', company_id)]"/>
+                                    </div>
+                                </div>
+                                <div>
+                                    <button name="%(account.action_tax_form)d" icon="fa-arrow-right" type="action" string="Taxes" class="btn-link"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <h2>Pricing</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-12 col-lg-6 o_setting_box" title="There are two ways to manage pricelists: 1) Multiple prices per product (e.g. quantity, shop-specific) : must be set in the Sales tab of the product detail form. 2) Price computed from formulas (discounts, margins, rounding) : must be set in the pricelist form.">
+                            <div class="o_setting_left_pane">
+                                <field name="pos_sales_price"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="pos_sales_price"/>
+                                <div class="text-muted">
+                                    Set multiple prices per product, automated discounts, etc.
+                                </div>
+                                <div class="content-group" attrs="{'invisible': [('pos_sales_price' ,'=', False)]}">
+                                    <div class="mt16">
+                                        <field name="group_product_pricelist" invisible="1"/>
+                                        <field name="group_sale_pricelist" invisible="1"/>
+                                        <field name="group_pricelist_item" invisible="1"/>
+                                        <field name="pos_pricelist_setting" widget="radio" class="o_light_label"/>
+                                    </div>
+                                    <button name="%(product.product_pricelist_action2)d" icon="fa-arrow-right" type="action" string="Pricelists"
+                                      attrs="{'invisible': [('pos_pricelist_setting', '=', False)]}" class="btn-link"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box" id="multicurrencies_setting" title="This adds the choice of a currency on pricelists.">
+                            <div class="o_setting_left_pane">
+                                <field name="group_multi_currency"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="group_multi_currency"/>
+                                <div class="text-muted">
+                                    Sell in several currencies
+                                </div>
+                                <div class="content-group" attrs="{'invisible': [('group_multi_currency', '=', False)]}">
+                                    <div class="mt16">
+                                        <button type="action" name="%(base.action_currency_form)d" string="Currencies" class="btn-link" icon="fa-arrow-right"/>
+                                    </div>
+                                    <div>
+                                        <button name="%(base.action_currency_all_form)d" icon="fa-arrow-right" type="action" string="Advanced Currencies Setup" class="btn-link"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <h2>Payments</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-12 col-lg-6 o_setting_box" title="The transactions are processed by Vantiv. Set your Vantiv credentials on the related payment journal.">
+                            <div class="o_setting_left_pane">
+                                <field name="module_pos_mercury"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="module_pos_mercury" string="Credit Card Reader"/>
+                                <div class="text-muted">
+                                    Accept payments with a credit card reader
+                                </div>
+                                <div class="content-group" attrs="{'invisible': [('module_pos_mercury', '=', False)]}">
+                                    <div class="mt16" id="btn_use_pos_mercury">
+                                        <button string="Save" type="object" name="execute" class="oe_highlight"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_pos_configuration" model="ir.actions.act_window">
+        <field name="name">Settings</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+        <field name="context">{'module' : 'point_of_sale'}</field>
+    </record>
+
+    <menuitem id="menu_pos_global_settings"
+        name="Settings"
+        parent="menu_point_config_product"
+        sequence="0"
+        action="action_pos_configuration"
+        groups="base.group_system"/>
+</odoo>

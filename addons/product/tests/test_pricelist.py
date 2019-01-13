@@ -11,10 +11,10 @@ class TestPricelist(TransactionCase):
 
         self.datacard = self.env.ref('product.product_delivery_02')
         self.usb_adapter = self.env.ref('product.product_delivery_01')
-        self.uom_ton = self.env.ref('product.product_uom_ton')
-        self.uom_unit_id = self.ref('product.product_uom_unit')
-        self.uom_dozen_id = self.ref('product.product_uom_dozen')
-        self.uom_kgm_id = self.ref('product.product_uom_kgm')
+        self.uom_ton = self.env.ref('uom.product_uom_ton')
+        self.uom_unit_id = self.ref('uom.product_uom_unit')
+        self.uom_dozen_id = self.ref('uom.product_uom_dozen')
+        self.uom_kgm_id = self.ref('uom.product_uom_kgm')
 
         self.public_pricelist = self.env.ref('product.list0')
         self.sale_pricelist_id = self.env['product.pricelist'].create({

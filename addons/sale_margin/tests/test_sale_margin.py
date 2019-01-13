@@ -11,7 +11,7 @@ class TestSaleMargin(common.TransactionCase):
         super(TestSaleMargin, self).setUp()
         self.SaleOrder = self.env['sale.order']
 
-        self.product_uom_id = self.ref('product.product_uom_unit')
+        self.product_uom_id = self.ref('uom.product_uom_unit')
         self.product_id = self.ref('product.product_product_24')
         self.partner_id = self.ref('base.res_partner_4')
         self.partner_invoice_address_id = self.ref('base.res_partner_address_7')
@@ -19,13 +19,12 @@ class TestSaleMargin(common.TransactionCase):
 
     def test_sale_margin(self):
         """ Test the sale_margin module in Odoo. """
-        # Create a sales order for product Graphics Card.
         sale_order_so11 = self.SaleOrder.create({
             'date_order': datetime.today(),
             'name': 'Test_SO011',
             'order_line': [
                 (0, 0, {
-                    'name': '[CARD] Graphics Card',
+                    'name': '[CARD] Individual Workplace',
                     'purchase_price': 700.0,
                     'price_unit': 1000.0,
                     'product_uom': self.product_uom_id,

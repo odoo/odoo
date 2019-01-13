@@ -77,6 +77,7 @@ QUnit.module('hr_org_chart', {
                             job_name: 'Sub-Gooroo',
                             link: 'fake_link',
                             name: 'Michael Hawkins',
+                            id: 2,
                         }],
                         managers: [],
                         managers_more: false,
@@ -94,9 +95,9 @@ QUnit.module('hr_org_chart', {
                 return this._super(route, args);
             }
         });
-        assert.strictEqual(form.$('.o_org_chart_entry_sub').length, 1,
+        assert.containsOnce(form, '.o_org_chart_entry_sub',
             "the chart should have 1 subordinate");
-        assert.strictEqual(form.$('.o_org_chart_entry_self').length, 1,
+        assert.containsOnce(form, '.o_org_chart_entry_self',
             "the current employee should only be displayed once in the chart");
         form.destroy();
     });
@@ -129,6 +130,7 @@ QUnit.module('hr_org_chart', {
                             job_name: 'Sub-Gooroo',
                             link: 'fake_link',
                             name: 'Michael Hawkins',
+                            id: 2,
                         }],
                         managers: [{
                             direct_sub_count: 1,
@@ -154,9 +156,9 @@ QUnit.module('hr_org_chart', {
                 return this._super(route, args);
             }
         });
-        assert.strictEqual(form.$('.o_org_chart_group_up .o_org_chart_entry_manager').length, 1, "the chart should have 1 manager");
-        assert.strictEqual(form.$('.o_org_chart_group_down .o_org_chart_entry_sub').length, 1, "the chart should have 1 subordinate");
-        assert.strictEqual(form.$('.o_org_chart_entry_self').length, 1, "the chart should have only once the current employee");
+        assert.containsOnce(form, '.o_org_chart_group_up .o_org_chart_entry_manager', "the chart should have 1 manager");
+        assert.containsOnce(form, '.o_org_chart_group_down .o_org_chart_entry_sub', "the chart should have 1 subordinate");
+        assert.containsOnce(form, '.o_org_chart_entry_self', "the chart should have only once the current employee");
         form.destroy();
     });
 });

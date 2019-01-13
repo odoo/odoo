@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
     'name': 'Payment Acquirer',
@@ -11,8 +12,11 @@
         'data/account_data.xml',
         'data/payment_icon_data.xml',
         'data/payment_acquirer_data.xml',
+        'data/payment_cron.xml',
         'views/payment_views.xml',
         'views/account_payment_views.xml',
+        'views/account_invoice_views.xml',
+        'views/payment_acquirer_onboarding_templates.xml',
         'views/payment_templates.xml',
         'views/payment_portal_templates.xml',
         'views/assets.xml',

@@ -7,6 +7,7 @@ from werkzeug.urls import url_unquote_plus
 from odoo import http
 from odoo.http import request
 from odoo.addons.payment.models.payment_acquirer import ValidationError
+from odoo.addons.payment.controllers.portal import PaymentProcessing
 
 _logger = logging.getLogger(__name__)
 
@@ -27,7 +28,7 @@ class OgoneController(http.Controller):
         """ Ogone contacts using GET, at least for accept """
         _logger.info('Ogone: entering form_feedback with post data %s', pprint.pformat(post))  # debug
         request.env['payment.transaction'].sudo().form_feedback(post, 'ogone')
-        return werkzeug.utils.redirect(url_unquote_plus(post.pop('return_url', '/')))
+        return werkzeug.utils.redirect("/payment/process")
 
     @http.route(['/payment/ogone/s2s/create_json'], type='json', auth='public', csrf=False)
     def ogone_s2s_create_json(self, **kwargs):
@@ -40,11 +41,18 @@ class OgoneController(http.Controller):
     def ogone_s2s_create_json_3ds(self, verify_validity=False, **kwargs):
         if not kwargs.get('partner_id'):
             kwargs = dict(kwargs, partner_id=request.env.user.partner_id.id)
-        token = request.env['payment.acquirer'].browse(int(kwargs.get('acquirer_id'))).s2s_process(kwargs)
+        token = False
+        error = None
+        
+        try:
+            token = request.env['payment.acquirer'].browse(int(kwargs.get('acquirer_id'))).s2s_process(kwargs)
+        except Exception as e:
+            error = str(e)
 
         if not token:
             res = {
                 'result': False,
+                'error': error,
             }
             return res
 
@@ -94,7 +102,9 @@ class OgoneController(http.Controller):
             tx = token.validate(**params)
             if tx and tx.html_3ds:
                 return tx.html_3ds
-        return werkzeug.utils.redirect(post.get('return_url', '/') + (error and '#error=%s' % werkzeug.url_quote(error) or ''))
+            # add the payment transaction into the session to let the page /payment/process to handle it
+            PaymentProcessing.add_payment_transaction(tx)
+        return werkzeug.utils.redirect("/payment/process")
 
     @http.route([
         '/payment/ogone/validate/accept',
@@ -104,7 +114,7 @@ class OgoneController(http.Controller):
     def ogone_validation_form_feedback(self, **post):
         """ Feedback from 3d secure for a bank card validation """
         request.env['payment.transaction'].sudo().form_feedback(post, 'ogone')
-        return werkzeug.utils.redirect(werkzeug.url_unquote(post.pop('return_url', '/')))
+        return werkzeug.utils.redirect("/payment/process")
 
     @http.route(['/payment/ogone/s2s/feedback'], auth='none', csrf=False)
     def feedback(self, **kwargs):

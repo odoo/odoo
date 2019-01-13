@@ -32,12 +32,12 @@
                     <group name="action" attrs="{'invisible': [('name', '!=', 'convert')]}" string="Customers" col="1">
                         <field name="action" nolabel="1" widget="radio"/>
                         <group col="2">
-                            <field name="partner_id" domain="[('customer', '=', True)]" context="{'search_default_customer': 1}" attrs="{'required': [('action', '=', 'exist')], 'invisible':[('action','!=','exist')]}"/>
+                            <field name="partner_id" widget="res_partner_many2one" domain="[('customer', '=', True)]" context="{'search_default_customer': 1, 'show_vat': True}" attrs="{'required': [('action', '=', 'exist')], 'invisible':[('action','!=','exist')]}"/>
                         </group>
                     </group>
                     <footer>
                         <button name="action_apply" string="Create Opportunity" type="object" class="btn-primary"/>
-                        <button string="Cancel" class="btn-default" special="cancel"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
                     </footer>
                 </form>
             </field>
@@ -79,13 +79,15 @@
                         <field name="action" class="oe_inline" widget="radio"/>
                         <group col="2">
                             <field name="partner_id"
+                                widget="res_partner_many2one"
                                 attrs="{'required': [('action', '=', 'exist')], 'invisible':[('action','!=','exist')]}"
+                                context="{'show_vat': True}"
                                 class="oe_inline"/>
                         </group>
                     </group>
                     <footer>
                         <button name="mass_convert" string="Convert to Opportunities" type="object" class="btn-primary"/>
-                        <button string="Cancel" class="btn-default" special="cancel"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
                     </footer>
                 </form>
             </field>

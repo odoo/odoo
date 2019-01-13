@@ -26,7 +26,7 @@
             <field name="condition">higher</field>
             <field name="domain">[('vote', '=', '-1')]</field>
             <field name="batch_mode">True</field>
-            <field name="batch_distinctive_field" eval="ref('website_forum.field_forum_post_vote_user_id')" />
+            <field name="batch_distinctive_field" eval="ref('website_forum.field_forum_post_vote__user_id')" />
             <field name="batch_user_expression">user.id</field>
         </record>
         <record model="gamification.challenge" id="challenge_critic">
@@ -62,7 +62,7 @@
             <field name="condition">higher</field>
             <field name="domain">[('vote_count', '>=', 3), ('active', '=', False)]</field>
             <field name="batch_mode">True</field>
-            <field name="batch_distinctive_field" eval="ref('website_forum.field_forum_post_create_uid')" />
+            <field name="batch_distinctive_field" eval="ref('website_forum.field_forum_post__create_uid')" />
             <field name="batch_user_expression">user.id</field>
         </record>
         <record model="gamification.challenge" id="challenge_disciplined">
@@ -98,7 +98,7 @@
             <field name="condition">higher</field>
             <field name="domain" eval="[('model', '=', 'forum.post'), ('subtype_id', 'in', [ref('website_forum.mt_answer_edit'), ref('website_forum.mt_question_edit')])]"/>
             <field name="batch_mode">True</field>
-            <field name="batch_distinctive_field" eval="ref('mail.field_mail_message_author_id')" />
+            <field name="batch_distinctive_field" eval="ref('mail.field_mail_message__author_id')" />
             <field name="batch_user_expression">user.partner_id.id</field>
         </record>
         <record model="gamification.challenge" id="challenge_editor">
@@ -133,7 +133,7 @@
             <field name="condition">higher</field>
             <field name="domain">[('vote', '=', '1')]</field>
             <field name="batch_mode">True</field>
-            <field name="batch_distinctive_field" eval="ref('website_forum.field_forum_post_vote_user_id')" />
+            <field name="batch_distinctive_field" eval="ref('website_forum.field_forum_post_vote__user_id')" />
             <field name="batch_user_expression">user.id</field>
         </record>
         <record model="gamification.challenge" id="challenge_supporter">
@@ -169,7 +169,7 @@
             <field name="condition">higher</field>
             <field name="domain">[('vote_count', '&lt;=', -3), ('active', '=', False)]</field>
             <field name="batch_mode">True</field>
-            <field name="batch_distinctive_field" eval="ref('website_forum.field_forum_post_create_uid')" />
+            <field name="batch_distinctive_field" eval="ref('website_forum.field_forum_post__create_uid')" />
             <field name="batch_user_expression">user.id</field>
         </record>
         <record model="gamification.challenge" id="challenge_peer_pressure">

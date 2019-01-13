@@ -1,17 +1,17 @@
 odoo.define('web.Apps', function (require) {
 "use strict";
 
+var AbstractAction = require('web.AbstractAction');
 var core = require('web.core');
 var framework = require('web.framework');
 var session = require('web.session');
-var Widget = require('web.Widget');
 
 var _t = core._t;
 
 var apps_client = null;
 
-var Apps = Widget.extend({
-    template: 'EmptyComponent',
+var Apps = AbstractAction.extend({
+    contentTemplate: 'EmptyComponent',
     remote_action_tag: 'loempia.embed',
     failback_action_id: 'base.open_module_tree',
 
@@ -141,7 +141,7 @@ var Apps = Widget.extend({
             self.on('message:unblockUI', self, function() { framework.unblockUI(); });
             self.on('message:warn', self, function(m) {self.do_warn(m.title, m.message, m.sticky); });
 
-            self.$ifr.appendTo(self.$el).css(css).addClass('apps-client');
+            self.$ifr.appendTo(self.$('.o_content')).css(css).addClass('apps-client');
 
             def.resolve();
         }, function() {

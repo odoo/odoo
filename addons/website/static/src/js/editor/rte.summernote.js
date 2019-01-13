@@ -54,6 +54,6 @@ eventHandler.modules.popover.button.update = function ($container, oStyle) {
     fn_boutton_update.call(this, $container, oStyle);
     $container.find('button[data-event="transform"]')
         .toggleClass('active', $(oStyle.image).is('[style*="transform"]'))
-        .toggleClass('hidden', !$(oStyle.image).is('img'));
+        .toggleClass('d-none', !$(oStyle.image).is('img'));
 };
 });

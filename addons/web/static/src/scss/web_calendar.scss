@@ -1,0 +1,221 @@
+@keyframes backgroundfade {
+    from {background-color: rgba($o-brand-odoo, 0.5);}
+    to {background-color: #f5f5f5;}
+}
+
+.o_calendar_container {
+    height: 100%;
+    @include o-webclient-padding($top: $o-horizontal-padding/2, $bottom: $o-horizontal-padding/2);
+    display: flex;
+
+    @for $index from 1 through $o-nb-calendar-colors {
+        .o_calendar_color_#{$index} {
+            color: #0D0D0D;
+            background-color: adjust-hue(rgb(255, 192, 192), (360/($o-nb-calendar-colors+1) * $index) * 1deg);
+            border-color:  adjust-hue(rgb(255, 192, 192), (360/($o-nb-calendar-colors+1) * $index) * 1deg);
+            opacity: 0.7;
+            &.o_event_hightlight {
+                font-weight: bold;
+                opacity: 0.9;
+            }
+            &:hover {
+                color: #666 !important;
+            }
+        }
+        .o_underline_color_#{$index} {
+            border-bottom: 4px solid adjust-hue(rgba(255, 192, 192, 0.7), (360/($o-nb-calendar-colors+1) * $index) * 1deg);
+        }
+    }
+
+    .o_calendar_view {
+        flex: 1 1 auto;
+        min-width: 0;
+
+        .o_calendar_widget {
+            height: 100%;
+            background-color: $o-view-background-color;
+            * {
+                z-index: 0; // FIXME
+            }
+            .fc-week-number, .fc-widget-header {
+                background-color: lighten($o-brand-secondary, 30%);
+            }
+            .o_avatar_square {
+                border-radius: 5px;
+                display: inline-block;
+                opacity: 1;
+                border: 1px solid #999;
+            }
+            .o_fields img, .o_avatar_square {
+                vertical-align: middle;
+                margin-left: 1px;
+                width: 18px;
+                height: 18px;
+            }
+            .o_field_type_char:first-child {
+                font-weight: bold;
+            }
+            .fc-view {
+                overflow-x: auto;
+            }
+        }
+    }
+
+    .o_calendar_sidebar_container {
+        flex: 0 0 $o-horizontal-padding;
+        position: relative;
+
+        &.o_sidebar_hidden {
+            margin-right: -$o-horizontal-padding; // hack to display the toggler in the gutter
+            .o_calendar_sidebar_toggler {
+                padding: 4px;
+                color: darken($o-webclient-background-color, 30%);
+            }
+        }
+
+        .o_calendar_sidebar_toggler {
+            @include o-position-absolute($top: 0, $right: 0);
+            cursor: pointer;
+            padding: 6px;
+            z-index: 1;
+            &:hover {
+                color: black;
+            }
+        }
+
+        .o_calendar_sidebar {
+            width: 250px;
+            margin-left: 8px;
+            background: $o-view-background-color;
+        }
+
+        .ui-datepicker {
+            width: 100%;
+            font-size: 8pt;
+            border-radius: 0;
+            border: none;
+            padding: 0;
+
+            .ui-widget-header {
+                display: flex;
+                background: none;
+                background-color: lighten($o-brand-secondary, 30%);
+                border-radius: 0;
+
+                .ui-datepicker-prev, .ui-datepicker-next {
+                    flex: 0 0 auto;
+                    position: static;
+                    cursor: pointer;
+                    padding: 2px;
+                    text-align: center;
+                    color: $o-main-text-color;
+                    &.ui-state-hover {
+                        background: none;
+                        border: none;
+                        color: black;
+                    }
+                    .ui-icon {
+                        display: none;
+                    }
+                }
+                .ui-datepicker-prev {
+                    order: 1;
+                    &:after {
+                        font-family: FontAwesome;
+                        content: "";
+                    }
+                }
+                .ui-datepicker-next {
+                    order: 3;
+                    &:before {
+                        font-family: FontAwesome;
+                        content: "";
+                    }
+                }
+                .ui-datepicker-title {
+                    flex: 0 0 auto;
+                    order: 2;
+                    display: inline-block;
+                    margin: 0 10px;
+                }
+            }
+            table {
+                td {
+                    padding: 0 2px 2px 0;
+                    background-color: $o-view-background-color;
+                    a {
+                        border: none;
+                        background: none;
+                        background-color: lighten($o-brand-secondary, 40%);
+                        text-align: center;
+                    }
+                }
+                .ui-state-default {
+                    color: $o-brand-odoo;
+                    &:hover {
+                        background: none;
+                        background-color: rgba($o-brand-odoo, 0.5);
+                        border-color: $o-brand-odoo;
+                        color: $o-view-background-color;
+                    };
+                }
+                .ui-state-active {
+                    background: none;
+                    background-color: $o-brand-odoo;
+                    color: $o-view-background-color;
+                }
+                .o_selected_range.o_color {
+                    background: none;
+                    background-color: $o-brand-odoo;
+                    animation: backgroundfade 3s forwards;
+                }
+            }
+        }
+        .o_calendar_filter {
+            padding: 8px;
+            border-top: 1px solid lightgray;
+            .o_field_many2one {
+                width: 100%;
+            }
+        }
+    }
+
+    .fc-time-grid-event.fc-short .fc-time:before {
+        content: '';
+    }
+}
+
+.modal {
+    .o_attendee_head {
+        width: 32px;
+        margin-right: 5px;
+    }
+}
+
+.o_dashboard {
+    .o_calendar_container .o_calendar_sidebar_container {
+        display: none;
+    }
+}
+
+// Mobile rules
+@include media-breakpoint-down(sm) {
+    .o_calendar_container {
+        padding: 0;
+    }
+}
+@include media-breakpoint-down(sm) {
+    .o_control_panel {
+        .o_calendar_button_today {
+            float: right;
+            > .o_calendar_text {
+                margin-top: 3px;
+            }
+        }
+    }
+    .o_calendar_view {
+        .fc-day-header {
+            word-spacing: 1000px; // force line break in week mode
+        }
+    }
+}

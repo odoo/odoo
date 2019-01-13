@@ -1,6 +1,9 @@
 from odoo.addons.account.tests.account_test_classes import AccountingTestCase
+from odoo.tests import tagged
 from odoo.exceptions import Warning
 
+
+@tagged('post_install', '-at_install')
 class TestAccountSupplierInvoice(AccountingTestCase):
 
     def test_supplier_invoice(self):

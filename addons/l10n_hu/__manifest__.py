@@ -31,6 +31,6 @@ This module consists :
         'data/account.fiscal.position.tax.template.csv',
         'data/res.bank.csv',
         'data/account_chart_template_data.xml',
-        'data/account_chart_template_data.yml',
+        'data/account_chart_template_configure_data.xml',
     ],
 }

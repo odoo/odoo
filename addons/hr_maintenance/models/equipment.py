@@ -6,8 +6,8 @@ from odoo import api, fields, models, tools
 class MaintenanceEquipment(models.Model):
     _inherit = 'maintenance.equipment'
 
-    employee_id = fields.Many2one('hr.employee', string='Assigned to Employee', track_visibility='onchange')
-    department_id = fields.Many2one('hr.department', string='Assigned to Department', track_visibility='onchange')
+    employee_id = fields.Many2one('hr.employee', string='Assigned to Employee', tracking=True)
+    department_id = fields.Many2one('hr.department', string='Assigned to Department', tracking=True)
     equipment_assign_to = fields.Selection(
         [('department', 'Department'), ('employee', 'Employee'), ('other', 'Other')],
         string='Used By',
@@ -36,36 +36,36 @@ class MaintenanceEquipment(models.Model):
     def create(self, vals):
         equipment = super(MaintenanceEquipment, self).create(vals)
         # subscribe employee or department manager when equipment assign to him.
-        user_ids = []
+        partner_ids = []
         if equipment.employee_id and equipment.employee_id.user_id:
-            user_ids.append(equipment.employee_id.user_id.id)
+            partner_ids.append(equipment.employee_id.user_id.partner_id.id)
         if equipment.department_id and equipment.department_id.manager_id and equipment.department_id.manager_id.user_id:
-            user_ids.append(equipment.department_id.manager_id.user_id.id)
-        if user_ids:
-            equipment.message_subscribe_users(user_ids=user_ids)
+            partner_ids.append(equipment.department_id.manager_id.user_id.partner_id.id)
+        if partner_ids:
+            equipment.message_subscribe(partner_ids=partner_ids)
         return equipment
 
     @api.multi
     def write(self, vals):
-        user_ids = []
+        partner_ids = []
         # subscribe employee or department manager when equipment assign to employee or department.
         if vals.get('employee_id'):
             user_id = self.env['hr.employee'].browse(vals['employee_id'])['user_id']
             if user_id:
-                user_ids.append(user_id.id)
+                partner_ids.append(user_id.partner_id.id)
         if vals.get('department_id'):
             department = self.env['hr.department'].browse(vals['department_id'])
             if department and department.manager_id and department.manager_id.user_id:
-                user_ids.append(department.manager_id.user_id.id)
-        if user_ids:
-            self.message_subscribe_users(user_ids=user_ids)
+                partner_ids.append(department.manager_id.user_id.partner_id.id)
+        if partner_ids:
+            self.message_subscribe(partner_ids=partner_ids)
         return super(MaintenanceEquipment, self).write(vals)
 
     @api.multi
     def _track_subtype(self, init_values):
         self.ensure_one()
         if ('employee_id' in init_values and self.employee_id) or ('department_id' in init_values and self.department_id):
-            return 'maintenance.mt_mat_assign'
+            return self.env.ref('maintenance.mt_mat_assign')
         return super(MaintenanceEquipment, self)._track_subtype(init_values)
 
 
@@ -106,7 +106,7 @@ class MaintenanceRequest(models.Model):
     def create(self, vals):
         result = super(MaintenanceRequest, self).create(vals)
         if result.employee_id.user_id:
-            result.message_subscribe_users(user_ids=[result.employee_id.user_id.id])
+            result.message_subscribe(partner_ids=[result.employee_id.user_id.partner_id.id])
         return result
 
     @api.multi
@@ -114,7 +114,7 @@ class MaintenanceRequest(models.Model):
         if vals.get('employee_id'):
             employee = self.env['hr.employee'].browse(vals['employee_id'])
             if employee and employee.user_id:
-                self.message_subscribe_users(user_ids=[employee.user_id.id])
+                self.message_subscribe(partner_ids=[employee.user_id.partner_id.id])
         return super(MaintenanceRequest, self).write(vals)
 
     @api.model

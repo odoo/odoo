@@ -92,11 +92,11 @@
                                 <field name="cash_register_balance_end" nolabel="1" attrs="{'invisible' : [('state', '=', 'opening_control')]}" class="oe_bold oe_pos_total" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                             </group>
                             <div class="oe_clear"/>
-                            <div attrs="{'invisible' : ['|', ('cash_journal_id', '=', False), ('state', '!=', 'opening_control')]}" class="oe_view_nocontent" groups="point_of_sale.group_pos_manager">
-                                <p class="oe_view_nocontent_create">
-                                You can define another list of available currencies on the
-                                <i>Cash Registers</i> tab of the <b><field name="cash_journal_id" class="oe_inline"/></b>
-                                payment method.
+                            <div attrs="{'invisible' : ['|', ('cash_journal_id', '=', False), ('state', '!=', 'opening_control')]}" class="o_field_nocontent" groups="point_of_sale.group_pos_manager">
+                                <p>
+                                    You can define another list of available currencies on the
+                                    <i>Cash Registers</i> tab of the <b><field name="cash_journal_id" class="oe_inline"/></b>
+                                    payment method.
                                 </p>
                             </div>
                         </div>
@@ -148,7 +148,7 @@
         <field name="name">pos.session.kanban</field>
         <field name="model">pos.session</field>
         <field name="arch" type="xml">
-            <kanban class="o_kanban_mobile">
+            <kanban class="o_kanban_mobile" create="0">
                 <field name="config_id" />
                 <field name="name" />
                 <field name="user_id" />
@@ -172,7 +172,7 @@
                                     <span><field name="start_at" /></span>
                                 </div>
                                 <div class="oe_kanban_bottom_right">
-                                    <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
+                                    <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" t-att-alt="record.user_id.value" width="24" height="24" class="oe_kanban_avatar float-right"/>
                                 </div>
                             </div>
                         </div>
@@ -190,12 +190,12 @@
                 <field name="name" />
                 <filter name="open_sessions" string="Open" domain="[('state', '=', 'opened')]" />
                 <separator/>
-                <filter string="Today" domain="[('start_at', '>=', datetime.datetime.combine(context_today(), datetime.time(0,0,0)))]" />
+                <filter string="Start Date" name="start_at_filter" date="start_at" default_period="today"/>
                 <field name="config_id" />
                 <field name="user_id" />
                 <group expand="0" string="Group By">
-                    <filter string="User" domain="[]" context="{'group_by' : 'user_id'}" />
-                    <filter string="Point of Sale" domain="[]" context="{'group_by': 'config_id'}" />
+                    <filter string="User" name="user" domain="[]" context="{'group_by' : 'user_id'}" />
+                    <filter string="Point of Sale" name="point_of_sale" domain="[]" context="{'group_by': 'config_id'}" />
                 </group>
             </search>
         </field>
@@ -209,16 +209,10 @@
         <field name="view_mode">tree,kanban,form</field>
         <field name="search_view_id" ref="view_pos_session_search" />
         <field name="help" type="html">
-            <p class="oe_view_nocontent_create">
-                Click to start a new session.
+            <p class="o_view_nocontent_empty_folder">
+                No sessions found
             </p><p>
-                A session is a period of time, usually one day, during which
-                you sell through the point of sale. The user has to check the
-                currencies in your cash registers at the beginning and the end
-                of each session.
-            </p><p>
-                Note that you may use the menu <i>Your Session</i>
-                to quickly open a new session.
+                A session is a period of time, usually one day, during which you sell through the Point of Sale.
             </p>
         </field>
     </record>

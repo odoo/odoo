@@ -27,16 +27,8 @@ __all__ = ['PyJsParser', 'parse', 'ENABLE_JS2PY_ERRORS', 'ENABLE_PYIMPORT', 'JsS
 REGEXP_SPECIAL_SINGLE = ('\\', '^', '$', '*', '+', '?', '.', '[', ']', '(', ')', '{', '{', '|', '-')
 ENABLE_PYIMPORT = False
 ENABLE_JS2PY_ERRORS = False
-
-PY3 = sys.version_info >= (3,0)
-
-if PY3:
-    basestring = str
-    long = int
-    xrange = range
-    unicode = str
-
 ESPRIMA_VERSION = '2.2.0'
+
 DEBUG = False
 # Small naming convention changes
 # len -> leng
@@ -179,14 +171,14 @@ class PyJsParser:
     def scanHexEscape(self, prefix):
         code = 0
         leng = 4 if (prefix == 'u') else 2
-        for i in xrange(leng):
+        for i in range(leng):
             if self.index < self.length and isHexDigit(self.source[self.index]):
                 ch = self.source[self.index]
                 self.index += 1
                 code = code * 16 + HEX_CONV[ch]
             else:
                 return ''
-        return unichr(code)
+        return chr(code)
 
     def scanUnicodeCodePointEscape(self):
         ch = self.source[self.index]
@@ -204,10 +196,10 @@ class PyJsParser:
             self.throwUnexpectedToken()
         # UTF-16 Encoding
         if (code <= 0xFFFF):
-            return unichr(code)
+            return chr(code)
         cu1 = ((code - 0x10000) >> 10) + 0xD800;
         cu2 = ((code - 0x10000) & 1023) + 0xDC00;
-        return unichr(cu1) + unichr(cu2)
+        return chr(cu1) + chr(cu2)
 
     def ccode(self, offset=0):
         return ord(self.source[self.index + offset])
@@ -442,7 +434,7 @@ class PyJsParser:
     def isImplicitOctalLiteral(self):
         # Implicit octal, unless there is a non-octal digit.
         # (Annex B.1.1 on Numeric Literals)
-        for i in xrange(self.index + 1, self.length):
+        for i in range(self.index + 1, self.length):
             ch = self.source[i];
             if (ch == '8' or ch == '9'):
                 return False;
@@ -532,14 +524,14 @@ class PyJsParser:
                     if ch == 'u':
                         digs = self.source[self.index:self.index + 4]
                         if len(digs) == 4 and all(isHexDigit(d) for d in digs):
-                            st += template % unichr(int(digs, 16))
+                            st += template % chr(int(digs, 16))
                             self.index += 4
                         else:
                             st += 'u'
                     elif ch == 'x':
                         digs = self.source[self.index:self.index + 2]
                         if len(digs) == 2 and all(isHexDigit(d) for d in digs):
-                            st += template % unichr(int(digs, 16))
+                            st += template % chr(int(digs, 16))
                             self.index += 2
                         else:
                             st += 'x'
@@ -992,20 +984,20 @@ class PyJsParser:
             except:
                 raise Exception("ENABLE_JS2PY_ERRORS was set to True, but Js2Py was not found!")
             ENABLE_PYIMPORT = old_pyimport
-            error = ERRORS['SyntaxError']('Line ' + unicode(line) + ': ' + unicode(description))
+            error = ERRORS['SyntaxError']('Line ' + str(line) + ': ' + str(description))
             error.put('index', Js(pos))
             error.put('lineNumber', Js(line))
             error.put('column', Js(pos - (self.lineStart if self.scanning else self.lastLineStart) + 1))
             error.put('description', Js(description))
             return JsToPyException(error)
         else:
-            return JsSyntaxError('Line ' + unicode(line) + ': ' + unicode(description))
+            return JsSyntaxError('Line ' + str(line) + ': ' + str(description))
 
 
     # Throw an exception
 
     def throwError(self, messageFormat, *args):
-        msg = messageFormat % tuple(unicode(e) for e in args)
+        msg = messageFormat % tuple(str(e) for e in args)
         raise self.createError(self.lastLineNumber, self.lastIndex, msg);
 
     def tolerateError(self, messageFormat, *args):
@@ -1038,7 +1030,7 @@ class PyJsParser:
             value = token['value']['raw'] if (typ == Token.Template)  else token.get('value')
         else:
             value = 'ILLEGAL'
-        msg = msg.replace('%s', unicode(value))
+        msg = msg.replace('%s', str(value))
 
         return (self.createError(token['lineNumber'], token['start'], msg) if (token and token.get('lineNumber')) else
                 self.createError(self.lineNumber if self.scanning else self.lastLineNumber,
@@ -1445,12 +1437,12 @@ class PyJsParser:
             self.reinterpretExpressionAsPattern(expr.argument)
         elif typ == Syntax.ArrayExpression:
             expr['type'] = Syntax.ArrayPattern
-            for i in xrange(len(expr['elements'])):
+            for i in range(len(expr['elements'])):
                 if (expr['elements'][i] != null):
                     self.reinterpretExpressionAsPattern(expr['elements'][i])
         elif typ == Syntax.ObjectExpression:
             expr['type'] = Syntax.ObjectPattern
-            for i in xrange(len(expr['properties'])):
+            for i in range(len(expr['properties'])):
                 self.reinterpretExpressionAsPattern(expr['properties'][i]['value']);
         elif Syntax.AssignmentExpression:
             expr['type'] = Syntax.AssignmentPattern;
@@ -1526,7 +1518,7 @@ class PyJsParser:
                     if (not self.match('=>')):
                         self.expect('=>');
                     self.isBindingElement = false
-                    for i in xrange(len(expressions)):
+                    for i in range(len(expressions)):
                         self.reinterpretExpressionAsPattern(expressions[i])
                     return {
                         'type': PlaceHolders.ArrowParameterPlaceHolder,
@@ -1539,7 +1531,7 @@ class PyJsParser:
             if (not self.isBindingElement):
                 self.throwUnexpectedToken(self.lookahead);
             if (expr['type'] == Syntax.SequenceExpression):
-                for i in xrange(len(expr.expressions)):
+                for i in range(len(expr.expressions)):
                     self.reinterpretExpressionAsPattern(expr['expressions'][i])
             else:
                 self.reinterpretExpressionAsPattern(expr);
@@ -1880,12 +1872,12 @@ class PyJsParser:
         elif typ == Syntax.AssignmentPattern:
             self.checkPatternParam(options, param.left)
         elif typ == Syntax.ArrayPattern:
-            for i in xrange(len(param.elements)):
+            for i in range(len(param.elements)):
                 if (param.elements[i] != null):
                     self.checkPatternParam(options, param.elements[i]);
         else:
             assert typ == Syntax.ObjectPattern, 'Invalid type'
-            for i in xrange(len(param.properties)):
+            for i in range(len(param.properties)):
                 self.checkPatternParam(options, param.properties[i]['value']);
 
     def reinterpretAsCoverFormalsList(self, expr):
@@ -1902,7 +1894,7 @@ class PyJsParser:
         options = {
             'paramSet': {}}
         le = len(params)
-        for i in xrange(le):
+        for i in range(le):
             param = params[i]
             if param.type == Syntax.AssignmentPattern:
                 params[i] = param.left;
@@ -2870,7 +2862,7 @@ class PyJsParser:
             raise NotImplementedError('Options not implemented! You can only use default settings.')
 
         self.clean()
-        self.source = unicode(code) + ' \n ; //END'  # I have to add it in order not to check for EOF every time
+        self.source = str(code) + ' \n ; //END'  # I have to add it in order not to check for EOF every time
         self.index = 0
         self.lineNumber = 1 if len(self.source) > 0 else 0
         self.lineStart = 0

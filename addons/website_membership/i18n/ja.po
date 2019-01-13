@@ -3,16 +3,16 @@
 # * website_membership
 # 
 # Translators:
-# Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2017
-# Yoshi Tashiro <tashiro@roomsfor.hk>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2018
+# Yoshi Tashiro <tashiro@roomsfor.hk>, 2018
+# Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:54+0000\n"
-"PO-Revision-Date: 2017-09-20 09:54+0000\n"
-"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
+"POT-Creation-Date: 2018-09-21 13:18+0000\n"
+"PO-Revision-Date: 2018-09-21 13:18+0000\n"
+"Last-Translator: Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2018\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: website_membership
-#: model:ir.ui.view,arch_db:website_membership.index
+#: model_terms:ir.ui.view,arch_db:website_membership.index
 msgid "All"
 msgstr "全て"
 
@@ -32,12 +32,17 @@ msgid "All Countries"
 msgstr "すべての国"
 
 #. module: website_membership
-#: model:ir.ui.view,arch_db:website_membership.index
+#: model_terms:ir.ui.view,arch_db:website_membership.index
 msgid "Associations"
 msgstr "関連"
 
 #. module: website_membership
-#: model:ir.ui.view,arch_db:website_membership.index
+#: model_terms:ir.ui.view,arch_db:website_membership.opt_index_google_map
+msgid "Close"
+msgstr "閉じる"
+
+#. module: website_membership
+#: model_terms:ir.ui.view,arch_db:website_membership.index
 msgid "Find a business partner"
 msgstr "ビジネスパートナーを探す"
 
@@ -48,37 +53,37 @@ msgid "Free Members"
 msgstr "無料会員"
 
 #. module: website_membership
-#: model:ir.ui.view,arch_db:website_membership.opt_index_country
+#: model_terms:ir.ui.view,arch_db:website_membership.opt_index_country
 msgid "Location"
 msgstr "ロケーション"
 
 #. module: website_membership
-#: model:ir.ui.view,arch_db:website_membership.footer_custom
-#: model:ir.ui.view,arch_db:website_membership.index
+#: model_terms:ir.ui.view,arch_db:website_membership.index
+#: model:website.menu,name:website_membership.menu_members
 msgid "Members"
-msgstr "会員"
+msgstr "メンバー"
 
 #. module: website_membership
-#: model:ir.ui.view,arch_db:website_membership.index
+#: model:ir.model,name:website_membership.model_membership_membership_line
+msgid "Membership Line"
+msgstr ""
+
+#. module: website_membership
+#: model_terms:ir.ui.view,arch_db:website_membership.index
 msgid "No result found."
 msgstr "結果が見つかりません"
 
 #. module: website_membership
-#: model:ir.ui.view,arch_db:website_membership.index
+#: model_terms:ir.ui.view,arch_db:website_membership.index
 msgid "Our Members Directory"
 msgstr "会員用ディレクトリ"
 
 #. module: website_membership
-#: model:ir.ui.view,arch_db:website_membership.opt_index_google_map
+#: model_terms:ir.ui.view,arch_db:website_membership.opt_index_google_map
 msgid "World Map"
 msgstr "世界地図"
 
 #. module: website_membership
-#: model:ir.model,name:website_membership.model_membership_membership_line
-msgid "membership.membership_line"
-msgstr "membership.membership_line"
-
-#. module: website_membership
-#: model:ir.ui.view,arch_db:website_membership.index
-msgid "pull-left"
-msgstr "pull-left"
+#: model_terms:ir.ui.view,arch_db:website_membership.index
+msgid "float-left"
+msgstr ""

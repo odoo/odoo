@@ -23,7 +23,7 @@ QUnit.test('add_link utility function', function (assert) {
     };
 
     _.each(testInputs, function (willLinkify, content) {
-        var output = utils.parse_and_transform(content, utils.add_link);
+        var output = utils.parseAndTransform(content, utils.addLink);
         if (willLinkify) {
             assert.strictEqual(output.indexOf('<a '), 0, "There should be a link");
             assert.strictEqual(output.indexOf('</a>'), (output.length - 4), "Link should match the whole text");

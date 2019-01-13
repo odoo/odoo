@@ -336,7 +336,7 @@ class TestApplyInheritanceSpecs(ViewCase):
                     name="target"),
                 string="Title"))
 
-    @mute_logger('odoo.addons.base.ir.ir_ui_view')
+    @mute_logger('odoo.addons.base.models.ir_ui_view')
     def test_invalid_position(self):
         spec = E.field(
                 E.field(name="whoops"),
@@ -345,7 +345,7 @@ class TestApplyInheritanceSpecs(ViewCase):
         with self.assertRaises(ValueError):
             self.View.apply_inheritance_specs(self.base_arch, spec, None)
 
-    @mute_logger('odoo.addons.base.ir.ir_ui_view')
+    @mute_logger('odoo.addons.base.models.ir_ui_view')
     def test_incorrect_version(self):
         # Version ignored on //field elements, so use something else
         arch = E.form(E.element(foo="42"))
@@ -356,7 +356,7 @@ class TestApplyInheritanceSpecs(ViewCase):
         with self.assertRaises(ValueError):
             self.View.apply_inheritance_specs(arch, spec, None)
 
-    @mute_logger('odoo.addons.base.ir.ir_ui_view')
+    @mute_logger('odoo.addons.base.models.ir_ui_view')
     def test_target_not_found(self):
         spec = E.field(name="targut")
 
@@ -384,6 +384,187 @@ class TestApplyInheritanceWrapSpecs(ViewCase):
                 E.div(E.p('Content'), {'class': 'some'})
             ))
         )
+
+
+class TestApplyInheritanceMoveSpecs(ViewCase):
+    def setUp(self):
+        super(TestApplyInheritanceMoveSpecs, self).setUp()
+        self.base_arch = E.template(
+            E.div(E.p("Content", {'class': 'some'})),
+            E.div({'class': 'target'})
+        )
+        self.wrapped_arch = E.template(
+            E.div("aaaa", E.p("Content", {'class': 'some'}), "bbbb"),
+            E.div({'class': 'target'})
+        )
+
+    def apply_spec(self, arch, spec):
+        self.View.apply_inheritance_specs(arch, spec, None)
+
+    def test_move_replace(self):
+        spec = E.xpath(
+            E.xpath(expr="//p", position="move"),
+            expr="//div[@class='target']", position="replace")
+
+        self.apply_spec(self.base_arch, spec)
+        self.assertEqual(
+            self.base_arch,
+            E.template(
+                E.div(),
+                E.p("Content", {'class': 'some'})
+            )
+        )
+        self.apply_spec(self.wrapped_arch, spec)
+        self.assertEqual(
+            self.wrapped_arch,
+            E.template(
+                E.div("aaaabbbb"),
+                E.p("Content", {'class': 'some'})
+            )
+        )
+
+    def test_move_inside(self):
+        spec = E.xpath(
+            E.xpath(expr="//p", position="move"),
+            expr="//div[@class='target']", position="inside")
+
+        self.apply_spec(self.base_arch, spec)
+        self.assertEqual(
+            self.base_arch,
+            E.template(
+                E.div(),
+                E.div(E.p("Content", {'class': 'some'}), {'class': 'target'})
+            )
+        )
+        self.apply_spec(self.wrapped_arch, spec)
+        self.assertEqual(
+            self.wrapped_arch,
+            E.template(
+                E.div("aaaabbbb"),
+                E.div(E.p("Content", {'class': 'some'}), {'class': 'target'})
+            )
+        )
+
+    def test_move_before(self):
+        spec = E.xpath(
+            E.xpath(expr="//p", position="move"),
+            expr="//div[@class='target']", position="before")
+
+        self.apply_spec(self.base_arch, spec)
+        self.assertEqual(
+            self.base_arch,
+            E.template(
+                E.div(""),
+                E.p("Content", {'class': 'some'}),
+                E.div({'class': 'target'}),
+            )
+        )
+        self.apply_spec(self.wrapped_arch, spec)
+        self.assertEqual(
+            self.wrapped_arch,
+            E.template(
+                E.div("aaaabbbb"),
+                E.p("Content", {'class': 'some'}),
+                E.div({'class': 'target'}),
+            )
+        )
+
+    def test_move_after(self):
+        spec = E.xpath(
+            E.xpath(expr="//p", position="move"),
+            expr="//div[@class='target']", position="after")
+
+        self.apply_spec(self.base_arch, spec)
+        self.assertEqual(
+            self.base_arch,
+            E.template(
+                E.div(),
+                E.div({'class': 'target'}),
+                E.p("Content", {'class': 'some'}),
+            )
+        )
+        self.apply_spec(self.wrapped_arch, spec)
+        self.assertEqual(
+            self.wrapped_arch,
+            E.template(
+                E.div("aaaabbbb"),
+                E.div({'class': 'target'}),
+                E.p("Content", {'class': 'some'}),
+            )
+        )
+
+    def test_move_with_other_1(self):
+        # multiple elements with move in first position
+        spec = E.xpath(
+            E.xpath(expr="//p", position="move"),
+            E.p("Content2", {'class': 'new_p'}),
+            expr="//div[@class='target']", position="after")
+
+        self.apply_spec(self.base_arch, spec)
+        self.assertEqual(
+            self.base_arch,
+            E.template(
+                E.div(),
+                E.div({'class': 'target'}),
+                E.p("Content", {'class': 'some'}),
+                E.p("Content2", {'class': 'new_p'}),
+            )
+        )
+
+    def test_move_with_other_2(self):
+        # multiple elements with move in last position
+        spec = E.xpath(
+            E.p("Content2", {'class': 'new_p'}),
+            E.xpath(expr="//p", position="move"),
+            expr="//div[@class='target']", position="after")
+
+        self.apply_spec(self.wrapped_arch, spec)
+        self.assertEqual(
+            self.wrapped_arch,
+            E.template(
+                E.div("aaaabbbb"),
+                E.div({'class': 'target'}),
+                E.p("Content2", {'class': 'new_p'}),
+                E.p("Content", {'class': 'some'}),
+            )
+        )
+
+    @mute_logger('odoo.addons.base.models.ir_ui_view')
+    def test_incorrect_move_1(self):
+        # cannot move an inexisting element
+        spec = E.xpath(
+            E.xpath(expr="//p[@name='none']", position="move"),
+            expr="//div[@class='target']", position="after")
+
+        with self.assertRaises(ValueError):
+            self.apply_spec(self.base_arch, spec)
+
+    @mute_logger('odoo.addons.base.models.ir_ui_view')
+    def test_incorrect_move_2(self):
+        # move xpath cannot contain any children
+        spec = E.xpath(
+            E.xpath(E.p("Content2", {'class': 'new_p'}), expr="//p", position="move"),
+            expr="//div[@class='target']", position="after")
+
+        with self.assertRaises(ValueError):
+            self.apply_spec(self.base_arch, spec)
+
+    def test_incorrect_move_3(self):
+        # move won't be correctly applied if not a direct child of an xpath
+        spec = E.xpath(
+            E.div(E.xpath(E.p("Content2", {'class': 'new_p'}), expr="//p", position="move"), {'class': 'wrapper'}),
+            expr="//div[@class='target']", position="after")
+
+        self.apply_spec(self.base_arch, spec)
+        self.assertEqual(
+            self.base_arch,
+            E.template(
+                E.div(E.p("Content", {'class': 'some'})),
+                E.div({'class': 'target'}),
+                E.div(E.xpath(E.p("Content2", {'class': 'new_p'}), expr="//p", position="move"), {'class': 'wrapper'}),
+            )
+        )
+
 
 class TestApplyInheritedArchs(ViewCase):
     """ Applies a sequence of modificator archs to a base view
@@ -437,7 +618,7 @@ class TestNoModel(ViewCase):
             'type': 'qweb',
         })
         self.env['ir.translation'].create({
-            'type': 'model',
+            'type': 'model_terms',
             'name': 'ir.ui.view,arch_db',
             'res_id': view.id,
             'lang': 'fr_FR',
@@ -685,7 +866,7 @@ class TestViews(ViewCase):
                     <separator name="separator" string="Separator" colspan="4"/>
                     <footer>
                         <button name="action_next" type="object" string="Next button" class="btn-primary"/>
-                        <button string="Skip" special="cancel" class="btn-default"/>
+                        <button string="Skip" special="cancel" class="btn-secondary"/>
                     </footer>
                 </form>
             """
@@ -810,7 +991,7 @@ class TestViews(ViewCase):
                     <separator name="separator" string="Separator" colspan="4"/>
                     <footer>
                         <button name="action_next" type="object" string="Next button" class="btn-primary"/>
-                        <button string="Skip" special="cancel" class="btn-default"/>
+                        <button string="Skip" special="cancel" class="btn-secondary"/>
                     </footer>
                 </form>
             """
@@ -866,7 +1047,7 @@ class TestViews(ViewCase):
         # implemeted elsewhere...
         modifiers_tests()
 
-    @mute_logger('odoo.addons.base.ir.ir_ui_view')
+    @mute_logger('odoo.addons.base.models.ir_ui_view')
     def test_invalid_field(self):
         with self.assertRaises(ValidationError):
             self.View.create({
@@ -880,7 +1061,7 @@ class TestViews(ViewCase):
                 """,
             })
 
-    @mute_logger('odoo.addons.base.ir.ir_ui_view')
+    @mute_logger('odoo.addons.base.models.ir_ui_view')
     def test_invalid_subfield(self):
         with self.assertRaises(ValidationError):
             self.View.create({
@@ -899,7 +1080,7 @@ class TestViews(ViewCase):
                 """,
             })
 
-    @mute_logger('odoo.addons.base.ir.ir_ui_view')
+    @mute_logger('odoo.addons.base.models.ir_ui_view')
     def test_context_in_view(self):
         arch = """
             <form string="View">
@@ -919,7 +1100,7 @@ class TestViews(ViewCase):
                 'arch': arch % '',
             })
 
-    @mute_logger('odoo.addons.base.ir.ir_ui_view')
+    @mute_logger('odoo.addons.base.models.ir_ui_view')
     def test_context_in_subview(self):
         arch = """
             <form string="View">
@@ -951,7 +1132,7 @@ class TestViews(ViewCase):
                 'arch': arch % ('<field name="model"/>', ''),
             })
 
-    @mute_logger('odoo.addons.base.ir.ir_ui_view')
+    @mute_logger('odoo.addons.base.models.ir_ui_view')
     def test_context_in_subview_with_parent(self):
         arch = """
             <form string="View">
@@ -982,7 +1163,7 @@ class TestViews(ViewCase):
                 'arch': arch % ('', '<field name="model"/>'),
             })
 
-    @mute_logger('odoo.addons.base.ir.ir_ui_view')
+    @mute_logger('odoo.addons.base.models.ir_ui_view')
     def test_context_in_subsubview_with_parent(self):
         arch = """
             <form string="View">
@@ -1024,7 +1205,7 @@ class TestViews(ViewCase):
                 'arch': arch % ('', '', '<field name="model"/>'),
             })
 
-    @mute_logger('odoo.addons.base.ir.ir_ui_view')
+    @mute_logger('odoo.addons.base.models.ir_ui_view')
     def test_domain_in_view(self):
         arch = """
             <form string="View">
@@ -1044,7 +1225,7 @@ class TestViews(ViewCase):
                 'arch': arch % '',
             })
 
-    @mute_logger('odoo.addons.base.ir.ir_ui_view')
+    @mute_logger('odoo.addons.base.models.ir_ui_view')
     def test_domain_in_subview(self):
         arch = """
             <form string="View">
@@ -1075,7 +1256,7 @@ class TestViews(ViewCase):
                 'arch': arch % ('<field name="model"/>', ''),
             })
 
-    @mute_logger('odoo.addons.base.ir.ir_ui_view')
+    @mute_logger('odoo.addons.base.models.ir_ui_view')
     def test_domain_in_subview_with_parent(self):
         arch = """
             <form string="View">
@@ -1106,7 +1287,7 @@ class TestViews(ViewCase):
                 'arch': arch % ('', '<field name="model"/>'),
             })
 
-    @mute_logger('odoo.addons.base.ir.ir_ui_view')
+    @mute_logger('odoo.addons.base.models.ir_ui_view')
     def test_domain_on_field_in_view(self):
         field = self.env['ir.ui.view']._fields['inherit_id']
         self.patch(field, 'domain', "[('model', '=', model)]")
@@ -1129,7 +1310,7 @@ class TestViews(ViewCase):
                 'arch': arch % '',
             })
 
-    @mute_logger('odoo.addons.base.ir.ir_ui_view')
+    @mute_logger('odoo.addons.base.models.ir_ui_view')
     def test_domain_on_field_in_subview(self):
         field = self.env['ir.ui.view']._fields['inherit_id']
         self.patch(field, 'domain', "[('model', '=', model)]")
@@ -1163,7 +1344,7 @@ class TestViews(ViewCase):
                 'arch': arch % ('<field name="model"/>', ''),
             })
 
-    @mute_logger('odoo.addons.base.ir.ir_ui_view')
+    @mute_logger('odoo.addons.base.models.ir_ui_view')
     def test_domain_on_field_in_subview_with_parent(self):
         field = self.env['ir.ui.view']._fields['inherit_id']
         self.patch(field, 'domain', "[('model', '=', parent.model)]")
@@ -1197,7 +1378,7 @@ class TestViews(ViewCase):
                 'arch': arch % ('', '<field name="model"/>'),
             })
 
-    @mute_logger('odoo.addons.base.ir.ir_ui_view')
+    @mute_logger('odoo.addons.base.models.ir_ui_view')
     def test_domain_on_field_in_noneditable_subview(self):
         field = self.env['ir.ui.view']._fields['inherit_id']
         self.patch(field, 'domain', "[('model', '=', model)]")
@@ -1225,7 +1406,7 @@ class TestViews(ViewCase):
                 'arch': arch % ' editable="bottom"',
             })
 
-    @mute_logger('odoo.addons.base.ir.ir_ui_view')
+    @mute_logger('odoo.addons.base.models.ir_ui_view')
     def test_domain_on_readonly_field_in_view(self):
         field = self.env['ir.ui.view']._fields['inherit_id']
         self.patch(field, 'domain', "[('model', '=', model)]")
@@ -1255,7 +1436,7 @@ class TestViews(ViewCase):
             'arch': arch,
         })
 
-    @mute_logger('odoo.addons.base.ir.ir_ui_view')
+    @mute_logger('odoo.addons.base.models.ir_ui_view')
     def test_domain_on_readonly_field_in_subview(self):
         field = self.env['ir.ui.view']._fields['inherit_id']
         self.patch(field, 'domain', "[('model', '=', model)]")
@@ -1283,7 +1464,7 @@ class TestViews(ViewCase):
                 'arch': arch % '',
             })
 
-    @mute_logger('odoo.addons.base.ir.ir_ui_view')
+    @mute_logger('odoo.addons.base.models.ir_ui_view')
     def test_attrs_field(self):
         arch = """
             <form string="View">
@@ -1304,7 +1485,7 @@ class TestViews(ViewCase):
                 'arch': arch % '',
             })
 
-    @mute_logger('odoo.addons.base.ir.ir_ui_view')
+    @mute_logger('odoo.addons.base.models.ir_ui_view')
     def test_attrs_subfield(self):
         arch = """
             <form string="View">
@@ -1336,7 +1517,7 @@ class TestViews(ViewCase):
                 'arch': arch % ('<field name="model"/>', ''),
             })
 
-    @mute_logger('odoo.addons.base.ir.ir_ui_view')
+    @mute_logger('odoo.addons.base.models.ir_ui_view')
     def test_attrs_subfield_with_parent(self):
         arch = """
             <form string="View">

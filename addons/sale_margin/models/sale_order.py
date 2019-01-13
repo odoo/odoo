@@ -17,9 +17,8 @@ class SaleOrderLine(models.Model):
         purchase_price = product_id.standard_price
         if product_uom_id != product_id.uom_id:
             purchase_price = product_id.uom_id._compute_price(purchase_price, product_uom_id)
-        ctx = self.env.context.copy()
-        ctx['date'] = order_id.date_order
-        price = frm_cur.with_context(ctx).compute(purchase_price, to_cur, round=False)
+        price = frm_cur._convert(
+            purchase_price, to_cur, order_id.company_id, order_id.date_order or fields.Date.today(), round=False)
         return price
 
     @api.model
@@ -29,9 +28,10 @@ class SaleOrderLine(models.Model):
         purchase_price = product.standard_price
         if product_uom != product.uom_id:
             purchase_price = product.uom_id._compute_price(purchase_price, product_uom)
-        ctx = self.env.context.copy()
-        ctx['date'] = date
-        price = frm_cur.with_context(ctx).compute(purchase_price, to_cur, round=False)
+        price = frm_cur._convert(
+            purchase_price, to_cur,
+            self.order_id.company_id or self.env.user.company_id,
+            date or fields.Date.today(), round=False)
         return {'purchase_price': price}
 
     @api.onchange('product_id', 'product_uom')
@@ -49,7 +49,7 @@ class SaleOrderLine(models.Model):
         if 'purchase_price' not in vals:
             order_id = self.env['sale.order'].browse(vals['order_id'])
             product_id = self.env['product.product'].browse(vals['product_id'])
-            product_uom_id = self.env['product.uom'].browse(vals['product_uom'])
+            product_uom_id = self.env['uom.uom'].browse(vals['product_uom'])
 
             vals['purchase_price'] = self._compute_margin(order_id, product_id, product_uom_id)
 

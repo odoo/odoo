@@ -253,7 +253,7 @@ function moment_to_strftime_format(value) {
 var _normalize_format_cache = {};
 var normalize_format_table = {
     // Python strftime to moment.js conversion table
-    // See openerp/addons/base/res/res_lang_view.xml
+    // See openerp/addons/base/views/res_lang_views.xml
     // for details about supported directives
     'a': 'ddd',
     'A': 'dddd',

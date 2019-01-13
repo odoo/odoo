@@ -1,13 +1,11 @@
 odoo.define('iap.redirect_odoo_credit_widget', function(require) {
 "use strict";
 
+var AbstractAction = require('web.AbstractAction');
 var core = require('web.core');
-var framework = require('web.framework');
-var Widget = require('web.Widget');
-var QWeb = core.qweb;
 
 
-var IapOdooCreditRedirect = Widget.extend({
+var IapOdooCreditRedirect = AbstractAction.extend({
     template: 'iap.redirect_to_odoo_credit',
     events : {
         "click .redirect_confirm" : "odoo_redirect",

@@ -189,6 +189,31 @@ class TestMatchHeadersMultiple(TransactionCase):
         )
 
 
+class TestColumnMapping(TransactionCase):
+
+    def test_column_mapping(self):
+        import_record = self.env['base_import.import'].create({
+            'res_model': 'base_import.tests.models.preview',
+            'file': u"Name,Some Value,value\n"
+                    u"chhagan,10,1\n"
+                    u"magan,20,2\n".encode('utf-8'),
+            'file_type': 'text/csv',
+            'file_name': 'data.csv',
+        })
+        import_record.do(
+            ['name', 'somevalue', 'othervalue'],
+            ['Name', 'Some Value', 'value'],
+            {'quoting': '"', 'separator': ',', 'headers': True},
+            True
+        )
+        fields = self.env['base_import.mapping'].search_read(
+            [('res_model', '=', 'base_import.tests.models.preview')],
+            ['column_name', 'field_name']
+        )
+        self.assertItemsEqual([f['column_name'] for f in fields], ['Name', 'Some Value', 'value'])
+        self.assertItemsEqual([f['field_name'] for f in fields], ['somevalue', 'name', 'othervalue'])
+
+
 class TestPreview(TransactionCase):
 
     def make_import(self):
@@ -207,7 +232,7 @@ class TestPreview(TransactionCase):
             'quoting': '"',
             'separator': ',',
         })
-        self.assertTrue('error' in result)
+        self.assertFalse('error' in result)
 
     @mute_logger('odoo.addons.base_import.models.base_import')
     def test_csv_errors(self):
@@ -216,14 +241,12 @@ class TestPreview(TransactionCase):
         result = import_wizard.parse_preview({
             'quoting': 'foo',
             'separator': ',',
-            'encoding': 'euc_kr',
         })
         self.assertTrue('error' in result)
 
         result = import_wizard.parse_preview({
             'quoting': '"',
             'separator': 'bob',
-            'encoding': 'euc_kr',
         })
         self.assertTrue('error' in result)
 
@@ -258,7 +281,7 @@ class TestPreview(TransactionCase):
             ['qux', '5', '6'],
         ])
         # Ensure we only have the response fields we expect
-        self.assertItemsEqual(list(result), ['matches', 'headers', 'fields', 'preview', 'headers_type', 'options', 'debug'])
+        self.assertItemsEqual(list(result), ['matches', 'headers', 'fields', 'preview', 'headers_type', 'options', 'advanced_mode', 'debug'])
 
     @unittest.skipUnless(can_import('xlrd'), "XLRD module not available")
     def test_xls_success(self):
@@ -288,7 +311,7 @@ class TestPreview(TransactionCase):
             ['qux', '5', '6'],
         ])
         # Ensure we only have the response fields we expect
-        self.assertItemsEqual(list(result), ['matches', 'headers', 'fields', 'preview', 'headers_type', 'options', 'debug'])
+        self.assertItemsEqual(list(result), ['matches', 'headers', 'fields', 'preview', 'headers_type', 'options', 'advanced_mode', 'debug'])
 
     @unittest.skipUnless(can_import('xlrd.xlsx'), "XLRD/XLSX not available")
     def test_xlsx_success(self):
@@ -318,7 +341,7 @@ class TestPreview(TransactionCase):
             ['qux', '5', '6'],
         ])
         # Ensure we only have the response fields we expect
-        self.assertItemsEqual(list(result), ['matches', 'headers', 'fields', 'preview', 'headers_type', 'options', 'debug'])
+        self.assertItemsEqual(list(result), ['matches', 'headers', 'fields', 'preview', 'headers_type', 'options', 'advanced_mode', 'debug'])
 
     @unittest.skipUnless(can_import('odf'), "ODFPY not available")
     def test_ods_success(self):
@@ -348,7 +371,7 @@ class TestPreview(TransactionCase):
             ['aux', '5', '6'],
         ])
         # Ensure we only have the response fields we expect
-        self.assertItemsEqual(list(result), ['matches', 'headers', 'fields', 'preview', 'headers_type', 'options', 'debug'])
+        self.assertItemsEqual(list(result), ['matches', 'headers', 'fields', 'preview', 'headers_type', 'options', 'advanced_mode', 'debug'])
 
 
 class test_convert_import_data(TransactionCase):
@@ -388,6 +411,7 @@ class test_convert_import_data(TransactionCase):
 
         results = import_wizard.do(
             ['name', 'date', 'create_date'],
+            [],
             {
                 'date_format': '%Y年%m月%d日',
                 'datetime_format': '%Y-%m-%d %H:%M',
@@ -398,7 +422,7 @@ class test_convert_import_data(TransactionCase):
         )
 
         # if results empty, no errors
-        self.assertItemsEqual(results, [])
+        self.assertItemsEqual(results['messages'], [])
 
     def test_parse_relational_fields(self):
         """ Ensure that relational fields float and date are correctly
@@ -570,5 +594,6 @@ class test_failures(TransactionCase):
         })
         results = import_wizard.do(
             ['name', 'db_datas'],
+            [],
             {'headers': True, 'separator': ',', 'quoting': '"'})
-        self.assertFalse(results, "results should be empty on successful import")
+        self.assertFalse(results['messages'], "results should be empty on successful import")

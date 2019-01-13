@@ -24,12 +24,13 @@ class TestAngloSaxonCommon(common.TransactionCase):
         self.account = self.env['account.account'].create({'name': 'Receivable', 'code': 'RCV00' , 'user_type_id': account_type_rcv.id, 'reconcile': True})
         account_expense = self.env['account.account'].create({'name': 'Expense', 'code': 'EXP00' , 'user_type_id': account_type_oth.id, 'reconcile': True})
         account_output = self.env['account.account'].create({'name': 'Output', 'code': 'OUT00' , 'user_type_id': account_type_oth.id, 'reconcile': True})
+        account_valuation = self.env['account.account'].create({'name': 'Valuation', 'code': 'STV00', 'user_type_id': account_type_oth.id, 'reconcile': True})
         self.partner.property_account_receivable_id = self.account
         self.category.property_account_income_categ_id = self.account
         self.category.property_account_expense_categ_id = account_expense
         self.category.property_stock_account_input_categ_id = self.account
         self.category.property_stock_account_output_categ_id = account_output
-        self.category.property_stock_valuation_account_id = self.account
+        self.category.property_stock_valuation_account_id = account_valuation
         self.category.property_stock_journal = self.env['account.journal'].create({'name': 'Stock journal', 'type': 'sale', 'code': 'STK00'})
         self.pos_config = self.env.ref('point_of_sale.pos_config_main')
         self.pos_config = self.pos_config.copy({'name': 'New POS config'})
@@ -74,8 +75,14 @@ class TestAngloSaxonFlow(TestAngloSaxonCommon):
                 'product_id': self.product.id,
                 'price_unit': 450,
                 'discount': 0.0,
-                'qty': 1.0
-            })]
+                'qty': 1.0,
+                'price_subtotal': 450,
+                'price_subtotal_incl': 450,
+            })],
+            'amount_total': 450,
+            'amount_tax': 0,
+            'amount_paid': 0,
+            'amount_return': 0,
         })
 
         # I make a payment to fully pay the order
@@ -91,6 +98,7 @@ class TestAngloSaxonFlow(TestAngloSaxonCommon):
 
         # I check that the order is marked as paid
         self.assertEqual(self.pos_order_pos0.state, 'paid', 'Order should be in paid state.')
+        self.assertEqual(self.pos_order_pos0.amount_paid, 450, 'Amount paid for the order should be updated.')
 
         # I close the current session to generate the journal entries
         self.pos_config.current_session_id.action_pos_session_close()

@@ -12,32 +12,35 @@ var $editable_area = $('#editable_area');
 var odoo_top = window.top.odoo;
 
 // Snippet option for resizing  image and column width inline like excel
-options.registry["width-x"] = options.Class.extend({
+options.registry.sizing_x = options.Class.extend({
+    /**
+     * @override
+     */
     start: function () {
-        this.container_width = this.$target.parent().closest("td, table, div").width();
+        var def = this._super.apply(this, arguments);
+
+        this.containerWidth = this.$target.parent().closest("td, table, div").width();
 
         var self = this;
         var offset, sib_offset, target_width, sib_width;
-        var $body = $(document.body);
-        this.is_image = false;
-        this._super.apply(this, arguments);
 
-        this.$overlay.find(".oe_handle.e, .oe_handle.w").removeClass("readonly");
-        if (this.$target.is("img")) {
-            this.$overlay.find(".oe_handle.w").addClass("readonly");
-            this.$overlay.find(".oe_snippet_move, .oe_snippet_clone").addClass("hidden");
-            this.is_image=true;
+        this.$overlay.find(".o_handle.e, .o_handle.w").removeClass("readonly");
+        this.isIMG = this.$target.is("img");
+        if (this.isIMG) {
+            this.$overlay.find(".o_handle.w").addClass("readonly");
+            this.$overlay.find(".oe_snippet_move, .oe_snippet_clone").addClass('d-none');
         }
 
-        this.$overlay.find(".oe_handle").on('mousedown', function (event) {
+        var $body = $(document.body);
+        this.$overlay.find(".o_handle").on('mousedown', function (event) {
             event.preventDefault();
             var $handle = $(this);
             var compass = false;
 
-            _.each(['n', 's', 'e', 'w' ], function (handler) {
+            _.each(['n', 's', 'e', 'w'], function (handler) {
                 if ($handle.hasClass(handler)) { compass = handler; }
             });
-            if (self.is_image) { compass = "image"; }
+            if (self.isIMG) { compass = "image"; }
 
             $body.on("mousemove.mass_mailing_width_x", function (event) {
                 event.preventDefault();
@@ -59,11 +62,12 @@ options.registry["width-x"] = options.Class.extend({
                     self.change_width(event, self.$target, target_width, offset, true);
                 }
             });
-
-            $body.one("mouseup", function(){
+            $body.one("mouseup", function () {
                 $body.off('.mass_mailing_width_x');
             });
         });
+
+        return def;
     },
     change_width: function (event, target, target_width, offset, grow) {
         target.css("width", grow ? (event.pageX - offset) : (offset + target_width - event.pageX));
@@ -73,13 +77,13 @@ options.registry["width-x"] = options.Class.extend({
         return parseInt($(el).css("width"), 10);
     },
     get_max_width: function ($el) {
-        return this.container_width - _.reduce(_.map($el.siblings(), this.get_int_width), function (memo, w) { return memo + w; });
+        return this.containerWidth - _.reduce(_.map($el.siblings(), this.get_int_width), function (memo, w) { return memo + w; });
     },
     onFocus: function () {
         this._super.apply(this, arguments);
 
         if (this.$target.is("td, th")) {
-            this.$overlay.find(".oe_handle.e, .oe_handle.w").toggleClass("readonly", this.$target.siblings().length === 0);
+            this.$overlay.find(".o_handle.e, .o_handle.w").toggleClass("readonly", this.$target.siblings().length === 0);
         }
     },
 });
@@ -193,7 +197,7 @@ snippets_editor.Class.include({
          * Add proposition to install enterprise themes if not installed.
          */
         var $mail_themes_upgrade = $dropdown.find(".o_mass_mailing_themes_upgrade");
-        $mail_themes_upgrade.on("click", "> a", function (e) {
+        $mail_themes_upgrade.on("click", function (e) {
             e.stopImmediatePropagation();
             e.preventDefault();
             odoo_top[window.callback+"_do_action"]("mass_mailing.action_mass_mailing_configuration");
@@ -204,15 +208,15 @@ snippets_editor.Class.include({
          * is pressed.
          */
         var selected_theme = false;
-        $dropdown.on("mouseenter", "li > a", function (e) {
+        $dropdown.on("mouseenter", ".dropdown-item", function (e) {
             if (first_choice) return;
             e.preventDefault();
-            var theme_params = themes_params[$(e.currentTarget).parent().index()];
+            var theme_params = themes_params[$(e.currentTarget).index()];
             switch_theme(theme_params);
         });
-        $dropdown.on("click", "li > a", function (e) {
+        $dropdown.on("click", ".dropdown-item", function (e) {
             e.preventDefault();
-            var theme_params = themes_params[$(e.currentTarget).parent().index()];
+            var theme_params = themes_params[$(e.currentTarget).index()];
             if (first_choice) {
                 switch_theme(theme_params);
                 $body.removeClass("o_force_mail_theme_choice");
@@ -240,7 +244,7 @@ snippets_editor.Class.include({
          */
         $dropdown.on("shown.bs.dropdown", function () {
             check_selected_theme();
-            $dropdown.find("li").removeClass("selected").filter(function () {
+            $dropdown.find(".dropdown-item").removeClass("selected").filter(function () {
                 return ($(this).has(".o_thumb[style=\""+ "background-image: url(" + (selected_theme && selected_theme.img) + "_small.png)"+ "\"]").length > 0);
             }).addClass("selected");
         });
@@ -322,30 +326,31 @@ snippets_editor.Class.include({
 
             $body.removeClass(all_classes).addClass(theme_params.className);
 
-            var $old_layout = $editable_area.find(".o_layout");
-            var $new_wrapper, $new_wrapper_content;
+            var $old_layout = $editable_area.find('.o_layout');
 
+            var $new_wrapper;
+            var $new_wrapper_content;
             if (theme_params.nowrap) {
-                $new_wrapper = $new_wrapper_content = $("<div/>", {"class": "oe_structure"});
-            }
-            else {
-                // This wrapper structure is the only way to have a responsive and
-                // centered fixed-width content column on all mail clients
+                $new_wrapper = $('<div/>', {class: 'oe_structure'});
+                $new_wrapper_content = $new_wrapper;
+            } else {
+                // This wrapper structure is the only way to have a responsive
+                // and centered fixed-width content column on all mail clients
                 $new_wrapper = $('<table/>', {class: 'o_mail_wrapper'});
-                $new_wrapper_content = $("<td/>", {class: 'o_mail_no_resize o_mail_no_colorpicker o_mail_wrapper_td oe_structure'});
+                $new_wrapper_content = $('<td/>', {class: 'o_mail_no_options o_mail_wrapper_td oe_structure'});
                 $new_wrapper.append($('<tr/>').append(
-                    $("<td/>", {class: 'o_mail_no_resize o_not_editable', contenteditable: 'false'}),
+                    $('<td/>', {class: 'o_mail_no_resize o_not_editable', contenteditable: 'false'}),
                     $new_wrapper_content,
-                    $("<td/>", {class: 'o_mail_no_resize o_not_editable', contenteditable: 'false'})
+                    $('<td/>', {class: 'o_mail_no_resize o_not_editable', contenteditable: 'false'})
                 ));
             }
-            var $new_layout = $("<div/>", {"class": "o_layout " + theme_params.className}).append($new_wrapper);
+            var $new_layout = $('<div/>', {class: 'o_layout ' + theme_params.className}).append($new_wrapper);
 
             var $contents;
             if (first_choice) {
                 $contents = theme_params.template;
             } else if ($old_layout.length) {
-                $contents = ($old_layout.hasClass("oe_structure") ? $old_layout : $old_layout.find(".oe_structure").first()).contents();
+                $contents = ($old_layout.hasClass('oe_structure') ? $old_layout : $old_layout.find('.oe_structure').first()).contents();
             } else {
                 $contents = $editable_area.contents();
             }
@@ -357,10 +362,21 @@ snippets_editor.Class.include({
 
             if (first_choice) {
                 self._registerDefaultTexts($new_wrapper_content);
+                if(theme_params.name == 'basic') {
+                    $editable_area.focusIn();
+                }
             }
             self._disableUndroppableSnippets();
         }
     },
+    cleanForSave: function () {
+        this._super.apply(this, arguments);
+        // remove font-family from all elements for plain text theme (just like gmail)
+        var $basicTheme = this.$editable.find('.o_basic_theme');
+        if($basicTheme.length && this.$editable.data('oe-model') === 'mail.mass_mailing') {
+            this.$editable.find('*').css('font-family', '');
+        }
+    }
 });
 
 var callback = window ? window["callback"] : undefined;
@@ -407,7 +423,7 @@ if ($editable_area.html().indexOf('on_change_model_and_list') !== -1) {
 // Adding compatibility for the outlook compliance of mailings.
 // Commit of such compatibility : a14f89c8663c9cafecb1cc26918055e023ecbe42
 options.registry.background.include({
-    start: function() {
+    start: function () {
         this._super();
         var $table_target = this.$target.find('table:first');
         if ($table_target) {

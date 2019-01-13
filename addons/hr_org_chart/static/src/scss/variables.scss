@@ -1,0 +1,14 @@
+$o-hr-org-chart-bg: white;
+$o-hr-org-chart-border-color: $o-brand-secondary;
+
+$o-hr-org-chart-entry-v-gap: 6px;
+$o-hr-org-chart-entry-pic-size: 46px;
+$o-hr-org-chart-entry-line-w: 1px;
+$o-hr-org-chart-entry-border-color: darken($o-hr-org-chart-bg, 25%);
+
+// MIXINS
+@mixin o-hr-org-chart-line {
+    content: '';
+    background-color: $o-hr-org-chart-bg;
+    border: 0px solid $o-hr-org-chart-entry-border-color;
+}

@@ -5,17 +5,17 @@
 # Translators:
 # Bonny Useful <bonny.useful@gmail.com>, 2017
 # Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2017
-# Martin Trigaux, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
 # Hendro Yulianto <hyulianto@gmail.com>, 2017
 # Deddy Ddr <deddy.ddr@gmail.com>, 2017
 # William Surya Permana <zarambie_game@yahoo.com>, 2017
 # Febrasari Almania <febrasari.almania@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 11.0\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-27 11:55+0000\n"
-"PO-Revision-Date: 2018-07-27 11:55+0000\n"
+"POT-Creation-Date: 2017-09-20 09:52+0000\n"
+"PO-Revision-Date: 2017-09-20 09:52+0000\n"
 "Last-Translator: Febrasari Almania <febrasari.almania@gmail.com>, 2017\n"
 "Language-Team: Indonesian (https://www.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
@@ -25,10 +25,10 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:344
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:348
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:365
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:369
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:328
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:332
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:349
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:353
 #, python-format
 msgid " already out"
 msgstr "sudah keluar"
@@ -73,7 +73,7 @@ msgid "By Weight"
 msgstr "Berat"
 
 #. module: stock_landed_costs
-#: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Cancel"
 msgstr "Batal"
 
@@ -83,17 +83,17 @@ msgid "Cancelled"
 msgstr "Dibatalkan"
 
 #. module: stock_landed_costs
-#: model:ir.actions.act_window,help:stock_landed_costs.action_stock_landed_cost
+#: model_terms:ir.actions.act_window,help:stock_landed_costs.action_stock_landed_cost
 msgid "Click to create a new landed cost."
 msgstr ""
 
 #. module: stock_landed_costs
-#: model:ir.actions.act_window,help:stock_landed_costs.stock_landed_cost_type_action
+#: model_terms:ir.actions.act_window,help:stock_landed_costs.stock_landed_cost_type_action
 msgid "Click to define a new kind of landed cost."
 msgstr ""
 
 #. module: stock_landed_costs
-#: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Compute"
 msgstr "Hitung"
 
@@ -109,12 +109,12 @@ msgstr "Biaya jalur"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_cost_lines
-#: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Cost Lines"
 msgstr "Biaya jalur"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:91
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:90
 #, python-format
 msgid ""
 "Cost and adjustments lines do not match. You should maybe recompute the "
@@ -154,13 +154,13 @@ msgid "Display Name"
 msgstr "Nama Tampilan"
 
 #. module: stock_landed_costs
-#: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
 #: model:mail.message.subtype,name:stock_landed_costs.mt_stock_landed_cost_open
 msgid "Done"
 msgstr "selesai"
 
 #. module: stock_landed_costs
-#: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
 #: selection:stock.landed.cost,state:0
 msgid "Draft"
 msgstr "Draft"
@@ -198,7 +198,7 @@ msgid "Former Cost(Per Unit)"
 msgstr "Mantan biaya (Per Unit)"
 
 #. module: stock_landed_costs
-#: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
 msgid "Group By"
 msgstr "Dikelompokkan berdasarkan"
 
@@ -210,7 +210,7 @@ msgid "ID"
 msgstr "ID"
 
 #. module: stock_landed_costs
-#: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_type_form
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_type_form
 msgid "Information"
 msgstr "Informasi"
 
@@ -238,29 +238,33 @@ msgid "Landed Cost"
 msgstr "Biaya mendarat"
 
 #. module: stock_landed_costs
-#: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Landed Cost Name"
 msgstr ""
 
 #. module: stock_landed_costs
 #: model:ir.ui.menu,name:stock_landed_costs.menu_stock_landed_cost_type
-#: model:ir.ui.view,arch_db:stock_landed_costs.res_config_settings_view_form
+msgid "Landed Cost Type"
+msgstr "Jenis biaya mendarat"
+
+#. module: stock_landed_costs
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.res_config_settings_view_form
 msgid "Landed Cost Types"
 msgstr ""
 
 #. module: stock_landed_costs
 #: model:ir.actions.act_window,name:stock_landed_costs.action_stock_landed_cost
 #: model:ir.ui.menu,name:stock_landed_costs.menu_stock_landed_cost
-#: model:ir.ui.view,arch_db:stock_landed_costs.view_product_landed_cost_form
-#: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
-#: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
-#: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_tree
-#: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_type_form
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_product_landed_cost_form
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_tree
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_type_form
 msgid "Landed Costs"
 msgstr "Biaya mendarat"
 
 #. module: stock_landed_costs
-#: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Landed cost are computed based on the purchase unit of measure."
 msgstr ""
 
@@ -291,32 +295,25 @@ msgid "Last Updated on"
 msgstr "Terakhir diperbarui pada"
 
 #. module: stock_landed_costs
-#: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
 msgid "Month"
 msgstr "Bulan"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_name
-#: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
 msgid "Name"
 msgstr "Nama"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:24
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:62
-#, python-format
-msgid "New"
-msgstr "Baru"
-
-#. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:89
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:88
 #, python-format
 msgid ""
 "No valuation adjustments lines. You should maybe recompute the landed costs."
 msgstr ""
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:87
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:86
 #, python-format
 msgid "Only draft landed costs can be validated"
 msgstr ""
@@ -327,7 +324,7 @@ msgid "Pickings"
 msgstr "Hasil"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:312
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:295
 #, python-format
 msgid "Please configure Stock Expense Account for product: %s."
 msgstr "Harap mengkonfigurasi Stock rekening pengeluaran untuk produk: %s."
@@ -344,7 +341,7 @@ msgid "Product"
 msgstr "Produk"
 
 #. module: stock_landed_costs
-#: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_type_form
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_type_form
 msgid "Product Name"
 msgstr "Nama Produk"
 
@@ -355,7 +352,7 @@ msgstr "Templete produk"
 
 #. module: stock_landed_costs
 #: model:ir.actions.act_window,name:stock_landed_costs.stock_landed_cost_type_action
-#: model:ir.ui.view,arch_db:stock_landed_costs.stock_landed_cost_tree_view
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.stock_landed_cost_tree_view
 msgid "Products"
 msgstr "Produk"
 
@@ -377,7 +374,7 @@ msgid "State"
 msgstr "Pernyataan"
 
 #. module: stock_landed_costs
-#: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
 msgid "Status"
 msgstr "Status"
 
@@ -403,7 +400,7 @@ msgid "Stock Valuation Adjustment Lines"
 msgstr "Stock Penilaian penyesuaian jalur"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:161
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:147
 #, python-format
 msgid ""
 "The selected picking does not contain any move that would be impacted by "
@@ -422,12 +419,17 @@ msgid "Total"
 msgstr "Total"
 
 #. module: stock_landed_costs
-#: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_move_total_value
+msgid "Total Value"
+msgstr "Nilai Total"
+
+#. module: stock_landed_costs
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Validate"
 msgstr "Validasi"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:81
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:80
 #, python-format
 msgid ""
 "Validated landed costs cannot be cancelled, but you could create negative "
@@ -436,7 +438,7 @@ msgstr ""
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_valuation_adjustment_lines
-#: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Valuation Adjustments"
 msgstr "Penilaian penyesuaian"
 
@@ -451,6 +453,6 @@ msgid "Weight"
 msgstr "Berat"
 
 #. module: stock_landed_costs
-#: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_type_form
+#: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_type_form
 msgid "describe the product characteristics..."
 msgstr "menggambarkan karakteristik produk..."

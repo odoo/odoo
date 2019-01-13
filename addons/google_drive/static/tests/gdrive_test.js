@@ -78,7 +78,7 @@ QUnit.module('gdrive_integration', {
                     '<field name="display_name"/>' +
                 '</form>',
             res_id: 1,
-            viewOptions: {sidebar: true},
+            viewOptions: {hasSidebar: true},
             mockRPC: function (route, args) {
                 if (route === '/web/dataset/call_kw/google.drive.config/get_google_drive_config') {
                     assert.deepEqual(args.args, ['partner', 1],
@@ -97,16 +97,18 @@ QUnit.module('gdrive_integration', {
                     return $.when();
                 }
                 return this._super.apply(this, arguments);
-            }
+            },
         });
 
-        var google_action = form.sidebar.$('.oe_share_gdoc');
+        var $googleAction = form.sidebar.$('.oe_share_gdoc');
 
-        assert.strictEqual(google_action.length, 1,
+        assert.strictEqual($googleAction.length, 1,
             'The button to the google action should be present');
 
-        // Trigger opening of the dynamic link
-        google_action.find('a:first').click();
+        // click on gdrive sidebar item
+        testUtils.dom.click(form.sidebar.$('.o_dropdown_toggler_btn:contains(Action)'));
+        testUtils.dom.click($googleAction);
+
         form.destroy();
     });
 
@@ -114,6 +116,7 @@ QUnit.module('gdrive_integration', {
         assert.expect(3);
         var self = this;
 
+        var currentID;
         var form = createView({
             View: FormView,
             model: 'partner',
@@ -123,7 +126,7 @@ QUnit.module('gdrive_integration', {
                 '</form>',
             res_id: 1,
             viewOptions: {
-                sidebar: true,
+                hasSidebar: true,
                 ids: [1, 2],
                 index: 0,
             },
@@ -139,7 +142,7 @@ QUnit.module('gdrive_integration', {
                                     id: 1}]);
                 }
                 if (route === '/web/dataset/call_kw/google.drive.config/get_google_drive_url') {
-                    assert.deepEqual(args.args, [27, self.activeId, 'T1000'],
+                    assert.deepEqual(args.args, [27, currentID, 'T1000'],
                         'The route to get the Google url should have been called');
                     // We don't return anything useful, otherwise it will open a new tab
                     return $.when();
@@ -148,16 +151,15 @@ QUnit.module('gdrive_integration', {
             },
         });
 
-        var nameToId = {
-            'Locomotive Breath': 1,
-            'Hey Macarena': 2,
-        }
-        // Trigger opening of the dynamic link
-        self.activeId = nameToId[$("[name='display_name']").text()];
-        form.sidebar.$('.oe_share_gdoc').find('a:first').click();
-        form.pager.$('.o_pager_next').click();
-        self.activeId = nameToId[$("[name='display_name']").text()];
-        form.sidebar.$('.oe_share_gdoc').find('a:first').click();
+        currentID = 1;
+        testUtils.dom.click(form.sidebar.$('.o_dropdown_toggler_btn:contains(Action)'));
+        testUtils.dom.click(form.sidebar.$('.oe_share_gdoc'));
+
+        testUtils.dom.click(form.pager.$('.o_pager_next'));
+        currentID = 2;
+        testUtils.dom.click(form.sidebar.$('.o_dropdown_toggler_btn:contains(Action)'));
+        testUtils.dom.click(form.sidebar.$('.oe_share_gdoc'));
+
         form.destroy();
     });
 });

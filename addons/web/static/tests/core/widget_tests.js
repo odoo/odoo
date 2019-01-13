@@ -1,10 +1,12 @@
 odoo.define('web.widget_tests', function (require) {
 "use strict";
 
+var AjaxService = require('web.AjaxService');
 var concurrency = require('web.concurrency');
 var core = require('web.core');
 var QWeb = require('web.QWeb');
 var Widget = require('web.Widget');
+var testUtils = require('web.test_utils');
 
 QUnit.module('core', {}, function () {
 
@@ -82,17 +84,15 @@ QUnit.module('core', {}, function () {
 
 
     QUnit.test('renderElement, no template, default', function (assert) {
-        assert.expect(8);
+        assert.expect(7);
 
         var widget = new (Widget.extend({ }))();
 
-        var $original = widget.$el;
-        assert.ok($original, "should initially have a root element");
+        assert.strictEqual(widget.$el, undefined, "should not have a root element");
 
         widget.renderElement();
 
         assert.ok(widget.$el, "should have generated a root element");
-        assert.ok($original !== widget.$el, "should have generated a new root element");
         assert.strictEqual(widget.$el, widget.$el, "should provide $el alias");
         assert.ok(widget.$el.is(widget.el), "should provide raw DOM alias");
 
@@ -122,7 +122,7 @@ QUnit.module('core', {}, function () {
         widget.renderElement();
 
         assert.strictEqual(widget.el.attributes.length, 1, "should have one attribute");
-        assert.strictEqual(widget.$el.attr('id'), 'foo', "should have generated the id attribute");
+        assert.hasAttrValue(widget.$el, 'id', 'foo', "should have generated the id attribute");
         assert.strictEqual(widget.el.id, 'foo', "should also be available via property");
     });
 
@@ -135,7 +135,7 @@ QUnit.module('core', {}, function () {
         widget.renderElement();
 
         assert.strictEqual(widget.el.className, 'oe_some_class', "should have the right property");
-        assert.strictEqual(widget.$el.attr('class'), 'oe_some_class', "should have the right attribute");
+        assert.hasAttrValue(widget.$el, 'class', 'oe_some_class', "should have the right attribute");
     });
 
     QUnit.test('no template, bunch of attributes', function (assert) {
@@ -156,16 +156,16 @@ QUnit.module('core', {}, function () {
         assert.strictEqual(widget.el.attributes.length, 5, "should have all the specified attributes");
 
         assert.strictEqual(widget.el.id, 'some_id');
-        assert.strictEqual(widget.$el.attr('id'), 'some_id');
+        assert.hasAttrValue(widget.$el, 'id', 'some_id');
 
         assert.strictEqual(widget.el.className, 'some_class');
-        assert.strictEqual(widget.$el.attr('class'), 'some_class');
+        assert.hasAttrValue(widget.$el, 'class', 'some_class');
 
-        assert.strictEqual(widget.$el.attr('data-foo'), 'data attribute');
+        assert.hasAttrValue(widget.$el, 'data-foo', 'data attribute');
         assert.strictEqual(widget.$el.data('foo'), 'data attribute');
 
-        assert.strictEqual(widget.$el.attr('clark'), 'gable');
-        assert.strictEqual(widget.$el.attr('spoiler'), 'snape kills dumbledore');
+        assert.hasAttrValue(widget.$el, 'clark', 'gable');
+        assert.hasAttrValue(widget.$el, 'spoiler', 'snape kills dumbledore');
     });
 
     QUnit.test('template', function (assert) {
@@ -306,7 +306,7 @@ QUnit.module('core', {}, function () {
         assert.ok(newclicked, "should trigger bound events");
 
         clicked = newclicked = false;
-        widget.undelegateEvents();
+        widget._undelegateEvents();
         widget.$('li').click();
         assert.ok(!clicked, "undelegate should unbind events delegated");
         assert.ok(newclicked, "undelegate should only unbind events it created");
@@ -379,17 +379,70 @@ QUnit.module('core', {}, function () {
     });
 
     QUnit.test("calling _rpc on destroyed widgets", function (assert) {
-        assert.expect(1);
+        assert.expect(3);
 
-        var widget = new Widget();
-        widget.destroy();
+        var def;
+        var parent = new Widget();
+        testUtils.mock.addMockEnvironment(parent, {
+            session: {
+                rpc: function () {
+                    def = $.Deferred();
+                    def.abort = def.reject;
+                    return def;
+                },
+            },
+            services: {
+                ajax: AjaxService
+            },
+        });
+        var widget = new Widget(parent);
+
+        widget._rpc({route: '/a/route'}).then(function () {
+            assert.ok(true, "The ajax call should be resolve");
+        });
+        def.resolve();
+        def = null;
+
         widget._rpc({route: '/a/route'}).always(function () {
             throw Error("Calling _rpc on a destroyed widget should return a " +
                 "deferred that is never resolved nor rejected");
         });
+        widget.destroy();
+        def.resolve();
+        def = null;
+
+        widget._rpc({route: '/a/route'}).always(function () {
+            throw Error("Calling _rpc on a destroyed widget should return a " +
+                "deferred that is never resolved nor rejected");
+        });
+        assert.ok(!def,
+            "The trigger_up is not performed and the call returns a deferred "+
+                "never resolved nor rejected");
+
         assert.ok(true,
             "there should be no crash when calling _rpc on a destroyed widget");
+        parent.destroy();
     });
+
+    QUnit.test('start is not called when widget is destroyed', function (assert) {
+        assert.expect(0);
+        var slowWillStartDef = $.Deferred();
+        var $fix = $( "#qunit-fixture");
+
+        var widget = new (Widget.extend({
+            willStart: function () {
+                return slowWillStartDef;
+            },
+            start: function () {
+                throw new Error('Should not call start method');
+            },
+        }))();
+
+        widget.appendTo($fix);
+        widget.destroy();
+        slowWillStartDef.resolve();
+    });
+
 });
 
 });

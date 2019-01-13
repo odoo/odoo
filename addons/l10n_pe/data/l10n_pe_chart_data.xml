@@ -18,27 +18,16 @@
     <record id="account_account_type_EGP_NA_110" model="account.account.type"><field name="name">Gastos por Tributos</field></record>
     <record id="account_account_type_EGP_NA_140" model="account.account.type"><field name="name">Valuación y Deterioro de Activos y Provisiones</field></record>
 
-    <record id="103000" model="account.account.template">
-        <field name="name">Caja y bancos - Efectivo en tránsito </field>
-        <field name="code">103000</field>
-        <field name="reconcile" eval="True"/>
-        <field ref="account.data_account_type_current_assets" name="user_type_id"/>
-    </record>
-
     <!--Account Chart Templaes-->
     <record id="pe_chart_template" model="account.chart.template">
         <field name="name">Peru - Plan de Cuentas 2011</field>
         <field name="bank_account_code_prefix">104</field>
         <field name="cash_account_code_prefix">101</field>
+        <field name="transfer_account_code_prefix">103000</field>
         <field name="code_digits">6</field>
         <field name="currency_id" ref="base.PEN"/>
-        <field name="transfer_account_id" ref="103000"/>
     </record>
     <!-- Account Templates -->
-
-    <record id="103000" model="account.account.template">
-        <field name="chart_template_id" ref="pe_chart_template"/>
-    </record>
 
             <record id="102_001" model="account.account.template"><field name="name">Caja y ...- Fondos fijos / caja chica 01 PEN (S/.)</field><field name="code">102.001</field><field name="reconcile" eval="False"/><field ref="account.data_account_type_current_assets" name="user_type_id"/><field name="chart_template_id" ref="pe_chart_template"/></record>
             <record id="105100" model="account.account.template"><field name="name">Caja y ...- Certificados bancarios / certificados bancarios ** otros equivalentes de efectivos </field><field name="code">105100</field><field name="reconcile" eval="False"/><field ref="account.data_account_type_current_assets" name="user_type_id"/><field name="chart_template_id" ref="pe_chart_template"/></record>

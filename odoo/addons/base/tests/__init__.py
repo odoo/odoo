@@ -2,6 +2,7 @@ from . import test_acl
 from . import test_api
 from . import test_base
 from . import test_basecase
+from . import test_cache
 from . import test_db_cursor
 from . import test_expression
 from . import test_float
@@ -10,6 +11,7 @@ from . import test_ir_actions
 from . import test_ir_attachment
 from . import test_ir_http
 from . import test_ir_filters
+from . import test_ir_model
 from . import test_ir_sequence
 from . import test_ir_sequence_date_range
 from . import test_ir_default
@@ -20,7 +22,6 @@ from . import test_misc
 from . import test_orm
 from . import test_ormcache
 from . import test_osv
-from . import test_phase
 from . import test_qweb
 from . import test_res_config
 from . import test_res_lang
@@ -34,4 +35,5 @@ from . import test_xmlrpc
 from . import test_res_partner
 from . import test_res_partner_bank
 from . import test_reports
+from . import test_tests_tags
 from . import test_non_regression

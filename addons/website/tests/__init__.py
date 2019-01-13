@@ -6,3 +6,5 @@ from . import test_qweb
 from . import test_crawl
 from . import test_ui
 from . import test_views
+from . import test_menu
+from . import test_page

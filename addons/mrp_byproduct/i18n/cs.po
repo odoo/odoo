@@ -3,16 +3,17 @@
 # * mrp_byproduct
 # 
 # Translators:
-# Martin Trigaux, 2017
+# Martin Trigaux, 2018
+# Jan Horzinka <jan.horzinka@centrum.cz>, 2018
 # Michal Veselý <michal@veselyberanek.net>, 2018
-# Jiří P., 2018
+# trendspotter, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 11.0\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-24 09:00+0000\n"
-"PO-Revision-Date: 2017-10-24 09:00+0000\n"
-"Last-Translator: Jiří P., 2018\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-09-21 13:17+0000\n"
+"Last-Translator: trendspotter, 2018\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,7 +27,7 @@ msgid "Bill of Material"
 msgstr "Kusovník"
 
 #. module: mrp_byproduct
-#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_bom_id
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct__bom_id
 msgid "BoM"
 msgstr "Kusovník"
 
@@ -36,63 +37,63 @@ msgid "Byproduct"
 msgstr "Polotovar"
 
 #. module: mrp_byproduct
-#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_bom_sub_products
-#: model:ir.ui.view,arch_db:mrp_byproduct.mrp_subproduct_view
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_bom__sub_products
+#: model_terms:ir.ui.view,arch_db:mrp_byproduct.mrp_subproduct_view
 msgid "Byproducts"
 msgstr "Polotovary"
 
 #. module: mrp_byproduct
 #: model:ir.model,name:mrp_byproduct.model_change_production_qty
-msgid "Change Quantity of Products"
-msgstr "Změnit množství výrobků"
+msgid "Change Production Qty"
+msgstr ""
 
 #. module: mrp_byproduct
-#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_create_uid
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct__create_uid
 msgid "Created by"
 msgstr "Vytvořil(a)"
 
 #. module: mrp_byproduct
-#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_create_date
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct__create_date
 msgid "Created on"
 msgstr "Vytvořeno"
 
 #. module: mrp_byproduct
-#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_display_name
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct__display_name
 msgid "Display Name"
 msgstr "Zobrazovaný název"
 
 #. module: mrp_byproduct
-#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_id
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct__id
 msgid "ID"
 msgstr "ID"
 
 #. module: mrp_byproduct
-#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct___last_update
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct____last_update
 msgid "Last Modified on"
-msgstr "Naposled upraveno"
+msgstr "Naposled změněno"
 
 #. module: mrp_byproduct
-#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_write_uid
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct__write_uid
 msgid "Last Updated by"
-msgstr "Naposled upraveno"
+msgstr "Naposledy upraveno od"
 
 #. module: mrp_byproduct
-#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_write_date
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct__write_date
 msgid "Last Updated on"
 msgstr "Naposled upraveno"
 
 #. module: mrp_byproduct
-#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_operation_id
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct__operation_id
 msgid "Produced at Operation"
 msgstr ""
 
 #. module: mrp_byproduct
-#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_product_id
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct__product_id
 msgid "Product"
 msgstr "Výrobek"
 
 #. module: mrp_byproduct
-#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_product_qty
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct__product_qty
 msgid "Product Qty"
 msgstr "Množství výrobků"
 
@@ -112,12 +113,12 @@ msgid "Stock Move"
 msgstr "Pohyb zásob"
 
 #. module: mrp_byproduct
-#: model:ir.model.fields,field_description:mrp_byproduct.field_stock_move_subproduct_id
+#: model:ir.model.fields,field_description:mrp_byproduct.field_stock_move__subproduct_id
 msgid "Subproduct"
 msgstr "Podprodukt"
 
 #. module: mrp_byproduct
-#: model:ir.model.fields,help:mrp_byproduct.field_stock_move_subproduct_id
+#: model:ir.model.fields,help:mrp_byproduct.field_stock_move__subproduct_id
 msgid "Subproduct line that generated the move in a manufacturing order"
 msgstr "Řádek podproduktu, který generoval posun ve vytvoření zakázky"
 
@@ -125,12 +126,12 @@ msgstr "Řádek podproduktu, který generoval posun ve vytvoření zakázky"
 #: code:addons/mrp_byproduct/models/mrp_subproduct.py:32
 #, python-format
 msgid ""
-"The Product Unit of Measure you chose has a different category than in the "
-"product form."
-msgstr "Měrná jednotka výrobku je jiné kategorie než ve formuláři výrobku."
+"The unit of measure you chose is in a different category than the product "
+"unit of measure."
+msgstr ""
 
 #. module: mrp_byproduct
-#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct_product_uom_id
+#: model:ir.model.fields,field_description:mrp_byproduct.field_mrp_subproduct__product_uom_id
 msgid "Unit of Measure"
 msgstr "Měrná jednotka"
 

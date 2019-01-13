@@ -55,6 +55,18 @@ QUnit.module('core', {}, function () {
         assert.strictEqual(is_bin_size('64.2 Кб'), true);
     });
 
+    QUnit.test('unaccent', function (assert) {
+        assert.expect(3);
+
+        var singleCharacters = utils.unaccent("ⱮɀꝾƶⱵȥ");
+        var doubledCharacters = utils.unaccent("ǱǄꝎꜩꝡƕ");
+        var caseSensetiveCharacters = utils.unaccent("ⱮɀꝾƶⱵȥ", true);
+
+        assert.strictEqual("mzgzhz", singleCharacters);
+        assert.strictEqual("dzdzootzvyhv", doubledCharacters);
+        assert.strictEqual("MzGzHz", caseSensetiveCharacters);
+    });
+
 });
 
 });

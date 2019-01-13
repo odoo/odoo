@@ -1,0 +1,31 @@
+.o_history_container{
+    table-layout: fixed;
+    width: 200% !important;
+    > tbody > tr > td {
+        padding: 0px !important;
+    }
+    .o_history_kanban_container {
+        text-align:center;
+        .o_history_kanban_sub_container {
+            .o_kanban_ungrouped {
+                flex-flow: column;
+                max-height:500px;
+                overflow:auto;
+                .o_kanban_record {
+                    min-width: 300px;
+                    width: 98%;
+                }
+            }
+            .oe_module_vignette {
+                text-align:left;
+            }
+            .o_kanban_image {
+                padding-top: 8px;
+            }
+            .oe_module_desc {
+                padding: 8px 8px 8px 70px;
+            }
+        }
+
+    }
+}

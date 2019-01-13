@@ -8,6 +8,7 @@ FILES_DIRECTORY=release
 MAKENSIS_ARGUMENTS=/DVERSION=$(VERSION) /DSERVICENAME=${SERVICENAME}
 
 LAUNCH_MAKENSIS=/cygdrive/c/tools/cygwin/makensis $(MAKENSIS_ARGUMENTS) setup.nsi
+WINPY_DIR=/cygdrive/c/odoobuild/WinPython/python-3.6.2
 
 default: allinone
 
@@ -24,6 +25,11 @@ server_clean:
 	rm -rf $(SERVER_DIRECTORY)/.cyg*
 
 allinone: server_clean
+	cp $(SERVER_DIRECTORY)/requirements.txt $(WINPY_DIR)/
+	-(cd $(WINPY_DIR) && ./python.exe -m pip install --upgrade pip)
+	-(cd $(WINPY_DIR) && cat requirements.txt | while read PAC ; do Scripts/pip3.exe install "$${PAC}" ; done)
+	-(cd $(WINPY_DIR) && Scripts/pip3.exe freeze)
+	rm $(WINPY_DIR)/requirements.txt
 	(cd $(SERVER_DIRECTORY)/setup/win32 && $(LAUNCH_MAKENSIS))
 	(cd $(SERVER_DIRECTORY)/setup/win32 && mkdir -p $(FILES_DIRECTORY))
 	(cd $(SERVER_DIRECTORY)/setup/win32 && cp openerp-*.exe $(FILES_DIRECTORY)/openerp-server-setup-$(VERSION).exe)

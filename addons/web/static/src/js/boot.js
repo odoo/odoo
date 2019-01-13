@@ -228,6 +228,8 @@
                     job_deferred.push(def);
                 } catch (e) {
                     job.error = e;
+                    console.error('Error while loading ' + job.name);
+                    console.error(e.stack);
                 }
                 if (!job.error) {
                     $.when(job_exec).then(
@@ -284,7 +286,7 @@
                     log_when_loaded();
                 }
             });
-        }, 4000);
+        }, 6000);
     };
     $(log_when_loaded);
 

@@ -7,8 +7,6 @@
 from __future__ import print_function
 import re
 
-from odoo.tools import pycompat
-
 component_re = re.compile(r'(\d+ | [a-z]+ | \.| -)', re.VERBOSE)
 replace = {'pre':'c', 'preview':'c','-':'final-','_':'final-','rc':'c','dev':'@','saas':'','~':''}.get
 
@@ -43,7 +41,7 @@ def parse_version(s):
     The algorithm assumes that strings like "-" and any alpha string that
     alphabetically follows "final"  represents a "patch level".  So, "2.4-1"
     is assumed to be a branch or patch of "2.4", and therefore "2.4.1" is
-    considered newer than "2.4-1", whic in turn is newer than "2.4".
+    considered newer than "2.4-1", which in turn is newer than "2.4".
 
     Strings like "a", "b", "c", "alpha", "beta", "candidate" and so on (that
     come before "final" alphabetically) are assumed to be pre-release versions,
@@ -74,7 +72,7 @@ if __name__ == '__main__':
                 if verbose:
                     print(v, pv)
 
-            for a, b in pycompat.izip(pvs, pvs[1:]):
+            for a, b in zip(pvs, pvs[1:]):
                 assert a < b, '%s < %s == %s' % (a, b, a < b)
         
         chk(('0', '4.2', '4.2.3.4', '5.0.0-alpha', '5.0.0-rc1', '5.0.0-rc1.1', '5.0.0_rc2', '5.0.0_rc3', '5.0.0'), False)

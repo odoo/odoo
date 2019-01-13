@@ -2,29 +2,25 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from __future__ import print_function
+import builtins
 import math
 
-from odoo.tools import pycompat
 
-if not pycompat.PY2:
-    import builtins
-    def round(f):
-        # P3's builtin round differs from P2 in the following manner:
-        # * it rounds half to even rather than up (away from 0)
-        # * round(-0.) loses the sign (it returns -0 rather than 0)
-        # * round(x) returns an int rather than a float
-        #
-        # this compatibility shim implements Python 2's round in terms of
-        # Python 3's so that important rounding error under P3 can be
-        # trivially fixed, assuming the P2 behaviour to be debugged and
-        # correct.
-        roundf = builtins.round(f)
-        if builtins.round(f + 1) - roundf != 1:
-            return f + math.copysign(0.5, f)
-        # copysign ensures round(-0.) -> -0 *and* result is a float
-        return math.copysign(roundf, f)
-else:
-    round = round
+def round(f):
+    # P3's builtin round differs from P2 in the following manner:
+    # * it rounds half to even rather than up (away from 0)
+    # * round(-0.) loses the sign (it returns -0 rather than 0)
+    # * round(x) returns an int rather than a float
+    #
+    # this compatibility shim implements Python 2's round in terms of
+    # Python 3's so that important rounding error under P3 can be
+    # trivially fixed, assuming the P2 behaviour to be debugged and
+    # correct.
+    roundf = builtins.round(f)
+    if builtins.round(f + 1) - roundf != 1:
+        return f + math.copysign(0.5, f)
+    # copysign ensures round(-0.) -> -0 *and* result is a float
+    return math.copysign(roundf, f)
 
 def _float_check_precision(precision_digits=None, precision_rounding=None):
     assert (precision_digits is not None or precision_rounding is not None) and \
@@ -171,7 +167,7 @@ def float_repr(value, precision_digits):
         :param int precision_digits: number of fractional digits to
                                      include in the output
     """
-    # Can't use str() here because it seems to have an intrisic
+    # Can't use str() here because it seems to have an intrinsic
     # rounding to 12 significant digits, which causes a loss of
     # precision. e.g. str(123456789.1234) == str(123456789.123)!!
     return ("%%.%sf" % precision_digits) % value
@@ -224,7 +220,7 @@ if __name__ == "__main__":
     expecteds = ['.00', '.02', '.01', '.68', '.67', '.46', '.456', '.4556']
     precisions = [2, 2, 2, 2, 2, 2, 3, 4]
     for magnitude in range(7):
-        for frac, exp, prec in pycompat.izip(fractions, expecteds, precisions):
+        for frac, exp, prec in zip(fractions, expecteds, precisions):
             for sign in [-1,1]:
                 for x in range(0, 10000, 97):
                     n = x * 10**magnitude

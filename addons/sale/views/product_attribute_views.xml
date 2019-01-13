@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Product attribute -->
+
+    <record id="attribute_tree_view" model="ir.ui.view">
+        <field name="name">product.attribute.tree.type</field>
+        <field name="model">product.attribute</field>
+        <field name="inherit_id" ref="product.attribute_tree_view"></field>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="type"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="product_template_attribute_line_form" model="ir.ui.view">
+        <field name="name">product.template.attribute.line.form.inherit</field>
+        <field name="model">product.template.attribute.line</field>
+        <field name="inherit_id" ref="product.product_template_attribute_line_form"/>
+        <field name="priority" eval="8"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='value_ids']/tree/field[@name='name']" position="after">
+                <field name="html_color"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="product_attribute_view_form" model="ir.ui.view">
+        <field name="name">product.attribute.form.inherit</field>
+        <field name="model">product.attribute</field>
+        <field name="inherit_id" ref="product.product_attribute_view_form"/>
+        <field name="priority" eval="8"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='create_variant']" position="before">
+                <field name="type" widget="radio"/>
+            </xpath>
+            <xpath expr="//field[@name='value_ids']/tree/field[@name='name']" position="after">
+                <field name="is_custom" groups="product.group_product_variant" />
+                <field name="html_color"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="product_template_attribute_value_view_tree_inherit" model="ir.ui.view">
+        <field name="name">product.template.attribute.value.view.tree.inherit</field>
+        <field name="model">product.template.attribute.value</field>
+        <field name="inherit_id" ref="product.product_template_attribute_value_view_tree"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="html_color"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="product_template_attribute_value_view_form_inherit" model="ir.ui.view">
+        <field name="name">product.template.attribute.value.view.form.inherit</field>
+        <field name="model">product.template.attribute.value</field>
+        <field name="inherit_id" ref="product.product_template_attribute_value_view_form"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="html_color" readonly="True" />
+            </field>
+        </field>
+    </record>
+
+    <record id="variants_tree_view" model="ir.ui.view">
+        <field name="name">variants.template.tree</field>
+        <field name="model">product.attribute.value</field>
+        <field name="inherit_id" ref="product.variants_tree_view"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="is_custom" groups="product.group_product_variant" />
+                <field name="html_color"/>
+            </field>
+        </field>
+    </record>
+</odoo>

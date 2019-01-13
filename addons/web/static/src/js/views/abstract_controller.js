@@ -12,37 +12,50 @@ odoo.define('web.AbstractController', function (require) {
  * reading localstorage, ...) has to go through the controller.
  */
 
+var ActionMixin = require('web.ActionMixin');
+var ajax = require('web.ajax');
 var concurrency = require('web.concurrency');
-var Widget = require('web.Widget');
+var config = require('web.config');
+var core = require('web.core');
+var mvc = require('web.mvc');
 
+var QWeb = core.qweb;
 
-var AbstractController = Widget.extend({
+var AbstractController = mvc.Controller.extend(ActionMixin, {
     custom_events: {
+        get_controller_query_params: '_onGetControllerQueryParams',
+        navigation_move: '_onNavigationMove',
         open_record: '_onOpenRecord',
+        search: '_onSearch',
+        switch_view: '_onSwitchView',
     },
     events: {
         'click a[type="action"]': '_onActionClicked',
     },
 
     /**
-     * @constructor
-     * @param {Widget} parent
-     * @param {AbstractModel} model
-     * @param {AbstractRenderer} renderer
-     * @param {object} params
+     * @override
      * @param {string} params.modelName
+     * @param {string} [params.controllerID] an id to ease the communication
+     *   with upstream components
+     * @param {ControlPanelController} [params.controlPanel]
      * @param {any} [params.handle] a handle that will be given to the model (some id)
-     * @param {any} params.initialState the initialState
+     * @param {boolean} params.isMultiRecord
+     * @param {Object[]} params.actionViews
+     * @param {string} params.viewType
      */
     init: function (parent, model, renderer, params) {
         this._super.apply(this, arguments);
-        this.model = model;
-        this.renderer = renderer;
+        this._controlPanel = params.controlPanel;
+        this._title = params.displayName;
         this.modelName = params.modelName;
-        this.handle = params.handle;
         this.activeActions = params.activeActions;
+        this.controllerID = params.controllerID;
         this.initialState = params.initialState;
-
+        this.bannerRoute = params.bannerRoute;
+        this.isMultiRecord = params.isMultiRecord;
+        this.actionViews = params.actionViews;
+        this.viewType = params.viewType;
         // use a DropPrevious to correctly handle concurrent updates
         this.dp = new concurrency.DropPrevious();
     },
@@ -52,10 +65,19 @@ var AbstractController = Widget.extend({
      * @returns {Deferred}
      */
     start: function () {
-        return $.when(
-            this._super.apply(this, arguments),
-            this.renderer.appendTo(this.$el)
-        ).then(this._update.bind(this, this.initialState));
+        var self = this;
+
+        this.$el.addClass('o_view_controller');
+
+        return this._super.apply(this, arguments).then(function () {
+            if (self._controlPanel) {
+                // render the ControlPanel elements (buttons, pager, sidebar...)
+                self.controlPanelElements = self._renderControlPanelElements();
+                self._controlPanel.$el.prependTo(self.$el);
+            }
+
+            return self._update(self.initialState);
+        });
     },
     /**
      * @override
@@ -64,12 +86,18 @@ var AbstractController = Widget.extend({
         if (this.$buttons) {
             this.$buttons.off();
         }
-        return this._super.apply(this, arguments);
+        if (this.controlPanelElements && this.controlPanelElements.$switch_buttons) {
+            this.controlPanelElements.$switch_buttons.off();
+        }
+        this._super.apply(this, arguments);
     },
     /**
      * Called each time the controller is attached into the DOM.
      */
     on_attach_callback: function () {
+        if (this._controlPanel) {
+            this._controlPanel.on_attach_callback();
+        }
         this.renderer.on_attach_callback();
     },
     /**
@@ -84,9 +112,16 @@ var AbstractController = Widget.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * @override
+     */
+    canBeRemoved: function () {
+        // AAB: get rid of this option when on_hashchange mechanism is improved
+        return this.discardChanges(undefined, {readonlyIfRealDiscard: true});
+    },
+    /**
      * Discards the changes made on the record associated to the given ID, or
      * all changes made by the current controller if no recordID is given. For
-     * example, when the user open the 'home' screen, the view manager will call
+     * example, when the user opens the 'home' screen, the action manager calls
      * this method on the active view to make sure it is ok to open the home
      * screen (and lose all current state).
      *
@@ -101,34 +136,24 @@ var AbstractController = Widget.extend({
         return $.when();
     },
     /**
-     * Returns any special keys that may be useful when reloading the view to
-     * get the same effect.  This is necessary for saving the current view in
-     * the favorites.  For example, a graph view might want to add a key to
-     * save the current graph type.
+     * Export the state of the controller containing information that is shared
+     * between different controllers of a same action (like the current
+     * searchQuery of the controlPanel).
      *
      * @returns {Object}
      */
-    getContext: function () {
-        return {};
+    exportState: function () {
+        var state = {};
+        if (this._controlPanel) {
+            state.cpState = this._controlPanel.exportState();
+        }
+        return state;
     },
     /**
-     * @see setScrollTop
-     * @returns {number}
+     * Gives the focus to the renderer
      */
-    getScrollTop: function () {
-        return this.scrollTop;
-    },
-    /**
-     * Returns a title that may be displayed in the breadcrumb area.  For
-     * example, the name of the record.
-     *
-     * Note: this seems wrong right now, it should not be implemented, we have
-     * no guarantee that there is a display_name variable in a controller.
-     *
-     * @returns {string}
-     */
-    getTitle: function () {
-        return this.display_name;
+    giveFocus: function() {
+        this.renderer.giveFocus();
     },
     /**
      * The use of this method is discouraged.  It is still snakecased, because
@@ -149,19 +174,16 @@ var AbstractController = Widget.extend({
      * @returns {Deferred}
      */
     reload: function (params) {
-        return this.update(params || {});
-    },
-    /**
-     * Most likely called by the view manager, this method is responsible for
-     * adding buttons in the control panel (buttons such as save/discard/...)
-     *
-     * Note that there is no guarantee that this method will be called. The
-     * controller is supposed to work even without a view manager, for example
-     * in the frontend (odoo frontend = public website)
-     *
-     * @param {jQuery Node} $node
-     */
-    renderButtons: function ($node) {
+        params = params || {};
+        var def;
+        var controllerState = params.controllerState || {};
+        var cpState = controllerState.cpState;
+        if (this._controlPanel && cpState) {
+            def = this._controlPanel.importState(cpState).then(function (searchQuery) {
+                params = _.extend({}, params, searchQuery);
+            });
+        }
+        return $.when(def).then(this.update.bind(this, params, {}));
     },
     /**
      * For views that require a pager, this method will be called to allow the
@@ -169,7 +191,7 @@ var AbstractController = Widget.extend({
      * controller can actually render whatever he wants in the pager zone.  If
      * your view does not want a pager, just let this method empty.
      *
-     * @param {Query Node} $node
+     * @param {jQuery Node} $node
      */
     renderPager: function ($node) {
     },
@@ -177,19 +199,9 @@ var AbstractController = Widget.extend({
      * Same as renderPager, but for the 'sidebar' zone (the zone with the menu
      * dropdown in the control panel next to the buttons)
      *
-     * @param {Query Node} $node
+     * @param {jQuery Node} $node
      */
     renderSidebar: function ($node) {
-    },
-    /**
-     * Not sure about this one, it probably needs to be reworked, maybe merged
-     * in get/set local state methods.
-     *
-     * @see getScrollTop
-     * @param {number} scrollTop
-     */
-    setScrollTop: function (scrollTop) {
-        this.scrollTop = scrollTop;
     },
     /**
      * This is the main entry point for the controller.  Changes from the search
@@ -210,13 +222,28 @@ var AbstractController = Widget.extend({
         var self = this;
         var shouldReload = (options && 'reload' in options) ? options.reload : true;
         var def = shouldReload ? this.model.reload(this.handle, params) : $.when();
+        // we check here that the updateIndex of the control panel hasn't changed
+        // between the start of the update request and the moment the controller
+        // asks the control panel to update itself ; indeed, it could happen that
+        // another action/controller is executed during this one reloads itself,
+        // and if that one finishes first, it replaces this controller in the DOM,
+        // and this controller should no longer update the control panel.
+        // note that this won't be necessary as soon as each controller will have
+        // its own control panel
+        var cpUpdateIndex = this._controlPanel && this._controlPanel.updateIndex;
         return this.dp.add(def).then(function (handle) {
+            if (self._controlPanel && cpUpdateIndex !== self._controlPanel.updateIndex) {
+                return;
+            }
             self.handle = handle || self.handle; // update handle if we reloaded
             var state = self.model.get(self.handle);
             var localState = self.renderer.getLocalState();
             return self.dp.add(self.renderer.updateState(state, params)).then(function () {
+                if (self._controlPanel && cpUpdateIndex !== self._controlPanel.updateIndex) {
+                    return;
+                }
                 self.renderer.setLocalState(localState);
-                self._update(state);
+                return self._update(state);
             });
         });
     },
@@ -235,7 +262,131 @@ var AbstractController = Widget.extend({
      *   world
      */
     _pushState: function (state) {
-        this.trigger_up('push_state', state || {});
+        this.trigger_up('push_state', {
+            controllerID: this.controllerID,
+            state: state || {},
+        });
+    },
+    /**
+     * Renders the html provided by the route specified by the
+     * bannerRoute attribute on the controller (banner_route in the template).
+     * Renders it before the view output and add a css class 'o_has_banner' to it.
+     * There can be only one banner displayed at a time.
+     *
+     * If the banner contains stylesheet links or js files, they are moved to <head>
+     * (and will only be fetched once).
+     *
+     * Route example:
+     * @http.route('/module/hello', auth='user', type='json')
+     * def hello(self):
+     *     return {'html': '<h1>hello, world</h1>'}
+     *
+     * @private
+     * @returns {Deferred}
+     */
+    _renderBanner: function () {
+        if (this.bannerRoute !== undefined) {
+            var self = this;
+            return this.dp
+                .add(this._rpc({route: this.bannerRoute}))
+                .then(function (response) {
+                    if (!response.html) {
+                        self.$el.removeClass('o_has_banner');
+                        return $.when();
+                    }
+                    self.$el.addClass('o_has_banner');
+                    var $banner = $(response.html);
+                    // we should only display one banner at a time
+                    if (self._$banner && self._$banner.remove) {
+                        self._$banner.remove();
+                    }
+                    // Css and js are moved to <head>
+                    var defs = [];
+                    $('link[rel="stylesheet"]', $banner).each(function (i, link) {
+                        defs.push(ajax.loadCSS(link.href));
+                        link.remove();
+                    });
+                    $('script[type="text/javascript"]', $banner).each(function (i, js) {
+                        defs.push(ajax.loadJS(js.src));
+                        js.remove();
+                    });
+                    return $.when.apply($, defs).then(function () {
+                        $banner.prependTo(self.$('> .o_content'));
+                        self._$banner = $banner;
+                    });
+                });
+        }
+        return $.when();
+    },
+    /**
+     * Renders the control elements (buttons, pager and sidebar) of the current
+     * view.
+     *
+     * @private
+     * @returns {Object} an object containing the control panel jQuery elements
+     */
+    _renderControlPanelElements: function () {
+        var elements = {
+            $buttons: $('<div>'),
+            $sidebar: $('<div>'),
+            $pager: $('<div>'),
+        };
+
+        this.renderButtons(elements.$buttons);
+        this.renderSidebar(elements.$sidebar);
+        this.renderPager(elements.$pager);
+        // remove the unnecessary outer div
+        elements = _.mapObject(elements, function($node) {
+            return $node && $node.contents();
+        });
+        elements.$switch_buttons = this._renderSwitchButtons();
+
+        return elements;
+    },
+    /**
+     * Renders the switch buttons and binds listeners on them.
+     *
+     * @private
+     * @returns {jQuery}
+     */
+    _renderSwitchButtons: function () {
+        var self = this;
+        var views = _.filter(this.actionViews, {multiRecord: this.isMultiRecord});
+
+        if (views.length <= 1) {
+            return $();
+        }
+
+        var template = config.device.isMobile ? 'ControlPanel.SwitchButtons.Mobile' : 'ControlPanel.SwitchButtons';
+        var $switchButtons = $(QWeb.render(template, {
+            viewType: this.viewType,
+            views: views,
+        }));
+        // create bootstrap tooltips
+        _.each(views, function (view) {
+            $switchButtons.filter('.o_cp_switch_' + view.type).tooltip();
+        });
+        // add onclick event listener
+        var $switchButtonsFiltered = config.device.isMobile ? $switchButtons.find('button') : $switchButtons.filter('button');
+        $switchButtonsFiltered.click(_.debounce(function (event) {
+            var viewType = $(event.target).data('view-type');
+            self.trigger_up('switch_view', {view_type: viewType});
+        }, 200, true));
+
+        // set active view's icon as view switcher button's icon in mobile
+        if (config.device.isMobile) {
+            var activeView = _.findWhere(views, {type: this.viewType});
+            $switchButtons.find('.o_switch_view_button_icon').addClass('fa fa-lg ' + activeView.icon);
+        }
+
+        return $switchButtons;
+    },
+    /**
+     * @override
+     * @private
+     */
+    _startRenderer: function () {
+        return this.renderer.appendTo(this.$('.o_content'));
     },
     /**
      * This method is called after each update or when the start method is
@@ -250,9 +401,16 @@ var AbstractController = Widget.extend({
      * @param {Object} state the state given by the model
      * @returns {Deferred}
      */
-    _update: function (state) {
+    _update: function () {
+        // AAB: update the control panel -> this will be moved elsewhere at some point
+        var cpContent = _.extend({}, this.controlPanelElements);
+        this.updateControlPanel({
+            cp_content: cpContent,
+            title: this.getTitle(),
+        });
+
         this._pushState();
-        return $.when();
+        return this._renderBanner();
     },
 
     //--------------------------------------------------------------------------
@@ -260,39 +418,119 @@ var AbstractController = Widget.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * When a user clicks on an <a> link with type="action", we need to actually
+     * do the action. This kind of links is used a lot in no-content helpers.
+     *
+     * The <a> may have
+     * - a data-method and data-model attribute, in that case the corresponding
+     *   rpc will be called. If that rpc returns an action it will be executed.
+     * - a data-reload-on-close attribute, in that case the view will be
+     *   reloaded after the dialog has been closed.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onActionClicked: function (ev) {
+        var $target = $(ev.currentTarget);
+        var self = this;
+        var model = $target.data('model');
+        var method = $target.data('method');
+
+        if (method !== undefined && model !== undefined) {
+            var options = {};
+            if ($target.data('reload-on-close')) {
+                options.on_close = function () {
+                    self.trigger_up('reload');
+                };
+            }
+            this.dp.add(this._rpc({
+                model: model,
+                method: method,
+            })).then(function (action) {
+                if (action !== undefined) {
+                    self.do_action(action, options);
+                }
+            });
+        } else {
+            this.do_action($target.attr('name'));
+        }
+    },
+    /**
+     * FIXME: this logic should be rethought
+     *
+     * Handles a context request: provides to the caller the state of the
+     * current controller.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     * @param {function} ev.data.callback used to send the requested state
+     */
+    _onGetControllerQueryParams: function (ev) {
+        ev.stopPropagation();
+        var state = this.getOwnedQueryParams();
+        ev.data.callback(state || {});
+    },
+    /**
+     * Called mainly from the control panel when the focus should be given to
+     * the controller
+     *
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onNavigationMove : function (ev) {
+        switch(ev.data.direction) {
+            case 'down' :
+                ev.stopPropagation();
+                this.giveFocus();
+                break;
+        }
+    },
+    /**
      * When an Odoo event arrives requesting a record to be opened, this method
      * gets the res_id, and request a switch view in the appropriate mode
      *
      * Note: this method seems wrong, it relies on the model being a basic model,
      * to get the res_id.  It should receive the res_id in the event data
-     * @todo move this to basic controller? or view manager
+     * @todo move this to basic controller?
      *
      * @private
-     * @param {OdooEvent} event
-     * @param {number} event.data.id The local model ID for the record to be
+     * @param {OdooEvent} ev
+     * @param {number} ev.data.id The local model ID for the record to be
      *   opened
-     * @param {string} [event.data.mode='readonly']
+     * @param {string} [ev.data.mode='readonly']
      */
-    _onOpenRecord: function (event) {
-        event.stopPropagation();
-        var record = this.model.get(event.data.id, {raw: true});
+    _onOpenRecord: function (ev) {
+        ev.stopPropagation();
+        var record = this.model.get(ev.data.id, {raw: true});
         this.trigger_up('switch_view', {
             view_type: 'form',
             res_id: record.res_id,
-            mode: event.data.mode || 'readonly',
+            mode: ev.data.mode || 'readonly',
             model: this.modelName,
         });
     },
     /**
-     * When a user clicks on an <a> link with type="action", we need to actually
-     * do the action. This kind of links is used a lot in no-content helpers.
+     * Called when there is a change in the search view, so the current action's
+     * environment needs to be updated with the new domain, context and groupby.
      *
      * @private
-     * @param {OdooEvent} event
+     * @param {OdooEvent} ev
+     * @param {Array[]} ev.data.domain
+     * @param {Object} ev.data.context
+     * @param {string[]} ev.data.groupby
      */
-    _onActionClicked: function (event) {
-        event.preventDefault();
-        this.do_action(event.target.name);
+    _onSearch: function (ev) {
+        ev.stopPropagation();
+        this.reload(_.extend({offset: 0}, ev.data));
+    },
+    /**
+     * Intercepts the 'switch_view' event to add the controllerID into the data,
+     * and lets the event bubble up.
+     *
+     * @param {OdooEvent} ev
+     */
+    _onSwitchView: function (ev) {
+        ev.data.controllerID = this.controllerID;
     },
 
 });

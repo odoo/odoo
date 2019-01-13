@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
-from odoo.tools import mute_logger, pycompat
+from odoo.tools import mute_logger
 from odoo.tests import common
 from odoo.exceptions import AccessError
 
@@ -69,14 +69,14 @@ class TestAPI(common.TransactionCase):
         self.cr.execute("SELECT COUNT(*) FROM res_partner WHERE active")
         count1 = self.cr.fetchone()[0]
         count2 = self.env['res.partner'].search([], count=True)
-        self.assertIsInstance(count1, pycompat.integer_types)
-        self.assertIsInstance(count2, pycompat.integer_types)
+        self.assertIsInstance(count1, int)
+        self.assertIsInstance(count2, int)
         self.assertEqual(count1, count2)
 
     @mute_logger('odoo.models')
     def test_05_immutable(self):
         """ Check that a recordset remains the same, even after updates. """
-        domain = [('name', 'ilike', 'j')]
+        domain = [('name', 'ilike', 'g')]
         partners = self.env['res.partner'].search(domain)
         self.assertTrue(partners)
         ids = partners.ids
@@ -136,7 +136,7 @@ class TestAPI(common.TransactionCase):
     @mute_logger('odoo.models')
     def test_40_new_new(self):
         """ Call new-style methods in the new API style. """
-        partners = self.env['res.partner'].search([('name', 'ilike', 'j')])
+        partners = self.env['res.partner'].search([('name', 'ilike', 'g')])
         self.assertTrue(partners)
 
         # call method write on partners itself, and check its effect
@@ -147,7 +147,7 @@ class TestAPI(common.TransactionCase):
     @mute_logger('odoo.models')
     def test_45_new_new(self):
         """ Call new-style methods on records (new API style). """
-        partners = self.env['res.partner'].search([('name', 'ilike', 'j')])
+        partners = self.env['res.partner'].search([('name', 'ilike', 'g')])
         self.assertTrue(partners)
 
         # call method write on partner records, and check its effects
@@ -157,7 +157,7 @@ class TestAPI(common.TransactionCase):
             self.assertFalse(p.active)
 
     @mute_logger('odoo.models')
-    @mute_logger('odoo.addons.base.ir.ir_model')
+    @mute_logger('odoo.addons.base.models.ir_model')
     def test_50_environment(self):
         """ Test environment on records. """
         # partners and reachable records are attached to self.env
@@ -291,29 +291,29 @@ class TestAPI(common.TransactionCase):
 
         # reading ONE partner should fetch them ALL
         for partner in partners:
-            partner.country_id
+            partner.state_id
             break
         partner_ids_with_field = [partner.id
                                   for partner in partners
-                                  if 'country_id' in partner._cache]
+                                  if 'state_id' in partner._cache]
         self.assertItemsEqual(partner_ids_with_field, partners.ids)
 
-        # partners' countries are ready for prefetching
-        country_ids = {cid
+        # partners' states are ready for prefetching
+        state_ids = {sid
                        for partner in partners
-                       for cid in partner._cache['country_id']}
-        self.assertTrue(len(country_ids) > 1)
-        self.assertItemsEqual(country_ids, partners._prefetch['res.country'])
+                       for sid in partner._cache['state_id']}
+        self.assertTrue(len(state_ids) > 1)
+        self.assertItemsEqual(state_ids, partners._prefetch['res.country.state'])
 
         # reading ONE partner country should fetch ALL partners' countries
         for partner in partners:
-            if partner.country_id:
-                partner.country_id.name
+            if partner.state_id:
+                partner.state_id.name
                 break
-        country_ids_with_field = [country.id
-                                  for country in partners.mapped('country_id')
-                                  if 'name' in country._cache]
-        self.assertItemsEqual(country_ids_with_field, country_ids)
+        state_ids_with_field = [state.id
+                                  for state in partners.mapped('state_id')
+                                  if 'name' in state._cache]
+        self.assertItemsEqual(state_ids_with_field, state_ids)
 
     @mute_logger('odoo.models')
     def test_60_prefetch_object(self):
@@ -366,6 +366,31 @@ class TestAPI(common.TransactionCase):
         same_prefetch(empty, empty.country_id)
         same_prefetch(empty, empty.bank_ids)
         same_prefetch(empty, empty.category_id)
+
+    @mute_logger('odoo.models')
+    def test_60_prefetch_read(self):
+        """ Check that reading a field computes it on self only. """
+        Partner = self.env['res.partner']
+        field = type(Partner).company_type
+        self.assertTrue(field.compute and not field.store)
+
+        partner1 = Partner.create({'name': 'Foo'})
+        partner2 = Partner.create({'name': 'Bar', 'parent_id': partner1.id})
+        self.assertEqual(partner1.child_ids, partner2)
+
+        # reading partner1 should not prefetch 'company_type' on partner2
+        self.env.clear()
+        partner1 = partner1.with_prefetch()
+        partner1.read(['company_type'])
+        self.assertIn('company_type', partner1._cache)
+        self.assertNotIn('company_type', partner2._cache)
+
+        # reading partner1 should not prefetch 'company_type' on partner2
+        self.env.clear()
+        partner1 = partner1.with_prefetch()
+        partner1.read(['child_ids', 'company_type'])
+        self.assertIn('company_type', partner1._cache)
+        self.assertNotIn('company_type', partner2._cache)
 
     @mute_logger('odoo.models')
     def test_70_one(self):

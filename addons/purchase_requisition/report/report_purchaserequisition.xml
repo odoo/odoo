@@ -11,19 +11,19 @@
                     <h2>Call for Tenders <span t-field="o.name"/></h2>
 
                     <div class="row mt32 mb32">
-                        <div class="col-xs-3">
+                        <div class="col-3">
                             <strong>Call for Tender Reference:</strong><br/>
                             <span t-field="o.name"/>
                         </div>
-                        <div class="col-xs-3">
+                        <div class="col-3">
                             <strong>Scheduled Ordering Date:</strong><br/>
                             <span t-field="o.ordering_date"/>
                         </div>
-                        <div class="col-xs-3">
+                        <div class="col-3">
                             <strong>Selection Type:</strong><br/>
                             <span t-esc="o.type_id.name">Multiple Requisitions</span>
                         </div>
-                        <div class="col-xs-3">
+                        <div class="col-3">
                             <strong>Source:</strong><br/>
                             <span t-field="o.origin"/>
                         </div>
@@ -31,12 +31,12 @@
 
                     <t t-if="o.line_ids">
                         <h3>Products</h3>
-                        <table class="table table-condensed">
+                        <table class="table table-sm">
                             <thead>
                                 <tr>
                                     <th><strong>Description</strong></th>
                                     <th class="text-right"><strong>Qty</strong></th>
-                                    <th class="text-center" groups="product.group_uom">
+                                    <th class="text-center" groups="uom.group_uom">
                                         <strong>Product UoM</strong>
                                     </th>
                                     <th class="text-right"><strong>Scheduled Date</strong></th>
@@ -52,7 +52,7 @@
                                         <span t-field="line_ids.product_qty"/>
                                     </td>
                                     <t>
-                                        <td class="text-center" groups="product.group_uom">
+                                        <td class="text-center" groups="uom.group_uom">
                                             <span t-field="line_ids.product_uom_id.category_id.name"/>
                                         </td>
                                     </t>
@@ -66,7 +66,7 @@
                     
                     <t t-if="o.purchase_ids">
                         <h3>Requests for Quotation Details</h3>
-                        <table class="table table-condensed">
+                        <table class="table table-sm">
                             <thead>
                                 <tr>
                                     <th><strong>Vendor </strong></th>

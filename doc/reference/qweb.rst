@@ -147,6 +147,9 @@ variables for various data points:
 
 :samp:`{$as}_all`
     the object being iterated over
+
+    .. note:: This variable is only available on JavaScript QWeb, not Python.
+
 :samp:`{$as}_value`
     the current iteration value, identical to ``$as`` for lists and integers,
     but for mappings it provides the value (where ``$as`` provides the key)
@@ -353,9 +356,9 @@ debugging
 ``t-debug``
     invokes a debugger using PDB's ``set_trace`` API. The parameter should
     be the name of a module, on which a ``set_trace`` method is called::
-    
+
         <t t-debug="pdb"/>
-    
+
     is equivalent to ``importlib.import_module("pdb").set_trace()``
 
 Helpers
@@ -503,14 +506,14 @@ The javascript QWeb implementation provides a few debugging hooks:
 ``t-log``
     takes an expression parameter, evaluates the expression during rendering
     and logs its result with ``console.log``::
-    
+
         <t t-set="foo" t-value="42"/>
         <t t-log="foo"/>
-        
+
     will print ``42`` to the console
 ``t-debug``
     triggers a debugger breakpoint during template rendering::
-    
+
         <t t-if="a_test">
             <t t-debug="">
         </t>
@@ -521,7 +524,7 @@ The javascript QWeb implementation provides a few debugging hooks:
     the node's body is javascript code executed during template rendering.
     Takes a ``context`` parameter, which is the name under which the rendering
     context will be available in the ``t-js``'s body::
-    
+
         <t t-set="foo" t-value="42"/>
         <t t-js="ctx">
             console.log("Foo is", ctx.foo);
@@ -547,8 +550,8 @@ API
     The QWeb "renderer", handles most of QWeb's logic (loading,
     parsing, compiling and rendering templates).
 
-    OpenERP Web instantiates one for the user in the core module, and 
-    exports it to ``core.qweb``. It also loads all the template files 
+    Odoo Web instantiates one for the user in the core module, and
+    exports it to ``core.qweb``. It also loads all the template files
     of the various modules into that QWeb instance.
 
     A :js:class:`QWeb2.Engine` also serves as a "template namespace".
@@ -566,7 +569,7 @@ API
 
     The engine exposes an other method which may be useful in some
     cases (e.g. if you need a separate template namespace with, in
-    OpenERP Web, Kanban views get their own :js:class:`QWeb2.Engine`
+    Odoo Web, Kanban views get their own :js:class:`QWeb2.Engine`
     instance so their templates don't collide with more general
     "module" templates):
 
@@ -613,7 +616,7 @@ API
     .. js:attribute:: QWeb2.Engine.preprocess_node
 
         A ``Function``. If present, called before compiling each DOM
-        node to template code. In OpenERP Web, this is used to
+        node to template code. In Odoo Web, this is used to
         automatically translate text content and some attributes in
         templates. Defaults to ``null``.
 

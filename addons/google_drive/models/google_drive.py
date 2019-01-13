@@ -9,7 +9,6 @@ import werkzeug.urls
 
 from odoo import api, fields, models
 from odoo.exceptions import RedirectWarning, UserError
-from odoo.tools import pycompat
 from odoo.tools.safe_eval import safe_eval
 from odoo.tools.translate import _
 
@@ -39,7 +38,7 @@ class GoogleDrive(models.Model):
         try:
             name_gdocs = name_gdocs % record
         except:
-            raise UserError(_("At least one key cannot be found in your Google Drive name pattern"))
+            raise UserError(_("At least one key cannot be found in your Google Drive name pattern."))
 
         attachments = self.env["ir.attachment"].search([('res_model', '=', model.model), ('name', '=', name_gdocs), ('res_id', '=', res_id)])
         url = False
@@ -155,7 +154,7 @@ class GoogleDrive(models.Model):
           :return: the config id and config name
         '''
         # TO DO in master: fix my signature and my model
-        if isinstance(res_model, pycompat.string_types):
+        if isinstance(res_model, str):
             res_model = self.env['ir.model'].search([('model', '=', res_model)]).id
         if not res_id:
             raise UserError(_("Creating google drive may only be done by one at a time."))

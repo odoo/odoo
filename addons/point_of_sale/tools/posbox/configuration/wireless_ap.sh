@@ -30,7 +30,12 @@ if [ -z "${WIRED_IP}" ] ; then
 
 			ip addr add 10.11.12.1/24 dev wlan0
 
-			service isc-dhcp-server restart
+			service dnsmasq restart
+
+			service nginx stop
+			# We start nginx in another configuration than the default one with https
+			# as it needs to do redirect instead in case the IoT Box acts as an ap
+			nginx -c /home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/nginx_ap.conf
 
 			service odoo restart
 		fi
@@ -40,5 +45,8 @@ if [ -z "${WIRED_IP}" ] ; then
 	fi
 # wired
 else
+	killall nginx
+	service nginx restart
+	service dnsmasq stop
 	service odoo restart
 fi

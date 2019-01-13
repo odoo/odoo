@@ -13,7 +13,7 @@ class MrpSubProduct(models.Model):
     product_qty = fields.Float(
         'Product Qty',
         default=1.0, digits=dp.get_precision('Product Unit of Measure'), required=True)
-    product_uom_id = fields.Many2one('product.uom', 'Unit of Measure', required=True)
+    product_uom_id = fields.Many2one('uom.uom', 'Unit of Measure', required=True)
     bom_id = fields.Many2one('mrp.bom', 'BoM', ondelete='cascade')
     operation_id = fields.Many2one('mrp.routing.workcenter', 'Produced at Operation')
 
@@ -29,7 +29,7 @@ class MrpSubProduct(models.Model):
         if self.product_uom_id and self.product_id and self.product_uom_id.category_id != self.product_id.uom_id.category_id:
             res['warning'] = {
                 'title': _('Warning'),
-                'message': _('The Product Unit of Measure you chose has a different category than in the product form.')
+                'message': _('The unit of measure you chose is in a different category than the product unit of measure.')
             }
             self.product_uom_id = self.product_id.uom_id.id
         return res

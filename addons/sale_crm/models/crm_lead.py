@@ -23,7 +23,8 @@ class CrmLead(models.Model):
                 if order.state in ('draft', 'sent', 'sale'):
                     nbr += 1
                 if order.state not in ('draft', 'sent', 'cancel'):
-                    total += order.currency_id.compute(order.amount_untaxed, company_currency)
+                    total += order.currency_id._convert(
+                        order.amount_untaxed, company_currency, order.company_id, order.date_order or fields.Date.today())
             lead.sale_amount_total = total
             lead.sale_number = nbr
 
@@ -37,7 +38,7 @@ class CrmLead(models.Model):
             'last_month': 0,
         }
         account_invoice_domain = [
-            ('state', 'in', ['open', 'paid']),
+            ('state', 'in', ['open', 'in_payment', 'paid']),
             ('user_id', '=', self.env.uid),
             ('date_invoice', '>=', date_today.replace(day=1) - relativedelta(months=+1)),
             ('type', 'in', ['out_invoice', 'out_refund'])

@@ -68,5 +68,7 @@ screens.define_action_button({
         return this.pos.config.iface_orderline_notes;
     },
 });
-
+return {
+    OrderlineNoteButton: OrderlineNoteButton,
+}
 });

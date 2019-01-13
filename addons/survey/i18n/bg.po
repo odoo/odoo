@@ -1,28 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * survey
-# 
+#
 # Translators:
-# Martin Trigaux, 2017
-# aleksandar ivanov, 2018
-# Albena Mincheva <albena_vicheva@abv.bg>, 2018
-# Kaloyan Naumov <kaloyan@lumnus.net>, 2018
-# kalatchev, 2018
-# Anton Vassilev, 2018
-# Boris Stefanov <borkata@gmail.com>, 2018
-# Maria Boyadjieva <marabo2000@gmail.com>, 2018
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:26+0000\n"
-"PO-Revision-Date: 2017-10-02 11:26+0000\n"
-"Last-Translator: Maria Boyadjieva <marabo2000@gmail.com>, 2018\n"
-"Language-Team: Bulgarian (https://www.transifex.com/odoo/teams/41243/bg/)\n"
+"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"PO-Revision-Date: 2016-07-17 15:04+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Bulgarian (http://www.transifex.com/odoo/odoo-9/language/"
+"bg/)\n"
+"Language: bg\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: bg\n"
+"#-#-#-#-#  bg.po (Odoo 9.0)  #-#-#-#-#\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"#-#-#-#-#  bg.po (Odoo 9.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: survey
@@ -32,191 +29,173 @@ msgid ""
 "                \n"
 "<p>Hello,</p>\n"
 "<p>We are conducting a survey, and your response would be appreciated.</p>\n"
-"<p><a style=\"margin-left: 85px; padding:5px 10px; border-radius: 3px; background-color:#875A7B; text-align:center; text-decoration:none; color:#F7FBFD;\" href=\"__URL__\">Please, click here to start survey</a></p>\n"
+"<p><a style=\"margin-left: 85px; padding:5px 10px; border-radius: 3px; "
+"background-color:#a24689; text-align:center; text-decoration:none; color:"
+"#F7FBFD;\" href=\"__URL__\">Please, click here to start survey</a></p>\n"
 "<p>Thanks for your participation!</p>\n"
 "                \n"
 "            "
 msgstr ""
-"\n"
-"                \n"
-"<p>Привет,</p>\n"
-"<p>Провеждаме проучване и вашият отговор ще бъде добре дошъл.</p>\n"
-"<p><a style=\"margin-left: 85px; padding:5px 10px; border-radius: 3px; background-color:#875A7B; text-align:center; text-decoration:none; color:#F7FBFD;\" href=\"__URL__\">Моля, натиснете тук, за да стартирате проучването</a></p>\n"
-"<p>Благодарим Ви за участието!</p>\n"
-"                \n"
-"            "
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.survey_page_tree
+#: model_terms:ir.ui.view,arch_db:survey.survey_page_tree
 msgid "#Questions"
 msgstr "#Въпроси"
 
 #. module: survey
-#: code:addons/survey/models/survey.py:122
+#: code:addons/survey/survey.py:231
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (копие)"
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.page
+#: model_terms:ir.ui.view,arch_db:survey.page
 msgid "&amp;times;"
 msgstr "&amp;време;"
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.result
+#: model_terms:ir.ui.view,arch_db:survey.result
 msgid "<b>Question </b>"
-msgstr "<b>Въпрос </b>"
+msgstr ""
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.survey_question_form
+#: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "<i class=\"fa fa-2x\">123..</i>"
-msgstr "<i class=\"fa fa-2x\">123..</i>"
+msgstr ""
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.result_matrix
+#: model_terms:ir.ui.view,arch_db:survey.result_matrix
 msgid ""
 "<i class=\"fa fa-bar-chart\"/>\n"
 "                    Graph"
 msgstr ""
-"<i class=\"fa fa-bar-chart\"/>\n"
-"                    Диаграма"
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.result_choice
+#: model_terms:ir.ui.view,arch_db:survey.result_choice
 msgid "<i class=\"fa fa-bar-chart-o\"/> Graph"
-msgstr "<i class=\"fa fa-bar-chart-o\"/> Диаграма"
+msgstr ""
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.result_choice
+#: model_terms:ir.ui.view,arch_db:survey.result_choice
 msgid "<i class=\"fa fa-bar-chart-o\"/> Pie Chart"
-msgstr "<i class=\"fa fa-bar-chart-o\"/> Диаграма тип торта"
+msgstr ""
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.survey_question_form
+#: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "<i class=\"fa fa-check-square-o fa-lg\"/> answer"
-msgstr "<i class=\"fa fa-check-square-o fa-lg\"/> отговор"
+msgstr ""
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.survey_question_form
+#: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "<i class=\"fa fa-circle-o  fa-lg\"/> answer"
-msgstr "<i class=\"fa fa-circle-o  fa-lg\"/> отговор"
+msgstr ""
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.survey_question_form
+#: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "<i class=\"fa fa-dot-circle-o fa-lg\"/> answer"
-msgstr "<i class=\"fa fa-dot-circle-o fa-lg\"/> отговор"
+msgstr ""
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.result_number
+#: model_terms:ir.ui.view,arch_db:survey.result_number
 msgid ""
 "<i class=\"fa fa-list-alt\"/>\n"
 "                    All Data"
 msgstr ""
-"<i class=\"fa fa-list-alt\"/>\n"
-"                    Всички данни"
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.result_matrix
+#: model_terms:ir.ui.view,arch_db:survey.result_matrix
 msgid ""
 "<i class=\"fa fa-list-alt\"/>\n"
 "                    Data"
 msgstr ""
-"<i class=\"fa fa-list-alt\"/>\n"
-"                    Данни"
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.result_choice
+#: model_terms:ir.ui.view,arch_db:survey.result_choice
 msgid "<i class=\"fa fa-list-alt\"/> Data"
-msgstr "<i class=\"fa fa-list-alt\"/> Данни"
+msgstr ""
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.result_number
+#: model_terms:ir.ui.view,arch_db:survey.result_number
 msgid ""
 "<i class=\"fa fa-list-ol\"/>\n"
 "                    Most Common"
 msgstr ""
-"<i class=\"fa fa-list-ol\"/>\n"
-"                    Най-често срещани"
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.survey_question_form
+#: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "<i class=\"fa fa-square-o fa-lg\"/> answer"
-msgstr "<i class=\"fa fa-square-o fa-lg\"/> отговор"
+msgstr ""
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.result
+#: model_terms:ir.ui.view,arch_db:survey.result
 msgid "<i class=\"fa fa-times\"/> Clear All Filters"
-msgstr "<i class=\"fa fa-times\"/> Изчистете всички филтри"
+msgstr ""
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.result
+#: model_terms:ir.ui.view,arch_db:survey.result
 msgid "<span class=\"fa fa-filter\"/>  Filters"
-msgstr "<span class=\"fa fa-filter\"/>  Филтри"
-
-#. module: survey
-#: model:ir.ui.view,arch_db:survey.result
-msgid ""
-"<span class=\"label label-default only_left_radius filter-all\">All "
-"surveys</span><span class=\"label label-primary only_right_radius filter-"
-"finished\">Finished surveys</span>"
 msgstr ""
-"<span class=\"label label-default only_left_radius filter-all\">Всички "
-"проучвания</span><span class=\"label label-primary only_right_radius filter-"
-"finished\">Приключени проучвания</span>"
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.result_number
+#: model_terms:ir.ui.view,arch_db:survey.result
+msgid ""
+"<span class=\"label label-default only_left_radius filter-all\">All surveys</"
+"span><span class=\"label label-primary only_right_radius filter-finished"
+"\">Finished surveys</span>"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.result_number
 msgid "<span class=\"label label-default only_left_radius\">Average </span>"
-msgstr "<span class=\"label label-default only_left_radius\">Среден </span>"
-
-#. module: survey
-#: model:ir.ui.view,arch_db:survey.result_number
-msgid "<span class=\"label label-default only_left_radius\">Maximum </span>"
-msgstr "<span class=\"label label-default only_left_radius\">Максимален </span>"
-
-#. module: survey
-#: model:ir.ui.view,arch_db:survey.result_number
-msgid "<span class=\"label label-default only_left_radius\">Minimum </span>"
-msgstr "<span class=\"label label-default only_left_radius\">Минимален </span>"
-
-#. module: survey
-#: model:ir.ui.view,arch_db:survey.result_number
-msgid "<span class=\"label label-default only_left_radius\">Sum </span>"
-msgstr "<span class=\"label label-default only_left_radius\">Сума </span>"
-
-#. module: survey
-#: model:ir.ui.view,arch_db:survey.result
-msgid ""
-"<span class=\"label label-primary only_left_radius filter-all\">All "
-"surveys</span><span class=\"label label-default only_right_radius filter-"
-"finished\">Finished surveys</span>"
 msgstr ""
-"<span class=\"label label-primary only_left_radius filter-all\">Всички "
-"проучвания</span><span class=\"label label-default only_right_radius filter-"
-"finished\">Приключени проучвания</span>"
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.no_result
+#: model_terms:ir.ui.view,arch_db:survey.result_number
+msgid "<span class=\"label label-default only_left_radius\">Maximum </span>"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.result_number
+msgid "<span class=\"label label-default only_left_radius\">Minimum </span>"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.result_number
+msgid "<span class=\"label label-default only_left_radius\">Sum </span>"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.result
+msgid ""
+"<span class=\"label label-primary only_left_radius filter-all\">All surveys</"
+"span><span class=\"label label-default only_right_radius filter-finished"
+"\">Finished surveys</span>"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.no_result
 msgid ""
 "<span>\n"
-"                            <i style=\"font-size:1.8em\" class=\"fa fa-users pull-right\"/>\n"
+"                            <i style=\"font-size:1.8em\" class=\"fa fa-users "
+"pull-right\"/>\n"
 "                        </span>\n"
 "                        Sorry, No one answered this survey yet"
 msgstr ""
-"<span>\n"
-"                            <i style=\"font-size:1.8em\" class=\"fa fa-users pull-right\"/>\n"
-"                        </span>\n"
-"                        Съжаляваме, все още никой не е отговорил на това проучване"
+
+#. module: survey
+#: constraint:survey.label:0
+msgid "A label must be attached to one and only one question"
+msgstr ""
 
 #. module: survey
 #: sql_constraint:survey.question:0
 msgid "A length must be positive!"
-msgstr "Дължината трябва да е положителна!"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey_description
 msgid "A long description of the purpose of the survey"
-msgstr "Дълго описание на целта на проучването"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_label_quizz_mark
@@ -224,50 +203,47 @@ msgid ""
 "A positive score indicates a correct choice; a negative or null score "
 "indicates a wrong answer"
 msgstr ""
-"Положителният резултат показва правилен избор; отрицателният или нулев "
-"резултат показва грешен отговор"
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.page
+#: model_terms:ir.ui.view,arch_db:survey.page
 msgid "A problem has occured"
-msgstr "Появи се проблем"
+msgstr ""
 
 #. module: survey
 #: model:survey.label,value:survey.frow_2_2_4
 msgid "A process is defined for all enterprise flows"
-msgstr "За всички бизнес потоци е определен процес"
+msgstr ""
 
 #. module: survey
-#: code:addons/survey/models/survey.py:806
-#, python-format
+#: constraint:survey.user_input_line:0
 msgid "A question cannot be unanswered and skipped"
-msgstr "Въпросът не може да остане без отговор и да се пропусне"
+msgstr ""
 
 #. module: survey
 #: sql_constraint:survey.user_input:0
 msgid "A token must be unique!"
-msgstr "Токенът трябва да бъде уникален!"
+msgstr ""
 
 #. module: survey
 #: model:survey.page,title:survey.feedback_1
 msgid "About your Odoo usage"
-msgstr "Относно Вашето използване на Odoo"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_active
 msgid "Active"
-msgstr "Активен"
-
-#. module: survey
-#: model:ir.ui.view,arch_db:survey.survey_email_compose_message
-msgid ""
-"Add a list of email of recipients (will not be converted into contacts). "
-"Separated by commas, semicolons or newline..."
 msgstr ""
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.survey_email_compose_message
-msgid "Add existing contacts..."
+#: model_terms:ir.ui.view,arch_db:survey.survey_email_compose_message
+msgid ""
+"Add list of email of recipients (will not converted in partner), separated "
+"by commas, semicolons or newline..."
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_email_compose_message
+msgid "Add list of existing contacts..."
 msgstr ""
 
 #. module: survey
@@ -276,27 +252,27 @@ msgstr ""
 #: model:survey.label,value:survey.fcol_2_5_3
 #: model:survey.label,value:survey.fcol_2_7_3
 msgid "Agree"
-msgstr "Съгласен"
+msgstr ""
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.survey_question_form
+#: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Allow Comments"
-msgstr "Позволете коментари"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_page_description
 msgid "An introductory text to your page"
-msgstr "Въвеждащ текст на страницата Ви"
+msgstr ""
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.survey_kanban
+#: model_terms:ir.ui.view,arch_db:survey.survey_kanban
 msgid "Analyze Answers"
-msgstr "Анализирайте отговори"
+msgstr ""
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.result_choice
+#: model_terms:ir.ui.view,arch_db:survey.result_choice
 msgid "Answer Choices"
-msgstr "Избори за отговор"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line_answer_type
@@ -305,7 +281,7 @@ msgid "Answer Type"
 msgstr "Тип на отговор"
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.result
+#: model_terms:ir.ui.view,arch_db:survey.result
 msgid "Answered"
 msgstr "Отговорено"
 
@@ -314,20 +290,14 @@ msgstr "Отговорено"
 #: model:ir.model.fields,field_description:survey.field_survey_question_user_input_line_ids
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_user_input_line_ids
 #: model:ir.ui.menu,name:survey.menu_survey_type_form1
-#: model:ir.ui.view,arch_db:survey.survey_form
-#: model:ir.ui.view,arch_db:survey.survey_question_form
+#: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Answers"
 msgstr "Отговори"
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.survey_survey_view_search
-msgid "Archived"
-msgstr "Архивирани"
-
-#. module: survey
 #: model:survey.question,question:survey.feedback_1_1
 msgid "Are you using Odoo on a daily basis?"
-msgstr "Ежедневно ли използвате Odoo?"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_attachment_ids
@@ -335,55 +305,53 @@ msgid "Attachments"
 msgstr "Прикачени файлове"
 
 #. module: survey
-#: model:ir.model.fields,help:survey.field_survey_mail_compose_message_attachment_ids
-msgid ""
-"Attachments are linked to a document through model / res_id and to the "
-"message through this field."
-msgstr ""
-"Прикачени файлове са свързани с документ чрез model/res_id и със съобщението"
-" чрез това поле."
-
-#. module: survey
-#: model:ir.ui.view,arch_db:survey.back
+#: model_terms:ir.ui.view,arch_db:survey.back
 msgid "Back to Survey"
-msgstr "Обратно към проучването"
+msgstr ""
 
 #. module: survey
 #: model:survey.label,value:survey.choice_1_2_4
 msgid "CRM"
-msgstr "Управление на взаимоотношенията с клиенти - CRM"
+msgstr ""
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.survey_email_compose_message
+#: model_terms:ir.ui.view,arch_db:survey.survey_email_compose_message
 msgid "Cancel"
 msgstr "Откажи"
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.survey_question_form
+#: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Choices"
-msgstr "Избори"
+msgstr ""
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.simple_choice
+#: model_terms:ir.ui.view,arch_db:survey.simple_choice
 msgid "Choose..."
-msgstr "Изберете..."
+msgstr ""
 
 #. module: survey
-#: code:addons/survey/models/survey.py:110
+#: code:addons/survey/survey.py:125
+#: code:addons/survey/wizard/survey_email_compose_message.py:34
 #, python-format
 msgid "Click here to start survey"
-msgstr "Натиснете тук, за да започнете проучване"
+msgstr ""
 
 #. module: survey
-#: model:ir.actions.act_window,help:survey.action_survey_form
+#: code:addons/survey/wizard/survey_email_compose_message.py:92
+#, python-format
+msgid "Click here to take survey"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.actions.act_window,help:survey.action_survey_form
 msgid "Click to add a survey."
-msgstr "Натиснете, за да добавите проучване."
+msgstr ""
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.page
-#: model:ir.ui.view,arch_db:survey.survey_email_compose_message
+#: model_terms:ir.ui.view,arch_db:survey.page
+#: model_terms:ir.ui.view,arch_db:survey.survey_email_compose_message
 msgid "Close"
-msgstr "Затваряне"
+msgstr "Затвори"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_stage_closed
@@ -392,44 +360,39 @@ msgid "Closed"
 msgstr "Затворено"
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.survey_kanban
-msgid "Color"
-msgstr "Цвят"
-
-#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_color
 msgid "Color Index"
 msgstr "Индекс на Цветовете."
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.result_comments
+#: model_terms:ir.ui.view,arch_db:survey.result_comments
 msgid "Comment"
 msgstr "Коментар"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_comment_count_as_answer
 msgid "Comment Field is an Answer Choice"
-msgstr "Коментарното поле е избор на отговор"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_comments_message
 msgid "Comment Message"
-msgstr "Коментарно съобщение"
+msgstr ""
 
 #. module: survey
 #: model:survey.page,title:survey.feedback_3
 msgid "Community and contributors"
-msgstr "Общността и сътрудниците"
+msgstr ""
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.survey_tree
-#: model:ir.ui.view,arch_db:survey.survey_user_input_search
+#: model_terms:ir.ui.view,arch_db:survey.survey_tree
+#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_search
 #: selection:survey.user_input,state:0
 msgid "Completed"
 msgstr "Завършен"
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.survey_email_compose_message
+#: model_terms:ir.ui.view,arch_db:survey.survey_email_compose_message
 msgid "Compose Email"
 msgstr "Съставяне на имейл"
 
@@ -441,30 +404,27 @@ msgstr "Настройка"
 #. module: survey
 #: model:survey.label,value:survey.frow_2_7_2
 msgid "Configuration wizard exists for each important setting"
-msgstr "Помощникът за конфигуриране съществува за всяка важна настройка"
-
-#. module: survey
-#: model:ir.ui.view,arch_db:survey.survey_question_form
-msgid "Constraints"
-msgstr "Ограничения"
-
-#. module: survey
-#: model:ir.ui.view,arch_db:survey.survey_email_compose_message
-msgid ""
-"Copy and paste the HTML code below to add this web link to any webpage."
 msgstr ""
-"Копирайте и поставете HTML кода по-долу, за да добавите този уеблинк към "
-"която и да е уебстраница."
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.survey_email_compose_message
+#: model_terms:ir.ui.view,arch_db:survey.survey_question_form
+msgid "Constraints"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_email_compose_message
+msgid "Copy and paste the HTML code below to add this web link to any webpage."
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_email_compose_message
 msgid "Copy, paste and share the web link below to your audience."
-msgstr "Копирайте, поставете и споделете с аудиторията си долния уеблинк."
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line_date_create
 msgid "Create Date"
-msgstr "Дата на създаване"
+msgstr "Създаване на дата"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_label_create_uid
@@ -496,21 +456,24 @@ msgid "Creation Date"
 msgstr "Дата на създаване"
 
 #. module: survey
-#: selection:survey.question,type:0
 #: selection:survey.user_input_line,answer_type:0
 msgid "Date"
 msgstr "Дата"
 
 #. module: survey
+#: selection:survey.question,type:0
+msgid "Date and Time"
+msgstr "Дата и време"
+
+#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line_value_date
 msgid "Date answer"
-msgstr "Дата за отговор"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_user_input_deadline
 msgid "Date by which the person can open the survey and submit answers"
 msgstr ""
-"Дата, на която лицето може да отвори проучването и да изпрати отговори"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_deadline
@@ -520,21 +483,19 @@ msgstr "Краен срок"
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_mail_compose_message_date_deadline
 msgid ""
-"Deadline to which the invitation to respond for this survey is valid. If the"
-" field is empty,        the invitation is still valid."
+"Deadline to which the invitation to respond for this survey is valid. If the "
+"field is empty, the invitation is still valid."
 msgstr ""
-"Краен срок, до който поканата за отговор за това проучване е валидна. Ако "
-"полето е празно, поканата е все още валидна."
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_date_deadline
 msgid "Deadline to which the invitation to respond is valid"
-msgstr "Краен срок, до който е валидна поканата за отговор"
+msgstr ""
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.survey_kanban
+#: model_terms:ir.ui.view,arch_db:survey.survey_kanban
 msgid "Delete"
-msgstr "Изтрий"
+msgstr "Изтриване"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_page_description
@@ -546,26 +507,24 @@ msgstr "Описание"
 #. module: survey
 #: model:survey.label,value:survey.frow_2_7_1
 msgid "Descriptions and help tooltips are clear enough"
-msgstr "Описанията и помощните инструкции са достатъчно ясни"
+msgstr ""
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.survey_kanban
+#: model_terms:ir.ui.view,arch_db:survey.survey_kanban
 msgid "Design"
 msgstr "Дизайн"
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.survey_form
+#: model_terms:ir.ui.view,arch_db:survey.survey_form
 msgid "Design Survey"
-msgstr "Проучване за дизайна"
+msgstr ""
 
 #. module: survey
-#: model:ir.actions.act_window,help:survey.action_survey_form
+#: model_terms:ir.actions.act_window,help:survey.action_survey_form
 msgid ""
 "Design easily your survey, send invitations to answer by email and analyse "
 "answers."
 msgstr ""
-"Проектирайте лесно вашето проучване, изпратете покани, за да отговорите по "
-"имейл и да анализирате отговорите."
 
 #. module: survey
 #: model:survey.label,value:survey.fcol_2_1_2
@@ -573,12 +532,7 @@ msgstr ""
 #: model:survey.label,value:survey.fcol_2_5_2
 #: model:survey.label,value:survey.fcol_2_7_2
 msgid "Disagree"
-msgstr "Несъгласен"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_question_display_mode
-msgid "Display Mode"
-msgstr "Режим на показване"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_label_display_name
@@ -593,29 +547,30 @@ msgid "Display Name"
 msgstr "Име за показване"
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.survey_question_form
+#: model:ir.model.fields,field_description:survey.field_survey_question_display_mode
+#: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Display mode"
-msgstr "Покажете режим"
+msgstr ""
 
 #. module: survey
 #: model:survey.question,question:survey.feedback_3_3
 msgid "Do you have a proposition to attract new contributors?"
-msgstr "Имате ли предложение да привлечете нови сътрудници?"
+msgstr ""
 
 #. module: survey
 #: model:survey.question,question:survey.feedback_3_2
 msgid "Do you have a proposition to help people to contribute?"
-msgstr "Имате ли предложение да помогнете на хората да допринесат?"
+msgstr ""
 
 #. module: survey
 #: model:survey.question,question:survey.feedback_2_3
 msgid "Do you have suggestions on how to improve the process view ?"
-msgstr "Имате ли предложения за това как да подобрите визията на процеса?"
+msgstr ""
 
 #. module: survey
 #: model:survey.stage,name:survey.stage_draft
 msgid "Draft"
-msgstr "Чернова"
+msgstr "Чернова "
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_email
@@ -623,17 +578,17 @@ msgid "E-mail"
 msgstr "Имейл"
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.survey_form
+#: model_terms:ir.ui.view,arch_db:survey.survey_form
 msgid "Edit Pages and Questions"
-msgstr "Редактирайте страници и въпроси"
+msgstr ""
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.survey_kanban
+#: model_terms:ir.ui.view,arch_db:survey.survey_kanban
 msgid "Edit Survey"
 msgstr "Редактиране на проучване"
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.survey_user_input_search
+#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_search
 msgid "Email"
 msgstr "Имейл"
 
@@ -645,120 +600,121 @@ msgstr "Шаблон за имейл"
 #. module: survey
 #: model:ir.model,name:survey.model_survey_mail_compose_message
 msgid "Email composition wizard for Survey"
-msgstr "Съветник за създаване на Имейли за Анкета"
+msgstr ""
 
 #. module: survey
 #: model:survey.page,title:survey.feedback_2
 msgid "Ergonomy and ease of use"
-msgstr "Ергономия и лекота на използване"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_constr_error_msg
+#: model:ir.model.fields,field_description:survey.field_survey_question_validation_error_msg
 msgid "Error message"
 msgstr "Съобщение за грешка"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_partner_ids
 msgid "Existing contacts"
-msgstr "Съществуващи контакти"
+msgstr ""
 
 #. module: survey
 #: model:survey.label,value:survey.frow_2_7_3
 msgid "Extra modules proposed are relevant"
-msgstr "Предложени са допълнителни модули"
+msgstr ""
 
 #. module: survey
 #: model:survey.label,value:survey.choice_1_2_3
 msgid "Financial Management"
-msgstr "Финансово управление"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_stage_fold
 msgid "Folded in kanban view"
-msgstr "Сгънато в канбан изглед"
+msgstr ""
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.survey_question_form
+#: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Format"
 msgstr "Формат"
 
 #. module: survey
 #: selection:survey.user_input_line,answer_type:0
 msgid "Free Text"
-msgstr "Свободен текст"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line_value_free_text
 msgid "Free Text answer"
-msgstr "Отговор - свободен текст"
+msgstr ""
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.survey_page_search
-#: model:ir.ui.view,arch_db:survey.survey_question_search
-#: model:ir.ui.view,arch_db:survey.survey_response_line_search
-#: model:ir.ui.view,arch_db:survey.survey_user_input_search
+#: model_terms:ir.ui.view,arch_db:survey.survey_page_search
+#: model_terms:ir.ui.view,arch_db:survey.survey_question_search
+#: model_terms:ir.ui.view,arch_db:survey.survey_response_line_search
+#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_search
 msgid "Group By"
 msgstr "Групиране по"
 
 #. module: survey
 #: model:survey.question,question:survey.feedback_3_1
 msgid "How do you contribute or plan to contribute to Odoo?"
-msgstr "Как допринасяте или възнамерявате да допринесете за Одоо?"
+msgstr ""
 
 #. module: survey
 #: model:survey.label,value:survey.choice_1_2_6
 msgid "Human Resources"
-msgstr "Човешки ресурси"
+msgstr ""
 
 #. module: survey
 #: model:survey.label,value:survey.choice_3_1_3
 msgid "I develop new features"
-msgstr "Разработвам нови функции"
+msgstr ""
 
 #. module: survey
 #: model:survey.label,value:survey.choice_4_1_4
 msgid "I do not publish my developments"
-msgstr "Не публикувам моите разработки"
+msgstr ""
 
 #. module: survey
 #: model:survey.label,value:survey.choice_3_1_4
 msgid "I help to translate"
-msgstr "Помагам да се преведе"
+msgstr ""
 
 #. module: survey
 #: model:survey.label,value:survey.choice_4_1_3
 msgid "I host them on my own website"
-msgstr "Хоствам ги на собствения си уебсайт"
+msgstr ""
 
 #. module: survey
 #: model:survey.label,value:survey.choice_3_1_1
 msgid "I participate to discussion and forums"
-msgstr "Аз участвам в дискусии и форуми"
+msgstr ""
 
 #. module: survey
 #: model:survey.label,value:survey.choice_4_1_1
 msgid "I use Github, like all official Odoo projects"
-msgstr "Използвам Github като всички официални проекти Odoo"
+msgstr ""
 
 #. module: survey
 #: model:survey.label,value:survey.choice_4_1_2
 msgid "I use another repository system (SourceForge...)"
-msgstr "Използвам друга система за хранилища (SourceForge...)"
+msgstr ""
 
 #. module: survey
 #: model:survey.label,value:survey.frow_2_1_3
 msgid "I use the contextual help in Odoo"
-msgstr "Използвам контекстуалната помощ в Odoo"
+msgstr ""
 
 #. module: survey
 #: model:survey.label,value:survey.choice_3_1_5
 msgid "I write documentations"
-msgstr "Пиша документации"
+msgstr ""
 
 #. module: survey
 #: model:survey.label,value:survey.choice_3_1_2
 msgid "I'd like to contribute but I don't know how?"
-msgstr "Бих искал да дам своя принос, но не знам как?"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_label_id
@@ -775,24 +731,20 @@ msgstr "ID"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_token
 msgid "Identification token"
-msgstr "Токен за идентификация"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey_users_can_go_back
 msgid "If checked, users can go back to previous pages."
 msgstr ""
-"Ако отметнато, потребителите могат да се върнат към предишните страници."
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_stage_closed
-#: model:ir.model.fields,help:survey.field_survey_survey_is_closed
 msgid "If closed, people won't be able to answer to surveys in this column."
 msgstr ""
-"Ако са затворени, хората няма да могат да отговорят на проучванията в тази "
-"графа."
 
 #. module: survey
-#: code:addons/survey/models/survey.py:471
+#: code:addons/survey/survey.py:624
 #: model:survey.question,comments_message:survey.feedback_1_1
 #: model:survey.question,comments_message:survey.feedback_1_2
 #: model:survey.question,comments_message:survey.feedback_2_1
@@ -808,18 +760,17 @@ msgstr ""
 #: model:survey.question,comments_message:survey.feedback_4_1
 #, python-format
 msgid "If other, please specify:"
-msgstr "Ако Друго, моля уточнете:"
+msgstr ""
 
 #. module: survey
-#: model:survey.page,description:survey.feedback_4
+#: model_terms:survey.page,description:survey.feedback_4
 msgid "If you do not contribute or develop in Odoo, skip this page."
 msgstr ""
-"Ако не допринасяте или не се развивате в Odoo, пропуснете тази страница."
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.sfinished
+#: model_terms:ir.ui.view,arch_db:survey.sfinished
 msgid "If you wish, you can"
-msgstr "Ако желаете, можете да"
+msgstr ""
 
 #. module: survey
 #: model:survey.stage,name:survey.stage_in_progress
@@ -827,65 +778,54 @@ msgid "In progress"
 msgstr "В развитие"
 
 #. module: survey
-#: code:addons/survey/wizard/survey_email_compose_message.py:68
-#, python-format
-msgid "Incorrect Email Address: %s"
-msgstr "Грешен имейл адрес: %s"
-
-#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_validation_email
 msgid "Input must be an email"
-msgstr "Входът трябва да е имейл"
+msgstr ""
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.survey_tree
+#: model_terms:ir.ui.view,arch_db:survey.survey_tree
 msgid "Invitations sent"
-msgstr "Изпратени покани"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_survey_is_closed
-msgid "Is closed"
-msgstr "Е затворен"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_designed
 msgid "Is designed?"
-msgstr "Е проектиран?"
+msgstr ""
 
 #. module: survey
 #: model:survey.label,value:survey.choice_2_4_2
 msgid "It can be improved"
-msgstr "Може да бъде подобрен"
+msgstr ""
 
 #. module: survey
 #: model:survey.label,value:survey.frow_2_1_2
 msgid "It helps in the beginning"
-msgstr "Помага в началото"
+msgstr ""
 
 #. module: survey
 #: model:survey.label,value:survey.frow_2_1_5
 msgid "It is clear"
-msgstr "Ясно ли е"
+msgstr ""
 
 #. module: survey
 #: model:survey.label,value:survey.frow_2_1_4
 msgid "It is complete"
-msgstr "Завършено е"
+msgstr ""
 
 #. module: survey
 #: model:survey.label,value:survey.frow_2_1_1
 msgid "It is up-to-date"
-msgstr "Актуално е"
+msgstr ""
 
 #. module: survey
 #: model:survey.label,value:survey.frow_2_2_5
 msgid "It's easy to find the process you need"
-msgstr "Лесно е да откриете процеса, който Ви е нужен"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_label_sequence
 msgid "Label Sequence order"
-msgstr "Ред на последователност на етикетите"
+msgstr ""
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_survey_label_form
@@ -932,12 +872,7 @@ msgstr "Последно обновено на"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_last_displayed_page_id
 msgid "Last displayed page"
-msgstr "Последна показвана страница"
-
-#. module: survey
-#: model:ir.ui.view,arch_db:survey.survey_survey_view_search
-msgid "Late Activities"
-msgstr "Последни дейности"
+msgstr ""
 
 #. module: survey
 #: selection:survey.user_input,type:0
@@ -947,24 +882,19 @@ msgstr "Връзка"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_multi_email
 msgid "List of emails"
-msgstr "Списък с имейли"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_auth_required
-#: model:ir.ui.view,arch_db:survey.auth_required
+#: model_terms:ir.ui.view,arch_db:survey.auth_required
 msgid "Login required"
-msgstr "Изисква се регистрация"
-
-#. module: survey
-#: model:res.groups,name:survey.group_survey_manager
-msgid "Manager"
-msgstr "Мениджър"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_constr_mandatory
-#: model:ir.ui.view,arch_db:survey.survey_question_form
+#: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Mandatory Answer"
-msgstr "Задължителен отговор"
+msgstr ""
 
 #. module: survey
 #: selection:survey.user_input,type:0
@@ -974,87 +904,82 @@ msgstr "Ръчно"
 #. module: survey
 #: selection:survey.question,type:0
 msgid "Matrix"
-msgstr "Матрица"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_matrix_subtype
 msgid "Matrix Type"
-msgstr "Вид матрица"
+msgstr ""
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.result
+#: model_terms:ir.ui.view,arch_db:survey.result
 msgid "Matrix:"
-msgstr "Матрица:"
+msgstr ""
 
 #. module: survey
 #: sql_constraint:survey.question:0
 msgid "Max date cannot be smaller than min date!"
-msgstr "Максималната дата не може да е по-малка от минималната!"
+msgstr ""
 
 #. module: survey
 #: sql_constraint:survey.question:0
 msgid "Max length cannot be smaller than min length!"
-msgstr "Максималната дължина не може да е по-малка от минималната!"
+msgstr ""
 
 #. module: survey
 #: sql_constraint:survey.question:0
 msgid "Max value cannot be smaller than min value!"
-msgstr "Максималната стойност не може да е по-малка от минималната стойност!"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_validation_max_date
 msgid "Maximum Date"
-msgstr "Максимална дата"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_validation_length_max
 msgid "Maximum Text Length"
-msgstr "Максимална дължина на текста"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_validation_max_float_value
 msgid "Maximum value"
-msgstr "Максимална стойност"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_validation_min_date
 msgid "Minimum Date"
-msgstr "Минимална дата"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_validation_length_min
 msgid "Minimum Text Length"
-msgstr "Минимална дължина на текста"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_validation_min_float_value
 msgid "Minimum value"
-msgstr "Минимална стойност"
+msgstr ""
 
 #. module: survey
 #: selection:survey.question,type:0
 msgid "Multiple Lines Text Box"
-msgstr "Текстово поле с няколко реда"
+msgstr ""
 
 #. module: survey
 #: selection:survey.question,type:0
 msgid "Multiple choice: multiple answers allowed"
-msgstr "Множествен избор: позволени са няколко отговора"
+msgstr ""
 
 #. module: survey
 #: selection:survey.question,type:0
 msgid "Multiple choice: only one answer"
-msgstr "Множествен избор: само един отговор"
+msgstr ""
 
 #. module: survey
 #: selection:survey.question,matrix_subtype:0
 msgid "Multiple choices per row"
-msgstr "Няколко избора на ред"
-
-#. module: survey
-#: model:ir.ui.view,arch_db:survey.survey_survey_view_search
-msgid "My Activities"
-msgstr "Моите дейности"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_stage_name
@@ -1062,115 +987,121 @@ msgid "Name"
 msgstr "Име"
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.survey_user_input_search
+#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_search
 msgid "New"
 msgstr "Nieuw"
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.page
+#: model_terms:ir.ui.view,arch_db:survey.page
 msgid "Next page"
-msgstr "Следваща страница"
+msgstr ""
 
 #. module: survey
 #: model:survey.label,value:survey.choice_1_1_4
 msgid "No, I just tested it"
-msgstr "Не, тъкмо то изпробвах"
+msgstr ""
 
 #. module: survey
-#: model:ir.actions.act_window,help:survey.action_selected_survey_user_input
+#: model_terms:ir.actions.act_window,help:survey.action_selected_survey_user_input
 msgid "Nobody has replied to your survey yet."
-msgstr "Все още никой не е отговорил на Вашето проучване."
+msgstr ""
 
 #. module: survey
-#: model:ir.actions.act_window,help:survey.action_survey_user_input
+#: model_terms:ir.actions.act_window,help:survey.action_survey_user_input
 msgid "Nobody has replied to your surveys yet."
-msgstr "Все още никой не е отговорил на Вашите проучвания."
+msgstr ""
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.notopen
+#: model_terms:ir.ui.view,arch_db:survey.notopen
 msgid "Not open"
-msgstr "Не отворен"
+msgstr ""
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.nopages
+#: model_terms:ir.ui.view,arch_db:survey.nopages
 msgid "Not ready"
-msgstr "Не е готов"
+msgstr ""
 
 #. module: survey
 #: selection:survey.user_input,state:0
 msgid "Not started yet"
-msgstr "Още не е започнал"
+msgstr ""
 
 #. module: survey
 #: selection:survey.user_input_line,answer_type:0
 msgid "Number"
-msgstr "Число"
+msgstr "Номер"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_column_nb
-#: model:ir.ui.view,arch_db:survey.survey_question_form
+#: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Number of columns"
-msgstr "Брой графи"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_tot_comp_survey
 msgid "Number of completed surveys"
-msgstr "Брой завършени проучвания"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_tot_sent_survey
 msgid "Number of sent surveys"
-msgstr "Брой изпратени проучвания"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_tot_start_survey
 msgid "Number of started surveys"
-msgstr "Брой започнати проучвания"
+msgstr ""
 
 #. module: survey
 #: selection:survey.question,type:0
 msgid "Numerical Value"
-msgstr "Цифрова стойност"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line_value_number
 msgid "Numerical answer"
-msgstr "Числен отговор"
+msgstr ""
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.result_number
+#: model_terms:ir.ui.view,arch_db:survey.result_number
 msgid "Occurence"
-msgstr "Поява"
+msgstr ""
 
 #. module: survey
 #: selection:survey.question,matrix_subtype:0
 msgid "One choice per row"
-msgstr "Един избор за ред"
+msgstr ""
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.survey_form
-#: model:ir.ui.view,arch_db:survey.survey_question_form
+#: code:addons/survey/wizard/survey_email_compose_message.py:78
+#, python-format
+msgid "One email at least is incorrect: %s"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_form
+#: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Options"
 msgstr "Настройки"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line_page_id
-#: model:ir.ui.view,arch_db:survey.page
-#: model:ir.ui.view,arch_db:survey.survey_page_search
-#: model:ir.ui.view,arch_db:survey.survey_question_search
+#: model_terms:ir.ui.view,arch_db:survey.page
+#: model_terms:ir.ui.view,arch_db:survey.survey_page_search
+#: model_terms:ir.ui.view,arch_db:survey.survey_question_search
 msgid "Page"
 msgstr "Страница"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_page_title
-#: model:ir.ui.view,arch_db:survey.survey_page_form
+#: model_terms:ir.ui.view,arch_db:survey.survey_page_form
 msgid "Page Title"
 msgstr "Заглавие на страницата"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_page_sequence
 msgid "Page number"
-msgstr "Номер на страница"
+msgstr ""
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.act_survey_pages
@@ -1181,52 +1112,59 @@ msgid "Pages"
 msgstr "Страници"
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.survey_user_input_search
+#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_search
 #: selection:survey.user_input,state:0
 msgid "Partially completed"
-msgstr "Частично завършен"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_partner_id
-#: model:ir.ui.view,arch_db:survey.survey_user_input_search
+#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_search
 msgid "Partner"
 msgstr "Партньор"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_partner_survey_mail
+#: model:ir.actions.act_window,name:survey.action_partner_survey_mail_crm
 msgid "Partner Survey Mailing"
-msgstr "Проучване на контрагент по пощата"
+msgstr ""
 
 #. module: survey
 #: model:survey.stage,name:survey.stage_permanent
 msgid "Permanent"
-msgstr "Постоянен"
+msgstr ""
 
 #. module: survey
-#: code:addons/survey/wizard/survey_email_compose_message.py:164
+#: code:addons/survey/wizard/survey_email_compose_message.py:199
 #, python-format
 msgid "Please enter at least one valid recipient."
-msgstr "Моля, въведете поне един валиден получател."
+msgstr ""
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.page
+#: code:addons/survey/wizard/survey_email_compose_message.py:95
+#, python-format
+msgid "Please select a survey"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.page
 msgid "Previous page"
-msgstr "Предишна страница"
+msgstr ""
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.survey_form
+#: model_terms:ir.ui.view,arch_db:survey.survey_form
 msgid "Print Survey"
 msgstr "Печат на проучване"
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.survey_user_input_form
+#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_form
 msgid "Print These Answers"
-msgstr "Разпечатайте тези отговори"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_print_url
 msgid "Print link"
-msgstr "Лазпечатайте линк"
+msgstr ""
 
 #. module: survey
 #: model:survey.label,value:survey.choice_1_2_5
@@ -1236,61 +1174,57 @@ msgstr "Управление на проекти"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_public_url_html
 msgid "Public HTML web link"
-msgstr "Общодостъпен HTML уеблинк"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_public_url
 msgid "Public link"
-msgstr "Общодостъпен линк"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_public_url_html
 msgid "Public link (html version)"
-msgstr "Общодостъпен линк (html версия)"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_print_url
 msgid "Public link to the empty survey"
-msgstr "Общодостъпен линк към празното проучване"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_result_url
 msgid "Public link to the survey results"
-msgstr "Общодостъпен линк към резултатите от проучването"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_public_url
 msgid "Public url"
-msgstr "Общодостъпен url"
+msgstr ""
 
 #. module: survey
 #: model:survey.label,value:survey.choice_1_2_2
 msgid "Purchases Management"
-msgstr "Управление на покупките"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_label_question_id
+#: model:ir.model.fields,field_description:survey.field_survey_label_question_id_2
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line_question_id
-#: model:ir.ui.view,arch_db:survey.survey_label_search
-#: model:ir.ui.view,arch_db:survey.survey_question_search
+#: model_terms:ir.ui.view,arch_db:survey.survey_label_search
+#: model_terms:ir.ui.view,arch_db:survey.survey_question_search
 msgid "Question"
 msgstr "Въпрос"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_label_question_id_2
-msgid "Question 2"
-msgstr "Въпрос 2"
-
-#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_question
-#: model:ir.ui.view,arch_db:survey.survey_question_form
+#: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Question Name"
-msgstr "Име на въпрос"
+msgstr ""
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.survey_question_form
+#: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Question name"
-msgstr "Име на въпрос"
+msgstr ""
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.act_survey_page_question
@@ -1304,59 +1238,57 @@ msgstr "Въпроси"
 #. module: survey
 #: model:survey.page,title:survey.feedback_4
 msgid "Questions for developers"
-msgstr "Въпроси за разработчици"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_quizz_mode
-msgid "Quizz Mode"
-msgstr "Тестов режим"
+msgid "Quiz mode"
+msgstr ""
 
 #. module: survey
 #: selection:survey.question,display_mode:0
 msgid "Radio Buttons"
-msgstr "Радио бутони"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_result_url
 msgid "Results link"
-msgstr "Линк за резултати"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line_value_suggested_row
 msgid "Row answer"
-msgstr "Отговор в редица"
+msgstr ""
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.survey_question_form
+#: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Row1"
-msgstr "Редица1"
+msgstr ""
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.survey_question_form
+#: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Row2"
-msgstr "Редица2"
+msgstr ""
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.survey_question_form
+#: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Row3"
-msgstr "Редица3"
+msgstr ""
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.survey_question_form
+#: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Rows"
-msgstr "Редици"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_labels_ids_2
 msgid "Rows of the Matrix"
-msgstr "Редици на матрицата"
+msgstr ""
 
 #. module: survey
 #: model:survey.label,value:survey.frow_2_7_4
 msgid "Running the configuration wizards is a good way to spare time"
 msgstr ""
-"Задействането на конфигурационните помощници е удачен начин да си изгубите "
-"времето"
 
 #. module: survey
 #: model:survey.label,value:survey.choice_1_2_1
@@ -1364,74 +1296,69 @@ msgid "Sales Management"
 msgstr "Управление на продажби"
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.survey_email_compose_message
+#: model_terms:ir.ui.view,arch_db:survey.survey_email_compose_message
 msgid "Save as a new template"
-msgstr "Запазете като нов шаблон"
+msgstr ""
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.survey_email_compose_message
+#: model_terms:ir.ui.view,arch_db:survey.survey_email_compose_message
 msgid "Save as new template"
-msgstr "Запазете като нов шаблон"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_quizz_score
 msgid "Score for the quiz"
-msgstr "Резултат на теста"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_label_quizz_mark
 msgid "Score for this choice"
-msgstr "Резултат за този избор"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line_quizz_mark
 msgid "Score given for this choice"
-msgstr "Резултат, даден за този избор"
+msgstr ""
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.survey_label_search
+#: model_terms:ir.ui.view,arch_db:survey.survey_label_search
 msgid "Search Label"
-msgstr "Потърсете етикет"
+msgstr ""
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.survey_page_search
+#: model_terms:ir.ui.view,arch_db:survey.survey_page_search
 msgid "Search Page"
-msgstr "Потърсете страница"
+msgstr ""
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.survey_question_search
+#: model_terms:ir.ui.view,arch_db:survey.survey_question_search
 msgid "Search Question"
-msgstr "Потърсете въпрос"
+msgstr ""
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.survey_user_input_search
+#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_search
 msgid "Search Survey"
-msgstr "Потърсете проучване"
+msgstr ""
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.survey_response_line_search
+#: model_terms:ir.ui.view,arch_db:survey.survey_response_line_search
 msgid "Search User input lines"
-msgstr "Потърсете потребителски входни редове"
+msgstr ""
 
 #. module: survey
 #: selection:survey.question,display_mode:0
 msgid "Selection Box"
-msgstr "Кутия за избори"
+msgstr ""
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.survey_email_compose_message
+#: model_terms:ir.ui.view,arch_db:survey.survey_email_compose_message
 msgid "Send"
 msgstr "Изпрати"
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.survey_user_input_form
-msgid "Send Invitation Again"
-msgstr "Изпратете покана отново"
-
-#. module: survey
 #: selection:survey.mail.compose.message,public:0
 msgid "Send by email the public web link to your audience."
-msgstr "Изпратете по имейл общодостъпния уеблинк до аудиторията си."
+msgstr ""
 
 #. module: survey
 #: selection:survey.mail.compose.message,public:0
@@ -1439,8 +1366,11 @@ msgid ""
 "Send private invitation to your audience (only one response per recipient "
 "and per invitation)."
 msgstr ""
-"Изпратете поверителна покана до аудиторията си (само един отговор на "
-"получател и на покана)."
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_form
+msgid "Sent Invitation Again"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_sequence
@@ -1451,80 +1381,70 @@ msgstr "Последователност"
 #. module: survey
 #: sql_constraint:survey.stage:0
 msgid "Sequence number MUST be a natural"
-msgstr "Поредният номер ТРЯБВА да бъде естествен"
+msgstr ""
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.survey_kanban
+#: model_terms:ir.ui.view,arch_db:survey.survey_kanban
 msgid "Share &amp;amp; Invite"
-msgstr "Споделете &amp;amp; Поканете"
+msgstr ""
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.survey_form
+#: model_terms:ir.ui.view,arch_db:survey.survey_form
 msgid "Share and invite by email"
-msgstr "Споделяйте и канете по имейл"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_public
 msgid "Share options"
-msgstr "Споделете варианти"
+msgstr ""
 
 #. module: survey
 #: selection:survey.mail.compose.message,public:0
 msgid "Share the public web link to your audience."
-msgstr "Споделете общодостъпния уеблинк с аудиторията си."
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_comments_allowed
 msgid "Show Comments Field"
-msgstr "Покажете полето с коментари"
-
-#. module: survey
-#: model:ir.ui.view,arch_db:survey.survey_survey_view_search
-msgid "Show all records which has next action date is before today"
 msgstr ""
-"Показване на всички записи, на които следващата дата на действие е преди "
-"днес"
 
 #. module: survey
 #: selection:survey.question,type:0
 msgid "Single Line Text Box"
-msgstr "Текстово поле с един ред"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line_skipped
-#: model:ir.ui.view,arch_db:survey.result
+#: model_terms:ir.ui.view,arch_db:survey.result
 msgid "Skipped"
-msgstr "Пропуснато"
+msgstr ""
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.page
+#: model_terms:ir.ui.view,arch_db:survey.page
 msgid ""
 "Something went wrong while contacting survey server. <strong class=\"text-"
 "danger\">Your answers have probably not been recorded.</strong> Try "
 "refreshing."
 msgstr ""
-"Нещо се обърка в хода на свръзката със сървъра за проучвания. <strong class"
-"=\"text-danger\">Отговорите ви вероятно не са били записани.</strong> "
-"Опитайте да опресните."
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.result
+#: model_terms:ir.ui.view,arch_db:survey.result
 msgid "Sorry, No one answered this question."
-msgstr "За съжаление, никой не отговори на този въпрос."
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_stage_id
-#: model:ir.ui.view,arch_db:survey.survey_stage_form
+#: model_terms:ir.ui.view,arch_db:survey.survey_stage_form
 msgid "Stage"
-msgstr "Стадий"
+msgstr "Етап"
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.survey_init
+#: model_terms:ir.ui.view,arch_db:survey.survey_init
 msgid "Start Survey"
-msgstr "Започнете проучване"
+msgstr ""
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.survey_tree
+#: model_terms:ir.ui.view,arch_db:survey.survey_tree
 msgid "Started"
 msgstr "Стартирана"
 
@@ -1534,29 +1454,29 @@ msgid "Status"
 msgstr "Състояние"
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.survey_email_compose_message
+#: model_terms:ir.ui.view,arch_db:survey.survey_email_compose_message
 msgid "Subject..."
-msgstr "Тема..."
+msgstr ""
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.page
+#: model_terms:ir.ui.view,arch_db:survey.page
 msgid "Submit survey"
-msgstr "Внесете проучване"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line_value_suggested
 msgid "Suggested answer"
-msgstr "Предложен отговор"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_label_value
 msgid "Suggested value"
-msgstr "Предложена стойност"
+msgstr ""
 
 #. module: survey
 #: selection:survey.user_input_line,answer_type:0
 msgid "Suggestion"
-msgstr "Предложение"
+msgstr ""
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_survey
@@ -1565,85 +1485,79 @@ msgstr "Предложение"
 #: model:ir.model.fields,field_description:survey.field_survey_question_survey_id
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line_survey_id
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_survey_id
-#: model:ir.ui.view,arch_db:survey.survey_form
-#: model:ir.ui.view,arch_db:survey.survey_page_search
-#: model:ir.ui.view,arch_db:survey.survey_question_search
-#: model:ir.ui.view,arch_db:survey.survey_response_line_search
-#: model:ir.ui.view,arch_db:survey.survey_survey_view_search
-#: model:ir.ui.view,arch_db:survey.survey_tree
-#: model:ir.ui.view,arch_db:survey.survey_user_input_search
+#: model_terms:ir.ui.view,arch_db:survey.survey_form
+#: model_terms:ir.ui.view,arch_db:survey.survey_page_search
+#: model_terms:ir.ui.view,arch_db:survey.survey_question_search
+#: model_terms:ir.ui.view,arch_db:survey.survey_response_line_search
+#: model_terms:ir.ui.view,arch_db:survey.survey_tree
+#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_search
 msgid "Survey"
 msgstr "Анкета"
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.survey_response_line_tree
+#: model_terms:ir.ui.view,arch_db:survey.survey_response_line_tree
 msgid "Survey Answer Line"
-msgstr "Ред на отговор в проучване"
+msgstr ""
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_label
-#: model:ir.ui.view,arch_db:survey.survey_label_tree
+#: model_terms:ir.ui.view,arch_db:survey.survey_label_tree
 msgid "Survey Label"
-msgstr "Етикет на проучване"
+msgstr ""
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_page
-#: model:ir.ui.view,arch_db:survey.survey_page_form
-#: model:ir.ui.view,arch_db:survey.survey_page_tree
+#: model_terms:ir.ui.view,arch_db:survey.survey_page_form
+#: model_terms:ir.ui.view,arch_db:survey.survey_page_tree
 msgid "Survey Page"
 msgstr "Анкетна страница"
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_question
-#: model:ir.ui.view,arch_db:survey.survey_question_form
-#: model:ir.ui.view,arch_db:survey.survey_question_tree
+#: model_terms:ir.ui.view,arch_db:survey.survey_question_form
+#: model_terms:ir.ui.view,arch_db:survey.survey_question_tree
 msgid "Survey Question"
 msgstr "Въпрос от анкета"
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_stage
 msgid "Survey Stage"
-msgstr "Етап на проучване"
+msgstr ""
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.survey_form
+#: model_terms:ir.ui.view,arch_db:survey.survey_form
 msgid "Survey Title"
 msgstr "Заглавие на анкета"
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_user_input
 msgid "Survey User Input"
-msgstr "Потребителски вход за проучвания"
+msgstr ""
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_user_input_line
 msgid "Survey User Input Line"
-msgstr "Ред на потребителски вход за проучване"
+msgstr ""
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_survey_user_input_line
 msgid "Survey User Input lines"
-msgstr "Редове на потребителски входове за проучвания"
+msgstr ""
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_selected_survey_user_input
 msgid "Survey User input"
-msgstr "Потребителски вход за проучване"
+msgstr ""
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.survey_user_input_form
-#: model:ir.ui.view,arch_db:survey.survey_user_input_tree
+#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_form
+#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_tree
 msgid "Survey User inputs"
-msgstr "Потребителски входове за проучвания"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_page_id
 msgid "Survey page"
-msgstr "Страница на проучване"
-
-#. module: survey
-#: model:ir.actions.server,name:survey.survey_action_server_clean_test_answers
-msgid "Survey: Clean test answers"
 msgstr ""
 
 #. module: survey
@@ -1654,20 +1568,20 @@ msgid "Surveys"
 msgstr "Анкети"
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.survey_kanban
-#: model:ir.ui.view,arch_db:survey.survey_user_input_search
+#: model_terms:ir.ui.view,arch_db:survey.survey_kanban
+#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_search
 msgid "Test"
 msgstr "Тест"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_user_input_test_entry
-msgid "Test Entry"
+#: model_terms:ir.ui.view,arch_db:survey.survey_form
+msgid "Test Survey"
 msgstr ""
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.survey_form
-msgid "Test Survey"
-msgstr "Проучване под формата на тест"
+#: model:ir.model.fields,field_description:survey.field_survey_user_input_test_entry
+msgid "Test entry"
+msgstr ""
 
 #. module: survey
 #: selection:survey.user_input_line,answer_type:0
@@ -1677,37 +1591,35 @@ msgstr "Текст"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line_value_text
 msgid "Text answer"
-msgstr "Отговор в тест"
-
-#. module: survey
-#: model:ir.ui.view,arch_db:survey.sfinished
-msgid "Thank you!"
-msgstr "Благодарим Ви!"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_thank_you_message
-msgid "Thanks Message"
-msgstr "Благодарствено съобщение"
+msgid "Thank you message"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.sfinished
+msgid "Thank you!"
+msgstr ""
 
 #. module: survey
 #: model:survey.label,value:survey.frow_2_5_3
 msgid "The 'Usability/Extended View' group helps in daily work"
-msgstr "Групата 'Използваемост/Разширен изглед' помага при ежедневната работа"
+msgstr ""
 
 #. module: survey
 #: model:survey.label,value:survey.frow_2_5_4
 msgid "The 'Usability/Extended View' group hides only optional fields"
 msgstr ""
-"Групата 'Използваемост/Разширен изглед' скрива само незедължителните полета"
 
 #. module: survey
-#: code:addons/survey/models/survey.py:819
-#, python-format
+#: constraint:survey.user_input_line:0
 msgid "The answer must be in the right type"
-msgstr "Отговорът трябва да е в правилния вид"
+msgstr ""
 
 #. module: survey
-#: code:addons/survey/models/survey.py:485
+#: code:addons/survey/survey.py:622
 #: model:survey.question,validation_error_msg:survey.feedback_1_1
 #: model:survey.question,validation_error_msg:survey.feedback_1_2
 #: model:survey.question,validation_error_msg:survey.feedback_2_1
@@ -1723,122 +1635,111 @@ msgstr "Отговорът трябва да е в правилния вид"
 #: model:survey.question,validation_error_msg:survey.feedback_4_1
 #, python-format
 msgid "The answer you entered has an invalid format."
-msgstr "Въведеният от вас отговор съдържа невалиден формат."
+msgstr ""
 
 #. module: survey
-#: code:addons/survey/wizard/survey_email_compose_message.py:139
+#: code:addons/survey/wizard/survey_email_compose_message.py:174
 #, python-format
 msgid ""
-"The content of the text don't contain '__URL__'.                     __URL__"
-" is automaticaly converted into the special url of the survey."
+"The content of the text don't contain '__URL__'.                     __URL__ "
+"is automaticaly converted into the special url of the survey."
 msgstr ""
-"Съдържанието на текста не съдържа '__URL__'.                     __URL__ "
-"автоматично се конвертира в специалния URL адрес на проучването."
 
 #. module: survey
 #: model:survey.label,value:survey.choice_2_4_1
 msgid "The current menu structure is good"
-msgstr "Настоящата структура на менюто е добра"
+msgstr ""
 
 #. module: survey
 #: sql_constraint:survey.user_input:0
 msgid "The deadline cannot be in the past"
-msgstr "Крайният срок не може да е в миналото"
+msgstr ""
 
 #. module: survey
 #: model:survey.label,value:survey.frow_2_5_5
 msgid "The groups set on menu items are relevant"
-msgstr "Групите, настроени в елементите на менюто, са уместни"
+msgstr ""
 
 #. module: survey
 #: model:survey.label,value:survey.choice_2_6_3
 msgid "The number of groups is good"
-msgstr "Броят на групите е добър"
+msgstr ""
 
 #. module: survey
 #: model:survey.label,value:survey.frow_2_5_1
 msgid "The security rules defined on groups are useful"
-msgstr "Правилата за сигурност, определени в групите, са полезни"
+msgstr ""
 
 #. module: survey
 #: model:survey.label,value:survey.choice_2_6_2
 msgid "There are too few groups defined, security isn't accurate enough"
 msgstr ""
-"Има твърде малко определени групи, сигурността не е достатъчно прецизна"
 
 #. module: survey
 #: model:survey.label,value:survey.choice_2_6_1
 msgid "There are too many groups defined, security is too complex to set"
 msgstr ""
-"Има твърде много определени групи, сигурността е твърде сложна, за да се "
-"настрои"
 
 #. module: survey
 #: model:survey.label,value:survey.choice_2_4_3
 msgid "There are too much menus, it's complex to understand"
-msgstr "Има твърде много менюта, това е сложно за разбиране"
+msgstr ""
 
 #. module: survey
-#: model:survey.page,description:survey.feedback_2
+#: model_terms:survey.page,description:survey.feedback_2
 msgid ""
-"These questions relate to the ergonomy and ease of use of Odoo. Try to remind your firsts days on Odoo and\n"
+"These questions relate to the ergonomy and ease of use of Odoo. Try to "
+"remind your firsts days on Odoo and\n"
 "what have been your difficulties."
 msgstr ""
-"Тези въпроси се отнасят до ергономията и лекотата на използване на Odoo. Опитайте се да напомните на Odoo на какви трудности сте се натъкнали\n"
-"през първите дни."
 
 #. module: survey
 #: model:survey.label,value:survey.frow_2_2_2
 msgid "They are clean and correct"
-msgstr "Те са чисти и правилни"
+msgstr ""
 
 #. module: survey
 #: model:survey.label,value:survey.frow_2_2_3
 msgid "They are useful on a daily usage"
-msgstr "Полезни са при ежедневна употреба"
+msgstr ""
 
 #. module: survey
 #: model:survey.label,value:survey.frow_2_2_1
 msgid "They help new users to understand Odoo"
-msgstr "Помагат на новите потребители да разберат Odoo"
-
-#. module: survey
-#: code:addons/survey/models/survey.py:544
-#: code:addons/survey/tests/test_survey.py:86
-#, python-format
-msgid "This answer must be an email address"
-msgstr "Този отговор трябва да е имейл адрес"
-
-#. module: survey
-#: code:addons/survey/models/survey.py:588
-#: code:addons/survey/tests/test_survey.py:107
-#, python-format
-msgid "This is not a date"
 msgstr ""
 
 #. module: survey
-#: code:addons/survey/models/survey.py:565
-#: code:addons/survey/tests/test_survey.py:97
+#: code:addons/survey/survey.py:671 code:addons/survey/tests/test_survey.py:94
+#, python-format
+msgid "This answer must be an email address"
+msgstr ""
+
+#. module: survey
+#: code:addons/survey/survey.py:713 code:addons/survey/tests/test_survey.py:115
+#, python-format
+msgid "This is not a date/time"
+msgstr ""
+
+#. module: survey
+#: code:addons/survey/survey.py:690 code:addons/survey/tests/test_survey.py:105
 #, python-format
 msgid "This is not a number"
-msgstr "Това не е число"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_mail_compose_message_multi_email
 msgid ""
-"This list of emails of recipients will not be converted in contacts.        "
-"Emails must be separated by commas, semicolons or newline."
+"This list of emails of recipients will not converted in contacts. Emails "
+"separated by commas, semicolons or newline."
 msgstr ""
-"Този списък с имейли на получателите няма да бъде конвертиран в контакти. "
-"Имейлите трябва да бъдат разделени със запетаи, точки и запетаи или нов ред."
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey_thank_you_message
 msgid "This message will be displayed when survey is completed"
-msgstr "Това съобщение ще се покаже при приключване на проучването"
+msgstr ""
 
 #. module: survey
-#: code:addons/survey/models/survey.py:489
+#: code:addons/survey/survey.py:621
 #: model:survey.question,constr_error_msg:survey.feedback_1_1
 #: model:survey.question,constr_error_msg:survey.feedback_1_2
 #: model:survey.question,constr_error_msg:survey.feedback_2_1
@@ -1854,27 +1755,27 @@ msgstr "Това съобщение ще се покаже при приключ
 #: model:survey.question,constr_error_msg:survey.feedback_4_1
 #, python-format
 msgid "This question requires an answer."
-msgstr "Този въпрос изисква отговор."
+msgstr ""
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.nopages
+#: model_terms:ir.ui.view,arch_db:survey.nopages
 msgid "This survey has no pages by now!"
-msgstr "Това изследване засега няма страници!"
+msgstr ""
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.notopen
+#: model_terms:ir.ui.view,arch_db:survey.notopen
 msgid "This survey is not open. Thank you for your interest!"
-msgstr "Това проучване не е отворено. Благодарим за проявения интерес!"
+msgstr ""
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.auth_required
+#: model_terms:ir.ui.view,arch_db:survey.auth_required
 msgid "This survey is open only to registered people. Please"
-msgstr "Това проучване е отворено само за хора с регистрирация. Моля "
+msgstr ""
 
 #. module: survey
 #: model:survey.survey,description:survey.feedback_form
 msgid "This survey should take less than five minutes."
-msgstr "Това проучване трябва да отнеме по-малко от пет минути."
+msgstr ""
 
 #. module: survey
 #: model:survey.label,value:survey.frow_2_5_2
@@ -1882,19 +1783,11 @@ msgid ""
 "Those security rules are standard and can be used out-of-the-box in most "
 "cases"
 msgstr ""
-"Тези правила за сигурност са стандартни и в повечето случаи могат да се "
-"използват извън полето"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_title
-#: model:ir.ui.view,arch_db:survey.survey_survey_view_search
 msgid "Title"
 msgstr "Заглавие"
-
-#. module: survey
-#: model:ir.ui.view,arch_db:survey.survey_survey_view_search
-msgid "Today Activities"
-msgstr "Днешни дейности"
 
 #. module: survey
 #: model:survey.label,value:survey.fcol_2_1_4
@@ -1902,7 +1795,7 @@ msgstr "Днешни дейности"
 #: model:survey.label,value:survey.fcol_2_5_4
 #: model:survey.label,value:survey.fcol_2_7_4
 msgid "Totally agree"
-msgstr "Напълно съгласен"
+msgstr ""
 
 #. module: survey
 #: model:survey.label,value:survey.fcol_2_1_1
@@ -1910,92 +1803,81 @@ msgstr "Напълно съгласен"
 #: model:survey.label,value:survey.fcol_2_5_1
 #: model:survey.label,value:survey.fcol_2_7_1
 msgid "Totally disagree"
-msgstr "Напълно несъгласен"
+msgstr ""
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.survey_question_search
+#: model_terms:ir.ui.view,arch_db:survey.survey_question_search
 msgid "Type"
-msgstr "Тип"
+msgstr "Вид"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_type
 msgid "Type of Question"
-msgstr "Вид въпрос"
+msgstr ""
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.survey_question_form
+#: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Type of answers"
-msgstr "Вид отговори"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_labels_ids
 msgid "Types of answers"
-msgstr "Видове отговори"
-
-#. module: survey
-#: model:ir.ui.view,arch_db:survey.survey_survey_view_search
-msgid "Upcoming Activities"
 msgstr ""
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.survey_email_compose_message
+#: model_terms:ir.ui.view,arch_db:survey.survey_email_compose_message
 msgid "Use template"
 msgstr "Използвай шаблон"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question_description
 msgid ""
-"Use this field to add         additional explanations about your question"
+"Use this field to add             additional explanations about your question"
 msgstr ""
-"Използвайте това поле, за да добавите допълнителни обяснения към въпроса си"
-
-#. module: survey
-#: model:res.groups,name:survey.group_survey_user
-msgid "User"
-msgstr "Потребител"
 
 #. module: survey
 #: model:survey.survey,title:survey.feedback_form
 msgid "User Feedback Form"
-msgstr "Форма за потребителски отзив"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line_user_input_id
-#: model:ir.ui.view,arch_db:survey.survey_response_line_search
+#: model_terms:ir.ui.view,arch_db:survey.survey_response_line_search
 msgid "User Input"
-msgstr "Потребителски вход"
+msgstr ""
 
 #. module: survey
 #: model:ir.ui.menu,name:survey.menu_survey_response_line_form
 msgid "User Input Lines"
-msgstr "Редове на потребителски входове"
+msgstr ""
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.result_choice
-#: model:ir.ui.view,arch_db:survey.result_number
-#: model:ir.ui.view,arch_db:survey.result_text
+#: model_terms:ir.ui.view,arch_db:survey.result_choice
+#: model_terms:ir.ui.view,arch_db:survey.result_number
+#: model_terms:ir.ui.view,arch_db:survey.result_text
 msgid "User Responses"
-msgstr "Потребителски отговори"
+msgstr ""
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.survey_form
+#: model_terms:ir.ui.view,arch_db:survey.survey_form
 msgid "User can come back in the previous page"
-msgstr "Потребителят може да се върне на предишната страница"
+msgstr ""
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.survey_user_input_line_form
+#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_line_form
 msgid "User input line details"
-msgstr "Данни за входния ред на потребител"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_user_input_ids
 msgid "User responses"
-msgstr "Потребителски отговори"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_users_can_go_back
 msgid "Users can go back"
-msgstr "Потребителите могат да се върнат"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey_auth_required
@@ -2003,162 +1885,221 @@ msgid ""
 "Users with a public link will be requested to login before taking part to "
 "the survey"
 msgstr ""
-"Потребителите с общодостъпна връзка ще бъдат поканени да влязат в профила си"
-" преди да участват в проучването"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_validation_required
 msgid "Validate entry"
-msgstr "Валидирайте запис"
+msgstr ""
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_question_validation_error_msg
-msgid "Validation Error message"
-msgstr "Съобщение за грешка при потвърждаване"
-
-#. module: survey
-#: model:ir.ui.view,arch_db:survey.survey_user_input_form
+#: model_terms:ir.ui.view,arch_db:survey.survey_user_input_form
 msgid "View Results"
-msgstr "Прегледайте резултати"
+msgstr ""
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.survey_form
+#: model_terms:ir.ui.view,arch_db:survey.survey_form
 msgid "View results"
-msgstr "Прегледайте резултатите"
+msgstr ""
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.result_choice
+#: model_terms:ir.ui.view,arch_db:survey.result_choice
 msgid "Vote"
-msgstr "Гласувайте"
+msgstr ""
 
 #. module: survey
 #: model:survey.question,question:survey.feedback_2_7
 msgid "What do you think about configuration wizards?"
-msgstr "Какво мислите за конфигурационните помощници?"
+msgstr ""
 
 #. module: survey
 #: model:survey.question,question:survey.feedback_2_1
 msgid "What do you think about the documentation available on doc.odoo.com?"
-msgstr "Какво мислите за наличната документация в doc.odoo.com?"
+msgstr ""
 
 #. module: survey
 #: model:survey.question,question:survey.feedback_2_5
 msgid "What do you think about the groups of users?"
-msgstr "Какво мислите за потребителските групи?"
+msgstr ""
 
 #. module: survey
 #: model:survey.question,question:survey.feedback_2_2
 msgid ""
 "What do you think about the process views of Odoo, available in the web "
 "client ?"
-msgstr "Какво мислите за процесните визии на Odoo, налични в уебклиента?"
+msgstr ""
 
 #. module: survey
 #: model:survey.question,question:survey.feedback_2_4
 #: model:survey.question,question:survey.feedback_2_6
 msgid "What do you think about the structure of the menus?"
-msgstr "Какво мислите за структурата на менютата?"
+msgstr ""
 
 #. module: survey
 #: model:survey.question,question:survey.feedback_4_1
 msgid "Where do you develop your new features?"
-msgstr "Къде развивате новите си функции?"
+msgstr ""
 
 #. module: survey
 #: model:survey.question,question:survey.feedback_1_2
 msgid "Which modules are you using/testing?"
-msgstr "Кои модули използвате/тествате?"
+msgstr ""
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.survey_question_form
+#: model_terms:ir.ui.view,arch_db:survey.datetime
+msgid "YYYY-MM-DD hh:mm:ss"
+msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid ""
-"YYYY-MM-DD\n"
-"                                            <i class=\"fa fa-calendar fa-2x\"/>"
+"YYYY-MM-DD hh:mm:ss\n"
+"                                            <i class=\"fa fa-calendar fa-2x"
+"\"/>"
 msgstr ""
 
 #. module: survey
 #: model:survey.label,value:survey.choice_1_1_1
 msgid "Yes, I use a version < 7.0"
-msgstr "Да, използвам версия < 7.0"
+msgstr ""
 
 #. module: survey
 #: model:survey.label,value:survey.choice_1_1_2
 msgid "Yes, I use the 7.0 version, installed locally"
-msgstr "Да, използвам версията 7.0, инсталирана локално"
+msgstr ""
 
 #. module: survey
 #: model:survey.label,value:survey.choice_1_1_3
 msgid "Yes, I use the online version of Odoo"
-msgstr "Да, използвам онлайн версията на Odoo"
+msgstr ""
 
 #. module: survey
-#: model:ir.actions.act_window,help:survey.action_survey_form
+#: model_terms:ir.actions.act_window,help:survey.action_survey_form
 msgid ""
 "You can create surveys for different purposes: customer opinion, services "
 "feedback, recruitment interviews, employee's periodical evaluations, "
 "marketing campaigns, etc."
 msgstr ""
-"Можете да създавате проучвания за различни цели: мнение на клиента, обратна "
-"връзка за услуги, интервюта за наемане на персонал, периодични оценявания на"
-" служителите, маркетингови кампании и др."
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.survey_email_compose_message
+#: model_terms:ir.ui.view,arch_db:survey.survey_email_compose_message
 msgid ""
-"You can share your survey web public link and/or send private invitations to"
-" your audience. People can answer once per invitation, and whenever they "
-"want with the public web link (in this case, the \"Login Required\" setting "
-"must be disabled)."
+"You can share your survey web public link and/or send private invitations to "
+"your audience. People can answer once per invitation, and whenever they want "
+"with the public web link (in this case, the \"Public in website\" setting "
+"must be enabled)."
 msgstr ""
-"Можете да споделяте общодостъпната си връзка в мрежата за наблюдение и/или "
-"да изпращате поверителни покани до аудиторията си. Хората могат да отговарят"
-" веднъж на покана и винаги, когато пожелаят, с общодостъпния уеблинк (в този"
-" случай трябва да бъде деактивирана настройката \"Задължителна "
-"регистрация\")."
 
 #. module: survey
-#: code:addons/survey/models/survey.py:316
+#: code:addons/survey/survey.py:424
 #, python-format
 msgid "You cannot send an invitation for a survey that has no questions."
-msgstr "Не можете да изпратите покана за проучване, в което няма въпроси."
+msgstr ""
 
 #. module: survey
-#: code:addons/survey/models/survey.py:319
+#: code:addons/survey/survey.py:429
 #, python-format
 msgid "You cannot send invitations for closed surveys."
-msgstr "Не можете да изпращате покани за закрити проучвания."
+msgstr ""
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.sfinished
+#: model_terms:ir.ui.view,arch_db:survey.sfinished
 msgid "You scored"
-msgstr "Отбелязахте"
+msgstr ""
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.survey_question_form
+#: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "ans"
-msgstr "отговор"
+msgstr ""
 
 #. module: survey
-#: model:ir.model,name:survey.model_ir_autovacuum
-msgid "ir.autovacuum"
-msgstr "ir.autovacuum"
-
-#. module: survey
-#: model:ir.ui.view,arch_db:survey.auth_required
+#: model_terms:ir.ui.view,arch_db:survey.auth_required
 msgid "log in"
-msgstr "Влезте в системата"
+msgstr ""
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.page
+#: model_terms:ir.ui.view,arch_db:survey.page
 msgid "of"
-msgstr "от"
+msgstr ""
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.sfinished
+#: model_terms:ir.ui.view,arch_db:survey.sfinished
 msgid "points."
-msgstr "точки."
+msgstr ""
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.sfinished
+#: model_terms:ir.ui.view,arch_db:survey.sfinished
 msgid "review your answers"
-msgstr "прегледайте отговорите си"
+msgstr ""
+
+#. module: survey
+#. openerp-web
+#: code:addons/survey/static/src/js/tour_test_survey.js:10
+#, python-format
+msgid "try to create and fill survey"
+msgstr ""
+
+#~ msgid "Action Needed"
+#~ msgstr "Нужно е действие"
+
+#~ msgid "Author"
+#~ msgstr "Автор"
+
+#~ msgid "Contents"
+#~ msgstr "Съдържание"
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "Дата на последното съобщение, публикувано на записа."
+
+#~ msgid "Followers"
+#~ msgstr "Последователи"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "Последователи (канали)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "Последователи (партньори)"
+
+#~ msgid "From"
+#~ msgstr "От"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "Ако е отбелязано, новите съобщения ще изискват внимание."
+
+#~ msgid "If checked, new messages require your attention."
+#~ msgstr "Ако е отбелязано, новите съобщения ще изискват внимание."
+
+#~ msgid "Is Follower"
+#~ msgstr "е последовател"
+
+#~ msgid "Last Message Date"
+#~ msgstr "Дата на последното съобщение"
+
+#~ msgid "Messages"
+#~ msgstr "Съобщения"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "История на събщенията и комуникациите"
+
+#~ msgid "Number of Actions"
+#~ msgstr "Брой действия"
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "Брой съобщения, които изискват внимание"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "Брой непрочетени съобщения"
+
+#~ msgid "Reply-To"
+#~ msgstr "Отговор до"
+
+#~ msgid "Subject"
+#~ msgstr "Относно"
+
+#~ msgid "Unread Messages"
+#~ msgstr "Непрочетени съобщения"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "Брой непрочетени съобщения"
+
+#~ msgid "on"
+#~ msgstr "на"

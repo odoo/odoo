@@ -13,7 +13,7 @@ QUnit.module('core', {}, function () {
 
         var widget = new Widget();
 
-        testUtils.intercept(widget, 'do_action', function (event) {
+        testUtils.mock.intercept(widget, 'do_action', function (event) {
             assert.strictEqual(event.data.action, 'test.some_action_id',
                 "should have sent proper action name");
             assert.deepEqual(event.data.options, {clear_breadcrumbs: true},

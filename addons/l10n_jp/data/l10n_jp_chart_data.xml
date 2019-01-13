@@ -3,22 +3,13 @@
    <menuitem id="account_reports_jp_statements_menu" name="Japan" parent="account.menu_finance_reports" sequence="0" groups="account.group_account_user"/>
 
     <!-- Chart Template -->
-    <record id="transfer_account_id" model="account.account.template">
-        <field name="code">A11109</field>
-        <field name="name">振替口座</field>
-        <field name="reconcile" eval='True'/>
-        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
-    </record>
     <record id="l10n_jp1" model="account.chart.template">
         <field name="name">日本勘定設定テンプレート</field>
         <field name="code_digits">7</field>
         <field name="bank_account_code_prefix">A11102</field>
         <field name="cash_account_code_prefix">A11105</field>
+        <field name="transfer_account_code_prefix">A11109</field>
         <field name="currency_id" ref="base.JPY"/>
-        <field name="transfer_account_id" ref="transfer_account_id"/>
-    </record>
-    <record id="transfer_account_id" model="account.account.template">
-        <field name="chart_template_id" ref="l10n_jp1"/>
     </record>
 
     <!-- Account Tags -->

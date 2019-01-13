@@ -58,7 +58,7 @@ class TestSaleStockLeadTime(TestStockCommon):
         self.warehouse_1.write({'delivery_steps': 'pick_pack_ship'})
 
         # Set delay on pull rule
-        for pull_rule in self.warehouse_1.delivery_route_id.pull_ids:
+        for pull_rule in self.warehouse_1.delivery_route_id.rule_ids:
             pull_rule.write({'delay': 2})
 
         # Create sale order of product_1

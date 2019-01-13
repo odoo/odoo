@@ -1,27 +1,19 @@
-odoo.define('web_tour.tour', function(require) {
+odoo.define('web_tour.tour', function (require) {
 "use strict";
 
 var ajax = require('web.ajax');
-var Class = require('web.Class');
 var config = require('web.config');
 var core = require('web.core');
-var mixins = require('web.mixins');
+var rootWidget = require('root.widget');
 var rpc = require('web.rpc');
 var session = require('web.session');
 var TourManager = require('web_tour.TourManager');
 
 var QWeb = core.qweb;
 
-if (config.device.size_class <= config.device.SIZES.XS) {
+if (config.device.isMobile) {
     return $.Deferred().reject();
 }
-
-var CallService = Class.extend(mixins.EventDispatcherMixin, mixins.ServiceProvider, {
-    init: function () {
-        mixins.ServiceProvider.init.call(this);
-        mixins.EventDispatcherMixin.init.call(this);
-    },
-});
 
 /**
  * @namespace
@@ -38,7 +30,7 @@ return session.is_bound.then(function () {
     // Load the list of consumed tours and the tip template only if we are admin, in the frontend,
     // tours being only available for the admin. For the backend, the list of consumed is directly
     // in the page source.
-    if (session.is_frontend && session.is_superuser) {
+    if (session.is_frontend && session.is_admin) {
         var def = rpc.query({
                 model: 'web_tour.tour',
                 method: 'get_consumed_tours',
@@ -47,7 +39,7 @@ return session.is_bound.then(function () {
     }
     return $.when.apply($, defs).then(function (consumed_tours) {
         consumed_tours = session.is_frontend ? consumed_tours : session.web_tours;
-        var tour_manager = new TourManager(new CallService(), consumed_tours);
+        var tour_manager = new TourManager(rootWidget, consumed_tours);
 
         // Use a MutationObserver to detect DOM changes
         var untracked_classnames = ["o_tooltip", "o_tooltip_content", "o_tooltip_overlay"];
@@ -82,8 +74,8 @@ return session.is_bound.then(function () {
                      * Once the DOM is ready, we still have to wait all the modules are loaded before completing the tours
                      * registration and starting listening for DOM mutations.
                      */
-                     $.when(load_def).then(function () {
-                         _.defer(function () {
+                    $.when(load_def).then(function () {
+                        _.defer(function () {
                             tour_manager._register_all(observe);
                             if (observe) {
                                 observer.observe(document.body, {
@@ -101,10 +93,10 @@ return session.is_bound.then(function () {
         })();
 
         // Enable the MutationObserver for the admin or if a tour is running, when the DOM is ready
-        start_service(session.is_superuser || tour_manager.running_tour);
+        start_service(session.is_admin || tour_manager.running_tour);
 
         // Override the TourManager so that it enables/disables the observer when necessary
-        if (!session.is_superuser) {
+        if (!session.is_admin) {
             var run = tour_manager.run;
             tour_manager.run = function () {
                 var self = this;

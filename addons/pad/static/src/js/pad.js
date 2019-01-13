@@ -35,8 +35,8 @@ var FieldPad = AbstractField.extend({
      */
     start: function () {
         if (!this.isPadConfigured) {
-            this.$(".oe_unconfigured").removeClass('hidden');
-            this.$(".oe_configured").addClass('hidden');
+            this.$(".oe_unconfigured").removeClass('d-none');
+            this.$(".oe_configured").addClass('d-none');
             return;
         }
         if (this.mode === 'edit' && _.str.startsWith(this.value, 'http')) {
@@ -178,6 +178,7 @@ var FieldPad = AbstractField.extend({
     _onToggleFullScreen: function () {
         this.$el.toggleClass('oe_pad_fullscreen mb0');
         this.$('.oe_pad_switch').toggleClass('fa-expand fa-compress');
+        this.$el.parents('.o_touch_device').toggleClass('o_scroll_hidden');
     },
 });
 

@@ -5,17 +5,16 @@
 # Translators:
 # Bonny Useful <bonny.useful@gmail.com>, 2017
 # William Surya Permana <zarambie_game@yahoo.com>, 2017
-# Martin Trigaux, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
 # Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2017
 # Hendro Yulianto <hyulianto@gmail.com>, 2017
-# Ryanto The <ry.the77@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-27 11:55+0000\n"
-"PO-Revision-Date: 2018-07-27 11:55+0000\n"
-"Last-Translator: Ryanto The <ry.the77@gmail.com>, 2018\n"
+"POT-Creation-Date: 2017-10-10 11:34+0000\n"
+"PO-Revision-Date: 2017-10-10 11:34+0000\n"
+"Last-Translator: Hendro Yulianto <hyulianto@gmail.com>, 2017\n"
 "Language-Team: Indonesian (https://www.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,23 +33,23 @@ msgid "Account Move"
 msgstr ""
 
 #. module: stock_account
-#: model:ir.ui.view,arch_db:stock_account.view_category_property_form
+#: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
 msgid "Account Stock Properties"
 msgstr "Properti Stock akun"
 
 #. module: stock_account
-#: model:ir.ui.view,arch_db:stock_account.view_move_form_inherit
+#: model_terms:ir.ui.view,arch_db:stock_account.view_move_form_inherit
 msgid "Accounting Entries"
 msgstr "Akuntansi entri"
 
 #. module: stock_account
-#: model:ir.ui.view,arch_db:stock_account.view_location_form_inherit
+#: model_terms:ir.ui.view,arch_db:stock_account.view_location_form_inherit
 msgid "Accounting Information"
 msgstr "Informasi Akuntansi"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_res_config_settings_module_stock_landed_costs
-#: model:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
 msgid ""
 "Affect landed costs on receipt operations and split them among products to "
 "update their cost price."
@@ -68,13 +67,12 @@ msgid "Average Cost (AVCO)"
 msgstr ""
 
 #. module: stock_account
-#: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
-#: model:ir.ui.view,arch_db:stock_account.view_stock_quantity_history
+#: model_terms:ir.ui.view,arch_db:stock_account.view_change_standard_price
 msgid "Cancel"
 msgstr "Batal"
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:501
+#: code:addons/stock_account/models/stock.py:409
 #, python-format
 msgid ""
 "Cannot find a stock input account for the product %s. You must define one on"
@@ -82,7 +80,7 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:503
+#: code:addons/stock_account/models/stock.py:411
 #, python-format
 msgid ""
 "Cannot find a stock output account for the product %s. You must define one "
@@ -91,24 +89,16 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
-#: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
+#: model_terms:ir.ui.view,arch_db:stock_account.view_change_standard_price
 msgid "Change Price"
 msgstr "Perubahan Harga"
 
 #. module: stock_account
 #: model:ir.actions.act_window,name:stock_account.action_view_change_standard_price
 #: model:ir.model,name:stock_account.model_stock_change_standard_price
-#: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
+#: model_terms:ir.ui.view,arch_db:stock_account.view_change_standard_price
 msgid "Change Standard Price"
 msgstr "Rubah Harga Standar"
-
-#. module: stock_account
-#: code:addons/stock_account/models/product.py:404
-#, python-format
-msgid ""
-"Changing your cost method is an important change that will impact your "
-"inventory valuation. Are you sure you want to make that change?"
-msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_inventory_accounting_date
@@ -118,12 +108,12 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
-#: model:ir.ui.view,arch_db:stock_account.view_stock_quantity_history
-msgid "Choose your date"
-msgstr "Pilih tanggal"
+#: model_terms:ir.actions.act_window,help:stock_account.stock_move_valuation_action
+msgid "Click to create a stock movement."
+msgstr "Klik untuk membuat sebuah gerakan yang stok."
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:566
+#: code:addons/stock_account/models/stock.py:480
 #, python-format
 msgid ""
 "Configuration error. Please configure the price difference account on the "
@@ -131,7 +121,7 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
-#: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
+#: model_terms:ir.ui.view,arch_db:stock_account.view_change_standard_price
 msgid "Cost"
 msgstr "Biaya"
 
@@ -142,7 +132,7 @@ msgid "Cost Method"
 msgstr ""
 
 #. module: stock_account
-#: model:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
 msgid "Costing"
 msgstr ""
 
@@ -204,12 +194,12 @@ msgstr ""
 "Jika harga biaya menurun, account stok variasi akan creadited dan  account  stok input akan didebet."
 
 #. module: stock_account
-#: model:ir.actions.act_window,help:stock_account.product_valuation_action
+#: model_terms:ir.actions.act_window,help:stock_account.product_valuation_action
 msgid "If there are products, you will see its name and valuation."
 msgstr ""
 
 #. module: stock_account
-#: model:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
 msgid "Include landed costs in product cost"
 msgstr ""
 
@@ -228,7 +218,9 @@ msgstr "Lokasi persediaan"
 #: model:ir.model.fields,field_description:stock_account.field_product_product_property_valuation
 #: model:ir.model.fields,field_description:stock_account.field_product_template_property_valuation
 #: model:ir.ui.menu,name:stock_account.menu_valuation
-#: model:ir.ui.view,arch_db:stock_account.view_category_property_form
+#: model_terms:ir.ui.view,arch_db:stock_account.product_template_valuation_form_view
+#: model_terms:ir.ui.view,arch_db:stock_account.product_valuation_form_view
+#: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
 msgid "Inventory Valuation"
 msgstr "Persediaan Penilaian"
 
@@ -284,6 +276,11 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.view_move_tree_valuation
+msgid "Moves"
+msgstr "Berpindah"
+
+#. module: stock_account
 #: code:addons/stock_account/models/product.py:128
 #, python-format
 msgid "No difference between standard price and new price!"
@@ -316,6 +313,7 @@ msgstr "Pengadaan Permintaan"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_product
+#: model_terms:ir.ui.view,arch_db:stock_account.product_valuation_tree
 msgid "Product"
 msgstr "Produk"
 
@@ -335,19 +333,17 @@ msgid "Product Valuation"
 msgstr ""
 
 #. module: stock_account
-#: code:addons/stock_account/wizard/stock_quantity_history.py:24
-#, python-format
-msgid "Products"
-msgstr "Produk"
+#: model_terms:ir.ui.view,arch_db:stock_account.view_move_tree_valuation
+msgid "Qty"
+msgstr "Qty"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_product_qty_at_date
-#: model:ir.ui.view,arch_db:stock_account.view_move_tree_valuation_at_date
-msgid "Quantity"
-msgstr "Jumlah"
+#: model_terms:ir.ui.view,arch_db:stock_account.product_valuation_tree
+msgid "Quantity on Hand"
+msgstr ""
 
 #. module: stock_account
-#: model:ir.ui.view,arch_db:stock_account.view_move_tree_valuation_at_date
+#: model_terms:ir.ui.view,arch_db:stock_account.view_move_tree_valuation
 msgid "Reference"
 msgstr "Rujukan"
 
@@ -362,17 +358,12 @@ msgid "Remaining Value"
 msgstr ""
 
 #. module: stock_account
-#: model:ir.ui.view,arch_db:stock_account.view_stock_quantity_history
-msgid "Retrieve the inventory valuation"
-msgstr ""
-
-#. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_return_picking
 msgid "Return Picking"
 msgstr "Kembali memetik"
 
 #. module: stock_account
-#: model:ir.ui.view,arch_db:stock_account.product_variant_easy_edit_view_inherit
+#: model_terms:ir.ui.view,arch_db:stock_account.product_variant_easy_edit_view_inherit
 msgid "Set standard cost"
 msgstr ""
 
@@ -384,7 +375,7 @@ msgstr "Standar Harga"
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:145
-#: code:addons/stock_account/models/product.py:151
+#: code:addons/stock_account/models/product.py:150
 #, python-format
 msgid "Standard Price changed  - %s"
 msgstr ""
@@ -408,16 +399,6 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_product_stock_fifo_manual_move_ids
-msgid "Stock Fifo Manual Move"
-msgstr ""
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_product_stock_fifo_real_time_aml_ids
-msgid "Stock Fifo Real Time Aml"
-msgstr ""
-
-#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category_property_stock_account_input_categ_id
 #: model:ir.model.fields,field_description:stock_account.field_product_product_property_stock_account_input
 #: model:ir.model.fields,field_description:stock_account.field_product_template_property_stock_account_input
@@ -438,6 +419,11 @@ msgid "Stock Move"
 msgstr "Pergerakan Stock"
 
 #. module: stock_account
+#: model:ir.actions.act_window,name:stock_account.stock_move_valuation_action
+msgid "Stock Moves"
+msgstr "Perpindahan Stok"
+
+#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category_property_stock_account_output_categ_id
 #: model:ir.model.fields,field_description:stock_account.field_product_product_property_stock_account_output
 #: model:ir.model.fields,field_description:stock_account.field_product_template_property_stock_account_output
@@ -445,14 +431,9 @@ msgid "Stock Output Account"
 msgstr "Akun Stok Kluar"
 
 #. module: stock_account
-#: model:ir.model,name:stock_account.model_stock_quantity_history
-msgid "Stock Quantity History"
-msgstr "Riwayat Kuantitas Stok"
-
-#. module: stock_account
-#: model:ir.ui.view,arch_db:stock_account.view_move_tree_valuation_at_date
-#: model:ir.ui.view,arch_db:stock_account.view_stock_product_tree2
-#: model:ir.ui.view,arch_db:stock_account.view_template_property_form
+#: model_terms:ir.ui.view,arch_db:stock_account.product_valuation_tree
+#: model_terms:ir.ui.view,arch_db:stock_account.view_move_tree_valuation
+#: model_terms:ir.ui.view,arch_db:stock_account.view_template_property_form
 msgid "Stock Valuation"
 msgstr ""
 
@@ -472,12 +453,17 @@ msgid "Stock Valuation Account (Outgoing)"
 msgstr "Akun Valuasi stok (Outgoing)"
 
 #. module: stock_account
+#: model:ir.actions.server,name:stock_account.action_stock_account_valuation_report
+msgid "Stock Valuation Report"
+msgstr ""
+
+#. module: stock_account
 #: model:ir.model,name:stock_account.model_account_chart_template
 msgid "Templates for Account Chart"
 msgstr "Cetakan Bagan Akun"
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:532
+#: code:addons/stock_account/models/stock.py:435
 #, python-format
 msgid ""
 "The cost of %s is currently equal to 0. Change the cost or the configuration"
@@ -485,35 +471,15 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:349
-#, python-format
-msgid ""
-"The move lines are not in a consistent state: some are entering and other "
-"are leaving the company. "
-msgstr ""
-
-#. module: stock_account
-#: code:addons/stock_account/models/stock.py:360
-#, python-format
-msgid ""
-"The move lines are not in a consistent states: they are doing an "
-"intercompany in a single step while they should go through the intercompany "
-"transit location."
-msgstr ""
-
-#. module: stock_account
-#: code:addons/stock_account/models/stock.py:358
-#, python-format
-msgid ""
-"The move lines are not in a consistent states: they do not share the same "
-"origin or destination company."
-msgstr ""
-
-#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move_to_refund
 #: model:ir.model.fields,field_description:stock_account.field_stock_return_picking_line_to_refund
 msgid "To Refund (update SO/PO)"
 msgstr ""
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.product_valuation_tree
+msgid "Total Value"
+msgstr "Nilai Total"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_move_to_refund
@@ -524,12 +490,12 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
-#: model:ir.ui.view,arch_db:stock_account.view_move_tree_valuation_at_date
+#: model_terms:ir.ui.view,arch_db:stock_account.view_move_tree_valuation
 msgid "Unit of Measure"
 msgstr "Satuan Ukuran"
 
 #. module: stock_account
-#: model:ir.ui.view,arch_db:stock_account.view_template_property_form
+#: model_terms:ir.ui.view,arch_db:stock_account.view_template_property_form
 msgid "Update Cost"
 msgstr ""
 
@@ -570,28 +536,10 @@ msgid "Valuation"
 msgstr ""
 
 #. module: stock_account
-#: model:ir.actions.act_window,name:stock_account.action_stock_inventory_valuation
-msgid "Valuation Report"
-msgstr ""
-
-#. module: stock_account
-#: code:addons/stock_account/models/product.py:245
-#, python-format
-msgid "Valuation at date"
-msgstr ""
-
-#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product_stock_value
 #: model:ir.model.fields,field_description:stock_account.field_stock_move_value
-#: model:ir.ui.view,arch_db:stock_account.view_stock_account_aml
 msgid "Value"
 msgstr "Nilai"
-
-#. module: stock_account
-#: code:addons/stock_account/models/product.py:403
-#, python-format
-msgid "Warning"
-msgstr "Peringatan"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category_property_stock_account_input_categ_id
@@ -670,7 +618,7 @@ msgstr ""
 "akan menampung nilai saat ini dari produk."
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:499
+#: code:addons/stock_account/models/stock.py:407
 #, python-format
 msgid ""
 "You don't have any stock journal defined on your product category, check if "
@@ -679,7 +627,7 @@ msgstr ""
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:130
-#: code:addons/stock_account/models/stock.py:505
+#: code:addons/stock_account/models/stock.py:413
 #, python-format
 msgid ""
 "You don't have any stock valuation account defined on your product category."
@@ -687,7 +635,7 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
-#: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
+#: model_terms:ir.ui.view,arch_db:stock_account.view_change_standard_price
 msgid "_Apply"
 msgstr "_Apply"
 

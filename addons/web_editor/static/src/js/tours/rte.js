@@ -29,15 +29,15 @@ tour.register('rte', {
             '<section>\n'+
             '    <div class="container" style="width: 600px;">\n'+
             '        <div class="row">\n'+
-            '            <div class="col-md-6 mt16">\n'+
+            '            <div class="col-lg-6 mt16">\n'+
             '<h1 id="text_content_id">Batnae municipium in Anthemusia</h1>     \n'+
             '     <p>Batnae municipium in Anthemusia conditum Macedonum manu priscorum ab Euphrate flumine brevi spatio disparatur, refertum mercatoribus opulentis, ubi annua sollemnitate prope Septembris initium mensis ad.</p>\n'+
             '     <p>    Quam <img style="width: 25%" src="/web/static/src/img/logo.png"/> quidem <span class="fa fa-flag fa-2x"></span> partem accusationis admiratus sum et moleste tuli potissimum esse Atratino datam. Neque enim decebat neque aetas.</p>\n'+
             '     <p>Et hanc quidem praeter oppida multa duae civitates exornant Seleucia opus Seleuci regis, et Claudiopolis quam deduxit coloniam Claudius Caesar. Isaura enim antehac nimium potens, olim subversa ut rebellatrix.</p>'+
             '<p>Harum trium sententiarum nulli prorsus assentior.</p>\n'+
             '        </div>\n'+
-            '        <div class="col-md-6 mt16">\n'+
-            '            <img class="img img-responsive shadow mb16" src="/web/static/src/img/logo.png" alt="Odoo text and image block">\n'+
+            '        <div class="col-lg-6 mt16">\n'+
+            '            <img class="img img-fluid shadow mb16" src="/web/static/src/img/logo.png" alt="Odoo text and image block">\n'+
             '        </div>\n'+
             '    </div>\n'+
             '</section>\n';
@@ -53,8 +53,11 @@ tour.register('rte', {
     }
 }, {
     content: "change text bg-color after triple click",
-    trigger: '.note-popover button[data-event="color"]',
+    trigger: '.note-color button.dropdown-toggle:has(.fa-paint-brush)',
     extra_trigger: '#editable_area > section .row > div:first',
+}, {
+    content: "change text backColor",
+    trigger: "button[data-event=backColor]:visible:eq(2)",
 }, {
     content: "change selection to change text color",
     trigger: '#editable_area > section .row > div:first:not(:has(p font)) h1 font',
@@ -64,10 +67,10 @@ tour.register('rte', {
     }
 }, {
     content: "open color dropdown",
-    trigger: ".note-color button.dropdown-toggle",
+    trigger: ".note-color button.dropdown-toggle:has(.fa-font)",
 }, {
     content: "change text color",
-    trigger: ".btn-group.open button[data-event=foreColor]:first",
+    trigger: "button[data-event=foreColor]:visible:first",
 }, {
     content: "change selection to change text bg-color again",
     trigger: '#editable_area > section .row > div:first h1 font:eq(2)',
@@ -77,7 +80,7 @@ tour.register('rte', {
     }
 }, {
     content: "open color dropdown",
-    trigger: ".note-color button.dropdown-toggle",
+    trigger: ".note-color button.dropdown-toggle:has(.fa-paint-brush)",
 }, {
     content: "change text backColor again",
     trigger: "button[data-event=backColor]:visible:first",
@@ -90,7 +93,7 @@ tour.register('rte', {
     }
 }, {
     content: "open color dropdown",
-    trigger: ".note-color button.dropdown-toggle",
+    trigger: ".note-color button.dropdown-toggle:has(.fa-font)",
 }, {
     content: "change text color again",
     trigger: "button[data-event=foreColor]:visible:eq(3)",
@@ -157,7 +160,7 @@ tour.register('rte', {
     trigger: '#editor-media-icon.active span.fa:first',
 }, {
     content: "save pictogram",
-    trigger: 'button.o_save_button',
+    trigger: '.modal-footer > .btn-primary',
     extra_trigger: '#editor-media-icon.active span.o_selected',
 }, {
     content: "select a size for the pictogram",
@@ -169,45 +172,39 @@ tour.register('rte', {
 }, {
     content: "click on create link",
     trigger: '.note-image-popover:visible button[data-event="showLinkDialog"]',
-    extra_trigger: '#editable_area > section .row > div:first span.fa.pull-right',
+    extra_trigger: '#editable_area > section .row > div:first span.fa.float-right',
+}, {
+    content: "insert a link url",
+    trigger: 'input[name="url"]',
+    run: "text http://www.odoo.com",
 }, {
     content: "click on color style",
     trigger: '.o_link_dialog_color > .o_link_dialog_color_item.btn-success',
-    extra_trigger: 'a#link-preview:containsRegex(/^<span [^>]+><\\/span>$/) > span.fa.fa-3x.pull-right',
-}, {
-    content: "insert a link url",
-    trigger: '#o_link_dialog_url_input',
-    extra_trigger: 'a#link-preview.btn',
-    run: "text http://www.odoo.com",
-}, {
-    content: "change text label",
-    trigger: '#o_link_dialog_label_input',
-    run: "text ABC[IMG] DEF",
+    extra_trigger: 'a#link-preview:containsRegex(/^<span [^>]+><\\/span>$/) > span.fa.fa-3x.float-right',
 }, {
     content: "save link",
-    trigger: 'button.o_save_button',
-    extra_trigger: 'a#link-preview.btn:containsRegex(/^ABC<span [^>]+><\\/span> DEF$/)',
+    trigger: '.modal-footer > .btn-primary',
+    extra_trigger: 'a#link-preview.btn.btn-success span.fa.fa-3x.float-right',
 }, {
     content: "click on other picture",
     trigger: '#editable_area > section .row > div:last img',
-    extra_trigger: 'body:not(:has(#link-preview)) a.btn[href^="http://"]:has(span.fa.fa-3x.pull-right)',
+    extra_trigger: 'body:not(:has(#link-preview)) a.btn[href^="http://"]:has(span.fa.fa-3x.float-right)',
 }, {
     content: "click on create link again",
     trigger: '.note-image-popover:visible button[data-event="showLinkDialog"]',
-    extra_trigger: '#editable_area > section .row > div:first span.fa.pull-right',
+    extra_trigger: '#editable_area > section .row > div:first span.fa.float-right',
+}, {
+    content: "insert an email",
+    trigger: 'input[name="url"]',
+    run: "text test@test.test",
 }, {
     content: "click on color style again",
     trigger: '.o_link_dialog_color > .o_link_dialog_color_item.btn-success',
     extra_trigger: 'a#link-preview:containsRegex(/^<img [^>]+>$/) img',
 }, {
-    content: "insert an email",
-    trigger: '#o_link_dialog_url_input',
-    extra_trigger: 'a#link-preview.btn',
-    run: "text test@test.test",
-}, {
     content: "save link",
-    trigger: 'button.o_save_button',
-    extra_trigger: 'a#link-preview.btn[href="mailto:test@test.test"]',
+    trigger: '.modal-footer > .btn-primary',
+    extra_trigger: 'a#link-preview.btn.btn-success[href="mailto:test@test.test"]:containsRegex(/^<img [^>]+>$/) img',
 }, {
     content: "select for triple enter then double backspace",
     trigger: '#editable_area > section .row > div:first p:eq(2)',
@@ -294,11 +291,11 @@ tour.register('rte_inline', {
             '    <tbody>\n'+
             '      <tr>\n'+
             '        <td valign="center" width="270">\n'+
-            '          <img src="/logo.png" alt="Your Logo" class="img-circle img-thumbnail">\n'+
+            '          <img src="/logo.png" alt="Your Logo" class="rounded-circle img-thumbnail">\n'+
             '        </td>\n'+
             '        <td valign="center" width="270">\n'+
             '          <a href="https://www.facebook.com/Odoo"><span class="fa fa-facebook-square fa-2x text-primary"></span></a>\n'+
-            '          <span style="color: rgb(255, 0, 0);" class="fa fa-4x fa-google-plus-square pull-right"></span>\n'+
+            '          <span style="color: rgb(255, 0, 0);" class="fa fa-4x fa-google-plus-square float-right"></span>\n'+
             '        </td>\n'+
             '      </tr>\n'+
             '    </tbody>\n'+
@@ -317,12 +314,12 @@ tour.register('rte_inline', {
     trigger: '#wrapwrap img:first[width][height][style*="-radius"][style*="1px"][style*="padding"]',
 }, {
     content: "check the font image src",
-    trigger: '#wrapwrap img:eq(1)[src^="/web_editor/font_to_img/"][src$="/rgb(51,122,183)/28"]',
+    trigger: '#wrapwrap img:eq(1)[src^="/web_editor/font_to_img/"][src$="/rgb(0,160,157)/28"]',
 }, {
     content: "check the font class to css",
     trigger: '#wrapwrap img:eq(1)[height]:not([class*="fa"])',
 }, {
     content: "check the second font class to css",
-    trigger: '#wrapwrap img:eq(2)[style*="float: right"]',
+    trigger: '#wrapwrap img:eq(2)[style*="float: right"],#wrapwrap img:eq(2)[style*="float:right"]',
 }]);
 });

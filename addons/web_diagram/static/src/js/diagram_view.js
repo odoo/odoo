@@ -16,7 +16,8 @@ var DiagramView = BasicView.extend({
     display_name: _lt('Diagram'),
     icon: 'fa-code-fork',
     multi_record: false,
-    searchable: false,
+    withSearchBar: false,
+    searchMenuTypes: [],
     jsLibs: [[
         '/web_diagram/static/lib/js/jquery.mousewheel.js',
         '/web_diagram/static/lib/js/raphael.js',
@@ -26,6 +27,7 @@ var DiagramView = BasicView.extend({
         Renderer: DiagramRenderer,
         Controller: DiagramController,
     },
+    viewType: 'diagram',
 
     /**
      * @override
@@ -35,7 +37,7 @@ var DiagramView = BasicView.extend({
     init: function (viewInfo, params) {
         this._super.apply(this, arguments);
         var self = this;
-        var arch = viewInfo.arch;
+        var arch = this.arch;
         // Compute additional data for diagram model
         function toTitleCase(str) {
             return str.replace(/\w\S*/g, function (txt) {

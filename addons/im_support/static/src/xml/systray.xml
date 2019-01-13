@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-extend="mail.systray.MessagingMenu">
+        <t t-jquery=".o_mail_systray_dropdown" t-operation="append">
+            <div t-if="widget.supportChannel" class="o_mail_systray_dropdown_bottom">
+                <t t-set="preview" t-value="widget.supportChannel"/>
+                <t t-call="mail.Preview"/>
+            </div>
+        </t>
+    </t>
+
+</templates>

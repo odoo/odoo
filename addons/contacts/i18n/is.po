@@ -3,14 +3,16 @@
 # * contacts
 # 
 # Translators:
+# Martin Trigaux, 2018
+# Birgir Steinarsson <biggboss83@gmail.com>, 2018
 # Bjorn Ingvarsson <boi@exigo.is>, 2018
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 10:16+0000\n"
+"POT-Creation-Date: 2018-09-18 09:49+0000\n"
+"PO-Revision-Date: 2018-08-24 09:17+0000\n"
 "Last-Translator: Bjorn Ingvarsson <boi@exigo.is>, 2018\n"
 "Language-Team: Icelandic (https://www.transifex.com/odoo/teams/41243/is/)\n"
 "MIME-Version: 1.0\n"
@@ -28,17 +30,12 @@ msgstr "Bankareikningar"
 #. module: contacts
 #: model:ir.ui.menu,name:contacts.menu_action_res_bank_form
 msgid "Banks"
-msgstr ""
-
-#. module: contacts
-#: model:ir.actions.act_window,help:contacts.action_contacts
-msgid "Click to add a contact in your contacts directory."
-msgstr ""
+msgstr "Bankar"
 
 #. module: contacts
 #: model:ir.ui.menu,name:contacts.res_partner_menu_config
 msgid "Configuration"
-msgstr "Stillingar"
+msgstr "Uppsetning"
 
 #. module: contacts
 #: model:ir.ui.menu,name:contacts.menu_partner_category_form
@@ -48,14 +45,15 @@ msgstr "Contact Tags"
 #. module: contacts
 #: model:ir.ui.menu,name:contacts.menu_partner_title_contact
 msgid "Contact Titles"
-msgstr "Titlar"
+msgstr "Titill tengiliðs"
 
 #. module: contacts
 #: model:ir.actions.act_window,name:contacts.action_contacts
+#: model:ir.actions.act_window,name:contacts.action_contacts_summary
 #: model:ir.ui.menu,name:contacts.menu_contacts
 #: model:ir.ui.menu,name:contacts.res_partner_menu_contacts
 msgid "Contacts"
-msgstr ""
+msgstr "Tengiliðir"
 
 #. module: contacts
 #: model:ir.ui.menu,name:contacts.menu_country_partner
@@ -68,6 +66,12 @@ msgid "Country Group"
 msgstr "Country Group"
 
 #. module: contacts
+#: model_terms:ir.actions.act_window,help:contacts.action_contacts
+#: model_terms:ir.actions.act_window,help:contacts.action_contacts_summary
+msgid "Create a contact in your address book"
+msgstr ""
+
+#. module: contacts
 #: model:ir.ui.menu,name:contacts.menu_country_state_partner
 msgid "Fed. States"
 msgstr "Fed. States"
@@ -78,14 +82,17 @@ msgid "Localization"
 msgstr "Staðfærsla"
 
 #. module: contacts
-#: model:ir.actions.act_window,help:contacts.action_contacts
-msgid ""
-"Odoo helps you easily track all activities related to\n"
-"            a customer: discussions, history of business opportunities,\n"
-"            documents, etc."
+#: model_terms:ir.actions.act_window,help:contacts.action_contacts
+#: model_terms:ir.actions.act_window,help:contacts.action_contacts_summary
+msgid "Odoo helps you to easily track all activities related to a customer."
 msgstr ""
 
 #. module: contacts
 #: model:ir.ui.menu,name:contacts.res_partner_industry_menu
 msgid "Sectors of Activity"
 msgstr ""
+
+#. module: contacts
+#: model:ir.model,name:contacts.model_res_users
+msgid "Users"
+msgstr "Notendur"

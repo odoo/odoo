@@ -5,7 +5,7 @@ from collections import defaultdict
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.tools import float_compare, float_round, float_is_zero, pycompat
+from odoo.tools import float_compare, float_round, float_is_zero
 
 import logging
 _logger = logging.getLogger(__name__)
@@ -15,10 +15,10 @@ class StockInventory(models.Model):
     _inherit = "stock.inventory"
 
     accounting_date = fields.Date(
-        'Force Accounting Date',
-        help="Choose the accounting date at which you want to value the stock "
-             "moves created by the inventory instead of the default one (the "
-             "inventory end date)")
+        'Accounting Date',
+        help="Date at which the accounting entries will be created"
+             " in case of automated inventory valuation."
+             " If empty, the inventory date will be used.")
 
     @api.multi
     def post_inventory(self):
@@ -62,15 +62,16 @@ class StockLocation(models.Model):
 class StockMoveLine(models.Model):
     _inherit = 'stock.move.line'
 
-    @api.model
-    def create(self, vals):
-        res = super(StockMoveLine, self).create(vals)
-        move = res.move_id
-        if move.state == 'done':
-            correction_value = move._run_valuation(res.qty_done)
-            if move.product_id.valuation == 'real_time' and (move._is_in() or move._is_out()):
-                move.with_context(force_valuation_amount=correction_value)._account_entry_move()
-        return res
+    @api.model_create_multi
+    def create(self, vals_list):
+        lines = super(StockMoveLine, self).create(vals_list)
+        for line in lines:
+            move = line.move_id
+            if move.state == 'done':
+                correction_value = move._run_valuation(line.qty_done)
+                if move.product_id.valuation == 'real_time' and (move._is_in() or move._is_out()):
+                    move.with_context(force_valuation_amount=correction_value)._account_entry_move()
+        return lines
 
     @api.multi
     def write(self, vals):
@@ -132,7 +133,7 @@ class StockMoveLine(models.Model):
 class StockMove(models.Model):
     _inherit = "stock.move"
 
-    to_refund = fields.Boolean(string="To Refund (update SO/PO)", copy=False,
+    to_refund = fields.Boolean(string="Update quantities on SO/PO", copy=False,
                                help='Trigger a decrease of the delivered/received quantity in the associated Sale Order/Purchase Order')
     value = fields.Float(copy=False)
     remaining_qty = fields.Float(copy=False)
@@ -305,18 +306,20 @@ class StockMove(models.Model):
             vals = {}
             price_unit = self._get_price_unit()
             value = price_unit * (quantity or valued_quantity)
+            value_to_return = value if quantity is None or not self.value else self.value
             vals = {
                 'price_unit': price_unit,
-                'value': value if quantity is None or not self.value else self.value,
+                'value': value_to_return,
                 'remaining_value': value if quantity is None else self.remaining_value + value,
             }
             vals['remaining_qty'] = valued_quantity if quantity is None else self.remaining_qty + quantity
 
             if self.product_id.cost_method == 'standard':
                 value = self.product_id.standard_price * (quantity or valued_quantity)
+                value_to_return = value if quantity is None or not self.value else self.value
                 vals.update({
                     'price_unit': self.product_id.standard_price,
-                    'value': value if quantity is None or not self.value else self.value,
+                    'value': value_to_return,
                 })
             self.write(vals)
         elif self._is_out():
@@ -328,8 +331,9 @@ class StockMove(models.Model):
             if self.product_id.cost_method in ['standard', 'average']:
                 curr_rounding = self.company_id.currency_id.rounding
                 value = -float_round(self.product_id.standard_price * (valued_quantity if quantity is None else quantity), precision_rounding=curr_rounding)
+                value_to_return = value if quantity is None else self.value + value
                 self.write({
-                    'value': value if quantity is None else self.value + value,
+                    'value': value_to_return,
                     'price_unit': value / valued_quantity,
                 })
         elif self._is_dropshipped() or self._is_dropshipped_returned():
@@ -341,21 +345,23 @@ class StockMove(models.Model):
             else:
                 price_unit = self.product_id.standard_price
             value = float_round(self.product_qty * price_unit, precision_rounding=curr_rounding)
+            value_to_return = value if self._is_dropshipped() else -value
             # In move have a positive value, out move have a negative value, let's arbitrary say
             # dropship are positive.
             self.write({
-                'value': value if self._is_dropshipped() else -value,
+                'value': value_to_return,
                 'price_unit': price_unit if self._is_dropshipped() else -price_unit,
             })
+            return value_to_return
 
-    def _action_done(self):
+    def _action_done(self, cancel_backorder=False):
         self.product_price_update_before_done()
-        res = super(StockMove, self)._action_done()
+        res = super(StockMove, self)._action_done(cancel_backorder=cancel_backorder)
         for move in res:
             # Apply restrictions on the stock move to be able to make
             # consistent accounting entries.
             if move._is_in() and move._is_out():
-                raise UserError(_("The move lines are not in a consistent state: some are entering and other are leaving the company. "))
+                raise UserError(_("The move lines are not in a consistent state: some are entering and other are leaving the company."))
             company_src = move.mapped('move_line_ids.location_id.company_id')
             company_dst = move.mapped('move_line_ids.location_dest_id.company_id')
             try:
@@ -475,8 +481,6 @@ class StockMove(models.Model):
     def _run_fifo_vacuum(self):
         # Call `_fifo_vacuum` on concerned moves
         fifo_valued_products = self.env['product.product']
-        fifo_valued_products |= self.env['product.template'].search([('property_cost_method', '=', 'fifo')]).mapped(
-            'product_variant_ids')
         fifo_valued_categories = self.env['product.category'].search([('property_cost_method', '=', 'fifo')])
         fifo_valued_products |= self.env['product.product'].search([('categ_id', 'child_of', fifo_valued_categories.ids)])
         moves_to_vacuum = self.env['stock.move']
@@ -506,7 +510,7 @@ class StockMove(models.Model):
         if acc_valuation:
             acc_valuation = acc_valuation.id
         if not accounts_data.get('stock_journal', False):
-            raise UserError(_('You don\'t have any stock journal defined on your product category, check if you have installed a chart of accounts'))
+            raise UserError(_('You don\'t have any stock journal defined on your product category, check if you have installed a chart of accounts.'))
         if not acc_src:
             raise UserError(_('Cannot find a stock input account for the product %s. You must define one on the product category, or on the location, before processing this operation.') % (self.product_id.display_name))
         if not acc_dest:
@@ -515,7 +519,7 @@ class StockMove(models.Model):
             raise UserError(_('You don\'t have any stock valuation account defined on your product category. You must define one before processing this operation.'))
         journal_id = accounts_data['stock_journal'].id
         return journal_id, acc_src, acc_dest, acc_valuation
-    
+
     def _prepare_account_move_line(self, qty, cost, credit_account_id, debit_account_id):
         """
         Generate the account.move.line values to post to track the stock valuation difference due to the
@@ -528,11 +532,6 @@ class StockMove(models.Model):
         else:
             valuation_amount = cost
 
-        if self._context.get('forced_ref'):
-            ref = self._context['forced_ref']
-        else:
-            ref = self.picking_id.name
-
         # the standard_price of the product may be in another decimal precision, or not compatible with the coinage of
         # the company currency... so we need to use round() before creating the accounting entries.
         debit_value = self.company_id.currency_id.round(valuation_amount)
@@ -542,7 +541,21 @@ class StockMove(models.Model):
             raise UserError(_("The cost of %s is currently equal to 0. Change the cost or the configuration of your product to avoid an incorrect valuation.") % (self.product_id.display_name,))
         credit_value = debit_value
 
-        partner_id = (self.picking_id.partner_id and self.env['res.partner']._find_accounting_partner(self.picking_id.partner_id).id) or False
+
+        valuation_partner_id = self._get_partner_id_for_valuation_lines()
+        res = [(0, 0, line_vals) for line_vals in self._generate_valuation_lines_data(valuation_partner_id, qty, debit_value, credit_value, debit_account_id, credit_account_id).values()]
+
+        return res
+
+    def _generate_valuation_lines_data(self, partner_id, qty, debit_value, credit_value, debit_account_id, credit_account_id):
+        # This method returns a dictonary to provide an easy extension hook to modify the valuation lines (see purchase for an example)
+        self.ensure_one()
+
+        if self._context.get('forced_ref'):
+            ref = self._context['forced_ref']
+        else:
+            ref = self.picking_id.name
+
         debit_line_vals = {
             'name': self.name,
             'product_id': self.product_id.id,
@@ -554,6 +567,7 @@ class StockMove(models.Model):
             'credit': -debit_value if debit_value < 0 else 0,
             'account_id': debit_account_id,
         }
+
         credit_line_vals = {
             'name': self.name,
             'product_id': self.product_id.id,
@@ -565,16 +579,19 @@ class StockMove(models.Model):
             'debit': -credit_value if credit_value < 0 else 0,
             'account_id': credit_account_id,
         }
-        res = [(0, 0, debit_line_vals), (0, 0, credit_line_vals)]
+
+        rslt = {'credit_line_vals': credit_line_vals, 'debit_line_vals': debit_line_vals}
         if credit_value != debit_value:
             # for supplier returns of product in average costing method, in anglo saxon mode
             diff_amount = debit_value - credit_value
             price_diff_account = self.product_id.property_account_creditor_price_difference
+
             if not price_diff_account:
                 price_diff_account = self.product_id.categ_id.property_account_creditor_price_difference_categ
             if not price_diff_account:
                 raise UserError(_('Configuration error. Please configure the price difference account on the product or its category to process this operation.'))
-            price_diff_line = {
+
+            rslt['price_diff_line_vals'] = {
                 'name': self.name,
                 'product_id': self.product_id.id,
                 'quantity': qty,
@@ -585,8 +602,10 @@ class StockMove(models.Model):
                 'debit': diff_amount < 0 and -diff_amount or 0,
                 'account_id': price_diff_account.id,
             }
-            res.append((0, 0, price_diff_line))
-        return res
+        return rslt
+
+    def _get_partner_id_for_valuation_lines(self):
+        return (self.picking_id.partner_id and self.env['res.partner']._find_accounting_partner(self.picking_id.partner_id).id) or False
 
     def _prepare_move_split_vals(self, uom_qty):
         vals = super(StockMove, self)._prepare_move_split_vals(uom_qty)
@@ -660,9 +679,26 @@ class StockMove(models.Model):
             elif self._is_dropshipped_returned():
                 self.with_context(force_company=self.company_id.id)._create_account_move_line(acc_dest, acc_src, journal_id)
 
+        if self.company_id.anglo_saxon_accounting:
+            #eventually reconcile together the invoice and valuation accounting entries on the stock interim accounts
+            self._get_related_invoices()._anglo_saxon_reconcile_valuation(product=self.product_id)
+
+    def _get_related_invoices(self): # To be overridden in purchase and sale_stock
+        """ This method is overrided in both purchase and sale_stock modules to adapt
+        to the way they mix stock moves with invoices.
+        """
+        return self.env['account.invoice']
+
 
 class StockReturnPicking(models.TransientModel):
     _inherit = "stock.return.picking"
+
+    @api.model
+    def default_get(self, default_fields):
+        res = super(StockReturnPicking, self).default_get(default_fields)
+        for i, k, vals in res.get('product_return_moves', []):
+            vals.update({'to_refund': True})
+        return res
 
     @api.multi
     def _create_returns(self):
@@ -678,7 +714,7 @@ class StockReturnPicking(models.TransientModel):
 class StockReturnPickingLine(models.TransientModel):
     _inherit = "stock.return.picking.line"
 
-    to_refund = fields.Boolean(string="To Refund (update SO/PO)", help='Trigger a decrease of the delivered/received quantity in the associated Sale Order/Purchase Order')
+    to_refund = fields.Boolean(string="Update quantities on SO/PO", help='Trigger a decrease of the delivered/received quantity in the associated Sale Order/Purchase Order')
 
 
 class ProcurementGroup(models.Model):

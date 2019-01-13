@@ -348,6 +348,10 @@ var ProgressBar = (function ProgressBarClosure() {
       this.div.classList.remove('indeterminate');
       var progressSize = this.width * this._percent / 100;
       this.div.style.width = progressSize + this.units;
+      // Add attributes for screen readers and analysis tools
+      this.bar.setAttribute('aria-valuemin', 0);
+      this.bar.setAttribute('aria-valuemax', 100);
+      this.bar.setAttribute('aria-valuenow', this._percent);
     },
 
     get percent() {
@@ -377,6 +381,7 @@ var ProgressBar = (function ProgressBarClosure() {
       }
       this.visible = false;
       this.bar.classList.add('hidden');
+      this.bar.setAttribute('aria-hidden', "true")
       document.body.classList.remove('loadingInProgress');
     },
 
@@ -387,6 +392,7 @@ var ProgressBar = (function ProgressBarClosure() {
       this.visible = true;
       document.body.classList.add('loadingInProgress');
       this.bar.classList.remove('hidden');
+      this.bar.setAttribute('aria-hidden', "false")
     }
   };
 

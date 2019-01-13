@@ -10,13 +10,19 @@ odoo.define('web.ListController', function (require) {
 var core = require('web.core');
 var BasicController = require('web.BasicController');
 var DataExport = require('web.DataExport');
-var pyeval = require('web.pyeval');
+var Dialog = require('web.Dialog');
+var pyUtils = require('web.py_utils');
 var Sidebar = require('web.Sidebar');
 
 var _t = core._t;
 var qweb = core.qweb;
 
 var ListController = BasicController.extend({
+    /**
+     * This key contains the name of the buttons template to render on top of
+     * the list view. It can be overridden to add buttons in specific child views.
+     */
+    buttons_template: 'ListView.buttons',
     custom_events: _.extend({}, BasicController.prototype.custom_events, {
         add_record: '_onAddRecord',
         button_clicked: '_onButtonClicked',
@@ -26,6 +32,7 @@ var ListController = BasicController.extend({
         selection_changed: '_onSelectionChanged',
         toggle_column_order: '_onToggleColumnOrder',
         toggle_group: '_onToggleGroup',
+        navigation_move: '_onNavigationMove',
     }),
     /**
      * @constructor
@@ -64,10 +71,9 @@ var ListController = BasicController.extend({
         // TODO: this method should be synchronous...
         var self = this;
         if (this.$('thead .o_list_record_selector input').prop('checked')) {
-            var searchView = this.getParent().searchview; // fixme
-            var searchData = searchView.build_search_data();
+            var searchData = this.searchView.build_search_data();
             var userContext = this.getSession().user_context;
-            var results = pyeval.eval_domains_and_contexts({
+            var results = pyUtils.eval_domains_and_contexts({
                 domains: searchData.domains,
                 contexts: [userContext].concat(searchData.contexts),
                 group_by_seq: searchData.groupbys || []
@@ -81,10 +87,10 @@ var ListController = BasicController.extend({
     /*
      * @override
      */
-    getContext: function () {
-        var context = this._super.apply(this, arguments);
-        context.orderedBy = this.model.get(this.handle, {raw: true}).orderedBy || [];
-        return context;
+    getOwnedQueryParams: function () {
+        var state = this._super.apply(this, arguments);
+        var orderedBy = this.model.get(this.handle, {raw: true}).orderedBy || [];
+        return _.extend({}, state, {orderedBy: orderedBy});
     },
     /**
      * Returns the list of currently selected res_ids (with the check boxes on
@@ -123,8 +129,17 @@ var ListController = BasicController.extend({
      */
     renderButtons: function ($node) {
         if (!this.noLeaf && this.hasButtons) {
-            this.$buttons = $(qweb.render('ListView.buttons', {widget: this}));
+            this.$buttons = $(qweb.render(this.buttons_template, {widget: this}));
             this.$buttons.on('click', '.o_list_button_add', this._onCreateRecord.bind(this));
+
+            this._assignCreateKeyboardBehavior(this.$buttons.find('.o_list_button_add'));
+            this.$buttons.find('.o_list_button_add').tooltip({
+                delay: {show: 200, hide:0},
+                title: function(){
+                    return qweb.render('CreateButton.tooltip');
+                },
+                trigger: 'manual',
+            });
             this.$buttons.on('click', '.o_list_button_discard', this._onDiscard.bind(this));
             this.$buttons.appendTo($node);
         }
@@ -136,7 +151,8 @@ var ListController = BasicController.extend({
      * @param {jQuery Node} $node
      */
     renderSidebar: function ($node) {
-        if (this.hasSidebar && !this.sidebar) {
+        var self = this;
+        if (this.hasSidebar) {
             var other = [{
                 label: _t("Export"),
                 callback: this._onExportData.bind(this)
@@ -144,11 +160,15 @@ var ListController = BasicController.extend({
             if (this.archiveEnabled) {
                 other.push({
                     label: _t("Archive"),
-                    callback: this._onToggleArchiveState.bind(this, true)
+                    callback: function () {
+                        Dialog.confirm(self, _t("Are you sure that you want to archive all the selected records?"), {
+                            confirm_callback: self._toggleArchiveState.bind(self, true),
+                        });
+                    }
                 });
                 other.push({
                     label: _t("Unarchive"),
-                    callback: this._onToggleArchiveState.bind(this, false)
+                    callback: this._toggleArchiveState.bind(this, false)
                 });
             }
             if (this.is_action_enabled('delete')) {
@@ -251,6 +271,33 @@ var ListController = BasicController.extend({
             .then(this.update.bind(this, {}, {reload: false}));
     },
     /**
+     * Assign on the buttons create additionnal behavior to facilitate the work of the users doing input only using the keyboard
+     *
+     * @param {jQueryElement} $createButton  The create button itself
+     */
+    _assignCreateKeyboardBehavior: function($createButton) {
+        var self = this;
+        $createButton.on('keydown', function(e) {
+            $createButton.tooltip('hide');
+            switch(e.which) {
+                case $.ui.keyCode.ENTER:
+                    e.preventDefault();
+                    self._onCreateRecord.apply(self);
+                    break;
+                case $.ui.keyCode.DOWN:
+                    e.preventDefault();
+                    self.renderer.giveFocus();
+                    break;
+                case $.ui.keyCode.TAB:
+                    if (!e.shiftKey && e.target.classList.contains("btn-primary")) {
+                        e.preventDefault();
+                        $createButton.tooltip('show');
+                    }
+                    break;
+            }
+        });
+    },
+    /**
      * This function is the hook called by the field manager mixin to confirm
      * that a record has been saved.
      *
@@ -313,6 +360,15 @@ var ListController = BasicController.extend({
         }
     },
     /**
+     * Called when clicking on 'Archive' or 'Unarchive' in the sidebar.
+     *
+     * @private
+     * @param {boolean} archive
+     */
+    _toggleArchiveState: function (archive) {
+        this._archive(this.selectedRecords, archive);
+    },
+    /**
      * Display the sidebar (the 'action' menu in the control panel) if we have
      * some selected records.
      */
@@ -349,25 +405,25 @@ var ListController = BasicController.extend({
      * Add a record to the list
      *
      * @private
-     * @param {OdooEvent} event
+     * @param {OdooEvent} ev
      */
-    _onAddRecord: function (event) {
-        event.stopPropagation();
+    _onAddRecord: function (ev) {
+        ev.stopPropagation();
         if (this.activeActions.create) {
             this._addRecord();
-        } else if (event.data.onFail) {
-            event.data.onFail();
+        } else if (ev.data.onFail) {
+            ev.data.onFail();
         }
     },
     /**
      * Handles a click on a button by performing its action.
      *
      * @private
-     * @param {OdooEvent} event
+     * @param {OdooEvent} ev
      */
-    _onButtonClicked: function (event) {
-        event.stopPropagation();
-        this._callButtonAction(event.data.attrs, event.data.record);
+    _onButtonClicked: function (ev) {
+        ev.stopPropagation();
+        this._callButtonAction(ev.data.attrs, ev.data.record);
     },
     /**
      * When the user clicks on the 'create' button, two things can happen. We
@@ -375,13 +431,15 @@ var ListController = BasicController.extend({
      * mode, or we can edit inline.
      *
      * @private
-     * @param {MouseEvent} event
+     * @param {MouseEvent} ev
      */
-    _onCreateRecord: function (event) {
+    _onCreateRecord: function (ev) {
         // we prevent the event propagation because we don't want this event to
         // trigger a click on the main bus, which would be then caught by the
         // list editable renderer and would unselect the newly created row
-        event.stopPropagation();
+        if (ev) {
+            ev.stopPropagation();
+        }
         var state = this.model.get(this.handle, {raw: true});
         if (this.editable && !state.groupedBy.length) {
             this._addRecord();
@@ -430,7 +488,37 @@ var ListController = BasicController.extend({
      */
     _onExportData: function () {
         var record = this.model.get(this.handle);
-        new DataExport(this, record).open();
+        var defaultExportFields = _.map(this.renderer.columns, function (field) {
+            return field.attrs.name;
+        });
+        new DataExport(this, record, defaultExportFields).open();
+    },
+    /**
+     * Force a resequence of the records curently on this page.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onResequence: function (ev) {
+        var self = this;
+
+        this.trigger_up('mutexify', {
+            action: function () {
+                var state = self.model.get(self.handle);
+                var resIDs = _.map(ev.data.rowIDs, function(rowID) {
+                    return _.findWhere(state.data, {id: rowID}).res_id;
+                });
+                var options = {
+                    offset: ev.data.offset,
+                    field: ev.data.handleField,
+                };
+                return self.model.resequence(self.modelName, resIDs, self.handle, options).then(function () {
+                    self._updateEnv();
+                    state = self.model.get(self.handle);
+                    return self.renderer.updateState(state, {noRender: true});
+                });
+            },
+        });
     },
     /**
      * Called when the renderer displays an editable row and the user tries to
@@ -445,58 +533,15 @@ var ListController = BasicController.extend({
             .fail(ev.data.onFailure);
     },
     /**
-     * Force a resequence of the records curently on this page.
-     *
-     * @private
-     * @param {OdooEvent} event
-     */
-    _onResequence: function (event) {
-        var self = this;
-
-        this.trigger_up('mutexify', {
-            action: function () {
-                var state = self.model.get(self.handle);
-                var resIDs = _.map(event.data.rowIDs, function(rowID) {
-                    return _.findWhere(state.data, {id: rowID}).res_id;
-                });
-                var options = {
-                    offset: event.data.offset,
-                    field: event.data.handleField,
-                };
-                return self.model.resequence(self.modelName, resIDs, self.handle, options).then(function () {
-                    self._updateEnv();
-                    state = self.model.get(self.handle);
-                    return self.renderer.updateState(state, {noRender: true});
-                });
-            },
-        });
-    },
-    /**
      * When the current selection changes (by clicking on the checkboxes on the
      * left), we need to display (or hide) the 'sidebar'.
      *
      * @private
-     * @param {OdooEvent} event
+     * @param {OdooEvent} ev
      */
-    _onSelectionChanged: function (event) {
-        this.selectedRecords = event.data.selection;
+    _onSelectionChanged: function (ev) {
+        this.selectedRecords = ev.data.selection;
         this._toggleSidebar();
-    },
-    /**
-     * @override
-     */
-    _onSidebarDataAsked: function (event) {
-        var env = this._getSidebarEnv();
-        event.data.callback(env);
-    },
-    /**
-     * Called when clicking on 'Archive' or 'Unarchive' in the sidebar.
-     *
-     * @private
-     * @param {boolean} archive
-     */
-    _onToggleArchiveState: function (archive) {
-        this._archive(this.selectedRecords, archive);
     },
     /**
      * When the user clicks on one of the sortable column headers, we need to
@@ -504,16 +549,16 @@ var ListController = BasicController.extend({
      * rerender the view.
      *
      * @private
-     * @param {OdooEvent} event
+     * @param {OdooEvent} ev
      */
-    _onToggleColumnOrder: function (event) {
-        event.stopPropagation();
+    _onToggleColumnOrder: function (ev) {
+        ev.stopPropagation();
         var data = this.model.get(this.handle);
         if (!data.groupedBy) {
             this.pager.updateState({current_min: 1});
         }
         var self = this;
-        this.model.setSort(data.id, event.data.name).then(function () {
+        this.model.setSort(data.id, ev.data.name).then(function () {
             self.update({});
         });
     },
@@ -523,11 +568,11 @@ var ListController = BasicController.extend({
      * renderer.
      *
      * @private
-     * @param {OdooEvent} event
+     * @param {OdooEvent} ev
      */
-    _onToggleGroup: function (event) {
+    _onToggleGroup: function (ev) {
         this.model
-            .toggleGroup(event.data.group.id)
+            .toggleGroup(ev.data.group.id)
             .then(this.update.bind(this, {}, {keepSelection: true, reload: false}));
     },
 });

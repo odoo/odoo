@@ -1,8 +1,6 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_procurement_group,procurement.group,model_procurement_group,base.group_user,1,1,1,0
-access_procurement_rule,procurement.rule,model_procurement_rule,base.group_user,1,1,1,0
-access_stock_incoterms_all,stock.incoterms all,model_stock_incoterms,,1,0,0,0
-access_stock_incoterms_manager,stock.incoterms manager,model_stock_incoterms,stock.group_stock_manager,1,1,1,1
+access_stock_rule,stock.rule,model_stock_rule,base.group_user,1,1,1,0
 access_stock_warehouse_manager,stock.warehouse.manager,model_stock_warehouse,stock.group_stock_manager,1,1,1,1
 access_stock_warehouse_user,stock.warehouse.user,model_stock_warehouse,base.group_user,1,0,0,0
 access_stock_location__partner_manager,stock.location.partner.manager,model_stock_location,base.group_partner_manager,1,0,0,0
@@ -26,8 +24,8 @@ access_stock_inventory_line_manager,stock.inventory.line manager,model_stock_inv
 access_stock_location_stock_manager,stock.location stock manager,model_stock_location,stock.group_stock_manager,1,0,0,0
 access_product_product_stock_user,product_product_stock_user,product.model_product_product,stock.group_stock_user,1,0,0,0
 access_product_template_stock_user,product.template stock user,product.model_product_template,stock.group_stock_user,1,0,0,0
-access_product_uom_categ_stock_manager,product.uom.categ stock_manager,product.model_product_uom_categ,stock.group_stock_manager,1,1,1,1
-access_product_uom_stock_manager,product.uom stock_manager,product.model_product_uom,stock.group_stock_manager,1,1,1,1
+access_uom_category_stock_manager,uom.category stock_manager,uom.model_uom_category,stock.group_stock_manager,1,1,1,1
+access_uom_uom_stock_manager,uom.uom stock_manager,uom.model_uom_uom,stock.group_stock_manager,1,1,1,1
 access_product_category_stock_manager,product.category stock_manager,product.model_product_category,stock.group_stock_manager,1,1,1,1
 access_product_template_stock_manager,product.template stock_manager,product.model_product_template,stock.group_stock_manager,1,1,1,1
 access_product_product_stock_manager,product.product stock_manager,product.model_product_product,stock.group_stock_manager,1,1,1,1
@@ -46,15 +44,15 @@ access_stock_quant_all,stock.quant all users,model_stock_quant,base.group_user,1
 access_stock_quant_package_all,stock.quant.package all users,model_stock_quant_package,base.group_user,1,0,0,0
 access_stock_quant_package_stock_manager,stock.quant.package stock manager,model_stock_quant_package,stock.group_stock_manager,1,1,1,1
 access_stock_quant_package_stock_user,stock.quant.package stock user,model_stock_quant_package,stock.group_stock_user,1,1,1,1
-access_procurement_rule_user,procurement_rule user,model_procurement_rule,stock.group_stock_user,1,0,0,0
-access_procurement_rule_manager,procurement_rule manager,model_procurement_rule,stock.group_stock_manager,1,1,1,1
-access_procurement_rule_stock_manager,procurement_rule stock manager,model_procurement_rule,stock.group_stock_manager,1,1,1,1
-access_stock_location_path_user,stock location path user,model_stock_location_path,stock.group_stock_user,1,0,0,0
-access_stock_location_path_internal_user,stock location path internal user,model_stock_location_path,base.group_user,1,0,0,0
-access_stock_location_path_stock_user,stock.location.path stock user,model_stock_location_path,stock.group_stock_user,1,1,1,1
+access_stock_package_level_all,stock.package_level all users,model_stock_package_level,base.group_user,1,0,0,0
+access_stock_package_level_stock_manager,stock.package_level stock manager,model_stock_package_level,stock.group_stock_manager,1,1,1,1
+access_stock_package_level_stock_user,stock.package_level stock user,model_stock_package_level,stock.group_stock_user,1,1,1,1
+access_stock_rule_user,stock_rule user,model_stock_rule,stock.group_stock_user,1,0,0,0
+access_stock_rule_manager,stock_rule manager,model_stock_rule,stock.group_stock_manager,1,1,1,1
+access_stock_rule_stock_manager,stock_rule stock manager,model_stock_rule,stock.group_stock_manager,1,1,1,1
 access_stock_location_route_stock_manager,stock.location.route,model_stock_location_route,stock.group_stock_manager,1,1,1,1
 access_stock_location_route,stock.location.route,model_stock_location_route,base.group_user,1,0,0,0
-access_procurement_rule_internal,procurement.rule.flow internal,model_procurement_rule,base.group_user,1,0,0,0
+access_stock_rule_internal,stock.rule.flow internal,model_stock_rule,base.group_user,1,0,0,0
 access_stock_move_line_manager,stock.move.line manager,model_stock_move_line,stock.group_stock_manager,1,1,1,1
 access_stock_move_line_user,stock.move.line user,model_stock_move_line,stock.group_stock_user,1,1,1,1
 access_stock_move_line_all,stock.move.line all users,model_stock_move_line,base.group_user,1,1,1,1
@@ -75,5 +73,6 @@ access_stock_forecast_manager,report.stock.forecast.manager,model_report_stock_f
 access_stock_scrap_user,stock.scrap.user,model_stock_scrap,stock.group_stock_user,1,1,1,0
 access_product_attribute_manager,product.attribute manager,product.model_product_attribute,stock.group_stock_manager,1,1,1,1
 access_product_attribute_value_manager,product.attribute manager value,product.model_product_attribute_value,stock.group_stock_manager,1,1,1,1
-access_product_attribute_price_manager,product.attribute manager price,product.model_product_attribute_price,stock.group_stock_manager,1,1,1,1
-access_product_attribute_line_manager,product.attribute manager line,product.model_product_attribute_line,stock.group_stock_manager,1,1,1,1
+access_product_product_attribute_manager,product.product.attribute manager value,product.model_product_template_attribute_value,stock.group_stock_manager,1,1,1,1
+access_product_template_attribute_exclusion_manager,product.attribute manager filter line,product.model_product_template_attribute_exclusion,stock.group_stock_manager,1,1,1,1
+access_product_template_attribute_line_manager,product.attribute manager line,product.model_product_template_attribute_line,stock.group_stock_manager,1,1,1,1

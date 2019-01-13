@@ -16,3 +16,5 @@ Pieter Paulussen pieter.paulussen@dynapps.be https://github.com/PieterPaulussen
 Raf Ven raf.ven@dynapps.be https://github.com/rven
 Kurt Schmitz kurt.schmitz@dynapps.be https://github.com/kurt-schmitz
 Rod Schouteden rod.schouteden@dynapps.be https://github.com/schout-it
+Eric Lembregts eric.lembregts@dynapps.be https://github.com/lembregtse
+Pieter Paulussen pieter.paulussen@dynapps.be https://github.com/PieterPaulussen

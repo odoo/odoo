@@ -18,4 +18,4 @@ class OgoneController(http.Controller):
     def transfer_form_feedback(self, **post):
         _logger.info('Beginning form_feedback with post data %s', pprint.pformat(post))  # debug
         request.env['payment.transaction'].sudo().form_feedback(post, 'transfer')
-        return werkzeug.utils.redirect(post.pop('return_url', '/'))
+        return werkzeug.utils.redirect('/payment/process')

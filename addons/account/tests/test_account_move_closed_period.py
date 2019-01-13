@@ -4,7 +4,10 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from calendar import monthrange
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
+from odoo.tests import tagged
 
+
+@tagged('post_install', '-at_install')
 class TestPeriodState(AccountingTestCase):
     """
     Forbid creation of Journal Entries for a closed period.

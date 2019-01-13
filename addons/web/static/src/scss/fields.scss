@@ -1,0 +1,457 @@
+//
+// This file regroups all the rules which apply to field widgets wherever they
+// are in the DOM, in both community and enterprise versions.
+//
+
+// Invalid
+.o_field_invalid {
+    &.o_input, .o_input, &.o_form_label {
+        color: theme-color('danger')!important;
+        border-color: theme-color('danger')!important; // enterprise o_required_modifier rule overrides this without !important
+    }
+}
+
+// Empty
+.o_field_empty {
+    display: none!important;
+}
+
+// Numbers
+.o_field_number {
+    white-space: nowrap;
+}
+
+//------------------------------------------------------------------------------
+// Fields
+//------------------------------------------------------------------------------
+
+.o_field_widget {
+    // Default display and alignment of widget and internal <input/>
+    &, input.o_input {
+        display: inline-block;
+        text-align: inherit;
+    }
+
+    // Block fields
+    &.note-editor, &.oe_form_field_html, &.oe_form_field_html_text, &.oe_form_field_text, &.o_field_domain, &.o_graph_linechart, &.o_graph_barchart {
+        display: block;
+    }
+
+    // Flex fields (inline)
+    &.o_field_many2one, &.o_field_radio, &.o_field_many2manytags, &.o_field_percent_pie, &.o_field_monetary, &.o_field_binary_file {
+        display: inline-flex;
+        > span, > button {
+            flex: 0 0 auto;
+        }
+    }
+
+    // Dropdowns input (many2one, ...)
+    .o_input_dropdown {
+        flex: 1 1 auto;
+        position: relative;
+        width: 100%;
+
+        > input {
+            height: 100%;
+            padding-right: 15px;
+            cursor: pointer;
+        }
+
+        .o_dropdown_button {
+            @include o-position-absolute(0, 0);
+            pointer-events: none;
+            &:after {
+                @include o-caret-down;
+            }
+        }
+    }
+
+    // Text
+    &.o_field_text, &.oe_form_field_text .oe_form_text_content {
+        width: 100%;
+        white-space: pre-wrap;
+    }
+
+    // Monetary
+    &.o_field_monetary {
+        &.o_input {
+            align-items: baseline;
+
+            > input {
+                width: 100px;
+                flex: 1 0 auto;
+            }
+        }
+    }
+
+    // Many2many tags
+    &.o_field_many2manytags {
+        flex-flow: row wrap;
+        align-items: baseline;
+
+        > .o_field_widget {
+            flex: 1 0 100px;
+            position: initial;
+            max-width: 100%;
+        }
+
+        .badge {
+            flex: 0 0 auto;
+            border: 0;
+            font-size: 12px;
+            cursor: pointer;
+            user-select: none;
+
+            a {
+                color: inherit;
+            }
+
+            .o_badge_text {
+                @include o-text-overflow(inline-block);
+                max-width: 200px;
+                color: inherit;
+            }
+
+            .o_delete {
+                color: inherit;
+                cursor: pointer;
+            }
+        }
+
+        // o-kanban-colorpicker without customizing
+        // '&:first-child > a::before' (transparent red-crossed colorpick)
+        @mixin o-tag-colorpicker {
+            $o-tag-colorpicker-padding-right: $o-dropdown-hpadding - 2 * 5px; // FIXME was $o-kanban-inner-hmargin before scss convertion
+
+            max-width: 100%;
+            padding: 3px $o-tag-colorpicker-padding-right 3px $o-dropdown-hpadding;
+
+            > li {
+                display: inline-block;
+                margin: 5px 5px 0 0; // FIXME was $o-kanban-inner-hmargin before scss convertion
+                border: 1px solid white;
+                box-shadow: 0 0 0 1px gray('300');
+
+                > a {
+                    display: block;
+
+                    &::after {
+                        content: "";
+                        display: block;
+                        width: 20px;
+                        height: 15px;
+                    }
+                }
+
+                &:last-of-type {
+                    box-shadow: 0 0 0 0px white; // remove grey border on hide in kanban
+                    color: $o-main-text-color;
+                }
+            }
+        }
+
+        .tagcolor_dropdown_menu {
+            min-width: 150px; // down from 160px of .dropdown-menu
+            margin-right: 0px; // cancel right margin of .dropdown-menu
+        }
+
+        .o_colorpicker > ul {
+            @include o-tag-colorpicker;
+            white-space: normal;
+        }
+
+        @for $size from 1 through length($o-colors) {
+            .o_tag_color_#{$size - 1} {
+                @if $size == 1 {
+                    & {
+                        background-color: white;
+                        color: nth($o-colors, $size);
+                        box-shadow: inset 0 0 0 2px nth($o-colors, $size);
+                    }
+                    &::after {
+                        background-color: nth($o-colors, $size);
+                    }
+                } @else {
+                    &, &::after {
+                        background-color: nth($o-colors, $size);
+                        color: $white;
+                    }
+                }
+            }
+        }        
+        .o_tag_error {
+            box-shadow: inset 0 0 0 2px #FF0000;
+
+            .o_delete {
+                color: #FF0000;
+            }
+        }
+    }
+
+    // Stars
+    &.o_priority {
+        display: inline-block;
+        padding: 0;
+        margin: 0;
+        vertical-align: baseline;
+        > .o_priority_star {
+            display: inline-block;
+            font-size: 1.35em;
+            &:hover, &:focus {
+                text-decoration: none;
+                outline: none;
+            }
+
+            + .o_priority_star {
+                padding-left: 5px;
+            }
+
+            &.fa-star-o {
+                color: $o-main-color-muted;
+            }
+            &.fa-star {
+                color: gold;
+            }
+        }
+    }
+
+    // Favorite
+    &.o_favorite {
+        i.fa {
+            font-size: 16px;
+        }
+        i.fa-star-o {
+            color: $o-main-color-muted;
+            &:hover {
+                color: gold;
+            }
+        }
+        i.fa-star {
+            color: gold;
+        }
+    }
+
+    // Specific success color for toggle_button widget
+    .fa.o_toggle_button_success {
+        color: theme-color('success');
+    }
+
+    // Handle widget
+    &.o_row_handle {
+        cursor: ns-resize;
+    }
+
+    &.o_field_selection_badge {
+        .o_selection_badge {
+            display: inline-block;
+            margin: 0px 0px 4px 4px;
+            padding: 1px 6px;
+            color: $o-main-color-muted;
+            border: 1px solid gray('300');
+            cursor: pointer;
+            &.active {
+                color: $o-brand-primary;
+                border-color: $o-brand-primary;
+            }
+            &:hover:not(.active) {
+                color: darken(gray('300'), 30%);
+                border-color: darken(gray('300'), 30%);
+            }
+        }
+    }
+    // Radio buttons
+    &.o_field_radio {
+        @include media-breakpoint-down(sm) {
+            display: inline-block;
+        }
+        .o_radio_input {
+            outline: none;
+        }
+
+        .o_radio_item {
+            flex: 0 0 auto;
+        }
+
+        &.o_horizontal {
+            .o_radio_item {
+                margin-right: $o-form-spacing-unit * 2;
+            }
+        }
+
+        &.o_vertical {
+            flex-flow: column nowrap;
+            .o_radio_item {
+                margin-bottom: $o-form-spacing-unit;
+            }
+        }
+    }
+
+    // Percent pie
+    &.o_field_percent_pie {
+        align-items: center;
+
+        > .o_pie {
+            position: relative;
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 10px;
+            border-radius: 100%;
+            overflow: hidden;
+            background-color: $o-brand-primary;
+
+            &:after { // Outside pie border to go over border-radius irregularities
+                content: " ";
+                @include o-position-absolute(0, 0);
+                width: 100%;
+                height: 100%;
+                border-radius: 100%;
+            }
+
+            .o_mask {
+                @include o-position-absolute(0, 0);
+                transform-origin: 0;
+                width: 50%;
+                height: 100%;
+                background-color: $o-view-background-color;
+                &.o_full {
+                    background-color: inherit;
+                }
+            }
+
+            .o_pie_value {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+
+                border-radius: 100%;
+
+                font-weight: 700;
+                color: $o-brand-odoo;
+            }
+        }
+    }
+
+    // Ace editor
+    &.o_ace_view_editor {
+        width: 100%;
+        .ace-view-editor {
+            height: 300px;
+            padding: 0 1em;
+        }
+    }
+
+    // Image
+    &.o_field_image {
+        position: relative;
+
+        .o_form_image_controls {
+            @include o-position-absolute(0, 0);
+            width: 100%;
+
+            color: white;
+            background-color: $o-brand-primary;
+            opacity: 0;
+            transition: opacity ease 400ms;
+
+            > button.fa {
+                border: none;
+                background-color: transparent;
+            }
+
+            > .fa {
+                margin: 5px;
+                cursor: pointer;
+            }
+        }
+        @include media-breakpoint-down(xs, $o-extra-grid-breakpoints) {
+            .o_form_image_controls{
+                position: initial;
+                opacity: 1;
+                > .fa{
+                    width: 50%;
+                    padding: 6px;
+                    margin: 0px;
+                    text-align: center;
+                    &.o_select_file_button{
+                        background: $o-brand-primary;
+                    }
+                    &.o_clear_file_button{
+                        background: theme-color('danger');
+                    }
+                }
+            }
+        }
+
+        &:hover .o_form_image_controls {
+            opacity: 0.8;
+        }
+
+        &.o_field_invalid > img {
+            border: 1px solid theme-color('danger');
+        }
+    }
+
+    // Input loading/file
+    .o_form_binary_progress, .o_hidden_input_file .o_input_file {
+        display: none;
+    }
+
+    // Domain
+    &.o_field_domain {
+        > .o_field_domain_panel {
+            margin-top: 8px;
+        }
+        &.o_inline_mode.o_edit_mode {
+            position: relative;
+
+            > .o_field_domain_panel {
+                @include o-position-absolute(0, 0);
+                margin-top: 0;
+            }
+        }
+    }
+
+    // PDF Viewer
+    &.o_field_pdfviewer, .o_pdfview_iframe {
+        width: 100%;
+        height: 450px;
+        border: 0;
+        margin-top: 10px;
+    }
+
+    // Copy to clipboard
+    &.o_field_copy {
+        position: relative;
+        width: 100% !important;
+        border-radius: 5px;
+        border: 1px solid $primary;
+        font-size: $font-size-sm;
+        color: $o-brand-primary;
+        font-weight: $badge-font-weight;
+        text-align: center;
+        padding-right: 100px;
+        .o_clipboard_button {
+            @include o-position-absolute($top: 0, $right: 0);
+            &.o_btn_text_copy {
+                position: absolute;
+                top: 0;
+                right: 0;
+            }
+            &.o_btn_char_copy {
+                padding-top: 2px;
+                height: 100%;
+            }
+        }
+    }
+
+}
+
+button.o_field_float_toggle {
+    width: 100%;
+    text-align: center;
+}
+
+// Selection fields
+select.o_field_widget.o_input {
+    padding: 1px;  // Other inputs get a 1px padding automatically added by the browsers but selects do not
+}

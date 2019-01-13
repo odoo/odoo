@@ -3,13 +3,6 @@
 <menuitem id="account_reports_vn_statements_menu" name="Vietnam" parent="account.menu_finance_reports" sequence="0" groups="account.group_account_user"/>
 
 <data>
-    <record id="transfer_account_id" model="account.account.template">
-        <field name="name">Tiền đang chuyển</field>
-        <field name="code">113</field>
-        <field name="reconcile" eval="True"/>
-        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
-    </record>
-
     <!-- Account Chart Templates -->
     <record id="vn_template" model="account.chart.template">
         <field name="name">VN - Chart of Accounts</field>
@@ -17,11 +10,7 @@
         <field name="currency_id" ref="base.VND"/>
         <field name="bank_account_code_prefix">112</field>
         <field name="cash_account_code_prefix">111</field>
-        <field name="transfer_account_id" ref="transfer_account_id"/>
-    </record>
-
-    <record id="transfer_account_id" model="account.account.template">
-        <field name="chart_template_id" ref="vn_template"/>
+        <field name="transfer_account_code_prefix">113</field>
     </record>
 
     <!-- Account Templates -->

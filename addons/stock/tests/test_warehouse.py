@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo.addons.stock.tests.common2 import TestStockCommon
-
+from odoo.tests import Form
 
 class TestWarehouse(TestStockCommon):
 
@@ -28,15 +28,15 @@ class TestWarehouse(TestStockCommon):
 
         # Update the line, set to 35
         inventory.line_ids.write({'product_qty': 35.0})
-        inventory.action_done()
+        inventory.action_validate()
 
         # Check related move and quants
         self.assertIn(inventory.name, inventory.move_ids.name)
         self.assertEqual(inventory.move_ids.product_qty, 15.0)
         self.assertEqual(inventory.move_ids.location_id, self.warehouse_1.lot_stock_id)
-        self.assertEqual(inventory.move_ids.location_dest_id, self.env.ref('stock.location_inventory'))  # Inventory loss
+        self.assertEqual(inventory.move_ids.location_dest_id, self.product_1.property_stock_inventory)  # Inventory loss
         self.assertEqual(inventory.move_ids.state, 'done')
-        quants = self.env['stock.quant']._gather(self.product_1, self.env.ref('stock.location_inventory'))
+        quants = self.env['stock.quant']._gather(self.product_1, self.product_1.property_stock_inventory)
         self.assertEqual(len(quants), 1)  # One quant created for inventory loss
 
         # Check quantity of product in various locations: current, its parent, brother and other
@@ -74,7 +74,6 @@ class TestWarehouse(TestStockCommon):
         # TDE TODO: expand this test
 
     def test_basic_move(self):
-        # TDE NOTE: replaces test/move.yml present until saas-10, including onchanges
         product = self.product_3.sudo(self.user_stock_manager)
         product.type = 'product'
         picking_out = self.env['stock.picking'].create({
@@ -154,7 +153,6 @@ class TestWarehouse(TestStockCommon):
             'location_dest_id': customer_location.id,
         })
         picking_out.action_confirm()
-        picking_out.force_assign()
         picking_out.move_lines.quantity_done = 1
         picking_out.action_done()
 
@@ -171,14 +169,14 @@ class TestWarehouse(TestStockCommon):
         return_pick.action_done()
 
         quant = self.env['stock.quant'].search([('product_id', '=', productA.id), ('location_id', '=', stock_location.id)])
-        self.assertEqual(len(quant), 0)
+        self.assertEqual(sum(quant.mapped('quantity')), 0)
 
     def test_inventory_adjustment_and_negative_quants_2(self):
         """Make sure negative quants get wiped out with an inventory adjustment"""
         productA = self.env['product.product'].create({'name': 'Product A', 'type': 'product'})
         stock_location = self.env.ref('stock.stock_location_stock')
         customer_location = self.env.ref('stock.stock_location_customers')
-        location_loss = self.env.ref('stock.location_inventory')
+        location_loss = productA.property_stock_inventory
 
         # Create a picking out and force availability
         picking_out = self.env['stock.picking'].create({
@@ -197,9 +195,8 @@ class TestWarehouse(TestStockCommon):
             'location_dest_id': customer_location.id,
         })
         picking_out.action_confirm()
-        picking_out.force_assign()
         picking_out.move_lines.quantity_done = 1
-        picking_out.do_transfer()
+        picking_out.action_done()
 
         # Make an inventory adjustment to set the quantity to 0
         inventory = self.env['stock.inventory'].create({
@@ -212,7 +209,7 @@ class TestWarehouse(TestStockCommon):
         self.assertEqual(len(inventory.line_ids), 1, "Wrong inventory lines generated.")
         self.assertEqual(inventory.line_ids.theoretical_qty, -1, "Theoretical quantity should be -1.")
         inventory.line_ids.product_qty = 0  # Put the quantity back to 0
-        inventory.action_done()
+        inventory.action_validate()
 
         # The inventory adjustment should have created one
         self.assertEqual(len(inventory.move_ids), 1)
@@ -223,7 +220,7 @@ class TestWarehouse(TestStockCommon):
 
         # There should be no quant in the stock location
         quants = self.env['stock.quant'].search([('product_id', '=', productA.id), ('location_id', '=', stock_location.id)])
-        self.assertEqual(len(quants), 0)
+        self.assertEqual(sum(quants.mapped('quantity')), 0)
 
         # There should be one quant in the inventory loss location
         quant = self.env['stock.quant'].search([('product_id', '=', productA.id), ('location_id', '=', location_loss.id)])
@@ -243,14 +240,12 @@ class TestWarehouse(TestStockCommon):
         warehouse_distribution = self.env['stock.warehouse'].create({
             'name': 'Dist.',
             'code': 'DIST',
-            'default_resupply_wh_id': warehouse_stock.id,
             'resupply_wh_ids': [(6, 0, [warehouse_stock.id])]
         })
 
         warehouse_shop = self.env['stock.warehouse'].create({
             'name': 'Shop',
             'code': 'SHOP',
-            'default_resupply_wh_id': warehouse_distribution.id,
             'resupply_wh_ids': [(6, 0, [warehouse_distribution.id])]
         })
 
@@ -262,7 +257,7 @@ class TestWarehouse(TestStockCommon):
         # select one randomly between them and if it select the resupply it is
         # 'make to stock' and it will not create the picking between stock and
         # dist warehouses.
-        route_dist_to_shop.pull_ids.write({'procure_method': 'make_to_order'})
+        route_dist_to_shop.rule_ids.write({'procure_method': 'make_to_order'})
 
         product = self.env['product.product'].create({
             'name': 'Fakir',
@@ -321,7 +316,6 @@ class TestWarehouse(TestStockCommon):
         warehouse_shop_wavre = self.env['stock.warehouse'].create({
             'name': 'Shop Wavre',
             'code': 'SHWV',
-            'default_resupply_wh_id': warehouse_distribution_wavre.id,
             'resupply_wh_ids': [(6, 0, [warehouse_distribution_wavre.id])]
         })
 
@@ -333,13 +327,11 @@ class TestWarehouse(TestStockCommon):
         warehouse_shop_namur = self.env['stock.warehouse'].create({
             'name': 'Shop Namur',
             'code': 'SHNM',
-            'default_resupply_wh_id': warehouse_distribution_namur.id,
             'resupply_wh_ids': [(6, 0, [warehouse_distribution_namur.id])]
         })
 
         route_shop_namur = warehouse_shop_namur.resupply_route_ids
         route_shop_wavre = warehouse_shop_wavre.resupply_route_ids
-
         # The product contains the 2 resupply routes.
         product = self.env['product.product'].create({
             'name': 'Fakir',
@@ -393,7 +385,7 @@ class TestWarehouse(TestStockCommon):
         # Check that the correct quantity has been provided to customer
         self.assertEqual(self.env['stock.quant']._gather(product, customer_location).quantity, 1)
         # Ensure there still no quants in distribution warehouse
-        self.assertEqual(len(self.env['stock.quant']._gather(product, warehouse_distribution_namur.lot_stock_id)), 0)
+        self.assertEqual(sum(self.env['stock.quant']._gather(product, warehouse_distribution_namur.lot_stock_id).mapped('quantity')), 0)
 
         # Create the move for the shop Wavre. Should create a resupply from
         # distribution warehouse Wavre.
@@ -437,7 +429,149 @@ class TestWarehouse(TestStockCommon):
         # Check that the correct quantity has been provided to customer
         self.assertEqual(self.env['stock.quant']._gather(product, customer_location).quantity, 2)
         # Ensure there still no quants in distribution warehouse
-        self.assertEqual(len(self.env['stock.quant']._gather(product, warehouse_distribution_wavre.lot_stock_id)), 0)
+        self.assertEqual(sum(self.env['stock.quant']._gather(product, warehouse_distribution_wavre.lot_stock_id).mapped('quantity')), 0)
+
+    def test_toggle_active_warehouse_1(self):
+        """ Basic test that create a warehouse with classic configuration.
+        Archive it and check that locations, picking types, routes, rules are
+        correclty active or archive.
+        """
+        wh = Form(self.env['stock.warehouse'])
+        wh.name = "The attic of Willy"
+        wh.code = "WIL"
+        warehouse = wh.save()
+
+        custom_location = Form(self.env['stock.location'])
+        custom_location.name = "A Trunk"
+        custom_location.location_id = warehouse.lot_stock_id
+        custom_location = custom_location.save()
+
+        # Archive warehouse
+        warehouse.toggle_active()
+        # Global rule
+        self.assertFalse(warehouse.mto_pull_id.active)
+
+        # Route
+        self.assertFalse(warehouse.reception_route_id.active)
+        self.assertFalse(warehouse.delivery_route_id.active)
+
+        # Location
+        self.assertFalse(warehouse.lot_stock_id.active)
+        self.assertFalse(warehouse.wh_input_stock_loc_id.active)
+        self.assertFalse(warehouse.wh_qc_stock_loc_id.active)
+        self.assertFalse(warehouse.wh_output_stock_loc_id.active)
+        self.assertFalse(warehouse.wh_pack_stock_loc_id.active)
+        self.assertFalse(custom_location.active)
+
+        # Picking Type
+        self.assertFalse(warehouse.in_type_id.active)
+        self.assertFalse(warehouse.out_type_id.active)
+        self.assertFalse(warehouse.int_type_id.active)
+        self.assertFalse(warehouse.pick_type_id.active)
+        self.assertFalse(warehouse.pack_type_id.active)
+
+        # Active warehouse
+        warehouse.toggle_active()
+        # Global rule
+        self.assertTrue(warehouse.mto_pull_id.active)
+
+        # Route
+        self.assertTrue(warehouse.reception_route_id.active)
+        self.assertTrue(warehouse.delivery_route_id.active)
+
+        # Location
+        self.assertTrue(warehouse.lot_stock_id.active)
+        self.assertFalse(warehouse.wh_input_stock_loc_id.active)
+        self.assertFalse(warehouse.wh_qc_stock_loc_id.active)
+        self.assertFalse(warehouse.wh_output_stock_loc_id.active)
+        self.assertFalse(warehouse.wh_pack_stock_loc_id.active)
+        self.assertTrue(custom_location.active)
+
+        # Picking Type
+        self.assertTrue(warehouse.in_type_id.active)
+        self.assertTrue(warehouse.out_type_id.active)
+        self.assertTrue(warehouse.int_type_id.active)
+        self.assertFalse(warehouse.pick_type_id.active)
+        self.assertFalse(warehouse.pack_type_id.active)
+
+    def test_toggle_active_warehouse_2(self):
+        wh = Form(self.env['stock.warehouse'])
+        wh.name = "The attic of Willy"
+        wh.code = "WIL"
+        wh.reception_steps = "two_steps"
+        wh.delivery_steps = "pick_pack_ship"
+        warehouse = wh.save()
+
+        warehouse.resupply_wh_ids = [(6, 0, [self.warehouse_1.id])]
+
+        custom_location = Form(self.env['stock.location'])
+        custom_location.name = "A Trunk"
+        custom_location.location_id = warehouse.lot_stock_id
+        custom_location = custom_location.save()
+
+        # Add a warehouse on the route.
+        warehouse.reception_route_id.write({
+            'warehouse_ids': [(4, self.warehouse_1.id)]
+        })
+
+        route = Form(self.env['stock.location.route'])
+        route.name = "Stair"
+        route = route.save()
+
+        route.warehouse_ids = [(6, 0, [warehouse.id, self.warehouse_1.id])]
+
+        # Pre archive a location and a route
+        warehouse.delivery_route_id.toggle_active()
+        warehouse.wh_pack_stock_loc_id.toggle_active()
+
+        # Archive warehouse
+        warehouse.toggle_active()
+        # Global rule
+        self.assertFalse(warehouse.mto_pull_id.active)
+
+        # Route
+        self.assertTrue(warehouse.reception_route_id.active)
+        self.assertFalse(warehouse.delivery_route_id.active)
+        self.assertTrue(route.active)
+
+        # Location
+        self.assertFalse(warehouse.lot_stock_id.active)
+        self.assertFalse(warehouse.wh_input_stock_loc_id.active)
+        self.assertFalse(warehouse.wh_qc_stock_loc_id.active)
+        self.assertFalse(warehouse.wh_output_stock_loc_id.active)
+        self.assertFalse(warehouse.wh_pack_stock_loc_id.active)
+        self.assertFalse(custom_location.active)
+
+        # Picking Type
+        self.assertFalse(warehouse.in_type_id.active)
+        self.assertFalse(warehouse.out_type_id.active)
+        self.assertFalse(warehouse.int_type_id.active)
+        self.assertFalse(warehouse.pick_type_id.active)
+        self.assertFalse(warehouse.pack_type_id.active)
+
+        # Active warehouse
+        warehouse.toggle_active()
+        # Global rule
+        self.assertTrue(warehouse.mto_pull_id.active)
+
+        # Route
+        self.assertTrue(warehouse.reception_route_id.active)
+        self.assertTrue(warehouse.delivery_route_id.active)
+
+        # Location
+        self.assertTrue(warehouse.lot_stock_id.active)
+        self.assertTrue(warehouse.wh_input_stock_loc_id.active)
+        self.assertFalse(warehouse.wh_qc_stock_loc_id.active)
+        self.assertTrue(warehouse.wh_output_stock_loc_id.active)
+        self.assertTrue(warehouse.wh_pack_stock_loc_id.active)
+        self.assertTrue(custom_location.active)
+
+        # Picking Type
+        self.assertTrue(warehouse.in_type_id.active)
+        self.assertTrue(warehouse.out_type_id.active)
+        self.assertTrue(warehouse.int_type_id.active)
+        self.assertTrue(warehouse.pick_type_id.active)
+        self.assertTrue(warehouse.pack_type_id.active)
 
 class TestResupply(TestStockCommon):
     def setUp(self):
@@ -446,7 +580,6 @@ class TestResupply(TestStockCommon):
         self.warehouse_2 = self.env['stock.warehouse'].create({
             'name': 'Small Warehouse',
             'code': 'SWH',
-            'default_resupply_wh_id': self.warehouse_1.id,
             'resupply_wh_ids': [(6, 0, [self.warehouse_1.id])]
         })
 

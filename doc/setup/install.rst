@@ -106,8 +106,7 @@ Linux
 Debian/Ubuntu
 '''''''''''''
 
-Odoo 11.0 'deb' package currently supports `Debian Stretch`_, `Ubuntu Xenial`_,
-`Ubuntu Zesty`_ and `Ubuntu Artful`_.
+Odoo 12.0 'deb' package currently supports `Debian Stretch`_, `Ubuntu 18.04`_ or above.
 
 Prepare
 ^^^^^^^
@@ -137,7 +136,7 @@ following commands as root:
 .. code-block:: console
 
     # wget -O - https://nightly.odoo.com/odoo.key | apt-key add -
-    # echo "deb http://nightly.odoo.com/11.0/nightly/deb/ ./" >> /etc/apt/sources.list.d/odoo.list
+    # echo "deb http://nightly.odoo.com/12.0/nightly/deb/ ./" >> /etc/apt/sources.list.d/odoo.list
     # apt-get update && apt-get install odoo
 
 You can then use the usual ``apt-get upgrade`` command to keep your installation up-to-date.
@@ -159,7 +158,7 @@ You can then use ``gdebi``:
 
     # gdebi <path_to_installation_package>
 
-Or ``dpkg`` (handles less dependencies automatically):
+Or ``dpkg``:
 
 .. code-block:: console
 
@@ -170,21 +169,15 @@ Or ``dpkg`` (handles less dependencies automatically):
 This will install Odoo as a service, create the necessary PostgreSQL_ user
 and automatically start the server.
 
-.. warning:: The 3 following python packages are only suggested by the Debian package.
-             Those packages are not available in Ubuntu Xenial (16.04).
+.. warning:: The python3-xlwt Debian package does not exists in Debian Stretch nor Ubuntu 18.04.
+             This python module is needed to export into xls format.
 
-* python3-vobject: Used in calendars to produce ical files.
-* python3-pyldap: Used to authenticat users with LDAP.
-* python3-qrcode: Used by the hardware driver for ESC/POS
-
-If you need one or all of the packages mentioned in the above warning, you can install them manually.
+If you need the feature, you can install it manually.
 One way to do it, is simply using pip3 like this:
 
 .. code-block:: console
 
-    $ sudo pip3 install vobject qrcode
-    $ sudo apt install libldap2-dev libsasl2-dev
-    $ sudo pip3 install pyldap
+    $ sudo pip3 install xlwt
 
 .. warning:: Debian 9 and Ubuntu do not provide a package for the python module
              num2words.
@@ -200,9 +193,9 @@ If you need this feature, you can install the python module like this:
 Fedora
 ''''''
 
-Odoo 11.0 'rpm' package supports Fedora 26.
+Odoo 12.0 'rpm' package supports Fedora 26.
 As of 2017, CentOS does not have the minimum Python requirements (3.5) for
-Odoo 11.0.
+Odoo 12.0.
 
 Prepare
 ^^^^^^^
@@ -234,7 +227,7 @@ commands:
 
 .. code-block:: console
 
-    $ sudo dnf config-manager --add-repo=https://nightly.odoo.com/11.0/nightly/rpm/odoo.repo
+    $ sudo dnf config-manager --add-repo=https://nightly.odoo.com/12.0/nightly/rpm/odoo.repo
     $ sudo dnf install -y odoo
     $ sudo systemctl enable odoo
     $ sudo systemctl start odoo
@@ -252,7 +245,7 @@ Once downloaded, the package can be installed using the 'dnf' package manager:
 
 .. code-block:: console
 
-    $ sudo dnf localinstall odoo_11.0.latest.noarch.rpm
+    $ sudo dnf localinstall odoo_12.0.latest.noarch.rpm
     $ sudo systemctl enable odoo
     $ sudo systemctl start odoo
 
@@ -372,49 +365,40 @@ Source installation requires manually installing dependencies:
         C:\> cd \YourOdooPath
         C:\YourOdooPath> C:\Python35\Scripts\pip.exe install -r requirements.txt
 
-* *Less CSS* via nodejs
+* *RTLCSS* via nodejs
+
+  For languages with right-to-left interface (such as Arabic or Hebrew), the
+  package ``rtlcss`` is needed.
 
   - on Linux, use your distribution's package manager to install nodejs and
     npm.
-
-    .. warning::
-
-        In debian wheezy and Ubuntu 13.10 and before you need to install
-        nodejs manually:
-
-        .. code-block:: console
-
-            $ wget -qO- https://deb.nodesource.com/setup | bash -
-            $ apt-get install -y nodejs
-
-        In later debian (>jessie) and ubuntu (>14.04) you may need to add a
-        symlink as npm packages call ``node`` but debian calls the binary
-        ``nodejs``
-
-        .. code-block:: console
-
-            $ apt-get install -y npm
-            $ sudo ln -s /usr/bin/nodejs /usr/bin/node
-
-    Once npm is installed, use it to install less:
+    Once npm is installed, use it to install rtlcss:
 
     .. code-block:: console
 
-        $ sudo npm install -g less
+        $ sudo npm install -g rtlcss
 
   - on OS X, install nodejs via your preferred package manager (homebrew_,
     macports_) then install less:
 
     .. code-block:: console
 
-        $ sudo npm install -g less
+        $ sudo npm install -g rtlcss
 
   - on Windows, `install nodejs <https://nodejs.org/en/download/>`_, reboot (to
-    update the :envvar:`PATH`) and install less:
+    update the :envvar:`PATH`) and install rtlcss:
 
     .. code-block:: doscon
 
-        C:\> npm install -g less
+        C:\> npm install -g rtlcss
+
+    It is then necessary to edit the System Environment's variable
+    :envvar:`PATH` and add the folder where `rtlcss.cmd` is located. Typically:
+
+    .. code-block:: console
+
+        C:\Users\<user>\AppData\Roaming\npm\
+
 
 Fetch the sources
 -----------------
@@ -597,9 +581,7 @@ official Odoo `docker image <https://registry.hub.docker.com/_/odoo/>`_ page.
 .. _docker: https://www.docker.com
 .. _Download: https://www.odoo.com/page/download
 .. _Debian Stretch: https://www.debian.org/releases/stretch/
-.. _Ubuntu Xenial: http://releases.ubuntu.com/16.04/
-.. _Ubuntu Zesty: http://releases.ubuntu.com/17.04/
-.. _Ubuntu Artful: http://releases.ubuntu.com/17.10/
+.. _Ubuntu 18.04: http://releases.ubuntu.com/18.04/
 .. _EPEL: https://fedoraproject.org/wiki/EPEL
 .. _PostgreSQL: http://www.postgresql.org
 .. _the official installer:
@@ -622,5 +604,5 @@ official Odoo `docker image <https://registry.hub.docker.com/_/odoo/>`_ page.
 .. _the repository: https://github.com/odoo/odoo
 .. _git: http://git-scm.com
 .. _Editions: https://www.odoo.com/pricing#pricing_table_features
-.. _nightly: https://nightly.odoo.com/11.0/nightly/
+.. _nightly: https://nightly.odoo.com/12.0/nightly/
 .. _extra: https://nightly.odoo.com/extra/

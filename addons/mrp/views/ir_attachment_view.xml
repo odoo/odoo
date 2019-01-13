@@ -12,27 +12,33 @@
                 <field name="datas_fname"/>
                 <field name="name"/>
                 <field name="priority"/>
+                <field name="create_uid"/>
                 <templates>
                     <t t-name="kanban-box">
-                        <div class="oe_kanban_global_click">
-                            <div class="oe_kanban_vignette">
-                                <div class="oe_attachment">
-                                    <div class="row">
-                                        <div class="col-xs-4 o_kanban_primary_left" t-if="record.type.raw_value == 'binary'">
-                                            <a t-attf-href="/web/content/#{record.ir_attachment_id.raw_value}?download=1">
-                                                <t t-set="webimage" t-value="new RegExp('image.*(gif|jpeg|jpg|png)').test(record.mimetype.value)"/>
-                                                <div t-if="!webimage" class="o_image" t-att-data-mimetype="record.mimetype.value"/>
-                                                <div t-if="webimage" class="o_attachment_image">
-                                                    <img t-attf-src="/web/image/#{record.ir_attachment_id.raw_value}?download=1"/>
-                                                </div>
-                                            </a>
-                                        </div>
-                                        <div class="col-xs-8">
-                                            <strong><field name="name"/></strong><br/>
-                                            <field name="datas_fname"/><br/>
-                                            <div class="mt8">
-                                                <field name="priority" widget="priority"/>
-                                            </div>
+                        <div class="oe_kanban_global_area o_kanban_attachment oe_kanban_global_click">
+                            <div class="o_kanban_image">
+                                <div class="o_kanban_image_wrapper">
+                                    <t t-set="webimage" t-value="new RegExp('image.*(gif|jpeg|jpg|png)').test(record.mimetype.value)"/>
+                                    <div t-if="record.type.raw_value == 'url'" class="o_url_image fa fa-link fa-3x text-muted"/>
+                                    <img t-elif="webimage" t-attf-src="/web/image/#{record.ir_attachment_id.raw_value}?field=thumbnail" width="100" height="100" alt="Document" class="o_attachment_image"/>
+                                    <div t-else="!webimage" class="o_image o_image_thumbnail" t-att-data-mimetype="record.mimetype.value"/>
+                                </div>
+                            </div>
+                            <div class="o_kanban_details">
+                                <div class="o_kanban_details_wrapper">
+                                    <div class="o_kanban_record_title">
+                                        <field name="name" class="o_text_overflow"/>
+                                    </div>
+                                    <div class="o_kanban_record_body">
+                                      <field name="datas_fname" attrs="{'invisible':[('type','=','url')]}"/>
+                                      <field name="url" widget="url" attrs="{'invisible':[('type','=','binary')]}"/>
+                                    </div>
+                                    <div class="o_kanban_record_bottom">
+                                        <span class="oe_kanban_bottom_left">
+                                            <field name="priority" widget="priority"/>
+                                        </span>
+                                        <div class="oe_kanban_bottom_right">
+                                            <img t-att-src="kanban_image('res.users', 'image_small', record.create_uid.raw_value)" t-att-data-member_id="record.create_uid.raw_value" t-att-alt="record.create_uid.raw_value" width="32" height="32" class="oe_kanban_avatar"/>
                                         </div>
                                     </div>
                                 </div>

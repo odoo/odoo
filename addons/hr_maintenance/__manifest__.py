@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 {
-    'name': 'HR - Equipments',
+    'name': 'Maintenance - HR',
     'version': '1.0',
     'sequence': 125,
     'description': """

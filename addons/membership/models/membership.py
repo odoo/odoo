@@ -19,6 +19,7 @@ class MembershipLine(models.Model):
     _name = 'membership.membership_line'
     _rec_name = 'partner'
     _order = 'id desc'
+    _description = 'Membership Line'
 
     partner = fields.Many2one('res.partner', string='Partner', ondelete='cascade', index=True)
     membership_id = fields.Many2one('product.product', string="Membership", required=True)

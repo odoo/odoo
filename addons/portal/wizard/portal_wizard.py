@@ -27,18 +27,9 @@ class PortalWizard(models.TransientModel):
     """
 
     _name = 'portal.wizard'
-    _description = 'Portal Access Management'
+    _description = 'Grant Portal Access'
 
-    def _default_portal(self):
-        return self.env['res.groups'].search([('is_portal', '=', True)], limit=1)
-
-    portal_id = fields.Many2one('res.groups', domain=[('is_portal', '=', True)], required=True, string='Portal',
-        default=_default_portal, help="The portal that users can be added in or removed from.")
-    user_ids = fields.One2many('portal.wizard.user', 'wizard_id', string='Users')
-    welcome_message = fields.Text('Invitation Message', help="This text is included in the email sent to new users of the portal.")
-
-    @api.onchange('portal_id')
-    def onchange_portal_id(self):
+    def _default_user_ids(self):
         # for each partner, determine corresponding portal.wizard.user records
         partner_ids = self.env.context.get('active_ids', [])
         contact_ids = set()
@@ -51,13 +42,16 @@ class PortalWizard(models.TransientModel):
                     contact_ids.add(contact.id)
                     in_portal = False
                     if contact.user_ids:
-                        in_portal = self.portal_id in contact.user_ids[0].groups_id
+                        in_portal = self.env.ref('base.group_portal') in contact.user_ids[0].groups_id
                     user_changes.append((0, 0, {
                         'partner_id': contact.id,
                         'email': contact.email,
                         'in_portal': in_portal,
                     }))
-        self.user_ids = user_changes
+        return user_changes
+
+    user_ids = fields.One2many('portal.wizard.user', 'wizard_id', string='Users',default=_default_user_ids)
+    welcome_message = fields.Text('Invitation Message', help="This text is included in the email sent to new users of the portal.")
 
     @api.multi
     def action_apply(self):
@@ -125,9 +119,9 @@ class PortalWizardUser(models.TransientModel):
             raise UserError("\n\n".join(error_msg))
 
         for wizard_user in self.sudo().with_context(active_test=False):
-            group_portal = wizard_user.wizard_id.portal_id
-            if not group_portal.is_portal:
-                raise UserError(_('Group %s is not a portal') % group_portal.name)
+
+            group_portal = self.env.ref('base.group_portal')
+            #Checking if the partner has a linked user
             user = wizard_user.partner_id.user_ids[0] if wizard_user.partner_id.user_ids else None
             # update partner email, if a new one was introduced
             if wizard_user.partner_id.email != wizard_user.email:
@@ -149,7 +143,7 @@ class PortalWizardUser(models.TransientModel):
                     wizard_user.user_id.write({'active': True, 'groups_id': [(4, group_portal.id)]})
                     # prepare for the signup process
                     wizard_user.user_id.partner_id.signup_prepare()
-                    wizard_user.with_context(active_test=True)._send_email()
+                wizard_user.with_context(active_test=True)._send_email()
                 wizard_user.refresh()
             else:
                 # remove the user (if it exists) from the portal group
@@ -166,13 +160,12 @@ class PortalWizardUser(models.TransientModel):
             :returns record of res.users
         """
         company_id = self.env.context.get('company_id')
-        return self.env['res.users'].with_context(no_reset_password=True).create({
+        return self.env['res.users'].with_context(no_reset_password=True)._create_user_from_template({
             'email': extract_email(self.email),
             'login': extract_email(self.email),
             'partner_id': self.partner_id.id,
             'company_id': company_id,
             'company_ids': [(6, 0, [company_id])],
-            'groups_id': [(6, 0, [])],
         })
 
     @api.multi

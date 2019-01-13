@@ -89,6 +89,20 @@
             <field name="digits">4</field>
         </record>
 
+        <!-- Benefits Type -->
+
+        <record id="benefit_type_attendance" model="hr.benefit.type">
+            <field name="name">Attendance</field>
+            <field name="color">0</field>
+            <field name="code">WORK100</field>
+        </record>
+
+        <record id="benefit_type_leave" model="hr.benefit.type">
+            <field name="name">Generic Leave</field>
+            <field name="code">LEAVE100</field>
+            <field name="color">3</field>
+            <field name="is_leave">True</field>
+        </record>
 
     </data>
 </odoo>

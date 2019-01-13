@@ -8,7 +8,7 @@
 # Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2017
 # William Surya Permana <zarambie_game@yahoo.com>, 2017
 # Andhitia Rama <andhitia.r@gmail.com>, 2017
-# Martin Trigaux, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
 # Rizki Mudhar <mudharrizki@gmail.com>, 2017
 # Budi Iskandar <budiiskandar11@gmail.com>, 2017
 # firman firman <firman.olxbpn@gmail.com>, 2017
@@ -17,14 +17,13 @@
 # Deddy Ddr <deddy.ddr@gmail.com>, 2017
 # Febrasari Almania <febrasari.almania@gmail.com>, 2017
 # Hendra So <mask783@gmail.com>, 2017
-# nle_odoo, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-27 11:56+0000\n"
-"PO-Revision-Date: 2018-07-27 11:56+0000\n"
-"Last-Translator: nle_odoo, 2017\n"
+"POT-Creation-Date: 2017-10-24 09:00+0000\n"
+"PO-Revision-Date: 2017-10-24 09:00+0000\n"
+"Last-Translator: Hendra So <mask783@gmail.com>, 2017\n"
 "Language-Team: Indonesian (https://www.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -58,7 +57,7 @@ msgid ""
 "% if object.origin:\n"
 "(with reference: ${object.origin} )\n"
 "% endif\n"
-"amounting in <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
+"amounting in <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}</strong>\n"
 "from ${object.company_id.name}.\n"
 "</p>\n"
 "\n"
@@ -133,19 +132,19 @@ msgid "${object.subject}"
 msgstr "${object.subject}"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.report_invoice_layouted
-#: model:ir.ui.view,arch_db:sale.report_saleorder_document
+#: model_terms:ir.ui.view,arch_db:sale.report_invoice_layouted
+#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "&amp;bull;"
 msgstr "&amp;bull;"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.portal_my_orders
+#: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
 msgid "&amp;nbsp;"
 msgstr "&amp;nbsp;"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.portal_order_page
-#: model:ir.ui.view,arch_db:sale.report_saleorder_document
+#: model_terms:ir.ui.view,arch_db:sale.portal_order_page
+#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "&amp;nbsp;<span>on</span>&amp;nbsp;"
 msgstr "&amp;nbsp;<span>pada</span>&amp;nbsp;"
 
@@ -155,7 +154,7 @@ msgid ""
 "<html>\n"
 "                <head></head>\n"
 "                % set record = ctx.get('record')\n"
-"                % set company = record and record.company_id or ctx.get('company')\n"
+"                % set company = record and record.company_id or user.company_id\n"
 "                <body style=\"margin: 0; padding: 0;\">\n"
 "                <table border=\"0\" width=\"100%\" cellpadding=\"0\" bgcolor=\"#ededed\" style=\"padding: 20px; background-color: #ededed; border-collapse:separate;\" summary=\"o_mail_notification\">\n"
 "                    <tbody>\n"
@@ -225,19 +224,90 @@ msgid ""
 "                </html>\n"
 "            "
 msgstr ""
+"<html>\n"
+"<head></head>\n"
+"% set record = ctx.get('record')\n"
+" % set company = record and record.company_id or user.company_id\n"
+"<body style=\"margin: 0; padding: 0;\">\n"
+"<table border=\"0\" width=\"100%\" cellpadding=\"0\" bgcolor=\"#ededed\" style=\"padding: 20px; background-color: #ededed; border-collapse:separate;\" summary=\"o_mail_notification\">\n"
+"<tbody>\n"
+"\n"
+" <!-- HEADER -->\n"
+"<tr>\n"
+"<td align=\"center\" style=\"min-width: 590px;\">\n"
+"<table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#875A7B\" style=\"min-width: 590px; background-color: rgb(135,90,123); padding: 20px; border-collapse:separate;\">\n"
+"<tr>\n"
+"<td valign=\"middle\">\n"
+"<span style=\"font-size:20px; color:white; font-weight: bold;\">\n"
+"${object.record_name}\n"
+"</span>\n"
+"</td>\n"
+"<td valign=\"middle\" align=\"right\">\n"
+"<img src=\"/logo.png?company=${company.id}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${company.name}\">\n"
+"</td>\n"
+"</tr>\n"
+"</table>\n"
+"</td>\n"
+"</tr>\n"
+"\n"
+"<!-- CONTENT -->\n"
+"<tr>\n"
+"<td align=\"center\" style=\"min-width: 590px;\">\n"
+"<table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#ffffff\" style=\"min-width: 590px; background-color: rgb(255, 255, 255); padding: 20px; border-collapse:separate;\">\n"
+"<tbody>\n"
+"<td valign=\"top\" style=\"font-family:Arial,Helvetica,sans-serif; color: #555; font-size: 14px;\">\n"
+"${object.body | safe}\n"
+"</td>\n"
+"</tbody>\n"
+"</table>\n"
+"</td>\n"
+"</tr>\n"
+"\n"
+"<!-- FOOTER -->\n"
+"<tr>\n"
+"<td align=\"center\" style=\"min-width: 590px;\">\n"
+"<table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#875A7B\" style=\"min-width: 590px; background-color: rgb(135,90,123); padding: 20px; border-collapse:separate;\">\n"
+"<tr>\n"
+"<td valign=\"middle\" align=\"left\" style=\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\">\n"
+" ${company.name}<br/>\n"
+"${company.phone or ''}\n"
+"</td>\n"
+"<td valign=\"middle\" align=\"right\" style=\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\">\n"
+"% if company.email:\n"
+"<a href=\"mailto:${company.email}\" style=\"text-decoration:none; color: white;\">${company.email}</a><br/>\n"
+" % endif\n"
+" % if company.website:\n"
+"<a href=\"${company.website}\" style=\"text-decoration:none; color: white;\">\n"
+"${company.website}\n"
+"</a>\n"
+"% endif\n"
+"</td>\n"
+"</tr>\n"
+"</table>\n"
+"</td>\n"
+"</tr>\n"
+"<tr>\n"
+"<td align=\"center\">\n"
+"Powered by <a target=\"_blank\" href=\"https://www.odoo.com\">Odoo</a>.\n"
+"</td>\n"
+"</tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</body>\n"
+"</html>"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.portal_order_page
+#: model_terms:ir.ui.view,arch_db:sale.portal_order_page
 msgid "<i class=\"fa fa-arrow-circle-right\"/> Accept &amp; Sign"
 msgstr "<i class=\"fa fa-arrow-circle-right\"/>Setuju &amp; Tandatangani"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.portal_order_page
+#: model_terms:ir.ui.view,arch_db:sale.portal_order_page
 msgid "<i class=\"fa fa-check-circle\"/> Signed"
 msgstr "<i class=\"fa fa-check-circle\"/> Ditandatangani"
 
 #. module: sale
-#: model:ir.actions.act_window,help:sale.action_orders_upselling
+#: model_terms:ir.actions.act_window,help:sale.action_orders_upselling
 msgid ""
 "<i>Example: pre-paid service offers for which the customer have\n"
 "                to buy an extra pack of hours, because he used all his support\n"
@@ -247,7 +317,7 @@ msgstr ""
 "tambahan jam jasa, karena dia telah menggunakan seluruh jam servisnya. </i>"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.portal_my_orders
+#: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
 msgid ""
 "<span class=\"hidden-xs\">Sales Order #</span>\n"
 "                      <span class=\"visible-xs\">Ref.</span>"
@@ -256,7 +326,7 @@ msgstr ""
 "<span class=\"visible-xs\">Referensi</span>"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.portal_my_orders
+#: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
 msgid ""
 "<span class=\"label label-danger\"><i class=\"fa fa-fw fa-warning\"/><span "
 "class=\"hidden-xs\"> Problem</span></span>"
@@ -265,7 +335,16 @@ msgstr ""
 "class=\"hidden-xs\">Masalah</span></span>"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.portal_my_quotations
+#: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
+msgid ""
+"<span class=\"label label-default hidden-xs\"><i class=\"fa fa-fw fa-"
+"check\"/><span class=\"hidden-xs\"> Done</span></span>"
+msgstr ""
+"<span class=\"label label-default hidden-xs\"><i class=\"fa fa-fw fa-"
+"check\"/><span class=\"hidden-xs\"> Selesai</span></span>"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
 msgid ""
 "<span class=\"label label-default\"><i class=\"fa fa-fw fa-clock-o\"/> "
 "Expired</span>"
@@ -274,8 +353,8 @@ msgstr ""
 "clock-o\"/>Kadaluarsa</span>"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.portal_my_quotations
-#: model:ir.ui.view,arch_db:sale.portal_order_page
+#: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
+#: model_terms:ir.ui.view,arch_db:sale.portal_order_page
 msgid ""
 "<span class=\"label label-default\"><i class=\"fa fa-fw fa-remove\"/> "
 "Cancelled</span>"
@@ -284,7 +363,16 @@ msgstr ""
 "remove\"/>Dibatalkan</span>"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.portal_order_page
+#: model_terms:ir.ui.view,arch_db:sale.portal_order_page
+msgid ""
+"<span class=\"label label-default\"><i class=\"fa fa-fw fa-remove\"/> "
+"Done</span>"
+msgstr ""
+"<span class=\"label label-default\"><i class=\"fa fa-fw fa-"
+"remove\"/>Selesai</span>"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.portal_order_page
 msgid ""
 "<span class=\"label label-info orders_label_text_align\"><i class=\"fa fa-fw"
 " fa-clock-o\"/> Waiting</span>"
@@ -293,7 +381,7 @@ msgstr ""
 " fa-clock-o\"/>Menunggu</span>"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.portal_my_orders
+#: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
 msgid ""
 "<span class=\"label label-info\"><i class=\"fa fa-fw fa-clock-o\"/><span "
 "class=\"hidden-xs\"> Invoiced</span></span>"
@@ -302,14 +390,7 @@ msgstr ""
 "class=\"hidden-xs\">Telah difakturkan</span></span>"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.portal_my_orders
-msgid ""
-"<span class=\"label label-success hidden-xs\"><i class=\"fa fa-fw fa-"
-"check\"/><span class=\"hidden-xs\"> Done</span></span>"
-msgstr ""
-
-#. module: sale
-#: model:ir.ui.view,arch_db:sale.portal_order_page
+#: model_terms:ir.ui.view,arch_db:sale.portal_order_page
 msgid ""
 "<span class=\"label label-success orders_label_text_align\"><i class=\"fa "
 "fa-fw fa-check\"/> Paid</span>"
@@ -318,114 +399,106 @@ msgstr ""
 "fa-fw fa-check\"/>Lunas</span>"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.portal_order_page
-msgid ""
-"<span class=\"label label-success\"><i class=\"fa fa-fw fa-check\"/> "
-"Done</span>"
-msgstr ""
-
-#. module: sale
-#: model:ir.ui.view,arch_db:sale.report_saleorder_document
+#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<span>Pro-Forma Invoice # </span>"
 msgstr "<span>Faktur Proforma</span>"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.portal_order_page
+#: model_terms:ir.ui.view,arch_db:sale.portal_order_page
 msgid "<strong>Contact</strong>"
 msgstr "<strong>Kontak</strong>"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.report_saleorder_document
+#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Date Ordered:</strong>"
 msgstr "<strong>Tanggal Order:</strong>"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.portal_order_page
+#: model_terms:ir.ui.view,arch_db:sale.portal_order_page
 msgid "<strong>Date:</strong>"
 msgstr "<strong>Tanggal:</strong>"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.portal_order_page
-#: model:ir.ui.view,arch_db:sale.report_saleorder_document
+#: model_terms:ir.ui.view,arch_db:sale.portal_order_page
 msgid "<strong>Expiration Date:</strong>"
 msgstr "<strong> Tanggal Kadaluarsa:</strong>"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.report_saleorder_document
+#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Fiscal Position Remark:</strong>"
 msgstr "<strong>Keterangan Posisi Fiskal:</strong>"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.portal_order_page
+#: model_terms:ir.ui.view,arch_db:sale.portal_order_page
 msgid "<strong>Invoices</strong>"
 msgstr "<strong>Faktur</strong>"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.portal_order_page
+#: model_terms:ir.ui.view,arch_db:sale.portal_order_page
 msgid "<strong>Invoicing Address</strong>"
 msgstr "<strong>Alamat Penagihan</strong>"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.report_saleorder_document
+#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Payment Terms:</strong>"
 msgstr "<strong>Syarat Pembayaran:</strong>"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.portal_order_page
+#: model_terms:ir.ui.view,arch_db:sale.portal_order_page
 msgid "<strong>Product</strong>"
 msgstr "<strong>Produk</strong>"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.portal_order_page
+#: model_terms:ir.ui.view,arch_db:sale.portal_order_page
 msgid "<strong>Quantity</strong>"
 msgstr "<strong>Kuantitas</strong>"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.report_saleorder_document
+#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Quotation Date:</strong>"
 msgstr "<strong>Tanggal Penawaran:</strong>"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.report_saleorder_document
+#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Salesperson:</strong>"
 msgstr "<strong>Penjual:</strong>"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.portal_order_page
+#: model_terms:ir.ui.view,arch_db:sale.portal_order_page
 msgid "<strong>Shipping Address</strong>"
 msgstr "<strong>Alamat Pengiriman</strong>"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.report_invoice_document_inherit_sale
-#: model:ir.ui.view,arch_db:sale.report_saleorder_document
+#: model_terms:ir.ui.view,arch_db:sale.report_invoice_document_inherit_sale
+#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Shipping address:</strong>"
 msgstr "<strong>Alamat pengiriman:</strong>"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.report_invoice_layouted
-#: model:ir.ui.view,arch_db:sale.report_saleorder_document
+#: model_terms:ir.ui.view,arch_db:sale.report_invoice_layouted
+#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Subtotal: </strong>"
 msgstr "<strong>Subtotal: </strong>"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.portal_order_page
-#: model:ir.ui.view,arch_db:sale.report_saleorder_document
+#: model_terms:ir.ui.view,arch_db:sale.portal_order_page
+#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Subtotal</strong>"
 msgstr "<strong>Subtotal</strong>"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.portal_order_page
-#: model:ir.ui.view,arch_db:sale.report_saleorder_document
+#: model_terms:ir.ui.view,arch_db:sale.portal_order_page
+#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Total</strong>"
 msgstr "<strong>Total</strong>"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.portal_order_page
+#: model_terms:ir.ui.view,arch_db:sale.portal_order_page
 msgid "<strong>Unit Price</strong>"
 msgstr "<strong>Harga Satuan</strong>"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.report_saleorder_document
+#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Your Reference:</strong>"
 msgstr "<strong>Referensi:</strong>"
 
@@ -440,7 +513,7 @@ msgid "A warning can be set on a product or a customer (Sale)"
 msgstr "Dapat menyetel peringatan pada produk atau pelanggan (Penjualan)"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid ""
 "Ability to select a package type in sales orders and to force a quantity "
 "that is a multiple of the number of units per package."
@@ -449,7 +522,7 @@ msgstr ""
 " merupakan kelipatan dari jumlah unit tiap paket"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.portal_order_page
+#: model_terms:ir.ui.view,arch_db:sale.portal_order_page
 msgid "Accept &amp; Sign"
 msgstr "Setuju &amp; Tandatangani"
 
@@ -474,7 +547,7 @@ msgid "Addresses in Sales Orders"
 msgstr "Alamat di Order Penjualan"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:159
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:156
 #, python-format
 msgid "Advance: %s"
 msgstr "Uang Muka: %s"
@@ -486,8 +559,8 @@ msgid "All Channels Sales Orders"
 msgstr "Semua Saluran Order Penjualan"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.report_all_channels_sales_view_pivot
-#: model:ir.ui.view,arch_db:sale.report_all_channels_sales_view_search
+#: model_terms:ir.ui.view,arch_db:sale.report_all_channels_sales_view_pivot
+#: model_terms:ir.ui.view,arch_db:sale.report_all_channels_sales_view_search
 msgid "All Channels Sales Orders Analysis"
 msgstr "Analisa Semua Saluran Order Penjualan"
 
@@ -497,12 +570,12 @@ msgid "All sales orders grouped by sales channels"
 msgstr "Semua order penjualan dikelompokkan menurut saluran penjualan"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Allow manual discounts on order lines"
 msgstr "Ijinkan input diskon per baris order"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Allows you to send Pro-Forma Invoice to your customers"
 msgstr "Ijinkan untuk mengirim Faktur Proforma kepada pelanggan"
 
@@ -512,8 +585,7 @@ msgid "Allows you to send pro-forma invoice."
 msgstr "Ijinkan mengirim faktur proforma"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.report_invoice_layouted
-#: model:ir.ui.view,arch_db:sale.report_saleorder_document
+#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Amount"
 msgstr "Jumlah"
 
@@ -568,7 +640,7 @@ msgstr "Atribut Nilai"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_attribute_action
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Attributes"
 msgstr "Atribut"
 
@@ -579,7 +651,7 @@ msgid "Blocking Message"
 msgstr "Blokir Pesan"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid ""
 "Boost your sales with two kinds of discount programs: promotions and coupon "
 "codes. Specific conditions can be set (products, customers, minimum purchase"
@@ -590,7 +662,7 @@ msgstr ""
 "periode). Hadiah dapat berupa diskon (% dari jumlah) atau barang gratis."
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.report_configuration_search_view
+#: model_terms:ir.ui.view,arch_db:sale.report_configuration_search_view
 msgid "Breaks Page"
 msgstr "Halaman Baru"
 
@@ -620,8 +692,8 @@ msgid "Can Edit Product"
 msgstr "Bisa Ubah Produk"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_order_form
-#: model:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "Cancel"
 msgstr "Batal"
 
@@ -654,7 +726,7 @@ msgstr ""
 "ini."
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
+#: model_terms:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
 msgid "Click to define a target"
 msgstr "Klik untuk menetapkan target"
 
@@ -673,37 +745,37 @@ msgstr "Perusahaan"
 #: model:ir.model.fields,field_description:sale.field_sale_order_company_id
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_company_id
 #: model:ir.model.fields,field_description:sale.field_sale_report_company_id
-#: model:ir.ui.view,arch_db:sale.view_order_product_search
+#: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Company"
 msgstr "Perusahaan"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with DHL"
 msgstr "Hitung ongkos pengiriman dan kirim dengan DHL"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with FedEx"
 msgstr "Hitung ongkos pengiriman dan kirim dengan FedEx"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with UPS"
 msgstr "Hitung ongkos pengiriman dan kirim dengan UPS"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with USPS"
 msgstr "Hitung ongkos pengiriman dan kirim dengan USPS"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with bpost"
 msgstr "Hitung ongkos pengiriman dan kirim dengan bpost"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs on orders"
 msgstr "Hitung ongkos pengiriman pada order"
 
@@ -713,7 +785,7 @@ msgid "Configuration"
 msgstr "Konfigurasi"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_order_form
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Confirm Sale"
 msgstr "Konfirmasi Penjualan"
 
@@ -734,21 +806,21 @@ msgid "Coupons & Promotions"
 msgstr "Kupon & Promosi"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
+#: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "Create Invoices"
 msgstr "Buat Faktur"
 
 #. module: sale
-#: model:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
-#: model:ir.actions.act_window,help:sale.action_orders
-#: model:ir.actions.act_window,help:sale.action_orders_salesteams
-#: model:ir.actions.act_window,help:sale.action_quotations
-#: model:ir.actions.act_window,help:sale.action_quotations_salesteams
+#: model_terms:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
+#: model_terms:ir.actions.act_window,help:sale.action_orders
+#: model_terms:ir.actions.act_window,help:sale.action_orders_salesteams
+#: model_terms:ir.actions.act_window,help:sale.action_quotations
+#: model_terms:ir.actions.act_window,help:sale.action_quotations_salesteams
 msgid "Create a Quotation, the first step of a new sale."
 msgstr "Buat penawaran, yang merupakan langkah awal dari penjualan."
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
+#: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "Create and View Invoices"
 msgstr "Buat dan Lihat Faktur"
 
@@ -779,15 +851,15 @@ msgid "Currency"
 msgstr "Mata Uang"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.report_all_channels_sales_view_search
+#: model_terms:ir.ui.view,arch_db:sale.report_all_channels_sales_view_search
 msgid "Current Year Sales"
 msgstr "Penjualan Tahun Ini"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_order_partner_id
 #: model:ir.model.fields,field_description:sale.field_sale_order_partner_id
-#: model:ir.ui.view,arch_db:sale.view_order_product_search
-#: model:ir.ui.view,arch_db:sale.view_sales_order_filter
+#: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
+#: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Customer"
 msgstr "Pelanggan"
 
@@ -848,8 +920,8 @@ msgid "Delivered"
 msgstr "Sudah Terkirim"
 
 #. module: sale
-#: code:addons/sale/models/sale.py:844
-#: model:ir.ui.view,arch_db:sale.view_order_form
+#: code:addons/sale/models/sale.py:824
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
 #, python-format
 msgid "Delivered Quantity"
 msgstr "Jumlah Terkirim"
@@ -893,13 +965,13 @@ msgstr "Setor Produk"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_name
-#: model:ir.ui.view,arch_db:sale.report_invoice_layouted
-#: model:ir.ui.view,arch_db:sale.report_saleorder_document
+#: model_terms:ir.ui.view,arch_db:sale.report_invoice_layouted
+#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Description"
 msgstr "Deskripsi"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Design standardized offers"
 msgstr "Desain tawaran baku"
 
@@ -909,8 +981,8 @@ msgid "Digital Content"
 msgstr "Konten Digital"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.report_invoice_layouted
-#: model:ir.ui.view,arch_db:sale.report_saleorder_document
+#: model_terms:ir.ui.view,arch_db:sale.report_invoice_layouted
+#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Disc.(%)"
 msgstr "Disk.(%)"
 
@@ -951,7 +1023,7 @@ msgid "Display Name"
 msgstr "Nama Tampilan"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:85
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:84
 #, python-format
 msgid "Down Payment"
 msgstr "Down Payment"
@@ -967,7 +1039,7 @@ msgid "Down Payment Product"
 msgstr "Product Down Payment"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Down Payments"
 msgstr "Down Payment"
 
@@ -982,7 +1054,7 @@ msgid "Down payment (percentage)"
 msgstr "Down Payment (persentase)"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:82
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:81
 #, python-format
 msgid "Down payment of %s%%"
 msgstr "Down payment dari %s%%"
@@ -997,7 +1069,7 @@ msgstr ""
 "terduplikat ketika order penjualan diduplikat."
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.portal_order_page
+#: model_terms:ir.ui.view,arch_db:sale.portal_order_page
 msgid "Download"
 msgstr "Unduh"
 
@@ -1017,20 +1089,15 @@ msgid "Expiration Date"
 msgstr "Tanggal Kadaluarsa"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_order_product_search
+#: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Extended Filters"
 msgstr "Penyaring Tambahan"
 
 #. module: sale
-#: code:addons/sale/models/sale.py:827
+#: code:addons/sale/models/sale.py:807
 #, python-format
 msgid "Extra line with %s "
 msgstr "Baris tambahan dengan %s"
-
-#. module: sale
-#: model:ir.model,name:sale.model_ir_model_fields
-msgid "Fields"
-msgstr "Kolom"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_fiscal_position_id
@@ -1038,7 +1105,7 @@ msgid "Fiscal Position"
 msgstr "Posisi Fiskal"
 
 #. module: sale
-#: model:ir.actions.act_window,help:sale.action_account_invoice_report_salesteam
+#: model_terms:ir.actions.act_window,help:sale.action_account_invoice_report_salesteam
 msgid ""
 "From this report, you can have an overview of the amount invoiced to your "
 "customer. The search tool can also be used to personalise your Invoices "
@@ -1052,15 +1119,15 @@ msgstr ""
 #: selection:sale.order,invoice_status:0
 #: selection:sale.order.line,invoice_status:0
 msgid "Fully Invoiced"
-msgstr "Selesai"
+msgstr "Selesai Difakturkan"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_sales_order_filter
+#: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Future Activities"
 msgstr "Aktifitas Akan Datang"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Get warnings in orders for products or customers"
 msgstr "Terima peringatan pada order untuk produk atau pelanggan"
 
@@ -1070,15 +1137,15 @@ msgid "Gross Weight"
 msgstr "Berat kotor"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.report_all_channels_sales_view_search
-#: model:ir.ui.view,arch_db:sale.view_order_product_search
-#: model:ir.ui.view,arch_db:sale.view_sales_order_filter
-#: model:ir.ui.view,arch_db:sale.view_sales_order_line_filter
+#: model_terms:ir.ui.view,arch_db:sale.report_all_channels_sales_view_search
+#: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
+#: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
+#: model_terms:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "Group By"
 msgstr "Dikelompokkan berdasarkan"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.report_configuration_search_view
+#: model_terms:ir.ui.view,arch_db:sale.report_configuration_search_view
 msgid "Group By Name"
 msgstr "Nama Group"
 
@@ -1094,7 +1161,7 @@ msgid "ID"
 msgstr "ID"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_order_form
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid ""
 "If the sale is locked, you can not modify it anymore. However, you will "
 "still be able to invoice or deliver."
@@ -1119,7 +1186,7 @@ msgid "Income Account"
 msgstr "Akun pendapatan"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Insert your terms & conditions here..."
 msgstr "Masukkan syarat & ketentuan Anda di sini..."
 
@@ -1135,7 +1202,7 @@ msgid "Invoice"
 msgstr "Faktur"
 
 #. module: sale
-#: code:addons/sale/models/account_invoice.py:55
+#: code:addons/sale/models/account_invoice.py:52
 #, python-format
 msgid "Invoice %s paid"
 msgstr "Faktur %s lunas"
@@ -1171,7 +1238,7 @@ msgid "Invoice Order"
 msgstr "Buat Faktur"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
+#: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "Invoice Sales Order"
 msgstr "Fakturkan Order Penjualan"
 
@@ -1223,8 +1290,8 @@ msgid "Invoiced"
 msgstr "Telah Difakturkan"
 
 #. module: sale
-#: code:addons/sale/models/sale.py:845
-#: model:ir.ui.view,arch_db:sale.view_order_form
+#: code:addons/sale/models/sale.py:825
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
 #, python-format
 msgid "Invoiced Quantity"
 msgstr "Kuantitas Difakturkan"
@@ -1237,8 +1304,8 @@ msgstr "Difakturkan Bulan Ini"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_invoice_salesteams
 #: model:ir.model.fields,field_description:sale.field_sale_order_invoice_ids
-#: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
-#: model:ir.ui.view,arch_db:sale.view_order_form
+#: model_terms:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Invoices"
 msgstr "Faktur"
 
@@ -1253,7 +1320,7 @@ msgid "Invoices Statistics"
 msgstr "Statistik Faktur"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
+#: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid ""
 "Invoices will be created in draft so that you can review\n"
 "                        them before validation."
@@ -1269,10 +1336,10 @@ msgstr "Faktur: Total Sebelum Pajak"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_sale_invoicing
-#: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
-#: model:ir.ui.view,arch_db:sale.product_template_form_view_invoice_policy
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
-#: model:ir.ui.view,arch_db:sale.view_order_form
+#: model_terms:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
+#: model_terms:ir.ui.view,arch_db:sale.product_template_form_view_invoice_policy
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Invoicing"
 msgstr "Penagihan"
 
@@ -1289,12 +1356,12 @@ msgid "Invoicing Target"
 msgstr "Target Faktur"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.report_saleorder_document
+#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Invoicing address:"
 msgstr "Alamat penagihan:"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.report_saleorder_document
+#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Invoicing and shipping address:"
 msgstr "Alamat penagihan dan pengiriman:"
 
@@ -1307,20 +1374,6 @@ msgstr "Adalah down payment"
 #: model:ir.model.fields,field_description:sale.field_sale_order_is_expired
 msgid "Is expired"
 msgstr "Telah kadaluarsa"
-
-#. module: sale
-#: code:addons/sale/models/sale.py:864
-#, python-format
-msgid ""
-"It is forbidden to modify the following fields in a locked order:\n"
-"%s"
-msgstr ""
-
-#. module: sale
-#: code:addons/sale/models/sale.py:551
-#, python-format
-msgid "It is not allowed to confirm an order in the following states: %s"
-msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales___last_update
@@ -1350,7 +1403,7 @@ msgid "Last Updated on"
 msgstr "Terakhir diperbarui pada"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_sales_order_filter
+#: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Late Activities"
 msgstr "Aktifitas Terakhir"
 
@@ -1361,22 +1414,22 @@ msgid "Layout Sequence"
 msgstr "Penomoran Tata Letak"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Let your customers log in to see their documents"
 msgstr "Ijinkan pelanggan Anda masuk untuk melihat dokumen mereka"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Let your customers sign &amp; pay online"
 msgstr "Ijinkan pelanggan Anda tandatangan &amp; bayar daring"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Line subtotals in sales orders"
 msgstr "Subtotal tiap baris pada order penjualan"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_order_form
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Lock"
 msgstr "Kunci"
 
@@ -1391,7 +1444,7 @@ msgid "Locked"
 msgstr "Dikunci"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Manage promotion &amp; coupon programs"
 msgstr "Mengatur promosi &amp; program kupon"
 
@@ -1457,23 +1510,23 @@ msgid "Multiple prices per product (e.g. customer segments, currencies)"
 msgstr "Berbagai jenis harga tiap produk (mis: segmen pelanggan, mata uang)"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_sales_order_filter
+#: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "My Activities"
 msgstr "Aktifitasku"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_sales_order_filter
+#: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "My Orders"
 msgstr "Orderku"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_sales_order_line_filter
+#: model_terms:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "My Sales Order Lines"
 msgstr "Detail Order Penjualanku"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_layout_category_name
-#: model:ir.ui.view,arch_db:sale.report_configuration_search_view
+#: model_terms:ir.ui.view,arch_db:sale.report_configuration_search_view
 msgid "Name"
 msgstr "Nama"
 
@@ -1501,15 +1554,43 @@ msgid "No Message"
 msgstr "Tidak ada pesan"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "No longer edit orders once confirmed"
 msgstr "Tidak ijinkan ubah order penjualan yang telah dikonfirmasi"
+
+#. module: sale
+#: model_terms:ir.actions.act_window,help:sale.action_quotations_salesteams
+msgid ""
+"Note that once a Quotation becomes a Sales Order, it will be moved\n"
+"                from the Quotations list to the Sales Order list."
+msgstr ""
+"Setelah Penawaran menjadi Order Penjualan, dokumen tersebut akan dipindahkan"
+" dari daftar Penawaran ke daftar Order Penjualan"
+
+#. module: sale
+#: model_terms:ir.actions.act_window,help:sale.action_quotations
+msgid ""
+"Note that once a Quotation becomes a Sales Order, it will be moved\n"
+"            from the Quotations list to the Sales Order list."
+msgstr ""
+"Setelah Penawaran menjadi Order Penjualan, dokumen tersebut akan dipindahkan"
+" dari daftar Penawaran ke daftar Order Penjualan"
+
+#. module: sale
+#: model_terms:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
+#: model_terms:ir.actions.act_window,help:sale.action_orders_salesteams
+msgid ""
+"Note that once a Quotation becomes a Sales Order, it will be moved from the "
+"Quotations list to the Sales Order list."
+msgstr ""
+"Setelah Penawaran menjadi Order Penjualan, dokumen tersebut akan dipindahkan"
+" dari daftar Penawaran ke daftar Order Penjualan"
 
 #. module: sale
 #: selection:sale.order,invoice_status:0
 #: selection:sale.order.line,invoice_status:0
 msgid "Nothing to Invoice"
-msgstr "Belum Selesai"
+msgstr "Tidak ada bisa difakturkan"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line_customer_lead
@@ -1530,7 +1611,7 @@ msgid "Number of sales to invoice"
 msgstr "Jumlah penjualan bisa difakturkan"
 
 #. module: sale
-#: model:ir.actions.act_window,help:sale.action_orders
+#: model_terms:ir.actions.act_window,help:sale.action_orders
 msgid ""
 "Once the quotation is confirmed, it becomes a sales order.\n"
 "                    You'll be able to invoice it and collect payments.\n"
@@ -1566,14 +1647,14 @@ msgid "Operation not allowed"
 msgstr "Operasi tidak diijinkan"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.portal_my_home_menu_sale
-#: model:ir.ui.view,arch_db:sale.portal_order_page
-#: model:ir.ui.view,arch_db:sale.view_sales_order_line_filter
+#: model_terms:ir.ui.view,arch_db:sale.portal_my_home_menu_sale
+#: model_terms:ir.ui.view,arch_db:sale.portal_order_page
+#: model_terms:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "Order"
 msgstr "Order"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.report_saleorder_document
+#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Order #"
 msgstr "Order #"
 
@@ -1581,32 +1662,32 @@ msgstr "Order #"
 #: code:addons/sale/controllers/portal.py:86
 #: code:addons/sale/controllers/portal.py:138
 #: model:ir.model.fields,field_description:sale.field_sale_order_date_order
-#: model:ir.ui.view,arch_db:sale.portal_my_orders
-#: model:ir.ui.view,arch_db:sale.portal_my_quotations
-#: model:ir.ui.view,arch_db:sale.view_order_tree
+#: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
+#: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
+#: model_terms:ir.ui.view,arch_db:sale.view_order_tree
 #, python-format
 msgid "Order Date"
 msgstr "Tanggal Order"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Order Line Sections"
 msgstr "Seksi Order Detail"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_order_line
-#: model:ir.ui.view,arch_db:sale.view_order_form
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Order Lines"
 msgstr "Detail Order"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_order_product_search
-#: model:ir.ui.view,arch_db:sale.view_sales_order_filter
+#: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
+#: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Order Month"
 msgstr "Bulan Pemesanan"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_order_tree
+#: model_terms:ir.ui.view,arch_db:sale.view_order_tree
 msgid "Order Number"
 msgstr "Nomor ID Order"
 
@@ -1636,18 +1717,18 @@ msgid "Order signed by %s"
 msgstr "Urutan yang ditandatangani oleh %s"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
+#: model_terms:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
 msgid "Order to Invoice"
 msgstr "Order siap Difakturkan"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_order_form
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Ordered Qty"
 msgstr "Jml Pesanan"
 
 #. module: sale
-#: code:addons/sale/models/sale.py:841
-#: model:ir.ui.view,arch_db:sale.view_order_form
+#: code:addons/sale/models/sale.py:821
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
 #, python-format
 msgid "Ordered Quantity"
 msgstr "Jumlah Pesanan"
@@ -1663,7 +1744,7 @@ msgstr ""
 "Jumlah Dikirim: Fakturkan berdasarkan jumlah yang pemasok kirimkan (waktu maupun jumlah barang)."
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_order_product_search
+#: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Ordered date of the sales order"
 msgstr "Tanggal pesan order penjualan"
 
@@ -1681,7 +1762,7 @@ msgstr "Order"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_orders_to_invoice
 #: model:ir.ui.menu,name:sale.menu_sale_order_invoice
-#: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
+#: model_terms:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
 msgid "Orders to Invoice"
 msgstr "Order siap Difakturkan"
 
@@ -1692,7 +1773,7 @@ msgid "Orders to Upsell"
 msgstr "Order Penjualan untuk Di-upsell"
 
 #. module: sale
-#: model:ir.actions.act_window,help:sale.action_orders_upselling
+#: model_terms:ir.actions.act_window,help:sale.action_orders_upselling
 msgid ""
 "Orders to upsell are orders having products with an invoicing\n"
 "                policy based on <i>ordered quantities</i> for which you have\n"
@@ -1703,7 +1784,7 @@ msgstr ""
 "banyak dari jumlah yang dipesan."
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_order_form
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Other Information"
 msgstr "Informasi lainnya"
 
@@ -1725,7 +1806,7 @@ msgid "Partner Country"
 msgstr "Negara Rekanan"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_order_product_search
+#: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Partner's Country"
 msgstr "Negara Rekanan"
 
@@ -1733,6 +1814,11 @@ msgstr "Negara Rekanan"
 #: selection:res.config.settings,portal_confirmation_options:0
 msgid "Payment"
 msgstr "Pembayaran"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid "Payment Acquirers"
+msgstr "Penerima Pembayaran"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_payment_term_id
@@ -1751,7 +1837,7 @@ msgid "Please define an accounting sales journal for this company."
 msgstr "Silahkan pilih jurnal penjualan di akuntansi untuk perusahaan ini."
 
 #. module: sale
-#: code:addons/sale/models/sale.py:949
+#: code:addons/sale/models/sale.py:916
 #, python-format
 msgid ""
 "Please define income account for this product: \"%s\" (id:%d) - or for its "
@@ -1759,6 +1845,11 @@ msgid ""
 msgstr ""
 "Silahkan pilih akun pemasukan untuk produk ini: \"%s\" (id:%d) - atau untuk "
 "kategori produk: \"%s\"."
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.report_invoice_layouted
+msgid "Price"
+msgstr "Harga"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_price_reduce
@@ -1802,7 +1893,7 @@ msgstr "Daftar harga untuk order penjualan ini."
 #: model:ir.model.fields,field_description:sale.field_res_config_settings_multi_sales_price_method
 #: model:ir.model.fields,field_description:sale.field_res_config_settings_sale_pricelist_setting
 #: model:ir.ui.menu,name:sale.menu_product_pricelist_main
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Pricelists"
 msgstr "Daftar harga"
 
@@ -1812,12 +1903,12 @@ msgid "Prices computed from formulas (discounts, margins, roundings)"
 msgstr "Harga dihitung berdasarkan rumus (diskon, margin, dan pembulatan)"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Pricing"
 msgstr "Harga"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_order_form
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Print"
 msgstr "Cetak"
 
@@ -1837,19 +1928,19 @@ msgstr "Faktur Proforma"
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_product_id
 #: model:ir.model.fields,field_description:sale.field_sale_order_product_id
 #: model:ir.model.fields,field_description:sale.field_sale_report_product_id
-#: model:ir.ui.view,arch_db:sale.view_sales_order_line_filter
+#: model_terms:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "Product"
 msgstr "Produk"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Product Catalog"
 msgstr "Katalog Produk"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales_categ_id
 #: model:ir.model.fields,field_description:sale.field_sale_report_categ_id
-#: model:ir.ui.view,arch_db:sale.view_order_product_search
+#: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Product Category"
 msgstr "Kategori Produk"
 
@@ -1877,7 +1968,7 @@ msgid "Product Variants"
 msgstr "Varian produk"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Product used for down payments"
 msgstr "Produk yang digunakan untuk down payment"
 
@@ -1888,7 +1979,7 @@ msgid "Products"
 msgstr "Produk"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_order_line_tree
+#: model_terms:ir.ui.view,arch_db:sale.view_order_line_tree
 msgid "Qty"
 msgstr "Jml"
 
@@ -1913,35 +2004,35 @@ msgid "Qty To Invoice"
 msgstr "Jml siap Difakturkan"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Quantities to invoice from sales orders"
 msgstr "Jumlah siap difakturkan pada order penjualan"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_product_uom_qty
-#: model:ir.ui.view,arch_db:sale.report_invoice_layouted
-#: model:ir.ui.view,arch_db:sale.report_saleorder_document
+#: model_terms:ir.ui.view,arch_db:sale.report_invoice_layouted
+#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Quantity"
 msgstr "Jumlah"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_order_form
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Quantity:"
 msgstr "Jumlah:"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order
-#: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
-#: model:ir.ui.view,arch_db:sale.portal_my_home_menu_sale
-#: model:ir.ui.view,arch_db:sale.portal_order_page
-#: model:ir.ui.view,arch_db:sale.view_quotation_tree
+#: model_terms:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
+#: model_terms:ir.ui.view,arch_db:sale.portal_my_home_menu_sale
+#: model_terms:ir.ui.view,arch_db:sale.portal_order_page
+#: model_terms:ir.ui.view,arch_db:sale.view_quotation_tree
 #: selection:sale.order,state:0
 msgid "Quotation"
 msgstr "Penawaran"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.portal_my_quotations
-#: model:ir.ui.view,arch_db:sale.report_saleorder_document
+#: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
+#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Quotation #"
 msgstr "Penawaran #"
 
@@ -1951,12 +2042,12 @@ msgid "Quotation / Order"
 msgstr "Penawaran / Order"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_quotation_tree
+#: model_terms:ir.ui.view,arch_db:sale.view_quotation_tree
 msgid "Quotation Date"
 msgstr "Tanggal Penawaran"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_quotation_tree
+#: model_terms:ir.ui.view,arch_db:sale.view_quotation_tree
 msgid "Quotation Number"
 msgstr "Nomor Pemesanan"
 
@@ -1983,18 +2074,18 @@ msgstr "Penawaran terkirim"
 #: model:ir.actions.act_window,name:sale.action_quotations_salesteams
 #: model:ir.model.fields,field_description:sale.field_crm_team_use_quotations
 #: model:ir.ui.menu,name:sale.menu_sale_quotations
-#: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
-#: model:ir.ui.view,arch_db:sale.portal_my_home_menu_sale
-#: model:ir.ui.view,arch_db:sale.portal_my_home_sale
-#: model:ir.ui.view,arch_db:sale.portal_my_quotations
-#: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
-#: model:ir.ui.view,arch_db:sale.view_order_product_search
+#: model_terms:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
+#: model_terms:ir.ui.view,arch_db:sale.portal_my_home_menu_sale
+#: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
+#: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
+#: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 #, python-format
 msgid "Quotations"
 msgstr "Penawaran"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Quotations &amp; Orders"
 msgstr "Penawaran &amp; Order Penjualan"
 
@@ -2004,7 +2095,7 @@ msgid "Quotations Analysis"
 msgstr "Analisis Penawaran"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
 msgid "Quotations Sent"
 msgstr "Penawaran Terkirim"
 
@@ -2039,8 +2130,8 @@ msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.report_configuration_action
-#: model:ir.ui.view,arch_db:sale.report_configuration_form_view
-#: model:ir.ui.view,arch_db:sale.report_configuration_tree_view
+#: model_terms:ir.ui.view,arch_db:sale.report_configuration_form_view
+#: model_terms:ir.ui.view,arch_db:sale.report_configuration_tree_view
 msgid "Report Configuration"
 msgstr "Konfigurasi Laporan"
 
@@ -2051,21 +2142,20 @@ msgstr "Kategori Tata Letak Laporan"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_sale_report
-#: model:ir.ui.view,arch_db:sale.view_order_form
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Reporting"
 msgstr "Laporan"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_report_product_all
 #: model:ir.ui.menu,name:sale.sale_menu_root
-#: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
-#: model:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
-#: model:ir.ui.view,arch_db:sale.product_template_form_view_sale_order_button
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
-#: model:ir.ui.view,arch_db:sale.res_partner_view_buttons
-#: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
-#: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_sale
-#: model:ir.ui.view,arch_db:sale.view_order_product_search
+#: model_terms:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
+#: model_terms:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
+#: model_terms:ir.ui.view,arch_db:sale.product_template_form_view_sale_order_button
+#: model_terms:ir.ui.view,arch_db:sale.res_partner_view_buttons
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_sale
+#: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Sales"
 msgstr "Penjualan"
 
@@ -2077,9 +2167,9 @@ msgstr "Faktur Pembayaran Penjualan di Muka"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_all
 #: model:ir.actions.act_window,name:sale.action_order_report_so_salesteam
-#: model:ir.ui.view,arch_db:sale.view_order_product_graph
-#: model:ir.ui.view,arch_db:sale.view_order_product_pivot
-#: model:ir.ui.view,arch_db:sale.view_order_product_search
+#: model_terms:ir.ui.view,arch_db:sale.view_order_product_graph
+#: model_terms:ir.ui.view,arch_db:sale.view_order_product_pivot
+#: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Sales Analysis"
 msgstr "Analisa Penjualan"
 
@@ -2090,11 +2180,11 @@ msgstr "Analisa Penjualan"
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales_team_id
 #: model:ir.model.fields,field_description:sale.field_sale_order_team_id
 #: model:ir.model.fields,field_description:sale.field_sale_report_team_id
-#: model:ir.ui.view,arch_db:sale.account_invoice_groupby_inherit
-#: model:ir.ui.view,arch_db:sale.report_all_channels_sales_view_search
-#: model:ir.ui.view,arch_db:sale.view_account_invoice_report_search_inherit
-#: model:ir.ui.view,arch_db:sale.view_order_product_search
-#: model:ir.ui.view,arch_db:sale.view_sales_order_filter
+#: model_terms:ir.ui.view,arch_db:sale.account_invoice_groupby_inherit
+#: model_terms:ir.ui.view,arch_db:sale.report_all_channels_sales_view_search
+#: model_terms:ir.ui.view,arch_db:sale.view_account_invoice_report_search_inherit
+#: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
+#: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Sales Channel"
 msgstr "Saluran Penjualan"
 
@@ -2115,7 +2205,7 @@ msgid "Sales Funnel"
 msgstr "Saluran Penjualan"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_order_form
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Sales Information"
 msgstr "Informasi penjualan"
 
@@ -2124,8 +2214,8 @@ msgstr "Informasi penjualan"
 #: model:ir.model.fields,field_description:sale.field_res_partner_sale_warn
 #: model:ir.model.fields,field_description:sale.field_res_users_sale_order_ids
 #: model:ir.model.fields,field_description:sale.field_res_users_sale_warn
-#: model:ir.ui.view,arch_db:sale.view_order_form
-#: model:ir.ui.view,arch_db:sale.view_sales_order_filter
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 #: model:res.request.link,name:sale.req_link_sale_order
 #: selection:sale.order,state:0 selection:sale.report,state:0
 msgid "Sales Order"
@@ -2148,18 +2238,18 @@ msgstr "Detail Order Penjualan"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_product_sale_list
 #: model:ir.model.fields,field_description:sale.field_account_invoice_line_sale_line_ids
-#: model:ir.ui.view,arch_db:sale.view_order_form
-#: model:ir.ui.view,arch_db:sale.view_order_line_tree
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#: model_terms:ir.ui.view,arch_db:sale.view_order_line_tree
 msgid "Sales Order Lines"
 msgstr "Detail Order Penjualan"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_sales_order_line_filter
+#: model_terms:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "Sales Order Lines ready to be invoiced"
 msgstr "Detail Order Penjualan siap difakturkan"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_sales_order_line_filter
+#: model_terms:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "Sales Order Lines related to a Sales Order of mine"
 msgstr "Baris Order Penjualan yang terkait dengan Order Penjualan saya"
 
@@ -2169,14 +2259,14 @@ msgstr "Baris Order Penjualan yang terkait dengan Order Penjualan saya"
 #: model:ir.actions.act_window,name:sale.action_orders_salesteams
 #: model:ir.actions.act_window,name:sale.action_orders_to_invoice_salesteams
 #: model:ir.ui.menu,name:sale.menu_sales_config
-#: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
-#: model:ir.ui.view,arch_db:sale.portal_my_home_menu_sale
-#: model:ir.ui.view,arch_db:sale.portal_my_home_sale
-#: model:ir.ui.view,arch_db:sale.portal_my_orders
-#: model:ir.ui.view,arch_db:sale.view_order_tree
-#: model:ir.ui.view,arch_db:sale.view_sale_order_calendar
-#: model:ir.ui.view,arch_db:sale.view_sale_order_graph
-#: model:ir.ui.view,arch_db:sale.view_sale_order_pivot
+#: model_terms:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
+#: model_terms:ir.ui.view,arch_db:sale.portal_my_home_menu_sale
+#: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
+#: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
+#: model_terms:ir.ui.view,arch_db:sale.view_order_tree
+#: model_terms:ir.ui.view,arch_db:sale.view_sale_order_calendar
+#: model_terms:ir.ui.view,arch_db:sale.view_sale_order_graph
+#: model_terms:ir.ui.view,arch_db:sale.view_sale_order_pivot
 #, python-format
 msgid "Sales Orders"
 msgstr "Order Penjualan"
@@ -2202,20 +2292,20 @@ msgstr "Penjualan: Total Sebelum Pajak"
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_salesman_id
 #: model:ir.model.fields,field_description:sale.field_sale_order_user_id
 #: model:ir.model.fields,field_description:sale.field_sale_report_user_id
-#: model:ir.ui.view,arch_db:sale.view_order_product_search
-#: model:ir.ui.view,arch_db:sale.view_sales_order_filter
-#: model:ir.ui.view,arch_db:sale.view_sales_order_line_filter
+#: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
+#: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
+#: model_terms:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "Salesperson"
 msgstr "Penjual"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.report_configuration_search_view
+#: model_terms:ir.ui.view,arch_db:sale.report_configuration_search_view
 msgid "Search Name"
 msgstr "Cari Nama"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_sales_order_filter
-#: model:ir.ui.view,arch_db:sale.view_sales_order_line_filter
+#: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
+#: model_terms:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "Search Sales Order"
 msgstr "Pencarian Order Penjualan"
 
@@ -2250,32 +2340,32 @@ msgstr ""
 "aliran. Pesan harus ditulis dalam bidang berikutnya."
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Sell and purchase products in different units of measure"
 msgstr "Jual dan beli produk dalam satuan yang berbeda"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Sell products by multiple of unit # per package"
 msgstr "Jual produk menurut jumlah unit # tiap paket"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_order_form
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Send PRO-FORMA Invoice"
 msgstr "Kirim Faktur Proforma"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Send a product-specific email once the invoice is paid"
 msgstr "Kirim email produk tertentu setelah faktur lunas"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_order_form
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Send by Email"
 msgstr "Kirim sebagai email"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid ""
 "Sending an email is useful if you need to share specific information or "
 "content about a product (instructions, rules, links, media, etc.). Create "
@@ -2309,22 +2399,22 @@ msgid "Set an invoicing target: "
 msgstr "Stel target faktur:"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Set multiple prices per product, automated discounts, etc."
 msgstr "Stel berbagai macam harga tiap produk, diskon otomatis, dll."
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Set product attributes (e.g. color, size) to sell variants"
 msgstr "Stel atribut produk (mis: warna, ukuran) untuk menjual varian"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Set specific billing and shipping addresses"
 msgstr "Stel alamat penagihan dan pengiriman yang spesifik"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_order_form
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Set to Quotation"
 msgstr "Tetapkan jadi Penawaran"
 
@@ -2335,12 +2425,12 @@ msgid "Settings"
 msgstr "Pengaturan"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_order_form
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Setup default terms and conditions in your sales settings ..."
 msgstr "Stel syarat dan ketentuan standar pada pengaturan penjualan Anda ..."
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Shipping"
 msgstr "Pengiriman"
 
@@ -2350,7 +2440,7 @@ msgid "Shipping Costs"
 msgstr "Ongkos Pengiriman"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_sales_order_filter
+#: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Show all records which has next action date is before today"
 msgstr "Tampilkan semua dokumen dengan aksi berikut sebelum hari ini"
 
@@ -2365,7 +2455,7 @@ msgid "Show line subtotals without taxes (B2B)"
 msgstr "Tampilkan subtotal tiap baris sebelum pajak (B2B)"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Show margins on orders"
 msgstr "Tampilkan margin pada order penjualan"
 
@@ -2375,9 +2465,9 @@ msgid "Show public price & discount to the customer"
 msgstr "Tampilkan harga jual dan diskon pada pelanggan"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Show standard terms &amp; conditions on orders"
-msgstr "Tampilkan syarat &amp; ketentuan standar di order penjualan"
+msgstr "Tampilkan syarat & ketentuan standar di order penjualan"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings_group_show_price_subtotal
@@ -2401,7 +2491,7 @@ msgid "Signature is missing."
 msgstr "Belum ada tandatangan."
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Sort products in sections with subtotals and page-breaks"
 msgstr "Sortir produk dalam golongan dengan subtotal dan halaman-baru"
 
@@ -2425,13 +2515,13 @@ msgstr "Tahap"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_state
 #: model:ir.model.fields,field_description:sale.field_sale_report_state
-#: model:ir.ui.view,arch_db:sale.view_order_product_search
+#: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Status"
 msgstr "Status"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_price_subtotal
-#: model:ir.ui.view,arch_db:sale.invoice_form_inherit_sale
+#: model_terms:ir.ui.view,arch_db:sale.invoice_form_inherit_sale
 msgid "Subtotal"
 msgstr "Subtotal"
 
@@ -2473,8 +2563,8 @@ msgstr "Harga Termasuk Pajak"
 #: model:ir.model.fields,field_description:sale.field_sale_order_amount_tax
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_price_tax
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_tax_id
-#: model:ir.ui.view,arch_db:sale.report_invoice_layouted
-#: model:ir.ui.view,arch_db:sale.report_saleorder_document
+#: model_terms:ir.ui.view,arch_db:sale.report_invoice_layouted
+#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Taxes"
 msgstr "Pajak"
 
@@ -2500,8 +2590,8 @@ msgid "Terms and conditions"
 msgstr "Syarat dan ketentuan"
 
 #. module: sale
-#: code:addons/sale/models/analytic.py:129
-#: code:addons/sale/models/analytic.py:143
+#: code:addons/sale/models/analytic.py:128
+#: code:addons/sale/models/analytic.py:140
 #, python-format
 msgid ""
 "The Sales Order %s linked to the Analytic Account must be validated before "
@@ -2521,7 +2611,7 @@ msgid "The analytic account related to a sales order."
 msgstr "Akun  analitik yang terkait  dengan  order penjualan"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid ""
 "The margin is computed as the sum of product sales prices minus the cost set"
 " in their detail form."
@@ -2530,7 +2620,7 @@ msgstr ""
 "yang distel pada produk."
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:151
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:149
 #, python-format
 msgid ""
 "The product used to invoice a down payment should be of type 'Service'. "
@@ -2540,7 +2630,7 @@ msgstr ""
 " produk lainnya atau ubah produk ini."
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:149
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:147
 #, python-format
 msgid ""
 "The product used to invoice a down payment should have an invoice policy set"
@@ -2557,17 +2647,17 @@ msgid "The value of the down payment amount must be positive."
 msgstr "Nilai down payment harus positif."
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.portal_my_orders
+#: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
 msgid "There are currently no orders for your account."
 msgstr "Saat ini tidak ada order untuk akun Anda."
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.portal_my_quotations
+#: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
 msgid "There are currently no quotations for your account."
 msgstr "Saat ini tidak ada penawaran untuk akun Anda."
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid ""
 "There are two ways to manage pricelists: 1) Multiple prices per product: "
 "must be set in the Sales tab of the product detail form. 2) Price computed "
@@ -2588,23 +2678,23 @@ msgstr ""
 "harus memasang bagan akun dari aplikasi Akuntansi, menu pengaturan."
 
 #. module: sale
-#: code:addons/sale/models/sale.py:438 code:addons/sale/models/sale.py:442
+#: code:addons/sale/models/sale.py:430 code:addons/sale/models/sale.py:434
 #, python-format
-msgid "There is no invoiceable line."
-msgstr ""
+msgid "There is no invoicable line."
+msgstr "Tidak ada yang bisa ditagih."
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.portal_order_error
+#: model_terms:ir.ui.view,arch_db:sale.portal_order_error
 msgid "There was an error processing this page."
 msgstr "Terdapat eror ketika memproses halaman ini."
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_order_product_search
+#: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "This Year"
 msgstr "Tahun Ini"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid ""
 "This default value is applied to any new product created. This can be "
 "changed in the product detail form."
@@ -2613,7 +2703,7 @@ msgstr ""
 "diubah dari halaman detail produk."
 
 #. module: sale
-#: model:ir.actions.act_window,help:sale.action_order_report_all
+#: model_terms:ir.actions.act_window,help:sale.action_order_report_all
 msgid ""
 "This report performs analysis on your quotations and sales orders. Analysis "
 "check your sales revenues and sort it by different group criteria (salesman,"
@@ -2629,7 +2719,7 @@ msgstr ""
 "Analisa Faktur di aplikasi Akuntansi"
 
 #. module: sale
-#: model:ir.actions.act_window,help:sale.action_order_report_quotation_salesteam
+#: model_terms:ir.actions.act_window,help:sale.action_order_report_quotation_salesteam
 msgid ""
 "This report performs analysis on your quotations. Analysis check your sales "
 "revenues and sort it by different group criteria (salesman, partner, "
@@ -2645,7 +2735,7 @@ msgstr ""
 "Akuntansi."
 
 #. module: sale
-#: model:ir.actions.act_window,help:sale.action_order_report_so_salesteam
+#: model_terms:ir.actions.act_window,help:sale.action_order_report_so_salesteam
 msgid ""
 "This report performs analysis on your sales orders. Analysis check your "
 "sales revenues and sort it by different group criteria (salesman, partner, "
@@ -2667,15 +2757,15 @@ msgstr "Kartu absen pada projek (satu tarif tiap projek)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_qty_to_invoice
-#: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_sale
-#: model:ir.ui.view,arch_db:sale.view_sales_order_line_filter
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_sale
+#: model_terms:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 #: selection:sale.order,invoice_status:0
 #: selection:sale.order.line,invoice_status:0
 msgid "To Invoice"
 msgstr "Siap Difakturkan"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_sales_order_filter
+#: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Today Activities"
 msgstr "Aktivitas Hari ini"
 
@@ -2684,23 +2774,23 @@ msgstr "Aktivitas Hari ini"
 #: model:ir.model.fields,field_description:sale.field_sale_order_amount_total
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_price_total
 #: model:ir.model.fields,field_description:sale.field_sale_report_price_total
-#: model:ir.ui.view,arch_db:sale.invoice_form_inherit_sale
-#: model:ir.ui.view,arch_db:sale.portal_my_orders
-#: model:ir.ui.view,arch_db:sale.portal_my_quotations
-#: model:ir.ui.view,arch_db:sale.report_configuration_search_view
-#: model:ir.ui.view,arch_db:sale.view_order_line_tree
+#: model_terms:ir.ui.view,arch_db:sale.invoice_form_inherit_sale
+#: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
+#: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
+#: model_terms:ir.ui.view,arch_db:sale.report_configuration_search_view
+#: model_terms:ir.ui.view,arch_db:sale.view_order_line_tree
 msgid "Total"
 msgstr "Total"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.report_all_channels_sales_view_pivot
-#: model:ir.ui.view,arch_db:sale.report_saleorder_document
+#: model_terms:ir.ui.view,arch_db:sale.report_all_channels_sales_view_pivot
+#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Total Price"
 msgstr "Total Harga"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_order_tree
-#: model:ir.ui.view,arch_db:sale.view_quotation_tree
+#: model_terms:ir.ui.view,arch_db:sale.view_order_tree
+#: model_terms:ir.ui.view,arch_db:sale.view_quotation_tree
 msgid "Total Tax Included"
 msgstr "Total Termasuk Pajak"
 
@@ -2711,27 +2801,21 @@ msgid "Track Service"
 msgstr "Telusuri Jasa"
 
 #. module: sale
-#: code:addons/sale/models/sale.py:578
-#, python-format
-msgid "Uncategorized"
-msgstr "Tidak Berkategori"
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_price_unit
-#: model:ir.ui.view,arch_db:sale.report_invoice_layouted
-#: model:ir.ui.view,arch_db:sale.report_saleorder_document
+#: model_terms:ir.ui.view,arch_db:sale.report_invoice_layouted
+#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Unit Price"
 msgstr "Harga Satuan"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_order_form
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Unit Price:"
 msgstr "Harga Satuan:"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_product_uom
 #: model:ir.model.fields,field_description:sale.field_sale_report_product_uom
-#: model:ir.ui.view,arch_db:sale.view_order_line_tree
+#: model_terms:ir.ui.view,arch_db:sale.view_order_line_tree
 msgid "Unit of Measure"
 msgstr "Satuan"
 
@@ -2743,17 +2827,17 @@ msgstr "Kategori Satuan"
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_uom_form_action
 #: model:ir.ui.menu,name:sale.next_id_16
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Units of Measure"
 msgstr "Satuan"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_order_form
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Unlock"
 msgstr "Buka"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_sales_order_filter
+#: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Unread Messages"
 msgstr "Pesan Belum Dibaca"
 
@@ -2768,7 +2852,7 @@ msgid "Untaxed Total"
 msgstr "Total Sebelum Pajak"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_sale
 msgid "Upselling"
 msgstr "Upsell"
 
@@ -2779,7 +2863,7 @@ msgid "Upselling Opportunity"
 msgstr "Kesempatan Upsell"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.portal_my_quotations
+#: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
 msgid "Valid Until"
 msgstr "Berlaku hingga"
 
@@ -2795,19 +2879,19 @@ msgid "Warning"
 msgstr "Peringatan"
 
 #. module: sale
-#: code:addons/sale/models/sale.py:1037
+#: code:addons/sale/models/sale.py:1006
 #, python-format
 msgid "Warning for %s"
 msgstr "Peringatan untuk %s"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.res_partner_view_buttons
+#: model_terms:ir.ui.view,arch_db:sale.res_partner_view_buttons
 msgid "Warning on the Sales Order"
 msgstr "Peringatan pada Order penjualan"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
-#: model:ir.ui.view,arch_db:sale.product_template_form_view_sale_order_button
+#: model_terms:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
+#: model_terms:ir.ui.view,arch_db:sale.product_template_form_view_sale_order_button
 msgid "Warning when Selling this Product"
 msgstr "Peringatan ketika menjual produk ini"
 
@@ -2839,7 +2923,7 @@ msgstr ""
 "penjualan! Coba batalkan sebelum itu."
 
 #. module: sale
-#: code:addons/sale/models/sale.py:1098
+#: code:addons/sale/models/sale.py:1069
 #, python-format
 msgid ""
 "You can not remove a sales order line.\n"
@@ -2849,7 +2933,7 @@ msgstr ""
 "Buang perubahan dan coba stel kuantitas menjadi 0."
 
 #. module: sale
-#: model:ir.actions.act_window,help:sale.action_orders_to_invoice
+#: model_terms:ir.actions.act_window,help:sale.action_orders_to_invoice
 msgid ""
 "You can select all orders and invoice them in batch, or check\n"
 "                every order and invoice them one by one."
@@ -2858,7 +2942,7 @@ msgstr ""
 "atau Anda dapat memeriksa dan memfakturkannya satu pe satu."
 
 #. module: sale
-#: model:ir.actions.act_window,help:sale.action_orders_to_invoice
+#: model_terms:ir.actions.act_window,help:sale.action_orders_to_invoice
 msgid "You will find here all orders that are ready to be invoiced."
 msgstr "Anda akan menemukan di sini semua order yang siap untuk difakturkan."
 
@@ -2869,7 +2953,7 @@ msgid "Your Order has been confirmed."
 msgstr "Order Anda telah dikonfirmasi"
 
 #. module: sale
-#: model:ir.actions.act_window,help:sale.action_quotations_salesteams
+#: model_terms:ir.actions.act_window,help:sale.action_quotations_salesteams
 msgid ""
 "Your next actions should flow efficiently: confirm the Quotation\n"
 "                to a Sales Order, then create the Invoice and collect the Payment."
@@ -2878,7 +2962,7 @@ msgstr ""
 "menjadi Order Penjualan, lalu buat Faktur dan terima Pembayaran."
 
 #. module: sale
-#: model:ir.actions.act_window,help:sale.action_quotations
+#: model_terms:ir.actions.act_window,help:sale.action_quotations
 msgid ""
 "Your next actions should flow efficiently: confirm the Quotation\n"
 "            to a Sales Order, then create the Invoice and collect the Payment."
@@ -2887,8 +2971,8 @@ msgstr ""
 "menjadi Order Penjualan, lalu buat Faktur dan terima Pembayaran."
 
 #. module: sale
-#: model:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
-#: model:ir.actions.act_window,help:sale.action_orders_salesteams
+#: model_terms:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
+#: model_terms:ir.actions.act_window,help:sale.action_orders_salesteams
 msgid ""
 "Your next actions should flow efficiently: confirm the Quotation to a Sales "
 "Order, then create the Invoice and collect the Payment."
@@ -2897,13 +2981,13 @@ msgstr ""
 "menjadi Order Penjualan, lalu buat Faktur dan terima Pembayaran."
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.portal_order_error
-#: model:ir.ui.view,arch_db:sale.portal_order_success
+#: model_terms:ir.ui.view,arch_db:sale.portal_order_error
+#: model_terms:ir.ui.view,arch_db:sale.portal_order_success
 msgid "close"
 msgstr "tutup"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_order_form
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "days"
 msgstr "hari"
 

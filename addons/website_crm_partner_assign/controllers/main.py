@@ -235,7 +235,7 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage):
             grade_domain += [('country_id', '=', country.id)]
         grades = partner_obj.sudo().read_group(
             grade_domain, ["id", "grade_id"],
-            groupby="grade_id", orderby="grade_id DESC")
+            groupby="grade_id")
         grades_partners = partner_obj.sudo().search_count(grade_domain)
         # flag active grade
         for grade_dict in grades:
@@ -296,7 +296,7 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage):
         partners = partner_ids.sudo()
 
         google_map_partner_ids = ','.join(str(p.id) for p in partners)
-        google_maps_api_key = request.env['ir.config_parameter'].sudo().get_param('google_maps_api_key')
+        google_maps_api_key = request.website.google_maps_api_key
 
         values = {
             'countries': countries,

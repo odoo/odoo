@@ -62,16 +62,6 @@ features whereas:
 * Python 3.2 made ``range`` views more list-like (backported to 2.7)and
   reintroduced ``callable``
 
-.. warning::
-
-    While Python 3 adds plenty of great features (keyword-only parameters,
-    generator delegation, pathlib, ...), you must *not* use them in Odoo
-    until Python 2 support is dropped
-
-.. note::
-
-    In the *very rare* cases where you *need* to differentiate between
-    Python 2 and Python 3, use the :data:`odoo.tools.pycompat.PY2` flag.
 
 Semantics changes
 =================
@@ -299,8 +289,6 @@ under the single ``int`` type.
 
     * the ``L`` suffix for integer literals must be removed
     * calls to ``long`` must be replaced by calls to ``int``
-    * ``(int, long)`` for type-checking purposes must be replaced by
-      :py:data:`odoo.tools.pycompat.integer_types`
 
 
 * the ``L`` suffix on numbers is unsupported in Python 3, and unnecessary in
@@ -310,18 +298,6 @@ under the single ``int`` type.
 * type-testing is the last and bigger issue as in Python 2 ``long`` is not a
   subtype of ``int`` (nor the reverse), and ``isinstance(value, (int, long))``
   is thus generally necessary to catch all integrals.
-
-  For that case, Odoo 11 now provides a compatibility module with an
-  :py:data:`~odoo.tools.pycompat.integer_types` definition which can be used
-  for type-testing.
-
-  It is a tuple of types so when used with ``isinstance`` it can be provided
-  directly or inside an other tuple alongside other types e.g.
-  ``isinstance(value, (BaseModel, integer_types))``.
-
-  However when used with ``type`` directly (which should be avoided) you
-  should use the ``in`` operator, and if you need other types you need to
-  concatenate ``integer_types`` to an other tuple.
 
 ``reduce``
 ##########
@@ -410,18 +386,6 @@ Both versions have the following prefixes for string literals:
 
 For best cross-version compatibility you should avoid unprefixed string
 literals unless you *specifically* need a "native string" [#native-string]_.
-
-For easier type-testing, :mod:`odoo.tools.pycompat` provides the following
-constants:
-
-* :data:`~odoo.tools.pycompat.string_types` is an alias/type tuple for testing
-  string types, essentially a replacement of testing for ``basestring`` or
-  ``(str, unicode)``.
-* :data:`~odoo.tools.pycompat.text_type` is the proper *text* type for the
-  current version, it should mostly be used for converting non-bytes objects
-  to text.
-* ``bytes`` should be avoided for type conversions, though it can be used to
-  check if an object is a bytestring.
 
 ``open``
 --------

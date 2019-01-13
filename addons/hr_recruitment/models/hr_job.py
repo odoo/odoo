@@ -15,15 +15,15 @@ class Job(models.Model):
         'res.partner', "Job Location", default=_default_address_id,
         help="Address where employees are working")
     application_ids = fields.One2many('hr.applicant', 'job_id', "Applications")
-    application_count = fields.Integer(compute='_compute_application_count', string="Applications")
+    application_count = fields.Integer(compute='_compute_application_count', string="Application Count")
     manager_id = fields.Many2one(
         'hr.employee', related='department_id.manager_id', string="Department Manager",
         readonly=True, store=True)
-    user_id = fields.Many2one('res.users', "Recruitment Responsible", track_visibility='onchange')
-    hr_responsible_id = fields.Many2one('res.users', "HR Responsible", track_visibility='onchange',
+    user_id = fields.Many2one('res.users', "Recruitment Responsible", tracking=True)
+    hr_responsible_id = fields.Many2one('res.users', "HR Responsible", tracking=True,
         help="Person responsible of validating the employee's contracts.")
-    document_ids = fields.One2many('ir.attachment', compute='_compute_document_ids', string="Applications")
-    documents_count = fields.Integer(compute='_compute_document_ids', string="Documents")
+    document_ids = fields.One2many('ir.attachment', compute='_compute_document_ids', string="Documents")
+    documents_count = fields.Integer(compute='_compute_document_ids', string="Document Count")
     alias_id = fields.Many2one(
         'mail.alias', "Alias", ondelete="restrict", required=True,
         help="Email alias for this job position. New emails will automatically create new applicants for this job position.")
@@ -69,7 +69,7 @@ class Job(models.Model):
     @api.multi
     def _track_subtype(self, init_values):
         if 'state' in init_values and self.state == 'open':
-            return 'hr_recruitment.mt_job_new'
+            return self.env.ref('hr_recruitment.mt_job_new')
         return super(Job, self)._track_subtype(init_values)
 
     @api.multi

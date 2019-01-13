@@ -5,8 +5,7 @@ import base64
 
 from odoo import http, _
 from odoo.http import request
-from odoo.addons.base.ir.ir_qweb import AssetsBundle
-from odoo.addons.web.controllers.main import binary_content
+from odoo.addons.base.models.assetsbundle import AssetsBundle
 
 
 class LivechatController(http.Controller):
@@ -22,7 +21,7 @@ class LivechatController(http.Controller):
         if isinstance(mock_attachment, list):  # suppose that CSS asset will not required to be split in pages
             mock_attachment = mock_attachment[0]
         # can't use /web/content directly because we don't have attachment ids (attachments must be created)
-        status, headers, content = binary_content(id=mock_attachment.id, unique=asset.checksum)
+        status, headers, content = request.env['ir.http'].binary_content(id=mock_attachment.id, unique=asset.checksum)
         content_base64 = base64.b64decode(content) if content else ''
         headers.append(('Content-Length', len(content_base64)))
         return request.make_response(content_base64, headers)
@@ -69,13 +68,20 @@ class LivechatController(http.Controller):
 
     @http.route('/im_livechat/get_session', type="json", auth='public')
     def get_session(self, channel_id, anonymous_name, **kwargs):
-        # if geoip, add the country name to the anonymous name
-        if request.session.geoip:
-            anonymous_name = anonymous_name + " ("+request.session.geoip.get('country_name', "")+")"
+        user_id = None
+        country_id = None
         # if the user is identifiy (eg: portal user on the frontend), don't use the anonymous name. The user will be added to session.
         if request.session.uid:
-            anonymous_name = request.env.user.name
-        return request.env["im_livechat.channel"].with_context(lang=False).get_mail_channel(channel_id, anonymous_name)
+            user_id = request.env.user.id
+            country_id = request.env.user.country_id.id
+        # if geoip, add the country name to the anonymous name
+        elif request.session.geoip:
+            # get the country of the anonymous person, if any
+            country_code = request.session.geoip.get('country_code', "")
+            country = request.env['res.country'].sudo().search([('code', '=', country_code)], limit=1) if country_code else None
+            if country:
+                anonymous_name, country_id = _("%s (%s)") % (anonymous_name, country.name), country.id
+        return request.env["im_livechat.channel"].with_context(lang=False).get_mail_channel(channel_id, anonymous_name, user_id, country_id)
 
     @http.route('/im_livechat/feedback', type='json', auth='public')
     def feedback(self, uuid, rate, reason=None, **kwargs):
@@ -115,3 +121,13 @@ class LivechatController(http.Controller):
         if channel:
             channel._send_history_message(pid, page_history)
         return True
+
+    @http.route('/im_livechat/notify_typing', type='json', auth='public')
+    def notify_typing(self, uuid, is_typing):
+        """ Broadcast the typing notification of the website user to other channel members
+            :param uuid: (string) the UUID of the livechat channel
+            :param is_typing: (boolean) tells whether the website user is typing or not.
+        """
+        Channel = request.env['mail.channel']
+        channel = Channel.sudo().search([('uuid', '=', uuid)], limit=1)
+        channel.notify_typing(is_typing=is_typing, is_website_user=True)

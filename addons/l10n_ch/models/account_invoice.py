@@ -26,7 +26,7 @@ class AccountInvoice(models.Model):
     l10n_ch_isr_valid = fields.Boolean(compute='_compute_l10n_ch_isr_valid', help='Boolean value. True iff all the data required to generate the ISR are present')
 
     l10n_ch_isr_sent = fields.Boolean(defaut=False, help="Boolean value telling whether or not the ISR corresponding to this invoice has already been printed or sent by mail.")
-    l10n_ch_currency_name = fields.Char(related='currency_id.name', help="The name of this invoice's currency") #This field is used in the "invisible" condition field of the 'Print ISR' button.
+    l10n_ch_currency_name = fields.Char(related='currency_id.name', readonly=False, string="Currency Name", help="The name of this invoice's currency") #This field is used in the "invisible" condition field of the 'Print ISR' button.
 
     @api.depends('partner_bank_id.bank_id.l10n_ch_postal_eur', 'partner_bank_id.bank_id.l10n_ch_postal_chf')
     def _compute_l10n_ch_isr_postal(self):
@@ -38,6 +38,10 @@ class AccountInvoice(models.Model):
             trailing_cipher = isr_postal[-1]
             middle_part = re.sub('^0*', '', middle_part)
             return currency_code + '-' + middle_part + '-' + trailing_cipher
+
+        def _format_isr_postal_scanline(isr_postal):
+            # format the isr for scanline
+            return isr_postal[:2] + isr_postal[2:-1].rjust(6, '0') + isr_postal[-1:]
 
         for record in self:
             if record.partner_bank_id and record.partner_bank_id.bank_id:
@@ -51,7 +55,7 @@ class AccountInvoice(models.Model):
                     continue
 
                 if isr_postal:
-                    record.l10n_ch_isr_postal = isr_postal
+                    record.l10n_ch_isr_postal = _format_isr_postal_scanline(isr_postal)
                     record.l10n_ch_isr_postal_formatted = _format_isr_postal(isr_postal)
 
     @api.depends('number', 'partner_bank_id.l10n_ch_postal')
@@ -133,15 +137,22 @@ class AccountInvoice(models.Model):
                 record.l10n_ch_currency_name in ['EUR', 'CHF']
 
     def split_total_amount(self):
-       """ Splits the total amount of this invoice in two parts, using the dot as
-       a separator, and taking two precision digits (always displayed).
-       These two parts are returned as the two elements of a tuple, as strings
-       to print in the report.
+        """ Splits the total amount of this invoice in two parts, using the dot as
+        a separator, and taking two precision digits (always displayed).
+        These two parts are returned as the two elements of a tuple, as strings
+        to print in the report.
 
-       This function is needed on the model, as it must be called in the report
-       template, which cannot reference static functions
-       """
-       return float_split_str(self.amount_total, 2)
+        This function is needed on the model, as it must be called in the report
+        template, which cannot reference static functions
+        """
+        return float_split_str(self.amount_total, 2)
+
+    def display_swiss_qr_code(self):
+        """ Trigger the print of the Swiss QR code in the invoice report or not
+        """
+        self.ensure_one()
+        qr_parameter = self.env['ir.config_parameter'].sudo().get_param('l10n_ch.print_qrcode')
+        return self.partner_id.country_id.code == 'CH' and qr_parameter
 
     def isr_print(self):
         """ Triggered by the 'Print ISR' button.
@@ -167,3 +178,10 @@ class AccountInvoice(models.Model):
             rslt['context']['l10n_ch_mark_isr_as_sent'] = True
 
         return rslt
+
+    @api.multi
+    @api.returns('mail.message', lambda value: value.id)
+    def message_post(self, **kwargs):
+        if self.env.context.get('l10n_ch_mark_isr_as_sent'):
+            self.filtered(lambda inv: not inv.l10n_ch_isr_sent).write({'l10n_ch_isr_sent': True})
+        return super(AccountInvoice, self.with_context(mail_post_autofollow=True)).message_post(**kwargs)

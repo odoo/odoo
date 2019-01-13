@@ -17,7 +17,7 @@ This module adds several restaurant features to the Point of Sale:
 
 """,
     'depends': ['point_of_sale'],
-    'website': 'https://www.odoo.com/page/point-of-sale',
+    'website': 'https://www.odoo.com/page/point-of-sale-restaurant',
     'data': [
         'security/ir.model.access.csv',
         'views/pos_order_views.xml',

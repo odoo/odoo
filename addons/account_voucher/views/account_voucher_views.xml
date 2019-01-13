@@ -45,19 +45,19 @@
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_card oe_kanban_global_click">
                                 <div class="row">
-                                    <div class="col-xs-6">
+                                    <div class="col-6">
                                         <strong><span><t t-esc="record.partner_id.value"/></span></strong>
                                     </div>
-                                    <div class="col-xs-6">
-                                        <strong><span class="pull-right text-right"><t t-esc="record.amount.value"/></span></strong>
+                                    <div class="col-6">
+                                        <strong><span class="float-right text-right"><t t-esc="record.amount.value"/></span></strong>
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-xs-6 text-muted">
+                                    <div class="col-6 text-muted">
                                         <span><t t-esc="record.number.value"/> <t t-esc="record.date.value"/></span>
                                     </div>
-                                    <div class="col-xs-6">
-                                        <span class="pull-right text-right">
+                                    <div class="col-6">
+                                        <span class="float-right text-right">
                                             <field name="state" widget="label_selection" options="{'classes': {'draft': 'default', 'cancel': 'default', 'none': 'danger', 'proforma': 'warning',
                                             'posted': 'success'}}"/>
                                         </span>
@@ -86,6 +86,7 @@
                             <field name="account_id"/>
                             <field name="tax_ids" widget="many2many_tags"/>
                             <field name="account_analytic_id" domain="[('company_id', '=', company_id)]" groups="analytic.group_analytic_accounting"/>
+                            <field name="analytic_tag_ids" widget="many2many_tags" groups="analytic.group_analytic_tags"/>
                             <field name="company_id" groups="base.group_multi_company" readonly="1"/>
                         </group>
                     </group>
@@ -104,6 +105,7 @@
                     <field name="name"/>
                     <field name="account_id"/>
                     <field name="account_analytic_id" domain="[('company_id', '=', company_id)]" groups="analytic.group_analytic_accounting"/>
+                    <field name="analytic_tag_ids" widget="many2many_tags" groups="analytic.group_analytic_tags"/>
                     <field name="quantity"/>
                     <field name="price_unit"/>
                     <field name="tax_ids" widget="many2many_tags"/>
@@ -122,17 +124,17 @@
                 <search string="Search Vouchers">
                     <field name="number" string="Voucher"/>
                     <field name="date"/>
-                    <filter string="Draft" domain="[('state','=','draft')]" help="Draft Vouchers"/>
-                    <filter string="Posted" domain="[('state','=','posted')]" help="Posted Vouchers"/>
+                    <filter string="Draft" name="draft" domain="[('state','=','draft')]" help="Draft Vouchers"/>
+                    <filter string="Posted" name="posted" domain="[('state','=','posted')]" help="Posted Vouchers"/>
                     <separator/>
-                    <filter string="To Review" domain="[('state','=','posted')]" help="To Review"/>
+                    <filter string="To Review" name="toreview" domain="[('state','=','posted')]" help="To Review"/>
                     <field name="partner_id" filter_domain="[('partner_id', 'child_of', self)]"/>
                     <field name="journal_id" widget="selection" context="{'journal_id': self, 'set_visible':False}" /> <!-- Keep widget=selection on this field to pass numeric `self` value, which is not the case for regular m2o widgets! -->
                     <group expand="0" string="Group By">
-                        <filter string="Partner" domain="[]" context="{'group_by':'partner_id'}"/>
-                        <filter string="Journal" domain="[]" context="{'group_by':'journal_id'}"/>
-                        <filter string="Date" domain="[]" context="{'group_by':'date','visible':True}"/>
-                        <filter string="Status" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Partner" name="partner" domain="[]" context="{'group_by':'partner_id'}"/>
+                        <filter string="Journal" name="journal" domain="[]" context="{'group_by':'journal_id'}"/>
+                        <filter string="Date" name="date" domain="[]" context="{'group_by':'date','visible':True}"/>
+                        <filter string="Status" name="status" domain="[]" context="{'group_by':'state'}"/>
                     </group>
                 </search>
             </field>
@@ -174,15 +176,15 @@
                 <search string="Search Vouchers">
                     <field name="number" string="Voucher"/>
                     <field name="date"/>
-                    <filter string="Draft" domain="[('state','=','draft')]" help="Draft Vouchers"/>
-                    <filter string="Posted" domain="[('state','=','posted')]" help="Posted Vouchers"/>
+                    <filter string="Draft" name="draft" domain="[('state','=','draft')]" help="Draft Vouchers"/>
+                    <filter string="Posted" name="posted" domain="[('state','=','posted')]" help="Posted Vouchers"/>
                     <field name="partner_id" string="Vendor" filter_domain="[('partner_id','child_of',self)]"/>
                     <field name="journal_id" widget="selection" context="{'journal_id': self, 'set_visible':False}" domain="[('type','=','purchase')]"/> <!-- Keep widget=selection on this field to pass numeric `self` value, which is not the case for regular m2o widgets! -->
                     <group expand="0" string="Group By">
-                        <filter string="Vendor" domain="[]" context="{'group_by':'partner_id'}"/>
-                        <filter string="Journal" domain="[]" context="{'group_by':'journal_id'}"/>
-                        <filter string="Bill Date" domain="[]" context="{'group_by':'date','visible':True}"/>
-                        <filter string="Status" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Vendor" name="vendor" domain="[]" context="{'group_by':'partner_id'}"/>
+                        <filter string="Journal" name="journal" domain="[]" context="{'group_by':'journal_id'}"/>
+                        <filter string="Bill Date" name="billdate" domain="[]" context="{'group_by':'date','visible':True}"/>
+                        <filter string="Status" name="status" domain="[]" context="{'group_by':'state'}"/>
                     </group>
                 </search>
             </field>
@@ -195,15 +197,15 @@
                 <search string="Search Vouchers">
                     <field name="number" string="Voucher"/>
                     <field name="date"/>
-                    <filter string="Draft" domain="[('state','=','draft')]" help="Draft Vouchers"/>
-                    <filter string="Posted" domain="[('state','=','posted')]" help="Posted Vouchers"/>
+                    <filter string="Draft" name="darft" domain="[('state','=','draft')]" help="Draft Vouchers"/>
+                    <filter string="Posted" name="posted" domain="[('state','=','posted')]" help="Posted Vouchers"/>
                     <field name="partner_id" string="Customer" filter_domain="[('partner_id','child_of',self)]"/>
                     <field name="journal_id" widget="selection" context="{'journal_id': self, 'set_visible':False}" domain="[('type','=','sale')]"/> <!-- Keep widget=selection on this field to pass numeric `self` value, which is not the case for regular m2o widgets! -->
                     <group expand="0" string="Group By">
-                        <filter string="Customer" domain="[]" context="{'group_by':'partner_id'}"/>
-                        <filter string="Journal" domain="[]" context="{'group_by':'journal_id'}"/>
-                        <filter string="Account Date" domain="[]" context="{'group_by':'account_date','visible':True}"/>
-                        <filter string="Status" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Customer" name="customer" domain="[]" context="{'group_by':'partner_id'}"/>
+                        <filter string="Journal" name="journal" domain="[]" context="{'group_by':'journal_id'}"/>
+                        <filter string="Account Date" name="accountdate" domain="[]" context="{'group_by':'account_date','visible':True}"/>
+                        <filter string="Status" name="status" domain="[]" context="{'group_by':'state'}"/>
                     </group>
                 </search>
             </field>
@@ -234,7 +236,7 @@
                             <field name="pay_now" required="1"/>
                             <field name="payment_journal_id"
                                    attrs="{'invisible': [('pay_now', '!=', 'pay_now')], 'required': [('pay_now', '=', 'pay_now')]}"/>
-                            <field name="account_id" attrs="{'invisible': [('pay_now', '=', 'pay_now')]}" groups="account.group_account_user"/>
+                            <field name="account_id" groups="account.group_account_user"/>
                             <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                         </group>
                         <group>
@@ -244,7 +246,6 @@
                                    groups="account.group_account_user"/>
                             <field name="date"/>
                             <field name="date_due" attrs="{'invisible':[('pay_now','=','pay_now')]}"/>
-                            <field name="account_date"/>
                             <field name="name" attrs="{'invisible': [('pay_now', '=', 'pay_later')]}"/>
                             <field name="paid" invisible="1"/>
                         </group>
@@ -257,6 +258,7 @@
                                     <field name="name"/>
                                     <field name="account_id" groups="account.group_account_user"/>
                                     <field name="account_analytic_id" domain="[('company_id', '=', parent.company_id)]" groups="analytic.group_analytic_accounting"/>
+                                    <field name="analytic_tag_ids" widget="many2many_tags" groups="analytic.group_analytic_tags"/>
                                     <field name="quantity"/>
                                     <field name="price_unit"/>
                                     <field name="tax_ids" widget="many2many_tags" domain="[('type_tax_use','=','sale')]"/>
@@ -275,6 +277,7 @@
                         </page>
                         <page string="Journal Items" groups="account.group_account_user">
                             <group>
+                                <field name="account_date"/>
                                 <field name="move_id" readonly="1"/>
                             </group>
                         </page>
@@ -290,7 +293,7 @@
 
         <!-- Sales Voucher -->
         <record id="action_sale_receipt" model="ir.actions.act_window">
-            <field name="name">Sales Receipts</field>
+            <field name="name">Receipts</field>
             <field name="res_model">account.voucher</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,kanban</field>
@@ -300,8 +303,8 @@
             <field name="search_view_id" ref="view_voucher_filter_sale"/>
             <field name="target">current</field>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to create a sale receipt.
+              <p class="o_view_nocontent_smiling_face">
+                Create a new sale receipt
               </p><p>
                 When the sale receipt is confirmed, you can record the customer
                 payment related to this sales receipt.
@@ -322,7 +325,7 @@
 
         <menuitem id="menu_action_sale_receipt"
             action="action_sale_receipt"
-            parent="account.menu_finance_receivables_documents"
+            parent="account.menu_finance_receivables"
             sequence="10"/>
 
         <!--  Purchase Vouchers -->
@@ -351,12 +354,11 @@
                             <field name="pay_now" required="1"/>
                             <field name="payment_journal_id"
                                    attrs="{'invisible': [('pay_now', '!=', 'pay_now')], 'required': [('pay_now', '=', 'pay_now')]}"/>
-                            <field name="account_id" groups="account.group_account_user" attrs="{'invisible': [('pay_now', '=', 'pay_now')]}" />
+                            <field name="account_id" groups="account.group_account_user"/>
                             <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                             <field name="reference"/>
                         </group>
                         <group>
-                            <field name="account_date"/>
                             <field name="journal_id"
                                    domain="[('type','=','purchase')]"
                                    widget="selection"
@@ -375,6 +377,7 @@
                                     <field name="name"/>
                                     <field name="account_id" groups="account.group_account_user"/>
                                     <field name="account_analytic_id" domain="[('company_id', '=', parent.company_id)]" groups="analytic.group_analytic_accounting"/>
+                                    <field name="analytic_tag_ids" widget="many2many_tags" groups="analytic.group_analytic_tags"/>
                                     <field name="quantity"/>
                                     <field name="price_unit"/>
                                     <field name="tax_ids" widget="many2many_tags" domain="[('type_tax_use','=','purchase')]"/>
@@ -394,6 +397,7 @@
                         </page>
                         <page string="Journal Items" groups="account.group_account_user">
                             <group>
+                                <field name="account_date"/>
                                 <field name="move_id" readonly="1"/>
                             </group>
                         </page>
@@ -407,7 +411,7 @@
             </field>
         </record>
         <record id="action_purchase_receipt" model="ir.actions.act_window">
-            <field name="name">Purchase Receipts</field>
+            <field name="name">Receipts</field>
             <field name="res_model">account.voucher</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,kanban</field>
@@ -417,8 +421,8 @@
             <field name="search_view_id" eval="view_voucher_filter_vendor"/>
             <field name="target">current</field>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to register a purchase receipt.
+              <p class="o_view_nocontent_smiling_face">
+                Register a new purchase receipt
               </p><p>
                 When the purchase receipt is confirmed, you can record the
                 vendor payment related to this purchase receipt.
@@ -438,5 +442,5 @@
         </record>
 
         <menuitem id="menu_action_purchase_receipt"
-            action="action_purchase_receipt" parent="account.menu_finance_payables_documents" sequence="4"/>
+            action="action_purchase_receipt" parent="account.menu_finance_payables" sequence="10"/>
 </odoo>

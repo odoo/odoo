@@ -12,36 +12,37 @@ WebsiteNewMenu.include({
         new_product: '_createNewProduct',
     }),
 
-    //----------------------------------------------------------------------
+    //--------------------------------------------------------------------------
     // Actions
-    //----------------------------------------------------------------------
+    //--------------------------------------------------------------------------
 
     /**
      * Asks the user information about a new product to create, then creates it
-     * and redirects the user to this new page.
+     * and redirects the user to this new product.
      *
      * @private
-     * @returns {Deferred} Unresolved if the product is created as there will be
-     *                     a redirection
+     * @returns {Deferred} Unresolved if there is a redirection
      */
     _createNewProduct: function () {
         var self = this;
-        var def = $.Deferred();
-        wUtils.prompt({
+        return wUtils.prompt({
             id: "editor_new_product",
             window_title: _t("New Product"),
-            input: "Product Name",
+            input: _t("Name"),
         }).then(function (name) {
-            self._rpc({
+            if (!name) {
+                return;
+            }
+            return self._rpc({
                 route: '/shop/add_product',
                 params: {
                     name: name,
                 },
             }).then(function (url) {
                 window.location.href = url;
+                return $.Deferred();
             });
-        }, def.resolve.bind(def));
-        return def;
+        });
     },
 });
 });
@@ -73,7 +74,7 @@ options.registry.website_sale = options.Class.extend({
         var size_x = parseInt(this.$target.attr("colspan") || 1);
         var size_y = parseInt(this.$target.attr("rowspan") || 1);
 
-        var $size = this.$el.find('ul[name="size"]');
+        var $size = this.$el.find('div[name="size"]');
         var $select = $size.find('tr:eq(0) td:lt('+size_x+')');
         if (size_y >= 2) $select = $select.add($size.find('tr:eq(1) td:lt('+size_x+')'));
         if (size_y >= 3) $select = $select.add($size.find('tr:eq(2) td:lt('+size_x+')'));
@@ -84,11 +85,11 @@ options.registry.website_sale = options.Class.extend({
             model: 'product.style',
             method: 'search_read',
         }).then(function (data) {
-            var $ul = self.$el.find('ul[name="style"]');
+            var $ul = self.$el.find('div[name="style"]');
             for (var k in data) {
                 $ul.append(
-                    $('<li data-style="'+data[k]['id']+'" data-toggle-class="'+data[k]['html_class']+'" data-no-preview="true"/>')
-                        .append( $('<a/>').text(data[k]['name']) ));
+                    $('<a class="dropdown-item" role="menuitem" data-style="'+data[k]['id']+'" data-toggle-class="'+data[k]['html_class']+'" data-no-preview="true"/>')
+                        .append(data[k]['name']));
             }
             self._setActive();
         });
@@ -104,13 +105,13 @@ options.registry.website_sale = options.Class.extend({
     },
     bind_resize: function () {
         var self = this;
-        this.$el.on('mouseenter', 'ul[name="size"] table', function (event) {
+        this.$el.on('mouseenter', 'div[name="size"] table', function (event) {
             $(event.currentTarget).addClass("oe_hover");
         });
-        this.$el.on('mouseleave', 'ul[name="size"] table', function (event) {
+        this.$el.on('mouseleave', 'div[name="size"] table', function (event) {
             $(event.currentTarget).removeClass("oe_hover");
         });
-        this.$el.on('mouseover', 'ul[name="size"] td', function (event) {
+        this.$el.on('mouseover', 'div[name="size"] td', function (event) {
             var $td = $(event.currentTarget);
             var $table = $td.closest("table");
             var x = $td.index()+1;
@@ -126,7 +127,7 @@ options.registry.website_sale = options.Class.extend({
             $table.find("td").removeClass("select");
             $select_td.addClass("select");
         });
-        this.$el.on('click', 'ul[name="size"] td', function (event) {
+        this.$el.on('click', 'div[name="size"] td', function (event) {
             var $td = $(event.currentTarget);
             var x = $td.index()+1;
             var y = $td.parent().index()+1;

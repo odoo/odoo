@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import date
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 from . import membership
@@ -10,7 +11,7 @@ class Partner(models.Model):
     _inherit = 'res.partner'
 
     associate_member = fields.Many2one('res.partner', string='Associate Member',
-        help="A member with whom you want to associate your membership. "
+        help="A member with whom you want to associate your membership."
              "It will consider the membership state of the associated member.")
     member_lines = fields.One2many('membership.membership_line', 'partner', string='Membership')
     free_member = fields.Boolean(string='Free Member',
@@ -114,7 +115,7 @@ class Partner(models.Model):
             s = 4
             if partner.member_lines:
                 for mline in partner.member_lines:
-                    if (mline.date_to or '0000-00-00') >= today and (mline.date_from or '0000-00-00') <= today:
+                    if (mline.date_to or date.min) >= today and (mline.date_from or date.min) <= today:
                         if mline.account_invoice_line.invoice_id.partner_id == partner:
                             mstate = mline.account_invoice_line.invoice_id.state
                             if mstate == 'paid':
@@ -132,7 +133,7 @@ class Partner(models.Model):
                                 s = 3
                 if s == 4:
                     for mline in partner.member_lines:
-                        if (mline.date_from or '0000-00-00') < today and (mline.date_to or '0000-00-00') < today and (mline.date_from or '0000-00-00') <= (mline.date_to or '0000-00-00') and mline.account_invoice_line and mline.account_invoice_line.invoice_id.state == 'paid':
+                        if (mline.date_from or date.min) < today and (mline.date_to or date.min) < today and (mline.date_from or date.min) <= (mline.date_to or date.min) and mline.account_invoice_line and mline.account_invoice_line.invoice_id.state == 'paid':
                             s = 5
                         else:
                             s = 6
@@ -159,7 +160,7 @@ class Partner(models.Model):
         while self:
             self = self.associate_member
             if not level:
-                raise ValidationError(_('Error ! You cannot create recursive associated members.'))
+                raise ValidationError(_('You cannot create recursive associated members.'))
             level -= 1
 
     @api.model

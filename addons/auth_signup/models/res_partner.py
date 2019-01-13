@@ -18,8 +18,7 @@ def random_token():
     return ''.join(random.SystemRandom().choice(chars) for _ in range(20))
 
 def now(**kwargs):
-    dt = datetime.now() + timedelta(**kwargs)
-    return fields.Datetime.to_string(dt)
+    return datetime.now() + timedelta(**kwargs)
 
 
 class ResPartner(models.Model):
@@ -28,14 +27,14 @@ class ResPartner(models.Model):
     signup_token = fields.Char(copy=False, groups="base.group_erp_manager")
     signup_type = fields.Char(string='Signup Token Type', copy=False, groups="base.group_erp_manager")
     signup_expiration = fields.Datetime(copy=False, groups="base.group_erp_manager")
-    signup_valid = fields.Boolean(compute='_compute_signup_valid', string='Signup Token is Valid')
+    signup_valid = fields.Boolean(compute='_compute_signup_valid', compute_sudo=True, string='Signup Token is Valid')
     signup_url = fields.Char(compute='_compute_signup_url', string='Signup URL')
 
     @api.multi
     @api.depends('signup_token', 'signup_expiration')
     def _compute_signup_valid(self):
         dt = now()
-        for partner in self.sudo():
+        for partner in self:
             partner.signup_valid = bool(partner.signup_token) and \
             (not partner.signup_expiration or dt <= partner.signup_expiration)
 
@@ -105,7 +104,7 @@ class ResPartner(models.Model):
         """
         res = defaultdict(dict)
 
-        allow_signup = self.env['ir.config_parameter'].sudo().get_param('auth_signup.allow_uninvited', 'False').lower() == 'true'
+        allow_signup = self.env['res.users']._get_signup_invitation_scope() == 'b2c'
         for partner in self:
             if allow_signup and not partner.user_ids:
                 partner = partner.sudo()

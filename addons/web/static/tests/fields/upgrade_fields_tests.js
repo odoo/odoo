@@ -32,7 +32,7 @@ QUnit.module('upgrade_fields', {
             arch: '<form><field name="bar" widget="upgrade_boolean"/></form>',
         });
 
-        form.$('input:checkbox').click();
+        testUtils.dom.click(form.$('input:checkbox'));
         assert.strictEqual($('.modal').length, 1,
             "the 'Upgrade to Enterprise' dialog should be opened");
 
@@ -52,10 +52,10 @@ QUnit.module('upgrade_fields', {
                 '</form>',
         });
 
-        assert.strictEqual(form.$('.o_field .label').length, 0,
-            "the upgrade label shouldn't be inside the field section");
-        assert.strictEqual(form.$('.o_label .label').length, 1,
-            "the upgrade label should be inside the label section");
+        assert.containsNone(form, '.o_field .badge',
+            "the upgrade badge shouldn't be inside the field section");
+        assert.containsOnce(form, '.o_label .badge',
+            "the upgrade badge should be inside the label section");
         assert.strictEqual(form.$('.o_label').text(), "Bar EnterpriseCoucou",
             "the upgrade label should be inside the label section");
         form.destroy();

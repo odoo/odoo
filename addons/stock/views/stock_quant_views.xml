@@ -13,8 +13,6 @@
                 <field name="lot_id" groups="stock.group_production_lot"/>
                 <field name="owner_id" groups="stock.group_tracking_owner"/>
                 <group expand='0' string='Filters'>
-                    <filter name="stockable" string="Stockable" domain="[('product_id.type', '=', 'product')]"/>
-                    <separator/>
                     <filter name='internal_loc' string="Internal Locations" domain="[('location_id.usage','=', 'internal')]"/>
                     <filter name='transit_loc' string="Transit Locations" domain="[('location_id.usage' ,'=', 'transit')]"/>
                     <separator/>
@@ -25,10 +23,10 @@
                 <group expand='0' string='Group by...'>
                     <filter string='Location' name="locationgroup" domain="[]" context="{'group_by': 'location_id'}"/>
                     <filter string='Product' name="productgroup" context="{'group_by': 'product_id'}"/>
-                    <filter string='Owner' context="{'group_by': 'owner_id'}" groups="stock.group_tracking_owner"/>
-                    <filter string='Lot/Serial Number' context="{'group_by': 'lot_id'}" groups="stock.group_production_lot"/>
-                    <filter string='Package' domain="[]" context="{'group_by': 'package_id'}" groups="stock.group_tracking_lot"/>
-                    <filter string='Company' domain="[]" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
+                    <filter string='Owner' name="owner" context="{'group_by': 'owner_id'}" groups="stock.group_tracking_owner"/>
+                    <filter string='Lot/Serial Number' name="Lot_Serial_number" context="{'group_by': 'lot_id'}" groups="stock.group_production_lot"/>
+                    <filter string='Package' name="package" domain="[]" context="{'group_by': 'package_id'}" groups="stock.group_tracking_lot"/>
+                    <filter string='Company' name="company" domain="[]" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
                </group>
             </search>
         </field>
@@ -56,12 +54,12 @@
                             <label for="quantity" string="Quantity On Hand"/>
                             <div class="o_row">
                                 <field name="quantity"/>
-                                <field name="product_uom_id" groups="product.group_uom"/>
+                                <field name="product_uom_id" groups="uom.group_uom"/>
                             </div>
                             <label for="reserved_quantity" string="Quantity Reserved"/>
                             <div class="o_row">
                                 <field name="reserved_quantity"/>
-                                <field name="product_uom_id" groups="product.group_uom"/>
+                                <field name="product_uom_id" groups="uom.group_uom"/>
                             </div>
                             <field name="in_date" attrs="{'invisible': [('lot_id', '=', False)]}" groups="stock.group_production_lot"/>
                         </group>
@@ -84,7 +82,7 @@
                 <field name="owner_id" groups="stock.group_tracking_owner"/>
                 <field name="reserved_quantity" string="Reserved"/>
                 <field name="quantity" string="On Hand"/>
-                <field name="product_uom_id" groups="product.group_uom"/>
+                <field name="product_uom_id" groups="uom.group_uom"/>
                 <field name='company_id' groups="base.group_multi_company"/>
             </tree>
         </field>
@@ -119,8 +117,14 @@
         <field name="res_model">stock.quant</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form,pivot,graph</field>
-        <field name="context">{'search_default_internal_loc': 1, 'search_default_stockable': 1, 'group_by': ['product_id', 'location_id']}</field>
-        <field name="help">This analysis gives you a fast overview on the current stock level of your products and their current inventory value.</field>
+        <field name="context">{'search_default_internal_loc': 1, 'group_by': ['product_id', 'location_id']}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                No inventory found
+            </p><p>
+                This analysis gives you a fast overview on the current stock level of your products and their current inventory value.    
+            </p>
+        </field>
     </record>
     <record model="ir.actions.act_window" id="product_template_open_quants"> <!-- Not used -->
         <field name="name">Stock On Hand</field>
@@ -151,8 +155,9 @@
                 <field name="location_id"/>
                 <field name="packaging_id"/>
                 <group  expand='0' string='Group by...'>
-                   <!-- FORWARD-PORT UP TO v11 -->
-                   <filter string='Packaging' domain="[]" context="{'group_by' : 'packaging_id'}"/>
+                   <filter string='Location' name="location" domain="[]" context="{'group_by' : 'location_id'}"/>
+                   <filter string='Packaging' name="packaging" domain="[]" context="{'group_by' : 'packaging_id'}"/>
+                   <filter string='Company' name="company" domain="[]" context="{'group_by' : 'company_id'}" groups="base.group_multi_company"/>
                </group>
             </search>
         </field>
@@ -184,23 +189,13 @@
                             <field name="location_id"/>
                         </group>
                     </group>
-                    <separator string="Ongoing Package Creation: Content" attrs="{'invisible': [('current_picking_id', '=', False)]}"/>
-                    <field name="current_picking_id" invisible="1"/>
-                    <field name="current_picking_move_line_ids" readonly="1" attrs="{'invisible': [('current_picking_id', '=', False)]}">
-                        <tree>
-                            <field name="product_id"/>
-                            <field name="lot_id" groups="stock.group_production_lot"/>
-                            <field name="qty_done" string="Quantity"/>
-                            <field name="product_uom_id" groups="product.group_uom"/>
-                        </tree>
-                    </field>
-                    <separator string="Content" attrs="{'invisible': [('current_picking_id', '=', True)]}"/>
-                    <field name="quant_ids" attrs="{'invisible': [('current_picking_id', '=', True)]}">
+                    <separator string="Content"/>
+                    <field name="quant_ids">
                         <tree>
                             <field name="product_id"/>
                             <field name="lot_id" groups="stock.group_production_lot"/>
                             <field name="quantity"/>
-                            <field name="product_uom_id" groups="product.group_uom"/>
+                            <field name="product_uom_id" groups="uom.group_uom"/>
                         </tree>
                     </field>
                 </sheet>
@@ -215,7 +210,6 @@
         <field name="arch" type="xml">
             <tree string="Package">
                 <field name="display_name"/>
-                <field name="packaging_id"/>
                 <field name="location_id"/>
                 <field name="company_id"/>
             </tree>
@@ -241,29 +235,16 @@
         </field>
     </record>
 
-    <record model="ir.ui.view" id="view_quant_package_picking_tree">
-        <field name="name">stock.quant.package.picking.tree</field>
-        <field name="model">stock.quant.package</field>
-        <field name="priority">1000</field>
-        <field name="arch" type="xml">
-            <tree editable="bottom" create="0" delete="0">
-                <field name="name" string="Package" readonly="1"/>
-                <field name="is_processed" invisible="1"/>
-                <field name="current_source_location_id" string="From" readonly="1" groups="stock.group_stock_multi_locations"/>
-                <field name="current_destination_location_id" string="To" attrs="{'readonly': [('is_processed', '=', True)]}" domain="[('id', 'child_of', parent.location_dest_id)]" groups="stock.group_stock_multi_locations"/>
-                <button name="action_toggle_processed" icon="fa-square-o" type="object" context="{'picking_id': parent.id, 'destination_location': current_destination_location_id}" attrs="{'invisible': ['|', ('is_processed', '=', True),('parent.state', '=', 'done')]}"/>
-                <button name="action_toggle_processed" icon="fa-check-square-o" type="object" context="{'picking_id': parent.id}" attrs="{'invisible': ['|', ('is_processed', '=', False), ('parent.state', '=', 'done')]}"/>
-            </tree>
-        </field>
-    </record>
-
     <record model="ir.actions.act_window" id="action_package_view">
         <field name="context">{}</field>
         <field name="name">Packages</field>
         <field name="res_model">stock.quant.package</field>
         <field name="view_mode">kanban,tree,form</field>
         <field name="help" type="html">
-            <p>Packages are usually created by pack operations made on transfers and can contains several different products. You can then reuse a package to move its whole content somewhere else, or to pack it into another bigger package. A package can also be unpacked, allowing the disposal of its former content as single units again.
+            <p class="o_view_nocontent_smiling_face">
+                Create a new package
+            </p><p>
+                Packages are usually created by pack operations made on transfers and can contains several different products. You can then reuse a package to move its whole content somewhere else, or to pack it into another bigger package. A package can also be unpacked, allowing the disposal of its former content as single units again.
             </p>
         </field>
     </record>

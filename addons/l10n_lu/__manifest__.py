@@ -28,11 +28,10 @@ Notes:
         'account',
         'base_iban',
         'base_vat',
+        'l10n_multilang',
     ],
     'data': [
         # basic accounting data
-        'data/account_financial_report_data.xml',
-        'data/account_financial_report_abr_data.xml',
         'data/l10n_lu_chart_data.xml',
         'data/account.account.template-2011.csv',
         'data/account.account.tag.csv',
@@ -42,7 +41,7 @@ Notes:
         'data/account.fiscal.position.tax.template-2015.csv',
         # configuration wizard, views, reports...
         'data/account.chart.template.csv',
-        'data/account_chart_template_data.yml',
+        'data/account_chart_template_data.xml',
     ],
     'post_init_hook': '_preserve_tag_on_taxes',
 }

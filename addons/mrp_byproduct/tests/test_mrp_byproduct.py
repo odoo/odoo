@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.tests import Form
 from odoo.tests import common
 
 
@@ -12,7 +13,7 @@ class TestMrpByProduct(common.TransactionCase):
         self.warehouse = self.env.ref('stock.warehouse0')
         route_manufacture = self.warehouse.manufacture_pull_id.route_id.id
         route_mto = self.warehouse.mto_pull_id.route_id.id
-        self.uom_unit_id = self.ref('product.product_uom_unit')
+        self.uom_unit_id = self.ref('uom.product_uom_unit')
         def create_product(name, route_ids=[]):
             return self.env['product.product'].create({
                 'name': name,
@@ -50,12 +51,12 @@ class TestMrpByProduct(common.TransactionCase):
         # Create production order for product A
         # -------------------------------------
 
-        mnf_product_a = self.env['mrp.production'].create({
-                        'product_id': self.product_a.id,
-                        'product_qty': 2.0,
-                        'product_uom_id': self.uom_unit_id,
-                        'bom_id': bom_product_a.id,
-                    })
+        mnf_product_a_form = Form(self.env['mrp.production'])
+        mnf_product_a_form.product_id = self.product_a
+        mnf_product_a_form.bom_id = bom_product_a
+        mnf_product_a_form.product_qty = 2.0
+        mnf_product_a = mnf_product_a_form.save()
+        mnf_product_a.action_confirm()
 
         # I compute the data of production order
         context = {"active_model": "mrp.production", "active_ids": [mnf_product_a.id], "active_id": mnf_product_a.id}
@@ -70,7 +71,9 @@ class TestMrpByProduct(common.TransactionCase):
 
         # I consume and produce the production of products.
         # I create record for selecting mode and quantity of products to produce.
-        product_consume = self.env['mrp.product.produce'].with_context(context).create({'product_qty': 2.00})
+        produce_form = Form(self.env['mrp.product.produce'].with_context(context))
+        produce_form.product_qty = 2.00
+        product_consume = produce_form.save()
         # I finish the production order.
         self.assertEqual(len(mnf_product_a.move_raw_ids), 1, "Wrong consume move on production order.")
         product_consume.do_produce()

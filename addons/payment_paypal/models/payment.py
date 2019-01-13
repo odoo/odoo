@@ -25,7 +25,7 @@ class AcquirerPaypal(models.Model):
         'Paypal Merchant ID', groups='base.group_user',
         help='The Merchant ID is used to ensure communications coming from Paypal are valid and secured.')
     paypal_use_ipn = fields.Boolean('Use IPN', default=True, help='Paypal Instant Payment Notification', groups='base.group_user')
-    paypal_pdt_token = fields.Char(string='Paypal PDT Token', required_if_provider='paypal', help='Payment Data Transfer allows you to receive notification of successful payments as they are made.', groups='base.group_user')
+    paypal_pdt_token = fields.Char(string='Paypal PDT Token', help='Payment Data Transfer allows you to receive notification of successful payments as they are made.', groups='base.group_user')
     # Server 2 server
     paypal_api_enabled = fields.Boolean('Use Rest API', default=False)
     paypal_api_username = fields.Char('Rest API Username', groups='base.group_user')
@@ -203,17 +203,20 @@ class TxPaypal(models.Model):
                     'PST': -8 * 3600,
                     'PDT': -7 * 3600,
                 }
-                date_validate = dateutil.parser.parse(data.get('payment_date'), tzinfos=tzinfos).astimezone(pytz.utc)
+                date = dateutil.parser.parse(data.get('payment_date'), tzinfos=tzinfos).astimezone(pytz.utc)
             except:
-                date_validate = fields.Datetime.now()
-            res.update(state='done', date_validate=date_validate)
+                date = fields.Datetime.now()
+            res.update(date=date)
+            self._set_transaction_done()
             return self.write(res)
         elif status in ['Pending', 'Expired']:
             _logger.info('Received notification for Paypal payment %s: set as pending' % (self.reference))
-            res.update(state='pending', state_message=data.get('pending_reason', ''))
+            res.update(state_message=data.get('pending_reason', ''))
+            self._set_transaction_pending()
             return self.write(res)
         else:
             error = 'Received unrecognized status for Paypal payment %s: %s, set as error' % (self.reference, status)
             _logger.info(error)
-            res.update(state='error', state_message=error)
+            res.update(state_message=error)
+            self._set_transaction_cancel()
             return self.write(res)

@@ -52,12 +52,12 @@ class AccountChartTemplate(models.Model):
                     'fields_id': field.id,
                     'value': value,
                 }
-                properties = PropertyObj.search([('name', '=', record), ('company_id', '=', company.id)])
-                if properties:
-                    # the property exist: modify it
-                    properties.write(vals)
-                else:
+                properties = PropertyObj.search([('name', '=', record), ('company_id', '=', company.id)], limit=1)
+                if not properties:
                     # create the property
                     PropertyObj.create(vals)
+                elif not properties.value_reference:
+                    # update the property if False
+                    properties.write(vals)
 
         return res

@@ -1,0 +1,66 @@
+
+.o_kanban_view.o_kanban_dashboard.o_salesteam_kanban {
+    .o_kanban_record {
+        .o_sales_team_kanban_graph_section {
+            .o_graph_linechart {
+                > svg {
+                    height: 80px;
+
+                    // X axis
+                    g.nv-x.nv-axis {
+                        // move the labels up, so they aren't hidden below the graph, and the lines back down.
+                        transform: translateY(50px);
+                        line {
+                            transform: translateY(30px);
+                        }
+                        .nv-axislabel{
+                            transform:translateY(-78px);
+                            font-weight: bold;
+                        }
+
+                        // Remove max and min labels
+                        g.nv-axisMaxMin {
+                            display: none;
+                        }
+                        g.tick.major {
+                            // Don't know why, but leads to strange bold text
+                            // stroke: $o-brand-odoo;
+
+                            line {
+                                display: none;
+                            }
+                        }
+                    }
+
+                    // !important are needed because nvd3 uses inline style on elements
+
+                    // Remove strokes
+                    g.nv-linesWrap {
+                        g.nv-group.nv-series-0 {
+                            fill-opacity: 0.3 !important;
+
+                            .nv-point {
+                                visibility: hidden;
+                                r: 3;
+                                fill: white;
+                                stroke-width: 2;
+                            }
+                        }
+                    }
+                }
+            }
+            .o_graph_barchart {
+                > svg {
+                    height: 95px;
+                    overflow: visible;
+                }
+            }
+        }
+    }
+
+    &.o_kanban_ungrouped {
+        .o_kanban_record {
+            width: 450px;
+        }
+    }
+}

@@ -19,11 +19,12 @@ You can assign several contracts per employee.
     'website': 'https://www.odoo.com/page/employees',
     'depends': ['hr'],
     'data': [
+        'security/security.xml',
         'security/ir.model.access.csv',
         'data/hr_contract_data.xml',
         'views/hr_contract_views.xml',
     ],
-    'demo': [],
+    'demo': ['data/hr_contract_demo.xml'],
     'installable': True,
     'auto_install': False,
 }

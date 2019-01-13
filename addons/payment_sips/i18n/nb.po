@@ -3,14 +3,14 @@
 # * payment_sips
 # 
 # Translators:
-# Jorunn D. Newth, 2017
+# Jorunn D. Newth, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Jorunn D. Newth, 2017\n"
+"POT-Creation-Date: 2018-08-02 09:56+0000\n"
+"PO-Revision-Date: 2018-08-02 09:56+0000\n"
+"Last-Translator: Jorunn D. Newth, 2018\n"
 "Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,38 +19,68 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: payment_sips
-#: code:addons/payment_sips/models/payment.py:153
+#: code:addons/payment_sips/models/payment.py:164
 #, python-format
 msgid "; multiple order found"
 msgstr "; flere ordrer funnet"
 
 #. module: payment_sips
-#: code:addons/payment_sips/models/payment.py:151
+#: code:addons/payment_sips/models/payment.py:162
 #, python-format
 msgid "; no order found"
 msgstr "; ingen ordre funnet"
 
 #. module: payment_sips
-#: code:addons/payment_sips/models/payment.py:74
+#: selection:payment.acquirer,provider:0
+msgid "Adyen"
+msgstr "Adyen"
+
+#. module: payment_sips
+#: selection:payment.acquirer,provider:0
+msgid "Authorize.Net"
+msgstr "Authorize.Net"
+
+#. module: payment_sips
+#: selection:payment.acquirer,provider:0
+msgid "Buckaroo"
+msgstr "Buckaroo"
+
+#. module: payment_sips
+#: code:addons/payment_sips/models/payment.py:75
 #, python-format
 msgid "Currency not supported by Wordline"
 msgstr "Valuta ikke støttet av Wordline"
 
 #. module: payment_sips
-#: code:addons/payment_sips/models/payment.py:55
+#: code:addons/payment_sips/models/payment.py:56
 #, python-format
 msgid "Incorrect payment acquirer provider"
 msgstr "Tilbyder av betalingsløsning er ikke korrekt"
 
 #. module: payment_sips
-#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer_sips_version
+#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_version
 msgid "Interface Version"
 msgstr "Grensesnittversjon"
 
 #. module: payment_sips
-#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer_sips_merchant_id
+#: selection:payment.acquirer,provider:0
+msgid "Manual Configuration"
+msgstr "Manuelt oppsett"
+
+#. module: payment_sips
+#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_merchant_id
 msgid "Merchant ID"
 msgstr "Merchant ID"
+
+#. module: payment_sips
+#: selection:payment.acquirer,provider:0
+msgid "Ogone"
+msgstr "Ogone"
+
+#. module: payment_sips
+#: selection:payment.acquirer,provider:0
+msgid "PayUmoney"
+msgstr "PayUmoney"
 
 #. module: payment_sips
 #: model:ir.model,name:payment_sips.model_payment_acquirer
@@ -63,27 +93,52 @@ msgid "Payment Transaction"
 msgstr "Betalingstransaksjon"
 
 #. module: payment_sips
-#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer_sips_prod_url
-msgid "Prod's url"
-msgstr "Nettadresse til Prod"
+#: selection:payment.acquirer,provider:0
+msgid "Paypal"
+msgstr "PayPal"
 
 #. module: payment_sips
-#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer_sips_secret
+#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_prod_url
+msgid "Production url"
+msgstr ""
+
+#. module: payment_sips
+#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__provider
+msgid "Provider"
+msgstr "Tilbyder"
+
+#. module: payment_sips
+#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_secret
 msgid "Secret Key"
 msgstr "Hemmelig nøkkel"
 
 #. module: payment_sips
-#: code:addons/payment_sips/models/payment.py:149
+#: selection:payment.acquirer,provider:0
+msgid "Sips"
+msgstr ""
+
+#. module: payment_sips
+#: code:addons/payment_sips/models/payment.py:160
 #, python-format
 msgid "Sips: received data for reference %s"
 msgstr "Sips: Mottatt data for referanse %s"
 
 #. module: payment_sips
-#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer_sips_test_url
-msgid "Test's url"
-msgstr "Nettadresse til Test"
+#: selection:payment.acquirer,provider:0
+msgid "Stripe"
+msgstr "Stripe"
 
 #. module: payment_sips
-#: model:ir.model.fields,help:payment_sips.field_payment_acquirer_sips_merchant_id
+#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_test_url
+msgid "Test url"
+msgstr ""
+
+#. module: payment_sips
+#: model:ir.model.fields,help:payment_sips.field_payment_acquirer__sips_merchant_id
 msgid "Used for production only"
 msgstr "Bare brukt i produksjon"
+
+#. module: payment_sips
+#: selection:payment.acquirer,provider:0
+msgid "Wire Transfer"
+msgstr "Bankoverføring"

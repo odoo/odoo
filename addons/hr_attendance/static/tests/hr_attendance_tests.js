@@ -18,7 +18,7 @@ QUnit.module('HR Attendance', {
                     attendance_state: {
                         string: 'State',
                         type: 'selection',
-                        selection: [[1, "In"], [2, "Out"]],
+                        selection: [['checked_in', "In"], ['checked_out', "Out"]],
                         default: 1,
                     },
                     user_id: {string: 'user ID', type: 'integer'},
@@ -27,7 +27,7 @@ QUnit.module('HR Attendance', {
                 records: [{
                     id: 1,
                     name: "Employee A",
-                    attendance_state: 1,
+                    attendance_state: 'checked_out',
                     user_id: 1,
                     barcode: 1,
                 },
@@ -57,8 +57,8 @@ QUnit.module('HR Attendance', {
         assert.expect(1);
 
         var $target = $('#qunit-fixture');
-        var clientAction = new MyAttendances(null);
-        testUtils.addMockEnvironment(clientAction, {
+        var clientAction = new MyAttendances(null, {});
+        testUtils.mock.addMockEnvironment(clientAction, {
             data: this.data,
             session: {
                 uid: 1,
@@ -66,7 +66,7 @@ QUnit.module('HR Attendance', {
         });
         clientAction.appendTo($target);
 
-        assert.strictEqual(clientAction.$('.o_hr_attendance_kiosk_mode h1').text(), 'Welcome Employee A',
+        assert.strictEqual(clientAction.$('.o_hr_attendance_kiosk_mode h1').text(), 'Employee A',
             "should have rendered the client action without crashing");
 
         clientAction.destroy();
@@ -78,8 +78,8 @@ QUnit.module('HR Attendance', {
         var $target = $('#qunit-fixture');
         var self = this;
         var rpcCount = 0;
-        var clientAction = new KioskMode(null);
-        testUtils.addMockEnvironment(clientAction, {
+        var clientAction = new KioskMode(null, {});
+        testUtils.mock.addMockEnvironment(clientAction, {
             data: this.data,
             session: {
                 uid: 1,
@@ -121,9 +121,9 @@ QUnit.module('HR Attendance', {
                 },
                 next_action: "hr_attendance.hr_attendance_action_kiosk_mode",
                 barcode: barcode,
-            }
+            };
             var clientAction = new GreetingMessage(null, action);
-            testUtils.addMockEnvironment(clientAction, {
+            testUtils.mock.addMockEnvironment(clientAction, {
                 data: self.data,
                 session: {
                     uid: 1,
@@ -146,7 +146,7 @@ QUnit.module('HR Attendance', {
             clientAction.appendTo(target);
 
             clientActions.push(clientAction);
-        };
+        }
 
         // init - mock coming from kiosk
         createGreetingMessage ($target, 1);

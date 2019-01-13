@@ -1,0 +1,85 @@
+.o_hidden {
+    display: none!important;
+}
+
+.o_text_overflow {
+    @include o-text-overflow;
+}
+
+.ui-autocomplete {
+    z-index: $zindex-modal + 1;
+}
+
+[aria-hidden="true"], [aria-hidden="1"] {
+    display: none!important;
+}
+
+.dropdown-toggle {
+    white-space: nowrap;
+
+    &.o-no-caret {
+        &::before, &::after {
+            content: normal;
+        }
+    }
+}
+
+// Allow to change data-toggle="collapse" text according to status
+:not(.collapsed) > .o-collapsed-label,
+.collapsed > .o-not-collapsed-label {
+    display: none;
+}
+
+// This is rtl language specific fix
+// It will fix the extra space in ui-autocomplete class
+// and flip the next and previous symbols of jquery ui.
+.o_rtl {
+    .ui-autocomplete {
+        direction: ltr;
+        right: 0;
+        left: auto;
+    }
+    .ui-datepicker-next, .ui-datepicker-prev {
+        -webkit-transform: rotate(180deg);
+         -o-transform: rotate(180deg);
+        transform: rotate(180deg);
+    }
+}
+
+// Overwrite bts4 custom-checkbox design (un-checked state only)
+.custom-control.custom-checkbox {
+    .custom-control-input:not(:checked):not(:indeterminate) {
+        ~ .custom-control-label:before {
+            background: none;
+            outline: 1px solid $o-main-text-color;
+        }
+        &:disabled ~ .custom-control-label:before {
+            background: $o-brand-lightsecondary;
+            opacity: 0.25;
+        }
+    }
+    @media print {
+        -webkit-print-color-adjust: exact !important;
+        color-adjust: exact !important;
+    }
+}
+
+.o_catch_attention {
+    position: relative;
+    z-index: 1;
+    animation: catchAttention 200ms ease 0s infinite normal;
+}
+
+@keyframes catchAttention {
+    0% {
+        outline: 0px solid fade-out($o-brand-primary, 0.0);
+    }
+    100% {
+        outline: 20px solid fade-out($o-brand-primary, 1.0);
+    }
+}
+
+// Declare a similar class as 'disabled' but with no visual effect
+.o_debounce_disabled {
+    pointer-events: none;
+}

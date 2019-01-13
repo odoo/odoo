@@ -3,16 +3,14 @@
 # * auth_ldap
 # 
 # Translators:
-# Onii Onii <onii0223@yahoo.com>, 2018
 # Martin Trigaux, 2018
-# Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2018\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-09-21 13:17+0000\n"
+"Last-Translator: Martin Trigaux, 2018\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,7 +19,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: auth_ldap
-#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap_create_user
+#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__create_user
 msgid ""
 "Automatically create local user accounts for new users authenticating via "
 "LDAP"
@@ -35,109 +33,125 @@ msgid "Companies"
 msgstr "Компаниуд"
 
 #. module: auth_ldap
-#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_company
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__company
 msgid "Company"
 msgstr "Компани"
 
 #. module: auth_ldap
-#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_create_user
+#: model:ir.model,name:auth_ldap.model_res_company_ldap
+msgid "Company LDAP configuration"
+msgstr ""
+
+#. module: auth_ldap
+#: model:ir.model,name:auth_ldap.model_res_config_settings
+msgid "Config Settings"
+msgstr ""
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__create_user
 msgid "Create User"
 msgstr "Хэрэглэгч үүсэх"
 
 #. module: auth_ldap
-#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_create_uid
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__create_uid
 msgid "Created by"
 msgstr "Үүсгэгч"
 
 #. module: auth_ldap
-#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_create_date
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__create_date
 msgid "Created on"
 msgstr "Үүсгэсэн"
 
 #. module: auth_ldap
-#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_display_name
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__display_name
 msgid "Display Name"
 msgstr "Дэлгэцийн Нэр"
 
 #. module: auth_ldap
-#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_id
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__id
 msgid "ID"
 msgstr "ID"
 
 #. module: auth_ldap
-#: model:ir.ui.view,arch_db:auth_ldap.res_company_ldap_view_tree
-#: model:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
+#: model_terms:ir.ui.view,arch_db:auth_ldap.res_company_ldap_view_tree
+#: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "LDAP Configuration"
 msgstr "LDAP Тохиргоо"
 
 #. module: auth_ldap
-#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldaps
-#: model:ir.model.fields,field_description:auth_ldap.field_res_config_settings_ldaps
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company__ldaps
+#: model:ir.model.fields,field_description:auth_ldap.field_res_config_settings__ldaps
 msgid "LDAP Parameters"
 msgstr "LDAP параметрүүд"
 
 #. module: auth_ldap
-#: model:ir.ui.view,arch_db:auth_ldap.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:auth_ldap.res_config_settings_view_form
 msgid "LDAP Server"
 msgstr ""
 
 #. module: auth_ldap
-#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_ldap_server
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_server
 msgid "LDAP Server address"
 msgstr "LDAP сервер хаяг"
 
 #. module: auth_ldap
-#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_ldap_server_port
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_server_port
 msgid "LDAP Server port"
 msgstr "LDAP сервер порт"
 
 #. module: auth_ldap
-#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_ldap_base
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_base
 msgid "LDAP base"
 msgstr "LDAP сан"
 
 #. module: auth_ldap
-#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_ldap_binddn
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_binddn
 msgid "LDAP binddn"
 msgstr "LDAP binddn"
 
 #. module: auth_ldap
-#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_ldap_filter
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_filter
 msgid "LDAP filter"
 msgstr "LDAP шүүлтүүр"
 
 #. module: auth_ldap
-#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_ldap_password
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_password
 msgid "LDAP password"
 msgstr "LDAP нууц үг"
 
 #. module: auth_ldap
-#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap___last_update
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap____last_update
 msgid "Last Modified on"
-msgstr "Сүүлийн зассан хийсэн огноо"
+msgstr "Сүүлийн засвар хийсэн огноо"
 
 #. module: auth_ldap
-#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_write_uid
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__write_uid
 msgid "Last Updated by"
 msgstr "Сүүлийн засвар хийсэн"
 
 #. module: auth_ldap
-#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_write_date
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__write_date
 msgid "Last Updated on"
 msgstr "Сүүлийн засвар хийсэн огноо"
 
 #. module: auth_ldap
-#: model:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
+#: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "Login Information"
 msgstr "Нэвтрэх мэдээлэл"
 
 #. module: auth_ldap
-#: model:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
+#: code:addons/auth_ldap/models/res_company_ldap.py:201
+#, python-format
+msgid "No local user found for LDAP login and not configured to create one"
+msgstr ""
+
+#. module: auth_ldap
+#: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "Process Parameter"
 msgstr "Парамтерийг Боловсруулах"
 
 #. module: auth_ldap
-#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap_ldap_tls
+#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_tls
 msgid ""
 "Request secure TLS/SSL encryption when connecting to the LDAP server. This "
 "option requires a server with STARTTLS enabled, otherwise all authentication"
@@ -148,12 +162,12 @@ msgstr ""
 "шалгах оролдлого бүтэлгүй болно."
 
 #. module: auth_ldap
-#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_sequence
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__sequence
 msgid "Sequence"
 msgstr "Дараалал"
 
 #. module: auth_ldap
-#: model:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
+#: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "Server Information"
 msgstr "Серверийн мэдээлэл"
 
@@ -163,12 +177,12 @@ msgid "Setup your LDAP Server"
 msgstr "Өөрийн LDAP серверийг тохируулах"
 
 #. module: auth_ldap
-#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_user
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__user
 msgid "Template User"
 msgstr "Үлгэр Хэрэглэгч"
 
 #. module: auth_ldap
-#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap_ldap_password
+#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_password
 msgid ""
 "The password of the user account on the LDAP server that is used to query "
 "the directory."
@@ -177,7 +191,7 @@ msgstr ""
 "нууц үг."
 
 #. module: auth_ldap
-#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap_ldap_binddn
+#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_binddn
 msgid ""
 "The user account on the LDAP server that is used to query the directory. "
 "Leave empty to connect anonymously."
@@ -186,17 +200,17 @@ msgstr ""
 "нэр. Хоосон үлдээвэл anonymous байдлаар холбогдоно."
 
 #. module: auth_ldap
-#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_ldap_tls
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_tls
 msgid "Use TLS"
 msgstr "TLS-г хэрэглэх"
 
 #. module: auth_ldap
-#: model:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
+#: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "User Information"
 msgstr "Хэрэглэгчийн мэдээлэл"
 
 #. module: auth_ldap
-#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap_user
+#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__user
 msgid "User to copy when creating new users"
 msgstr "Шинэ хэрэглэгчдийг үүсгэх үед хуулах хэрэглэгч"
 
@@ -204,13 +218,3 @@ msgstr "Шинэ хэрэглэгчдийг үүсгэх үед хуулах х�
 #: model:ir.model,name:auth_ldap.model_res_users
 msgid "Users"
 msgstr "Хэрэглэгчид"
-
-#. module: auth_ldap
-#: model:ir.model,name:auth_ldap.model_res_company_ldap
-msgid "res.company.ldap"
-msgstr "res.company.ldap"
-
-#. module: auth_ldap
-#: model:ir.model,name:auth_ldap.model_res_config_settings
-msgid "res.config.settings"
-msgstr "res.config.settings"

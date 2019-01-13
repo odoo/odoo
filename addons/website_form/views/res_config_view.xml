@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="website.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='google_analytics_dashboard_setting']" position="before">
+                <div class="col-12 col-lg-6 o_setting_box" groups="base.group_no_one">
+                    <div class="o_setting_left_pane">
+                        <field name="website_form_enable_metadata"/>
+                    </div>
+                    <div class="o_setting_right_pane">
+                        <label for="website_form_enable_metadata"/>
+                        <span class="fa fa-lg fa-globe" title="Values set here are website-specific." groups="website.group_multi_website"/>
+                        <div class="text-muted">
+                            Track metadata (IP, User Agent, ...) on your Website Forms
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

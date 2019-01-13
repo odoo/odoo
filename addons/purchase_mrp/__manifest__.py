@@ -13,10 +13,7 @@ This module provides facility to the user to install mrp and purchase modules at
 It is basically used when we want to keep track of production orders generated
 from purchase order.
     """,
-    'website': 'https://www.odoo.com/page/manufacturing',
     'depends': ['mrp', 'purchase'],
-    'data': [],
-    'demo': [],
     'installable': True,
     'auto_install': True,
 }

@@ -3,26 +3,26 @@
 # * analytic
 # 
 # Translators:
-# Martin Trigaux, 2017
-# Linas Versada <paulius.sladkevicius@gmail.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Monika Raciunaite <monika.raciunaite@gmail.com>, 2017
 # Audrius Palenskis <audrius.palenskis@gmail.com>, 2017
 # digitouch UAB <digitouchagencyeur@gmail.com>, 2017
 # UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2017
-# Monika Raciunaite <monika.raciunaite@gmail.com>, 2017
-# Silvija Butko <silvija.butko@gmail.com>, 2018
+# Antanas Muliuolis <an.muliuolis@gmail.com>, 2017
+# Šarūnas Ažna <sarunas.azna@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-09-20 09:53+0000\n"
 "PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Silvija Butko <silvija.butko@gmail.com>, 2018\n"
+"Last-Translator: Šarūnas Ažna <sarunas.azna@gmail.com>, 2017\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: lt\n"
-"Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_currency_id
@@ -37,7 +37,7 @@ msgstr "Aktyvus"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_amount
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_form
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_form
 msgid "Amount"
 msgstr "Suma"
 
@@ -45,9 +45,9 @@ msgstr "Suma"
 #: model:ir.model,name:analytic.model_account_analytic_account
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_name
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_account_id
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
 msgid "Analytic Account"
 msgstr "Analitinė sąskaita"
 
@@ -58,27 +58,27 @@ msgstr "Analitinė apskaita"
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.action_account_analytic_account_form
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_list
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_list
 msgid "Analytic Accounts"
 msgstr "Analitinės sąskaitos"
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.account_analytic_tag_action
-#: model:ir.ui.view,arch_db:analytic.account_analytic_tag_form_view
-#: model:ir.ui.view,arch_db:analytic.account_analytic_tag_tree_view
+#: model_terms:ir.ui.view,arch_db:analytic.account_analytic_tag_form_view
+#: model_terms:ir.ui.view,arch_db:analytic.account_analytic_tag_tree_view
 msgid "Analytic Accounts Tags"
 msgstr "Analitinės sąskaitos žymos"
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.account_analytic_line_action_entries
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_graph
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_pivot
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_tree
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_graph
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_pivot
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_tree
 msgid "Analytic Entries"
 msgstr "Analitiniai įrašai"
 
 #. module: analytic
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_form
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_form
 msgid "Analytic Entry"
 msgstr "Analitinis įrašas"
 
@@ -100,27 +100,27 @@ msgstr "Analitinė žyma"
 #. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_tag
 msgid "Analytic Tags"
-msgstr "Analitinė žyma"
+msgstr "Analitinė žymė"
 
 #. module: analytic
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
 msgid "Archived"
-msgstr "Archyvuotas"
+msgstr "Archyvuojamas"
 
 #. module: analytic
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
 msgid "Associated Partner"
 msgstr "Susijęs partneris"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_balance
 msgid "Balance"
-msgstr "Balansas"
+msgstr "Likutis"
 
 #. module: analytic
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_kanban
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_kanban
 msgid "Balance:"
-msgstr "Balansas:"
+msgstr ""
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.action_analytic_account_form
@@ -128,12 +128,12 @@ msgid "Chart of Analytic Accounts"
 msgstr "Analitinių sąskaitų planas"
 
 #. module: analytic
-#: model:ir.actions.act_window,help:analytic.account_analytic_tag_action
+#: model_terms:ir.actions.act_window,help:analytic.account_analytic_tag_action
 msgid "Click to add a new tag."
-msgstr "Paspauskite, norėdami pridėti naują žymą."
+msgstr "Spauskite pridėti naują žymą."
 
 #. module: analytic
-#: model:ir.actions.act_window,help:analytic.action_analytic_account_form
+#: model_terms:ir.actions.act_window,help:analytic.action_analytic_account_form
 msgid "Click to add an analytic account."
 msgstr "Paspauskite, norėdami pridėti analitinę sąskaitą."
 
@@ -149,24 +149,22 @@ msgid "Company"
 msgstr "Įmonė"
 
 #. module: analytic
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
 msgid "Cost/Revenue"
-msgstr "Kaštai / Pajamos"
+msgstr "Kaina / Pajamos"
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.account_analytic_line_action
 msgid "Costs & Revenues"
-msgstr "Kaštai ir pajamos"
+msgstr "Kaina ir pajamos"
 
 #. module: analytic
-#: model:ir.actions.act_window,help:analytic.account_analytic_line_action
-#: model:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
+#: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action
+#: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid ""
 "Costs will be created automatically when you register supplier\n"
 "                invoices, expenses or timesheets."
 msgstr ""
-"Kaštai bus sukurti automatiškai, kai registruosite tiekėjų\n"
-"                sąskaitas, išlaidas ar darbo apskaitos žiniaraščio įrašus."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_create_uid
@@ -195,7 +193,7 @@ msgstr "Valiuta"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_partner_id
 msgid "Customer"
-msgstr "Klientas"
+msgstr "Pirkėjas"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_date
@@ -220,8 +218,8 @@ msgid "Display Name"
 msgstr "Vaizduojamas pavadinimas"
 
 #. module: analytic
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
 msgid "Group By..."
 msgstr "Grupuoti pagal..."
 
@@ -238,20 +236,17 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the account "
 "without removing it."
 msgstr ""
-"Jeigu aktyvus laukelis nustatytas kaip neigiamas, bus leidžiama paslėpti "
-"sąskaitą jos nepašalinus."
+"Jeigu aktyvus laukelis nustatytas kaip \"ne\", leidžiame paslėpti sąskaitą, "
+"jos nepašalinus."
 
 #. module: analytic
-#: model:ir.actions.act_window,help:analytic.account_analytic_line_action
-#: model:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
+#: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action
+#: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid ""
 "In Odoo, sales orders and projects are implemented using\n"
 "                analytic accounts. You can track costs and revenues to analyse\n"
 "                your margins easily."
 msgstr ""
-"\"Odoo\" sistemoje pardavimo užsakymai ir projektai yra implementuoti naudojant \n"
-"                analitines sąskaitas. Galite sekti sąnaudas ir pajamas \n"
-"                paprastai analizuodami maržas."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account___last_update
@@ -275,14 +270,14 @@ msgid "Last Updated on"
 msgstr "Paskutinį kartą atnaujinta"
 
 #. module: analytic
-#: model:ir.actions.act_window,help:analytic.account_analytic_line_action
+#: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action
 msgid "No activity yet on this account."
-msgstr "Kol kas šioje sąskaitoje veiksmų nėra."
+msgstr ""
 
 #. module: analytic
-#: model:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
+#: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid "No activity yet."
-msgstr "Kol kas veiksmų nėra."
+msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_partner_id
@@ -291,7 +286,7 @@ msgstr "Partneris"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_unit_amount
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_tree
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_tree
 msgid "Quantity"
 msgstr "Kiekis"
 
@@ -301,30 +296,24 @@ msgid "Reference"
 msgstr "Numeris"
 
 #. module: analytic
-#: model:ir.actions.act_window,help:analytic.account_analytic_line_action
-#: model:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
+#: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action
+#: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid ""
 "Revenues will be created automatically when you create customer\n"
 "                invoices. Customer invoices can be created based on sales orders\n"
 "                (fixed price invoices), on timesheets (based on the work done) or\n"
 "                on expenses (e.g. reinvoicing of travel costs)."
 msgstr ""
-"Pajamos bus sukuriamos automatiškai, kai tik sukursite sąskaitas \n"
-"                klientams. Sąskaitos klientams gali būti kuriamos pardavimo užsakymų pagrindu\n"
-"                (fiksuotos kainos sąskaitos), darbo apskaitos žiniaraščių pagrindu (pagal atliktus darbus) arba\n"
-"                išlaidų pagrindu (pvz.: sąskaitų už kelionės sąnaudas perrašymas)."
 
 #. module: analytic
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
 msgid "Search Analytic Lines"
-msgstr "Analitinių eilučių paieška"
+msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_tag_active
 msgid "Set active to false to hide the Analytic Tag without removing it."
 msgstr ""
-"Nustatykite aktyvų kaip neigiamą, kad paslėptumėte analitinę žymą jos "
-"neištrinant."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_tag_ids
@@ -333,7 +322,7 @@ msgid "Tags"
 msgstr "Žymos"
 
 #. module: analytic
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
 msgid "Tasks Month"
 msgstr "Mėnesinės užduotys"
 
@@ -343,7 +332,7 @@ msgid "The related account currency if not equal to the company one."
 msgstr "Susieta valiuta nėra lygi kompanijos valiutai."
 
 #. module: analytic
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_tree
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_tree
 msgid "Total"
 msgstr "Viso"
 
@@ -353,6 +342,6 @@ msgid "User"
 msgstr "Vartotojas"
 
 #. module: analytic
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
 msgid "e.g. Project XYZ"
-msgstr "pvz.: Projektas XYZ"
+msgstr ""

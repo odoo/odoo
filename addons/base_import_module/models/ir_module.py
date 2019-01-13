@@ -11,7 +11,7 @@ from os.path import join as opj
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.modules import load_information_from_description_file
-from odoo.tools import convert_file, exception_to_unicode, pycompat
+from odoo.tools import convert_file, exception_to_unicode
 from odoo.tools.osutil import tempdir
 
 _logger = logging.getLogger(__name__)
@@ -54,7 +54,7 @@ class IrModule(models.Model):
                 )
             raise UserError(err)
         elif 'web_studio' not in installed_mods and _is_studio_custom(path):
-            raise UserError(_("Studio customizations require Studio"))
+            raise UserError(_("Studio customizations require the Odoo Studio app."))
 
         mod = known_mods_names.get(module)
         if mod:
@@ -88,7 +88,7 @@ class IrModule(models.Model):
                     with open(full_path, 'rb') as fp:
                         data = base64.b64encode(fp.read())
                     url_path = '/{}{}'.format(module, full_path.split(path)[1].replace(os.path.sep, '/'))
-                    if not isinstance(url_path, pycompat.text_type):
+                    if not isinstance(url_path, str):
                         url_path = url_path.decode(sys.getfilesystemencoding())
                     filename = os.path.split(url_path)[1]
                     values = dict(
@@ -112,7 +112,7 @@ class IrModule(models.Model):
         if not module_file:
             raise Exception(_("No file sent."))
         if not zipfile.is_zipfile(module_file):
-            raise UserError(_('File is not a zip file!'))
+            raise UserError(_('Only zip files are supported.'))
 
         success = []
         errors = dict()
