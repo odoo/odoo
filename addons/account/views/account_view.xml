@@ -29,59 +29,6 @@
                              </div>
                              <field name="deprecated"/>
                            </group>
-                           <group>
-                               <div class="row">
-                                   <div class="col-lg-11 offset-lg-1 col-md-12 no-margin-top" style="background-color: #eee">
-                                       <p class="text-center" style="font-weight: bold;">How do account types affect your reports?</p>
-                                       <div class="col-lg-6 col-md-6">
-                                           <div class="oe_account_help">
-                                                <p class="oe_account_font_help text-center">Profit &amp; Loss</p>
-                                                <p class="oe_account_font_help oe_account_font_title">Income</p>
-                                                <p class="oe_account_font_help oe_account_font_title">Minus Cost of Revenue</p>
-                                                <p class="oe_account_font_help" style="color: grey;border-top: 2px solid;border-bottom: 2px solid;">GROSS PROFIT</p>
-                                                <p class="oe_account_font_help oe_account_font_title">Plus Other Income</p>
-                                                <p class="oe_account_font_help oe_account_font_title">Minus Expenses</p>
-                                                <p class="oe_account_font_help oe_account_font_content">Expenses</p>
-                                                <p class="oe_account_font_help oe_account_font_content">Depreciation</p>
-                                                <p class="oe_account_font_help" style="color: grey;border-top: 2px solid;border-bottom: 2px solid;">NET PROFIT</p>
-                                                <div style="position: relative; width: 250px; height: 277px;" id="layer">
-                                                   <div style="position: relative; left: 0px; top: 0px; visibility: visible; width: 250px; height: 277px;">
-                                                     <svg pointer-events="none" overflow="auto" width="712.5" height="265" viewBox="-4 -4 712.5 265" style="position: relative; top: -4px; left: -4px; overflow: auto; visibility: visible; width: 400.5px; height: 265px;">
-                                                       <defs>
-                                                         <marker id="arrow" markerWidth="70" markerHeight="70" refx="10" refy="6" orient="auto">
-                                                             <path d="M2,1 L2,12 L10,6 L2,1" stroke="rgb(173,216,230)" fill="rgb(173,216,230)"/>
-                                                         </marker>
-                                                       </defs>
-                                                       <path pointer-events="visiblePainted" shape-rendering="auto" d="M 150 -110 q 270 100 150 150 t 160 120" fill="none" stroke-dasharray="8,3" stroke="rgb(173,216,230)" stroke-linecap="butt" stroke-width="4" stroke-opacity="1" stroke-linejoin="round" transform="matrix(1,0,0,1,0,0)" fill-opacity="1" style="marker-end: url(#arrow);">
-                                                       </path>
-                                                     </svg>
-                                                   </div>
-                                               </div>
-                                           </div>
-                                       </div>
-                                       <div class="col-lg-6 col-md-6">
-                                           <div class="oe_account_help">
-                                               <p class="oe_account_font_help text-center">Balance Sheet</p>
-                                               <p class="oe_account_font_help oe_account_font_title" style="color: grey;">Current Assets</p>
-                                               <p class="oe_account_font_help oe_account_font_content">Receivable Accounts</p>
-                                               <p class="oe_account_font_help oe_account_font_content">Prepayments</p>
-                                               <p class="oe_account_font_help oe_account_font_title">Plus Bank</p>
-                                               <p class="oe_account_font_help oe_account_font_title">Plus Fixed Assets</p>
-                                               <p class="oe_account_font_help oe_account_font_title">Plus Non-Current Assets</p>
-                                               <p class="oe_account_font_help" style="color: grey;border-top: 2px solid;border-bottom: 2px solid;">TOTAL ASSETS</p>
-                                               <p class="oe_account_font_help oe_account_font_title">Minus Current Liabilities</p>
-                                               <p class="oe_account_font_help oe_account_font_title">Minus Credit Card Accounts</p>
-                                               <p class="oe_account_font_help oe_account_font_title">Minus Payable Accounts</p>
-                                               <p class="oe_account_font_help oe_account_font_title">Minus Non-Current Liabilities</p>
-                                               <p class="oe_account_font_help" style="color: grey;border-top: 2px solid;border-bottom: 2px solid;">NET ASSETS</p>
-                                               <p class="oe_account_font_help oe_account_font_title">Equity</p>
-                                               <p class="oe_account_font_help oe_account_font_title">Plus Net Profit</p>
-                                               <p class="oe_account_font_help" style="color: grey;border-top: 2px solid;border-bottom: 2px solid;">TOTAL EQUITY</p>
-                                           </div>
-                                       </div>
-                                   </div>
-                               </div>
-                           </group>
                        </group>
                     </sheet>
                 </form>
@@ -344,7 +291,7 @@
                                         <field name="inbound_payment_method_ids" widget="many2many_checkboxes"/>
                                         <field name="outbound_payment_method_ids" widget="many2many_checkboxes"/>
                                     </group>
-                                    <group string="Accounting App Options" attrs="{'invisible': [('type', 'not in', ['sale', 'purchase', 'bank', 'cash'])]}">
+                                    <group string="Accounting App Options">
                                         <field name="profit_account_id" attrs="{'invisible': [('type', '!=', 'cash')]}"/>
                                         <field name="loss_account_id" attrs="{'invisible': [('type', '!=', 'cash')]}"/>
                                         <field name="group_invoice_lines" attrs="{'invisible': [('type', 'not in', ['sale', 'purchase'])]}"/>
@@ -959,7 +906,7 @@
                                     <field name="amount" class="oe_inline"/>
                                     <span class="o_form_label oe_inline" attrs="{'invisible':[('amount_type','!=','percentage')]}">%</span>
                                 </div>
-                                <field name="journal_id" domain="[('company_id', '=', company_id)]" widget="selection"
+                                <field name="journal_id" domain="[('type', '!=', 'general'), ('company_id', '=', company_id)]" widget="selection"
                                        attrs="{'invisible': [('rule_type', '!=', 'writeoff_button')]}"/>
                             </group>
                         </group>
@@ -992,7 +939,7 @@
                                     <field name="second_amount" class="oe_inline"/>
                                     <span class="o_form_label oe_inline" attrs="{'invisible':[('amount_type','!=','percentage')]}">%</span>
                                 </div>
-                                <field name="second_journal_id" string="Journal" domain="[('company_id', '=', company_id)]" widget="selection"
+                                <field name="second_journal_id" string="Journal" domain="[('type', '!=', 'general'), ('company_id', '=', company_id)]" widget="selection"
                                        attrs="{'invisible': [('rule_type', '!=', 'writeoff_button')]}"/>
                             </group>
                         </group>
@@ -1440,7 +1387,7 @@
 
         <act_window
             id="action_move_line_select_tax_audit"
-            name="Journal Items"
+            name="Journal Items for Tax Audit"
             context="{'search_default_account_id': [active_id]}"
             res_model="account.move.line"
             src_model="account.account"

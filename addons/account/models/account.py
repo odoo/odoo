@@ -273,6 +273,8 @@ class AccountAccount(models.Model):
 
         Note that: lines with debit = credit = amount_currency = 0 are set to `reconciled´ = True
         '''
+        if not self.ids:
+            return None
         query = """
             UPDATE account_move_line SET
                 reconciled = CASE WHEN debit = 0 AND credit = 0 AND amount_currency = 0
@@ -288,6 +290,8 @@ class AccountAccount(models.Model):
 
         Note that it is disallowed if some lines are partially reconciled.
         '''
+        if not self.ids:
+            return None
         partial_lines_count = self.env['account.move.line'].search_count([
             ('account_id', 'in', self.ids),
             ('full_reconcile_id', '=', False),

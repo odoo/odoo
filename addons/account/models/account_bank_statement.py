@@ -324,6 +324,16 @@ class AccountBankStatementLine(models.Model):
         if self.amount_currency != 0 and self.amount == 0:
             raise ValidationError(_('If "Amount Currency" is specified, then "Amount" must be as well.'))
 
+    @api.constrains('currency_id', 'journal_id')
+    def _check_currency_id(self):
+        for line in self:
+            if not line.currency_id:
+                continue
+
+            statement_currency = line.journal_id.currency_id or line.company_id.currency_id
+            if line.currency_id == statement_currency:
+                raise ValidationError(_('The currency of the bank statement line must be different than the statement currency.'))
+
     @api.model
     def create(self, vals):
         line = super(AccountBankStatementLine, self).create(vals)
@@ -657,7 +667,14 @@ class AccountBankStatementLine(models.Model):
 
         #create the res.partner.bank if needed
         if self.account_number and self.partner_id and not self.bank_account_id:
-            self.bank_account_id = self.env['res.partner.bank'].create({'acc_number': self.account_number, 'partner_id': self.partner_id.id}).id
+            # Search bank account without partner to handle the case the res.partner.bank already exists but is set
+            # on a different partner.
+            bank_account = self.env['res.partner.bank'].search([('acc_number', '=', self.account_number)])
+            if not bank_account:
+                bank_account = self.env['res.partner.bank'].create({
+                    'acc_number': self.account_number, 'partner_id': self.partner_id.id
+                })
+            self.bank_account_id = bank_account
 
         counterpart_moves.assert_balanced()
         return counterpart_moves

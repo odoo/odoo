@@ -3,23 +3,24 @@
 # * website_event
 # 
 # Translators:
-# Karolina Tonković <karolina.tonkovic@storm.hr>, 2017
-# Davor Bojkić <davor.bojkic@storm.hr>, 2017
-# Đurđica Žarković <durdica.zarkovic@storm.hr>, 2017
-# Vladimir Olujić <olujic.vladimir@storm.hr>, 2017
-# Bole <bole@dajmi5.com>, 2017
-# Martin Trigaux, 2017
-# Mario Jureša <mario.juresa@uvid.hr>, 2017
-# storm_mpildek <matija.pildek@storm.hr>, 2017
-# Tina Milas, 2017
-# Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2018
+# Martin Trigaux, 2019
+# Bole <bole@dajmi5.com>, 2019
+# Davor Bojkić <davor.bojkic@storm.hr>, 2019
+# Vladimir Olujić <olujic.vladimir@storm.hr>, 2019
+# Đurđica Žarković <durdica.zarkovic@storm.hr>, 2019
+# Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2019
+# Karolina Tonković <karolina.tonkovic@storm.hr>, 2019
+# storm_mpildek <matija.pildek@storm.hr>, 2019
+# Mario Jureša <mario.juresa@uvid.hr>, 2019
+# Tina Milas, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:56+0000\n"
-"PO-Revision-Date: 2018-08-02 09:56+0000\n"
-"Last-Translator: Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2018\n"
+"POT-Creation-Date: 2018-10-02 10:07+0000\n"
+"PO-Revision-Date: 2018-08-24 09:34+0000\n"
+"Last-Translator: Tina Milas, 2019\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -74,9 +75,23 @@ msgstr ""
 "<i class=\"fa fa-clock-o\"/> Da"
 
 #. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.registration_template
+msgid ""
+"<em><i class=\"fa fa-plus-circle\" role=\"img\" aria-label=\"Create\" title=\"Create\"/>\n"
+"                    Configure and Launch Event Registration</em>"
+msgstr ""
+
+#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 msgid "<i class=\"fa fa-clock-o\"/> From"
 msgstr "<i class=\"fa fa-clock-o\"/> Iz"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.event_right_country_event
+msgid ""
+"<i class=\"fa fa-flag fa-5x\"/>\n"
+"                            Events from Your Country"
+msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_complete
@@ -86,13 +101,6 @@ msgstr ""
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_complete
 msgid "<i class=\"fa fa-fw fa-arrow-right\"/>Add to iCal/Outlook"
-msgstr ""
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.registration_template
-msgid ""
-"<i class=\"fa fa-plus-circle\"/>\n"
-"                    <em>Configure and Launch Event Registration</em>"
 msgstr ""
 
 #. module: website_event
@@ -150,7 +158,7 @@ msgstr "<strong>Sudionici</strong>"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
 msgid "<strong>Email</strong>"
-msgstr "<strong>Email</strong>"
+msgstr "<strong>E-mail</strong>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
@@ -228,7 +236,7 @@ msgstr "Klikni <em>Nastavi</em> za kreiranje događaja."
 #: code:addons/website_event/static/src/js/website.tour.event.js:15
 #, python-format
 msgid "Click here to create a new event."
-msgstr "Klikni ovdje za kreiranje novog događaja."
+msgstr "Kliknite ovdje za kreiranje novog događaja."
 
 #. module: website_event
 #. openerp-web
@@ -246,6 +254,11 @@ msgstr "Klikni za objavu događaja."
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
+msgid "Close"
+msgstr "Zatvori"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
 msgid "Continue"
 msgstr "Nastavi"
 
@@ -257,7 +270,7 @@ msgid ""
 "Create a name for your new event and click <em>\"Continue\"</em>. e.g: "
 "Technical Training"
 msgstr ""
-"Kreirajte naziv za Vaš novi događaj i kliknite <em>\"Nastavi\"</em>. npr. "
+"Kreirajte naziv za Vaš novi događaj i kliknite <em>\"Nastavi\"</em>. Npr.: "
 "Tehnička obuka"
 
 #. module: website_event
@@ -290,11 +303,6 @@ msgstr "Povucite ovaj blok i pustite ga na Vašoj stranici. "
 #: model_terms:ir.ui.view,arch_db:website_event.registration_complete
 msgid "E-mail"
 msgstr "E-pošta"
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form_inherit_website
-msgid "Edit Badges"
-msgstr "Uredi oznake"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.ticket
@@ -332,6 +340,13 @@ msgid "Event Menu"
 msgstr "Izbornik događaja"
 
 #. module: website_event
+#. openerp-web
+#: code:addons/website_event/static/src/js/website_event.editor.js:31
+#, python-format
+msgid "Event Name"
+msgstr "Naziv događaja"
+
+#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.404
 msgid "Event not found!"
 msgstr "Događaj nije pronađen!"
@@ -364,11 +379,6 @@ msgid "Events"
 msgstr "Događanja"
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.event_right_country_event
-msgid "Events from Your Country"
-msgstr "Događaji iz vaše zemlje"
-
-#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.country_events
 msgid "Events in visitor's country"
 msgstr "Događaji u zemlji posjetitelja"
@@ -388,7 +398,12 @@ msgstr ""
 "i pridružite se razgovoru."
 
 #. module: website_event
-#: code:addons/website_event/models/event.py:73
+#: model_terms:ir.ui.view,arch_db:website_event.event_description_full
+msgid "Google Maps"
+msgstr "Google Mape"
+
+#. module: website_event
+#: code:addons/website_event/models/event.py:70
 #, python-format
 msgid "Introduction"
 msgstr "Uvod"
@@ -399,7 +414,12 @@ msgid "Is Participating"
 msgstr "Sudjeluje"
 
 #. module: website_event
-#: code:addons/website_event/models/event.py:74
+#: model:ir.model.fields,field_description:website_event.field_event_event__is_published
+msgid "Is published"
+msgstr ""
+
+#. module: website_event
+#: code:addons/website_event/models/event.py:71
 #, python-format
 msgid "Location"
 msgstr "Lokacija"
@@ -416,33 +436,32 @@ msgstr "Naziv"
 
 #. module: website_event
 #. openerp-web
-#: code:addons/website_event/controllers/main.py:191
-#: code:addons/website_event/static/src/js/website_event.editor.js:29
-#: model_terms:ir.ui.view,arch_db:website_event.content_new_event
+#: code:addons/website_event/controllers/main.py:200
+#: code:addons/website_event/static/src/js/website_event.editor.js:30
 #, python-format
 msgid "New Event"
 msgstr "Novi događaj"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:40
+#: code:addons/website_event/controllers/main.py:39
 #, python-format
 msgid "Next Events"
 msgstr "Sljedeći događaji"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:49
+#: code:addons/website_event/controllers/main.py:48
 #, python-format
 msgid "Next Week"
 msgstr "Sljedeći tjedan"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:57
+#: code:addons/website_event/controllers/main.py:56
 #, python-format
 msgid "Next month"
 msgstr "Sljedeći mjesec"
 
 #. module: website_event
-#: code:addons/website_event/models/event.py:152
+#: code:addons/website_event/models/event.py:150
 #, python-format
 msgid "No date has been specified for the event, no file will be generated."
 msgstr ""
@@ -456,12 +475,6 @@ msgstr "Događaj nije pronađen"
 #: model_terms:ir.ui.view,arch_db:website_event.brand_promotion
 msgid "Odoo"
 msgstr "Odoo"
-
-#. module: website_event
-#: code:addons/website_event/controllers/main.py:61
-#, python-format
-msgid "Old Events"
-msgstr "Stari događaji"
 
 #. module: website_event
 #. openerp-web
@@ -502,6 +515,12 @@ msgid "Participating"
 msgstr "Sudjeluju"
 
 #. module: website_event
+#: code:addons/website_event/controllers/main.py:60
+#, python-format
+msgid "Past Events"
+msgstr ""
+
+#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_complete
 msgid "Phone"
 msgstr "Telefon"
@@ -524,6 +543,11 @@ msgid "Powered by"
 msgstr "Podržano od "
 
 #. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form_inherit_website
+msgid "Preview Badges"
+msgstr ""
+
+#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.ticket
 msgid "Price"
 msgstr "Cijena"
@@ -544,7 +568,7 @@ msgid "Reference"
 msgstr "Vezna oznaka"
 
 #. module: website_event
-#: code:addons/website_event/models/event.py:75
+#: code:addons/website_event/models/event.py:72
 #, python-format
 msgid "Register"
 msgstr "Registracija"
@@ -585,18 +609,13 @@ msgid "Sorry, the requested event is not available anymore."
 msgstr "Žao nam je, traženi događaj više nije dostupan."
 
 #. module: website_event
-#: model:ir.model.fields,help:website_event.field_event_event__website_url
-msgid "The full URL to access the document through the website."
-msgstr "Puni URL za pristup dokumentu putem web stranice."
-
-#. module: website_event
-#: code:addons/website_event/controllers/main.py:45
+#: code:addons/website_event/controllers/main.py:44
 #, python-format
 msgid "This Week"
 msgstr "Ovaj tjedan"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:53
+#: code:addons/website_event/controllers/main.py:52
 #, python-format
 msgid "This month"
 msgstr "Ovaj mjesec"
@@ -607,7 +626,7 @@ msgid "Ticket Type #"
 msgstr "Vrsta ulaznice #"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:41
+#: code:addons/website_event/controllers/main.py:40
 #, python-format
 msgid "Today"
 msgstr "Danas"
@@ -617,11 +636,6 @@ msgstr "Danas"
 msgid "Use the top menu <i>'Content'</i> to create your first event."
 msgstr ""
 "Koristi glavni izbornik <i>'Sadržaj'</i> za kreiranje svog prvog događaja."
-
-#. module: website_event
-#: model:ir.model.fields,field_description:website_event.field_event_event__website_published
-msgid "Visible in Website"
-msgstr "Vidljivo na web stranicama"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
@@ -642,26 +656,6 @@ msgstr "Web naslovnica"
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form_inherit_website
 msgid "Website Menu"
 msgstr "Website izbornik"
-
-#. module: website_event
-#: model:ir.model.fields,field_description:website_event.field_event_event__website_url
-msgid "Website URL"
-msgstr "URL web stranice"
-
-#. module: website_event
-#: model:ir.model.fields,field_description:website_event.field_event_event__website_meta_description
-msgid "Website meta description"
-msgstr "Web meta opis"
-
-#. module: website_event
-#: model:ir.model.fields,field_description:website_event.field_event_event__website_meta_keywords
-msgid "Website meta keywords"
-msgstr "Web meta ključne riječi"
-
-#. module: website_event
-#: model:ir.model.fields,field_description:website_event.field_event_event__website_meta_title
-msgid "Website meta title"
-msgstr "Web meta naslov"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
@@ -697,7 +691,7 @@ msgstr ""
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_details
 msgid "to"
-msgstr "za"
+msgstr "do"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index

@@ -49,7 +49,7 @@ Single Page Application
 -----------------------
 
 In short, the *webClient*, instance of *WebClient* is the root component of the
-whole user interface.  Its responsability is to orchestrate all various
+whole user interface.  Its responsibility is to orchestrate all various
 subcomponents, and to provide services, such as rpcs, local storage and more.
 
 In runtime, the web client is a single page application. It does not need to
@@ -259,7 +259,7 @@ As an example, it may look like this:
         return B;
     });
 
-An alternative way to define a module is to give explicitely a list of dependencies
+An alternative way to define a module is to give explicitly a list of dependencies
 in the second argument.
 
 .. code-block:: javascript
@@ -296,7 +296,7 @@ The *odoo.define* method is given three arguments:
 - *dependencies*: the second argument is optional. If given, it should be a list
   of strings, each corresponding to a javascript module.  This describes the
   dependencies that are required to be loaded before the module is executed. If
-  the dependencies are not explicitely given here, then the module system will
+  the dependencies are not explicitly given here, then the module system will
   extract them from the function by calling toString on it, then using a regexp
   to find all *require* statements.
 
@@ -366,7 +366,7 @@ Best practices
 Class System
 ============
 
-Odoo was developped before ECMAScript 6 classes were available.  In Ecmascript 5,
+Odoo was developed before ECMAScript 6 classes were available.  In Ecmascript 5,
 the standard way to define a class is to define a function and to add methods
 on its prototype object.  This is fine, but it is slightly complex when we want
 to use inheritance, mixins.
@@ -566,7 +566,7 @@ rendering takes place, then *start* and finally *destroy*.
     hook that should return a deferred.  The JS framework will wait for this deferred
     to complete before moving on to the rendering step.  Note that at this point,
     the widget does not have a DOM root element.  The *willStart* hook is mostly
-    useful to perfom some asynchronous work, such as fetching data from the server
+    useful to perform some asynchronous work, such as fetching data from the server
 
 .. function:: [Rendering]
 
@@ -637,12 +637,12 @@ Widget API
 .. attribute:: Widget.el
 
     raw DOM element set as root to the widget (only available after the start
-    lifecyle method)
+    lifecycle method)
 
 .. attribute:: Widget.$el
 
     jQuery wrapper around :attr:`~Widget.el`. (only available after the start
-    lifecyle method)
+    lifecycle method)
 
 .. attribute:: Widget.template
 
@@ -1176,7 +1176,7 @@ The notification system in Odoo is designed with the following components:
 - a *Notification* widget: this is a simple widget that is meant to be created
   and displayed with the desired information
 
-- a *NotificationService*: a service whose responsability is to create and
+- a *NotificationService*: a service whose responsibility is to create and
   destroy notifications whenever a request is done (with a custom_event). Note
   that the web client is a service provider.
 
@@ -1952,7 +1952,7 @@ Relational fields
 
     Options:
 
-    - horizontal: if true, radio buttons will be diplayed horizontally.
+    - horizontal: if true, radio buttons will be displayed horizontally.
 
     .. code-block:: xml
 
@@ -2013,7 +2013,7 @@ Relational fields
     - Supported field types: *many2one*
 
 - many2many (FieldMany2Many)
-    Defaut widget for many2many fields.
+    Default widget for many2many fields.
 
     - Supported field types: *many2many*
 
@@ -2067,7 +2067,7 @@ Relational fields
     - Supported field types: *many2many*
 
 - one2many (FieldOne2Many)
-    Defaut widget for one2many fields.
+    Default widget for one2many fields.
 
     It usually displays data in a sub list view, or a sub kanban view.
 

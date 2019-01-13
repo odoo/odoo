@@ -3,24 +3,26 @@
 # * mass_mailing
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Eloïse Stilmant <est@odoo.com>, 2018
 # fr rev <e2ffr02@hotmail.com>, 2018
 # Fabri Yohann <psn@fabri.pw>, 2018
 # Loic <loic.richard2@gmail.com>, 2018
 # lucasdeliege <deliegelucas@gmail.com>, 2018
 # Melanie Bernard <mbe@odoo.com>, 2018
+# Eloïse Stilmant <est@odoo.com>, 2018
 # Laura Piraux <lap@odoo.com>, 2018
 # Nathan Grognet <ngr@odoo.com>, 2018
 # Marie Willemyns <mwi@odoo.com>, 2018
+# Martin Trigaux, 2018
 # Fabien Bourgeois <fabien@yaltik.com>, 2018
+# Moka Tourisme <hello@mokatourisme.fr>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 06:49+0000\n"
-"PO-Revision-Date: 2018-10-08 06:49+0000\n"
-"Last-Translator: Fabien Bourgeois <fabien@yaltik.com>, 2018\n"
+"POT-Creation-Date: 2018-12-19 08:21+0000\n"
+"PO-Revision-Date: 2018-08-24 09:20+0000\n"
+"Last-Translator: Moka Tourisme <hello@mokatourisme.fr>, 2018\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -289,6 +291,8 @@ msgid ""
 "Allow the recipient to manage himself his state in the blacklist via the "
 "unsubscription page."
 msgstr ""
+"Autoriser le destinataire à gérer lui-même son état dans la liste noire via "
+"la page de désabonnement."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.res_config_settings_view_form
@@ -299,6 +303,11 @@ msgid ""
 "                                   The 'come Back' button will always be "
 "visible in any case to allow leads and partners to re-subscribe."
 msgstr ""
+"Autoriser le destinataire à gérer lui-même son état dans la liste noire via "
+"la page de désabonnement. Si l'option est active, le bouton \"Me mettre sur "
+"la liste noire\" est masqué sur la page de désabonnement. Le bouton "
+"\"Revenir\" sera toujours visible dans tous les cas pour permettre aux "
+"prospects et aux partenaires de se réabonner."
 
 #. module: mass_mailing
 #. openerp-web
@@ -455,7 +464,7 @@ msgstr "Changer le style"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_title_sub
 msgid "Check this out!"
-msgstr "Regardez ça!"
+msgstr "Regardez ça !"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_steps
@@ -886,6 +895,7 @@ msgstr "Exclut les emails invalides"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mail_mass_mailing_list_contact_view_search
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_contact_search
 msgid "Exclude Opt Out"
 msgstr "Exclure les désinscrits"
 
@@ -1658,9 +1668,17 @@ msgid "Opened Ratio"
 msgstr "Ratio d'ouverture"
 
 #. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact__opt_out
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_list_contact_rel__opt_out
 msgid "Opt Out"
 msgstr "Désinscription"
+
+#. module: mass_mailing
+#: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_contact__opt_out
+msgid ""
+"Opt out flag for a specific mailing list.This field should not be used in a "
+"view without a unique and active mailing list context."
+msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -2329,6 +2347,7 @@ msgstr "Utilisateur"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mail_mass_mailing_list_contact_view_search
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_contact_search
 msgid "Valid Recipients"
 msgstr "Récipients Valides"
 

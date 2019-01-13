@@ -20,7 +20,11 @@
             <field name="arch" type="xml">
                 <pivot string="Invoices" display_quantity="true">
                     <field name="partner_id"/>
-                    <field name="amount_total_signed" type="measure"/>
+                    <field name="amount_total_company_signed" type="measure"/>
+                    <field name="amount_total_signed" invisible="1"/>
+                    <field name="amount_total" invisible="1"/>
+                    <field name="residual_signed" invisible="1"/>
+                    <field name="residual" invisible="1"/>
                 </pivot>
             </field>
         </record>
@@ -77,8 +81,11 @@
                     <field name="sequence" invisible="1"/>
                     <group attrs="{'invisible': [('display_type', '!=', False)]}">
                         <group>
+                            <field name="partner_id" invisible="1"/>
+                            <field name="invoice_type" invisible="1"/>
+                            <field name="company_id" invisible="1"/>
                             <field name="product_id"
-                                 context="parent and {'partner_id': parent.partner_id}"/>
+                                 context="{'partner_id': partner_id}"/>
                             <label for="quantity"/>
                             <div>
                                 <field name="quantity" class="oe_inline"/>
@@ -90,9 +97,9 @@
                         </group>
                         <group>
                             <field name="analytic_tag_ids" groups="analytic.group_analytic_accounting" widget="many2many_tags" options="{'color_field': 'color'}"/>
-                            <field domain="[('company_id', '=', parent.company_id)]" name="account_id" groups="account.group_account_user"/>
-                            <field name="invoice_line_tax_ids" context="{'type':parent.type}" domain="[('type_tax_use','!=','none'),('company_id', '=', parent.company_id)]" widget="many2many_tags" options="{'no_create': True}"/>
-                            <field domain="[('company_id', '=', parent.company_id)]" name="account_analytic_id" groups="analytic.group_analytic_accounting"/>
+                            <field domain="[('company_id', '=', company_id)]" name="account_id" groups="account.group_account_user"/>
+                            <field name="invoice_line_tax_ids" context="{'type': invoice_type}" domain="[('type_tax_use','!=','none'),('company_id', '=', company_id)]" widget="many2many_tags" options="{'no_create': True}"/>
+                            <field domain="[('company_id', '=', company_id)]" name="account_analytic_id" groups="analytic.group_analytic_accounting"/>
                             <field name="analytic_tag_ids" widget="many2many_tags" groups="analytic.group_analytic_tags"/>
                             <field name="company_id" groups="base.group_multi_company" readonly="1"/>
                         </group>

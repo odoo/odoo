@@ -247,6 +247,9 @@
                     <group>
                         <group>
                             <field name="partner_id"/>
+                            <button name="action_assign_partner" string="Assign Partner" type="object" help="Assign the partner to the Operations. Use only if the partner is manually changed!"
+                                    attrs="{'invisible': ['|', '|', ('move_line_exist', '=', False), ('state', 'not in', ('draft', 'assigned', 'confirmed')), ('picking_type_code', '=', 'internal')]}"
+                                    class="oe_link oe_edit_only"/>
                             <field name="picking_type_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                             <field name="location_id" groups="stock.group_stock_multi_locations" attrs="{'invisible': [('picking_type_code', '=', 'incoming')]}"/>
                             <field name="location_dest_id" groups="stock.group_stock_multi_locations" attrs="{'invisible': [('picking_type_code', '=', 'outgoing')]}"/>

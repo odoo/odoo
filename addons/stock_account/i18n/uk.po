@@ -41,7 +41,7 @@ msgstr "Бухгалтерське проведення"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
 msgid "Account Stock Properties"
-msgstr "Властивості рахунків"
+msgstr "Властивості рахунку обліку записів"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_inventory__accounting_date
@@ -56,7 +56,7 @@ msgstr "Бухгалтерські записи"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_location_form_inherit
 msgid "Accounting Information"
-msgstr "Інформація для обліку"
+msgstr "Інформація бухобліку"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_res_config_settings__module_stock_landed_costs
@@ -101,7 +101,8 @@ msgid ""
 " the product category, or on the location, before processing this operation."
 msgstr ""
 "Не вдається знайти вхідний рахунок складу для товару %s. Перш ніж обробляти "
-"цю операцію, ви повинні визначити її у категорії товару чи на місці."
+"цю операцію, ви повинні визначити її у категорії товару чи на "
+"місцезнаходженні."
 
 #. module: stock_account
 #: code:addons/stock_account/models/stock.py:512
@@ -112,7 +113,8 @@ msgid ""
 "operation."
 msgstr ""
 "Не вдається знайти вихідний рахунок складу для товару %s. Перш ніж обробляти"
-" цю операцію, ви повинні визначити її у категорії товару чи на місці."
+" цю операцію, ви повинні визначити її у категорії товару чи на "
+"місцезнаходженні."
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
@@ -138,8 +140,8 @@ msgid ""
 "Changing your cost method is an important change that will impact your "
 "inventory valuation. Are you sure you want to make that change?"
 msgstr ""
-"Зміна методу витрат - це важлива зміна, яка вплине на оцінку вашої "
-"інвентаризації. Ви впевнені, що хочете внести ці зміни?"
+"Зміна методу витрат - це важлива зміна, яка вплине на оцінку запасів. Ви "
+"впевнені, що хочете внести ці зміни?"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_stock_quantity_history
@@ -213,7 +215,7 @@ msgstr "Створено"
 #: model:ir.model.fields,help:stock_account.field_stock_inventory__accounting_date
 msgid ""
 "Date at which the accounting entries will be created in case of automated "
-"inventory valuation. If empty, the inventoy date will be used."
+"inventory valuation. If empty, the inventory date will be used."
 msgstr ""
 
 #. module: stock_account
@@ -243,8 +245,8 @@ msgid ""
 "If cost price is increased, stock variation account will be debited and stock output account will be credited with the value = (difference of amount * quantity available).\n"
 "If cost price is decreased, stock variation account will be creadited and stock input account will be debited."
 msgstr ""
-"Якщо собівартість буде збільшена, обліковий запис варіації акцій буде дебетовано, а вихідний рахунок складу акцій буде зараховуватися з величиною = (різниця суми * доступна кількість).\n"
-"Якщо собівартість знизиться, буде створений рахунок варіації запасів, а вхідний рахунок складу буде дебетовано."
+"Якщо собівартість буде збільшена, варіації рахунку обліку запасів буде дебетовано, а вихідний рахунок обліку запасів буде зараховуватися з величиною = (різниця суми * доступна кількість).\n"
+"Якщо собівартість знизиться, буде створена варіацію рахунка обліку запасів, а вхідний рахунок буде дебетовано."
 
 #. module: stock_account
 #: model_terms:ir.actions.act_window,help:stock_account.product_valuation_action
@@ -254,7 +256,7 @@ msgstr "Якщо є товари, ви побачите його назву та
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
 msgid "Include landed costs in product cost"
-msgstr "Включіть витрати на землю у вартість товару"
+msgstr "Включіть додаткові витрати у вартість товару"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_inventory
@@ -264,7 +266,7 @@ msgstr "Склад"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_location
 msgid "Inventory Locations"
-msgstr "Розташування складів"
+msgstr "Місцерозташування запасів"
 
 #. module: stock_account
 #: code:addons/stock_account/wizard/stock_quantity_history.py:25
@@ -400,7 +402,7 @@ msgstr "Кількість"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_move_tree_valuation_at_date
 msgid "Reference"
-msgstr "Референс"
+msgstr "Посилання"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__remaining_qty
@@ -551,7 +553,7 @@ msgid ""
 "transit location."
 msgstr ""
 "Рядки переміщення не є узгодженими станами: вони роблять взаємодію в один "
-"крок, поки вони повинні пройти через міжвідомче місце транзиту."
+"крок, поки вони повинні пройти через місце транзиту в середині компанії."
 
 #. module: stock_account
 #: code:addons/stock_account/models/stock.py:367
@@ -582,7 +584,7 @@ msgstr ""
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_move_tree_valuation_at_date
 msgid "Unit of Measure"
-msgstr "Одиниця виміру"
+msgstr "Одиниця вимірювання"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.product_variant_easy_edit_view_inherit

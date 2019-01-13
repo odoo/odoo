@@ -392,14 +392,17 @@ class AccountReconcileModel(models.Model):
                 aml.date_maturity                   AS aml_date_maturity,
                 aml.amount_residual                 AS aml_amount_residual,
                 aml.amount_residual_currency        AS aml_amount_residual_currency,
-                CASE WHEN
-                    REGEXP_REPLACE(st_line.name, '[^0-9]', '', 'g') ~ REGEXP_REPLACE(move.name, '[^0-9]', '', 'g')
-                    OR (
-                        move.ref IS NOT NULL
-                        AND
-                        REGEXP_REPLACE(st_line.name, '[^0-9]', '', 'g') ~ REGEXP_REPLACE(move.ref, '[^0-9]', '', 'g')
-                    )
-                THEN TRUE ELSE FALSE END            AS communication_flag
+
+                -- Determine a matching or not with the statement line communication using the move.name or move.ref.
+                regexp_split_to_array(TRIM(REGEXP_REPLACE(move.name, '[^0-9|^\s]', '', 'g')),'\s+')
+                && regexp_split_to_array(TRIM(REGEXP_REPLACE(st_line.name, '[^0-9|^\s]', '', 'g')), '\s+')
+                OR
+                (
+                    move.ref IS NOT NULL
+                    AND
+                        regexp_split_to_array(TRIM(REGEXP_REPLACE(move.ref, '[^0-9|^\s]', '', 'g')),'\s+')
+                        && regexp_split_to_array(TRIM(REGEXP_REPLACE(st_line.name, '[^0-9|^\s]', '', 'g')), '\s+')
+                )                                   AS communication_flag
             FROM account_bank_statement_line st_line
             LEFT JOIN account_journal journal       ON journal.id = st_line.journal_id
             LEFT JOIN jnl_precision                 ON jnl_precision.journal_id = journal.id
@@ -424,19 +427,30 @@ class AccountReconcileModel(models.Model):
 
                 -- if there is a partner, propose all aml of the partner, otherwise propose only the ones
                 -- matching the statement line communication
-                AND CASE WHEN line_partner.partner_id != 0 THEN
+                AND 
+                (
+                    (
+                        line_partner.partner_id != 0
+                        AND
                         aml.partner_id = line_partner.partner_id
-                    ELSE
+                    )
+                    OR
+                    (
+                        line_partner.partner_id = 0
+                        AND
                         (
-                            REGEXP_REPLACE(st_line.name, '[^0-9]', '', 'g') ~ REGEXP_REPLACE(move.name, '[^0-9]', '', 'g')
-                            OR (
+                            regexp_split_to_array(TRIM(REGEXP_REPLACE(move.name, '[^0-9|^\s]', '', 'g')),'\s+')
+                            && regexp_split_to_array(TRIM(REGEXP_REPLACE(st_line.name, '[^0-9|^\s]', '', 'g')), '\s+')
+                            OR
+                            (
                                 move.ref IS NOT NULL
                                 AND
-                                REGEXP_REPLACE(st_line.name, '[^0-9]', '', 'g') ~ REGEXP_REPLACE(move.ref, '[^0-9]', '', 'g')
+                                    regexp_split_to_array(TRIM(REGEXP_REPLACE(move.ref, '[^0-9|^\s]', '', 'g')),'\s+')
+                                    && regexp_split_to_array(TRIM(REGEXP_REPLACE(st_line.name, '[^0-9|^\s]', '', 'g')), '\s+')
                             )
                         )
-                    END
-
+                    )
+                )
                 AND
                 (
                     (
@@ -676,6 +690,8 @@ class AccountReconcileModel(models.Model):
                             new_aml_dicts = reconciliation_results['new_aml_dicts']
                             if reconciliation_results['open_balance_dict']:
                                 new_aml_dicts.append(reconciliation_results['open_balance_dict'])
+                            if not line.partner_id and partner:
+                                line.partner_id = partner
                             counterpart_moves = line.process_reconciliation(
                                 counterpart_aml_dicts=reconciliation_results['counterpart_aml_dicts'],
                                 payment_aml_rec=reconciliation_results['payment_aml_rec'],
@@ -707,6 +723,8 @@ class AccountReconcileModel(models.Model):
                         new_aml_dicts = reconciliation_results['new_aml_dicts']
                         if reconciliation_results['open_balance_dict']:
                             new_aml_dicts.append(reconciliation_results['open_balance_dict'])
+                        if not line.partner_id and partner:
+                            line.partner_id = partner
                         counterpart_moves = line.process_reconciliation(
                             counterpart_aml_dicts=reconciliation_results['counterpart_aml_dicts'],
                             payment_aml_rec=reconciliation_results['payment_aml_rec'],

@@ -55,7 +55,7 @@ var page_widgets = {};
             if(is_public){
                 this.popover_alert(button, _.str.sprintf(_t('Please <a href="/web?redirect=%s">login</a> to vote this slide'), (document.URL)));
             }else{
-                var target = button.find('.fa');
+                var target = button.find('.o_wslides_like_dislike_count');
                 if (local_storage.getItem('slide_vote_' + slide_id) !== user_id.toString()) {
                     ajax.jsonRpc(href, 'call', {slide_id: slide_id}).then(function (data) {
                         target.text(data);

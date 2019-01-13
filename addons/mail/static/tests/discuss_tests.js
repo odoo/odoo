@@ -424,7 +424,7 @@ QUnit.test('@ mention in channel', function (assert) {
 });
 
 QUnit.test('@ mention with special chars', function (assert) {
-    assert.expect(9);
+    assert.expect(10);
     var done = assert.async();
     var fetchListenersDef = $.Deferred();
     var receiveMessageDef = $.Deferred();
@@ -506,9 +506,94 @@ QUnit.test('@ mention with special chars', function (assert) {
                         assert.strictEqual(discuss.$('.o_thread_message_content a').text(),
                             "@\u0405pëciãlUser<&>\"`' \u30C4",
                             "should have correct mention link in the message content");
+                        $input.val("@");
+                        $input.trigger('keyup');
+                        var $mention = discuss.$('.o_mention_proposition');
+                        assert.strictEqual($mention.find('.o_mention_name').text(),
+                            '\u0405pëciãlUser<&>"`\' \u30C4',
+                            "first partner mention should still display the correct partner name");
                         discuss.destroy();
                         done();
                 });
+        });
+    });
+});
+
+QUnit.test('@ mention in mailing channel', function (assert) {
+    assert.expect(8);
+    var done = assert.async();
+
+    var fetchListenersDef = $.Deferred();
+
+    this.data.initMessaging = {
+        channel_slots: {
+            channel_channel: [{
+                id: 1,
+                channel_type: "channel",
+                name: "general",
+                mass_mailing: true,
+            }],
+        },
+    };
+
+    createDiscuss({
+        id: 1,
+        context: {},
+        params: {},
+        data: this.data,
+        services: this.services,
+        mockRPC: function (route, args) {
+            if (args.method === 'channel_fetch_listeners') {
+                fetchListenersDef.resolve();
+                return $.when([
+                    {id: 1, name: 'Admin'},
+                ]);
+            }
+            return this._super.apply(this, arguments);
+        },
+    })
+    .then(function (discuss) {
+        var $general = discuss.$('.o_mail_discuss_sidebar')
+                        .find('.o_mail_discuss_item[data-thread-id=1]');
+
+        // click on general
+        $general.click();
+        // 1st composer: basic composer (hidden), 2nd composer: extended (shown)
+        var $input = discuss.$('textarea.o_composer_text_field').eq(1);
+        assert.ok($input.length, "should display a composer input");
+
+        // Simulate '@' typed by user with mocked Window.getSelection
+        // Note: focus is needed in order to trigger rpc 'channel_fetch_listeners'
+        $input.focus();
+        $input.val("@");
+        $input.trigger('keyup');
+
+        fetchListenersDef
+            .then(concurrency.delay.bind(concurrency, 0))
+            .then(function () {
+                assert.strictEqual(discuss.$('.dropup.o_composer_mention_dropdown.show').length, 1,
+                "dropup menu for partner mentions should be open");
+
+                var $mention = discuss.$('.o_mention_proposition');
+                assert.strictEqual($mention.length, 1,
+                    "should display 1 partner mention proposition");
+
+                // correct mention proposition
+                assert.ok($mention.hasClass('active'),
+                    "partner mention should be active");
+                assert.strictEqual($mention.data('id'), 1,
+                    "partner mention should link to the correct partner id");
+                assert.strictEqual($mention.find('.o_mention_name').text(), "Admin",
+                    "partner mention should display the correct partner name");
+
+                // equivalent to $mentionPropositions.find('active').click();
+                $input.trigger($.Event('keyup', {which: $.ui.keyCode.ENTER}));
+
+                assert.ok($input.is(':focus'), "composer body should have focus");
+                assert.notOk(discuss.$('.o_composer_subject').is(':focus'));
+
+                discuss.destroy();
+                done();
         });
     });
 });
@@ -986,6 +1071,85 @@ QUnit.test('mark all messages as read from Inbox', function (assert) {
             discuss.destroy();
             done();
         });
+    });
+});
+
+QUnit.test('reply to message from inbox', function (assert) {
+    var done = assert.async();
+    assert.expect(11);
+
+    var self = this;
+    this.data['mail.message'].records = [{
+        author_id: [5, 'Demo User'],
+        body: '<p>test 1</p>',
+        id: 1,
+        needaction: true,
+        needaction_partner_ids: [3],
+        res_id: 100,
+        model: 'some.document',
+        record_name: 'SomeDocument',
+    }];
+    this.data.initMessaging = {
+        needaction_inbox_counter: 1,
+    };
+
+    createDiscuss({
+        id: 1,
+        context: {},
+        params: {},
+        data: this.data,
+        services: this.services,
+        session: { partner_id: 3 },
+        mockRPC: function (route, args) {
+            if (args.method === 'message_post') {
+                assert.step(args.method);
+                assert.strictEqual(args.model, 'some.document',
+                    "should post message to correct document model");
+                assert.strictEqual(args.args[0], 100,
+                    "should post message to correct document ID");
+
+                self.data['mail.message'].records.push({
+                    author_id: [3, 'Me'],
+                    body: args.kwargs.body,
+                    id: 2,
+                    res_id: 100,
+                    model: 'some.document',
+                    record_name: 'SomeDocument',
+                });
+                return $.when(2);
+            }
+            return this._super.apply(this, arguments);
+        },
+    })
+    .then(function (discuss) {
+        assert.strictEqual(discuss.$('.o_mail_discuss_item.o_active').data('thread-id'),
+            'mailbox_inbox',
+            "Inbox should be selected by default");
+        assert.containsOnce(discuss, '.o_thread_message',
+            "should display a single message in inbox");
+        assert.strictEqual(discuss.$('.o_thread_message').data('message-id'), 1,
+            "message should be linked to correct message");
+        assert.containsOnce(discuss.$('.o_thread_message'), '.o_thread_message_reply',
+            "should display the reply icon for message linked to a document");
+
+        testUtils.dom.click(discuss.$('.o_thread_message_reply'));
+        var $composer = discuss.$('.o_thread_composer_extended');
+        assert.isVisible($composer,
+            "extended composer should become visible");
+        assert.strictEqual($composer.find('.o_composer_subject input').val(),
+            'Re: SomeDocument',
+            "composer should have copied document name as subject of message");
+
+        var $textarea = $composer.find('.o_composer_input textarea').first();
+        testUtils.fields.editInput($textarea, 'someContent');
+        assert.containsOnce($composer, '.o_composer_button_send',
+            "should have button to send reply message");
+        testUtils.dom.click($composer.find('.o_composer_button_send'));
+
+        assert.verifySteps(['message_post']);
+
+        discuss.destroy();
+        done();
     });
 });
 

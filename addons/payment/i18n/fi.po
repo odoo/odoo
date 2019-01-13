@@ -4,26 +4,27 @@
 # 
 # Translators:
 # Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2018
-# Tommi Rintala <tommi.rintala@gmail.com>, 2018
-# Martin Trigaux, 2018
-# Kari Lindgren <kari.lindgren@emsystems.fi>, 2018
 # Miku Laitinen <miku.laitinen@gmail.com>, 2018
-# Mikko Salmela <salmemik@gmail.com>, 2018
-# Svante Suominen <svante.suominen@web-veistamo.fi>, 2018
 # Sanna Edelman <direct@generare.com>, 2018
 # Kari Lindgren <karisatu@gmail.com>, 2018
+# Marko Happonen <marko.happonen@sprintit.fi>, 2018
+# Pekko Tuomisto <pekko.tuomisto@web-veistamo.fi>, 2018
+# Tommi Rintala <tommi.rintala@gmail.com>, 2018
+# Kari Lindgren <kari.lindgren@emsystems.fi>, 2018
+# Svante Suominen <svante.suominen@web-veistamo.fi>, 2018
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2018
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2018
-# Marko Happonen <marko.happonen@sprintit.fi>, 2018
+# Mikko Salmela <salmemik@gmail.com>, 2018
+# Martin Trigaux, 2018
 # Veikko Väätäjä <veikko.vaataja@gmail.com>, 2018
-# Pekko Tuomisto <pekko.tuomisto@web-veistamo.fi>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: Pekko Tuomisto <pekko.tuomisto@web-veistamo.fi>, 2018\n"
+"PO-Revision-Date: 2018-08-24 09:21+0000\n"
+"Last-Translator: Veikko Väätäjä <veikko.vaataja@gmail.com>, 2018\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1071,6 +1072,14 @@ msgid "Never"
 msgstr "Ei koskaan"
 
 #. module: payment
+#: code:addons/payment/wizards/payment_acquirer_onboarding_wizard.py:127
+#, python-format
+msgid ""
+"No manual payment method could be found for this company. Please create one "
+"from the Payment Acquirer menu."
+msgstr ""
+
+#. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
 msgid "No payment acquirer found."
 msgstr ""
@@ -1908,6 +1917,12 @@ msgstr "Tilisiirto"
 #: code:addons/payment/static/src/xml/payment_processing.xml:59
 #, python-format
 msgid "You can click here to be redirected to the confirmation page."
+msgstr ""
+
+#. module: payment
+#: code:addons/payment/wizards/payment_acquirer_onboarding_wizard.py:135
+#, python-format
+msgid "You have to set a journal for your payment acquirer %s."
 msgstr ""
 
 #. module: payment

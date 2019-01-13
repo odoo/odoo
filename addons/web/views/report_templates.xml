@@ -102,9 +102,9 @@
                 <t t-call-assets="web.report_assets_pdf" t-js="false"/>
                 <t t-call-assets="web.report_assets_common" t-js="false"/>
                 <t t-call-assets="web.report_assets_pdf" t-css="false"/>
-                <t t-call-assets="web.report_assets_common" t-css="false"/>
                 <meta charset="utf-8"/>
-                <t t-if="subst is True">
+                <t t-set="subst_needed" t-value="subst is True"/>
+                <t t-if="subst_needed">
                     <script>
                         function subst() {
                             var vars = {};
@@ -137,7 +137,7 @@
                     </script>
                 </t>
             </head>
-            <body class="container" onload="subst()">
+            <body class="container" t-att-onload="subst_needed and 'subst()'">
                 <t t-raw="body"/>
             </body>
         </html>
@@ -281,7 +281,7 @@
                     <h4 class="mt0 mb0 text-uppercase" t-field="company.report_header"/>
                 </div>
                 <div class="col-1">
-                    <ul t-if="report_type != 'html'" class="list-inline pagenumber float-right text-center">
+                    <ul t-if="report_type == 'pdf'" class="list-inline pagenumber float-right text-center">
                         <li class="list-inline-item"><strong><span class="page"/></strong></li>
                     </ul>
                 </div>

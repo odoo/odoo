@@ -229,9 +229,11 @@ class FleetVehicle(models.Model):
     def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
         domain = args or []
         domain = expression.AND([domain, [('name', operator, name)]])
-        partner_ids = self.env['res.partner']._search([('name', operator, name)], access_rights_uid=name_get_uid)
-        if partner_ids:
-            domain = expression.OR([domain, ['|', ('driver_id', 'in', partner_ids), ('driver_id', '=', False)]])
+        # we don't want to override the domain's filter on driver_id if present
+        if not any(['driver_id' in element for element in domain]):
+            partner_ids = self.env['res.partner']._search([('name', operator, name)], access_rights_uid=name_get_uid)
+            if partner_ids:
+                domain = expression.OR([domain, ['|', ('driver_id', 'in', partner_ids), ('driver_id', '=', False)]])
         rec = self._search(domain, limit=limit, access_rights_uid=name_get_uid)
         return self.browse(rec).name_get()
 
@@ -315,7 +317,7 @@ class FleetVehicleState(models.Model):
     _order = 'sequence asc'
     _description = 'Vehicle Status'
 
-    name = fields.Char(required=True)
+    name = fields.Char(required=True, translate=True)
     sequence = fields.Integer(help="Used to order the note stages")
 
     _sql_constraints = [('fleet_state_name_unique', 'unique(name)', 'State name already exists')]

@@ -3,31 +3,32 @@
 # * website_sale
 # 
 # Translators:
-# e2f <projects@e2f.com>, 2018
 # AppleMentalist <felix.schnatbaum@gmail.com>, 2018
-# Martin Trigaux, 2018
 # Wolfgang Taferner, 2018
-# Ermin Trevisan <trevi@twanda.com>, 2018
 # Anja Funk <anja.funk@afimage.de>, 2018
 # Martin K <martinkuenz@gmail.com>, 2018
-# Andi, 2018
-# Torsten Wichmann <t.wichmann@intero-technologies.de>, 2018
-# Katharina Moritz <kmo@e2f.com>, 2018
-# key six <mobile.umts@gmail.com>, 2018
 # Thomas Neu <t.neu@runbox.com>, 2018
 # Ralf Hilgenstock <rh@dialoge.info>, 2018
 # JackTheHunter <Maximilian.N98@gmail.com>, 2018
 # Maik Steinfeld <info@streward.de>, 2018
 # darenkster <inactive+darenkster@transifex.com>, 2018
+# Andi, 2018
+# key six <mobile.umts@gmail.com>, 2018
+# Torsten Wichmann <t.wichmann@intero-technologies.de>, 2018
 # Mathias Markl <mathias.markl@mukit.at>, 2018
+# Ermin Trevisan <trevi@twanda.com>, 2018
+# e2f <projects@e2f.com>, 2018
+# Martin Trigaux, 2018
+# Katharina Moritz <kmo@e2f.com>, 2018
 # Johannes Croe <jcr@odoo.com>, 2018
 # Marco Tarsia <marco.y.tarsia@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-10-08 06:48+0000\n"
-"PO-Revision-Date: 2018-10-08 06:48+0000\n"
+"PO-Revision-Date: 2018-08-24 09:35+0000\n"
 "Last-Translator: Marco Tarsia <marco.y.tarsia@gmail.com>, 2018\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
@@ -602,6 +603,11 @@ msgstr "Durchschnittlicher Auftrag"
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__journal_name
 msgid "Bank Name"
 msgstr "Bankname"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address
+msgid "Be aware!"
+msgstr ""
 
 #. module: website_sale
 #: model:res.country.group,name:website_sale.benelux
@@ -1265,6 +1271,19 @@ msgstr "Rechnungen an Kunden senden"
 #: code:addons/website_sale/models/sale_order.py:166
 #, python-format
 msgid "It is forbidden to modify a sales order which is not in draft status."
+msgstr ""
+
+#. module: website_sale
+#: code:addons/website_sale/models/sale_order.py:184
+#, python-format
+msgid "The given product does not exist therefore it cannot be added to cart."
+msgstr ""
+
+#. module: website_sale
+#: code:addons/website_sale/models/sale_order.py:198
+#, python-format
+msgid ""
+"The given combination does not exist therefore it cannot be added to cart."
 msgstr ""
 
 #. module: website_sale
@@ -2234,7 +2253,7 @@ msgstr "Bundesland / Region"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "State / Province..."
-msgstr "Bundesland / Routen ..."
+msgstr "Bundesland / Region ..."
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_company__website_sale_onboarding_payment_acquirer_state
@@ -2590,6 +2609,13 @@ msgstr ""
 " und Berechnungsregeln von Preislisten fest."
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address
+msgid ""
+"You are editing your <b>billing and shipping</b> addresses at the same time!<br/>\n"
+"                                            If you want to modify your shipping address, create a"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.sale_report_action_carts
 #: model_terms:ir.actions.act_window,help:website_sale.sale_report_action_dashboard
 msgid "You don't have any order from the website"
@@ -2727,6 +2753,11 @@ msgstr "kg"
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "ml-2"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address
+msgid "new address"
 msgstr ""
 
 #. module: website_sale

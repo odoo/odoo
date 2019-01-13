@@ -179,6 +179,7 @@ MailManager.include({
      * @private
      * @param {Object} channelData
      * @param {integer} channelData.id
+     * @param {string} [channelData.info]
      * @param {boolean} channelData.is_minimized
      * @param {string} channelData.state
      */
@@ -199,7 +200,7 @@ MailManager.include({
             }
         }
         var channel = this.getChannel(channelData.id);
-        if (channel) {
+        if (channel && channelData.info !== 'join') {
             channel.updateWindowState({
                 folded: channelData.state === 'folded' ? true : false,
                 detached: channelData.is_minimized,
@@ -463,7 +464,7 @@ MailManager.include({
         var self = this;
         var partnerID = data.partner_id;
         this.call('bus_service', 'sendNotification', data.title, data.message, function ( ){
-            self.call('mail_service', 'openDmWindow', partnerID);
+            self.call('mail_service', 'openDMChatWindowFromBlankThreadWindow', partnerID);
         });
     },
     /**

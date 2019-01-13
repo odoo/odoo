@@ -10,14 +10,16 @@
 
     <template id="add_to_compare" inherit_id="website_sale.products_item" active="True" customize_show="True" name="Comparison List" priority="22">
         <xpath expr="//div[hasclass('product_price')]" position="inside">
-            <button type="button" role="button" class="d-none d-md-inline-block btn btn-secondary btn-sm o_add_compare" title="Compare" aria-label="Compare" t-att-data-product-product-id="product.product_variant_ids[0].id if product.product_variant_ids else '0'" data-action="o_comparelist"><span class="fa fa-exchange"></span></button>
+            <t t-set="product_variant" t-value="product_variant or product._create_first_product_variant()"/>
+            <button t-if="product_variant" type="button" role="button" class="d-none d-md-inline-block btn btn-secondary btn-sm o_add_compare" title="Compare" aria-label="Compare" t-att-data-product-product-id="product_variant.id" data-action="o_comparelist"><span class="fa fa-exchange"></span></button>
         </xpath>
     </template>
 
     <template id="product_add_to_compare" name='Add to comparison in product page' inherit_id="website_sale.product" priority="8">
         <xpath expr="//a[@id='add_to_cart']" position="after">
-            <t t-if="product.env.ref('website_sale_comparison.add_to_compare').active">
-                <button type="button" role="button" class="d-none d-md-inline-block btn btn-secondary btn-lg mt8 o_add_compare_dyn" title="Compare" aria-label="Compare" t-att-data-product-product-id="product.product_variant_ids[0].id if product.product_variant_ids else '0'" data-action="o_comparelist"><span class="fa fa-exchange"></span></button>
+            <t t-if="request.website.viewref('website_sale_comparison.add_to_compare').active">
+                <t t-set="product_variant" t-value="product_variant or product._create_first_product_variant()"/>
+                <button t-if="product_variant" type="button" role="button" class="d-none d-md-inline-block btn btn-secondary btn-lg mt8 o_add_compare_dyn" title="Compare" aria-label="Compare" t-att-data-product-product-id="product_variant.id" data-action="o_comparelist"><span class="fa fa-exchange"></span></button>
             </t>
         </xpath>
     </template>
@@ -57,8 +59,19 @@
 
     <template id='recommended_product' inherit_id="website_sale.recommended_products" name="Alternative Products">
         <xpath expr="//h3" position="replace">
-            <t t-set="ids" t-value="str(product.product_variant_id.id) + ','+ ','.join([str(a) for a in product.alternative_product_ids.mapped('product_variant_id.id')])"/>
-            <div><span class='h3'>Suggested alternatives: </span><a role="button" class="btn btn-primary" t-attf-href="/shop/compare/?products=#{ids}"><i class="fa fa-exchange"></i> Compare</a></div>
+            <!--
+                Create the first variant if it doesn't exist for the current
+                product and every alternative product because the product
+                comparator need the variants and not the templates.
+            -->
+            <t t-set="product_variant" t-value="product_variant or product._create_first_product_variant()"/>
+            <t t-set="id_list" t-value="[product_variant.id] if product_variant else []"/>
+            <t t-foreach="product.alternative_product_ids" t-as="alt_product">
+                <t t-set="alt_product_variant_id" t-value="alt_product._get_combination_info()['product_id'] or alt_product._create_first_product_variant().id"/>
+                <t t-if="alt_product_variant_id" t-set="id_list" t-value="id_list + [alt_product_variant_id]"/>
+            </t>
+            <t t-set="ids" t-value="','.join([str(id) for id in id_list])"/>
+            <div><span class='h3'>Suggested alternatives: </span><a t-if="len(id_list) > 1" role="button" class="btn btn-primary" t-attf-href="/shop/compare/?products=#{ids}"><i class="fa fa-exchange"></i> Compare</a></div>
         </xpath>
     </template>
 
@@ -74,6 +87,7 @@
                             <thead>
                                 <td t-if="specs.keys()" class='td-top-left'/>
                                 <td t-foreach="products" t-as="product">
+                                    <t t-set="combination_info" t-value="product._get_combination_info_variant()"/>
                                     <a href="#" t-att-data-product_product_id="product.id" class="o_comparelist_remove" t-if="len(products) &gt; 2">
                                         <strong class='float-right'>x</strong>
                                     </a>
@@ -82,15 +96,15 @@
                                     </a>
                                     <div class='product_summary'>
                                         <a class="o_product_comparison_table" t-attf-href="/shop/product/#{ slug(product.product_tmpl_id) }">
-                                            <span t-field='product.display_name'></span><br/>
+                                            <span t-esc="combination_info['display_name']"></span><br/>
                                         </a>
 
                                         <span>
                                             <strong>Price:</strong>
-                                            <t t-if="(compute_currency(product.lst_price) - product.website_price ) &gt; 0.01  and website.get_current_pricelist().discount_policy=='without_discount'">
-                                                <del class="text-danger mr8" style="white-space: nowrap;" t-esc="compute_currency(product.website_public_price)" t-options="{'widget': 'monetary', 'display_currency': website.get_current_pricelist().currency_id, 'from_currency': website.currency_id}" />
+                                            <t t-if="True"><!-- compatibility 12.0-->
+                                                <del t-attf-class="text-danger mr8 {{'' if combination_info['has_discounted_price'] else 'd-none'}}" style="white-space: nowrap;" t-esc="combination_info['list_price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}" />
                                             </t>
-                                            <span t-esc="product.website_price" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"></span>
+                                            <span t-esc="combination_info['price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"></span>
                                         </span>
 
                                         <form action="/shop/cart/update" method="post" class="text-center">
@@ -121,17 +135,18 @@
     </template>
 
     <template id="product_product" name="Comparator - Product row in comparator popover">
+        <t t-set="combination_info" t-value="product._get_combination_info_variant()"/>
         <div class="row no-gutters align-items-center mt-2 o_product_row" t-att-data-category_ids="product.public_categ_ids.ids">
             <div class="col-3">
                 <img class="img img-fluid" t-attf-src="/web/image/product.product/#{product.id}/image_small" style="max-height: 50px;" alt="Product image"/>
             </div>
             <div class="col-8 pl-2">
                 <h6>
-                    <a t-attf-href="/shop/product/#{product.product_tmpl_id[0].id}"><t t-esc="product.display_name" /></a><br/>
-                    <t t-if="(compute_currency(product.lst_price) - product.website_price ) &gt; 0.01  and website.get_current_pricelist().discount_policy=='without_discount'">
-                        <del class="text-danger mr8" style="white-space: nowrap;" t-esc="compute_currency(product.website_public_price)" t-options="{'widget': 'monetary', 'display_currency': website.get_current_pricelist().currency_id, 'from_currency': website.currency_id}" />
+                    <a t-attf-href="/shop/product/#{product.product_tmpl_id[0].id}"><t t-esc="combination_info['display_name']" /></a><br/>
+                    <t t-if="True"><!--compatibility 12.0-->
+                        <del t-attf-class="text-danger mr8 {{'' if combination_info['has_discounted_price'] else 'd-none'}}" style="white-space: nowrap;" t-esc="combination_info['list_price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}" />
                     </t>
-                    <span t-esc="product.website_price" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"></span>
+                    <span t-esc="combination_info['price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"></span>
                 </h6>
             </div>
             <div class="col-1 text-right">

@@ -199,6 +199,8 @@ class MailThread(models.AbstractModel):
     @api.multi
     def _get_message_needaction(self):
         res = dict((res_id, 0) for res_id in self.ids)
+        if not res:
+            return
 
         # search for unread messages, directly in SQL to improve performances
         self._cr.execute(""" SELECT msg.res_id FROM mail_message msg
@@ -1926,7 +1928,7 @@ class MailThread(models.AbstractModel):
     def message_post(self, body='', subject=None,
                      message_type='notification', subtype=None,
                      parent_id=False, attachments=None,
-                     notif_layout=False, add_sign=False, model_description=False,
+                     notif_layout=False, add_sign=True, model_description=False,
                      mail_auto_delete=True, **kwargs):
         """ Post a new message in an existing thread, returning the new
             mail.message ID.
@@ -2345,18 +2347,20 @@ class MailThread(models.AbstractModel):
         view = self.env['ir.ui.view'].browse(self.env['ir.model.data'].xmlid_to_res_id(template))
 
         for record in self:
+            model_description = self.env['ir.model']._get(record._name).display_name
             values = {
                 'object': record,
+                'model_description': model_description,
             }
             assignation_msg = view.render(values, engine='ir.qweb', minimal_qcontext=True)
             assignation_msg = self.env['mail.thread']._replace_local_links(assignation_msg)
             record.message_notify(
-                subject='You have been assigned to %s' % record.display_name,
+                subject=_('You have been assigned to %s') % record.display_name,
                 body=assignation_msg,
                 partner_ids=[(4, pid) for pid in partner_ids],
                 record_name=record.display_name,
                 notif_layout='mail.mail_notification_light',
-                model_description=record._description.lower()
+                model_description=model_description,
             )
 
     @api.multi

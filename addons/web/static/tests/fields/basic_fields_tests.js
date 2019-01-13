@@ -2937,6 +2937,38 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('field date should select its content onclick when there is one', function (assert) {
+        assert.expect(2);
+        var done = assert.async();
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<field name="display_name" /> ' + // Do not focus on the date field right away
+                    '<field name="date" />' +
+                '</form>',
+            res_id: 1,
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        form.$el.on({
+            'show.datetimepicker': function () {
+                assert.ok($('.bootstrap-datetimepicker-widget').is(':visible'),
+                    'bootstrap-datetimepicker is visible');
+                assert.strictEqual(window.getSelection().toString(), "02/03/2017",
+                    'The whole input of the date field should have been selected');
+                done();
+            }
+        });
+        form.$('.o_input[name="date"]').mouseenter().trigger('focus');
+
+        form.destroy();
+    });
+
     QUnit.module('FieldDatetime');
 
     QUnit.test('datetime field in form view', function (assert) {
@@ -5376,6 +5408,48 @@ QUnit.module('basic_fields', {
         // we don't actually check that it doesn't open the record because even
         // if it tries to, it will crash as we don't define an arch in this test
         $('.modal .o_list_view .o_data_row:first .o_data_cell').click();
+
+        form.destroy();
+    });
+
+    QUnit.module('FieldProgressBar');
+
+    QUnit.test('Field ProgressBar: max_value should update', function (assert) {
+        assert.expect(2);
+
+        this.data.partner.records = this.data.partner.records.slice(0,1);
+        this.data.partner.records[0].qux = 2;
+
+        this.data.partner.onchanges = {
+            display_name: function (obj) {
+                obj.int_field = 999;
+                obj.qux = 5;
+            }
+        };
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<field name="display_name" />' +
+                    '<field name="qux" invisible="1" />' +
+                    '<field name="int_field" widget="progressbar" options="{\'current_value\': \'int_field\', \'max_value\': \'qux\'}" />' +
+                '</form>',
+            res_id: 1,
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        assert.strictEqual(form.$('.o_progressbar_value').text(), '10 / 2',
+            'The initial value of the progress bar should be correct');
+
+        // trigger the onchange
+        form.$('.o_input[name=display_name]').val('new name').trigger('input');
+
+        assert.strictEqual(form.$('.o_progressbar_value').text(), '999 / 5',
+            'The value of the progress bar should be correct after the update');
 
         form.destroy();
     });

@@ -214,7 +214,7 @@ class PurchaseRequisitionLine(models.Model):
                 ('product_id', '=', vals.get('product_id')),
                 ('name', '=', res.requisition_id.vendor_id.id),
             ])
-            if not [s.requisition_id for s in supplier_infos]:
+            if not any([s.purchase_requisition_id for s in supplier_infos]):
                 res.create_supplier_info()
             if vals['price_unit'] <= 0.0:
                 raise UserError(_('You cannot confirm the blanket order without price.'))
@@ -369,8 +369,8 @@ class PurchaseOrder(models.Model):
         self.order_line = order_lines
 
     @api.multi
-    def button_confirm(self):
-        res = super(PurchaseOrder, self).button_confirm()
+    def button_approve(self, force=False):
+        res = super(PurchaseOrder, self).button_approve(force=force)
         for po in self:
             if not po.requisition_id:
                 continue
@@ -489,7 +489,7 @@ class StockMove(models.Model):
 
     def _get_upstream_documents_and_responsibles(self, visited):
         if self.requisition_line_ids:
-            return [(requisition_line.requisition_id, requisition_line.requisition_id.user_id, visited) for requisition_line in self.requisition_line_ids if requisition_line.state not in ('done', 'cancel')]
+            return [(requisition_line.requisition_id, requisition_line.requisition_id.user_id, visited) for requisition_line in self.requisition_line_ids if requisition_line.requisition_id.state not in ('done', 'cancel')]
         else:
             return super(StockMove, self)._get_upstream_documents_and_responsibles(visited)
 

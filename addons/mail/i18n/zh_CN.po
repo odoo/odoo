@@ -3,13 +3,13 @@
 # * mail
 # 
 # Translators:
+# Cécile Collart <cco@odoo.com>, 2018
 # 卓忆科技 <zhanghao@jointd.com>, 2018
 # v2exerer <9010446@qq.com>, 2018
 # Henry Zhou <zhouhenry@live.com>, 2018
 # ChinaMaker <liuct@chinamaker.net>, 2018
 # 老窦 北京 <2662059195@qq.com>, 2018
 # gary chk <garychk@163.com>, 2018
-# Cécile Collart <cco@odoo.com>, 2018
 # Emily JIA <eji@odoo.com>, 2018
 # Martin Trigaux, 2018
 # bower Guo <124358678@qq.com>, 2018
@@ -17,23 +17,23 @@
 # Youfu Sheng <wdmsyf@sina.com>, 2018
 # diaojiaolou <124412206@qq.com>, 2018
 # snow wang <147156565@qq.com>, 2018
-# inspur qiuguodong <qiuguodong@inspur.com>, 2018
 # 演奏王 <wangwhai@qq.com>, 2018
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
+# inspur qiuguodong <qiuguodong@inspur.com>, 2018
 # 湘子 南 <1360857908@qq.com>, 2018
+# liAnGjiA <liangjia@qq.com>, 2018
 # Gary Wei <Gary.wei@elico-corp.com>, 2018
 # e2f_cn c7 <e2f_cn_c7@outlook.com>, 2018
 # rejen he <251442037@qq.com>, 2018
 # 广州救火 <7017511@qq.com>, 2018
-# liAnGjiA <liangjia@qq.com>, 2018
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 06:49+0000\n"
+"POT-Creation-Date: 2018-12-19 08:20+0000\n"
 "PO-Revision-Date: 2018-08-24 09:20+0000\n"
-"Last-Translator: liAnGjiA <liangjia@qq.com>, 2018\n"
+"Last-Translator: Jeffery CHEN Fan <jeffery9@gmail.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -42,10 +42,22 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:921
+#: code:addons/mail/models/mail_channel.py:922
 #, python-format
 msgid " This channel is private. People must be invited to join it."
 msgstr " This channel is private. People must be invited to join it."
+
+#. module: mail
+#: code:addons/mail/wizard/invite.py:29
+#, python-format
+msgid "%(user_name)s invited you to follow %(document)s document: %(title)s"
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/wizard/invite.py:31
+#, python-format
+msgid "%(user_name)s invited you to follow a new document."
+msgstr ""
 
 #. module: mail
 #. openerp-web
@@ -171,7 +183,7 @@ msgstr ""
 " 您可以通过键入 <b>:快捷方式</b>在您的消息中插入预设回复。<br>"
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:721
+#: code:addons/mail/models/mail_channel.py:722
 #, python-format
 msgid ""
 "<div class=\"o_mail_notification\">%(author)s invited %(new_partner)s to <a "
@@ -183,7 +195,7 @@ msgstr ""
 "id=\"%(channel_id)s\">#%(channel_name)s</a></div>"
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:828
+#: code:addons/mail/models/mail_channel.py:829
 #, python-format
 msgid ""
 "<div class=\"o_mail_notification\">created <a href=\"#\" "
@@ -193,8 +205,8 @@ msgstr ""
 "class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:728
-#: code:addons/mail/models/mail_channel.py:802
+#: code:addons/mail/models/mail_channel.py:729
+#: code:addons/mail/models/mail_channel.py:804
 #, python-format
 msgid ""
 "<div class=\"o_mail_notification\">joined <a href=\"#\" "
@@ -204,7 +216,7 @@ msgstr ""
 "class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:294
+#: code:addons/mail/models/mail_channel.py:295
 #, python-format
 msgid ""
 "<div class=\"o_mail_notification\">left <a href=\"#\" "
@@ -214,22 +226,8 @@ msgstr ""
 "class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
 
 #. module: mail
-#: code:addons/mail/wizard/invite.py:23
-#, python-format
-msgid ""
-"<div><p>Hello,</p><p>%s invited you to follow %s document: %s.</p></div>"
-msgstr "<div><p>您好,</p><p>%s 邀请您关注%s单据: %s.</p></div>"
-
-#. module: mail
-#: code:addons/mail/wizard/invite.py:26
-#, python-format
-msgid ""
-"<div><p>Hello,</p><p>%s invited you to follow a new document.</p></div>"
-msgstr "<div><p>您好，</p><p>%s 邀请您关注新单据。</p></div>"
-
-#. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/tour.js:28
+#: code:addons/mail/static/src/js/tour.js:60
 #, python-format
 msgid ""
 "<p><b>Chat with coworkers</b> in real-time using direct "
@@ -239,7 +237,7 @@ msgstr "<p>使用私信实时<b>与同事聊天</b>。</p><p><i>您可能需要�
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/tour.js:15
+#: code:addons/mail/static/src/js/tour.js:39
 #, python-format
 msgid ""
 "<p><b>Write a message</b> to the members of the channel here.</p> <p>You can"
@@ -251,7 +249,7 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/tour.js:11
+#: code:addons/mail/static/src/js/tour.js:23
 #, python-format
 msgid ""
 "<p>Channels make it easy to organize information across different topics and"
@@ -259,6 +257,13 @@ msgid ""
 "marketing, product XYZ, after work party, etc).</p>"
 msgstr ""
 "<p>通过渠道可以轻松跨越不同主题和组织信息。</p><p>尝试<b>创建您的第一个渠道</b>（例如，销售、营销、产品矩阵、工作之余的聚会等）。</p>"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/js/tour.js:27
+#, python-format
+msgid "<p>Create a channel here.</p>"
+msgstr ""
 
 #. module: mail
 #. openerp-web
@@ -278,7 +283,7 @@ msgid ""
 "                            <span name=\"document_followers_text\" attrs=\"{'invisible':['|', ('model', '=', False), ('composition_mode', '=', 'mass_mail')]}\">Followers of the document and</span>"
 msgstr ""
 "<span attrs=\"{'invisible': [('composition_mode', '!=', 'mass_mail')]}\">\n"
-"                                <strong>电子邮件群发</strong> 在\n"
+"                                <strong>EMail群发</strong> 在\n"
 "                                <span attrs=\"{'invisible': [('use_active_domain', '=', True)]}\">选定的记录</span>\n"
 "                                <span attrs=\"{'invisible': [('use_active_domain', '=', False)]}\">当前搜索筛选器</span>.\n"
 "                            </span>\n"
@@ -344,7 +349,7 @@ msgstr ""
 "<strong>\n"
 " 与当前搜索过滤器匹配的所有记录及在列表视图中选中的 ID都将以邮件发送，\n"
 " </strong><br/>\n"
-" 在列表中选中的所有记录都将发送电子邮件。<br/>\n"
+" 在列表中选中的所有记录都将发送EMail。<br/>\n"
 " 该操作可能使您几分钟内无法打开浏览器。"
 
 #. module: mail
@@ -368,7 +373,7 @@ msgid ""
 "                                The email will be sent for all the records selected in the list."
 msgstr ""
 "<strong>仅使用列表中选中的记录。</strong><br/>\n"
-" 在列表中选中的所有记录都将收到电子邮件。"
+" 在列表中选中的所有记录都将收到EMail。"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
@@ -550,7 +555,7 @@ msgstr "添加频道"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_view_form
 msgid "Add Email Blacklist"
-msgstr "添加 Email 黑名单"
+msgstr "添加 EMail 黑名单"
 
 #. module: mail
 #. openerp-web
@@ -888,7 +893,7 @@ msgstr "作者签名(仅限群发邮件)"
 msgid ""
 "Author of the message. If not set, email_from may hold an email address that"
 " did not match any partner."
-msgstr "消息的作者。如果没设置，email_from 可能保存一个不匹配任何合作伙伴的电邮地址"
+msgstr "消息的作者。如果没设置，email_from 可能保存一个不匹配任何合作伙伴的EMail地址"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__author_avatar
@@ -970,12 +975,12 @@ msgstr "禁止清单"
 #: code:addons/mail/static/src/xml/thread.xml:420
 #, python-format
 msgid "Ban this email address"
-msgstr "禁止此Email地址"
+msgstr "禁止此EMail地址"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_moderation_view_search
 msgid "Banned Emails"
-msgstr "禁止的Email"
+msgstr "禁止的EMail"
 
 #. module: mail
 #. openerp-web
@@ -1050,7 +1055,7 @@ msgstr "取消"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_tree
 msgid "Cancel Email"
-msgstr "取消电子邮件"
+msgstr "取消EMail"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_cancel_view_form
@@ -1384,7 +1389,7 @@ msgstr "创建新活动"
 #: code:addons/mail/models/mail_thread.py:400
 #, python-format
 msgid "Create a new %(document)s"
-msgstr "创建新文档"
+msgstr ""
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:392
@@ -1554,7 +1559,7 @@ msgid ""
 msgstr ""
 "记录的默认收件人： \n"
 "- 合作伙伴（使用合作伙伴的Id或partner_id字段）或\n"
-"- 电子邮件(使用发件人或email字段)"
+"- EMail(使用发件人或email字段)"
 
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.mail_shortcode_action
@@ -1730,7 +1735,7 @@ msgstr "相关单据的显示名称"
 msgid ""
 "Do not keep a copy of the email in the document communication history (mass "
 "mailing only)"
-msgstr "不要在文档通信历史中保存电子邮件副本（仅限群发邮件）"
+msgstr "不要在文档通信历史中保存EMail副本（仅限群发邮件）"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_document_file_kanban
@@ -1853,84 +1858,84 @@ msgstr "编辑订阅"
 #: selection:mail.compose.message,message_type:0
 #: selection:mail.message,message_type:0
 msgid "Email"
-msgstr "Email"
+msgstr "EMail"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__email
 msgid "Email Address"
-msgstr "Email地址"
+msgstr "EMail地址"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_view_form
 msgid "Email Alias"
-msgstr "Email别名"
+msgstr "EMail别名"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_alias
 msgid "Email Aliases"
-msgstr "Email别名"
+msgstr "EMail别名"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_alias_mixin
 msgid "Email Aliases Mixin"
-msgstr "电子邮件别名 Mixin"
+msgstr "EMail别名 Mixin"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_view_tree
 msgid "Email Blacklist"
-msgstr "Email黑名单"
+msgstr "EMail黑名单"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Email Configuration"
-msgstr "Email配置"
+msgstr "EMail配置"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_preview_form
 msgid "Email Preview"
-msgstr "Email预览"
+msgstr "EMail预览"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Email Search"
-msgstr "Email搜索"
+msgstr "EMail搜索"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_notification__email_status
 msgid "Email Status"
-msgstr "Email状态"
+msgstr "EMail状态"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__template_id
 msgid "Email Template"
-msgstr "Email模板"
+msgstr "EMail模板"
 
 #. module: mail
 #: model:ir.model,name:mail.model_email_template_preview
 msgid "Email Template Preview"
-msgstr "Email模板预览"
+msgstr "EMail模板预览"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_template
 msgid "Email Templates"
-msgstr "Email模板"
+msgstr "EMail模板"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_thread
 msgid "Email Thread"
-msgstr "电子邮件线程"
+msgstr "EMail线程"
 
 #. module: mail
 #: sql_constraint:mail.blacklist:0
 msgid "Email address already exists!"
-msgstr "电子邮件地址已存在！"
+msgstr "EMail地址已存在！"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_users__alias_id
 msgid ""
 "Email address internally associated with this user. Incoming emails will "
 "appear in the user's notifications."
-msgstr "关联用户的电子邮件地址，并以电子邮件通知用户。"
+msgstr "关联用户的EMail地址，并以EMail通知用户。"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__email_from
@@ -1939,7 +1944,7 @@ msgstr "关联用户的电子邮件地址，并以电子邮件通知用户。"
 msgid ""
 "Email address of the sender. This field is set when no matching partner is "
 "found and replaces the author_id field in the chatter."
-msgstr "发送者的Email地址。当无法匹配业务伙伴的邮件时，此字段被设置。并且Chatter中的作者id被替换掉"
+msgstr "发送者的EMail地址。当无法匹配业务伙伴的邮件时，此字段被设置。并且Chatter中的作者id被替换掉"
 
 #. module: mail
 #: selection:mail.notification,failure_type:0
@@ -1949,14 +1954,14 @@ msgstr "您的消息被拒绝。"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid "Email address to redirect replies..."
-msgstr "电子邮件地址重定向回复..."
+msgstr "EMail地址重定向回复..."
 
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.mail_blacklist_action
 msgid ""
 "Email addresses that are blacklisted means that the recipient won't receive "
 "any mass mailing anymore."
-msgstr "存在于黑名单的电子邮件表示收件者不会再收到群发邮件。"
+msgstr "存在于黑名单的EMail表示收件者不会再收到群发邮件。"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_compose_message
@@ -1967,19 +1972,19 @@ msgstr "邮件撰写向导"
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_message_subtype_form
 msgid "Email message"
-msgstr "Email消息"
+msgstr "EMail消息"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_resend_message
 msgid "Email resend wizard"
-msgstr "电子邮件重发向导"
+msgstr "EMail重发向导"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_view_mail_mail
 #: model:ir.ui.menu,name:mail.menu_mail_mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_tree
 msgid "Emails"
-msgstr "电子邮件"
+msgstr "EMail"
 
 #. module: mail
 #. openerp-web
@@ -2008,12 +2013,20 @@ msgid "Error during communication with the publisher warranty server."
 msgstr "当与保障服务器通信时发生错误。"
 
 #. module: mail
-#: code:addons/mail/models/mail_mail.py:317
+#: code:addons/mail/models/mail_mail.py:340
+#, python-format
+msgid ""
+"Error without exception. Probably due do concurrent access update of "
+"notification records. Please see with an administrator."
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/models/mail_mail.py:329
 #, python-format
 msgid ""
 "Error without exception. Probably due do sending an email without computed "
 "recipients."
-msgstr "无异常错误。可能是由于没有找到收件人电子邮件。"
+msgstr "无异常错误。可能是由于没有找到收件人EMail。"
 
 #. module: mail
 #: sql_constraint:mail.followers:0
@@ -2096,7 +2109,7 @@ msgstr "失败原因"
 msgid ""
 "Failure reason. This is usually the exception thrown by the email server, "
 "stored to ease the debugging of mailing issues."
-msgstr "失败原因。通过电子邮件服务器抛出的异常，存储以缓解邮件问题的调试。"
+msgstr "失败原因。通过EMail服务器抛出的异常，存储以缓解邮件问题的调试。"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_notification__failure_type
@@ -2371,6 +2384,12 @@ msgid "Hello"
 msgstr "您好"
 
 #. module: mail
+#: code:addons/mail/wizard/invite.py:35
+#, python-format
+msgid "Hello,"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_cancel__help_message
 #: model:ir.model.fields,field_description:mail.field_mail_resend_partner__message
 msgid "Help message"
@@ -2489,7 +2508,7 @@ msgstr "如果勾选此框，用户签名会附加到消息文本中"
 msgid ""
 "If set, the queue manager will send the email after the date. If not set, "
 "the email will be send as soon as possible."
-msgstr "如果设置完毕，队列管理员将在指定日期之后发送电子邮件。如果未设置完毕，电子邮件将尽快发送"
+msgstr "如果设置完毕，队列管理员将在指定日期之后发送EMail。如果未设置完毕，EMail将尽快发送"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview__scheduled_date
@@ -2497,7 +2516,7 @@ msgstr "如果设置完毕，队列管理员将在指定日期之后发送电子
 msgid ""
 "If set, the queue manager will send the email after the date. If not set, "
 "the email will be send as soon as possible. Jinja2 placeholders may be used."
-msgstr "如果设置完毕，队列管理员将在指定日期之后发送电子邮件。如果未设置完毕，电子邮件将尽快发送。可以使用 Jinja2 占位符。"
+msgstr "如果设置完毕，队列管理员将在指定日期之后发送EMail。如果未设置完毕，EMail将尽快发送。可以使用 Jinja2 占位符。"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_blacklist_mixin__is_blacklisted
@@ -2506,14 +2525,14 @@ msgstr "如果设置完毕，队列管理员将在指定日期之后发送电子
 msgid ""
 "If the email address is on the blacklist, the contact won't receive mass "
 "mailing anymore, from any list"
-msgstr "存在于黑名单的电子邮件表示收件者不会再收到任何列表的群发邮件。"
+msgstr "存在于黑名单的EMail表示收件者不会再收到任何列表的群发邮件。"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__alias_domain
 msgid ""
 "If you have setup a catch-all email domain redirected to the Odoo server, "
 "enter the domain name here."
-msgstr "如果你设置了电子邮件域名重定向到这个Odoo服务器，请在这里输入域名。"
+msgstr "如果你设置了EMail域名重定向到这个Odoo服务器，请在这里输入域名。"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_cancel_view_form
@@ -2590,13 +2609,13 @@ msgstr "仅内部的"
 #. module: mail
 #: selection:mail.notification,failure_type:0
 msgid "Invalid email address"
-msgstr "无效的电子邮件地址"
+msgstr "无效的EMail地址"
 
 #. module: mail
 #: code:addons/mail/models/mail_blacklist.py:35
 #, python-format
 msgid "Invalid email address %r"
-msgstr "无效的电子邮件地址 %r"
+msgstr "无效的EMail地址 %r"
 
 #. module: mail
 #: code:addons/mail/models/mail_alias.py:88
@@ -3038,7 +3057,7 @@ msgstr "邮件被创建，以通知当前收件人"
 #: model:ir.cron,cron_name:mail.ir_cron_mail_scheduler_action
 #: model:ir.cron,name:mail.ir_cron_mail_scheduler_action
 msgid "Mail: Email Queue Manager"
-msgstr "邮件：电子邮件队列管理器"
+msgstr "邮件：EMail队列管理器"
 
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_mail_notify_channel_moderators_ir_actions_server
@@ -3220,7 +3239,7 @@ msgstr "消息在审核中"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__email_to
 msgid "Message recipients (emails)"
-msgstr "消息收件人(电子邮件)"
+msgstr "消息收件人(EMail)"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__references
@@ -3264,7 +3283,7 @@ msgstr "消息子类型跟随，意味着将被推到用户墙上的子类型。
 msgid ""
 "Message type: email for email message, notification for system message, "
 "comment for other messages such as user replies"
-msgstr "消息类型：电子邮件用于 邮件消息， 通知用户系统消息，评论用于其他消息，例如用户回复。"
+msgstr "消息类型：EMail用于 邮件消息， 通知用户系统消息，评论用于其他消息，例如用户回复。"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__message_id
@@ -3370,7 +3389,7 @@ msgstr "管理员"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__moderation_ids
 msgid "Moderated Emails"
-msgstr "管理电子邮件"
+msgstr "管理EMail"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users__moderation_channel_ids
@@ -3380,7 +3399,7 @@ msgstr "管理频道"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__moderation_count
 msgid "Moderated emails count"
-msgstr "管理电子邮件账户"
+msgstr "管理EMail账户"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_moderation_action
@@ -3862,6 +3881,13 @@ msgid "Open"
 msgstr "打开"
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/xml/thread.xml:409
+#, python-format
+msgid "Open Channel in Discuss to moderate"
+msgstr ""
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_alias_form
 msgid "Open Document"
 msgstr "打开单据"
@@ -3973,14 +3999,14 @@ msgstr "逾期"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Override author's email"
-msgstr "覆盖作者电子邮件"
+msgstr "覆盖作者EMail"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_user_id
 #: model:ir.model.fields,field_description:mail.field_mail_alias_mixin__alias_user_id
 #: model:ir.model.fields,field_description:mail.field_mail_channel__alias_user_id
 msgid "Owner"
-msgstr "所有者"
+msgstr "货主"
 
 #. module: mail
 #. openerp-web
@@ -4054,7 +4080,7 @@ msgstr "业务合作伙伴只读"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_resend_partner
 msgid "Partner with additionnal information for mail resend"
-msgstr "业务伙伴需要额外信息重发电邮"
+msgstr "业务伙伴需要额外信息重发EMail"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__needaction_partner_ids
@@ -4177,7 +4203,7 @@ msgid ""
 "- Handle in Odoo: notifications appear in your Odoo Inbox"
 msgstr ""
 "处理聊天通知的规则:\n"
-"- 通过电邮处理: 通知会发送至您的电邮地址\n"
+"- 通过EMail处理: 通知会发送至您的EMail地址\n"
 "- 系统内部处理: 通知会出现在Odoo收件箱"
 
 #. module: mail
@@ -4195,6 +4221,13 @@ msgstr ""
 "- 每一个人: 任何人都可以提交\n"
 "- 合作伙伴: 只有认证过的合作伙伴\n"
 "- 关注者: 只有相关文件或下列频道成员的跟随者\n"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/js/tour.js:48
+#, python-format
+msgid "Post your message on the thread"
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_borders
@@ -4473,7 +4506,7 @@ msgstr "回复"
 msgid ""
 "Reply email address. Setting the reply_to bypasses the automatic thread "
 "creation."
-msgstr "回复电子邮件地址。设置回复到reply_to以绕过自动创建。"
+msgstr "回复EMail地址。设置回复到reply_to以绕过自动创建。"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview__reply_to
@@ -4659,7 +4692,7 @@ msgstr ""
 msgid ""
 "Select the action to do on each mail and correct the email address if "
 "needed. The modified address will be saved on the corresponding contact."
-msgstr "选择每个邮件上的操作，并在需要时更正电子邮件地址。修改后的地址将保存在相应的联系人上。"
+msgstr "选择每个邮件上的操作，并在需要时更正EMail地址。修改后的地址将保存在相应的联系人上。"
 
 #. module: mail
 #: selection:mail.channel,public:0
@@ -4686,7 +4719,7 @@ msgstr "再次发送"
 #: selection:ir.actions.server,state:0
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite__send_mail
 msgid "Send Email"
-msgstr "发送电子邮件"
+msgstr "发送EMail"
 
 #. module: mail
 #: code:addons/mail/models/mail_template.py:265
@@ -4771,11 +4804,6 @@ msgstr "以邮件形式发送"
 #, python-format
 msgid "Sent"
 msgstr "已发送"
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.message_notification_email
-msgid "Sent by"
-msgstr "发送者"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_notification__is_email
@@ -5043,12 +5071,12 @@ msgstr "'期望到期日'不能是以前的日期。"
 #. module: mail
 #: sql_constraint:mail.moderation:0
 msgid "The email address must be unique per channel !"
-msgstr "每个频道的电子邮件地址必须是唯一的！"
+msgstr "每个频道的EMail地址必须是唯一的！"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_bounce_catchall
 msgid "The email sent to"
-msgstr "电子邮件发到"
+msgstr "EMail发到"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_shortcode__substitution
@@ -5073,7 +5101,7 @@ msgstr ""
 msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
-msgstr "邮件别名的名称，例如，如果你要收取 <jobs@example.odoo.com> 的电子邮件,别名就要设为：\"jobs\""
+msgstr "邮件别名的名称，例如，如果你要收取 <jobs@example.odoo.com> 的EMail,别名就要设为：\"jobs\""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_user_id
@@ -5085,7 +5113,7 @@ msgid ""
 "the sender (From) address, or will use the Administrator account if no "
 "system user is found for that address."
 msgstr ""
-"基于此别名接收到的邮件，创建记录的所有人。若此字段没有设置，系统将试图根据发送者(From)地址来查找正确的所有者，如果对于那个地址没有系统用户被发现，将使用系统管理员账户。"
+"基于此别名接收到的邮件，创建记录的所有人。若此字段没有设置，系统将试图根据发送者(From)地址来查找正确的货主，如果对于那个地址没有系统用户被发现，将使用系统管理员账户。"
 
 #. module: mail
 #: code:addons/mail/models/mail_activity.py:243
@@ -5122,7 +5150,7 @@ msgstr "此"
 #: code:addons/mail/static/src/xml/activity_view.xml:10
 #, python-format
 msgid "This action will send an email."
-msgstr "此操作将发出电子邮件。"
+msgstr "此操作将发出EMail。"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_channel__image
@@ -5157,7 +5185,7 @@ msgstr "至"
 #: model:ir.model.fields,field_description:mail.field_email_template_preview__email_to
 #: model:ir.model.fields,field_description:mail.field_mail_template__email_to
 msgid "To (Emails)"
-msgstr "至（Email）"
+msgstr "至（EMail）"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview__partner_to
@@ -5295,7 +5323,7 @@ msgstr ""
 "- '在记录上写'：更新记录的值\n"
 "- “执行几个动作”：定义触发其他几个服务器动作的动作\n"
 "- “添加追随者”：将追随者添加到记录中（在讨论中可用）\n"
-"- “发送电子邮件”：自动发送电子邮件（在email_template中提供）"
+"- “发送EMail”：自动发送EMail（在email_template中提供）"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__uuid
@@ -5312,19 +5340,19 @@ msgstr "无法连接到 SMTP 服务器"
 #: code:addons/mail/models/mail_thread.py:2207
 #, python-format
 msgid "Unable to log message, please configure the sender's email address."
-msgstr "无法记录消息，请配置发件人的电子邮件地址。"
+msgstr "无法记录消息，请配置发件人的EMail地址。"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:2172
 #, python-format
 msgid "Unable to notify message, please configure the sender's email address."
-msgstr "无法通知消息，请配置发件人的电子邮件地址。"
+msgstr "无法通知消息，请配置发件人的EMail地址。"
 
 #. module: mail
 #: code:addons/mail/models/mail_message.py:34
 #, python-format
 msgid "Unable to post message, please configure the sender's email address."
-msgstr "无法发布邮件，请配置发件人的电子邮件地址。"
+msgstr "无法发布邮件，请配置发件人的EMail地址。"
 
 #. module: mail
 #. openerp-web
@@ -5344,7 +5372,7 @@ msgstr "取消关注"
 #: sql_constraint:mail.alias:0
 msgid ""
 "Unfortunately this email alias is already used, please choose a unique one"
-msgstr "可惜 这个电子邮件别名已经被使用，请选择一个不一样的"
+msgstr "可惜 这个EMail别名已经被使用，请选择一个不一样的"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_tree
@@ -5426,7 +5454,7 @@ msgstr "退订"
 #: code:addons/mail/models/mail_template.py:473
 #, python-format
 msgid "Unsupported report type %s found."
-msgstr "发现不支持的报告类型 %。"
+msgstr "发现不支持的报告类型 %s。"
 
 #. module: mail
 #: code:addons/mail/models/mail_message.py:188
@@ -5529,7 +5557,7 @@ msgid ""
 "and Enterprise versions. Online users already benefit from a ready-to-use "
 "email server (@mycompany.odoo.com)."
 msgstr ""
-"在社区和企业版本中，发送/接收电子邮件需要使用自己的电子邮件服务器。在线用户已受益于随时可用的电子邮件服务器 "
+"在社区和企业版本中，发送/接收EMail需要使用自己的EMail服务器。在线用户已受益于随时可用的EMail服务器 "
 "(@mycompany.odoo.com)。"
 
 #. module: mail
@@ -5570,10 +5598,20 @@ msgstr "查看当前记录的所有附件"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/thread.xml:57
+#: code:addons/mail/static/src/xml/thread.xml:58
 #, python-format
 msgid "Viewer"
 msgstr "查看者"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/js/tour.js:13
+#: code:addons/mail/static/src/js/tour.js:18
+#, python-format
+msgid ""
+"Want to <b>get in touch</b> with your contacts? <i>Discuss with them "
+"here.</i>"
+msgstr ""
 
 #. module: mail
 #. openerp-web
@@ -5592,7 +5630,7 @@ msgid ""
 " Do you really want to remove this follower ?"
 msgstr ""
 "警告！\n"
-" 如果你删除了一个关注者，任何电子邮件或在此文档之上的讨论都不再通知这个关注者了。\n"
+" 如果你删除了一个关注者，任何EMail或在此文档之上的讨论都不再通知这个关注者了。\n"
 " 你真的想要删除这个关注者吗 ?"
 
 #. module: mail
@@ -5746,6 +5784,12 @@ msgid ""
 "You cannot delete those groups, as the Whole Company group is required by "
 "other modules."
 msgstr "您不能删除这些群组，因为整个公司群组被其它模块引用。"
+
+#. module: mail
+#: code:addons/mail/models/mail_thread.py:2358
+#, python-format
+msgid "You have been assigned to %s"
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_user_assigned
@@ -5977,7 +6021,7 @@ msgstr "错误地别名配置（未知参考记录）"
 #: code:addons/mail/models/mail_thread.py:1051
 #, python-format
 msgid "model %s does not accept document creation"
-msgstr "模型 % 不接受文档创建"
+msgstr "模型 %s 不接受文档创建"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:1046
@@ -5990,7 +6034,7 @@ msgstr "模型 % 不接受文档更新"
 #, python-format
 msgid ""
 "model %s does not accept document update, fall back on document creation"
-msgstr "模型 % 不接受文档更新，将在文档创建中退回"
+msgstr "模型 %s 不接受文档更新，回退到文档创建"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_origin_link
@@ -6037,7 +6081,7 @@ msgstr "或"
 msgid ""
 "posting a message without model should be with a null res_id (private "
 "message), received %s"
-msgstr "发布无模型消息应使用无效 res_id（私人消息），收到 %"
+msgstr "发布无模型消息应使用无效 res_id（私人信息），收到%s"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:1025
@@ -6074,13 +6118,13 @@ msgstr "记录："
 #: code:addons/mail/models/mail_thread.py:1043
 #, python-format
 msgid "reply to missing document (%s,%s)"
-msgstr "对缺失文档的回复 (%,%)"
+msgstr "对缺失文档的回复 (%s,%s)"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:1036
 #, python-format
 msgid "reply to missing document (%s,%s), fall back on new document creation"
-msgstr "对丢失文档的回复 (%,%)，在新文档创建中退回"
+msgstr "对丢失文档的回复 (%s,%s)，在新文档创建中退回"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:1021

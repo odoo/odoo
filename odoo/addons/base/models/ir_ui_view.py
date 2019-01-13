@@ -1174,12 +1174,15 @@ actual arch.
         """ Return the view ID corresponding to ``template``, which may be a
         view ID or an XML ID. Note that this method may be overridden for other
         kinds of template values.
+
+        This method could return the ID of something that is not a view (when
+        using fallback to `xmlid_to_res_id`).
         """
         if isinstance(template, pycompat.integer_types):
             return template
         if '.' not in template:
             raise ValueError('Invalid template id: %r' % template)
-        view = self.search([('key', '=', template)])
+        view = self.search([('key', '=', template)], limit=1)
         return view and view.id or self.env['ir.model.data'].xmlid_to_res_id(template, raise_if_not_found=True)
 
     def clear_cache(self):

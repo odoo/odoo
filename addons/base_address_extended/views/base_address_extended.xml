@@ -19,13 +19,15 @@
         <field name="inherit_id" ref="base.view_partner_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='street']" position="replace">
-                <field name="street" invisible="1"/>
-                <field name="street_name" placeholder="Street Name..." attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
-                <div class="o_row">
-                    <label for="street_number" class="oe_edit_only"/>
+                <div>
+                    <field name="street" class="oe_read_only"/>
+                </div>
+                <field name="street_name" placeholder="Street Name..." attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}" class="oe_edit_only"/>
+                <div class="oe_edit_only o_row">
+                    <label for="street_number"/>
                     <span> </span>
                     <field name="street_number" attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
-                    <label for="street_number2" class="oe_edit_only"/>
+                    <label for="street_number2"/>
                     <field name="street_number2" attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
                 </div>
             </xpath>

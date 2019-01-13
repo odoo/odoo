@@ -123,13 +123,21 @@ class PaymentWizard(models.TransientModel):
                 })
             if self.payment_method == 'manual':
                 manual_acquirer = self._get_manual_payment_acquirer(new_env)
+                if not manual_acquirer:
+                    raise UserError(_(
+                        'No manual payment method could be found for this company. ' +
+                        'Please create one from the Payment Acquirer menu.'
+                    ))
                 manual_acquirer.name = self.manual_name
                 manual_acquirer.post_msg = self.manual_post_msg
                 manual_acquirer.website_published = True
 
                 journal = manual_acquirer.journal_id
-                journal.name = self.journal_name
-                journal.bank_acc_number = self.acc_number
+                if journal:
+                    journal.name = self.journal_name
+                    journal.bank_acc_number = self.acc_number
+                else:
+                    raise UserError(_("You have to set a journal for your payment acquirer %s." % (self.manual_name,)))
 
             # delete wizard data immediately to get rid of residual credentials
             self.unlink()

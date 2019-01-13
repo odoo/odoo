@@ -177,12 +177,16 @@ class IrModel(models.Model):
 
     def _drop_table(self):
         for model in self:
-            table = self.env[model.model]._table
-            kind = tools.table_kind(self._cr, table)
-            if kind == 'v':
-                self._cr.execute('DROP VIEW "%s"' % table)
-            elif kind == 'r':
-                self._cr.execute('DROP TABLE "%s" CASCADE' % table)
+            current_model = self.env.get(model.model)
+            if current_model is not None:
+                table = current_model._table
+                kind = tools.table_kind(self._cr, table)
+                if kind == 'v':
+                    self._cr.execute('DROP VIEW "%s"' % table)
+                elif kind == 'r':
+                    self._cr.execute('DROP TABLE "%s" CASCADE' % table)
+            else:
+                _logger.warning('The model %s could not be dropped because it did not exist in the registry.', model.model)
         return True
 
     @api.multi
@@ -552,14 +556,15 @@ class IrModelFields(models.Model):
         for field in self:
             if field.name in models.MAGIC_COLUMNS:
                 continue
-            model = self.env[field.model]
-            if tools.column_exists(self._cr, model._table, field.name) and \
+            model = self.env.get(field.model)
+            is_model = model is not None
+            if is_model and tools.column_exists(self._cr, model._table, field.name) and \
                     tools.table_kind(self._cr, model._table) == 'r':
                 self._cr.execute('ALTER TABLE "%s" DROP COLUMN "%s" CASCADE' % (model._table, field.name))
             if field.state == 'manual' and field.ttype == 'many2many':
-                rel_name = field.relation_table or model._fields[field.name].relation
+                rel_name = field.relation_table or (is_model and model._fields[field.name].relation)
                 tables_to_drop.add(rel_name)
-            if field.state == 'manual':
+            if field.state == 'manual' and is_model:
                 model._pop_field(field.name)
 
         if tables_to_drop:
@@ -581,18 +586,19 @@ class IrModelFields(models.Model):
         """
         failed_dependencies = []
         for rec in self:
-            model = self.env[rec.model]
-            if rec.name in model._fields:
-                field = model._fields[rec.name]
-            else:
-                # field hasn't been loaded (yet?)
-                continue
-            for dependant, path in model._field_triggers.get(field, ()):
-                if dependant.manual:
-                    failed_dependencies.append((field, dependant))
-            for inverse in model._field_inverses.get(field, ()):
-                if inverse.manual and inverse.type == 'one2many':
-                    failed_dependencies.append((field, inverse))
+            model = self.env.get(rec.model)
+            if model is not None:
+                if rec.name in model._fields:
+                    field = model._fields[rec.name]
+                else:
+                    # field hasn't been loaded (yet?)
+                    continue
+                for dependant, path in model._field_triggers.get(field, ()):
+                    if dependant.manual:
+                        failed_dependencies.append((field, dependant))
+                for inverse in model._field_inverses.get(field, ()):
+                    if inverse.manual and inverse.type == 'one2many':
+                        failed_dependencies.append((field, inverse))
 
         if not self._context.get(MODULE_UNINSTALL_FLAG) and failed_dependencies:
             msg = _("The field '%s' cannot be removed because the field '%s' depends on it.")
@@ -1533,7 +1539,8 @@ class IrModelData(models.Model):
             raise AccessError(_('Administrator access is required to uninstall a module'))
 
         # enable model/field deletion
-        self = self.with_context(**{MODULE_UNINSTALL_FLAG: True})
+        # we deactivate prefetching to not try to read a column that has been deleted
+        self = self.with_context(**{MODULE_UNINSTALL_FLAG: True, 'prefetch_fields': False})
 
         datas = self.search([('module', 'in', modules_to_remove)])
         to_unlink = tools.OrderedSet()
@@ -1618,6 +1625,16 @@ class IrModelData(models.Model):
         for (id, xmlid, model, res_id) in self._cr.fetchall():
             if xmlid not in loaded_xmlids:
                 if model in self.env:
+                    if self.search_count([
+                        ("model", "=", model),
+                        ("res_id", "=", res_id),
+                        ("id", "!=", id),
+                        ("id", "not in", bad_imd_ids),
+                    ]):
+                        # another external id is still linked to the same record, only deleting the old imd
+                        bad_imd_ids.append(id)
+                        continue
+
                     _logger.info('Deleting %s@%s (%s)', res_id, model, xmlid)
                     record = self.env[model].browse(res_id)
                     if record.exists():

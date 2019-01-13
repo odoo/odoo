@@ -3,26 +3,28 @@
 # * website_forum
 # 
 # Translators:
+# falexandresilva <falexandresilva@gmail.com>, 2018
+# Fernanda Gauss Pereira <nanda.gauss@gmail.com>, 2018
+# André Augusto Firmino Cordeiro <a.cordeito@gmail.com>, 2018
 # Rodrigo de Almeida Sottomaior Macedo <rmsolucoeseminformatic4@gmail.com>, 2018
 # danimaribeiro <danimaribeiro@gmail.com>, 2018
-# Martin Trigaux, 2018
 # Claudio Araujo Santos <inactive+CDASCSI@transifex.com>, 2018
 # Mateus Lopes <mateus1@gmail.com>, 2018
 # Peter Leaf <pablleaf@gmail.com>, 2018
 # Luiz Carlos de Lima <luiz.carlos@akretion.com.br>, 2018
 # Adriel Kotviski <kotviski@gmail.com>, 2018
-# falexandresilva <falexandresilva@gmail.com>, 2018
 # grazziano <gra.negocia@gmail.com>, 2018
-# Fernanda Gauss Pereira <nanda.gauss@gmail.com>, 2018
-# André Augusto Firmino Cordeiro <a.cordeito@gmail.com>, 2018
+# Martin Trigaux, 2018
 # Silmar <pinheirosilmar@gmail.com>, 2018
+# Emanuel Martins <emanuel.breno@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-02 10:06+0000\n"
-"PO-Revision-Date: 2018-10-02 10:06+0000\n"
-"Last-Translator: Silmar <pinheirosilmar@gmail.com>, 2018\n"
+"POT-Creation-Date: 2018-12-19 08:21+0000\n"
+"PO-Revision-Date: 2018-08-24 09:34+0000\n"
+"Last-Translator: Emanuel Martins <emanuel.breno@gmail.com>, 2018\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -90,7 +92,7 @@ msgstr ""
 #: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:29
 #, python-format
 msgid "45% of questions shared"
-msgstr "45% de perguntas partilhada"
+msgstr "45% de perguntas compartilhada"
 
 #. module: website_forum
 #. openerp-web
@@ -100,6 +102,8 @@ msgid ""
 "65% more chance to get an\n"
 "        answer"
 msgstr ""
+"65% a mais de chances de\n"
+"obter uma resposta"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
@@ -118,12 +122,12 @@ msgstr "<b> [Apagado]</b>"
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_display_post_answer
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "<b> [Offensive]</b>"
-msgstr ""
+msgstr "<b>[Ofensivo]</b>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.users
 msgid "<b> badges:</b>"
-msgstr "emblemas."
+msgstr "<b>distintivos:</b>"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -211,7 +215,7 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_badges
 msgid "<b>No badge yet!</b><br/>"
-msgstr ""
+msgstr "<b>Nenhum distintivo ainda!</b><br/>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_votes
@@ -460,6 +464,11 @@ msgstr "Aceitar uma resposta sobre suas próprias perguntas"
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_answer_accept_all
 msgid "Accept an answer to all questions"
 msgstr "Aceite uma resposta para todas as perguntas"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.post_answers
+msgid "Accept answer"
+msgstr ""
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_search
@@ -744,7 +753,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_forum.header
 #: model_terms:ir.ui.view,arch_db:website_forum.user_detail_full
 msgid "Badges"
-msgstr "Medalhas"
+msgstr "Distintivos"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.badge
@@ -754,8 +763,8 @@ msgid ""
 "            appear on your profile page, and your posts."
 msgstr ""
 "Além de ganhar reputação com suas perguntas e respostas,\n"
-"você receberá medalhas por ser especialmente útil. As medalhas\n"
-"aparecem na sua página de perfil, e suas mensagens."
+"você receberá distintivos por ser especialmente útil. Os distintivos\n"
+"aparecem na sua página de perfil e nas suas mensagens."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_profile
@@ -766,12 +775,12 @@ msgstr "Biografia"
 #: model_terms:ir.ui.view,arch_db:website_forum.badge
 #: model_terms:ir.ui.view,arch_db:website_forum.user_badges
 msgid "Bronze badge"
-msgstr ""
+msgstr "Distintivos de bronze"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_res_users__bronze_badge
 msgid "Bronze badges count"
-msgstr ""
+msgstr "Número de distintivos de bronze"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__bump_date
@@ -863,7 +872,7 @@ msgstr "Alterar marcadores de pergunta"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_badges
 msgid "Check available badges"
-msgstr "Cheque Medalhas Disponíveis"
+msgstr "Verificar distintivos disponíveis"
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum__allow_bump
@@ -951,7 +960,7 @@ msgstr ""
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_close_all
 msgid "Close all posts"
-msgstr "Fechar todos Posts"
+msgstr "Fechar todas as postagens"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_close_own
@@ -990,7 +999,7 @@ msgstr "Comentário"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_comment_all
 msgid "Comment all posts"
-msgstr "Comentar todos posts"
+msgstr "Comentar todas as postagens"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_comment_own
@@ -1000,7 +1009,7 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_comment
 msgid "Comment this post..."
-msgstr "Comentar este post..."
+msgstr "Comentar esta postagem..."
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_p_2
@@ -1153,7 +1162,7 @@ msgstr ""
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__default_post_type
 msgid "Default Post"
-msgstr ""
+msgstr "Postagem padrão"
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_gamification_challenge__category
@@ -1170,7 +1179,7 @@ msgstr "Excluir"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_unlink_all
 msgid "Delete all posts"
-msgstr "Apagar todos posts"
+msgstr "Apagar todas as postagens"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_unlink_own
@@ -1479,7 +1488,7 @@ msgstr "Fórum"
 #: model:ir.model.fields,field_description:website_forum.field_gamification_badge__level
 #: model:ir.model.fields,field_description:website_forum.field_gamification_badge_user__level
 msgid "Forum Badge Level"
-msgstr "Nível de medalhas no fórum"
+msgstr "Nível de distintivos no fórum"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.res_users_view_form_preference
@@ -1550,12 +1559,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_forum.badge
 #: model_terms:ir.ui.view,arch_db:website_forum.user_badges
 msgid "Gold badge"
-msgstr ""
+msgstr "Distintivo de ouro"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_res_users__gold_badge
 msgid "Gold badges count"
-msgstr ""
+msgstr "Número de distintivos de ouro"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_a_3
@@ -2212,7 +2221,7 @@ msgstr "Lançar"
 #: model_terms:ir.ui.view,arch_db:website_forum.post_answer
 #: model_terms:ir.ui.view,arch_db:website_forum.post_reply
 msgid "Post Answer"
-msgstr ""
+msgstr "Postar resposta"
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_forum_post_reason
@@ -2228,12 +2237,12 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.new_link
 msgid "Post Title"
-msgstr ""
+msgstr "Título da postagem"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_forum_form
 msgid "Post Types"
-msgstr ""
+msgstr "Tipos de postagem"
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_forum_post_vote
@@ -2243,7 +2252,7 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
 msgid "Post Your Question"
-msgstr "Poste Sua Pergunta"
+msgstr "Postar pergunta"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.new_discussion
@@ -2519,7 +2528,7 @@ msgstr "estudioso"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_search
 msgid "Search in Post"
-msgstr "Pesquisa na mensagem"
+msgstr "Pesquisar na postagem"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__relevancy_time_decay
@@ -2604,12 +2613,12 @@ msgstr "Opções de Compartilhamento"
 #: model_terms:ir.ui.view,arch_db:website_forum.badge
 #: model_terms:ir.ui.view,arch_db:website_forum.user_badges
 msgid "Silver badge"
-msgstr ""
+msgstr "Distintivo de prata"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_res_users__silver_badge
 msgid "Silver badges count"
-msgstr ""
+msgstr "Número de distintivos de prata"
 
 #. module: website_forum
 #. openerp-web
@@ -2682,7 +2691,7 @@ msgstr "Estudante"
 #: model_terms:ir.ui.view,arch_db:website_forum.header
 #: model_terms:ir.ui.view,arch_db:website_forum.new_link
 msgid "Submit a Link"
-msgstr ""
+msgstr "Enviar um link"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_31
@@ -2704,7 +2713,7 @@ msgstr "Marcador"
 #. module: website_forum
 #: sql_constraint:forum.tag:0
 msgid "Tag name already exists !"
-msgstr "Essa tag já existe !"
+msgstr "Esse marcador já existe!"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__tag_ids
@@ -2815,26 +2824,26 @@ msgstr ""
 #: code:addons/website_forum/models/forum.py:411
 #, python-format
 msgid "This forum does not allow %s"
-msgstr ""
+msgstr "Este fórum não permite %s"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
 msgid "This forum has been archived."
-msgstr ""
+msgstr "Este fórum foi arquivado."
 
 #. module: website_forum
 #. openerp-web
 #: code:addons/website_forum/static/src/js/website_forum.js:111
 #, python-format
 msgid "This post can not be flagged"
-msgstr ""
+msgstr "Esta postagem não pode ser marcada"
 
 #. module: website_forum
 #. openerp-web
 #: code:addons/website_forum/static/src/js/website_forum.js:106
 #, python-format
 msgid "This post is already flagged"
-msgstr ""
+msgstr "Esta postagem já está marcada"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
@@ -2869,7 +2878,7 @@ msgstr ""
 #: code:addons/website_forum/controllers/main.py:414
 #, python-format
 msgid "Title should not be empty."
-msgstr ""
+msgstr "Informe um título."
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote__recipient_id
@@ -2916,7 +2925,7 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.new_link
 msgid "URL to Share"
-msgstr ""
+msgstr "URL para compartilhar"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
@@ -2931,7 +2940,7 @@ msgstr "Desvincular todos os comentários"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_comment_unlink_own
 msgid "Unlink own comments"
-msgstr ""
+msgstr "Desvincular os próprios comentários"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__message_unread
@@ -2945,7 +2954,7 @@ msgstr "Mensagens não lidas"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__message_unread_counter
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__message_unread_counter
 msgid "Unread Messages Counter"
-msgstr "Contador de Mensagens Não Lidas"
+msgstr "Contador de mensagens não lidas"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_profile
@@ -3016,27 +3025,27 @@ msgstr "Validar"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_template_validation
 msgid "Validate question"
-msgstr ""
+msgstr "Validar pergunta"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
 msgid "View"
-msgstr "Visão"
+msgstr "Visualizações"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
 msgid "View Your Badges"
-msgstr "Ver Suas Medalhas"
+msgstr "Ver os seus distintivos"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
 msgid "Views"
-msgstr "Visões"
+msgstr "Visualizações"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote__vote
 msgid "Vote"
-msgstr "Vote"
+msgstr "Votar"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__vote_ids
@@ -3047,17 +3056,17 @@ msgstr "Votos"
 #. module: website_forum
 #: selection:forum.post,state:0
 msgid "Waiting Validation"
-msgstr ""
+msgstr "Esperando validação"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Waiting for validation"
-msgstr ""
+msgstr "Esperando pela validação"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_res_users__forum_waiting_posts_count
 msgid "Waiting post"
-msgstr ""
+msgstr "Esperando postagem"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.new_link
@@ -3076,21 +3085,21 @@ msgstr "Site"
 #. module: website_forum
 #: selection:gamification.challenge,category:0
 msgid "Website / Forum"
-msgstr ""
+msgstr "Site/fórum"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__website_message_ids
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__website_message_ids
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__website_message_ids
 msgid "Website Messages"
-msgstr "Mensagens do Site"
+msgstr "Mensagens do site"
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum__website_message_ids
 #: model:ir.model.fields,help:website_forum.field_forum_post__website_message_ids
 #: model:ir.model.fields,help:website_forum.field_forum_tag__website_message_ids
 msgid "Website communication history"
-msgstr "Histórico de Comunicação do Site"
+msgstr "Histórico de comunicação do site"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__website_meta_description
@@ -3128,7 +3137,7 @@ msgstr "Mensagem de Boas Vindas"
 #. module: website_forum
 #: model_terms:forum.forum,welcome_message:website_forum.forum_help
 msgid "Welcome!"
-msgstr ""
+msgstr "Bem vindo!"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -3312,7 +3321,7 @@ msgstr ""
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_1
 msgid "duplicate post"
-msgstr ""
+msgstr "duplicar postagem"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.new_link

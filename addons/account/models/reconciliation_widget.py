@@ -82,18 +82,12 @@ class AccountReconciliation(models.AbstractModel):
         query = '''
             SELECT
                 st_line.id                          AS id,
-                partner.id                          AS partner_id
+                COALESCE(p1.id,p2.id,p3.id)         AS partner_id
             FROM account_bank_statement_line st_line
             LEFT JOIN res_partner_bank bank         ON bank.id = st_line.bank_account_id OR bank.acc_number = st_line.account_number
-            LEFT JOIN res_partner partner           ON (
-                CASE WHEN st_line.partner_id IS NOT NULL THEN
-                    partner.id = st_line.partner_id
-                WHEN bank.partner_id IS NOT NULL THEN
-                    partner.id = bank.partner_id
-                ELSE
-                    partner.name ILIKE st_line.partner_name
-                END
-            )
+            LEFT JOIN res_partner p1 ON st_line.partner_id=p1.id
+            LEFT JOIN res_partner p2 ON bank.partner_id=p2.id
+            LEFT JOIN res_partner p3 ON p3.name ILIKE st_line.partner_name
             WHERE st_line.id IN %s
         '''
         params = [tuple(st_lines.ids)]
@@ -143,12 +137,19 @@ class AccountReconciliation(models.AbstractModel):
                 bank_statements_left += line.statement_id
 
                 amls = aml_ids and self.env['account.move.line'].browse(aml_ids)
-                results['lines'].append({
+                line_vals = {
                     'st_line': self._get_statement_line(line),
                     'reconciliation_proposition': aml_ids and self._prepare_move_lines(amls) or [],
                     'model_id': matching_amls[line.id].get('model') and matching_amls[line.id]['model'].id,
                     'write_off': matching_amls[line.id].get('status') == 'write_off',
-                })
+                }
+                if not line.partner_id and partner_map.get(line.id):
+                    partner = self.env['res.partner'].browse(partner_map[line.id])
+                    line_vals.update({
+                        'partner_id': partner.id,
+                        'partner_name': partner.name,
+                    })
+                results['lines'].append(line_vals)
 
         return results
 
@@ -323,6 +324,12 @@ class AccountReconciliation(models.AbstractModel):
             allowed_ids = set(Partner.browse(ids).ids)
             rows = [row for row in rows if row['partner_id'] in allowed_ids]
 
+        # Keep mode for future use in JS
+        if res_type == 'account':
+            mode = 'accounts'
+        else:
+            mode = 'customers' if account_type == 'receivable' else 'suppliers'
+
         # Fetch other data
         for row in rows:
             account = Account.browse(row['account_id'])
@@ -331,8 +338,13 @@ class AccountReconciliation(models.AbstractModel):
             partner_id = is_partner and row['partner_id'] or None
             rec_prop = aml_ids and self.env['account.move.line'].browse(aml_ids) or self._get_move_line_reconciliation_proposition(account.id, partner_id)
             row['reconciliation_proposition'] = self._prepare_move_lines(rec_prop, target_currency=currency)
+            row['mode'] = mode
             row['company_id'] = account.company_id.id
-        return rows
+
+        # Return the partners with a reconciliation proposition first, since they are most likely to
+        # be reconciled.
+        return [r for r in rows if r['reconciliation_proposition']] + [r for r in rows if not r['reconciliation_proposition']]
+
 
     @api.model
     def process_move_lines(self, data):
@@ -686,13 +698,15 @@ class AccountReconciliation(models.AbstractModel):
         # Create writeoff move lines
         if len(new_mv_line_dicts) > 0:
             company_currency = account_move_line[0].account_id.company_id.currency_id
-            company = account_move_line[0].account_id.company_id
-            date = fields.Date.today()
-            writeoff_currency = account_move_line[0].currency_id or company_currency
+            same_currency = False
+            currencies = list(set([aml.currency_id or company_currency for aml in account_move_line]))
+            if len(currencies) == 1 and currencies[0] != company_currency:
+                same_currency = True
+            # We don't have to convert debit/credit to currency as all values in the reconciliation widget are displayed in company currency
+            # If all the lines are in the same currency, create writeoff entry with same currency also
             for mv_line_dict in new_mv_line_dicts:
-                if writeoff_currency != company_currency:
-                    mv_line_dict['debit'] = writeoff_currency._convert(mv_line_dict['debit'], company_currency, company, date)
-                    mv_line_dict['credit'] = writeoff_currency._convert(mv_line_dict['credit'], company_currency, company, date)
+                if not same_currency:
+                    mv_line_dict['amount_currency'] = False
                 writeoff_lines += account_move_line._create_writeoff([mv_line_dict])
 
             (account_move_line + writeoff_lines).reconcile()

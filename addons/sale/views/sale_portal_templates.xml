@@ -386,13 +386,16 @@
                 </div>
                 <div class="row">
                     <div class="col-lg-6">
-                        <strong class="d-block mb-1">Invoicing Address</strong>
+                        <strong t-if="sale_order.partner_shipping_id == sale_order.partner_invoice_id" class="d-block mb-1">Invoicing and Shipping Address</strong>
+                        <strong t-if="sale_order.partner_shipping_id != sale_order.partner_invoice_id" class="d-block mb-1">Invoicing Address</strong>
                         <address t-field="sale_order.partner_invoice_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
                     </div>
-                    <div id="shipping_address" class="col-lg-6" groups="sale.group_delivery_invoice_address">
-                        <strong class="d-block mb-1">Shipping Address</strong>
-                        <address t-field="sale_order.partner_shipping_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
-                    </div>
+                     <t t-if="sale_order.partner_shipping_id != sale_order.partner_invoice_id">
+                        <div id="shipping_address" class="col-lg-6">
+                            <strong class="d-block mb-1">Shipping Address</strong>
+                            <address t-field="sale_order.partner_shipping_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
+                        </div>
+                    </t>
                 </div>
 
                 <t t-set="invoices" t-value="[i for i in sale_order.invoice_ids if i.state not in ['draft', 'cancel']]"/>
@@ -449,7 +452,7 @@
                             <t t-set="current_subtotal" t-value="current_subtotal + line.price_subtotal" groups="account.group_show_line_subtotals_tax_excluded"/>
                             <t t-set="current_subtotal" t-value="current_subtotal + line.price_total" groups="account.group_show_line_subtotals_tax_included"/>
 
-                            <tr t-att-class="'bg-200 font-weight-bold' if line.display_type == 'line_section' else 'font-italic' if line.display_type == 'line_note' else ''">
+                            <tr t-att-class="'bg-200 font-weight-bold o_line_section' if line.display_type == 'line_section' else 'font-italic o_line_note' if line.display_type == 'line_note' else ''">
                                 <t t-if="not line.display_type">
                                     <td id="product_name"><span t-field="line.name"/></td>
                                     <td class="text-right">
@@ -460,6 +463,7 @@
                                     </td>
                                     <td t-attf-class="text-right {{ 'd-none d-sm-table-cell' if report_type == 'html' else '' }}">
                                         <div
+                                            t-if="line.discount &gt;= 0"
                                             t-field="line.price_unit"
                                             t-options='{"widget": "monetary", "display_currency": sale_order.pricelist_id.currency_id}'
                                             t-att-style="line.discount and 'text-decoration: line-through' or None"
@@ -470,7 +474,7 @@
                                         </div>
                                     </td>
                                     <td t-if="display_discount" t-attf-class="text-right {{ 'd-none d-sm-table-cell' if report_type == 'html' else '' }}">
-                                        <strong t-if="line.discount" class="text-info">
+                                        <strong t-if="line.discount &gt; 0" class="text-info">
                                             <t t-esc="((line.discount % 1) and '%s' or '%d') % line.discount"/>% discount
                                         </strong>
                                     </td>

@@ -3,24 +3,26 @@
 # * rating
 # 
 # Translators:
-# Antanas Muliuolis <an.muliuolis@gmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
-# digitouch UAB <digitouchagencyeur@gmail.com>, 2017
-# Audrius Palenskis <audrius.palenskis@gmail.com>, 2017
-# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2017
+# Martin Trigaux, 2018
+# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2018
+# Silvija Butko <silvija.butko@gmail.com>, 2018
+# Antanas Muliuolis <an.muliuolis@gmail.com>, 2018
+# digitouch UAB <digitouchagencyeur@gmail.com>, 2018
+# Linas Versada <linaskrisiukenas@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: UAB \"Draugiški sprendimai\" <transifex@draugiskisprendimai.lt>, 2017\n"
+"POT-Creation-Date: 2018-09-18 09:49+0000\n"
+"PO-Revision-Date: 2018-08-24 09:24+0000\n"
+"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2018\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: lt\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
@@ -28,89 +30,93 @@ msgid ""
 "<br/>\n"
 "                            on our services on \""
 msgstr ""
+"<br/>\n"
+"                            mūsų paslaugoms \""
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_form
 msgid "<span class=\"o_stat_text\">Resource</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Ištekliai</span>"
 
 #. module: rating
-#: model:ir.model.fields,help:rating.field_rating_rating_access_token
+#: model:ir.model.fields,help:rating.field_rating_rating__access_token
 msgid "Access token to set the rating of the value"
-msgstr ""
+msgstr "Prieigos raktas įvertinimo reikšmei nustatyti"
 
 #. module: rating
-#: model:ir.model.fields,help:rating.field_rating_rating_message_id
+#: model:ir.model.fields,help:rating.field_rating_rating__message_id
 msgid ""
 "Associated message when posting a review. Mainly used in website addons."
 msgstr ""
+"Susieta žinutė, rodoma skelbiant apžvalgą. Dažniausiai naudojama svetainės "
+"įskiepiams."
 
 #. module: rating
-#: model:ir.model.fields,help:rating.field_rating_rating_partner_id
+#: model:ir.model.fields,help:rating.field_rating_rating__partner_id
 msgid "Author of the rating"
-msgstr ""
+msgstr "Įvertinimo autorius"
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_rating_rating_feedback
+#: model:ir.model.fields,field_description:rating.field_rating_rating__feedback
 msgid "Comment"
 msgstr "Komentaras"
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_rating_rating_create_uid
+#: model:ir.model.fields,field_description:rating.field_rating_rating__create_uid
 msgid "Created by"
 msgstr "Sukūrė"
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_rating_rating_create_date
+#: model:ir.model.fields,field_description:rating.field_rating_rating__create_date
 msgid "Created on"
 msgstr "Sukurta"
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_rating_rating_partner_id
+#: model:ir.model.fields,field_description:rating.field_rating_rating__partner_id
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 msgid "Customer"
-msgstr "Pirkėjas"
+msgstr "Klientas"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
-msgid "Day"
+msgid "Date"
 msgstr "Data"
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_rating_mixin_display_name
-#: model:ir.model.fields,field_description:rating.field_rating_rating_display_name
+#: model:ir.model.fields,field_description:rating.field_rating_mixin__display_name
+#: model:ir.model.fields,field_description:rating.field_rating_rating__display_name
 msgid "Display Name"
-msgstr "Vaizduojamas pavadinimas"
+msgstr "Rodomas pavadinimas"
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_rating_rating_res_id
+#: model:ir.model.fields,field_description:rating.field_rating_rating__res_id
 msgid "Document"
 msgstr "Dokumentas"
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_rating_rating_res_model
+#: model:ir.model.fields,field_description:rating.field_rating_rating__res_model
 msgid "Document Model"
-msgstr ""
+msgstr "Dokumento modelis"
 
 #. module: rating
 #: model:ir.model,name:rating.model_mail_thread
 msgid "Email Thread"
-msgstr "El. pašto temos"
+msgstr "El. pašto diskusija"
 
 #. module: rating
-#: model:ir.model.fields,help:rating.field_rating_rating_consumed
+#: model:ir.model.fields,help:rating.field_rating_rating__consumed
 msgid "Enabled if the rating has been filled."
-msgstr ""
+msgstr "Įjungta, jei įvertinimas yra užpildytas."
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_rating_rating_consumed
+#: model:ir.model.fields,field_description:rating.field_rating_rating__consumed
 msgid "Filled Rating"
-msgstr ""
+msgstr "Užpildytas įvertinimas"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_external_page_view
 msgid "Go to our website"
-msgstr ""
+msgstr "Eikite į mūsų svetainę"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
@@ -121,44 +127,44 @@ msgstr "Grupuoti pagal"
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 #: selection:rating.rating,rating_text:0
 msgid "Highly dissatisfied"
-msgstr ""
+msgstr "Labai nepatenkintas"
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_rating_mixin_id
-#: model:ir.model.fields,field_description:rating.field_rating_rating_id
+#: model:ir.model.fields,field_description:rating.field_rating_mixin__id
+#: model:ir.model.fields,field_description:rating.field_rating_rating__id
 msgid "ID"
 msgstr "ID"
 
 #. module: rating
-#: model:ir.model.fields,help:rating.field_rating_rating_res_id
+#: model:ir.model.fields,help:rating.field_rating_rating__res_id
 msgid "Identifier of the rated object"
-msgstr ""
+msgstr "Įvertinto objekto identifikatorius"
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_rating_rating_rating_image
+#: model:ir.model.fields,field_description:rating.field_rating_rating__rating_image
 msgid "Image"
 msgstr "Paveikslėlis"
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_rating_mixin___last_update
-#: model:ir.model.fields,field_description:rating.field_rating_rating___last_update
+#: model:ir.model.fields,field_description:rating.field_rating_mixin____last_update
+#: model:ir.model.fields,field_description:rating.field_rating_rating____last_update
 msgid "Last Modified on"
 msgstr "Paskutinį kartą keista"
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_rating_rating_write_uid
+#: model:ir.model.fields,field_description:rating.field_rating_rating__write_uid
 msgid "Last Updated by"
 msgstr "Paskutinį kartą atnaujino"
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_rating_rating_write_date
+#: model:ir.model.fields,field_description:rating.field_rating_rating__write_date
 msgid "Last Updated on"
 msgstr "Paskutinį kartą atnaujinta"
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_rating_rating_message_id
+#: model:ir.model.fields,field_description:rating.field_rating_rating__message_id
 msgid "Linked message"
-msgstr ""
+msgstr "Susieta žinutė"
 
 #. module: rating
 #: model:ir.model,name:rating.model_mail_message
@@ -166,235 +172,214 @@ msgid "Message"
 msgstr "Pranešimas"
 
 #. module: rating
-#: model:ir.model.fields,help:rating.field_rating_rating_res_model_id
+#: model:ir.model.fields,help:rating.field_rating_rating__res_model_id
 msgid "Model of the followed resource"
 msgstr "Prenumeruojamų išteklių modelis"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
-msgid "Month"
-msgstr "Mėnuo"
-
-#. module: rating
-#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 msgid "My Ratings"
-msgstr ""
+msgstr "Mano vertinimai"
 
 #. module: rating
 #: selection:rating.rating,rating_text:0
 msgid "No Rating yet"
-msgstr ""
+msgstr "Įvertinimų dar nėra"
+
+#. module: rating
+#: model_terms:ir.actions.act_window,help:rating.action_view_rating
+msgid "No rating yet"
+msgstr "Vertinimo dar nėra"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 #: selection:rating.rating,rating_text:0
 msgid "Not satisfied"
-msgstr ""
+msgstr "Nepatenkintas"
 
 #. module: rating
-#: model:ir.model.fields,help:rating.field_rating_rating_rated_partner_id
+#: model:ir.model.fields,help:rating.field_rating_rating__rated_partner_id
 msgid "Owner of the rated resource"
-msgstr ""
+msgstr "Įvertinto objekto savininkas"
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_rating_rating_parent_res_id
+#: model:ir.model.fields,field_description:rating.field_rating_rating__parent_res_id
 msgid "Parent Document"
-msgstr ""
+msgstr "Tėvinis dokumentas"
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_rating_rating_parent_res_model
+#: model:ir.model.fields,field_description:rating.field_rating_rating__parent_res_model
 msgid "Parent Document Model"
-msgstr ""
+msgstr "Tėvinio dokumento modelis"
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_rating_rating_parent_res_name
+#: model:ir.model.fields,field_description:rating.field_rating_rating__parent_res_name
 msgid "Parent Document Name"
-msgstr ""
+msgstr "Tėvinio dokumento pavadinimas"
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_rating_rating_parent_res_model_id
+#: model:ir.model.fields,field_description:rating.field_rating_rating__parent_res_model_id
 msgid "Parent Related Document Model"
-msgstr ""
+msgstr "Susijusio tėvinio dokumento modelis"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 msgid "Rated User"
-msgstr ""
+msgstr "Įvertintas vartotojas"
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_rating_rating_rated_partner_id
+#: model:ir.model.fields,field_description:rating.field_rating_rating__rated_partner_id
 msgid "Rated person"
-msgstr ""
+msgstr "Įvertintas asmuo"
 
 #. module: rating
 #: model:ir.actions.act_window,name:rating.action_view_rating
 #: model:ir.model,name:rating.model_rating_rating
-#: model:ir.model.fields,field_description:rating.field_mail_channel_rating_ids
-#: model:ir.model.fields,field_description:rating.field_product_template_rating_ids
-#: model:ir.model.fields,field_description:rating.field_project_task_rating_ids
-#: model:ir.model.fields,field_description:rating.field_rating_mixin_rating_ids
-#: model:ir.model.fields,field_description:rating.field_rating_rating_rating
-#: model:ir.model.fields,field_description:rating.field_rating_rating_rating_text
+#: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_ids
+#: model:ir.model.fields,field_description:rating.field_rating_rating__rating_text
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_form
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_tree
 msgid "Rating"
-msgstr "Vertinimas"
+msgstr "Įvertinimas"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_graph
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_pivot
 msgid "Rating Average"
-msgstr ""
+msgstr "Įvertinimo vidurkis"
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_mail_channel_rating_last_feedback
-#: model:ir.model.fields,field_description:rating.field_product_template_rating_last_feedback
-#: model:ir.model.fields,field_description:rating.field_project_task_rating_last_feedback
-#: model:ir.model.fields,field_description:rating.field_rating_mixin_rating_last_feedback
+#: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_last_feedback
 msgid "Rating Last Feedback"
-msgstr ""
+msgstr "Paskutinio įvertinimo atsiliepimas "
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_mail_channel_rating_last_image
-#: model:ir.model.fields,field_description:rating.field_product_template_rating_last_image
-#: model:ir.model.fields,field_description:rating.field_project_task_rating_last_image
-#: model:ir.model.fields,field_description:rating.field_rating_mixin_rating_last_image
+#: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_last_image
 msgid "Rating Last Image"
-msgstr ""
+msgstr "Paskutinio įvertinimo paveikslėlis"
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_mail_channel_rating_last_value
-#: model:ir.model.fields,field_description:rating.field_product_template_rating_last_value
-#: model:ir.model.fields,field_description:rating.field_project_task_rating_last_value
-#: model:ir.model.fields,field_description:rating.field_rating_mixin_rating_last_value
+#: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_last_value
 msgid "Rating Last Value"
-msgstr ""
+msgstr "Paskutinio įvertinimo reikšmė"
 
 #. module: rating
 #: model:ir.model,name:rating.model_rating_mixin
 msgid "Rating Mixin"
+msgstr "Įvertinimo Mixin"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_rating__rating
+msgid "Rating Number"
 msgstr ""
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_mail_compose_message_rating_value
-#: model:ir.model.fields,field_description:rating.field_mail_mail_rating_value
-#: model:ir.model.fields,field_description:rating.field_mail_message_rating_value
-#: model:ir.model.fields,field_description:rating.field_survey_mail_compose_message_rating_value
+#: model:ir.model.fields,field_description:rating.field_mail_compose_message__rating_value
+#: model:ir.model.fields,field_description:rating.field_mail_mail__rating_value
+#: model:ir.model.fields,field_description:rating.field_mail_message__rating_value
 msgid "Rating Value"
-msgstr ""
+msgstr "Įvertinimo reikšmė"
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_mail_channel_rating_count
-#: model:ir.model.fields,field_description:rating.field_product_template_rating_count
-#: model:ir.model.fields,field_description:rating.field_project_task_rating_count
-#: model:ir.model.fields,field_description:rating.field_rating_mixin_rating_count
+#: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_count
 msgid "Rating count"
-msgstr ""
+msgstr "Įvertinimų kiekis"
 
 #. module: rating
 #: sql_constraint:rating.rating:0
 msgid "Rating should be between 0 to 10"
-msgstr ""
+msgstr "Įvertinimas turėtų būti tarp 0 ir 10."
 
 #. module: rating
-#: model:ir.model.fields,help:rating.field_rating_rating_rating
+#: model:ir.model.fields,help:rating.field_rating_rating__rating
 msgid "Rating value: 0=Unhappy, 10=Happy"
-msgstr ""
+msgstr "Reitingo reikšmę: 0=Nelaimingas, 10=Laimingas"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 msgid "Ratings"
-msgstr "Vertinimai"
+msgstr "Įvertinimai"
 
 #. module: rating
-#: model:ir.model.fields,help:rating.field_mail_channel_rating_last_feedback
-#: model:ir.model.fields,help:rating.field_product_template_rating_last_feedback
-#: model:ir.model.fields,help:rating.field_project_task_rating_last_feedback
-#: model:ir.model.fields,help:rating.field_rating_mixin_rating_last_feedback
-#: model:ir.model.fields,help:rating.field_rating_rating_feedback
+#: model:ir.model.fields,help:rating.field_rating_mixin__rating_last_feedback
+#: model:ir.model.fields,help:rating.field_rating_rating__feedback
 msgid "Reason of the rating"
-msgstr ""
+msgstr "Įvertinimo priežastis"
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_rating_rating_res_model_id
+#: model:ir.model.fields,field_description:rating.field_rating_rating__res_model_id
 msgid "Related Document Model"
-msgstr "Susijęs dokumento modelis"
+msgstr "Susijusio dokumento modelis"
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_mail_compose_message_rating_ids
-#: model:ir.model.fields,field_description:rating.field_mail_mail_rating_ids
-#: model:ir.model.fields,field_description:rating.field_mail_message_rating_ids
-#: model:ir.model.fields,field_description:rating.field_survey_mail_compose_message_rating_ids
+#: model:ir.model.fields,field_description:rating.field_mail_compose_message__rating_ids
+#: model:ir.model.fields,field_description:rating.field_mail_mail__rating_ids
+#: model:ir.model.fields,field_description:rating.field_mail_message__rating_ids
 msgid "Related ratings"
-msgstr ""
+msgstr "Susiję vertinimai"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 msgid "Resource"
-msgstr "Resursas"
+msgstr "Ištekliai"
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_rating_rating_res_name
+#: model:ir.model.fields,field_description:rating.field_rating_rating__res_name
 msgid "Resource name"
-msgstr ""
+msgstr "Objekto pavadinimas"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 #: selection:rating.rating,rating_text:0
 msgid "Satisfied"
-msgstr ""
+msgstr "Patenkintas"
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_rating_rating_access_token
+#: model:ir.model.fields,field_description:rating.field_rating_rating__access_token
 msgid "Security Token"
-msgstr "Apsaugos požymis"
+msgstr "Apsaugos prieigos raktas"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
 msgid "Send Feedback"
-msgstr ""
+msgstr "Siųsti atsiliepimą"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_form
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_tree
 msgid "Submitted on"
-msgstr ""
+msgstr "Pateikta"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
 msgid "Thanks! We appreciate your feedback."
-msgstr ""
+msgstr "Ačiū! Vertiname jūsų atsiliepimus."
 
 #. module: rating
-#: model:ir.model.fields,help:rating.field_rating_rating_res_name
+#: model:ir.model.fields,help:rating.field_rating_rating__res_name
 msgid "The name of the rated resource."
-msgstr ""
+msgstr "Įvertinto objekto pavadinimas."
 
 #. module: rating
 #: model_terms:ir.actions.act_window,help:rating.action_view_rating
 msgid "There is no rating for this object at the moment."
-msgstr ""
+msgstr "Šis objektas šiuo metu neturi įvertinimo."
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_external_page_view
 msgid "We appreciate your feedback!"
-msgstr ""
+msgstr "Vertiname jūsų atsiliepimus!"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
 msgid "Would be great if you can provide more information:"
-msgstr ""
-
-#. module: rating
-#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
-msgid "Year"
-msgstr "Metai"
+msgstr "Būtų puiku, jei galėtumėte suteikti daugiau informacijos:"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
 msgid "Your rating has been submitted."
-msgstr ""
+msgstr "Jūsų reitingas buvo pateiktas."
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
@@ -405,32 +390,32 @@ msgstr "pagal"
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_kanban
 msgid "for"
-msgstr ""
+msgstr "skirtas"
 
 #. module: rating
 #: code:addons/rating/controllers/main.py:21
 #, python-format
 msgid "highly dissatisfied"
-msgstr ""
+msgstr "labai nepatenkintas"
 
 #. module: rating
 #: code:addons/rating/controllers/main.py:20
 #, python-format
 msgid "not satisfied"
-msgstr ""
+msgstr "nepatenkintas"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_kanban
 msgid "on"
-msgstr "įjungta"
+msgstr "esantis"
 
 #. module: rating
 #: code:addons/rating/controllers/main.py:22
 #, python-format
 msgid "satisfied"
-msgstr ""
+msgstr "patenkintas"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
 msgid "you are"
-msgstr ""
+msgstr "jūs esate"

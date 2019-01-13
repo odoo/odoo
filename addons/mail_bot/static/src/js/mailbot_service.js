@@ -12,17 +12,16 @@ var MailBotService =  AbstractService.extend({
      * @override
      */
     start: function () {
-        var self = this;
+        this._hasRequest = (window.Notification && window.Notification.permission === "default") || false;
         if ('odoobot_initialized' in session && ! session.odoobot_initialized) {
-            setTimeout(function () {
-                session.odoobot_initialized = true;
-                self._rpc({
-                    model: 'mail.channel',
-                    method: 'init_odoobot',
-                });
-            }, 2*60*1000);
+            this._showOdoobotTimeout();
         }
     },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
     /**
      * Get the previews related to the OdooBot (conversation not included).
      * For instance, when there is no conversation with OdooBot and OdooBot has
@@ -52,7 +51,31 @@ var MailBotService =  AbstractService.extend({
      * @returns {boolean}
      */
     hasRequest: function () {
-        return window.Notification && window.Notification.permission === "default";
+        return this._hasRequest;
+    },
+    /**
+     * Called when user either accepts or refuses push notifications.
+     */
+    removeRequest: function () {
+        this._hasRequest = false;
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _showOdoobotTimeout: function () {
+        var self = this;
+        setTimeout(function () {
+            session.odoobot_initialized = true;
+            self._rpc({
+                model: 'mail.channel',
+                method: 'init_odoobot',
+            });
+        }, 2*60*1000);
     },
 });
 

@@ -141,7 +141,8 @@ class IrTranslationImport(object):
                            WHERE type = 'code'
                            AND noupdate IS NOT TRUE
                            ON CONFLICT (type, lang, md5(src)) WHERE type = 'code'
-                            DO UPDATE SET (name, lang, res_id, src, type, value, module, state, comments) = (EXCLUDED.name, EXCLUDED.lang, EXCLUDED.res_id, EXCLUDED.src, EXCLUDED.type, EXCLUDED.value, EXCLUDED.module, EXCLUDED.state, EXCLUDED.comments);
+                            DO UPDATE SET (name, lang, res_id, src, type, value, module, state, comments) = (EXCLUDED.name, EXCLUDED.lang, EXCLUDED.res_id, EXCLUDED.src, EXCLUDED.type, EXCLUDED.value, EXCLUDED.module, EXCLUDED.state, EXCLUDED.comments)
+                            WHERE EXCLUDED.value IS NOT NULL AND EXCLUDED.value != '';
                        """ % (self._model_table, self._table))
             count += cr.rowcount
             cr.execute(""" INSERT INTO %s(name, lang, res_id, src, type, value, module, state, comments)
@@ -150,7 +151,8 @@ class IrTranslationImport(object):
                            WHERE type = 'model'
                            AND noupdate IS NOT TRUE
                            ON CONFLICT (type, lang, name, res_id) WHERE type = 'model'
-                            DO UPDATE SET (name, lang, res_id, src, type, value, module, state, comments) = (EXCLUDED.name, EXCLUDED.lang, EXCLUDED.res_id, EXCLUDED.src, EXCLUDED.type, EXCLUDED.value, EXCLUDED.module, EXCLUDED.state, EXCLUDED.comments);
+                            DO UPDATE SET (name, lang, res_id, src, type, value, module, state, comments) = (EXCLUDED.name, EXCLUDED.lang, EXCLUDED.res_id, EXCLUDED.src, EXCLUDED.type, EXCLUDED.value, EXCLUDED.module, EXCLUDED.state, EXCLUDED.comments)
+                            WHERE EXCLUDED.value IS NOT NULL AND EXCLUDED.value != '';
                        """ % (self._model_table, self._table))
             count += cr.rowcount
             cr.execute(""" INSERT INTO %s(name, lang, res_id, src, type, value, module, state, comments)
@@ -159,7 +161,8 @@ class IrTranslationImport(object):
                            WHERE type IN ('selection', 'constraint', 'sql_constraint')
                            AND noupdate IS NOT TRUE
                            ON CONFLICT (type, lang, name, md5(src)) WHERE type IN ('selection', 'constraint', 'sql_constraint')
-                            DO UPDATE SET (name, lang, res_id, src, type, value, module, state, comments) = (EXCLUDED.name, EXCLUDED.lang, EXCLUDED.res_id, EXCLUDED.src, EXCLUDED.type, EXCLUDED.value, EXCLUDED.module, EXCLUDED.state, EXCLUDED.comments);
+                            DO UPDATE SET (name, lang, res_id, src, type, value, module, state, comments) = (EXCLUDED.name, EXCLUDED.lang, EXCLUDED.res_id, EXCLUDED.src, EXCLUDED.type, EXCLUDED.value, EXCLUDED.module, EXCLUDED.state, EXCLUDED.comments)
+                            WHERE EXCLUDED.value IS NOT NULL AND EXCLUDED.value != '';
                        """ % (self._model_table, self._table))
             count += cr.rowcount
             cr.execute(""" INSERT INTO %s(name, lang, res_id, src, type, value, module, state, comments)
@@ -168,7 +171,8 @@ class IrTranslationImport(object):
                            WHERE type = 'model_terms'
                            AND noupdate IS NOT TRUE
                            ON CONFLICT (type, name, lang, res_id, md5(src))
-                            DO UPDATE SET (name, lang, res_id, src, type, value, module, state, comments) = (EXCLUDED.name, EXCLUDED.lang, EXCLUDED.res_id, EXCLUDED.src, EXCLUDED.type, EXCLUDED.value, EXCLUDED.module, EXCLUDED.state, EXCLUDED.comments);
+                            DO UPDATE SET (name, lang, res_id, src, type, value, module, state, comments) = (EXCLUDED.name, EXCLUDED.lang, EXCLUDED.res_id, EXCLUDED.src, EXCLUDED.type, EXCLUDED.value, EXCLUDED.module, EXCLUDED.state, EXCLUDED.comments)
+                            WHERE EXCLUDED.value IS NOT NULL AND EXCLUDED.value != '';
                        """ % (self._model_table, self._table))
             count += cr.rowcount
         cr.execute(""" INSERT INTO %s(name, lang, res_id, src, type, value, module, state, comments)
@@ -457,15 +461,15 @@ class IrTranslation(models.Model):
         if not callable(field.translate):
             return
 
-        trans = self.env['ir.translation']
-        outdated = trans
-        discarded = trans
+        Translation = self.env['ir.translation']
+        outdated = Translation
+        discarded = Translation
 
         for record in records:
             # get field value and terms to translate
             value = record[field.name]
             terms = set(field.get_trans_terms(value))
-            record_trans = trans.search([
+            translations = Translation.search([
                 ('type', '=', 'model_terms'),
                 ('name', '=', "%s,%s" % (field.model_name, field.name)),
                 ('res_id', '=', record.id),
@@ -473,25 +477,34 @@ class IrTranslation(models.Model):
 
             if not terms:
                 # discard all translations for that field
-                discarded += record_trans
+                discarded += translations
                 continue
 
-            # remap existing translations on terms when possible
-            trans_src = record_trans.mapped('src')
-            for trans in record_trans:
-                if trans.src == trans.value:
-                    discarded += trans
-                elif trans.src not in terms:
-                    matches = get_close_matches(trans.src, terms, 1, 0.9)
-                    if matches:
-                        if matches[0] in trans_src:
-                            # there is already a translation for this term; discard this one
-                            discarded += trans
-                        else:
-                            trans.write({'src': matches[0], 'state': trans.state})
-                            trans_src.append(matches[0])  # avoid reuse of term
-                    else:
-                        outdated += trans
+            # remap existing translations on terms when possible; each term
+            # should be translated at most once per language
+            done = set()                # {(src, lang), ...}
+            translations_to_match = []
+
+            for translation in translations:
+                if translation.src == translation.value:
+                    discarded += translation
+                    # consider it done to avoid being matched against another term
+                    done.add((translation.src, translation.lang))
+                elif translation.src in terms:
+                    done.add((translation.src, translation.lang))
+                else:
+                    translations_to_match.append(translation)
+
+            for translation in translations_to_match:
+                matches = get_close_matches(translation.src, terms, 1, 0.9)
+                src = matches[0] if matches else None
+                if not src:
+                    outdated += translation
+                elif (src, translation.lang) in done:
+                    discarded += translation
+                else:
+                    translation.write({'src': src, 'state': translation.state})
+                    done.add((src, translation.lang))
 
         # process outdated and discarded translations
         outdated.write({'state': 'to_translate'})

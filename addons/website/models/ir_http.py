@@ -74,7 +74,9 @@ class Http(models.AbstractModel):
 
         # Force website with query string paramater, typically set from website selector in frontend navbar
         force_website_id = request.httprequest.args.get('fw')
-        if force_website_id and request.session.get('force_website_id') != force_website_id:
+        if (force_website_id and request.session.get('force_website_id') != force_website_id and
+                request.env.user.has_group('website.group_multi_website') and
+                request.env.user.has_group('website.group_website_publisher')):
             request.env['website']._force_website(request.httprequest.args.get('fw'))
 
         context = {}
