@@ -351,7 +351,7 @@ def send_iot_box_device(send_printer):
                 pass
             for printer in printers:
                 printerTab = printer.split('\n')
-                if printer and printerTab[4].split('=')[1] != ' ':
+                if printer and printerTab[4].split('=')[1] != ' ' or 'lpd://' in printerTab[0]:
                     device_connection = printerTab[1].split('= ')[1]
                     model = ''
                     for device_id in printerTab[4].split('= ')[1].split(';'):
@@ -365,6 +365,9 @@ def send_iot_box_device(send_printer):
                         socketIP = printerTab[0].split('://')[1]
                         macprinter = subprocess.check_output("arp -a " + socketIP + " |awk NR==1'{print $4}'", shell=True).decode('utf-8').split('\n')[0]
                         identifier = macprinter  # macPRINTER
+                    elif device_connection == 'network' and 'lpd' in printerTab[0]:
+                        identifier = re.sub('[^a-zA-Z0-9 ]+', '', printerTab[0].split('://')[1])
+                        model = printerTab[2].split('= ')[1]
                     elif device_connection == 'network' and 'dnssd' in printerTab[0]:
                         hostname_printer = subprocess.check_output("ippfind -n \"" + model + "\" | awk \'{split($0,a,\"/\"); print a[3]}\' | awk \'{split($0,b,\":\"); print b[1]}\'", shell=True).decode('utf-8').split('\n')[0]
                         if hostname_printer:
