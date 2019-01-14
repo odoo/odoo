@@ -669,6 +669,10 @@ class TestFields(common.TransactionCase):
         self.env['ir.property'].create({'name': 'foo', 'fields_id': field_tag_id.id,
                                         'value': tag0, 'type': 'many2one'})
 
+        # assumption: users don't have access to 'ir.property'
+        accesses = self.env['ir.model.access'].search([('model_id.model', '=', 'ir.property')])
+        accesses.write(dict.fromkeys(['perm_read', 'perm_write', 'perm_create', 'perm_unlink'], False))
+
         # create/modify a record, and check the value for each user
         record = self.env['test_new_api.company'].create({
             'foo': 'main',
@@ -720,6 +724,13 @@ class TestFields(common.TransactionCase):
         record.invalidate_cache()
         self.assertEqual(record.sudo(user0).foo, 'main')
         self.assertEqual(record.sudo(user1).foo, False)
+        self.assertEqual(record.sudo(user2).foo, 'default')
+
+        # set field with 'force_company' in context
+        record.sudo(user0).with_context(force_company=company1.id).foo = 'beta'
+        record.invalidate_cache()
+        self.assertEqual(record.sudo(user0).foo, 'main')
+        self.assertEqual(record.sudo(user1).foo, 'beta')
         self.assertEqual(record.sudo(user2).foo, 'default')
 
         # create company record and attribute
