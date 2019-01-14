@@ -6,7 +6,6 @@ import itertools
 import logging
 import re
 from dateutil.relativedelta import relativedelta
-from math import floor, log10
 
 from odoo import api, fields, models, tools, _
 from odoo.addons.iap import jsonrpc
@@ -316,34 +315,11 @@ class CRMRevealRule(models.Model):
                     'reveal_state': 'not_found'
                 })
         if result.get('credit_error'):
-            self._notify_no_more_credit()
+            self.env['crm.iap.lead.helpers'].notify_no_more_credit('reveal', self._name, 'reveal.already_notified')
             return False
         else:
             self.env['ir.config_parameter'].sudo().set_param('reveal.already_notified', False)
         return True
-
-    def _notify_no_more_credit(self):
-        """
-        Notify about the number of credit.
-        In order to avoid to spam people each hour, an ir.config_parameter is set
-        """
-        already_notified = self.env['ir.config_parameter'].sudo().get_param('reveal.already_notified', False)
-        if already_notified:
-            return
-        mail_template = self.env.ref('crm_iap_lead.lead_generation_no_credits')
-        iap_account = self.env['iap.account'].search([('service_name', '=', 'reveal')], limit=1)
-        # Get the email address of the creators of the Lead Generation Rules
-        res = self.env['crm.reveal.rule'].search_read([], ['create_uid'])
-        uids = set(r['create_uid'][0] for r in res if r.get('create_uid'))
-        res = self.env['res.users'].search_read([('id', 'in', list(uids))], ['email'])
-        emails = set(r['email'] for r in res if r.get('email'))
-
-        mail_values = mail_template.generate_email(iap_account.id)
-        mail_values['email_to'] = ','.join(emails)
-        mail = self.env['mail.mail'].create(mail_values)
-        mail.send()
-        self.env['ir.config_parameter'].sudo().set_param('reveal.already_notified', True)
-
 
     def _create_lead_from_response(self, result):
         """ This method will get response from service and create the lead accordingly """
@@ -365,7 +341,7 @@ class CRMRevealRule(models.Model):
         lead = self.env['crm.lead'].create(lead_vals)
         lead.message_post_with_view(
             'crm_iap_lead.lead_message_template',
-            values=self._format_data_for_message_post(result),
+            values=self.env['crm.iap.lead.helpers'].format_data_for_message_post(result['reveal_data'], result.get('people_data')),
             subtype_id=self.env.ref('mail.mt_note').id
         )
         return lead
@@ -373,100 +349,19 @@ class CRMRevealRule(models.Model):
     # Methods responsible for format response data in to valid odoo lead data
     def _lead_vals_from_response(self, result):
         self.ensure_one()
-        reveal_data = result['reveal_data']
+        company_data = result['reveal_data']
         people_data = result.get('people_data')
-        country_id = self.env['res.country'].search([('code', '=', reveal_data['country_code'])]).id
-        website_url = 'https://www.%s' % reveal_data['domain'] if reveal_data['domain'] else False
-        lead_vals = {
-            # Lead vals from rule itself
-            'type': self.lead_type,
-            'team_id': self.team_id.id,
-            'tag_ids': [(6, 0, self.tag_ids.ids)],
+        lead_vals = self.env['crm.iap.lead.helpers'].lead_vals_from_response(self.lead_type, self.team_id.id, self.tag_ids.ids, self.user_id.id, company_data, people_data)
+
+        lead_vals.update({
             'priority': self.priority,
-            'user_id': self.user_id.id,
             'reveal_ip': result['ip'],
             'reveal_rule_id': self.id,
-            'reveal_id': result['clearbit_id'],
             'referred': 'Website Visitor',
-            # Lead vals from response
-            'name': reveal_data['name'],
             'reveal_iap_credits': result['credit'],
-            'partner_name': reveal_data['legal_name'] or reveal_data['name'],
-            'email_from': ",".join(reveal_data['email'] or []),
-            'phone': reveal_data['phone'] or (reveal_data['phone_numbers'] and reveal_data['phone_numbers'][0]) or '',
-            'website': website_url,
-            'street': reveal_data['location'],
-            'city': reveal_data['city'],
-            'zip': reveal_data['postal_code'],
-            'country_id': country_id,
-            'state_id': self._find_state_id(reveal_data['state_name'], reveal_data['state_code'], country_id),
-            'description': self._prepare_lead_description(reveal_data),
-        }
+        })
 
         if self.suffix:
             lead_vals['name'] = '%s - %s' % (lead_vals['name'], self.suffix)
 
-        # If type is people then add first contact in lead data
-        if people_data:
-            lead_vals.update({
-                'contact_name': people_data[0]['full_name'],
-                'email_from': people_data[0]['email'],
-                'function': people_data[0]['title'],
-            })
         return lead_vals
-
-    def _find_state_id(self, state_code, state_name, country_id):
-        state_id = self.env['res.country.state'].search([('code', '=', state_code), ('country_id', '=', country_id)])
-        if state_id:
-            return state_id.id
-        return False
-
-    def _prepare_lead_description(self, reveal_data):
-        description = ''
-        if reveal_data['sector']:
-            description += reveal_data['sector']
-        if reveal_data['website_title']:
-            description += '\n' + reveal_data['website_title']
-        if reveal_data['twitter_bio']:
-            description += '\n' + "Twitter Bio: " + reveal_data['twitter_bio']
-        if reveal_data['twitter_followers']:
-            description += ('\nTwitter %s followers, %s \n') % (reveal_data['twitter_followers'], reveal_data['twitter_location'] or '')
-
-        numbers = ['raised', 'market_cap', 'employees', 'estimated_annual_revenue']
-        millnames = ['', ' K', ' M', ' B', 'T']
-
-        def millify(n):
-            try:
-                n = float(n)
-                millidx = max(0, min(len(millnames) - 1, int(floor(0 if n == 0 else log10(abs(n)) / 3))))
-                return '{:.0f}{}'.format(n / 10**(3 * millidx), millnames[millidx])
-            except Exception:
-                return n
-
-        for key in numbers:
-            if reveal_data.get(key):
-                description += ' %s : %s,' % (key.replace('_', ' ').title(), millify(reveal_data[key]))
-        return description
-
-    def _format_data_for_message_post(self, result):
-        reveal_data = result['reveal_data']
-        people_data = result.get('people_data')
-        log_data = {
-            'twitter': reveal_data['twitter'],
-            'description': reveal_data['description'],
-            'logo': reveal_data['logo'],
-            'name': reveal_data['name'],
-            'phone_numbers': reveal_data['phone_numbers'],
-            'facebook': reveal_data['facebook'],
-            'linkedin': reveal_data['linkedin'],
-            'crunchbase': reveal_data['crunchbase'],
-            'tech': [t.replace('_', ' ').title() for t in reveal_data['tech']],
-            'people_data': people_data,
-        }
-        timezone = result['ip_time_zone'] or reveal_data['timezone']
-        if timezone:
-            log_data.update({
-                'timezone': timezone.replace('_', ' ').title(),
-                'timezone_url': reveal_data['timezone_url'],
-            })
-        return log_data

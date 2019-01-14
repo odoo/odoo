@@ -48,3 +48,16 @@ class PeopleSeniority(models.Model):
     @api.depends('name')
     def name_get(self):
         return [(seniority.id, seniority.name.replace('_', ' ').title()) for seniority in self]
+
+
+class TechnologyTag(models.Model):
+    """ Technology Tags of Clearbit """
+    _name = 'crm.iap.lead.technology'
+    _description = 'Technology Tag'
+
+    name = fields.Char(string='Name', required=True, translate=True)
+    tech_tag = fields.Char(string="Tech Tag", required=True)
+
+    _sql_constraints = [
+        ('name_uniq', 'unique (name)', 'Technology tag name already exists!'),
+    ]

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <record id="crm_iap_opportunity_tree" model="ir.ui.view">
+        <field name="name">crm.opportunity.inherited.tree</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_case_tree_view_oppor" />
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="js_class">crm_iap_lead_mining_request_tree</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="crm_iap_opportunity_kanban" model="ir.ui.view">
+        <field name="name">crm.opportunity.inherited.kanban</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_case_kanban_view_leads" />
+        <field name="arch" type="xml">
+            <xpath expr="//kanban" position="attributes">
+                <attribute name="js_class">crm_iap_lead_mining_request_kanban</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="crm_iap_lead_tree" model="ir.ui.view">
+        <field name="name">crm.lead.inherited.tree</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_case_tree_view_leads" />
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="js_class">crm_iap_lead_mining_request_tree</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="crm_iap_lead_kanban" model="ir.ui.view">
+        <field name="name">crm.lead.inherited.kanban</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.view_crm_lead_kanban" />
+        <field name="arch" type="xml">
+            <xpath expr="//kanban" position="attributes">
+                <attribute name="js_class">crm_iap_lead_mining_request_kanban</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

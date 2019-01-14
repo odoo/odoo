@@ -68,7 +68,7 @@ def jsonrpc(url, method='call', params=None, timeout=15):
             raise e
         return response.get('result')
     except (ValueError, requests.exceptions.ConnectionError, requests.exceptions.MissingSchema, requests.exceptions.Timeout, requests.exceptions.HTTPError) as e:
-        raise exceptions.AccessError('The url that this service requested returned an error. Please contact the author the app. The url it tried to contact was ' + url)
+        raise exceptions.AccessError('The url that this service requested returned an error. Please contact the author of the app. The url it tried to contact was ' + url)
 
 #----------------------------------------------------------
 # Helpers for proxy
