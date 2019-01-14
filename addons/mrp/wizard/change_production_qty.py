@@ -73,7 +73,7 @@ class ChangeProductionQty(models.TransientModel):
             production._log_downside_manufactured_quantity(finished_moves_modification)
             moves = production.move_raw_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
             moves._action_assign()
-            for move in production.move_raw_ids:
+            for move in done_quantities:
                 if move.quantity_done != done_quantities[move]:
                     move._set_quantity_done(done_quantities[move])
             for wo in production.workorder_ids:
