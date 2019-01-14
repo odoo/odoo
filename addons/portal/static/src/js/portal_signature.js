@@ -3,7 +3,7 @@ odoo.define('portal.signature_form', function (require) {
 
     var core = require('web.core');
     var dom = require('web.dom');
-    var NameAndSignature = require('portal.name_and_signature').NameAndSignature;
+    var NameAndSignature = require('web.name_and_signature').NameAndSignature;
     var qweb = core.qweb;
     var Widget = require('web.Widget');
 
@@ -61,7 +61,7 @@ odoo.define('portal.signature_form', function (require) {
         start: function () {
             this.$confirm_btn = this.$('.o_portal_sign_submit');
             this.$controls = this.$('.o_portal_sign_controls');
-            this.nameAndSignature.replace(this.$('.o_portal_sign_name_and_signature'));
+            this.nameAndSignature.replace(this.$('.o_web_sign_name_and_signature'));
             return this._super.apply(this, arguments);
         },
 
@@ -168,7 +168,7 @@ $('.o_portal_signature_form').each(function () {
     var nameAndSignatureOptions = {
         defaultName: $elem.data('default-name'),
         mode: $elem.data('mode'),
-        signatureRatio: $elem.data('signature-ratio'),
+        displaySignatureRatio: $elem.data('signature-ratio'),
         signatureType: $elem.data('signature-type'),
     };
     var sendLabel = $elem.data('send-label');

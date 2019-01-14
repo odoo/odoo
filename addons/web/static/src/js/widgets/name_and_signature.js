@@ -1,4 +1,4 @@
-odoo.define('portal.name_and_signature', function (require) {
+odoo.define('web.name_and_signature', function (require) {
 'use strict';
 
 var core = require('web.core');
@@ -12,26 +12,26 @@ var _t = core._t;
  * the given name and a selected font, or loaded from an image file.
  */
 var NameAndSignature = Widget.extend({
-    template: 'portal.sign_name_and_signature',
-    xmlDependencies: ['/portal/static/src/xml/portal_name_and_signature.xml'],
+    template: 'web.sign_name_and_signature',
+    xmlDependencies: ['/web/static/src/xml/name_and_signature.xml'],
     events: {
         // name
-        'input .o_portal_sign_name_input': '_onInputSignName',
+        'input .o_web_sign_name_input': '_onInputSignName',
         // signature
-        'click .o_portal_sign_signature': '_onClickSignature',
-        'change .o_portal_sign_signature': '_onChangeSignature',
+        'click .o_web_sign_signature': '_onClickSignature',
+        'change .o_web_sign_signature': '_onChangeSignature',
         // draw
-        'click .o_portal_sign_draw_button': '_onClickSignDrawButton',
-        'click .o_portal_sign_draw_clear a': '_onClickSignDrawClear',
+        'click .o_web_sign_draw_button': '_onClickSignDrawButton',
+        'click .o_web_sign_draw_clear a': '_onClickSignDrawClear',
         // auto
-        'click .o_portal_sign_auto_button': '_onClickSignAutoButton',
-        'click .o_portal_sign_auto_select_style a': '_onClickSignAutoSelectStyle',
-        'click .o_portal_sign_auto_font_selection a': '_onClickSignAutoFontSelection',
-        'mouseover .o_portal_sign_auto_font_selection a': '_onMouseOverSignAutoFontSelection',
-        'touchmove .o_portal_sign_auto_font_selection a': '_onTouchStartSignAutoFontSelection',
+        'click .o_web_sign_auto_button': '_onClickSignAutoButton',
+        'click .o_web_sign_auto_select_style a': '_onClickSignAutoSelectStyle',
+        'click .o_web_sign_auto_font_selection a': '_onClickSignAutoFontSelection',
+        'mouseover .o_web_sign_auto_font_selection a': '_onMouseOverSignAutoFontSelection',
+        'touchmove .o_web_sign_auto_font_selection a': '_onTouchStartSignAutoFontSelection',
         // load
-        'click .o_portal_sign_load_button': '_onClickSignLoadButton',
-        'change .o_portal_sign_load_file input': '_onChangeSignLoadInput',
+        'click .o_web_sign_load_button': '_onClickSignLoadButton',
+        'change .o_web_sign_load_file input': '_onChangeSignLoadInput',
     },
 
     /**
@@ -40,10 +40,15 @@ var NameAndSignature = Widget.extend({
      * @constructor
      * @param {Widget} parent
      * @param {Object} [options={}]
-     * @param {number} [options.signatureRatio=3.0] - The ratio used when
+     * @param {number} [options.displaySignatureRatio=3.0] - The ratio used when
      *  (re)computing the size of the signature (width = height * ratio)
      * @param {string} [options.defaultName=''] - The default name of
      *  the signer.
+     * @param {string} [options.defaultFont=''] - The unique and default
+     *  font for auto mode. If empty, all fonts are visible.
+     * @param {string} [options.noInputName=false] - If set to true,
+     *  the user can not enter his name. If there aren't defaultName,
+     *  auto mode is hidden.
      * @param {string} [options.mode='draw'] - @see this.setMode
      * @param {string} [options.signatureType='signature'] - The type of
      *  signature used in 'auto' mode. Can be one of the following values:
@@ -58,9 +63,11 @@ var NameAndSignature = Widget.extend({
         options = options || {};
         this.htmlId = _.uniqueId();
         this.defaultName = options.defaultName || '';
-        this.signatureRatio = options.signatureRatio || 3.0;
+        this.defaultFont = options.defaultFont || '';
+        this.displaySignatureRatio = options.displaySignatureRatio || 3.0;
         this.signatureType = options.signatureType || 'signature';
         this.signMode = options.mode || 'draw';
+        this.noInputName = options.noInputName || false;
         this.currentFont = 0;
         this.drawTimeout = null;
         this.drawPreviewTimeout = null;
@@ -72,12 +79,14 @@ var NameAndSignature = Widget.extend({
      */
     willStart: function () {
         var self = this;
+
         return $.when(
             this._super.apply(this, arguments),
-            this._rpc({route: '/portal/sign/get_fonts'}).then(function (data) {
+            this._rpc({route: '/web/sign/get_fonts/' + self.defaultFont}).then(function (data) {
                 self.fonts = data;
             })
         );
+
     },
     /**
      * Finds the DOM elements, initializes the signature area,
@@ -88,22 +97,23 @@ var NameAndSignature = Widget.extend({
     start: function () {
         var self = this;
         // signature and name input
-        this.$signatureGroup = this.$('.o_portal_sign_signature_group');
-        this.$signatureField = this.$('.o_portal_sign_signature');
-        this.$nameInput = this.$('.o_portal_sign_name_input');
+        this.$signatureGroup = this.$('.o_web_sign_signature_group');
+        this.$signatureField = this.$('.o_web_sign_signature');
+        this.$nameInput = this.$('.o_web_sign_name_input');
+        this.$nameInputGroup = this.$('.o_web_sign_name_group');
 
         // mode selection buttons
-        this.$drawButton = this.$('a.o_portal_sign_draw_button');
-        this.$autoButton = this.$('a.o_portal_sign_auto_button');
-        this.$loadButton = this.$('a.o_portal_sign_load_button');
+        this.$drawButton = this.$('a.o_web_sign_draw_button');
+        this.$autoButton = this.$('a.o_web_sign_auto_button');
+        this.$loadButton = this.$('a.o_web_sign_load_button');
 
         // mode: draw
-        this.$drawClear = this.$('.o_portal_sign_draw_clear');
+        this.$drawClear = this.$('.o_web_sign_draw_clear');
 
         // mode: auto
-        this.$autoSelectStyle = this.$('.o_portal_sign_auto_select_style');
-        this.$autoFontSelection = this.$('.o_portal_sign_auto_font_selection');
-        this.$autoFontList = this.$('.o_portal_sign_auto_font_list');
+        this.$autoSelectStyle = this.$('.o_web_sign_auto_select_style');
+        this.$autoFontSelection = this.$('.o_web_sign_auto_font_selection');
+        this.$autoFontList = this.$('.o_web_sign_auto_font_list');
         for (var i in this.fonts) {
             var $img = $('<img/>').addClass('img-fluid');
             var $a = $('<a/>').addClass('btn p-0').append($img).data('fontNb', i);
@@ -111,11 +121,22 @@ var NameAndSignature = Widget.extend({
         }
 
         // mode: load
-        this.$loadFile = this.$('.o_portal_sign_load_file');
-        this.$loadInvalid = this.$('.o_portal_sign_load_invalid');
+        this.$loadFile = this.$('.o_web_sign_load_file');
+        this.$loadInvalid = this.$('.o_web_sign_load_invalid');
+
+        if (this.fonts && this.fonts.length < 2) {
+            this.$autoSelectStyle.hide();
+        }
+
+        if (this.noInputName) {
+            if (this.defaultName === "") {
+                this.$autoButton.hide();
+            }
+            this.$nameInputGroup.hide();
+        }
 
         // Resize the signature area if it is resized
-        $(window).on('resize.o_portal_sign_name_and_signature', _.debounce(function () {
+        $(window).on('resize.o_web_sign_name_and_signature', _.debounce(function () {
             if (self.isDestroyed()) {
                 // May happen since this is debounced
                 return;
@@ -133,7 +154,7 @@ var NameAndSignature = Widget.extend({
      */
     destroy: function () {
         this._super.apply(this, arguments);
-        $(window).off('resize.o_portal_sign_name_and_signature');
+        $(window).off('resize.o_web_sign_name_and_signature');
     },
 
     //----------------------------------------------------------------------
@@ -146,7 +167,6 @@ var NameAndSignature = Widget.extend({
     focusName: function () {
         this.$nameInput.focus();
     },
-
     /**
      * Gets the name currently given by the user.
      *
@@ -201,7 +221,7 @@ var NameAndSignature = Widget.extend({
         // recompute size based on the current width
         this.$signatureField.css({width: 'unset'});
         var width = this.$signatureField.width();
-        var height = parseInt(width / this.signatureRatio);
+        var height = parseInt(width / this.displaySignatureRatio);
 
         // necessary because the lib is adding invisible div with margin
         // signature field too tall without this code
@@ -313,7 +333,8 @@ var NameAndSignature = Widget.extend({
      * @returns {string} cleaned name
      */
     _getCleanedName: function () {
-        var text = this.getName().replace(/[^[\w\u00E0-\u00FC]-'" ]/g, '');
+        var regexRemoveSpecialCharacters = /[^\w\u00E0-\u00FC-'" ]/g;
+        var text = this.getName().replace(regexRemoveSpecialCharacters, '');
         if (this.signatureType === 'initial') {
             return (text.split(' ').map(function (w) {
                 return w[0];
@@ -333,7 +354,7 @@ var NameAndSignature = Widget.extend({
      * @returns {string} image = mimetype + image data
      */
     _getSVGText: function (font, text, width, height) {
-        var $svg = $(core.qweb.render('portal.sign_svg_text', {
+        var $svg = $(core.qweb.render('web.sign_svg_text', {
             width: width,
             height: height,
             font: font,
@@ -421,7 +442,7 @@ var NameAndSignature = Widget.extend({
         clearTimeout(this.drawPreviewTimeout);
         this.drawPreviewTimeout = setTimeout(function () {
             var height = 100;
-            var width = parseInt(height * self.signatureRatio);
+            var width = parseInt(height * self.displaySignatureRatio);
             var $existingButtons = self.$autoFontList.find('a');
             for (var i = 0; i < self.fonts.length; i++) {
                 var imgSrc = self._getSVGText(
@@ -503,7 +524,7 @@ var NameAndSignature = Widget.extend({
     _onClickSignAutoSelectStyle: function (ev) {
         var self = this;
         var width = Math.min(
-            self.$autoFontSelection.find('a').first().height() * self.signatureRatio * 1.25,
+            self.$autoFontSelection.find('a').first().height() * self.displaySignatureRatio * 1.25,
             this.$signatureField.width()
         );
 
@@ -562,9 +583,14 @@ var NameAndSignature = Widget.extend({
      * @see mode 'load'
      * @private
      * @param {Event} ev
+     * @return bool|undefined
      */
     _onChangeSignLoadInput: function (ev) {
+        var self = this;
         var f = ev.target.files[0];
+        if (f === undefined) {
+            return false;
+        }
         if (f.type.substr(0, 5) !== 'image') {
             this.$signatureField.jSignature('reset');
             this.$loadInvalid.removeClass('d-none');
@@ -572,10 +598,9 @@ var NameAndSignature = Widget.extend({
         }
         this.$loadInvalid.addClass('d-none');
 
-        var self = this;
         var reader = new FileReader();
         reader.onload = function (ev) {
-            self._printImage(this.result);
+            self._printImage(reader.result);
         };
         reader.readAsDataURL(f);
     },
