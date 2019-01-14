@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import datetime, timedelta
 import unittest
 from odoo.tests import Form
 from odoo.tests import common
@@ -574,3 +575,26 @@ class TestWorkOrderProcess(common.TransactionCase):
             self.assertEqual(workorder.final_lot_id, serial_c)
             workorder.record_production()
             self.assertEqual(workorder.state, 'done')
+
+    def test_04_test_planning_date(self):
+        """ Test that workorder are planned at the correct time. """
+        # Remove attendances linked to the calendar, this means that the workcenter is working 24/7
+        self.env['resource.calendar'].search([]).write({'attendance_ids': [(5, False, False)]})
+
+        dining_table = self.env.ref("mrp.product_product_computer_desk")
+
+        production_table_form = Form(self.env['mrp.production'])
+        production_table_form.product_id = dining_table
+        production_table_form.bom_id = self.env.ref("mrp.mrp_bom_desk")
+        production_table_form.product_qty = 1.0
+        production_table_form.product_uom_id = dining_table.uom_id
+        production_table = production_table_form.save()
+        production_table.action_confirm()
+
+        # Create work order
+        production_table.button_plan()
+        workorder = production_table.workorder_ids[0]
+
+        # Check that the workorder is planned now and that it lasts one hour
+        self.assertAlmostEqual(workorder.date_planned_start, datetime.now(), delta=timedelta(seconds=10), msg="Workorder should be planned now.")
+        self.assertAlmostEqual(workorder.date_planned_finished, datetime.now() + timedelta(hours=1), delta=timedelta(seconds=10), msg="Workorder should be done in an hour.")
