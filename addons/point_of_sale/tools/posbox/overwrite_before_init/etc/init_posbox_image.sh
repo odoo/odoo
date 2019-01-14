@@ -147,6 +147,7 @@ fi
 if [ $SYSTEMD -eq 1 ]; then
     systemctl set-default graphical.target
     ln -fs /etc/systemd/system/autologin@.service /etc/systemd/system/getty.target.wants/getty@tty1.service
+    rm /etc/systemd/system/sysinit.target.wants/systemd-timesyncd.service
 else
     update-rc.d lightdm enable 2
 fi
