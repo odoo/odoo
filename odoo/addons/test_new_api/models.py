@@ -413,6 +413,13 @@ class CompanyDependent(models.Model):
     tag_id = fields.Many2one('test_new_api.multi.tag', company_dependent=True)
 
 
+class CompanyDependentGroups(models.Model):
+    _name = 'test_new_api.company_1'
+    _description = 'Test New API Company'
+
+    foo = fields.Char(company_dependent=True)
+
+
 class CompanyDependentAttribute(models.Model):
     _name = 'test_new_api.company.attr'
     _description = 'Test New API Company Attribute'

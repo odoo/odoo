@@ -654,7 +654,7 @@ class Field(MetaField('DummyField', (object,), {})):
             record.id: self.convert_to_write(record[self.name], record)
             for record in records
         }
-        Property.set_multi(self.name, self.model_name, values)
+        Property.sudo().set_multi(self.name, self.model_name, values)
 
     def _search_company_dependent(self, records, operator, value):
         Property = records.env['ir.property']

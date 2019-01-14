@@ -2,6 +2,7 @@
 # test cases for new-style fields
 #
 from datetime import date, datetime, time
+from unittest.mock import patch
 
 from odoo import fields
 from odoo.exceptions import AccessError, UserError
@@ -1101,6 +1102,53 @@ class TestFields(common.TransactionCase):
         field = self.env['test_new_api.monetary_inherits']._fields['amount']
         self.assertEqual(field.related, ('monetary_id', 'amount'))
         self.assertEqual(field.currency_field, 'base_currency_id')
+
+    def test_94_company_dependent(self):
+        env_user = self.env.user
+        company0 = self.env['res.company'].search([('id', '!=', env_user.company_id.id)], limit=1)
+
+        company_dependent = self.env['test_new_api.company_1']
+
+        other_user = self.env.ref('base.user_demo')
+        other_user.write({
+            'company_ids': [(4, company0.id, False)]
+        })
+        other_user.company_id = company0
+
+        def patched_create1(*args, **kwargs):
+            # create for env company
+            vals = args[1]
+            self.assertEqual(len(vals), 1)
+            self.assertEqual(vals[0]['company_id'], env_user.company_id.id)
+
+        with patch('odoo.addons.base.models.ir_property.Property.create', patched_create1):
+            company_dependent = company_dependent.create({
+                'foo': 'bar des sports',
+            })
+
+        def patched_create2(*args, **kwargs):
+            # create for force company and context
+            record_set = args[0]
+            vals = args[1]
+            self.assertEqual(len(vals), 1)
+            self.assertEqual(record_set._context['arbitrary_key'], 'passed')
+            self.assertEqual(vals[0]['company_id'], company0.id)
+
+        with patch('odoo.addons.base.models.ir_property.Property.create', patched_create2):
+            company_dependent = company_dependent.with_context(force_company=company0.id, arbitrary_key='passed').create({
+                'foo': 'bar des sports',
+            })
+
+        def patched_create3(*args, **kwargs):
+            # create for force company and context
+            vals = args[1]
+            self.assertEqual(len(vals), 1)
+            self.assertEqual(vals[0]['company_id'], company0.id)
+
+        with patch('odoo.addons.base.models.ir_property.Property.create', patched_create3):
+            company_dependent = company_dependent.sudo(other_user.id).create({
+                'foo': 'bar des sports',
+            })
 
 
 class TestX2many(common.TransactionCase):
