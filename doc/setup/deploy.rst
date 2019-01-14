@@ -554,7 +554,7 @@ In this case we cannot use the Odoo logs, as no valid IP will be logged. But the
     
 This log entry can be analyzed and counted by `fail2ban`. The following fail2ban filter definition should match a failed login on Apache:
 
-    failregex = <HOST> .* /web/login .*
+    failregex = <HOST> .*POST /web/login .*
     ignoreregex =
 
 This can be used with the jail definition to block the attacking IP on HTTP(S). Here is what a corresponding jail definition could look like: 
