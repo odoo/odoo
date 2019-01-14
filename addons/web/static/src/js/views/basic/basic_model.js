@@ -4144,6 +4144,7 @@ var BasicModel = AbstractModel.extend({
                         fields: list.fields,
                         modelName: list.model,
                         parentID: list.id,
+                        rawContext: list.rawContext,
                         viewType: list.viewType,
                     });
                     self._parseServerData(fieldNames, dataPoint, dataPoint.data);
