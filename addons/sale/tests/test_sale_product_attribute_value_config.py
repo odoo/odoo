@@ -185,6 +185,11 @@ class TestSaleProductAttributeValueConfig(TestSaleProductAttributeValueSetup):
         do_test(self)
 
     def test_02_get_combination_info(self):
+        # If using multi-company, company_id will be False, and this code should
+        # still work.
+        # The case with a company_id will be implicitly tested on website_sale.
+        self.computer.company_id = False
+
         computer_ssd_256 = self._get_product_template_attribute_value(self.ssd_256)
         computer_ram_8 = self._get_product_template_attribute_value(self.ram_8)
         computer_hdd_1 = self._get_product_template_attribute_value(self.hdd_1)

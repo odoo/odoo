@@ -48,7 +48,7 @@ QUnit.module('Timesheet Plan', {
             mockRPC: function (route) {
                 assert.step(route);
                 if (route === '/timesheet/plan') {
-                    return $.when({html_content: 'Banach-Tarski'});
+                    return $.when({html_content: '<p>Banach-Tarski</p>'});
                 }
                 return this._super.apply(this, arguments);
             },
@@ -81,7 +81,7 @@ QUnit.module('Timesheet Plan', {
             action: {name: 'Fibonacci'},
             mockRPC: function (route) {
                 if (route === '/timesheet/plan') {
-                    return $.when({html_content: 'Banach-Tarski'});
+                    return $.when({html_content: '<p>Banach-Tarski</p>'});
                 }
                 return this._super.apply(this, arguments);
             },

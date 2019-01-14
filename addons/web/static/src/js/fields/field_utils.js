@@ -363,7 +363,7 @@ function formatPercentage(value, field, options) {
     if (options.humanReadable && options.humanReadable(value * 100)) {
         return result + "%";
     }
-    return parseFloat(result) + "%";
+    return (parseFloat(result) + "%").replace('.', _t.database.parameters.decimal_point);
 }
 /**
  * Returns a string representing the value of the selection.

@@ -75,6 +75,7 @@ class SaleOrder(models.Model):
 
     def _get_delivery_methods(self):
         address = self.partner_shipping_id
+        # searching on website_published will also search for available website (_search method on computed field)
         return self.env['delivery.carrier'].sudo().search([('website_published', '=', True)]).available_carriers(address)
 
     @api.multi

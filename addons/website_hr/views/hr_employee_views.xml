@@ -10,6 +10,7 @@
                 <button class="oe_stat_button" name="website_publish_button"
                     type="object" icon="fa-globe" groups="hr.group_hr_user">
                     <field name="website_published" widget="website_button"/>
+                    <field name="is_published" invisible="1"/>
                 </button>
             </button>
             <xpath expr="//page[@name='public']/group" position="inside">

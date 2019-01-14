@@ -1540,7 +1540,8 @@ class IrModelData(models.Model):
             raise AccessError(_('Administrator access is required to uninstall a module'))
 
         # enable model/field deletion
-        self = self.with_context(**{MODULE_UNINSTALL_FLAG: True})
+        # we deactivate prefetching to not try to read a column that has been deleted
+        self = self.with_context(**{MODULE_UNINSTALL_FLAG: True, 'prefetch_fields': False})
 
         datas = self.search([('module', 'in', modules_to_remove)])
         to_unlink = tools.OrderedSet()
@@ -1625,6 +1626,16 @@ class IrModelData(models.Model):
         for (id, xmlid, model, res_id) in self._cr.fetchall():
             if xmlid not in loaded_xmlids:
                 if model in self.env:
+                    if self.search_count([
+                        ("model", "=", model),
+                        ("res_id", "=", res_id),
+                        ("id", "!=", id),
+                        ("id", "not in", bad_imd_ids),
+                    ]):
+                        # another external id is still linked to the same record, only deleting the old imd
+                        bad_imd_ids.append(id)
+                        continue
+
                     _logger.info('Deleting %s@%s (%s)', res_id, model, xmlid)
                     record = self.env[model].browse(res_id)
                     if record.exists():

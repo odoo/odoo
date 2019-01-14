@@ -4,7 +4,7 @@ odoo.define('barcodes.field', function(require) {
 var AbstractField = require('web.AbstractField');
 var basicFields = require('web.basic_fields');
 var fieldRegistry = require('web.field_registry');
-var is_special_key = require('barcodes.BarcodeEvents').BarcodeEvents.is_special_key;
+var BarcodeEvents = require('barcodes.BarcodeEvents').BarcodeEvents;
 
 // Field in which the user can both type normally and scan barcodes
 
@@ -42,7 +42,7 @@ var FieldFloatScannable = basicFields.FieldFloat.extend({
     _onKeypress: function (e) {
         /* only simulate a keypress if it has been previously prevented */
         if (e.dispatched_by_barcode_reader !== true) {
-            if (!is_special_key(e)) {
+            if (!BarcodeEvents.is_special_key(e)) {
                 e.preventDefault();
             }
             return;

@@ -1098,8 +1098,8 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
             dic['lang'] = lang
             dic.update(zip(fields, row))
 
-            # ignore empty value that may be set from base language
-            if not dic['value']:
+            # do not import empty values
+            if not env.context.get('create_empty_translation', False) and not dic['value']:
                 return
 
             if use_pot_reference:

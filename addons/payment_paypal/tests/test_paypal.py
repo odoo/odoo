@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from odoo import fields
 from odoo.addons.payment.models.payment_acquirer import ValidationError
 from odoo.addons.payment.tests.common import PaymentAcquirerCommon
 from odoo.addons.payment_paypal.controllers.main import PaypalController
@@ -182,7 +183,6 @@ class PaypalForm(PaypalCommon):
         self.assertEqual(tx.state, 'pending', 'paypal: wrong state after receiving a valid pending notification')
         self.assertEqual(tx.state_message, 'multi_currency', 'paypal: wrong state message after receiving a valid pending notification')
         self.assertEqual(tx.acquirer_reference, '08D73520KX778924N', 'paypal: wrong txn_id after receiving a valid pending notification')
-        self.assertFalse(tx.date, 'paypal: validation date should not be updated whenr receiving pending notification')
 
         # update tx
         tx.write({
@@ -196,4 +196,4 @@ class PaypalForm(PaypalCommon):
         # check
         self.assertEqual(tx.state, 'done', 'paypal: wrong state after receiving a valid pending notification')
         self.assertEqual(tx.acquirer_reference, '08D73520KX778924N', 'paypal: wrong txn_id after receiving a valid pending notification')
-        self.assertEqual(tx.date, '2013-11-18 11:21:19', 'paypal: wrong validation date')
+        self.assertEqual(fields.Datetime.to_string(tx.date), '2013-11-18 11:21:19', 'paypal: wrong validation date')

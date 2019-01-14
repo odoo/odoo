@@ -12,7 +12,7 @@
                     <tr>
                         <td>
                             <strong>Price:</strong>
-                            <strong t-field="product.list_price" t-options="{'widget': 'monetary', 'display_currency': product.company_id.currency_id}"/>
+                            <strong t-field="product.lst_price" t-options="{'widget': 'monetary', 'display_currency': product.company_id.currency_id}"/>
                         </td>
                     </tr>
                       <t t-if="product.barcode">
