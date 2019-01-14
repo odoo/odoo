@@ -14,7 +14,7 @@
 # Martin Trigaux, 2018
 # Michal Veselý <michal@veselyberanek.net>, 2018
 # Jan Horzinka <jan.horzinka@centrum.cz>, 2018
-# trendspotter <j.podhorecky@volny.cz>, 2018
+# trendspotter <j.podhorecky@volny.cz>, 2019
 # 
 msgid ""
 msgstr ""
@@ -22,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-12-19 08:20+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
-"Last-Translator: trendspotter <j.podhorecky@volny.cz>, 2018\n"
+"Last-Translator: trendspotter <j.podhorecky@volny.cz>, 2019\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2231,7 +2231,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Batch Payments"
-msgstr ""
+msgstr "Dávkové platby"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__belongs_to_company
@@ -4876,7 +4876,7 @@ msgstr "Má všechny požadované argumenty"
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__has_error
 #: model:ir.model.fields,help:account.field_account_invoice_send__has_error
 msgid "Has error"
-msgstr ""
+msgstr "Má chybu"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_abstract_payment__hide_payment_method
@@ -6623,7 +6623,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__moderator_id
 msgid "Moderated By"
-msgstr ""
+msgstr "Moderováno od"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__moderation_status
@@ -6888,7 +6888,7 @@ msgstr ""
 #: selection:res.company,account_setup_coa_state:0
 #: selection:res.company,account_setup_fy_data_state:0
 msgid "Not done"
-msgstr ""
+msgstr "Není dokončeno"
 
 #. module: account
 #. openerp-web
@@ -10331,14 +10331,6 @@ msgstr ""
 "účtu a jeho specifikách."
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1439
-#, python-format
-msgid ""
-"This %s has been created from: <a href=# data-oe-model=account.invoice data-"
-"oe-id=%d>%s</a><br>Reason: %s"
-msgstr ""
-
-#. module: account
 #: code:addons/account/models/account_journal_dashboard.py:100
 #, python-format
 msgid "This Week"
@@ -10404,6 +10396,14 @@ msgid ""
 "This boolean helps you to choose if you want to propose to the user to "
 "encode the sale and purchase rates or choose from list of taxes. This last "
 "choice assumes that the set of tax defined on this template is complete"
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_invoice.py:1458
+#, python-format
+msgid ""
+"This customer invoice credit note has been created from: <a href=# data-oe-"
+"model=account.invoice data-oe-id=%d>%s</a><br>Reason: %s"
 msgstr ""
 
 #. module: account
@@ -10543,6 +10543,14 @@ msgstr ""
 "Toto technické pole lze použít při vytváření / importu řádku příkazu, aby se"
 " později zabránilo procesu vyúčtování. Řádek prohlášení jednoduše vytvoří "
 "protějšek na tomto účtu"
+
+#. module: account
+#: code:addons/account/models/account_invoice.py:1460
+#, python-format
+msgid ""
+"This vendor bill credit note has been created from: <a href=# data-oe-"
+"model=account.invoice data-oe-id=%d>%s</a><br>Reason: %s"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_validate_account_move
@@ -10942,7 +10950,7 @@ msgstr "Použijte konkrétní deník"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__use_active_domain
 msgid "Use active domain"
-msgstr ""
+msgstr "Použít aktivní doménu"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__anglo_saxon_accounting

@@ -49,11 +49,10 @@ var ReportWidget = Widget.extend({
     },
     updownStream: function(e) {
         var $el = $(e.target).parents('tr');
-        var string = "Traceability Report";
         this.do_action({
             type: "ir.actions.client",
             tag: 'stock_report_generic',
-            name: _t(string),
+            name: _t("Traceability Report"),
             context: {
                 active_id : $el.data('model_id'),
                 active_model : $el.data('model'),

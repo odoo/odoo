@@ -23,6 +23,7 @@
 # David Minneci <david@numeko.it>, 2018
 # Martin Trigaux, 2018
 # Manuela Feliciani <mfeliciani@alice.it>, 2018
+# Lorenzo Battistini <lorenzo.battistini@agilebg.com>, 2018
 # Léonie Bouchat <lbo@odoo.com>, 2018
 # Sergio Zanchetta <primes2h@gmail.com>, 2018
 # 
@@ -142,13 +143,13 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        % set doc_name = 'quotation' if object.state in ('draft', 'sent') else 'order'\n"
+"        % set doc_name = 'il preventivo' if object.state in ('draft', 'sent') else 'l\\'ordine'\n"
 "        Gentile ${object.partner_id.name}\n"
 "        % if object.partner_id.parent_id:\n"
 "            (${object.partner_id.parent_id.name})\n"
 "        % endif\n"
 "        <br/><br/>\n"
-"        Troverà\n"
+"        Ecco\n"
 "        % if ctx.get('proforma')\n"
 "            in allegato la Sua fattura proforma.\n"
 "        % else\n"
@@ -949,7 +950,7 @@ msgstr "Configura un prodotto"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_open_sale_onboarding_quotation_layout
 msgid "Configure your document layout"
-msgstr "Configura il layout del documento"
+msgstr "Configurazione della struttura del documento"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form

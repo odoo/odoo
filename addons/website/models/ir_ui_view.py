@@ -144,8 +144,12 @@ class View(models.Model):
             return self.filtered(lambda view: not view.website_id)
 
         for view in self:
+            # specific view: add it if it's for the current website and ignore
+            # it if it's for another website
             if view.website_id and view.website_id.id == current_website_id:
                 most_specific_views |= view
+            # generic view: add it only if, for the current website, there is no
+            # specific view for this view (based on the same `key` attribute)
             elif not view.website_id and not any(view.key == view2.key and view2.website_id and view2.website_id.id == current_website_id for view2 in self):
                 most_specific_views |= view
 
@@ -202,6 +206,17 @@ class View(models.Model):
     @api.model
     @tools.ormcache_context('self._uid', 'xml_id', keys=('website_id',))
     def get_view_id(self, xml_id):
+        """If a website_id is in the context and the given xml_id is not an int
+        then try to get the id of the specific view for that website, but
+        fallback to the id of the generic view if there is no specific.
+
+        If no website_id is in the context, it might randomly return the generic
+        or the specific view, so it's probably not recommanded to use this
+        method. `viewref` is probably more suitable.
+
+        Archived views are ignored (unless the active_test context is set, but
+        then the ormcache_context will not work as expected).
+        """
         if 'website_id' in self._context and not isinstance(xml_id, pycompat.integer_types):
             current_website = self.env['website'].browse(self._context.get('website_id'))
             domain = ['&', ('key', '=', xml_id)] + current_website.website_domain()

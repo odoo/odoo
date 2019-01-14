@@ -25,7 +25,8 @@ var MrpBomReport = stock_report_generic.extend({
         return this._rpc({
                 model: 'report.mrp.report_bom_structure',
                 method: 'get_html',
-                args: args
+                args: args,
+                context: this.given_context,
             })
             .then(function (result) {
                 self.data = result;

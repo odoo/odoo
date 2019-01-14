@@ -5,12 +5,13 @@
 # Translators:
 # Martin Trigaux, 2018
 # Dorin Hongu <dhongu@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-08-24 09:23+0000\n"
 "Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2018\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
@@ -123,7 +124,7 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Amount</strong>"
-msgstr ""
+msgstr "<strong>Valoare</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -192,7 +193,7 @@ msgstr "<strong>Taxe</strong>"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.track_po_line_template
 msgid "<strong>The ordered quantity has been updated.</strong>"
-msgstr ""
+msgstr "<strong>Cantitatea comandată a fost actualizată.</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
@@ -213,7 +214,7 @@ msgstr "<strong>Preț unitar</strong>"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Your Order Reference:</strong>"
-msgstr ""
+msgstr "<strong>Referința dvs.</strong>"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__product_type
@@ -370,6 +371,10 @@ msgid ""
 " your vendors provide you with pricelist files, this option allows you to "
 "easily import them into the system from ‘Purchase > Vendor Pricelists’ menu."
 msgstr ""
+"În mod implicit, prețurile furnizorilor pot fi setate manual în formularul "
+"detaliat al produsului. Dacă furnizorii vă oferă fișiere de prețuri, această"
+" opțiune vă permite să le importați cu ușurință în sistem din meniul "
+"\"Achiziții> Furnizorii de prețuri\"."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_calendar
@@ -563,7 +568,7 @@ msgstr "Zile până la validare"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Define your terms and conditions ..."
-msgstr ""
+msgstr "Definiți termenii și condiții ..."
 
 #. module: purchase
 #: selection:res.config.settings,default_purchase_method:0
@@ -806,12 +811,12 @@ msgstr "Activități întârziate"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_company__po_double_validation
 msgid "Levels of Approvals"
-msgstr ""
+msgstr "Nivelurile de aprobări"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__po_double_validation
 msgid "Levels of Approvals *"
-msgstr ""
+msgstr "Nivelurile de aprobare *"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_account_invoice__purchase_id
@@ -828,7 +833,7 @@ msgstr "Blochează"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__lock_confirmed_po
 msgid "Lock Confirmed Orders"
-msgstr ""
+msgstr "Blocați comenzile confirmate"
 
 #. module: purchase
 #: code:addons/purchase/controllers/portal.py:53
@@ -984,7 +989,7 @@ msgstr "Nici un mesaj"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "No longer edit orders once confirmed"
-msgstr ""
+msgstr "Nu mai editați comenzile după confirmare"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__product_image
@@ -1076,7 +1081,7 @@ msgstr "Statusul comenzii"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.track_po_line_template
 msgid "Ordered Quantity:"
-msgstr ""
+msgstr "Cantitate comandată:"
 
 #. module: purchase
 #: selection:res.config.settings,default_purchase_method:0
@@ -1345,7 +1350,7 @@ msgstr "Comenzi de achiziție"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
 msgid "Purchase Orders #"
-msgstr ""
+msgstr "Comenzi de achiziție"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_graph
@@ -1484,7 +1489,7 @@ msgstr "Cantitatea primită"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.track_po_line_template
 msgid "Received Quantity:"
-msgstr ""
+msgstr "Cantitate primită:"
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.act_res_partner_2_supplier_invoices
@@ -1535,8 +1540,11 @@ msgid "Reporting"
 msgstr "Raportare"
 
 #. module: purchase
+#: code:addons/purchase/models/purchase.py:276
 #: model:ir.actions.report,name:purchase.report_purchase_quotation
+#: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchasequotation_document
+#, python-format
 msgid "Request for Quotation"
 msgstr "Cerere de ofertă"
 
@@ -1884,6 +1892,8 @@ msgid ""
 "            and Odoo will fill the bill automatically according to ordered\n"
 "            or received quantities."
 msgstr ""
+"Utilizați acest meniu pentru a controla facturile de primit de la dvs.\n"
+"  furnizori. Când înregistrați o factură nouă, setați comanda de achiziție și Odoo va completa automat factura conform cantităților comandate sau primite."
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_purchase_user
@@ -2008,6 +2018,8 @@ msgid ""
 "You can control the invoice from your vendor according to\n"
 "            what you purchased (services) or received (products)."
 msgstr ""
+"Puteți controla factura de la furnizorul dvs. în funcție de ceea ce ați "
+"achiziționat (servicii) sau ați primit (produse)."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__partner_id

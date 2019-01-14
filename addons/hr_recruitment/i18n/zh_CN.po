@@ -6,13 +6,12 @@
 # Martin Trigaux, 2018
 # ChinaMaker <liuct@chinamaker.net>, 2018
 # 老窦 北京 <2662059195@qq.com>, 2018
-# Jackie Zhang <jzh@odoo.com>, 2018
+# JZH-Odoo <jzh@odoo.com>, 2018
 # bower Guo <124358678@qq.com>, 2018
 # roye w <159820@qq.com>, 2018
-# neter ji <jifuyi@qq.com>, 2018
 # 李赋 <fu792659@163.com>, 2018
-# liAnGjiA <liangjia@qq.com>, 2018
 # inspur qiuguodong <qiuguodong@inspur.com>, 2018
+# liAnGjiA <liangjia@qq.com>, 2018
 # snow wang <147156565@qq.com>, 2018
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
 # r <263737@qq.com>, 2018
@@ -488,7 +487,7 @@ msgstr ""
 "                    % if object.user_id:\n"
 "                        -- <br/>\n"
 "                        <strong>${object.user_id.name}</strong><br/>\n"
-"                        Email: ${object.user_id.email or ''}<br/>\n"
+"                        EMail: ${object.user_id.email or ''}<br/>\n"
 "                        电话: ${object.user_id.phone or ''}\n"
 "                    % else:\n"
 "                        -- <br/>\n"
@@ -641,7 +640,7 @@ msgid ""
 "                If you install the document management modules, all resumes are indexed automatically,\n"
 "                so that you can easily search through their content."
 msgstr ""
-" 当发送电子邮件时，自动创建申请人及其附件CV。\n"
+" 当发送EMail时，自动创建申请人及其附件CV。\n"
 "如果安装文档管理模块，所有的简历都会自动索引，\n"
 "这样你就可以轻松地搜索他们的内容"
 
@@ -652,7 +651,7 @@ msgid ""
 "            If you install the document management modules, all resumes are indexed automatically,\n"
 "            so that you can easily search through their content."
 msgstr ""
-" 当发送电子邮件时，自动创建申请人及其附件CV。\n"
+" 当发送EMail时，自动创建申请人及其附件CV。\n"
 "如果安装文档管理模块，所有的简历都会自动索引，\n"
 "这样你就可以轻松地搜索他们的内容"
 
@@ -661,7 +660,7 @@ msgstr ""
 msgid ""
 "Applicants can send resume to this email address,<br/>it will create an "
 "application automatically"
-msgstr "申请人可以将简历发送到这个电子邮件地址，<br/>它将自动创建一个新的申请"
+msgstr "申请人可以将简历发送到这个EMail地址，<br/>它将自动创建一个新的申请"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__application_count
@@ -676,7 +675,7 @@ msgstr "申请摘要"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
 msgid "Application email"
-msgstr "申请电子邮件"
+msgstr "申请EMail"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
@@ -826,7 +825,7 @@ msgstr "联系"
 #: code:addons/hr_recruitment/models/hr_recruitment.py:373
 #, python-format
 msgid "Contact Email"
-msgstr "联系电邮"
+msgstr "联系EMail"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.ir_attachment_view_search_inherit_hr_recruitment
@@ -920,7 +919,7 @@ msgid ""
 "Define a specific contact address for this job position. If you keep it "
 "empty, the default email address will be used which is in human resources "
 "settings"
-msgstr "为这个工作岗位定义一个特定的联系地址。如果为空，将默认使用人事部门预设的电子邮件"
+msgstr "为这个工作岗位定义一个特定的联系地址。如果为空，将默认使用人事部门预设的EMail"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.hr_job_stage_act
@@ -1001,7 +1000,7 @@ msgstr "显示名称"
 #: code:addons/hr_recruitment/models/digest.py:16
 #, python-format
 msgid "Do not have access, skip this data for user's digest email"
-msgstr "没有权限，用户电子邮件中忽略此数据"
+msgstr "没有权限，用户EMail中忽略此数据"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.degree,name:hr_recruitment.degree_bac5
@@ -1042,13 +1041,13 @@ msgstr "编辑"
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__email_from
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source__email
 msgid "Email"
-msgstr "Email"
+msgstr "EMail"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
 msgid "Email Alias"
-msgstr "Email别名"
+msgstr "EMail别名"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
@@ -1060,7 +1059,7 @@ msgstr "邮箱别名"
 msgid ""
 "Email alias for this job position. New emails will automatically create new "
 "applicants for this job position."
-msgstr "当前职位的电子邮件别名。新邮件将自动为这个职位创造新的申请者。"
+msgstr "当前职位的EMail别名。新邮件将自动为这个职位创造新的申请者。"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_employee
@@ -1549,7 +1548,7 @@ msgstr "新雇用的员工"
 msgid ""
 "New applicants can be generated from incoming emails. You just need to set "
 "email aliases in configuration of job positions.<br>"
-msgstr "可以从收到的邮件中产生新的申请人。你只需要在职位配置中设置电子邮件别名。<br>"
+msgstr "可以从收到的邮件中产生新的申请人。你只需要在职位配置中设置EMail别名。<br>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_employee_view_search
@@ -1700,7 +1699,7 @@ msgstr "逾期"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_user_id
 msgid "Owner"
-msgstr "所有者"
+msgstr "货主"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_parent_model_id
@@ -1948,7 +1947,7 @@ msgstr "序号"
 #. module: hr_recruitment
 #: model_terms:digest.tip,tip_description:hr_recruitment.digest_tip_hr_recruitment_0
 msgid "Set Email Aliases"
-msgstr "设置电子邮件别名"
+msgstr "设置EMail别名"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_recruitment_configuration
@@ -2088,7 +2087,7 @@ msgid ""
 "The model (Odoo Document Kind) to which this alias corresponds. Any incoming"
 " email that does not reply to an existing record will cause the creation of "
 "a new record of this model (e.g. a Project Task)"
-msgstr "这个别名对应的模型（Odoo文档类型）。任何未回复现有记录的传入电子邮件都将导致创建此模型的新记录（例如，项目任务）"
+msgstr "这个别名对应的模型（Odoo文档类型）。任何未回复现有记录的传入EMail都将导致创建此模型的新记录（例如，项目任务）"
 
 #. module: hr_recruitment
 #: sql_constraint:hr.recruitment.degree:0
@@ -2100,7 +2099,7 @@ msgstr "应聘者学历的名称必须唯一"
 msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
-msgstr "邮件别名的名称，例如，如果你要收取 <jobs@example.odoo.com> 的电子邮件,别名就要被设为：\"jobs\""
+msgstr "邮件别名的名称，例如，如果你要收取 <jobs@example.odoo.com> 的EMail,别名就要被设为：\"jobs\""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_user_id
@@ -2110,14 +2109,14 @@ msgid ""
 "the sender (From) address, or will use the Administrator account if no "
 "system user is found for that address."
 msgstr ""
-"收到此别名的电子邮件时创建记录的所有者。如果此字段未设置，系统将尝试根据发件人(发件人)地址查找正确的所有者，或者如果没有找到该地址的系统用户，将使用管理员帐户。"
+"收到此别名的EMail时创建记录的货主。如果此字段未设置，系统将尝试根据发件人(发件人)地址查找正确的货主，或者如果没有找到该地址的系统用户，将使用管理员帐户。"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_sources
 msgid ""
 "These aliases can be emails or urls for every source. When the applicant "
 "arrives here through one of these you'll know where he came from."
-msgstr "这些别名可以是电子邮件或每个来源的 url。当申请人通过上述两种方式之一到这里时，您便会知道他来自哪里。"
+msgstr "这些别名可以是EMail或每个来源的 url。当申请人通过上述两种方式之一到这里时，您便会知道他来自哪里。"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__email_cc
@@ -2125,12 +2124,12 @@ msgid ""
 "These email addresses will be added to the CC field of all inbound and "
 "outbound emails for this record before being sent. Separate multiple email "
 "addresses with a comma"
-msgstr "作为此记录在发送前，这些电邮地址将添加到所有接收和发送邮件的抄送字段。用逗号分隔多个电邮地址"
+msgstr "作为此记录在发送前，这些EMail地址将添加到所有接收和发送邮件的抄送字段。用逗号分隔多个EMail地址"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__email_from
 msgid "These people will receive email."
-msgstr "这些人将收到电子邮件。"
+msgstr "这些人将收到EMail。"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__campaign_id
@@ -2142,14 +2141,14 @@ msgstr "这是一个帮助您追踪不同营销活动的名称，例如，节能
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__medium_id
 msgid "This is the method of delivery, e.g. Postcard, Email, or Banner Ad"
-msgstr "这是传达方法，例如，明信片、电子邮件或横幅广告"
+msgstr "这是传达方法，例如，明信片、EMail或横幅广告"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__source_id
 msgid ""
 "This is the source of the link, e.g. Search Engine, another domain, or name "
 "of email list"
-msgstr "这是链接源，例如，搜索引擎、其他域名或电子邮件列表名称"
+msgstr "这是链接源，例如，搜索引擎、其他域名或EMail列表名称"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.hr_applicant_resumes
@@ -2193,7 +2192,7 @@ msgstr "提示"
 msgid ""
 "Try to send an email to this address, it will create an application "
 "automatically."
-msgstr "尝试向此地址发送电子邮件，它会自动创建申请。"
+msgstr "尝试向此地址发送EMail，它会自动创建申请。"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
@@ -2237,7 +2236,7 @@ msgstr "使用面包屑导航 <b>返回到仪表板</b>."
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__user_email
 msgid "User Email"
-msgstr "用户Email"
+msgstr "用户EMail"
 
 #. module: hr_recruitment
 #: selection:hr.applicant,priority:0
@@ -2255,7 +2254,7 @@ msgstr "想要像 <b>专业人士</b> 一样开始您的招聘? <i>在这里开�
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__email_cc
 msgid "Watchers Emails"
-msgstr "关注者的电子邮件"
+msgstr "关注者的EMail"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__website_message_ids
