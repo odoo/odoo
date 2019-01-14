@@ -509,8 +509,11 @@ Blocking Brute Force Attacks
 ----------------------------
 For internet-facing deployments, brute force attacks on user passwords are very common, and this
 threat should not be neglected for Odoo servers. Odoo emits a log entry whenever a login attempt
-is performed, and reports the result: success or failure, along with the target login and source IP.
+is performed, and reports the result: success or failure, along with the target login and source IP. 
+To configure fail2ban, we need to distinguish two scenarios: 1) the Odoo server is exposed to the internet
+2) the Odoo server runs behind a proxy, like Apache. In scenario 1, it is possible to let fail2ban look at the odoo logs directly. In scenario 2, we need a "workaround", because Odoo will only log the IP of the upstream proxy, in most cases 127.0.0.1. If fail2ban would now kick in and block 127.0.0.1, the entire service will essentially be unavailable. 
 
+Scenario 1) Odoo is directly facing the internet. Let fail2ban look at Odoo logs. 
 The log entries will have the following form.
 
 Failed login::
@@ -544,8 +547,35 @@ Here is what it could look like for blocking the IP for 15 minutes when
     findtime = 60  ; within 1 min  /!\ Should be adjusted with the TZ offset
     logpath = /var/log/odoo.log  ;  set the actual odoo log path here
 
+Scenario 2) Odoo works behind a proxy, like Apache.
+In this case we cannot use the Odoo logs, as no valid IP will be logged. But the proxy server (e.g. Apache) knows the IPs where the request originated from. A failed login attempt will cause Odoo to POST the page /web/login to the user again (and again ...). And this is logged by the proxy server! A failed login on Apache looks something like:
 
+    7.120.35.25 - - [13/Jan/2019:22:52:25] "POST /web/login HTTP/1.1" 200 2514 "https://YOUR-DOMAIN.com/" "Mozilla/5.0 (X11; Ubuntu; ....
+    
+This log entry can be analyzed and counted by `fail2ban`. The following fail2ban filter definition should match a failed login on Apache:
 
+    failregex = <HOST> .* /web/login .*
+    ignoreregex =
+
+This can be used with the jail definition to block the attacking IP on HTTP(S). Here is what a corresponding jail definition could look like: 
+
+    [odoo-login]
+    enabled = true
+    port = http,https
+    bantime = 900  ; 15 min ban
+    maxretry = 10  ; if 10 attempts
+    findtime = 60  ; within 1 min  /!\ Should be adjusted with the TZ offset
+    logpath = /var/log/apache2/your-vhost-custom.log  ;  set the log path of the PROXY SERVER (APACHE...) here
+
+for this to work, you need to know where the logs are stored. The easiest way is to explicitly configure the log destination in the vhost file of your proxy (for example in /etc/apache2/sites-available/YOUR-ODOO-VHOST.com.conf):
+
+    <VirtualHost *:443>
+    ...
+    CustomLog /var/log/apache2/odoo.log combined
+    ...
+    </VirtualHost>
+
+Another advantage of this approach is that you do not get into trouble with the timezones, as Odoo logs in UTC, whereas the findtime of fail2ban is based on local time.
 
 .. _db_manager_security:
 
