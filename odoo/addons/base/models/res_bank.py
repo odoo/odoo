@@ -17,6 +17,7 @@ def sanitize_account_number(acc_number):
 
 
 class Bank(models.Model):
+    """ Banks """
     _description = 'Bank'
     _name = 'res.bank'
     _order = 'name'
@@ -55,6 +56,7 @@ class Bank(models.Model):
 
 
 class ResPartnerBank(models.Model):
+    """ Bank Accounts """
     _name = 'res.partner.bank'
     _rec_name = 'acc_number'
     _description = 'Bank Accounts'

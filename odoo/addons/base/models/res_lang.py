@@ -18,6 +18,7 @@ DEFAULT_TIME_FORMAT = '%H:%M:%S'
 
 
 class Lang(models.Model):
+    """ Languages """
     _name = "res.lang"
     _description = "Languages"
     _order = "active desc,name"

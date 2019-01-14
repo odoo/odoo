@@ -327,12 +327,12 @@ class IrActionsServer(models.Model):
 
     The available actions are :
 
-    - 'Execute Python Code': a block of python code that will be executed
-    - 'Run a Client Action': choose a client action to launch
-    - 'Create or Copy a new Record': create a new record with new values, or
+    - *Execute Python Code*: a block of python code that will be executed
+    - *Run a Client Action*: choose a client action to launch
+    - *Create or Copy a new Record*: create a new record with new values, or
       copy an existing record in your database
-    - 'Write on a Record': update the values of a record
-    - 'Execute several actions': define an action that triggers several other
+    - *Write on a Record*: update the values of a record
+    - *Execute several actions*: define an action that triggers several other
       server actions
     """
     _name = 'ir.actions.server'
@@ -455,8 +455,8 @@ class IrActionsServer(models.Model):
     def run_action_object_write(self, action, eval_context=None):
         """ Write server action.
 
-         - 1. evaluate the value mapping
-         - 2. depending on the write configuration:
+         1. evaluate the value mapping
+         2. depending on the write configuration:
 
           - `current`: id = active_id
           - `other`: id = from reference object
@@ -477,8 +477,8 @@ class IrActionsServer(models.Model):
     def run_action_object_create(self, action, eval_context=None):
         """ Create and Copy server action.
 
-         - 1. evaluate the value mapping
-         - 2. depending on the write configuration:
+         1. evaluate the value mapping
+         2. depending on the write configuration:
 
           - `new`: new record in the base model
           - `copy_current`: copy the current record (id = active_id) + gives custom values
@@ -552,7 +552,7 @@ class IrActionsServer(models.Model):
                              - active_ids: ids of the current records (mass mode). If active_ids
                                and active_id are present, active_ids is given precedence.
 
-        :return: an action_id to be executed, or False is finished correctly without
+        :return: an action_id to be executed, or False if finished correctly without
                  return action
         """
         res = False
@@ -584,8 +584,8 @@ class IrActionsServer(models.Model):
     @api.model
     def _run_actions(self, ids):
         """
-            Run server actions with given ids.
-            Allow crons to run specific server actions
+        Run server actions with given ids.
+        Allow crons to run specific server actions
         """
         return self.browse(ids).run()
 
@@ -658,6 +658,7 @@ class IrActionsTodo(models.Model):
     """
     Configuration Wizards
     """
+
     _name = 'ir.actions.todo'
     _description = "Configuration Wizards"
     _order = "sequence, id"
@@ -716,7 +717,7 @@ class IrActionsTodo(models.Model):
 
     @api.multi
     def action_launch(self):
-        """ Launch Action of Wizard"""
+        """ Launch Action of Wizard. """
         self.ensure_one()
 
         self.write({'state': 'done'})
@@ -744,7 +745,7 @@ class IrActionsTodo(models.Model):
 
     @api.multi
     def action_open(self):
-        """ Sets configuration wizard in TODO state"""
+        """ Sets configuration wizard in TODO state. """
         return self.write({'state': 'open'})
 
 

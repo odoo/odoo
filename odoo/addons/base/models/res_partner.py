@@ -130,6 +130,7 @@ class PartnerTitle(models.Model):
 
 
 class Partner(models.Model):
+    """ Contacts """
     _description = 'Contact'
     _inherit = ['format.address.mixin']
     _name = "res.partner"
@@ -723,11 +724,12 @@ class Partner(models.Model):
 
     @api.model
     def find_or_create(self, email):
-        """ Find a partner with the given ``email`` or use :py:method:`~.name_create`
+        """ Find a partner with the given ``email`` or use :py:meth:`~.name_create`
             to create one
 
             :param str email: email-like string, which should contain at least one email,
-                e.g. ``"Raoul Grosbedon <r.g@grosbedon.fr>"``"""
+                e.g. ``"Raoul Grosbedon <r.g@grosbedon.fr>"``
+        """
         assert email, 'an email is required for find_or_create to work'
         emails = tools.email_split(email)
         if emails:
@@ -760,7 +762,8 @@ class Partner(models.Model):
         through descendants within company boundaries (stop at entities flagged ``is_company``)
         then continuing the search at the ancestors that are within the same company boundaries.
         Defaults to partners of type ``'default'`` when the exact type is not found, or to the
-        provided partner itself if no type ``'default'`` is found either. """
+        provided partner itself if no type ``'default'`` is found either.
+        """
         adr_pref = set(adr_pref or [])
         if 'contact' not in adr_pref:
             adr_pref.add('contact')
@@ -818,7 +821,7 @@ class Partner(models.Model):
     @api.multi
     def _display_address(self, without_company=False):
 
-        '''
+        """
         The purpose of this function is to build and return an address formatted accordingly to the
         standards of the country where it belongs.
 
@@ -826,7 +829,7 @@ class Partner(models.Model):
         :returns: the address formatted in a display that fit its country habits (or the default ones
             if not country is specified)
         :rtype: string
-        '''
+        """
         # get the information that will be injected into the display format
         # get the address format
         address_format = self._get_address_format()

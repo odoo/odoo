@@ -9,6 +9,7 @@ from odoo.exceptions import ValidationError, UserError
 
 
 class Company(models.Model):
+    """ Companies """
     _name = "res.company"
     _description = 'Companies'
     _order = 'sequence, name'

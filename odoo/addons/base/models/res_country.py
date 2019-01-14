@@ -28,6 +28,7 @@ def location_name_search(self, name='', args=None, operator='ilike', limit=100):
 
 
 class Country(models.Model):
+    """ Countries """
     _name = 'res.country'
     _description = 'Country'
     _order = 'name'
@@ -95,6 +96,7 @@ class Country(models.Model):
 
 
 class CountryGroup(models.Model):
+    """ Country Groups"""
     _description = "Country Group"
     _name = 'res.country.group'
 
@@ -104,6 +106,7 @@ class CountryGroup(models.Model):
 
 
 class CountryState(models.Model):
+    """ Country States"""
     _description = "Country state"
     _name = 'res.country.state'
     _order = 'code'

@@ -21,6 +21,7 @@ CURRENCY_DISPLAY_PATTERN = re.compile(r'(\w+)\s*(?:\((.*)\))?')
 
 
 class Currency(models.Model):
+    """ Currencies """
     _name = "res.currency"
     _description = "Currency"
     _order = 'active desc, name'
@@ -240,6 +241,7 @@ class Currency(models.Model):
 
 
 class CurrencyRate(models.Model):
+    """ Currency Rates"""
     _name = "res.currency.rate"
     _description = "Currency Rate"
     _order = "name desc"

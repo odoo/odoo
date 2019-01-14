@@ -973,7 +973,7 @@ class IrModelConstraint(models.Model):
         for data in self.sorted(key='id', reverse=True):
             name = tools.ustr(data.name)
             if data.model.model in self.env:
-                table = self.env[data.model.model]._table    
+                table = self.env[data.model.model]._table
             else:
                 table = data.model.model.replace('.', '_')
             typ = data.type
@@ -1288,12 +1288,12 @@ class IrModelData(models.Model):
     """Holds external identifier keys for records in the database.
        This has two main uses:
 
-           * allows easy data integration with third-party systems,
-             making import/export/sync of data possible, as records
-             can be uniquely identified across multiple systems
-           * allows tracking the origin of data installed by Odoo
-             modules themselves, thus making it possible to later
-             update them seamlessly.
+       * allows easy data integration with third-party systems,
+         making import/export/sync of data possible, as records
+         can be uniquely identified across multiple systems
+       * allows tracking the origin of data installed by Odoo
+         modules themselves, thus making it possible to later
+         update them seamlessly.
     """
     _name = 'ir.model.data'
     _description = 'Model Data'
@@ -1382,7 +1382,7 @@ class IrModelData(models.Model):
 
     @api.model
     def xmlid_to_object(self, xmlid, raise_if_not_found=False):
-        """ Return a Model object, or ``None`` if ``raise_if_not_found`` is 
+        """ Return a Model object, or ``None`` if ``raise_if_not_found`` is
         set
         """
         t = self.xmlid_to_res_model_res_id(xmlid, raise_if_not_found)
@@ -1530,11 +1530,11 @@ class IrModelData(models.Model):
         ``ids`` along with their corresponding database backed (including
         dropping tables, columns, FKs, etc, as long as there is no other
         ir.model.data entry holding a reference to them (which indicates that
-        they are still owned by another module). 
+        they are still owned by another module).
         Attempts to perform the deletion in an appropriate order to maximize
         the chance of gracefully deleting all records.
         This step is performed as part of the full uninstallation of a module.
-        """ 
+        """
         if not (self._uid == SUPERUSER_ID or self.env.user.has_group('base.group_system')):
             raise AccessError(_('Administrator access is required to uninstall a module'))
 

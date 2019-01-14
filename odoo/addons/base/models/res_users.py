@@ -85,6 +85,7 @@ def parse_m2m(commands):
 #----------------------------------------------------------
 
 class Groups(models.Model):
+    """ Access groups """
     _name = "res.groups"
     _description = "Access Groups"
     _rec_name = 'full_name'
@@ -185,12 +186,15 @@ class ResUsersLog(models.Model):
 
 
 class Users(models.Model):
-    """ User class. A res.users record models an OpenERP user and is different
-        from an employee.
+    """ User class.
 
-        res.users class now inherits from res.partner. The partner model is
-        used to store the data related to the partner: lang, name, address,
-        avatar, ... The user model is now dedicated to technical data.
+    A res.users record models an Odoo user and is different
+    from an employee.
+
+    :class:`res.users` class now inherits from :class:`res.partner`.
+    The partner model is used to store the data related to the partner:
+    lang, name, address, avatar, ...
+    The user model is now dedicated to technical data.
     """
     _name = "res.users"
     _description = 'Users'
@@ -573,11 +577,11 @@ class Users(models.Model):
         ``login`` and ``password`` combination, or False if there was
         no matching user.
 
-       :param str db: the database on which user is trying to authenticate
-       :param str login: username
-       :param str password: user password
-       :param dict user_agent_env: environment dictionary describing any
-           relevant environment attributes
+        :param str db: the database on which user is trying to authenticate
+        :param str login: username
+        :param str password: user password
+        :param dict user_agent_env: environment dictionary describing any
+            relevant environment attributes
         """
         uid = cls._login(db, login, password)
         if user_agent_env and user_agent_env.get('base_location'):
