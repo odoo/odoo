@@ -410,7 +410,7 @@ class TestXMLTranslation(TransactionCase):
         """ Check translations after minor change in source terms. """
         archf = '<form string="X"><div>%s</div><div>%s</div></form>'
         terms_src = ('Subtotal', 'Subtotal:')
-        terms_en = ('Subtotal', 'Sub total:')
+        terms_en = ('', 'Sub total:')
         view = self.create_view(archf, terms_src, en_US=terms_en)
 
         translations = self.env['ir.translation'].search([
