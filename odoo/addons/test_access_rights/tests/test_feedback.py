@@ -118,6 +118,15 @@ class TestIRRuleFeedback(Feedback):
 (records: [%s], uid: %d)""" % (self.record.id, self.user.id)
         )
 
+
+
+        p = self.env['test_access_right.parent'].create({'obj_id': self.record.id})
+        self.assertRaisesRegex(
+            AccessError,
+            r"Implicitly accessed through \\'Object for testing related access rights\\' \(test_access_right.parent\)\.",
+            p.sudo(self.user).write, {'val': 1}
+        )
+
     def test_locals(self):
         self.env.ref('base.group_no_one').write(
             {'users': [(4, self.user.id)]})
@@ -226,6 +235,14 @@ Note: this might be a multi-company issue.
 Note: this might be a multi-company issue.
 
 (records: [%s], uid: %d)""" % (self.record.id, self.user.id)
+        )
+
+        p = self.env['test_access_right.parent'].create({'obj_id': self.record.id})
+        # p.sudo(self.user).val
+        self.assertRaisesRegex(
+            AccessError,
+            r"Implicitly accessed through \\'Object for testing related access rights\\' \(test_access_right.parent\)\.",
+            lambda: p.sudo(self.user).val
         )
 
 class TestFieldGroupFeedback(Feedback):
