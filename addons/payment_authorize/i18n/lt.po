@@ -3,60 +3,69 @@
 # * payment_authorize
 # 
 # Translators:
-# Anatolij <an@cq.lt>, 2017
-# Antanas Muliuolis <an.muliuolis@gmail.com>, 2017
-# digitouch UAB <digitouchagencyeur@gmail.com>, 2017
+# Anatolij, 2018
+# Silvija Butko <silvija.butko@gmail.com>, 2018
+# digitouch UAB <digitouchagencyeur@gmail.com>, 2018
+# Linas Versada <linaskrisiukenas@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: digitouch UAB <digitouchagencyeur@gmail.com>, 2017\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-08-24 09:21+0000\n"
+"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2019\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: lt\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: payment_authorize
-#: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer_authorize_login
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_login
 msgid "API Login Id"
-msgstr ""
+msgstr "API prisijungimo ID"
 
 #. module: payment_authorize
-#: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer_authorize_transaction_key
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_transaction_key
 msgid "API Transaction Key"
-msgstr ""
+msgstr "API operacijos raktas"
 
 #. module: payment_authorize
-#: code:addons/payment_authorize/models/authorize_request.py:67
-#, python-format
-msgid ""
-"Authorize.net Error Message(s):\n"
-" %s"
-msgstr ""
-"Authorize.net klaidos pranešimas(-ai):\n"
-" %s"
+#: selection:payment.acquirer,provider:0
+msgid "Adyen"
+msgstr "Adyen"
 
 #. module: payment_authorize
-#: model:ir.model.fields,field_description:payment_authorize.field_payment_token_authorize_profile
+#: selection:payment.acquirer,provider:0
+msgid "Authorize.Net"
+msgstr "Authorize.Net"
+
+#. module: payment_authorize
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_token__authorize_profile
 msgid "Authorize.net Profile ID"
 msgstr "Authorize.net profilio ID"
 
 #. module: payment_authorize
-#: code:addons/payment_authorize/models/payment.py:167
+#: code:addons/payment_authorize/models/payment.py:177
 #, python-format
 msgid ""
 "Authorize: received data with missing reference (%s) or trans_id (%s) or "
 "fingerprint (%s)"
 msgstr ""
+"Patvirtinimas: gauti duomenys su trūkstamu numeriu (%s) arba trans_id (%s) "
+"arba pirštų antspaudu (%s)"
+
+#. module: payment_authorize
+#: selection:payment.acquirer,provider:0
+msgid "Buckaroo"
+msgstr "Buckaroo"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.authorize_s2s_form
 msgid "CVC"
-msgstr ""
+msgstr "CVC"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.authorize_s2s_form
@@ -66,61 +75,145 @@ msgstr "Kortelės numeris"
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.authorize_s2s_form
 msgid "Cardholder name"
-msgstr ""
+msgstr "Kortelės turėtojo vardas"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.authorize_s2s_form
 msgid "Expires (MM / YY)"
-msgstr ""
+msgstr "Galioja (Mėnuo/ Metai)"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.acquirer_form_authorize
 msgid "How to get paid with Authorize.Net"
+msgstr "Kaip gauti mokėjimą per Authorize.Net"
+
+#. module: payment_authorize
+#: code:addons/payment_authorize/controllers/main.py:64
+#, python-format
+msgid ""
+"If you don't have any account, please ask your salesperson to update your "
+"profile. "
 msgstr ""
+"Jei neturite jokios sąskaitos, paprašykite savo pardavimų specialisto, kad "
+"atnaujintų jūsų profilį."
+
+#. module: payment_authorize
+#: code:addons/payment_authorize/models/payment.py:261
+#, python-format
+msgid ""
+"Invalid token found: the Authorize profile is missing.Please make sure the "
+"token has a valid acquirer reference."
+msgstr ""
+"Rastas netinkamas raktas: trūksta patvirtinimo profilio. Įsitikinkite, kad "
+"raktas turi teisingą surinkėjo numerį."
+
+#. module: payment_authorize
+#: selection:payment.acquirer,provider:0
+msgid "Manual Configuration"
+msgstr "Konfigūracija rankiniu būdu"
+
+#. module: payment_authorize
+#: selection:payment.acquirer,provider:0
+msgid "Ogone"
+msgstr "Ogone"
+
+#. module: payment_authorize
+#: selection:payment.acquirer,provider:0
+msgid "PayUmoney"
+msgstr "PayUmoney"
 
 #. module: payment_authorize
 #: model:ir.model,name:payment_authorize.model_payment_acquirer
 msgid "Payment Acquirer"
-msgstr "Pirkėjas"
+msgstr "Mokėjimo surinkėjas"
+
+#. module: payment_authorize
+#: model:ir.model,name:payment_authorize.model_payment_token
+msgid "Payment Token"
+msgstr "Mokėjimo raktas"
 
 #. module: payment_authorize
 #: model:ir.model,name:payment_authorize.model_payment_transaction
 msgid "Payment Transaction"
-msgstr "Mokėjimo transakcija"
+msgstr "Mokėjimo operacija"
 
 #. module: payment_authorize
-#: model:ir.model.fields,field_description:payment_authorize.field_payment_token_provider
+#: selection:payment.acquirer,provider:0
+msgid "Paypal"
+msgstr "Paypal"
+
+#. module: payment_authorize
+#: code:addons/payment_authorize/controllers/main.py:66
+#, python-format
+msgid "Please complete your profile. "
+msgstr "Užpildykite savo profilį."
+
+#. module: payment_authorize
+#: code:addons/payment_authorize/controllers/main.py:61
+#, python-format
+msgid "Please sign in to complete your profile."
+msgstr "Norėdami užbaigti profilio pildymą, prisijunkite."
+
+#. module: payment_authorize
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__provider
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_token__provider
 msgid "Provider"
-msgstr ""
+msgstr "Tiekėjas"
 
 #. module: payment_authorize
-#: model:ir.model.fields,field_description:payment_authorize.field_payment_token_save_token
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_token__save_token
 msgid "Save Cards"
-msgstr ""
+msgstr "Išsaugoti korteles"
 
 #. module: payment_authorize
-#: code:addons/payment_authorize/models/payment.py:372
+#: selection:payment.acquirer,provider:0
+msgid "Sips"
+msgstr "Sips"
+
+#. module: payment_authorize
+#: selection:payment.acquirer,provider:0
+msgid "Stripe"
+msgstr "Stripe"
+
+#. module: payment_authorize
+#: code:addons/payment_authorize/models/payment.py:365
 #, python-format
 msgid "The Customer Profile creation in Authorize.NET failed."
-msgstr ""
+msgstr "Kliento profilio kūrimas per Authorize.NET nepavyko."
 
 #. module: payment_authorize
-#: model:ir.model.fields,help:payment_authorize.field_payment_token_authorize_profile
+#: code:addons/payment_authorize/controllers/main.py:58
+#, python-format
+msgid ""
+"The transaction cannot be processed because some contact details are missing"
+" or invalid: "
+msgstr ""
+"Operacija negali būti apdorota, nes trūksta kontaktinės informacijos ar ji "
+"yra neteisinga:"
+
+#. module: payment_authorize
+#: model:ir.model.fields,help:payment_authorize.field_payment_token__authorize_profile
 msgid ""
 "This contains the unique reference for this partner/payment token "
 "combination in the Authorize.net backend"
 msgstr ""
+"Čia yra unikalus numeris šiai partnerio ir mokėjimo rakto kombinacijai "
+"Authorize.net techninėje dalyje"
 
 #. module: payment_authorize
-#: model:ir.model.fields,help:payment_authorize.field_payment_token_save_token
+#: model:ir.model.fields,help:payment_authorize.field_payment_token__save_token
 msgid ""
 "This option allows customers to save their credit card as a payment token "
-"and to reuse it for a later purchase.If you manage subscriptions (recurring "
-"invoicing), you need it to automatically charge the customer when you issue "
-"an invoice."
+"and to reuse it for a later purchase. If you manage subscriptions (recurring"
+" invoicing), you need it to automatically charge the customer when you issue"
+" an invoice."
 msgstr ""
+"Šis pasirinkimas leidžia klientams išsaugoti savo kreditinę kortelę kaip "
+"mokėjimo raktą ir naudoti ją tolimesniems pirkimams. Jei valdote "
+"prenumeratas (pasikartojančias sąskaitas), jums reikia, kad ji automatiškai "
+"nuskaičiuotų pinigus iš kliento tada, kai išrašote sąskaitą."
 
 #. module: payment_authorize
-#: model:ir.model,name:payment_authorize.model_payment_token
-msgid "payment.token"
-msgstr "payment.token"
+#: selection:payment.acquirer,provider:0
+msgid "Wire Transfer"
+msgstr "Piniginė perlaida"

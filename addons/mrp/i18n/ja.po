@@ -3,27 +3,28 @@
 # * mrp
 # 
 # Translators:
-# SHIMIZU Taku <shimizu.taku@gmail.com>, 2018
-# Martin Trigaux, 2018
-# Yoshi Tashiro <tashiro@roomsfor.hk>, 2018
-# 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2018
 # kent_ocean <ke.tanabe@gmail.com>, 2018
 # Takahiro MURAKAMI <murakami@date-yakkyoku.com>, 2018
 # Kohji Katayama <kohji.katayama@dreamyard.co.jp>, 2018
-# Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2018
 # 城谷 龍弥 <tatsuya.shirotani@pro-spire.co.jp>, 2018
-# 森岡広道 <hiromichi.morioka@pro-spire.co.jp>, 2018
-# Masako Ogawa <masako.ogawa@pro-spire.co.jp>, 2018
+# SHIMIZU Taku <shimizu.taku@gmail.com>, 2018
 # Manami Hashi <manami@roomsfor.hk>, 2018
 # NOKA Shigekazu <shigekazu.noka@gmail.com>, 2018
+# Masako Ogawa <masako.ogawa@pro-spire.co.jp>, 2018
+# 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2018
 # Tim Siu Lai <tl@roomsfor.hk>, 2018
+# Martin Trigaux, 2018
+# Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2018
+# 森岡広道 <hiromichi.morioka@pro-spire.co.jp>, 2018
+# Yoshi Tashiro <tashiro@roomsfor.hk>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-24 09:34+0000\n"
-"PO-Revision-Date: 2018-10-24 09:34+0000\n"
-"Last-Translator: Tim Siu Lai <tl@roomsfor.hk>, 2018\n"
+"POT-Creation-Date: 2018-12-19 08:20+0000\n"
+"PO-Revision-Date: 2018-08-24 09:21+0000\n"
+"Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>, 2019\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -297,7 +298,7 @@ msgstr "有効"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__active_move_line_ids
 msgid "Active Move Line"
-msgstr "ラインのアクティブな動き"
+msgstr "有効な移動明細"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__activity_ids
@@ -598,12 +599,12 @@ msgstr ""
 #: model:ir.actions.client,name:mrp.action_report_mrp_bom
 #, python-format
 msgid "BoM Structure & Cost"
-msgstr ""
+msgstr "BOM構成 & 費用"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 msgid "BoM Structure &amp; Cost"
-msgstr ""
+msgstr "BOM構成 &amp; 費用"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__type
@@ -1907,7 +1908,7 @@ msgstr "構成品利用可能性"
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__message_has_error
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "メッセージ配信エラー"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_ids
@@ -2230,7 +2231,7 @@ msgstr "オーダ"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__qty_production
 msgid "Original Production Quantity"
-msgstr "オリジナルの生産数量"
+msgstr "予定生産数量"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_workcenter_productivity_report
@@ -2456,7 +2457,7 @@ msgstr "優先度"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid "Process operations at specific work centers based on the routing"
-msgstr ""
+msgstr "工順に基づき特定の作業区で工程を処理"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__produce_line_ids
@@ -2567,6 +2568,7 @@ msgid "Product to Track"
 msgstr "プロダクトの追跡"
 
 #. module: mrp
+#: model:ir.model,name:mrp.model_mrp_production
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce__production_id
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
@@ -2592,7 +2594,6 @@ msgstr "製造ロケーション"
 
 #. module: mrp
 #: model:ir.actions.report,name:mrp.action_report_production_order
-#: model:ir.model,name:mrp.model_mrp_production
 #: model:ir.model.fields,field_description:mrp.field_stock_move_line__production_id
 #: model_terms:ir.ui.view,arch_db:mrp.stock_production_type_kanban
 msgid "Production Order"
@@ -2791,7 +2792,7 @@ msgstr "理由"
 #: model:ir.model,name:mrp.model_mrp_product_produce
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_product_produce_wizard
 msgid "Record Production"
-msgstr "記録 生産"
+msgstr "生産を記録"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_product_produce_line
@@ -3162,7 +3163,7 @@ msgstr "作業開始"
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_workcenter
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workorder_todo
 msgid "Start a new work order"
-msgstr ""
+msgstr "作業オーダーを始めましょう"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__state
@@ -3242,7 +3243,7 @@ msgstr "格納ファイル名"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid "Structure & Cost"
-msgstr ""
+msgstr "構成 & 費用"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__child_bom_id
@@ -3442,14 +3443,6 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_unbuild_move_line
 msgid "There's no product move yet"
-msgstr ""
-
-#. module: mrp
-#: code:addons/mrp/models/mrp_bom.py:78
-#, python-format
-msgid ""
-"This BoM is used in some Manufacturing Orders that are still open. You "
-"should rather archive this BoM and create a new one."
 msgstr ""
 
 #. module: mrp
@@ -3662,6 +3655,11 @@ msgid "Tracking"
 msgstr "追跡"
 
 #. module: mrp
+#: model:ir.model,name:mrp.model_stock_picking
+msgid "Transfer"
+msgstr "運送"
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__type
 msgid "Type"
 msgstr "タイプ"
@@ -3704,7 +3702,7 @@ msgstr "解体オーダ"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom_line
 msgid "Unfold"
-msgstr ""
+msgstr "展開"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__unit_factor
@@ -4401,8 +4399,8 @@ msgid "minute(s)"
 msgstr "分"
 
 #. module: mrp
-#: code:addons/mrp/report/mrp_report_bom_structure.py:224
 #: code:addons/mrp/report/mrp_report_bom_structure.py:234
+#: code:addons/mrp/report/mrp_report_bom_structure.py:244
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view

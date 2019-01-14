@@ -736,6 +736,7 @@ var IconWidget = MediaWidget.extend({
         this.$('div.font-icons-icons').html(
             QWeb.render('web_editor.dialog.font-icons.icons', {iconsParser: iconsParser})
         );
+        return $.when();
     },
 
     //--------------------------------------------------------------------------
@@ -1288,6 +1289,7 @@ var MediaDialog = Dialog.extend({
      * @private
      */
     _onPagerClick: function (ev) {
+        ev.preventDefault();
         this.active.goToPage(this.active.page + ($(ev.currentTarget).hasClass('previous') ? -1 : 1));
         this._updateControlPanel();
     },

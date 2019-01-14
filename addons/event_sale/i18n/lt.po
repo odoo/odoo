@@ -3,26 +3,26 @@
 # * event_sale
 # 
 # Translators:
-# digitouch UAB <digitouchagencyeur@gmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
-# Monika Raciunaite <monika.raciunaite@gmail.com>, 2017
-# Rolandas <info@paninfo.lt>, 2017
-# Audrius Palenskis <audrius.palenskis@gmail.com>, 2017
-# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2017
-# Antanas Muliuolis <an.muliuolis@gmail.com>, 2017
+# Martin Trigaux, 2018
+# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2018
+# Silvija Butko <silvija.butko@gmail.com>, 2018
+# Rolandas <info@paninfo.lt>, 2018
+# digitouch UAB <digitouchagencyeur@gmail.com>, 2018
+# Linas Versada <linaskrisiukenas@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:26+0000\n"
-"PO-Revision-Date: 2017-10-02 11:26+0000\n"
-"Last-Translator: Antanas Muliuolis <an.muliuolis@gmail.com>, 2017\n"
+"POT-Creation-Date: 2018-10-08 06:49+0000\n"
+"PO-Revision-Date: 2018-08-24 09:17+0000\n"
+"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2019\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: lt\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
@@ -30,19 +30,14 @@ msgid "Apply"
 msgstr "Taikyti"
 
 #. module: event_sale
-#: model:ir.model,name:event_sale.model_event_registration
-msgid "Attendee"
-msgstr "Dalyvis"
-
-#. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_seats_availability
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__seats_availability
 msgid "Available Seat"
-msgstr "Galima vieta"
+msgstr "Laisva vieta"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_seats_available
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__seats_available
 msgid "Available Seats"
-msgstr "Galimos vietos"
+msgstr "Laisvos vietos"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
@@ -50,14 +45,14 @@ msgid "Before confirming"
 msgstr "Prieš patvirtinant"
 
 #. module: event_sale
-#: model:ir.model.fields,help:event_sale.field_sale_order_line_event_id
+#: model:ir.model.fields,help:event_sale.field_sale_order_line__event_id
 msgid ""
 "Choose an event and it will automatically create a registration for this "
 "event."
 msgstr "Pasirinkite įvykį ir registraciją į jį susikurs automatiškai."
 
 #. module: event_sale
-#: model:ir.model.fields,help:event_sale.field_sale_order_line_event_ticket_id
+#: model:ir.model.fields,help:event_sale.field_sale_order_line__event_ticket_id
 msgid ""
 "Choose an event ticket and it will automatically create a registration for "
 "this event ticket."
@@ -66,70 +61,68 @@ msgstr ""
 "automatiškai."
 
 #. module: event_sale
-#: model:product.product,name:event_sale.event_2_product
-#: model:product.template,name:event_sale.event_2_product_product_template
-msgid "Conference on Business Applications"
-msgstr ""
-
-#. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_create_uid
-#: model:ir.model.fields,field_description:event_sale.field_registration_editor_create_uid
-#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_create_uid
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__create_uid
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor__create_uid
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__create_uid
 msgid "Created by"
 msgstr "Sukūrė"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_create_date
-#: model:ir.model.fields,field_description:event_sale.field_registration_editor_create_date
-#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_create_date
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__create_date
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor__create_date
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__create_date
 msgid "Created on"
 msgstr "Sukurta"
 
 #. module: event_sale
-#: model:ir.model.fields,help:event_sale.field_event_event_ticket_seats_max
+#: model:ir.model.fields,help:event_sale.field_event_event_ticket__seats_max
 msgid ""
 "Define the number of available tickets. If you have too much registrations "
 "you will not be able to sell tickets anymore. Set 0 to ignore this rule set "
 "as unlimited."
 msgstr ""
+"Nustatykite galimų bilietų skaičių. Jei turite per daug registracijų, "
+"nebegalėsite parduoti bilietų. Nustatykite 0, kad ignoruotumėte šią "
+"taisyklę."
 
 #. module: event_sale
-#: model:ir.model.fields,help:event_sale.field_product_product_event_ok
-#: model:ir.model.fields,help:event_sale.field_product_template_event_ok
-#: model:ir.model.fields,help:event_sale.field_sale_order_line_event_ok
-msgid ""
-"Determine if a product needs to create automatically an event registration "
-"at the confirmation of a sales order line."
-msgstr ""
-
-#. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_display_name
-#: model:ir.model.fields,field_description:event_sale.field_registration_editor_display_name
-#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_display_name
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__display_name
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor__display_name
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__display_name
 msgid "Display Name"
-msgstr "Vaizduojamas pavadinimas"
+msgstr "Rodomas pavadinimas"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_editor_id
+#: model:ir.model,name:event_sale.model_registration_editor
+msgid "Edit Attendee Details on Sales Confirmation"
+msgstr "Redaguoti dalyvio duomenis pardavimų patvirtinime"
+
+#. module: event_sale
+#: model:ir.model,name:event_sale.model_registration_editor_line
+msgid "Edit Attendee Line on Sales Confirmation"
+msgstr "Redaguoti dalyvio eilutę pardavimų patvirtinime"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__editor_id
 msgid "Editor"
 msgstr "Redaktorius"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_email
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__email
 msgid "Email"
 msgstr "El. paštas"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_event_event
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_event_id
-#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_event_id
-#: model:ir.model.fields,field_description:event_sale.field_sale_order_line_event_id
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__event_id
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__event_id
+#: model:ir.model.fields,field_description:event_sale.field_sale_order_line__event_id
 msgid "Event"
 msgstr "Įvykis"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_event_type
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_event_type_id
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__event_type_id
 msgid "Event Category"
 msgstr "Įvykio kategorija"
 
@@ -139,6 +132,7 @@ msgid "Event Name"
 msgstr "Įvykio pavadinimas"
 
 #. module: event_sale
+#: model:ir.model,name:event_sale.model_event_registration
 #: model:product.product,name:event_sale.product_product_event
 #: model:product.template,name:event_sale.product_product_event_product_template
 msgid "Event Registration"
@@ -151,82 +145,86 @@ msgstr "Įvykio registracijos"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_event_event_ticket
-#: model:ir.model.fields,field_description:event_sale.field_event_event_event_ticket_ids
-#: model:ir.model.fields,field_description:event_sale.field_event_registration_event_ticket_id
-#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_event_ticket_id
-#: model:ir.model.fields,field_description:event_sale.field_sale_order_line_event_ticket_id
+#: model:ir.model.fields,field_description:event_sale.field_event_event__event_ticket_ids
+#: model:ir.model.fields,field_description:event_sale.field_event_registration__event_ticket_id
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__event_ticket_id
+#: model:ir.model.fields,field_description:event_sale.field_sale_order_line__event_ticket_id
 msgid "Event Ticket"
 msgstr "Įvykio bilietas"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_product_product_event_ticket_ids
+#: model:ir.model.fields,field_description:event_sale.field_product_product__event_ticket_ids
 msgid "Event Tickets"
 msgstr "Įvykio bilietai"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_ticket_form_view
 msgid "Event's Ticket"
-msgstr "Įvykių bilietai"
+msgstr "Įvykio bilietas"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_product_template_form
+#: model:product.category,name:event_sale.product_category_events
 msgid "Events"
 msgstr "Įvykiai"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:226
+#: code:addons/event_sale/models/event.py:254
 #, python-format
 msgid "Free"
-msgstr "Laisva"
+msgstr "Nemokamas"
 
 #. module: event_sale
-#: model:product.product,name:event_sale.event_1_product
-#: model:product.template,name:event_sale.event_1_product_product_template
-msgid "Functional Webinar"
-msgstr "Funkcinis internetinis seminaras"
-
-#. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_id
-#: model:ir.model.fields,field_description:event_sale.field_registration_editor_id
-#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_id
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__id
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor__id
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__id
 msgid "ID"
 msgstr "ID"
 
 #. module: event_sale
+#: model:ir.model.fields,help:event_sale.field_product_template__event_ok
+#: model:ir.model.fields,help:event_sale.field_sale_order_line__event_ok
+msgid ""
+"If checked this product automatically creates an event registration at the "
+"sales order confirmation."
+msgstr ""
+"Jei pažymėta, šis produktas automatiškai sukuria įvykio registraciją "
+"patvirtinant pardavimo užsakymą."
+
+#. module: event_sale
 #: model:ir.model,name:event_sale.model_account_invoice
 msgid "Invoice"
-msgstr "Sąskaita faktūra"
+msgstr "Sąskaita-faktūra"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_is_expired
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__is_expired
 msgid "Is Expired"
-msgstr "Negalioja"
+msgstr "Yra nebegaliojantis"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_product_product_event_ok
-#: model:ir.model.fields,field_description:event_sale.field_product_template_event_ok
-#: model:ir.model.fields,field_description:event_sale.field_sale_order_line_event_ok
+#: model:ir.model.fields,field_description:event_sale.field_product_template__event_ok
+#: model:ir.model.fields,field_description:event_sale.field_sale_order_line__event_ok
 msgid "Is an Event Ticket"
-msgstr ""
+msgstr "Yra įvykio bilietas"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket___last_update
-#: model:ir.model.fields,field_description:event_sale.field_registration_editor___last_update
-#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line___last_update
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket____last_update
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor____last_update
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line____last_update
 msgid "Last Modified on"
 msgstr "Paskutinį kartą keista"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_write_uid
-#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_write_uid
-#: model:ir.model.fields,field_description:event_sale.field_registration_editor_write_uid
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__write_uid
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor__write_uid
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__write_uid
 msgid "Last Updated by"
 msgstr "Paskutinį kartą atnaujino"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_write_date
-#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_write_date
-#: model:ir.model.fields,field_description:event_sale.field_registration_editor_write_date
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__write_date
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor__write_date
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__write_date
 msgid "Last Updated on"
 msgstr "Paskutinį kartą atnaujinta"
 
@@ -236,87 +234,81 @@ msgid "Limited"
 msgstr "Ribotas"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_seats_max
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__seats_max
 msgid "Maximum Available Seats"
 msgstr "Daugiausia galimų vietų"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:222
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_name
-#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_name
+#: code:addons/event_sale/models/event.py:249
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__name
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__name
 #, python-format
 msgid "Name"
 msgstr "Pavadinimas"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:151
-#, python-format
-msgid "No more available seats for the ticket"
-msgstr "Daugiau galimų vietų šiam bilietui nėra"
-
-#. module: event_sale
-#: code:addons/event_sale/models/event.py:178
+#: code:addons/event_sale/models/event.py:205
 #, python-format
 msgid "No more available seats for this ticket"
-msgstr "Daugiau galimų vietų šiam bilietui nėra"
+msgstr "Daugiau laisų vietų šiam bilietui nėra"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:223
+#: code:addons/event_sale/models/event.py:152
+#, python-format
+msgid "No more available seats for this ticket type."
+msgstr "Šiam bilieto tipui nebėra laisvų vietų."
+
+#. module: event_sale
+#: code:addons/event_sale/models/event.py:250
 #, python-format
 msgid "None"
 msgstr "Nieko"
 
 #. module: event_sale
-#: model:product.product,name:event_sale.event_0_product
-#: model:product.template,name:event_sale.event_0_product_product_template
-msgid "Open Days in Los Angeles"
-msgstr "Atvirų durų dienos Los Andžele"
-
-#. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_ticket_form
 msgid "Origin"
-msgstr "Susijęs dokumentas"
+msgstr "Kilmė"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_registration_id
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__registration_id
 msgid "Original Registration"
-msgstr "Originali registracija"
+msgstr "Pradinė registracija"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:231
+#: code:addons/event_sale/models/event.py:259
 #, python-format
 msgid "Paid"
 msgstr "Apmokėta"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:232
+#: code:addons/event_sale/models/event.py:260
 #, python-format
 msgid "Payment"
 msgstr "Mokėjimas"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_phone
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__phone
 msgid "Phone"
 msgstr "Telefonas"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_price
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__price
 msgid "Price"
-msgstr "Suma"
+msgstr "Kaina"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_price_reduce
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__price_reduce
 msgid "Price Reduce"
 msgstr "Kainos mažinimas"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_price_reduce_taxinc
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__price_reduce_taxinc
 msgid "Price Reduce Tax inc"
-msgstr ""
+msgstr "Kainos mažinimas su mokesčiais"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_product_product
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_product_id
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__product_id
 msgid "Product"
 msgstr "Produktas"
 
@@ -326,66 +318,66 @@ msgid "Product Template"
 msgstr "Produkto šablonas"
 
 #. module: event_sale
-#: model:ir.model,name:event_sale.model_sale_order
-msgid "Quotation"
-msgstr "Įkainojimas"
-
-#. module: event_sale
-#: code:addons/event_sale/models/event.py:19
-#: code:addons/event_sale/models/event.py:32
+#: code:addons/event_sale/models/event.py:20
+#: code:addons/event_sale/models/event.py:33
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
 #, python-format
 msgid "Registration"
 msgstr "Registracija"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:33
-#: code:addons/event_sale/models/event.py:50
+#: code:addons/event_sale/models/event.py:34
+#: code:addons/event_sale/models/event.py:51
 #, python-format
 msgid "Registration for %s"
-msgstr ""
+msgstr "%s registracija"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_registration_ids
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__registration_ids
 msgid "Registrations"
 msgstr "Registracijos"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_registration_editor_event_registration_ids
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor__event_registration_ids
 msgid "Registrations to Edit"
-msgstr ""
+msgstr "Registracijos redagavimui"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_seats_reserved
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__seats_reserved
 msgid "Reserved Seats"
 msgstr "Rezervuotos vietos"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_deadline
+#: model:ir.model,name:event_sale.model_sale_order
+msgid "Sale Order"
+msgstr "Pardavimo užsakymas"
+
+#. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__deadline
 msgid "Sales End"
 msgstr "Pardavimų pabaiga"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_registration_editor_sale_order_id
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor__sale_order_id
 msgid "Sales Order"
 msgstr "Pardavimo užsakymas"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_sale_order_line
-#: model:ir.model.fields,field_description:event_sale.field_event_registration_sale_order_line_id
-#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_sale_order_line_id
+#: model:ir.model.fields,field_description:event_sale.field_event_registration__sale_order_line_id
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__sale_order_line_id
 msgid "Sales Order Line"
 msgstr "Pardavimo užsakymo eilutė"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_seats_used
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__seats_used
 msgid "Seats Used"
-msgstr ""
+msgstr "Naudojamos vietos"
 
 #. module: event_sale
 #: model:event.type,name:event_sale.event_type_data_sale
 msgid "Sell Online"
-msgstr ""
+msgstr "Parduoti internetu"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
@@ -393,32 +385,24 @@ msgid "Skip"
 msgstr "Praleisti"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_registration_sale_order_id
+#: model:ir.model.fields,field_description:event_sale.field_event_registration__sale_order_id
 msgid "Source Sales Order"
-msgstr ""
+msgstr "Pirminis pardavimo užsakymas"
 
 #. module: event_sale
 #: model:event.event.ticket,name:event_sale.event_0_ticket_1
-#: model:event.event.ticket,name:event_sale.event_1_ticket_1
 #: model:event.event.ticket,name:event_sale.event_2_ticket_1
-#: model:event.event.ticket,name:event_sale.event_3_ticket_1
 msgid "Standard"
 msgstr "Standartinis"
 
 #. module: event_sale
-#: model:product.product,name:event_sale.event_3_product
-#: model:product.template,name:event_sale.event_3_product_product_template
-msgid "Technical Training"
-msgstr "Techniniai mokymai"
-
-#. module: event_sale
-#: code:addons/event_sale/models/event.py:229
+#: code:addons/event_sale/models/event.py:257
 #, python-format
 msgid "The registration must be paid"
-msgstr ""
+msgstr "Registracija turi būti apmokėta"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:223
+#: code:addons/event_sale/models/event.py:250
 #, python-format
 msgid "Ticket"
 msgstr "Bilietas"
@@ -430,57 +414,68 @@ msgid "Ticket Type"
 msgstr "Bilieto tipas"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:156
+#: code:addons/event_sale/models/event.py:157
 #, python-format
-msgid "Ticket should belong to either event category or event but not both"
-msgstr ""
+msgid "Ticket cannot belong to both the event category and the event itself."
+msgstr "Bilietas negali priklausyti ir įvykio kategorijai, ir pačiam įvykiui."
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_type_use_ticketing
+#: model:ir.model.fields,field_description:event_sale.field_event_type__use_ticketing
 msgid "Ticketing"
-msgstr ""
+msgstr "Bilietavimas"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_type_event_ticket_ids
+#: model:ir.model.fields,field_description:event_sale.field_event_type__event_ticket_ids
 #: model_terms:ir.ui.view,arch_db:event_sale.event_type_view_form_inherit_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_form_inherit_ticket
 msgid "Tickets"
 msgstr "Bilietai"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:228
+#: code:addons/event_sale/models/event.py:256
 #, python-format
 msgid "To pay"
-msgstr "Mokėti"
+msgstr "Apmokėti"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_seats_unconfirmed
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket__seats_unconfirmed
 msgid "Unconfirmed Seat Reservations"
-msgstr "Nepatvirtintos vietų registracijos"
+msgstr "Nepatvirtintos vietų rezervacijos"
+
+#. module: event_sale
+#: model:product.product,uom_name:event_sale.product_product_event
+#: model:product.template,uom_name:event_sale.product_product_event_product_template
+msgid "Unit(s)"
+msgstr "Vienetas (-ai)"
 
 #. module: event_sale
 #: selection:event.event.ticket,seats_availability:0
 msgid "Unlimited"
-msgstr "Be limito"
+msgstr "Neribotai"
 
 #. module: event_sale
 #: model:event.event.ticket,name:event_sale.event_0_ticket_2
 #: model:event.event.ticket,name:event_sale.event_2_ticket_2
-#: model:event.event.ticket,name:event_sale.event_3_ticket_2
 msgid "VIP"
 msgstr "VIP"
 
 #. module: event_sale
+#: model:product.product,weight_uom_name:event_sale.product_product_event
+#: model:product.template,weight_uom_name:event_sale.product_product_event_product_template
+msgid "kg"
+msgstr "kg"
+
+#. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
 msgid "please give details about the registrations"
-msgstr "prašome suteikti detalių apie registracijas"
+msgstr "prašome pateikti informaciją apie registracijas"
 
 #. module: event_sale
-#: model:ir.model,name:event_sale.model_registration_editor
-msgid "registration.editor"
-msgstr "registration.editor"
+#: model_terms:ir.ui.view,arch_db:event_sale.view_event_form_inherit_ticket
+msgid "reserved +"
+msgstr "rezervuota +"
 
 #. module: event_sale
-#: model:ir.model,name:event_sale.model_registration_editor_line
-msgid "registration.editor.line"
-msgstr "registration.editor.line"
+#: model_terms:ir.ui.view,arch_db:event_sale.view_event_form_inherit_ticket
+msgid "unconfirmed"
+msgstr "nepatvirtinta"

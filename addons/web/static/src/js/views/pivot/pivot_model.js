@@ -457,16 +457,23 @@ var PivotModel = AbstractModel.extend({
      * @param {any} col_id
      * @param {any} measure
      * @param {any} descending
+     * @param {'data'|'comparisonData'|'variation'} [dataType]
      */
-    sortRows: function (col_id, measure, descending) {
+    sortRows: function (col_id, measure, descending, dataType) {
         var cells = this.data.cells;
+        var comparisonFunction = compare;
+        if (this.data.compare) {
+            dataType = dataType || 'data';
+            comparisonFunction = specialCompare;
+        }
         this._traverseTree(this.data.main_row.root, function (header) {
-            header.children.sort(compare);
+            header.children.sort(comparisonFunction);
         });
         this.data.sorted_column = {
             id: col_id,
             measure: measure,
             order: descending ? 'desc' : 'asc',
+            dataType: dataType,
         };
         function _getValue (id1, id2) {
             if ((id1 in cells) && (id2 in cells[id1])) {
@@ -476,11 +483,25 @@ var PivotModel = AbstractModel.extend({
         }
 
         function compare (row1, row2) {
-            var values1 = _getValue(row1.id, col_id),
-                values2 = _getValue(row2.id, col_id),
-                value1 = values1 ? values1[measure] : 0,
-                value2 = values2 ? values2[measure] : 0;
+            var values1 = _getValue(row1.id, col_id);
+            var values2 = _getValue(row2.id, col_id);
+            var value1 = values1 ? values1[measure] : 0;
+            var value2 = values2 ? values2[measure] : 0;
             return descending ? value1 - value2 : value2 - value1;
+        }
+        function specialCompare (row1, row2) {
+            var values1 = _getValue(row1.id, col_id);
+            var values2 = _getValue(row2.id, col_id);
+            var value1 = values1 ? values1[measure] : {data: 0, comparisonData: 0, variation: {magnitude: 0}};
+            var value2 = values2 ? values2[measure] : {data: 0, comparisonData: 0, variation: {magnitude: 0}};
+            if (dataType === 'variation') {
+                return descending ?
+                        value1[dataType].magnitude - value2[dataType].magnitude:
+                        value2[dataType].magnitude - value1[dataType].magnitude;
+            }
+            return descending ?
+                        value1[dataType] - value2[dataType]:
+                        value2[dataType] - value1[dataType];
         }
     },
     /**

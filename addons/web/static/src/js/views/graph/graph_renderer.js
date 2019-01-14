@@ -210,6 +210,10 @@ return AbstractRenderer.extend({
           margin: {left: 80, bottom: 100, top: 80, right: 0},
           delay: 100,
           transition: 10,
+          controlLabels: {
+            'grouped': _t('Grouped'),
+            'stacked': _t('Stacked'),
+          },
           showLegend: _.size(data) <= MAX_LEGEND_LENGTH,
           showXAxis: true,
           showYAxis: true,
@@ -332,8 +336,8 @@ return AbstractRenderer.extend({
         var self = this;
 
         // Remove Undefined of first GroupBy
-        var graphData = _.filter(this.state.data, function(elem){
-            return elem.labels[0] !== undefined;
+        var graphData = _.filter(this.state.data, function (elem) {
+            return elem.labels[0] !== undefined && elem.labels[0] !== _t("Undefined");
         });
 
         // undefined label value becomes a string 'Undefined' translated
@@ -386,10 +390,9 @@ return AbstractRenderer.extend({
             var tick = 0;
             var serie, tickLabel;
             var identity = function (p) {return p;};
-
-            for (var i = 0; i < this.state.data.length; i++) {
+            for (var i = 0; i < graphData.length; i++) {
                 if (graphData[i].labels[0] !== tickLabel) {
-                    tickLabel = this.state.data[i].labels[0];
+                    tickLabel = graphData[i].labels[0];
                     ticksLabels.push(tickLabel);
                     tick++;
                 }

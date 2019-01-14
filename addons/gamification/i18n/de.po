@@ -3,15 +3,17 @@
 # * gamification
 # 
 # Translators:
+# Wolfgang Taferner, 2018
 # Martin Trigaux, 2018
 # Johannes Croe <jcr@odoo.com>, 2018
 # Marco Tarsia <marco.y.tarsia@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 06:49+0000\n"
-"PO-Revision-Date: 2018-10-08 06:49+0000\n"
+"POT-Creation-Date: 2018-12-19 08:21+0000\n"
+"PO-Revision-Date: 2018-08-24 09:18+0000\n"
 "Last-Translator: Marco Tarsia <marco.y.tarsia@gmail.com>, 2018\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
@@ -285,7 +287,7 @@ msgid ""
 "                                        <tr><td style=\"padding:0 30px;\">\n"
 "                                            <table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\" style=\"table-layout: fixed;\">\n"
 "                                                <tr>\n"
-"                                                    % set top_goals = [line['goals'][1], line['goals'][0], line['goals'][2]]\n"
+"                                                    % set top_goals = line['goals'][:3]\n"
 "                                                    % for goal in top_goals:\n"
 "                                                        <td align=\"center\" style=\"width:32%;\">\n"
 "                                                            % if loop.index == 1:\n"
@@ -1844,7 +1846,7 @@ msgstr "Ziel starten"
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_search_view
 #: model_terms:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "State"
-msgstr "Bundesland"
+msgstr "Status"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_form_view

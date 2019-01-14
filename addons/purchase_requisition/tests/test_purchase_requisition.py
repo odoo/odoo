@@ -295,3 +295,49 @@ class TestPurchaseRequisition(common.TransactionCase):
         ])
         order_line._onchange_quantity()
         self.assertEqual(order_line.price_unit, 50, 'The supplier info chosen should be the one without requisition id')
+
+    def test_06_purchase_requisition(self):
+        """ Create a blanquet order for a product and a vendor already linked via
+        a supplier info"""
+        product = self.env['product.product'].create({
+            'name': 'test6',
+        })
+        product2 = self.env['product.product'].create({
+            'name': 'test6',
+        })
+        vendor = self.env['res.partner'].create({
+            'name': 'vendor6',
+        })
+        supplier_info = self.env['product.supplierinfo'].create({
+            'product_id': product.id,
+            'name': vendor.id,
+        })
+
+        # create a empty blanquet order
+        requisition_type = self.env['purchase.requisition.type'].create({
+            'name': 'Blanket test',
+            'quantity_copy': 'none'
+        })
+        line1 = (0, 0, {
+            'product_id': product2.id,
+            'product_uom_id': product2.uom_po_id.id,
+            'price_unit': 41,
+            'product_qty': 10,
+        })
+        requisition_blanket = self.env['purchase.requisition'].create({
+            'line_ids': [line1],
+            'type_id': requisition_type.id,
+            'vendor_id': vendor.id,
+        })
+        requisition_blanket.action_in_progress()
+        self.env['purchase.requisition.line'].create({
+            'product_id': product.id,
+            'product_qty': 14.0,
+            'requisition_id': requisition_blanket.id,
+            'price_unit': 10,
+        })
+        new_si = self.env['product.supplierinfo'].search([
+            ('product_id', '=', product.id),
+            ('name', '=', vendor.id)
+        ]) - supplier_info
+        self.assertEqual(new_si.purchase_requisition_id, requisition_blanket, 'the blanket order is not linked to the supplier info')

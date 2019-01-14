@@ -12,11 +12,11 @@
 # Henry Zhou <zhouhenry@live.com>, 2018
 # n37r06u3 <n37r06u3@gmail.com>, 2018
 # Gang LIU <liu9ang@hotmail.com>, 2018
+# e2f_cn r14 <e2f_cn_r14@outlook.com>, 2018
 # 卓忆科技 <zhanghao@jointd.com>, 2018
 # glovebx <ruinning@163.com>, 2018
 # Zamba Lee <zambalee@gmail.com>, 2018
 # 朱仁杰 <johnson19960308@gmail.com>, 2018
-# e2f_cn r14 <e2f_cn_r14@outlook.com>, 2018
 # zpq001 <zpq001@live.com>, 2018
 # e2f_cn c7 <e2f_cn_c7@outlook.com>, 2018
 # e2f <projects@e2f.com>, 2018
@@ -29,7 +29,6 @@
 # xiaobin wu <bd5dml@gmail.com>, 2018
 # Joray <13637815@qq.com>, 2018
 # Eddie Lim <bhweelim@yahoo.com>, 2018
-# e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
 # John Lin <linyinhuan@139.com>, 2018
 # 老窦 北京 <2662059195@qq.com>, 2018
 # Lisa Zhang <lzh@odoo.com>, 2018
@@ -45,28 +44,30 @@
 # neter ji <jifuyi@qq.com>, 2018
 # Youfu Sheng <wdmsyf@sina.com>, 2018
 # diaojiaolou <124412206@qq.com>, 2018
-# inspur qiuguodong <qiuguodong@inspur.com>, 2018
 # xu xiaohu <xu.xiaohu@gmail.com>, 2018
 # niulin lnc. <admin@niulin.net>, 2018
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
 # 湘子 南 <1360857908@qq.com>, 2018
-# Martin Trigaux, 2018
 # 菜小蛇 <lttlsnk@gmail.com>, 2018
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2018
-# F4NNIU <sparkamax@gmail.com>, 2018
 # snow wang <147156565@qq.com>, 2018
+# F4NNIU <sparkamax@gmail.com>, 2018
 # rejen he <251442037@qq.com>, 2018
-# liAnGjiA <liangjia@qq.com>, 2018
 # 卫安琪 <weianqi1991@gmail.com>, 2018
 # 广州救火 <7017511@qq.com>, 2018
+# jian liu <lj1989419@gmail.com>, 2018
+# Martin Trigaux, 2018
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
+# liAnGjiA <liangjia@qq.com>, 2018
+# e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
+# inspur qiuguodong <qiuguodong@inspur.com>, 2018
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 07:02+0000\n"
+"POT-Creation-Date: 2018-12-19 08:47+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
-"Last-Translator: 广州救火 <7017511@qq.com>, 2018\n"
+"Last-Translator: inspur qiuguodong <qiuguodong@inspur.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -103,34 +104,20 @@ msgid ""
 "\n"
 "\n"
 "Add Structured Communication to customer invoices.\n"
-"---------------------------------------------------------------------------------------------------------------------\n"
+"--------------------------------------------------\n"
 "\n"
-"Using BBA structured communication simplifies the reconciliation between invoices and payments.        \n"
+"Using BBA structured communication simplifies the reconciliation between invoices and payments.\n"
 "You can select the structured communication as payment communication in Invoicing/Accounting settings.\n"
 "Three algorithms are suggested:\n"
+"\n"
 "    1) Random : +++RRR/RRRR/RRRDD+++\n"
 "        **R..R =** Random Digits, **DD =** Check Digits\n"
 "    2) Date : +++DOY/YEAR/SSSDD+++\n"
 "        **DOY =** Day of the Year, **SSS =** Sequence Number, **DD =** Check Digits\n"
 "    3) Customer Reference +++RRR/RRRR/SSSDDD+++\n"
-"        **R..R =** Customer Reference without non-numeric characters, **SSS =** Sequence Number, **DD =** Check Digits  \n"
+"        **R..R =** Customer Reference without non-numeric characters, **SSS =** Sequence Number, **DD =** Check Digits\n"
 "    "
 msgstr ""
-"\n"
-"\n"
-"将结构化通信添加到客户发票。\n"
-"---------------------------------------------------------------------------------------------------------------------\n"
-"\n"
-"使用BBA结构化通信简化了发票和付款之间的对账。        \n"
-"您可以在开票/会计设置中选择结构化通信作为支付通信。\n"
-"建议使用三种算法:\n"
-"    1) 随机 : +++RRR/RRRR/RRRDD+++\n"
-"        **R..R =** 随机数字, **DD =** 校验数字\n"
-"    2) 日期: +++DOY/YEAR/SSSDD+++\n"
-"        **DOY =** 年内天数, **SSS =** 序列号, **DD =** 校验数字\n"
-"    3) 客户参考 +++RRR/RRRR/SSSDDD+++\n"
-"        **R..R =** 无数字字母客户参考, **SSS =** 序列号, **DD =** 校验数字  \n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_reprint
@@ -678,6 +665,14 @@ msgstr ""
 "        建立起HR和运维的桥梁."
 
 #. module: base
+#: model:ir.module.module,description:base.module_sale_intrastat
+msgid ""
+"\n"
+"        Bridge module between sale and intrastat.\n"
+"    "
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_account_taxcloud
 msgid ""
 "\n"
@@ -932,7 +927,7 @@ msgstr ""
 "\n"
 "        在“注册付款”向导中选择银行账户时，\n"
 "        针对未付清发票，还可以使用专用的“SEPA 直接付款”付款方式。\n"
-"        如果您在验证后为其所有者添加了授权，则可以使用其为发票\n"
+"        如果您在验证后为其货主添加了授权，则可以使用其为发票\n"
 "       生成 SDD 付款。如果您尝试在没有被赋予授权的发票上使用此方法，\n"
 "       您将看到一条错误消息，其付款方式可能无法使用。\n"
 "    "
@@ -1162,6 +1157,15 @@ msgstr ""
 " 印度的 PayuMoney 付款收单方。\n"
 "\n"
 " PayUmoney 支付网关仅支持 INR 货币。\n"
+
+#. module: base
+#: model:ir.module.module,summary:base.module_l10n_mx_tax_cash_basis
+msgid ""
+"\n"
+"    Properly create the Journal Entries on Tax Cash basis when using foreign\n"
+"    currencies the Tax must be set at date of payment\n"
+"    "
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_forecast
@@ -1702,7 +1706,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"为产品添加电子邮件模板，可供发送发票时使用。\n"
+"为产品添加EMail模板，可供发送发票时使用。\n"
 "有了这个模块，可以把产品相关的模板以发送完整的信息发给你的客户。\n"
 "例如为培训开票的时候，培训日程和材料将被自动发送到你的客户。“"
 
@@ -1771,6 +1775,14 @@ msgstr ""
 "由公司来定义链接到哪个服务器\n"
 "(默认是 http://etherpad.com/).\n"
 "    "
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_be_intrastat_2019
+msgid ""
+"\n"
+"Adds the possibility to specify the origin country of goods and the partner VAT in the Intrastat XML report.\n"
+"    "
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_calendar
@@ -2322,31 +2334,13 @@ msgid ""
 "Legal\n"
 "-----\n"
 "**The use of pos_blackbox_be sources is only certified on odoo.com SaaS platform\n"
-"for version 9.0.**\n"
+"for version 11.0.** Contact Odoo SA before installing pos_blackbox_be module.\n"
+"\n"
 "An obfuscated and certified version of the pos_blackbox_be may be provided on\n"
 "requests for on-premise installations.\n"
 "No modified version is certified and supported by Odoo SA.\n"
 "    "
 msgstr ""
-"\n"
-"已注册的比利时收银机\n"
-"================================\n"
-"\n"
-"此模块将销售点模块变成已认证的比利时收银机。\n"
-"\n"
-"详细信息：\n"
-"  * http://www.systemedecaisseenregistreuse.be/\n"
-"  * http://www.geregistreerdkassasysteem.be/\n"
-"\n"
-"Legal\n"
-"-----\n"
-"**仅在 odoo.com SaaS 平台的版本 9.0 上认证\n"
-" pos_blackbox_be 源的使用。**\n"
-"可能会在预置安装请求上\n"
-"提供 pos_blackbox_be\n"
-"的混淆和认证版本。\n"
-"Odoo SA 不支持和认证修改的版本。\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_bo
@@ -2927,6 +2921,16 @@ msgstr ""
 " 允许用户生成墨西哥发票 EDI 文档。\n"
 "\n"
 " 此模块支持创建EDI 文档以及与墨西哥认证提供者 (PACs) 的交流，以签署/将其取消。\n"
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_mx_edi_payment_bank
+msgid ""
+"\n"
+"EDI Mexican Localization\n"
+"========================\n"
+"Allow the user to select the bank account that was used the customer to paid the invoices.\n"
+"    "
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_hw_escpos
@@ -4269,7 +4273,7 @@ msgstr ""
 " 支付跟进/发送邮件和信件\n"
 "\n"
 " 它将根据所定义的催收级别不同\n"
-" 生成 PDF/发送电子邮件/ 设置手动操作。可为不同的公司定义不同的策略。 \n"
+" 生成 PDF/发送EMail/ 设置手动操作。可为不同的公司定义不同的策略。 \n"
 "\n"
 
 #. module: base
@@ -4362,7 +4366,7 @@ msgstr ""
 "\n"
 "在CODA处理的结果中移除一个对象将导致相关对象的移除。 一个包含多个银行报表的CODA文件的移除，也将删除与此文件相关的报表.\n"
 "\n"
-"取而代之的是产生银行对帐单手动调节，也可以重新导入CODA与信息更新的OpenERP数据库后失踪允许自动调节.\n"
+"取而代之的是产生银行对帐单手动核销，也可以重新导入CODA与信息更新的OpenERP数据库后失踪允许自动核销.\n"
 "\n"
 "下面的逻辑已经在CODA处理实现：\n"
 "~~~~~~~~~~~~~~~~~~~~~~~~~~\n"
@@ -4726,7 +4730,7 @@ msgstr ""
 "关键功能\n"
 "------------\n"
 "* 管理您的活动和登记\n"
-"* 使用电子邮件自动确认，并向所有活动注册用户发送致谢信\n"
+"* 使用EMail自动确认，并向所有活动注册用户发送致谢信\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_pa
@@ -5053,15 +5057,15 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"在 POP/IMAP 服务器上检索收到的电子邮件。\n"
+"在 POP/IMAP 服务器上检索收到的EMail。\n"
 "============================================\n"
 "\n"
 "输入您的 POP/IMAP 账户参数，并且会自动将\n"
-"这些账户上所收到的电子邮件下载至您的 Odoo 系统。支持所有的\n"
+"这些账户上所收到的EMail下载至您的 Odoo 系统。支持所有的\n"
 "POP3/IMAP-兼容服务器，包括需要\n"
 "加密的 SSL/TLS 连接的服务器。\n"
 "\n"
-"可用其为许多启用电子邮件的 Odoo 文档轻松创建基于电子邮件的工作流，例如：\n"
+"可用其为许多启用EMail的 Odoo 文档轻松创建基于EMail的工作流，例如：\n"
 "----------------------------------------------------------------------------------------------------------\n"
 "    * CRM 线索/商机\n"
 "    * CRM 索赔\n"
@@ -5070,9 +5074,9 @@ msgstr ""
 "    * 人力资源 招聘（应用程序）\n"
 "\n"
 "只需安装相关的应用程序，便可将这些文档\n"
-"类型（线索、工程问题）中的任何一种文档分配到您用于接收电子邮件的账户。新的电子邮件将\n"
+"类型（线索、工程问题）中的任何一种文档分配到您用于接收EMail的账户。新的EMail将\n"
 " 自动生成新的所选类型文档，因此，很容易创建\n"
-"Odoo 集成邮箱。更好的是：这些文档会直接充当通过电子邮件进行同步的微型\n"
+"Odoo 集成邮箱。更好的是：这些文档会直接充当通过EMail进行同步的微型\n"
 "会话。您可以收到 Odoo 内部的回复， 并\n"
 "在收到回复时自动收集答案，且将其附加到\n"
 "相同的 *对话* 文档。\n"
@@ -5175,6 +5179,15 @@ msgstr ""
 " 本地邮政公司发货。\n"
 "\n"
 " 请参阅：https://www.bpost.be/portal/goHome\n"
+
+#. module: base
+#: model:ir.module.module,description:base.module_delivery_hs_code
+msgid ""
+"\n"
+"Set back field hs_code on pruduct template.\n"
+"==============================================================\n"
+"\n"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_analytic_default
@@ -5392,7 +5405,7 @@ msgstr ""
 "\n"
 "瑞士本地化\n"
 "==================\n"
-"此模块会定义瑞士（瑞士 PME/KMU 2015）科目表、税收，并在打印发票或通过电邮发送时启生成 ISR 。\n"
+"此模块会定义瑞士（瑞士 PME/KMU 2015）科目表、税收，并在打印发票或通过EMail发送时启生成 ISR 。\n"
 "\n"
 "如果你指定了其所需要的信息，则将会生成 ISR：\n"
 " －必须设置您希望进行支付的银行账户，并具有有效的邮政参考。\n"
@@ -6439,24 +6452,15 @@ msgid ""
 "-----------------\n"
 "This module supports the three most common check formats and will work out of the box with the linked checks from checkdepot.net.\n"
 "\n"
-"- Check on top: Quicken / QuickBooks standard (https://www.checkdepot.net/checks/checkorder/59209.htm)\n"
-"- Check on middle: Peachtree standard (https://www.checkdepot.net/checks/checkorder/513791.htm)\n"
+"View all checks at: https://www.checkdepot.net/checks/laser/Odoo.htm\n"
+"\n"
+"You can choose between:\n"
+"\n"
+"- Check on top: Quicken / QuickBooks standard (https://www.checkdepot.net/checks/checkorder/laser_topcheck.htm)\n"
+"- Check on middle: Peachtree standard (https://www.checkdepot.net/checks/checkorder/laser_middlecheck.htm)\n"
 "- Check on bottom: ADP standard (https://www.checkdepot.net/checks/checkorder/laser_bottomcheck.htm)\n"
 "    "
 msgstr ""
-"\n"
-"此模块允许在预制支票纸张上打印您的付款情况。\n"
-"您可以在公司设置中配置输出（布局、存根信息等），并在日记账设置中管理\n"
-"支票编号（如果使用无编号的预制支票）。\n"
-"\n"
-"支持的格式\n"
-"-----------------\n"
-"该模块支持三种最常见的检查格式，并将与CuffDePO.NET打通。\n"
-"\n"
-"- 支票头部: Quicken / QuickBooks standard (https://www.checkdepot.net/checks/checkorder/59209.htm)\n"
-"- 支票内容: Peachtree standard (https://www.checkdepot.net/checks/checkorder/513791.htm)\n"
-"- 支票按钮: ADP standard (https://www.checkdepot.net/checks/checkorder/laser_bottomcheck.htm)\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ca_check_printing
@@ -6652,7 +6656,7 @@ msgid ""
 msgstr ""
 "\n"
 "该模块带来了一个带有邮件列表小功能的新构建模块，可以放在您网站的任何页面上。\n"
-"只需单击一下，您的访问者就可以订阅在Email Marketing应用中管理的邮件列表。\n"
+"只需单击一下，您的访问者就可以订阅在EMail Marketing应用中管理的邮件列表。\n"
 "    "
 
 #. module: base
@@ -7258,7 +7262,7 @@ msgstr ""
 "*库存计价（定期或自动）\n"
 "*从拣货开票\n"
 "\n"
-"仓库管理仪表板/报告包括：\n"
+"库存管理仪表板/报告包括：\n"
 "------------------------------------------------------ \n"
 "*对给定的日期（在过去的日期）的库存计价"
 
@@ -7752,6 +7756,11 @@ msgid ""
 msgstr "<span class=\"o_form_label\">我们提议重载菜单来查看新菜单 (Ctrl+T 然后 Ctrl+R).\"</span>"
 
 #. module: base
+#: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
+msgid "<span class=\"text-white text-uppercase\">Danger Zone</span>"
+msgstr "<span class=\"text-white text-uppercase\">危险区域</span>"
+
+#. module: base
 #: model_terms:ir.ui.view,arch_db:base.sequence_view
 msgid ""
 "<span colspan=\"2\">Current Year with Century: %(year)s</span>\n"
@@ -7841,7 +7850,7 @@ msgstr "<strong>依赖:</strong>"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_company_kanban
 msgid "<strong>Email:</strong>"
-msgstr "<strong>电子邮件地址：</strong>"
+msgstr "<strong>EMail地址：</strong>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -8983,10 +8992,21 @@ msgid "Active"
 msgstr "有效"
 
 #. module: base
+#: selection:ir.actions.act_window.view,view_mode:0
+#: selection:ir.ui.view,type:0
+msgid "Activity"
+msgstr "有效"
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence__number_next_actual
 #: model:ir.model.fields,field_description:base.field_ir_sequence_date_range__number_next_actual
 msgid "Actual Next Number"
 msgstr "确切的下一号码"
+
+#. module: base
+#: selection:ir.actions.server,state:0
+msgid "Add Followers"
+msgstr "添加关注者"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mail_bot
@@ -9330,7 +9350,7 @@ msgstr "所有"
 msgid ""
 "All contacts must have the same email. Only the Administrator can merge "
 "contacts with different emails."
-msgstr "所有联系人都必须具有相同的电子邮件。只有管理员可以合并不同电子邮件的联系人。"
+msgstr "所有联系人都必须具有相同的EMail。只有管理员可以合并不同EMail的联系人。"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_step
@@ -9343,7 +9363,7 @@ msgstr "全部搞定!"
 msgid ""
 "All the emails and documents sent to this contact will be translated in this"
 " language."
-msgstr "发送到该联系人的所有电子邮件和文件将以这种语言翻译。"
+msgstr "发送到该联系人的所有EMail和文件将以这种语言翻译。"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_holidays
@@ -9401,13 +9421,6 @@ msgid ""
 "Allows you to create your invoices and track the payments. It is an easier "
 "version of the accounting module for managers who are not accountants."
 msgstr "允许你创建发票，以及跟踪付款。这是为不是会计师的管理人员准备的简化版会计模块。"
-
-#. module: base
-#: model_terms:ir.actions.act_window,help:base.action_attachment
-msgid ""
-"Also you will find here all the related documents and download it by "
-"clicking on any individual document."
-msgstr "您还可以在此处找到所有相关文档，并通过单击任何单个文档进行下载。"
 
 #. module: base
 #: code:addons/base/models/ir_fields.py:394
@@ -9619,11 +9632,6 @@ msgid ""
 msgstr "你确定要执行自动合并列表联系人？"
 
 #. module: base
-#: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
-msgid "Are you sure you want to load demo data?"
-msgstr "您确定要加载演示数据么？"
-
-#. module: base
 #: model:res.country,name:base.ar
 msgid "Argentina"
 msgstr "阿根廷"
@@ -9680,6 +9688,11 @@ msgid "At least one language must be active."
 msgstr "至少要激活一种语言."
 
 #. module: base
+#: model_terms:ir.actions.act_window,help:base.action_attachment
+msgid "Attach a new document"
+msgstr ""
+
+#. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_search
 msgid "Attached Document Name"
 msgstr "附加文档名称"
@@ -9690,7 +9703,6 @@ msgid "Attached To"
 msgstr "附加于"
 
 #. module: base
-#: model:ir.model,name:base.model_ir_attachment
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_search
 msgid "Attachment"
 msgstr "附件"
@@ -9776,6 +9788,11 @@ msgstr "Authorize.Net付款收单方"
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__auto_search
 msgid "Auto Search"
 msgstr "自动搜索"
+
+#. module: base
+#: selection:ir.actions.server,usage:0
+msgid "Automated Action"
+msgstr "自动动作"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_automation
@@ -9957,6 +9974,16 @@ msgid "Bank account"
 msgstr "银行账户"
 
 #. module: base
+#: model:ir.module.module,summary:base.module_l10n_mx_edi_payment_bank
+msgid "Bank account in the payments"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_mx_edi_payment_bank
+msgid "Bank account payment to Mexico"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,help:base.field_res_partner_bank__acc_type
 msgid ""
 "Bank account type: Normal or IBAN. Inferred from the bank account number."
@@ -10134,6 +10161,11 @@ msgstr "白俄罗斯"
 #: model:ir.module.module,shortdesc:base.module_l10n_be_intrastat
 msgid "Belgian Intrastat Declaration"
 msgstr "比利时国际间组织申报"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_be_intrastat_2019
+msgid "Belgian Intrastat Declaration - Complement for 2019"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_blackbox_be
@@ -11405,7 +11437,7 @@ msgstr "哥斯达黎加-会计"
 #: code:addons/base/models/res_partner.py:654
 #, python-format
 msgid "Couldn't create contact without email address!"
-msgstr "不能建立没有电子邮件地址的联系人！"
+msgstr "不能建立没有EMail地址的联系人！"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model__count
@@ -11511,6 +11543,11 @@ msgid "Create Menu Wizard"
 msgstr "创建菜单向导"
 
 #. module: base
+#: selection:ir.actions.server,state:0
+msgid "Create Next Activity"
+msgstr "创建新活动"
+
+#. module: base
 #: model:ir.module.module,summary:base.module_crm_project
 msgid "Create Tasks from Leads"
 msgstr "从潜在客户创建任务"
@@ -11560,11 +11597,6 @@ msgstr "创建一个新联系人标签"
 #: model_terms:ir.actions.act_window,help:base.action_partner_form
 msgid "Create a new customer in your address book"
 msgstr "在你的地址簿中创建一个联系人"
-
-#. module: base
-#: model_terms:ir.actions.act_window,help:base.action_attachment
-msgid "Create a new document"
-msgstr "创建一个新文档"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.res_partner_industry_action
@@ -12012,8 +12044,8 @@ msgstr "D 电力，煤气，蒸汽和供暖"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_dhl
-msgid "DHL Shipping"
-msgstr "DHL 送货"
+msgid "DHL Express Shipping"
+msgstr ""
 
 #. module: base
 #: selection:report.paperformat,format:0
@@ -12146,6 +12178,27 @@ msgid "Days"
 msgstr "天"
 
 #. module: base
+#: model:res.company,overdue_msg:base.main_company
+msgid ""
+"Dear Sir/Madam,\n"
+"\n"
+"Our records indicate that some payments on your account are still due. Please find details below.\n"
+"If the amount has already been paid, please disregard this notice. Otherwise, please forward us the total amount stated below.\n"
+"If you have any queries regarding your account, Please contact us.\n"
+"\n"
+"Thank you in advance for your cooperation.\n"
+"Best Regards,"
+msgstr ""
+"尊敬的先生/女士，\n"
+"    我们的记录表明，您仍有逾期待付的款项尚未付款。请查阅如明细。\n"
+"    如款项已经支付，请忽略此通知。否则，请按如下所述的总金额付款给我们。\n"
+"    如果有任何关于账户的疑问，请联系我们。\n"
+"\n"
+"    谢谢你的合作。\n"
+"    此致 ，\n"
+"           敬礼"
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server__smtp_debug
 msgid "Debugging"
 msgstr "调试"
@@ -12262,6 +12315,11 @@ msgid "Delivery Costs"
 msgstr "交货成本"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_delivery_hs_code
+msgid "Delivery HS Code"
+msgstr ""
+
+#. module: base
 #: model:ir.model,name:base.model_ir_demo
 msgid "Demo"
 msgstr "演示"
@@ -12284,9 +12342,11 @@ msgstr "演示安装特性"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
 msgid ""
-"Demo data should only be used on test databases. Once they are loaded, they "
-"cannot be removed."
-msgstr "演示数据只应用于测试数据库。加载后，无法将其删除。"
+"Demo data should only be used on test databases!\n"
+"                             Once they are loaded, they cannot be removed!"
+msgstr ""
+"Demo数据仅用于测试数据库\n"
+"                         一旦这些数据加载，就不能被删除！"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_demo_failure
@@ -12356,7 +12416,7 @@ msgstr "使用构建块设计出色的报价模板，以显著提高您的成功
 #. module: base
 #: model:ir.module.module,summary:base.module_mass_mailing
 msgid "Design, send and track emails"
-msgstr "生成、发送和跟踪电子邮件"
+msgstr "生成、发送和跟踪EMail"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_14
@@ -12425,7 +12485,6 @@ msgstr ""
 "%s"
 
 #. module: base
-#: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
 #: model_terms:ir.ui.view,arch_db:base.onboarding_container
 #: model_terms:ir.ui.view,arch_db:base.res_config_settings_view_form
 msgid "Discard"
@@ -12661,6 +12720,7 @@ msgid "Doctor"
 msgstr "博士"
 
 #. module: base
+#: model:ir.model,name:base.model_ir_attachment
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_uninstall
 msgid "Document"
 msgstr "单据"
@@ -13003,18 +13063,18 @@ msgstr "元素 '%s' 在母级视图中没有找到"
 #: model:ir.ui.menu,name:base.menu_email
 #: model_terms:ir.ui.view,arch_db:base.contact
 msgid "Email"
-msgstr "Email"
+msgstr "EMail"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
 #: model_terms:ir.ui.view,arch_db:base.view_users_simple_form
 msgid "Email Address"
-msgstr "Email地址"
+msgstr "EMail地址"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_fetchmail
 msgid "Email Gateway"
-msgstr "Email 网关"
+msgstr "EMail 网关"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_mass_mailing
@@ -13025,7 +13085,7 @@ msgstr "邮件营销"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid "Email Preferences"
-msgstr "Email首选项"
+msgstr "EMail首选项"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__employee
@@ -13047,7 +13107,12 @@ msgid "Employees"
 msgstr "员工"
 
 #. module: base
-#: code:addons/base/models/ir_model.py:462
+#: selection:ir.attachment,type:0
+msgid "Empty"
+msgstr "空白"
+
+#. module: base
+#: code:addons/base/models/ir_model.py:466
 #, python-format
 msgid "Empty dependency in %r"
 msgstr "空白依赖在 %r"
@@ -13442,10 +13507,6 @@ msgid ""
 "    changed here if is one exception. If this field is actived, then will be\n"
 "    showed the next fields:\n"
 "\n"
-"  - **Incoterm**: It is used for the attribute *incoterm* in the External Trade\n"
-"    node, is required, and must contain a value from the SAT catalog_ to\n"
-"    incoterms.\n"
-"\n"
 "  - **Certificate Source**: If the document to be generated is a\n"
 "    Certificate of Origin, must be registered the certificate of\n"
 "    origin folio or the fiscal folio in CFDI with which the issuance of the\n"
@@ -13518,12 +13579,8 @@ msgid ""
 "\n"
 "- In the partner:\n"
 "\n"
-"  - **CURP**: It is used to store the unique Key of the Register of\n"
-"    Population (CURP) of the issuer of the CFDI. When it is a natural\n"
-"    person, it must contain 18 characters.\n"
-"\n"
 "  - **Need external trade?**: Field used to indicate if the customer needs\n"
-"    their invoices with external complement. If the field is equal to True,\n"
+"    his/her invoices with external complement. If the field is equal to True,\n"
 "    then the add-on is added to the CFDIs for this client.\n"
 "\n"
 "\n"
@@ -13561,156 +13618,11 @@ msgid ""
 "in this version, since it needs fields that depend on the stock module.\n"
 "They will be added in a later version.\n"
 "\n"
-".. _catalog: http://www.sat.gob.mx/informacion_fiscal/factura_electronica/Documents/c_INCOTERM.xls\n"
 ".. _c_FraccionArancelaria: http://www.sat.gob.mx/informacion_fiscal/factura_electronica/Documents/c_FraccionArancelaria.xls \n"
 ".. _Link: http://www.sat.gob.mx/informacion_fiscal/factura_electronica/Documents/c_UnidadMedidaAduana.xls\n"
 ".. _c_colonia: http://www.sat.gob.mx/informacion_fiscal/factura_electronica/Documents/c_Colonia.xls\n"
 ".. _c_localidad: http://www.sat.gob.mx/informacion_fiscal/factura_electronica/Documents/c_Localidad.xls\n"
 msgstr ""
-"墨西哥本地化的对外贸易补充\n"
-"================================================== =====\n"
-"\n"
-"该模块将对外贸易补充添加到CFDI版本3.3，其中\n"
-"添加了产品的海关信息，它指定了发射器\n"
-"和接收者地址，以及与出口法律有关的数据\n"
-"\n"
-"所有出口货物和发票的发票都需要这种补充\n"
-"登陆码为“A1”\n"
-"\n"
-"添加以下字段以符合补充结构\n"
-"由SAT定义\n"
-"\n"
-" - 在发票中：\n"
-"\n"
-" - **需要外贸吗？**：此字段用于表示CFDI\n"
-" 要生成的文件，必须加入外贸\n"
-" 补充。默认情况下从合作伙伴处获取此值，但可能是\n"
-" 如果是一个例外，这里改变了。如果此字段处于活动状态，则将为\n"
-" 显示了下一个字段：\n"
-"\n"
-" - ** Incoterm **：用于外部交易中的属性* incoterm *\n"
-" node，是必需的，并且必须包含SATcatalog_to中的值\n"
-" incoterms.\n"
-"\n"
-" - **证书来源**：如果要生成的文件是a\n"
-" 原产地证书，必须注册证书\n"
-" 原始对账单或CFDI中的财务对开，用于发行\n"
-" 原产地证书已经支付。如果此字段为空，请指明\n"
-" 本文件不适合作为原产地证书\n"
-"\n"
-"\n"
-" .. figure ::../l10n_mx_edi_external_trade/static/src/InvoiceET.png\n"
-"\n"
-" - 在产品中：\n"
-"\n"
-" - **关税分数**：此字段用于存储关税分数\n"
-" 对应于要销售的产品，这已经加载了SAT\n"
-" 目录“c_FraccionArancelaria_”。如果找不到一条记录是因为\n"
-" 只加载了当前的记录\n"
-"\n"
-"- ** UMT Customs **：用于指定适用单位密钥的字段\n"
-" 衡量海关货物数量的指标。 This\n"
-" 度量单位必须与中指定的关税分数相对应\n"
-" 产品，如SAT目录中所示\n"
-"\n"
-" - **重量**：如果* UMT海关*是“KG”，这里必须具体为重量\n"
-" 每种产品\n"
-"\n"
-"\n"
-" .. figure ::../l10n_mx_edi_external_trade/static/src/Product_CET.png\n"
-"\n"
-" - 在测量单位\n"
-"\n"
-" - **海关编码**：与中的计量单位对应的代码\n"
-" SAT的目录。这是将aduana用于产品的代码\n"
-" 有关。 Link_\n"
-"\n"
-"\n"
-" .. figure ::../l10n_mx_edi_external_trade/static/src/Code_Aduana.png\n"
-"\n"
-" - 在发票行中：\n"
-"\n"
-" - ** Qty UMT **：以量为单位表示的数量\n"
-" 产品的习俗\n"
-"\n"
-" 它将用于每个属性中的“CantidadAduana”属性\n"
-" 商品销售，当产品代码海关UMT是\n"
-" 不同于99.\n"
-"\n"
-"该字段自动填入invoice中的发票行\n"
-" 以下情况：\n"
-"\n"
-" 1.该产品具有与UMT海关和UoM相同的价值\n"
-" 在这种情况下，Qty UMT设置为数量的相同值\n"
-" 产品上线.\n"
-"\n"
-" 2.产品UMT中的计量单位代码等于06（千）\n"
-" 在这种情况下，Qty UMT将等于the中定义的权重\n"
-" 产品乘以销售的产品数量\n"
-"\n"
-" 在其他情况下，该值必须由用户在每个中定义\n"
-" lines.\n"
-"\n"
-" - **单位价值UMT **：代表商品的单价\n"
-" 海关UMT。它用于设置属性“ValorUnitarioAduana”in\n"
-" 每个CFDI商品。它对用户是透明的\n"
-"\n"
-" - ** UMT Adduana **：默认情况下，此值与the中定义的值相同\n"
-" 该产品线\n"
-"\n"
-"\n"
-" .. figure ::../l10n_mx_edi_external_trade/static/src/invoice_line_ET.png\n"
-" ：宽度：700pt\n"
-"\n"
-" - 在伙伴中：\n"
-"\n"
-" - ** CURP **：用于存储寄存器的唯一密钥\n"
-" CFDI发行人的人口（CURP）。当它是天然的\n"
-" 人，必须包含18个字符\n"
-"\n"
-" - **需要对外贸易？**：用于表明客户是否需要的字段\n"
-" 他们的发票与外部补充。如果该字段等于True，则\n"
-" 然后将附加组件添加到此客户端的CFDI中\n"
-"\n"
-"\n"
-" .. figure ::../l10n_mx_edi_external_trade/static/src/partnerET2.png\n"
-"\n"
-" - **地点**：用于表示发射器和loc的位置的字段\n"
-" CFDI中的接收者\n"
-"- ** Colony Code **：该字段用于存储发射器的代码\n"
-" 殖民地。它必须是SAT目录提供的值\n"
-" 注意：此字段只能在公司地址或in中配置\n"
-" 在多分支环境中用作分支地址的合作伙伴\n"
-" c_colonia_\n"
-"\n"
-" .. figure ::../l10n_mx_edi_external_trade/static/src/partnerET.png\n"
-"\n"
-" - 在公司里\n"
-"\n"
-" - **可靠出口商数量**：出口商的身份识别\n"
-" 根据“自由贸易协定”附件1第22条的规定\n"
-" 欧洲协会和欧洲共同体的决定，\n"
-" 用于建立属性“NumeroExportadorConfiable”如果\n"
-" 客户的国家属于欧洲联盟\n"
-"\n"
-" - 此外，还增加了以下型号：\n"
-"\n"
-" - **地点**：用于存储墨西哥地区的模型\n"
-" 通过SAT的目录。它的字段是名称，州，国家和代码\n"
-" c_localidad_\n"
-"\n"
-"在此版本中，外部交易补充不支持Type of\n"
-"转移证明（'T'）。出于这个原因，节点“Propietario”和\n"
-"外部交易模板中未指定“MotivodeTraslado”。在\n"
-"另一方面，不会添加可选节点“DescripcionesEspecificas”\n"
-"在这个版本中，因为它需要依赖于库存模块的字段\n"
-"它们将在以后的版本中添加\n"
-"\n"
-".. _catalog：http：//www.sat.gob.mx/informacion_fiscal/factura_electronica/Documents/c_INCOTERM.xls\n"
-".. _c_FraccionArancelaria：http：//www.sat.gob.mx/informacion_fiscal/factura_electronica/Documents/c_FraccionArancelaria.xls\n"
-".. _Link：http：//www.sat.gob.mx/informacion_fiscal/factura_electronica/Documents/c_UnidadMedidaAduana.xls\n"
-".. _c_colonia：http：//www.sat.gob.mx/informacion_fiscal/factura_electronica/Documents/c_Colonia.xls\n"
-".. _c_localidad：http：//www.sat.gob.mx/informacion_fiscal/factura_electronica/Documents/c_Localidad.xls\n"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_users__share
@@ -14703,10 +14615,10 @@ msgstr ""
 "同事都拥有自己的颜色，并且每位参与者都\n"
 "拥有自己的头像...\n"
 "\n"
-"获取电子邮件\n"
+"获取EMail\n"
 "------------\n"
 "\n"
-"在您要参加的活动被创建以及当此活动的某项字段（例如开始日期）更新时，您会收到电子邮件...\n"
+"在您要参加的活动被创建以及当此活动的某项字段（例如开始日期）更新时，您会收到EMail...\n"
 "接收通知\n"
 "-----------\n"
 "\n"
@@ -15386,6 +15298,11 @@ msgstr "IBAN银行账号"
 #: model:ir.model.fields,field_description:base.field_wizard_ir_model_menu_create__id
 msgid "ID"
 msgstr "ID"
+
+#. module: base
+#: model:ir.model.fields,help:base.field_ir_actions_server__xml_id
+msgid "ID of the action if defined in a XML file"
+msgstr "在 XML 文件中定义的动作的 ID"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_data__res_id
@@ -16984,7 +16901,6 @@ msgstr "加载翻译"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.demo_force_install_action
-#: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
 msgid "Load demo data"
 msgstr "加载演示数据"
 
@@ -17254,10 +17170,10 @@ msgstr ""
 "---------------------------------\n"
 "\n"
 "自动连接到最著名的求职招聘网站；LinkedIn、Monster、\n"
-"Craigslist ...每个工作职位都会自动分配一个新的电子邮件地址，\n"
+"Craigslist ...每个工作职位都会自动分配一个新的EMail地址，\n"
 "以便自动将申请发送到正确的工作职位。\n"
 "\n"
-"无论申请人是通过电子邮件还是使用在线表格与您联系，您都可以\n"
+"无论申请人是通过EMail还是使用在线表格与您联系，您都可以\n"
 "自动索引所有的数据（如简历、求职信），只需点击一下，就可以\n"
 "重新使用答复模板做出答复。\n"
 "\n"
@@ -17274,7 +17190,7 @@ msgstr ""
 "-----------------------------------\n"
 "\n"
 "使用智能看板视图在招聘流程中跟踪申请人。\n"
-"借助电子邮件模板自动完成一部分通信任务来节省时间。\n"
+"借助EMail模板自动完成一部分通信任务来节省时间。\n"
 "\n"
 "通过自动索引简历、求职信等文件，\n"
 "您可以轻松查找特定技能并建立应聘者资料\n"
@@ -18580,7 +18496,7 @@ msgstr ""
 "培养访客忠诚度\n"
 "---------------------\n"
 "\n"
-"只需点击*关注*按钮就可以让访客通过电子邮件接收\n"
+"只需点击*关注*按钮就可以让访客通过EMail接收\n"
 "您的博客文章，轻松方便，无需注册。添加社交媒体图标，\n"
 "方便访客轻松分享您的最佳博客文章。\n"
 "\n"
@@ -18736,7 +18652,7 @@ msgstr ""
 "\n"
 "轻松管理您的销售渠道。吸引销售线索、安排电话随访\n"
 "和会面。分析销售线索的质量，做出正确决策，\n"
-"并能将电子邮件直接集成到应用程序来节省时间。\n"
+"并能将EMail直接集成到应用程序来节省时间。\n"
 "\n"
 "您的销售渠道，您喜欢的方式\n"
 "--------------------------------------\n"
@@ -18748,7 +18664,7 @@ msgstr ""
 "销售线索管理变得简单\n"
 "-------------------------\n"
 "\n"
-"根据收到的电子邮件自动创建销售线索。分析销售线索的效率并\n"
+"根据收到的EMail自动创建销售线索。分析销售线索的效率并\n"
 "根据营销活动、渠道或销售渠道比较业绩。\n"
 "\n"
 "查找后合并重复线索，并将其分配给合适的销售人员，\n"
@@ -18757,22 +18673,22 @@ msgstr ""
 "优化机会组织\n"
 "---------------------------\n"
 "\n"
-"对机会进行组织，重点关注最佳交易。通过电子邮件、\n"
+"对机会进行组织，重点关注最佳交易。通过EMail、\n"
 "电话、内部消息、会面和报价等机会，管理\n"
 "所有与客户的互动。\n"
 "\n"
 "跟踪您所关注的机会，每当发生特定事件，如交易成功或失败、\n"
 "新的阶段变化或客户需求等，您都可以收到通知。\n"
 "\n"
-"电子邮件的集成和自动化\n"
+"EMail的集成和自动化\n"
 "--------------------------------\n"
 "\n"
-"使用日常电子邮件应用程序。无论您在公司每天使用\n"
+"使用日常EMail应用程序。无论您在公司每天使用\n"
 " Microsoft Outlook 还是 Gmail，都不需要改变\n"
 "原有的工作习惯，让人人都能保持高效率。\n"
 "\n"
-"自动分发、排序和过滤收到的电子邮件。Odoo CRM \n"
-"统一处理收到的电子邮件，将它们发送给适合的机会或销售渠道。\n"
+"自动分发、排序和过滤收到的EMail。Odoo CRM \n"
+"统一处理收到的EMail，将它们发送给适合的机会或销售渠道。\n"
 "即时创建新的销售线索，并自动通知感兴趣的销售人员。\n"
 "\n"
 "协作议程\n"
@@ -18789,8 +18705,8 @@ msgstr ""
 "\n"
 "通过我们的市场营销活动，实现销售线索收集、跟踪\n"
 "和促销的自动化。根据触发条件（20 天内无活动，\n"
-"对促销电子邮件的回复等），定义自动操作（例如，要求销售\n"
-"人员打电话，发送电子邮件等）\n"
+"对促销EMail的回复等），定义自动操作（例如，要求销售\n"
+"人员打电话，发送EMail等）\n"
 "\n"
 "从销售线索到达成交易，在每个渠道上优化营销活动。\n"
 "更明智地决定投资方向，并展示您的市场营销活动为公司\n"
@@ -18904,13 +18820,13 @@ msgstr ""
 "\n"
 "通过 Odoo <a href=\"https://www.odoo.com/page/enterprise-social-network\">企业社交网络</a>与专家联系，关注您所感兴趣的内容，共享文档，\n"
 "并推广最佳实践。通过跨部门、地区、文档和业务应用程序之间的有效协作完成工作。\n"
-"在实现所有这些的同时，减少了电子邮件超载。\n"
+"在实现所有这些的同时，减少了EMail超载。\n"
 "\n"
 "与专家联系\n"
 "--------------------\n"
 "\n"
 "下一次，如果您对市场营销、销售、研发或其他部门\n"
-"有任何疑问，无需通过电子邮件将大量问题发送到 Odoo，\n"
+"有任何疑问，无需通过EMail将大量问题发送到 Odoo，\n"
 "便可从最合适的人那里获得答案。\n"
 "\n"
 "关注您所感兴趣的内容\n"
@@ -18930,7 +18846,7 @@ msgstr ""
 "推广最佳实践\n"
 "----------------------\n"
 "\n"
-"通过兴趣小组共同合作，减少会议和电子邮件负担。\n"
+"通过兴趣小组共同合作，减少会议和EMail负担。\n"
 "创建一个群组，让人们共享文件，讨论想法，并投票\n"
 "推广最佳做法。\n"
 "\n"
@@ -19077,7 +18993,7 @@ msgstr ""
 "发布招聘职位并跟踪收到的每份申请。在招聘流程中使用智能看板视图\n"
 "跟踪申请人。\n"
 "\n"
-"通过使用电子邮件模板，实现部分通信内容的自动化，节省时间。\n"
+"通过使用EMail模板，实现部分通信内容的自动化，节省时间。\n"
 "通过自动索引简历，帮您轻松找到特定的资料。\n"
 "\n"
 "企业社交网络\n"
@@ -19338,17 +19254,17 @@ msgstr ""
 "\n"
 "使用 Odoo <a href=\"https://www.odoo.com/page/mailing#\">群发邮件</a>功能，轻松向销售线索、潜在机会\n"
 "或现有客户群发邮件。跟踪市场营销活动的绩效，提高转化率。\n"
-"只需点击几下鼠标，即可设计专业电子邮件和可重复使用的\n"
+"只需点击几下鼠标，即可设计专业EMail和可重复使用的\n"
 "模板。\n"
 "\n"
-"发送专业电子邮件\n"
+"发送专业EMail\n"
 "------------------------\n"
 "\n"
 "只需点击几下鼠标，即可导入潜在客户数据库，还可以筛选现有的\n"
 "销售线索、潜在机会或特定客户。\n"
 "\n"
-"定义电子邮件模板，在实时通讯中重用特定的内容或设计。\n"
-"设置包含独立 IP /域名的多个电子邮件服务器，优化打开率。\n"
+"定义EMail模板，在实时通讯中重用特定的内容或设计。\n"
+"设置包含独立 IP /域名的多个EMail服务器，优化打开率。\n"
 "\n"
 "组织市场营销活动\n"
 "----------------------------\n"
@@ -19367,36 +19283,36 @@ msgstr ""
 "所有 Odoo 应用均提供群发邮件功能，助您大幅改善用户的\n"
 "通信方式。\n"
 "\n"
-"面向 Odoo <a href=\"https://www.odoo.com/page/mailing\">CRM 商机</a>发送电子邮件模板，根据市场细分\n"
+"面向 Odoo <a href=\"https://www.odoo.com/page/mailing\">CRM 商机</a>发送EMail模板，根据市场细分\n"
 "圈定销售线索，向申请人发送<a href=\"https://www.odoo.com/page/recruitment\">工作邀请</a>并自动予以\n"
-"回复，在销售线索自动化市场营销活动中重用电子邮件\n"
+"回复，在销售线索自动化市场营销活动中重用EMail\n"
 "模板。\n"
 "\n"
-"对您的电子邮件的回复内容会自动显示在社交网络模块对每个文档的历史记录中。\n"
+"对您的EMail的回复内容会自动显示在社交网络模块对每个文档的历史记录中。\n"
 "\n"
 "清理销售线索数据库\n"
 "------------------------\n"
 "\n"
 "整理销售线索数据库，在使用邮件性能的同时，不断对数据库\n"
-"加以完善。Odoo 可以高效地处理退回的电子邮件，相应地标记\n"
+"加以完善。Odoo 可以高效地处理退回的EMail，相应地标记\n"
 "错误的销售线索，并为您提供有关销售线索质量的统计数据。\n"
 "\n"
-"一键发送电子邮件\n"
+"一键发送EMail\n"
 "---------------------\n"
 "\n"
 "营销部门热衷于开展营销活动。对于其他用户也可以考虑提供\n"
 "一键群发邮件的功能，方便其针对潜在客户或文档使用群发功能。\n"
 "\n"
 "选择文档（如销售线索、支持工票、供应商、申请人等），\n"
-"然后点击一下鼠标，即可将电子邮件发送给他们的联系人，\n"
-"并重用现有的电子邮件模板。\n"
+"然后点击一下鼠标，即可将EMail发送给他们的联系人，\n"
+"并重用现有的EMail模板。\n"
 "\n"
 "跟进回复\n"
 "--------------------\n"
 "\n"
 "使用聊天功能，与客户进行更快、更有效沟通。根据在群发邮件中\n"
 "对营销活动的回复，自动创建文档（销售线索、机会或任务等）\n"
-"直接在 Odoo 或电子邮件文档中，跟进协商讨论的\n"
+"直接在 Odoo 或EMail文档中，跟进协商讨论的\n"
 "内容。\n"
 "\n"
 "把所有的协商和讨论内容都附加到对应的文档上，并将特定活动\n"
@@ -19412,8 +19328,8 @@ msgstr ""
 "全面与其他应用集成\n"
 "---------------------------------\n"
 "\n"
-"根据触发条件（20 天内无活动， 对促销电子邮件的回复等），\n"
-"定义自动操作（例如，要求销售 人员打电话，发送电子邮件等）\n"
+"根据触发条件（20 天内无活动， 对促销EMail的回复等），\n"
+"定义自动操作（例如，要求销售 人员打电话，发送EMail等）\n"
 "\n"
 "从销售线索到达成交易，在每个渠道上优化营销活动。 更明智地\n"
 "决定投资方向，并展示您的市场营销活动为公司带来的利润影响。 \n"
@@ -19422,7 +19338,7 @@ msgstr ""
 "会自动创建销售线索。销售线索可用于市场营销活动。\n"
 "\n"
 "轻松管理您的<a href=\"https://www.odoo.com/page/crm\">销售渠道</a>。吸引销售线索，安排电话随访\n"
-"和会面。分析销售线索的质量，做出正确决策， 并能将电子邮件\n"
+"和会面。分析销售线索的质量，做出正确决策， 并能将EMail\n"
 "直接集成到应用程序来节省时间。\n"
 "\n"
 
@@ -19892,7 +19808,7 @@ msgstr ""
 "事后使用报表来分析供应商的质量。\n"
 "\n"
 "\n"
-"电子邮件集成\n"
+"EMail集成\n"
 "------------------\n"
 "\n"
 "集成采购订单（或 RfQ）中所有供应商的通信，以获得\n"
@@ -20654,6 +20570,11 @@ msgid ""
 msgstr "只有以下访问等级的用户可才做这"
 
 #. module: base
+#: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
+msgid "Oops, no!"
+msgstr "哦,不!"
+
+#. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_update
 msgid "Open Apps"
 msgstr "打开应用"
@@ -20969,7 +20890,7 @@ msgstr ""
 "\n"
 "### 群发邮件和社交媒体\n"
 "\n"
-"使用细分、社交网络集成和群发邮件功能，将您的活动推广给合适的受众。设置自动发送电子邮件以便向参与者发送关键细节。\n"
+"使用细分、社交网络集成和群发邮件功能，将您的活动推广给合适的受众。设置自动发送EMail以便向参与者发送关键细节。\n"
 "\n"
 "设计人员友好主题\n"
 "------------------------\n"
@@ -21020,7 +20941,7 @@ msgstr ""
 "\n"
 "- 高级计划\n"
 "- 打印徽章\n"
-"- 自动发送跟进电子邮件\n"
+"- 自动发送跟进EMail\n"
 "- 最小/最大容量\n"
 "- 管理分类和资源\n"
 "- 创建参与者群组\n"
@@ -21162,7 +21083,7 @@ msgstr "覆盖现有术语"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_search
 msgid "Owner"
-msgstr "所有者"
+msgstr "货主"
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_P
@@ -21551,7 +21472,14 @@ msgstr "SNC葡萄牙的方案，决算方案（为什么会有葡萄牙语？翻
 msgid ""
 "Please configure an email on the current user to simulate sending an email "
 "message via this outgoing server"
-msgstr "请在当前用户上配置电子邮件，以模拟使用该发件服务器发送电子邮件消息"
+msgstr "请在当前用户上配置EMail，以模拟使用该发件服务器发送EMail消息"
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
+msgid ""
+"Please confirm that you want to <b>irreversibly</b> make this database a "
+"demo database."
+msgstr "你想让这个数据库成为demo数据库，该操作<b>不可逆</b>，请确认。"
 
 #. module: base
 #: code:addons/base/models/ir_model.py:1231
@@ -21762,7 +21690,7 @@ msgstr "产品比较"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_product_email_template
 msgid "Product Email Template"
-msgstr "产品 Email 模板"
+msgstr "产品 EMail 模板"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_bom_cost
@@ -21909,10 +21837,10 @@ msgstr ""
 "共同合作\n"
 "-------------\n"
 "\n"
-"### 实时聊天、文件共享、电子邮件集成\n"
+"### 实时聊天、文件共享、EMail集成\n"
 "\n"
 "使用开放式的聊天工具与您的团队或客户进行沟通，并就任务和问题分享评论\n"
-"和文档。将讨论与电子邮件集成快速集成。\n"
+"和文档。将讨论与EMail集成快速集成。\n"
 "\n"
 "通过网站在线聊天功能与其他用户或客户交流。\n"
 "\n"
@@ -22345,7 +22273,6 @@ msgid "Record ID"
 msgstr "记录 ID"
 
 #. module: base
-#: model:ir.model,name:base.model_ir_rule
 #: model_terms:ir.ui.view,arch_db:base.view_rule_search
 msgid "Record Rule"
 msgstr "记录规则"
@@ -22709,6 +22636,11 @@ msgid "Rounding unit"
 msgstr "舍入单位"
 
 #. module: base
+#: model:ir.model,name:base.model_ir_rule
+msgid "Rule"
+msgstr "规则"
+
+#. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_form
 msgid "Rule Definition (Domain Filter)"
 msgstr "规则定义（ Domain  筛选）"
@@ -22869,6 +22801,11 @@ msgstr "销售优惠券"
 #: model:ir.module.module,shortdesc:base.module_sale_coupon_delivery
 msgid "Sale Coupon Delivery"
 msgstr "销售优惠券交付"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_sale_intrastat
+msgid "Sale Intrastat"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_purchase
@@ -23209,6 +23146,11 @@ msgid "Sell your products online"
 msgstr "在线销售你的产品"
 
 #. module: base
+#: selection:ir.actions.server,state:0
+msgid "Send Email"
+msgstr "发送EMail"
+
+#. module: base
 #: model:ir.module.module,summary:base.module_sign
 msgid "Send documents to sign online and handle filled copies"
 msgstr "发送文件到网上签名和处理填写的副本"
@@ -23319,6 +23261,7 @@ msgstr "服务器"
 
 #. module: base
 #: selection:ir.actions.server,usage:0
+#: model:ir.model,name:base.model_ir_actions_server
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_search
 msgid "Server Action"
@@ -23331,7 +23274,6 @@ msgstr "服务器动作值映射"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_server_action
-#: model:ir.model,name:base.model_ir_actions_server
 #: model:ir.ui.menu,name:base.menu_server_action
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_search
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_tree
@@ -23753,7 +23695,7 @@ msgstr "开始配置"
 #: model_terms:ir.ui.view,arch_db:base.view_partner_short_form
 #: model_terms:ir.ui.view,arch_db:base.view_res_bank_form
 msgid "State"
-msgstr "状态"
+msgstr "省/ 州"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country_state__code
@@ -23807,6 +23749,11 @@ msgstr "增量数字必须是非0的。"
 #: model:ir.module.module,summary:base.module_note_pad
 msgid "Sticky memos, Collaborative"
 msgstr "即时贴，协同"
+
+#. module: base
+#: model:ir.module.category,name:base.module_category_stock
+msgid "Stock"
+msgstr "库存"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_barcode_mobile
@@ -24125,6 +24072,573 @@ msgid "Task Logs"
 msgstr "任务日志"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_mx_tax_cash_basis
+msgid "Tax Cash Basis Entries at Payment Date"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_mx_tax_cash_basis
+msgid ""
+"Tax Cash Basis Entries at Payment Date\n"
+"======================================\n"
+"\n"
+"Allow to create the Journal Entries for Taxes at date of payment.\n"
+"The following tests cases pretend to enlight you on what is expected of each\n"
+"one according to Mexican requirements.\n"
+"\n"
+"Case Multi-currency (both invoice & payment) Payment before Invoice\n"
+"-------------------------------------------------------------------\n"
+"\n"
+"        Test to validate tax effectively receivable\n"
+"\n"
+"        My company currency is MXN.\n"
+"\n"
+"        Invoice issued yesterday in USD at a rate => 1MXN = 1 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Receivable          1160                1160    USD\n"
+"                Revenue                 1000       -1000    USD\n"
+"                Taxes to Collect         160        -160    USD\n"
+"\n"
+"        Payment issued two days ago in USD at a rate => 1MXN = 0.80 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Bank                1450                1160    USD\n"
+"                Receivable              1450       -1160    USD\n"
+"\n"
+"        This Generates a Exchange Rate Difference.\n"
+"        Booked like:\n"
+"\n"
+"            Receivable           290                   0    USD\n"
+"                Gain Exchange rate       290           0    USD\n"
+"\n"
+"        And a Tax Cash Basis Entry is generated.\n"
+"        Booked like:\n"
+"\n"
+"            Tax Base Account    1250                1000    USD\n"
+"                Tax Base Account        1250       -1000    USD\n"
+"            Taxes to Collect     200                 160    USD\n"
+"                Taxes to Paid            200        -160    USD\n"
+"\n"
+"        What I expect from here:\n"
+"            - Base to report to DIOT if it would be the case (not in this case): \n"
+"              * Tax Base Account MXN 1250.00\n"
+"            - Paid to SAT MXN 200.00\n"
+"            - Have a difference of MXN 40.00 for Taxes to Collect that I would\n"
+"              later have to issue as a Loss in Exchange Rate Difference\n"
+"\n"
+"            Loss Exchange rate    40                   0    USD\n"
+"                Taxes to Collect          40           0    USD\n"
+"\n"
+"\n"
+"Case Multi-currency (both invoice & payment) Payment after Invoice\n"
+"------------------------------------------------------------------\n"
+"\n"
+"        Test to validate tax effectively receivable\n"
+"\n"
+"        My company currency is MXN.\n"
+"\n"
+"        Invoice issued two days ago in USD at a rate => 1MXN = 0.80 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Receivable          1450                1160    USD\n"
+"                Revenue                 1250       -1000    USD\n"
+"                Taxes to Collect         200        -160    USD\n"
+"\n"
+"        Payment issued today in USD at a rate => 1 MXN = 1.25 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Bank                 928                1160    USD\n"
+"                Receivable               928       -1160    USD\n"
+"\n"
+"        This Generates a Exchange Rate Difference.\n"
+"        Booked like:\n"
+"\n"
+"            Loss Exchange rate   522                   0    USD\n"
+"                Receivable               522           0    USD\n"
+"\n"
+"        And a Tax Cash Basis Entry is generated.\n"
+"        Booked like:\n"
+"\n"
+"            Tax Base Account     800                1000    USD\n"
+"                Tax Base Account         800       -1000    USD\n"
+"            Taxes to Collect     128                 160    USD\n"
+"                Taxes to Paid            128        -160    USD\n"
+"\n"
+"        What I expect from here:\n"
+"            - Base to report to DIOT if it would be the case (not in this case): \n"
+"              * Tax Base Account MXN 800.00\n"
+"            - Paid to SAT MXN 128.00\n"
+"            - Have a difference of MXN -72.00 for Taxes to Collect that I would\n"
+"              later have to issue as a Gain in Exchange Rate Difference\n"
+"\n"
+"            Taxes to Collect      72                   0    USD\n"
+"                Gain Exchange rate        72           0    USD\n"
+"\n"
+"\n"
+"Case Multi-currency (both invoice & payment) Payment same day than Invoice\n"
+"--------------------------------------------------------------------------\n"
+"\n"
+"        Test to validate tax effectively receivable\n"
+"\n"
+"        My company currency is MXN.\n"
+"\n"
+"        Invoice issued two days ago in USD at a rate => 1MXN = 0.8 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Receivable          1450                1160    USD\n"
+"                Revenue                 1250       -1000    USD\n"
+"                Taxes to Collect         200        -160    USD\n"
+"\n"
+"        Payment issued two days ago in USD at a rate => 1 MXN = 0.8 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Bank                1450                1160    USD\n"
+"                Receivable              1450       -1160    USD\n"
+"\n"
+"        This does not generates any Exchange Rate Difference.\n"
+"\n"
+"        But a Tax Cash Basis Entry is generated.\n"
+"        Booked like:\n"
+"\n"
+"            Tax Base Account    1250                1000    USD\n"
+"                Tax Base Account        1250       -1000    USD\n"
+"            Taxes to Collect     200                 160    USD\n"
+"                Taxes to Paid            200        -160    USD\n"
+"\n"
+"        What I expect from here:\n"
+"            - Base to report to DIOT if it would be the case (not in this case): \n"
+"              * Tax Base Account MXN 1250.00\n"
+"            - Paid to SAT MXN 200.00\n"
+"            - Have no difference for Taxes to Collect\n"
+"\n"
+"\n"
+"Case Invoiced Yesterday (MXN) Payment Two Days Ago (USD)\n"
+"--------------------------------------------------------\n"
+"\n"
+"        Test to validate tax effectively receivable\n"
+"\n"
+"        My company currency is MXN.\n"
+"\n"
+"        Invoice issued yesterday in MXN at a rate => 1MXN = 1 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Receivable          1160                   -      -\n"
+"                Revenue                 1000           -      -\n"
+"                Taxes to Collect         160           -      -\n"
+"\n"
+"        Payment issued two days ago in USD at a rate => 1 MXN = 0.80 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Bank                1160                 928    USD\n"
+"                Receivable              1160        -928    USD\n"
+"\n"
+"        This does not generates any Exchange Rate Difference.\n"
+"\n"
+"        But a Tax Cash Basis Entry is generated.\n"
+"        Booked like:\n"
+"\n"
+"            Tax Base Account    1000                   0      -\n"
+"                Tax Base Account        1000           0      -\n"
+"            Taxes to Collect     160                   0      -\n"
+"                Taxes to Paid            160           0      -\n"
+"\n"
+"        What I expect from here:\n"
+"            - Base to report to DIOT if it would be the case (not in this case):\n"
+"              * Tax Base Account MXN 1000.00\n"
+"            - Paid to SAT MXN 160.00\n"
+"            - Have no difference for Taxes to Collect\n"
+"\n"
+"\n"
+"Case Invoiced Yesterday (USD) Payment Today (MXN)\n"
+"-------------------------------------------------\n"
+"\n"
+"        Test to validate tax effectively receivable\n"
+"\n"
+"        My company currency is MXN.\n"
+"\n"
+"        Invoice issued yesterday in USD at a rate => 1MXN = 1 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Receivable          1160                1160    USD\n"
+"                Revenue                 1000       -1000    USD\n"
+"                Taxes to Collect         160        -160    USD\n"
+"\n"
+"        Payment issued today in MXN at a rate => 1 MXN = 1.25 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Bank                 928                   -      -\n"
+"                Receivable               928           -      -\n"
+"\n"
+"        This Generates a Exchange Rate Difference.\n"
+"        Booked like:\n"
+"\n"
+"            Loss Exchange rate   232                 232    USD\n"
+"                Receivable               232        -232    USD\n"
+"\n"
+"        And a Tax Cash Basis Entry is generated.\n"
+"        Booked like:\n"
+"\n"
+"            Tax Base Account     800                   0    USD\n"
+"                Tax Base Account         800           0    USD\n"
+"            Taxes to Collect     128                   0    USD  # (I'd expect the same value as in the invoice for amount_currency in tax: 160 USD) \n"
+"                Taxes to Paid            128           0    USD\n"
+"\n"
+"        What I expect from here:\n"
+"            - Base to report to DIOT if it would be the case (not in this case): \n"
+"              * Tax Base Account MXN 800.00\n"
+"            - Paid to SAT MXN 128.00\n"
+"            - Have a difference of MXN -32.00 for Taxes to Collect that I would\n"
+"              later have to issue as a Gain in Exchange Rate Difference\n"
+"\n"
+"            Taxes to Collect      32                   0    USD\n"
+"                Gain Exchange rate        32           0    USD\n"
+"\n"
+"\n"
+"Case Invoiced Yesterday (MXN) Payment Today (MXN)\n"
+"-------------------------------------------------\n"
+"\n"
+"        Test to validate tax effectively receivable\n"
+"\n"
+"        My company currency is MXN.\n"
+"\n"
+"        Invoice issued yesterday in MXN at a rate => 1MXN = 1 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Receivable          1160                   -      -\n"
+"                Revenue                 1000           -      -\n"
+"                Taxes to Collect         160           -      -\n"
+"\n"
+"        Payment issued today in MXN at a rate => 1 MXN = 1.25 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Bank                1160                   -      -\n"
+"                Receivable              1160           -      -\n"
+"\n"
+"        This does not generates any Exchange Rate Difference.\n"
+"\n"
+"        But a Tax Cash Basis Entry is generated.\n"
+"        Booked like:\n"
+"\n"
+"            Tax Base Account    1000                   -      -\n"
+"                Tax Base Account        1000           -      -\n"
+"            Taxes to Collect     160                   -      -\n"
+"                Taxes to Paid            160           -      -\n"
+"\n"
+"        What I expect from here:\n"
+"            - Base to report to DIOT if it would be the case (not in this case): \n"
+"              * Tax Base Account MXN 1000.00\n"
+"            - Paid to SAT MXN 160.00\n"
+"            - Have no difference for Taxes to Collect\n"
+"\n"
+"\n"
+"Case Multi-currency (both invoice & payment) Payment before Invoice (Supplier)\n"
+"------------------------------------------------------------------------------\n"
+"\n"
+"        Test to validate tax effectively Payable\n"
+"\n"
+"        My company currency is MXN.\n"
+"\n"
+"        Invoice issued yesterday in USD at a rate => 1MXN = 1 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Expenses            1000                1000    USD\n"
+"            Unpaid Taxes         160                 160    USD\n"
+"\n"
+"                Payable                 1160       -1160    USD\n"
+"\n"
+"        Payment issued two days ago in USD at a rate => 1MXN = 0.80 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Payable             1450                1160    USD\n"
+"                Bank                    1450       -1160    USD\n"
+"\n"
+"        This Generates a Exchange Rate Difference.\n"
+"        Booked like:\n"
+"\n"
+"            Loss Exchange rate   290                   0    USD\n"
+"                Payable                  290           0    USD\n"
+"\n"
+"        And a Tax Cash Basis Entry is generated.\n"
+"        Booked like:\n"
+"\n"
+"            Tax Base Account    1250                1000    USD\n"
+"                Tax Base Account        1250       -1000    USD\n"
+"            Creditable Tax       200                 160    USD\n"
+"                Unpaid Taxes             200        -160    USD\n"
+"\n"
+"        What I expect from here:\n"
+"            - Base to report to DIOT: Tax Base Account MXN 1250.00\n"
+"            - Creditable Tax MXN 200.00\n"
+"            - Have a difference of MXN -40.00 for Unpaid Taxes that I would\n"
+"              later have to issue as a Loss in Exchange Rate Difference\n"
+"\n"
+"            Unpaid Taxes          40                   0    USD\n"
+"                Gain Exchange rate        40           0    USD\n"
+"\n"
+"\n"
+"Case Multi-currency (both invoice & payment) Payment after Invoice (Supplier)\n"
+"-----------------------------------------------------------------------------\n"
+"\n"
+"        Test to validate tax effectively Payable\n"
+"\n"
+"        My company currency is MXN.\n"
+"\n"
+"        Invoice issued two days ago in USD at a rate => 1MXN = 0.80 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Expenses            1250                1000    USD\n"
+"            Unpaid Taxes         200                 160    USD\n"
+"\n"
+"                Payable                 1450       -1160    USD\n"
+"\n"
+"        Payment issued today in USD at a rate => 1 MXN = 1.25 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Payable              928                1160    USD\n"
+"                Bank                     928       -1160    USD\n"
+"\n"
+"        This Generates a Exchange Rate Difference.\n"
+"        Booked like:\n"
+"\n"
+"            Payable              522                   0    USD\n"
+"                Gain Exchange rate       522           0    USD\n"
+"\n"
+"        And a Tax Cash Basis Entry is generated.\n"
+"        Booked like:\n"
+"\n"
+"            Tax Base Account     800                1000    USD\n"
+"                Tax Base Account         800       -1000    USD\n"
+"            Creditable Tax       128                 160    USD\n"
+"                Unpaid Taxes             128        -160    USD\n"
+"\n"
+"        What I expect from here:\n"
+"            - Base to report to DIOT: Tax Base Account MXN 800.00\n"
+"            - Creditable Tax MXN 128.00\n"
+"            - Have a difference of MXN 72.00 for Unpaid Taxes that I would\n"
+"              later have to issue as a Loss in Exchange Rate Difference\n"
+"\n"
+"            Loss Exchange rate    72                   0    USD\n"
+"                Unpaid Taxes              72           0    USD\n"
+"\n"
+"\n"
+"Case Multi-currency (both invoice & payment) Payment same day than Invoice (Supplier)\n"
+"-------------------------------------------------------------------------------------\n"
+"\n"
+"        Test to validate tax effectively Payable\n"
+"\n"
+"        My company currency is MXN.\n"
+"\n"
+"        Invoice issued two days ago in USD at a rate => 1MXN = 0.8 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Expenses            1250                1000    USD\n"
+"            Unpaid Taxes         200                 160    USD\n"
+"\n"
+"                Payable                 1450       -1160    USD\n"
+"\n"
+"        Payment issued two days ago in USD at a rate => 1 MXN = 0.8 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Payable             1450                1160    USD\n"
+"                Bank                    1450       -1160    USD\n"
+"\n"
+"        This does not generates any Exchange Rate Difference.\n"
+"\n"
+"        But a Tax Cash Basis Entry is generated.\n"
+"        Booked like:\n"
+"\n"
+"            Tax Base Account    1250                1000    USD\n"
+"                Tax Base Account        1250       -1000    USD\n"
+"            Creditable Tax       200                 160    USD\n"
+"                Unpaid Taxes             200        -160    USD\n"
+"\n"
+"        What I expect from here:\n"
+"            - Base to report to DIOT: Tax Base Account MXN 1250.00\n"
+"            - Creditable Tax MXN 200.00\n"
+"            - Have no difference for Unpaid Taxes\n"
+"\n"
+"\n"
+"Case Invoiced Yesterday (MXN) Payment Two Days Ago (USD) (Supplier)\n"
+"-------------------------------------------------------------------\n"
+"\n"
+"        Test to validate tax effectively Payable\n"
+"\n"
+"        My company currency is MXN.\n"
+"\n"
+"        Invoice issued yesterday in MXN at a rate => 1MXN = 1 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Expenses            1000                   -      -\n"
+"            Unpaid Taxes         160                   -      -\n"
+"\n"
+"                Payable                 1160           -      -\n"
+"\n"
+"        Payment issued two days ago in USD at a rate => 1 MXN = 0.80 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Payable             1160                 928    USD\n"
+"                Bank                    1160        -928    USD\n"
+"\n"
+"        This does not generates any Exchange Rate Difference.\n"
+"\n"
+"        But a Tax Cash Basis Entry is generated.\n"
+"        Booked like:\n"
+"\n"
+"            Tax Base Account    1000                   0      -\n"
+"                Tax Base Account        1000           0      -\n"
+"            Creditable Tax       160                   0      -\n"
+"                Unpaid Taxes             160           0      -\n"
+"\n"
+"        What I expect from here:\n"
+"            - Base to report to DIOT: Tax Base Account MXN 1000.00\n"
+"            - Creditable Tax MXN 160.00\n"
+"            - Have no difference for Unpaid Taxes\n"
+"\n"
+"\n"
+"Case Invoiced Yesterday (USD) Payment Today (MXN) (Supplier)\n"
+"------------------------------------------------------------\n"
+"\n"
+"        Test to validate tax effectively Payable\n"
+"\n"
+"        My company currency is MXN.\n"
+"\n"
+"        Invoice issued yesterday in USD at a rate => 1MXN = 1 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Expenses            1000                1000    USD\n"
+"            Unpaid Taxes         160                 160    USD\n"
+"\n"
+"                Payable                 1160       -1160    USD\n"
+"\n"
+"        Payment issued today in MXN at a rate => 1 MXN = 1.25 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Payable              928                   -      -\n"
+"                Bank                     928           -      -\n"
+"\n"
+"        This Generates a Exchange Rate Difference.\n"
+"        Booked like:\n"
+"\n"
+"            Payable              232                 232    USD\n"
+"                Gain Exchange rate       522        -232    USD\n"
+"\n"
+"        And a Tax Cash Basis Entry is generated.\n"
+"        Booked like:\n"
+"\n"
+"            Tax Base Account     800                   0    USD\n"
+"                Tax Base Account         800           0    USD\n"
+"            Creditable Tax       128                   0    USD  # (I'd expect the same value as in the invoice for amount_currency in tax: 160 USD) \n"
+"                Unpaid Taxes             128           0    USD\n"
+"\n"
+"        What I expect from here:\n"
+"            - Base to report to DIOT: Tax Base Account MXN 800.00\n"
+"            - Creditable Tax MXN 128.00\n"
+"            - Have a difference of MXN 32.00 for Unpaid Taxes that I would\n"
+"              later have to issue as a Loss in Exchange Rate Difference\n"
+"\n"
+"            Loss Exchange rate    32                   0    USD\n"
+"                Unpaid Taxes              32           0    USD\n"
+"\n"
+"\n"
+"Case Invoiced Yesterday (MXN) Payment Today (MXN) (Supplier)\n"
+"------------------------------------------------------------\n"
+"\n"
+"        Test to validate tax effectively Payable\n"
+"\n"
+"        My company currency is MXN.\n"
+"\n"
+"        Invoice issued yesterday in MXN at a rate => 1MXN = 1 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Expenses            1000                   -      -\n"
+"            Unpaid Taxes         160                   -      -\n"
+"\n"
+"                Payable                 1160           -      -\n"
+"\n"
+"        Payment issued today in MXN at a rate => 1 MXN = 1.25 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Payable             1160                   -      -\n"
+"                Bank                    1160           -      -\n"
+"\n"
+"        This does not generates any Exchange Rate Difference.\n"
+"\n"
+"        But a Tax Cash Basis Entry is generated.\n"
+"        Booked like:\n"
+"\n"
+"            Tax Base Account    1000                   -      -\n"
+"                Tax Base Account        1000           -      -\n"
+"            Creditable Tax       160                   -      -\n"
+"                Unpaid Taxes             160           -      -\n"
+"\n"
+"        What I expect from here:\n"
+"            - Base to report to DIOT: Tax Base Account MXN 1000.00\n"
+"            - Creditable Tax MXN 160.00\n"
+"            - Have no difference for Unpaid Taxes\n"
+"\n"
+"\n"
+"Case Invoiced Yesterday (MXN) Credit Note Today (MXN) (Customer)\n"
+"----------------------------------------------------------------\n"
+"        Test to validate tax effectively receivable\n"
+"\n"
+"        My company currency is MXN.\n"
+"\n"
+"        Invoice issued two days ago in USD at a rate => 1MXN = 0.80 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Receivable          1450                1160    USD\n"
+"                Revenue                 1250       -1000    USD\n"
+"                Taxes to Collect         200        -160    USD\n"
+"\n"
+"        Credit Note issued today in USD at a rate => 1 MXN = 1.25 USD.\n"
+"        Booked like:\n"
+"\n"
+"            Revenue              800                1000    USD\n"
+"            Taxes to Collect     128                 160    USD\n"
+"\n"
+"                Receivable               928       -1160    USD\n"
+"\n"
+"        This Generates a Exchange Rate Difference.\n"
+"        Booked like:\n"
+"\n"
+"            Loss Exchange rate   522                   0    USD\n"
+"                Receivable               522           0    USD\n"
+"\n"
+"        And two Tax Cash Basis Entry are generated.\n"
+"        Booked like:\n"
+"\n"
+"            Tax Base Account     800                1000    USD\n"
+"                Tax Base Account         800       -1000    USD\n"
+"            Taxes to Collect     128                 160    USD\n"
+"                Taxes to Paid            128        -160    USD\n"
+"\n"
+"            Tax Base Account     800                1000    USD\n"
+"                Tax Base Account         800       -1000    USD\n"
+"            Taxes to Paid        128                 160    USD\n"
+"                Taxes to Collect         128        -160    USD\n"
+"\n"
+"        What I expect from here:\n"
+"            - Base to report to DIOT if it would be the case (not in this case): \n"
+"              * Tax Base Account MXN 800.00 and MXN -800.00\n"
+"            - Paid to SAT MXN 0.00\n"
+"            - Have a difference of MXN -72.00 for Taxes to Collect that I would\n"
+"              later have to issue as a Gain in Exchange Rate Difference\n"
+"\n"
+"            Taxes to Collect      72                   0    USD\n"
+"                Gain Exchange rate        72           0    USD\n"
+"\n"
+"Credits\n"
+"=======\n"
+"\n"
+"**Contributors**\n"
+"\n"
+"* Nhomar Hernandez <nhomar@vauxoo.com> (Planner/Auditor)\n"
+"* Luis Torres <luis_t@vauxoo.com> (Auditor)\n"
+"* Humberto Arocha <luis_t@vauxoo.com> (Planner/Developer)\n"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__vat
 #: model:ir.model.fields,field_description:base.field_res_partner__vat
 #: model:ir.model.fields,field_description:base.field_res_users__vat
@@ -24165,11 +24679,12 @@ msgstr "技术名称"
 #. module: base
 #: model:ir.module.category,name:base.module_category_hidden
 #: model:ir.module.category,name:base.module_category_technical_settings
+#: model_terms:ir.ui.view,arch_db:base.user_groups_view
 msgid "Technical Settings"
 msgstr "技术设置"
 
 #. module: base
-#: code:addons/base/models/ir_translation.py:782
+#: code:addons/base/models/ir_translation.py:794
 #, python-format
 msgid "Technical Translations"
 msgstr "技术翻译"
@@ -24688,7 +25203,7 @@ msgstr "州省代码。"
 #: code:addons/base/models/ir_model.py:531
 #, python-format
 msgid "The table %r if used for other, possibly incompatible fields."
-msgstr "如果该表 ％r 用于其他用途，可能会造成字段不兼容。"
+msgstr "如果该表 %r 用于其他用途，可能会造成字段不兼容。"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields__model
@@ -25311,7 +25826,7 @@ msgstr ""
 "- '在记录上写'：更新记录的值\n"
 "- “执行几个动作”：定义触发其他几个服务器动作的动作\n"
 "- “添加追随者”：将追随者添加到记录中（在讨论中可用）\n"
-"- “发送电子邮件”：自动发送电子邮件（在email_template中提供）"
+"- “发送EMail”：自动发送EMail（在email_template中提供）"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_constraint__type
@@ -26468,6 +26983,11 @@ msgid "Yemen"
 msgstr "也门"
 
 #. module: base
+#: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
+msgid "Yes, I understand the risks"
+msgstr "是的，我了解相应风险"
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_account_yodlee
 msgid "Yodlee"
 msgstr "Yodlee"
@@ -27012,11 +27532,6 @@ msgstr "snailmail_account"
 #: model:ir.module.module,shortdesc:base.module_social_media
 msgid "social_media"
 msgstr "social_media"
-
-#. module: base
-#: model:ir.module.category,name:base.module_category_stock
-msgid "stock"
-msgstr "库存"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_zebra

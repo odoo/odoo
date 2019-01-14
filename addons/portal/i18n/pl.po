@@ -7,12 +7,12 @@
 # zbik2607 <darek@krokus.com.pl>, 2018
 # Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2018
 # Grażyna Grzelak <grazyna.grzelak@openglobe.pl>, 2018
-# Tomasz Leppich <t.leppich@gmail.com>, 2018
 # Piotr Szlązak <szlazakpiotr@gmail.com>, 2018
 # Marcin Młynarczyk <mlynarczyk@gmail.com>, 2018
 # Andrzej Donczew <a.donczew@hadron.eu.com>, 2018
 # Maja Stawicka <mjstwck@wp.pl>, 2018
 # Wiktor Kaźmierczak <wik92tor@wp.pl>, 2018
+# Tomasz Leppich <t.leppich@gmail.com>, 2018
 # Paweł Wodyński <pw@myodoo.pl>, 2018
 # 
 msgid ""
@@ -44,7 +44,7 @@ msgstr "<b>Zaloguj się</b>"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_back_in_edit_mode
 msgid "<i class=\"fa fa-arrow-right\"/> Back to edit mode"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-right\"/> Wróć do edycji dokumentu"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_layout
@@ -612,7 +612,7 @@ msgstr "Na razie nie ma komentarzy."
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_back_in_edit_mode
 msgid "This is a preview of the customer portal."
-msgstr ""
+msgstr "To jest podgląd portalu klienta."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
@@ -653,6 +653,12 @@ msgstr "Użytkownicy"
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
 msgid "VAT Number"
 msgstr "Numer NIP"
+
+#. module: portal
+#: code:addons/portal/models/portal_mixin.py:83
+#, python-format
+msgid "View %s"
+msgstr "Widok %s"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_account_analytic_account__website_message_ids

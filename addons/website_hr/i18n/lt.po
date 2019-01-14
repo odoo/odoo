@@ -3,26 +3,34 @@
 # * website_hr
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
-# Antanas Muliuolis <an.muliuolis@gmail.com>, 2017
+# Martin Trigaux, 2018
+# Antanas Muliuolis <an.muliuolis@gmail.com>, 2018
+# Linas Versada <linaskrisiukenas@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:54+0000\n"
-"PO-Revision-Date: 2017-09-20 09:54+0000\n"
-"Last-Translator: Antanas Muliuolis <an.muliuolis@gmail.com>, 2017\n"
+"POT-Creation-Date: 2018-09-18 09:49+0000\n"
+"PO-Revision-Date: 2018-08-24 09:34+0000\n"
+"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2018\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: lt\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: website_hr
 #: model:ir.model,name:website_hr.model_hr_employee
+#: model_terms:ir.ui.view,arch_db:website_hr.aboutus
 msgid "Employee"
 msgstr "Darbuotojas"
+
+#. module: website_hr
+#: model:ir.model.fields,field_description:website_hr.field_hr_employee__is_published
+msgid "Is published"
+msgstr ""
 
 #. module: website_hr
 #: model_terms:ir.ui.view,arch_db:website_hr.aboutus
@@ -30,11 +38,36 @@ msgid "Our Team"
 msgstr "Mūsų komanda"
 
 #. module: website_hr
-#: model:ir.model.fields,field_description:website_hr.field_hr_employee_public_info
+#: model:ir.model.fields,field_description:website_hr.field_hr_employee__public_info
 msgid "Public Info"
 msgstr "Vieša informacija"
 
 #. module: website_hr
+#: model:ir.model.fields,help:website_hr.field_hr_employee__website_id
+msgid "Restrict publishing to this website."
+msgstr ""
+
+#. module: website_hr
+#: model:ir.model.fields,help:website_hr.field_hr_employee__website_url
+msgid "The full URL to access the document through the website."
+msgstr "Pilna nuoroda dokumento pasiekimui per tinklalapį."
+
+#. module: website_hr
+#: model:ir.model.fields,field_description:website_hr.field_hr_employee__website_published
+msgid "Visible on current website"
+msgstr ""
+
+#. module: website_hr
+#: model:ir.model.fields,field_description:website_hr.field_hr_employee__website_id
+msgid "Website"
+msgstr "Svetainė"
+
+#. module: website_hr
 #: model:ir.actions.act_url,name:website_hr.action_open_website
 msgid "Website About"
-msgstr "Apie tinklalapį"
+msgstr "Apie svetainę"
+
+#. module: website_hr
+#: model:ir.model.fields,field_description:website_hr.field_hr_employee__website_url
+msgid "Website URL"
+msgstr "Svetainės nuoroda"

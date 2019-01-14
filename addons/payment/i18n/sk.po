@@ -4,19 +4,21 @@
 # 
 # Translators:
 # Robert Kirschner <robertkirschner@yahoo.com>, 2018
-# Martin Trigaux, 2018
 # Matus Krnac <matus.krnac@gmail.com>, 2018
+# Martin Trigaux, 2018
+# Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2018
 # Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2018
 # Miroslav Fic <mirko.fic@gmail.com>, 2018
 # gebri <gebri@inmail.sk>, 2018
-# Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2018
+# Jan Prokop, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2018\n"
+"PO-Revision-Date: 2018-08-24 09:21+0000\n"
+"Last-Translator: Jan Prokop, 2018\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -954,7 +956,7 @@ msgstr "Manuálne"
 #. module: payment
 #: selection:payment.acquirer,provider:0
 msgid "Manual Configuration"
-msgstr ""
+msgstr "Ručné nastavenie"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__inbound_payment_method_ids
@@ -1058,6 +1060,14 @@ msgstr ""
 #: selection:payment.acquirer,save_token:0
 msgid "Never"
 msgstr "Nikdy"
+
+#. module: payment
+#: code:addons/payment/wizards/payment_acquirer_onboarding_wizard.py:127
+#, python-format
+msgid ""
+"No manual payment method could be found for this company. Please create one "
+"from the Payment Acquirer menu."
+msgstr ""
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -1902,6 +1912,12 @@ msgstr "Drôtový prenos"
 #: code:addons/payment/static/src/xml/payment_processing.xml:59
 #, python-format
 msgid "You can click here to be redirected to the confirmation page."
+msgstr ""
+
+#. module: payment
+#: code:addons/payment/wizards/payment_acquirer_onboarding_wizard.py:135
+#, python-format
+msgid "You have to set a journal for your payment acquirer %s."
 msgstr ""
 
 #. module: payment

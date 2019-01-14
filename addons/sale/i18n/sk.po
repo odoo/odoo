@@ -4,20 +4,22 @@
 # 
 # Translators:
 # palica <pavol.cupka@gmail.com>, 2018
+# Miroslav Fic <mirko.fic@gmail.com>, 2018
+# Robert Kirschner <robertkirschner@yahoo.com>, 2018
 # Martin Trigaux, 2018
 # Matus Krnac <matus.krnac@gmail.com>, 2018
 # Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2018
 # Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2018
-# Miroslav Fic <mirko.fic@gmail.com>, 2018
 # gebri <gebri@inmail.sk>, 2018
-# Robert Kirschner <robertkirschner@yahoo.com>, 2018
+# Jan Prokop, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-10-08 06:49+0000\n"
-"PO-Revision-Date: 2018-10-08 06:49+0000\n"
-"Last-Translator: Robert Kirschner <robertkirschner@yahoo.com>, 2018\n"
+"PO-Revision-Date: 2018-08-24 09:24+0000\n"
+"Last-Translator: Jan Prokop, 2018\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,7 +35,7 @@ msgstr "# riadky"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_transaction__sale_order_ids_nbr
 msgid "# of Sales Orders"
-msgstr ""
+msgstr "# objednávok predaja"
 
 #. module: sale
 #: model:mail.template,report_name:sale.email_template_edi_sale
@@ -156,21 +158,23 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
 msgid "<i class=\"fa fa-fw fa-check\" role=\"img\" aria-label=\"Done\" title=\"Done\"/>Done"
 msgstr ""
+"<i class=\"fa fa-fw fa-check\" role=\"img\" aria-label=\"Done\" "
+"title=\"Done\"/>Hotovo"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<i class=\"fa fa-fw fa-check\"/> <b>Paid</b>"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-check\"/> <b>Zaplatené</b>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<i class=\"fa fa-fw fa-clock-o\"/> <b>Waiting Payment</b>"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-clock-o\"/> <b>Čakajúca platba</b>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
 msgid "<i class=\"fa fa-fw fa-clock-o\"/> Expired"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-clock-o\"/> Expirované"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
@@ -457,7 +461,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__access_warning
 msgid "Access warning"
-msgstr ""
+msgstr "Varovanie prístupu"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__qty_delivered_method
@@ -492,7 +496,7 @@ msgstr "Aktivity"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_state
 msgid "Activity State"
-msgstr ""
+msgstr "Stav aktivity"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.mail_activity_type_action_config_sale
@@ -627,7 +631,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "Počet príloh"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_attribute_custom_value__attribute_value_id
@@ -840,7 +844,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model,name:sale.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Nastavenie konfigurácie"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_sale_config
@@ -1014,7 +1018,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__access_url
 msgid "Customer Portal URL"
-msgstr ""
+msgstr "URL zákazníckeho portálu"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__client_order_ref
@@ -1245,7 +1249,7 @@ msgstr "Zobrazovaný Názov"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__display_type
 msgid "Display Type"
-msgstr ""
+msgstr "Zobrazovaný typ"
 
 #. module: sale
 #: selection:res.company,sale_onboarding_order_confirmation_state:0
@@ -1335,7 +1339,7 @@ msgstr "Rozšírené filtre"
 #: code:addons/sale/models/sale.py:1034
 #, python-format
 msgid "Extra line with %s "
-msgstr ""
+msgstr "Zvláštny riadok s %s "
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_fedex
@@ -1387,7 +1391,7 @@ msgstr "Plne vyfaktúrované"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Future Activities"
-msgstr ""
+msgstr "Budúce aktivity"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1469,7 +1473,7 @@ msgstr "Ak zaškrtnuté, nové správy vyžadujú vašu pozornosť."
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "Ak zaškrtnuté, niektoré správy majú chybu dodania."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -1503,7 +1507,7 @@ msgstr ""
 #: code:addons/sale/models/product_template.py:89
 #, python-format
 msgid "Import Template for Products"
-msgstr ""
+msgstr "Import šablóny produktu"
 
 #. module: sale
 #: code:addons/sale/models/product_template.py:92
@@ -1807,7 +1811,7 @@ msgstr "Naposledy upravované"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Late Activities"
-msgstr ""
+msgstr "Neskoršie aktivity"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1826,7 +1830,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Lock"
-msgstr ""
+msgstr "Zamknúť"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__auto_done_setting
@@ -1836,7 +1840,7 @@ msgstr ""
 #. module: sale
 #: selection:sale.order,state:0
 msgid "Locked"
-msgstr ""
+msgstr "Uzamknuté"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.onboarding_quotation_layout_step
@@ -1846,7 +1850,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "Hlavná príloha"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1889,7 +1893,7 @@ msgstr "Marže"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "Chyba zobrazovania správ"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_partner__sale_warn_msg
@@ -1935,7 +1939,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "My Activities"
-msgstr ""
+msgstr "Moje aktivity"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -1973,7 +1977,7 @@ msgstr "Nová cenová ponuka"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr ""
+msgstr "Ďalšia lehota aktivity"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_summary
@@ -1983,7 +1987,7 @@ msgstr "Zhrnutie ďalšej aktivity"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_type_id
 msgid "Next Activity Type"
-msgstr ""
+msgstr "Typ ďalšej aktivity"
 
 #. module: sale
 #: selection:product.template,expense_policy:0
@@ -2046,7 +2050,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_has_error_counter
 msgid "Number of error"
-msgstr ""
+msgstr "Číslo chyby"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__message_needaction_counter
@@ -2056,7 +2060,7 @@ msgstr "Počet správ ktoré vyžadujú akciu"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "Počet chýb zobrazovania správ"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__quotations_count
@@ -2421,7 +2425,7 @@ msgstr "Reťazové spracovanie"
 #. module: sale
 #: selection:sale.order,activity_state:0
 msgid "Planned"
-msgstr ""
+msgstr "Plánované"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:450
@@ -2442,7 +2446,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__access_url
 msgid "Portal Access URL"
-msgstr ""
+msgstr "URL portálového prístupu"
 
 #. module: sale
 #: selection:sale.report,state:0
@@ -2584,7 +2588,7 @@ msgstr "Kategória produktu"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_image
 msgid "Product Image"
-msgstr ""
+msgstr "Obrázok produktu"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales__product_qty
@@ -2915,7 +2919,7 @@ msgstr "Analýza predaja"
 #. module: sale
 #: model:ir.model,name:sale.model_sale_report
 msgid "Sales Analysis Report"
-msgstr ""
+msgstr "Report analýzy predaja"
 
 #. module: sale
 #: model:ir.model,name:sale.model_crm_team
@@ -3249,7 +3253,7 @@ msgstr "Informácia o doprave"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Show all records which has next action date is before today"
-msgstr ""
+msgstr "Zobraz všetky záznamy ktorých následná aktivita je pred dnešným dňom"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3413,7 +3417,7 @@ msgstr "Dane použité pre vklady"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__display_type
 msgid "Technical field for UX purpose."
-msgstr ""
+msgstr "Technické pole používané na účely UX"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -3825,7 +3829,7 @@ msgstr "Merné jednotky"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Unlock"
-msgstr ""
+msgstr "Odomkni"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_unread

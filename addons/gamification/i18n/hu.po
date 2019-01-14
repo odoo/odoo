@@ -8,14 +8,15 @@
 # krnkris, 2018
 # gezza <geza.nagy@oregional.hu>, 2018
 # Ákos Nagy <akos.nagy@oregional.hu>, 2018
+# Tibor Kőnig <konig.tibor@evitalit.hu>, 2018
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 06:49+0000\n"
+"POT-Creation-Date: 2018-12-19 08:21+0000\n"
 "PO-Revision-Date: 2018-08-24 09:18+0000\n"
-"Last-Translator: Ákos Nagy <akos.nagy@oregional.hu>, 2018\n"
+"Last-Translator: Tibor Kőnig <konig.tibor@evitalit.hu>, 2018\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -287,7 +288,7 @@ msgid ""
 "                                        <tr><td style=\"padding:0 30px;\">\n"
 "                                            <table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\" style=\"table-layout: fixed;\">\n"
 "                                                <tr>\n"
-"                                                    % set top_goals = [line['goals'][1], line['goals'][0], line['goals'][2]]\n"
+"                                                    % set top_goals = line['goals'][:3]\n"
 "                                                    % for goal in top_goals:\n"
 "                                                        <td align=\"center\" style=\"width:32%;\">\n"
 "                                                            % if loop.index == 1:\n"
@@ -497,7 +498,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__message_attachment_count
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "Mellékletek száma"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__rule_auth_user_ids

@@ -336,7 +336,8 @@ var PivotController = AbstractController.extend({
         var col_id = $target.data('id');
         var measure = $target.data('measure');
         var isAscending = $target.hasClass('o_pivot_measure_row_sorted_asc');
-        this.model.sortRows(col_id, measure, isAscending);
+        var dataType = $target.data('data_type');
+        this.model.sortRows(col_id, measure, isAscending, dataType);
         this.update({}, {reload: false});
     },
     /**

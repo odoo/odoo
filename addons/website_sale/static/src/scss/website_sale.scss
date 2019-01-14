@@ -80,7 +80,7 @@
         right: 0;
         bottom: 0;
         overflow: hidden;
-        padding: 0 15px 24px 10px;
+        padding: 0 15px 0 10px;
         min-height: 56px;
         border-top: 1px solid rgba(255,255,255,0.2);
         background: rgba(255, 255, 255, 0.75);
@@ -88,8 +88,6 @@
     }
 
     .product_price {
-        padding: 5px 0;
-        position: absolute;
         bottom: 0;
     }
 
@@ -612,6 +610,11 @@ a.no-decoration {
 }
 
 #o-carousel-product {
+
+    &.css_not_available {
+        opacity: 0.2;
+    }
+
     .carousel-inner div.item, .carousel-control-prev, .carousel-control-next {
         height: 400px;
     }
@@ -687,7 +690,7 @@ a.no-decoration {
 
 .o_website_sale_animate {
     opacity: 0.7;
-    position: absolute;
+    position: absolute !important;
     height: 150px;
     width: 150px;
     z-index: 1020;

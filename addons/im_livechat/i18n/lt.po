@@ -3,51 +3,59 @@
 # * im_livechat
 # 
 # Translators:
-# digitouch UAB <digitouchagencyeur@gmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
-# Rytis Štreimikis <r.streimikis@hotmail.lt>, 2017
-# Antanas Muliuolis <an.muliuolis@gmail.com>, 2017
-# Monika Raciunaite <monika.raciunaite@gmail.com>, 2017
-# Rolandas <info@paninfo.lt>, 2017
-# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2017
-# Audrius Palenskis <audrius.palenskis@gmail.com>, 2017
+# Martin Trigaux, 2018
+# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2018
+# Rolandas <info@paninfo.lt>, 2018
+# Antanas Muliuolis <an.muliuolis@gmail.com>, 2018
+# Monika Raciunaite <monika.raciunaite@gmail.com>, 2018
+# digitouch UAB <digitouchagencyeur@gmail.com>, 2018
+# Linas Versada <linaskrisiukenas@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 11.0\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-30 13:12+0000\n"
-"PO-Revision-Date: 2017-11-30 13:12+0000\n"
-"Last-Translator: Audrius Palenskis <audrius.palenskis@gmail.com>, 2017\n"
+"POT-Creation-Date: 2018-09-21 13:18+0000\n"
+"PO-Revision-Date: 2018-08-24 09:19+0000\n"
+"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2019\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: lt\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: im_livechat
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator_nbr_channel
+#: model_terms:ir.ui.view,arch_db:im_livechat.mail_channel_view_tree
+msgid "# Messages"
+msgstr ""
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator__nbr_channel
 msgid "# of Sessions"
 msgstr "# sesijų"
 
 #. module: im_livechat
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel_nbr_speaker
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__nbr_speaker
 msgid "# of speakers"
-msgstr ""
+msgstr "pranešėjų"
 
 #. module: im_livechat
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rating_percentage_satisfaction
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__rating_percentage_satisfaction
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "% Happy"
 msgstr "% Laimingas"
 
 #. module: im_livechat
-#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule_action
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule__action
 msgid ""
 "* 'Display the button' displays the chat button on the pages.\n"
 "* 'Auto popup' displays the button and automatically open the conversation pane.\n"
 "* 'Hide the button' hides the chat button on the pages."
 msgstr ""
+"* \"Rodyti mygtuką\" rodo pokalbio mygtuką puslapiuose.\n"
+"* \"Automatinis iššokantis langas\" rodo mygtuką ir automatiškai atidaro pokalbio langą.\n"
+"* \"Slėpti mygtuką\" paslepia pokalbio mygtuką puslapiuose."
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -58,25 +66,35 @@ msgid ""
 "country, GeoIP must be installed on your server, otherwise, the countries of"
 " the rule will not be taken into account.</span>"
 msgstr ""
+"<span>Nustatykite taisykles savo gyvo palaikymo kanalui. Galite taikyti "
+"veiksmą (išjungti palaikymą, automatiškai atidaryti palaikymą, tiesiog "
+"padaryti mygtuką pasiekiamu) konkrečiai nuorodai arba šaliai. <br/>Norint "
+"identifikuoti šalį, jūsų serveryje turi būti įdiegtas GeoIP, kitu atveju į "
+"šalis taisyklėje nebus kreipiama dėmesio. </span>"
 
 #. module: im_livechat
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule_action
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__action
 msgid "Action"
 msgstr "Veiksmas"
 
 #. module: im_livechat
-#: model:ir.model.fields,field_description:im_livechat.field_mail_channel_anonymous_name
-msgid "Anonymous Name"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:im_livechat.mail_channel_view_form
+msgid "Anonymous"
+msgstr "Anoniminis"
 
 #. module: im_livechat
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_are_you_inside
+#: model:ir.model.fields,field_description:im_livechat.field_mail_channel__anonymous_name
+msgid "Anonymous Name"
+msgstr "Anoniminis vardas"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__are_you_inside
 msgid "Are you inside the matrix?"
-msgstr ""
+msgstr "Ar esate matricos viduje?"
 
 #. module: im_livechat
 #. openerp-web
-#: code:addons/im_livechat/static/src/js/im_livechat.js:48
+#: code:addons/im_livechat/static/src/js/im_livechat.js:60
 #, python-format
 msgid "Ask something ..."
 msgstr "Paklauskite ko nors .."
@@ -90,28 +108,38 @@ msgstr "Dalyviai"
 #. module: im_livechat
 #: selection:im_livechat.channel.rule,action:0
 msgid "Auto popup"
-msgstr ""
+msgstr "Iššokantis \"Apie\" langas"
 
 #. module: im_livechat
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule_auto_popup_timer
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__auto_popup_timer
 msgid "Auto popup timer"
+msgstr "Automatinio iššokančio lango laikmatis"
+
+#. module: im_livechat
+#: model:ir.model,name:im_livechat.model_ir_autovacuum
+msgid "Automatic Vacuum"
 msgstr ""
 
 #. module: im_livechat
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel_duration
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator_duration
+#: model_terms:ir.ui.view,arch_db:im_livechat.mail_channel_view_form
+msgid "Avatar"
+msgstr "Portretas"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__duration
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator__duration
 msgid "Average duration"
 msgstr "Vidutinė trukmė"
 
 #. module: im_livechat
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel_nbr_message
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__nbr_message
 msgid "Average message"
-msgstr " "
+msgstr " Vidutinė žinutė"
 
 #. module: im_livechat
-#: model:ir.model.fields,help:im_livechat.field_im_livechat_report_operator_time_to_answer
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_report_operator__time_to_answer
 msgid "Average time to give the first answer to the visitor"
-msgstr ""
+msgstr "Vidutinis laikas, per kurį lankytojui pateikiamas pirmasis atsakymas"
 
 #. module: im_livechat
 #. openerp-web
@@ -134,20 +162,26 @@ msgid ""
 "                replaced directly in your message, so that you can still edit\n"
 "                it before sending."
 msgstr ""
+"Paruošti atsakymai leidžia jums įterpti iš anksto paruoštus \n"
+"atsakymus į jūsų žinutes parašant <i>:trumpinys</i>. Trumpinys\n"
+"yra tiesiogiai pakeičiamas jūsų žinutėje, todėl jį galite radaguoti\n"
+"prieš išsiunčiant."
 
 #. module: im_livechat
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule_channel_id
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel_livechat_channel_id
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator_livechat_channel_id
-#: model:ir.model.fields,field_description:im_livechat.field_mail_channel_livechat_channel_id
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__channel_id
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__livechat_channel_id
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator__livechat_channel_id
+#: model:ir.model.fields,field_description:im_livechat.field_mail_channel__livechat_channel_id
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_search
 #: model_terms:ir.ui.view,arch_db:im_livechat.mail_channel_view_search
+#: selection:mail.channel,channel_type:0
 msgid "Channel"
 msgstr "Kanalas"
 
 #. module: im_livechat
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel_channel_name
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__channel_name
 msgid "Channel Name"
 msgstr "Kanalo pavadinimas"
 
@@ -157,10 +191,14 @@ msgid "Channel Rule"
 msgstr "Kanalo taisyklė"
 
 #. module: im_livechat
-#: model:ir.model,name:im_livechat.model_im_livechat_channel_rule
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Channel Rules"
 msgstr "Kanalo taisyklės"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_mail_channel__channel_type
+msgid "Channel Type"
+msgstr "Kanalo tipas"
 
 #. module: im_livechat
 #: model:ir.ui.menu,name:im_livechat.support_channels
@@ -168,30 +206,26 @@ msgid "Channels"
 msgstr "Kanalai"
 
 #. module: im_livechat
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_input_placeholder
+#: selection:mail.channel,channel_type:0
+msgid "Chat Discussion"
+msgstr "Pokalbis diskusija"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__input_placeholder
 msgid "Chat Input Placeholder"
-msgstr ""
+msgstr "Susirašinėjimo įvesties vietaženklis"
 
 #. module: im_livechat
 #. openerp-web
-#: code:addons/im_livechat/static/src/js/im_livechat.js:50
+#: code:addons/im_livechat/static/src/js/im_livechat.js:62
 #, python-format
 msgid "Chat with one of our collaborators"
-msgstr ""
+msgstr "Susirašinėkite su vienu iš mūsų partnerių"
 
 #. module: im_livechat
-#: model_terms:ir.actions.act_window,help:im_livechat.im_livechat_canned_response_action
-msgid "Click to create a new canned response."
-msgstr ""
-
-#. module: im_livechat
-#: model_terms:ir.actions.act_window,help:im_livechat.im_livechat_channel_action
-msgid "Click to define a new website live chat channel."
-msgstr ""
-
-#. module: im_livechat
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel_technical_name
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__technical_name
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.rating_rating_view_search_livechat
 msgid "Code"
 msgstr "Kodas"
 
@@ -201,81 +235,62 @@ msgid "Configuration"
 msgstr "Nustatymai"
 
 #. module: im_livechat
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel_channel_id
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator_channel_id
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__channel_id
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator__channel_id
 msgid "Conversation"
 msgstr "Pokalbis"
-
-#. module: im_livechat
-#. openerp-web
-#: code:addons/im_livechat/static/src/js/copy_clipboard.js:32
-#, python-format
-msgid "Copied !"
-msgstr ""
-
-#. module: im_livechat
-#. openerp-web
-#: code:addons/im_livechat/static/src/xml/copy_clipboard.xml:6
-#: code:addons/im_livechat/static/src/xml/copy_clipboard.xml:12
-#, python-format
-msgid "Copy Text"
-msgstr ""
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid ""
 "Copy and paste this code into your website, within the &lt;head&gt; tag:"
 msgstr ""
+"Nukopijuokite ir įklijuokite šį kodą į savo svetainės kodą, tarp "
+"&lt;head&gt; žymų:"
 
 #. module: im_livechat
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule_country_ids
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__country_ids
 msgid "Country"
-msgstr "Valstybė"
+msgstr "Šalis"
 
 #. module: im_livechat
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_create_uid
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule_create_uid
+#: model_terms:ir.actions.act_window,help:im_livechat.mail_channel_action
+msgid "Create a channel and start chatting to fill up your history."
+msgstr ""
+
+#. module: im_livechat
+#: model_terms:ir.actions.act_window,help:im_livechat.im_livechat_canned_response_action
+msgid "Create a new canned response"
+msgstr ""
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__create_uid
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__create_uid
 msgid "Created by"
 msgstr "Sukūrė"
 
 #. module: im_livechat
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_create_date
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule_create_date
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__create_date
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__create_date
 msgid "Created on"
 msgstr "Sukurta"
 
 #. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.mail_channel_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.rating_rating_view_search_livechat
+msgid "Creation Date"
+msgstr "Sukūrimo data"
+
+#. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_search
-#: model_terms:ir.ui.view,arch_db:im_livechat.mail_channel_view_search
-msgid "Creation date (day)"
-msgstr "Sukūrimo data (diena)"
+msgid "Creation date"
+msgstr "Sukūrimo data"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
 msgid "Creation date (hour)"
 msgstr "Sukūrimo data (valanda)"
-
-#. module: im_livechat
-#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
-#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_search
-#: model_terms:ir.ui.view,arch_db:im_livechat.mail_channel_view_search
-msgid "Creation date (month)"
-msgstr "Sukūrimo data (mėnuo)"
-
-#. module: im_livechat
-#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
-#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_search
-#: model_terms:ir.ui.view,arch_db:im_livechat.mail_channel_view_search
-msgid "Creation date (week)"
-msgstr "Sukūrimo data (savaitė)"
-
-#. module: im_livechat
-#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
-#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_search
-#: model_terms:ir.ui.view,arch_db:im_livechat.mail_channel_view_search
-msgid "Creation date (year)"
-msgstr "Sukūrimo data (metai)"
 
 #. module: im_livechat
 #: model:ir.actions.act_window,name:im_livechat.rating_rating_action_livechat_report
@@ -284,53 +299,56 @@ msgid "Customer Ratings"
 msgstr "Kliento vertinimai"
 
 #. module: im_livechat
-#: model_terms:ir.actions.act_window,help:im_livechat.rating_rating_action_livechat_report
-msgid "Customer ratings on livechat session."
-msgstr ""
-
-#. module: im_livechat
-#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_button_text
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel__button_text
 msgid "Default text displayed on the Livechat Support Button"
+msgstr "Numatytasis tekstas, rodomas susirašinėjimo palaikymo mygtuke"
+
+#. module: im_livechat
+#: model_terms:ir.actions.act_window,help:im_livechat.im_livechat_channel_action
+msgid "Define a new website live chat channel"
 msgstr ""
 
 #. module: im_livechat
-#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule_auto_popup_timer
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule__auto_popup_timer
 msgid ""
 "Delay (in seconds) to automatically open the conversation window. Note: the "
 "selected action must be 'Auto popup' otherwise this parameter will not be "
 "taken into account."
 msgstr ""
+"Delsimas (sekundėmis) automatiškai atidaryti pokalbio langą. Pastaba: "
+"pasirinktas veiksmas turi būti \"Automatinis iššokantis langas\", kitu "
+"atveju, šis parametras bus ignoruojamas."
 
 #. module: im_livechat
 #. openerp-web
 #: code:addons/im_livechat/static/src/xml/im_livechat.xml:7
 #, python-format
 msgid "Did we correctly answer your question ?"
-msgstr ""
+msgstr "Ar teisingai atsakėme į jūsų klausimą?"
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_mail_channel
 msgid "Discussion channel"
-msgstr "Diskusijos kanalas"
+msgstr "Diskusijų kanalas"
 
 #. module: im_livechat
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_display_name
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule_display_name
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel_display_name
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator_display_name
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__display_name
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__display_name
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__display_name
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator__display_name
 msgid "Display Name"
-msgstr "Vaizduojamas pavadinimas"
+msgstr "Rodomas pavadinimas"
 
 #. module: im_livechat
 #: selection:im_livechat.channel.rule,action:0
 msgid "Display the button"
-msgstr ""
+msgstr "Rodyti mygtuką"
 
 #. module: im_livechat
-#: model:ir.model.fields,help:im_livechat.field_im_livechat_report_channel_duration
-#: model:ir.model.fields,help:im_livechat.field_im_livechat_report_operator_duration
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_report_channel__duration
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_report_operator__duration
 msgid "Duration of the conversation (in seconds)"
-msgstr ""
+msgstr "Pokalbio trukmė (sekundėmis)"
 
 #. module: im_livechat
 #: model_terms:ir.actions.act_window,help:im_livechat.im_livechat_channel_action
@@ -338,28 +356,37 @@ msgid ""
 "Each channel has it's own URL that you can send by email to\n"
 "                your customers in order to start chatting with you."
 msgstr ""
+"Kiekvienas kanalas turi savo URL, kurį galite paštu nusiųsti\n"
+"savo klientams, kad pradėtumėte pokalbį su jais."
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.mail_channel_view_search
+msgid "Empty Sessions"
+msgstr ""
 
 #. module: im_livechat
 #. openerp-web
 #: code:addons/im_livechat/static/src/xml/im_livechat.xml:19
 #, python-format
 msgid "Explain your note"
-msgstr ""
+msgstr "Paaiškinkite savo pastabą"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid ""
-"For website built with Odoo CMS, please install the website_livechat module."
-" Then go to Website Admin &gt; Configuration &gt; Settings and select the "
+"For websites built with the Odoo CMS, please install the website_livechat "
+"module. Then go to Website &gt; Configuration &gt; Settings and select the "
 "Website Live Chat Channel you want to add on your website."
 msgstr ""
 
 #. module: im_livechat
-#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule_sequence
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule__sequence
 msgid ""
 "Given the order to find a matching rule. If 2 rules are matching for the "
 "given url/country, the one with the lowest sequence will be chosen."
 msgstr ""
+"Duotas užsakymas surasti sutampančią taisyklę. Jei pateiktai nuorodai/šaliai"
+" sutampa 2 taisyklės, bus pasirinkta turinti žemiausią seką."
 
 #. module: im_livechat
 #. openerp-web
@@ -376,6 +403,11 @@ msgid "Group By..."
 msgstr "Grupuoti pagal..."
 
 #. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
+msgid "Happy face"
+msgstr ""
+
+#. module: im_livechat
 #: selection:im_livechat.channel.rule,action:0
 msgid "Hide the button"
 msgstr "Paslėpti mygtuką"
@@ -388,46 +420,46 @@ msgid "History"
 msgstr "Istorija"
 
 #. module: im_livechat
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel_start_date_hour
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__start_date_hour
 msgid "Hour of start Date of session"
-msgstr ""
+msgstr "Sesijos pradžios dienos valanda"
 
 #. module: im_livechat
 #. openerp-web
-#: code:addons/im_livechat/static/src/js/im_livechat.js:51
+#: code:addons/im_livechat/static/src/js/im_livechat.js:63
 #, python-format
 msgid "How may I help you?"
-msgstr "Kuo galime padėti?"
+msgstr "Kuo galiu padėti?"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "How to use the Website Live Chat widget?"
-msgstr ""
+msgstr "Kaip naudoti svetainės gyvojo susirašinėjimo skydelį?"
 
 #. module: im_livechat
 #. openerp-web
-#: code:addons/im_livechat/static/src/xml/im_livechat.xml:15
+#: code:addons/im_livechat/static/src/xml/im_livechat.xml:16
 #, python-format
 msgid "I don't want to rate this conversation"
-msgstr ""
+msgstr "Nenoriu vertinti šio pokalbio"
 
 #. module: im_livechat
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_id
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule_id
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel_id
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator_id
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__id
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__id
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__id
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator__id
 msgid "ID"
 msgstr "ID"
 
 #. module: im_livechat
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_image
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__image
 msgid "Image"
 msgstr "Paveikslėlis"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
 msgid "Join"
-msgstr "Jungtis"
+msgstr "Prisijungti"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -441,40 +473,29 @@ msgid "Last 24h"
 msgstr "Paskutinės 24 val."
 
 #. module: im_livechat
-#: model_terms:ir.ui.view,arch_db:im_livechat.rating_rating_view_search_livechat
-msgid "Last 7 days"
-msgstr "Paskutinės 7 dienos"
-
-#. module: im_livechat
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel___last_update
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule___last_update
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel___last_update
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator___last_update
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel____last_update
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule____last_update
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel____last_update
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator____last_update
 msgid "Last Modified on"
 msgstr "Paskutinį kartą keista"
 
 #. module: im_livechat
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule_write_uid
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_write_uid
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__write_uid
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__write_uid
 msgid "Last Updated by"
 msgstr "Paskutinį kartą atnaujino"
 
 #. module: im_livechat
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule_write_date
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_write_date
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__write_date
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__write_date
 msgid "Last Updated on"
 msgstr "Paskutinį kartą atnaujinta"
 
 #. module: im_livechat
-#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
-#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_search
-msgid "Last Week"
-msgstr ""
-
-#. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
 msgid "Leave"
-msgstr "Atostogos"
+msgstr "Palikti"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -484,17 +505,17 @@ msgstr "Palikti kanalą"
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_mail_channel_partner
 msgid "Listeners of a Channel"
-msgstr ""
+msgstr "Kanalo klausytojai"
 
 #. module: im_livechat
 #: model:ir.ui.menu,name:im_livechat.menu_livechat_root
 msgid "Live Chat"
-msgstr ""
+msgstr "Gyvas susirašinėjimas"
 
 #. module: im_livechat
 #: model:ir.module.category,name:im_livechat.module_category_im_livechat
 msgid "Live Support"
-msgstr ""
+msgstr "Gyvas palaikymas"
 
 #. module: im_livechat
 #. openerp-web
@@ -502,12 +523,27 @@ msgstr ""
 #: code:addons/im_livechat/static/src/xml/im_livechat_backend.xml:21
 #, python-format
 msgid "Livechat"
-msgstr ""
+msgstr "Gyvas susirašinėjimas"
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_im_livechat_channel
 #: model_terms:ir.ui.view,arch_db:im_livechat.rating_rating_view_search_livechat
 msgid "Livechat Channel"
+msgstr "Gyvo susirašinėjimo kanalas"
+
+#. module: im_livechat
+#: model:ir.model,name:im_livechat.model_im_livechat_channel_rule
+msgid "Livechat Channel Rules"
+msgstr ""
+
+#. module: im_livechat
+#: selection:mail.channel,channel_type:0
+msgid "Livechat Conversation"
+msgstr "Tiesioginiai pokalbiai"
+
+#. module: im_livechat
+#: model:ir.model,name:im_livechat.model_im_livechat_report_channel
+msgid "Livechat Support Channel Report"
 msgstr ""
 
 #. module: im_livechat
@@ -518,18 +554,20 @@ msgid ""
 "your company livechat session performance. Extract information about the "
 "missed sessions, the audiance, the duration of a session, etc."
 msgstr ""
+"Gyvojo pokalbio palaikymo kanalo statistika leidžia jums lengvai sekti ir "
+"analizuoti jūsų įmonės susirašinėjimo sesijų kokybę. Gaukite informaciją "
+"apie praleistas sesijas, lankytojus, sesijų trukmę ir t.t."
 
 #. module: im_livechat
-#: model:ir.model,name:im_livechat.model_im_livechat_report_channel
 #: model:ir.model,name:im_livechat.model_im_livechat_report_operator
-msgid "Livechat Support Report"
+msgid "Livechat Support Operator Report"
 msgstr ""
 
 #. module: im_livechat
 #: model:ir.actions.act_window,name:im_livechat.im_livechat_report_channel_action
 #: model:ir.actions.act_window,name:im_livechat.im_livechat_report_operator_action
 msgid "Livechat Support Report Channel"
-msgstr ""
+msgstr "Gyvojo susirašinėjimo palaikymo kanalas"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_graph
@@ -537,7 +575,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_graph
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_pivot
 msgid "Livechat Support Statistics"
-msgstr ""
+msgstr "Gyvojo susirašinėjimo palaikymo statistika"
 
 #. module: im_livechat
 #: model:res.groups,name:im_livechat.im_livechat_group_manager
@@ -545,25 +583,25 @@ msgid "Manager"
 msgstr "Vadovas"
 
 #. module: im_livechat
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule_sequence
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__sequence
 msgid "Matching order"
-msgstr ""
+msgstr "Sutampantis užsakymas"
 
 #. module: im_livechat
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_image_medium
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__image_medium
 msgid "Medium"
-msgstr "Vidutinis"
+msgstr "Kanalas"
 
 #. module: im_livechat
-#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_image_medium
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel__image_medium
 msgid ""
 "Medium-sized photo of the group. It is automatically resized as a 128x128px "
 "image, with aspect ratio preserved. Use this field in form views or some "
 "kanban views."
 msgstr ""
-"Vidutinio dydžio grupės nuotrauka. Nuotraukos dydis automatiškai "
-"sumažinamas, išlaikant kraštinių santykį, į 128x128px, kai nuotrauka viršija"
-" minėtą dydį. Naudokite šį lauką paprastose arba Kanban formose."
+"Vidutinio dydžio grupės nuotrauka. Nuotraukos dydis automatiškai sumažinamas"
+" į 128x128px, išlaikant kraštinių santykį. Naudokite šį lauką paprastose "
+"arba Kanban formose."
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
@@ -571,50 +609,60 @@ msgid "Missed sessions"
 msgstr "Praleistos sesijos"
 
 #. module: im_livechat
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_name
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__name
 msgid "Name"
 msgstr "Pavadinimas"
 
 #. module: im_livechat
-#: code:addons/im_livechat/models/mail_channel.py:125
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
+msgid "Neutral face"
+msgstr ""
+
+#. module: im_livechat
+#: model_terms:ir.actions.act_window,help:im_livechat.rating_rating_action_livechat_report
+msgid "No customer ratings on live chat session yet"
+msgstr ""
+
+#. module: im_livechat
+#: code:addons/im_livechat/models/mail_channel.py:119
 #, python-format
 msgid "No history found"
-msgstr ""
+msgstr "Istorija nerasta"
 
 #. module: im_livechat
 #. openerp-web
-#: code:addons/im_livechat/static/src/js/im_livechat.js:150
+#: code:addons/im_livechat/static/src/js/im_livechat.js:226
 #, python-format
 msgid ""
 "None of our collaborators seems to be available, please try again later."
-msgstr ""
+msgstr "Nepasiekiamas nė vienas iš jūsų partnerių, pabandykite dar kartą."
 
 #. module: im_livechat
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_nbr_channel
-#: model:ir.model.fields,help:im_livechat.field_im_livechat_report_operator_nbr_channel
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__nbr_channel
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_report_operator__nbr_channel
 msgid "Number of conversation"
-msgstr ""
+msgstr "Pokalbio numeris"
 
 #. module: im_livechat
-#: model:ir.model.fields,help:im_livechat.field_im_livechat_report_channel_nbr_speaker
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_report_channel__nbr_speaker
 msgid "Number of different speakers"
-msgstr ""
+msgstr "Skirtingų kalbėtojų skaičius"
 
 #. module: im_livechat
-#: model:ir.model.fields,help:im_livechat.field_im_livechat_report_channel_nbr_message
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_report_channel__nbr_message
 msgid "Number of message in the conversation"
-msgstr ""
+msgstr "Žinutės skaičius pokalbyje"
 
 #. module: im_livechat
 #. openerp-web
 #: code:addons/im_livechat/static/src/xml/im_livechat.xml:12
 #, python-format
 msgid "OK"
-msgstr "Gerai"
+msgstr "OK"
 
 #. module: im_livechat
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel_partner_id
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator_partner_id
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__partner_id
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator__partner_id
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_search
 msgid "Operator"
@@ -623,10 +671,10 @@ msgstr "Operatorius"
 #. module: im_livechat
 #: model:ir.ui.menu,name:im_livechat.menu_reporting_livechat_operator
 msgid "Operator Analysis"
-msgstr ""
+msgstr "Operatoriaus analizė"
 
 #. module: im_livechat
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_user_ids
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__user_ids
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Operators"
 msgstr "Operatoriai"
@@ -636,11 +684,8 @@ msgstr "Operatoriai"
 msgid ""
 "Operators\n"
 "                                            <br/>\n"
-"                                            <i class=\"fa fa-comments\"/>"
+"                                            <i class=\"fa fa-comments\" role=\"img\" aria-label=\"Comments\" title=\"Comments\"/>"
 msgstr ""
-"Operatoriai\n"
-"                                            <br/>\n"
-"                                            <i class=\"fa fa-comments\"/>"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -648,56 +693,85 @@ msgid ""
 "Operators that do not show any activity In Odoo for more than 30 minutes "
 "will be considered as disconnected."
 msgstr ""
+"Operatoriai, kurie daugiau nei 30 neatlieka jokių veiksmų \"Odoo\", bus "
+"laikomi atsijungusiais."
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Options"
-msgstr "Pasirinkimai"
+msgstr "Nustatymai"
 
 #. module: im_livechat
-#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rating_percentage_satisfaction
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel__rating_percentage_satisfaction
 msgid "Percentage of happy ratings over the past 7 days"
-msgstr ""
+msgstr "Teigiamų įvertinimų per paskutines 7 dienas procentas"
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_rating_rating
-#: model_terms:ir.ui.view,arch_db:im_livechat.mail_channel_view_form
+#: model:ir.model.fields,field_description:im_livechat.field_mail_channel__rating_ids
 #: model_terms:ir.ui.view,arch_db:im_livechat.mail_channel_view_tree
 msgid "Rating"
-msgstr "Vertinimas"
+msgstr "Įvertinimas"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_mail_channel__rating_last_feedback
+msgid "Rating Last Feedback"
+msgstr "Paskutinio įvertinimo atsiliepimas "
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_mail_channel__rating_last_image
+msgid "Rating Last Image"
+msgstr "Paskutinio įvertinimo paveikslėlis"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_mail_channel__rating_last_value
+msgid "Rating Last Value"
+msgstr "Paskutinio įvertinimo reikšmė"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_mail_channel__rating_count
+msgid "Rating count"
+msgstr "Įvertinimų kiekis"
 
 #. module: im_livechat
 #. openerp-web
-#: code:addons/im_livechat/static/src/js/im_livechat.js:344
+#: code:addons/im_livechat/static/src/js/im_livechat.js:420
 #, python-format
-msgid "Rating: :rating_%d"
+msgid "Rating: %s"
 msgstr ""
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
 msgid "Rating: Bad"
-msgstr ""
+msgstr "Įvertinimas: Blogai"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
 msgid "Rating: Great"
-msgstr ""
+msgstr "Įvertinimas: Puikiai"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
 msgid "Rating: Okay"
-msgstr ""
+msgstr "Įvertinimas: Neblogai"
 
 #. module: im_livechat
 #: model:ir.actions.act_window,name:im_livechat.rating_rating_action_view_livechat_rating
 msgid "Ratings for livechat channel"
-msgstr ""
+msgstr "Gyvo susirašinėjimo kanalo vertinimai"
 
 #. module: im_livechat
-#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule_regex_url
+#: model:ir.model.fields,help:im_livechat.field_mail_channel__rating_last_feedback
+msgid "Reason of the rating"
+msgstr "Įvertinimo priežastis"
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule__regex_url
 msgid ""
 "Regular expression specifying the web pages this rule will be applied on."
 msgstr ""
+"Įprasta išraišką, nurodanti, kokiems svetainės puslapiams bus taikoma ši "
+"taisyklė."
 
 #. module: im_livechat
 #: model:ir.ui.menu,name:im_livechat.menu_reporting_livechat
@@ -705,15 +779,20 @@ msgid "Report"
 msgstr "Ataskaita"
 
 #. module: im_livechat
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule_ids
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__rule_ids
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_rule_view_tree
 msgid "Rules"
 msgstr "Taisyklės"
 
 #. module: im_livechat
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_script_external
-msgid "Script (external)"
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
+msgid "Sad face"
 msgstr ""
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__script_external
+msgid "Script (external)"
+msgstr "Skriptas (išorinis)"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.mail_channel_view_search
@@ -727,10 +806,10 @@ msgid "Search report"
 msgstr "Paieškos ataskaita"
 
 #. module: im_livechat
-#: code:addons/im_livechat/models/mail_channel.py:113
+#: code:addons/im_livechat/models/mail_channel.py:107
 #, python-format
 msgid "See 15 last visited pages"
-msgstr ""
+msgstr "Rodyti 15 paskutinių aplankytų puslapių"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.mail_channel_view_form
@@ -750,7 +829,7 @@ msgstr "Sesijos statistika"
 
 #. module: im_livechat
 #: model:ir.actions.act_window,name:im_livechat.mail_channel_action_from_livechat_channel
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_channel_ids
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__channel_ids
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
 msgid "Sessions"
@@ -759,45 +838,59 @@ msgstr "Sesijos"
 #. module: im_livechat
 #: model:ir.ui.menu,name:im_livechat.session_history
 msgid "Sessions History"
-msgstr "Sesijos istorija"
+msgstr "Sesijų istorija"
 
 #. module: im_livechat
-#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_image_small
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel__image_small
 msgid ""
 "Small-sized photo of the group. It is automatically resized as a 64x64px "
 "image, with aspect ratio preserved. Use this field anywhere a small image is"
 " required."
 msgstr ""
+"Mažo dydžio grupės nuotrauka. Ji automatiškai pakeičiama į 64x64px dydį, "
+"išsaugant kraštinių santykį. Naudokite šį lauką visur, kur reikia mažos "
+"nuotraukos."
 
 #. module: im_livechat
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel_start_date
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator_start_date
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_search
+msgid "Start Date"
+msgstr "Pradžios data"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__start_date
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator__start_date
 msgid "Start Date of session"
 msgstr "Sesijos pradžios data"
 
 #. module: im_livechat
-#: model:ir.model.fields,help:im_livechat.field_im_livechat_report_channel_start_date
-#: model:ir.model.fields,help:im_livechat.field_im_livechat_report_operator_start_date
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_report_channel__start_date
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_report_operator__start_date
 msgid "Start date of the conversation"
 msgstr "Pokalbio pradžios data"
 
 #. module: im_livechat
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_button_text
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__button_text
 msgid "Text of the Button"
 msgstr "Mygtuko tekstas"
 
 #. module: im_livechat
-#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule_channel_id
-msgid "The channel of the rule"
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel__input_placeholder
+msgid "Text that prompts the user to initiate the chat."
 msgstr ""
 
 #. module: im_livechat
-#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_name
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule__channel_id
+msgid "The channel of the rule"
+msgstr "Taisyklės kanalas"
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel__name
 msgid "The name of the channel"
 msgstr "Kanalo pavadinimas"
 
 #. module: im_livechat
-#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule_country_ids
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule__country_ids
 msgid ""
 "The rule will only be applied for these countries. Example: if you select "
 "'Belgium' and 'United States' and that you set the action to 'Hide Button', "
@@ -805,24 +898,28 @@ msgid ""
 "located in these 2 countries. This feature requires GeoIP installed on your "
 "server."
 msgstr ""
+"Taisyklė bus taikoma tik šioms šalims. Pavyzdžiui, jei pasirenkate "
+"\"Belgiją\" ir \"JAV\" ir nustatote veiksmą \"Slėpti mygtuką\", pokalbio "
+"mygtukas nurodytoje nuorodoje bus slepiamas nuo lankytojų šiose dviejose "
+"šalyse. Šiai funkcijai reikia serveryje įdiegto GeoIP."
 
 #. module: im_livechat
 #: model:res.groups,comment:im_livechat.im_livechat_group_manager
 msgid "The user will be able to delete support channels."
-msgstr ""
+msgstr "Vartotojas galės ištrinti palaikymo kanalus."
 
 #. module: im_livechat
 #: model:res.groups,comment:im_livechat.im_livechat_group_user
 msgid "The user will be able to join support channels."
-msgstr ""
+msgstr "Vartotojas galės prisijungti prie palaikymo kanalų."
 
 #. module: im_livechat
 #: model_terms:ir.actions.act_window,help:im_livechat.rating_rating_action_view_livechat_rating
-msgid "There is no rating for this channel at the moment."
+msgid "There is no rating for this channel at the moment"
 msgstr ""
 
 #. module: im_livechat
-#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_image
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel__image
 msgid ""
 "This field holds the image used as photo for the group, limited to "
 "1024x1024px."
@@ -831,47 +928,50 @@ msgstr ""
 "1024x1024px."
 
 #. module: im_livechat
-#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_default_message
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel__default_message
 msgid ""
 "This is an automated 'welcome' message that your visitor will see when they "
 "initiate a new conversation."
 msgstr ""
+"Tai yra automatizuota pasisveikinimo žinutę, kurią pradėję naują pokalbį "
+"pamatys jūsų lankytojai."
 
 #. module: im_livechat
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_image_small
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__image_small
 msgid "Thumbnail"
-msgstr ""
+msgstr "Miniatiūra"
 
 #. module: im_livechat
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator_time_to_answer
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator__time_to_answer
 msgid "Time to answer"
-msgstr ""
+msgstr "Laikas atsakymui"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
 msgid "Treated sessions"
-msgstr ""
+msgstr "Apdorotos sesijos"
 
 #. module: im_livechat
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule_regex_url
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__regex_url
 msgid "URL Regex"
-msgstr ""
+msgstr "URL Regex"
 
 #. module: im_livechat
-#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_web_page
+#: model:ir.model.fields,help:im_livechat.field_im_livechat_channel__web_page
 msgid ""
 "URL to a static page where you client can discuss with the operator of the "
 "channel."
 msgstr ""
-"Nuoroda į statinį puslapį, kur Jūsų klientas gali diskutuoti su kanalo "
+"Nuoroda į statinį puslapį, kur jūsų klientas gali diskutuoti su kanalo "
 "operatoriumi."
 
 #. module: im_livechat
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel_uuid
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__uuid
 msgid "UUID"
 msgstr "UUID"
 
 #. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 #: model:res.groups,name:im_livechat.im_livechat_group_user
 msgid "User"
 msgstr "Vartotojas"
@@ -879,25 +979,35 @@ msgstr "Vartotojas"
 #. module: im_livechat
 #. openerp-web
 #: code:addons/im_livechat/controllers/main.py:37
-#: code:addons/im_livechat/static/src/js/im_livechat.js:49
+#: code:addons/im_livechat/static/src/js/im_livechat.js:61
 #, python-format
 msgid "Visitor"
 msgstr "Lankytojas"
 
 #. module: im_livechat
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_web_page
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__web_page
 msgid "Web Page"
-msgstr "Tinklalapio puslapis"
+msgstr "Svetainės puslapis"
 
 #. module: im_livechat
 #: model:ir.actions.act_window,name:im_livechat.im_livechat_channel_action
 msgid "Website Live Chat Channels"
-msgstr ""
+msgstr "Svetainės gyvo susirašinėjimo kanalai"
 
 #. module: im_livechat
-#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_default_message
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__default_message
 msgid "Welcome Message"
-msgstr "Sutikimo pranešimas"
+msgstr "Pasisveikinimo pranešimas"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
+msgid "Widget"
+msgstr "Valdiklis"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.mail_channel_view_search
+msgid "With Messages"
+msgstr ""
 
 #. module: im_livechat
 #: model_terms:ir.actions.act_window,help:im_livechat.im_livechat_channel_action
@@ -906,33 +1016,31 @@ msgid ""
 "                to integrate the website live chat widget, allowing your website\n"
 "                visitors to talk in real time with your operators."
 msgstr ""
+"Galite sukurti kanalus kiekvienai svetainei, kuriai norite integruoti\n"
+"gyvojo susirašinėjimo skydelį, leidžiantį svetainės lankytojams\n"
+"realiu laiku bendrauti su jūsų operatoriais."
 
 #. module: im_livechat
 #: model_terms:ir.actions.act_window,help:im_livechat.mail_channel_action
-msgid ""
-"Your chatter history is empty. Create a channel and start chatting to fill "
-"up your history."
+msgid "Your chatter history is empty"
 msgstr ""
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "e.g. Hello, how may I help you?"
-msgstr "pvz. Sveiki, kuo galime Jums padėti?"
+msgstr "pvz. Sveiki, kuo galime jums padėti?"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "e.g. YourWebsite.com"
-msgstr "pvz. YourWebsite.com"
-
-#. module: im_livechat
-#: model:ir.model,name:im_livechat.model_ir_autovacuum
-msgid "ir.autovacuum"
-msgstr "ir.autovacuum"
+msgstr "pvz. JusuSvetaine.com"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "or copy this url and send it by email to your customers or suppliers:"
 msgstr ""
+"arba nukopijuokite šią nuorodą ir nusiųskite ją savo klientams ar tiekėjams "
+"el. paštu:"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_rule_view_form

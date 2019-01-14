@@ -12,7 +12,6 @@
 # Christian <chris@effeci.info>, 2018
 # Fabio Genovese <ing.fabiogenovese@gmail.com>, 2018
 # Francesco Garganese <francesco.garganese@aeromnia.aero>, 2018
-# Lorenzo Battistini <lorenzo.battistini@agilebg.com>, 2018
 # Simone Bernini <simone@aperturelabs.it>, 2018
 # Giacomo Grasso <giacomo.grasso.82@gmail.com>, 2018
 # Sebastiano Pistore <SebastianoPistore.info@protonmail.ch>, 2018
@@ -21,17 +20,19 @@
 # Cesare Cugnasco <cesare.cugnasco@gmail.com>, 2018
 # Massimo Bianchi <bianchi.massimo@gmail.com>, 2018
 # Sergio Zanchetta <primes2h@gmail.com>, 2018
-# Mirto Bonan <mbo@odoo.com>, 2018
+# nle_odoo, 2018
+# mbo_odoo <mbo@odoo.com>, 2018
 # Martin Trigaux, 2018
-# Paolo Valier, 2018
 # David Minneci <david@numeko.it>, 2018
+# Lorenzo Battistini <lorenzo.battistini@agilebg.com>, 2018
+# Paolo Valier, 2018
 # Léonie Bouchat <lbo@odoo.com>, 2018
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-24 09:34+0000\n"
+"POT-Creation-Date: 2018-12-19 08:20+0000\n"
 "PO-Revision-Date: 2018-08-24 09:25+0000\n"
 "Last-Translator: Léonie Bouchat <lbo@odoo.com>, 2018\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
@@ -280,7 +281,7 @@ msgstr "<strong>Da</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
 msgid "<strong>Inventory</strong>"
-msgstr "<strong>Inventario</strong>"
+msgstr "<strong>Magazzino</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
@@ -400,7 +401,7 @@ msgid ""
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
-"Un prodotto stoccabile è un prodotto per il quale gestisci lo stock. L'applicazione Inventorio deve essere installata\n"
+"Un prodotto stoccabile è un prodotto per il quale gestisci lo stock. L'applicazione magazzino deve essere installata\n"
 "Un prodotto di consumo è un prodotto per il quale lo stock non è gestito.\n"
 "Un servizio è un prodotto non materiale che fornisci."
 
@@ -767,7 +768,7 @@ msgstr "Lettore barcode"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_stock_picking_batch
 msgid "Batch Pickings"
-msgstr "Raccolta di lotti"
+msgstr "Gruppi di prelievi"
 
 #. module: stock
 #: selection:res.partner,picking_warn:0
@@ -1117,6 +1118,7 @@ msgstr "Contenuto"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_replenish__product_uom_category_id
+#: model:ir.model.fields,help:stock.field_stock_inventory_line__product_uom_category_id
 msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
@@ -1427,8 +1429,8 @@ msgstr "Clienti"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_dhl
-msgid "DHL USA"
-msgstr "DHL Stati Uniti"
+msgid "DHL Connector"
+msgstr "Connettore DHL"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_report_stock_forecast__date
@@ -1888,8 +1890,8 @@ msgstr "Sposta Bozza"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_easypost
-msgid "Easypost"
-msgstr "Easypost"
+msgid "Easypost Connector"
+msgstr "Connettore Easypost"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -1961,8 +1963,8 @@ msgstr "FIFO, LIFO …"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_fedex
-msgid "FedEx"
-msgstr "FedEx"
+msgid "FedEx Connector"
+msgstr "Connettore FedEx"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_destination__filtered_location
@@ -2611,7 +2613,7 @@ msgstr "Data di inventari"
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_pivot
 msgid "Inventory"
-msgstr "Inventario"
+msgstr "Magazzino"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_form
@@ -3444,7 +3446,7 @@ msgstr "Nuovo Trasferimento"
 #: model:ir.model.fields,field_description:stock.field_stock_picking__activity_date_deadline
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr "Scadenza Prossima Attività"
+msgstr "Scadenza prossima attività"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__activity_summary
@@ -6375,13 +6377,13 @@ msgstr "Tipo di Operazione"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_ups
-msgid "UPS"
-msgstr "UPS"
+msgid "UPS Connector"
+msgstr "Connettore UPS"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_usps
-msgid "USPS"
-msgstr "USPS"
+msgid "USPS Connector"
+msgstr "Connettore USPS"
 
 #. module: stock
 #. openerp-web
@@ -6509,6 +6511,11 @@ msgstr "UdM"
 #: model:ir.ui.menu,name:stock.menu_stock_uom_categ_form_action
 msgid "UoM Categories"
 msgstr "Categorie UdM"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_inventory_line__product_uom_category_id
+msgid "Uom category"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_change_product_quantity
@@ -7054,7 +7061,7 @@ msgid ""
 " one."
 msgstr ""
 "Non si possono avere due rettifiche d'inventario in stato \"in corso\" con "
-"lo stesso prodotto (%s), la stessa ubicazione (%s), lo stesso pacchetto, lo "
+"lo stesso prodotto (%s), la stessa ubicazione, lo stesso pacchetto, lo "
 "stesso proprietario e lo stesso lotto. Per favore prima convalida le "
 "rettifiche d'inventario precedenti prima di crearne nuove.  "
 
@@ -7269,8 +7276,8 @@ msgstr "_Annulla"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_bpost
-msgid "bpost"
-msgstr "bpost"
+msgid "bpost Connector"
+msgstr "Connettore bpost"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form

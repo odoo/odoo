@@ -3,37 +3,39 @@
 # * payment_transfer
 # 
 # Translators:
-# Antanas Muliuolis <an.muliuolis@gmail.com>, 2017
-# digitouch UAB <digitouchagencyeur@gmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2018
+# Silvija Butko <silvija.butko@gmail.com>, 2018
+# digitouch UAB <digitouchagencyeur@gmail.com>, 2018
+# Linas Versada <linaskrisiukenas@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
+"POT-Creation-Date: 2018-09-18 09:49+0000\n"
+"PO-Revision-Date: 2018-08-24 09:22+0000\n"
+"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2018\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: lt\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: payment_transfer
-#: code:addons/payment_transfer/models/payment.py:70
+#: code:addons/payment_transfer/models/payment.py:83
 #, python-format
 msgid "; multiple order found"
-msgstr ""
+msgstr "; rasti keli užsakymai"
 
 #. module: payment_transfer
-#: code:addons/payment_transfer/models/payment.py:68
+#: code:addons/payment_transfer/models/payment.py:81
 #, python-format
 msgid "; no order found"
 msgstr "; užsakymų nerasta"
 
 #. module: payment_transfer
-#: code:addons/payment_transfer/models/payment.py:28
+#: code:addons/payment_transfer/models/payment.py:41
 #, python-format
 msgid ""
 "<div>\n"
@@ -44,31 +46,93 @@ msgid ""
 "<p>Please use the order name as communication reference.</p>\n"
 "</div>"
 msgstr ""
+"<div>\n"
+"<h3>Naudokite šiuos operacijos duomenis</h3>\n"
+"<h4>%(bank_title)s</h4>\n"
+"%(bank_accounts)s\n"
+"<h4>Komunikacija</h4>\n"
+"<p>Naudokite užsakymo pavadinimą kaip numerį komunikacijai.</p>\n"
+"</div>"
 
 #. module: payment_transfer
-#: code:addons/payment_transfer/models/payment.py:26
+#: selection:payment.acquirer,provider:0
+msgid "Adyen"
+msgstr "Adyen"
+
+#. module: payment_transfer
+#: selection:payment.acquirer,provider:0
+msgid "Authorize.Net"
+msgstr "Authorize.Net"
+
+#. module: payment_transfer
+#: code:addons/payment_transfer/models/payment.py:39
 #, python-format
 msgid "Bank Account"
 msgstr "Banko sąskaita"
 
 #. module: payment_transfer
-#: code:addons/payment_transfer/models/payment.py:26
+#: code:addons/payment_transfer/models/payment.py:39
 #, python-format
 msgid "Bank Accounts"
 msgstr "Banko sąskaitos"
 
 #. module: payment_transfer
+#: selection:payment.acquirer,provider:0
+msgid "Buckaroo"
+msgstr "Buckaroo"
+
+#. module: payment_transfer
+#: selection:payment.acquirer,provider:0
+msgid "Manual Configuration"
+msgstr "Konfigūracija rankiniu būdu"
+
+#. module: payment_transfer
+#: selection:payment.acquirer,provider:0
+msgid "Ogone"
+msgstr "Ogone"
+
+#. module: payment_transfer
+#: selection:payment.acquirer,provider:0
+msgid "PayUmoney"
+msgstr "PayUmoney"
+
+#. module: payment_transfer
 #: model:ir.model,name:payment_transfer.model_payment_acquirer
 msgid "Payment Acquirer"
-msgstr "Pirkėjas"
+msgstr "Mokėjimo surinkėjas"
 
 #. module: payment_transfer
 #: model:ir.model,name:payment_transfer.model_payment_transaction
 msgid "Payment Transaction"
-msgstr "Mokėjimo transakcija"
+msgstr "Mokėjimo operacija"
 
 #. module: payment_transfer
-#: code:addons/payment_transfer/models/payment.py:66
+#: selection:payment.acquirer,provider:0
+msgid "Paypal"
+msgstr "Paypal"
+
+#. module: payment_transfer
+#: model:ir.model.fields,field_description:payment_transfer.field_payment_acquirer__provider
+msgid "Provider"
+msgstr "Tiekėjas"
+
+#. module: payment_transfer
+#: selection:payment.acquirer,provider:0
+msgid "Sips"
+msgstr "Sips"
+
+#. module: payment_transfer
+#: selection:payment.acquirer,provider:0
+msgid "Stripe"
+msgstr "Stripe"
+
+#. module: payment_transfer
+#: selection:payment.acquirer,provider:0
+msgid "Wire Transfer"
+msgstr "Piniginė perlaida"
+
+#. module: payment_transfer
+#: code:addons/payment_transfer/models/payment.py:79
 #, python-format
 msgid "received data for reference %s"
-msgstr ""
+msgstr "gauti duomenys numeriui %s"

@@ -4,24 +4,28 @@
 # 
 # Translators:
 # Rodrigo de Almeida Sottomaior Macedo <rmsolucoeseminformatic4@gmail.com>, 2018
-# danimaribeiro <danimaribeiro@gmail.com>, 2018
 # Rui Andrada <shingonoide@gmail.com>, 2018
-# Martin Trigaux, 2018
 # Clemilton Clementino <clemylton@hotmail.com>, 2018
-# Mateus Lopes <mateus1@gmail.com>, 2018
 # Adriel Kotviski <kotviski@gmail.com>, 2018
 # falexandresilva <falexandresilva@gmail.com>, 2018
 # grazziano <gra.negocia@gmail.com>, 2018
-# Silmar <pinheirosilmar@gmail.com>, 2018
 # André Augusto Firmino Cordeiro <a.cordeito@gmail.com>, 2018
 # guisantos23 <guisantos23@yahoo.com.br>, 2018
+# danimaribeiro <danimaribeiro@gmail.com>, 2018
+# Silmar <pinheirosilmar@gmail.com>, 2018
+# Martin Trigaux, 2018
+# Mateus Lopes <mateus1@gmail.com>, 2018
+# Marcel Savegnago <marcel.savegnago@gmail.com>, 2018
+# Rafael H L Moretti <rafael.moretti@gmail.com>, 2018
+# Marcelo Costa <marcelo@comdesk.com.br>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 06:49+0000\n"
-"PO-Revision-Date: 2018-10-08 06:49+0000\n"
-"Last-Translator: guisantos23 <guisantos23@yahoo.com.br>, 2018\n"
+"POT-Creation-Date: 2018-12-19 08:21+0000\n"
+"PO-Revision-Date: 2018-08-24 09:20+0000\n"
+"Last-Translator: Marcelo Costa <marcelo@comdesk.com.br>, 2018\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -253,7 +257,7 @@ msgstr "Ativo"
 #. module: mass_mailing
 #: model_terms:ir.actions.act_window,help:mass_mailing.mass_mailing_tag_action
 msgid "Add a new tag"
-msgstr ""
+msgstr "Adicione uma nova tag"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign__unique_ab_testing
@@ -351,7 +355,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_list_contact_rel__is_blacklisted
 #: model:ir.ui.menu,name:mass_mailing.mail_blacklist_mm_menu
 msgid "Blacklist"
-msgstr ""
+msgstr "Lista negra"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe
@@ -563,7 +567,7 @@ msgstr ""
 #. module: mass_mailing
 #: model_terms:ir.actions.act_window,help:mass_mailing.action_view_mass_mailing_contacts
 msgid "Create a contact in your address book"
-msgstr ""
+msgstr "Criar um contato em seu catálogo de endereços"
 
 #. module: mass_mailing
 #: model_terms:ir.actions.act_window,help:mass_mailing.action_create_ab_mass_mailings_from_campaign
@@ -571,7 +575,7 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:mass_mailing.action_view_mass_mailings
 #: model_terms:ir.actions.act_window,help:mass_mailing.action_view_mass_mailings_from_campaign
 msgid "Create a new mailing"
-msgstr ""
+msgstr "Criar uma nova correspondência"
 
 #. module: mass_mailing
 #: model_terms:ir.actions.act_window,help:mass_mailing.action_view_mass_mailing_campaigns
@@ -857,6 +861,7 @@ msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mail_mass_mailing_list_contact_view_search
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_contact_search
 msgid "Exclude Opt Out"
 msgstr "Excluir opção de sair"
 
@@ -1495,6 +1500,8 @@ msgid ""
 "No need of importing your mailing lists, you can easily\n"
 "                send emails to any contact saved in other Odoo apps."
 msgstr ""
+"Não precisa importar suas listas de correspondências, você pode facilmente\n"
+"                enviar e-mails para qualquer contato gravado em outros apps Odoo."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_comparison_table
@@ -1577,6 +1584,8 @@ msgstr "Te vejo em breve !"
 #: model_terms:ir.actions.act_window,help:mass_mailing.action_view_mass_mailing_contacts
 msgid "Odoo helps you to easily track all activities related to a customer."
 msgstr ""
+"Odoo ajuda você a rastrear facilmente todas as atividades relacionadas a um "
+"cliente."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_image_text
@@ -1613,9 +1622,17 @@ msgid "Opened Ratio"
 msgstr "Proporção Aberta"
 
 #. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact__opt_out
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_list_contact_rel__opt_out
 msgid "Opt Out"
 msgstr "Opt Out"
+
+#. module: mass_mailing
+#: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_contact__opt_out
+msgid ""
+"Opt out flag for a specific mailing list.This field should not be used in a "
+"view without a unique and active mailing list context."
+msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -1966,7 +1983,7 @@ msgstr "Nome da Fonte"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_res_config_settings__mass_mailing_outgoing_mail_server
 msgid "Specific Mail Server"
-msgstr ""
+msgstr "Servidor de E-mail Específico"
 
 #. module: mass_mailing
 #: selection:mail.mass_mailing,reply_to_mode:0
@@ -2228,12 +2245,12 @@ msgstr ""
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_discount2
 msgid "Use This Promo Code BEFORE 1st of August"
-msgstr ""
+msgstr "Use este código promocional ANTES de 1 de agosto"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.res_config_settings_view_form
 msgid "Use a specific mail server for mailings"
-msgstr ""
+msgstr "Usar um servidor de e-mail específico"
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing__mail_server_id
@@ -2244,6 +2261,9 @@ msgid ""
 "outgoing mail server available (based on their sequencing) as it does for "
 "normal mails."
 msgstr ""
+"Usar um servidor de e-mail específico. Ou então o Odoo utiliza o primeiro "
+"servidor de saída de e-mail disponível (baseado na sequência deles) como "
+"ocorre para correspondências normais."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_discount2
@@ -2257,6 +2277,7 @@ msgstr "Usuário"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mail_mass_mailing_list_contact_view_search
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_contact_search
 msgid "Valid Recipients"
 msgstr ""
 

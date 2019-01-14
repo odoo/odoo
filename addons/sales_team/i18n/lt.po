@@ -3,26 +3,30 @@
 # * sales_team
 # 
 # Translators:
-# Rolandas <info@paninfo.lt>, 2017
-# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
-# Audrius Palenskis <audrius.palenskis@gmail.com>, 2017
-# Šarūnas Ažna <sarunas.azna@gmail.com>, 2017
-# digitouch UAB <digitouchagencyeur@gmail.com>, 2017
-# Monika Raciunaite <monika.raciunaite@gmail.com>, 2017
+# Martin Trigaux, 2018
+# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2018
+# Silvija Butko <silvija.butko@gmail.com>, 2018
+# Audrius Palenskis <audrius.palenskis@gmail.com>, 2018
+# Rolandas <info@paninfo.lt>, 2018
+# Šarūnas Ažna <sarunas.azna@gmail.com>, 2018
+# Antanas Muliuolis <an.muliuolis@gmail.com>, 2018
+# Monika Raciunaite <monika.raciunaite@gmail.com>, 2018
+# digitouch UAB <digitouchagencyeur@gmail.com>, 2018
+# Linas Versada <linaskrisiukenas@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:26+0000\n"
-"PO-Revision-Date: 2017-10-02 11:26+0000\n"
-"Last-Translator: Monika Raciunaite <monika.raciunaite@gmail.com>, 2017\n"
+"POT-Creation-Date: 2018-10-08 06:49+0000\n"
+"PO-Revision-Date: 2018-08-24 09:25+0000\n"
+"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2018\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: lt\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
@@ -32,22 +36,27 @@ msgstr "<span>Naujas</span>"
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
 msgid "<span>Reporting</span>"
-msgstr ""
+msgstr "<span>Ataskaitos</span>"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
 msgid "<span>View</span>"
-msgstr "<span>Vaizdas</span>"
+msgstr "<span>Peržiūra</span>"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_active
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__message_needaction
+msgid "Action Needed"
+msgstr "Reikia atlikti veiksmą"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__active
 msgid "Active"
 msgstr "Aktyvus"
 
 #. module: sales_team
 #: model:ir.actions.act_window,name:sales_team.mail_activity_type_action_config_sales
 msgid "Activity Types"
-msgstr ""
+msgstr "Veiklos tipai"
 
 #. module: sales_team
 #: model:crm.team,name:sales_team.crm_team_1
@@ -57,47 +66,41 @@ msgstr "Amerika"
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
 msgid "Archived"
-msgstr "Archyvuojamas"
+msgstr "Archyvuotas"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__message_attachment_count
+msgid "Attachment Count"
+msgstr "Prisegtukų skaičius"
+
+#. module: sales_team
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
+msgid "Avatar"
+msgstr "Portretas"
 
 #. module: sales_team
 #: selection:crm.team,dashboard_graph_type:0
 msgid "Bar"
-msgstr ""
+msgstr "Juosta"
 
 #. module: sales_team
-#: code:addons/sales_team/models/crm_team.py:269
+#: code:addons/sales_team/models/crm_team.py:274
 #, python-format
 msgid "Big Pretty Button :)"
-msgstr ""
+msgstr "Didelis gražus mygtukas :)"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_user_id
-msgid "Channel Leader"
-msgstr ""
-
-#. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_member_ids
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__member_ids
 msgid "Channel Members"
-msgstr ""
+msgstr "Kanalo nariai"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_team_type
-msgid "Channel Type"
-msgstr "Kanalo rušis"
-
-#. module: sales_team
-#: model_terms:ir.actions.act_window,help:sales_team.crm_team_salesteams_act
-#: model_terms:ir.actions.act_window,help:sales_team.sales_team_config_action
-msgid "Click here to define a new sales channel."
-msgstr ""
-
-#. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_color
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__color
 msgid "Color Index"
 msgstr "Spalvos indeksas"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_company_id
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__company_id
 msgid "Company"
 msgstr "Įmonė"
 
@@ -109,52 +112,58 @@ msgstr "Nustatymai"
 #. module: sales_team
 #: model:ir.model,name:sales_team.model_res_partner
 msgid "Contact"
-msgstr "Kontaktas"
+msgstr "Kontaktai"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_dashboard_graph_model
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__dashboard_graph_model
 msgid "Content"
 msgstr "Turinys"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_create_uid
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__create_uid
 msgid "Created by"
 msgstr "Sukūrė"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_create_date
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__create_date
 msgid "Created on"
 msgstr "Sukurta"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_currency_id
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__currency_id
 msgid "Currency"
 msgstr "Valiuta"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "Dashboard"
-msgstr "Valdymo skydas"
+msgstr "Valdymo skydelis"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_dashboard_button_name
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__dashboard_button_name
 msgid "Dashboard Button"
-msgstr ""
+msgstr "Skydelio mygtukas"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_dashboard_graph_data
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__dashboard_graph_data
 msgid "Dashboard Graph Data"
-msgstr ""
+msgstr "Skydelio grafiko duomenys"
 
 #. module: sales_team
 #: selection:crm.team,dashboard_graph_group:0
 msgid "Day"
-msgstr "Data"
+msgstr "Diena"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_display_name
+#: model_terms:ir.actions.act_window,help:sales_team.crm_team_salesteams_act
+#: model_terms:ir.actions.act_window,help:sales_team.sales_team_config_action
+msgid "Define a new Sales Team"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__display_name
 msgid "Display Name"
-msgstr "Vaizduojamas pavadinimas"
+msgstr "Rodomas pavadinimas"
 
 #. module: sales_team
 #: model:crm.team,name:sales_team.team_sales_department
@@ -162,15 +171,17 @@ msgid "Europe"
 msgstr "Europa"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_favorite_user_ids
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__favorite_user_ids
 msgid "Favorite Members"
-msgstr ""
+msgstr "Pamėgti nariai"
 
 #. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_crm_team_is_favorite
+#: model:ir.model.fields,help:sales_team.field_crm_team__is_favorite
 msgid ""
 "Favorite teams to display them in the dashboard and access them easily."
 msgstr ""
+"Priskirkite komandas prie mėgstamiausių, kad jos būtų rodomos skydelyje ir "
+"galėtumėte jas lengvai pasiekti."
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
@@ -178,13 +189,28 @@ msgid ""
 "Follow this salesteam to automatically track the events associated to users "
 "of this team."
 msgstr ""
-"Prenumeruokite šią pardavimų komandą, kad galėtumėte sekti įvykius "
-"susijusius su komandos nariais."
+"Sekite šią pardavimų komandą, kad galėtumėte matyti įvykius, susijusius su "
+"šios komandos nariais."
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__message_follower_ids
+msgid "Followers"
+msgstr "Sekėjai"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__message_channel_ids
+msgid "Followers (Channels)"
+msgstr "Sekėjai (kanalai)"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Sekėjai (partneriai)"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "Graph"
-msgstr "Diagrama"
+msgstr "Grafikas"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
@@ -192,42 +218,61 @@ msgid "Group By..."
 msgstr "Grupuoti pagal..."
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_dashboard_graph_group
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__dashboard_graph_group
 msgid "Group by"
 msgstr "Grupuoti pagal"
 
 #. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_crm_team_dashboard_graph_group
+#: model:ir.model.fields,help:sales_team.field_crm_team__dashboard_graph_group
 msgid "How this channel's dashboard graph will group the results."
-msgstr ""
+msgstr "Kaip šio kanalo skydelio grafikas grupuos rezultatus."
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_id
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__id
 msgid "ID"
 msgstr "ID"
 
 #. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_res_partner_team_id
-#: model:ir.model.fields,help:sales_team.field_res_users_team_id
+#: model:ir.model.fields,help:sales_team.field_crm_team__message_unread
+msgid "If checked new messages require your attention."
+msgstr "Jeigu pažymėta, naujiems pranešimams reikės jūsų dėmesio."
+
+#. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_crm_team__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Jeigu pažymėta, naujiems pranešimams reikės jūsų dėmesio."
+
+#. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_crm_team__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr "Jei pažymėta, yra žinučių, turinčių pristatymo klaidų."
+
+#. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_res_partner__team_id
 msgid ""
-"If set, this sales channel will be used for sales and assignations related "
-"to this partner"
+"If set, this Sales Team will be used for sales and assignations related to "
+"this partner"
 msgstr ""
 
 #. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_crm_team_active
+#: model:ir.model.fields,help:sales_team.field_crm_team__active
 msgid ""
-"If the active field is set to false, it will allow you to hide the sales "
-"channel without removing it."
+"If the active field is set to false, it will allow you to hide the Sales "
+"Team without removing it."
 msgstr ""
 
 #. module: sales_team
 #: selection:crm.team,dashboard_graph_model:0
 msgid "Invoices"
-msgstr "Sąskaitos faktūros"
+msgstr "Sąskaitos-faktūros"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team___last_update
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__message_is_follower
+msgid "Is Follower"
+msgstr "Yra sekėjas"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team____last_update
 msgid "Last Modified on"
 msgstr "Paskutinį kartą keista"
 
@@ -237,19 +282,19 @@ msgid "Last Month"
 msgstr "Paskutinis mėnuo"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_write_uid
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__write_uid
 msgid "Last Updated by"
 msgstr "Paskutinį kartą atnaujino"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_write_date
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__write_date
 msgid "Last Updated on"
 msgstr "Paskutinį kartą atnaujinta"
 
 #. module: sales_team
 #: selection:crm.team,dashboard_graph_period:0
 msgid "Last Week"
-msgstr ""
+msgstr "Praėjusi savaitė"
 
 #. module: sales_team
 #: selection:crm.team,dashboard_graph_period:0
@@ -262,14 +307,29 @@ msgid "Line"
 msgstr "Eilutė"
 
 #. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__message_main_attachment_id
+msgid "Main Attachment"
+msgstr "Pagrindinis prisegtukas"
+
+#. module: sales_team
 #: model:res.groups,name:sales_team.group_sale_manager
 msgid "Manager"
 msgstr "Vadovas"
 
 #. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__message_has_error
+msgid "Message Delivery error"
+msgstr "Žinutės pristatymo klaida"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__message_ids
+msgid "Messages"
+msgstr "Pranešimai"
+
+#. module: sales_team
 #: selection:crm.team,dashboard_graph_group:0
 msgid "Month"
-msgstr "Mėnuo"
+msgstr "Mėnesį"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
@@ -277,23 +337,48 @@ msgid "My Favorites"
 msgstr "Mano mėgstamiausi"
 
 #. module: sales_team
-#: code:addons/sales_team/models/crm_team.py:255
+#: code:addons/sales_team/models/crm_team.py:260
 #, python-format
 msgid "Not Defined"
-msgstr ""
+msgstr "Neapibrėžta"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Veiksmų skaičius"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__message_has_error_counter
+msgid "Number of error"
+msgstr "Klaidų skaičius"
+
+#. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_crm_team__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "Žinučių, kurioms reikia jūsų veiksmo, skaičius"
+
+#. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_crm_team__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Žinučių su pristatymo klaida skaičius"
+
+#. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_crm_team__message_unread_counter
+msgid "Number of unread messages"
+msgstr "Neperskaitytų žinučių skaičius"
 
 #. module: sales_team
 #: selection:crm.team,dashboard_graph_model:0
 msgid "Pipeline"
-msgstr ""
+msgstr "Piltuvėlis"
 
 #. module: sales_team
 #: selection:crm.team,team_type:0
 msgid "Point of Sale"
-msgstr "POS"
+msgstr "Pardavimo taškas"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_reply_to
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__reply_to
 msgid "Reply-To"
 msgstr "Atsakyti (kam)"
 
@@ -304,27 +389,28 @@ msgstr "Pardavimai"
 
 #. module: sales_team
 #: model:ir.model,name:sales_team.model_crm_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_name
-#: model:ir.model.fields,field_description:sales_team.field_res_partner_team_id
-#: model:ir.model.fields,field_description:sales_team.field_res_users_sale_team_id
-#: model:ir.model.fields,field_description:sales_team.field_res_users_team_id
+msgid "Sales Channels"
+msgstr "Pardavimo kanalai"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__name
+#: model:ir.model.fields,field_description:sales_team.field_res_partner__team_id
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_tree
-msgid "Sales Channel"
-msgstr ""
+msgid "Sales Team"
+msgstr "Pardavimų komanda"
 
 #. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_res_users_sale_team_id
+#: model:ir.model.fields,help:sales_team.field_res_users__sale_team_id
 msgid ""
-"Sales Channel the user is member of. Used to compute the members of a sales "
-"channel through the inverse one2many"
+"Sales Team the user is member of. Used to compute the members of a Sales "
+"Team through the inverse one2many"
 msgstr ""
 
 #. module: sales_team
-#: model:ir.actions.act_window,name:sales_team.crm_team_salesteams_act
 #: model:ir.actions.act_window,name:sales_team.sales_team_config_action
-msgid "Sales Channels"
-msgstr ""
+msgid "Sales Teams"
+msgstr "Pardavimų komandos"
 
 #. module: sales_team
 #: selection:crm.team,dashboard_graph_group:0
@@ -339,10 +425,10 @@ msgstr "Pardavimų komandos pavadinimas..."
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
 msgid "Salesteams Search"
-msgstr "Paieška pagal pardavimų komandą"
+msgstr "Pardavimų komandų paieška"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_dashboard_graph_period
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__dashboard_graph_period
 msgid "Scale"
 msgstr "Mastelis"
 
@@ -352,11 +438,12 @@ msgid "Settings"
 msgstr "Nustatymai"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_is_favorite
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__is_favorite
 msgid "Show on dashboard"
-msgstr ""
+msgstr "Rodyti skydelyje"
 
 #. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__user_id
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
 msgid "Team Leader"
 msgstr "Komandos vadovas"
@@ -367,67 +454,93 @@ msgid "Team Members"
 msgstr "Komandos nariai"
 
 #. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_crm_team_color
-msgid "The color of the channel"
+#: model:ir.actions.act_window,name:sales_team.crm_team_salesteams_act
+msgid "Team Pipelines"
 msgstr ""
 
 #. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_crm_team_reply_to
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__team_type
+msgid "Team Type"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_crm_team__color
+msgid "The color of the channel"
+msgstr "Kanalo spalva"
+
+#. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_crm_team__reply_to
 msgid ""
 "The email address put in the 'Reply-To' of all emails sent by Odoo about "
-"cases in this sales channel"
+"cases in this Sales Team"
 msgstr ""
 
 #. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_crm_team_dashboard_graph_model
+#: model:ir.model.fields,help:sales_team.field_crm_team__dashboard_graph_model
 msgid "The graph this channel will display in the Dashboard.\n"
-msgstr ""
+msgstr "Šio kanalo grafikas bus rodomas skydelyje.\n"
 
 #. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_crm_team_dashboard_graph_period
+#: model:ir.model.fields,help:sales_team.field_crm_team__dashboard_graph_period
 msgid "The time period this channel's dashboard graph will consider."
-msgstr ""
+msgstr "Laiko tarpas,  į kurį šis kanalo grafikas atkreips dėmesį."
 
 #. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_crm_team_dashboard_graph_type
+#: model:ir.model.fields,help:sales_team.field_crm_team__dashboard_graph_type
 msgid "The type of graph this channel will display in the dashboard."
-msgstr ""
+msgstr "Grafiko tipas, kurį šis kanalas atvaizduos valdymo skydelyje."
 
 #. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_crm_team_team_type
+#: model:ir.model.fields,help:sales_team.field_crm_team__team_type
 msgid ""
 "The type of this channel, it will define the resources this channel uses."
 msgstr ""
+"Šio kanalo tipas, kuris nurodys, kokius išteklius šis kanalas naudoja."
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_dashboard_graph_type
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__dashboard_graph_type
 msgid "Type"
 msgstr "Tipas"
 
 #. module: sales_team
-#: code:addons/sales_team/models/crm_team.py:146
-#: code:addons/sales_team/models/crm_team.py:173
+#: code:addons/sales_team/models/crm_team.py:151
+#: code:addons/sales_team/models/crm_team.py:178
 #, python-format
-msgid "Undefined graph model for Sales Channel: %s"
+msgid "Undefined graph model for Sales Team: %s"
 msgstr ""
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__message_unread
+msgid "Unread Messages"
+msgstr "Neskaityti pranešimai"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr "Neperskaitytų žinučių skaičiuoklis"
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_salesteams_act
 #: model_terms:ir.actions.act_window,help:sales_team.sales_team_config_action
 msgid ""
-"Use sales channels to organize your sales departments. \n"
+"Use Sales Teams to organize your sales departments.\n"
 "                    Each channel will work with a separate pipeline."
+msgstr ""
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_res_users__sale_team_id
+msgid "User's Sales Team"
 msgstr ""
 
 #. module: sales_team
 #: model:res.groups,name:sales_team.group_sale_salesman_all_leads
 msgid "User: All Documents"
-msgstr "Naudotojas: visi dokumentai"
+msgstr "Vartotojas: visi dokumentai"
 
 #. module: sales_team
 #: model:res.groups,name:sales_team.group_sale_salesman
 msgid "User: Own Documents Only"
-msgstr ""
+msgstr "Vartotojas: tik savo dokumentai"
 
 #. module: sales_team
 #: model:ir.model,name:sales_team.model_res_users
@@ -438,7 +551,17 @@ msgstr "Vartotojai"
 #: model:crm.team,name:sales_team.salesteam_website_sales
 #: selection:crm.team,team_type:0
 msgid "Website"
-msgstr "Tinklalapis"
+msgstr "Svetainė"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__website_message_ids
+msgid "Website Messages"
+msgstr "Interneto svetainės pranešimai"
+
+#. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_crm_team__website_message_ids
+msgid "Website communication history"
+msgstr "Interneto svetainės komunikacijos istorija"
 
 #. module: sales_team
 #: selection:crm.team,dashboard_graph_group:0
@@ -451,11 +574,13 @@ msgid ""
 "the user will have access to all records of everyone in the sales "
 "application."
 msgstr ""
+"vartotojas turės prieigą prie visų įrašų, esančių pardavimų programoje."
 
 #. module: sales_team
 #: model:res.groups,comment:sales_team.group_sale_salesman
 msgid "the user will have access to his own data in the sales application."
 msgstr ""
+"vartotojas turės prieigą prie savo duomenų, esančių pardavimų programoje."
 
 #. module: sales_team
 #: model:res.groups,comment:sales_team.group_sale_manager

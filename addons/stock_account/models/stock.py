@@ -18,7 +18,7 @@ class StockInventory(models.Model):
         'Accounting Date',
         help="Date at which the accounting entries will be created"
              " in case of automated inventory valuation."
-             " If empty, the inventoy date will be used.")
+             " If empty, the inventory date will be used.")
 
     @api.multi
     def post_inventory(self):
@@ -269,7 +269,8 @@ class StockMove(models.Model):
 
         # Update the standard price with the price of the last used candidate, if any.
         if new_standard_price and move.product_id.cost_method == 'fifo':
-            move.product_id.sudo().standard_price = new_standard_price
+            move.product_id.sudo().with_context(force_company=move.company_id.id) \
+                .standard_price = new_standard_price
 
         # If there's still quantity to value but we're out of candidates, we fall in the
         # negative stock use case. We chose to value the out move at the price of the
@@ -305,18 +306,20 @@ class StockMove(models.Model):
             vals = {}
             price_unit = self._get_price_unit()
             value = price_unit * (quantity or valued_quantity)
+            value_to_return = value if quantity is None or not self.value else self.value
             vals = {
                 'price_unit': price_unit,
-                'value': value if quantity is None or not self.value else self.value,
+                'value': value_to_return,
                 'remaining_value': value if quantity is None else self.remaining_value + value,
             }
             vals['remaining_qty'] = valued_quantity if quantity is None else self.remaining_qty + quantity
 
             if self.product_id.cost_method == 'standard':
                 value = self.product_id.standard_price * (quantity or valued_quantity)
+                value_to_return = value if quantity is None or not self.value else self.value
                 vals.update({
                     'price_unit': self.product_id.standard_price,
-                    'value': value if quantity is None or not self.value else self.value,
+                    'value': value_to_return,
                 })
             self.write(vals)
         elif self._is_out():
@@ -328,8 +331,9 @@ class StockMove(models.Model):
             if self.product_id.cost_method in ['standard', 'average']:
                 curr_rounding = self.company_id.currency_id.rounding
                 value = -float_round(self.product_id.standard_price * (valued_quantity if quantity is None else quantity), precision_rounding=curr_rounding)
+                value_to_return = value if quantity is None else self.value + value
                 self.write({
-                    'value': value if quantity is None else self.value + value,
+                    'value': value_to_return,
                     'price_unit': value / valued_quantity,
                 })
         elif self._is_dropshipped() or self._is_dropshipped_returned():
@@ -341,12 +345,14 @@ class StockMove(models.Model):
             else:
                 price_unit = self.product_id.standard_price
             value = float_round(self.product_qty * price_unit, precision_rounding=curr_rounding)
+            value_to_return = value if self._is_dropshipped() else -value
             # In move have a positive value, out move have a negative value, let's arbitrary say
             # dropship are positive.
             self.write({
-                'value': value if self._is_dropshipped() else -value,
+                'value': value_to_return,
                 'price_unit': price_unit if self._is_dropshipped() else -price_unit,
             })
+            return value_to_return
 
     def _action_done(self):
         self.product_price_update_before_done()

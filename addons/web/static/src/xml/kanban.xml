@@ -24,8 +24,8 @@
                             <a t-if="widget.deletable and widget.id" role="menuitem" class="dropdown-item o_column_delete" href="#">Delete</a>
                         </t>
                         <t t-if="widget.has_active_field and widget.archivable">
-                            <a href="#" class="dropdown-item o_column_archive_records">Archive All</a>
-                            <a href="#" class="dropdown-item o_column_unarchive_records">Unarchive All</a>
+                            <a role="menuitem" href="#" class="dropdown-item o_column_archive_records">Archive All</a>
+                            <a role="menuitem" href="#" class="dropdown-item o_column_unarchive_records">Unarchive All</a>
                         </t>
                     </div>
                 </span>

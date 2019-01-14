@@ -1451,6 +1451,55 @@ QUnit.test('chatter: Attachment viewer', function (assert) {
     form.destroy();
 });
 
+QUnit.test('chatter: keep context when sending a message', function(assert) {
+    assert.expect(1);
+    var form = createView({
+        View: FormView,
+        model: 'partner',
+        data: this.data,
+        services: this.services,
+        arch: '<form string="Partners">' +
+                '<sheet>' +
+                    '<field name="foo"/>' +
+                '</sheet>' +
+                '<div class="oe_chatter">' +
+                    '<field name="message_ids" widget="mail_thread"/>' +
+                '</div>' +
+            '</form>',
+        res_id: 2,
+        session: {
+            user_context: {lang: 'en_US'},
+        },
+        mockRPC: function (route, args) {
+            if (args.method === 'message_get_suggested_recipients') {
+                return $.when({2: []});
+            }
+            if (args.method === 'message_post') {
+                assert.deepEqual(args.kwargs.context, {
+                        default_model: "partner",
+                        default_res_id: 2,
+                        lang: "en_US",
+                        mail_post_autofollow: true,
+                    },
+                    "the context is incorrect");
+                return $.when(57923);
+            }
+            if (args.method === 'message_format') {
+                return $.when([{
+                    author_id: [42, "Me"],
+                    model: 'partner',
+                }]);
+            }
+            return this._super(route, args);
+        },
+    });
+
+    testUtils.dom.click(form.$('.o_chatter_button_new_message'));
+    testUtils.fields.editInput(form.$('.oe_chatter .o_composer_text_field:first()'), 'Pouet');
+    testUtils.dom.click(form.$('.oe_chatter .o_composer_button_send'));
+    form.destroy();
+});
+
 QUnit.test('form activity widget: read RPCs', function (assert) {
     // Records of model 'mail.activity' may be updated in business flows (e.g.
     // the date of a 'Meeting' activity is updated when the associated meeting

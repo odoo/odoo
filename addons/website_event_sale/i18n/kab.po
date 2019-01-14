@@ -1,20 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * website_event_sale
-#
+# 
 # Translators:
+# Martin Trigaux, 2018
+# Muḥend Belqasem <belkacem77@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2015-09-08 10:16+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Kabyle (http://www.transifex.com/odoo/odoo-9/language/kab/)\n"
-"Language: kab\n"
+"POT-Creation-Date: 2018-09-21 13:18+0000\n"
+"PO-Revision-Date: 2018-08-24 09:34+0000\n"
+"Last-Translator: Muḥend Belqasem <belkacem77@gmail.com>, 2018\n"
+"Language-Team: Kabyle (https://www.transifex.com/odoo/teams/41243/kab/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: kab\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_event_sale
@@ -33,9 +36,14 @@ msgid "<span>left</span>"
 msgstr ""
 
 #. module: website_event_sale
-#: model:ir.model.fields,field_description:website_event_sale.field_product_product_intrastat_id
-msgid "Intrastat code"
-msgstr "Tangalt Intrastat"
+#: model:ir.model.fields,field_description:website_event_sale.field_product_product__event_ticket_ids
+msgid "Event Tickets"
+msgstr ""
+
+#. module: website_event_sale
+#: model_terms:ir.ui.view,arch_db:website_event_sale.registration_complete_inherit_website_event_sale
+msgid "N/A"
+msgstr "N/A"
 
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.index
@@ -43,14 +51,15 @@ msgid "Only"
 msgstr "Ala"
 
 #. module: website_event_sale
-#: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
-msgid "Order Now"
-msgstr ""
-
-#. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_product_product
 msgid "Product"
 msgstr "Afaris"
+
+#. module: website_event_sale
+#: code:addons/website_event_sale/controllers/main.py:59
+#, python-format
+msgid "Registration"
+msgstr "Tiggezt"
 
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.index
@@ -59,12 +68,16 @@ msgstr "i d-iqqimen"
 
 #. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_sale_order
-msgid "Sales Order"
+msgid "Sale Order"
 msgstr "Taladna n uznuzu"
 
 #. module: website_event_sale
+#: model:ir.model,name:website_event_sale.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Izirig n tladna n uznuzu"
+
+#. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.index
-#: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
 msgid "Sold Out"
 msgstr ""
 
@@ -78,20 +91,19 @@ msgstr ""
 #: code:addons/website_event_sale/models/sale_order.py:77
 #, python-format
 msgid ""
-"Sorry, only %(remaining_seats)d seats are still available for the %(ticket)s "
-"ticket for the %(event)s event."
+"Sorry, only %(remaining_seats)d seats are still available for the %(ticket)s"
+" ticket for the %(event)s event."
 msgstr ""
 
 #. module: website_event_sale
-#: code:addons/website_event_sale/controllers/main.py:65
-#, python-format
-msgid "Subscription"
-msgstr "Amulteɣ"
-
-#. module: website_event_sale
-#: code:addons/website_event_sale/models/sale_order.py:36
+#: code:addons/website_event_sale/models/sale_order.py:39
 #, python-format
 msgid "The ticket doesn't match with this product."
+msgstr ""
+
+#. module: website_event_sale
+#: model_terms:ir.ui.view,arch_db:website_event_sale.registration_complete_inherit_website_event_sale
+msgid "Ticket"
 msgstr ""
 
 #. module: website_event_sale

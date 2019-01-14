@@ -4,18 +4,19 @@
 # 
 # Translators:
 # Yaroslav Molochko <onorua@gmail.com>, 2018
-# Bohdan Lisnenko, 2018
 # Zoriana Zaiats, 2018
+# Bohdan Lisnenko, 2018
 # ТАрас <tratatuta@i.ua>, 2018
 # zhanna shewchuk <zhanna_shewchuk@rambler.ru>, 2018
 # Martin Trigaux, 2018
+# Oleg Pikarevskyi <o@btegri.co>, 2018
 # Alina Lisnenko <alinasemeniuk1@gmail.com>, 2018
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-02 10:06+0000\n"
+"POT-Creation-Date: 2018-12-19 08:21+0000\n"
 "PO-Revision-Date: 2018-08-24 09:34+0000\n"
 "Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2018\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
@@ -108,7 +109,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "<b> [Closed]</b>"
-msgstr "<b> [Зачинено]</b>"
+msgstr "<b> [Закрито]</b>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
@@ -134,8 +135,8 @@ msgid ""
 "<b>Answers should not add or expand questions</b>. Instead\n"
 "    either edit the question or add a comment."
 msgstr ""
-"<b>Відповіді не повинні додавати або розгорнути питання</b>. Замість цього\n"
-"   будь-ласка, відредагуйте питання або додайте коментар."
+"<b>Відповіді не повинні додавати або розгортати питання</b>. Замість цього\n"
+"будь-ласка, відредагуйте питання або додайте коментар."
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -152,7 +153,7 @@ msgid ""
 "<b>Answers should not comment other answers</b>. Instead\n"
 "    add a comment on the other answers."
 msgstr ""
-"<b>ВІдповіді не повинні коментувати інші відповіді</b>. Замість цього\n"
+"<b>Відповіді не повинні коментувати інші відповіді</b>. Замість цього\n"
 "    додайте коментар на інші відповіді."
 
 #. module: website_forum
@@ -186,8 +187,8 @@ msgid ""
 " information."
 msgstr ""
 "<b>Відповіді не повинні вказувати на інші питання</b>. Замість цього додайте"
-" запитання коментар \"Можливі копії ...\". Однак, добре включити посилання "
-"на інші питання або відповіді, що надають відповідну додаткову інформацію."
+" запитання коментар \"Можливі копії...\". Однак, добре включити посилання на"
+" інші питання або відповіді, що надають відповідну додаткову інформацію."
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -199,8 +200,8 @@ msgid ""
 "    information."
 msgstr ""
 "<b>Відповіді не повинні вказувати на інші питання</b>.\n"
-"   Замість цього додайте коментар із зазначенням <i>\"Можливий дублікат\n"
-"    ...\"</i>. Однак, добре включити посилання на інші\n"
+"   Замість цього додайте коментар із зазначенням <i>\"Можливий дублікат...\"</i>. \n"
+"Однак, добре включити посилання на інші\n"
 "питання або відповіді, що надають відповідну додаткову\n"
 "інформацію."
 
@@ -227,10 +228,10 @@ msgid ""
 "Links are welcome, but should be complementary to answer, referring sources "
 "or additional reading."
 msgstr ""
-"<b>Відповіді повинні не тільки забезпечувати посилання на "
-"рішення</b>.Замість цього надайте текст опису рішення у відповідь, навіть "
-"якщо це просто копі-паст. Посилання є прийнятними, але воно повинне бути "
-"додатковим до відповіді, посилання на джерела або додаткове читання."
+"<b>Відповіді повинні не тільки забезпечувати посилання на рішення</b>. "
+"Замість цього надайте текст опису рішення у відповідь, навіть якщо це просто"
+" копі-паст. Посилання є прийнятними, але воно повинне бути додатковим до "
+"відповіді, посилання на джерела або додаткове читання."
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -513,6 +514,11 @@ msgid "Accept an answer to all questions"
 msgstr "Прийміть відповідь на всі запитання"
 
 #. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.post_answers
+msgid "Accept answer"
+msgstr ""
+
+#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_search
 msgid "Accepted Answer"
 msgstr "Прийняті відповіді"
@@ -551,7 +557,7 @@ msgstr "Додати коментар"
 #: code:addons/website_forum/static/src/js/website_forum.editor.js:45
 #, python-format
 msgid "Add to menu"
-msgstr ""
+msgstr "Додати в меню"
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum__allow_share
@@ -636,7 +642,7 @@ msgstr "За відповідіь проголосовано 6 разів"
 #. module: website_forum
 #: model:gamification.badge,description:website_forum.badge_a_5
 msgid "Answer was accepted with 3 or more votes"
-msgstr "Відповідь була прийнята з 3 або більше голосами"
+msgstr "Відповідь була прийнята з трьома або більше голосами"
 
 #. module: website_forum
 #: selection:forum.forum,default_order:0
@@ -1155,12 +1161,12 @@ msgstr "Дата створення"
 #. module: website_forum
 #: model_terms:ir.actions.act_window,help:website_forum.action_forum_post
 msgid "Create a new forum post"
-msgstr ""
+msgstr "Створити новий пост"
 
 #. module: website_forum
 #: model_terms:ir.actions.act_window,help:website_forum.forum_tag_action
 msgid "Create a new tag"
-msgstr ""
+msgstr "Створити нови тег"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_tag_create
@@ -1670,7 +1676,7 @@ msgstr "Групувати за"
 #: model_terms:forum.forum,faq:website_forum.forum_help
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__faq
 msgid "Guidelines"
-msgstr "Путівники"
+msgstr "Керівні принципи"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_a_6
@@ -1855,7 +1861,7 @@ msgstr "Карма"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_forum_form
 msgid "Karma Gains"
-msgstr "Карма прибутку"
+msgstr "Здобутки карми"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_forum_form
@@ -2283,7 +2289,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_forum.post_comment
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_search
 msgid "Post"
-msgstr "Провести"
+msgstr "Опублікувати"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_answer
@@ -2560,7 +2566,7 @@ msgstr "Відповісти на власне запитання"
 #: model:ir.model.fields,help:website_forum.field_forum_forum__website_id
 #: model:ir.model.fields,help:website_forum.field_forum_post__website_id
 msgid "Restrict publishing to this website."
-msgstr ""
+msgstr "Обмеження публікації на цьому веб-сайті."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.404
@@ -2578,7 +2584,7 @@ msgstr "Переглянуто"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__is_seo_optimized
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__is_seo_optimized
 msgid "SEO optimized"
-msgstr ""
+msgstr "Оптимізовано SEO"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_post
@@ -2682,7 +2688,7 @@ msgstr ""
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__allow_share
 msgid "Sharing Options"
-msgstr "Поширення фенкцій"
+msgstr "Поширення функцій"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.badge
@@ -2945,7 +2951,7 @@ msgid ""
 "This post is currently awaiting moderation and not yet published... Do you "
 "want <i>Accept</i> or <i>Reject</i> this post ?"
 msgstr ""
-"Цей пост в даний час очікує модерації і ще не опубліковано ... Ви "
+"Цей пост в даний час очікує модерації і ще не опубліковано... Ви "
 "хочете<i>Прийняти</i> або <i>Відхилити</i> цю публікацію?"
 
 #. module: website_forum
@@ -2988,7 +2994,7 @@ msgid ""
 "    subjective questions where …"
 msgstr ""
 "Щоб запобігти виникненню вашого запитання та, можливо, його видаленню, уникайте задавання\n"
-"суб'єктивних питань, де ..."
+"суб'єктивних питань, де..."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
@@ -3067,7 +3073,7 @@ msgstr "Оновити на"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__write_uid
 msgid "Updated by"
-msgstr "Оновити"
+msgstr "Оновлено"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_upvote
@@ -3135,7 +3141,7 @@ msgstr "Перегляд"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
 msgid "View Your Badges"
-msgstr "перегляньте ваші значки"
+msgstr "Перегляньте ваші значки"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
@@ -3194,7 +3200,7 @@ msgstr "Веб-сайт/Форум"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__website_message_ids
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__website_message_ids
 msgid "Website Messages"
-msgstr "Повідомлення з вебсайту"
+msgstr "Повідомлення з веб-сайту"
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum__website_message_ids
@@ -3229,7 +3235,7 @@ msgstr "Мета-заголовок сайту"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__website_meta_og_img
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__website_meta_og_img
 msgid "Website opengraph image"
-msgstr ""
+msgstr "Зображення веб-сайту opengraph"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__welcome_message
@@ -3370,7 +3376,7 @@ msgstr "погані приклади"
 #. module: website_forum
 #: selection:gamification.badge,level:0
 msgid "bronze"
-msgstr "бронза"
+msgstr "бронзовий"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
@@ -3547,7 +3553,7 @@ msgstr "невідповідні та неприйнятні заяви"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.faq
 msgid "insert text link, upload files"
-msgstr "вставити текстове посилання, завантажте файли"
+msgstr "вставте текстове посилання, завантажте файли"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_11
@@ -3618,7 +3624,7 @@ msgid ""
 "        5 hours. Questions shared on two social networks have"
 msgstr ""
 "в соціальних мережах отримує відповідь у межах\n"
-"5 годин. Питання, що надсилаються в двох соціальних мережах, є"
+"5 годин. Питання, що надсилаються у двох соціальних мережах, є"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
@@ -3633,7 +3639,7 @@ msgstr "расистське та ненависне висловлювання"
 #. module: website_forum
 #: selection:gamification.badge,level:0
 msgid "silver"
-msgstr "срібло"
+msgstr "срібний"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_8
@@ -3682,7 +3688,7 @@ msgstr "занадто суб'єктивний і аргументаційний
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.faq
 msgid "upvote, add comments"
-msgstr "підвищення голосів, додати коментарів"
+msgstr "підвищення голосів, додати коментарі"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
@@ -3716,7 +3722,7 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_detail_full
 msgid "website"
-msgstr "вебсайт"
+msgstr "веб-сайт"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -3730,8 +3736,8 @@ msgid ""
 "your answer is provided along with the question, and you expect more "
 "answers: “I use ______ for ______, what do you use?”"
 msgstr ""
-"ваш відповідь надається разом із питанням, і ви очікуєте більше відповідей: "
-"\"Я використовую ______ для ______, що ви використовуєте?\""
+"ваша відповідь надається разом із питанням, і ви очікуєте більше відповідей:"
+" \"Я використовую ______ для ______, що ви використовуєте?\""
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.faq

@@ -3,36 +3,40 @@
 # * sale
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Eloïse Stilmant <est@odoo.com>, 2018
-# fr rev <e2ffr02@hotmail.com>, 2018
 # Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2018
 # Florian Hatat, 2018
-# Fabri Yohann <psn@fabri.pw>, 2018
-# f5f0a0dac17dde787a1d812a6989680e, 2018
+# fr rev <e2ffr02@hotmail.com>, 2018
 # Lucas Deliege <lud@odoo.com>, 2018
 # Melanie Bernard <mbe@odoo.com>, 2018
-# e2f <projects@e2f.com>, 2018
-# fr trans <e2ffr05@hotmail.com>, 2018
-# Laura Piraux <lap@odoo.com>, 2018
-# Marie Willemyns <mwi@odoo.com>, 2018
+# f5f0a0dac17dde787a1d812a6989680e, 2018
 # Christophe CHAUVET <christophe.chauvet@gmail.com>, 2018
 # Nathan Noël <nathan070@me.com>, 2018
-# Nathan Grognet <ngr@odoo.com>, 2018
-# Fred Gilson <fgi@odoo.com>, 2018
+# Laura Piraux <lap@odoo.com>, 2018
 # fr rev <e2ffr04@hotmail.com>, 2018
+# fr trans <e2ffr05@hotmail.com>, 2018
 # Frédéric LIETART <stuff@tifred.fr>, 2018
+# Fabri Yohann <psn@fabri.pw>, 2018
+# Eloïse Stilmant <est@odoo.com>, 2018
+# Marie Willemyns <mwi@odoo.com>, 2018
+# Nathan Grognet <ngr@odoo.com>, 2018
 # Richard Mathot <rim@odoo.com>, 2018
 # Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2018
+# Fred Gilson <fgi@odoo.com>, 2018
+# e2f <projects@e2f.com>, 2018
 # Nancy Bolognesi <nb@microcom.ca>, 2018
 # Alain van de Werve <avw@openerp.com>, 2018
+# Martin Trigaux, 2018
+# Moka Tourisme <hello@mokatourisme.fr>, 2018
+# Nicolas Bayet <nicolas.bayet@gmail.com>, 2018
+# Olivier ANDRE <frsw194@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-10-08 06:49+0000\n"
-"PO-Revision-Date: 2018-10-08 06:49+0000\n"
-"Last-Translator: Alain van de Werve <avw@openerp.com>, 2018\n"
+"PO-Revision-Date: 2018-08-24 09:24+0000\n"
+"Last-Translator: Olivier ANDRE <frsw194@gmail.com>, 2019\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -138,11 +142,35 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        % set doc_name = 'Devis' if object.state in ('draft', 'sent') else 'order'\n"
+"        Bonjour ${object.partner_id.name}\n"
+"        % if object.partner_id.parent_id:\n"
+"            (${object.partner_id.parent_id.name})\n"
+"        % endif\n"
+"        <br/><br/>\n"
+"        Voici\n"
+"        % if ctx.get('proforma')\n"
+"            en pièce jointe votre devis\n"
+"        % else\n"
+"            votre ${doc_name} <strong>${object.name}</strong>\n"
+"        % endif\n"
+"        % if object.origin:\n"
+"            (référence : ${object.origin} )\n"
+"        % endif\n"
+"        d'un montant de <strong>${format_amount(object.amount_total, object.pricelist_id.currency_id)}</strong>\n"
+"        de la part de ${object.company_id.name}.\n"
+"        <br/><br/>\n"
+"        N'hésitez pas à nous contacter si vous avez la moindre question.\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<i class=\"fa fa-check\"/> Accept &amp; Sign"
-msgstr ""
+msgstr "<i class=\"fa fa-check\"/> Accepter &amp; Signer"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -249,7 +277,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Down Payments</span>"
-msgstr ""
+msgstr "Acomptes"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
@@ -267,7 +295,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<span>Accepted on the behalf of:</span>"
-msgstr ""
+msgstr "<span>Accepté au nom de :</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -277,7 +305,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<span>By signing this proposal, I agree to the following terms:</span>"
-msgstr ""
+msgstr "En signant ce devis, vous acceptez les conditions suivantes :"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -292,7 +320,7 @@ msgstr "<span>Réduction</span>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<span>For an amount of:</span>"
-msgstr ""
+msgstr "<span>Pour un montant de :</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -302,7 +330,7 @@ msgstr "<span>Facture pro-forma n° </span>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<span>With payment terms:</span>"
-msgstr ""
+msgstr "<span>Avec les conditions de paiement : </span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -479,7 +507,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Accept &amp; Pay"
-msgstr ""
+msgstr "Accepter &amp; Payer"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__access_warning
@@ -1813,6 +1841,7 @@ msgstr ""
 #, python-format
 msgid "It is not allowed to confirm an order in the following states: %s"
 msgstr ""
+"Il n'est pas autorisé de confirmer une commande aux étapes suivantes : %s"
 
 #. module: sale
 #: selection:res.company,sale_onboarding_order_confirmation_state:0
@@ -2397,7 +2426,7 @@ msgstr "Payer et confirmer"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Pay &amp; Confirm"
-msgstr ""
+msgstr "Payeer &amp; Confirmer"
 
 #. module: sale
 #: code:addons/sale/models/payment.py:160

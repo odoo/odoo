@@ -69,7 +69,7 @@ var KioskMode = AbstractAction.extend({
 
     _callServer: function () {
         // Make a call to the database to avoid the auto close of the session
-        return ajax.rpc("/web/webclient/version_info", {});
+        return ajax.rpc("/hr_attendance/kiosk_keepalive", {});
     },
 
 });

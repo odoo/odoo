@@ -6,6 +6,7 @@ import os
 from collections import OrderedDict
 
 from odoo import api, fields, models
+from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
 from odoo.exceptions import MissingError
 from odoo.http import request
 
@@ -206,7 +207,7 @@ class IrModuleModule(models.Model):
 
             for model_name in self._theme_model_names:
                 template = self._get_module_data(model_name)
-                models = template.with_context(active_test=False).mapped('copy_ids').filtered(lambda m: m.website_id == website)
+                models = template.with_context(**{'active_test': False, MODULE_UNINSTALL_FLAG: True}).mapped('copy_ids').filtered(lambda m: m.website_id == website)
                 models.unlink()
                 self._theme_cleanup(model_name, website)
 
@@ -235,8 +236,9 @@ class IrModuleModule(models.Model):
 
         if model_name in ('website.page', 'website.menu'):
             return model
-
-        orphans = model.with_context(active_test=False).search([
+        # use active_test to also unlink archived models
+        # and use MODULE_UNINSTALL_FLAG to also unlink inherited models
+        orphans = model.with_context(**{'active_test': False, MODULE_UNINSTALL_FLAG: True}).search([
             ('key', '=like', self.name + '.%'),
             ('website_id', '=', website.id),
             ('theme_template_id', '=', False),
@@ -333,9 +335,6 @@ class IrModuleModule(models.Model):
     def button_choose_theme(self):
         """
             Remove any existing theme on the current website and install the theme ``self`` instead.
-
-            The removal of the previous theme will however keep the existing data
-            that will also be used in the new theme.
 
             The actual loading of the theme on the current website will be done
             automatically on ``write`` thanks to the upgrade and/or install.

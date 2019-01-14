@@ -199,6 +199,13 @@ class MailComposer(models.TransientModel):
         """ Process the wizard content and proceed with sending the related
             email(s), rendering any template patterns on the fly if needed. """
         notif_layout = self._context.get('custom_layout')
+        # Several custom layouts make use of the model description at rendering, e.g. in the
+        # 'View <document>' button. Some models are used for different business concepts, such as
+        # 'purchase.order' which is used for a RFQ and and PO. To avoid confusion, we must use a
+        # different wording depending on the state of the object.
+        # Therefore, we can set the description in the context from the beginning to avoid falling
+        # back on the regular display_name retrieved in '_notify_prepare_template_context'.
+        model_description = self._context.get('model_description')
         for wizard in self:
             # Duplicate attachments linked to the email.template.
             # Indeed, basic mail.compose.message wizard duplicates attachments in mass
@@ -253,6 +260,7 @@ class MailComposer(models.TransientModel):
                             notif_layout=notif_layout,
                             add_sign=not bool(wizard.template_id),
                             mail_auto_delete=wizard.template_id.auto_delete if wizard.template_id else False,
+                            model_description=model_description,
                             **mail_values)
                         if ActiveModel._name == 'mail.thread' and wizard.model:
                             post_params['model'] = wizard.model

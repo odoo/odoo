@@ -282,7 +282,10 @@ var py = {};
         var name_pattern = new RegExp('^' + Name + '$');
         var strip = new RegExp('^' + Whitespace);
         return function tokenize(s) {
-            var max=s.length, tokens = [], start, end = undefined;
+            s = s
+                .replace(/\\\"/g, '\\u0022')   // for double quote
+                .replace(/\\\'/g, '\\u0027');  // for single quote
+            var max=s.length, tokens = [], start, end;
             // /g flag makes repeated exec() have memory
             var pseudoprog = new RegExp(PseudoToken, 'g');
 
@@ -302,7 +305,6 @@ var py = {};
                 end = pseudoprog.lastIndex;
                 // strip leading space caught by Whitespace
                 var token = s.slice(start, end).replace(strip, '');
-                var initial = token[0];
 
                 if (number_pattern.test(token)) {
                     tokens.push(create(symbols['(number)'], {
@@ -310,9 +312,13 @@ var py = {};
                     }));
                 } else if (string_pattern.test(token)) {
                     var m = string_pattern.exec(token);
+                    var value = (m[3] !== undefined ? m[3] : m[5]);
+                    value
+                        .replace(/\\u0022/g, '"')
+                        .replace(/\\u0027/g, "'");
                     tokens.push(create(symbols['(string)'], {
                         unicode: !!(m[2] || m[4]),
-                        value: (m[3] !== undefined ? m[3] : m[5])
+                        value: value
                     }));
                 } else if (token in symbols) {
                     var symbol;

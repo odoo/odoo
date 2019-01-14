@@ -3,19 +3,20 @@
 # * mass_mailing
 # 
 # Translators:
-# Martin Trigaux, 2018
 # Ranjit Pillai <rpi@odoo.com>, 2018
-# Dharmraj Jhala <dja@openerp.com>, 2018
 # Divya Pandya <dia@odoo.com>, 2018
 # Turkesh Patel <turkesh4friends@gmail.com>, 2018
+# Dharmraj Jhala <dja@openerp.com>, 2018
 # Spellbound Soft Solutions <jeel.spellbound@gmail.com>, 2018
+# Martin Trigaux, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 06:49+0000\n"
-"PO-Revision-Date: 2018-10-08 06:49+0000\n"
-"Last-Translator: Spellbound Soft Solutions <jeel.spellbound@gmail.com>, 2018\n"
+"POT-Creation-Date: 2018-12-19 08:21+0000\n"
+"PO-Revision-Date: 2018-08-24 09:20+0000\n"
+"Last-Translator: Martin Trigaux, 2018\n"
 "Language-Team: Gujarati (https://www.transifex.com/odoo/teams/41243/gu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -851,6 +852,7 @@ msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mail_mass_mailing_list_contact_view_search
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_contact_search
 msgid "Exclude Opt Out"
 msgstr ""
 
@@ -1603,8 +1605,16 @@ msgid "Opened Ratio"
 msgstr ""
 
 #. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact__opt_out
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_list_contact_rel__opt_out
 msgid "Opt Out"
+msgstr ""
+
+#. module: mass_mailing
+#: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_contact__opt_out
+msgid ""
+"Opt out flag for a specific mailing list.This field should not be used in a "
+"view without a unique and active mailing list context."
 msgstr ""
 
 #. module: mass_mailing
@@ -2243,6 +2253,7 @@ msgstr "વપરાશકર્તા"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mail_mass_mailing_list_contact_view_search
+#: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_contact_search
 msgid "Valid Recipients"
 msgstr ""
 

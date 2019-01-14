@@ -6,6 +6,7 @@
 # Martin Trigaux, 2018
 # Bohdan Lisnenko, 2018
 # ТАрас <tratatuta@i.ua>, 2018
+# Oleg Pikarevskyi <o@btegri.co>, 2018
 # Alina Lisnenko <alinasemeniuk1@gmail.com>, 2018
 # 
 msgid ""
@@ -50,12 +51,12 @@ msgstr "К-сть завдань"
 #. module: project
 #: model:mail.template,subject:project.rating_project_request_email_template
 msgid "${object.project_id.company_id.name}: Satisfaction Survey"
-msgstr ""
+msgstr "${object.project_id.company_id.name}: Оцінювання задоволеності"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "% On"
-msgstr ""
+msgstr "% На"
 
 #. module: project
 #: code:addons/project/models/project.py:302
@@ -366,7 +367,7 @@ msgstr "Безпека псевдоніма контакту"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_name
 msgid "Alias Name"
-msgstr "Назва псевдоніма"
+msgstr "Ім'я псевдоніма"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_domain
@@ -444,14 +445,14 @@ msgid ""
 msgstr ""
 "На кожному етапі співробітники можуть заблокувати або зробити завдання/проблему готову до наступного етапу.\n"
 "Тут можна визначити мітки, які відображатимуться замість статусу\n"
-"ярликів за умовчанням."
+"ярликів за замовчуванням."
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/xml/project.xml:7
 #, python-format
 msgid "Attachment"
-msgstr "Вкладення"
+msgstr "Прикріплення"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__message_attachment_count
@@ -462,13 +463,13 @@ msgstr "Підрахунок прикріплення"
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__attachment_ids
 msgid "Attachment that don't come from message."
-msgstr "Додаток, що не походить від повідомлення."
+msgstr "Прикріплення, що не походить від повідомлення."
 
 #. module: project
 #: code:addons/project/models/project.py:114
 #, python-format
 msgid "Attachments"
-msgstr "Долучення"
+msgstr "Прикріпплення"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__auto_validation_kanban_state
@@ -728,7 +729,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_tags_action
 msgid "Create a new tag"
-msgstr ""
+msgstr "Створити нови тег"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.action_view_task
@@ -763,7 +764,7 @@ msgstr "Дата створення"
 #. module: project
 #: model:ir.filters,name:project.filter_task_report_cumulative_flow
 msgid "Cumulative Flow"
-msgstr "Сумарний потік"
+msgstr "Сукупний процес"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__currency_id
@@ -810,7 +811,7 @@ msgstr ""
 #: model:ir.model.fields,help:project.field_project_project__access_url
 #: model:ir.model.fields,help:project.field_project_task__access_url
 msgid "Customer Portal URL"
-msgstr "URL Порталу клієнта"
+msgstr "URL порталу клієнта"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.rating_rating_action_project_report
@@ -877,7 +878,7 @@ msgid ""
 "                solving a task or an issue."
 msgstr ""
 "Визначте кроки, які будуть використовуватися в проекті зі\n"
-"створення завдання, аж до закриття завдання чи питання.\n"
+"створення завдання, аж до закриття завдання чи проблеми.\n"
 "Ви будете використовувати ці етапи для відстеження прогресу\n"
 "вирішення задачі чи проблеми."
 
@@ -1065,8 +1066,8 @@ msgid ""
 "Explanation text to help users using the star on tasks or issues in this "
 "stage."
 msgstr ""
-"Текст пояснення, щоб допомогти користувачам, які використовують зірку, на "
-"завдання чи проблеми на цьому етапі."
+"Текст пояснення, щоб допомогти користувачам, які позначають зіркою завдання "
+"чи проблеми на цьому етапі."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
@@ -1173,7 +1174,7 @@ msgstr "Дає порядок послідовності при відображ
 #. module: project
 #: selection:project.task,kanban_state:0
 msgid "Green"
-msgstr "Зелена"
+msgstr "Зелений"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__legend_done
@@ -1216,7 +1217,7 @@ msgstr "Щасливі % на завданні"
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_partner_stat
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Happy face"
-msgstr ""
+msgstr "Щасливе обличчя"
 
 #. module: project
 #: selection:report.project.task.user,priority:0
@@ -1408,8 +1409,8 @@ msgid ""
 "Tracker module is installed)."
 msgstr ""
 "Внутрішня електронна пошта, пов'язана з цим проектом. Вхідні електронні "
-"листи автоматично синхронізуються із завданнями (або, якщо можливо, "
-"проблеми, якщо модуль Відстеження проблемвстановлено)."
+"листи автоматично синхронізуються із завданнями (або, можливі проблеми, якщо"
+" встановлено модуль Відстеження проблем)."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__message_is_follower
@@ -1557,9 +1558,8 @@ msgid ""
 "Lets the company customize which Pad installation should be used to link to "
 "new pads (for example: http://etherpad.com/)."
 msgstr ""
-"Дозволяє компанії налаштовувати, яке встановлення Блокноту слід "
-"використовувати для посилання на нові блокноти (наприклад: "
-"http://ietherpad.com/)."
+"Дозволяє компанії налаштовувати, яке встановлення Pad слід використовувати "
+"для посилання на нові pad (наприклад: http://ietherpad.com/)."
 
 #. module: project
 #. openerp-web
@@ -1602,7 +1602,7 @@ msgstr "Основне прикріплення"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__attachment_ids
 msgid "Main Attachments"
-msgstr "Основні вкладення"
+msgstr "Основні прикріплення"
 
 #. module: project
 #: model:res.groups,name:project.group_project_manager
@@ -1678,7 +1678,7 @@ msgstr "Потрібна функціональна або технічна ко
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_partner_stat
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Neutral face"
-msgstr ""
+msgstr "Нейтральне обличчя"
 
 #. module: project
 #. openerp-web
@@ -1725,7 +1725,7 @@ msgstr "Наступні дії"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr "Наступий дедлайн дії"
+msgstr "Дедлайн наступної дії"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__activity_summary
@@ -1735,7 +1735,7 @@ msgstr "Підсумок наступної дії"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__activity_type_id
 msgid "Next Activity Type"
-msgstr "Наступний тип дії"
+msgstr "Тип наступної дії"
 
 #. module: project
 #: code:addons/project/models/project.py:852
@@ -1806,7 +1806,7 @@ msgstr "Кількість робочих днів до закриття зав�
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__doc_count
 msgid "Number of documents attached"
-msgstr "Кількість долучених документів"
+msgstr "Кількість прикріплених документів"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__message_has_error_counter
@@ -1878,7 +1878,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all
 msgid "Or"
-msgstr "або"
+msgstr "Або"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all_config
@@ -1898,7 +1898,7 @@ msgstr "Інші"
 #. module: project
 #: selection:project.task,activity_state:0
 msgid "Overdue"
-msgstr "Прострочено"
+msgstr "Протерміновано"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_view_task_overpassed_draft
@@ -1913,8 +1913,8 @@ msgid ""
 "selection, when the task or issue is in that stage."
 msgstr ""
 "Перевизначити значення за замовчуванням, яке відображається для "
-"заблокованого стану для вибору каналу, коли завдання або питання знаходяться"
-" на цьому етапі."
+"заблокованого стану для вибору канбану, коли завдання або питання "
+"знаходяться на цьому етапі."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__legend_done
@@ -1924,8 +1924,8 @@ msgid ""
 "selection, when the task or issue is in that stage."
 msgstr ""
 "Перевизначити значення за замовчуванням, яке відображається для "
-"заблокованого стану для вибору каналу, коли завдання або питання знаходяться"
-" на цьому етапі."
+"заблокованого стану для вибору канбану, коли завдання або проблема "
+"знаходяться на цьому етапі."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__legend_normal
@@ -1935,7 +1935,7 @@ msgid ""
 "selection, when the task or issue is in that stage."
 msgstr ""
 "Перевизначити значення за замовчуванням, яке відображається для звичайного "
-"стану для вибору канбану, коли завдання або питання знаходяться на цьому "
+"стану для вибору канбану, коли завдання або проблема знаходяться на цьому "
 "етапі."
 
 #. module: project
@@ -1958,7 +1958,7 @@ msgstr "Батьківська модель"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_parent_thread_id
 msgid "Parent Record Thread ID"
-msgstr " ID запису батьківської теми"
+msgstr "ID запису батьківської теми"
 
 #. module: project
 #: code:addons/project/models/project.py:919
@@ -2026,7 +2026,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_project__access_url
 #: model:ir.model.fields,field_description:project.field_project_task__access_url
 msgid "Portal Access URL"
-msgstr "URL Доступу до порталу"
+msgstr "URL доступу до порталу"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__priority
@@ -2159,7 +2159,7 @@ msgstr "Шаблон листа оцінки"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_status_period
 msgid "Rating Frequency"
-msgstr "Частота рейтингу"
+msgstr "Частота оцінювання"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_last_feedback
@@ -2174,7 +2174,7 @@ msgstr "Останнє зображення рейтингу"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_last_value
 msgid "Rating Last Value"
-msgstr "Оцінювання останнього значення"
+msgstr "Останнє значення рейтингу"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_request_deadline
@@ -2336,7 +2336,7 @@ msgstr "Відповідальний користувач"
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_partner_stat
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Sad face"
-msgstr ""
+msgstr "Сумне обличчя"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -2383,7 +2383,7 @@ msgstr "Пошук в етапах"
 #: model:ir.model.fields,field_description:project.field_project_project__access_token
 #: model:ir.model.fields,field_description:project.field_project_task__access_token
 msgid "Security Token"
-msgstr "Token безпеки"
+msgstr "Токен безпеки"
 
 #. module: project
 #. openerp-web
@@ -2402,7 +2402,7 @@ msgstr "Послідовність"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Set Cover Image"
-msgstr "Встановіть обкладинку"
+msgstr "Встановити обкладинку"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_0
@@ -2419,7 +2419,7 @@ msgstr "Встановити шаблон електронної пошти на
 #: code:addons/project/static/src/js/project.js:64
 #, python-format
 msgid "Set a Cover Image"
-msgstr "Встановіть обкладинку"
+msgstr "Встановити обкладинку"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_config_settings_action
@@ -2505,7 +2505,7 @@ msgstr "Стадії"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Starred"
-msgstr "З зірочкою"
+msgstr "Позначено зірочкою"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__legend_priority
@@ -2531,7 +2531,7 @@ msgid ""
 "Planned: Future activities."
 msgstr ""
 "Етап заснований на діях\n"
-"Прострочений: термін виконання вже минув\n"
+"Протерміновано: термін виконання вже минув\n"
 "Сьогодні: дата дії сьогодні\n"
 "Заплановано: майбутні дії."
 
@@ -2596,7 +2596,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__tasks
 msgid "Task Activities"
-msgstr "Дії по завдвнню"
+msgstr "Дії по завданню"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_blocked
@@ -2755,7 +2755,7 @@ msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
 msgstr ""
-"Ім'я псевдоніма електронної пошти, наприклад, \"Робота\", якщо ви хочете "
+"Ім'я псевдоніма електронної пошти, наприклад, 'jobs', якщо ви хочете "
 "отримувати повідомлення електронної пошти на <jobs@example.odoo.com>"
 
 #. module: project
@@ -2989,7 +2989,7 @@ msgstr "Використовувати завдання як"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Use collaborative rich text pads on tasks"
-msgstr "Використовуйте спільні багаті текстові поля для завдань"
+msgstr "Використовуйте спільні текстові поля для завдань"
 
 #. module: project
 #. openerp-web
@@ -3052,7 +3052,7 @@ msgstr "Ел. пошта підписників"
 #: model:ir.model.fields,field_description:project.field_project_project__website_message_ids
 #: model:ir.model.fields,field_description:project.field_project_task__website_message_ids
 msgid "Website Messages"
-msgstr "Повідомлення з вебсайту"
+msgstr "Повідомлення з веб-сайту"
 
 #. module: project
 #. openerp-web

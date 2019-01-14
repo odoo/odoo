@@ -3,26 +3,36 @@
 # * website_livechat
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
-# digitouch UAB <digitouchagencyeur@gmail.com>, 2017
+# Martin Trigaux, 2018
+# Rolandas <info@paninfo.lt>, 2018
+# digitouch UAB <digitouchagencyeur@gmail.com>, 2018
+# Linas Versada <linaskrisiukenas@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:54+0000\n"
-"PO-Revision-Date: 2017-09-20 09:54+0000\n"
-"Last-Translator: digitouch UAB <digitouchagencyeur@gmail.com>, 2017\n"
+"POT-Creation-Date: 2018-10-02 10:06+0000\n"
+"PO-Revision-Date: 2018-08-24 09:34+0000\n"
+"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2019\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: lt\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);\n"
+
+#. module: website_livechat
+#: model_terms:ir.ui.view,arch_db:website_livechat.res_config_settings_view_form
+msgid ""
+"<span class=\"o_form_label\">Live Chat</span>\n"
+"                        <span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-specific.\" groups=\"website.group_multi_website\"/>"
+msgstr ""
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
 msgid "<span>Livechat Channel</span>"
-msgstr ""
+msgstr "<span>Gyvo susirašinėjimo kanalas </span>"
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.res_config_settings_view_form
@@ -30,33 +40,62 @@ msgid "Channel"
 msgstr "Kanalas"
 
 #. module: website_livechat
-#: model:ir.model.fields,help:website_livechat.field_im_livechat_channel_website_description
+#: model:ir.model,name:website_livechat.model_res_config_settings
+msgid "Config Settings"
+msgstr "Konfigūracijos nustatymai"
+
+#. module: website_livechat
+#: model:ir.model.fields,help:website_livechat.field_im_livechat_channel__website_description
 msgid "Description of the channel displayed on the website page"
+msgstr "Kanalo aprašymas, rodomas svetainėje"
+
+#. module: website_livechat
+#: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
+msgid "Happy face"
 msgstr ""
 
 #. module: website_livechat
-#: model_terms:ir.ui.view,arch_db:website_livechat.res_config_settings_view_form
-msgid "Live Chat"
-msgstr ""
+#: model:website.menu,name:website_livechat.menu_livechat
+msgid "Live Support"
+msgstr "Gyvas palaikymas"
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.res_config_settings_view_form
 msgid "Live chat channel of your website"
-msgstr ""
+msgstr "Jūsų svetainės gyvas susirašinėjimas"
 
 #. module: website_livechat
 #: model:ir.model,name:website_livechat.model_im_livechat_channel
 msgid "Livechat Channel"
-msgstr ""
-
-#. module: website_livechat
-#: model_terms:ir.ui.view,arch_db:website_livechat.header_footer_custom
-msgid "Livechat Support"
-msgstr ""
+msgstr "Gyvo susirašinėjimo kanalas"
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_list_page
 msgid "Livechat Support Channels"
+msgstr "Gyvo susirašinėjimo palaikymo kanalai"
+
+#. module: website_livechat
+#. openerp-web
+#: code:addons/website_livechat/static/src/js/website_livechat.editor.js:30
+#, python-format
+msgid "Name"
+msgstr "Pavadinimas"
+
+#. module: website_livechat
+#: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
+msgid "Neutral face"
+msgstr ""
+
+#. module: website_livechat
+#. openerp-web
+#: code:addons/website_livechat/static/src/js/website_livechat.editor.js:29
+#, python-format
+msgid "New Channel"
+msgstr "Naujas kanalas"
+
+#. module: website_livechat
+#: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
+msgid "Sad face"
 msgstr ""
 
 #. module: website_livechat
@@ -67,49 +106,44 @@ msgstr "Statistika"
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
 msgid "The"
-msgstr ""
+msgstr " "
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
 msgid "The Team"
-msgstr ""
+msgstr "Komanda"
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_list_page
 msgid "There is no public livechat channel to show."
-msgstr ""
+msgstr "Nėra viešų gyvo susirašinėjimo kanalų."
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
-msgid "This is no rating for this channel for now."
+msgid "There is no rating for this channel for now."
 msgstr ""
 
 #. module: website_livechat
 #: model:ir.model,name:website_livechat.model_website
 msgid "Website"
-msgstr "Tinklalapis"
+msgstr "Svetainė"
 
 #. module: website_livechat
-#: model:ir.model.fields,field_description:website_livechat.field_res_config_settings_channel_id
+#: model:ir.model.fields,field_description:website_livechat.field_res_config_settings__channel_id
 msgid "Website Live Channel"
-msgstr ""
+msgstr "Svetainės gyvas susirašinėjimas"
 
 #. module: website_livechat
-#: model:ir.model.fields,field_description:website_livechat.field_website_channel_id
+#: model:ir.model.fields,field_description:website_livechat.field_website__channel_id
 msgid "Website Live Chat Channel"
-msgstr ""
+msgstr "Svetainės gyvojo susirašinėjimo kanalas"
 
 #. module: website_livechat
-#: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel_website_description
+#: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel__website_description
 msgid "Website description"
 msgstr "Tinklalapio aprašymas"
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
 msgid "last feedbacks"
-msgstr ""
-
-#. module: website_livechat
-#: model:ir.model,name:website_livechat.model_res_config_settings
-msgid "res.config.settings"
-msgstr "res.config.settings"
+msgstr "paskutiniai atsiliepimai"

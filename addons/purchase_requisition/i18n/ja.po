@@ -4,20 +4,21 @@
 # 
 # Translators:
 # SHIMIZU Taku <shimizu.taku@gmail.com>, 2018
-# Martin Trigaux, 2018
-# Yoshi Tashiro <tashiro@roomsfor.hk>, 2018
 # Manami Hashi <manami@roomsfor.hk>, 2018
 # 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2018
 # kent_ocean <ke.tanabe@gmail.com>, 2018
 # Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2018
 # Tim Siu Lai <tl@roomsfor.hk>, 2018
+# Martin Trigaux, 2018
+# Yoshi Tashiro <tashiro@roomsfor.hk>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: Tim Siu Lai <tl@roomsfor.hk>, 2018\n"
+"POT-Creation-Date: 2018-12-19 08:21+0000\n"
+"PO-Revision-Date: 2018-08-24 09:24+0000\n"
+"Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>, 2019\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -206,7 +207,6 @@ msgid "Create a draft purchase order"
 msgstr "ドラフト購買オーダ作成"
 
 #. module: purchase_requisition
-#: model:ir.model.fields,help:purchase_requisition.field_product_product__purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_product_template__purchase_requisition
 msgid ""
 "Create a draft purchase order: Based on your product configuration, the "
@@ -392,12 +392,17 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "メッセージ配信エラー"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_ids
 msgid "Messages"
 msgstr "メッセージ"
+
+#. module: purchase_requisition
+#: model:ir.model,name:purchase_requisition.model_stock_warehouse_orderpoint
+msgid "Minimum Inventory Rule"
+msgstr "最小在庫ルール"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
@@ -472,7 +477,6 @@ msgid "Ordering Date"
 msgstr "オーダ日"
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_product_product__purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_product_template__purchase_requisition
 msgid "Procurement"
 msgstr "調達"
@@ -518,7 +522,7 @@ msgstr "入札提案"
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order__requisition_id
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__requisition_id
 msgid "Purchase Agreement"
-msgstr ""
+msgstr "購買契約"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.tender_type_action
@@ -561,7 +565,7 @@ msgstr "購買オーダ"
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__user_id
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Purchase Representative"
-msgstr ""
+msgstr "購買担当者"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_requisition

@@ -462,7 +462,7 @@
                                             tabindex="0"
                                             data-toggle="popover">
                                             <i class="fa fa-thumbs-up fa-1x" role="img" aria-label="Likes" title="Likes"/>
-                                            <t t-esc="slide.likes"/>
+                                            <span class="o_wslides_like_dislike_count" t-esc="slide.likes"/>
                                         </span>
                                         <span
                                             class="oe_slide_js_unlike"
@@ -473,7 +473,7 @@
                                             tabindex="0"
                                             data-toggle="popover">
                                             <i class="fa fa-thumbs-down fa-1x" role="img" aria-label="Dislikes" title="Dislikes"/>
-                                            <t t-esc="slide.dislikes"/>
+                                            <span class="o_wslides_like_dislike_count" t-esc="slide.dislikes"/>
                                         </span>
                                     </div>
                                 </div>
@@ -508,7 +508,7 @@
                                 </li>
                             </ul>
                             <div class="tab-content" style="padding: 20px 5px 5px 5px; word-wrap: break-word;">
-                                <div role="tabpanel" t-att-class="not comments and 'tab-pane fade active in' or 'tab-pane fade'" id="about">
+                                <div role="tabpanel" t-att-class="not comments and 'tab-pane fade in show active' or 'tab-pane fade'" id="about">
                                     <div t-field="slide.description"/>
                                 </div>
                                 <div role="tabpanel" class="tab-pane fade" t-if="slide.website_published" id="share">
@@ -529,7 +529,7 @@
                                         The social sharing module will be unlocked when a moderator will allow your publication.
                                     </h4>
                                 </div>
-                                <div role="tabpanel" t-att-class="comments and 'tab-pane fade active in' or 'tab-pane fade'" id="discuss">
+                                <div role="tabpanel" t-att-class="comments and 'tab-pane fade in show active' or 'tab-pane fade'" id="discuss">
                                     <t t-call="portal.message_thread">
                                         <t t-set="object" t-value="slide"/>
                                     </t>

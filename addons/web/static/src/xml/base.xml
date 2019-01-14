@@ -228,7 +228,7 @@
 
 <t t-name="WebClient.DebugManager">
     <li class="o_debug_manager" role="menuitem">
-        <a href="#" title="Open Developer Tools" aria-label="Open Developer Tools" data-toggle="dropdown" aria-expanded="false" tabindex="-1" data-display="static">
+        <a role="button" href="#" title="Open Developer Tools" aria-label="Open Developer Tools" data-toggle="dropdown" aria-expanded="false" tabindex="-1" data-display="static">
             <span class="fa fa-bug"/>
         </a>
         <div class="dropdown-menu dropdown-menu-right o_debug_dropdown" role="menu"/>
@@ -843,7 +843,7 @@
                 <span class="o_badge_text" t-att-title="el.display_name"><span role="img" t-attf-aria-label="Tag color: #{colornames[color]}"/><t t-esc="el.display_name"/></span>
             </t>
             <t t-if="colorField">
-                <a href="#" class="dropdown-toggle o-no-caret" data-toggle="dropdown">
+                <a role="button" href="#" class="dropdown-toggle o-no-caret" data-toggle="dropdown" aria-expanded="false">
                     <t t-raw="_badge_text"/>
                 </a>
             </t>
@@ -1070,10 +1070,10 @@
     <t t-if="widget.items.length !== 0">
         <t t-set="group" t-value="0"/>
         <t t-foreach="widget.items" t-as="item">
-            <div t-if="group !== item.groupId" class="dropdown-divider" data-removable="1"/>
+            <div t-if="group !== item.groupId" role="separator" class="dropdown-divider" data-removable="1"/>
             <div class="o_menu_item"
                 t-att-data-id="item.itemId">
-                <a href="#" t-attf-class="dropdown-item#{item.isActive ? ' selected ' : ''}">
+                <a role="menuitem" href="#" t-attf-class="dropdown-item#{item.isActive ? ' selected ' : ''}">
                     <t t-esc="item.description"/>
                     <span t-if="item.isRemovable" t-att-data-id="item.itemId" class="o_trash_button" > <span class="fa fa-trash-o"></span> </span>
                     <span t-if="item.hasOptions" t-att-data-id="item.itemId" class="o_submenu_switcher">
@@ -1083,10 +1083,10 @@
                 <ul t-if="item.hasOptions &amp;&amp; item.isOpen" class="list-unstyled">
                     <t t-set="subgroup" t-value="0"/>
                     <t t-foreach="_.values(item.options)" t-as="option">
-                        <li t-if="subgroup !== option.groupId" class="dropdown-divider" data-removable="1"/>
+                        <li t-if="subgroup !== option.groupId" role="separator" class="dropdown-divider" data-removable="1"/>
                         <li class="o_item_option"
                             t-att-data-item_id="item.itemId" t-att-data-option_id="option.optionId">
-                            <a href="#" t-attf-class="dropdown-item#{item.currentOptionId === option.optionId ? ' selected': ''} pl-5"><t t-esc="option.description"/></a>
+                            <a role="menuitem" href="#" t-attf-class="dropdown-item#{item.currentOptionId === option.optionId ? ' selected': ''} pl-5"><t t-esc="option.description"/></a>
                         </li>
                         <t t-set="subgroup" t-value="option.groupId"/>
                     </t>
@@ -1107,8 +1107,8 @@
 </div>
 
 <t t-name="GroupbyMenuGenerator">
-    <div t-if="Object.keys(widget.presentedFields).length !== 0 &amp;&amp; widget.items.length !== 0" class="dropdown-divider o_generator_menu"/>
-    <button t-if="Object.keys(widget.presentedFields).length !== 0" type="button" class="dropdown-item o_generator_menu o_add_custom_group">Add Custom Group</button>
+    <div t-if="Object.keys(widget.presentedFields).length !== 0 &amp;&amp; widget.items.length !== 0" role="separator" class="dropdown-divider o_generator_menu"/>
+    <button t-if="Object.keys(widget.presentedFields).length !== 0" type="button" class="dropdown-item o_generator_menu o_add_custom_group" aria-expanded="false">Add Custom Group</button>
     <div t-if="widget.generatorMenuIsOpen" class="dropdown-item-text o_generator_menu">
         <select class="w-auto o_input o_group_selector o_add_group">
             <t t-foreach="widget.presentedFields" t-as="field">
@@ -1122,8 +1122,8 @@
 </t>
 
 <t t-name="FiltersMenuGenerator">
-    <div class="dropdown-divider"/>
-    <button t-if="Object.keys(widget.fields).length !== 0" type="button" class="dropdown-item o_add_custom_filter o_closed_menu">Add Custom Filter</button>
+    <div role="separator" class="dropdown-divider"/>
+    <button t-if="Object.keys(widget.fields).length !== 0" type="button" class="dropdown-item o_add_custom_filter o_closed_menu" aria-expanded="false">Add Custom Filter</button>
     <div class="dropdown-item-text o_add_filter_menu">
         <button class="btn btn-primary o_apply_filter" type="button">Apply</button>
         <button class="btn btn-secondary o_add_condition" type="button">
@@ -1353,9 +1353,9 @@
         <span class="fa fa-star"/> Favorites <span t-if="widget.isMobile" class="fa fa-chevron-right float-right mt4"/>
     </button>
     <div class="dropdown-menu o_favorites_menu" role="menu">
-        <div class="dropdown-divider user_filter"/>
-        <div class="dropdown-divider shared_filter"/>
-        <a role="menuitem" href="#" class="dropdown-item o_save_search o_closed_menu">Save current search</a>
+        <div role="separator" class="dropdown-divider user_filter"/>
+        <div role="separator" class="dropdown-divider shared_filter"/>
+        <a role="button" href="#" class="dropdown-item o_save_search o_closed_menu" aria-expanded="false">Save current search</a>
         <div role="menuitem" class="dropdown-item-text o_save_name">
             <input type="text" class="o_input"></input>
         </div>
@@ -1372,7 +1372,7 @@
             </div>
         </div>
         <div class="dropdown-item-text o_save_name">
-            <button role="menuitem" type="button" class="btn btn-primary">Save</button>
+            <button type="button" class="btn btn-primary">Save</button>
         </div>
     </div>
 </div>
@@ -1532,7 +1532,7 @@
 
 <t t-name="UserMenu">
     <li class="o_user_menu">
-        <a class="dropdown-toggle" data-toggle="dropdown" data-display="static" aria-expanded="false" href="#">
+        <a role="button" class="dropdown-toggle" data-toggle="dropdown" data-display="static" aria-expanded="false" href="#">
             <img class="rounded-circle oe_topbar_avatar" t-att-src="_s + '/web/static/src/img/user_menu_avatar.png'" alt="Avatar"/>
             <span class="oe_topbar_name"/>
         </a>
@@ -1553,7 +1553,7 @@
 
 <t t-name="SwitchCompanyMenu">
     <li class="o_switch_company_menu">
-        <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false" href="#" aria-label="Dropdown menu" title="Dropdown menu">
+        <a role="button" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false" href="#" aria-label="Dropdown menu" title="Dropdown menu">
             <span t-attf-class="#{widget.isMobile ? 'fa fa-building-o' : 'oe_topbar_name'}"/>
         </a>
         <div class="dropdown-menu dropdown-menu-right" role="menu"/>

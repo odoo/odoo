@@ -3,45 +3,46 @@
 # * stock
 # 
 # Translators:
-# e2f <projects@e2f.com>, 2018
-# fr rev <e2ffr02@hotmail.com>, 2018
-# fr trans <e2ffr05@hotmail.com>, 2018
-# Martin Trigaux, 2018
-# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2018
-# Fabien Pinckaers <fp@openerp.com>, 2018
-# Olivier Lenoir <olivier.lenoir@free.fr>, 2018
-# Florian Hatat, 2018
-# Simon CARRIER <carrier.sim@gmail.com>, 2018
-# Clo <clo@odoo.com>, 2018
 # Xavier Symons <xsy@openerp.com>, 2018
-# Melanie Bernard <mbe@odoo.com>, 2018
-# f5f0a0dac17dde787a1d812a6989680e, 2018
-# Eloïse Stilmant <est@odoo.com>, 2018
-# Laura Piraux <lap@odoo.com>, 2018
-# Nathan Noël <nathan070@me.com>, 2018
-# Bertrand LATOUR <divoir@gmail.com>, 2018
-# Quentin THEURET <odoo@kerpeo.com>, 2018
-# Lionel Sausin <ls@numerigraphe.com>, 2018
-# Jérôme Tanché <jerome.tanche@ouest-dsi.fr>, 2018
 # Fred Gilson <fgi@odoo.com>, 2018
-# Saad Thaifa <saad.thaifa@gmail.com>, 2018
 # Loic <loic.richard2@gmail.com>, 2018
 # zoe <yann.hoareau@migs.re>, 2018
 # Miguel Vidali <mvidali129@gmail.com>, 2018
 # Xavier Belmere <Info@cartmeleon.com>, 2018
 # Xavier Brochard <xavier@alternatif.org>, 2018
-# Guilhaume Bordiau <github@guilhaume.fr>, 2018
+# Saad Thaifa <saad.thaifa@gmail.com>, 2018
+# Lionel Sausin <ls@numerigraphe.com>, 2018
+# Simon CARRIER <carrier.sim@gmail.com>, 2018
+# Clo <clo@odoo.com>, 2018
+# Quentin THEURET <odoo@kerpeo.com>, 2018
+# Fabien Pinckaers <fp@openerp.com>, 2018
+# Olivier Lenoir <olivier.lenoir@free.fr>, 2018
 # Lucas Deliege <lud@odoo.com>, 2018
-# Marie Willemyns <mwi@odoo.com>, 2018
-# Thomas Dobbelsteyn <tdo@odoo.com>, 2018
+# Melanie Bernard <mbe@odoo.com>, 2018
+# Guilhaume Bordiau <github@guilhaume.fr>, 2018
+# e2f <projects@e2f.com>, 2018
+# fr rev <e2ffr02@hotmail.com>, 2018
+# fr trans <e2ffr05@hotmail.com>, 2018
+# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2018
+# Florian Hatat, 2018
+# Nathan Noël <nathan070@me.com>, 2018
+# Bertrand LATOUR <divoir@gmail.com>, 2018
+# Jérôme Tanché <jerome.tanche@ouest-dsi.fr>, 2018
 # Nathan Grognet <ngr@odoo.com>, 2018
+# Thomas Dobbelsteyn <tdo@odoo.com>, 2018
+# Marie Willemyns <mwi@odoo.com>, 2018
+# Martin Trigaux, 2018
+# f5f0a0dac17dde787a1d812a6989680e, 2018
+# Eloïse Stilmant <est@odoo.com>, 2018
+# Laura Piraux <lap@odoo.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-24 09:34+0000\n"
-"PO-Revision-Date: 2018-10-24 09:34+0000\n"
-"Last-Translator: Nathan Grognet <ngr@odoo.com>, 2018\n"
+"POT-Creation-Date: 2018-12-19 08:20+0000\n"
+"PO-Revision-Date: 2018-08-24 09:25+0000\n"
+"Last-Translator: Laura Piraux <lap@odoo.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1119,6 +1120,7 @@ msgstr "Contenu"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_replenish__product_uom_category_id
+#: model:ir.model.fields,help:stock.field_stock_inventory_line__product_uom_category_id
 msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
@@ -1424,8 +1426,8 @@ msgstr "Clients"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_dhl
-msgid "DHL USA"
-msgstr "DHL USA"
+msgid "DHL Connector"
+msgstr "Connecteur DHL"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_report_stock_forecast__date
@@ -1883,8 +1885,8 @@ msgstr "Mouvements en brouillon"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_easypost
-msgid "Easypost"
-msgstr "Easypost"
+msgid "Easypost Connector"
+msgstr "Connecteur Easypost"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -1955,8 +1957,8 @@ msgstr "FIFO, LIFO..."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_fedex
-msgid "FedEx"
-msgstr "FedEx"
+msgid "FedEx Connector"
+msgstr "Connecteur FedEx"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_destination__filtered_location
@@ -6377,13 +6379,13 @@ msgstr "Type d'opération"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_ups
-msgid "UPS"
-msgstr "UPS"
+msgid "UPS Connector"
+msgstr "Connecteur UPS"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_usps
-msgid "USPS"
-msgstr "USPS"
+msgid "USPS Connector"
+msgstr "Connecteur USPSConnecteur USPS"
 
 #. module: stock
 #. openerp-web
@@ -6511,6 +6513,11 @@ msgstr "UdM"
 #: model:ir.ui.menu,name:stock.menu_stock_uom_categ_form_action
 msgid "UoM Categories"
 msgstr "Catégories UdM"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_inventory_line__product_uom_category_id
+msgid "Uom category"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_change_product_quantity
@@ -7274,8 +7281,8 @@ msgstr "_Annuler"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_bpost
-msgid "bpost"
-msgstr "bpost"
+msgid "bpost Connector"
+msgstr "Connecteur Bpost"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form

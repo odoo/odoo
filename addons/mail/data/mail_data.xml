@@ -169,7 +169,7 @@
         <td align="center" style="min-width: 590px;">
             <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: white; padding: 0; border-collapse:separate;">
                 <tr><td valign="middle">
-                    <span style="font-size: 10px;">Your <t t-esc="'%s' % model_description or 'document'"/></span><br/>
+                    <span style="font-size: 10px;">Your <t t-esc="model_description or 'document'"/></span><br/>
                     <span style="font-size: 20px; font-weight: bold;">
                         <t t-esc="message.record_name and message.record_name.replace('/','-') or ''"/>
                     </span>
@@ -233,11 +233,11 @@
             <t t-set="is_online" t-value="access_action and access_action['type'] == 'ir.actions.act_url'"/>
             <t t-set="access_url" t-value="is_online and record._get_share_url(redirect=True, signup_partner=True) or ''"/>
             <t t-set="access_name">
-                View <t t-esc="record._description.lower()"/>
+                View <t t-esc="model_description or 'document'"/>
             </t>
             <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: white; padding: 0; border-collapse:separate;">
                 <tr><td valign="middle">
-                    <span style="font-size: 10px;">Your <t t-esc="'%s' % model_description or 'document'"/></span><br/>
+                    <span style="font-size: 10px;">Your <t t-esc="model_description or 'document'"/></span><br/>
                     <span style="font-size: 20px; font-weight: bold;">
                         <t t-esc="message.record_name"/>
                     </span>
@@ -301,11 +301,11 @@
         <template id="message_user_assigned">
 <p style="margin: 0px;">
     <span>Dear <t t-esc="object.user_id.sudo().name"/>,</span><br />
-    <span style="margin-top: 8px;">You have been assigned to the <t t-esc="object._description.lower()"/> <t t-esc="object.name_get()[0][1]"/>.</span>
+    <span style="margin-top: 8px;">You have been assigned to the <t t-esc="model_description or 'document'"/> <t t-esc="object.name_get()[0][1]"/>.</span>
 </p>
 <p style="margin-top: 24px; margin-bottom: 16px;">
     <a t-att-href="'/mail/view?model=%s&amp;res_id=%s' % (object._name, object.id)" style="background-color:#875A7B; padding: 10px; text-decoration: none; color: #fff; border-radius: 5px;">
-            View <t t-esc="object._description.lower()"/>
+            View <t t-esc="model_description or 'document'"/>
     </a>
 </p>
         </template>
@@ -314,7 +314,7 @@
 <div>
     <p>
         <strong><span t-attf-class="fa #{activity.activity_type_id.icon}"/></strong> <span t-field="activity.activity_type_id.name"/> done
-        by <span t-field="activity.user_id.name"/><span t-if="activity.summary">:</span>
+        by <span t-field="activity.env.user.name"/><span t-if="activity.summary">:</span>
         <span t-if="activity.summary" t-field="activity.summary"/>
     </p>
     <div t-field="activity.note" style="margin-left: 8px;"/>

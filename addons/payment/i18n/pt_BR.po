@@ -3,28 +3,30 @@
 # * payment
 # 
 # Translators:
-# Rodrigo de Almeida Sottomaior Macedo <rmsolucoeseminformatic4@gmail.com>, 2018
 # danimaribeiro <danimaribeiro@gmail.com>, 2018
-# Martin Trigaux, 2018
 # Clemilton Clementino <clemylton@hotmail.com>, 2018
-# Mateus Lopes <mateus1@gmail.com>, 2018
-# Luiz Carlos de Lima <luiz.carlos@akretion.com.br>, 2018
 # Caio Leonardo Mendes de Sousa <caleozao@gmail.com>, 2018
 # falexandresilva <falexandresilva@gmail.com>, 2018
-# grazziano <gra.negocia@gmail.com>, 2018
 # Marcos Abreu <marcoos.abreu@gmail.com>, 2018
 # Silmar <pinheirosilmar@gmail.com>, 2018
+# Rodrigo de Almeida Sottomaior Macedo <rmsolucoeseminformatic4@gmail.com>, 2018
+# Mateus Lopes <mateus1@gmail.com>, 2018
+# Luiz Carlos de Lima <luiz.carlos@akretion.com.br>, 2018
+# grazziano <gra.negocia@gmail.com>, 2018
 # André Augusto Firmino Cordeiro <a.cordeito@gmail.com>, 2018
 # Fábio Novais <fabionovais@aptu.com.br>, 2018
 # Diego Bittencourt <diegomb86@gmail.com>, 2018
-# Brenno Martins <emanuel.breno@gmail.com>, 2018
+# Martin Trigaux, 2018
+# Emanuel Martins <emanuel.breno@gmail.com>, 2018
+# Thiago Alves Cavalcante <thiagoalcav@gmail.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: Brenno Martins <emanuel.breno@gmail.com>, 2018\n"
+"PO-Revision-Date: 2018-08-24 09:21+0000\n"
+"Last-Translator: Thiago Alves Cavalcante <thiagoalcav@gmail.com>, 2018\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -280,7 +282,7 @@ msgstr "Conta"
 #. module: payment
 #: model:ir.model,name:payment.model_account_chart_template
 msgid "Account Chart Template"
-msgstr ""
+msgstr "Modelo de Gráfico da Conta"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__acc_number
@@ -1072,6 +1074,14 @@ msgstr ""
 #: selection:payment.acquirer,save_token:0
 msgid "Never"
 msgstr "Nunca"
+
+#. module: payment
+#: code:addons/payment/wizards/payment_acquirer_onboarding_wizard.py:127
+#, python-format
+msgid ""
+"No manual payment method could be found for this company. Please create one "
+"from the Payment Acquirer menu."
+msgstr ""
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -1915,6 +1925,12 @@ msgstr "Transferência Eletrônica"
 #: code:addons/payment/static/src/xml/payment_processing.xml:59
 #, python-format
 msgid "You can click here to be redirected to the confirmation page."
+msgstr ""
+
+#. module: payment
+#: code:addons/payment/wizards/payment_acquirer_onboarding_wizard.py:135
+#, python-format
+msgid "You have to set a journal for your payment acquirer %s."
 msgstr ""
 
 #. module: payment

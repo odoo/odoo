@@ -397,7 +397,12 @@ class AccountInvoice(models.Model):
         if self.company_id.invoice_reference_type == 'invoice_number':
             seq_suffix = self.journal_id.sequence_id.suffix or ''
             regex_number = '.*?([0-9]+)%s$' % seq_suffix
-            identification_number = int(re.match(regex_number, self.number).group(1))
+            exact_match = re.match(regex_number, self.number)
+            if exact_match:
+                identification_number = int(exact_match.group(1))
+            else:
+                ran_num = str(uuid.uuid4().int)
+                identification_number = int(ran_num[:5] + ran_num[-5:])
             prefix = self.number
         else:
             #self.company_id.invoice_reference_type == 'partner'
@@ -499,6 +504,9 @@ class AccountInvoice(models.Model):
 
     @api.model
     def create(self, vals):
+        if not vals.get('journal_id') and vals.get('type'):
+            vals['journal_id'] = self.with_context(type=vals.get('type'))._default_journal().id
+
         onchanges = {
             '_onchange_partner_id': ['account_id', 'payment_term_id', 'fiscal_position_id', 'partner_bank_id'],
             '_onchange_journal_id': ['currency_id'],
@@ -984,6 +992,7 @@ class AccountInvoice(models.Model):
     @api.multi
     def get_taxes_values(self):
         tax_grouped = {}
+        round_curr = self.currency_id.round
         for line in self.invoice_line_ids:
             if not line.account_id:
                 continue
@@ -995,9 +1004,10 @@ class AccountInvoice(models.Model):
 
                 if key not in tax_grouped:
                     tax_grouped[key] = val
+                    tax_grouped[key]['base'] = round_curr(val['base'])
                 else:
                     tax_grouped[key]['amount'] += val['amount']
-                    tax_grouped[key]['base'] += val['base']
+                    tax_grouped[key]['base'] += round_curr(val['base'])
         return tax_grouped
 
     @api.multi
@@ -1285,6 +1295,11 @@ class AccountInvoice(models.Model):
             # Auto-compute reference, if not already existing and if configured on company
             if not invoice.reference and invoice.type == 'out_invoice':
                 invoice.reference = invoice._get_computed_reference()
+
+            # DO NOT FORWARD-PORT.
+            # The reference is copied after the move creation because we need the move to get the invoice number but
+            # we need the invoice number to get the reference.
+            invoice.move_id.ref = invoice.reference
         self._check_duplicate_supplier_reference()
 
         return self.write({'state': 'open'})
@@ -1441,9 +1456,11 @@ class AccountInvoice(models.Model):
             values = self._prepare_refund(invoice, date_invoice=date_invoice, date=date,
                                     description=description, journal_id=journal_id)
             refund_invoice = self.create(values)
-            invoice_type = {'out_invoice': ('customer invoices credit note'),
-                'in_invoice': ('vendor bill credit note')}
-            message = _("This %s has been created from: <a href=# data-oe-model=account.invoice data-oe-id=%d>%s</a><br>Reason: %s") % (invoice_type[invoice.type], invoice.id, invoice.number, description)
+            if invoice.type == 'out_invoice':
+                message = _("This customer invoice credit note has been created from: <a href=# data-oe-model=account.invoice data-oe-id=%d>%s</a><br>Reason: %s") % (invoice.id, invoice.number, description)
+            else:
+                message = _("This vendor bill credit note has been created from: <a href=# data-oe-model=account.invoice data-oe-id=%d>%s</a><br>Reason: %s") % (invoice.id, invoice.number, description)
+
             refund_invoice.message_post(body=message)
             new_invoices += refund_invoice
         return new_invoices
@@ -1514,7 +1531,7 @@ class AccountInvoice(models.Model):
             res = {}
             for line in invoice.tax_line_ids:
                 res.setdefault(line.tax_id.tax_group_id, {'base': 0.0, 'amount': 0.0})
-                res[line.tax_id.tax_group_id]['amount'] += line.amount
+                res[line.tax_id.tax_group_id]['amount'] += line.amount_total
                 res[line.tax_id.tax_group_id]['base'] += line.base
             res = sorted(res.items(), key=lambda l: l[0].sequence)
             invoice.amount_by_group = [(
@@ -1578,6 +1595,7 @@ class AccountInvoiceLine(models.Model):
         help="Gives the sequence of this line when displaying the invoice.")
     invoice_id = fields.Many2one('account.invoice', string='Invoice Reference',
         ondelete='cascade', index=True)
+    invoice_type = fields.Selection(related='invoice_id.type', readonly=True)
     uom_id = fields.Many2one('uom.uom', string='Unit of Measure',
         ondelete='set null', index=True, oldname='uos_id')
     product_id = fields.Many2one('product.product', string='Product',
@@ -1696,17 +1714,17 @@ class AccountInvoiceLine(models.Model):
                 self.price_unit = 0.0
             domain['uom_id'] = []
         else:
+            self_lang = self
             if part.lang:
-                product = self.product_id.with_context(lang=part.lang)
-            else:
-                product = self.product_id
-
+                self_lang = self.with_context(lang=part.lang)
+   
+            product = self_lang.product_id
             account = self.get_invoice_line_account(type, product, fpos, company)
             if account:
                 self.account_id = account.id
             self._set_taxes()
 
-            product_name = self._get_invoice_line_name_from_product()
+            product_name = self_lang._get_invoice_line_name_from_product()
             if product_name != None:
                 self.name = product_name
 
@@ -1763,6 +1781,7 @@ class AccountInvoiceLine(models.Model):
             else:
                 price_unit = self.product_id.lst_price
             self.price_unit = self.product_id.uom_id._compute_price(price_unit, self.uom_id)
+            self._set_currency()
 
             if self.product_id.uom_id.category_id.id != self.uom_id.category_id.id:
                 warning = {

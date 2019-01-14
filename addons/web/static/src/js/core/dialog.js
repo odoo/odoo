@@ -143,7 +143,11 @@ var Dialog = Widget.extend({
                     $.when(def).always(self.close.bind(self));
                 }
             });
-            self.$footer.append($button);
+            if (self.technical) {
+                self.$footer.append($button);
+            } else {
+                self.$footer.prepend($button);
+            }
         });
     },
 

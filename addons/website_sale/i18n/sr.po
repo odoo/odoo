@@ -3,16 +3,17 @@
 # * website_sale
 # 
 # Translators:
-# Martin Trigaux, 2018
 # Đorđe Cvijanović <cdorde@gmail.com>, 2018
 # Slobodan Simić <slsimic@gmail.com>, 2018
+# Martin Trigaux, 2018
 # Bojan Borovnjak <bojan.borovnjak@modoolar.com>, 2018
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-10-08 06:48+0000\n"
-"PO-Revision-Date: 2018-10-08 06:48+0000\n"
+"PO-Revision-Date: 2018-08-24 09:35+0000\n"
 "Last-Translator: Bojan Borovnjak <bojan.borovnjak@modoolar.com>, 2018\n"
 "Language-Team: Serbian (https://www.transifex.com/odoo/teams/41243/sr/)\n"
 "MIME-Version: 1.0\n"
@@ -557,6 +558,11 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__journal_name
 msgid "Bank Name"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address
+msgid "Be aware!"
 msgstr ""
 
 #. module: website_sale
@@ -1194,6 +1200,19 @@ msgstr ""
 #: code:addons/website_sale/models/sale_order.py:166
 #, python-format
 msgid "It is forbidden to modify a sales order which is not in draft status."
+msgstr ""
+
+#. module: website_sale
+#: code:addons/website_sale/models/sale_order.py:184
+#, python-format
+msgid "The given product does not exist therefore it cannot be added to cart."
+msgstr ""
+
+#. module: website_sale
+#: code:addons/website_sale/models/sale_order.py:198
+#, python-format
+msgid ""
+"The given combination does not exist therefore it cannot be added to cart."
 msgstr ""
 
 #. module: website_sale
@@ -2486,6 +2505,13 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address
+msgid ""
+"You are editing your <b>billing and shipping</b> addresses at the same time!<br/>\n"
+"                                            If you want to modify your shipping address, create a"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.sale_report_action_carts
 #: model_terms:ir.actions.act_window,help:website_sale.sale_report_action_dashboard
 msgid "You don't have any order from the website"
@@ -2617,6 +2643,11 @@ msgstr "kg"
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "ml-2"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address
+msgid "new address"
 msgstr ""
 
 #. module: website_sale

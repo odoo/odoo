@@ -3,17 +3,18 @@
 # * stock
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Boško Stojaković <bluesoft83@gmail.com>, 2018
-# Malik K, 2018
 # Bole <bole@dajmi5.com>, 2018
+# Malik K, 2018
+# Martin Trigaux, 2018
+# Boško Stojaković <bluesoft83@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-24 09:34+0000\n"
-"PO-Revision-Date: 2018-10-24 09:34+0000\n"
-"Last-Translator: Bole <bole@dajmi5.com>, 2018\n"
+"POT-Creation-Date: 2018-12-19 08:20+0000\n"
+"PO-Revision-Date: 2018-08-24 09:25+0000\n"
+"Last-Translator: Boško Stojaković <bluesoft83@gmail.com>, 2019\n"
 "Language-Team: Bosnian (https://www.transifex.com/odoo/teams/41243/bs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -966,7 +967,7 @@ msgstr "Uslovi"
 #. module: stock
 #: model:ir.model,name:stock.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Postavke konfiguracije"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_config_settings
@@ -1020,6 +1021,7 @@ msgstr "Sadržaj"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_replenish__product_uom_category_id
+#: model:ir.model.fields,help:stock.field_stock_inventory_line__product_uom_category_id
 msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
@@ -1313,7 +1315,7 @@ msgstr "Kupci"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_dhl
-msgid "DHL USA"
+msgid "DHL Connector"
 msgstr ""
 
 #. module: stock
@@ -1755,7 +1757,7 @@ msgstr "Nacrt kretanja"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_easypost
-msgid "Easypost"
+msgid "Easypost Connector"
 msgstr ""
 
 #. module: stock
@@ -1822,7 +1824,7 @@ msgstr "FIFO - prvi unutra prvi van, LIFO - zadnji unutra prvi van..."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_fedex
-msgid "FedEx"
+msgid "FedEx Connector"
 msgstr ""
 
 #. module: stock
@@ -2130,7 +2132,7 @@ msgstr "Ako je zakačeno, nove poruke će zahtjevati vašu pažnju"
 #: model:ir.model.fields,help:stock.field_stock_picking__message_has_error
 #: model:ir.model.fields,help:stock.field_stock_production_lot__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "Ukoliko je označeno, neke poruke će imati grešku isporuke."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__propagate
@@ -3059,7 +3061,7 @@ msgstr "Maksimalna količina"
 #: model:ir.model.fields,field_description:stock.field_stock_picking__message_has_error
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "Greška u isporuci poruke"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_partner__picking_warn_msg
@@ -3376,7 +3378,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_picking__message_has_error_counter
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot__message_has_error_counter
 msgid "Number of error"
-msgstr ""
+msgstr "Broj grešaka"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__message_needaction_counter
@@ -3388,7 +3390,7 @@ msgstr "Broj poruka koje zahtjevaju neku akciju"
 #: model:ir.model.fields,help:stock.field_stock_picking__message_has_error_counter
 #: model:ir.model.fields,help:stock.field_stock_production_lot__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "Broj poruka sa greškom isporuke"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__message_unread_counter
@@ -3610,7 +3612,7 @@ msgstr ""
 #: model:ir.ui.menu,name:stock.stock_picking_type_menu
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_rules_report
 msgid "Overview"
-msgstr ""
+msgstr "Pregled"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line__partner_id
@@ -6016,12 +6018,12 @@ msgstr "Tip operacije"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_ups
-msgid "UPS"
+msgid "UPS Connector"
 msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_usps
-msgid "USPS"
+msgid "USPS Connector"
 msgstr ""
 
 #. module: stock
@@ -6030,7 +6032,7 @@ msgstr ""
 #: code:addons/stock/static/src/xml/stock_traceability_report_line.xml:36
 #, python-format
 msgid "Unfold"
-msgstr ""
+msgstr "Razvuci"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_production_lot__name
@@ -6149,6 +6151,11 @@ msgstr "JM"
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_uom_categ_form_action
 msgid "UoM Categories"
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_inventory_line__product_uom_category_id
+msgid "Uom category"
 msgstr ""
 
 #. module: stock
@@ -6815,7 +6822,7 @@ msgstr "Otkaži"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_bpost
-msgid "bpost"
+msgid "bpost Connector"
 msgstr ""
 
 #. module: stock

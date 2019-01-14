@@ -3,30 +3,59 @@
 # * base_setup
 # 
 # Translators:
-# digitouch UAB <digitouchagencyeur@gmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
-# Anatolij <an@cq.lt>, 2017
-# Monika Raciunaite <monika.raciunaite@gmail.com>, 2017
-# Audrius Palenskis <audrius.palenskis@gmail.com>, 2017
+# Naglis Jonaitis, 2018
+# Martin Trigaux, 2018
+# Anatolij, 2018
+# Silvija Butko <silvija.butko@gmail.com>, 2018
+# Audrius Palenskis <audrius.palenskis@gmail.com>, 2018
+# Monika Raciunaite <monika.raciunaite@gmail.com>, 2018
+# digitouch UAB <digitouchagencyeur@gmail.com>, 2018
+# Linas Versada <linaskrisiukenas@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 11.0\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-16 08:08+0000\n"
-"PO-Revision-Date: 2017-11-16 08:08+0000\n"
-"Last-Translator: Audrius Palenskis <audrius.palenskis@gmail.com>, 2017\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-08-24 09:16+0000\n"
+"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2019\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: lt\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);\n"
+
+#. module: base_setup
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid ""
+"<i class=\"fa fa-lg fa-building-o\"/>\n"
+"                                            <span class=\"text-muted\">\n"
+"                                                the creation of documents between your companies\n"
+"                                            </span>"
+msgstr ""
+
+#. module: base_setup
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid ""
+"<span class=\"o_form_label\">Document Template</span>\n"
+"                                        <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
+msgstr ""
+
+#. module: base_setup
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid ""
+"<span class=\"o_form_label\">Format</span>\n"
+"                                        <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
+msgstr ""
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid ""
 "<strong>Save</strong> this page and come back here to set up the feature."
 msgstr ""
+"<strong>Išsaugokite</strong> šį puslapį ir sugrįžkite nustatyti "
+"funkcionalumo parametrus."
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -34,72 +63,84 @@ msgid "Access Rights"
 msgstr "Prieigos teisės "
 
 #. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_module_google_calendar
-msgid "Allow the users to synchronize their calendar  with Google Calendar"
-msgstr "Leisti vartotojams sinchronizuoti jų kalendorių su Google Calendar."
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Add fun feedback and motivate your employees"
+msgstr ""
 
 #. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_module_base_import
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_google_calendar
+msgid "Allow the users to synchronize their calendar  with Google Calendar"
+msgstr "Leisti vartotojams sinchronizuoti jų kalendorių su \"Google Calendar\""
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_base_import
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Allow users to import data from CSV/XLS/XLSX/ODS files"
 msgstr "Leisti vartotojams importuoti duomenis iš CSV/XLS/XLSX/ODS failų"
 
 #. module: base_setup
-#: model:ir.model.fields,help:base_setup.field_res_config_settings_group_multi_currency
+#: model:ir.model.fields,help:base_setup.field_res_config_settings__group_multi_currency
 msgid "Allows to work in a multi currency environment"
-msgstr "Leidžia Jums dirbti kelių valiutų aplinkoje"
+msgstr "Leidžia dirbti kelių valiutų aplinkoje"
 
 #. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_module_voip
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_voip
 msgid "Asterisk (VoIP)"
+msgstr "Asterisk (VoIP)"
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_google_drive
+msgid "Attach Google documents to any record"
+msgstr "Prisegti \"Google\" dokumentus prie bet kurio įrašo"
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_partner_autocomplete
+msgid "Auto-populate company data"
 msgstr ""
 
 #. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_module_google_drive
-msgid "Attach Google documents to any record"
-msgstr "Prisegti Google dokumentą prie bet kurio įrašo"
-
-#. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid "Automate inter-company transactions"
+msgid "Autocomplete company data (name, logo, address, etc.)"
 msgstr ""
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Business Documents"
-msgstr ""
+msgstr "Verslo dokumentai"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid ""
 "By default, new users get highest access rights for all installed apps."
 msgstr ""
+"Standartiškai, nauji vartotojai gauna aukščiausias prieigos teises visoms "
+"įdiegtoms programoms."
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Change Document Template"
-msgstr ""
+msgstr "Keisti dokumento šabloną"
 
 #. module: base_setup
 #: code:addons/base_setup/models/res_config_settings.py:100
 #, python-format
 msgid "Choose Your Document Layout"
-msgstr ""
+msgstr "Pasirinkite savo dokumento išdėstymą"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Choose your document's header and footer layout"
-msgstr ""
+msgstr "Pasirinkite savo dokumentų antraščių ir poraščių išdėstymus"
 
 #. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_module_pad
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_pad
 msgid "Collaborative Pads"
-msgstr "Apjungti teksto redaktoriai"
+msgstr "Kolektyviniai teksto redaktoriai"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Common Contact Book"
-msgstr ""
+msgstr "Bendrų kontaktų knyga"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -107,9 +148,14 @@ msgid "Companies"
 msgstr "Įmonės"
 
 #. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_company_id
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__company_id
 msgid "Company"
 msgstr "Įmonė"
+
+#. module: base_setup
+#: model:ir.model,name:base_setup.model_res_config_settings
+msgid "Config Settings"
+msgstr "Konfigūracijos nustatymai"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -117,47 +163,53 @@ msgid ""
 "Configure company rules to automatically create SO/PO when one of your "
 "company sells/buys to another of your company."
 msgstr ""
+"Nustatykite savo įmonės taisykles, kad automatiškai būtų sukuriami "
+"pirkimo/pardavimo užsakymai, kai viena iš jūsų įmonių parduoda ar perka iš "
+"kitos."
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Create and attach Google Drive documents to any record"
-msgstr ""
+msgstr "Kurti ir pridėti \"Google Drive\" dokumentus prie bet kokio įrašo"
 
 #. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_default_custom_report_footer
-#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_report_footer
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__report_footer
 msgid "Custom Report Footer"
-msgstr "Pakeista ataskaitų poraštė"
+msgstr "Nestandartinė ataskaitos poraštė"
 
 #. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_default_user_rights
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__user_default_rights
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Default Access Rights"
-msgstr ""
+msgstr "Numatytosios prieigos teisės"
 
 #. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_external_report_layout
-#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__external_report_layout_id
 msgid "Document Template"
 msgstr "Dokumento šablonas"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid "Edit Header"
-msgstr ""
+msgid "Edit Layout"
+msgstr "Keisti išdėstymą"
 
 #. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_default_external_email_server
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__external_email_server_default
 msgid "External Email Servers"
-msgstr ""
+msgstr "Išoriniai el. pašto serveriai"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Extract and analyze Odoo data from Google Spreadsheet"
+msgstr "Gaukite ir analizuokite \"Odoo\" duomenis iš \"Google Spreadsheet\""
+
+#. module: base_setup
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid "Find free high-resolution images from Unsplash"
 msgstr ""
 
 #. module: base_setup
-#: model:ir.model.fields,help:base_setup.field_res_config_settings_report_footer
+#: model:ir.model.fields,help:base_setup.field_res_config_settings__report_footer
 msgid "Footer text displayed at the bottom of all reports."
 msgstr "Poraštės tekstas bus rodomas visų ataskaitų apačioje."
 
@@ -175,12 +227,12 @@ msgstr "Bendri nustatymai"
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Gengo Translations"
-msgstr ""
+msgstr "Gengo vertimai"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Google Calendar"
-msgstr "Google Calendar"
+msgstr "Google kalendorius"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -188,80 +240,85 @@ msgid "Google Drive"
 msgstr "Google Drive"
 
 #. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_module_google_spreadsheet
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_google_spreadsheet
 msgid "Google Spreadsheet"
 msgstr "Google Spreadsheet"
 
 #. module: base_setup
+#: model:ir.model,name:base_setup.model_ir_http
+msgid "HTTP Routing"
+msgstr "HTTP nukreipimas"
+
+#. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Import & Export"
-msgstr ""
+msgstr "Importavimas ir eksportavimas"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Integrations"
-msgstr ""
+msgstr "Integracijos"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid "Inter-Company Transactions"
+msgid "Inter Company Flows"
 msgstr ""
 
 #. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_module_auth_ldap
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_auth_ldap
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "LDAP Authentication"
-msgstr ""
+msgstr "LDAP patvirtinimas"
 
 #. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_module_inter_company_rules
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_inter_company_rules
 msgid "Manage Inter Company"
-msgstr "Valdyti vidinę įmonę"
+msgstr "Valdyti kompanijos viduje"
 
 #. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_group_multi_company
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__group_multi_company
 msgid "Manage multiple companies"
 msgstr "Valdyti kelias įmones"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Manage multiple legal entities with separate accounting"
-msgstr ""
+msgstr "Tvarkyti kelis juridinius asmenis su atskira apskaita"
 
 #. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_group_multi_currency
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__group_multi_currency
 msgid "Multi-Currencies"
 msgstr "Kelios-valiutos"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
-msgid "Multi-company"
+msgid "Multi-companies"
 msgstr ""
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "OAuth Authentication"
-msgstr ""
+msgstr "OAuth patvirtinimas"
 
 #. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_paperformat_id
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__paperformat_id
 msgid "Paper format"
-msgstr "Lapo formatas"
+msgstr "Popieriaus formatas"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Preview Document"
-msgstr ""
+msgstr "Dokumento peržiūra"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Set custom access rights for new users"
-msgstr ""
+msgstr "Nustatyti papildomas prieigos teises naujiems vartotojams"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Set the paper format of printed documents"
-msgstr ""
+msgstr "Nustatykite spausdinamų dokumentų popieriaus formatą"
 
 #. module: base_setup
 #: model:ir.actions.act_window,name:base_setup.action_general_configuration
@@ -269,22 +326,30 @@ msgid "Settings"
 msgstr "Nustatymai"
 
 #. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_company_share_partner
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__company_share_partner
 msgid "Share partners to all companies"
-msgstr ""
+msgstr "Dalintis partneriais su visomis įmonėmis"
 
 #. module: base_setup
-#: model:ir.model.fields,help:base_setup.field_res_config_settings_company_share_partner
+#: model:ir.model.fields,help:base_setup.field_res_config_settings__company_share_partner
 msgid ""
 "Share your partners to all companies defined in your instance.\n"
 " * Checked : Partners are visible for every companies, even if a company is defined on the partner.\n"
 " * Unchecked : Each company can see only its partner (partners where company is defined). Partners not related to a company are visible for all companies."
 msgstr ""
+"Dalinkitės partneriais su visomis įmonėmis šioje sistemoje.\n"
+" * Pažymėta: partneriai matomi visoms įmonėms, net jei partneriui yra nustatyta įmonė.\n"
+" * Nepažymėta: kiekviena įmonė gali matyti tik savo partnerius (partnerius, kur nustatyta įmonė). Partneriai, kurie nėra susieti su jokia įmone, yra matomi visose įmonėse."
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__show_effect
+msgid "Show Effect"
+msgstr ""
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Synchronize your calendar with Google Calendar"
-msgstr ""
+msgstr "Sinchronizuoti savo kalendorių su \"Google Calendar\""
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -292,34 +357,39 @@ msgid "Template"
 msgstr "Šablonas"
 
 #. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_module_base_gengo
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_base_gengo
 msgid "Translate Your Website with Gengo"
-msgstr ""
+msgstr "Verskite savo tinklalapį su Gengo"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Translate your website with Gengo"
+msgstr "Verskite savo tinklalapį su Gengo"
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_web_unsplash
+msgid "Unsplash Image Library"
 msgstr ""
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Use LDAP credentials to log in"
-msgstr ""
+msgstr "Naudoti LDAP duomenis prisijungiant"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Use external accounts to log in (Google, Facebook, etc.)"
-msgstr ""
+msgstr "Prisijungimui naudoti išorines paskyras (Google, Facebook ir kt.)"
 
 #. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_res_config_settings_module_auth_oauth
+#: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_auth_oauth
 msgid "Use external authentication providers (OAuth)"
-msgstr ""
+msgstr "Naudoti išorinius patvirtinimo įrankius (OAuth)"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
 msgid "Use external pads in Odoo Notes"
-msgstr ""
+msgstr "\"Odoo\" pastabose naudoti išorines užrašines"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -327,6 +397,9 @@ msgid "Users"
 msgstr "Vartotojai"
 
 #. module: base_setup
-#: model:ir.model,name:base_setup.model_res_config_settings
-msgid "res.config.settings"
-msgstr "res.config.settings"
+#: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+msgid ""
+"When populating your address book, Odoo provides a list of matching "
+"companies. When selecting one item, the company data and logo are auto-"
+"filled."
+msgstr ""
