@@ -73,7 +73,13 @@ var ProjectPlan = AbstractAction.extend({
      * @param {string|html} dom
      */
     _refreshPlan: function (dom) {
-        this.$('.o_content').html(dom);
+        // TODO: Not forward port this fix on master
+        var $dom = $(dom);
+        $dom.find('div.o_timesheet_plan_sale_timesheet_dashboard > table.table, ' +
+            'div.o_timesheet_plan_sale_timesheet_people_time > table.table, ' +
+            'div.o_project_plan_project_timesheet_forecast > table.table')
+            .wrap('<div class="table-responsive"></div>');
+        this.$('.o_content').html($dom);
     },
 
     /**

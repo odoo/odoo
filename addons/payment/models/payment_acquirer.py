@@ -871,24 +871,25 @@ class PaymentTransaction(models.Model):
     def create(self, values):
         # call custom create method if defined (i.e. ogone_create for ogone)
         acquirer = self.env['payment.acquirer'].browse(values['acquirer_id'])
-        partner = self.env['res.partner'].browse(values['partner_id'])
+        if values.get('partner_id'):
+            partner = self.env['res.partner'].browse(values['partner_id'])
 
-        values.update({
-            'partner_name': partner.name,
-            'partner_lang': partner.lang or 'en_US',
-            'partner_email': partner.email,
-            'partner_zip': partner.zip,
-            'partner_address': _partner_format_address(partner.street or '', partner.street2 or ''),
-            'partner_city': partner.city,
-            'partner_country_id': partner.country_id.id or self._get_default_partner_country_id(),
-            'partner_phone': partner.phone,
-        })
+            values.update({
+                'partner_name': partner.name,
+                'partner_lang': partner.lang or 'en_US',
+                'partner_email': partner.email,
+                'partner_zip': partner.zip,
+                'partner_address': _partner_format_address(partner.street or '', partner.street2 or ''),
+                'partner_city': partner.city,
+                'partner_country_id': partner.country_id.id or self._get_default_partner_country_id(),
+                'partner_phone': partner.phone,
+            })
 
         # compute fees
         custom_method_name = '%s_compute_fees' % acquirer.provider
         if hasattr(acquirer, custom_method_name):
             fees = getattr(acquirer, custom_method_name)(
-                values.get('amount', 0.0), values.get('currency_id'), partner.country_id.id)
+                values.get('amount', 0.0), values.get('currency_id'), values['partner_country_id'])
             values['fees'] = fees
 
         # custom create

@@ -83,7 +83,7 @@ var MailFailure = Class.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
             documentModel: this._documentModel,
             id: 'mail_failure',
             imageSRC: this._moduleIcon,
-            title: this._recordName,
+            title: this._modelName,
         };
         return preview;
     },

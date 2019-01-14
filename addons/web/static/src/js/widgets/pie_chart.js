@@ -31,6 +31,7 @@ var PieChart = Widget.extend({
             Domain.prototype.stringToArray(modifiers.domain || '[]'));
         var arch = qweb.render('web.PieChart', {
             modifiers: modifiers,
+            title: node.attrs.title || modifiers.title || modifiers.measure,
         });
 
         this.subViewParams = {

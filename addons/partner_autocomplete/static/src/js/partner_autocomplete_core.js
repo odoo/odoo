@@ -112,7 +112,7 @@ var PartnerAutocompleteMixin = {
         var self = this;
 
         var removeUselessFields = function (company) {
-            var fields = 'label,description,domain,logo,legal_name'.split(',');
+            var fields = 'label,description,domain,logo,legal_name,ignored'.split(',');
             fields.forEach(function (field) {
                 delete company[field];
             });
