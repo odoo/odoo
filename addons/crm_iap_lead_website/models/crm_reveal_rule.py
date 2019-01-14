@@ -35,16 +35,16 @@ class CRMRevealRule(models.Model):
                                    'Rules with a lower sequence number will be processed first.')
 
     # Company Criteria Filter
-    industry_tag_ids = fields.Many2many('crm.reveal.industry', string='Industries', help='Leave empty to always match. Odoo will not create lead if no match')
+    industry_tag_ids = fields.Many2many('crm.iap.lead.industry', string='Industries', help='Leave empty to always match. Odoo will not create lead if no match')
     filter_on_size = fields.Boolean(string="Filter on Size", default=True, help="Filter companies based on their size.")
     company_size_min = fields.Integer(string='Company Size', default=0)
     company_size_max = fields.Integer(default=1000)
 
     # Contact Generation Filter
     contact_filter_type = fields.Selection([('role', 'Role'), ('seniority', 'Seniority')], string="Filter On", required=True, default='role')
-    preferred_role_id = fields.Many2one('crm.reveal.role', string='Preferred Role')
-    other_role_ids = fields.Many2many('crm.reveal.role', string='Other Roles')
-    seniority_id = fields.Many2one('crm.reveal.seniority', string='Seniority')
+    preferred_role_id = fields.Many2one('crm.iap.lead.role', string='Preferred Role')
+    other_role_ids = fields.Many2many('crm.iap.lead.role', string='Other Roles')
+    seniority_id = fields.Many2one('crm.iap.lead.seniority', string='Seniority')
     extra_contacts = fields.Integer(string='Number of Contacts', help='This is the number of contacts to track if their role/seniority match your criteria. Their details will show up in the history thread of generated leads/opportunities. One credit is consumed per tracked contact.', default=1)
 
     # Lead / Opportunity Data
@@ -330,7 +330,7 @@ class CRMRevealRule(models.Model):
         already_notified = self.env['ir.config_parameter'].sudo().get_param('reveal.already_notified', False)
         if already_notified:
             return
-        mail_template = self.env.ref('crm_reveal.reveal_no_credits')
+        mail_template = self.env.ref('crm_iap_lead.lead_generation_no_credits')
         iap_account = self.env['iap.account'].search([('service_name', '=', 'reveal')], limit=1)
         # Get the email address of the creators of the Lead Generation Rules
         res = self.env['crm.reveal.rule'].search_read([], ['create_uid'])
@@ -364,7 +364,7 @@ class CRMRevealRule(models.Model):
         lead_vals = rule._lead_vals_from_response(result)
         lead = self.env['crm.lead'].create(lead_vals)
         lead.message_post_with_view(
-            'crm_reveal.lead_message_template',
+            'crm_iap_lead.lead_message_template',
             values=self._format_data_for_message_post(result),
             subtype_id=self.env.ref('mail.mt_note').id
         )
@@ -470,52 +470,3 @@ class CRMRevealRule(models.Model):
                 'timezone_url': reveal_data['timezone_url'],
             })
         return log_data
-
-
-class IndustryTag(models.Model):
-    """ Industry Tags of Acquisition Rules """
-    _name = 'crm.reveal.industry'
-    _description = 'Industry Tag'
-
-    name = fields.Char(string='Tag Name', required=True, translate=True)
-    reveal_id = fields.Char(required=True)
-    color = fields.Integer(string='Color Index')
-
-    _sql_constraints = [
-        ('name_uniq', 'unique (name)', 'Tag name already exists!'),
-    ]
-
-
-class PeopleRole(models.Model):
-    """ CRM Reveal People Roles for People """
-    _name = 'crm.reveal.role'
-    _description = 'People Role'
-
-    name = fields.Char(string='Role Name', required=True, translate=True)
-    reveal_id = fields.Char(required=True)
-    color = fields.Integer(string='Color Index')
-
-    _sql_constraints = [
-        ('name_uniq', 'unique (name)', 'Role name already exists!'),
-    ]
-
-    @api.depends('name')
-    def name_get(self):
-        return [(role.id, role.name.replace('_', ' ').title()) for role in self]
-
-
-class PeopleSeniority(models.Model):
-    """ Seniority for People Rules """
-    _name = 'crm.reveal.seniority'
-    _description = 'People Seniority'
-
-    name = fields.Char(string='Name', required=True, translate=True)
-    reveal_id = fields.Char(required=True)
-
-    _sql_constraints = [
-        ('name_uniq', 'unique (name)', 'Name already exists!'),
-    ]
-
-    @api.depends('name')
-    def name_get(self):
-        return [(seniority.id, seniority.name.replace('_', ' ').title()) for seniority in self]
