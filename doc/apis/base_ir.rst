@@ -8,17 +8,29 @@
 Base Ir
 =======
 
+.. note::
+
+  This section is auto-generated from Odoo source code.
+  It should be more up to date than static technical documentation.
+
+  Nevertheless, some parts may be incomplete, insufficiently documented
+  or partly deprecated.
+
+  Don't hesitate to see the code itself for further information via the
+  ``source`` link near the class or method sections
+  (generally hidden until you hover over those).
+
 ir\_actions
 --------------------------
 
 .. automodule:: odoo.addons.base.models.ir_actions
     :members:
 
-ir\_actions\_report
-----------------------------------
+.. TODO ir\_actions\_report
+.. ----------------------------------
 
-.. automodule:: odoo.addons.base.models.ir_actions_report
-    :members:
+.. .. automodule:: odoo.addons.base.models.ir_actions_report
+..    :members:
 
 ir\_attachment
 -----------------------------
@@ -26,11 +38,11 @@ ir\_attachment
 .. automodule:: odoo.addons.base.models.ir_attachment
     :members:
 
-ir\_autovacuum
------------------------------
+.. ir\_autovacuum
+.. -----------------------------
 
-.. automodule:: odoo.addons.base.models.ir_autovacuum
-    :members:
+.. .. automodule:: odoo.addons.base.models.ir_autovacuum
+..    :members:
 
 ir\_config\_parameter
 ------------------------------------
@@ -44,23 +56,28 @@ ir\_cron
 .. automodule:: odoo.addons.base.models.ir_cron
     :members:
 
+.. seealso:: :ref:`Ir.cron Doc <reference/actions/cron>`
+
 ir\_default
 --------------------------
 
 .. automodule:: odoo.addons.base.models.ir_default
     :members:
 
-ir\_demo
------------------------
+.. ir\_demo
+.. -----------------------
 
-.. automodule:: odoo.addons.base.models.ir_demo
-    :members:
+.. TODO .. automodule:: odoo.addons.base.models.ir_demo
+..    :members:
 
-ir\_demo\_failure
---------------------------------
+.. ir\_demo\_failure
+.. --------------------------------
 
-.. automodule:: odoo.addons.base.models.ir_demo_failure
-    :members:
+.. .. automodule:: odoo.addons.base.models.ir_demo_failure
+..    :members:
+
+.. TODO No or nearly no doc in ir_demo and ir_demo_failure.
+.. Document before showing those classes
 
 ir\_exports
 --------------------------
@@ -68,11 +85,16 @@ ir\_exports
 .. automodule:: odoo.addons.base.models.ir_exports
     :members:
 
-ir\_fields
--------------------------
+.. ir\_fields
+.. -------------------------
 
-.. automodule:: odoo.addons.base.models.ir_fields
-    :members:
+.. TODO .. automodule:: odoo.addons.base.models.ir_fields
+..    :members:
+
+.. Base class not documented thus methods not showing
+.. Consider documenting base class or using :undoc-members:
+.. Note that using undoc-members will show all undoc public methods/class
+.. if no specific arguments is given to it.
 
 ir\_filters
 --------------------------
@@ -80,17 +102,24 @@ ir\_filters
 .. automodule:: odoo.addons.base.models.ir_filters
     :members:
 
+.. TODO document base class
+
 ir\_http
 -----------------------
 
 .. automodule:: odoo.addons.base.models.ir_http
     :members:
 
-ir\_logging
---------------------------
+.. TODO document
 
-.. automodule:: odoo.addons.base.models.ir_logging
-    :members:
+.. ir\_logging
+.. --------------------------
+
+.. .. automodule:: odoo.addons.base.models.ir_logging
+..    :members:
+
+.. TODO Nothing shown as is, need more documentation or to play with
+.. autodoc args
 
 ir\_mail\_server
 -------------------------------
@@ -110,11 +139,14 @@ ir\_module
 .. automodule:: odoo.addons.base.models.ir_module
     :members:
 
-ir\_property
----------------------------
+.. ir\_property
+.. ---------------------------
 
-.. automodule:: odoo.addons.base.models.ir_property
-    :members:
+.. .. automodule:: odoo.addons.base.models.ir_property
+..    :members:
+
+.. TODO Nothing shown as is, need more documentation or to play with
+.. autodoc args
 
 ir\_qweb and Qweb
 -----------------
@@ -137,11 +169,14 @@ qweb
 .. automodule:: odoo.addons.base.models.qweb
     :members:
 
-ir\_rule
------------------------
+.. ir\_rule
+.. -----------------------
 
-.. automodule:: odoo.addons.base.models.ir_rule
-    :members:
+.. .. automodule:: odoo.addons.base.models.ir_rule
+..    :members:
+
+.. TODO Nothing shown as is, need more documentation or to play with
+.. autodoc args
 
 ir\_sequence
 ---------------------------
@@ -155,11 +190,14 @@ ir\_translation
 .. automodule:: odoo.addons.base.models.ir_translation
     :members:
 
-ir\_ui\_menu
----------------------------
+.. ir\_ui\_menu
+.. ---------------------------
 
-.. automodule:: odoo.addons.base.models.ir_ui_menu
-    :members:
+.. .. automodule:: odoo.addons.base.models.ir_ui_menu
+..    :members:
+
+.. TODO Nothing shown as is, need more documentation or to play with
+.. autodoc args
 
 ir\_ui\_view
 ---------------------------
@@ -167,8 +205,11 @@ ir\_ui\_view
 .. automodule:: odoo.addons.base.models.ir_ui_view
     :members:
 
-report\_paperformat
-----------------------------------
+.. report\_paperformat
+.. ----------------------------------
 
-.. automodule:: odoo.addons.base.models.report_paperformat
-    :members:
+.. .. automodule:: odoo.addons.base.models.report_paperformat
+..    :members:
+
+.. TODO Nothing shown as is, need more documentation or to play with
+.. autodoc args
