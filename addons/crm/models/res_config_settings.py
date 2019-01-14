@@ -11,7 +11,7 @@ class ResConfigSettings(models.TransientModel):
     generate_lead_from_alias = fields.Boolean('Manual Assignation of Emails', config_parameter='crm.generate_lead_from_alias')
     group_use_lead = fields.Boolean(string="Leads", implied_group='crm.group_use_lead')
     module_crm_phone_validation = fields.Boolean("Phone Formatting")
-    module_crm_reveal = fields.Boolean("Create Leads/Opportunities from your website's traffic")
+    module_crm_iap_lead_website = fields.Boolean("Create Leads/Opportunities from your website's traffic")
 
     def _find_default_lead_alias_id(self):
         alias = self.env.ref('crm.mail_alias_lead_info', False)

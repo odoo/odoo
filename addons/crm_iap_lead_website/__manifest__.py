@@ -5,12 +5,8 @@
     'name': 'Lead Generation',
     'summary': 'Create Leads/Opportunities from your website\'s traffic',
     'category': 'CRM',
-    'depends': ['iap', 'crm', 'website_form'],
+    'depends': ['iap', 'crm', 'website_form', 'crm_iap_lead'],
     'data': [
-        'data/crm.reveal.industry.csv',
-        'data/crm.reveal.role.csv',
-        'data/crm.reveal.seniority.csv',
-        'data/message_template.xml',
         'data/reveal_data.xml',
         'security/ir.model.access.csv',
         'views/crm_lead_view.xml',
