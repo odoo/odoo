@@ -3335,7 +3335,17 @@ Fields:
                     cr.execute(query, [sub_ids])
                     parent_ids.update(row[0] for row in cr.fetchall())
 
-                self.env[model_name].browse(parent_ids).write(parent_vals)
+                try:
+                    self.env[model_name].browse(parent_ids).write(parent_vals)
+                except AccessError as e:
+                    description = self.env['ir.model']._get(self._name).name
+                    raise AccessError(
+                        _("%(previous_message)s\n\nImplicitly accessed through '%(document_kind)s' (%(document_model)s).") % {
+                            'previous_message': e.args[0],
+                            'document_kind': description,
+                            'document_model': self._name,
+                        }
+                    )
 
             if inverse_vals:
                 self.modified(set(inverse_vals) - set(store_vals))
