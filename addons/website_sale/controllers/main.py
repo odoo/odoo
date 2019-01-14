@@ -1220,9 +1220,8 @@ class WebsiteSale(ProductConfiguratorController):
         kw.pop('pricelist_id')
         res = self.get_combination_info(product_template_id, product_id, combination, add_qty, request.website.get_current_pricelist(), **kw)
 
-        if request.env.ref('website_sale.shop_product_carousel', raise_if_not_found=False):  # IF for compatibility 12.0
-            res.update(carousel=request.env['ir.ui.view'].render_template('website_sale.shop_product_carousel', values={
-                'product': request.env['product.template'].browse(res['product_template_id']),
-                'product_variant': request.env['product.product'].browse(res['product_id']),
-            }))
+        res.update(carousel=request.env['ir.ui.view'].render_template('website_sale.shop_product_carousel', values={
+            'product': request.env['product.template'].browse(res['product_template_id']),
+            'product_variant': request.env['product.product'].browse(res['product_id']),
+        }))
         return res

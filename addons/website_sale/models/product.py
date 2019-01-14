@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import api, fields, models, tools, _
 from odoo.addons import decimal_precision as dp
+from odoo.tools import pycompat
 from odoo.tools.translate import html_translate
 
 
@@ -332,6 +333,8 @@ class Product(models.Model):
     _inherit = "product.product"
 
     website_id = fields.Many2one(related='product_tmpl_id.website_id', readonly=False)
+    variant_image_ids = fields.One2many('product.image', 'product_product_id', string='Product Images')
+    all_image_ids = fields.One2many('product.image', compute='_compute_all_image_ids', string='Product & Variant Images')
 
     # website_price deprecated, directly use _get_combination_info instead
     website_price = fields.Float('Website price', compute='_website_price', digits=dp.get_precision('Product Price'))
@@ -339,6 +342,15 @@ class Product(models.Model):
     website_public_price = fields.Float('Website public price', compute='_website_price', digits=dp.get_precision('Product Price'))
     # website_price_difference deprecated, directly use _get_combination_info instead
     website_price_difference = fields.Boolean('Website price difference', compute='_website_price')
+
+    def _compute_all_image_ids(self):
+        """Compute all variant images.
+
+        All images specifically set on each variant + all images from the
+        template that are set on no variant at all.
+        """
+        for record in self:
+            record.all_image_ids = record.product_tmpl_id.product_image_ids.filtered(lambda i: not i.product_product_id or i.product_product_id == record)
 
     def _website_price(self):
         for product in self:
@@ -356,7 +368,84 @@ class Product(models.Model):
 class ProductImage(models.Model):
     _name = 'product.image'
     _description = 'Product Image'
+    _order = "sequence, id"
 
-    name = fields.Char('Name')
-    image = fields.Binary('Image', attachment=True)
-    product_tmpl_id = fields.Many2one('product.template', 'Related Product', copy=True)
+    name = fields.Char('Name', required=True)
+
+    image_raw = fields.Binary('Image', attachment=True, required=True)
+    image_raw_byte_size = fields.Integer(compute='_compute_images')
+
+    image_big = fields.Binary(
+        "Big-sized image", compute='_compute_images', inverse='_set_image_big',
+        help="Image of the product variant (Big-sized image of product template if false). It is automatically "
+             "resized as a 1024x1024px image, with aspect ratio preserved.")
+    image_medium = fields.Binary(
+        "Medium-sized image", compute='_compute_images', inverse='_set_image_medium',
+        help="Image of the product variant (Medium-sized image of product template if false).")
+    image_small = fields.Binary(
+        "Small-sized image", compute='_compute_images', inverse='_set_image_small',
+        help="Image of the product variant (Small-sized image of product template if false).")
+
+    product_tmpl_id = fields.Many2one('product.template', 'For Product', required=True, index=True)
+    product_product_id = fields.Many2one('product.product', 'For Variant', index=True)
+
+    sequence = fields.Integer(default=1, required=True)
+
+    @api.onchange('product_tmpl_id')
+    def onchange_product_tmpl_id(self):
+        """Remove the variant if it doesn't match the new template."""
+        if self.product_tmpl_id != self.product_product_id.product_tmpl_id:
+            self.product_product_id = False
+
+    @api.multi
+    @api.depends('image_raw')
+    def _compute_images(self):
+        for record in self:
+            record.image_raw_byte_size = len(record.image_raw) if record.image_raw else 0
+            if self._context.get('bin_size'):
+                record.image_big = record.image_raw
+                record.image_medium = record.image_raw
+                record.image_small = record.image_raw
+            else:
+                resized_images = tools.image_get_resized_images(record.image_raw, big_name='image_big', return_big=True, avoid_resize_medium=True)
+                record.image_big = resized_images['image_big']
+                record.image_medium = resized_images['image_medium']
+                record.image_small = resized_images['image_small']
+
+    @api.model
+    def create(self, vals):
+        vals = self._associate_product_template(vals)
+        return super(ProductImage, self).create(vals)
+
+    @api.multi
+    def write(self, vals):
+        vals = self._associate_product_template(vals)
+        return super(ProductImage, self).write(vals)
+
+    @api.multi
+    def _associate_product_template(self, vals):
+        product_id = vals.get('product_product_id')
+        if product_id:
+            product_template = self.env['product.product'].browse(product_id).ensure_one().product_tmpl_id
+            vals['product_tmpl_id'] = product_template.id
+        return vals
+
+    @api.multi
+    def _set_image_big(self):
+        self._set_image_value('image_big')
+
+    @api.multi
+    def _set_image_medium(self):
+        self._set_image_value('image_medium')
+
+    @api.multi
+    def _set_image_small(self):
+        self._set_image_value('image_small')
+
+    @api.multi
+    def _set_image_value(self, field_name):
+        for record in self:
+            value = record[field_name]
+            if isinstance(value, pycompat.text_type):
+                value = value.encode('ascii')
+            record.image_raw = value
