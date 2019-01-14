@@ -37,6 +37,7 @@ registry
     .add('CopyClipboardText', basic_fields.TextCopyClipboard)
     .add('CopyClipboardChar', basic_fields.CharCopyClipboard)
     .add('image', basic_fields.FieldBinaryImage)
+    .add('signature', basic_fields.FieldBinarySignature)
     .add('binary', basic_fields.FieldBinaryFile)
     .add('pdf_viewer', basic_fields.FieldPdfViewer)
     .add('monetary', basic_fields.FieldMonetary)

@@ -3005,6 +3005,7 @@ return {
     FieldEmail: FieldEmail,
     FieldBinaryFile: FieldBinaryFile,
     FieldPdfViewer: FieldPdfViewer,
+    AbstractFieldBinary: AbstractFieldBinary,
     FieldBinaryImage: FieldBinaryImage,
     FieldBoolean: FieldBoolean,
     FieldBooleanButton: FieldBooleanButton,

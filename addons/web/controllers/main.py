@@ -1185,6 +1185,37 @@ class Binary(http.Controller):
 
         return response
 
+    @http.route(['/web/sign/get_fonts','/web/sign/get_fonts/<string:fontname>'], type='json', auth='public')
+    def get_fonts(self, fontname=None):
+        """This route will return a list of base64 encoded fonts.
+
+        Those fonts will be proposed to the user when creating a signature
+        using mode 'auto'.
+
+        :return: base64 encoded fonts
+        :rtype: list
+        """
+
+
+        fonts = []
+        if fontname:
+            font_path = get_resource_path('web', 'static/src/fonts/sign', fontname)
+            if not font_path:
+                return []
+            font_file = open(font_path, 'rb')
+            font = base64.b64encode(font_file.read())
+            fonts.append(font)
+        else:
+            current_dir = os.path.dirname(os.path.abspath(__file__))
+            fonts_directory = os.path.join(current_dir, '..', 'static', 'src', 'fonts', 'sign')
+            font_filenames = sorted(os.listdir(fonts_directory))
+
+            for filename in font_filenames:
+                font_file = open(os.path.join(fonts_directory, filename), 'rb')
+                font = base64.b64encode(font_file.read())
+                fonts.append(font)
+        return fonts
+
 class Action(http.Controller):
 
     @http.route('/web/action/load', type='json', auth="user")

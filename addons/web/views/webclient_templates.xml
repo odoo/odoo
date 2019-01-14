@@ -61,6 +61,7 @@
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/banner.scss"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/colorpicker.scss"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/keyboard.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/name_and_signature.scss"/>
 
         <t t-if="request and request.env['res.lang'].search([('code', '=', request.env.lang)]).direction == 'rtl'">
             <link rel="stylesheet" type="text/less" href="/web/static/src/scss/fontawesome_overriden.scss"/>
@@ -136,6 +137,8 @@
         <script type="text/javascript" src="/web/static/src/js/services/session_storage_service.js"></script>
         <script type="text/javascript" src="/web/static/src/js/core/ram_storage.js"></script>
         <script type="text/javascript" src="/web/static/src/js/widgets/rainbow_man.js"></script>
+        <script type="text/javascript" src="/web/static/lib/jSignature/jSignatureCustom.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/widgets/name_and_signature.js"></script>
     </template>
 
     <template id="assets_backend" name="Backend Assets (used in backend interface)">
@@ -322,6 +325,7 @@
         <script type="text/javascript" src="/web/static/src/js/views/calendar/calendar_view.js"></script>
         <script type="text/javascript" src="/web/static/src/js/views/qweb/qweb_view.js"></script>
         <script type="text/javascript" src="/web/static/src/js/widgets/attach_document.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/fields/signature.js"></script>
 
         <script type="text/javascript" src="/web/static/src/js/report/utils.js"/>
         <script type="text/javascript" src="/web/static/src/js/report/client_action.js"/>

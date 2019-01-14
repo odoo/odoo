@@ -26,7 +26,7 @@ tour.register('sale_signature', {
     },
     {
         content: "click Auto",
-        trigger: '.o_portal_sign_auto_button',
+        trigger: '.o_web_sign_auto_button',
     },
     {
         content: "check submit is enabled",
@@ -35,11 +35,11 @@ tour.register('sale_signature', {
     },
     {
         content: "click select style",
-        trigger: '.o_portal_sign_auto_select_style a',
+        trigger: '.o_web_sign_auto_select_style a',
     },
     {
         content: "click style 4",
-        trigger: '.o_portal_sign_auto_font_selection a:eq(3)',
+        trigger: '.o_web_sign_auto_font_selection a:eq(3)',
     },
     {
         content: "click submit",
