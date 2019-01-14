@@ -1300,7 +1300,6 @@ var MediaDialog = Dialog.extend({
     /**
      * @private
      */
-        ev.preventDefault();
     _onSaveRequest: function (ev) {
         ev.stopPropagation();
         this.save();
