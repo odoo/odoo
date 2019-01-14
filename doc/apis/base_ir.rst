@@ -116,18 +116,25 @@ ir\_property
 .. automodule:: odoo.addons.base.models.ir_property
     :members:
 
+ir\_qweb and Qweb
+-----------------
+
 ir\_qweb
------------------------
+''''''''
 
 .. automodule:: odoo.addons.base.models.ir_qweb
     :members:
 
-
-
 ir\_qweb\_fields
--------------------------------
+''''''''''''''''
 
 .. automodule:: odoo.addons.base.models.ir_qweb_fields
+    :members:
+
+qweb
+''''
+
+.. automodule:: odoo.addons.base.models.qweb
     :members:
 
 ir\_rule
@@ -158,12 +165,6 @@ ir\_ui\_view
 ---------------------------
 
 .. automodule:: odoo.addons.base.models.ir_ui_view
-    :members:
-
-qweb
--------------------
-
-.. automodule:: odoo.addons.base.models.qweb
     :members:
 
 report\_paperformat
