@@ -606,6 +606,7 @@ class IrActionsReport(models.Model):
     def render_qweb_pdf(self, res_ids=None, data=None):
         if not data:
             data = {}
+        data.setdefault('report_type', 'pdf')
 
         # remove editor feature in pdf generation
         data.update(enable_editor=False)
@@ -700,6 +701,9 @@ class IrActionsReport(models.Model):
 
     @api.model
     def render_qweb_text(self, docids, data=None):
+        if not data:
+            data = {}
+        data.setdefault('report_type', 'text')
         data = self._get_rendering_context(docids, data)
         return self.render_template(self.report_name, data), 'text'
 
@@ -707,6 +711,9 @@ class IrActionsReport(models.Model):
     def render_qweb_html(self, docids, data=None):
         """This method generates and returns html version of a report.
         """
+        if not data:
+            data = {}
+        data.setdefault('report_type', 'html')
         data = self._get_rendering_context(docids, data)
         return self.render_template(self.report_name, data), 'html'
 

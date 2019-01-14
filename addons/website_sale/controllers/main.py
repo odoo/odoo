@@ -150,9 +150,10 @@ class WebsiteSale(ProductConfiguratorController):
         return pricelist_context, pricelist
 
     def _get_compute_currency(self, pricelist, product=None):
-        from_currency = (product or request.env.user.company_id).currency_id
+        company = product and product._get_current_company(pricelist=pricelist, website=request.website) or pricelist.company_id or request.website.company_id
+        from_currency = (product or request.env['res.company']._get_main_company()).currency_id
         to_currency = pricelist.currency_id
-        return lambda price: from_currency._convert(price, to_currency, (product or request.env.user).company_id, fields.Date.today())
+        return lambda price: from_currency._convert(price, to_currency, company, fields.Date.today())
 
     def _get_search_order(self, post):
         # OrderBy will be parsed in orm and so no direct sql injection
@@ -312,7 +313,7 @@ class WebsiteSale(ProductConfiguratorController):
         pricelist = request.website.get_current_pricelist()
 
         def compute_currency(price):
-            return product.currency_id._convert(price, pricelist.currency_id, product.company_id, fields.Date.today())
+            return product.currency_id._convert(price, pricelist.currency_id, product._get_current_company(pricelist=pricelist, website=request.website), fields.Date.today())
 
         if not product_context.get('pricelist'):
             product_context['pricelist'] = pricelist.id
@@ -337,7 +338,7 @@ class WebsiteSale(ProductConfiguratorController):
         }
         return request.render("website_sale.product", values)
 
-    @http.route(['/shop/change_pricelist/<model("product.pricelist"):pl_id>'], type='http', auth="public", website=True)
+    @http.route(['/shop/change_pricelist/<model("product.pricelist"):pl_id>'], type='http', auth="public", website=True, sitemap=False)
     def pricelist_change(self, pl_id, **post):
         if (pl_id.selectable or pl_id == request.env.user.partner_id.property_product_pricelist) \
                 and request.website.is_pricelist_available(pl_id.id):
@@ -345,7 +346,7 @@ class WebsiteSale(ProductConfiguratorController):
             request.website.sale_get_order(force_pricelist=pl_id.id)
         return request.redirect(request.httprequest.referrer or '/shop')
 
-    @http.route(['/shop/pricelist'], type='http', auth="public", website=True)
+    @http.route(['/shop/pricelist'], type='http', auth="public", website=True, sitemap=False)
     def pricelist(self, promo, **post):
         redirect = post.get('r', '/shop/cart')
         pricelist = request.env['product.pricelist'].sudo().search([('code', '=', promo)], limit=1)

@@ -15,7 +15,7 @@
 # MS <manuelarodsilva@gmail.com>, 2018
 # Diogo Fonseca <dsf@thinkopensolutions.pt>, 2018
 # Nuno Silva <nuno.silva@arxi.pt>, 2018
-# Ricardo Santa Ana <ricardosantana@gmail.com>, 2018
+# Ricardo Santa Ana <ricardosantana@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
@@ -23,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-12-19 08:20+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
-"Last-Translator: Ricardo Santa Ana <ricardosantana@gmail.com>, 2018\n"
+"Last-Translator: Ricardo Santa Ana <ricardosantana@gmail.com>, 2019\n"
 "Language-Team: Portuguese (https://www.transifex.com/odoo/teams/41243/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -371,7 +371,7 @@ msgstr "<span role=\"separator\">Reconciliação</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span role=\"separator\">View</span>"
-msgstr ""
+msgstr "<span>Ver</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -10520,14 +10520,6 @@ msgstr ""
 "informação acerca da conta e das suas especificidades."
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1439
-#, python-format
-msgid ""
-"This %s has been created from: <a href=# data-oe-model=account.invoice data-"
-"oe-id=%d>%s</a><br>Reason: %s"
-msgstr ""
-
-#. module: account
 #: code:addons/account/models/account_journal_dashboard.py:100
 #, python-format
 msgid "This Week"
@@ -10607,6 +10599,14 @@ msgstr ""
 "codificar as taxas de vendas e de compras ou escolher da lista de impostos. "
 "Esta última opção assume que o conjunto de impostos definido neste modelo "
 "está completo"
+
+#. module: account
+#: code:addons/account/models/account_invoice.py:1458
+#, python-format
+msgid ""
+"This customer invoice credit note has been created from: <a href=# data-oe-"
+"model=account.invoice data-oe-id=%d>%s</a><br>Reason: %s"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -10759,6 +10759,14 @@ msgstr ""
 "Este campo técnico pode ser usado aquando da criação/importação da linha "
 "declarativa para evitar o processo de reconciliação da mesma mais tarde. A "
 "linha declarativa criará simplesmente um complemento para esta conta"
+
+#. module: account
+#: code:addons/account/models/account_invoice.py:1460
+#, python-format
+msgid ""
+"This vendor bill credit note has been created from: <a href=# data-oe-"
+"model=account.invoice data-oe-id=%d>%s</a><br>Reason: %s"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_validate_account_move

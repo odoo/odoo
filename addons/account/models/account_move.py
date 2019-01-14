@@ -784,7 +784,7 @@ class AccountMoveLine(models.Model):
             (multiple_currency and float_compare(total_debit, total_credit, precision_rounding=digits_rounding_precision) == 0):
             exchange_move_id = False
             # Eventually create a journal entry to book the difference due to foreign currency's exchange rate that fluctuates
-            if to_balance and any([residual for aml, residual in to_balance.values()]):
+            if to_balance and any([not float_is_zero(residual, precision_rounding=digits_rounding_precision) for aml, residual in to_balance.values()]):
                 exchange_move = self.env['account.move'].create(
                     self.env['account.full.reconcile']._prepare_exchange_diff_move(move_date=maxdate, company=amls[0].company_id))
                 part_reconcile = self.env['account.partial.reconcile']
@@ -813,7 +813,7 @@ class AccountMoveLine(models.Model):
         (debit_moves + credit_moves).read([field])
         to_create = []
         cash_basis = debit_moves and debit_moves[0].account_id.internal_type in ('receivable', 'payable') or False
-        cash_basis_percentage_before_rec = []
+        cash_basis_percentage_before_rec = {}
         while (debit_moves and credit_moves):
             debit_move = debit_moves[0]
             credit_move = credit_moves[0]
@@ -848,7 +848,7 @@ class AccountMoveLine(models.Model):
 
             if cash_basis:
                 tmp_set = debit_move | credit_move
-                cash_basis_percentage_before_rec.append(tmp_set._get_matched_percentage())
+                cash_basis_percentage_before_rec.update(tmp_set._get_matched_percentage())
 
             to_create.append({
                 'debit_move_id': debit_move.id,
@@ -859,14 +859,12 @@ class AccountMoveLine(models.Model):
             })
 
         part_rec = self.env['account.partial.reconcile']
-        index = 0
         with self.env.norecompute():
             for partial_rec_dict in to_create:
                 new_rec = self.env['account.partial.reconcile'].create(partial_rec_dict)
                 part_rec += new_rec
                 if cash_basis:
-                    new_rec.create_tax_cash_basis_entry(cash_basis_percentage_before_rec[index])
-                    index += 1
+                    new_rec.create_tax_cash_basis_entry(cash_basis_percentage_before_rec)
         self.recompute()
 
         return debit_moves+credit_moves
@@ -1477,10 +1475,14 @@ class AccountPartialReconcile(models.Model):
             #move_date is the max of the 2 reconciled items
             if move_date < move.date:
                 move_date = move.date
+            percentage_before = percentage_before_rec[move.id]
+            percentage_after = move.line_ids[0]._get_matched_percentage()[move.id]
+            # update the percentage before as the move can be part of
+            # multiple partial reconciliations
+            percentage_before_rec[move.id] = percentage_after
+
             for line in move.line_ids:
                 if not line.tax_exigible:
-                    percentage_before = percentage_before_rec[move.id]
-                    percentage_after = line._get_matched_percentage()[move.id]
                     #amount is the current cash_basis amount minus the one before the reconciliation
                     amount = line.balance * percentage_after - line.balance * percentage_before
                     rounded_amt = self._get_amount_tax_cash_basis(amount, line)
@@ -1498,7 +1500,7 @@ class AccountPartialReconcile(models.Model):
                             'analytic_account_id': line.analytic_account_id.id,
                             'analytic_tag_ids': line.analytic_tag_ids.ids,
                             'tax_exigible': True,
-                            'amount_currency': self.amount_currency and line.currency_id.round(-line.amount_currency * amount / line.balance) or 0.0,
+                            'amount_currency': line.amount_currency and line.currency_id.round(-line.amount_currency * amount / line.balance) or 0.0,
                             'currency_id': line.currency_id.id,
                             'move_id': newly_created_move.id,
                             'partner_id': line.partner_id.id,
@@ -1513,7 +1515,7 @@ class AccountPartialReconcile(models.Model):
                             'analytic_tag_ids': line.analytic_tag_ids.ids,
                             'tax_line_id': line.tax_line_id.id,
                             'tax_exigible': True,
-                            'amount_currency': self.amount_currency and line.currency_id.round(line.amount_currency * amount / line.balance) or 0.0,
+                            'amount_currency': line.amount_currency and line.currency_id.round(line.amount_currency * amount / line.balance) or 0.0,
                             'currency_id': line.currency_id.id,
                             'move_id': newly_created_move.id,
                             'partner_id': line.partner_id.id,
@@ -1552,6 +1554,7 @@ class AccountPartialReconcile(models.Model):
                                 'amount_currency': self.amount_currency and line.currency_id.round(-line.amount_currency * amount / line.balance) or 0.0,
                                 'partner_id': line.partner_id.id,
                             })
+
         if newly_created_move:
             if move_date > (self.company_id.period_lock_date or date.min) and newly_created_move.date != move_date:
                 # The move date should be the maximum date between payment and invoice (in case

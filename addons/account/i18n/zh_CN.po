@@ -25,10 +25,10 @@
 # 演奏王 <wangwhai@qq.com>, 2018
 # Martin Trigaux, 2018
 # p too <totopo@163.com>, 2018
+# snow wang <147156565@qq.com>, 2018
 # Youfu Sheng <wdmsyf@sina.com>, 2018
 # 广州救火 <7017511@qq.com>, 2018
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
-# snow wang <147156565@qq.com>, 2018
 # 老窦 北京 <2662059195@qq.com>, 2018
 # inspur qiuguodong <qiuguodong@inspur.com>, 2018
 # liAnGjiA <liangjia@qq.com>, 2018
@@ -59,8 +59,8 @@ msgid ""
 msgstr ""
 " * 这个 '草稿' 状态是指当用户生成了一个新的、但还未被确认的发票。\n"
 " * 这个 '未结清发票' 状态是指当用户生成了一个发票、并生成了发票号码，此发票会一直停留在未结清状态，直至用户付清此发票。.\n"
-" * 这个 '正在支付' 状态是指：仅为银行对账，某笔款项已被计入了其所在的某项总账之内，但是其中某些款项实际上还未进行实际银行对账。\n"
-" * 这个 '已支付' 状态是指：某个发票被支付时，自动变更至此状态。它的关联账目可能未、可能被执行银行对账。.\n"
+" * 这个 '正在支付' 状态是指：仅为银行核销，某笔款项已被计入了其所在的某项总账之内，但是其中某些款项实际上还未进行实际银行核销。\n"
+" * 这个 '已支付' 状态是指：某个发票被支付时，自动变更至此状态。它的关联账目可能未、可能被执行银行核销。.\n"
 " * 这个 '已取消' 状态是指：当用户已经取消了某个发票。."
 
 #. module: account
@@ -119,12 +119,12 @@ msgstr "&amp;次数;"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
 msgid "-> Reconcile"
-msgstr "-> 调节"
+msgstr "-> 核销"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
 msgid "-> View partially reconciled entries"
-msgstr "-> 查看已部分调节分录"
+msgstr "-> 查看已部分核销分录"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_15days
@@ -299,7 +299,7 @@ msgid ""
 "                                    <span>Followers of the document and</span>"
 msgstr ""
 "<span attrs=\"{'invisible': [('composition_mode', '!=', 'mass_mail')]}\">\n"
-"                                        <strong>电子邮件群发</strong> 在\n"
+"                                        <strong>EMail群发</strong> 在\n"
 "                                        <span>类别是</span>\n"
 "                                    </span>\n"
 "                                    <span>此文档关注者</span>"
@@ -449,7 +449,7 @@ msgstr "<span role=\"separator\">新建</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span role=\"separator\">Reconciliation</span>"
-msgstr "<span role=\"separator\">调节</span>"
+msgstr "<span role=\"separator\">核销</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -770,13 +770,13 @@ msgid ""
 "only when payments are reconciled with a bank statement cannot be manually "
 "posted. Those will be posted automatically after performing the bank "
 "reconciliation."
-msgstr "在日记账中生成的支付日记账条目，被配置为仅在支付与银行对账单相符时才发布，不能手动发布。这些信息将在银行对账后自动发布。"
+msgstr "在日记账中生成的支付日记账条目，被配置为仅在支付与银行核销单相符时才发布，不能手动发布。这些信息将在银行核销后自动发布。"
 
 #. module: account
 #: code:addons/account/models/reconciliation_widget.py:681
 #, python-format
 msgid "A reconciliation must involve at least 2 move lines."
-msgstr "调节至少要２个凭证行."
+msgstr "核销至少要２个凭证行."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -790,13 +790,13 @@ msgstr "如果你的价格是含税的，则建议每行取整。通过这种方
 #: code:addons/account/models/account_bank_statement.py:530
 #, python-format
 msgid "A selected move line was already reconciled."
-msgstr "选择的分录行已被调节."
+msgstr "选择的分录行已被核销."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:538
 #, python-format
 msgid "A selected statement line was already reconciled with an account move."
-msgstr "选定的分录行已经与记账凭证相调节."
+msgstr "选定的分录行已经与记账凭证相核销."
 
 #. module: account
 #: sql_constraint:account.fiscal.position.tax:0
@@ -843,7 +843,7 @@ msgstr "科目"
 msgid ""
 "Account %s (%s) does not allow reconciliation. First change the "
 "configuration of this account to allow it."
-msgstr "科目%s（%s）不允许对账。首先更改这个科目的配置以允许对账."
+msgstr "科目%s（%s）不允许核销。首先更改这个科目的配置以允许核销."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_accountant
@@ -965,7 +965,7 @@ msgstr "应收账款"
 #. module: account
 #: model:ir.model,name:account.model_account_reconciliation_widget
 msgid "Account Reconciliation widget"
-msgstr "会计调节挂账"
+msgstr "会计核销挂账"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account_template__account_src_id
@@ -1061,7 +1061,7 @@ msgstr "允许的科目类型"
 #. module: account
 #: model:ir.model,name:account.model_account_unreconcile
 msgid "Account Unreconcile"
-msgstr "会计取消调节"
+msgstr "会计取消核销"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_group_search
@@ -1435,7 +1435,7 @@ msgstr "所有分录"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__all_lines_reconciled
 msgid "All Lines Reconciled"
-msgstr "所有的明细行都已调节"
+msgstr "所有的明细行都已核销"
 
 #. module: account
 #: selection:account.common.journal.report,target_move:0
@@ -1492,7 +1492,7 @@ msgstr "允许产品毛利"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__reconcile
 msgid "Allow Reconciliation"
-msgstr "允许调节"
+msgstr "允许核销"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_check_printing
@@ -2146,23 +2146,23 @@ msgstr "银行作业"
 #: code:addons/account/static/src/js/reconciliation/reconciliation_action.js:17
 #, python-format
 msgid "Bank Reconciliation"
-msgstr "银行对账"
+msgstr "银行核销"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_tree
 msgid "Bank Reconciliation Move Presets"
-msgstr "银行对账凭证预制"
+msgstr "银行核销凭证预制"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_search
 msgid "Bank Reconciliation Move preset"
-msgstr "银行对账分录预置"
+msgstr "银行核销分录预置"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_bank_reconciliation_start
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_bank_reconciliation_start
 msgid "Bank Reconciliation Threshold"
-msgstr "银行对账阈值"
+msgstr "银行核销阈值"
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement
@@ -2227,7 +2227,7 @@ msgstr "银行设置通用配置"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__statement_line_id
 msgid "Bank statement line reconciled with this entry"
-msgstr "用该分录调节的银行对账单明细"
+msgstr "用该分录核销的银行核销单明细"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_journal_2_account_bank_statement
@@ -2487,7 +2487,7 @@ msgstr "取消"
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
 msgid "Cancel: create credit note and reconcile"
-msgstr "取消：创建信用证，并调节"
+msgstr "取消：创建信用证，并核销"
 
 #. module: account
 #: selection:account.invoice,state:0 selection:account.invoice.report,state:0
@@ -2507,7 +2507,7 @@ msgid ""
 "Cannot create a credit note for the invoice which is already reconciled, "
 "invoice should be unreconciled first, then only you can add credit note for "
 "this invoice."
-msgstr "无法为已调节的发票创建信用证，应该先要取消调节发票，然后再为这张发票创建信用证。"
+msgstr "无法为已核销的发票创建信用证，应该先要取消核销发票，然后再为这张发票创建信用证。"
 
 #. module: account
 #: code:addons/account/wizard/account_invoice_refund.py:54
@@ -2778,7 +2778,7 @@ msgstr "勾选, 如果您使用的产品和发票价格含税."
 #: model:ir.model.fields,help:account.field_account_account_template__reconcile
 msgid ""
 "Check this option if you want the user to reconcile entries in this account."
-msgstr "勾选此项, 如果您想用户调节这科目的分录。"
+msgstr "勾选此项, 如果您想用户核销这科目的分录。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -2935,7 +2935,7 @@ msgstr "商业实体"
 #: code:addons/account/models/account_invoice.py:519
 #, python-format
 msgid "Commercial partner and vendor account owners must be identical."
-msgstr "商业伙伴和伙伴帐户所有者必须是相同的。"
+msgstr "商业伙伴和伙伴帐户货主必须是相同的。"
 
 #. module: account
 #: model:ir.model,name:account.model_account_common_journal_report
@@ -3284,7 +3284,7 @@ msgstr "创造一种新的可购买产品"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_reconcile_model
 msgid "Create a new reconciliation model"
-msgstr "创建新的协调模型"
+msgstr "创建新的核销模型"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.product_product_action_sellable
@@ -4149,14 +4149,14 @@ msgstr "显示在发票上"
 #: code:addons/account/models/digest.py:16
 #, python-format
 msgid "Do not have access, skip this data for user's digest email"
-msgstr "没有权限，用户电子邮件中忽略此数据"
+msgstr "没有权限，用户EMail中忽略此数据"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_send__auto_delete_message
 msgid ""
 "Do not keep a copy of the email in the document communication history (mass "
 "mailing only)"
-msgstr "不要在文档通信历史中保存电子邮件副本（仅限群发邮件）"
+msgstr "不要在文档通信历史中保存EMail副本（仅限群发邮件）"
 
 #. module: account
 #: selection:res.company,account_dashboard_onboarding_state:0
@@ -4291,7 +4291,7 @@ msgstr "要么通过两个，要么一个也不通过"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__is_email
 msgid "Email"
-msgstr "电子邮箱"
+msgstr "EMail"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -4303,7 +4303,7 @@ msgstr "邮箱别名"
 msgid ""
 "Email address of the sender. This field is set when no matching partner is "
 "found and replaces the author_id field in the chatter."
-msgstr "发送者的Email地址。当找不到业务伙伴的匹配的邮件时候，这个字段就被设置。并且Chatter中的作者id被替换掉."
+msgstr "发送者的EMail地址。当找不到业务伙伴的匹配的邮件时候，这个字段就被设置。并且Chatter中的作者id被替换掉."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__invoice_is_email
@@ -4748,7 +4748,7 @@ msgstr "来自: "
 #: model:ir.model,name:account.model_account_full_reconcile
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__full_reconcile_id
 msgid "Full Reconcile"
-msgstr "完全调节"
+msgstr "完全核销"
 
 #. module: account
 #: code:addons/account/models/account_journal_dashboard.py:102
@@ -4910,7 +4910,7 @@ msgstr "有未清项"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__has_unreconciled_entries
 msgid "Has Unreconciled Entries"
-msgstr "有未调节的分录"
+msgstr "有未核销的分录"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__qr_code_valid
@@ -5077,8 +5077,8 @@ msgid ""
 "If set, the accounting entries created during the bank statement reconciliation process will be created at this date.\n"
 "This is useful if the accounting period in which the entries should normally be booked is already closed."
 msgstr ""
-"如果输入了此日期，对账单核销生成的会计凭证记录在此日期。\n"
-"用于在月初补录上月的对账单。"
+"如果输入了此日期，核销单核销生成的会计凭证记录在此日期。\n"
+"用于在月初补录上月的核销单。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__analytic
@@ -5133,7 +5133,7 @@ msgstr "如果你还没有安装会计科目表，请先安装一个.<br>"
 msgid ""
 "If you unreconcile transactions, you must also verify all the actions that "
 "are linked to those transactions because they will not be disabled"
-msgstr "如果取消调节交易，您也必须验证所有连接到这些交易的动作，因为它们不能被取消。"
+msgstr "如果取消核销交易，您也必须验证所有连接到这些交易的动作，因为它们不能被取消。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice__payment_term_id
@@ -5752,7 +5752,7 @@ msgstr "通过发送邮件创建供应商账单."
 msgid ""
 "It indicates that the invoice has been paid and the journal entry of the "
 "invoice has been reconciled with one or several journal entries of payment."
-msgstr "此字段表示发票已付款，也就是说这张发票对应的日记账分录与一张或几张付款对应的日记账分录已调节。"
+msgstr "此字段表示发票已付款，也就是说这张发票对应的日记账分录与一张或几张付款对应的日记账分录已核销。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice__sent
@@ -5907,7 +5907,7 @@ msgstr ""
 #: model:ir.actions.client,name:account.action_manual_reconcile
 #, python-format
 msgid "Journal Items to Reconcile"
-msgstr "待调节的日记账项目"
+msgstr "待核销的日记账项目"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__name
@@ -6125,7 +6125,7 @@ msgstr "最后修改日"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:125
 #, python-format
 msgid "Last Reconciliation:"
-msgstr "上次调节："
+msgstr "上次核销："
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__write_uid
@@ -6247,7 +6247,7 @@ msgid ""
 "Last time the invoices & payments matching was performed for this partner. "
 "It is set either if there's not at least an unreconciled debit and an "
 "unreconciled credit or if you click the \"Done\" button."
-msgstr "上次这个业务伙伴的发票和付款是匹配的。设置为调节的借方或者未调节的贷方或者你点击 \"完成\" 按钮"
+msgstr "上次这个业务伙伴的发票和付款是匹配的。设置为核销的借方或者未核销的贷方或者你点击 \"完成\" 按钮"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__last_time_entries_checked
@@ -6255,7 +6255,7 @@ msgid ""
 "Last time the invoices & payments matching was performed on this account. It"
 " is set either if there's not at least an unreconciled debit and an "
 "unreconciled credit Or if you click the \"Done\" button."
-msgstr "上次这个业务伙伴的发票和付款是匹配的。设置为取消调节的借方或者取消调节的贷方或者你点击 \"完成\" 按钮"
+msgstr "上次这个业务伙伴的发票和付款是匹配的。设置为取消核销的借方或者取消核销的贷方或者你点击 \"完成\" 按钮"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -6455,7 +6455,7 @@ msgid ""
 msgstr ""
 "手动：通过现金、支票或除 Odoo 以外的其他方法获取报酬.\n"
 "电子方式：在客户线上购买或订阅时（支付令），在已保存的卡中请求交易，通过付款受让人自动获取报酬.\n"
-"批量存款：几个客户同时支票付款时，可生成批量存款提交到银行中。当在 Odoo 进行编码银行对账单时，建议您协调批量存款与交易之间的关系。从设置中启用该选项."
+"批量存款：几个客户同时支票付款时，可生成批量存款提交到银行中。当在 Odoo 进行编码银行核销单时，建议您核销批量存款与交易之间的关系。从设置中启用该选项."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_abstract_payment__payment_method_id
@@ -6619,7 +6619,7 @@ msgstr "发票消息"
 msgid ""
 "Message type: email for email message, notification for system message, "
 "comment for other messages such as user replies"
-msgstr "消息类型：电子邮件用于邮件消息， 通知用户系统消息，评论用于其他消息，例如用户回复"
+msgstr "消息类型：EMail用于邮件消息， 通知用户系统消息，评论用于其他消息，例如用户回复"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_send__message_id
@@ -6681,7 +6681,7 @@ msgstr "修改税率金额"
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
 msgid "Modify: create credit note, reconcile and create a new draft invoice"
-msgstr "修改：创建信用证，调节，并创建草稿发票"
+msgstr "修改：创建信用证，核销，并创建草稿发票"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -6708,7 +6708,7 @@ msgstr "凭证明细数"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__move_reconciled
 msgid "Move Reconciled"
-msgstr "凭证已调节"
+msgstr "凭证已核销"
 
 #. module: account
 #: code:addons/account/models/account_move.py:1144
@@ -7055,7 +7055,7 @@ msgstr "十月"
 msgid ""
 "Odoo allows you to reconcile a statement line directly with\n"
 "                the related sale or puchase invoice(s)."
-msgstr "Odoo能让你直接对相应的销售或者采购发票调节结算行"
+msgstr "Odoo能让你直接对相应的销售或者采购发票核销结算行"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_bank_statement_tree
@@ -7063,8 +7063,8 @@ msgid ""
 "Odoo allows you to reconcile a statement line directly with\n"
 "                the related sale or puchase invoices."
 msgstr ""
-"Odoo允许你使用对账单行于相关的\n"
-"                销售或者采购发票进行调节."
+"Odoo允许你使用核销单行于相关的\n"
+"                销售或者采购发票进行核销."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_line_grouping_key
@@ -7208,7 +7208,7 @@ msgid ""
 "(%s), you cannot reconcile it entirely with existing journal entries "
 "otherwise it would make a gap in the numbering. You should book an entry and"
 " make a regular revert of it in case you want to cancel it."
-msgstr "操作不允许，你的对账单明细已收到号码 (%s), 你无法调节存在的日记账分录，你可以取消它。."
+msgstr "操作不允许，你的核销单明细已收到号码 (%s), 你无法核销存在的日记账分录，你可以取消它。."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -7243,7 +7243,7 @@ msgid ""
 "bills to be created upon reception of an email."
 msgstr ""
 "或者设置 <a data-oe-id=%s data-oe-model=\"account.journal\" "
-"href=#id=%s&model=account.journal>邮箱别名</a> 以便允许在收到电子邮件时创建草拟卖方票据。"
+"href=#id=%s&model=account.journal>邮箱别名</a> 以便允许在收到EMail时创建草拟卖方票据。"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:692
@@ -7251,7 +7251,7 @@ msgstr ""
 msgid ""
 "Or share the email %s to your vendors: bills will be created automatically "
 "upon mail reception."
-msgstr "或共享电子邮件 %s 给你的供应商：将自动创建邮件帐单."
+msgstr "或共享EMail %s 给你的供应商：将自动创建邮件帐单."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:694
@@ -7259,7 +7259,7 @@ msgstr "或共享电子邮件 %s 给你的供应商：将自动创建邮件帐�
 msgid ""
 "Or share the emails %s to your vendors: bills will be created automatically "
 "upon mail reception."
-msgstr "或共享电子邮件 %s 给你的供应商：将自动创建邮件帐单."
+msgstr "或共享EMail %s 给你的供应商：将自动创建邮件帐单."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__payment_id
@@ -7366,7 +7366,7 @@ msgstr "已付于"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice__reconciled
 msgid "Paid/Reconciled"
-msgstr "已付／已调节"
+msgstr "已付／已核销"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_group__parent_id
@@ -7396,7 +7396,7 @@ msgstr "上级状态"
 #. module: account
 #: model:ir.model,name:account.model_account_partial_reconcile
 msgid "Partial Reconcile"
-msgstr "部分调节"
+msgstr "部分核销"
 
 #. module: account
 #. openerp-web
@@ -7835,7 +7835,7 @@ msgstr "发布所有分录 "
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__post_at_bank_rec
 msgid "Post At Bank Reconciliation"
-msgstr "银行对账时过账"
+msgstr "银行核销时过账"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_from_invoices
@@ -8158,58 +8158,58 @@ msgstr "重新计算税额"
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_form
 #, python-format
 msgid "Reconcile"
-msgstr "调节"
+msgstr "核销"
 
 #. module: account
 #: model:ir.actions.client,name:account.action_view_account_move_line_reconcile
 msgid "Reconcile Entries"
-msgstr "调节分录"
+msgstr "核销分录"
 
 #. module: account
 #: model:ir.model,name:account.model_account_reconcile_model_template
 msgid "Reconcile Model Template"
-msgstr "调节模型模板"
+msgstr "核销模型模板"
 
 #. module: account
 #: selection:account.payment,state:0
 #: model:ir.model.fields,field_description:account.field_account_move_line__reconciled
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Reconciled"
-msgstr "已调节"
+msgstr "已核销"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_invoice_ids
 msgid "Reconciled Invoices"
-msgstr "已调节的发票"
+msgstr "已核销的发票"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Reconciled entries"
-msgstr "已调节的分录"
+msgstr "已核销的分录"
 
 #. module: account
 #: model:ir.actions.client,name:account.action_manual_reconciliation
 #: model:ir.ui.menu,name:account.menu_action_manual_reconciliation
 msgid "Reconciliation"
-msgstr "调节"
+msgstr "核销"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_reconcile_model
 #: model:ir.ui.menu,name:account.action_account_reconcile_model_menu
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Reconciliation Models"
-msgstr "调节模型"
+msgstr "核销模型"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_full_reconcile__partial_reconcile_ids
 msgid "Reconciliation Parts"
-msgstr " 对账部分"
+msgstr " 核销部分"
 
 #. module: account
 #: model:ir.actions.client,name:account.action_bank_reconcile
 #: model:ir.actions.client,name:account.action_bank_reconcile_bank_statements
 msgid "Reconciliation on Bank Statements"
-msgstr "银行对账单对账"
+msgstr "银行核销单核销"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_vendor_bill_template
@@ -8849,7 +8849,7 @@ msgstr "发送与打印"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__invoice_is_email
 msgid "Send Email"
-msgstr "发送电子邮件"
+msgstr "发送EMail"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:607
@@ -8867,7 +8867,7 @@ msgstr "付款"
 #. module: account
 #: model:ir.actions.act_window,name:account.account_send_payment_receipt_by_email_action
 msgid "Send Receipt By Email"
-msgstr "通过电子邮件发送发票"
+msgstr "通过EMail发送发票"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_open_account_onboarding_sample_invoice
@@ -9731,7 +9731,7 @@ msgid ""
 "Technical field used to keep track of the tax cash basis reconciliation. "
 "This is needed when cancelling the source: it will post the inverse journal "
 "entry to cancel that part too."
-msgstr "技术字段用于追踪税金现金收付制调节。当取消源单据时需要它：它会发布反向会计分录来取消那部分。"
+msgstr "技术字段用于追踪税金现金收付制核销。当取消源单据时需要它：它会发布反向会计分录来取消那部分。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__recompute_tax_line
@@ -9905,9 +9905,9 @@ msgid ""
 "                                                                                                       This is useful if you install accounting after having used invoicing for some time and\n"
 "                                                                                                       don't want to reconcile all the past payments with bank statements."
 msgstr ""
-"银行余额调节器不会要求支付在这个日期之前的付款。\n"
+"银行余额核销器不会要求支付在这个日期之前的付款。\n"
 "                    如果你安装会计，使用发票一段时间后，这个是有用的，并且\n"
-"                    不会把所有过去的付款与银行结单相调节。"
+"                    不会把所有过去的付款与银行结单相核销。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__account_bank_reconciliation_start
@@ -9916,14 +9916,14 @@ msgid ""
 "               This is useful if you install accounting after having used invoicing for some time and\n"
 "               don't want to reconcile all the past payments with bank statements."
 msgstr ""
-"银行余额调节器不会要求支付在这个日期之前的付款。 \n"
+"银行余额核销器不会要求支付在这个日期之前的付款。 \n"
 "                  如果你安装会计，使用发票一段时间后，这个是有用的，并且 \n"
-"                 不会把所有过去的付款与银行结单相调节"
+"                 不会把所有过去的付款与银行结单相核销"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__statement_id
 msgid "The bank statement used for bank reconciliation"
-msgstr "银行对账单行用来银行对账"
+msgstr "银行核销单行用来银行核销"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:1260
@@ -10135,7 +10135,7 @@ msgstr "这张发票的业务伙伴科目."
 msgid ""
 "The partner has at least one unreconciled debit and credit since last time "
 "the invoices & payments matching was performed."
-msgstr "自上次执行发票和付款匹配以来，这个业务伙伴至少有一个未调节的借方和贷方."
+msgstr "自上次执行发票和付款匹配以来，这个业务伙伴至少有一个未核销的借方和贷方."
 
 #. module: account
 #: code:addons/account/models/account.py:648
@@ -10168,7 +10168,7 @@ msgstr "一旦发票被验证，付款通知会被自动发出。你应另发通
 msgid ""
 "The payments which have not been matched with a bank statement will not be "
 "shown in bank reconciliation data if they were made before this date."
-msgstr "未与银行对账单相符的付款如果在此日期之前支付，则不会在银行对账数据中显示。"
+msgstr "未与银行核销单相符的付款如果在此日期之前支付，则不会在银行核销数据中显示。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_partner_category_ids
@@ -10176,7 +10176,7 @@ msgstr "未与银行对账单相符的付款如果在此日期之前支付，则
 msgid ""
 "The reconciliation model will only be applied to the selected "
 "customer/vendor categories."
-msgstr "调节模型只能应用在选择的客户/供应商类别."
+msgstr "核销模型只能应用在选择的客户/供应商类别."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_partner_ids
@@ -10184,7 +10184,7 @@ msgstr "调节模型只能应用在选择的客户/供应商类别."
 msgid ""
 "The reconciliation model will only be applied to the selected "
 "customers/vendors."
-msgstr "调节模型只能应用在选择的客户/供应商."
+msgstr "核销模型只能应用在选择的客户/供应商."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_nature
@@ -10205,7 +10205,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_reconcile_model_template__match_partner
 msgid ""
 "The reconciliation model will only be applied when a customer/vendor is set."
-msgstr "调节模型只能在设置了客户/供应商时被应用."
+msgstr "核销模型只能在设置了客户/供应商时被应用."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_amount
@@ -10213,7 +10213,7 @@ msgstr "调节模型只能在设置了客户/供应商时被应用."
 msgid ""
 "The reconciliation model will only be applied when the amount being lower "
 "than, greater than or between specified amount(s)."
-msgstr "调节模型只能用于当金额低于，大于或介于指定的金额区间情况。"
+msgstr "核销模型只能用于当金额低于，大于或介于指定的金额区间情况。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_label
@@ -10234,7 +10234,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_reconcile_model_template__match_journal_ids
 msgid ""
 "The reconciliation model will only be available from the selected journals."
-msgstr "调节模型只能可见于选择的日记账."
+msgstr "核销模型只能可见于选择的日记账."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__amount_residual_currency
@@ -10344,7 +10344,7 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_reconciliation.xml:48
 #, python-format
 msgid "There is nothing to reconcile."
-msgstr "没有需要调节的."
+msgstr "没有需要核销的."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_error
@@ -10362,16 +10362,6 @@ msgid ""
 "These types are defined according to your country. The type contains more "
 "information about the account and its specificities."
 msgstr "根据你所在的国家定义类型，这个类型包含科目和他的特性的更多的信息."
-
-#. module: account
-#: code:addons/account/models/account_invoice.py:1439
-#, python-format
-msgid ""
-"This %s has been created from: <a href=# data-oe-model=account.invoice data-"
-"oe-id=%d>%s</a><br>Reason: %s"
-msgstr ""
-"这个 %s 已经创建自: <a href=# data-oe-model=account.invoice data-oe-"
-"id=%d>%s</a><br>原因是: %s"
 
 #. module: account
 #: code:addons/account/models/account_journal_dashboard.py:100
@@ -10442,6 +10432,14 @@ msgid ""
 msgstr "这个选项用于确定您是否希望提示用户输入销售和采购的税率，或者是从下拉列表选择税。这是配置税模版的最后一步。"
 
 #. module: account
+#: code:addons/account/models/account_invoice.py:1458
+#, python-format
+msgid ""
+"This customer invoice credit note has been created from: <a href=# data-oe-"
+"model=account.invoice data-oe-id=%d>%s</a><br>Reason: %s"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "This feature is useful if you issue a high amounts of invoices."
 msgstr "如果有大量的发票，这个功能很有用。"
@@ -10464,7 +10462,7 @@ msgstr "这个字段包含和这个日记中日记账分录数量相关的信息
 #: model:ir.model.fields,help:account.field_account_reconcile_model__journal_id
 #: model:ir.model.fields,help:account.field_account_reconcile_model__second_journal_id
 msgid "This field is ignored in a bank statement reconciliation."
-msgstr "这一字段在银行对账单调节中被忽略掉."
+msgstr "这一字段在银行核销单核销中被忽略掉."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__date_maturity
@@ -10527,7 +10525,7 @@ msgstr ""
 msgid ""
 "This page displays all the bank transactions that are to be reconciled and "
 "provides with a neat interface to do so."
-msgstr "此页显示所有的要被调节的银行交易，并提供了一个整洁的界面."
+msgstr "此页显示所有的要被核销的银行交易，并提供了一个整洁的界面."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -10541,7 +10539,7 @@ msgstr "该参数会在报表明细行与录入严格一致的情况下被忽略
 #: code:addons/account/static/src/xml/account_reconciliation.xml:294
 #, python-format
 msgid "This payment is registered but not reconciled."
-msgstr "付款被登记但没有调节."
+msgstr "付款被登记但没有核销."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__property_supplier_payment_term_id
@@ -10563,7 +10561,15 @@ msgid ""
 "This technical field can be used at the statement line creation/import time "
 "in order to avoid the reconciliation process on it later on. The statement "
 "line will simply create a counterpart on this account"
-msgstr "这个技术字段可以用于对账单行创建或导入时，用以避免以后在它上面的对账过程。对账单行仅仅是在这个科目上创建一个对方分录"
+msgstr "这个技术字段可以用于核销单行创建或导入时，用以避免以后在它上面的核销过程。核销单行仅仅是在这个科目上创建一个对方分录"
+
+#. module: account
+#: code:addons/account/models/account_invoice.py:1460
+#, python-format
+msgid ""
+"This vendor bill credit note has been created from: <a href=# data-oe-"
+"model=account.invoice data-oe-id=%d>%s</a><br>Reason: %s"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_validate_account_move
@@ -10578,7 +10584,7 @@ msgid ""
 "Those can be used to quickly create a journal items when reconciling\n"
 "                a bank statement or an account."
 msgstr ""
-"当调节银行对账单或者一个科目的时候，\n"
+"当核销银行核销单或者一个科目的时候，\n"
 "                这被用来快捷的创建日记账项目."
 
 #. module: account
@@ -10600,14 +10606,14 @@ msgstr "支付"
 #: code:addons/account/models/account_move.py:909
 #, python-format
 msgid "To reconcile the entries company should be the same for all entries."
-msgstr "调节录入对公司的所有录入应该是一致的。"
+msgstr "核销录入对公司的所有录入应该是一致的。"
 
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_reconciliation.xml:169
 #, python-format
 msgid "To speed up reconciliation, define"
-msgstr "为了加速调节， 定义"
+msgstr "为了加速核销， 定义"
 
 #. module: account
 #: selection:account.invoice,activity_state:0
@@ -10884,27 +10890,27 @@ msgstr "未读消息计数器"
 #: model_terms:ir.ui.view,arch_db:account.account_unreconcile_view
 #, python-format
 msgid "Unreconcile"
-msgstr "取消调节"
+msgstr "取消核销"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_unreconcile
 msgid "Unreconcile Entries"
-msgstr "取消调节分录"
+msgstr "取消核销分录"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_unreconcile_view
 msgid "Unreconcile Transactions"
-msgstr "取消调节交易"
+msgstr "取消核销交易"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Unreconciled"
-msgstr "未调节的"
+msgstr "未核销的"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_acount_move_line_open_unreconciled
 msgid "Unreconciled Entries"
-msgstr "未调节的分录"
+msgstr "未核销的分录"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice__amount_untaxed
@@ -11025,7 +11031,7 @@ msgid ""
 msgstr ""
 "如果你想取消一个根本不该产生的发票\n"
 "                               你就可以使用这个选项\n"
-"                                这张发票的付款会被创建，确认和调节。你将不能更改付款."
+"                                这张发票的付款会被创建，确认和核销。你将不能更改付款."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_type__include_initial_balance
@@ -11291,7 +11297,7 @@ msgstr "网站沟通记录"
 msgid ""
 "When receiving an email with a bill, or uploading scanned bills, Odoo will "
 "parse them (OCR) and auto-complete (AI) Draft Bills to validate."
-msgstr "当收到带有账单的电子邮件或上传扫描的账单时，Odoo将解析它们（OCR）并自动完成（AI）草案账单以进行验证。"
+msgstr "当收到带有账单的EMail或上传扫描的账单时，Odoo将解析它们（OCR）并自动完成（AI）草案账单以进行验证。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__post_at_bank_rec
@@ -11299,7 +11305,7 @@ msgid ""
 "Whether or not the payments made in this journal should be generated in "
 "draft state, so that the related journal entries are only posted when "
 "performing bank reconciliation."
-msgstr "是否应在汇票状态下生成本日记账中的付款，以便仅在进行银行对账时才对相关的日记账分录过账。"
+msgstr "是否应在汇票状态下生成本日记账中的付款，以便仅在进行银行核销时才对相关的日记账分录过账。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_send__is_log
@@ -11349,7 +11355,7 @@ msgstr "在记账分录中有错误的借贷值 !"
 #: code:addons/account/models/account_move.py:908
 #, python-format
 msgid "You are trying to reconcile some entries that are already reconciled."
-msgstr "你正在调节一些已经被调节的分录."
+msgstr "你正在核销一些已经被核销的分录."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__blocked
@@ -11495,7 +11501,7 @@ msgid ""
 "You cannot do this modification on a reconciled entry. You can just change some non legal fields or you must unreconcile first.\n"
 "%s."
 msgstr ""
-"已经调节的分录不能更改。你只能更改一些非法律强制项，或者必须首先取消调节.\n"
+"已经核销的分录不能更改。你只能更改一些非法律强制项，或者必须首先取消核销.\n"
 "%s."
 
 #. module: account
@@ -11504,7 +11510,7 @@ msgstr ""
 msgid ""
 "You cannot have a receivable/payable account that is not reconcilable. "
 "(account code: %s)"
-msgstr "您不能有不可调节的应收账款/应付账款。（账号：%s）"
+msgstr "您不能有不可核销的应收账款/应付账款。（账号：%s）"
 
 #. module: account
 #: code:addons/account/models/account.py:71
@@ -11551,7 +11557,7 @@ msgstr ""
 msgid ""
 "You cannot pay an invoice which is partially paid. You need to reconcile "
 "payment entries first."
-msgstr "您不能支付已部分支付的发票。您需要先调节付款分录。"
+msgstr "您不能支付已部分支付的发票。您需要先核销付款分录。"
 
 #. module: account
 #: code:addons/account/models/account.py:327
@@ -11657,7 +11663,7 @@ msgstr "必须先选择一个客户."
 #: code:addons/account/static/src/xml/account_reconciliation.xml:55
 #, python-format
 msgid "You reconciled"
-msgstr "调节了"
+msgstr "核销了"
 
 #. module: account
 #: code:addons/account/models/account_move.py:1624
@@ -11779,7 +11785,7 @@ msgstr "对于这个供应商，你可以将它们分配为标记此账单已支
 #: code:addons/account/static/src/xml/account_reconciliation.xml:318
 #, python-format
 msgid "have been reconciled automatically."
-msgstr "已自动调节"
+msgstr "已自动核销"
 
 #. module: account
 #. openerp-web
@@ -11813,7 +11819,7 @@ msgstr "待支付款项"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:169
 #, python-format
 msgid "reconciliation models"
-msgstr "调节模型"
+msgstr "核销模型"
 
 #. module: account
 #. openerp-web

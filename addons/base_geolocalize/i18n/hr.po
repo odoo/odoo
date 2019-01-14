@@ -3,16 +3,16 @@
 # * base_geolocalize
 # 
 # Translators:
-# Bole <bole@dajmi5.com>, 2017
-# Karolina Tonković <karolina.tonkovic@storm.hr>, 2017
-# Martin Trigaux, 2017
+# Martin Trigaux, 2019
+# Bole <bole@dajmi5.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
-"Last-Translator: Martin Trigaux, 2017\n"
+"POT-Creation-Date: 2018-09-18 09:49+0000\n"
+"PO-Revision-Date: 2018-08-24 09:16+0000\n"
+"Last-Translator: Bole <bole@dajmi5.com>, 2019\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,14 +36,25 @@ msgid "<span> ;  Long:  </span>"
 msgstr "<span> ;  Duljina:  </span>"
 
 #. module: base_geolocalize
-#: code:addons/base_geolocalize/models/res_partner.py:18
+#: code:addons/base_geolocalize/models/res_partner.py:19
+#, python-format
+msgid ""
+"API key for GeoCoding (Places) required.\n"
+"\n"
+"                          Save this key in System Parameters with key: google.api_key_geocode, value: <your api key>\n"
+"                          Visit https://developers.google.com/maps/documentation/geocoding/get-api-key for more information.\n"
+"                          "
+msgstr ""
+
+#. module: base_geolocalize
+#: code:addons/base_geolocalize/models/res_partner.py:28
 #, python-format
 msgid ""
 "Cannot contact geolocation servers. Please make sure that your Internet "
 "connection is up and running (%s)."
 msgstr ""
-"Nije moguće kontaktirati geolokalizacijske sposlužitelje. Molim provjerite "
-"vašu internet vezu (%s)."
+"Nije moguće kontaktirati geolokalizacijske poslužitelje. Molimo provjerite "
+"Vašu internet vezu (%s)."
 
 #. module: base_geolocalize
 #: model:ir.model,name:base_geolocalize.model_res_partner

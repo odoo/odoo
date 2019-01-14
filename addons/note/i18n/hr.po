@@ -3,24 +3,25 @@
 # * note
 # 
 # Translators:
-# Đurđica Žarković <durdica.zarkovic@storm.hr>, 2017
-# Vladimir Olujić <olujic.vladimir@storm.hr>, 2017
-# Bole <bole@dajmi5.com>, 2017
-# Martin Trigaux, 2017
-# Mario Jureša <mario.juresa@uvid.hr>, 2017
-# Karolina Tonković <karolina.tonkovic@storm.hr>, 2017
-# Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2017
-# Tina Milas, 2017
-# Marko Carević <marko.carevic@live.com>, 2018
-# Stjepan Lovasić <stjepan.lovasic@gmail.com>, 2018
-# Ivan Marijanović <ivanm101@yahoo.com>, 2018
+# Ivan Marijanović <ivanm101@yahoo.com>, 2019
+# Martin Trigaux, 2019
+# Vladimir Olujić <olujic.vladimir@storm.hr>, 2019
+# Đurđica Žarković <durdica.zarkovic@storm.hr>, 2019
+# Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2019
+# Karolina Tonković <karolina.tonkovic@storm.hr>, 2019
+# Marko Carević <marko.carevic@live.com>, 2019
+# Mario Jureša <mario.juresa@uvid.hr>, 2019
+# Tina Milas, 2019
+# Stjepan Lovasić <stjepan.lovasic@gmail.com>, 2019
+# Bole <bole@dajmi5.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.4\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-02 09:12+0000\n"
-"PO-Revision-Date: 2018-08-02 09:12+0000\n"
-"Last-Translator: Ivan Marijanović <ivanm101@yahoo.com>, 2018\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-08-24 09:21+0000\n"
+"Last-Translator: Bole <bole@dajmi5.com>, 2019\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -74,7 +75,7 @@ msgstr "Dodaj novu oznaku"
 #: code:addons/note/static/src/xml/systray.xml:14
 #, python-format
 msgid "Add a note"
-msgstr ""
+msgstr "Dodaj bilješku"
 
 #. module: note
 #. openerp-web
@@ -87,6 +88,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Archive"
 msgstr "Arhiviraj"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__message_attachment_count
+msgid "Attachment Count"
+msgstr ""
 
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
@@ -102,6 +108,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:note.field_mail_activity_type__category
 msgid "Category"
 msgstr "Kategorija"
+
+#. module: note
+#. openerp-web
+#: code:addons/note/static/src/xml/systray.xml:10
+#, python-format
+msgid "Channel"
+msgstr "Kanal"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__color
@@ -126,7 +139,7 @@ msgstr "Kreirao"
 #: model:ir.model.fields,field_description:note.field_note_stage__create_date
 #: model:ir.model.fields,field_description:note.field_note_tag__create_date
 msgid "Created on"
-msgstr "Datum kreiranja"
+msgstr "Kreirano"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__date_done
@@ -146,9 +159,19 @@ msgid "Display Name"
 msgstr "Naziv za prikaz"
 
 #. module: note
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_kanban
+msgid "Dropdown menu"
+msgstr ""
+
+#. module: note
 #: model:ir.model.fields,field_description:note.field_note_stage__fold
 msgid "Folded by Default"
 msgstr "Zatvoreno (zadano)"
+
+#. module: note
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_kanban
+msgid "Follower"
+msgstr ""
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_follower_ids
@@ -226,6 +249,11 @@ msgstr "Vrijeme promjene"
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Late Activities"
+msgstr ""
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__message_main_attachment_id
+msgid "Main Attachment"
 msgstr ""
 
 #. module: note
@@ -309,6 +337,13 @@ msgstr "Oznaka bilješke"
 #, python-format
 msgid "Notes"
 msgstr "Bilješke"
+
+#. module: note
+#: model_terms:ir.actions.act_window,help:note.action_note_note
+msgid ""
+"Notes are private, unless you share them by inviting follower on a note.\n"
+"            (Useful for meeting minutes)."
+msgstr ""
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_needaction_counter
@@ -398,6 +433,13 @@ msgid "Sequence"
 msgstr "Sekvenca"
 
 #. module: note
+#. openerp-web
+#: code:addons/note/static/src/xml/systray.xml:18
+#, python-format
+msgid "Set date and time"
+msgstr ""
+
+#. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Show all records which has next action date is before today"
 msgstr ""
@@ -466,7 +508,7 @@ msgstr "Oznake"
 
 #. module: note
 #. openerp-web
-#: code:addons/note/static/src/js/systray.js:90
+#: code:addons/note/static/src/js/systray_activity_menu.js:97
 #: selection:note.note,activity_state:0
 #, python-format
 msgid "Today"
@@ -493,16 +535,6 @@ msgid "Unread Messages Counter"
 msgstr "Brojač nepročitanih poruka"
 
 #. module: note
-#: model_terms:ir.actions.act_window,help:note.action_note_note
-msgid ""
-"Use notes to organize personal tasks or notes. All\n"
-"            notes are private; no one else will be able to see them. However\n"
-"            you can share some notes with other people by inviting followers\n"
-"            on the note. (Useful for meeting minutes, especially if\n"
-"            you activate the pad feature for collaborative writings)."
-msgstr ""
-
-#. module: note
 #: model:ir.model.fields,help:note.field_note_stage__sequence
 msgid "Used to order the note stages"
 msgstr "Koristi se za poredak faza bilješki"
@@ -513,10 +545,11 @@ msgid "Users"
 msgstr "Korisnici"
 
 #. module: note
-#: model_terms:ir.actions.act_window,help:note.action_note_note
-msgid ""
-"You can customize how you process your notes/tasks by adding,\n"
-"            removing or modifying columns."
-msgstr ""
-"Možete prilagoditi način procesiranja Vaših bilježaka/zadataka dodajući, "
-"uklanjajući ili mijenjajući stupce."
+#: model:ir.model.fields,field_description:note.field_note_note__website_message_ids
+msgid "Website Messages"
+msgstr "Poruke webstranica"
+
+#. module: note
+#: model:ir.model.fields,help:note.field_note_note__website_message_ids
+msgid "Website communication history"
+msgstr "Povijest komunikacije Web stranice"

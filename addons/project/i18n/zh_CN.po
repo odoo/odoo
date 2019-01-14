@@ -6,12 +6,11 @@
 # ChinaMaker <liuct@chinamaker.net>, 2018
 # 老窦 北京 <2662059195@qq.com>, 2018
 # Fisher <fisher@kdomi.com>, 2018
-# Jackie Zhang <jzh@odoo.com>, 2018
+# JZH-Odoo <jzh@odoo.com>, 2018
 # Maie <m@maie.name>, 2018
 # Shane Tsoi <sso@odoo.com>, 2018
 # bower Guo <124358678@qq.com>, 2018
 # roye w <159820@qq.com>, 2018
-# neter ji <jifuyi@qq.com>, 2018
 # 李赋 <fu792659@163.com>, 2018
 # liAnGjiA <liangjia@qq.com>, 2018
 # xu xiaohu <xu.xiaohu@gmail.com>, 2018
@@ -726,7 +725,7 @@ msgid ""
 "Communicate with customers on the task using the email gateway. Attach logo "
 "designs to the task, so that information flow from designers to the workers "
 "who print the t-shirt. Organize priorities amongst orders %s using the icon."
-msgstr "使用电子邮件网关与客户沟通任务。 将徽标设计附加到任务，以便信息从设计师流向打印T恤的工人。 使用图标组织订单 %s 之间的优先级。"
+msgstr "使用EMail网关与客户沟通任务。 将徽标设计附加到任务，以便信息从设计师流向打印T恤的工人。 使用图标组织订单 %s 之间的优先级。"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__company_id
@@ -923,7 +922,7 @@ msgid ""
 "you can communicate on the task directly. Your managers decide which "
 "feedback is accepted %s and which feedback is moved to the \"Refused\" "
 "column."
-msgstr "客户通过电子邮件提出反馈; Odoo自动创建任务，您可以直接与任务进行通信。 您的经理决定接受哪些反馈%s以及将哪些反馈移至“拒绝”列。"
+msgstr "客户通过EMail提出反馈; Odoo自动创建任务，您可以直接与任务进行通信。 您的经理决定接受哪些反馈%s以及将哪些反馈移至“拒绝”列。"
 
 #. module: project
 #: selection:project.project,rating_status_period:0
@@ -1022,7 +1021,7 @@ msgstr "显示名称"
 #: code:addons/project/models/digest.py:16
 #, python-format
 msgid "Do not have access, skip this data for user's digest email"
-msgstr "没有权限，用户电子邮件中忽略此数据"
+msgstr "没有权限，用户EMail中忽略此数据"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -1068,7 +1067,7 @@ msgstr "编辑任务"
 msgid ""
 "Edit project's stages and set an email template on the stages on which you "
 "want to activate the rating."
-msgstr "编辑项目阶段并在您想要激活评级的阶段上设置电子邮件模板。"
+msgstr "编辑项目阶段并在您想要激活评级的阶段上设置EMail模板。"
 
 #. module: project
 #. openerp-web
@@ -1080,22 +1079,22 @@ msgstr "编辑中"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__email_from
 msgid "Email"
-msgstr "电子邮箱"
+msgstr "EMail"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Email Alias"
-msgstr "Email别名"
+msgstr "EMail别名"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__mail_template_id
 msgid "Email Template"
-msgstr "Email模板"
+msgstr "EMail模板"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Emails"
-msgstr "电子邮件"
+msgstr "EMail"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__date_end
@@ -1156,8 +1155,8 @@ msgid ""
 "review the \"This Week\" column to move important tasks \"Today\". Every "
 "Monday, you review the \"This Month\" column."
 msgstr ""
-"使用电子邮件网关轻松填写收件箱。 定期检查收件箱并通过将任务移至其它列来安排任务。 每天，您都会查看 \"本周\" 列以移动重要任务 \"今天\" 。 "
-"每周一，您都会查看 \"本月\" 列。"
+"使用EMail网关轻松填写收件箱。 定期检查收件箱并通过将任务移至其它列来安排任务。 每天，您都会查看 \"本周\" 列以移动重要任务 \"今天\" 。"
+" 每周一，您都会查看 \"本月\" 列。"
 
 #. module: project
 #. openerp-web
@@ -1323,10 +1322,10 @@ msgid ""
 "Don't forget to set up the mail templates on the stages for which you want to get the customer's feedbacks."
 msgstr ""
 "如何获得客户反馈？\n"
-"- 改变阶段时评级：当任务/问题拉到另一个阶段时将发送电子邮件\n"
-"- 定期评级：将定期发送电子邮件\n"
+"- 改变阶段时评级：当任务/问题拉到另一个阶段时将发送EMail\n"
+"- 定期评级：将定期发送EMail\n"
 "\n"
-" 请记住，为想要获得客户反馈的阶段设置电子邮件模版。"
+" 请记住，为想要获得客户反馈的阶段设置EMail模版。"
 
 #. module: project
 #: code:addons/project/models/project.py:808
@@ -1380,7 +1379,7 @@ msgstr "如果勾选此项， 某些信息将会产生传递错误。"
 msgid ""
 "If set an email will be sent to the customer when the task or issue reaches "
 "this step."
-msgstr "当任务或问题到达这一步时，设置发送电子邮件给客户。"
+msgstr "当任务或问题到达这一步时，设置发送EMail给客户。"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__rating_template_id
@@ -1388,7 +1387,7 @@ msgid ""
 "If set and if the project's rating configuration is 'Rating when changing "
 "stage', then an email will be sent to the customer when the task reaches "
 "this step."
-msgstr "如果设置，且项目评级配置为“改变阶段时评级”，那么当任务达到此步骤时，将会给客户发送电子邮件。"
+msgstr "如果设置，且项目评级配置为“改变阶段时评级”，那么当任务达到此步骤时，将会给客户发送EMail。"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__active
@@ -1761,7 +1760,7 @@ msgstr "新项目"
 msgid ""
 "New tasks can be generated from incoming emails. You just need to set email "
 "aliases on your projects.<br>"
-msgstr "可以从传入的电子邮件生成新任务。 您只需要在项目中设置电子邮件别名即可。<br>"
+msgstr "可以从传入的EMail生成新任务。 您只需要在项目中设置EMail别名即可。<br>"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:41
@@ -1982,7 +1981,7 @@ msgstr "当任务或者议题在这个阶段的时候，覆盖用来看板选择
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_user_id
 msgid "Owner"
-msgstr "所有者"
+msgstr "货主"
 
 #. module: project
 #. openerp-web
@@ -2445,12 +2444,12 @@ msgstr "设置封面图像"
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_0
 msgid "Set Email Aliases"
-msgstr "设置电子邮件别名"
+msgstr "设置EMail别名"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Set Email Template to Stages"
-msgstr "设置电子邮件模板到阶段"
+msgstr "设置EMail模板到阶段"
 
 #. module: project
 #. openerp-web
@@ -2789,7 +2788,7 @@ msgstr "相应于这个别名对应的模型(Odoo单据种类)。任何一封不
 msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
-msgstr "邮件别名的名称，例如，如果你要收取 <jobs@example.odoo.com> 的电子邮件,别名就要被设为：\"jobs\""
+msgstr "邮件别名的名称，例如，如果你要收取 <jobs@example.odoo.com> 的EMail,别名就要被设为：\"jobs\""
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_user_id
@@ -2799,7 +2798,7 @@ msgid ""
 "the sender (From) address, or will use the Administrator account if no "
 "system user is found for that address."
 msgstr ""
-"基于此别名接收到的邮件，创建记录的所有人。若此字段没有设置，系统将试图根据发送者(From)地址来查找正确的所有者，如果通过地址没有找到用户，将使用系统管理员账户。"
+"基于此别名接收到的邮件，创建记录的所有人。若此字段没有设置，系统将试图根据发送者(From)地址来查找正确的货主，如果通过地址没有找到用户，将使用系统管理员账户。"
 
 #. module: project
 #: code:addons/project/models/project.py:253
@@ -2847,13 +2846,13 @@ msgid ""
 "These email addresses will be added to the CC field of all inbound\n"
 "        and outbound emails for this record before being sent. Separate multiple email addresses with a comma"
 msgstr ""
-"这些电子邮件地址将添加至所有的入境 CC 字段内 \n"
-" 以及该记录的出境电子邮件中，然后发送。用逗号分割多个电子邮件地址"
+"这些EMail地址将添加至所有的入境 CC 字段内 \n"
+" 以及该记录的出境EMail中，然后发送。用逗号分割多个EMail地址"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__email_from
 msgid "These people will receive email."
-msgstr "上述人员将收到电子邮件。"
+msgstr "上述人员将收到EMail。"
 
 #. module: project
 #. openerp-web
@@ -2937,7 +2936,7 @@ msgid ""
 "                    Chat in real time or by email to collaborate efficiently."
 msgstr ""
 "要完成任务，请在任务中使用活动和状态.<br>\n"
-" 实时聊天或通过电子邮件进行有效协作。"
+" 实时聊天或通过EMail进行有效协作。"
 
 #. module: project
 #. openerp-web
@@ -3035,7 +3034,7 @@ msgstr "用户"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__user_email
 msgid "User Email"
-msgstr "用户Email"
+msgstr "用户EMail"
 
 #. module: project
 #: selection:project.project,privacy_visibility:0
@@ -3066,7 +3065,7 @@ msgstr "想要以更好的方式 <b>管理您的项目</b>吗? <i>从这里开�
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__email_cc
 msgid "Watchers Emails"
-msgstr "关注者的电子邮件"
+msgstr "关注者的EMail"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__website_message_ids

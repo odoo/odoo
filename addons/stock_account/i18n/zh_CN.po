@@ -591,7 +591,7 @@ msgid ""
 "generic Stock Output Account set on the product. This has no effect for "
 "internal locations."
 msgstr ""
-"用于实时库存计价。当设定在一个虚拟库位（非内部类型）时，这科目将用于记录从内部库位调拨产品的值，而非替代此产品的一般出库科目。它不影响内部库位。"
+"用于实时库存计价。当设定在一个虚拟位置（非内部类型）时，这科目将用于记录从内部位置调拨产品的值，而非替代此产品的一般出库科目。它不影响内部位置。"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location__valuation_out_account_id
@@ -602,7 +602,7 @@ msgid ""
 "the generic Stock Output Account set on the product. This has no effect for "
 "internal locations."
 msgstr ""
-"用于实时库存计价。当设定在一个虚拟库位（非内部类型）时，这科目将用于记录从内部库位调拨产品的值，而非替代此产品的一般出库科目。它不影响内部库位。"
+"用于实时库存计价。当设定在一个虚拟位置（非内部类型）时，这科目将用于记录从内部位置调拨产品的值，而非替代此产品的一般出库科目。它不影响内部位置。"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__valuation
@@ -639,7 +639,7 @@ msgid ""
 "value for all products in this category. It can also directly be set on each"
 " product"
 msgstr ""
-"在进行实时库存计价时，除非在源库位指定一个核算科目，否则所有入库库存移动在对应的的日记账将登入这科目。这是该类别所有产品的默认值。它也可以直接设定在每个产品上。"
+"在进行实时库存计价时，除非在源位置指定一个核算科目，否则所有入库库存移动在对应的的日记账将登入这科目。这是该类别所有产品的默认值。它也可以直接设定在每个产品上。"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product__property_stock_account_input
@@ -650,7 +650,7 @@ msgid ""
 "specific valuation account set on the source location. When not set on the "
 "product, the one from the product category is used."
 msgstr ""
-"在进行实时库存估值时，除非为源库位指定一个库存核算科目，否则所有的入库库存移动日记账明细将登入这科目。当没在产品设定时，使用产品类别的设定。"
+"在进行实时库存估值时，除非为源位置指定一个库存核算科目，否则所有的入库库存移动日记账明细将登入这科目。当没在产品设定时，使用产品类别的设定。"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_stock_account_output_categ_id
@@ -661,7 +661,7 @@ msgid ""
 "default value for all products in this category. It can also directly be set"
 " on each product"
 msgstr ""
-"在进行实时库存计价时，除非在源库位指定一个核算科目，否则所有入库库存移动在对应的的日记账将登入这科目。这是该类别所有产品的默认值。它也可以直接设定在每个产品上。"
+"在进行实时库存计价时，除非在源位置指定一个核算科目，否则所有入库库存移动在对应的的日记账将登入这科目。这是该类别所有产品的默认值。它也可以直接设定在每个产品上。"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product__property_stock_account_output
@@ -671,7 +671,7 @@ msgid ""
 "outgoing stock moves will be posted in this account, unless there is a "
 "specific valuation account set on the destination location. When not set on "
 "the product, the one from the product category is used."
-msgstr "在进行实时估值时，除非对目标库位指定一个核算科目否则出向库存移动的日记账项目将登帐到这个科目。当产品没设定时，它默认继承产品的类别的设定。"
+msgstr "在进行实时估值时，除非对目标位置指定一个核算科目否则出向库存移动的日记账项目将登帐到这个科目。当产品没设定时，它默认继承产品的类别的设定。"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_stock_journal

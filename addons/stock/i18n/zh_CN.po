@@ -5,14 +5,14 @@
 # Translators:
 # Wei "oldrev" Li <liwei@sandwych.com>, 2018
 # Yuan Xulei <hi@yxl.name>, 2018
+# v2exerer <9010446@qq.com>, 2018
 # Rona Lin <ssauapw@qq.com>, 2018
 # e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
 # Henry Zhou <zhouhenry@live.com>, 2018
+# 卓忆科技 <zhanghao@jointd.com>, 2018
 # 苏州远鼎 <tiexinliu@126.com>, 2018
 # fausthuang, 2018
 # liulixia <liu.lixia@elico-corp.com>, 2018
-# 卓忆科技 <zhanghao@jointd.com>, 2018
-# v2exerer <9010446@qq.com>, 2018
 # Gary Wei <Gary.wei@elico-corp.com>, 2018
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2018
 # e2f_cn c7 <e2f_cn_c7@outlook.com>, 2018
@@ -22,8 +22,8 @@
 # Felix Yuen <fyu@odoo.com>, 2018
 # Shane Tsoi <sso@odoo.com>, 2018
 # JZH-Odoo <jzh@odoo.com>, 2018
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
 # bower Guo <124358678@qq.com>, 2018
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
 # inspur qiuguodong <qiuguodong@inspur.com>, 2018
 # roye w <159820@qq.com>, 2018
 # snow wang <147156565@qq.com>, 2018
@@ -144,10 +144,10 @@ msgid ""
 "* Transit Location: Counterpart location that should be used in inter-company or inter-warehouses operations"
 msgstr ""
 "*供应商位置：虚拟位置，代表来自供应商的产品的来源位置\n"
-"*视图：用于为您的仓库创建分层结构的虚拟位置，聚合其子位置;不能直接包含产品\n"
-"*内部位置：您自己的仓库内的物理位置，\n"
+"*视图：用于为您的库存创建分层结构的虚拟位置，聚合其子位置;不能直接包含产品\n"
+"*内部位置：您自己的库存内的物理位置，\n"
 "*客户位置：代表发送给客户的产品的目的地位置的虚拟位置\n"
-"*库存损失：作为库存操作的副本，用于纠正库存水平的虚拟库位（物理库存）\n"
+"*库存损失：作为库存操作的副本，用于纠正库存水平的虚拟位置（物理库存）\n"
 "*采购：当来源（供应商或生产）尚未被知晓时，虚拟地点作为采购业务的临时对手。采购计划员完成运行时，此位置应为空。\n"
 "*生产：生产操作的虚拟对应位置：该位置消耗原材料并生产成品\n"
 "*运输地点：应在公司间或仓间运营中使用的对口位置"
@@ -400,7 +400,7 @@ msgid ""
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
-"可库存商品是指在仓库中受存量管控的产品。 要使用此项目你必须安装仓库模块。\n"
+"可库存商品是指在库存中受存量管控的产品。 要使用此项目你必须安装库存模块。\n"
 "可消耗商品是指不受库存量管控的产品。\n"
 "服务是指你提供的非产品类服务业务。"
 
@@ -469,8 +469,8 @@ msgid ""
 "Add and customize route operations to process product moves in your warehouse(s): e.g. unload > quality control > stock for incoming products, pick > pack > ship for outgoing products. \n"
 " You can also set putaway strategies on warehouse locations in order to send incoming products into specific child locations straight away (e.g. specific bins, racks)."
 msgstr ""
-"添加并自定义路线操作以处理你仓库中的产品移动：例如：卸货>品控>入库，拣货>包装>发运。\n"
-"您也可以在仓库位置设置上架策略，以便直接将入库产品发送到特定的子位置（例如：特定的货位、货架）。"
+"添加并自定义路线操作以处理你库存中的产品移动：例如：卸货>品控>入库，拣货>包装>发运。\n"
+"您也可以在仓位置置设置上架策略，以便直接将入库产品发送到特定的子位置（例如：特定的货位、货架）。"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -481,7 +481,7 @@ msgid ""
 "strategies on warehouse locations in order to send incoming products into "
 "specific child locations straight away (e.g. specific bins, racks)."
 msgstr ""
-"添加并自定义路线操作以处理你仓库中的产品移动：例如：卸货>品控>入库，拣货>包装>发运。您也可以在仓库位置设置上架策略，以便直接将入库产品发送到特定的子位置（例如：特定的货位、货架）。"
+"添加并自定义路线操作以处理你库存中的产品移动：例如：卸货>品控>入库，拣货>包装>发运。您也可以在仓位置置设置上架策略，以便直接将入库产品发送到特定的子位置（例如：特定的货位、货架）。"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -627,7 +627,7 @@ msgstr "尽快"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Assign Owner"
-msgstr "指定所有者"
+msgstr "指定货主"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -938,7 +938,7 @@ msgstr "选择一个日期以获得该日期的库存"
 #: code:addons/stock/models/stock_picking.py:998
 #, python-format
 msgid "Choose destination location"
-msgstr "选择目的库位"
+msgstr "选择目的位置"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quantity_history__compute_at_date
@@ -1348,7 +1348,7 @@ msgid ""
 msgstr ""
 "当前产品数量。 \n"
 "对单一库存位置来说，包括了此位置或其任何子位置所存储的产品。 \n"
-"对单一仓库来说，包括了此仓库位置或其任何子位置所存储的产品。  \n"
+"对单一库存来说，包括了此仓位置置或其任何子位置所存储的产品。  \n"
 "另外，这包括了所有'内部'类型的任何库存位置所存储的产品。"
 
 #. module: stock
@@ -1454,7 +1454,7 @@ msgstr "默认目的位置"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__owner_id
 msgid "Default Owner"
-msgstr "默认所有者"
+msgstr "默认货主"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__default_location_src_id
@@ -1524,9 +1524,9 @@ msgid ""
 "            the stock operations like the manufacturing orders\n"
 "            consumptions, inventories, etc."
 msgstr ""
-"自定义位置来反映仓库的结构\n"
+"自定义位置来反映库存的结构\n"
 "和组织。系统能管理实体位置\n"
-"（仓库、货架、储位等等），\n"
+"（库存、货架、储位等等），\n"
 "业务伙伴位置（客户、\n"
 "供应商）和虚拟位置，即是对方的库存作业，如：生产订单\n"
 "的消耗、盘点等。"
@@ -1701,7 +1701,7 @@ msgstr "目的地包裹："
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_destination__location_dest_id
 msgid "Destination location"
-msgstr "目的库位"
+msgstr "目的位置"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__route_ids
@@ -1864,7 +1864,7 @@ msgid ""
 msgstr ""
 "系统中每一个库存操作都是将产品从一个\n"
 "位置移至另一位置。例如，若果你从供应商那边收到产品，\n"
-"Odoo将会把产品从供应商位置调拨到仓库位置。每个报表可用在\n"
+"Odoo将会把产品从供应商位置调拨到仓位置置。每个报表可用在\n"
 "实体位置、业务伙伴位置或者虚拟位置进行。"
 
 #. module: stock
@@ -1906,7 +1906,7 @@ msgstr "FedEx 接口"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_destination__filtered_location
 msgid "Filtered Location"
-msgstr "筛选的库位"
+msgstr "筛选的位置"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
@@ -1936,7 +1936,7 @@ msgstr "固定的补货组"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_fixed_putaway_strat
 msgid "Fixed Putaway Strategy on Location"
-msgstr "库位固定上架策略"
+msgstr "位置固定上架策略"
 
 #. module: stock
 #. openerp-web
@@ -1983,7 +1983,7 @@ msgid ""
 msgstr ""
 "预测数量(计算为手上数量 - 出库 + 入库) \n"
 "对于单一库存位置来说，这包括了存储在此位置及其子位置的货物。\n"
-"对于单一仓库来说，这包括了存储在此仓库的库存位置及其子位置的货物。\n"
+"对于单一库存来说，这包括了存储在此库存的库存位置及其子位置的货物。\n"
 "否则，这包括存储在任何“内部”类型的任何库存位置的货物。"
 
 #. module: stock
@@ -2485,7 +2485,7 @@ msgstr "已盘点批次/序列号"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory__partner_id
 msgid "Inventoried Owner"
-msgstr "已盘点所有者"
+msgstr "已盘点货主"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory__package_id
@@ -2927,7 +2927,7 @@ msgstr "位置类型"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__location_dest_id
 msgid "Location where the system will stock the finished products."
-msgstr "系统存储成品的库位"
+msgstr "系统存储成品的位置"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_location_form
@@ -3051,7 +3051,7 @@ msgstr "按订单生成"
 #. module: stock
 #: model:res.groups,name:stock.group_tracking_owner
 msgid "Manage Different Stock Owners"
-msgstr "管理不同的库存所有者"
+msgstr "管理不同的库存货主"
 
 #. module: stock
 #: model:res.groups,name:stock.group_production_lot
@@ -3395,7 +3395,7 @@ msgid ""
 "No procurement rule found in location \"%s\" for product \"%s\".\n"
 " Check routes configuration."
 msgstr ""
-"库位 \"%s\" 中的产品 \"%s\"没有定义补货规则。\n"
+"位置 \"%s\" 中的产品 \"%s\"没有定义补货规则。\n"
 "请确认路线设置。"
 
 #. module: stock
@@ -3514,7 +3514,7 @@ msgstr "一个批次/序列号"
 #: code:addons/stock/models/stock_inventory.py:119
 #, python-format
 msgid "One owner only"
-msgstr "仅一个所有者"
+msgstr "仅一个货主"
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:114
@@ -3526,7 +3526,7 @@ msgstr "一个产品类别"
 #: code:addons/stock/models/stock_inventory.py:119
 #, python-format
 msgid "One product for a specific owner"
-msgstr "特定所有者的一个产品"
+msgstr "特定货主的一个产品"
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:115
@@ -3705,27 +3705,27 @@ msgstr "概览"
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
 #: model_terms:ir.ui.view,arch_db:stock.view_move_line_form
 msgid "Owner"
-msgstr "所有者"
+msgstr "货主"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__restrict_partner_id
 msgid "Owner "
-msgstr "所有者 "
+msgstr "货主 "
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.message_body
 msgid "Owner :"
-msgstr "所有者:"
+msgstr "货主:"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__partner_id
 msgid "Owner of the location if not internal"
-msgstr "如果不是内部位置，则填写位置所有者"
+msgstr "如果不是内部位置，则填写位置货主"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_line__owner_id
 msgid "Owner of the quants"
-msgstr "份的所有者"
+msgstr "份的货主"
 
 #. module: stock
 #: code:addons/stock/models/product.py:340
@@ -4462,7 +4462,7 @@ msgid ""
 msgstr ""
 "计划出货产品的数量。\n"
 "在单个库存位置的情况下，这包括离开该位置或其任何子位置的货品。\n"
-"在单个仓库的情况下，这包括离开仓库的库存位置或其任何子位置的货物。\n"
+"在单个库存的情况下，这包括离开库存的库存位置或其任何子位置的货物。\n"
 "否则，这包括任何离开“内部”类型库存位置的货物。"
 
 #. module: stock
@@ -4474,9 +4474,9 @@ msgid ""
 "Otherwise, this includes goods leaving any Stock Location with 'internal' type."
 msgstr ""
 "计划到达的产品数量。\n"
-"对于一个库位来说，这包括了将要到达此库位或其子库位的货物。\n"
-"对于一个仓库来说，这包括了将要到达这个仓库的的这个库位,或其子库位的货物。\n"
-"另外，这包括了所有“内部”类型库位要到达的货物。"
+"对于一个位置来说，这包括了将要到达此位置或其子位置的货物。\n"
+"对于一个库存来说，这包括了将要到达这个库存的的这个位置,或其子位置的货物。\n"
+"另外，这包括了所有“内部”类型位置要到达的货物。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__quantity
@@ -5106,7 +5106,7 @@ msgstr "为批次和序列号设置过期日期"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Set owner on stored products"
-msgstr "在储存的产品上设置所有者"
+msgstr "在储存的产品上设置货主"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -5288,7 +5288,7 @@ msgstr "指定批次/序列号使你的存货有一个特定的批次/序列号�
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory__partner_id
 msgid "Specify Owner to focus your inventory on a particular Owner."
-msgstr "指定所有者以便一个特定所有者专注于你的存货。"
+msgstr "指定货主以便一个特定货主专注于你的存货。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory__package_id
@@ -5358,12 +5358,12 @@ msgstr "库存预测报表"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
 msgid "Stock Inventory"
-msgstr "仓库库存"
+msgstr "库存库存"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_line_tree
 msgid "Stock Inventory Lines"
-msgstr "仓库库存明细行"
+msgstr "库存库存明细行"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_level_forecast_report_product
@@ -5420,7 +5420,7 @@ msgstr "库存移动分析"
 #: model:ir.actions.act_window,name:stock.product_open_quants
 #: model:ir.actions.act_window,name:stock.product_template_open_quants
 msgid "Stock On Hand"
-msgstr "手上库存"
+msgstr "在手库存"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_scrap_form_view
@@ -5435,13 +5435,13 @@ msgstr "包裹目的地"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_package_level
 msgid "Stock Package Level"
-msgstr "仓库包装层级"
+msgstr "库存包装层级"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_partner__picking_warn
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__picking_id
 msgid "Stock Picking"
-msgstr "仓库拣货"
+msgstr "库存拣货"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__stock_quant_ids
@@ -5586,7 +5586,7 @@ msgstr "用于计算验证是否应该显示的技术字段。"
 msgid ""
 "Technical field used to depict a restriction on the ownership of quants to "
 "consider when marking this move as 'done'"
-msgstr "该技术字段用来描述当所有者的份移动标记为’完成‘时的限制"
+msgstr "该技术字段用来描述当货主的份移动标记为’完成‘时的限制"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__price_unit
@@ -5678,7 +5678,7 @@ msgid ""
 "                operation a specific type which will alter its views accordingly.\n"
 "                On the operation type you could e.g. specify if packing is needed by default,\n"
 "                if it should show the customer."
-msgstr "操作类型系统允许您为每个仓库分配一个特定的类型，该类型将相应地改变其视图。在操作类型上，您可以指定是否需要包装，是否应该向客户显示等操作。"
+msgstr "操作类型系统允许您为每个库存分配一个特定的类型，该类型将相应地改变其视图。在操作类型上，您可以指定是否需要包装，是否应该向客户显示等操作。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__package_id
@@ -5760,13 +5760,13 @@ msgstr "所选产品不属于此物主。"
 #: model:ir.model.fields,help:stock.field_res_partner__property_stock_customer
 msgid ""
 "The stock location used as destination when sending goods to this contact."
-msgstr "当发送产品到此联系人时， 此预定义的库存将用做目的库位。"
+msgstr "当发送产品到此联系人时， 此预定义的库存将用做目的位置。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_partner__property_stock_supplier
 msgid ""
 "The stock location used as source when receiving goods from this contact."
-msgstr "当从此联系人接收产品时， 此预定义的库存将用做源库位。"
+msgstr "当从此联系人接收产品时， 此预定义的库存将用做源位置。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_line__picking_id
@@ -5847,7 +5847,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__owner_id
 msgid "This is the owner of the quant"
-msgstr "这是库存分析所有者"
+msgstr "这是库存分析货主"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__product_uom_qty
@@ -6746,7 +6746,7 @@ msgid ""
 "Please first validate the first inventory adjustment before creating another"
 " one."
 msgstr ""
-"在“正在进行”状态下，您不能有两个库存调整使用相同的产品 (%s), 相同的位置, 相同的包装, 相同的所有者和相同的批次。 "
+"在“正在进行”状态下，您不能有两个库存调整使用相同的产品 (%s), 相同的位置, 相同的包装, 相同的货主和相同的批次。 "
 "在创建另一个产品之前，请先使用此产品验证第一个库存调整。"
 
 #. module: stock

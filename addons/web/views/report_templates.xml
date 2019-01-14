@@ -281,7 +281,7 @@
                     <h4 class="mt0 mb0 text-uppercase" t-field="company.report_header"/>
                 </div>
                 <div class="col-1">
-                    <ul t-if="report_type != 'html'" class="list-inline pagenumber float-right text-center">
+                    <ul t-if="report_type == 'pdf'" class="list-inline pagenumber float-right text-center">
                         <li class="list-inline-item"><strong><span class="page"/></strong></li>
                     </ul>
                 </div>
