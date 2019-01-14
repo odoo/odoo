@@ -276,18 +276,20 @@ class Lang(models.Model):
 def split(l, counts):
     """
 
-    >>> split("hello world", [])
-    ['hello world']
-    >>> split("hello world", [1])
-    ['h', 'ello world']
-    >>> split("hello world", [2])
-    ['he', 'llo world']
-    >>> split("hello world", [2,3])
-    ['he', 'llo', ' world']
-    >>> split("hello world", [2,3,0])
-    ['he', 'llo', ' wo', 'rld']
-    >>> split("hello world", [2,-1,3])
-    ['he', 'llo world']
+    ::
+
+        >>> split("hello world", [])
+        ['hello world']
+        >>> split("hello world", [1])
+        ['h', 'ello world']
+        >>> split("hello world", [2])
+        ['he', 'llo world']
+        >>> split("hello world", [2,3])
+        ['he', 'llo', ' world']
+        >>> split("hello world", [2,3,0])
+        ['he', 'llo', ' wo', 'rld']
+        >>> split("hello world", [2,-1,3])
+        ['he', 'llo world']
 
     """
     res = []

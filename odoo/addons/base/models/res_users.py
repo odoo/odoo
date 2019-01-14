@@ -66,7 +66,7 @@ def get_selection_groups(name):
     return [int(v) for v in name[11:].split('_')]
 
 def parse_m2m(commands):
-    "return a list of ids corresponding to a many2many value"
+    """return a list of ids corresponding to a many2many value"""
     ids = []
     for command in commands:
         if isinstance(command, (tuple, list)):
@@ -568,14 +568,16 @@ class Users(models.Model):
 
     @classmethod
     def authenticate(cls, db, login, password, user_agent_env):
-        """Verifies and returns the user ID corresponding to the given
-          ``login`` and ``password`` combination, or False if there was
-          no matching user.
-           :param str db: the database on which user is trying to authenticate
-           :param str login: username
-           :param str password: user password
-           :param dict user_agent_env: environment dictionary describing any
-               relevant environment attributes
+        """
+        Verifies and returns the user ID corresponding to the given
+        ``login`` and ``password`` combination, or False if there was
+        no matching user.
+
+       :param str db: the database on which user is trying to authenticate
+       :param str login: username
+       :param str password: user password
+       :param dict user_agent_env: environment dictionary describing any
+           relevant environment attributes
         """
         uid = cls._login(db, login, password)
         if user_agent_env and user_agent_env.get('base_location'):

@@ -652,7 +652,7 @@ Model Reference
 
         Whether a database table should be created (default: ``True``)
 
-        If set to ``False``, override :meth:`.init` to create the database
+        If set to ``False``, override :meth:`~odoo.models.BaseModel.init` to create the database
         table
 
      .. tip:: To create a model without any table, inherit

@@ -24,8 +24,7 @@ _logger = logging.getLogger(__name__)
 class IrAttachment(models.Model):
     """Attachments are used to link binary files or url to any openerp document.
 
-    External attachment storage
-    ---------------------------
+    .. rubric:: External attachment storage
 
     The computed field ``datas`` is implemented using ``_file_read``,
     ``_file_write`` and ``_file_delete``, which can be overridden to implement
@@ -539,6 +538,7 @@ class IrAttachment(models.Model):
     def _split_pdf_groups(self, pdf_groups=None, remainder=False):
         """
         calls _make_pdf to create the a new attachment for each page section.
+
         :param pdf_groups: a list of lists representing the pages to split:  pages = [[1,1], [4,5], [7,7]]
         :returns the list of the ID's of the new PDF attachments.
 
@@ -581,12 +581,15 @@ class IrAttachment(models.Model):
 
     def split_pdf(self, indices=None, remainder=False):
         """
-        called by the Document Viewer's Split PDF button.
-        evaluates the input string and turns it into a list of lists to be processed by _split_pdf_groups
+        Called by the Document Viewer's Split PDF button.
+
+        Evaluates the input string and turns it into a list of lists
+        to be processed by _split_pdf_groups.
 
         :param indices: the formatted string of pdf split (e.g. 1,5-10, 8-22, 29-34) o_page_number_input
-        :param remainder: bool, if true splits the non specified pages, one by one. form checkbox o_remainder_input
-        :returns the list of the ID's of the newly created pdf attachments.
+        :param bool remainder: if true splits the non specified pages, one by one. form checkbox o_remainder_input
+        :returns: the list of the ID's of the newly created pdf attachments.
+
         """
         self.ensure_one()
         if 'pdf' not in self.mimetype:

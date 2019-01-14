@@ -137,8 +137,15 @@ def propagate(method1, method2):
 
 
 def constrains(*args):
-    """ Decorates a constraint checker. Each argument must be a field name
-    used in the check::
+    """
+    :param arg: Field used in the check
+    :type arg: odoo.fields.Field
+    :raise odoo.exceptions.ValidationError: if validation failed
+
+    Decorates a constraint checker. Each argument must be a field name
+    used in the check
+
+    .. code-block:: python
 
         @api.one
         @api.constrains('name', 'description')
@@ -147,9 +154,6 @@ def constrains(*args):
                 raise ValidationError("Fields name and description must be different")
 
     Invoked on the records on which one of the named fields has been modified.
-
-    Should raise :class:`~odoo.exceptions.ValidationError` if the
-    validation failed.
 
     .. warning::
 
@@ -921,10 +925,12 @@ class Environment(Mapping):
 
     @contextmanager
     def protecting(self, what, records=None):
-        """ Prevent the invalidation or recomputation of fields on records.
-            The parameters are either:
-             - ``what`` a collection of fields and ``records`` a recordset, or
-             - ``what`` a collection of pairs ``(fields, records)``.
+        """
+        Prevent the invalidation or recomputation of fields on records.
+        The parameters are either:
+
+         - ``what`` a collection of fields and ``records`` a recordset, or
+         - ``what`` a collection of pairs ``(fields, records)``.
         """
         protected = self._protected
         try:

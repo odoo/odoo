@@ -53,18 +53,19 @@ class FieldConverter(models.AbstractModel):
     @api.model
     def get_available_options(self):
         """
-            Get the available option informations.
+        Get the available option informations.
 
-            Returns a dict of dict with:
-            * key equal to the option key.
-            * dict: type, params, name, description, default_value
-            * type:
-                'string'
-                'integer'
-                'float'
-                'model' (e.g. 'res.partner')
-                'array'
-                'selection' (e.g. [key1, key2...])
+        Returns a dict of dict with:
+
+        * key equal to the option key.
+        * dict: type, params, name, description, default_value
+        * type:
+            'string'
+            'integer'
+            'float'
+            'model' (e.g. 'res.partner')
+            'array'
+            'selection' (e.g. [key1, key2...])
         """
         return {}
 
@@ -343,7 +344,7 @@ class HTMLConverter(models.AbstractModel):
 
 
 class ImageConverter(models.AbstractModel):
-    """ ``image`` widget rendering, inserts a data:uri-using image tag in the
+    """ ``image`` widget rendering, inserts a `data:uri-using` image tag in the
     document. May be overridden by e.g. the website module to generate links
     instead.
 
@@ -588,7 +589,7 @@ class RelativeDatetimeConverter(models.AbstractModel):
 
 
 class BarcodeConverter(models.AbstractModel):
-    """ ``barcode`` widget rendering, inserts a data:uri-using image tag in the
+    """ ``barcode`` widget rendering, inserts a `data:uri-using` image tag in the
     document. May be overridden by e.g. the website module to generate links
     instead.
     """

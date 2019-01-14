@@ -54,7 +54,7 @@ if pycompat.PY2:
 
 class Contextifier(ast.NodeTransformer):
     """ For user-provided template expressions, replaces any ``name`` by
-    :sampe:`values.get('{name}')` so all variable accesses are
+    :samp:`values.get('{name}')` so all variable accesses are
     performed on the values rather than in the "native" values
     """
 

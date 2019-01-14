@@ -26,8 +26,10 @@ _logger = logging.getLogger(__name__)
 
 class IrQWeb(models.AbstractModel, QWeb):
     """ Base QWeb rendering engine
-    * to customize ``t-field`` rendering, subclass ``ir.qweb.field`` and
+
+    * to customize ``t-field`` rendering, subclass :class:`~odoo.addons.base.models.ir_qweb_fields` and
       create new models called :samp:`ir.qweb.field.{widget}`
+
     Beware that if you need extensions or alterations which could be
     incompatible with other subsystems, you should create a local object
     inheriting from ``ir.qweb`` and customize that.
@@ -38,16 +40,17 @@ class IrQWeb(models.AbstractModel, QWeb):
 
     @api.model
     def render(self, id_or_xml_id, values=None, **options):
-        """ render(id_or_xml_id, values, **options)
-
+        """
         Render the template specified by the given name.
 
         :param id_or_xml_id: name or etree (see get_template)
         :param dict values: template values to be used for rendering
         :param options: used to compile the template (the dict available for the rendering is frozen)
+
             * ``load`` (function) overrides the load method
             * ``profile`` (float) profile the rendering (use astor lib) (filter
               profile line with time ms >= profile)
+
         """
         for method in dir(self):
             if method.startswith('render_'):
