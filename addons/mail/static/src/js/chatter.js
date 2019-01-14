@@ -155,6 +155,7 @@ var Chatter = Widget.extend(chat_mixin, {
             record_name: this.record_name,
             default_body: old_composer && old_composer.$input && old_composer.$input.val(),
             default_mention_selections: old_composer && old_composer.mention_get_listener_selections(),
+            attachment_ids: (old_composer && old_composer.get('attachment_ids')) || [],
         });
         this.composer.on('input_focused', this, function () {
             this.composer.mention_set_prefetched_partners(this.mentionSuggestions || []);
