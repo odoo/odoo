@@ -1006,6 +1006,50 @@
     </div>
 </t>
 
+<t t-name="FieldBinarySignature-img">
+    <img class="o_signature img img-fluid"
+        alt="Binary file"
+        t-att-src='url'
+        t-att-border="1"
+        t-att-name="widget.name"/>
+</t>
+
+<div t-name="FieldBinarySignature">
+    <div class="o_sign_signature_draw panel panel-default mt16 mb0">
+        <div class="card-header">
+            <a role="button" class="o_sign_select_style float-right btn btn-link">Select Signature Style</a>
+            <a role="button" class="o_sign_clean float-right btn btn-link">Clear Signature</a>
+            <a data-mode="draw" class="o_sign_mode o_sign_mode_draw btn btn-primary" role="button">Draw</a>
+            <a data-mode="auto" class="o_sign_mode o_sign_mode_auto btn" role="button">Auto</a>
+            <a data-mode="load" class="o_sign_mode o_sign_mode_load btn" role="button">Load</a>
+            <input type="file" name="files[]" class="o_sign_load btn btn-link" role="button"/>
+        </div>
+        <div class="o_sign_signature card-body"/>
+    </div>
+    <div class="mt16 small">By clicking Adopt and Sign, I agree that the chosen signature/initials will be a valid electronic representation of my hand-written signature/initials for all purposes when it is used on documents, including legally binding contracts.</div>
+
+    <div class="o_sign_font_dialog card">
+        <div class="card-header">Styles</div>
+        <div class="o_sign_font_selection card-body"/>
+    </div>
+</div>
+
+<t t-name="SignatureSvgText" name="SVG Signature Text">
+    <svg t-att-width="width" t-att-height="height">
+        <defs>
+            <style type="text/css">
+                @font-face {
+                    font-family: "font_sign";
+                    src: url(data:font/ttf;base64,<t t-esc="font"/>) format("woff");
+                    font-weight: normal;
+                    font-style: normal;
+                }
+            </style>
+        </defs>
+        <text x="50%" t-att-y="height*4/5" t-att-font-size="height*4/5" t-att-textLength="width * 4 / 5 * Math.min(1, text.length / 7)" lengthAdjust="spacingAndGlyphs" style="font-family:'font_sign'" fill="black" text-anchor="middle"><t t-esc="text"/></text>
+    </svg>
+</t>
+
 <t t-name="FieldPdfViewer">
     <div class="o_field_pdfviewer" aria-atomic="true">
         <div t-if="widget.mode !== 'readonly'" class="o_form_pdf_controls mt8" role="toolbar" aria-label="PDF controls">
