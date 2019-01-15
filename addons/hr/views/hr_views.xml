@@ -76,7 +76,8 @@
                         <group string="Activities">
                             <field name="plan_activity_type_ids" nolabel="1">
                                 <tree editable="bottom">
-                                    <field name="name"/>
+                                    <field name="activity_type_id"/>
+                                    <field name="summary"/>
                                     <field name="responsible"/>
                                     <field name="responsible_id" attrs="{'readonly': [('responsible', '!=', 'other')]}"/>
                                 </tree>
@@ -94,7 +95,7 @@
                 <form string="Planning">
                     <sheet>
                         <group>
-                            <field name="name"/>
+                            <field name="summary"/>
                             <field name="activity_type_id"/>
                             <field name="responsible"/>
                             <field name="responsible_id" attrs="{'invisible': [('responsible', '!=', 'other')]}"/>
