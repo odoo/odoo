@@ -3,6 +3,7 @@
 
 from odoo.tests.common import TransactionCase
 from odoo.addons.web_planner.models.web_planner import Planner
+from werkzeug import urls
 
 
 class TestWebPlanner(TransactionCase):
@@ -26,10 +27,9 @@ class TestWebPlanner(TransactionCase):
             }
         )
 
-        self.assertEqual(
-            Planner.prepare_backend_url(self, "web_planner.test_00"),
-            "/web#view_type=list&action=%s" % action.id,
-        )
+        backend_url = Planner.prepare_backend_url(self, "web_planner.test_00")
+        parameters = urls.url_decode(urls.url_parse(backend_url).fragment).to_dict(flat=False)
+        self.assertEqual(parameters, {'view_type': ['list'], 'action': [str(action.id)]})
 
     def test_01(self):
         #bad choise of view_type
@@ -50,10 +50,9 @@ class TestWebPlanner(TransactionCase):
             }
         )
 
-        self.assertEqual(
-            Planner.prepare_backend_url(self, "web_planner.test_01", 'form'),
-            "/web#view_type=list&action=%s" % action.id,
-        )
+        backend_url = Planner.prepare_backend_url(self, "web_planner.test_01", 'form')
+        parameters = urls.url_decode(urls.url_parse(backend_url).fragment).to_dict(flat=False)
+        self.assertEqual(parameters, {'view_type': ['list'], 'action': [str(action.id)]})
     
     def test_02(self):
         #choose the second view_mode
@@ -74,10 +73,9 @@ class TestWebPlanner(TransactionCase):
             }
         )
 
-        self.assertEqual(
-            Planner.prepare_backend_url(self, "web_planner.test_02", 'form'),
-            "/web#view_type=form&action=%s" % action.id,
-        )
+        backend_url = Planner.prepare_backend_url(self, "web_planner.test_02", 'form')
+        parameters = urls.url_decode(urls.url_parse(backend_url).fragment).to_dict(flat=False)
+        self.assertEqual(parameters, {'view_type': ['form'], 'action': [str(action.id)]})
     
     def test_03(self):
         #bad xml_id
@@ -98,8 +96,6 @@ class TestWebPlanner(TransactionCase):
             }
         )
 
-        self.assertEqual(
-            Planner.prepare_backend_url(self, "web_planner.bad_xml_id", 'form'),
-            "/web#view_type=list&model=ir.module.module",
-        )
-
+        backend_url = Planner.prepare_backend_url(self, "web_planner.bad_xml_id", 'form')
+        parameters = urls.url_decode(urls.url_parse(backend_url).fragment).to_dict(flat=False)
+        self.assertEqual(parameters, {'view_type': ['list'], 'model': ['ir.module.module']})

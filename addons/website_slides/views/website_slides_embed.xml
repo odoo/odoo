@@ -133,7 +133,7 @@
                                     <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 text-center"></div>
                                 </div>
                                 <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 pull-right text-right">
-                                    <a t-if="slide.download_security and not is_embedded" target="_top" t-attf-href="/slides/slide/#{slug(slide)}/download" title="Download" id="download">
+                                    <a t-if="slide.download_security != 'none' and not is_embedded" target="_top" t-attf-href="/slides/slide/#{slug(slide)}/download" title="Download" id="download">
                                         <i class="fa fa-download fa-2x"></i>
                                     </a>
                                     <span id="fullscreen" title="View fullscreen">
