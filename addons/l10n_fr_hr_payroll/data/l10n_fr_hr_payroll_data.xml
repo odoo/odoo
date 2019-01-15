@@ -91,19 +91,27 @@
     </record>
 
     <!-- Contribution Register -->
-    <record id="hr_urssaf_register" model="hr.contribution.register">
+    <record id="hr_urssaf_register" model="res.partner">
         <field name="name">URSSAF</field>
+        <field name="supplier">1</field>
+        <field eval="0" name="customer"/>
     </record>
 
-    <record id="hr_retraite_register" model="hr.contribution.register">
+    <record id="hr_retraite_register" model="res.partner">
         <field name="name">Organisme de retraite complementaire</field>
+        <field name="supplier">1</field>
+        <field eval="0" name="customer"/>
     </record>
 
-    <record id="hr_cci_register" model="hr.contribution.register">
+    <record id="hr_cci_register" model="res.partner">
         <field name="name">Chambre du commerce et de l'industrie</field>
+        <field name="supplier">1</field>
+        <field eval="0" name="customer"/>
     </record>
 
-    <record id="hr_prevoyance_register" model="hr.contribution.register">
+    <record id="hr_prevoyance_register" model="res.partner">
         <field name="name">Organisme de prevoyance</field>
+        <field name="supplier">1</field>
+        <field eval="0" name="customer"/>
     </record>
 </odoo>
