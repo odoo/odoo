@@ -131,13 +131,14 @@
           </p>
         </field>
     </record>
-    <record id="action_selected_survey_user_input" model="ir.actions.act_window">
-        <field name="name">Survey User input</field>
+    <record model="ir.actions.act_window" id="action_survey_user_input_notest">
+        <field name="name">Answers</field>
         <field name="res_model">survey.user_input</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">tree,kanban,form</field>
         <field name="view_id" ref="survey_user_input_tree"></field>
         <field name="search_view_id" ref="survey_user_input_search"/>
-        <field name="context">{'search_default_survey_id': active_id, 'default_survey_id': active_id}</field>
+        <field name="context">{'search_default_group_by_survey': True}</field>
+        <field name="domain">[('test_entry', '=', False)]</field>
         <field name="help" type="html">
           <p class="o_view_nocontent_empty_folder">
             Nobody has replied to your surveys yet
