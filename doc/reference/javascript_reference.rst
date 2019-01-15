@@ -2173,40 +2173,40 @@ do that, several steps should be done.
 
 - add ControlPanelMixin in the widget:
 
-    .. code-block:: javascript
+  .. code-block:: javascript
 
-        var ControlPanelMixin = require('web.ControlPanelMixin');
+      var ControlPanelMixin = require('web.ControlPanelMixin');
 
-        var MyClientAction = AbstractAction.extend(ControlPanelMixin, {
-            ...
-        });
+      var MyClientAction = AbstractAction.extend(ControlPanelMixin, {
+          ...
+      });
 
 - call the method *update_control_panel* whenever we need to update the control
   panel. For example:
 
-    .. code-block:: javascript
+  .. code-block:: javascript
 
-        var SomeClientAction = Widget.extend(ControlPanelMixin, {
-            ...
-            start: function () {
-                this._renderButtons();
-                this._updateControlPanel();
-                ...
-            },
-            do_show: function () {
-                 ...
-                 this._updateControlPanel();
-            },
-            _renderButtons: function () {
-                this.$buttons = $(QWeb.render('SomeTemplate.Buttons'));
-                this.$buttons.on('click', ...);
-            },
-            _updateControlPanel: function () {
-                this.update_control_panel({
-                    cp_content: {
-                       $buttons: this.$buttons,
-                    },
-             });
+      var SomeClientAction = Widget.extend(ControlPanelMixin, {
+          ...
+          start: function () {
+              this._renderButtons();
+              this._updateControlPanel();
+              ...
+          },
+          do_show: function () {
+               ...
+               this._updateControlPanel();
+          },
+          _renderButtons: function () {
+              this.$buttons = $(QWeb.render('SomeTemplate.Buttons'));
+              this.$buttons.on('click', ...);
+          },
+          _updateControlPanel: function () {
+              this.update_control_panel({
+                  cp_content: {
+                     $buttons: this.$buttons,
+                  },
+           });
 
 For more information, look into the *control_panel.js* file.
 
