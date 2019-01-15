@@ -44,7 +44,6 @@ class HrPayrollStructure(models.Model):
                 'condition_select': 'none',
                 'amount_select': 'code',
                 'amount_python_compute': 'result = categories.BASIC + categories.ALW + categories.DED',
-                'register_id': self.env.ref('hr_payroll.contrib_register_employees').id
             })
         ]
 
@@ -89,17 +88,6 @@ class HrPayrollStructureType(models.Model):
         for structure_type in self:
             sorted_structures = sorted(structure_type.struct_ids, key=lambda struct: struct.regular_pay, reverse=True)
             structure_type.default_struct_id = sorted_structures[0] if sorted_structures else False
-
-
-class HrContributionRegister(models.Model):
-    _name = 'hr.contribution.register'
-    _description = 'Contribution Register'
-
-    partner_id = fields.Many2one('res.partner', string='Partner')
-    name = fields.Char(required=True)
-    register_line_ids = fields.One2many('hr.payslip.line', 'register_id',
-        string='Register Line', readonly=True)
-    note = fields.Text(string='Description')
 
 
 class HrSalaryRuleCategory(models.Model):
@@ -192,7 +180,7 @@ class HrSalaryRule(models.Model):
 
                     result = contract.wage * 0.10''')
     amount_percentage_base = fields.Char(string='Percentage based on', help='result will be affected to a variable')
-    register_id = fields.Many2one('hr.contribution.register', string='Contribution Register',
+    partner_id = fields.Many2one('res.partner', string='Partner',
         help="Eventual third party involved in the salary payment of the employees.")
     note = fields.Text(string='Description')
 

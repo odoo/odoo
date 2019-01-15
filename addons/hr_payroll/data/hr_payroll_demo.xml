@@ -3,20 +3,28 @@
 
         <!-- Contribution Register -->
 
-        <record id="hr_houserent_register" model="hr.contribution.register">
+        <record id="hr_houserent_register" model="res.partner">
             <field name="name">House Rent Allowance Register</field>
+            <field name="supplier">1</field>
+            <field eval="0" name="customer"/>
         </record>
 
-        <record id="hr_provident_fund_register" model="hr.contribution.register">
+        <record id="hr_provident_fund_register" model="res.partner">
             <field name="name">Provident Fund Register</field>
+            <field name="supplier">1</field>
+            <field eval="0" name="customer"/>
         </record>
 
-        <record id="hr_professional_tax_register" model="hr.contribution.register">
+        <record id="hr_professional_tax_register" model="res.partner">
             <field name="name">Professional Tax Register</field>
+            <field name="supplier">1</field>
+            <field eval="0" name="customer"/>
         </record>
 
-        <record id="hr_meal_voucher_register" model="hr.contribution.register">
+        <record id="hr_meal_voucher_register" model="res.partner">
             <field name="name">Meal Voucher Register</field>
+            <field name="supplier">1</field>
+            <field eval="0" name="customer"/>
         </record>
 
         <!-- Salary Structure -->
@@ -34,7 +42,7 @@
             <field name="amount_percentage_base">contract.wage</field>
             <field name="code">HRA</field>
             <field name="category_id" ref="hr_payroll.ALW"/>
-            <field name="register_id" ref="hr_houserent_register"/>
+            <field name="partner_id" ref="hr_houserent_register"/>
             <field name="name">House Rent Allowance</field>
             <field name="sequence" eval="5"/>
             <field name="struct_id" ref="structure_002"/>
@@ -66,7 +74,7 @@
             <field name="quantity">worked_days.WORK100 and worked_days.WORK100.number_of_days</field>
             <field name="code">MA</field>
             <field name="category_id" ref="hr_payroll.ALW"/>
-            <field name="register_id" ref="hr_meal_voucher_register"/>
+            <field name="partner_id" ref="hr_meal_voucher_register"/>
             <field name="name">Meal Voucher</field>
             <field name="sequence" eval="16"/>
             <field name="struct_id" ref="structure_002"/>
@@ -79,7 +87,7 @@
             <field name="amount_percentage_base">contract.wage</field>
             <field name="code">PF</field>
             <field name="category_id" ref="hr_payroll.DED"/>
-            <field name="register_id" ref="hr_provident_fund_register"/>
+            <field name="partner_id" ref="hr_provident_fund_register"/>
             <field name="name">Provident Fund</field>
             <field name="struct_id" ref="structure_002"/>
         </record>
@@ -90,7 +98,7 @@
             <field name="amount_fix" eval="-200.0"/>
             <field name="code">PT</field>
             <field name="category_id" ref="hr_payroll.DED"/>
-            <field name="register_id" ref="hr_professional_tax_register"/>
+            <field name="partner_id" ref="hr_professional_tax_register"/>
             <field name="name">Professional Tax</field>
             <field name="struct_id" ref="structure_002"/>
         </record>

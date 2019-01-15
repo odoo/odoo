@@ -18,11 +18,6 @@
             <field name="full_time_required_hours">38</field>
         </record>
 
-        <record id="contrib_register_employees" model="hr.contribution.register">
-            <field name="name">Employees</field>
-            <field name="partner_id" eval="False"/>
-        </record>
-
         <record id="BASIC" model="hr.salary.rule.category">
             <field name="name">Basic</field>
             <field name="code">BASIC</field>
@@ -54,7 +49,6 @@
         </record>
 
         <!-- Decimal Precision -->
-
         <record forcecreate="True" id="decimal_payroll" model="decimal.precision">
             <field name="name">Payroll</field>
             <field name="digits">2</field>
@@ -66,7 +60,6 @@
         </record>
 
         <!-- Work entries Type -->
-
         <record id="work_entry_type_attendance" model="hr.work.entry.type">
             <field name="name">Attendance</field>
             <field name="color">0</field>

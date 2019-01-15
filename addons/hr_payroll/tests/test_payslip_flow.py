@@ -59,16 +59,3 @@ class TestPayslipFlow(TestPayslipBase):
 
         # I generate the payslip by clicking on Generat button wizard.
         payslip_employee.with_context(active_id=payslip_run.id).compute_sheet()
-
-        # I open Contribution Register and from there I print the Payslip Lines report.
-        self.env['payslip.lines.contribution.register'].create({
-            'date_from': '2011-09-30',
-            'date_to': '2011-09-01'
-        })
-
-        # I print the payslip report
-        data, data_format = self.env.ref('hr_payroll.action_report_payslip').render(richard_payslip.ids)
-
-        # I print the contribution register report
-        context = {'model': 'hr.contribution.register', 'active_ids': [self.ref('hr_payroll.hr_houserent_register')]}
-        test_reports.try_report_action(self.env.cr, self.env.uid, 'action_payslip_lines_contribution_register', context=context, our_module='hr_payroll')
