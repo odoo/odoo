@@ -308,17 +308,11 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
             _.extend(options, url);
             url = url.url;
         }
-        var fct;
-        if (self.origin_server) {
-            fct = ajax.jsonRpc;
-        } else if (self.use_cors) {
-            fct = ajax.jsonRpc;
-            url = self.url(url, null);
-        } else {
-            fct = ajax.jsonpRpc;
+        if (self.use_cors) {
             url = self.url(url, null);
         }
-        return fct(url, "call", params, options);
+
+        return ajax.jsonRpc(url, "call", params, options);
     },
     url: function (path, params) {
         params = _.extend(params || {});

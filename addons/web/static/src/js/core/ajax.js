@@ -45,7 +45,6 @@ function genericJsonRpc (fct_name, params, settings, fct) {
         var def = $.Deferred();
         return def.reject.apply(def, ["communication"].concat(_.toArray(arguments)));
     });
-    // FIXME: jsonp?
     deferred.abort = function () {
         deferred.reject({message: "XmlHttpRequestError abort"}, $.Event('abort'));
         if (xhr.abort) {
@@ -103,78 +102,6 @@ function jsonRpc(url, fct_name, params, settings) {
             data: JSON.stringify(data, time.date_to_utc),
             contentType: 'application/json'
         }));
-    });
-}
-
-function jsonpRpc(url, fct_name, params, settings) {
-    settings = settings || {};
-    return genericJsonRpc(fct_name, params, settings, function(data) {
-        var payload_str = JSON.stringify(data, time.date_to_utc);
-        var payload_url = $.param({r:payload_str});
-        var force2step = settings.force2step || false;
-        delete settings.force2step;
-        if (payload_url.length < 2000 && ! force2step) {
-            return $.ajax(url, _.extend({}, settings, {
-                url: url,
-                dataType: 'jsonp',
-                jsonp: 'jsonp',
-                type: 'GET',
-                cache: false,
-                data: {r: payload_str}
-            }));
-        } else {
-            var args = {id: data.id};
-            var ifid = _.uniqueId('oe_rpc_iframe');
-            var html = "<iframe src='javascript:false;' name='" + ifid + "' id='" + ifid + "' style='display:none'></iframe>";
-            var $iframe = $(html);
-            var nurl = 'jsonp=1&' + $.param(args);
-            nurl = url.indexOf("?") !== -1 ? url + "&" + nurl : url + "?" + nurl;
-            var $form = $('<form>')
-                        .attr('method', 'POST')
-                        .attr('target', ifid)
-                        .attr('enctype', "multipart/form-data")
-                        .attr('action', nurl)
-                        .append($('<input type="hidden" name="r" />').attr('value', payload_str))
-                        .hide()
-                        .appendTo($('body'));
-            var cleanUp = function() {
-                if ($iframe) {
-                    $iframe.unbind("load").remove();
-                }
-                $form.remove();
-            };
-            var deferred = $.Deferred();
-            // the first bind is fired up when the iframe is added to the DOM
-            $iframe.bind('load', function() {
-                // the second bind is fired up when the result of the form submission is received
-                $iframe.unbind('load').bind('load', function() {
-                    $.ajax({
-                        url: url,
-                        dataType: 'jsonp',
-                        jsonp: 'jsonp',
-                        type: 'GET',
-                        cache: false,
-                        data: {id: data.id}
-                    }).always(function() {
-                        cleanUp();
-                    }).done(function() {
-                        deferred.resolve.apply(deferred, arguments);
-                    }).fail(function() {
-                        deferred.reject.apply(deferred, arguments);
-                    });
-                });
-                // now that the iframe can receive data, we fill and submit the form
-                $form.submit();
-            });
-            // append the iframe to the DOM (will trigger the first load)
-            $form.after($iframe);
-            if (settings.timeout) {
-                realSetTimeout(function() {
-                    deferred.reject({});
-                }, settings.timeout);
-            }
-            return deferred;
-        }
     });
 }
 
@@ -310,7 +237,7 @@ function get_file(options) {
         xhr.open('POST', options.url);
         data = new FormData();
         _.each(options.data || {}, function (v, k) {
-            data.append(k, v)
+            data.append(k, v);
         });
     }
     data.append('token', 'dummy-because-api-expects-one');
@@ -358,7 +285,7 @@ function get_file(options) {
                         name: String(xhr.status),
                         title: nodes.length > 0 ? nodes[0].textContent : '',
                     }
-                }
+                };
             }
             options.error(err);
         };
@@ -373,7 +300,7 @@ function get_file(options) {
         }
     };
     if (options.complete) {
-        xhr.onloadend = function () { options.complete(); }
+        xhr.onloadend = function () { options.complete(); };
     }
 
     xhr.send(data);
@@ -594,7 +521,6 @@ function loadLibs (libs) {
 
 var ajax = {
     jsonRpc: jsonRpc,
-    jsonpRpc: jsonpRpc,
     rpc: rpc,
     loadCSS: loadCSS,
     loadJS: loadJS,
