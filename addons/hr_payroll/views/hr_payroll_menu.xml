@@ -21,6 +21,13 @@
         groups="hr_payroll.group_hr_payroll_manager"/>
 
     <menuitem
+        id="menu_hr_payroll_report"
+        name="Report"
+        parent="menu_hr_payroll_root"
+        sequence="70"
+        groups="hr_payroll.group_hr_payroll_manager"/>
+
+    <menuitem
         id="menu_hr_payroll_configuration"
         name="Configuration"
         parent="menu_hr_payroll_root"
@@ -81,6 +88,15 @@
         parent="menu_hr_benefit_confirguration"
     />
 
+    <!-- Report Configuration -->
+
+    <menuitem
+        id="menu_hr_payroll_contribution_registers"
+        action="action_contribution_registers"
+        parent="menu_hr_payroll_report"
+        sequence="10"
+    />
+
     <!-- Salary Configuration -->
     <menuitem
         id="menu_hr_salary_configuration"
@@ -113,13 +129,6 @@
         sequence="30"
     />
 
-    <menuitem
-        id="menu_action_hr_contribution_register_form"
-        action="action_contribution_register_form"
-        parent="menu_hr_salary_configuration"
-        sequence="50"
-    />
-
     <!-- Repository Configuration -->
     <menuitem
         id="menu_hr_repository_confirguration"
@@ -141,7 +150,5 @@
         parent="menu_hr_repository_confirguration"
         sequence="20"
     />
-
-
 
 </odoo>

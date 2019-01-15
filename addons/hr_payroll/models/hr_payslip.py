@@ -339,7 +339,10 @@ class HrPayslipLine(models.Model):
     amount_percentage = fields.Float(related='salary_rule_id.amount_percentage', readonly=True)
     appears_on_payslip = fields.Boolean(related='salary_rule_id.appears_on_payslip', readonly=True)
     category_id = fields.Many2one(related='salary_rule_id.category_id', readonly=True, store=True)
-    register_id = fields.Many2one(related='salary_rule_id.register_id', readonly=True, store=True)
+    partner_id = fields.Many2one(related='salary_rule_id.partner_id', readonly=True, store=True)
+
+    date_from = fields.Date(string='From', related="slip_id.date_from")
+    date_to = fields.Date(string='To', related="slip_id.date_to")
 
     @api.depends('quantity', 'amount', 'rate')
     def _compute_total(self):
@@ -434,4 +437,27 @@ class HrPayslipRun(models.Model):
             "views": [[False, "tree"], [False, "form"]],
             "domain": [['id', 'in', self.slip_ids.ids]],
             "name": "Payslips",
+        }
+
+class ContributionRegisterReport(models.AbstractModel):
+    _name = 'report.hr_payroll.contribution_register'
+    _description = 'Model for Printing hr.payslip.line grouped by register'
+
+    def _get_report_values(self, docids, data):
+        docs = []
+        lines_data = {}
+        lines_total = {}
+
+        for result in self.env['hr.payslip.line'].read_group([('id', 'in', docids)], ['partner_id', 'total', 'ids:array_agg(id)'], ['partner_id']):
+            if result['partner_id']:
+                docid = result['partner_id'][0]
+                docs.append(docid)
+                lines_data[docid] = self.env['hr.payslip.line'].browse(result['ids'])
+                lines_total[docid] = result['total']
+
+        return {
+            'docs': self.env['res.partner'].browse(docs),
+            'data': data,
+            'lines_data': lines_data,
+            'lines_total': lines_total
         }

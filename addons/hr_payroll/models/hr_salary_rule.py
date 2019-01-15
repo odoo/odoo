@@ -67,17 +67,6 @@ class HrPayrollStructure(models.Model):
         return parent | self
 
 
-class HrContributionRegister(models.Model):
-    _name = 'hr.contribution.register'
-    _description = 'Contribution Register'
-
-    partner_id = fields.Many2one('res.partner', string='Partner')
-    name = fields.Char(required=True)
-    register_line_ids = fields.One2many('hr.payslip.line', 'register_id',
-        string='Register Line', readonly=True)
-    note = fields.Text(string='Description')
-
-
 class HrSalaryRuleCategory(models.Model):
     _name = 'hr.salary.rule.category'
     _description = 'Salary Rule Category'
@@ -169,7 +158,7 @@ class HrSalaryRule(models.Model):
                     result = contract.wage * 0.10''')
     amount_percentage_base = fields.Char(string='Percentage based on', help='result will be affected to a variable')
     child_ids = fields.One2many('hr.salary.rule', 'parent_rule_id', string='Child Salary Rule', copy=True)
-    register_id = fields.Many2one('hr.contribution.register', string='Contribution Register',
+    partner_id = fields.Many2one('res.partner', string='Partner',
         help="Eventual third party involved in the salary payment of the employees.")
     note = fields.Text(string='Description')
 
@@ -238,4 +227,3 @@ class HrSalaryRule(models.Model):
                 return  localdict.get('result', False)
             except:
                 raise UserError(_('Wrong python condition defined for salary rule %s (%s).') % (self.name, self.code))
-
