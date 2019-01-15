@@ -3,12 +3,15 @@
 
 import base64
 
-from odoo import http, _
+from odoo import http,tools, _
 from odoo.http import request
 from odoo.addons.base.models.assetsbundle import AssetsBundle
 
 
 class LivechatController(http.Controller):
+
+    # Note: the `cors` attribute on many routes is meant to allow the livechat
+    # to be embedded in an external website.
 
     @http.route('/im_livechat/external_lib.<any(css,js):ext>', type='http', auth='none')
     def livechat_lib(self, ext, **kwargs):
@@ -26,6 +29,17 @@ class LivechatController(http.Controller):
         headers.append(('Content-Length', len(content_base64)))
         return request.make_response(content_base64, headers)
 
+    @http.route('/im_livechat/load_templates', type='json', auth='none', cors="*")
+    def load_templates(self, **kwargs):
+        base_url = request.httprequest.base_url
+        templates = [
+            'mail/static/src/xml/abstract_thread_window.xml',
+            'mail/static/src/xml/discuss.xml',
+            'mail/static/src/xml/thread.xml',
+            'im_livechat/static/src/xml/im_livechat.xml',
+        ]
+        return [tools.file_open(tmpl, 'rb').read() for tmpl in templates]
+
     @http.route('/im_livechat/support/<int:channel_id>', type='http', auth='public')
     def support_page(self, channel_id, **kwargs):
         channel = request.env['im_livechat.channel'].sudo().browse(channel_id)
@@ -38,7 +52,7 @@ class LivechatController(http.Controller):
         info = request.env['im_livechat.channel'].get_livechat_info(channel.id, username=username)
         return request.render('im_livechat.loader', {'info': info, 'web_session_required': True}, headers=[('Content-Type', 'application/javascript')])
 
-    @http.route('/im_livechat/init', type='json', auth="public")
+    @http.route('/im_livechat/init', type='json', auth="public", cors="*")
     def livechat_init(self, channel_id):
         LivechatChannel = request.env['im_livechat.channel']
         available = len(LivechatChannel.browse(channel_id).get_available_users())
@@ -66,7 +80,7 @@ class LivechatController(http.Controller):
             'rule': rule,
         }
 
-    @http.route('/im_livechat/get_session', type="json", auth='public')
+    @http.route('/im_livechat/get_session', type="json", auth='public', cors="*")
     def get_session(self, channel_id, anonymous_name, **kwargs):
         user_id = None
         country_id = None
@@ -83,7 +97,7 @@ class LivechatController(http.Controller):
                 anonymous_name, country_id = _("%s (%s)") % (anonymous_name, country.name), country.id
         return request.env["im_livechat.channel"].with_context(lang=False).get_mail_channel(channel_id, anonymous_name, user_id, country_id)
 
-    @http.route('/im_livechat/feedback', type='json', auth='public')
+    @http.route('/im_livechat/feedback', type='json', auth='public', cors="*")
     def feedback(self, uuid, rate, reason=None, **kwargs):
         Channel = request.env['mail.channel']
         Rating = request.env['rating.rating']
@@ -114,7 +128,7 @@ class LivechatController(http.Controller):
             return rating.id
         return False
 
-    @http.route('/im_livechat/history', type="json", auth="public")
+    @http.route('/im_livechat/history', type="json", auth="public", cors="*")
     def history_pages(self, pid, channel_uuid, page_history=None):
         partner_ids = (pid, request.env.user.partner_id.id)
         channel = request.env['mail.channel'].sudo().search([('uuid', '=', channel_uuid), ('channel_partner_ids', 'in', partner_ids)])
@@ -122,7 +136,7 @@ class LivechatController(http.Controller):
             channel._send_history_message(pid, page_history)
         return True
 
-    @http.route('/im_livechat/notify_typing', type='json', auth='public')
+    @http.route('/im_livechat/notify_typing', type='json', auth='public', cors="*")
     def notify_typing(self, uuid, is_typing):
         """ Broadcast the typing notification of the website user to other channel members
             :param uuid: (string) the UUID of the livechat channel

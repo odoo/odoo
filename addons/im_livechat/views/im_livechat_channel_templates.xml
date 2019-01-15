@@ -194,7 +194,7 @@
                     odoo.define('web.session', function (require) {
                         var Session = require('web.Session');
                         var modules = odoo._modules;
-                        return new Session(undefined, "<t t-esc="info['server_url']"/>", {modules:modules, use_cors: false});
+                        return new Session(undefined, "<t t-esc="info['server_url']"/>", {modules:modules, use_cors: true});
                     });
                     </t>
 

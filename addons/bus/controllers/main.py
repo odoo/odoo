@@ -27,7 +27,7 @@ class BusController(Controller):
         request._cr = None
         return dispatch.poll(dbname, channels, last, options)
 
-    @route('/longpolling/poll', type="json", auth="public")
+    @route('/longpolling/poll', type="json", auth="public", cors="*")
     def poll(self, channels, last, options=None):
         if options is None:
             options = {}
