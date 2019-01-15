@@ -7254,6 +7254,69 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('call canBeRemoved while saving', function (assert) {
+        assert.expect(10);
+
+        this.data.partner.onchanges = {
+            foo: function (obj) {
+                obj.display_name = obj.foo === 'trigger onchange' ? 'changed' : 'default';
+            },
+        };
+
+        var onchangeDef;
+        var createDef = $.Deferred();
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form><field name="display_name"/><field name="foo"/></form>',
+            mockRPC: function (route, args) {
+                var result = this._super.apply(this, arguments);
+                if (args.method === 'onchange') {
+                    return $.when(onchangeDef).then(_.constant(result));
+                }
+                if (args.method === 'create') {
+                    return $.when(createDef).then(_.constant(result));
+                }
+                return result;
+            },
+        });
+
+        // edit foo to trigger a delayed onchange
+        onchangeDef = $.Deferred();
+        testUtils.fields.editInput(form.$('.o_field_widget[name=foo]'), 'trigger onchange');
+
+        assert.strictEqual(form.$('.o_field_widget[name=display_name]').val(), 'default');
+
+        // save (will wait for the onchange to return), and will be delayed as well
+        testUtils.dom.click(form.$buttons.find('.o_form_button_save'));
+
+        assert.hasClass(form.$('.o_form_view'), 'o_form_editable');
+        assert.strictEqual(form.$('.o_field_widget[name=display_name]').val(), 'default');
+
+        // simulate a click on the breadcrumbs to leave the form view
+        form.canBeRemoved();
+
+        assert.hasClass(form.$('.o_form_view'), 'o_form_editable');
+        assert.strictEqual(form.$('.o_field_widget[name=display_name]').val(), 'default');
+
+        // unlock the onchange
+        onchangeDef.resolve();
+
+        assert.hasClass(form.$('.o_form_view'), 'o_form_editable');
+        assert.strictEqual(form.$('.o_field_widget[name=display_name]').val(), 'changed');
+
+        // unlock the create
+        createDef.resolve();
+
+        assert.hasClass(form.$('.o_form_view'), 'o_form_readonly');
+        assert.strictEqual(form.$('.o_field_widget[name=display_name]').text(), 'changed');
+        assert.containsNone(document.body, '.modal',
+            "should not display the 'Changes will be discarded' dialog");
+
+        form.destroy();
+    });
+
     QUnit.module('FormViewTABMainButtons');
 
     QUnit.test('using tab in an empty required string field should not move to the next field',function(assert) {
