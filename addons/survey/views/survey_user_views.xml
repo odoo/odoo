@@ -29,9 +29,9 @@
         <field name="arch" type="xml">
             <form string="Survey User inputs" create="false">
                 <header>
-                    <button name="action_survey_resend" string="Send Invitation Again" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('input_type','=','manually'), ('state', '=', 'done')]}"/>
-                    <button name="action_view_answers" states="done" string="Print These Answers" type="object"  class="oe_highlight" />
-                    <button name="action_survey_results" string="View Results" type="object" />
+                    <button name="action_resend" string="Resend Invitation" type="object" class="oe_highlight"
+                        attrs="{'invisible': ['|', ('state', '=', 'done'), '&amp;', ('partner_id', '=', False), ('email', '=', False)]}"/>
+                    <button name="action_print_answers" states="done" string="Print" type="object"  class="oe_highlight"/>
                     <field name="state" widget="statusbar"/>
                 </header>
                 <sheet>
@@ -39,7 +39,7 @@
                     <group col="2">
                         <group>
                             <field name="survey_id"/>
-                            <field name="date_create"/>
+                            <field name="create_date"/>
                             <field name="input_type"/>
                             <field name="token" groups="base.group_no_one"/>
                         </group>
@@ -57,7 +57,7 @@
                             <field name="question_id"/>
                             <field name="answer_type"/>
                             <field name="skipped"/>
-                            <field name="date_create"/>
+                            <field name="create_date"/>
                             <field name="quizz_mark" groups="base.group_no_one"/>
                         </tree>
                     </field>
@@ -71,7 +71,7 @@
         <field name="arch" type="xml">
             <tree string="Survey User inputs" decoration-muted="test_entry == True" create="false">
                 <field name="survey_id"/>
-                <field name="date_create"/>
+                <field name="create_date"/>
                 <field name="deadline"/>
                 <field name="partner_id"/>
                 <field name="email"/>
@@ -89,7 +89,7 @@
         <field name="arch" type="xml">
             <kanban create="false">
                 <field name="survey_id"/>
-                <field name="date_create"/>
+                <field name="create_date"/>
                 <field name="partner_id"/>
                 <field name="email"/>
                 <field name="input_type"/>
@@ -105,7 +105,7 @@
                             </div>
                             <div class="o_kanban_record_bottom">
                                 <div class="oe_kanban_bottom_left">
-                                    <field name="date_create"/>
+                                    <field name="create_date"/>
                                 </div>
                                 <div class="oe_kanban_bottom_right mr4">
                                     <field name="state" widget="kanban_label_selection" options="{'classes': {'new': 'default', 'done': 'success', 'skip':'warning'}}"/>
@@ -155,7 +155,7 @@
                 <sheet>
                     <group col="4">
                         <field name="question_id"/>
-                        <field name="date_create"/>
+                        <field name="create_date"/>
                         <field name="answer_type"/>
                         <field name="skipped" />
                         <field name="quizz_mark" groups="base.group_no_one"/>
@@ -181,7 +181,7 @@
                 <field name="user_input_id"/>
                 <field name="page_id"/>
                 <field name="question_id"/>
-                <field name="date_create"/>
+                <field name="create_date"/>
                 <field name="answer_type"/>
                 <field name="skipped"/>
                 <field name="quizz_mark" groups="base.group_no_one"/>

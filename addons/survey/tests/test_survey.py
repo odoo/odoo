@@ -175,19 +175,3 @@ class TestSurveyInternals(common.SurveyCase):
         result = self.env['survey.survey'].prepare_result(question)
         for key in exresult:
             self.assertEqual(result[key], exresult[key])
-
-    @users('survey_manager')
-    def test_survey_urls(self):
-        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-        urltypes = {'public': 'start', 'print': 'print', 'result': 'results'}
-        for urltype, urltxt in urltypes.items():
-            survey_url = getattr(self.survey, urltype + '_url')
-            survey_url_relative = getattr(self.survey.with_context({'relative_url': True}), urltype + '_url')
-            url = "survey/%s/%s" % (urltxt, slug(self.survey))
-            full_url = urls.url_join(base_url, url)
-            self.assertEqual(full_url, survey_url)
-            self.assertEqual('/' + url, survey_url_relative)
-            if urltype == 'public':
-                url_html = '<a href="%s">Click here to start survey</a>'
-                self.assertEqual(url_html % full_url, getattr(self.survey, urltype + '_url_html'), msg="Public URL is incorrect")
-                self.assertEqual(url_html % ('/' + url), getattr(self.survey.with_context({'relative_url': True}), urltype + '_url_html'))

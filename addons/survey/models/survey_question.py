@@ -20,72 +20,56 @@ def dict_keys_startswith(dictionary, string):
 
 
 class SurveyQuestion(models.Model):
-    """ Questions that will be asked in a survey.
-
-        Each question can have one of more suggested answers (eg. in case of
-        dropdown choices, multi-answer checkboxes, radio buttons...).
-    """
-
+    """ Questions that will be asked in a survey. Each question can have one of more suggested answers (eg. in case of
+    dropdown choices, multi-answer checkboxes, radio buttons...). """
     _name = 'survey.question'
     _description = 'Survey Question'
     _rec_name = 'question'
     _order = 'sequence,id'
 
-    # Model fields #
-
     # Question metadata
-    page_id = fields.Many2one('survey.page', string='Survey page',
-            ondelete='cascade', required=True, default=lambda self: self.env.context.get('page_id'))
+    page_id = fields.Many2one(
+        'survey.page', string='Survey page',
+        ondelete='cascade', required=True, default=lambda self: self.env.context.get('page_id'))
     survey_id = fields.Many2one('survey.survey', related='page_id.survey_id', string='Survey', readonly=False)
     sequence = fields.Integer('Sequence', default=10)
-
     # Question
     question = fields.Char('Question Name', required=True, translate=True)
-    description = fields.Html('Description', help="Use this field to add \
-        additional explanations about your question", translate=True,
-        oldname='descriptive_text')
-
-    # Answer
+    description = fields.Html('Description', help="Use this field to add additional explanations about your question", translate=True)
     question_type = fields.Selection([
-            ('free_text', 'Multiple Lines Text Box'),
-            ('textbox', 'Single Line Text Box'),
-            ('numerical_box', 'Numerical Value'),
-            ('date', 'Date'),
-            ('simple_choice', 'Multiple choice: only one answer'),
-            ('multiple_choice', 'Multiple choice: multiple answers allowed'),
-            ('matrix', 'Matrix')], string='Type of Question', default='free_text', required=True, oldname='type')
-    matrix_subtype = fields.Selection([('simple', 'One choice per row'),
+        ('free_text', 'Multiple Lines Text Box'),
+        ('textbox', 'Single Line Text Box'),
+        ('numerical_box', 'Numerical Value'),
+        ('date', 'Date'),
+        ('simple_choice', 'Multiple choice: only one answer'),
+        ('multiple_choice', 'Multiple choice: multiple answers allowed'),
+        ('matrix', 'Matrix')], string='Type of Question',
+        default='free_text', required=True, oldname='type')
+    # simple choice / multiple choice / matrix
+    labels_ids = fields.One2many(
+        'survey.label', 'question_id', string='Types of answers', copy=True,
+        help='Labels used for proposed choices: simple choice, multiple choice and columns of matrix')
+    # matrix
+    matrix_subtype = fields.Selection([
+        ('simple', 'One choice per row'),
         ('multiple', 'Multiple choices per row')], string='Matrix Type', default='simple')
-    labels_ids = fields.One2many('survey.label', 'question_id', string='Types of answers', oldname='answer_choice_ids', copy=True)
-    labels_ids_2 = fields.One2many('survey.label', 'question_id_2', string='Rows of the Matrix', copy=True)
-    # labels are used for proposed choices
-    # if question.type == simple choice | multiple choice
-    #                    -> only labels_ids is used
-    # if question.type == matrix
-    #                    -> labels_ids are the columns of the matrix
-    #                    -> labels_ids_2 are the rows of the matrix
-
+    labels_ids_2 = fields.One2many(
+        'survey.label', 'question_id_2', string='Rows of the Matrix', copy=True,
+        help='Labels used for proposed choices: rows of matrix')
     # Display options
-    column_nb = fields.Selection([('12', '1'),
-                                   ('6', '2'),
-                                   ('4', '3'),
-                                   ('3', '4'),
-                                   ('2', '6')],
-        'Number of columns', default='12')
-    # These options refer to col-xx-[12|6|4|3|2] classes in Bootstrap
-    display_mode = fields.Selection([('columns', 'Radio Buttons'),
-                                      ('dropdown', 'Selection Box')],
-                                    default='columns')
-
+    column_nb = fields.Selection([
+        ('12', '1'), ('6', '2'), ('4', '3'), ('3', '4'), ('2', '6')],
+        string='Number of columns', default='12',
+        help='These options refer to col-xx-[12|6|4|3|2] classes in Bootstrap for dropdown-based simple and multiple choice questions.')
+    display_mode = fields.Selection(
+        [('columns', 'Radio Buttons'), ('dropdown', 'Selection Box')],
+        string='Display Mode', default='columns', help='Display mode of simple choice questions.')
     # Comments
-    comments_allowed = fields.Boolean('Show Comments Field',
-        oldname="allow_comment")
+    comments_allowed = fields.Boolean('Show Comments Field')
     comments_message = fields.Char('Comment Message', translate=True, default=lambda self: _("If other, please specify:"))
-    comment_count_as_answer = fields.Boolean('Comment Field is an Answer Choice',
-        oldname='make_comment_field')
-
+    comment_count_as_answer = fields.Boolean('Comment Field is an Answer Choice')
     # Validation
-    validation_required = fields.Boolean('Validate entry', oldname='is_validation_require')
+    validation_required = fields.Boolean('Validate entry')
     validation_email = fields.Boolean('Input must be an email')
     validation_length_min = fields.Integer('Minimum Text Length')
     validation_length_max = fields.Integer('Maximum Text Length')
@@ -93,13 +77,14 @@ class SurveyQuestion(models.Model):
     validation_max_float_value = fields.Float('Maximum value')
     validation_min_date = fields.Date('Minimum Date')
     validation_max_date = fields.Date('Maximum Date')
-    validation_error_msg = fields.Char('Validation Error message', oldname='validation_valid_err_msg',
-                                        translate=True, default=lambda self: _("The answer you entered has an invalid format."))
-
+    validation_error_msg = fields.Char('Validation Error message', translate=True, default=lambda self: _("The answer you entered has an invalid format."))
     # Constraints on number of answers (matrices)
-    constr_mandatory = fields.Boolean('Mandatory Answer', oldname="is_require_answer")
-    constr_error_msg = fields.Char('Error message', oldname='req_error_msg', translate=True, default=lambda self: _("This question requires an answer."))
-    user_input_line_ids = fields.One2many('survey.user_input_line', 'question_id', string='Answers', domain=[('skipped', '=', False)])
+    constr_mandatory = fields.Boolean('Mandatory Answer')
+    constr_error_msg = fields.Char('Error message', translate=True, default=lambda self: _("This question requires an answer."))
+    # Answer
+    user_input_line_ids = fields.One2many(
+        'survey.user_input_line', 'question_id', string='Answers',
+        domain=[('skipped', '=', False)], groups='survey.group_survey_user')
 
     _sql_constraints = [
         ('positive_len_min', 'CHECK (validation_length_min >= 0)', 'A length must be positive!'),
@@ -277,9 +262,9 @@ class SurveyQuestion(models.Model):
                 errors.update({answer_tag: self.constr_error_msg})
         return errors
 
+
 class SurveyLabel(models.Model):
     """ A suggested answer for a question """
-
     _name = 'survey.label'
     _rec_name = 'value'
     _order = 'sequence,id'
