@@ -873,6 +873,8 @@ class AccountBankStatementLine(models.Model):
         company_currency = self.journal_id.company_id.currency_id
         statement_currency = self.journal_id.currency_id or company_currency
         st_line_currency = self.currency_id or statement_currency
+        payable_account_type = self.env.ref('account.data_account_type_payable')
+        receivable_account_type = self.env.ref('account.data_account_type_receivable')
 
         counterpart_moves = self.env['account.move']
 
@@ -916,10 +918,19 @@ class AccountBankStatementLine(models.Model):
                 partner_id = self.partner_id and self.partner_id.id or False
                 partner_type = False
                 if partner_id:
-                    if total < 0:
-                        partner_type = 'supplier'
-                    else:
-                        partner_type = 'customer'
+                    # If an account is specified, the payment_type will be obtained based on the
+                    # account type rather than on the total amount sign.
+                    if aml_dict.get('account_id'):
+                        account = self.env['account.account'].browse(aml_dict['account_id'])
+                        if account.user_type_id == payable_account_type:
+                            partner_type = 'supplier'
+                        elif account.user_type_id == receivable_account_type:
+                            partner_type = 'customer'
+                    if not partner_type:
+                        if total < 0:
+                            partner_type = 'supplier'
+                        else:
+                            partner_type = 'customer'
 
                 payment_methods = (total>0) and self.journal_id.inbound_payment_method_ids or self.journal_id.outbound_payment_method_ids
                 currency = self.journal_id.currency_id or self.company_id.currency_id
