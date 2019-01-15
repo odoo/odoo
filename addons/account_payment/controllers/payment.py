@@ -77,11 +77,11 @@ class PaymentPortal(http.Controller):
         vals = {
             'payment_token_id': token.id,
             'type': 'server2server',
-            'return_url': success_url,
+            'return_url': _build_url_w_params(success_url, params),
         }
 
         tx = invoice_sudo._create_payment_transaction(vals)
         PaymentProcessing.add_payment_transaction(tx)
 
         params['success'] = 'pay_invoice'
-        return request.redirect(_build_url_w_params(success_url, params))
+        return request.redirect('/payment/process')
