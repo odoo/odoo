@@ -141,8 +141,6 @@ class Field(MetaField('DummyField', (object,), {})):
         :param string oldname: the previous name of this field, so that ORM can rename
             it automatically at migration
 
-        .. _field-computed:
-
         .. rubric:: Computed fields
 
         One can define a field whose value is computed instead of simply being
@@ -208,8 +206,6 @@ class Field(MetaField('DummyField', (object,), {})):
         actual search on the model. It must return a domain equivalent to the
         condition: ``field operator value``.
 
-        .. _field-related:
-
         .. rubric:: Related fields
 
         The value of a related field is given by following a sequence of
@@ -230,8 +226,6 @@ class Field(MetaField('DummyField', (object,), {})):
         fields. Related fields are automatically recomputed when their
         dependencies are modified.
 
-        .. _field-company-dependent:
-
         .. rubric:: Company-dependent fields
 
         Formerly known as 'property' fields, the value of those fields depends
@@ -239,8 +233,6 @@ class Field(MetaField('DummyField', (object,), {})):
         may see different values for the field on a given record.
 
         :param company_dependent: whether the field is company-dependent (boolean)
-
-        .. _field-incremental-definition:
 
         .. rubric:: Incremental definition
 
@@ -1143,6 +1135,7 @@ class Field(MetaField('DummyField', (object,), {})):
 
 
 class Boolean(Field):
+    """ Boolean """
     type = 'boolean'
     column_type = ('bool', 'bool')
 
@@ -1159,6 +1152,7 @@ class Boolean(Field):
 
 
 class Integer(Field):
+    """ Integer """
     type = 'integer'
     column_type = ('int4', 'int4')
     _slots = {
@@ -1517,6 +1511,7 @@ class Html(_String):
 
 
 class Date(Field):
+    """ Date """
     type = 'date'
     column_type = ('date', 'date')
     column_cast_from = ('timestamp',)
@@ -1613,6 +1608,7 @@ class Date(Field):
 
 
 class Datetime(Field):
+    """ Datetime """
     type = 'datetime'
     column_type = ('timestamp', 'timestamp')
     column_cast_from = ('date',)
@@ -1734,6 +1730,7 @@ if pycompat.PY2:
     _BINARY = buffer
 
 class Binary(Field):
+    """ Binary """
     type = 'binary'
     _slots = {
         'prefetch': False,              # not prefetched by default
@@ -1857,8 +1854,7 @@ class Selection(Field):
         of an overridden field. It is a list of pairs (``value``, ``string``).
 
     The attribute ``selection`` is mandatory except in the case of
-    :ref:`related fields <field-related>` or :ref:`field extensions
-    <field-incremental-definition>`.
+    related fields or field extensions.
     """
     type = 'selection'
     _slots = {
@@ -1956,6 +1952,7 @@ class Selection(Field):
 
 
 class Reference(Selection):
+    """ Reference """
     type = 'reference'
 
     @property

@@ -3158,7 +3158,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         :raise AccessError: * if user has no write rights on the requested object
                             * if user tries to bypass access rules for write on the requested object
-        :raise ValidateError: if user tries to enter invalid value for a field that is not in selection
+        :raise ValidationError: if user tries to enter invalid value for a field that is not in selection
         :raise UserError: if a loop would be created in a hierarchy of objects a result of the operation (such as setting an object as its own parent)
 
         * For numeric fields (:class:`~odoo.fields.Integer`,
@@ -3440,7 +3440,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         :return: the created records
         :raise AccessError: * if user has no create rights on the requested object
                             * if user tries to bypass access rules for create on the requested object
-        :raise ValidateError: if user tries to enter invalid value for a field that is not in selection
+        :raise ValidationError: if user tries to enter invalid value for a field that is not in selection
         :raise UserError: if a loop would be created in a hierarchy of objects a result of the operation (such as setting an object as its own parent)
         """
         if not vals_list:
