@@ -101,6 +101,7 @@ class ProductTemplate(models.Model):
 class ProductProduct(models.Model):
     _inherit = 'product.product'
 
+    stock_value_currency_id = fields.Many2one('res.currency', compute='_compute_stock_value_currency')
     stock_value = fields.Float(
         'Value', compute='_compute_stock_value')
     qty_at_date = fields.Float(
@@ -175,6 +176,12 @@ class ProductProduct(models.Model):
         domain = [('product_id', '=', self.id)] + StockMove._get_all_base_domain()
         moves = StockMove.search(domain)
         return sum(moves.mapped('remaining_value')), moves
+
+    @api.multi
+    def _compute_stock_value_currency(self):
+        currency_id = self.env.user.company_id.currency_id
+        for product in self:
+            product.stock_value_currency_id = currency_id
 
     @api.multi
     @api.depends('stock_move_ids.product_qty', 'stock_move_ids.state', 'stock_move_ids.remaining_value', 'product_tmpl_id.cost_method', 'product_tmpl_id.standard_price', 'product_tmpl_id.property_valuation', 'product_tmpl_id.categ_id.property_valuation')
