@@ -204,6 +204,10 @@ var AbstractWebClient = Widget.extend(ServiceProviderMixin, KeyboardNavigationMi
                     });
                 }
             } else {
+                // ignore Chrome video internal error: https://crbug.com/809574
+                if (!error && message === 'ResizeObserver loop limit exceeded') {
+                    return;
+                }
                 var traceback = error ? error.stack : '';
                 crash_manager.show_error({
                     type: _t("Odoo Client Error"),
