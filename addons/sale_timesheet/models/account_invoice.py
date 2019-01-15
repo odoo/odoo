@@ -24,7 +24,7 @@ class AccountInvoice(models.Model):
         return {
             'type': 'ir.actions.act_window',
             'name': _('Timesheets'),
-            'domain': [('project_id', '!=', False)],
+            'domain': [('is_timesheet', '=', True)],
             'res_model': 'account.analytic.line',
             'view_id': False,
             'view_mode': 'tree,form',
@@ -40,8 +40,7 @@ class AccountInvoice(models.Model):
             """),
             'limit': 80,
             'context': {
-                'default_project_id': self.id,
-                'search_default_project_id': [self.id]
+                'default_timesheet_invoice_id': self.id,
             }
         }
 
@@ -78,5 +77,5 @@ class AccountInvoiceLine(models.Model):
             ('so_line', 'in', sale_line_delivery.ids),
             '&',
             ('timesheet_invoice_id', '=', False),
-            ('project_id', '!=', False)
+            ('is_timesheet', '=', True)
         ]

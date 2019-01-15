@@ -30,6 +30,8 @@ class TestSaleTimesheet(TestCommonSaleTimesheetNoChart):
                 4. add new SO line (ordered service)
                 5. create new invoice
         """
+        Timesheet = self.env['account.analytic.line'].with_context(default_is_timesheet=True)
+
         # create SO and confirm it
         sale_order = self.env['sale.order'].create({
             'partner_id': self.partner_customer_usd.id,
@@ -68,7 +70,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheetNoChart):
         invoice1 = self.env['account.invoice'].browse(invoice_id1)
 
         # let's log some timesheets (on the project created by so_line_ordered_project_only)
-        timesheet1 = self.env['account.analytic.line'].create({
+        timesheet1 = Timesheet.create({
             'name': 'Test Line',
             'project_id': task_serv2.project_id.id,
             'task_id': task_serv2.id,
@@ -80,7 +82,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheetNoChart):
         self.assertEqual(timesheet1.timesheet_invoice_type, 'billable_fixed', "Timesheets linked to SO line with ordered product shoulbe be billable fixed")
         self.assertFalse(timesheet1.timesheet_invoice_id, "The timesheet1 should not be linked to the invoice, since we are in ordered quantity")
 
-        timesheet2 = self.env['account.analytic.line'].create({
+        timesheet2 = Timesheet.create({
             'name': 'Test Line',
             'project_id': task_serv2.project_id.id,
             'task_id': task_serv2.id,
@@ -92,7 +94,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheetNoChart):
         self.assertEqual(timesheet2.timesheet_invoice_type, 'billable_fixed', "Timesheets linked to SO line with ordered product shoulbe be billable fixed")
         self.assertFalse(timesheet2.timesheet_invoice_id, "The timesheet should not be linked to the invoice, since we are in ordered quantity")
 
-        timesheet3 = self.env['account.analytic.line'].create({
+        timesheet3 = Timesheet.create({
             'name': 'Test Line',
             'project_id': task_serv2.project_id.id,
             'unit_amount': 10,
@@ -103,7 +105,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheetNoChart):
         self.assertFalse(timesheet3.timesheet_invoice_id, "The timesheet should not be linked to the invoice, since we are in ordered quantity")
 
         # log timesheet on task in global project (higher than the initial ordrered qty)
-        timesheet4 = self.env['account.analytic.line'].create({
+        timesheet4 = Timesheet.create({
             'name': 'Test Line',
             'project_id': task_serv2.project_id.id,
             'task_id': task_serv2.id,
@@ -170,6 +172,8 @@ class TestSaleTimesheet(TestCommonSaleTimesheetNoChart):
                 5. create a second invoice
                 6. add new SO line (delivered service)
         """
+        Timesheet = self.env['account.analytic.line'].with_context(default_is_timesheet=True)
+
         # create SO and confirm it
         sale_order = self.env['sale.order'].create({
             'partner_id': self.partner_customer_usd.id,
@@ -212,7 +216,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheetNoChart):
         self.assertEqual(sale_order.analytic_account_id, project_serv2.analytic_account_id, "The created project should be linked to the analytic account of the SO")
 
         # let's log some timesheets
-        timesheet1 = self.env['account.analytic.line'].create({
+        timesheet1 = Timesheet.create({
             'name': 'Test Line',
             'project_id': task_serv1.project_id.id,  # global project
             'task_id': task_serv1.id,
@@ -234,7 +238,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheetNoChart):
             timesheet1.write({'unit_amount': 42})
 
         # log some timesheets again
-        timesheet2 = self.env['account.analytic.line'].create({
+        timesheet2 = Timesheet.create({
             'name': 'Test Line',
             'project_id': task_serv1.project_id.id,  # global project
             'task_id': task_serv1.id,
@@ -269,7 +273,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheetNoChart):
         self.assertEqual(len(sale_order.project_ids), 2, "No new project should have been created by the SO, when selling 'project only' product, since it reuse the one from 'new task in new project'.")
 
         # let's log some timesheets on the project
-        timesheet3 = self.env['account.analytic.line'].create({
+        timesheet3 = Timesheet.create({
             'name': 'Test Line',
             'project_id': project_serv2.id,
             'unit_amount': 7,
@@ -281,7 +285,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheetNoChart):
         self.assertFalse(timesheet3.timesheet_invoice_id, "The timesheet3 should not be linked to the invoice yet")
 
         # let's log some timesheets on the task (new task/new project)
-        timesheet4 = self.env['account.analytic.line'].create({
+        timesheet4 = Timesheet.create({
             'name': 'Test Line 4',
             'project_id': task_serv2.project_id.id,
             'task_id': task_serv2.id,
@@ -306,6 +310,8 @@ class TestSaleTimesheet(TestCommonSaleTimesheetNoChart):
     def test_timesheet_manual(self):
         """ Test timesheet invoicing with 'invoice on delivery' timetracked products
         """
+        Timesheet = self.env['account.analytic.line'].with_context(default_is_timesheet=True)
+
         # create SO and confirm it
         sale_order = self.env['sale.order'].create({
             'partner_id': self.partner_customer_usd.id,
@@ -340,7 +346,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheetNoChart):
         self.assertEqual(sale_order.analytic_account_id, project_serv2.analytic_account_id, "The created project should be linked to the analytic account of the SO")
 
         # let's log some timesheets (on task and project)
-        timesheet1 = self.env['account.analytic.line'].create({
+        timesheet1 = Timesheet.create({
             'name': 'Test Line',
             'project_id': self.project_global.id,  # global project
             'task_id': so_line_manual_global_project.task_id.id,
@@ -348,7 +354,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheetNoChart):
             'employee_id': self.employee_manager.id,
         })
 
-        timesheet2 = self.env['account.analytic.line'].create({
+        timesheet2 = Timesheet.create({
             'name': 'Test Line',
             'project_id': self.project_global.id,  # global project
             'unit_amount': 3,

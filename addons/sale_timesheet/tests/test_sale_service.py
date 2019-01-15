@@ -23,6 +23,8 @@ class TestSaleService(TestCommonSaleTimesheetNoChart):
 
     def test_sale_service(self):
         """ Test task creation when confirming a sale_order with the corresponding product """
+        Timesheet = self.env['account.analytic.line'].with_context(default_is_timesheet=True)
+
         sale_order_line = self.env['sale.order.line'].create({
             'order_id': self.sale_order.id,
             'name': self.product_delivery_timesheet2.name,
@@ -50,7 +52,7 @@ class TestSaleService(TestCommonSaleTimesheetNoChart):
         self.assertEqual(task.email_from, self.sale_order.partner_id.email, 'Sale Service: Task Email should be the same as the SO customer Email')
 
         # log timesheet on task
-        self.env['account.analytic.line'].create({
+        Timesheet.create({
             'name': 'Test Line',
             'project_id': project.id,
             'task_id': task.id,
@@ -96,6 +98,8 @@ class TestSaleService(TestCommonSaleTimesheetNoChart):
 
     def test_timesheet_uom(self):
         """ Test timesheet invoicing and uom conversion """
+        Timesheet = self.env['account.analytic.line'].with_context(default_is_timesheet=True)
+
         # create SO and confirm it
         uom_days = self.env.ref('uom.product_uom_day')
         sale_order_line = self.env['sale.order.line'].create({
@@ -110,7 +114,7 @@ class TestSaleService(TestCommonSaleTimesheetNoChart):
         task = self.env['project.task'].search([('sale_line_id', '=', sale_order_line.id)])
 
         # let's log some timesheets
-        self.env['account.analytic.line'].create({
+        Timesheet.create({
             'name': 'Test Line',
             'project_id': task.project_id.id,
             'task_id': task.id,
@@ -119,7 +123,7 @@ class TestSaleService(TestCommonSaleTimesheetNoChart):
         })
         self.assertEqual(sale_order_line.qty_delivered, 2, 'Sale: uom conversion of timesheets is wrong')
 
-        self.env['account.analytic.line'].create({
+        Timesheet.create({
             'name': 'Test Line',
             'project_id': task.project_id.id,
             'task_id': task.id,
@@ -130,6 +134,8 @@ class TestSaleService(TestCommonSaleTimesheetNoChart):
         self.assertEqual(self.sale_order.invoice_status, 'invoiced', 'Sale Timesheet: "invoice on delivery" timesheets should not modify the invoice_status of the so')
 
     def test_task_so_line_assignation(self):
+        Timesheet = self.env['account.analytic.line'].with_context(default_is_timesheet=True)
+
         # create SO line and confirm it
         so_line_deliver_global_project = self.env['sale.order.line'].create({
             'name': self.product_delivery_timesheet2.name,
@@ -145,14 +151,14 @@ class TestSaleService(TestCommonSaleTimesheetNoChart):
 
         # let's log some timesheets (on the project created by so_line_ordered_project_only)
         timesheets = self.env['account.analytic.line']
-        timesheets |= self.env['account.analytic.line'].create({
+        timesheets |= Timesheet.create({
             'name': 'Test Line',
             'project_id': task_serv2.project_id.id,
             'task_id': task_serv2.id,
             'unit_amount': 4,
             'employee_id': self.employee_user.id,
         })
-        timesheets |= self.env['account.analytic.line'].create({
+        timesheets |= Timesheet.create({
             'name': 'Test Line',
             'project_id': task_serv2.project_id.id,
             'task_id': task_serv2.id,
@@ -177,6 +183,8 @@ class TestSaleService(TestCommonSaleTimesheetNoChart):
             timesheets.write({'so_line': False})
 
     def test_delivered_quantity(self):
+        Timesheet = self.env['account.analytic.line'].with_context(default_is_timesheet=True)
+
         # create SO line and confirm it
         so_line_deliver_new_task_project = self.env['sale.order.line'].create({
             'name': self.product_delivery_timesheet3.name,
@@ -191,7 +199,7 @@ class TestSaleService(TestCommonSaleTimesheetNoChart):
         task_serv2 = self.env['project.task'].search([('sale_line_id', '=', so_line_deliver_new_task_project.id)])
 
         # add a timesheet
-        timesheet1 = self.env['account.analytic.line'].create({
+        timesheet1 = Timesheet.create({
             'name': 'Test Line',
             'project_id': task_serv2.project_id.id,
             'task_id': task_serv2.id,
@@ -205,14 +213,14 @@ class TestSaleService(TestCommonSaleTimesheetNoChart):
         self.assertEqual(so_line_deliver_new_task_project.qty_delivered, 0.0, 'Delivered quantity should be reset to zero, since there is no more timesheet.')
 
         # log 2 new timesheets
-        timesheet2 = self.env['account.analytic.line'].create({
+        timesheet2 = Timesheet.create({
             'name': 'Test Line 2',
             'project_id': task_serv2.project_id.id,
             'task_id': task_serv2.id,
             'unit_amount': 4,
             'employee_id': self.employee_user.id,
         })
-        timesheet3 = self.env['account.analytic.line'].create({
+        timesheet3 = Timesheet.create({
             'name': 'Test Line 3',
             'project_id': task_serv2.project_id.id,
             'task_id': task_serv2.id,

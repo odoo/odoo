@@ -93,7 +93,7 @@ class ProfitabilityAnalysis(models.Model):
                                 SUM(TS.amount) AS timesheet_cost,
                                 0.0 AS expense_cost
                             FROM account_analytic_line TS, project_project P
-                            WHERE TS.project_id IS NOT NULL AND P.id = TS.project_id AND P.active = 't' AND P.allow_timesheets = 't'
+                            WHERE TS.is_timesheet = 't' AND P.id = TS.project_id AND P.active = 't' AND P.allow_timesheets = 't'
                             GROUP BY P.id, TS.so_line
 
                             UNION
@@ -108,7 +108,7 @@ class ProfitabilityAnalysis(models.Model):
                             FROM project_project P
                                 LEFT JOIN account_analytic_account AA ON P.analytic_account_id = AA.id
                                 LEFT JOIN account_analytic_line AAL ON AAL.account_id = AA.id
-                            WHERE AAL.amount < 0.0 AND AAL.project_id IS NULL AND P.active = 't' AND P.allow_timesheets = 't'
+                            WHERE AAL.amount < 0.0 AND AAL.is_timesheet = 'f' AND P.active = 't' AND P.allow_timesheets = 't'
                             GROUP BY P.id, AA.id, AAL.so_line
 
                             UNION

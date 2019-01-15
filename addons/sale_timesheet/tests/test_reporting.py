@@ -96,7 +96,7 @@ class TestReporting(TestCommonSaleTimesheetNoChart):
 
     def _log_timesheet_user(self, project, unit_amount, task=False):
         """ Utility method to log timesheet """
-        Timesheet = self.env['account.analytic.line']
+        Timesheet = self.env['account.analytic.line'].with_context(default_is_timesheet=True)
         return Timesheet.create({
             'name': 'timesheet employee on project_so_1 only',
             'account_id': project.analytic_account_id.id,
@@ -108,7 +108,7 @@ class TestReporting(TestCommonSaleTimesheetNoChart):
 
     def _log_timesheet_manager(self, project, unit_amount, task=False):
         """ Utility method to log timesheet """
-        Timesheet = self.env['account.analytic.line']
+        Timesheet = self.env['account.analytic.line'].with_context(default_is_timesheet=True)
         return Timesheet.create({
             'name': 'timesheet employee on project_so_1 only',
             'account_id': project.analytic_account_id.id,
