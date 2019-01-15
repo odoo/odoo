@@ -261,7 +261,7 @@ class MrpBomLine(models.Model):
     @api.one
     @api.depends('product_id')
     def _compute_has_attachments(self):
-        nbr_attach = self.env['ir.attachment'].search_count([
+        nbr_attach = self.env['mrp.document'].search_count([
             '|',
             '&', ('res_model', '=', 'product.product'), ('res_id', '=', self.product_id.id),
             '&', ('res_model', '=', 'product.template'), ('res_id', '=', self.product_id.product_tmpl_id.id)])
