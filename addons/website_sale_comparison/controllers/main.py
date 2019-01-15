@@ -29,7 +29,7 @@ class WebsiteSaleProductComparison(WebsiteSale):
                 if val:
                     res[cat_name][att_name][num] = val[0].name
         values['specs'] = res
-        values['compute_currency'] = self._get_compute_currency_and_context(products[:1])[0]
+        values['compute_currency'] = self._get_compute_currency_and_context(products[:1].product_tmpl_id)[0]
         return request.render("website_sale_comparison.product_compare", values)
 
     @http.route(['/shop/get_product_data'], type='json', auth="public", website=True)
@@ -37,7 +37,7 @@ class WebsiteSaleProductComparison(WebsiteSale):
         ret = {}
         pricelist_context, pricelist = self._get_pricelist_context()
         prods = request.env['product.product'].with_context(pricelist_context, display_default_code=False).search([('id', 'in', product_ids)])
-        compute_currency = self._get_compute_currency(pricelist, prods[:1])
+        compute_currency = self._get_compute_currency(pricelist, prods[:1].product_tmpl_id)
 
         if cookies is not None:
             ret['cookies'] = json.dumps(request.env['product.product'].search([('id', 'in', list(set(product_ids + cookies)))]).ids)
