@@ -21,6 +21,9 @@
         <t t-call="survey.layout">
             <div class="wrap">
                 <div class="container">
+                    <div class="alert alert-danger text-center no_print" t-if="user_input.test_entry">
+                        <span>This is a test survey. Your answer will not be registered in the answers. </span>
+                    </div>
                     <t t-call="survey.back" />
                     <div class="jumbotron mt32">
                         <h1>Thank you!</h1>
@@ -137,6 +140,9 @@
             <div class="wrap">
                 <div class="oe_structure" id="oe_structure_survey_init_1"/>
                 <div class="container">
+                    <div class="alert alert-danger text-center no_print" t-if="test_entry">
+                        <span>This is a test survey. Your answer will not be registered in the answers. </span>
+                    </div>
                     <t t-call="survey.back" />
                     <div class='jumbotron mt32'>
                         <h1 t-field='survey.title' />
@@ -168,6 +174,9 @@
     <!-- A page -->
     <template id="page" name="Page">
         <div class="o_page_header">
+            <div class="alert alert-danger text-center no_print" t-if="test_entry">
+                <span>This is a test survey. Your answer will not be registered in the answers. </span>
+            </div>
             <p class="float-right">Page <span t-raw='page_nr + 1'/> of <span t-raw="len(survey.page_ids)"/></p>
             <h1 t-field='page.title' />
             <div t-field='page.description' class="oe_no_empty"/>
@@ -341,6 +350,9 @@
         <t t-call="survey.layout">
             <div class="wrap">
                 <div class="container">
+                    <div class="alert alert-danger text-center no_print" t-if="test_entry">
+                        <span>This is a test survey. Your answer will not be registered in the answers. </span>
+                    </div>
                     <t t-call="survey.back" />
                     <div class='jumbotron mt32'>
                         <h1><span t-field='survey.title'/></h1>

@@ -8,6 +8,7 @@ from werkzeug import urls
 from odoo import api, fields, models, SUPERUSER_ID, _
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.exceptions import UserError
+from odoo.osv import expression
 
 
 class Survey(models.Model):
@@ -50,7 +51,7 @@ class Survey(models.Model):
     public_url = fields.Char("Public link", compute="_compute_survey_url")
     # statistics
     tot_sent_survey = fields.Integer("Number of sent surveys", compute="_compute_survey_statistic")
-    tot_start_survey = fields.Integer("Number of started surveys", compute="_compute_survey_statistic")
+    tot_start_survey = fields.Integer("Number of started startedurveys", compute="_compute_survey_statistic")
     tot_comp_survey = fields.Integer("Number of completed surveys", compute="_compute_survey_statistic")
 
     @api.multi
@@ -62,10 +63,11 @@ class Survey(models.Model):
     @api.multi
     def _compute_survey_statistic(self):
         UserInput = self.env['survey.user_input']
+        base_domain = ['&', ('survey_id', 'in', self.ids), ('test_entry', '!=', True)]
 
-        sent_survey = UserInput.search([('survey_id', 'in', self.ids), ('input_type', '=', 'link')])
-        start_survey = UserInput.search(['&', ('survey_id', 'in', self.ids), '|', ('state', '=', 'skip'), ('state', '=', 'done')])
-        complete_survey = UserInput.search([('survey_id', 'in', self.ids), ('state', '=', 'done')])
+        sent_survey = UserInput.search(expression.AND([base_domain, [('input_type', '=', 'link')]]))
+        start_survey = UserInput.search(expression.AND([base_domain, ['|', ('state', '=', 'skip'), ('state', '=', 'done')]]))
+        complete_survey = UserInput.search(expression.AND([base_domain, [('state', '=', 'done')]]))
 
         for survey in self:
             survey.tot_sent_survey = len(sent_survey.filtered(lambda user_input: user_input.survey_id == survey))
@@ -252,12 +254,13 @@ class Survey(models.Model):
         """ Compute statistical data for questions by counting number of vote per choice on basis of filter """
         current_filters = current_filters if current_filters else []
         result_summary = {}
+        input_lines = question.user_input_line_ids.filtered(lambda line: not line.user_input_id.test_entry)
 
         # Calculate and return statistics for choice
         if question.question_type in ['simple_choice', 'multiple_choice']:
             comments = []
             answers = OrderedDict((label.id, {'text': label.value, 'count': 0, 'answer_id': label.id}) for label in question.labels_ids)
-            for input_line in question.user_input_line_ids:
+            for input_line in input_lines:
                 if input_line.answer_type == 'suggestion' and answers.get(input_line.value_suggested.id) and (not(current_filters) or input_line.user_input_id.id in current_filters):
                     answers[input_line.value_suggested.id]['count'] += 1
                 if input_line.answer_type == 'text' and (not(current_filters) or input_line.user_input_id.id in current_filters):
@@ -274,7 +277,7 @@ class Survey(models.Model):
             [answers.update({label.id: label.value}) for label in question.labels_ids]
             for cell in product(rows, answers):
                 res[cell] = 0
-            for input_line in question.user_input_line_ids:
+            for input_line in input_lines:
                 if input_line.answer_type == 'suggestion' and (not(current_filters) or input_line.user_input_id.id in current_filters) and input_line.value_suggested_row:
                     res[(input_line.value_suggested_row.id, input_line.value_suggested.id)] += 1
                 if input_line.answer_type == 'text' and (not(current_filters) or input_line.user_input_id.id in current_filters):
@@ -284,7 +287,7 @@ class Survey(models.Model):
         # Calculate and return statistics for free_text, textbox, date
         if question.question_type in ['free_text', 'textbox', 'date']:
             result_summary = []
-            for input_line in question.user_input_line_ids:
+            for input_line in input_lines:
                 if not(current_filters) or input_line.user_input_id.id in current_filters:
                     result_summary.append(input_line)
 
@@ -292,7 +295,7 @@ class Survey(models.Model):
         if question.question_type == 'numerical_box':
             result_summary = {'input_lines': []}
             all_inputs = []
-            for input_line in question.user_input_line_ids:
+            for input_line in input_lines:
                 if not(current_filters) or input_line.user_input_id.id in current_filters:
                     all_inputs.append(input_line.value_number)
                     result_summary['input_lines'].append(input_line)
@@ -309,15 +312,11 @@ class Survey(models.Model):
         """ Returns overall summary of question e.g. answered, skipped, total_inputs on basis of filter """
         current_filters = current_filters if current_filters else []
         result = {}
-        if question.survey_id.user_input_ids:
-            total_input_ids = current_filters or [input_id.id for input_id in question.survey_id.user_input_ids if input_id.state != 'new']
-            result['total_inputs'] = len(total_input_ids)
-            question_input_ids = []
-            for user_input in question.user_input_line_ids:
-                if not user_input.skipped:
-                    question_input_ids.append(user_input.user_input_id.id)
-            result['answered'] = len(set(question_input_ids) & set(total_input_ids))
-            result['skipped'] = result['total_inputs'] - result['answered']
+        search_line_ids = current_filters if current_filters else question.user_input_line_ids.ids
+
+        result['answered'] = len([line for line in question.user_input_line_ids if line.user_input_id.state != 'new' and not line.user_input_id.test_entry and not line.skipped])
+        result['skipped'] = len([line for line in question.user_input_line_ids if line.user_input_id.state != 'new' and not line.user_input_id.test_entry and line.skipped])
+
         return result
 
     # Actions
@@ -400,7 +399,7 @@ class Survey(models.Model):
 
     @api.multi
     def action_survey_user_input(self):
-        action_rec = self.env.ref('survey.action_survey_user_input')
+        action_rec = self.env.ref('survey.action_survey_user_input_notest')
         action = action_rec.read()[0]
         ctx = dict(self.env.context)
         ctx.update({'search_default_survey_id': self.ids[0],
