@@ -20,9 +20,7 @@ class WebsiteSaleProductComparison(WebsiteSale):
 
         res = {}
         for num, product in enumerate(products):
-            attr_ids = product.attribute_line_ids.mapped('attribute_id.id')
-            # to get ordered recordset we have to use search
-            for attr in request.env['product.attribute'].search([('id', 'in', attr_ids)]):
+            for attr in product.attribute_line_ids.mapped('attribute_id').sorted():
                 cat_name = attr.category_id.name or _('Uncategorized')
                 att_name = attr.name
                 if not product.attribute_value_ids: # create_variant = False
