@@ -644,6 +644,7 @@ var Discuss = AbstractAction.extend({
         var self = this;
         if (type === 'multi_user_channel') {
             $input.autocomplete({
+                autoFocus: true,
                 source: function (request, response) {
                     self._lastSearchVal = _.escape(request.term);
                     self._searchChannel(self._lastSearchVal).done(function (result){
@@ -685,6 +686,7 @@ var Discuss = AbstractAction.extend({
             });
         } else if (type === 'dm_chat') {
             $input.autocomplete({
+                autoFocus: true,
                 source: function (request, response) {
                     self._lastSearchVal = _.escape(request.term);
                     self.call('mail_service', 'searchPartner', self._lastSearchVal, 10).done(response);
