@@ -64,7 +64,7 @@ class SurveyCase(common.SavepointCase):
 
         self.survey = self.env['survey.survey'].sudo(self.survey_manager).create({
             'title': 'Test Survey',
-            'auth_required': True,
+            'access_mode': 'authentication',
             'users_can_go_back': False,
         })
         self.page_0 = self.env['survey.page'].sudo(self.survey_manager).create({

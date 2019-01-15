@@ -6,7 +6,7 @@ from odoo import api, fields, models
 class Applicant(models.Model):
     _inherit = "hr.applicant"
 
-    survey_id = fields.Many2one('survey.survey', related='job_id.survey_id', string="Survey", readonly=False)
+    survey_id = fields.Many2one('survey.survey', related='job_id.survey_id', string="Survey", readonly=True)
     response_id = fields.Many2one('survey.user_input', "Response", ondelete="set null", oldname="response")
 
     @api.multi

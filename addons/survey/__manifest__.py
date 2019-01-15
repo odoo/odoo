@@ -16,7 +16,11 @@ sent mails with personal token for the invitation of the survey.
     """,
     'summary': 'Create surveys and analyze answers',
     'website': 'https://www.odoo.com/page/survey',
-    'depends': ['http_routing', 'mail', 'web_tour'],
+    'depends': [
+        'auth_signup',
+        'http_routing',
+        'mail',
+        'web_tour'],
     'data': [
         'data/mail_template_data.xml',
         'data/survey_data.xml',
