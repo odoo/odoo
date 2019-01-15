@@ -20,7 +20,8 @@ mock==2.0.0
 num2words==0.5.6
 ofxparse==0.16
 passlib==1.6.5
-Pillow==4.0.0
+Pillow==4.0.0; python_version < '3.7'
+Pillow==5.2.0; python_version >= '3.7'
 psutil==4.3.1; sys_platform != 'win32'
 psycopg2==2.7.3.1; sys_platform != 'win32'
 pydot==1.2.3
