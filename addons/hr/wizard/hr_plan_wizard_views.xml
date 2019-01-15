@@ -9,10 +9,11 @@
                     <sheet>
                         <group>
                             <field name="plan_id"/>
+                            <field name="employee_id" invisible="1"/>
                         </group>
                     </sheet>
                     <footer>
-                        <button name="launch" string="Launch Plan" type="object" class="oe_highlight" groups="hr.group_hr_manager"/>
+                        <button name="action_launch" string="Launch Plan" type="object" class="oe_highlight" groups="hr.group_hr_manager"/>
                         <button string="Cancel" class="btn-secondary" special="cancel"/>
                     </footer>
                 </form>
