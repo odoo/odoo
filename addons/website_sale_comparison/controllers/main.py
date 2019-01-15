@@ -3,6 +3,7 @@ from odoo import http, _
 from odoo.http import request
 from odoo.addons.website_sale.controllers.main import WebsiteSale
 import json
+from collections import OrderedDict
 
 
 class WebsiteSaleProductComparison(WebsiteSale):
@@ -24,7 +25,7 @@ class WebsiteSaleProductComparison(WebsiteSale):
                 att_name = var.attribute_id.name
                 if not product.attribute_value_ids: # create_variant = False
                     continue
-                res.setdefault(cat_name, {}).setdefault(att_name, [' - '] * len(products))
+                res.setdefault(cat_name, OrderedDict()).setdefault(att_name, [' - '] * len(products))
                 val = product.attribute_value_ids.filtered(lambda x: x.attribute_id == var.attribute_id)
                 if val:
                     res[cat_name][att_name][num] = val[0].name
