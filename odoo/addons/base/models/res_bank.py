@@ -82,7 +82,7 @@ class ResPartnerBank(models.Model):
     qr_code_valid = fields.Boolean(string="Has all required arguments", compute="_validate_qr_code_arguments")
 
     _sql_constraints = [
-        ('unique_number', 'unique(sanitized_acc_number, company_id)', 'Account Number must be unique'),
+        ('unique_number', 'unique(sanitized_acc_number, partner_id, bank_id, company_id)', 'Account Number must be unique'),
     ]
 
     @api.depends('acc_number')
