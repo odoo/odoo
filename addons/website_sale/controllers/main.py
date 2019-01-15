@@ -543,7 +543,7 @@ class WebsiteSale(http.Controller):
             except ValidationError:
                 error["vat"] = 'error'
 
-        if [err for err in error.items() if err == 'missing']:
+        if [err for err in error.values() if err == 'missing']:
             error_message.append(_('Some required fields are empty.'))
 
         return error, error_message
