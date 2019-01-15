@@ -4,7 +4,7 @@
         <record id="act_hr_timesheet_report" model="ir.actions.act_window">
             <field name="name">By Employee</field>
             <field name="res_model">account.analytic.line</field>
-            <field name="domain">[('project_id', '!=', False)]</field>
+            <field name="domain">[('is_timesheet', '=', 'True')]</field>
             <field name="context">{'search_default_groupby_employee':1,}</field>
             <field name="search_view_id" ref="hr_timesheet_line_search"/>
             <field name="help" type="html">
@@ -42,7 +42,7 @@
         <record id="timesheet_action_report_by_project" model="ir.actions.act_window">
             <field name="name">By Project</field>
             <field name="res_model">account.analytic.line</field>
-            <field name="domain">[('project_id', '!=', False)]</field>
+            <field name="domain">[('is_timesheet', '=', 'True')]</field>
             <field name="context">{'search_default_groupby_project':1,}</field>
             <field name="search_view_id" ref="hr_timesheet_line_search"/>
             <field name="help" type="html">
@@ -80,7 +80,7 @@
         <record id="timesheet_action_report_by_task" model="ir.actions.act_window">
             <field name="name">By Task</field>
             <field name="res_model">account.analytic.line</field>
-            <field name="domain">[('project_id', '!=', False)]</field>
+            <field name="domain">[('is_timesheet', '=', 'True')]</field>
             <field name="context">{'search_default_groupby_task':1,}</field>
             <field name="search_view_id" ref="hr_timesheet_line_search"/>
             <field name="help" type="html">

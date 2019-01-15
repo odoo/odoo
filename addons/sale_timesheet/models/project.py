@@ -84,7 +84,8 @@ class Project(models.Model):
             'limit': 80,
             'context': {
                 'default_project_id': self.id,
-                'search_default_project_id': [self.id]
+                'search_default_project_id': [self.id],
+                'default_is_timesheet': 1,
             }
         }
 

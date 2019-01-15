@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import logging
 from lxml import etree
 import re
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+
+_logger = logging.getLogger(__name__)
 
 
 class AccountAnalyticLine(models.Model):
@@ -18,16 +21,22 @@ class AccountAnalyticLine(models.Model):
             result['employee_id'] = self.env['hr.employee'].search([('user_id', '=', result['user_id'])], limit=1).id
         return result
 
+    is_timesheet = fields.Boolean("Is timesheet", default=False, index=True)
+
     task_id = fields.Many2one('project.task', 'Task', index=True)
     project_id = fields.Many2one('project.project', 'Project', domain=[('allow_timesheets', '=', True)])
 
     employee_id = fields.Many2one('hr.employee', "Employee")
     department_id = fields.Many2one('hr.department', "Department", compute='_compute_department_id', store=True, compute_sudo=True)
 
+    _sql_constraints = [
+        ('check_timesheet_employee_required', "CHECK((is_timesheet = 't' AND employee_id IS NOT NULL) OR (is_timesheet = 'f'))", "The employee is required for a timesheet entry."),
+    ]
+
     @api.onchange('project_id')
     def onchange_project_id(self):
         # force domain on task when project is set
-        if self.project_id:
+        if self.is_timesheet and self.project_id:
             if self.project_id != self.task_id.project_id:
                 # reset task when changing project
                 self.task_id = False
@@ -37,12 +46,13 @@ class AccountAnalyticLine(models.Model):
 
     @api.onchange('task_id')
     def _onchange_task_id(self):
-        if not self.project_id:
+        if self.is_timesheet and not self.project_id:
             self.project_id = self.task_id.project_id
 
     @api.onchange('employee_id')
     def _onchange_employee_id(self):
-        self.user_id = self.employee_id.user_id
+        if self.is_timesheet:
+            self.user_id = self.employee_id.user_id
 
     @api.depends('employee_id')
     def _compute_department_id(self):
@@ -55,26 +65,29 @@ class AccountAnalyticLine(models.Model):
 
     @api.model
     def create(self, values):
-        # compute employee only for timesheet lines, makes no sense for other lines
-        if not values.get('employee_id') and values.get('project_id'):
-            if values.get('user_id'):
-                ts_user_id = values['user_id']
-            else:
-                ts_user_id = self._default_user()
-            values['employee_id'] = self.env['hr.employee'].search([('user_id', '=', ts_user_id)], limit=1).id
-
-        values = self._timesheet_preprocess(values)
+        if self._is_timesheet(values):
+            # force to be a 'timesheet'
+            values['is_timesheet'] = True
+            # compute employee only for timesheet lines, makes no sense for other lines
+            if not values.get('employee_id'):
+                if values.get('user_id'):
+                    ts_user_id = values['user_id']
+                else:
+                    ts_user_id = self._default_user()
+                values['employee_id'] = self.env['hr.employee'].search([('user_id', '=', ts_user_id)], limit=1).id
+            values = self._timesheet_preprocess(values)
         result = super(AccountAnalyticLine, self).create(values)
-        if result.project_id:  # applied only for timesheet
+        if result.is_timesheet:  # applied only for timesheet
             result._timesheet_postprocess(values)
         return result
 
     @api.multi
     def write(self, values):
-        values = self._timesheet_preprocess(values)
+        if self._is_timesheet(values):
+            values = self._timesheet_preprocess(values)
         result = super(AccountAnalyticLine, self).write(values)
         # applied only for timesheet
-        self.filtered(lambda t: t.project_id)._timesheet_postprocess(values)
+        self.filtered(lambda t: t.is_timesheet)._timesheet_postprocess(values)
         return result
 
     @api.model
@@ -98,6 +111,19 @@ class AccountAnalyticLine(models.Model):
     # ----------------------------------------------------
     # Business Methods
     # ----------------------------------------------------
+
+    @api.model
+    def _is_timesheet(self, values):
+        if values.get('is_timesheet'):
+            return True
+        if self.default_get(['is_timesheet'])['is_timesheet']:
+            return True
+        if self._context.get('default_is_timesheet'):
+            return True
+        if self._context.get('default_project_id'):  # retro compatibility for the UI
+            _logger.warning("Determine timesheet use case with project_id set: this should be deprecated baby !")
+            return True
+        return False
 
     def _timesheet_preprocess(self, vals):
         """ Deduce other field values from the one given.

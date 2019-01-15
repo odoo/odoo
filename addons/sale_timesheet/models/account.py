@@ -25,7 +25,7 @@ class AccountAnalyticLine(models.Model):
     @api.depends('so_line.product_id', 'project_id', 'task_id')
     def _compute_timesheet_invoice_type(self):
         for timesheet in self:
-            if timesheet.project_id:  # AAL will be set to False
+            if timesheet.is_timesheet:  # AAL will be set to False
                 invoice_type = 'non_billable_project' if not timesheet.task_id else 'non_billable'
                 if timesheet.task_id and timesheet.so_line.product_id.type == 'service':
                     if timesheet.so_line.product_id.invoice_policy == 'delivery':
@@ -39,7 +39,7 @@ class AccountAnalyticLine(models.Model):
 
     @api.onchange('employee_id')
     def _onchange_task_id_employee_id(self):
-        if self.project_id:  # timesheet only
+        if self.is_timesheet and self.project_id:  # timesheet only
             if self.task_id.billable_type == 'task_rate':
                 self.so_line = self.task_id.sale_line_id
             elif self.task_id.billable_type == 'employee_rate':
@@ -79,9 +79,10 @@ class AccountAnalyticLine(models.Model):
         # (re)compute the sale line
         if any([field_name in values for field_name in ['task_id', 'employee_id']]):
             for timesheet in self:
-                result[timesheet.id].update({
-                    'so_line': timesheet._timesheet_determine_sale_line(timesheet.task_id, timesheet.employee_id).id,
-                })
+                if timesheet.project_id:
+                    result[timesheet.id].update({
+                        'so_line': timesheet._timesheet_determine_sale_line(timesheet.task_id, timesheet.employee_id).id,
+                    })
         return result
 
     @api.model

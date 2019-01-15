@@ -116,7 +116,7 @@ class TestProjectBilling(TestCommonSaleTimesheetNoChart):
 
     def test_make_billable_at_task_rate(self):
         """ Starting from a non billable project, make it billable at task rate, using the wizard """
-        Timesheet = self.env['account.analytic.line']
+        Timesheet = self.env['account.analytic.line'].with_context(default_is_timesheet=True)
         Task = self.env['project.task']
         # set a customer on the project
         self.project_non_billable.write({
@@ -168,9 +168,9 @@ class TestProjectBilling(TestCommonSaleTimesheetNoChart):
 
     def test_make_billable_at_employee_rate(self):
         """ Starting from a non billable project, make it billable at employee rate, using the wizard """
-        Timesheet = self.env['account.analytic.line']
-        Task = self.env['project.task']
-        # set a customer on the project
+        Task = self.env['project.task'].with_context(tracking_disable=True)        # set a customer on the project
+        Timesheet = self.env['account.analytic.line'].with_context(default_is_timesheet=True)
+
         self.project_non_billable.write({
             'partner_id': self.partner_2.id
         })
@@ -243,7 +243,7 @@ class TestProjectBilling(TestCommonSaleTimesheetNoChart):
     def test_billing_employee_rate(self):
         """ Check task and subtask creation, and timesheeting in a project billed at 'employee rate'. Then move the task into a 'task rate' project. """
         Task = self.env['project.task'].with_context(tracking_disable=True)
-        Timesheet = self.env['account.analytic.line']
+        Timesheet = self.env['account.analytic.line'].with_context(default_is_timesheet=True)
 
         # create a task
         task = Task.with_context(default_project_id=self.project_employee_rate.id).create({
@@ -343,7 +343,7 @@ class TestProjectBilling(TestCommonSaleTimesheetNoChart):
     def test_billing_task_rate(self):
         """ Check task and subtask creation, and timesheeting in a project billed at 'task rate'. Then move the task into a 'employee rate' project then, 'non billable'. """
         Task = self.env['project.task'].with_context(tracking_disable=True)
-        Timesheet = self.env['account.analytic.line']
+        Timesheet = self.env['account.analytic.line'].with_context(default_is_timesheet=True)
 
         # set subtask project on task rate project
         self.project_task_rate.write({'subtask_project_id': self.project_subtask.id})
