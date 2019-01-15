@@ -24,8 +24,8 @@
     'data': [
         'security/hr_security.xml',
         'security/ir.model.access.csv',
-        'wizard/plan_wizard_views.xml',
-        'wizard/departure_wizard_views.xml',
+        'wizard/hr_plan_wizard_views.xml',
+        'wizard/hr_departure_wizard_views.xml',
         'views/hr_views.xml',
         'views/hr_templates.xml',
         'views/res_config_settings_views.xml',
