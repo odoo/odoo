@@ -7,28 +7,27 @@ from odoo.addons.purchase_requisition.tests.common import TestPurchaseRequisitio
 class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
 
     def test_00_purchase_requisition_users(self):
-        self.assertTrue(self.res_users_purchase_requisition_manager, 'Manager Should be created')
-        self.assertTrue(self.res_users_purchase_requisition_user, 'User Should be created')
+        self.assertTrue(self.user_purchase_requisition_manager, 'Manager Should be created')
+        self.assertTrue(self.user_purchase_requisition_user, 'User Should be created')
 
     def test_01_cancel_purchase_requisition(self):
-        self.requisition1.sudo(self.res_users_purchase_requisition_user.id).action_cancel()
+        self.requisition1.sudo(self.user_purchase_requisition_user.id).action_cancel()
         # Check requisition after cancelled.
         self.assertEqual(self.requisition1.state, 'cancel', 'Requisition should be in cancelled state.')
         # I reset requisition as "New".
-        self.requisition1.sudo(self.res_users_purchase_requisition_user.id).action_draft()
+        self.requisition1.sudo(self.user_purchase_requisition_user.id).action_draft()
         # I duplicate requisition.
-        self.requisition1.sudo(self.res_users_purchase_requisition_user.id).copy()
+        self.requisition1.sudo(self.user_purchase_requisition_user.id).copy()
 
 
     def test_02_purchase_requisition(self):
         price_product09 = 34
         price_product13 = 62
         quantity = 26
-        # Create a pruchase requisition with type blanket order and two product
-        line1 = (0, 0, {'product_id': self.product_09_id, 'product_qty': quantity, 'product_uom_id': self.product_09_uom_id, 'price_unit': price_product09})
 
-        self.product_13_uom_id = self.ref('uom.product_uom_unit')
-        line2 = (0, 0, {'product_id': self.product_13_id, 'product_qty': quantity, 'product_uom_id': self.product_13_uom_id, 'price_unit': price_product13})
+        # Create a pruchase requisition with type blanket order and two product
+        line1 = (0, 0, {'product_id': self.product_09.id, 'product_qty': quantity, 'product_uom_id': self.product_uom_id.id, 'price_unit': price_product09})
+        line2 = (0, 0, {'product_id': self.product_13.id, 'product_qty': quantity, 'product_uom_id': self.product_uom_id.id, 'price_unit': price_product13})
 
         requisition_type = self.env['purchase.requisition.type'].create({
             'name': 'Blanket test',
@@ -37,7 +36,7 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
         requisition_blanket = self.env['purchase.requisition'].create({
             'line_ids': [line1, line2],
             'type_id': requisition_type.id,
-            'vendor_id': self.res_partner_1_id
+            'vendor_id': self.res_partner_1.id,
         })
 
         # confirm the requisition
@@ -45,10 +44,10 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
 
         # Check for both product that the new supplier info(purchase.requisition.vendor_id) is added to the puchase tab
         # and check the quantity
-        seller_partner1 = self.env['res.partner'].browse(self.res_partner_1_id)
+        seller_partner1 = self.res_partner_1
         supplierinfo09 = self.env['product.supplierinfo'].search([
             ('name', '=', seller_partner1.id),
-            ('product_id', '=', self.product_09_id),
+            ('product_id', '=', self.product_09.id),
             ('purchase_requisition_id', '=', requisition_blanket.id),
         ])
         self.assertEqual(supplierinfo09.name, seller_partner1, 'The supplierinfo is not the good one')
@@ -56,7 +55,7 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
 
         supplierinfo13 = self.env['product.supplierinfo'].search([
             ('name', '=', seller_partner1.id),
-            ('product_id', '=', self.product_13_id),
+            ('product_id', '=', self.product_13.id),
             ('purchase_requisition_id', '=', requisition_blanket.id),
         ])
         self.assertEqual(supplierinfo13.name, seller_partner1, 'The supplierinfo is not the good one')

@@ -12,16 +12,13 @@ class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
     def test_01_purchase_requisition_stock(self):
         date_planned = fields.Datetime.now()
         warehouse = self.env['stock.warehouse'].browse(self.ref('stock.warehouse0'))
-        product = self.env['product.product'].browse(self.product_13_id)
-        product.write({'route_ids': [(4, self.ref('purchase_stock.route_warehouse0_buy'))]})
-        self.env['procurement.group'].run(product, 14, self.env['uom.uom'].browse(self.ref('uom.product_uom_unit')), warehouse.lot_stock_id, '/', '/',
+        self.env['procurement.group'].run(self.product_13, 14, self.env['uom.uom'].browse(self.ref('uom.product_uom_unit')), warehouse.lot_stock_id, '/', '/',
                                           {
                                             'warehouse_id': warehouse,
                                             'date_planned': date_planned,
                                           })
-
         # Check requisition details which created after run procurement.
-        line = self.env['purchase.requisition.line'].search([('product_id', '=', self.product_13_id), ('product_qty', '=', 14.0)])
+        line = self.env['purchase.requisition.line'].search([('product_id', '=', self.product_13.id), ('product_qty', '=', 14.0)])
         requisition = line[0].requisition_id
         self.assertEqual(requisition.date_end, date_planned, "End date does not correspond.")
         self.assertEqual(len(requisition.line_ids), 1, "Requisition Lines should be one.")
@@ -29,12 +26,12 @@ class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
 
         # Give access rights of Purchase Requisition User to open requisition
         # Set tender state to choose tendering line.
-        self.requisition1.sudo(self.res_users_purchase_requisition_user.id).action_in_progress()
-        self.requisition1.sudo(self.res_users_purchase_requisition_user.id).action_open()
+        self.requisition1.sudo(self.user_purchase_requisition_user.id).action_in_progress()
+        self.requisition1.sudo(self.user_purchase_requisition_user.id).action_open()
 
         # Vendor send one RFQ so I create a RfQ of that agreement.
         PurchaseOrder = self.env['purchase.order']
-        purchase_order = PurchaseOrder.new({'partner_id': self.res_partner_1_id, 'requisition_id': self.requisition1.id})
+        purchase_order = PurchaseOrder.new({'partner_id': self.res_partner_1, 'requisition_id': self.requisition1.id})
         purchase_order._onchange_requisition_id()
         po_dict = purchase_order._convert_to_write({name: purchase_order[name] for name in purchase_order._cache})
         self.po_requisition = PurchaseOrder.create(po_dict)
