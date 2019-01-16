@@ -5,15 +5,17 @@ import email
 import socket
 
 from email.utils import formataddr
+from unittest.mock import DEFAULT
+from unittest.mock import patch
 
+from odoo import exceptions
 from odoo.addons.test_mail.data import test_mail_data
 from odoo.addons.test_mail.data.test_mail_data import MAIL_TEMPLATE
+from odoo.addons.test_mail.models.test_mail_models import MailTestGateway
 from odoo.addons.test_mail.tests.common import BaseFunctionalTest, MockEmails
 from odoo.addons.test_mail.tests.common import mail_new_test_user
-from odoo.tools import mute_logger, pycompat
-
-
 from odoo.tests import tagged
+from odoo.tools import mute_logger, pycompat
 
 
 @tagged('mail_gateway')
@@ -326,6 +328,71 @@ class TestMailgateway(BaseFunctionalTest, MockEmails):
         self.assertEqual(len(self.test_record.message_ids), 2)
         # Test: sent emails: 1 (Sylvie copy of the incoming email)
         self.assertEmails(False, self.partner_1, email_from=self.email_from)
+
+    # --------------------------------------------------
+    # Creator recognition
+    # --------------------------------------------------
+
+    @mute_logger('odoo.addons.mail.models.mail_thread')
+    def test_message_process_create_uid_crash(self):
+        def _employee_crash(*args, **kwargs):
+            """ If employee is test employee, consider he has no access on document """
+            recordset = args[0]
+            if recordset.env.uid == self.user_employee.id and not recordset.env.su:
+                if kwargs.get('raise_exception', True):
+                    raise exceptions.AccessError('Hop hop hop Ernest, please step back.')
+                return False
+            return DEFAULT
+
+        with patch.object(MailTestGateway, 'check_access_rights', autospec=True, side_effect=_employee_crash):
+            record = self.format_and_process(MAIL_TEMPLATE, self.user_employee.email_formatted, 'groups@test.com', subject='NoEmployeeAllowed')
+        self.assertEqual(record.create_uid, self.user_employee)
+        self.assertEqual(record.message_ids[0].subject, 'NoEmployeeAllowed')
+        self.assertEqual(record.message_ids[0].create_uid, self.user_employee)
+        self.assertEqual(record.message_ids[0].author_id, self.user_employee.partner_id)
+
+    @mute_logger('odoo.addons.mail.models.mail_thread')
+    def test_message_process_create_uid_email(self):
+        record = self.format_and_process(MAIL_TEMPLATE, self.user_employee.email_formatted, 'groups@test.com', subject='Email Found')
+        self.assertEqual(record.create_uid, self.user_employee)
+        self.assertEqual(record.message_ids[0].subject, 'Email Found')
+        self.assertEqual(record.message_ids[0].create_uid, self.user_employee)
+        self.assertEqual(record.message_ids[0].author_id, self.user_employee.partner_id)
+
+        record = self.format_and_process(MAIL_TEMPLATE, 'Another name <%s>' % self.user_employee.email, 'groups@test.com', subject='Email OtherName')
+        self.assertEqual(record.create_uid, self.user_employee)
+        self.assertEqual(record.message_ids[0].subject, 'Email OtherName')
+        self.assertEqual(record.message_ids[0].create_uid, self.user_employee)
+        self.assertEqual(record.message_ids[0].author_id, self.user_employee.partner_id)
+
+        record = self.format_and_process(MAIL_TEMPLATE, self.user_employee.email_normalized, 'groups@test.com', subject='Email SimpleEmail')
+        self.assertEqual(record.create_uid, self.user_employee)
+        self.assertEqual(record.message_ids[0].subject, 'Email SimpleEmail')
+        self.assertEqual(record.message_ids[0].create_uid, self.user_employee)
+        self.assertEqual(record.message_ids[0].author_id, self.user_employee.partner_id)
+
+    @mute_logger('odoo.addons.mail.models.mail_thread')
+    def test_message_process_create_uid_email_follower(self):
+        self.alias.write({
+            'alias_parent_model_id': self.test_model.id,
+            'alias_parent_thread_id': self.test_record.id,
+        })
+        follower_user = mail_new_test_user(self.env, login='better', groups='base.group_user', name='Ernest Follower', email=self.user_employee.email)
+        self.test_record.message_subscribe(follower_user.partner_id.ids)
+
+        record = self.format_and_process(MAIL_TEMPLATE, self.user_employee.email_formatted, 'groups@test.com', subject='FollowerWinner')
+        self.assertEqual(record.create_uid, follower_user)
+        self.assertEqual(record.message_ids[0].subject, 'FollowerWinner')
+        self.assertEqual(record.message_ids[0].create_uid, follower_user)
+        self.assertEqual(record.message_ids[0].author_id, follower_user.partner_id)
+
+        # name order win
+        self.test_record.message_unsubscribe(follower_user.partner_id.ids)
+        record = self.format_and_process(MAIL_TEMPLATE, self.user_employee.email_formatted, 'groups@test.com', subject='FirstFoundWinner')
+        self.assertEqual(record.create_uid, self.user_employee)
+        self.assertEqual(record.message_ids[0].subject, 'FirstFoundWinner')
+        self.assertEqual(record.message_ids[0].create_uid, self.user_employee)
+        self.assertEqual(record.message_ids[0].author_id, self.user_employee.partner_id)
 
     # --------------------------------------------------
     # Email Management
