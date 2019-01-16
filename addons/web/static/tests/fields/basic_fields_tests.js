@@ -2969,6 +2969,47 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('date field support internalization', function (assert) {
+        assert.expect(2);
+
+        var originalLocale = moment.locale();
+        var originalParameters = _.clone(core._t.database.parameters);
+
+        _.extend(core._t.database.parameters, {date_format: '%d. %b %Y', time_format: '%H:%M:%S'});
+        moment.defineLocale('norvegianForTest', {
+            monthsShort: 'jan._feb._mars_april_mai_juni_juli_aug._sep._okt._nov._des.'.split('_'),
+            monthsParseExact: true,
+            dayOfMonthOrdinalParse: /\d{1,2}\./,
+            ordinal: '%d.',
+        });
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners"><field name="date"/></form>',
+            res_id: 1,
+        });
+
+        var dateViewForm = form.$('.o_field_date').text();
+        testUtils.dom.click(form.$buttons.find('.o_form_button_edit'));
+        testUtils.openDatepicker(form.$('.o_datepicker'));
+        assert.strictEqual(form.$('.o_datepicker_input').val(), dateViewForm,
+            "input date field should be the same as it was in the view form");
+
+        testUtils.dom.click($('.day:contains(30)'));
+        var dateEditForm = form.$('.o_datepicker_input').val()
+        testUtils.dom.click(form.$buttons.find('.o_form_button_save'));
+        assert.strictEqual(form.$('.o_field_date').text(), dateEditForm,
+            "date field should be the same as the one selected in the view form");
+
+        moment.locale(originalLocale);
+        moment.updateLocale('norvegianForTest', null);
+        core._t.database.parameters = originalParameters;
+
+        form.destroy();
+    });
+
     QUnit.module('FieldDatetime');
 
     QUnit.test('datetime field in form view', function (assert) {
