@@ -51,7 +51,7 @@ class Survey(models.Model):
     public_url = fields.Char("Public link", compute="_compute_survey_url")
     # statistics
     tot_sent_survey = fields.Integer("Number of sent surveys", compute="_compute_survey_statistic")
-    tot_start_survey = fields.Integer("Number of started startedurveys", compute="_compute_survey_statistic")
+    tot_start_survey = fields.Integer("Number of started surveys", compute="_compute_survey_statistic")
     tot_comp_survey = fields.Integer("Number of completed surveys", compute="_compute_survey_statistic")
 
     @api.multi
