@@ -1036,6 +1036,17 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
             uid = dispatch_rpc('common', 'authenticate', [db, login, password, env])
         else:
             security.check(db, uid, password)
+
+        # udes-11.0
+        # Session fixation:
+        # If the user has successfully logged in, forcefully create a new
+        # session as part of this request. This prevents session hijacking
+        # prior to authentication being effective.
+        if uid:
+            request.httprequest.session = root.session_store.new()
+            self = request.httprequest.session
+        # end udes-11.0
+
         self.db = db
         self.uid = uid
         self.login = login
