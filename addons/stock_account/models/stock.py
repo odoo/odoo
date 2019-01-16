@@ -150,7 +150,7 @@ class StockQuant(models.Model):
     def _quant_create_from_move(self, qty, move, lot_id=False, owner_id=False, src_package_id=False, dest_package_id=False, force_location_from=False, force_location_to=False):
         quant = super(StockQuant, self)._quant_create_from_move(qty, move, lot_id=lot_id, owner_id=owner_id, src_package_id=src_package_id, dest_package_id=dest_package_id, force_location_from=force_location_from, force_location_to=force_location_to)
         quant._account_entry_move(move)
-        if move.product_id.valuation == 'real_time':
+        if move.product_id.product_tmpl_id.valuation == 'real_time':
             # If the precision required for the variable quant cost is larger than the accounting
             # precision, inconsistencies between the stock valuation and the accounting entries
             # may arise.
