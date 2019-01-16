@@ -660,6 +660,7 @@ class TestMrpOrder(TestMrpCommon):
         }).create({
             'product_qty': 5.0,
         })
+        produce_wizard._onchange_product_qty()
 
         for produce_line in produce_wizard.produce_line_ids:
             produce_line.qty_done = produce_line.qty_to_consume
