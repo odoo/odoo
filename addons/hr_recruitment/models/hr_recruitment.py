@@ -96,14 +96,12 @@ class Applicant(models.Model):
 
     def _default_stage_id(self):
         if self._context.get('default_job_id'):
-            ids = self.env['hr.recruitment.stage'].search([
+            return self.env['hr.recruitment.stage'].search([
                 '|',
                 ('job_id', '=', False),
                 ('job_id', '=', self._context['default_job_id']),
                 ('fold', '=', False)
-            ], order='sequence asc', limit=1).ids
-            if ids:
-                return ids[0]
+            ], order='sequence asc', limit=1).id
         return False
 
     def _default_company_id(self):
