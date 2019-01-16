@@ -1,0 +1,13 @@
+.o_wevent_participating_container {
+    position: relative;
+
+    &::before {
+        content: "";
+        @include o-position-absolute(0, auto, 0, 0);
+        width: 3px;
+        background-color: theme-color('info');
+    }
+}
+.o_wevent_registration_list_attendees:nth-child(2n) {
+    background-color: gray('200');
+}

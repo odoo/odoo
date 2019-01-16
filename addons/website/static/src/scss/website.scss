@@ -1058,6 +1058,23 @@ table.table_desc tr td {
         }
     }
 }
+// Figure with special style
+.o_figure_relative_layout {
+    position: relative;
+
+    .figure-img {
+        margin-bottom: 0;
+    }
+    .figure-caption {
+        @include o-position-absolute(auto, 0, 0, 0);
+        @include o-bg-color(rgba(theme-color('dark'), $o-theme-figcaption-opacity));
+        padding: $tooltip-padding-y $tooltip-padding-x;
+        font-weight: $font-weight-bold;
+        a {
+            color: inherit;
+        }
+    }
+}
 
 @each $color, $value in $theme-colors {
     .bg-#{$color}-light {
