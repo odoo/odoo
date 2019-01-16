@@ -15,9 +15,9 @@
                 <h2 class="text-center mb32">Our Sponsors</h2>
             </section>
             <div class="row">
-                <div t-attf-class="col-lg-#{(len(event.sponsor_ids) > 6) and 2 or (12 // len(event.sponsor_ids))} text-center mb16 oe_sponsor" t-foreach="event.sponsor_ids" t-as="sponsor">
+                <div t-attf-class="col-sm-6 col-lg-#{(len(event.sponsor_ids) > 6) and 2 or (12 // len(event.sponsor_ids))} text-center mb16 oe_sponsor" t-foreach="event.sponsor_ids" t-as="sponsor">
                     <t t-if="sponsor.url">
-                        <a t-att-href="sponsor.url" style="position: relative; display: inline-block;">
+                        <a t-att-href="sponsor.url" style="position: relative; display: inline-block;" class="bg-white">
                             <span t-field="sponsor.image_medium"
                                 t-options='{"widget": "image", "class": "shadow"}'/>
                             <div class="ribbon-wrapper">
@@ -26,7 +26,7 @@
                         </a>
                     </t>
                     <t t-if="not sponsor.url">
-                        <span style="position: relative; display: inline-block;">
+                        <span style="position: relative; display: inline-block;" class="bg-white">
                             <span t-field="sponsor.image_medium"
                                 t-options='{"widget": "image", "class": "shadow"}'/>
                             <div class="ribbon-wrapper">
@@ -122,7 +122,7 @@
             <div class="alert alert-warning" t-if="not len(tracks)" role="alert">
                 No tracks found!
             </div>
-            <div class="row mb32" t-foreach="tracks" t-as="track">
+            <div class="row mb-2" t-foreach="tracks" t-as="track">
                 <div class="col-md-2">
                     <t t-if="track.image">
                         <span t-field="track.image"
@@ -131,21 +131,24 @@
                 </div>
                 <div class="col-md-10">
                     <h3 class="mt0 mb0">
-                        <a t-attf-href="/event/#{ slug(event) }/track/#{ slug(track) }"><span t-field="track.name"> </span></a>
+                        <a t-attf-href="/event/#{ slug(event) }/track/#{ slug(track) }" class="text-secondary"><span t-field="track.name"> </span></a>
                         <small t-if="not track.website_published" class="badge badge-danger">unpublished</small>
                     </h3>
                     <ul class="list-inline mb0">
-                        <li t-if="track.partner_id" class="list-inline-item text-muted fa fa-user">
+                        <li t-if="track.partner_id" class="list-inline-item">
+                            <i class="fa fa-user text-primary"/>
                             <t t-esc="track.partner_id.sudo().name"/>
                         </li>
-                        <li t-if="track.date" class="list-inline-item text-muted fa fa-calendar"> <span t-field="track.date" t-options='{"hide_seconds":"True"}'/></li>
-                        <li class="list-inline-item text-muted fa fa-map-marker" t-if="track.location_id">
+                        <li t-if="track.date" class="list-inline-item"> <i class="fa fa-calendar text-primary"/><span t-field="track.date" t-options='{"hide_seconds":"True"}'/></li>
+                        <li class="list-inline-item" t-if="track.location_id">
+                            <i class="fa fa-map-marker"/>
                             <span t-field="track.location_id"/>
                         </li>
                     </ul>
                     <ul class="list-inline">
-                        <li t-foreach="track.tag_ids" t-as="tag_id" class="list-inline-item text-muted fa fa-tags">
+                        <li t-foreach="track.tag_ids" t-as="tag_id" class="list-inline-item fa fa-tags">
                             <a t-attf-href="/event/#{ slug(event) }/track/tag/#{ slug(tag_id) }">
+                                <i class="fa fa-tags"/>
                                 <span t-field="tag_id.name"/>
                             </a>
                         </li>
@@ -161,7 +164,7 @@
 <template id="tracks_filter" inherit_id="website_event_track.tracks" customize_show="True" name="Filter on Tags">
     <xpath expr="//div[@id='left_column']" position="inside">
         <ul class="nav nav-pills flex-column">
-            <li class="nav-item"><a t-attf-href="/event/#{ slug(event) }/track" t-attf-class="nav-link#{'' if searches.get('tag') else ' active'}">All Tags</a></li>
+            <li class="nav-item"><a t-attf-href="/event/#{ slug(event) }/track" t-attf-class="nav-link #{'' if searches.get('tag') else ' active'}">All Tags</a></li>
             <t t-foreach="tags" t-as="tag">
                 <li class="nav-item">
                     <a t-attf-href="/event/#{ slug(event) }/track/tag/#{ slug(tag) }" t-attf-class="nav-link#{searches.get('tag') == tag.id and ' active' or ''}">
@@ -188,7 +191,7 @@
             <div class="container">
                 <div class="row mt8">
                     <div class="col-md-7" id="event_menu">
-                        <ol name="Event Menu" class="breadcrumb mb0" id="event_menu" t-if="event.menu_id" t-att-data-content_menu_id="editable and event.menu_id.id">
+                        <ol name="Event Menu" class="breadcrumb" id="event_menu" t-if="event.menu_id" t-att-data-content_menu_id="editable and event.menu_id.id">
                             <t t-foreach="event.menu_id.child_id" t-as="submenu">
                                 <t t-call="website.submenu">
                                     <t t-set="item_class" t-value="'breadcrumb-item'"/>
@@ -306,8 +309,8 @@
         <div class="oe_structure" id="oe_structure_website_event_track_proposal_1"/>
         <div class="container">
             <section>
-                <h1 class="text-center mb0">Call for Proposals</h1>
-                <h2 class="text-center text-muted mb32" t-esc="event.name"></h2>
+                <h1 class="o_page_header">Call for Proposals</h1>
+                <h2 class="text-center text-secondary font-weight-bold my-4" t-esc="event.name"/>
             </section>
             <section id="forms" t-if="not event.website_track_proposal">
                 <h1>Proposals are closed!</h1>
@@ -316,7 +319,7 @@
                 </p>
             </section>
             <section class="row">
-                <div class="col-lg-8">
+                <div class="col-lg-9">
                     <div class="oe_structure">
                         <section>
                             <h3 class="o_page_header mt16">
@@ -332,7 +335,7 @@
                                 inclusion in the programme.
                             </p>
                         </section>
-                        <section>
+                        <section class="mt-5">
                             <h3 class="o_page_header">Application</h3>
                             <p>
                                 Fill this form to propose your talk.
@@ -398,8 +401,9 @@
                         </form>
                     </section>
                     <div class="oe_structure" id="oe_structure_website_event_track_proposal_2"/>
-                </div><div class="col-lg-3 offset-lg-1">
-                    <div class="card">
+                </div>
+                <div class="col-lg-3">
+                    <div class="card mb-3 bg-secondary">
                         <h4 class="card-header">Talks Types</h4>
                         <div class="card-body">
                             <ul class="list-unstyled">
@@ -413,9 +417,7 @@
                             </ul>
                         </div>
                     </div>
-
-
-                    <div class="card">
+                    <div class="card bg-secondary">
                         <h4 class="card-header">Submission Agreement</h4>
                         <div class="card-body">
                             <p>
@@ -434,7 +436,6 @@
                     </div>
                 </div>
             </section>
-
         </div>
         <div class="oe_structure" id="oe_structure_website_event_track_proposal_3"/>
     </t>
