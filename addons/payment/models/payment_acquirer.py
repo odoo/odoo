@@ -324,7 +324,7 @@ class PaymentAcquirer(models.Model):
             'acquirers': acquirers,
             'pms': self.env['payment.token'].search([
                 ('partner_id', '=', partner.id),
-                ('acquirer_id', 'in', acquirers.filtered(lambda acq: acq.payment_flow == 's2s').ids)]),
+                ('acquirer_id', 'in', acquirers.ids)]),
         }
 
     @api.multi
