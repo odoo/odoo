@@ -954,7 +954,7 @@ class TestSaleMrpFlow(common.TransactionCase):
         for move in return_of_return_pick.move_lines:
             move.write({
                 'quantity_done': expected_quantities[move.product_id] - 1,
-                'to_refund': False
+                'to_refund': True
             })
 
         backorder_wizard = self.env['stock.backorder.confirmation'].create({'pick_ids': [(4, return_of_return_pick.id)]})
