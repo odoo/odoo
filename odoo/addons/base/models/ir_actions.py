@@ -394,7 +394,7 @@ class IrActionsServer(models.Model):
     # Create
     crud_model_id = fields.Many2one('ir.model', string='Create/Write Target Model',
                                     oldname='srcmodel_id', help="Model for record creation / update. Set this field only to specify a different model than the base model.")
-    crud_model_name = fields.Char(related='crud_model_id.name', readonly=True)
+    crud_model_name = fields.Char(related='crud_model_id.model', string='Target Model', readonly=True)
     link_field_id = fields.Many2one('ir.model.fields', string='Link using field',
                                     help="Provide the field used to link the newly created record "
                                          "on the record on used by the server action.")

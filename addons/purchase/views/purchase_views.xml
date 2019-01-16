@@ -218,6 +218,7 @@
                                                 <field name="taxes_id" widget="many2many_tags" domain="[('type_tax_use', '=', 'purchase')]" options="{'no_create': True}"/>
                                                 <field name="date_planned" widget="date"/>
                                                 <field name="account_analytic_id" colspan="2" groups="analytic.group_analytic_accounting"/>
+                                                <field name="analytic_tag_ids" groups="purchase.group_analytic_accounting" widget="many2many_tags" options="{'color_field': 'color'}"/>
                                                 <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                                             </group>
                                         </group>
@@ -227,6 +228,7 @@
                                         </page>
                                         <page string="Invoices and Incoming Shipments">
                                             <field name="invoice_lines"/>
+                                            <field name="move_dest_ids" invisible="1"/>
                                         </page>
                                         </notebook>
                                     </sheet>
