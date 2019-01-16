@@ -124,6 +124,7 @@ class ProductTemplate(models.Model):
                                         help="The product will be available in each mentioned e-commerce category. Go to"
                                         "Shop > Customize and enable 'E-commerce categories' to view all e-commerce categories.")
     product_image_ids = fields.One2many('product.image', 'product_tmpl_id', string='Images')
+    display_image = fields.Binary(compute="_compute_display_image", inverse='_inverse_display_image', string='Image to display on E-commerce')
 
     # website_price deprecated, directly use _get_combination_info instead
     website_price = fields.Float('Website price', compute='_website_price', digits=dp.get_precision('Product Price'))
@@ -131,6 +132,34 @@ class ProductTemplate(models.Model):
     website_public_price = fields.Float('Website public price', compute='_website_price', digits=dp.get_precision('Product Price'))
     # website_price_difference deprecated, directly use _get_combination_info instead
     website_price_difference = fields.Boolean('Website price difference', compute='_website_price')
+
+    def _compute_display_image(self):
+        for template in self:
+            if template.product_variant_id.image_variant_raw:
+                template.display_image = template.product_variant_id.image
+            elif template.product_variant_id.variant_image_ids:
+                template.display_image = tools.image_resize_image(template.product_variant_id.variant_image_ids[0].image, size=(1024, 1024),
+                                                                  filetype='PNG', upper_limit=True, avoid_if_small=True)
+            elif template.image_raw:
+                template.display_image = template.image
+            elif template.product_image_ids:
+                template.display_image = tools.image_resize_image(template.product_image_ids[0].image, size=(1024, 1024),
+                                                                  filetype='PNG', upper_limit=True, avoid_if_small=True)
+            else:
+                template.display_image = False
+
+    def _inverse_display_image(self):
+        for template in self:
+            if template.product_variant_id.image_variant_raw:
+                template.product_variant_id.image = template.display_image
+            elif template.product_variant_id.variant_image_ids:
+                template.product_variant_id.variant_image_ids[0].image = template.display_image
+            elif template.image_raw:
+                template.image = template.display_image
+            elif template.product_image_ids:
+                template.product_image_ids[0].image = template.display_image
+            else:
+                template.image = template.display_image
 
     def _website_price(self):
         current_website = self.env['website'].get_current_website()
@@ -339,6 +368,36 @@ class Product(models.Model):
     website_public_price = fields.Float('Website public price', compute='_website_price', digits=dp.get_precision('Product Price'))
     # website_price_difference deprecated, directly use _get_combination_info instead
     website_price_difference = fields.Boolean('Website price difference', compute='_website_price')
+    variant_image_ids = fields.One2many('product.image', 'product_product_id', string='Product Images')
+    display_image = fields.Binary(compute='_compute_display_image', inverse='_inverse_display_image')
+
+    def _compute_display_image(self):
+        for product in self:
+            if product.image_variant_raw:
+                product.display_image = product.image
+            elif product.variant_image_ids:
+                product.display_image = tools.image_resize_image(product.variant_image_ids[0].image, size=(1024, 1024),
+                                                                 filetype='PNG', upper_limit=True, avoid_if_small=True)
+            elif product.product_tmpl_id.image_raw:
+                product.display_image = product.product_tmpl_id.image
+            elif product.product_tmpl_id.product_image_ids:
+                product.display_image = tools.image_resize_image(product.product_tmpl_id.product_image_ids[0].image, size=(1024, 1024),
+                                                                 filetype='PNG', upper_limit=True, avoid_if_small=True)
+            else:
+                product.display_image = False
+
+    def _inverse_display_image(self):
+        for product in self:
+            if product.image_variant_raw:
+                product.image = product.display_image
+            elif product.product_variant_id.variant_image_ids:
+                product.variant_image_ids[0].image = product.display_image
+            elif product.product_tmpl_id.image_raw:
+                product.product_tmpl_id.image = product.display_image
+            elif product.product_tmpl_id.product_image_ids:
+                product.product_tmpl_id.product_image_ids[0].image = product.display_image
+            else:
+                product.product_tmpl_id.image = product.display_image
 
     def _website_price(self):
         for product in self:
@@ -356,7 +415,10 @@ class Product(models.Model):
 class ProductImage(models.Model):
     _name = 'product.image'
     _description = 'Product Image'
+    _order = "sequence, id"
 
     name = fields.Char('Name')
     image = fields.Binary('Image', attachment=True)
     product_tmpl_id = fields.Many2one('product.template', 'Related Product', copy=True)
+    product_product_id = fields.Many2one('product.product', 'Related Product Product', copy=True)
+    sequence = fields.Integer(default=1)

@@ -152,6 +152,7 @@ sAnimations.registry.WebsiteSale = sAnimations.Class.extend(ProductConfiguratorM
         'change #shipping_use_same': '_onChangeShippingUseSame',
         'click .toggle_summary': '_onToggleSummary',
         'click input.js_product_change': 'onChangeVariant',
+        'click #o-carousel-product .o_indicators': '_onCarouselScroll',
     },
 
     /**
@@ -192,6 +193,7 @@ sAnimations.registry.WebsiteSale = sAnimations.Class.extend(ProductConfiguratorM
         });
 
         this._startZoom();
+        this._updateCarouselIndicators();
 
         return def;
     },
@@ -381,6 +383,24 @@ sAnimations.registry.WebsiteSale = sAnimations.Class.extend(ProductConfiguratorM
         }
     },
     /**
+     * @private
+     */
+    _updateCarouselIndicators: function () {
+        // Hide / Show bottom scroll indicators based on no of images
+        var $carousel = $('#o-carousel-product');
+        $carousel.find('.o_indicators_container').removeClass('d-none');
+        var indicators = $carousel.find('.carousel-indicators li').length;
+        if (indicators) {
+            var indicatorWidth = $carousel.find('.carousel-indicators li.active').outerWidth() + 2;
+            var parentWidth = $carousel.width();
+            if (parentWidth < indicatorWidth * indicators) {
+                $carousel.addClass('o_show_indicators');
+            } else {
+                $carousel.removeClass('o_show_indicators');
+            }
+        }
+    },
+    /**
      * On website, we display a carousel instead of only one image
      *
      * @override
@@ -401,6 +421,7 @@ sAnimations.registry.WebsiteSale = sAnimations.Class.extend(ProductConfiguratorM
                 $carousel = $new_carousel;
                 $carousel.carousel(0);
                 this._startZoom();
+                this._updateCarouselIndicators();
                 // fix issue with carousel height
                 this.trigger_up('animation_start_demand', {$target: $carousel});
             }
@@ -595,6 +616,26 @@ sAnimations.registry.WebsiteSale = sAnimations.Class.extend(ProductConfiguratorM
     _onToggleSummary: function () {
         $('.toggle_summary_div').toggleClass('d-none');
         $('.toggle_summary_div').removeClass('d-xl-block');
+    },
+    /**
+      * @private
+      * @param {Event} ev
+      */
+     _onCarouselScroll: function (ev) {
+        ev.preventDefault();
+        var $target = $(ev.currentTarget);
+        var $carousel = $target.parent();
+        var $indicators = $carousel.find('.carousel-indicators li');
+        var indicatorWidth = $indicators.first().outerWidth() + 4;
+        var parentWidth = $carousel.find('.o_indicators_container').width();
+        var maxLeft = parentWidth - (indicatorWidth * $indicators.length);
+        var currentPosition = $carousel.find('.carousel-indicators').position().left;
+        if ($target.hasClass('right')) {
+            var left = currentPosition - (indicatorWidth * 3) < maxLeft ? maxLeft : currentPosition - (indicatorWidth * 3);
+        } else {
+            left = currentPosition + (indicatorWidth * 3) > -(indicatorWidth / 2) ? 0 : currentPosition + (indicatorWidth * 3);
+        }
+        $carousel.find('.carousel-indicators').css('left', left);
     },
 });
 
