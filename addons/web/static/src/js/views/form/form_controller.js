@@ -283,7 +283,8 @@ var FormController = BasicController.extend({
                         $saveCancelButtonContainer.tooltip('show');
                     } else if (e.shiftKey && e.target.classList.contains("btn-primary")) {
                         // If shift + tab is pressed then set focus back to last active widget
-                        self.renderer.trigger_up('navigation_move', {direction: "previous"});
+                        // do not pass index, it will automatically consider last widget from allFieldWidgets
+                        self.renderer._activatePreviousFieldWidget(self.renderer.state);
                     }
                     break;
             }
