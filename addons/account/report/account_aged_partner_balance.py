@@ -28,7 +28,7 @@ class ReportAgedPartnerBalance(models.AbstractModel):
         ctx = self._context
         periods = {}
         date_from = fields.Date.from_string(date_from)
-        start = date_from - relativedelta(days=1)
+        start = date_from
         for i in range(5)[::-1]:
             stop = start - relativedelta(days=period_length)
             period_name = str((5-(i+1)) * period_length + 1) + '-' + str((5-i) * period_length)
