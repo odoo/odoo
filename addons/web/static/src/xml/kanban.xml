@@ -56,7 +56,7 @@
                         <button class="btn btn-primary o_kanban_add" type="button">Add</button>
                     </span>
                 </div>
-                <span class="o_discard_msg text-muted float-right">Esc to discard</span>
+                <span t-if="!widget.isMobile" class="o_discard_msg text-muted float-right">Esc to discard</span>
                 <t t-if="widget.examples">
                     <button type="button" class="btn btn-link o_kanban_examples">See examples</button>
                 </t>
@@ -197,7 +197,10 @@
 <t t-name="KanbanView.MobileTabs">
     <div class="o_kanban_mobile_tabs">
         <t t-foreach="data" t-as="group">
-            <div class="o_kanban_mobile_tab" t-att-data-id="group.res_id or group.id">
+            <div t-if="group.id &amp;&amp; group.id === 'quick_create'" class="o_kanban_mobile_tab" t-att-data-id="group.id">
+                <span class="o_column_title"><i class="fa fa-plus mr8"/><t t-esc="group.value"/></span>
+            </div>
+            <div t-else="" class="o_kanban_mobile_tab" t-att-data-id="group.res_id or group.id">
                 <span class="o_column_title"><t t-esc="group.value"/></span>
             </div>
         </t>

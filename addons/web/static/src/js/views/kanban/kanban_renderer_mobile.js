@@ -55,7 +55,7 @@ KanbanRenderer.include({
      * @override
      */
     on_detach_callback: function () {
-        if (this.state.groupedBy.length && this.widgets.length) {
+        if (this.state.groupedBy.length && this.activeColumnIndex < this.widgets.length) {
             var $column = this.widgets[this.activeColumnIndex].$el;
             this._scrollPosition = {
                 left: $column.scrollLeft(),
@@ -77,7 +77,25 @@ KanbanRenderer.include({
      * @returns {Deferred}
      */
     addQuickCreate: function () {
-        return this.widgets[this.activeColumnIndex].addQuickCreate();
+        var self = this;
+        if (this.activeColumnIndex < this.widgets.length) {
+            return this.widgets[this.activeColumnIndex].addQuickCreate();
+        } else if (this.widgets.length) {
+            // If Create record is clicked when user is on New column creation
+            // then move to first column and open record quick create in first column
+            return this._moveToGroup(0, this.ANIMATE).then(function () {
+                return self.widgets[0].addQuickCreate();
+            });
+        }
+    },
+    /**
+     * Overrides to call _moveToGroup forcefully so that last created column is displayed
+     * after new column created, to do that pass widgets.length-1 as activeColumnIndex
+     *
+     * @override
+     */
+    quickCreateToggleFold: function () {
+        this._moveToGroup(this.widgets.length-1, this.ANIMATE);
     },
     /**
      * Overrides to restore the left property and the scrollTop on the updated
@@ -132,43 +150,70 @@ KanbanRenderer.include({
      */
     _moveToGroup: function (moveToIndex, animate) {
         var self = this;
-        if (moveToIndex < 0 || moveToIndex >= this.widgets.length) {
+        var widgetsLength = this.createColumnEnabled ? this.widgets.length + 1 : this.widgets.length;
+        if (moveToIndex < 0 || moveToIndex >= widgetsLength) {
             return $.when();
         }
         var def = $.Deferred();
         this.activeColumnIndex = moveToIndex;
-        var column = this.widgets[this.activeColumnIndex];
-        this.trigger_up('kanban_load_records', {
-            columnID: column.db_id,
-            onSuccess: function () {
-                // update the columns and tabs positions (optionally with an animation)
-                var updateFunc = animate ? 'animate' : 'css';
-                self.$('.o_kanban_mobile_tab, .o_kanban_group').removeClass('o_current');
-                _.each(self.widgets, function (column, index) {
-                    var columnID = column.id || column.db_id;
-                    var $column = self.$('.o_kanban_group[data-id="' + columnID + '"]');
-                    var $tab = self.$('.o_kanban_mobile_tab[data-id="' + columnID + '"]');
-                    if (index === moveToIndex - 1) {
-                        $column[updateFunc]({left: '-100%'});
-                        $tab[updateFunc]({left: '0%'});
-                    } else if (index === moveToIndex + 1) {
-                        $column[updateFunc]({left: '100%'});
-                        $tab[updateFunc]({left: '100%'});
-                    } else if (index === moveToIndex) {
-                        $column[updateFunc]({left: '0%'});
-                        $tab[updateFunc]({left: '50%'});
-                        $tab.add($column).addClass('o_current');
-                    } else if (index < moveToIndex) {
-                        $column.css({left: '-100%'});
-                        $tab[updateFunc]({left: '-100%'});
-                    } else if (index > moveToIndex) {
-                        $column.css({left: '100%'});
-                        $tab[updateFunc]({left: '200%'});
-                    }
-                });
-                def.resolve();
-            },
-        });
+        // update the columns and tabs positions (optionally with an animation)
+        var updateFunc = animate ? 'animate' : 'css';
+        var $quickCreateTab = self.$('.o_kanban_mobile_tab[data-id="quick_create"]');
+        var $quickCreateColumn = self.$(".o_column_quick_create");
+
+        var setStyleLeft = function () {
+            _.each(self.widgets, function (column, index) {
+                var $column = self.$('.o_kanban_group[data-id="' + column.id + '"]');
+                var $tab = self.$('.o_kanban_mobile_tab[data-id="' + column.id + '"]');
+                if (index === moveToIndex - 1) {
+                    $column[updateFunc]({left: "-100%"});
+                    $tab[updateFunc]({left: '0%'});
+                } else if (index === moveToIndex + 1) {
+                    $column[updateFunc]({left: '100%'});
+                    $tab[updateFunc]({left: '100%'});
+                } else if (index === moveToIndex) {
+                    $column[updateFunc]({left: '0%'});
+                    $tab[updateFunc]({left: '50%'});
+                    $tab.add($column).addClass('o_current');
+                } else if (index < moveToIndex) {
+                    $column.css({left: '-100%'});
+                    $tab[updateFunc]({left: '-100%'});
+                } else if (index > moveToIndex) {
+                    $column.css({left: '100%'});
+                    $tab[updateFunc]({left: '200%'});
+                }
+            });
+        }
+        if (moveToIndex < this.widgets.length) {
+            // reset quick create positions
+            if (this.createColumnEnabled) {
+                $quickCreateTab.removeClass("o_current");
+                $quickCreateColumn[updateFunc]({left: '100%'});
+                $quickCreateTab[updateFunc]({left: moveToIndex < self.widgets.length - 1 ? '200%' : "100%"});
+            }
+
+            var column = this.widgets[this.activeColumnIndex];
+            this.trigger_up('kanban_load_records', {
+                columnID: column.db_id,
+                onSuccess: function () {
+                    self.$('.o_kanban_mobile_tab').removeClass('o_current');
+                    setStyleLeft();
+                    def.resolve();
+                },
+            });
+        } else {
+            if (this.createColumnEnabled) {
+                this.$('.o_kanban_mobile_tab').removeClass('o_current');
+                if (self.widgets.length) {
+                    setStyleLeft();
+                }
+                $quickCreateTab[updateFunc]({"left": "50%"});
+                $quickCreateColumn[updateFunc]({left: '0%'});
+                $quickCreateTab.addClass("o_current");
+                this.quickCreate.toggleFold();
+            }
+            def.resolve();
+        }
         return def;
     },
     /**
@@ -187,7 +232,13 @@ KanbanRenderer.include({
                 data.push(group);
             }
         });
-
+        // create tab for quick create column
+        if (this.createColumnEnabled) {
+            data.push({
+                id: "quick_create",
+                value: _("Add column")
+            });
+        }
         $(qweb.render('KanbanView.MobileTabs', {
             data: data,
         })).prependTo(fragment);
@@ -215,6 +266,7 @@ KanbanRenderer.include({
      * @param {MouseEvent} event
      */
     _onMobileTabClicked: function (event) {
+        event.stopImmediatePropagation();
         this._moveToGroup($(event.currentTarget).index(), true);
     },
 });
