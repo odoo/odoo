@@ -11,15 +11,38 @@ class res_partner(models.Model):
 
     @api.multi
     def _compute_purchase_order_count(self):
-        PurchaseOrder = self.env['purchase.order']
-        for partner in self:
-            partner.purchase_order_count = PurchaseOrder.search_count([('partner_id', 'child_of', partner.id)])
+        # retrieve all children partners and prefetch 'parent_id' on them
+        all_partners = self.search([('id', 'child_of', self.ids)])
+        all_partners.read(['parent_id'])
+
+        purchase_order_groups = self.env['purchase.order'].read_group(
+            domain=[('partner_id', 'in', all_partners.ids)],
+            fields=['partner_id'], groupby=['partner_id']
+        )
+        for group in purchase_order_groups:
+            partner = self.browse(group['partner_id'][0])
+            while partner:
+                if partner in self:
+                    partner.purchase_order_count += group['partner_id_count']
+                partner = partner.parent_id
 
     @api.multi
     def _compute_supplier_invoice_count(self):
-        Invoice = self.env['account.invoice']
-        for partner in self:
-            partner.supplier_invoice_count = Invoice.search_count([('partner_id', 'child_of', partner.id), ('type', '=', 'in_invoice')])
+        # retrieve all children partners and prefetch 'parent_id' on them
+        all_partners = self.search([('id', 'child_of', self.ids)])
+        all_partners.read(['parent_id'])
+
+        supplier_invoice_groups = self.env['account.invoice'].read_group(
+            domain=[('partner_id', 'in', all_partners.ids),
+                    ('type', '=', 'in_invoice')],
+            fields=['partner_id'], groupby=['partner_id']
+        )
+        for group in supplier_invoice_groups:
+            partner = self.browse(group['partner_id'][0])
+            while partner:
+                if partner in self:
+                    partner.supplier_invoice_count += group['partner_id_count']
+                partner = partner.parent_id
 
     @api.model
     def _commercial_fields(self):
