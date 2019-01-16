@@ -24,7 +24,6 @@
                 <field name="survey_id"/>
             </xpath>
             <xpath expr='//a[@name="edit_job"]' position="after">
-                <br/>
                 <a t-if="record.survey_id.raw_value" name="action_print_survey" type="object" title="Display Interview Form">Interview Form</a>
                 <span t-if="!record.survey_id.raw_value">No Interview Form</span>
             </xpath>

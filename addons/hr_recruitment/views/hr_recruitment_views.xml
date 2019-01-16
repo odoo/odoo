@@ -62,7 +62,7 @@
         </field>
     </record>
 
-    <record model="ir.ui.view" id="crm_case_form_view_job">
+    <record model="ir.ui.view" id="hr_applicant_view_form">
         <field name="name">Jobs - Recruitment Form</field>
         <field name="model">hr.applicant</field>
         <field name="arch" type="xml">
@@ -202,7 +202,8 @@
         <field name="model">hr.applicant</field>
         <field name="arch" type="xml">
             <search string="Search Applicants">
-                <field name="partner_name" filter_domain="['|','|',('name','ilike',self),('partner_name','ilike',self),('email_from','ilike',self)]" string="Subject / Applicant"/>
+                <field name="partner_name" filter_domain="['|', ('name', 'ilike', self), ('partner_name', 'ilike', self)]" string="Subject / Applicant"/>
+                <field name="email_from" filter_domain="[('email_from', 'ilike', self)]" string="Email"/>
                 <filter string="My Applications" name="my_applications" domain="[('user_id', '=', uid)]"/>
                 <filter string="Unassigned" name="unassigned" domain="[('user_id', '=', False)]"/>
                 <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
@@ -296,13 +297,13 @@
                     <t t-name="kanban-box">
                         <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click oe_applicant_kanban oe_semantic_html_override">
                             <div class="o_dropdown_kanban dropdown">
-
                                 <a class="dropdown-toggle o-no-caret btn" role="button" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
                                     <span class="fa fa-ellipsis-v"/>
                                 </a>
                                 <div class="dropdown-menu" role="menu">
                                     <t t-if="widget.deletable"><a role="menuitem" type="delete" class="dropdown-item">Delete</a></t>
                                     <a role="menuitem" name="action_makeMeeting" type="object" class="dropdown-item">Schedule Interview</a>
+                                    <div role="separator" class="dropdown-divider"></div>
                                     <ul class="oe_kanban_colorpicker" data-field="color"/>
                                 </div>
                             </div>
@@ -335,7 +336,7 @@
                                     </div>
                                     <div class="oe_kanban_bottom_right">
                                         <a name="action_get_attachment_tree_view" type="object">
-                                            <span title='Documents'><i class='fa fa-book' role="img" aria-label="Documents"/>
+                                            <span title='Documents'><i class='fa fa-paperclip' role="img" aria-label="Documents"/>
                                                 <t t-esc="record.attachment_number.raw_value"/>
                                             </span>
                                         </a>
@@ -403,6 +404,9 @@
                 <separator/>
                 <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
             </field>
+            <xpath expr="//filter[@name='in_position']" position="before">
+                <filter string="My Favorites"  name="my_favorite_jobs" domain="[('favorite_user_ids', 'in', uid)]"/>
+            </xpath>
         </field>
     </record>
 
@@ -466,7 +470,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='department_id']" position="after">
                 <field name="address_id" context="{'show_address': 1}" domain= "[('is_company', '=', True )]" options="{'always_reload': True}"/>
-                <label for="alias_name" string="Email alias" attrs="{'invisible': [('alias_domain', '=', False)]}" help="Define a specific contact address for this job position. If you keep it empty, the default email address will be used which is in human resources settings"/>
+                <label for="alias_name" string="Email Alias" attrs="{'invisible': [('alias_domain', '=', False)]}" help="Define a specific contact address for this job position. If you keep it empty, the default email address will be used which is in human resources settings"/>
                 <div name="alias_def" attrs="{'invisible': [('alias_domain', '=', False)]}">
                     <field name="alias_id" class="oe_read_only" string="Email Alias" required="0"/>
                     <div class="oe_edit_only" name="edit_alias">
@@ -474,11 +478,6 @@
                     </div>
                 </div>
                 <field name="user_id"/>
-            </xpath>
-            <xpath expr="//group[@name='recruitment']" position="after">
-                <group string="Offer" name="offer">
-                    <field name="hr_responsible_id"/>
-                </group>
             </xpath>
             <div name="button_box" position="inside">
                 <button class="oe_stat_button"
@@ -495,7 +494,7 @@
                     <field name="no_of_employee" widget="statinfo" string="Employees"/>
                 </button>
                 <button class="oe_stat_button"
-                    icon="fa-book"
+                    icon="fa-paperclip"
                     name="action_get_attachment_tree_view"
                     type="object">
                     <field name="documents_count" widget="statinfo" string="Documents"/>
@@ -570,7 +569,7 @@
     <record model="ir.actions.act_window.view" id="action_hr_sec_form_view_act_job">
         <field name="sequence" eval="2"/>
         <field name="view_mode">form</field>
-        <field name="view_id" ref="crm_case_form_view_job"/>
+        <field name="view_id" ref="hr_applicant_view_form"/>
         <field name="act_window_id" ref="crm_case_categ0_act_job"/>
     </record>
 
