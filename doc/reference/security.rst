@@ -13,6 +13,12 @@ Both mechanisms are linked to specific users through *groups*: a user belongs
 to any number of groups, and security mechanisms are associated to groups,
 thus applying security mechamisms to users.
 
+.. note:: Since Odoo 12.0, basic access controls have to be defined for
+    new models or their views won't be accessible !
+    If no access control is specified for a model, a warning will be raised in
+    the server logs and propose basic read rules to provide minimal read access to
+    the models.
+
 .. _reference/security/acl:
 
 Access Control
@@ -68,6 +74,21 @@ This means the first *group rule* restricts access, but any further
 *group rule* expands it, while *global rules* can only ever restrict access
 (or have no effect).
 
+.. code-block:: xml
+
+  <record id="only_responsible_can_modify" model="ir.rule">
+    <field name="name">Only Responsible can modify Course</field>
+    <field name="model_id" ref="model_openacademy_course"/>
+    <field name="groups" eval="[(4, ref('openacademy.group_maesters'))]"/>
+    <field name="perm_read" eval="0"/>
+    <field name="perm_write" eval="1"/>
+    <field name="perm_create" eval="1"/>
+    <field name="perm_unlink" eval="1"/>
+    <field name="domain_force">
+       [('responsible_id','=',user.id)]
+    </field>
+  </record>
+
 .. warning:: record rules do not apply to the Administrator user
     :class: aphorism
 
@@ -76,7 +97,7 @@ This means the first *group rule* restricts access, but any further
 Field Access
 ============
 
-.. versionadded:: 7.0
+.. .. versionadded:: 7.0
 
 An ORM :class:`~odoo.fields.Field` can have a ``groups`` attribute
 providing a list of groups (as a comma-separated string of

@@ -426,7 +426,7 @@ how the POS interface works.
 Automated Actions (``ir.cron``)
 ======================================
 
-Triggers action automatically on a predefined frequency.
+Actions triggered automatically on a predefined frequency.
 
 ``name``
     Name of the automated action (Mainly used in log display)
@@ -438,7 +438,7 @@ Triggers action automatically on a predefined frequency.
     Unit of measure of frequency interval
 
 ``numbercall``
-    Number of times this action has to be run
+    Number of times this action has to be run.
     If the action is expected to run indefinitely, set to ``-1``.
 
 ``doall``

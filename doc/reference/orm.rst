@@ -9,9 +9,9 @@ ORM
 Recordsets
 ==========
 
-.. versionadded:: 8.0
+.. .. versionadded:: 8.0
 
-    This page documents the New API added in Odoo 8.0 which should be the
+..    This page documents the New API added in Odoo 8.0 which should be the
     primary development API going forward. It also provides information about
     porting from or bridging with the "old API" of versions 7 and earlier, but
     does not explicitly document that API. See the old documentation for that.
@@ -508,107 +508,6 @@ Clearing caches can be performed using the
 :meth:`~odoo.models.BaseModel.invalidate_cache` method of the
 :class:`~odoo.models.BaseModel` object.
 
-
-.. _reference/orm/oldapi:
-
-Compatibility between new API and old API
-=========================================
-
-Odoo is currently transitioning from an older (less regular) API, it can be
-necessary to manually bridge from one to the other manually:
-
-* RPC layers (both XML-RPC and JSON-RPC) are expressed in terms of the old
-  API, methods expressed purely in the new API are not available over RPC
-* overridable methods may be called from older pieces of code still written
-  in the old API style
-
-The big differences between the old and new APIs are:
-
-* values of the :class:`~odoo.api.Environment` (cursor, user id and
-  context) are passed explicitly to methods instead
-* record data (:attr:`~odoo.models.Model.ids`) are passed explicitly to
-  methods, and possibly not passed at all
-* methods tend to work on lists of ids instead of recordsets
-
-By default, methods are assumed to use the new API style and are not callable
-from the old API style.
-
-.. tip:: calls from the new API to the old API are bridged
-    :class: aphorism
-
-    when using the new API style, calls to methods defined using the old API
-    are automatically converted on-the-fly, there should be no need to do
-    anything special::
-
-        >>> # method in the old API style
-        >>> def old_method(self, cr, uid, ids, context=None):
-        ...    print ids
-
-        >>> # method in the new API style
-        >>> def new_method(self):
-        ...     # system automatically infers how to call the old-style
-        ...     # method from the new-style method
-        ...     self.old_method()
-
-        >>> env[model].browse([1, 2, 3, 4]).new_method()
-        [1, 2, 3, 4]
-
-Two decorators can expose a new-style method to the old API:
-
-:func:`~odoo.api.model`
-    the method is exposed as not using ids, its recordset will generally be
-    empty. Its "old API" signature is ``cr, uid, *arguments, context``::
-
-        @api.model
-        def some_method(self, a_value):
-            pass
-        # can be called as
-        old_style_model.some_method(cr, uid, a_value, context=context)
-
-:func:`~odoo.api.multi`
-    the method is exposed as taking a list of ids (possibly empty), its
-    "old API" signature is ``cr, uid, ids, *arguments, context``::
-
-        @api.multi
-        def some_method(self, a_value):
-            pass
-        # can be called as
-        old_style_model.some_method(cr, uid, [id1, id2], a_value, context=context)
-
-Note that a method `create` decorated with :func:`~odoo.api.model` will always
-be called with a single dictionary. A method `create` decorated with the variant
-:func:`~odoo.api.model_create_multi` will always be called with a list of dicts.
-The decorators take care of converting the argument to one form or the other::
-
-    @api.model
-    def create(self, vals):
-        ...
-
-    @api.model_create_multi
-    def create(self, vals_list):
-        ...
-
-Because new-style APIs tend to return recordsets and old-style APIs tend to
-return lists of ids, there is also a decorator managing this:
-
-:func:`~odoo.api.returns`
-    the function is assumed to return a recordset, the first parameter should
-    be the name of the recordset's model or ``self`` (for the current model).
-
-    No effect if the method is called in new API style, but transforms the
-    recordset into a list of ids when called from the old API style::
-
-        >>> @api.multi
-        ... @api.returns('self')
-        ... def some_method(self):
-        ...     return self
-        >>> new_style_model = env['a.model'].browse(1, 2, 3)
-        >>> new_style_model.some_method()
-        a.model(1, 2, 3)
-        >>> old_style_model = pool['a.model']
-        >>> old_style_model.some_method(cr, uid, [1, 2, 3], context=context)
-        [1, 2, 3]
-
 .. _reference/orm/model:
 
 Model Reference
@@ -627,6 +526,7 @@ Model Reference
 
 .. autoclass:: odoo.models.Model
   :members:
+  :noindex:
 
   .. rubric:: Structural attributes
 
@@ -842,8 +742,7 @@ Method decorators
 =================
 
 .. automodule:: odoo.api
-    :members: multi, model, depends, constrains, onchange, returns,
-              one, v7, v8
+    :members: multi, model, depends, constrains, onchange, returns
     :noindex:
 
 .. _reference/orm/fields:
@@ -1196,12 +1095,121 @@ Domain criteria can be combined using logical operators in *prefix* form:
         AND (language is NOT english)
         AND (country is Belgium OR Germany)
 
+
+.. TODO remove the sections on old API ?
+
+.. _reference/orm/oldapi:
+
+Old API
+=======
+
+.. warning:: This section refers to the old Odoo ORM API
+
+
+Compatibility between new API and old API
+-----------------------------------------
+
+Odoo is currently transitioning from an older (less regular) API, it can be
+necessary to manually bridge from one to the other manually:
+
+* RPC layers (both XML-RPC and JSON-RPC) are expressed in terms of the old
+  API, methods expressed purely in the new API are not available over RPC
+* overridable methods may be called from older pieces of code still written
+  in the old API style
+
+The big differences between the old and new APIs are:
+
+* values of the :class:`~odoo.api.Environment` (cursor, user id and
+  context) are passed explicitly to methods instead
+* record data (:attr:`~odoo.models.Model.ids`) are passed explicitly to
+  methods, and possibly not passed at all
+* methods tend to work on lists of ids instead of recordsets
+
+By default, methods are assumed to use the new API style and are not callable
+from the old API style.
+
+.. tip:: calls from the new API to the old API are bridged
+    :class: aphorism
+
+    when using the new API style, calls to methods defined using the old API
+    are automatically converted on-the-fly, there should be no need to do
+    anything special::
+
+        >>> # method in the old API style
+        >>> def old_method(self, cr, uid, ids, context=None):
+        ...    print ids
+
+        >>> # method in the new API style
+        >>> def new_method(self):
+        ...     # system automatically infers how to call the old-style
+        ...     # method from the new-style method
+        ...     self.old_method()
+
+        >>> env[model].browse([1, 2, 3, 4]).new_method()
+        [1, 2, 3, 4]
+
+Two decorators can expose a new-style method to the old API:
+
+:func:`~odoo.api.model`
+    the method is exposed as not using ids, its recordset will generally be
+    empty. Its "old API" signature is ``cr, uid, *arguments, context``::
+
+        @api.model
+        def some_method(self, a_value):
+            pass
+        # can be called as
+        old_style_model.some_method(cr, uid, a_value, context=context)
+
+:func:`~odoo.api.multi`
+    the method is exposed as taking a list of ids (possibly empty), its
+    "old API" signature is ``cr, uid, ids, *arguments, context``::
+
+        @api.multi
+        def some_method(self, a_value):
+            pass
+        # can be called as
+        old_style_model.some_method(cr, uid, [id1, id2], a_value, context=context)
+
+Note that a method `create` decorated with :func:`~odoo.api.model` will always
+be called with a single dictionary. A method `create` decorated with the variant
+:func:`~odoo.api.model_create_multi` will always be called with a list of dicts.
+The decorators take care of converting the argument to one form or the other::
+
+    @api.model
+    def create(self, vals):
+        ...
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        ...
+
+Because new-style APIs tend to return recordsets and old-style APIs tend to
+return lists of ids, there is also a decorator managing this:
+
+:func:`~odoo.api.returns`
+    the function is assumed to return a recordset, the first parameter should
+    be the name of the recordset's model or ``self`` (for the current model).
+
+    No effect if the method is called in new API style, but transforms the
+    recordset into a list of ids when called from the old API style::
+
+        >>> @api.multi
+        ... @api.returns('self')
+        ... def some_method(self):
+        ...     return self
+        >>> new_style_model = env['a.model'].browse(1, 2, 3)
+        >>> new_style_model.some_method()
+        a.model(1, 2, 3)
+        >>> old_style_model = pool['a.model']
+        >>> old_style_model.some_method(cr, uid, [1, 2, 3], context=context)
+        [1, 2, 3]
+
 Porting from the old API to the new API
-=======================================
+---------------------------------------
 
 * bare lists of ids are to be avoided in the new API, use recordsets instead
 * methods still written in the old API should be automatically bridged by the
-  ORM, no need to switch to the old API, just call them as if they were a new
+  ORM, no need to switch to the new API, just call them as if they were a new
   API method. See :ref:`reference/orm/oldapi/bridging` for more details.
 * :meth:`~odoo.models.Model.search` returns a recordset, no point in e.g.
   browsing its result
@@ -1291,7 +1299,7 @@ Porting from the old API to the new API
 .. _reference/orm/oldapi/bridging:
 
 Automatic bridging of old API methods
--------------------------------------
+'''''''''''''''''''''''''''''''''''''
 
 When models are initialized, all methods are automatically scanned and bridged
 if they look like models declared in the old API style. This bridging makes
