@@ -6,24 +6,30 @@
             <field name="model">crm.merge.opportunity</field>
             <field name="arch" type="xml">
                 <form string="Merge Leads/Opportunities">
-                    <group string="Assign opportunities to">
-                        <field name="user_id" class="oe_inline"/>
-                        <field name="team_id" class="oe_inline" kanban_view_ref="%(sales_team.crm_team_view_kanban)s"/>
-                    </group>
                     <group string="Select Leads/Opportunities">
                         <field name="opportunity_ids" nolabel="1">
                             <tree>
-                                <field name="create_date"/>
+                                <field name="id"/>
+                                <field name="create_date" widget="date"/>
                                 <field name="name"/>
-                                <field name="type"/>
-                                <field name="contact_name"/>
+                                <field name="contact_name" string="Contact"/>
                                 <field name="email_from"/>
                                 <field name="phone"/>
+                                <field name="type"/>
                                 <field name="stage_id"/>
                                 <field name="user_id"/>
                                 <field name="team_id"/>
                             </tree>
                         </field>
+                        <group>
+                            <field name="merge_destination_opportunity_id" domain="[('id', 'in', opportunity_ids)]" options="{'no_create': True, 'no_open':True}" required="1"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Assign to">
+                            <field name="user_id" options="{'no_open':True,'no_create':True}"/>
+                            <field name="team_id" options="{'no_open':True,'no_create':True}" kanban_view_ref="%(sales_team.crm_team_view_kanban)s"/>
+                        </group>
                     </group>
                     <footer>
                         <button name="action_merge" type="object" string="Merge" class="btn-primary"/>
@@ -41,6 +47,7 @@
             binding_views="list"
             view_mode="form"
             target="new"
+            context="{'merge_opportunity_name_get': True}"
             groups="sales_team.group_sale_salesman" />
 
 </odoo>

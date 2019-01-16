@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import api, models
 
 
 class MergeOpportunity(models.TransientModel):
@@ -16,6 +16,7 @@ class MergeOpportunity(models.TransientModel):
 
     _name = 'crm.merge.opportunity'
     _description = 'Merge Opportunities'
+    _inherit = ['crm.common.merge.opportunity']
 
     @api.model
     def default_get(self, fields):
@@ -32,24 +33,7 @@ class MergeOpportunity(models.TransientModel):
 
         return result
 
-    opportunity_ids = fields.Many2many('crm.lead', 'merge_opportunity_rel', 'merge_id', 'opportunity_id', string='Leads/Opportunities')
-    user_id = fields.Many2one('res.users', 'Salesperson', index=True)
-    team_id = fields.Many2one('crm.team', 'Sales Team', index=True)
-
     def action_merge(self):
         self.ensure_one()
-        merge_opportunity = self.opportunity_ids.merge_opportunity(self.user_id.id, self.team_id.id)
+        merge_opportunity = self.opportunity_ids.merge_opportunity(self.user_id.id, self.team_id.id, destination_id=self.merge_destination_opportunity_id.id)
         return merge_opportunity.redirect_lead_opportunity_view()
-
-    @api.onchange('user_id')
-    def _onchange_user(self):
-        """ When changing the user, also set a team_id or restrict team id
-            to the ones user_id is member of. """
-        team_id = False
-        if self.user_id:
-            user_in_team = False
-            if self.team_id:
-                user_in_team = self.env['crm.team'].search_count([('id', '=', self.team_id.id), '|', ('user_id', '=', self.user_id.id), ('member_ids', '=', self.user_id.id)])
-            if not user_in_team:
-                team_id = self.env['crm.team'].search(['|', ('user_id', '=', self.user_id.id), ('member_ids', '=', self.user_id.id)], limit=1)
-        self.team_id = team_id
