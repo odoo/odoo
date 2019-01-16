@@ -559,7 +559,7 @@
                         <button class="oe_stat_button" name="button_journal_entries"
                                 string="Journal Entries" type="object"
                                 attrs="{'invisible':[('move_line_ids','=',[])]}" icon="fa-bars"/>
-                        <field name="move_line_ids" invisible="1"/>
+                        <field name="move_line_ids" invisible="1" readonly="1"/>
                     </div>
                     <div class="oe_title oe_inline">
                         <label for="name" class="oe_edit_only"/>
