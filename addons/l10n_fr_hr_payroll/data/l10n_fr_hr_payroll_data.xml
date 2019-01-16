@@ -107,20 +107,28 @@
 
         <!-- Contribution Register -->
 
-    <record id="hr_urssaf_register" model="hr.contribution.register">
+    <record id="hr_urssaf_register" model="res.partner">
         <field name="name">URSSAF</field>
+        <field name="supplier">1</field>
+        <field eval="0" name="customer"/>
     </record>
 
-    <record id="hr_retraite_register" model="hr.contribution.register">
+    <record id="hr_retraite_register" model="res.partner">
         <field name="name">Organisme de retraite complementaire</field>
+        <field name="supplier">1</field>
+        <field eval="0" name="customer"/>
     </record>
 
-    <record id="hr_cci_register" model="hr.contribution.register">
+    <record id="hr_cci_register" model="res.partner">
         <field name="name">Chambre du commerce et de l'industrie</field>
+        <field name="supplier">1</field>
+        <field eval="0" name="customer"/>
     </record>
 
-    <record id="hr_prevoyance_register" model="hr.contribution.register">
+    <record id="hr_prevoyance_register" model="res.partner">
         <field name="name">Organisme de prevoyance</field>
+        <field name="supplier">1</field>
+        <field eval="0" name="customer"/>
     </record>
 
 
@@ -290,7 +298,7 @@
         <field name="amount_percentage">0.75</field>
         <field name="amount_percentage_base">categories.BRUT</field>
         <field name="appears_on_payslip" eval="True"/>
-        <field name="register_id" ref="hr_urssaf_register"/>
+        <field name="partner_id" ref="hr_urssaf_register"/>
     </record>
 
     <record id="hr_payroll_rules_C1_employer" model="hr.salary.rule">
@@ -303,7 +311,7 @@
         <field name="amount_select">percentage</field>
         <field name="amount_percentage">13.10</field>
         <field name="amount_percentage_base">categories.BRUT</field>
-        <field name="register_id" ref="hr_urssaf_register"/>
+        <field name="partner_id" ref="hr_urssaf_register"/>
     </record>
 
 
@@ -319,7 +327,7 @@
         <field name="amount_percentage">6.65</field>
         <field name="amount_percentage_base">min(categories.BRUT,SECU)</field>
         <field name="appears_on_payslip" eval="True"/>
-        <field name="register_id" ref="hr_urssaf_register"/>
+        <field name="partner_id" ref="hr_urssaf_register"/>
     </record>
 
     <record id="hr_payroll_rules_C2_employer" model="hr.salary.rule">
@@ -332,7 +340,7 @@
         <field name="amount_select">percentage</field>
         <field name="amount_percentage">8.3</field>
         <field name="amount_percentage_base">min(categories.BRUT,SECU)</field>
-        <field name="register_id" ref="hr_urssaf_register"/>
+        <field name="partner_id" ref="hr_urssaf_register"/>
     </record>
 
 
@@ -348,7 +356,7 @@
         <field name="amount_percentage">0.1</field>
         <field name="amount_percentage_base">categories.BRUT</field>
         <field name="appears_on_payslip" eval="True"/>
-        <field name="register_id" ref="hr_urssaf_register"/>
+        <field name="partner_id" ref="hr_urssaf_register"/>
     </record>
 
     <record id="hr_payroll_rules_C3_employer" model="hr.salary.rule">
@@ -361,7 +369,7 @@
         <field name="amount_select">percentage</field>
         <field name="amount_percentage">1.6</field>
         <field name="amount_percentage_base">categories.BRUT</field>
-        <field name="register_id" ref="hr_urssaf_register"/>
+        <field name="partner_id" ref="hr_urssaf_register"/>
     </record>
 
 
@@ -376,7 +384,7 @@
         <field name="amount_percentage">0</field>
         <field name="amount_percentage_base">categories.BRUT</field>
         <field name="appears_on_payslip" eval="True"/>
-        <field name="register_id" ref="hr_urssaf_register"/>
+        <field name="partner_id" ref="hr_urssaf_register"/>
     </record>
 
     <record id="hr_payroll_rules_C4_employer" model="hr.salary.rule">
@@ -389,7 +397,7 @@
         <field name="amount_select">percentage</field>
         <field name="amount_percentage">5.4</field>
         <field name="amount_percentage_base">categories.BRUT</field>
-        <field name="register_id" ref="hr_urssaf_register"/>
+        <field name="partner_id" ref="hr_urssaf_register"/>
     </record>
 
 
@@ -408,7 +416,7 @@
         <field name="amount_percentage">2.40</field>
         <field name="amount_percentage_base">min(categories.BRUT,TB)</field>
         <field name="appears_on_payslip" eval="True"/>
-        <field name="register_id" ref="hr_urssaf_register"/>
+        <field name="partner_id" ref="hr_urssaf_register"/>
     </record>
 
     <record id="hr_payroll_rules_C10_employer" model="hr.salary.rule">
@@ -421,7 +429,7 @@
         <field name="amount_select">percentage</field>
         <field name="amount_percentage">4</field>
         <field name="amount_percentage_base">min(categories.BRUT,TB)</field>
-        <field name="register_id" ref="hr_urssaf_register"/>
+        <field name="partner_id" ref="hr_urssaf_register"/>
     </record>
 
 
@@ -436,7 +444,7 @@
         <field name="amount_percentage">0</field>
         <field name="amount_percentage_base">min(categories.BRUT,TB)</field>
         <field name="appears_on_payslip" eval="True"/>
-        <field name="register_id" ref="hr_urssaf_register"/>
+        <field name="partner_id" ref="hr_urssaf_register"/>
     </record>
 
     <record id="hr_payroll_rules_C11_employer" model="hr.salary.rule">
@@ -449,7 +457,7 @@
         <field name="amount_select">percentage</field>
         <field name="amount_percentage">0.3</field>
         <field name="amount_percentage_base">min(categories.BRUT,TB)</field>
-        <field name="register_id" ref="hr_urssaf_register"/>
+        <field name="partner_id" ref="hr_urssaf_register"/>
     </record>
 
 
@@ -463,7 +471,7 @@
         <field name="amount_percentage">3</field>
         <field name="amount_percentage_base">min(categories.BRUT,T1)</field>
         <field name="appears_on_payslip" eval="True"/>
-        <field name="register_id" ref="hr_retraite_register"/>
+        <field name="partner_id" ref="hr_retraite_register"/>
     </record>
 
     <record id="hr_payroll_rules_C12_employer" model="hr.salary.rule">
@@ -476,7 +484,7 @@
         <field name="amount_select">percentage</field>
         <field name="amount_percentage">4.5</field>
         <field name="amount_percentage_base">min(categories.BRUT,T1)</field>
-        <field name="register_id" ref="hr_retraite_register"/>
+        <field name="partner_id" ref="hr_retraite_register"/>
     </record>
 
 
@@ -493,7 +501,7 @@
         <field name="amount_percentage">8</field>
         <field name="amount_percentage_base">min(categories.BRUT-T1,T2-T1)</field>
         <field name="appears_on_payslip" eval="True"/>
-        <field name="register_id" ref="hr_retraite_register"/>
+        <field name="partner_id" ref="hr_retraite_register"/>
     </record>
 
     <record id="hr_payroll_rules_C14_employer" model="hr.salary.rule">
@@ -507,7 +515,7 @@
         <field name="amount_select">percentage</field>
         <field name="amount_percentage">12</field>
         <field name="amount_percentage_base">min(categories.BRUT-T1,T2-T1)</field>
-        <field name="register_id" ref="hr_retraite_register"/>
+        <field name="partner_id" ref="hr_retraite_register"/>
     </record>
 
 
@@ -524,7 +532,7 @@
         <field name="amount_percentage">0.8</field>
         <field name="amount_percentage_base">min(categories.BRUT,T1)</field>
         <field name="appears_on_payslip" eval="True"/>
-        <field name="register_id" ref="hr_retraite_register"/>
+        <field name="partner_id" ref="hr_retraite_register"/>
     </record>
 
     <record id="hr_payroll_rules_C13_employer" model="hr.salary.rule">
@@ -537,7 +545,7 @@
         <field name="amount_select">percentage</field>
         <field name="amount_percentage">1.2</field>
         <field name="amount_percentage_base">min(categories.BRUT,T1)</field>
-        <field name="register_id" ref="hr_retraite_register"/>
+        <field name="partner_id" ref="hr_retraite_register"/>
     </record>
 
 
@@ -553,7 +561,7 @@
         <field name="amount_percentage">0.9</field>
         <field name="amount_percentage_base">min(categories.BRUT-T1,T2-T1)</field>
         <field name="appears_on_payslip" eval="True"/>
-        <field name="register_id" ref="hr_retraite_register"/>
+        <field name="partner_id" ref="hr_retraite_register"/>
     </record>
 
     <record id="hr_payroll_rules_C15_employer" model="hr.salary.rule">
@@ -567,7 +575,7 @@
         <field name="amount_select">percentage</field>
         <field name="amount_percentage">1.3</field>
         <field name="amount_percentage_base">min(categories.BRUT-T1,T2-T1)</field>
-        <field name="register_id" ref="hr_retraite_register"/>
+        <field name="partner_id" ref="hr_retraite_register"/>
     </record>
 
 
@@ -583,7 +591,7 @@
         <field name="amount_percentage">3</field>
         <field name="amount_percentage_base">min(categories.BRUT,TA)</field>
         <field name="appears_on_payslip" eval="True"/>
-        <field name="register_id" ref="hr_retraite_register"/>
+        <field name="partner_id" ref="hr_retraite_register"/>
     </record>
 
     <record id="hr_payroll_rules_C16_employer" model="hr.salary.rule">
@@ -596,7 +604,7 @@
         <field name="amount_select">percentage</field>
         <field name="amount_percentage">4.5</field>
         <field name="amount_percentage_base">min(categories.BRUT,TA)</field>
-        <field name="register_id" ref="hr_retraite_register"/>
+        <field name="partner_id" ref="hr_retraite_register"/>
     </record>
 
 
@@ -613,7 +621,7 @@
         <field name="amount_percentage">7.7</field>
         <field name="amount_percentage_base">min(categories.BRUT-TA,TB-TA)</field>
         <field name="appears_on_payslip" eval="True"/>
-        <field name="register_id" ref="hr_retraite_register"/>
+        <field name="partner_id" ref="hr_retraite_register"/>
     </record>
 
     <record id="hr_payroll_rules_C17_employer" model="hr.salary.rule">
@@ -627,7 +635,7 @@
         <field name="amount_select">percentage</field>
         <field name="amount_percentage">12.6</field>
         <field name="amount_percentage_base">min(categories.BRUT-TA,TB-TA)</field>
-        <field name="register_id" ref="hr_retraite_register"/>
+        <field name="partner_id" ref="hr_retraite_register"/>
     </record>
 
 <!-- TO DO : Ajouter input pour les taux -->
@@ -643,7 +651,7 @@
         <field name="amount_percentage">0</field>
         <field name="amount_percentage_base">min(categories.BRUT-TB,TC-TB)</field>
         <field name="appears_on_payslip" eval="True"/>
-        <field name="register_id" ref="hr_retraite_register"/>
+        <field name="partner_id" ref="hr_retraite_register"/>
     </record>
 
     <record id="hr_payroll_rules_C38_employer" model="hr.salary.rule">
@@ -657,7 +665,7 @@
         <field name="amount_select">percentage</field>
         <field name="amount_percentage">0</field>
         <field name="amount_percentage_base">min(categories.BRUT-TB,TC-TB)</field>
-        <field name="register_id" ref="hr_retraite_register"/>
+        <field name="partner_id" ref="hr_retraite_register"/>
     </record>
 
 
@@ -672,7 +680,7 @@
         <field name="amount_percentage">0.8</field>
         <field name="amount_percentage_base">min(categories.BRUT,TA)</field>
         <field name="appears_on_payslip" eval="True"/>
-        <field name="register_id" ref="hr_retraite_register"/>
+        <field name="partner_id" ref="hr_retraite_register"/>
     </record>
 
     <record id="hr_payroll_rules_C39_employer" model="hr.salary.rule">
@@ -685,7 +693,7 @@
         <field name="amount_select">percentage</field>
         <field name="amount_percentage">1.2</field>
         <field name="amount_percentage_base">min(categories.BRUT,TA)</field>
-        <field name="register_id" ref="hr_retraite_register"/>
+        <field name="partner_id" ref="hr_retraite_register"/>
     </record>
 
 
@@ -701,7 +709,7 @@
         <field name="amount_percentage">0.9</field>
         <field name="amount_percentage_base">min(categories.BRUT-TA,TB-TA)</field>
         <field name="appears_on_payslip" eval="True"/>
-        <field name="register_id" ref="hr_retraite_register"/>
+        <field name="partner_id" ref="hr_retraite_register"/>
     </record>
 
     <record id="hr_payroll_rules_C18_employer" model="hr.salary.rule">
@@ -715,7 +723,7 @@
         <field name="amount_select">percentage</field>
         <field name="amount_percentage">1.3</field>
         <field name="amount_percentage_base">min(categories.BRUT-TA,TB-TA)</field>
-        <field name="register_id" ref="hr_retraite_register"/>
+        <field name="partner_id" ref="hr_retraite_register"/>
     </record>
 
 
@@ -729,7 +737,7 @@
         <field name="amount_percentage">0.13</field>
         <field name="amount_percentage_base">min(categories.BRUT,TC)</field>
         <field name="appears_on_payslip" eval="True"/>
-        <field name="register_id" ref="hr_retraite_register"/>
+        <field name="partner_id" ref="hr_retraite_register"/>
     </record>
 
     <record id="hr_payroll_rules_C19_employer" model="hr.salary.rule">
@@ -742,7 +750,7 @@
         <field name="amount_select">percentage</field>
         <field name="amount_percentage">0.22</field>
         <field name="amount_percentage_base">min(categories.BRUT,TC)</field>
-        <field name="register_id" ref="hr_retraite_register"/>
+        <field name="partner_id" ref="hr_retraite_register"/>
     </record>
 
 
@@ -756,7 +764,7 @@
         <field name="amount_percentage">0.024</field>
         <field name="amount_percentage_base">min(categories.BRUT,TB)</field>
         <field name="appears_on_payslip" eval="True"/>
-        <field name="register_id" ref="hr_retraite_register"/>
+        <field name="partner_id" ref="hr_retraite_register"/>
     </record>
 
     <record id="hr_payroll_rules_C20_employer" model="hr.salary.rule">
@@ -769,7 +777,7 @@
         <field name="amount_select">percentage</field>
         <field name="amount_percentage">0.036</field>
         <field name="amount_percentage_base">min(categories.BRUT,TB)</field>
-        <field name="register_id" ref="hr_retraite_register"/>
+        <field name="partner_id" ref="hr_retraite_register"/>
     </record>
 
 
@@ -784,7 +792,7 @@
         <field name="amount_percentage">0</field>
         <field name="amount_percentage_base">min(categories.BRUT,TA)</field>
         <field name="appears_on_payslip" eval="True"/>
-        <field name="register_id" ref="hr_retraite_register"/>
+        <field name="partner_id" ref="hr_retraite_register"/>
     </record>
 
     <record id="hr_payroll_rules_C21_employer" model="hr.salary.rule">
@@ -797,7 +805,7 @@
         <field name="amount_select">percentage</field>
         <field name="amount_percentage">1.5</field>
         <field name="amount_percentage_base">min(categories.BRUT,TA)</field>
-        <field name="register_id" ref="hr_retraite_register"/>
+        <field name="partner_id" ref="hr_retraite_register"/>
     </record>
 
 
@@ -812,7 +820,7 @@
         <field name="amount_percentage">0</field>
         <field name="amount_percentage_base">categories.BRUT</field>
         <field name="appears_on_payslip" eval="True"/>
-        <field name="register_id" ref="hr_retraite_register"/>
+        <field name="partner_id" ref="hr_retraite_register"/>
     </record>
 
     <record id="hr_payroll_rules_C5_employer" model="hr.salary.rule">
@@ -824,7 +832,7 @@
         <field name="condition_select">none</field>
         <field name="amount_select">percentage</field>
         <field name="amount_percentage_base">categories.BRUT</field>
-        <field name="register_id" ref="hr_urssaf_register"/>
+        <field name="partner_id" ref="hr_urssaf_register"/>
     </record>
 
 
@@ -836,7 +844,7 @@
         <field name="condition_select">none</field>
         <field name="amount_select">percentage</field>
         <field name="amount_percentage_base">min(categories.BRUT,TA)</field>
-        <field name="register_id" ref="hr_prevoyance_register"/>
+        <field name="partner_id" ref="hr_prevoyance_register"/>
     </record>
 
     <record id="hr_payroll_rules_C35_employer" model="hr.salary.rule">
@@ -848,7 +856,7 @@
         <field name="condition_select">none</field>
         <field name="amount_select">percentage</field>
         <field name="amount_percentage_base">min(categories.BRUT,TA)</field>
-        <field name="register_id" ref="hr_prevoyance_register"/>
+        <field name="partner_id" ref="hr_prevoyance_register"/>
     </record>
 
     <record id="hr_payroll_rules_C36_employe" model="hr.salary.rule">
@@ -860,7 +868,7 @@
         <field name="condition_python">result = categories.BRUT > TA</field>
         <field name="amount_select">percentage</field>
         <field name="amount_percentage_base">min(categories.BRUT-TA,TB-TA)</field>
-        <field name="register_id" ref="hr_prevoyance_register"/>
+        <field name="partner_id" ref="hr_prevoyance_register"/>
     </record>
 
     <record id="hr_payroll_rules_C36_employer" model="hr.salary.rule">
@@ -873,7 +881,7 @@
         <field name="condition_python">result = categories.BRUT > TA</field>
         <field name="amount_select">percentage</field>
         <field name="amount_percentage_base">min(categories.BRUT-TA,TB-TA)</field>
-        <field name="register_id" ref="hr_prevoyance_register"/>
+        <field name="partner_id" ref="hr_prevoyance_register"/>
     </record>
 
     <record id="hr_payroll_rules_C37_employe" model="hr.salary.rule">
@@ -883,7 +891,7 @@
         <field name="sequence">2234</field>
         <field name="condition_select">none</field>
         <field name="amount_select">fix</field>
-        <field name="register_id" ref="hr_prevoyance_register"/>
+        <field name="partner_id" ref="hr_prevoyance_register"/>
     </record>
 
     <record id="hr_payroll_rules_C37_employer" model="hr.salary.rule">
@@ -894,7 +902,7 @@
         <field name="sequence">2235</field>
         <field name="condition_select">none</field>
         <field name="amount_select">fix</field>
-        <field name="register_id" ref="hr_prevoyance_register"/>
+        <field name="partner_id" ref="hr_prevoyance_register"/>
     </record>
 
 
@@ -907,7 +915,7 @@
         <field name="condition_python">result = categories.PREV != 0</field>
         <field name="amount_select">percentage</field>
         <field name="amount_percentage_base">categories.PREV</field>
-        <field name="register_id" ref="hr_prevoyance_register"/>
+        <field name="partner_id" ref="hr_prevoyance_register"/>
     </record>
 
     <record id="hr_payroll_rules_C40_employer" model="hr.salary.rule">
@@ -921,7 +929,7 @@
         <field name="amount_select">percentage</field>
         <field name="amount_percentage">8</field>
         <field name="amount_percentage_base">categories.PREV</field>
-        <field name="register_id" ref="hr_urssaf_register"/>
+        <field name="partner_id" ref="hr_urssaf_register"/>
     </record>
 
 
@@ -935,7 +943,7 @@
         <field name="condition_range_max">19</field>
         <field name="amount_select">percentage</field>
         <field name="amount_percentage_base">min(categories.BRUT,SECU)</field>
-        <field name="register_id" ref="hr_urssaf_register"/>
+        <field name="partner_id" ref="hr_urssaf_register"/>
     </record>
 
     <record id="hr_payroll_rules_C7_employer" model="hr.salary.rule">
@@ -950,7 +958,7 @@
         <field name="amount_select">percentage</field>
         <field name="amount_percentage">0.1</field>
         <field name="amount_percentage_base">min(categories.BRUT,SECU)</field>
-        <field name="register_id" ref="hr_urssaf_register"/>
+        <field name="partner_id" ref="hr_urssaf_register"/>
     </record>
 
 
@@ -965,7 +973,7 @@
         <field name="condition_range_min">20</field>
         <field name="amount_select">percentage</field>
         <field name="amount_percentage_base">categories.BRUT</field>
-        <field name="register_id" ref="hr_urssaf_register"/>
+        <field name="partner_id" ref="hr_urssaf_register"/>
     </record>
 
     <record id="hr_payroll_rules_C8_employer" model="hr.salary.rule">
@@ -980,7 +988,7 @@
         <field name="amount_select">percentage</field>
         <field name="amount_percentage">0.5</field>
         <field name="amount_percentage_base">categories.BRUT</field>
-        <field name="register_id" ref="hr_urssaf_register"/>
+        <field name="partner_id" ref="hr_urssaf_register"/>
     </record>
 
 
@@ -994,7 +1002,7 @@
         <field name="condition_range">contract.employee_id.company_id.nombre_employes</field>
         <field name="condition_range_min">10</field>
         <field name="amount_select">percentage</field>
-        <field name="register_id" ref="hr_urssaf_register"/>
+        <field name="partner_id" ref="hr_urssaf_register"/>
     </record>
 
 
@@ -1008,7 +1016,7 @@
         <field name="condition_range">contract.employee_id.company_id.nombre_employes</field>
         <field name="condition_range_min">10</field>
         <field name="amount_select">percentage</field>
-        <field name="register_id" ref="hr_urssaf_register"/>
+        <field name="partner_id" ref="hr_urssaf_register"/>
     </record>
 
 
@@ -1022,7 +1030,7 @@
         <field name="condition_range">contract.employee_id.company_id.nombre_employes</field>
         <field name="condition_range_min">20</field>
         <field name="amount_select">percentage</field>
-        <field name="register_id" ref="hr_urssaf_register"/>
+        <field name="partner_id" ref="hr_urssaf_register"/>
     </record>
 
     <record id="hr_payroll_rules_C22_employer" model="hr.salary.rule">
@@ -1037,7 +1045,7 @@
         <field name="amount_select">percentage</field>
         <field name="amount_percentage">0.45</field>
         <field name="amount_percentage_base">categories.BRUT</field>
-        <field name="register_id" ref="hr_urssaf_register"/>
+        <field name="partner_id" ref="hr_urssaf_register"/>
     </record>
 
 
@@ -1049,7 +1057,7 @@
         <field name="condition_select">none</field>
         <field name="amount_select">percentage</field>
         <field name="amount_percentage_base">categories.BRUT</field>
-        <field name="register_id" ref="hr_cci_register"/>
+        <field name="partner_id" ref="hr_cci_register"/>
     </record>
 
     <record id="hr_payroll_rules_C23_employer" model="hr.salary.rule">
@@ -1062,7 +1070,7 @@
         <field name="amount_select">percentage</field>
         <field name="amount_percentage">0.5</field>
         <field name="amount_percentage_base">categories.BRUT</field>
-        <field name="register_id" ref="hr_cci_register"/>
+        <field name="partner_id" ref="hr_cci_register"/>
     </record>
 
 
@@ -1074,7 +1082,7 @@
         <field name="condition_select">none</field>
         <field name="amount_select">percentage</field>
         <field name="amount_percentage_base">categories.BRUT</field>
-        <field name="register_id" ref="hr_cci_register"/>
+        <field name="partner_id" ref="hr_cci_register"/>
     </record>
 
     <record id="hr_payroll_rules_C24_employer" model="hr.salary.rule">
@@ -1087,7 +1095,7 @@
         <field name="amount_select">percentage</field>
         <field name="amount_percentage">0.18</field>
         <field name="amount_percentage_base">categories.BRUT</field>
-        <field name="register_id" ref="hr_cci_register"/>
+        <field name="partner_id" ref="hr_cci_register"/>
     </record>
 
 
@@ -1101,7 +1109,7 @@
         <field name="condition_range_max">9</field>
         <field name="amount_select">percentage</field>
         <field name="amount_percentage_base">categories.BRUT</field>
-        <field name="register_id" ref="hr_cci_register"/>
+        <field name="partner_id" ref="hr_cci_register"/>
     </record>
 
     <record id="hr_payroll_rules_C25_employer" model="hr.salary.rule">
@@ -1116,7 +1124,7 @@
         <field name="amount_select">percentage</field>
         <field name="amount_percentage">0.55</field>
         <field name="amount_percentage_base">categories.BRUT</field>
-        <field name="register_id" ref="hr_cci_register"/>
+        <field name="partner_id" ref="hr_cci_register"/>
     </record>
 
 
@@ -1132,7 +1140,7 @@
         <field name="condition_range_max">19</field>
         <field name="amount_select">percentage</field>
         <field name="amount_percentage_base">categories.BRUT</field>
-        <field name="register_id" ref="hr_cci_register"/>
+        <field name="partner_id" ref="hr_cci_register"/>
     </record>
 
     <record id="hr_payroll_rules_C26_employer" model="hr.salary.rule">
@@ -1148,7 +1156,7 @@
         <field name="amount_select">percentage</field>
         <field name="amount_percentage">1.05</field>
         <field name="amount_percentage_base">categories.BRUT</field>
-        <field name="register_id" ref="hr_cci_register"/>
+        <field name="partner_id" ref="hr_cci_register"/>
     </record>
 
 
@@ -1162,7 +1170,7 @@
         <field name="condition_range_min">20</field>
         <field name="amount_select">percentage</field>
         <field name="amount_percentage_base">categories.BRUT</field>
-        <field name="register_id" ref="hr_cci_register"/>
+        <field name="partner_id" ref="hr_cci_register"/>
     </record>
 
     <record id="hr_payroll_rules_C27_employer" model="hr.salary.rule">
@@ -1177,7 +1185,7 @@
         <field name="amount_select">percentage</field>
         <field name="amount_percentage">1.60</field>
         <field name="amount_percentage_base">categories.BRUT</field>
-        <field name="register_id" ref="hr_cci_register"/>
+        <field name="partner_id" ref="hr_cci_register"/>
     </record>
 
 
@@ -1191,7 +1199,7 @@
         <field name="amount_percentage">5.1</field>
         <field name="amount_percentage_base">(categories.BRUT + categories.PREV)*0.9825</field>
         <field name="appears_on_payslip" eval="True"/>
-        <field name="register_id" ref="hr_urssaf_register"/>
+        <field name="partner_id" ref="hr_urssaf_register"/>
     </record>
 
     <record id="hr_payroll_rules_C28_employe" model="hr.salary.rule">
@@ -1204,7 +1212,7 @@
         <field name="amount_percentage">2.4</field>
         <field name="amount_percentage_base">(categories.BRUT + categories.PREV)*0.9825</field>
         <field name="appears_on_payslip" eval="True"/>
-        <field name="register_id" ref="hr_urssaf_register"/>
+        <field name="partner_id" ref="hr_urssaf_register"/>
     </record>
 
 
@@ -1218,7 +1226,7 @@
         <field name="amount_percentage">0.5</field>
         <field name="amount_percentage_base">(categories.BRUT + categories.PREV)*0.9825</field>
         <field name="appears_on_payslip" eval="True"/>
-        <field name="register_id" ref="hr_urssaf_register"/>
+        <field name="partner_id" ref="hr_urssaf_register"/>
     </record>
 
 

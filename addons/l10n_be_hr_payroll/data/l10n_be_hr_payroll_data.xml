@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+
     <record id="hr_payroll.hr_rule_basic" model="hr.salary.rule">
         <field name="amount_python_compute">
 result = contract.wage_with_holidays
@@ -12,28 +13,15 @@ result = contract.wage_with_holidays
         <field name="supplier">1</field>
         <field eval="0" name="customer"/>
     </record>
-    <record id="contrib_register_onss" model="hr.contribution.register">
-        <field name="name">ONSS</field>
-        <field name="note">National Office of Social Security</field>
-        <field name="partner_id" ref="res_partner_onss"/>
-    </record>
     <record id="res_partner_pp" model="res.partner">
         <field name="name">Fiscal Administration</field>
         <field name="supplier">1</field>
         <field eval="0" name="customer"/>
     </record>
-    <record id="contrib_register_pp" model="hr.contribution.register">
-        <field name="name">Fiscal Administration</field>
-        <field name="partner_id" ref="res_partner_pp"/>
-    </record>
     <record id="res_partner_meal_vouchers" model="res.partner">
         <field name="name">Meal Voucher Vendor</field>
         <field name="supplier">1</field>
         <field eval="0" name="customer"/>
-    </record>
-    <record id="contrib_register_meal_vouchers" model="hr.contribution.register">
-        <field name="name">Meal Voucher Vendor</field>
-        <field name="partner_id" ref="res_partner_meal_vouchers"/>
     </record>
 
 <!-- HR SALARY RULE CATEGORIES-->
@@ -131,7 +119,7 @@ if contract.mobile:
         <field name="amount_select">percentage</field>
         <field name="amount_percentage_base">SALARY</field>
         <field name="amount_percentage">-13.07</field>
-        <field name="register_id" ref="contrib_register_onss"/>
+        <field name="partner_id" ref="res_partner_onss"/>
     </record>
     <record id="hr_salary_rule_employment_bonus_employees" model="hr.salary.rule">
         <field name="category_id" ref="hr_payroll_head_employment_bonus"/>
@@ -500,7 +488,7 @@ result = -contract.car_atn
         <field name="amount_percentage_base">contract.meal_voucher_amount - contract.meal_voucher_paid_by_employer</field>
         <field name="quantity">worked_days.WORK100 and worked_days.WORK100.number_of_days</field>
         <field name="appears_on_payslip" eval="True"/>
-        <field name="register_id" ref="contrib_register_meal_vouchers"/>
+        <field name="partner_id" ref="res_partner_meal_vouchers"/>
     </record>
     <record id="hr_payroll_rules_reim_travel" model="hr.salary.rule">
         <field name="category_id" ref="hr_payroll.DED"/>
