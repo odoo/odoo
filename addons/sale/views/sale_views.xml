@@ -254,6 +254,7 @@
                                             <field name="qty_to_invoice" invisible="1"/>
                                             <field name="qty_delivered_manual" invisible="1"/>
                                             <field name="qty_delivered_method" invisible="1"/>
+                                            <field name="price_total" invisible="1"/>
                                             <field name="price_subtotal" invisible="1"/>
                                             <label for="product_uom_qty" string="Ordered Quantity"/>
                                             <div>
@@ -342,6 +343,7 @@
                                     <field name="product_uom_qty"/>
                                     <field name="product_uom" groups="uom.group_uom"/>
                                     <field name="price_subtotal"/>
+                                    <field name="price_total" invisible="1"/>
                                     <field name="price_unit"/>
                                     <templates>
                                         <t t-name="kanban-box">
