@@ -1,4 +1,5 @@
 :orphan:
+:banner: banners/index.jpg
 
 
 .. _api/base/res:

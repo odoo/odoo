@@ -1,5 +1,5 @@
 :orphan:
-:banner: banners/orm_api.jpg
+:banner: banners/index.jpg
 
 
 .. _api/base/ir:
