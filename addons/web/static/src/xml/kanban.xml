@@ -327,16 +327,22 @@
         <div class="form-group row">
             <div class="col-sm-12">
                 <div class="alert alert-warning">
-                    You need to move records to another column to delete this column.
+                    There are <t t-esc="totalRecords"/> records in column, Some records might be not visible due to archive records or are hidden. You can Delete this column with moving records to other column or delete records with column.
                 </div>
             </div>
-            <label class="col-sm-3 col-form-label"> <strong>Move records to </strong> </label>
-            <div class="col-sm-9">
-                <select class="o_input o_column">
-                    <t t-foreach="groups" t-as="group">
-                        <option t-att-value="group[0]"> <t t-esc="group[1]"/> </option>
-                    </t>
-                </select>
+            <div class="col-sm-12">
+                <label class="radio-inline"><input type="radio" name="o_project_delete_column_option" value="delete_column"/>Delete columns with all records</label>
+                <label class="radio-inline"><input type="radio" name="o_project_delete_column_option" value="move_records"/>Move records to other column</label>
+            </div>
+            <div class="o_project_move_column_option modal-body row d-none">
+                <label class="col-sm-3 col-form-label"> <strong>Move records to </strong> </label>
+                <div class="col-sm-9">
+                    <select class="o_input o_column">
+                        <t t-foreach="groups" t-as="group">
+                            <option t-att-value="group[0]"> <t t-esc="group[1]"/> </option>
+                        </t>
+                    </select>
+                </div>
             </div>
         </div>
     </t>

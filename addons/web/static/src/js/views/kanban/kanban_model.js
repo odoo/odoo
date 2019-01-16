@@ -272,18 +272,22 @@ var KanbanModel = BasicModel.extend({
      * @param {string} parentID localID of the parent
      * @returns {Deferred}
      */
-    onWriteByDomain: function (domain, vals, parentID) {
+    onWriteByDomain: function (column, vals, parentID, relatedModelName) {
         var self = this;
         var parent = this.localData[parentID];
+        var records = _.map([parentID], function (id) { return self.localData[id]; });
+        var domain = [[column.groupedBy, '=', column.id]];
         return this._rpc({
             model: parent.model,
             method: 'write_by_domain',
             args: [domain, vals],
-        }).then(function () {
+            kwargs: {'record_ids': _.pluck(records, 'res_id'), 'related_model': relatedModelName},
+            context: column.data.context,
+        }).done(function () {
                 // optionally clear the DataManager's cache
                 self._invalidateCache(parent);
-                return self.reload(parentID);
-            });
+                self.reload(parentID);
+        });
     },
     /**
      * @override

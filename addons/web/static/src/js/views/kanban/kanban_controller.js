@@ -28,6 +28,7 @@ var KanbanController = BasicController.extend({
         kanban_record_update: '_onUpdateRecord',
         kanban_column_delete: '_onDeleteColumn',
         kanban_column_move_delete: '_onMoveDeleteColumn',
+        kanban_delete_records_with_column: '_onDeleteRecordsWithColumn',
         kanban_column_add_record: '_onAddRecordToColumn',
         kanban_column_resequence: '_onColumnResequence',
         kanban_load_more: '_onLoadMore',
@@ -419,6 +420,21 @@ var KanbanController = BasicController.extend({
     },
     /**
      * @private
+     * @param {OdooEvent} ev
+     */
+    _onDeleteRecordsWithColumn: function(ev) {
+        var self = this;
+        var column = ev.target;
+        var state = this.model.get(this.handle, { raw: true });
+        var relatedModelName = state.fields[state.groupedBy[0]].relation;
+        this.model
+            .onWriteByDomain(column, false, column.db_id, relatedModelName)
+            .done(function() {
+                self.reload();
+            });
+    },
+    /**
+     * @private
      * @param {OdooEvent} event
      */
     _onMoveDeleteColumn: function (event) {
@@ -427,16 +443,12 @@ var KanbanController = BasicController.extend({
         var state = this.model.get(this.handle, { raw: true });
         var relatedModelName = state.fields[state.groupedBy[0]].relation;
         var groupedField = column.groupedBy;
-        var vals = {}
+        var vals = {};
         vals[groupedField] = event.data.move_to;
         this.model
-            .onWriteByDomain(column.data.domain, vals, column.db_id)
-            .done(function () {
-                self.model
-                    .deleteRecords([column.db_id], relatedModelName)
-                        .done(function () {
-                            self.reload();
-                        });
+            .onWriteByDomain(column, vals, column.db_id, relatedModelName)
+            .done(function() {
+                self.reload();
             });
     },
     /**

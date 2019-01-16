@@ -3649,6 +3649,18 @@ Fields:
             self.recompute()
 
         return records
+    @api.model
+    def get_record_count(self, **kw):
+        return self.with_context(active_test=False).search_count(kw.get('domain'))
+
+    @api.model
+    def write_by_domain(self, domain, vals, **kw):
+        if vals is not False:
+            self.with_context(active_test=False).search(domain).write(vals)
+            self.env[kw.get('related_model')].browse(kw.get('record_ids')).unlink()
+        else:
+            self.with_context(active_test=False).search(domain).unlink()
+            self.env[kw.get('related_model')].browse(kw.get('record_ids')).unlink()
 
     @api.model
     def _create(self, data_list):

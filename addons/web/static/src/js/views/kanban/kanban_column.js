@@ -303,28 +303,55 @@ var KanbanColumn = Widget.extend({
         event.preventDefault();
         var self = this;
         var isEmpty = this.data.count === 0;
-        var groups = _.filter(this.allGroups, function (group) {return group[0] != self.data.res_id; });
-        new Dialog(this, {
-            size: 'medium',
-            buttons: [
-                {
-                    text: isEmpty ? _t("Ok") : _t("Move and delete"),
-                    classes: 'btn-primary',
-                    close: true,
-                    click: function (ev) {
-                        if (isEmpty) {
-                            self.trigger_up('kanban_column_delete');
-                        } else {
-                            self.trigger_up('kanban_column_move_delete', {
-                                move_to: parseInt(this.$('select').val())
-                            });
-                        }
+        var totalRecords;
+        this._rpc({
+            model: self.modelName,
+            method: 'get_record_count',
+            kwargs: { 'domain': [[this.groupedBy, '=', this.id]]},
+            context: this.data.context
+        }).then(function (res) {
+            totalRecords = res;
+            var groups = _.filter(self.allGroups, function (group) {return group[0] !==  self.data.res_id; });
+            var $content = QWeb.render('KanbanView.MoveRecords', { groups: groups, isEmpty: isEmpty, totalRecords: totalRecords });
+            var dialog = new Dialog(self, {
+                size: 'medium',
+                buttons: [
+                    {
+                        text: _t("Confirm"),
+                        classes: 'btn-primary',
+                        close: true,
+                        click: function (ev) {
+                            if (isEmpty) {
+                                self.trigger_up('kanban_column_delete');
+                            } else {
+                                if (dialog.$('input[type="radio"]:checked').val() === "move_records") {
+                                    self.trigger_up('kanban_column_move_delete', {
+                                        move_to: parseInt(this.$('select').val()),
+                                    });
+                                } else {
+                                    self.trigger_up('kanban_delete_records_with_column', {
+                                        records: self.data.data,
+                                        columnId: self.db_id,
+                                    });
+                                }
+                            }
+                        },
                     },
-                },
-                {text: _t("Cancel"), close: true}
-            ],
-            $content: QWeb.render('KanbanView.MoveRecords', { groups: groups, isEmpty: isEmpty }),
-        }).open();
+                    {text: _t("Cancel"), close: true}
+                ],
+                $content: $content,
+            });
+            dialog.opened().then(function () {
+                dialog.$('input[name="o_project_delete_column_option"]').click(function(ev) {
+                    if ($(ev.currentTarget).val() === "move_records" && dialog.$('.o_project_move_column_option').hasClass('d-none')) {
+                        dialog.$('.o_project_move_column_option').toggleClass('d-none');
+                    } else if($(ev.currentTarget).val() === "delete_column" && !dialog.$('.o_project_move_column_option').hasClass('d-none')) {
+                        dialog.$('.o_project_move_column_option').toggleClass('d-none');
+                    }
+                });
+            });
+            dialog.open();
+        });
     },
     /**
      * @private
