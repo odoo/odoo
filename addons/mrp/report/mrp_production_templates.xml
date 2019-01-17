@@ -7,8 +7,13 @@
                 <div class="page">
                     <div class="oe_structure"/>
                     <div class="row">
-                        <div class="col-12">
+                        <div class="col-7">
                             <h2><span t-field="o.name"/></h2>
+                        </div>
+                        <div class="col-5">
+                            <span class="text-right">
+                                <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', o.name, 600, 100)" style="width:350px;height:60px"/>
+                            </span>
                         </div>
                     </div>
                     <div class="row mt32 mb32">
