@@ -1044,6 +1044,7 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
         # prior to authentication being effective.
         if uid:
             request.httprequest.session = root.session_store.new()
+            request.session = request.httprequest.session
             self = request.httprequest.session
         # end udes-11.0
 
