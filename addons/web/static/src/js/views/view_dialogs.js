@@ -265,7 +265,7 @@ var FormViewDialog = ViewDialog.extend({
             // record might have been changed by the save (e.g. if this was a new record, it has an
             // id now), so don't re-use the copy obtained before the save
             var record = self.form_view.model.get(self.form_view.handle);
-            self.on_saved(record, !!changedFields.length);
+            return self.on_saved(record, !!changedFields.length);
         });
     },
 });

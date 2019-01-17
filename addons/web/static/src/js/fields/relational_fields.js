@@ -1510,7 +1510,7 @@ var FieldOne2Many = FieldX2Many.extend({
             this._openFormDialog({
                 context: data.context && data.context[0],
                 on_saved: function (record) {
-                    self._setValue({ operation: 'ADD', id: record.id });
+                    return self._setValue({ operation: 'ADD', id: record.id });
                 },
             });
         }

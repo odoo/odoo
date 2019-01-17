@@ -219,15 +219,16 @@ var Dialog = Widget.extend({
         if (this.isDestroyed()) {
             return;
         }
-        var isFocusSet = this._focusOnClose();
-
-        this._super();
 
         $('.tooltip').remove(); //remove open tooltip if any to prevent them staying when modal has disappeared
         if (this.$modal) {
             this.$modal.modal('hide');
             this.$modal.remove();
         }
+
+        var isFocusSet = this._focusOnClose();
+
+        this._super();
 
         if (!isFocusSet) {
             var modals = $('body > .modal').filter(':visible');
