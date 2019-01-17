@@ -7,7 +7,8 @@ import werkzeug
 from datetime import datetime
 from math import ceil
 
-from odoo import fields, http, SUPERUSER_ID
+from odoo import fields, http
+from odoo.addons.base.models.ir_ui_view import keep_query
 from odoo.exceptions import UserError
 from odoo.http import request
 from odoo.tools import ustr
@@ -136,7 +137,7 @@ class Survey(http.Controller):
             answer_sudo = survey_sudo._create_answer(user=request.env.user, test_entry=True)
         except:
             return werkzeug.utils.redirect('/')
-        return request.redirect('/survey/start/%s?token=%s' % (survey_sudo.id, answer_sudo.token))
+        return request.redirect('/survey/start/%s?%s' % (survey_sudo.id, keep_query('*', token=answer_sudo.token)))
 
     @http.route('/survey/start/<int:survey_id>', type='http', auth='public', website=True)
     def survey_start(self, survey_id, token=None, email=False, **post):
