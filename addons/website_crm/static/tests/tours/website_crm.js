@@ -11,9 +11,17 @@ odoo.define('website_crm.tour', function(require) {
         trigger: "input[name=contact_name]",
         run: "text John Smith",
     }, {
+        content: "Open Country Code Selector",
+        trigger: ".iti__selected-flag",
+        run: 'click',
+    }, {
+        content: "Complete Country Code",
+        trigger: ".iti__country-list li[data-dial-code='32']",
+        run: 'click',
+    }, {
         content: "Complete phone number",
         trigger: "input[name=phone]",
-        run: "text +32 485 118.218"
+        run: "text 485 118.218"
     }, {
         content: "Complete Email",
         trigger: "input[name=email_from]",

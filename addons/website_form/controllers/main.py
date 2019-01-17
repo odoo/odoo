@@ -242,3 +242,14 @@ class WebsiteForm(http.Controller):
             # attach the custom binary field files on the attachment_ids field.
             for attachment_id_id in orphan_attachment_ids:
                 record.attachment_ids = [(4, attachment_id_id)]
+
+    @http.route('/website_form/get_geoip_info', type='json', auth="public")
+    def get_geoip_info(self):
+        """
+        Used to get dictionary containing geoip related information
+        (Returns empty dict if details are not available)
+
+        :returns: dict with geoip related info or {}
+        :rtype: dict
+        """
+        return request.session.geoip

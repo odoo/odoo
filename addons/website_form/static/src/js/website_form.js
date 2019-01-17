@@ -12,12 +12,18 @@ odoo.define('website_form.animation', function (require) {
     publicWidget.registry.form_builder_send = publicWidget.Widget.extend({
         selector: '.s_website_form',
 
+        jsLibs: [
+            '/website_form/static/lib/intl-tel-input/js/intlTelInput.js',
+            '/website_form/static/lib/intl-tel-input/js/utils.js',
+        ],
+        cssLibs: [
+            '/website_form/static/lib/intl-tel-input/css/intlTelInput.css',
+        ],
         willStart: function () {
-            var prom;
             if (!$.fn.datetimepicker) {
-                prom = ajax.loadJS("/web/static/lib/tempusdominus/tempusdominus.js");
+                this.jsLibs.push("/web/static/lib/tempusdominus/tempusdominus.js");
             }
-            return Promise.all([this._super.apply(this, arguments), prom]);
+            return Promise.all([this._super.apply(this, arguments), ajax.loadLibs(this)]);
         },
 
         start: function (editable_mode) {
@@ -51,6 +57,12 @@ odoo.define('website_form.animation', function (require) {
             // Adapt options to date-only pickers
             datepickers_options.format = time.getLangDateFormat();
             this.$target.find('.o_website_form_date').datetimepicker(datepickers_options);
+            // For now we identify phone number with text inputs having class 'o_website_form_phone_input'
+            // because we don't have specific field type for phone numbers
+            this.phoneInputs = {};
+            this.$('input.o_website_form_phone_input[type=text]').each(function () {
+                self.phoneInputs[$(this).attr('name')] = self.createPhoneWidget(this);
+            });
 
             // Display form values from tag having data-for attribute
             // It's necessary to handle field values generated on server-side
@@ -72,7 +84,32 @@ odoo.define('website_form.animation', function (require) {
             return this._super.apply(this, arguments);
         },
 
+        // Initializes and returns intlTelInput object bound to given input that will be used
+        // for validation and getting number in international format while submitting a form
+        createPhoneWidget: function (input) {
+            var self = this;
+            // Check for the valid number on the fly
+            $(input).on('blur', function () {
+                $(this).toggleClass('is-invalid', !self.is_phone_number_valid(this));
+            });
+            return window.intlTelInput(input, {
+                separateDialCode: true,
+                customContainer: 'w-100',
+                geoIpLookup: function (callback) {
+                    var always = function (res) {
+                        callback((res && res.country_code) ? res.country_code : 'US');
+                    };
+                    self._rpc({route: '/website_form/get_geoip_info'}).then(always).guardedCatch(always);
+                },
+            });
+        },
+
         destroy: function () {
+            // Destroy the intlTelInput objects to prevent them being saved
+            _.each(this.phoneInputs, function (iti) {
+                $(iti.telInput).off('blur').removeClass('is-invalid').removeAttr('placeholder style');
+                iti.destroy();
+            });
             this._super.apply(this, arguments);
             this.$target.find('button').off('click');
         },
@@ -100,6 +137,14 @@ odoo.define('website_form.animation', function (require) {
                         value: file
                     });
                 });
+            });
+
+            // Format the phone numbers in valid international format
+            _.each(_.keys(this.phoneInputs), function (fieldName) {
+                var phoneData = _.findWhere(self.form_fields, {name: fieldName});
+                if (phoneData.value.trim()) {
+                    phoneData.value = self.phoneInputs[fieldName].getNumber(window.intlTelInputUtils.numberFormat.INTERNATIONAL);
+                }
             });
 
             // Serialize form inputs into a single object
@@ -177,13 +222,17 @@ odoo.define('website_form.animation', function (require) {
                         });
                         return !_.any(checkboxes, function (checkbox) { return checkbox.checked; });
 
-                    // Special cases for dates and datetimes
+                    // Special cases for dates, datetimes and phone numbers
                     } else if ($(input).hasClass('o_website_form_date')) {
                         if (!self.is_datetime_valid(input.value, 'date')) {
                             return true;
                         }
                     } else if ($(input).hasClass('o_website_form_datetime')) {
                         if (!self.is_datetime_valid(input.value, 'datetime')) {
+                            return true;
+                        }
+                    } else if ($(input).hasClass('o_website_form_phone_input')) {
+                        if (!self.is_phone_number_valid(input)) {
                             return true;
                         }
                     }
@@ -216,6 +265,14 @@ odoo.define('website_form.animation', function (require) {
                 } catch (e) {
                     return false;
                 }
+            }
+        },
+
+        is_phone_number_valid: function (input) {
+            if (input.required || (!input.required && input.value.trim())) {
+                return this.phoneInputs[input.name].isValidNumber();
+            } else {
+                return true;
             }
         },
 
