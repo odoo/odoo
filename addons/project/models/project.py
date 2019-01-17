@@ -203,17 +203,17 @@ class Project(models.Model):
         help="Internal email associated with this project. Incoming emails are automatically synchronized "
              "with Tasks (or optionally Issues if the Issue Tracker module is installed).")
     privacy_visibility = fields.Selection([
-            ('followers', 'On invitation only'),
-            ('employees', 'Visible by all employees'),
-            ('portal', 'Visible by following customers'),
+            ('followers', 'Visible by invited employees'),
+            ('employees', 'Visible by employees'),
+            ('portal', 'Visible by portal users and employees'),
         ],
         string='Privacy', required=True,
         default='portal',
         help="Defines the visibility of the tasks of the project:\n"
-                "- On invitation only: employees may only see the followed project and tasks.\n"
-                "- Visible by all employees: employees may see all project and tasks.\n"
-                "- Visible by following customers: employees may see everything."
-                "   if website is activated, portal users may see project and tasks followed by.\n"
+                "- Visible by invited employees: employees may only see the followed project and tasks.\n"
+                "- Visible by employees: employees may see all project and tasks.\n"
+                "- Visible by portal users and employees: employees may see everything."
+                "   Portal users may see project and tasks followed by.\n"
                 "   them or by someone of their company.")
     doc_count = fields.Integer(compute='_compute_attached_docs_count', string="Number of documents attached")
     date_start = fields.Date(string='Start Date')
@@ -428,9 +428,9 @@ class Task(models.Model):
     name = fields.Char(string='Title', tracking=True, required=True, index=True)
     description = fields.Html(string='Description')
     priority = fields.Selection([
-        ('0', 'Low'),
-        ('1', 'Normal'),
-        ], default='0', index=True, string="Priority")
+        ('0', 'Normal'),
+        ('1', 'Important'),
+    ], default='0', index=True, string="Priority")
     sequence = fields.Integer(string='Sequence', index=True, default=10,
         help="Gives the sequence order when displaying a list of tasks.")
     stage_id = fields.Many2one('project.task.type', string='Stage', ondelete='restrict', tracking=True, index=True,

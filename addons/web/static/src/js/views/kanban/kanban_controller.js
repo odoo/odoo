@@ -33,6 +33,9 @@ var KanbanController = BasicController.extend({
         column_toggle_fold: '_onToggleColumn',
         kanban_column_records_toggle_active: '_onToggleActiveRecords',
     }),
+    events: _.extend({}, BasicController.prototype.events, {
+        click: '_onClick',
+    }),
     /**
      * @override
      * @param {Object} params
@@ -303,6 +306,23 @@ var KanbanController = BasicController.extend({
         }
     },
     /**
+     * Bounce the 'Create' button.
+     *
+     * @private
+     * @param {MouseEvent} ev
+     **/
+    _onClick: function (ev) {
+        var state = this.model.get(this.handle, {raw: true});
+        if (!state.count && this.buttons) {
+            var classesList = ['o_kanban_view', 'o_kanban_group', 'o_column_quick_create', 'o_view_nocontent_smiling_face'];
+            var $target = $(ev.target);
+            var hasClassList = _.map(classesList, function(klass){ return $target.hasClass(klass) });
+            if (_.some(hasClassList)) {
+                this.$buttons.find('.o-kanban-button-new').odooBounce();
+            }
+        }
+    },
+    /**
      * @private
      * @param {OdooEvent} ev
      */
@@ -321,12 +341,7 @@ var KanbanController = BasicController.extend({
         this.model
             .deleteRecords([column.db_id], relatedModelName)
             .done(function () {
-                if (column.isEmpty()) {
-                    self.renderer.removeWidget(column);
-                    self._updateButtons();
-                } else {
-                    self.reload();
-                }
+                self.update({}, {reload: !column.isEmpty()});
             });
     },
     /**
