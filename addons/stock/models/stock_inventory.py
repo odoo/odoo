@@ -257,7 +257,7 @@ class Inventory(models.Model):
             LEFT JOIN product_product
             ON product_product.id = stock_quant.product_id
             WHERE %s
-            GROUP BY product_id, location_id, lot_id, package_id, partner_id """ % domain, args)
+            GROUP BY product_id, location_id, lot_id, package_id, owner_id """ % domain, args)
 
         for product_data in self.env.cr.dictfetchall():
             # replace the None the dictionary by False, because falsy values are tested later on
