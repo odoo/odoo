@@ -178,7 +178,7 @@ class MrpAbstractWorkorder(models.AbstractModel):
             )
             if move_line:
                 if self.product_id.tracking == 'serial':
-                    raise UserError(_('You cannot produce the same serial number twice.'))
+                    raise UserError(_('The serial number %s for product %s has already been used. Please correct the serial number of the finished product.') % (self.final_lot_id.name, self.product_id.display_name))
                 move_line.product_uom_qty += self.qty_producing
                 move_line.qty_done += self.qty_producing
             else:
@@ -260,7 +260,7 @@ class MrpAbstractWorkorderLine(models.AbstractModel):
             raise UserError(_('Please enter a lot or serial number for %s !' % self.product_id.display_name))
 
         if self.lot_id and self.product_id.tracking == 'serial' and self.lot_id in self.move_id.move_line_ids.filtered(lambda ml: ml.qty_done).mapped('lot_id'):
-            raise UserError(_('You cannot consume the same serial number twice. Please correct the serial numbers encoded.'))
+            raise UserError(_('The serial number %s for product %s has already been used. Please correct the encoded serial number.') % (self.lot_id.name, self.product_id.display_name))
 
         # Update reservation and quantity done
         for ml in move_lines:
