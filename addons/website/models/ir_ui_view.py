@@ -372,6 +372,15 @@ class View(models.Model):
         res['website_id'] = self.env['website'].get_current_website().id
         return res
 
+    @api.model
+    def _set_noupdate(self):
+        '''If website is installed, any call to `save` from the frontend will
+        actually write on the specific view (or create it if not exist yet).
+        In that case, we don't want to flag the generic view as noupdate.
+        '''
+        if not self._context.get('website_id'):
+            super(View, self)._set_noupdate()
+
     @api.multi
     def save(self, value, xpath=None):
         self.ensure_one()
