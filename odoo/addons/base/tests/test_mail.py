@@ -281,6 +281,11 @@ class TestSanitizer(unittest.TestCase):
         self.assertNotIn('<title>404 - Not Found</title>', html)
         self.assertIn('<h1>404 - Not Found</h1>', html)
 
+    def test_cid_with_at(self):
+        img_tag = '<img src="@">'
+        sanitized = html_sanitize(img_tag, sanitize_tags=False, strip_classes=True)
+        self.assertEqual(img_tag, sanitized, "img with can have cid containing @ and shouldn't be escaped")
+
     # ms office is currently not supported, have to find a way to support it
     # def test_30_email_msoffice(self):
     #     new_html = html_sanitize(test_mail_examples.MSOFFICE_1, remove=True)
