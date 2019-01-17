@@ -23,10 +23,9 @@
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/layout_boxed.scss"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/layout_clean.scss"/>
 
+        <script type="text/javascript" src="/web/static/src/js/chrome/public_root_widget.js"/>
         <script type="text/javascript" src="/web/static/src/js/services/session.js"/>
         <script type="text/javascript" src="/web/static/src/js/report/utils.js"/>
-        <script type="text/javascript" src="/web_editor/static/src/js/content/body_manager.js"/>
-        <script type="text/javascript" src="/web_editor/static/src/js/root_widget.js"/>
         <script type="text/javascript" src='/web/static/src/js/report/report.js' />
     </template>
 
@@ -34,23 +33,10 @@
         <link href="/web/static/src/css/reset.min.css" rel="stylesheet"/>
     </template>
 
-    <template id="report_assets_editor">
-        <t t-call="web._assets_helpers"/>
-
-        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/report.editor.scss"/>
-
-        <script type="text/javascript" src="/web/static/src/js/services/session.js"/>
-        <script type="text/javascript" src='/web/static/src/js/report/report.editor.js' />
-    </template>
-
     <!-- Private templates used internally by reports -->
 
     <template id="report_layout" name="Report layout">&lt;!DOCTYPE html&gt;
         <html t-att-lang="lang and lang.replace('_', '-')"
-              t-att-data-editable="'1' if editable else None"
-              t-att-data-translatable="'1' if translatable else None"
-              t-att-data-edit_translations="'1' if edit_translations else None"
-              t-att-data-main-object="repr(main_object) if editable else None"
               t-att-data-report-margin-top="data_report_margin_top"
               t-att-data-report-header-spacing="data_report_header_spacing"
               t-att-data-report-dpi="data_report_dpi"
@@ -60,27 +46,13 @@
                 <meta charset="utf-8"/>
                 <meta name="viewport" content="initial-scale=1"/>
                 <title><t t-esc="title or 'Odoo Report'"/></title>
-                <t t-call-assets="web.assets_common" t-js="false"/>
                 <t t-call-assets="web.report_assets_common" t-js="false"/>
-                <t t-if="editable">
-                    <t t-call-assets="web_editor.summernote" t-js="false"/>
-                    <t t-call-assets="web_editor.assets_editor" t-js="false"/>
-                    <t t-call-assets="web.report_assets_editor" t-js="false"/>
-                </t>
                 <t t-call-assets="web.assets_common" t-css="false"/>
                 <t t-call-assets="web.report_assets_common" t-css="false"/>
-                <t t-if="editable">
-                    <t t-call-assets="web_editor.summernote" t-css="false"/>
-                    <t t-call-assets="web_editor.assets_editor" t-css="false"/>
-                    <t t-call-assets="web.report_assets_editor" t-css="false"/>
-
-                    <script type="text/javascript" src="/web_editor/static/src/js/iframe.js"></script>
-                    <script t-if="enable_editor and inline_mode" type="text/javascript" src="/web_editor/static/src/js/inline.js"></script>
-                </t>
             </head>
-            <body>
+            <body t-att-class="'container' if not full_width else 'container-fluid'">
                 <div id="wrapwrap">
-                    <main t-att-class="'container' if not full_width else 'container-fluid'">
+                    <main>
                         <t t-raw="0"/>
                     </main>
                 </div>

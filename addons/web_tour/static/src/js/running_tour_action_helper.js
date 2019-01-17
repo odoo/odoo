@@ -92,7 +92,11 @@ var RunningTourActionHelper = core.Class.extend({
             $selectedOption.prop("selected", true);
             this._click(values);
         } else {
+            values.$element.focusIn();
+            values.$element.trigger($.Event( "keydown", {key: '_', keyCode: 95}));
             values.$element.text(text);
+            values.$element.focusInEnd();
+            values.$element.trigger($.Event( "keyup", {key: '_', keyCode: 95}));
         }
         values.$element.trigger("change");
     },

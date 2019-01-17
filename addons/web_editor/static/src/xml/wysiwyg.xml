@@ -1,0 +1,375 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+	
+    <!--=================-->
+    <!-- Edition Dialogs -->
+    <!--=================-->
+
+    <!-- Alt Dialog (allows to change alt and title of page images) -->
+    <form t-name="wysiwyg.widgets.alt" action="#">
+        <div class="form-group row">
+            <label class="col-md-3 col-form-label" for="alt"
+                   title="'Alt tag' specifies an alternate text for an image, if the image cannot be displayed (slow connection, missing image, screen reader ...).">
+               Description <small>(ALT Tag)</small>
+            </label>
+            <div class="col-md-8">
+                <input class="form-control" id="alt" required="required" t-att-value="widget.alt" type="text"/>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-md-3 col-form-label" for="title"
+                   title="'Title tag' is shown as a tooltip when you hover the picture.">
+               Tooltip  <small>(TITLE Tag)</small>
+            </label>
+            <div class="col-md-8">
+                <input class="form-control" id="title" required="required" t-att-value="widget.tag_title" type="text"/>
+            </div>
+        </div>
+    </form>
+
+    <!-- Media Dialog (allows to choose an img/pictogram/video) -->
+    <div t-name="wysiwyg.widgets.media">
+        <ul class="nav nav-tabs" role="tablist">
+            <li class="nav-item"><a role="tab" href="#editor-media-image" aria-controls="editor-media-image" data-toggle="tab" t-attf-class="nav-link#{widget.noImages ? ' d-none' : ''}">Image</a></li>
+            <li class="nav-item"><a role="tab" href="#editor-media-document" aria-controls="editor-media-document" data-toggle="tab" t-attf-class="nav-link#{widget.noDocuments ? ' d-none' : ''}">Document</a></li>
+            <li class="nav-item"><a role="tab" href="#editor-media-icon" aria-controls="editor-media-icon" data-toggle="tab" t-attf-class="nav-link#{widget.noIcons ? ' d-none' : ''}">Pictogram</a></li>
+            <li class="nav-item"><a role="tab" href="#editor-media-video" aria-controls="editor-media-video" data-toggle="tab" t-attf-class="nav-link#{widget.noVideos ? ' d-none' : ''}">Video</a></li>
+        </ul>
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade" id="editor-media-image"/>
+            <div role="tabpanel" class="tab-pane fade" id="editor-media-document"/>
+            <div role="tabpanel" class="tab-pane fade" id="editor-media-icon"/>
+            <div role="tabpanel" class="tab-pane fade" id="editor-media-video"/>
+        </div>
+    </div>
+
+    <t t-name="wysiwyg.widgets.media.search">
+        <div class="input-group ml-auto">
+            <input type="text" class="form-control o_we_search" t-att-placeholder="searchPlaceholder.trim()"/>
+            <div class="input-group-append">
+                <div class="input-group-text o_we_search_icon">
+                    <i class="fa fa-search" title="Search" role="img" aria-label="Search"/>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <!-- Image choosing part of the Media Dialog -->
+    <t t-name="wysiwyg.widgets.image">
+        <t t-set="iframeName" t-value="_.uniqueId('fileframe-')"/>
+        <form method="POST"
+            action="/web_editor/attachment/add"
+            enctype="multipart/form-data"
+            t-att-target="iframeName">
+            <input type="hidden" name="csrf_token" t-att-value="csrf_token"/>
+            <input type="hidden" name="filters" t-att-value="widget.firstFilters.join('_')"/>
+            <input t-if="widget.options.res_id" type="hidden" name="res_id" t-att-value="widget.options.res_id"/>
+            <input t-if="widget.options.res_model" type="hidden" name="res_model" t-att-value="widget.options.res_model"/>
+            <t t-call="wysiwyg.widgets.files.submenu">
+                <t t-set="isDocument" t-value="widget.options.document"/>
+                <t t-set="accept" t-value="widget.accept"/>
+            </t>
+            <div class="form-text"/>
+            <div class="existing-attachments"/>
+            <div class="mt-4 text-center mx-auto">
+                <button class="btn btn-primary o_load_more" type="button">Load more...</button>
+                <div class="mt-4 o_load_done_msg d-none">
+                    <span><i>All attachments have been loaded</i></span>
+                </div>
+            </div>
+            <iframe class="o_file_upload_iframe d-none" t-att-name="iframeName"/>
+        </form>
+    </t>
+
+    <t t-name="wysiwyg.widgets.files.submenu">
+        <div class="form-inline align-items-center py-4">
+            <input type="file" class="d-none o_file_input" name="upload" t-att-accept="accept" multiple="multiple"/>
+            <input type="hidden" name="disable_optimization" value=""/>
+
+            <div class="btn-group">
+                <button type="button" class="btn btn-primary o_upload_media_button">
+                    <t t-if="isDocument">Upload a document</t>
+                    <t t-else="">Upload an image</t>
+                </button>
+                <t t-if="!isDocument">
+                    <button class="btn btn-primary dropdown-toggle dropdown-toggle-split o_media_optimization" data-toggle="dropdown" type="button">
+                        <span class="sr-only">Alternate Upload</span>
+                    </button>
+                    <div class="dropdown-menu" role="menu">
+                        <button type="button" role="menuitem" class="dropdown-item o_upload_media_button_no_optimization">Upload image without optimization</button>
+                    </div>
+                </t>
+            </div>
+
+            <div class="input-group align-items-center ml-2">
+                <input type="text" class="form-control o_we_url_input" name="url" t-attf-placeholder="https://www.odoo.com/#{isDocument ? 'mydocument' : 'logo.png'}"/>
+                <div class="input-group-append align-items-center">
+                    <button type="button" class="btn btn-secondary o_upload_media_url_button" disabled="disabled">
+                        <t t-if="isDocument">Add document</t>
+                        <t t-else="">Add image</t>
+                    </button>
+                    <div class="ml-2">
+                        <span class="o_we_url_success text-success d-none fa fa-lg fa-check" title="The URL seems valid"/>
+                        <span class="o_we_url_warning text-warning d-none fa fa-lg fa-warning" title="The URL does not contain any image. The file will be added in the document section."/>
+                        <span class="o_we_url_error text-danger d-none fa fa-lg fa-times" title="The URL does not seem to work"/>
+                    </div>
+                </div>
+            </div>
+
+            <t t-call="wysiwyg.widgets.media.search">
+                <t t-set="searchPlaceholder">
+                    <t t-if="isDocument">Search a document</t>
+                    <t t-else="">Search an image</t>
+                </t>
+            </t>
+        </div>
+    </t>
+
+    <t t-name="wysiwyg.widgets.image.existing">
+        <div role="dialog" class="modal" tabindex="-1">
+            <div class="modal-dialog select-image">
+                <div class="modal-content">
+                    <header class="modal-header">
+                        <h3 class="modal-title">Select a Picture</h3>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button>
+                    </header>
+                    <main class="modal-body o_has_error">
+                        <div class="existing-attachments"/>
+                        <div class="form-text"/>
+                    </main>
+                    <footer class="modal-footer">
+                        <button data-dismiss="modal" type="button" aria-label="Discard">Discard</button>
+                    </footer>
+                </div>
+            </div>
+        </div>
+    </t>
+    <t t-name="wysiwyg.widgets.files.existing.content">
+        <div class="existing-attachments">
+            <div class="row mt16 ml-auto" t-as="row" t-foreach="rows">
+                <div class="col-2 o_existing_attachment_cell" t-as="attachment" t-foreach="row">
+                    <i t-if="attachment.res_model === 'ir.ui.view'" class="fa fa-trash o_existing_attachment_remove" title="This file is a public view attachment" role="img" aria-label="This file is a public view attachment" t-att-data-id="attachment.id"/>
+                    <i t-else="" class="fa fa-trash o_existing_attachment_remove" title="This file is attached to the current record" role="img" aria-label="This file is attached to the current record" t-att-data-id="attachment.id"/>
+                    <div class="o_attachment_border" t-att-style="attachment.res_model === 'ir.ui.view' ? null : 'border: 1px solid #5cb85c;'"><div t-att-data-src="attachment.src" t-att-data-url="attachment.url" role="img" t-att-aria-label="attachment.name" t-att-title="attachment.name" t-att-data-id="attachment.id" t-att-data-mimetype="attachment.mimetype" t-attf-class="o_image {{withEffect ? 'o_image_loading' : ''}}"/></div>
+                    <t t-if="isDocument">
+                        <small class="o_file_name"><t t-esc="attachment.name"/></small>
+                    </t>
+                </div>
+            </div>
+        </div>
+    </t>
+    <t t-name="wysiwyg.widgets.image.existing.error">
+        <div class="form-text">
+            <p>The image could not be deleted because it is used in the
+               following pages or views:</p>
+            <ul t-as="view" t-foreach="views">
+                <li>
+                    <a t-attf-href="/web#model=ir.ui.view&amp;id=#{view.id}">
+                        <t t-esc="view.name"/>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </t>
+
+    <!-- Icon choosing part of the Media Dialog -->
+    <t t-name="wysiwyg.widgets.font-icons">
+        <form action="#">
+            <div class="form-inline align-items-center py-4">
+                <t t-call="wysiwyg.widgets.media.search">
+                    <t t-set="searchPlaceholder">Search a pictogram</t>
+                </t>
+            </div>
+            <div class="font-icons-icons">
+                <t t-call="wysiwyg.widgets.font-icons.icons">
+                    <t t-set="iconsParser" t-value="widget.iconsParser"/>
+                </t>
+            </div>
+        </form>
+    </t>
+    <t t-name="wysiwyg.widgets.font-icons.icons">
+        <t t-as="data" t-foreach="iconsParser">
+            <span t-foreach="data.cssData" t-as="cssData"
+                t-att-data-id="cssData.names[0]"
+                t-att-title="cssData.names[0]"
+                t-att-aria-label="cssData.names[0]" role="img"
+                t-attf-class="font-icons-icon #{data.base} #{cssData.names[0]}"
+                t-att-data-alias="cssData.names.join(',')"/>
+        </t>
+    </t>
+
+    <!-- Video choosing part of the Media Dialog -->
+    <t t-name="wysiwyg.widgets.video">
+        <form action="#" class="row">
+            <div class="col mt-4 o_video_dialog_form">
+                <div class="form-group mb-2" id="o_video_form_group">
+                    <label class="col-form-label" for="o_video_text">
+                        Video code <small>(URL or Embed)</small>
+                        <div class="o_validate_feedback">
+                            <i class="fa fa-check text-success" role="img" aria-label="Checked" title="Checked"/>
+                            <i class="fa fa-exclamation-triangle text-danger" role="img" aria-label="Attention" title="Attention"/>
+                        </div>
+                    </label>
+                    <textarea class="form-control" id="o_video_text" placeholder="Copy-paste your URL or embed code here"/>
+                </div>
+                <div class="text-right">
+                    <small class="text-muted">Accepts <b><i>Youtube</i></b>, <b><i>Instagram</i></b>, <b><i>Vine.co</i></b>, <b><i>Vimeo</i></b>, <b><i>Dailymotion</i></b> and <b><i>Youku</i></b> videos</small>
+                </div>
+                <div class="o_video_dialog_options d-none mt-4">
+                    <div class="o_yt_option o_vim_option o_dm_option">
+                        <label class="o_switch mb0"><input id="o_video_autoplay" type="checkbox"/><span/>Autoplay</label>
+                    </div>
+                    <div class="o_yt_option o_vim_option">
+                        <label class="o_switch mb0"><input id="o_video_loop" type="checkbox"/><span/>Loop</label>
+                    </div>
+                    <div class="o_yt_option o_dm_option">
+                        <label class="o_switch mb0"><input id="o_video_hide_controls" type="checkbox"/><span/>Hide player controls</label>
+                    </div>
+                    <div class="o_yt_option">
+                        <label class="o_switch mb0"><input id="o_video_hide_fullscreen" type="checkbox"/><span/>Hide fullscreen button</label>
+                    </div>
+                    <div class="o_yt_option">
+                        <label class="o_switch mb0"><input id="o_video_hide_yt_logo" type="checkbox"/><span/>Hide Youtube logo</label>
+                    </div>
+                    <div class="o_dm_option">
+                        <label class="o_switch mb0"><input id="o_video_hide_dm_logo" type="checkbox"/><span/>Hide Dailymotion logo</label>
+                    </div>
+                    <div class="o_dm_option">
+                        <label class="o_switch mb0"><input id="o_video_hide_dm_share" type="checkbox"/><span/>Hide sharing button</label>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div id="video-preview" class="p-3">
+                    <div class="o_video_dialog_preview_text small mb-2 d-none">Preview</div>
+                    <div class="media_iframe_video">
+                        <div class="media_iframe_video_size"/>
+                        <iframe class="o_video_dialog_iframe" allowfullscreen="allowfullscreen" frameborder="0" src=""/>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </t>
+
+
+    <!-- Link Dialog (allows to choose a style and content for a link on the page) -->
+    <div t-name="wysiwyg.widgets.link" class="o_link_dialog">
+        <div class="row">
+            <form class="col-lg-8">
+                <div t-attf-class="form-group row#{widget.needLabel ? '' : ' d-none'}">
+                    <label class="col-form-label col-md-3" for="o_link_dialog_label_input">Link Label</label>
+                    <div class="col-md-9">
+                        <input type="text" name="label" class="form-control" id="o_link_dialog_label_input" required="required" t-att-value="widget.data.text"/>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-md-3" for="o_link_dialog_url_input">URL or Email</label>
+                    <div class="col-md-9">
+                        <input type="text" name="url" class="form-control" id="o_link_dialog_url_input" required="required"/>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-md-3">Size</label>
+                    <div class="col-md-9">
+                        <select name="link_style_size" class="form-control link-style">
+                            <option value="sm">Small</option>
+                            <option value="" selected="selected">Medium</option>
+                            <option value="lg">Large</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-md-3">Style</label>
+                    <div class="col-md-9">
+                        <select name="link_style_shape" class="form-control link-shape">
+                            <option value="" selected="selected">Default</option>
+                            <option value="outline">Outline</option>
+                            <option value="rounded-circle">Rounded</option>
+                            <option value="outline,rounded-circle">Outline-Rounded</option>
+                            <option value="flat">Flat</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-form-label col-md-3">Color</label>
+                    <div class="col-md-9">
+                        <div class="o_link_dialog_color">
+                            <label role="button" t-attf-class="o_link_dialog_color_item o_btn_preview btn btn-link text-center" data-color="">
+                                <span>L</span>
+                                <input class="d-none link-style" name="link_style_color" type="radio" value=""/>
+                                <i class="fa"/>
+                            </label>
+                            <t t-foreach="['alpha', 'beta', 'gamma', 'delta', 'epsilon', 'primary', 'secondary', 'success', 'info', 'warning', 'danger']" t-as="color">
+                                <label role="button" t-attf-class="o_link_dialog_color_item o_btn_preview btn btn-#{color}" t-attf-aria-label="Color for #{color}" t-attf-title="Color for #{color}">
+                                    <input type="radio" name="link_style_color" class="d-none link-style" t-att-value="color"/>
+                                    <i class="fa"/>
+                                </label>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="offset-md-3 col-md-9">
+                        <label class="o_switch">
+                            <input type="checkbox" name="is_new_window" t-att-checked="widget.data.isNewWindow ? 'checked' : undefined"/>
+                            <span/>
+                            Open in new window
+                        </label>
+                    </div>
+                </div>
+            </form>
+            <div class="col-lg-4 o_link_dialog_preview">
+                <div class="form-group text-center">
+                    <label>Preview</label>
+                    <div style="overflow-x: auto; max-width: 100%; max-height: 200px;">
+                        <a href="#" id="link-preview" aria-label="Preview" title="Preview"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Crop Image Dialog (allows to crop image on the page) -->
+    <div t-name="wysiwyg.widgets.crop_image" class="o_crop_image_dialog">
+        <div t-if="widget.imageData.isExternalImage" class="alert alert-warning text-center" role="alert">
+            <i class="fa fa-exclamation-triangle fa-2x"/>
+            <h4>This image is an external image</h4>
+            <p>
+                This type of image is not supported for cropping.<br/>
+                If you want to crop it, please first download it from the original source and upload it in Odoo.
+            </p>
+        </div>
+        <t t-else="">
+           <div class="o_crop_area">
+                <img class="img img-fluid o_cropper_image" t-att-src="widget.imageData.originalSrc"/>
+           </div>
+           <div class="o_crop_options text-center mt16">
+               <div class="btn-group btn-group-toggle" title="Aspect Ratio" data-toggle="buttons">
+                   <t t-foreach="widget.aspectRatioList" t-as="ratio">
+                       <t t-set="is_active" t-value="ratio[1] === widget.imageData.aspectRatio"/>
+                       <label t-attf-class="btn btn-secondary#{is_active and ' active' or ''}" data-event="ratio" t-att-data-label="ratio[1]" t-att-data-value="ratio[2]">
+                           <input type="radio" /><t t-esc="ratio[0]"/>
+                       </label>
+                   </t>
+               </div>
+               <div class="btn-group" role="group">
+                   <button type="button" class="btn btn-secondary" title="Zoom In" data-event="zoom" data-value="0.1"><i class="fa fa-search-plus"/></button>
+                   <button type="button" class="btn btn-secondary" title="Zoom Out" data-event="zoom" data-value="-0.1"><i class="fa fa-search-minus"/></button>
+               </div>
+               <div class="btn-group" role="group">
+                   <button type="button" class="btn btn-secondary" title="Rotate Left" data-event="rotate" data-value="-45"><i class="fa fa-rotate-left"/></button>
+                   <button type="button" class="btn btn-secondary" title="Rotate Right" data-event="rotate" data-value="45"><i class="fa fa-rotate-right"/></button>
+               </div>
+               <div class="btn-group" role="group">
+                   <button type="button" class="btn btn-secondary" title="Flip Horizontal" data-event="flip" data-value="horizontal" data-x="1"><i class="fa fa-arrows-h"/></button>
+                   <button type="button" class="btn btn-secondary" title="Flip Vertical" data-event="flip" data-value="vertical" data-y="1"><i class="fa fa-arrows-v"/></button>
+               </div>
+               <div class="btn-group" role="group">
+                   <button type="button" class="btn btn-secondary" title="Reset Image" data-event="reset"><i class="fa fa-refresh"/> Reset Image</button>
+               </div>
+           </div>
+       </t>
+    </div>
+
+</templates>

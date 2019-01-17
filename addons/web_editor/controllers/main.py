@@ -20,54 +20,6 @@ logger = logging.getLogger(__name__)
 
 class Web_Editor(http.Controller):
     #------------------------------------------------------
-    # Backend snippet
-    #------------------------------------------------------
-    @http.route('/web_editor/snippets', type='json', auth="user")
-    def snippets(self, **kwargs):
-        return request.env.ref('web_editor.snippets').render(None)
-
-    #------------------------------------------------------
-    # Backend html field
-    #------------------------------------------------------
-    @http.route('/web_editor/field/html', type='http', auth="user")
-    def FieldTextHtml(self, model=None, res_id=None, field=None, callback=None, **kwargs):
-        kwargs.update(
-            model=model,
-            res_id=res_id,
-            field=field,
-            datarecord=json.loads(kwargs['datarecord']),
-            debug=request.debug)
-
-        for k in kwargs:
-            if isinstance(kwargs[k], str) and kwargs[k].isdigit():
-                kwargs[k] = int(kwargs[k])
-
-        trans = dict(
-            lang=kwargs.get('lang', request.env.context.get('lang')),
-            translatable=kwargs.get('translatable'),
-            edit_translations=kwargs.get('edit_translations'),
-            editable=kwargs.get('enable_editor'))
-
-        kwargs.update(trans)
-
-        record = None
-        if model and kwargs.get('res_id'):
-            record = request.env[model].with_context(trans).browse(kwargs.get('res_id'))
-
-        kwargs.update(content=record and getattr(record, field) or "")
-
-        return request.render(kwargs.get("template") or "web_editor.FieldTextHtml", kwargs, uid=request.uid)
-
-    #------------------------------------------------------
-    # Backend html field in inline mode
-    #------------------------------------------------------
-    @http.route('/web_editor/field/html/inline', type='http', auth="user")
-    def FieldTextHtmlInline(self, model=None, res_id=None, field=None, callback=None, **kwargs):
-        kwargs['inline_mode'] = True
-        kwargs['dont_load_assets'] = not kwargs.get('enable_editor') and not kwargs.get('edit_translations')
-        return self.FieldTextHtml(model, res_id, field, callback, **kwargs)
-
-    #------------------------------------------------------
     # convert font into picture
     #------------------------------------------------------
     @http.route([
@@ -137,6 +89,106 @@ class Web_Editor(http.Controller):
         return response
 
     #------------------------------------------------------
+    # Update a checklist in the editor on check/uncheck
+    #------------------------------------------------------
+    @http.route('/web_editor/checklist', type='json', auth='user')
+    def update_checklist(self, res_model, res_id, filename, checklistId, checked, **kwargs):
+        record = request.env[res_model].browse(res_id)
+        value = getattr(record, filename, False)
+        htmlelem = etree.fromstring("<div>%s</div>" % value, etree.HTMLParser())
+        checked = bool(checked)
+
+        li = htmlelem.find(".//li[@id='checklist-id-" + str(checklistId) + "']")
+
+        if not self._update_checklist_recursive(li, checked, children=True, ancestors=True):
+            return value
+
+        value = etree.tostring(htmlelem[0][0], encoding='utf-8', method='html')[5:-6]
+        record.write({filename: value})
+
+        return value
+
+    def _update_checklist_recursive (self, li, checked, children=False, ancestors=False):
+        if 'checklist-id-' not in li.get('id', ''):
+            return False
+
+        classname = li.get('class', '')
+        if ('o_checked' in classname) == checked:
+            return False
+
+        # check / uncheck
+        if checked:
+            classname = '%s o_checked' % classname
+        else:
+            classname = re.sub(r"\s?o_checked\s?", '', classname)
+        li.set('class', classname)
+
+        # propagate to children
+        if children:
+            node = li.getnext()
+            ul = None
+            if node is not None:
+                if node.tag == 'ul':
+                    ul = node
+                if node.tag == 'li' and len(node.getchildren()) == 1 and node.getchildren()[0].tag == 'ul':
+                    ul = node.getchildren()[0]
+
+            if ul is not None:
+                for child in ul.getchildren():
+                    if child.tag == 'li':
+                        self._update_checklist_recursive(child, checked, children=True)
+
+        # propagate to ancestors
+        if ancestors:
+            allSelected = True
+            ul = li.getparent()
+            if ul.tag == 'li':
+                ul = ul.getparent()
+
+            for child in ul.getchildren():
+                if child.tag == 'li' and 'o_checked' not in child.get('class', ''):
+                    allSelected = False
+
+            node = ul.getprevious()
+            if node is not None and node.tag == 'li':
+                self._update_checklist_recursive(node, allSelected, ancestors=True)
+
+        return True
+
+    #------------------------------------------------------
+    # upload an image as base64
+    #------------------------------------------------------
+    @http.route('/web_editor/add_image_base64', type='json', auth='user', methods=['POST'], website=True)
+    def add_image_base64(self, res_model, res_id, image_base64, filename, disable_optimization=None, **kwargs):
+        data = base64.b64decode(image_base64)
+        attachment = self._image_to_attachment(res_model, res_id, data, filename, filename, disable_optimization=disable_optimization)
+        return attachment.read(['name', 'mimetype', 'checksum', 'url', 'res_id', 'res_model', 'access_token'])[0]
+
+    def _image_to_attachment(self, res_model, res_id, data, name, datas_fname, disable_optimization=None):
+        Attachments = request.env['ir.attachment']
+        try:
+            image = Image.open(io.BytesIO(data))
+            w, h = image.size
+            if w*h > 42e6: # Nokia Lumia 1020 photo resolution
+                raise ValueError(
+                    u"Image size excessive, uploaded images must be smaller "
+                    u"than 42 million pixel")
+            if not disable_optimization and image.format in ('PNG', 'JPEG'):
+                data = tools.image_save_for_web(image)
+        except IOError:
+            pass
+        attachment = Attachments.create({
+            'name': name,
+            'datas_fname': datas_fname,
+            'datas': base64.b64encode(data),
+            'public': res_model == 'ir.ui.view',
+            'res_id': res_id,
+            'res_model': res_model,
+        })
+        attachment.generate_access_token()
+        return attachment
+
+    #------------------------------------------------------
     # add attachment (images or link)
     #------------------------------------------------------
     @http.route('/web_editor/attachment/add', type='http', auth='user', methods=['POST'], website=True)
@@ -175,32 +227,11 @@ class Web_Editor(http.Controller):
                 attachments = request.env['ir.attachment']
                 for c_file in request.httprequest.files.getlist('upload'):
                     data = c_file.read()
-                    try:
-                        image = Image.open(io.BytesIO(data))
-                        w, h = image.size
-                        if w*h > 42e6: # Nokia Lumia 1020 photo resolution
-                            raise ValueError(
-                                u"Image size excessive, uploaded images must be smaller "
-                                u"than 42 million pixel")
-                        if not disable_optimization and image.format in ('PNG', 'JPEG'):
-                            data = tools.image_save_for_web(image)
-                    except IOError as e:
-                        pass
-
                     name = c_file.filename
                     datas_fname = name
                     if filters:
                         datas_fname = filters + '_' + datas_fname
-                    attachment = Attachments.create({
-                        'name': name,
-                        'datas': base64.b64encode(data),
-                        'datas_fname': datas_fname,
-                        'public': res_model == 'ir.ui.view',
-                        'res_id': res_id,
-                        'res_model': res_model,
-                    })
-                    attachment.generate_access_token()
-                    attachments += attachment
+                    attachments += self._image_to_attachment(res_model, res_id, data, name, datas_fname, disable_optimization=disable_optimization)
                 uploads += attachments.read(['name', 'mimetype', 'checksum', 'url', 'res_id', 'res_model', 'access_token'])
             except Exception as e:
                 logger.exception("Failed to upload image to attachment")

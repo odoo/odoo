@@ -494,7 +494,9 @@ var Animation = Widget.extend({
 /**
  * The registry object contains the list of available animations.
  */
-var registry = {};
+var Registry = require('web.Registry');
+var registryObject = new Registry();
+var registry = registryObject.map;
 
 registry.slider = Animation.extend({
     selector: '.carousel',
@@ -1108,5 +1110,6 @@ registry.anchorSlide = Animation.extend({
 return {
     Class: Animation,
     registry: registry,
+    registryObject: registryObject,
 };
 });

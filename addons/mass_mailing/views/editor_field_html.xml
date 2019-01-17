@@ -6,42 +6,27 @@
     <t t-call="mass_mailing.mass_mailing_mail_style"/>
 </template>
 
-<template id="FieldTextHtmlInline" name="Editor layout">
-    <t t-call="web_editor.layout">
-        <t t-set="head_mm_field_text_html_inline">
-            <t t-if="enable_editor">
-                <t t-call-assets="mass_mailing.assets_mail_themes"/>
-                <script type="text/javascript" src="/mass_mailing/static/src/js/mass_mailing_editor.js"></script>
-            </t>
-            <t t-else="">
-                <link rel="stylesheet" href="/mass_mailing/static/src/css/basic_theme_readonly.css" type="text/css"/>
-            </t>
-            <base target="_parent"/>
-        </t>
-        <t t-set="head" t-value="head_mm_field_text_html_inline + (head or '')"/>
-
-        <div t-if="not edit_translations" id="editable_area" class="o_editable o_mail_area" t-att-data-oe-model="model" t-att-data-oe-field="field" t-att-data-oe-id="res_id" data-oe-type="html"><t t-raw="content"/></div>
-        <div t-if="edit_translations" id="editable_area" class="o_mail_area"><t t-raw="content"/></div>
-    </t>
+<template id="assets_mail_themes_edition"> <!-- maybe to remove and convert into a field dumy with attr invisible if the template is not selected -->
+    <t t-call="web._assets_helpers"/>
+    <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/webclient.scss"/>
+    <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/wysiwyg_variables.scss"/>
+    <link rel="stylesheet" type="text/scss" href="/mass_mailing/static/src/scss/mass_mailing.ui.scss"/>
 </template>
 
-<template id="FieldTextHtmlPopupContent" name="Editor layout">
-    <t t-call="web_editor.layout">
-        <t t-set="head">
-            <link rel="stylesheet" href="/mass_mailing/static/src/css/mass_mailing_popup.css" type="text/css"/>
-        </t>
-        <div role="dialog" class="modal-dialog modal-md d-block" id="o_newsletter_popup">
-            <div class="modal-content o_popup_modal_content">
-                <div class="o_popup_modal_body text-center">
-                    <div class="o_popup_content_dev">
-                        <div id="editable_area" class="o_editable o_mail_area" t-att-data-oe-model="model" t-att-data-oe-field="field" t-att-data-oe-id="res_id" data-oe-type="html">
-                            <!-- Can be removed once default values are ok for the editor -->
-                            <t t-raw="content"/>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </t>
- </template>
+<template id="iframe_css_assets_edit">
+    <t t-call-assets="web.assets_common" t-js="false"/>
+    <t t-call-assets="web.assets_frontend" t-js="false"/>
+    <t t-call-assets="mass_mailing.assets_mail_themes" t-js="false"/>
+    <t t-call-assets="mass_mailing.assets_mail_themes_edition" t-js="false"/>
+</template>
+
+<template id="iframe_css_assets_readonly">
+    <link rel="stylesheet" type="text/scss" href="/mass_mailing/static/src/css/basic_theme_readonly.css"/>
+</template>
+
+<template id="qunit_suite" inherit_id="web.qunit_suite">
+    <xpath expr="." position="inside">
+        <script type="text/javascript" src="/mass_mailing/static/tests/mass_mailing_html_tests.js"/>
+    </xpath>
+</template>
 </odoo>
