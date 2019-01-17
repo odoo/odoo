@@ -505,3 +505,10 @@ class MonetaryInherits(models.Model):
 
     monetary_id = fields.Many2one('test_new_api.monetary_base', required=True, ondelete='cascade')
     currency_id = fields.Many2one('res.currency')
+
+
+class FieldWithCaps(models.Model):
+    _name = 'test_new_api.field_with_caps'
+    _description = 'Model with field defined with capital letters'
+
+    pArTneR_321_id = fields.Many2one('res.partner')
