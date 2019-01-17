@@ -7460,6 +7460,64 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('domain returned by onchange is cleared on discard', function (assert) {
+        assert.expect(4);
+
+        this.data.partner.onchanges = {
+            foo: function () {},
+        };
+
+        var domain = ['id', '=', 1];
+        var expectedDomain = domain;
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form><field name="foo"/><field name="trululu"/></form>',
+            mockRPC: function (route, args) {
+                if (args.method === 'onchange' && args.args[0][0] === 1) {
+                    // onchange returns a domain only on record 1
+                    return $.when({
+                        domain: {
+                            trululu: domain,
+                        },
+                    });
+                }
+                if (args.method === 'name_search') {
+                    assert.deepEqual(args.kwargs.args, expectedDomain);
+                }
+                return this._super.apply(this, arguments);
+            },
+            res_id: 1,
+            viewOptions: {
+                ids: [1, 2],
+                mode: 'edit',
+            },
+        });
+
+        assert.strictEqual(form.$('input[name=foo]').val(), 'yop', "should be on record 1");
+
+        // change foo to trigger the onchange
+        testUtils.fields.editInput(form.$('input[name=foo]'), 'new value');
+
+        // open many2one dropdown to check if the domain is applied
+        testUtils.fields.many2one.clickOpenDropdown('trululu');
+
+        // switch to another record (should ask to discard changes, and reset the domain)
+        testUtils.dom.click(form.pager.$('.o_pager_next'));
+
+        // discard changes by clicking on confirm in the dialog
+        testUtils.dom.click($('.modal .modal-footer .btn-primary:first'));
+
+        assert.strictEqual(form.$('input[name=foo]').val(), 'blip', "should be on record 2");
+
+        // open many2one dropdown to check if the domain is applied
+        expectedDomain = [];
+        testUtils.fields.many2one.clickOpenDropdown('trululu');
+
+        form.destroy();
+    });
+
     QUnit.module('FormViewTABMainButtons');
 
     QUnit.test('using tab in an empty required string field should not move to the next field',function(assert) {
