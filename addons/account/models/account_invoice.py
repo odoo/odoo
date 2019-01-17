@@ -990,7 +990,10 @@ class AccountInvoice(models.Model):
         return vals
 
     @api.multi
-    def get_taxes_values(self):
+    def get_taxes_values(self, tax_group_fields=False):
+        default_tax_group_fields = set(['amount', 'base'])
+        if tax_group_fields:
+            default_tax_group_fields |= set(tax_group_fields)
         tax_grouped = {}
         round_curr = self.currency_id.round
         for line in self.invoice_line_ids:
@@ -1006,8 +1009,8 @@ class AccountInvoice(models.Model):
                     tax_grouped[key] = val
                     tax_grouped[key]['base'] = round_curr(val['base'])
                 else:
-                    tax_grouped[key]['amount'] += val['amount']
-                    tax_grouped[key]['base'] += round_curr(val['base'])
+                    for field in default_tax_group_fields:
+                        tax_grouped[key][field] += round_curr(val.get(field) or 0)
         return tax_grouped
 
     @api.multi
@@ -1876,6 +1879,14 @@ class AccountInvoiceTax(models.Model):
     _description = "Invoice Tax"
     _order = 'sequence'
 
+    def _prepare_invoice_tax_val(self):
+        self.ensure_one()
+        return {
+            'tax_id': self.tax_id.id,
+            'account_id': self.account_id.id,
+            'account_analytic_id': self.account_analytic_id.id,
+            'analytic_tag_ids': self.analytic_tag_ids.ids or False}
+
     @api.depends('invoice_id.invoice_line_ids')
     def _compute_base_amount(self):
         tax_grouped = {}
@@ -1884,12 +1895,7 @@ class AccountInvoiceTax(models.Model):
         for tax in self:
             tax.base = 0.0
             if tax.tax_id:
-                key = tax.tax_id.get_grouping_key({
-                    'tax_id': tax.tax_id.id,
-                    'account_id': tax.account_id.id,
-                    'account_analytic_id': tax.account_analytic_id.id,
-                    'analytic_tag_ids': tax.analytic_tag_ids.ids or False,
-                })
+                key = tax.tax_id.get_grouping_key(tax._prepare_invoice_tax_val())
                 if tax.invoice_id and key in tax_grouped[tax.invoice_id.id]:
                     tax.base = tax_grouped[tax.invoice_id.id][key]['base']
                 else:
