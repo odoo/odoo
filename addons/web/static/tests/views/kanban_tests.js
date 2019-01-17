@@ -3710,7 +3710,6 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
-
     QUnit.test('nocontent helper for grouped kanban with no records with no group_create', function (assert) {
         assert.expect(4);
 
@@ -4741,7 +4740,7 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
-    QUnit.test('progress bar subgroup count recompute', function(assert) {
+    QUnit.test('progress bar subgroup count recompute', function (assert) {
         assert.expect(2);
 
         var kanban = createView({
@@ -5098,6 +5097,7 @@ QUnit.module('Views', {
 
         kanban.destroy();
     });
+
     QUnit.test('keyboard navigation on kanban grouped rendering with empty columns', function (assert) {
         assert.expect(2);
 
@@ -5166,9 +5166,9 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
-    QUnit.test('keyboard navigation on kanban when the focus is on a link that' +
-     'has an action and the kanban has no oe_kanban_global_... class', function(assert){
-        assert.expect(1)
+    QUnit.test('keyboard navigation on kanban when the focus is on a link that ' +
+     'has an action and the kanban has no oe_kanban_global_... class', function (assert) {
+        assert.expect(1);
         var kanban = createView({
             View: KanbanView,
             model: 'partner',
@@ -5184,7 +5184,7 @@ QUnit.module('Views', {
                 res_id: 1,
                 mode: 'edit',
                 model: 'partner',
-            },'When selecting focusing a card and hitting ENTER, the first link or button is clicked');
+            }, 'When selecting focusing a card and hitting ENTER, the first link or button is clicked');
         });
         kanban.$('.o_kanban_record').first().focus().trigger($.Event('keydown', {
             keyCode: $.ui.keyCode.ENTER,
