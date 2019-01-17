@@ -258,10 +258,10 @@ class Partner(models.Model):
         for partner in self:
             partner.tz_offset = datetime.datetime.now(pytz.timezone(partner.tz or 'GMT')).strftime('%z')
 
-    @api.depends('user_ids.share')
+    @api.depends('user_ids.share', 'user_ids.active')
     def _compute_partner_share(self):
         for partner in self:
-            partner.partner_share = not partner.user_ids or any(user.share for user in partner.user_ids)
+            partner.partner_share = not partner.user_ids or not any(not user.share for user in partner.user_ids)
 
     @api.depends(lambda self: self._display_address_depends())
     def _compute_contact_address(self):
