@@ -415,7 +415,6 @@
                     <header>
                         <button name="action_assign_to_me" string="Assign to Me" type="object" class="oe_highlight"
                             attrs="{'invisible' : [('user_id', '!=', False)]}"/>
-                        <button name="%(portal.portal_share_action)d" string="Share" type="action" class="oe_highlight oe_read_only"/>
                         <field name="stage_id" widget="statusbar" options="{'clickable': '1', 'fold_field': 'fold'}"/>
                     </header>
                     <sheet string="Task">
@@ -499,6 +498,16 @@
                 </form>
             </field>
         </record>
+
+        <act_window
+            id="portal_share_action"
+            name="Share"
+            res_model="portal.share"
+            src_model="project.task"
+            view_type="form"
+            view_mode="form"
+            target="new"
+        />
 
         <record id="quick_create_task_form" model="ir.ui.view">
             <field name="name">project.task.form.quick_create</field>
