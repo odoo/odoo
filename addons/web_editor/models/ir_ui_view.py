@@ -160,6 +160,10 @@ class IrUiView(models.Model):
         out.tail = el.tail
         return out
 
+    @api.model
+    def _set_noupdate(self):
+        self.sudo().mapped('model_data_id').write({'noupdate': True})
+
     @api.multi
     def save(self, value, xpath=None):
         """ Update a view section. The view section may embed fields to write
@@ -196,7 +200,7 @@ class IrUiView(models.Model):
         new_arch = self.replace_arch_section(xpath, arch_section)
         old_arch = etree.fromstring(self.arch.encode('utf-8'))
         if not self._are_archs_equal(old_arch, new_arch):
-            self.sudo().model_data_id.write({'noupdate': True}) # TODO check if we remove this
+            self._set_noupdate()
             self.write({'arch': self._pretty_arch(new_arch)})
 
     @api.model
