@@ -259,7 +259,7 @@ class Registry(Mapping):
             model._prepare_setup()
 
         # do the actual setup from a clean state
-        self._m2m = {}
+        self._m2m = defaultdict(list)
         for model in models:
             model._setup_base()
 
