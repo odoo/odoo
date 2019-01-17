@@ -2492,9 +2492,19 @@ class Many2many(_RelationalMulti):
         :param column2: optional name of the column referring to "those" records
             in the table ``relation`` (string)
 
-        The attributes ``relation``, ``column1`` and ``column2`` are optional. If not
-        given, names are automatically generated from model names, provided
-        ``model_name`` and ``comodel_name`` are different!
+        The attributes ``relation``, ``column1`` and ``column2`` are optional.
+        If not given, names are automatically generated from model names,
+        provided ``model_name`` and ``comodel_name`` are different!
+
+        Note that having several fields with implicit relation parameters on a
+        given model with the same comodel is not accepted by the ORM, since
+        those field would use the same table. The ORM prevents two many2many
+        fields to use the same relation parameters, except if
+
+        - both fields use the same model, comodel, and relation parameters are
+          explicit; or
+
+        - at least one field belongs to a model with ``_auto = False``.
 
         :param domain: an optional domain to set on candidate values on the
             client side (domain or string)
@@ -2507,6 +2517,7 @@ class Many2many(_RelationalMulti):
     """
     type = 'many2many'
     _slots = {
+        '_explicit': True,              # whether schema is explicitly given
         'relation': None,               # name of table
         'column1': None,                # column of table referring to model
         'column2': None,                # column of table referring to comodel
@@ -2529,6 +2540,7 @@ class Many2many(_RelationalMulti):
         super(Many2many, self)._setup_regular_base(model)
         if self.store:
             if not (self.relation and self.column1 and self.column2):
+                self._explicit = False
                 # table name is based on the stable alphabetical order of tables
                 comodel = model.env[self.comodel_name]
                 if not self.relation:
@@ -2551,19 +2563,27 @@ class Many2many(_RelationalMulti):
         super(Many2many, self)._setup_regular_full(model)
         if self.relation:
             m2m = model.pool._m2m
-            # if inverse field has already been setup, it is present in m2m
-            invf = m2m.get((self.relation, self.column2, self.column1))
-            if invf:
-                comodel = model.env[self.comodel_name]
-                model._field_inverses.add(self, invf)
-                comodel._field_inverses.add(invf, self)
 
-            elif model._auto:
-                # add self in m2m, so that its inverse field can find it
-                if (self.relation, self.column1, self.column2) in m2m:
-                    msg = "Many2many fields %s and %s use the same table and columns"
-                    raise TypeError(msg % (self, m2m[(self.relation, self.column1, self.column2)]))
-                m2m[(self.relation, self.column1, self.column2)] = self
+            # check whether other fields use the same schema
+            fields = m2m[(self.relation, self.column1, self.column2)]
+            for field in fields:
+                if (    # same model: relation parameters must be explicit
+                    self.model_name == field.model_name and
+                    self.comodel_name == field.comodel_name and
+                    self._explicit and field._explicit
+                ) or (  # different models: one model must be _auto=False
+                    self.model_name != field.model_name and
+                    not (model._auto and model.env[field.model_name]._auto)
+                ):
+                    continue
+                msg = "Many2many fields %s and %s use the same table and columns"
+                raise TypeError(msg % (self, field))
+            fields.append(self)
+
+            # retrieve inverse fields, and link them in _field_inverses
+            for field in m2m[(self.relation, self.column2, self.column1)]:
+                model._field_inverses.add(self, field)
+                model.env[field.model_name]._field_inverses.add(field, self)
 
     def update_db(self, model, columns):
         cr = model._cr
