@@ -159,6 +159,12 @@ class TestViewSaving(common.TransactionCase):
                 h.LI(h.SPAN("+12 3456789", attrs(model='res.company', id=1, field='phone', expression="edmund", type='char'))),
             )
         ), encoding='unicode')
+
+        self.view_id.with_context(website_id=1).save(value=replacement, xpath='/div/div[2]')
+        self.assertFalse(imd.noupdate, "view's xml_id shouldn't be set to 'noupdate' in a website context as `save` method will COW")
+        # remove newly created COW view so next `save()`` wont be redirected to COW view
+        self.env['website'].with_context(website_id=1).viewref(self.view_id.key).unlink()
+
         self.view_id.save(value=replacement, xpath='/div/div[2]')
 
         # the xml_id of the view should be flagged as 'noupdate'
