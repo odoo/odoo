@@ -249,12 +249,14 @@ class ProductProduct(models.Model):
         """
         self.ensure_one()
         to_date = self.env.context.get('to_date')
+        ctx = self.env.context.copy()
+        ctx.pop('group_by', None)
         action = {
             'name': _('Valuation at date'),
             'type': 'ir.actions.act_window',
             'view_type': 'form',
             'view_mode': 'tree,form',
-            'context': self.env.context,
+            'context': ctx,
         }
         if self.valuation == 'real_time':
             action['res_model'] = 'account.move.line'
