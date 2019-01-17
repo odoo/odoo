@@ -53,7 +53,6 @@ class ChangeProductionQty(models.TransientModel):
             factor = production.product_uom_id._compute_quantity(production.product_qty - qty_produced, production.bom_id.product_uom_id) / production.bom_id.product_qty
             boms, lines = production.bom_id.explode(production.product_id, factor, picking_type=production.bom_id.picking_type_id)
             documents = {}
-            done_quantities = {move: move.quantity_done for move in production.move_raw_ids}
             for line, line_data in lines:
                 move, old_qty, new_qty = production._update_raw_move(line, line_data)
                 iterate_key = production._get_document_iterate_key(move)
@@ -73,9 +72,6 @@ class ChangeProductionQty(models.TransientModel):
             production._log_downside_manufactured_quantity(finished_moves_modification)
             moves = production.move_raw_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
             moves._action_assign()
-            for move in production.move_raw_ids:
-                if move.quantity_done != done_quantities[move]:
-                    move._set_quantity_done(done_quantities[move])
             for wo in production.workorder_ids:
                 operation = wo.operation_id
                 if operation_bom_qty.get(operation.id):

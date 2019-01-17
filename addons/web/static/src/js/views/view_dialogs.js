@@ -303,7 +303,7 @@ var SelectCreateDialog = ViewDialog.extend({
             event.stopPropagation(); // prevent this event from bubbling up to the action manager
             var d = event.data;
             var searchData = this._process_search_data(d.domains, d.contexts, d.groupbys);
-            this.list_controller.reload(searchData);
+            this.list_controller.reload(_.extend({offset: 0}, searchData));
         },
         get_controller_context: '_onGetControllerContext',
     }),
