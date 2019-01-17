@@ -1,0 +1,522 @@
+// NOTE EDITOR
+
+.note-editor.note-frame {
+    background-color: inherit;
+
+    .note-editing-area .note-editable {
+        background-color: transparent !important;
+        color: inherit;
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    &.fullscreen {
+        background-color: #fff;
+    }
+}
+
+.note-popover.popover {
+    z-index: $o-wysiwyg-zindex;
+    height: auto;
+
+    .popover-content {
+        padding-bottom: 0;
+        max-width: 334px;
+
+        >note-btn-group {
+            white-space: nowrap;
+        }
+    }
+}
+
+.note-editor .note-toolbar {
+    white-space: nowrap;
+    z-index: $o-wysiwyg-zindex + 10;
+    height: $o-wysiwyg-toolbar-height;
+}
+
+.note-popover.popover .popover-content,
+.note-editor .note-toolbar {
+    font-family: $o-wysiwyg-font-family;
+    background-color: $o-wysiwyg-bg-color;
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    .h1,
+    .h2,
+    .h3,
+    .h4,
+    .h5,
+    .h6 {
+        font-family: $o-wysiwyg-font-family;
+    }
+
+    .btn {
+        height: $o-wysiwyg-toolbar-height;
+        border: none;
+        border-radius: 0;
+        background-color: inherit;
+        color: inherit;
+        border-top: 2px solid transparent;
+        transition: all 0.3s ease 0s;
+
+        >.fa {
+            color: inherit;
+        }
+
+        &:hover {
+            border-top: 2px solid inherit;
+            color: inherit;
+
+            >.fa {
+                color: inherit;
+            }
+        }
+
+        .o_image_alt {
+            @include o-text-overflow(inline-block);
+            max-width: 100px;
+        }
+
+        &.active {
+            border-top: 2px solid white;
+            background-color: inherit;
+            color: inherit;
+            box-shadow: inset 0 3px 10px rgba(0, 0, 0, 0.5);
+
+            >.fa {
+                color: inherit;
+            }
+        }
+
+        &.o_disabled {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+    }
+
+    .note-btn-group {
+        margin: 0;
+    }
+
+    >.btn-group {
+        margin-top: 0;
+
+        &.show,
+        .btn-group.show {
+            .dropdown-toggle {
+                border-top: 2px solid white;
+                background-color: $o-wysiwyg-bg-color-dark;
+                box-shadow: none;
+
+                >.fa,
+                >span {
+                    color: inherit;
+                }
+            }
+        }
+    }
+
+    .dropdown-menu {
+        margin: 0;
+        border-radius: 0;
+        background-color: $o-wysiwyg-bg-color;
+        color: inherit;
+        white-space: normal;
+
+        .dropdown-item {
+            width: 100%;
+            color: inherit;
+
+            >.fa {
+                color: inherit;
+            }
+
+            &:hover {
+                background-color: $o-wysiwyg-bg-color-dark;
+                color: inherit;
+
+                >.fa {
+                    color: inherit;
+                }
+            }
+        }
+    }
+
+    .note-para .dropdown-menu {
+        min-width: 0;
+        white-space: nowrap;
+    }
+
+    .note-color {
+
+        .note-back-color-preview,
+        .note-fore-color-preview {
+            .dropdown-toggle {
+                padding: 0px 7px;
+                height: 35px;
+                width: auto;
+                border-top: none;
+                border-bottom: 3px solid;
+
+                &:after {
+                    display: none;
+                }
+            }
+        }
+
+        .dropdown-menu {
+            min-width: 180px;
+
+            .note-custom-color {
+                cursor: pointer;
+                border-radius: 5px;
+
+                &:hover {
+                    background-color: gray('400');
+                    color: black
+                }
+            }
+        }
+
+        .dropdown-toggle:after {
+            display: none;
+        }
+
+        .note-palette:first-child {
+            width: 100%;
+
+            .note-color-reset,
+            .note-custom-color {
+                width: 162px;
+            }
+
+            .note-color-reset {
+                padding: 0 3px !important;
+                height: 32px;
+            }
+
+            .note-holder,
+            .note-color-palette .note-color-row,
+            .note-custom-color-palette .note-color-row {
+                height: auto !important;
+
+                &::after {
+                    content: "";
+                    display: table;
+                    clear: both;
+                }
+
+                .note-color-btn {
+                    float: left;
+                    height: 20px;
+                    width: 20px;
+                    margin: 1px 1px 0 0;
+                    border: 1px solid black;
+                    cursor: pointer;
+                    @include o-alpha-button-preview;
+
+                    &.o_small {
+                        width: 16px;
+                        height: 16px;
+                        margin: 3px 3px 2px 2px;
+                        border-radius: 50%;
+                    }
+
+                    &.o_clear {
+                        clear: both;
+                    }
+
+                    &.o_btn_transparent {
+                        display: none;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.note-popover.popover.note-hint-popover .popover-content {
+    height: auto;
+}
+
+.note-popover,
+.note-editor {
+    .modal .modal-footer p {
+        display: none;
+    }
+}
+
+.note-handle {
+    pointer-events: none;
+
+    .note-control-selection {
+        z-index: 1;
+        overflow: hidden;
+
+        .note-control-se {
+            border-top: 0;
+            border-left: 0;
+            background: transparent;
+        }
+    }
+}
+
+.o_fake_editable:not([data-oe-model]):focus {
+    outline: none;
+}
+
+.note-editor.dragover .note-dropzone {
+    z-index: $o-wysiwyg-zindex + 1;
+}
+
+// MODALS
+
+body .modal {
+
+    // SELECT MEDIA
+    .o_select_media_dialog {
+        max-width: 80%;
+
+        .modal-body {
+            .tab-pane {
+                min-height: 300px;
+            }
+
+            .existing-attachments {
+                width: 100%;
+            }
+
+            .o_existing_attachment_cell {
+                $o-border-image: 2px;
+
+                .o_existing_attachment_remove {
+                    @include o-position-absolute($o-border-image, 15px + $o-border-image);
+                    padding: 3px 5px 5px 5px;
+                    background-color: rgba(white, 0.8);
+                    text-shadow: 0 0 1px white;
+                    border-radius: 0 0 0 2px;
+                    opacity: 0;
+                    cursor: pointer;
+
+                    &:hover {
+                        background-color: white;
+                        color: $o-wysiwyg-color-danger;
+                    }
+                }
+
+                .o_image {
+                    border: $o-border-image solid transparent;
+                    cursor: pointer;
+                    transition: opacity 400ms ease 0s;
+
+                    &.o_webimage {
+                        width: 100%;
+                        height: auto;
+                        background-image: none !important;
+                    }
+
+                    &.o_image_loading {
+                        opacity: 0;
+                    }
+                }
+
+                &.o_selected .o_image {
+                    border-color: $o-brand-odoo;
+                    box-shadow: 0px 0px 2px 2px $o-brand-secondary;
+                }
+
+                &:hover .o_existing_attachment_remove {
+                    opacity: 1;
+                }
+            }
+
+            .font-icons-icons {
+                >span {
+                    text-align: center;
+                    font-size: 22px;
+                    margin: 5px;
+                    width: 50px;
+                    height: 50px;
+                    padding: 15px;
+                    cursor: pointer;
+
+                    &.o_selected {
+                        cursor: auto;
+                        background-color: $o-wysiwyg-bg-color-dark;
+                        box-shadow: 0px 0px 0px 1px $o-wysiwyg-color-success;
+                    }
+                }
+            }
+
+            #editor-media-image,
+            #editor-media-document {
+                .o_we_url_input {
+                    width: 300px;
+                }
+            }
+
+            // VIDEO TAB
+            #editor-media-video {
+                .o_video_dialog_form {
+                    #o_video_form_group {
+                        position: relative;
+                        width: 100%;
+
+                        >textarea {
+                            width: 100%;
+                            min-height: 95px;
+                            padding-bottom: 25px;
+                            overflow-y: scroll;
+                        }
+
+                        .o_validate_feedback {
+                            @include o-position-absolute(auto, 10px, 10px);
+
+                            >.fa {
+                                display: none;
+                            }
+                        }
+
+                        &.o_has_error .o_validate_feedback>.fa-exclamation-triangle {
+                            display: block;
+                        }
+
+                        &.o_has_success .o_validate_feedback>.fa-check {
+                            display: block;
+                        }
+                    }
+                }
+
+                #video-preview {
+                    position: relative;
+                    @include o-we-preview-box();
+                    border: none;
+
+                    .media_iframe_video {
+                        width: 100%;
+                    }
+
+                    .o_video_dialog_iframe {
+                        @include o-we-preview-content;
+                        max-width: 100%;
+                        max-height: 100%;
+
+                        &.alert {
+                            animation: fadeInDownSmall 700ms forwards;
+                            margin: 0 auto;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // Crop Dialog
+    .o_crop_image_dialog .o_crop_area {
+        height: 350px;
+
+        .cropper-point {
+            background-color: white;
+            transition: all 400ms $o-wysiwyg-md-ease 0s;
+            transform: scale(1.5, 1.5);
+            border-radius: 10px;
+            box-shadow: 0 0 1px 1px rgba(23, 23, 23, 0.5);
+            opacity: 1;
+
+            &:hover {
+                transform: scale(2.5, 2.5);
+            }
+        }
+
+        .cropper-line {
+            background: black;
+        }
+
+        .cropper-view-box {
+            outline: 2px solid white;
+        }
+    }
+
+    // LINK EDITOR DIALOG COLOR SELECTOR
+    .o_link_dialog {
+        .o_link_dialog_color>.o_link_dialog_color_item {
+            position: relative;
+            width: 30px;
+            height: 30px;
+            padding: 0; // Important for themes
+            border: 2px solid rgba(0, 0, 0, 0.25);
+            border-radius: 50%;
+
+            input:checked+i::before {
+                content: "\f00c";
+                @include o-position-absolute($top: 6px, $left: 5px);
+            }
+
+            &.btn-link {
+                padding: 3px 9px;
+
+                >span {
+                    text-decoration: underline;
+                }
+            }
+        }
+
+        .o_link_dialog_preview {
+            border-left: 1px solid gray('200');
+        }
+    }
+}
+
+// Highlight selected image/icon
+%o-we-selected-image {
+    $o-selected-image-color: rgba(150, 150, 220, 0.3);
+    background: $o-selected-image-color;
+    outline: 3px solid $o-selected-image-color;
+}
+
+img.o_we_selected_image {
+    @extend %o-we-selected-image;
+}
+
+.fa.o_we_selected_image::before {
+    @extend %o-we-selected-image;
+}
+
+.fa.mx-auto,
+img.o_we_custom_image.mx-auto {
+    display: block;
+}
+
+// ENTER IN EDIT MODE
+
+.note-editor .css_editable_mode_display {
+    border: 1px dashed rgba(153, 153, 153, 0.5);
+    display: block !important;
+}
+
+.note-editable {
+
+    li,
+    p,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        &:empty:after {
+            content: "\00a0"
+        }
+    }
+}
+
+.wysiwyg_iframe {
+    margin: 0;
+    padding: 0;
+    border: 0;
+}

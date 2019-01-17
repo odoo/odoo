@@ -85,7 +85,8 @@ sAnimations.registry.WebsiteSaleOptions = sAnimations.Class.extend(ProductConfig
                 isWebsite: true,
                 okButtonText: _t('Proceed to Checkout'),
                 cancelButtonText: _t('Continue Shopping'),
-                title: _t('Add to cart')
+                title: _t('Add to cart'),
+                context: weContext.get(),
             }).open();
 
             self.optionalProductsModal.on('options_empty', null, self._onModalOptionsEmpty.bind(self));

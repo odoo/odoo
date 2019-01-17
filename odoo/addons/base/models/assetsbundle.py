@@ -340,14 +340,16 @@ class AssetsBundle(object):
                 if (window.__assetsBundleErrorSeen) return;
                 window.__assetsBundleErrorSeen = true;
 
-                document.addEventListener("DOMContentLoaded", function () {
+                var loaded = function () {
+                    clearTimeout(loadedTimeout);
                     var alertTimeout = setTimeout(alert.bind(window, message), 0);
-                    if (typeof odoo === "undefined") return;
+                    var odoo = window.top.odoo;
+                    if (!odoo || !odoo.define) return;
 
                     odoo.define("AssetsBundle.ErrorMessage", function (require) {
                         "use strict";
 
-                        var base = require("web_editor.base");
+                        require('web.dom_ready');
                         var core = require("web.core");
                         var Dialog = require("web.Dialog");
 
@@ -355,16 +357,17 @@ class AssetsBundle(object):
 
                         clearTimeout(alertTimeout);
 
-                        base.ready().then(function () {
-                            new Dialog(null, {
-                                title: _t("Style error"),
-                                $content: $("<div/>")
-                                    .append($("<p/>", {text: _t("The style compilation failed, see the error below. Your recent actions may be the cause, please try reverting the changes you made.")}))
-                                    .append($("<pre/>", {html: message})),
-                            }).open();
-                        });
+                        new Dialog(null, {
+                            title: _t("Style error"),
+                            $content: $("<div/>")
+                                .append($("<p/>", {text: _t("The style compilation failed, see the error below. Your recent actions may be the cause, please try reverting the changes you made.")}))
+                                .append($("<pre/>", {html: message})),
+                        }).open();
                     });
-                });
+                }
+
+                var loadedTimeout = setTimeout(loaded, 5000);
+                document.addEventListener("DOMContentLoaded", loaded);
             })("%s");
         """ % message.replace('"', '\\"').replace('\n', '&NewLine;')
 

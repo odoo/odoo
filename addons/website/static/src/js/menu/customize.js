@@ -87,7 +87,7 @@ var CustomizeMenu = Widget.extend({
                     $menu.append('<li class="dropdown-header">' + currentGroup + '</li>');
                 }
                 var $a = $('<a/>', {href: '#', class: 'dropdown-item', 'data-view-id': item.id, role: 'menuitem'})
-                            .append(qweb.render('web_editor.components.switch', {id: 'switch-' + item.id, label: item.name}));
+                            .append(qweb.render('website.components.switch', {id: 'switch-' + item.id, label: item.name}));
                 $a.find('input').prop('checked', !!item.active);
                 $menu.append($a);
             });
