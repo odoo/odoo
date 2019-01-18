@@ -113,6 +113,13 @@ QUnit.module('Search View', {
             type: 'ir.actions.act_window',
             views: [[false, 'pivot']],
             search_view_id: [8, 'search'],
+        }, {
+            id: 11,
+            name: 'Partners Action 11',
+            res_model: 'partner',
+            type: 'ir.actions.act_window',
+            views: [[2, 'list']],
+            search_view_id: [8, 'search'],
         }
         ];
 
@@ -187,7 +194,7 @@ QUnit.module('Search View', {
                     '<field name="foo"/>' +
                     '<field name="date_field"/>' +
                     '<field name="birthday"/>' +
-                    '<field name="bar"/>' +
+                    '<field name="bar" context="{\'bar\': self}"/>' +
                     '<field name="float_field"/>' +
                     '<filter string="Date Field Filter" name="positive" date="date_field"/>' +
                     '<filter string="Date Field Groupby" name="coolName" context="{\'group_by\': \'date_field:day\'}"/>' +
@@ -988,6 +995,59 @@ QUnit.module('Search View', {
         testUtils.dom.click($('.o_group_by_menu .o_menu_item').eq(0));
         assert.strictEqual($('.o_group_by_menu .o_item_option a.selected').text().trim(), "Day",
             "The item 'Day' should be selected in the groupby menu");
+
+        actionManager.destroy();
+    });
+
+    QUnit.test('select an autocomplete field with `context` key', function (assert) {
+        assert.expect(9);
+
+        var searchRead = 0;
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            debug: 1,
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/search_read') {
+                    if (searchRead === 1) {
+                        assert.deepEqual(args.domain, [["bar", "=", 1]]);
+                        assert.deepEqual(args.context, {'bar': [1]});
+                    } else if (searchRead === 2) {
+                        assert.deepEqual(args.domain, ["|", ["bar", "=", 1], ["bar", "=", 2]]);
+                        assert.deepEqual(args.context, { 'bar': [1, 2] });
+                    }
+                    searchRead++;
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        actionManager.doAction(11);
+        assert.strictEqual(searchRead, 1, "there should be 1 search_read");
+
+        // 'r' key to filter on bar "First Record"
+        $('.o_searchview_input').trigger($.Event('keypress', { which: 82, keyCode: 82 }));
+        $('.o_searchview_input').trigger($.Event('keydown', { which: $.ui.keyCode.DOWN, keyCode: $.ui.keyCode.DOWN }));
+        $('.o_searchview_input').trigger($.Event('keydown', { which: $.ui.keyCode.RIGHT, keyCode: $.ui.keyCode.RIGHT }));
+        $('.o_searchview_input').trigger($.Event('keydown', { which: $.ui.keyCode.DOWN, keyCode: $.ui.keyCode.DOWN }));
+        $('.o_searchview_input').trigger($.Event('keydown', { which: $.ui.keyCode.ENTER, keyCode: $.ui.keyCode.ENTER }));
+
+        assert.strictEqual($('.o_searchview_input_container .o_facet_values').eq(0).text().trim(), "First record",
+            "the autocompletion facet should be correct");
+        assert.strictEqual(searchRead, 2, "there should be 2 search_read");
+
+        // 'r' key to filter on bar "Second Record"
+        $('.o_searchview_input').trigger($.Event('keypress', { which: 82, keyCode: 82 }));
+        $('.o_searchview_input').trigger($.Event('keydown', { which: $.ui.keyCode.DOWN, keyCode: $.ui.keyCode.DOWN }));
+        $('.o_searchview_input').trigger($.Event('keydown', { which: $.ui.keyCode.RIGHT, keyCode: $.ui.keyCode.RIGHT }));
+        $('.o_searchview_input').trigger($.Event('keydown', { which: $.ui.keyCode.DOWN, keyCode: $.ui.keyCode.DOWN }));
+        $('.o_searchview_input').trigger($.Event('keydown', { which: $.ui.keyCode.DOWN, keyCode: $.ui.keyCode.DOWN }));
+        $('.o_searchview_input').trigger($.Event('keydown', { which: $.ui.keyCode.ENTER, keyCode: $.ui.keyCode.ENTER }));
+
+        assert.strictEqual($('.o_searchview_input_container .o_facet_values').eq(0).text().trim(), "First record or Second record",
+            "the autocompletion facet should be correct");
+        assert.strictEqual(searchRead, 3, "there should be 3 search_read");
 
         actionManager.destroy();
     });
