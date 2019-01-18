@@ -208,9 +208,10 @@ var LinkDialog = Dialog.extend({
     /**
      * @private
      */
-    _onURLInput: function (ev) {
-        $(ev.currentTarget).closest('.form-group').removeClass('o_has_error').find('.form-control, .custom-select').removeClass('is-invalid');
-        var isLink = $(ev.currentTarget).val().indexOf('@') < 0;
+    _onURLInput: function () {
+        var $linkUrlInput = this.$('#o_link_dialog_url_input');
+        $linkUrlInput.closest('.form-group').removeClass('o_has_error').find('.form-control, .custom-select').removeClass('is-invalid');
+        var isLink = $linkUrlInput.val().indexOf('@') < 0;
         this.$('input[name="is_new_window"]').closest('.form-group').toggleClass('d-none', !isLink);
     },
 });
