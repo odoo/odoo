@@ -11,9 +11,9 @@ var _t = core._t;
  */
 var LinkDialog = Dialog.extend({
     template: 'wysiwyg.widgets.link',
-    xmlDependencies: Dialog.prototype.xmlDependencies.concat(
-        ['/web_editor/static/src/xml/editor.xml']
-    ),
+    xmlDependencies: (Dialog.prototype.xmlDependencies || []).concat([
+        '/web_editor/static/src/xml/wysiwyg.xml'
+    ]),
     events: _.extend({}, Dialog.prototype.events || {}, {
         'input': '_onAnyChange',
         'change': '_onAnyChange',
@@ -40,10 +40,10 @@ var LinkDialog = Dialog.extend({
 
         this.data = linkInfo || {};
         this.needLabel = linkInfo.needLabel;
-        this.data.iniClassName = linkInfo.className;
+        this.data.iniClassName = linkInfo.className || '';
         var allBtnClassSuffixes = /(^|\s+)btn(-[a-z0-9_-]*)?/gi;
         var allBtnShapes = /\s*(rounded-circle|flat)\s*/gi;
-        this.data.className = linkInfo.className
+        this.data.className = this.data.iniClassName
             .replace(allBtnClassSuffixes, ' ')
             .replace(allBtnShapes, ' ');
     },

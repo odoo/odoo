@@ -367,11 +367,12 @@ var MenuEntryDialog = weWidgets.LinkDialog.extend({
     init: function (parent, options, data) {
         data.text = data.name || '';
         data.isNewWindow = data.new_window;
-        this.data = data;
 
-        this._super(parent, _.extend({}, {
+        this._super(parent, _.extend({
             title: _t("Create Menu"),
-        }, options || {}), data);
+        }, options || {}), _.extend({
+            needLabel: true,
+        }, data || {}));
     },
     /**
      * @override
