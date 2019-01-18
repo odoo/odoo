@@ -8,7 +8,7 @@ class PurchaseBillUnion(models.Model):
     _name = 'purchase.bill.union'
     _auto = False
     _description = 'Purchases & Bills Union'
-    _order = "purchase_order_id desc, vendor_bill_id desc"
+    _order = "date desc, name desc"
 
     name = fields.Char(string='Reference', readonly=True)
     reference = fields.Char(string='Source', readonly=True)

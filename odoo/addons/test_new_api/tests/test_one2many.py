@@ -130,3 +130,22 @@ class One2manyCase(TransactionCase):
 
         res_movies_not_of_edition_name = self.Movie.search([('editions', '!=', one_movie_edition.name)])
         self.assertItemsEqual(t(res_movies_not_of_edition_name), t(movies.filtered(lambda r: one_movie_edition not in r.editions)))
+
+    def test_merge_partner(self):
+        model = self.env['test_new_api.field_with_caps']
+        partner = self.env['res.partner']
+
+        p1 = partner.create({'name': 'test1'})
+        p2 = partner.create({'name': 'test2'})
+
+        model1 = model.create({'pArTneR_321_id': p1.id})
+        model2 = model.create({'pArTneR_321_id': p2.id})
+
+        self.env['base.partner.merge.automatic.wizard']._merge((p1 + p2).ids, p1)
+
+        self.assertFalse(p2.exists())
+        self.assertTrue(p1.exists())
+
+        self.assertEqual(model1.pArTneR_321_id, p1)
+        self.assertTrue(model2.exists())
+        self.assertEqual(model2.pArTneR_321_id, p1)

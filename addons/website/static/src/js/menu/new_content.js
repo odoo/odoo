@@ -81,7 +81,7 @@ var NewContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
                 var $group = this.$dialog.find('div.form-group');
                 $group.removeClass('mb0');
 
-                var $add = $('<div/>', {'class': 'form-group mb0'})
+                var $add = $('<div/>', {'class': 'form-group mb0 row'})
                             .append($('<span/>', {'class': 'offset-md-3 col-md-9 text-left'})
                                     .append(qweb.render('web_editor.components.switch', {id: 'switch_addTo_menu', label: _t("Add to menu")})));
                 $add.find('input').prop('checked', true);

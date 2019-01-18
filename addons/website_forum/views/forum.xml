@@ -8,6 +8,19 @@
         <menuitem name="Forum" id="menu_website_forum_global"
             parent="website.menu_website_global_configuration" sequence="170" groups="website.group_website_designer"/>
 
+        <record id="badge_form_view_forum" model="ir.ui.view">
+            <field name="name">forum.badge_form_view</field>
+            <field name="model">gamification.badge</field>
+            <field name="inherit_id" ref="gamification.badge_form_view"/>
+            <field name="arch" type="xml">
+                <field name="challenge_ids" position="after">
+                    <group>
+                        <field name="level" />
+                    </group>
+                </field>
+            </field>
+        </record>
+
         <!-- FORUM VIEWS -->
         <record id="view_forum_forum_list" model="ir.ui.view">
             <field name="name">forum.forum.list</field>

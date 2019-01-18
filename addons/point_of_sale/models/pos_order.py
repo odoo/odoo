@@ -572,14 +572,22 @@ class PosOrder(models.Model):
         states={'draft': [('readonly', False)]},
     )
 
-    @api.onchange('statement_ids', 'lines', 'lines')
+    @api.onchange('statement_ids', 'lines')
     def _onchange_amount_all(self):
+        amounts = {order_id: {'paid': 0, 'return': 0, 'untaxed': 0} for order_id in self.ids}
+        for order in self.env['account.bank.statement.line'].read_group([('pos_statement_id', 'in', self.ids)], ['pos_statement_id', 'amount'], ['pos_statement_id']):
+            amounts[order['pos_statement_id'][0]]['paid'] = order['amount']
+        for order in self.env['account.bank.statement.line'].read_group(['&', ('pos_statement_id', 'in', self.ids), ('amount', '<', 0)], ['pos_statement_id', 'amount'], ['pos_statement_id']):
+            amounts[order['pos_statement_id'][0]]['return'] = order['amount']
+        for order in self.env['pos.order.line'].read_group([('order_id', 'in', self.ids)], ['order_id', 'price_subtotal'], ['order_id']):
+            amounts[order['order_id'][0]]['untaxed'] = order['price_subtotal']
+
         for order in self:
             currency = order.pricelist_id.currency_id
-            order.amount_paid = sum(payment.amount for payment in order.statement_ids)
-            order.amount_return = sum(payment.amount < 0 and payment.amount or 0 for payment in order.statement_ids)
+            order.amount_paid = amounts[order.id]['paid']
+            order.amount_return = amounts[order.id]['return']
             order.amount_tax = currency.round(sum(self._amount_line_tax(line, order.fiscal_position_id) for line in order.lines))
-            amount_untaxed = currency.round(sum(line.price_subtotal for line in order.lines))
+            amount_untaxed = currency.round(amounts[order.id]['untaxed'])
             order.amount_total = order.amount_tax + amount_untaxed
 
     @api.onchange('partner_id')

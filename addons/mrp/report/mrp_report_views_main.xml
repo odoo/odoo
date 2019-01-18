@@ -19,5 +19,14 @@
             report_type="qweb-pdf"
             print_report_name="'Bom Structure - %s' % object.display_name"
         />
+        <report
+            string="Finished Product Label (PDF)"
+            id="action_report_finished_product"
+            model="mrp.production"
+            name="mrp.label_production_view_pdf"
+            file="mrp.label_production_view_pdf"
+            report_type="qweb-pdf"
+            print_report_name="'Finished products - %s' % object.name"
+        />
     </data>
 </odoo>
