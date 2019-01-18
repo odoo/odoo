@@ -107,6 +107,21 @@ if records:
         </field>
     </record>
 
+    <record id="hr_benefit_tree" model="ir.ui.view">
+        <field name="name">hr.benefit.tree</field>
+        <field name="model">hr.benefit</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="benefit_type_id"/>
+                <field name="duration"/>
+                <field name="state"/>
+                <field name="date_start" string="Beginning"/>
+                <field name="display_warning"/>
+            </tree>
+        </field>
+    </record>
+
     <record id="view_hr_benefit_filter" model="ir.ui.view">
         <field name="name">hr.benefit.filter</field>
         <field name="model">hr.benefit</field>
@@ -115,7 +130,9 @@ if records:
                 <field name="employee_id"/>
                 <field name="name"/>
                 <filter string="My Benefits" domain="[('employee_id.user_id','=',uid)]" name="my_benefits"/>
+                <filter string="With error" domain="[('display_warning','=', True)]" name="benefits_error"/>
                 <filter name="group_employee" string="Employee" context="{'group_by':'employee_id'}"/>
+                <filter name="group_benefit_type" string="Type" context="{'group_by':'benefit_type_id'}"/>
             </search>
         </field>
     </record>
