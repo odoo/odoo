@@ -85,9 +85,6 @@ class AccountAccount(models.Model):
     internal_group = fields.Selection(related='user_type_id.internal_group', string="Internal Group", store=True, readonly=True)
     #has_unreconciled_entries = fields.Boolean(compute='_compute_has_unreconciled_entries',
     #    help="The account has at least one unreconciled debit and credit since last time the invoices & payments matching was performed.")
-    last_time_entries_checked = fields.Datetime(string='Latest Invoices & Payments Matching Date', readonly=True, copy=False,
-        help='Last time the invoices & payments matching was performed on this account. It is set either if there\'s not at least '\
-        'an unreconciled debit and an unreconciled credit Or if you click the "Done" button.')
     reconcile = fields.Boolean(string='Allow Reconciliation', default=False,
         help="Check this box if this account allows invoices & payments matching of journal items.")
     tax_ids = fields.Many2many('account.tax', 'account_account_tax_default_rel',
@@ -338,10 +335,6 @@ class AccountAccount(models.Model):
         if partner_prop_acc:
             raise UserError(_('You cannot remove/deactivate an account which is set on a customer or vendor.'))
         return super(AccountAccount, self).unlink()
-
-    @api.multi
-    def mark_as_reconciled(self):
-        return self.write({'last_time_entries_checked': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
 
     @api.multi
     def action_open_reconcile(self):
