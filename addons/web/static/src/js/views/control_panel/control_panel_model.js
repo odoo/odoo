@@ -646,8 +646,18 @@ var ControlPanelModel = mvc.Model.extend({
      */
     _getFilterContext: function (filter) {
         var context = filter.context || {};
+
+        // for <field> nodes, a dynamic context (like context="{'field1': self}")
+        // should set {'field1': [value1, value2]} in the context
+        if (filter.type === 'field' && filter.attrs.context) {
+            context = pyUtils.eval('context', filter.attrs.context, {
+                self: _.map(filter.autoCompleteValues, function (autoCompleteValue) {
+                    return autoCompleteValue.value;
+                }),
+            });
+        }
         // the following code aims to restore this:
-        // https://github.com/odoo/odoo/blob/master/addons/web/static/src/js/views/search/search_inputs.js#L498
+        // https://github.com/odoo/odoo/blob/12.0/addons/web/static/src/js/views/search/search_inputs.js#L498
         // this is required for the helpdesk tour to pass
         // this seems weird to only do that for m2o fields, but a test fails if
         // we do it for other fields (my guess being that the test should simply
@@ -656,7 +666,7 @@ var ControlPanelModel = mvc.Model.extend({
             if (this.fields[filter.attrs.name].type === 'many2one') {
                 var value = filter.defaultValue;
                 // the following if required to make the main_flow_tour pass (see
-                // https://github.com/odoo/odoo/blob/master/addons/web/static/src/js/views/search/search_inputs.js#L461)
+                // https://github.com/odoo/odoo/blob/12.0/addons/web/static/src/js/views/search/search_inputs.js#L461)
                 if (_.isArray(filter.defaultValue)) {
                     value = filter.defaultValue[0];
                 }
