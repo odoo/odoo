@@ -44,7 +44,7 @@ class ProductWishlist(models.Model):
             "&",
             ("partner_id", "=", False),
             ("session", "=", self.env.user.current_session),
-        ]).filtered('product_id.product_tmpl_id.website_published')
+        ]).filtered('product_id.product_tmpl_id.website_published').sudo(user=self.env.user)
 
     @api.model
     def _add_to_wishlist(self, pricelist_id, currency_id, website_id, price, product_id, partner_id=False, session=False):
