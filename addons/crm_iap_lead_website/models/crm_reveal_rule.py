@@ -50,7 +50,7 @@ class CRMRevealRule(models.Model):
     lead_for = fields.Selection([('companies', 'Companies'), ('people', 'Companies and their Contacts')], string='Data Tracking', required=True, default='companies', help='Choose whether to track companies only or companies and their contacts')
     lead_type = fields.Selection([('lead', 'Lead'), ('opportunity', 'Opportunity')], string='Type', required=True, default='opportunity')
     suffix = fields.Char(string='Suffix', help='This will be appended in name of generated lead so you can identify lead/opportunity is generated with this rule')
-    team_id = fields.Many2one('crm.team', string='Sales Channel')
+    team_id = fields.Many2one('crm.team', string='Sales Team')
     tag_ids = fields.Many2many('crm.lead.tag', string='Tags')
     user_id = fields.Many2one('res.users', string='Salesperson')
     priority = fields.Selection(crm_stage.AVAILABLE_PRIORITIES, string='Priority')
