@@ -415,7 +415,7 @@ class ProductProduct(models.Model):
 
         # Prefetch the fields used by the `name_get`, so `browse` doesn't fetch other fields
         # Use `load=False` to not call `name_get` for the `product_tmpl_id`
-        self.sudo().read(['name', 'default_code', 'product_tmpl_id', 'attribute_value_ids'], load=False)
+        self.sudo().read(['name', 'default_code', 'product_tmpl_id', 'attribute_value_ids', 'attribute_line_ids'], load=False)
 
         product_template_ids = self.sudo().mapped('product_tmpl_id').ids
 
@@ -432,7 +432,7 @@ class ProductProduct(models.Model):
                 supplier_info_by_template.setdefault(r.product_tmpl_id, []).append(r)
         for product in self.sudo():
             # display only the attributes with multiple possible values on the template
-            variable_attributes = product.attribute_value_ids.filtered(lambda v: len(v.attribute_id.value_ids) > 1).mapped('attribute_id')
+            variable_attributes = product.attribute_line_ids.filtered(lambda l: len(l.value_ids) > 1).mapped('attribute_id')
             variant = product.attribute_value_ids._variant_name(variable_attributes)
 
             name = variant and "%s (%s)" % (product.name, variant) or product.name
