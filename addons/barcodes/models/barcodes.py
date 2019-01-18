@@ -31,11 +31,11 @@ class BarcodeNomenclature(models.Model):
 
         oddsum = evensum = total = 0
         code = code[:-1] # Remove checksum
-        for i in range(len(code)):
-            if i % 2 == 0:
-                evensum += int(code[i])
+        for num,value in enumerate(code):
+            if num % 2 == 0:
+                evensum += int(value)
             else:
-                oddsum += int(code[i])
+                oddsum += int(value)
         total = oddsum * 3 + evensum
         return int((10 - total % 10) % 10)
 
