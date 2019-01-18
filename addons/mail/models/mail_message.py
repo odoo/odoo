@@ -553,7 +553,7 @@ class Message(models.Model):
                 'model': message.model,
                 'last_message_date': message.date,
                 'module_icon': '/mail/static/src/img/smiley/mailfailure.jpg',
-                'notifications': dict((notif.res_partner_id.id, (notif.email_status, notif.res_partner_id.name)) for notif in message.notification_ids)
+                'notifications': dict((notif.res_partner_id.id, (notif.email_status, notif.res_partner_id.name)) for notif in message.notification_ids.sudo())
             }
             failures_infos.append(info)
         return failures_infos
