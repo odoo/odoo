@@ -501,10 +501,6 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
-
-        form.destroy();
-    });
-
     QUnit.test('quickly switch between pages in one2many list', function (assert) {
         assert.expect(2);
 
@@ -543,6 +539,10 @@ QUnit.module('relational_fields', {
         readDefs[2].resolve();
 
         assert.strictEqual(form.$('.o_field_widget[name=turtles] .o_data_cell').text(), 'raphael');
+
+        form.destroy();
+    });
+
     QUnit.test('many2many read, field context is properly sent', function (assert) {
         assert.expect(4);
 
