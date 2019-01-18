@@ -21,7 +21,7 @@ Odoo Web tours.
         'data/web_tour_demo.xml',
     ],
     'qweb': [
-        "static/src/xml/*.xml",
+        "static/src/xml/debug_manager.xml",
     ],
     'auto_install': True
 }

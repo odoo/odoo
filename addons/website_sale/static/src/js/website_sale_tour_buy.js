@@ -21,7 +21,7 @@ tour.register('shop_buy_product', {
         },
         {
             content: "select conference chair",
-            trigger: '.oe_product_cart a:contains("Conference Chair")',
+            trigger: '.oe_product_cart:first a:contains("Conference Chair")',
         },
         {
             content: "select Conference Chair Aluminium",

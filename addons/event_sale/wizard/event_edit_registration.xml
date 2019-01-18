@@ -12,7 +12,7 @@
                         <tree string="Registration" editable="top" create="false" delete="false">
                             <field name="event_id" readonly='1' force_save="1"/>
                             <field name="registration_id" readonly='1' force_save="1"/>
-                            <field name="event_ticket_id" domain="[('event_id', '=', event_id)]" readonly='1'/>
+                            <field name="event_ticket_id" domain="[('event_id', '=', event_id)]" readonly='1' force_save="1"/>
                             <field name="name"/>
                             <field name="email"/>
                             <field name="phone"/>

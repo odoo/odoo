@@ -529,6 +529,7 @@ class ChromeBrowser():
             '--user-data-dir': self.user_data_dir,
             '--disable-translate': '',
             '--window-size': self.window_size,
+            '--remote-debugging-address': HOST,
             '--remote-debugging-port': str(self.devtools_port),
             '--no-sandbox': '',
         }
@@ -571,7 +572,7 @@ class ChromeBrowser():
         command = os.path.join('json', command).strip('/')
         while timeout > 0:
             try:
-                url = werkzeug.urls.url_join('http://127.0.0.1:%s/' % self.devtools_port, command)
+                url = werkzeug.urls.url_join('http://%s:%s/' % (HOST, self.devtools_port), command)
                 self._logger.info('Url : %s', url)
                 r = requests.get(url, timeout=3)
                 if r.ok:
@@ -881,7 +882,7 @@ class HttpCase(TransactionCase):
         odoo.http.root.session_store.save(session)
         if self.browser:
             self._logger.info('Setting session cookie in browser')
-            self.browser.set_cookie('session_id', self.session_id, '/', '127.0.0.1')
+            self.browser.set_cookie('session_id', self.session_id, '/', HOST)
 
     def browser_js(self, url_path, code, ready='', login=None, timeout=60, **kw):
         """ Test js code running in the browser
@@ -905,7 +906,10 @@ class HttpCase(TransactionCase):
 
         try:
             self.authenticate(login, login)
-            url = "http://%s:%s%s" % (HOST, PORT, url_path or '/')
+            base_url = "http://%s:%s" % (HOST, PORT)
+            ICP = self.env['ir.config_parameter']
+            ICP.set_param('web.base.url', base_url)
+            url = "%s%s" % (base_url, url_path or '/')
             self._logger.info('Open "%s" in browser', url)
 
             if odoo.tools.config['logfile']:
