@@ -315,8 +315,8 @@ var PivotModel = AbstractModel.extend({
         if (!this.data.has_data) {
             return {
                 has_data: false,
-                colGroupBys: this.data.main_col.groupbys,
-                rowGroupBys:  this.data.main_row.groupbys,
+                colGroupBys: this.data.main_col.root.groupbys,
+                rowGroupBys:  this.data.main_row.root.groupbys,
                 measures: this.data.measures,
             };
         }

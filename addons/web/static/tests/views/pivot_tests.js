@@ -967,7 +967,7 @@ QUnit.module('Views', {
         }, "context should be correct");
 
         pivot.$('tbody .o_pivot_header_cell_closed').click();
-        pivot.$('.o_pivot_field_menu li[data-field=product_id] a').click();
+        pivot.$('.o_pivot_field_menu .dropdown-item[data-field="product_id"]:first').click();
 
         assert.deepEqual(pivot.getContext(), {
             pivot_column_groupby: [],
@@ -976,7 +976,7 @@ QUnit.module('Views', {
         }, "context should be correct");
 
         pivot.$('thead .o_pivot_header_cell_closed').click();
-        pivot.$('.o_pivot_field_menu li[data-field=customer] a').click();
+        pivot.$('.o_pivot_field_menu .dropdown-item[data-field="customer"]:first').click();
 
         assert.deepEqual(pivot.getContext(), {
             pivot_column_groupby: ['customer'],
