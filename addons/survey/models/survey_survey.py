@@ -117,7 +117,7 @@ class Survey(models.Model):
                 'survey_id': survey.id,
                 'test_entry': test_entry,
             }
-            if user and not user._is_public:
+            if user and not user._is_public():
                 answer_vals['partner_id'] = user.partner_id.id
                 answer_vals['email'] = user.email
             elif partner:
