@@ -32,6 +32,8 @@ class AccountAccountType(models.Model):
         ('liability', 'Liability'),
         ('income', 'Income'),
         ('expense', 'Expense'),
+        ('memorandum', 'Memorandum'),
+        ('contra_memorandum', 'Contra Memorandum'),
     ], string="Internal Group",
        help="The 'Internal Group' is used to filter accounts based on the internal group set on the account type.")
     note = fields.Text(string='Description')
