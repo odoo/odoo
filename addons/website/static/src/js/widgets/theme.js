@@ -472,7 +472,7 @@ var ThemeCustomizeDialog = Dialog.extend({
                 });
 
                 var colors = {};
-                colors[colorName] = ev.data.hex;
+                colors[colorName] = ev.data.cssColor;
                 if (colorName === 'alpha') {
                     colors['beta'] = 'null';
                     colors['gamma'] = 'null';
