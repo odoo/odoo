@@ -622,6 +622,104 @@ class TestCowViewSaving(common.TransactionCase):
         views = View.with_context(website_id=1).get_related_views('B')
         self.assertEqual(views.mapped('key'), ['B', 'I', 'II'], "Should only return the specific tree")
 
+    def test_cow_inherit_children_order(self):
+        """ COW method should loop on inherit_children_ids in correct order
+            when copying them on the new specific tree.
+            Correct order is the same as the one when applying view arch:
+            PRIORITY, ID
+            And not the default one from ir.ui.view (NAME, PRIORIRTY, ID).
+        """
+        self.inherit_view.copy({
+            'name': 'alphabetically before "Extension"',
+            'key': '_test.alphabetically_first',
+            'arch': '<div position="replace"><p>COMPARE</p></div>',
+        })
+        # Next line should not crash, COW loop on inherit_children_ids should be sorted correctly
+        self.base_view.with_context(website_id=1).write({'name': 'Product (W1)'})
+
+    def test_module_new_inherit_view_on_parent_already_forked(self):
+        """ If a generic parent view is copied (COW) and that another module
+            creates a child view for that generic parent, all the COW views
+            should also get a copy of that new child view.
+
+            Typically, a parent view (website_sale.product) is copied (COW)
+            and then wishlist module is installed.
+            Wishlist views inhering from website_sale.product are added to the
+            generic `website_sale.product`. But it should also be added to the
+            COW `website_sale.product` to activate the module views for that
+            website.
+        """
+        Website = self.env['website']
+        View = self.env['ir.ui.view']
+
+        # Simulate website_sale product view
+        self.base_view.write({'name': 'Product', 'key': '_website_sale.product'})
+        # Trigger cow on website_sale hierarchy for website 1
+        self.base_view.with_context(website_id=1).write({'name': 'Product (W1)'})
+
+        # Simulate website_sale_comparison install
+        View._load_records([dict(xml_id='_website_sale_comparison.product_add_to_compare', values={
+            'name': 'Add to comparison in product page',
+            'mode': 'extension',
+            'inherit_id': self.base_view.id,
+            'arch': '<div position="replace"><p>COMPARE</p></div>',
+            'key': '_website_sale_comparison.product_add_to_compare',
+        })])
+
+        specific_view = Website.with_context(load_all_views=True, website_id=1).viewref('_website_sale.product')
+        specific_view_arch = specific_view.read_combined(['arch'])['arch']
+        self.assertEqual(specific_view.website_id.id, 1, "Ensure we got specific view to perform the checks against")
+        self.assertEqual(specific_view_arch, '<p>COMPARE</p>', "When a module creates an inherited view (on a generic tree), it should also create that view in the specific COW'd tree.")
+
+        # Simulate website_sale_comparison update
+        View._load_records([dict(xml_id='_website_sale_comparison.product_add_to_compare', values={
+            'arch': '<div position="replace"><p>COMPARE EDITED</p></div>',
+        })])
+
+        specific_view_arch = Website.with_context(load_all_views=True, website_id=1).viewref('_website_sale.product').read_combined(['arch'])['arch']
+        self.assertEqual(specific_view_arch, '<p>COMPARE EDITED</p>', "When a module updates an inherited view (on a generic tree), it should also update the copies of that view (COW).")
+
+        # Test fields that should not be COW'd
+        random_view_id = View.search([], limit=1).id
+        View._load_records([dict(xml_id='_website_sale_comparison.product_add_to_compare', values={
+            'website_id': None,
+            'inherit_id': random_view_id,
+        })])
+
+        w1_specific_child_view = Website.with_context(load_all_views=True, website_id=1).viewref('_website_sale_comparison.product_add_to_compare')
+        generic_child_view = Website.with_context(load_all_views=True).viewref('_website_sale_comparison.product_add_to_compare')
+        self.assertEqual(w1_specific_child_view.website_id.id, 1, "website_id is a prohibited field when COWing views during _load_records")
+        self.assertEqual(w1_specific_child_view.inherit_id.id != random_view_id, True, "inherit_id is a prohibited field when COWing views during _load_records")
+        self.assertEqual(generic_child_view.inherit_id.id, random_view_id, "prohibited fields only concerned write on COW'd view. Generic should still considere these fields")
+
+        # Set back the generic view as parent for the rest of the test
+        generic_child_view.inherit_id = self.base_view
+
+        # Don't update fields from COW'd view if these fields have been modified from original view
+        new_website = Website.create({'name': 'New Website'})
+        self.base_view.with_context(website_id=new_website.id).write({'name': 'Product (new_website)'})
+        new_website_specific_child_view = Website.with_context(load_all_views=True, website_id=new_website.id).viewref('_website_sale_comparison.product_add_to_compare')
+        new_website_specific_child_view.priority = 6
+        View._load_records([dict(xml_id='_website_sale_comparison.product_add_to_compare', values={
+            'priority': 3,
+        })])
+        self.assertEqual(generic_child_view.priority, 3, "XML update should be written on the Generic View")
+        self.assertEqual(w1_specific_child_view.priority, 3, "XML update should be written on the specific view if the fields have not been modified on that specific view")
+        self.assertEqual(new_website_specific_child_view.priority, 6, "XML update should NOT be written on the specific view if the fields have been modified on that specific view")
+
+        # Simulate website_sale update on top level view
+        self.env['ir.model.data'].create({
+            'module': '_website_sale',
+            'name': 'product',
+            'model': self.base_view._name,
+            'res_id': self.base_view.id,
+        })
+        View._load_records([dict(xml_id='_website_sale.product', values={
+            'website_meta_title': 'A bug got fixed by updating this field',
+        })])
+        all_title_updated = specific_view.website_meta_title == self.base_view.website_meta_title == "A bug got fixed by updating this field"
+        self.assertEqual(all_title_updated, True, "Update on top level generic views should also be applied on specific views")
+
 
 class Crawler(HttpCase):
     def setUp(self):
