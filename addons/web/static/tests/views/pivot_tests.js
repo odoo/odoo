@@ -952,46 +952,56 @@ QUnit.module('Views', {
         };
         pivot.reload(reloadParams);
 
-        assert.deepEqual(pivot.getContext(), {
-            pivot_column_groupby: ['customer'],
-            pivot_measures: ['foo'],
-            pivot_row_groupby: ['product_id'],
+        assert.deepEqual(pivot.getOwnedQueryParams(), {
+            context: {
+                pivot_column_groupby: ['customer'],
+                pivot_measures: ['foo'],
+                pivot_row_groupby: ['product_id'],
+            },
         }, "context should be correct");
 
         // Let's get rid of the rows groupBy
         pivot.$('tbody .o_pivot_header_cell_opened').click();
 
-        assert.deepEqual(pivot.getContext(), {
-            pivot_column_groupby: ['customer'],
-            pivot_measures: ['foo'],
-            pivot_row_groupby: [],
+        assert.deepEqual(pivot.getOwnedQueryParams(), {
+            context: {
+                pivot_column_groupby: ['customer'],
+                pivot_measures: ['foo'],
+                pivot_row_groupby: [],
+            },
         }, "context should be correct");
 
         // And now, get rid of the col groupby
         pivot.$('thead .o_pivot_header_cell_opened').click();
 
-        assert.deepEqual(pivot.getContext(), {
-            pivot_column_groupby: [],
-            pivot_measures: ['foo'],
-            pivot_row_groupby: [],
+        assert.deepEqual(pivot.getOwnedQueryParams(), {
+            context: {
+                pivot_column_groupby: [],
+                pivot_measures: ['foo'],
+                pivot_row_groupby: [],
+            },
         }, "context should be correct");
 
         pivot.$('tbody .o_pivot_header_cell_closed').click();
-        pivot.$('.o_pivot_field_menu li[data-field=product_id] a').click();
+        pivot.$('.o_pivot_field_menu .dropdown-item[data-field="product_id"]:first').click();
 
-        assert.deepEqual(pivot.getContext(), {
-            pivot_column_groupby: [],
-            pivot_measures: ['foo'],
-            pivot_row_groupby: ['product_id'],
+        assert.deepEqual(pivot.getOwnedQueryParams(), {
+            context: {
+                pivot_column_groupby: [],
+                pivot_measures: ['foo'],
+                pivot_row_groupby: ['product_id'],
+            },
         }, "context should be correct");
 
         pivot.$('thead .o_pivot_header_cell_closed').click();
-        pivot.$('.o_pivot_field_menu li[data-field=customer] a').click();
+        pivot.$('.o_pivot_field_menu .dropdown-item[data-field="customer"]:first').click();
 
-        assert.deepEqual(pivot.getContext(), {
-            pivot_column_groupby: ['customer'],
-            pivot_measures: ['foo'],
-            pivot_row_groupby: ['product_id'],
+        assert.deepEqual(pivot.getOwnedQueryParams(), {
+            context: {
+                pivot_column_groupby: ['customer'],
+                pivot_measures: ['foo'],
+                pivot_row_groupby: ['product_id'],
+            },
         }, "context should be correct");
 
         pivot.destroy();
