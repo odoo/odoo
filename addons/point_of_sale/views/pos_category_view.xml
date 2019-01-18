@@ -4,16 +4,21 @@
         <field name="name">pos.category.form</field>
         <field name="model">pos.category</field>
         <field name="arch" type="xml">
-            <form string="Pos Categories">
+            <form string="Pos Product Categories">
                 <sheet>
                     <field name="image" widget='image' class="oe_avatar"/>
-                    <div class="oe_left">
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name" placeholder="POS Category Name" required="True"/>
+                        </h1>
+                    </div>
+                    <group>
                         <group>
-                            <field name="name"/>
                             <field name="parent_id"/>
                             <field name="sequence"/>
                         </group>
-                    </div>
+                    </group>
                 </sheet>
             </form>
         </field>
@@ -25,7 +30,7 @@
         <field name="arch" type="xml">
             <tree string="Product Product Categories">
                 <field name="sequence" widget="handle"/>
-                <field name="display_name"/>
+                <field name="display_name" string="PoS Product Category"/>
             </tree>
         </field>
     </record>
@@ -57,7 +62,7 @@
     </record>
 
     <record id="product_pos_category_action" model="ir.actions.act_window">
-        <field name="name">PoS Categories</field>
+        <field name="name">PoS Product Categories</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">pos.category</field>
         <field name="view_type">form</field>

@@ -60,7 +60,6 @@
             <field name="arch" type="xml">
                 <search string="Currencies">
                     <field name="name" string="Currency"/>
-                    <field name="active"/>
                     <filter name="active" string="Active" domain="[('active','=',True)]" help="Show active currencies"/>
                     <filter name="inactive" string="Inactive" domain="[('active','=',False)]" help="Show inactive currencies"/>
                 </search>

@@ -57,14 +57,11 @@
                             <div class="o_setting_right_pane">
                                 <label for="group_multi_currency"/>
                                 <div class="text-muted">
-                                    Sell in several currencies
+                                    Record transactions in foreign currencies
                                 </div>
                                 <div class="content-group" attrs="{'invisible': [('group_multi_currency', '=', False)]}">
                                     <div class="mt16">
                                         <button type="action" name="%(base.action_currency_form)d" string="Currencies" class="btn-link" icon="fa-arrow-right"/>
-                                    </div>
-                                    <div>
-                                        <button name="%(base.action_currency_all_form)d" icon="fa-arrow-right" type="action" string="Advanced Currencies Setup" class="btn-link"/>
                                     </div>
                                 </div>
                             </div>
