@@ -211,7 +211,7 @@ var KanbanController = BasicController.extend({
     _onAddColumn: function (ev) {
         var self = this;
         this.mutex.exec(function () {
-            return self.model.createGroup(ev.data.value, this.handle).then(function () {
+            return self.model.createGroup(ev.data.value, self.handle).then(function () {
                 var state = self.model.get(self.handle, {raw: true});
                 var ids = _.pluck(state.data, 'res_id').filter(_.isNumber);
                 return self._resequenceColumns(ids);
