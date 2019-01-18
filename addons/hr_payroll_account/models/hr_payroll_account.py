@@ -27,10 +27,10 @@ class HrPayslipLine(models.Model):
 class HrPayslip(models.Model):
     _inherit = 'hr.payslip'
 
-    date = fields.Date('Date Account', states={'draft': [('readonly', False)]}, readonly=True,
+    date = fields.Date('Date Account', states={'draft': [('readonly', False)], 'verify': [('readonly', False)]}, readonly=True,
         help="Keep empty to use the period of the validation(Payslip) date.")
     journal_id = fields.Many2one('account.journal', 'Salary Journal', readonly=True, required=True,
-        states={'draft': [('readonly', False)]}, default=lambda self: self.env['account.journal'].search([('type', '=', 'general')], limit=1))
+        states={'draft': [('readonly', False)], 'verify': [('readonly', False)]}, default=lambda self: self.env['account.journal'].search([('type', '=', 'general')], limit=1))
     move_id = fields.Many2one('account.move', 'Accounting Entry', readonly=True, copy=False)
 
     @api.model

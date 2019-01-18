@@ -69,5 +69,5 @@ class HrLeave(models.Model):
     def action_refuse(self):
         super(HrLeave, self).action_refuse()
         benefits = self.env['hr.benefit'].search([('leave_id', 'in', self.ids)])
-        benefits.write({'display_warning': False, 'leave_id': None})
+        benefits.write({'display_warning': False, 'active': False})
         return True

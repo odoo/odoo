@@ -1,11 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Root Menus -->
-
-    <menuitem id="menu_hr_payroll_root" name="Payroll" sequence="45" web_icon="hr_payroll,static/description/icon.png"/>
-    <menuitem id="menu_hr_payroll_configuration" name="Configuration" parent="menu_hr_payroll_root"
-        sequence="100" groups="hr_payroll.group_hr_payroll_manager"/>
-
     <!-- Contract View -->
     <record id="hr_contract_form_inherit" model="ir.ui.view">
         <field name="name">hr.contract.view.form.inherit</field>
@@ -22,6 +16,21 @@
              <xpath expr="//field[@name='resource_calendar_id']" position="after">
                 <field name="schedule_pay"/>
             </xpath>
+        </field>
+    </record>
+
+    <record id="action_hr_contract_repository" model="ir.actions.act_window">
+        <field name="name">Contracts</field>
+        <field name="res_model">hr.contract</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,kanban,form,activity</field>
+        <field name="domain">[('employee_id', '!=', False)]</field>
+        <field name="context">{'search_default_running': 1, 'search_default_to_renew': 1}</field>
+        <field name="search_view_id" ref="hr_contract.hr_contract_view_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+            Create a new contract
+            </p>
         </field>
     </record>
 </odoo>

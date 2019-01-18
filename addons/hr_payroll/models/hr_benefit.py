@@ -18,9 +18,9 @@ class HrBenefit(models.Model):
     active = fields.Boolean(default=True)
     employee_id = fields.Many2one('hr.employee', required=True,
         domain=lambda self: [('contract_ids.state', 'in', ('open', 'pending')), ('company_id', '=', self.env.user.company_id.id)])
-    date_start = fields.Datetime(required=True, string='Start')
-    date_stop = fields.Datetime(string='End')
-    duration = fields.Float(compute='_compute_duration', inverse='_inverse_duration', store=True, string="Hours")
+    date_start = fields.Datetime(required=True, string='From')
+    date_stop = fields.Datetime(string='To')
+    duration = fields.Float(compute='_compute_duration', inverse='_inverse_duration', store=True, string="Period")
     benefit_type_id = fields.Many2one('hr.benefit.type')
     color = fields.Integer(related='benefit_type_id.color', readonly=True)
     state = fields.Selection([
@@ -73,6 +73,7 @@ class HrBenefit(models.Model):
                 vals['active'] = True
             if vals['state'] == 'cancelled':
                 vals['active'] = False
+                self.mapped('leave_id').action_refuse()
         return super(HrBenefit, self).write(vals)
 
     @api.multi
@@ -283,3 +284,16 @@ class HrBenefitType(models.Model):
                             help="If the active field is set to false, it will allow you to hide the benefit type without removing it.")
     is_leave = fields.Boolean(default=False, string="Leave")
 
+class Contacts(models.Model):
+    """ Personnal calendar filter """
+
+    _name = 'hr.user.benefit.employee'
+    _description = 'Benefits Employees'
+
+    user_id = fields.Many2one('res.users', 'Me', required=True, default=lambda self: self.env.user)
+    employee_id = fields.Many2one('hr.employee', 'Employee', required=True)
+    active = fields.Boolean('Active', default=True)
+
+    _sql_constraints = [
+        ('user_id_employee_id_unique', 'UNIQUE(user_id,employee_id)', 'You cannot have twice the same employee.')
+    ]
