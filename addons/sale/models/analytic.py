@@ -103,7 +103,7 @@ class AccountAnalyticLine(models.Model):
     @api.multi
     def _sale_determine_order(self):
         mapping = {}
-        for analytic_line in self.sudo().filtered(lambda aal: not aal.so_line and aal.product_id and aal.product_id.expense_policy != 'no'):
+        for analytic_line in self.sudo().filtered(lambda aal: not aal.so_line and aal.product_id and aal.product_id.expense_policy not in [False, 'no']):
             sale_order = self.env['sale.order'].search([('analytic_account_id', '=', analytic_line.account_id.id), ('state', '=', 'sale')], limit=1)
             if not sale_order:
                 sale_order = self.env['sale.order'].search([('analytic_account_id', '=', analytic_line.account_id.id)], limit=1)
@@ -120,7 +120,7 @@ class AccountAnalyticLine(models.Model):
         # determine SO : first SO open linked to AA
         sale_order_map = self._sale_determine_order()
         # determine so line
-        for analytic_line in self.sudo().filtered(lambda aal: not aal.so_line and aal.product_id and aal.product_id.expense_policy != 'no'):
+        for analytic_line in self.sudo().filtered(lambda aal: not aal.so_line and aal.product_id and aal.product_id.expense_policy not in [False, 'no']):
             sale_order = sale_order_map.get(analytic_line.id)
             if not sale_order:
                 continue
