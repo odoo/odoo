@@ -481,7 +481,7 @@ return AbstractModel.extend({
      */
     _loadFilter: function (filter) {
         if (!filter.write_model) {
-            return;
+            return $.when();
         }
 
         var field = this.fields[filter.fieldName];

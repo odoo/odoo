@@ -27,8 +27,6 @@ class TestPayslipFlow(TestPayslipBase):
         context = {
             "lang": "en_US", "tz": False, "active_model": "ir.ui.menu",
             "department_id": False, "section_id": False,
-            "active_ids": [self.ref("hr_payroll.menu_department_tree")],
-            "active_id": self.ref("hr_payroll.menu_department_tree")
         }
         # I click on 'Compute Sheet' button on payslip
         richard_payslip.with_context(context).compute_sheet()
