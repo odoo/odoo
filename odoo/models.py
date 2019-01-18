@@ -3114,6 +3114,9 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         with self.env.protecting(protected_fields, self):
             # write stored fields with (low-level) method _write
             if store_vals or inverse_vals or inherited_vals:
+                # if log_access is enabled, this updates 'write_date' and
+                # 'write_uid' and check access rules, even when old_vals is
+                # empty
                 self._write(store_vals)
 
             # update parent records (after possibly updating parent fields)
@@ -3130,6 +3133,8 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 self.env[model_name].browse(parent_ids).write(parent_vals)
 
             if inverse_vals:
+                self.check_field_access_rights('write', list(inverse_vals))
+
                 self.modified(set(inverse_vals) - set(store_vals))
 
                 # in case several fields use the same inverse method, call it once
