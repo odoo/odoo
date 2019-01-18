@@ -13,6 +13,7 @@ from odoo.addons.resource.models.resource import Intervals
 class HrBenefit(models.Model):
     _name = 'hr.benefit'
     _description = 'hr.benefit'
+    _order = 'display_warning desc,state,date_start'
 
     name = fields.Char(required=True)
     active = fields.Boolean(default=True)
