@@ -159,4 +159,8 @@ var ShowPaymentLineWidget = AbstractField.extend({
 
 field_registry.add('payment', ShowPaymentLineWidget);
 
+return {
+    ShowPaymentLineWidget: ShowPaymentLineWidget
+};
+    
 });
