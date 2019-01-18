@@ -580,6 +580,9 @@ var FieldDate = InputField.extend({
         if (value === false) {
             return this.value === false;
         }
+        if (this.value === false) {
+            return false;
+        }
         return value.isSame(this.value, 'day');
     },
     /**
@@ -637,6 +640,9 @@ var FieldDateTime = FieldDate.extend({
     _isSameValue: function (value) {
         if (value === false) {
             return this.value === false;
+        }
+        if (this.value === false) {
+            return false;
         }
         return value.isSame(this.value);
     },
