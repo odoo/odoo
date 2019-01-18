@@ -22,8 +22,10 @@ weWidgets.LinkDialog.include({
      * @override
      */
     start: function () {
+        var def = this._super.apply(this, arguments);
         wUtils.autocompleteWithPages(this, this.$('input[name="url"]'));
-        return this._super.apply(this, arguments);
+        this.opened(this._adaptPageAnchor.bind(this));
+        return def;
     },
 
     //--------------------------------------------------------------------------
