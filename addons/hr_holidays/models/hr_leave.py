@@ -355,7 +355,13 @@ class HolidaysRequest(models.Model):
     @api.onchange('date_from', 'date_to', 'employee_id')
     def _onchange_leave_dates(self):
         if self.date_from and self.date_to:
-            self.number_of_days = self._get_number_of_days(self.date_from, self.date_to, self.employee_id.id)
+            date_from = self.date_from
+            date_to = self.date_to
+            if self.employee_id.tz:
+                tz = timezone(self.employee_id.tz)
+                date_from = tz.localize(self.date_from)
+                date_to = tz.localize(self.date_to)
+            self.number_of_days = self._get_number_of_days(date_from, date_to, self.employee_id.id)
         else:
             self.number_of_days = 0
 
