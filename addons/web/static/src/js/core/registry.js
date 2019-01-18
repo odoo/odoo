@@ -41,7 +41,7 @@ var Registry = Class.extend({
      *
      * @param {string} key
      * @param {any} value
-     * @param {[number]} score if given, this value will be used to order keys
+     * @param {number} [score] if given, this value will be used to order keys
      * @returns {Registry} can be used to chain add calls.
      */
     add: function (key, value, score) {
