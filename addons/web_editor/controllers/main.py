@@ -417,7 +417,17 @@ class Web_Editor(http.Controller):
 
             # Create a view to extend the template which adds the original file to link the new modified version instead
             IrUiView = request.env["ir.ui.view"]
-            view_to_xpath = IrUiView.get_related_views(bundle_xmlid, bundles=True).filtered(lambda v: v.arch.find(url) >= 0)
+
+            def views_linking_url(view):
+                """
+                Returns whether the view arch has some html link tag linked to the url.
+
+                (note: searching for the URL string is not enough as it could appear in a comment or an xpath expression.)
+                """
+                return bool(etree.XML(view.arch).xpath("link[@href='{}']".format(url)))
+
+            view_to_xpath = IrUiView.get_related_views(bundle_xmlid, bundles=True).filtered(views_linking_url)
+
             new_view = {
                 'name': custom_url,
                 'key': 'web_editor.scss_%s' % str(uuid.uuid4())[:6],
