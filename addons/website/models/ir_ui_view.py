@@ -117,7 +117,7 @@ class View(models.Model):
                     if cow_view[key] == self[key]:
                         authorized_vals[key] = values[key]
                 cow_view.write(authorized_vals)
-            super(View, self)._load_records_write(values)
+        super(View, self)._load_records_write(values)
 
     def _load_records_create(self, values):
         """ During module install, when creating a generic child view, we should

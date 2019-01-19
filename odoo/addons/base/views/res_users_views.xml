@@ -167,7 +167,15 @@
                                 <field name="active" widget="boolean_button" options='{"terminology": "active"}'/>
                             </button>
                         </div>
-                        <div class="alert alert-info text-center o_form_header" attrs="{'invisible': [('active', '=', True)]}" role="alert">
+                        <field name="active_partner" required="0" readonly="1" invisible="1"/>
+                        <div class="alert alert-info text-center o_form_header"
+                            attrs="{'invisible': [
+                                '|', '|',
+                                '&amp;', ('active', '=', True), ('active_partner', '=', True),
+                                '&amp;', ('active', '=', False), ('active_partner', '=', False),
+                                '&amp;', ('active', '=', True), ('active_partner', '=', False),
+                            ]}"
+                            role="alert">
                           <a class="close" data-dismiss="alert" href="#">x</a>
                           <div>
                             <strong>The contact linked to this user is still active</strong>
