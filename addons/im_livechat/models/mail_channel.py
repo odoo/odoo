@@ -37,6 +37,13 @@ class MailChannel(models.Model):
     livechat_channel_id = fields.Many2one('im_livechat.channel', 'Channel')
 
     @api.multi
+    def _compute_is_chat(self):
+        super(MailChannel, self)._compute_is_chat()
+        for record in self:
+            if record.channel_type == 'livechat':
+                record.is_chat = True
+
+    @api.multi
     def _channel_message_notifications(self, message):
         """ When a anonymous user create a mail.channel, the operator is not notify (to avoid massive polling when
             clicking on livechat button). So when the anonymous person is sending its FIRST message, the channel header

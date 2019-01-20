@@ -21,7 +21,70 @@ apt-get update && apt-get -y upgrade
 # Do not be too fast to upgrade to more recent firmware and kernel than 4.38
 # Firmware 4.44 seems to prevent the LED mechanism from working
 
-PKGS_TO_INSTALL="fswebcam python3-urllib3 cups printer-driver-all cups-ipp-utils adduser postgresql python3 python3-dateutil python3-decorator python3-docutils python3-feedparser python3-pil python3-jinja2 python3-ldap3 python3-lxml python3-mako python3-mock python3-openid python3-psutil python3-psycopg2 python3-babel python3-pydot python3-pyparsing python3-pypdf2 python3-reportlab python3-requests python3-simplejson python3-tz python3-vatnumber python3-werkzeug python3-serial python3-pip python3-dev localepurge vim mc mg screen iw hostapd git rsync console-data lightdm xserver-xorg-video-fbdev xserver-xorg-input-evdev iceweasel xdotool unclutter x11-utils openbox python3-netifaces rpi-update python3-passlib python3-libsass python3-qrcode python3-html2text python3-unittest2 python3-simplejson nginx-full dnsmasq"
+PKGS_TO_INSTALL="
+    fswebcam \
+    nginx-full \
+    dnsmasq \
+    cups \
+    printer-driver-all \
+    cups-ipp-utils \
+    localepurge \
+    vim \
+    mc \
+    mg \
+    screen \
+    iw \
+    hostapd \
+    git \
+    rsync \
+    console-data \
+    lightdm \
+    xserver-xorg-video-fbdev \
+    xserver-xorg-input-evdev \
+    iceweasel \
+    xdotool \
+    unclutter \
+    x11-utils \
+    openbox \
+    rpi-update \
+    adduser \
+    postgresql \
+    python3 \
+    python3-urllib3 \
+    python3-dateutil \
+    python3-decorator \
+    python3-docutils \
+    python3-feedparser \
+    python3-pil \
+    python3-jinja2 \
+    python3-ldap3 \
+    python3-lxml \
+    python3-mako \
+    python3-mock \
+    python3-openid \
+    python3-psutil \
+    python3-psycopg2 \
+    python3-babel \
+    python3-pydot \
+    python3-pyparsing \
+    python3-pypdf2 \
+    python3-reportlab \
+    python3-requests \
+    python3-simplejson \
+    python3-tz \
+    python3-vatnumber \
+    python3-werkzeug \
+    python3-serial \
+    python3-pip \
+    python3-dev \
+    python3-netifaces \
+    python3-passlib \
+    python3-libsass \
+    python3-qrcode \
+    python3-html2text \
+    python3-unittest2 \
+    python3-simplejson"
+
 echo "Acquire::Retries "16";" > /etc/apt/apt.conf.d/99acquire-retries
 # KEEP OWN CONFIG FILES DURING PACKAGE CONFIGURATION
 # http://serverfault.com/questions/259226/automatically-keep-current-version-of-config-files-when-apt-get-install
@@ -84,6 +147,7 @@ fi
 if [ $SYSTEMD -eq 1 ]; then
     systemctl set-default graphical.target
     ln -fs /etc/systemd/system/autologin@.service /etc/systemd/system/getty.target.wants/getty@tty1.service
+    rm /etc/systemd/system/sysinit.target.wants/systemd-timesyncd.service
 else
     update-rc.d lightdm enable 2
 fi

@@ -360,7 +360,7 @@ class account_journal(models.Model):
             action['view_id'] = False
         if self.type == 'purchase':
             new_help = self.env['account.invoice'].with_context(ctx).complete_empty_list_help()
-            action.update({'help': action.get('help', '') + new_help})
+            action.update({'help': (action.get('help') or '') + new_help})
         return action
 
     @api.multi

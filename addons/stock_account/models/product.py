@@ -101,6 +101,7 @@ class ProductTemplate(models.Model):
 class ProductProduct(models.Model):
     _inherit = 'product.product'
 
+    stock_value_currency_id = fields.Many2one('res.currency', compute='_compute_stock_value_currency')
     stock_value = fields.Float(
         'Value', compute='_compute_stock_value')
     qty_at_date = fields.Float(
@@ -177,6 +178,12 @@ class ProductProduct(models.Model):
         return sum(moves.mapped('remaining_value')), moves
 
     @api.multi
+    def _compute_stock_value_currency(self):
+        currency_id = self.env.user.company_id.currency_id
+        for product in self:
+            product.stock_value_currency_id = currency_id
+
+    @api.multi
     @api.depends('stock_move_ids.product_qty', 'stock_move_ids.state', 'stock_move_ids.remaining_value', 'product_tmpl_id.cost_method', 'product_tmpl_id.standard_price', 'product_tmpl_id.property_valuation', 'product_tmpl_id.categ_id.property_valuation')
     def _compute_stock_value(self):
         StockMove = self.env['stock.move']
@@ -242,12 +249,14 @@ class ProductProduct(models.Model):
         """
         self.ensure_one()
         to_date = self.env.context.get('to_date')
+        ctx = self.env.context.copy()
+        ctx.pop('group_by', None)
         action = {
             'name': _('Valuation at date'),
             'type': 'ir.actions.act_window',
             'view_type': 'form',
             'view_mode': 'tree,form',
-            'context': self.env.context,
+            'context': ctx,
         }
         if self.valuation == 'real_time':
             action['res_model'] = 'account.move.line'

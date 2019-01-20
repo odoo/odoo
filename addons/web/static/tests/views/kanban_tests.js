@@ -2161,6 +2161,67 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('quick create record while adding a new column', function (assert) {
+        assert.expect(10);
+
+        var def = $.Deferred();
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban on_create="quick_create">' +
+                        '<templates><t t-name="kanban-box">' +
+                            '<div><field name="foo"/></div>' +
+                        '</t></templates>' +
+                    '</kanban>',
+            groupBy: ['product_id'],
+            mockRPC: function (route, args) {
+                var result = this._super.apply(this, arguments);
+                if (args.method === 'name_create' && args.model === 'product') {
+                    return def.then(_.constant(result));
+                }
+                return result;
+            },
+        });
+
+        assert.containsN(kanban, '.o_kanban_group', 2);
+        assert.containsN(kanban, '.o_kanban_group:first .o_kanban_record', 2);
+
+        // add a new column
+        assert.containsOnce(kanban, '.o_column_quick_create');
+        assert.isNotVisible(kanban.$('.o_column_quick_create input'));
+
+        testUtils.dom.click(kanban.$('.o_quick_create_folded'));
+
+        assert.isVisible(kanban.$('.o_column_quick_create input'));
+
+        testUtils.fields.editInput(kanban.$('.o_column_quick_create input'), 'new column');
+        testUtils.dom.click(kanban.$('.o_column_quick_create button.o_kanban_add'));
+
+        assert.containsN(kanban, '.o_kanban_group', 2);
+
+        // click to add a new record
+        testUtils.dom.click(kanban.$buttons.find('.o-kanban-button-new'));
+
+        // should wait for the column to be created (and view to be re-rendered
+        // before opening the quick create
+        assert.containsNone(kanban, '.o_kanban_quick_create');
+
+        // unlock column creation
+        def.resolve();
+
+        assert.containsN(kanban, '.o_kanban_group', 3);
+        assert.containsOnce(kanban, '.o_kanban_quick_create');
+
+        // quick create record in first column
+        testUtils.fields.editInput(kanban.$('.o_kanban_quick_create input'), 'new record');
+        testUtils.dom.click(kanban.$('.o_kanban_quick_create .o_kanban_add'));
+
+        assert.containsN(kanban, '.o_kanban_group:first .o_kanban_record', 3);
+
+        kanban.destroy();
+    });
+
     QUnit.test('many2many_tags in kanban views', function (assert) {
         assert.expect(12);
 
