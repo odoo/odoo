@@ -865,6 +865,7 @@ class PostReason(models.Model):
 class Vote(models.Model):
     _name = 'forum.post.vote'
     _description = 'Post Vote'
+    _order = 'create_date desc, id desc'
 
     post_id = fields.Many2one('forum.post', string='Post', ondelete='cascade', required=True)
     user_id = fields.Many2one('res.users', string='User', required=True, default=lambda self: self._uid)
