@@ -28,3 +28,12 @@ class TestMenu(TransactionCase):
 
         orphans =  Menu.search([('id', 'in', all_ids), ('parent_id', '=', False)], order="id")
         self.assertEqual([child1.id, child2.id], orphans.ids)
+
+    def test_00_menu_filtering(self):
+        """Some users shouldn't be able to search some menus."""
+        demoenv = self.env(user=self.env.ref("base.user_demo"))
+        domain = [("name", "ilike", "user")]
+        # Admin user should be able to read users menu
+        self.assertTrue(self.env["ir.ui.menu"].search(domain))
+        # Demo user shouldn't see it
+        self.assertFalse(demoenv["ir.ui.menu"].search(domain))

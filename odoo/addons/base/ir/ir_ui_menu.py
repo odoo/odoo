@@ -98,9 +98,18 @@ class IrUiMenu(models.Model):
         groups = self.env.user.groups_id
         if not debug:
             groups = groups - self.env.ref('base.group_no_one')
+
+        def _allgroups(menu):
+            _groups = menu.groups_id
+            while menu.parent_id:
+                menu = menu.parent_id
+                _groups |= menu.groups_id
+            # If no groups are found, it will filter later by model permissions
+            return _groups or groups
+
         # first discard all menus with groups the user does not have
         menus = menus.filtered(
-            lambda menu: not menu.groups_id or menu.groups_id & groups)
+            lambda menu: _allgroups(menu) & groups)
 
         # take apart menus that have an action
         action_menus = menus.filtered(lambda m: m.action and m.action.exists())
