@@ -30,14 +30,15 @@
 # Quentin THEURET <odoo@kerpeo.com>, 2018
 # Martin Trigaux, 2018
 # Richard Mathot <rim@odoo.com>, 2018
+# Moka Tourisme <hello@mokatourisme.fr>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 06:48+0000\n"
+"POT-Creation-Date: 2019-01-09 10:31+0000\n"
 "PO-Revision-Date: 2018-08-24 09:35+0000\n"
-"Last-Translator: Richard Mathot <rim@odoo.com>, 2018\n"
+"Last-Translator: Moka Tourisme <hello@mokatourisme.fr>, 2019\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -387,6 +388,21 @@ msgid ""
 msgstr "Passer au paiement"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cart_summary
+msgid ""
+"<span class=\"fa fa-chevron-down fa-border float-right\" role=\"img\" aria-"
+"label=\"Details\" title=\"Details\"/>"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product
+#: model_terms:ir.ui.view,arch_db:website_sale.shop_product_carousel
+msgid ""
+"<span class=\"fa fa-chevron-left\" role=\"img\" aria-label=\"Previous\" "
+"title=\"Previous\"/>"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
 msgid ""
 "<span class=\"fa fa-chevron-left\"/>\n"
@@ -408,6 +424,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
 msgid "<span class=\"fa fa-chevron-left\"/> Previous"
 msgstr "Précédent"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product
+#: model_terms:ir.ui.view,arch_db:website_sale.shop_product_carousel
+msgid "<span class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Next\" title=\"Next\"/>"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -729,7 +751,7 @@ msgstr "Nom de la banque"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Be aware!"
-msgstr ""
+msgstr "Attention !"
 
 #. module: website_sale
 #: model:res.country.group,name:website_sale.benelux
@@ -1390,25 +1412,12 @@ msgid "Issue invoices to customers"
 msgstr "Émettre des factures aux clients"
 
 #. module: website_sale
-#: code:addons/website_sale/models/sale_order.py:166
+#: code:addons/website_sale/models/sale_order.py:174
 #, python-format
 msgid "It is forbidden to modify a sales order which is not in draft status."
 msgstr ""
 "Il est interdit de modifier un bon de commande qui n'est pas en l'étape "
 "Brouillon. "
-
-#. module: website_sale
-#: code:addons/website_sale/models/sale_order.py:184
-#, python-format
-msgid "The given product does not exist therefore it cannot be added to cart."
-msgstr ""
-
-#. module: website_sale
-#: code:addons/website_sale/models/sale_order.py:198
-#, python-format
-msgid ""
-"The given combination does not exist therefore it cannot be added to cart."
-msgstr ""
 
 #. module: website_sale
 #: selection:res.company,website_sale_onboarding_payment_acquirer_state:0
@@ -2478,6 +2487,19 @@ msgid "The SEPA QR Code informations are not set correctly."
 msgstr "Les informations du QR Code ne sont pas correctement configurées."
 
 #. module: website_sale
+#: code:addons/website_sale/models/sale_order.py:198
+#, python-format
+msgid ""
+"The given combination does not exist therefore it cannot be added to cart."
+msgstr ""
+
+#. module: website_sale
+#: code:addons/website_sale/models/sale_order.py:184
+#, python-format
+msgid "The given product does not exist therefore it cannot be added to cart."
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid ""
 "The mode selected here applies as invoicing policy of any new product "
@@ -2552,6 +2574,16 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
 msgid "This is your current cart."
 msgstr "Voici votre panier actuel."
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product
+msgid "This product has no valid combination."
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product
+msgid "This product is no longer available."
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products_item
@@ -2748,6 +2780,8 @@ msgid ""
 "You are editing your <b>billing and shipping</b> addresses at the same time!<br/>\n"
 "                                            If you want to modify your shipping address, create a"
 msgstr ""
+"Vous modifiez vos adresses de <b>facturation et de livraison</b> en même temps !<br/>\n"
+"                                            Si vous souhaitez modifier une adresse de livraison différente, créez"
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.sale_report_action_carts
@@ -2893,7 +2927,7 @@ msgstr "ml-2"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "new address"
-msgstr ""
+msgstr "une nouvelle adresse"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products

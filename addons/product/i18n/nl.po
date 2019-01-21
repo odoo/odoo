@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-12-19 08:21+0000\n"
+"POT-Creation-Date: 2019-01-09 10:32+0000\n"
 "PO-Revision-Date: 2018-08-24 09:23+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2018\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
@@ -76,6 +76,11 @@ msgstr "160x80cm, met grote poten"
 #: model:product.attribute.value,name:product.product_attribute_value_6
 msgid "2 year"
 msgstr "2 jaar"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_pricelist_view_kanban
+msgid "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Currency\" title=\"Currency\"/>"
+msgstr ""
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -313,7 +318,7 @@ msgstr "Kenmerkwaarde"
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_line__value_ids
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
 msgid "Attribute Values"
-msgstr "Kenmerk waardes"
+msgstr "Kenmerkwaardes"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.attribute_action
@@ -2110,7 +2115,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__product_template_attribute_value_ids
 msgid "Template Attribute Values"
-msgstr "Sjabloon kenmerk waardes"
+msgstr "Sjabloon kenmerkwaardes"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -2162,7 +2167,7 @@ msgstr ""
 "Het aantal producten in deze categorie (zonder de onderliggende categorieën)"
 
 #. module: product
-#: code:addons/product/models/product_template.py:475
+#: code:addons/product/models/product_template.py:480
 #, python-format
 msgid ""
 "The number of variants to generate is too high. You should either not "
@@ -2176,17 +2181,7 @@ msgstr ""
 "modus *Varianten aanmaken*."
 
 #. module: product
-#: code:addons/product/models/product_attribute.py:46
-#, python-format
-msgid ""
-"You are trying to change the type of an attribute value still referenced on "
-"at least one product template: %s"
-msgstr ""
-"U probeert het type van een kenmerkwaarde te wijzigen waarnaar nog steeds "
-"wordt verwezen op ten minste één productsjabloon: %s"
-
-#. module: product
-#: code:addons/product/models/product_attribute.py:56
+#: code:addons/product/models/product_attribute.py:85
 #, python-format
 msgid ""
 "The operation cannot be completed:\n"
@@ -2593,6 +2588,16 @@ msgid "White"
 msgstr "Wit"
 
 #. module: product
+#: code:addons/product/models/product_attribute.py:46
+#, python-format
+msgid ""
+"You are trying to change the type of an attribute value still referenced on "
+"at least one product template: %s"
+msgstr ""
+"U probeert het type van een kenmerkwaarde te wijzigen waarnaar nog steeds "
+"wordt verwezen op ten minste één productsjabloon: %s"
+
+#. module: product
 #: model_terms:ir.actions.act_window,help:product.product_pricelist_action2
 msgid ""
 "You can assign pricelists to your customers or select one when creating a "
@@ -2602,7 +2607,7 @@ msgstr ""
 "een nieuwe offerte aanmaakt."
 
 #. module: product
-#: code:addons/product/models/product_pricelist.py:437
+#: code:addons/product/models/product_pricelist.py:442
 #, python-format
 msgid ""
 "You cannot assign the Main Pricelist as Other Pricelist in PriceList Item"
@@ -2611,7 +2616,7 @@ msgstr ""
 "prijslijst item"
 
 #. module: product
-#: code:addons/product/models/product.py:54
+#: code:addons/product/models/product.py:57
 #, python-format
 msgid "You cannot create recursive categories."
 msgstr "U kan geen recursieve categorieën aanmaken."

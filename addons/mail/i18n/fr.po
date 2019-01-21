@@ -15,16 +15,17 @@
 # Nathan Grognet <ngr@odoo.com>, 2018
 # Marie Willemyns <mwi@odoo.com>, 2018
 # Quentin THEURET <odoo@kerpeo.com>, 2018
-# Martin Trigaux, 2018
 # Julien Martin <204336@supinfo.com>, 2018
+# Martin Trigaux, 2019
+# Olivier ANDRE <frsw194@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-12-19 08:20+0000\n"
+"POT-Creation-Date: 2019-01-09 10:31+0000\n"
 "PO-Revision-Date: 2018-08-24 09:20+0000\n"
-"Last-Translator: Julien Martin <204336@supinfo.com>, 2018\n"
+"Last-Translator: Olivier ANDRE <frsw194@gmail.com>, 2019\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -43,6 +44,7 @@ msgstr "Ce salon est privé. Vous devez être invité pour le rejoindre."
 #, python-format
 msgid "%(user_name)s invited you to follow %(document)s document: %(title)s"
 msgstr ""
+"%(user_name)s vous a invité à suivre le document %(document)s: %(title)s"
 
 #. module: mail
 #: code:addons/mail/wizard/invite.py:31
@@ -215,6 +217,16 @@ msgid ""
 msgstr ""
 "<div class=\"o_mail_notification\">a quitté <a href=\"#\" "
 "class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.res_partner_view_form_inherit_mail
+#: model_terms:ir.ui.view,arch_db:mail.res_partner_view_form_short
+msgid ""
+"<i class=\"fa fa-ban\" style=\"color: red;\" role=\"img\" title=\"This email"
+" is blacklisted for mass mailing\" aria-label=\"Blacklisted\" "
+"attrs=\"{'invisible': [('is_blacklisted', '=', False)]}\" "
+"groups=\"base.group_user\"/>"
+msgstr ""
 
 #. module: mail
 #. openerp-web
@@ -734,7 +746,7 @@ msgstr "Tous"
 #: code:addons/mail/static/src/xml/thread.xml:46
 #, python-format
 msgid "All pages:&nbsp;"
-msgstr ""
+msgstr "Toutes les pages : &nbsp;"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_moderation_view_search
@@ -2115,7 +2127,7 @@ msgstr "Filtres étendus..."
 #: code:addons/mail/static/src/xml/thread.xml:45
 #, python-format
 msgid "Extract pages:&nbsp;"
-msgstr ""
+msgstr "Extraire les pages : &nbsp;"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__fail_counter
@@ -6144,7 +6156,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/thread.xml:45
 #, python-format
 msgid "e.g. 1-5, 7, 8-9"
-msgstr ""
+msgstr "Ex. : 1-5, 7, 8-9"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup

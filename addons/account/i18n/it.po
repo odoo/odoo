@@ -22,8 +22,8 @@
 # Paolo Valier, 2018
 # David Minneci <david@numeko.it>, 2018
 # efraimbiffi <eab@odoo.com>, 2018
-# Léonie Bouchat <lbo@odoo.com>, 2018
 # Lorenzo Battistini <lorenzo.battistini@agilebg.com>, 2018
+# Léonie Bouchat <lbo@odoo.com>, 2018
 # Martin Trigaux, 2018
 # Sergio Zanchetta <primes2h@gmail.com>, 2019
 # 
@@ -31,7 +31,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-12-19 08:20+0000\n"
+"POT-Creation-Date: 2019-01-09 10:31+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
 "Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2019\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
@@ -256,9 +256,27 @@ msgid "<em>Draft Invoice</em>"
 msgstr "<em>Fattura in bozza</em>"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.account_move_line_view_kanban
+#: model_terms:ir.ui.view,arch_db:account.view_account_move_kanban
+msgid "<i class=\"fa fa-clock-o\" aria-label=\"Date\" role=\"img\" title=\"Date\"/>"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_payment_kanban
+msgid "<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
 msgid "<i class=\"fa fa-download\"/> Download"
 msgstr "<i class=\"fa fa-download\"/> Scarica"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
+msgid ""
+"<i class=\"fa fa-ellipsis-v\" aria-label=\"Selection\" role=\"img\" "
+"title=\"Selection\"/>"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
@@ -298,10 +316,10 @@ msgid ""
 "                                    <span>Followers of the document and</span>"
 msgstr ""
 "<span attrs=\"{'invisible': [('composition_mode', '!=', 'mass_mail')]}\">\n"
-"                                <strong>Invio di massa via email</strong> per\n"
-"                                <span>il campi selezionati</span>\n"
-"                                </span>\n"
-"                               <span>Followers del documento e</span>"
+"                                        <strong>Invio massivo di email</strong> per\n"
+"                                        <span>i record selezionati</span>\n"
+"                                    </span>\n"
+"                                    <span>Follower del documento e</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -335,6 +353,21 @@ msgstr ""
 "<span class=\"badge badge-pill badge-warning\"><i class=\"fa fa-fw fa-"
 "remove\" aria-label=\"Cancelled\" title=\"Cancelled\" role=\"img\"/><span "
 "class=\"d-none d-md-inline\"> Annullata</span></span>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" aria-label=\"Values set here are company-specific.\" "
+"groups=\"base.group_multi_company\" role=\"img\"/>"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\"/>"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.invoice_supplier_form
@@ -822,7 +855,7 @@ msgstr ""
 #. module: account
 #: model:res.groups,name:account.group_warning_account
 msgid "A warning can be set on a partner (Account)"
-msgstr "Può essere impostato un avviso sul partner (conto)"
+msgstr "Impostazione di un avviso sul partner (conto)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice__access_warning
@@ -1152,8 +1185,8 @@ msgid ""
 "Account that will be set on lines created in cash basis journal entry and "
 "used to keep track of the tax base amount."
 msgstr ""
-"Conto che verrà impostato sulle linee create nella scrittura contabile di "
-"cassa e utilizzato per tenere traccia dell'importo di base delle imposte. "
+"Conto usato per tenere traccia della base imponibile delle imposte. Verrà "
+"impostato sulle righe create nella registrazione in regime di cassa."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account__account_dest_id
@@ -1340,7 +1373,7 @@ msgstr "Aggiungi nota"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Add a payment QR code to your invoices"
-msgstr "Aggiungi un pagamento QR code alla tua fattura"
+msgstr "Aggiunta di un codice QR di pagamento alle fatture"
 
 #. module: account
 #: selection:account.cash.rounding,strategy:0
@@ -1426,12 +1459,12 @@ msgstr "Impostazioni avanzate"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__include_base_amount
 msgid "Affect Base of Subsequent Taxes"
-msgstr "Determina l'imponibile delle imposte successive"
+msgstr "Determinare imponibile imposte successive"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_template__include_base_amount
 msgid "Affect Subsequent Taxes"
-msgstr "Determina le imposte successive"
+msgstr "Determinare imposte successive"
 
 #. module: account
 #: model:ir.actions.report,name:account.action_report_aged_partner_balance
@@ -1543,25 +1576,24 @@ msgstr "Consentire versamenti e stampa degli assegni"
 #. module: account
 #: model:res.groups,name:account.group_cash_rounding
 msgid "Allow the cash rounding management"
-msgstr "Consentire la gestione degli arrotondamenti di cassa"
+msgstr "Consentire gestione degli arrotondamenti di cassa"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Allow to configure taxes using cash basis"
-msgstr "Consentire la configurazione delle imposte per cassa"
+msgstr "Consente di configurare le imposte con il regime di cassa"
 
 #. module: account
 #: model:res.groups,name:account.group_fiscal_year
 msgid "Allow to define fiscal years of more or less than a year"
-msgstr ""
-"Permetti di identificare una anno fiscale che sia maggiore o inferiore di un"
-" anno"
+msgstr "Consentire anni fiscali di durata superiore o inferiore a un anno"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Allows to tag analytic entries and to manage analytic distributions"
 msgstr ""
-"Permetti di taggare le scritture per gestire la distribuzione analitica"
+"Consente di impostare etichette su registrazioni analitiche e gestirne le "
+"distribuzioni"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -1914,7 +1946,7 @@ msgstr "Applicare solo se la controparte ha un identificativo IVA"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Apply right VAT rates for digital products sold in EU"
-msgstr "Applicare corrette aliquote IVA per prodotti digitali venduti in UE"
+msgstr "Applicazione aliquote IVA corrette su prodotti digitali venduti in UE"
 
 #. module: account
 #: selection:res.company,fiscalyear_last_month:0
@@ -2216,7 +2248,7 @@ msgstr "Movimento programmato per riconciliazione bancaria"
 #: model:ir.model.fields,field_description:account.field_res_company__account_bank_reconciliation_start
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_bank_reconciliation_start
 msgid "Bank Reconciliation Threshold"
-msgstr "Soglia della Riconciliazione Bancaria "
+msgstr "Soglia riconciliazione bancaria "
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement
@@ -2317,19 +2349,19 @@ msgstr "Conto di credito per la tassa"
 #: code:addons/account/models/company.py:19
 #, python-format
 msgid "Based on Customer"
-msgstr "Basato su cliente"
+msgstr "Basata su cliente"
 
 #. module: account
 #: selection:account.tax,tax_exigibility:0
 #: selection:account.tax.template,tax_exigibility:0
 msgid "Based on Invoice"
-msgstr "Basato su fattura"
+msgstr "Basata su fattura"
 
 #. module: account
 #: code:addons/account/models/company.py:19
 #, python-format
 msgid "Based on Invoice Number"
-msgstr "Basato su numero fattura"
+msgstr "Basata su numero fattura"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__tax_exigibility
@@ -2345,7 +2377,7 @@ msgstr ""
 #: selection:account.tax,tax_exigibility:0
 #: selection:account.tax.template,tax_exigibility:0
 msgid "Based on Payment"
-msgstr "Basato su pagamento"
+msgstr "Basata su pagamento"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -2627,7 +2659,7 @@ msgstr "Cassa"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__tax_exigibility
 msgid "Cash Basis"
-msgstr "Per cassa"
+msgstr "Regime di cassa"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__tax_cash_basis_journal_id
@@ -2999,7 +3031,7 @@ msgstr "Valore moneta/banconota"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Collect customer payments in one-click using Euro SEPA Service"
 msgstr ""
-"Riscossione dei pagamenti clienti in un clic con il servizio europeo SEPA"
+"Riscossione dei pagamenti cliente in un clic con il servizio Euro SEPA"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -4035,7 +4067,7 @@ msgstr "Definisci un nuovo tipo di account"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Define the smallest coinage of the currency used to pay by cash."
 msgstr ""
-"Definizione del taglio minimo di valuta da usare per operazioni di cassa"
+"Definizione del taglio minimo di valuta da usare nei pagamenti per cassa"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_fiscal_year_step
@@ -4053,7 +4085,8 @@ msgid ""
 "Defines the smallest coinage of the currency that can be used to pay by "
 "cash."
 msgstr ""
-"Definizione del taglio minimo di valuta da usare per operazioni di cassa"
+"Definisce il taglio minimo di valuta che può essere usato nei pagamenti per "
+"cassa."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_template_form
@@ -4174,8 +4207,8 @@ msgstr ""
 msgid ""
 "Disable to have a simplified view of vendor bills, without the products."
 msgstr ""
-"Disattivare per una versione semplificata delle fatture fornitore senza i "
-"prodotti."
+"Disattivare per una versione semplificata, senza prodotti, delle fatture "
+"fornitore."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.invoice_form
@@ -4553,7 +4586,7 @@ msgstr "Costo"
 #: model:ir.model.fields,field_description:account.field_product_template__property_account_expense_id
 #: model_terms:ir.ui.view,arch_db:account.view_account_chart_template_seacrh
 msgid "Expense Account"
-msgstr "Conto di costo"
+msgstr "Conto costi"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__property_account_expense_id
@@ -4923,7 +4956,7 @@ msgstr "Documenti generici"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Get warnings when invoicing specific customers"
-msgstr "Ricevere avvisi alla fatturazione di clienti specifici"
+msgstr "Ricezione di avvisi alla fatturazione di clienti specifici"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -5038,8 +5071,8 @@ msgstr "Gruppo di imposte"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Group payments into a single batch to ease the reconciliation process"
 msgstr ""
-"Raggruppa i pagamenti in unico campione per semplificare il processo di "
-"storno"
+"Raggruppamento unico dei pagamenti per facilitare il processo di "
+"riconciliazione"
 
 #. module: account
 #: selection:account.cash.rounding,rounding_method:0
@@ -5097,7 +5130,7 @@ msgstr "Cronologia"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "How total tax amount is computed in orders and invoices"
-msgstr "Come il totale imposta viene calcolato negli ordini e nelle fatture"
+msgstr "Metodo di calcolo dell'importo totale imposte per ordini e fatture"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_abstract_payment__id
@@ -5226,8 +5259,8 @@ msgid ""
 "If set, taxes which are computed after this one will be computed based on "
 "the price tax included."
 msgstr ""
-"Se settato le imposte calcolate dopo di questo si calcoleranno sul prezzo "
-"imposta inclusa"
+"Se selezionata, le imposte successive a questa verranno calcolate in base al"
+" prezzo imposta inclusa."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__accounting_date
@@ -5479,7 +5512,7 @@ msgstr "Includere nel costo analitico"
 #: model:ir.model.fields,field_description:account.field_account_tax__price_include
 #: model:ir.model.fields,field_description:account.field_account_tax_template__price_include
 msgid "Included in Price"
-msgstr "Compreso nel prezzo"
+msgstr "Compresa nel prezzo"
 
 #. module: account
 #: selection:account.account.type,internal_group:0
@@ -5733,7 +5766,7 @@ msgstr "Numero fattura:"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_payment
 msgid "Invoice Online Payment"
-msgstr ""
+msgstr "Pagamento fatture online"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_line__invoice_id
@@ -6514,7 +6547,7 @@ msgstr "- pagamenti"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Let your customers pay their invoices online"
-msgstr "Consentire ai clienti di pagare le fatture online"
+msgstr "Consente ai clienti di pagare le fatture online"
 
 #. module: account
 #: selection:account.account.type,internal_group:0
@@ -6530,7 +6563,7 @@ msgstr "Totale righe"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__show_line_subtotals_tax_selection
 msgid "Line Subtotals Tax Display"
-msgstr "Visualizzazione delle imposte nei subtotali delle righe"
+msgstr "Visualizzazione imposte nei subtotali righe"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -6912,7 +6945,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Monitor your product margins from invoices"
-msgstr "Controllo del margine dalla fattura"
+msgstr "Monitoraggio dei margini prodotto dalle fatture"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_journal
@@ -6952,7 +6985,7 @@ msgstr "Multi"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Multi-Currencies"
-msgstr "Multi-valute"
+msgstr "Multi valuta"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -7138,7 +7171,7 @@ msgstr "Normale debitore"
 #: selection:account.reconcile.model,match_label:0
 #: selection:account.reconcile.model.template,match_label:0
 msgid "Not Contains"
-msgstr ""
+msgstr "Non contiene"
 
 #. module: account
 #: selection:res.company,account_dashboard_onboarding_state:0
@@ -7471,7 +7504,7 @@ msgstr "Creazione opzionale"
 #: model:ir.model.fields,help:account.field_account_tax__tag_ids
 #: model:ir.model.fields,help:account.field_account_tax_template__tag_ids
 msgid "Optional tags you may want to assign for custom reporting"
-msgstr "Etichette opzionali da assegnare per rendicontazioni personalizzate"
+msgstr "Etichette opzionali per eventuali rendicontazioni personalizzate"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line__option
@@ -7673,7 +7706,7 @@ msgstr "Azienda partner"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__country_id
 msgid "Partner Company's Country"
-msgstr ""
+msgstr "Nazione azienda del partner"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__contract_ids
@@ -7717,7 +7750,7 @@ msgstr "Precedenti"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Pay your bills in one-click using Euro SEPA Service"
-msgstr "Pagamento delle fatture in un clic con il servizio europeo SEPA"
+msgstr "Pagamento delle fatture in un clic con il servizio Euro SEPA"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_payable
@@ -8174,7 +8207,7 @@ msgstr "Prezzo"
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_send_wizard_form
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
 msgid "Print"
-msgstr "Stampare"
+msgstr "Stampa"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_common_journal_report__amount_currency
@@ -8194,7 +8227,7 @@ msgstr "Stampa sempre"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Print checks to pay your vendors"
-msgstr "Stampare gli assegni per il pagamentodei fornitori"
+msgstr "Stampa di assegni per il pagamento dei fornitori"
 
 #. module: account
 #: model:ir.model,name:account.model_product_product
@@ -8473,7 +8506,7 @@ msgstr "Registra una nuova fattura fornitore"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Record transactions in foreign currencies"
-msgstr "Registrare operazioni in valuta estera"
+msgstr "Registrazione di operazioni in valute estere"
 
 #. module: account
 #: code:addons/account/models/account.py:930
@@ -8810,7 +8843,7 @@ msgstr "Esegui"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_sepa
 msgid "SEPA Credit Transfer (SCT)"
-msgstr "Trasferimento di credito SEPA (SCT)"
+msgstr "Bonifici SEPA (SCT)"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -8846,7 +8879,7 @@ msgstr "Imposta su vendite"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_open_account_onboarding_sale_tax
 msgid "Sales tax"
-msgstr ""
+msgstr "Imposta di vendita"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice__user_id
@@ -8945,7 +8978,7 @@ msgstr "Cercare modelli piano dei conti"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_filter
 msgid "Search Fiscal Positions"
-msgstr ""
+msgstr "Ricerca posizioni fiscali"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -9078,9 +9111,9 @@ msgid ""
 "Select this if the taxes should use cash basis, which will create an entry "
 "for such taxes on a given account during reconciliation."
 msgstr ""
-"Selezionare questo se le imposte devono essere calcolate per cassa, verra' "
-"cosi' creata una registrazione per queste imposte su un dato conto al "
-"momento della riconciliazione."
+"Selezionare se le imposte usano il regime di cassa. Durante la "
+"riconciliazione, per queste imposte verrà creata una registrazione su un "
+"apposito conto."
 
 #. module: account
 #: code:addons/account/wizard/account_invoice_state.py:21
@@ -9250,7 +9283,7 @@ msgstr "Impostazioni"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Setup"
-msgstr "Installazione"
+msgstr "Impostazione"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_bank_account_step
@@ -9672,7 +9705,7 @@ msgstr "Registrazione per cassa di"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__tax_cash_basis_journal_id
 msgid "Tax Cash Basis Journal"
-msgstr "Registro imposte per cassa"
+msgstr "Registro imposte regime di cassa"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__amount_type
@@ -9756,7 +9789,7 @@ msgstr "Conto imposta riscossa"
 #: model:ir.model.fields,field_description:account.field_account_tax__type_tax_use
 #: model:ir.model.fields,field_description:account.field_account_tax_template__type_tax_use
 msgid "Tax Scope"
-msgstr "Perimetro imposta"
+msgstr "Ambito imposta"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax_template__tax_src_id
@@ -9781,7 +9814,7 @@ msgstr "Modelli imposta"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move__tax_type_domain
 msgid "Tax Type Domain"
-msgstr ""
+msgstr "Dominio tipo imposta"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice__amount_by_group
@@ -9796,12 +9829,12 @@ msgstr "Metodo di arrotondamento per il calcolo imposte"
 #. module: account
 #: model:res.groups,name:account.group_show_line_subtotals_tax_excluded
 msgid "Tax display B2B"
-msgstr "Visualizzare imposte B2B"
+msgstr "Visualizzare imposta modello B2B"
 
 #. module: account
 #: model:res.groups,name:account.group_show_line_subtotals_tax_included
 msgid "Tax display B2C"
-msgstr "Visualizzazione delle Imposte B2C"
+msgstr "Visualizzare imposta modello B2C"
 
 #. module: account
 #: sql_constraint:account.tax:0 sql_constraint:account.tax.template:0
@@ -9851,7 +9884,7 @@ msgstr "Imposte"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Taxes Applied"
-msgstr ""
+msgstr "Imposte applicate"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_template_form
@@ -9963,7 +9996,7 @@ msgstr "Campo tecnico usato a fini di usabilita'"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move__matched_percentage
 msgid "Technical field used in cash basis method"
-msgstr "Campo tecnico usato nei calcoli per cassa"
+msgstr "Campo tecnico usato nel regime di cassa"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__second_tax_amount_type
@@ -10520,8 +10553,8 @@ msgid ""
 "The payments which have not been matched with a bank statement will not be "
 "shown in bank reconciliation data if they were made before this date."
 msgstr ""
-"I pagamenti non associati ad un estratto conto bancario non saranno mostrati"
-" nella riconciliazione bancaria se fatti prima di questa data."
+"Se effettuati prima di questa data, i pagamenti non abbinati a un estratto "
+"conto non verranno mostrati nella riconciliazione bancaria."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_partner_category_ids
@@ -10786,6 +10819,8 @@ msgid ""
 "This allows you grouping payments into a single batch and eases the reconciliation process.\n"
 "-This installs the account_batch_payment module."
 msgstr ""
+"Consente di effettuare un raggruppamento unico dei pagamenti per facilitare il processo di riconciliazione.\n"
+"- Viene installato il modulo account_batch_payment."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -11071,7 +11106,7 @@ msgstr "Importo totale"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tax_audit_tree
 msgid "Total Base Amount"
-msgstr ""
+msgstr "Importo imponibile totale"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -11168,7 +11203,7 @@ msgstr "Totale righe delle operazioni."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Track costs &amp; revenues by project, department, etc."
-msgstr "Tracciatura costi &amp; ricavi per progetto, funzione etc."
+msgstr "Tracciamento costi e ricavi per progetto, reparto ecc."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_send__tracking_value_ids
@@ -11411,7 +11446,7 @@ msgstr "Usare contabilità anglosassone"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_batch_payment
 msgid "Use batch payments"
-msgstr ""
+msgstr "Utilizzo di pagamenti raggruppati"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -11705,7 +11740,7 @@ msgstr "Avvisi"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_warning_account
 msgid "Warnings in Invoices"
-msgstr "Avvisi nelle fatture"
+msgstr "Avvisi per fatture"
 
 #. module: account
 #: code:addons/account/models/company.py:518
@@ -12357,7 +12392,7 @@ msgstr "secondi per operazione."
 #: code:addons/account/static/src/xml/account_reconciliation.xml:319
 #, python-format
 msgid "statement lines"
-msgstr ""
+msgstr "righe estratto conto"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form

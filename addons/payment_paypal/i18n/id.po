@@ -3,14 +3,18 @@
 # * payment_paypal
 # 
 # Translators:
-# Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2017
+# Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2019
+# Deddy Ddr <deddy.ddr@gmail.com>, 2019
+# Ryanto The <ry.the77@gmail.com>, 2019
+# Ikhsanul Wirsa <iwirsa02@outlook.co.id>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2017\n"
+"POT-Creation-Date: 2018-09-18 09:49+0000\n"
+"PO-Revision-Date: 2018-08-24 09:22+0000\n"
+"Last-Translator: Ikhsanul Wirsa <iwirsa02@outlook.co.id>, 2019\n"
 "Language-Team: Indonesian (https://www.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,14 +23,39 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_api_access_token
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_api_access_token
 msgid "Access Token"
-msgstr "Token akses"
+msgstr "Token Akses"
 
 #. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_api_access_token_validity
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_api_access_token_validity
 msgid "Access Token Validity"
 msgstr "Akses Token Validitas"
+
+#. module: payment_paypal
+#: selection:payment.acquirer,provider:0
+msgid "Adyen"
+msgstr ""
+
+#. module: payment_paypal
+#: selection:payment.acquirer,provider:0
+msgid "Authorize.Net"
+msgstr ""
+
+#. module: payment_paypal
+#: selection:payment.acquirer,provider:0
+msgid "Buckaroo"
+msgstr ""
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__fees_dom_fixed
+msgid "Fixed domestic fees"
+msgstr "Biaya domestik tetap"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__fees_int_fixed
+msgid "Fixed international fees"
+msgstr "Biaya tetap internasional"
 
 #. module: payment_paypal
 #: model_terms:ir.ui.view,arch_db:payment_paypal.acquirer_form_paypal
@@ -34,12 +63,27 @@ msgid "How to configure your paypal account?"
 msgstr ""
 
 #. module: payment_paypal
-#: model:ir.model,name:payment_paypal.model_payment_acquirer
-msgid "Payment Acquirer"
-msgstr "Acquirer pembayaran"
+#: selection:payment.acquirer,provider:0
+msgid "Manual Configuration"
+msgstr ""
 
 #. module: payment_paypal
-#: model:ir.model.fields,help:payment_paypal.field_payment_acquirer_paypal_pdt_token
+#: selection:payment.acquirer,provider:0
+msgid "Ogone"
+msgstr ""
+
+#. module: payment_paypal
+#: selection:payment.acquirer,provider:0
+msgid "PayUmoney"
+msgstr ""
+
+#. module: payment_paypal
+#: model:ir.model,name:payment_paypal.model_payment_acquirer
+msgid "Payment Acquirer"
+msgstr "Pemilik Tagihan"
+
+#. module: payment_paypal
+#: model:ir.model.fields,help:payment_paypal.field_payment_acquirer__paypal_pdt_token
 msgid ""
 "Payment Data Transfer allows you to receive notification of successful "
 "payments as they are made."
@@ -48,25 +92,30 @@ msgstr ""
 #. module: payment_paypal
 #: model:ir.model,name:payment_paypal.model_payment_transaction
 msgid "Payment Transaction"
-msgstr "Transaksi pembayaran"
+msgstr "Transaksi Tagihan"
 
 #. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_email_account
+#: selection:payment.acquirer,provider:0
+msgid "Paypal"
+msgstr "Paypal"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_email_account
 msgid "Paypal Email ID"
 msgstr "Paypal Email ID"
 
 #. module: payment_paypal
-#: model:ir.model.fields,help:payment_paypal.field_payment_acquirer_paypal_use_ipn
+#: model:ir.model.fields,help:payment_paypal.field_payment_acquirer__paypal_use_ipn
 msgid "Paypal Instant Payment Notification"
 msgstr "Paypal Pemberitahuan Pembayaran Instan"
 
 #. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_seller_account
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_seller_account
 msgid "Paypal Merchant ID"
 msgstr "Paypal Merchant ID"
 
 #. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_pdt_token
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_pdt_token
 msgid "Paypal PDT Token"
 msgstr ""
 
@@ -77,17 +126,32 @@ msgid "Paypal: received data with missing reference (%s) or txn_id (%s)"
 msgstr ""
 
 #. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_api_password
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__provider
+msgid "Provider"
+msgstr "Pemberi"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_api_password
 msgid "Rest API Password"
 msgstr "Sisanya API Sandi"
 
 #. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_api_username
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_api_username
 msgid "Rest API Username"
 msgstr "Sisanya API pengguna"
 
 #. module: payment_paypal
-#: model:ir.model.fields,help:payment_paypal.field_payment_acquirer_paypal_seller_account
+#: selection:payment.acquirer,provider:0
+msgid "Sips"
+msgstr ""
+
+#. module: payment_paypal
+#: selection:payment.acquirer,provider:0
+msgid "Stripe"
+msgstr ""
+
+#. module: payment_paypal
+#: model:ir.model.fields,help:payment_paypal.field_payment_acquirer__paypal_seller_account
 msgid ""
 "The Merchant ID is used to ensure communications coming from Paypal are "
 "valid and secured."
@@ -96,16 +160,31 @@ msgstr ""
 "yang valid dan dijamin."
 
 #. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_transaction_paypal_txn_type
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_transaction__paypal_txn_type
 msgid "Transaction type"
 msgstr "Tipe transaksi"
 
 #. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_use_ipn
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_use_ipn
 msgid "Use IPN"
 msgstr "Gunakan IPN"
 
 #. module: payment_paypal
-#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_api_enabled
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_api_enabled
 msgid "Use Rest API"
 msgstr "Menggunakan template"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__fees_dom_var
+msgid "Variable domestic fees (in percents)"
+msgstr "Biaya variabel domestik (dalam persen)"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__fees_int_var
+msgid "Variable international fees (in percents)"
+msgstr "Biaya variabel internasional (dalam persen)"
+
+#. module: payment_paypal
+#: selection:payment.acquirer,provider:0
+msgid "Wire Transfer"
+msgstr "Transfer rekening"

@@ -23,7 +23,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-12-19 08:20+0000\n"
+"POT-Creation-Date: 2019-01-09 10:31+0000\n"
 "PO-Revision-Date: 2018-08-24 09:33+0000\n"
 "Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2019\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
@@ -589,6 +589,28 @@ msgid "<i class=\"fa fa-trash-o\"/>Remove Slide"
 msgstr "<i class=\"fa fa-trash-o\"/>Pašalinti skaidrę"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.list_website_pages
+msgid "<i title=\"Is the page SEO optimized?\" class=\"fa fa-search\"/>"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.list_website_pages
+msgid ""
+"<i title=\"Is the page included in the main menu?\" class=\"fa fa-thumb-"
+"tack\"/>"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.list_website_pages
+msgid "<i title=\"Is the page indexed by search engines?\" class=\"fa fa-globe\"/>"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.list_website_pages
+msgid "<i title=\"Is the page published?\" class=\"fa fa-eye\"/>"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
 msgid "<i>Instant setup, satisfied or reimbursed.</i>"
 msgstr "<i>Momentinis nustatymas, patenkintas arba grąžintas.</i>"
@@ -634,6 +656,20 @@ msgid ""
 msgstr ""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid ""
+"<span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-"
+"specific.\" groups=\"website.group_multi_website\"/>"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.company_description
+msgid ""
+"<span class=\"fa fa-map-marker fa-fw mt16\" role=\"img\" aria-"
+"label=\"Address\" title=\"Address\"/>"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
 msgid "<span class=\"fa fa-pencil\"/>Edit"
 msgstr "<span class=\"fa fa-pencil\"/>Redaguoti"
@@ -642,6 +678,11 @@ msgstr "<span class=\"fa fa-pencil\"/>Redaguoti"
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
 msgid "<span class=\"fa fa-plus\"/>New"
 msgstr "<span class=\"fa fa-plus\"/>Naujas"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.list_website_pages
+msgid "<span class=\"fa fa-sort fa-lg\" role=\"img\" aria-label=\"Sort\" title=\"Sort\"/>"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_facebook_page
@@ -687,6 +728,13 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
 msgid "<span class=\"sr-only\">Toggle Dropdown</span>"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.user_navbar
+msgid ""
+"<span title=\"Mobile preview\" role=\"img\" aria-label=\"Mobile preview\" "
+"class=\"fa fa-mobile\"/>"
 msgstr ""
 
 #. module: website
@@ -1262,7 +1310,7 @@ msgstr "Konfigūracijos nustatymai"
 #. module: website
 #: model:ir.ui.menu,name:website.menu_website_global_configuration
 msgid "Configuration"
-msgstr "Nustatymai"
+msgstr "Konfigūracija"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__has_social_network
@@ -1528,7 +1576,7 @@ msgstr "Aprašymas"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_tabs
 msgid "Details"
-msgstr "Papildoma infomacija"
+msgstr "Papildoma informacija"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -2082,7 +2130,7 @@ msgstr "Google Maps API raktas"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Google Plus"
-msgstr ""
+msgstr "Google Plus"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__social_googleplus
@@ -2443,7 +2491,7 @@ msgstr "Yra matomas"
 #: model:ir.model.fields,field_description:website.field_website_published_mixin__is_published
 #: model:ir.model.fields,field_description:website.field_website_published_multi_mixin__is_published
 msgid "Is published"
-msgstr ""
+msgstr "Yra paskelbtas"
 
 #. module: website
 #. openerp-web
@@ -2639,7 +2687,7 @@ msgstr "Susieti mano \"Analytics\" paskyrą"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "LinkedIn"
-msgstr ""
+msgstr "LinkedIn"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__social_linkedin
@@ -3473,7 +3521,7 @@ msgstr "Atstatyti šablonus"
 #: model:ir.model.fields,help:website.field_website_page__website_id
 #: model:ir.model.fields,help:website.field_website_published_multi_mixin__website_id
 msgid "Restrict publishing to this website."
-msgstr ""
+msgstr "Apriboti skelbimą šioje svetainėje."
 
 #. module: website
 #: model:res.groups,name:website.group_website_publisher
@@ -3511,7 +3559,7 @@ msgstr "SEO metaduomenys"
 #: model:ir.model.fields,field_description:website.field_website_seo_metadata__is_seo_optimized
 #: model_terms:ir.ui.view,arch_db:website.one_page_line
 msgid "SEO optimized"
-msgstr ""
+msgstr "SEO optimizuotas"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features_grid
@@ -3799,6 +3847,8 @@ msgid ""
 "Technical field used to resolve multiple attachments in a multi-website "
 "environment."
 msgstr ""
+"Techninis laukas, naudojamas išspręsti kelis prisegtukus kelių svetainių "
+"aplinkoje."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.show_website_info
@@ -4378,7 +4428,7 @@ msgstr "Matomas"
 #: model:ir.model.fields,field_description:website.field_website_published_mixin__website_published
 #: model:ir.model.fields,field_description:website.field_website_published_multi_mixin__website_published
 msgid "Visible on current website"
-msgstr ""
+msgstr "Matomas esamoje svetainėje"
 
 #. module: website
 #. openerp-web
@@ -4572,7 +4622,7 @@ msgstr "Svetainės meta pavadinimas"
 #: model:ir.model.fields,field_description:website.field_website_page__website_meta_og_img
 #: model:ir.model.fields,field_description:website.field_website_seo_metadata__website_meta_og_img
 msgid "Website opengraph image"
-msgstr ""
+msgstr "Svetainės Opengraph paveikslėlis"
 
 #. module: website
 #: model:ir.actions.server,name:website.ir_actions_server_website_dashboard

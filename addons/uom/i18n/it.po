@@ -3,22 +3,21 @@
 # * uom
 # 
 # Translators:
-# Sergio Zanchetta <primes2h@gmail.com>, 2018
 # Martin Trigaux, 2018
 # Luigi Di Naro <gigidn@gmail.com>, 2018
 # Simone Bernini <simone@aperturelabs.it>, 2018
 # Paolo Valier, 2018
-# David Minneci <david@numeko.it>, 2018
 # Niccolò Lubello <nlubello@gmail.com>, 2018
 # Léonie Bouchat <lbo@odoo.com>, 2018
-# Massimo Bianchi <bianchi.massimo@gmail.com>, 2018
+# Sergio Zanchetta <primes2h@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
-"Last-Translator: Massimo Bianchi <bianchi.massimo@gmail.com>, 2018\n"
+"PO-Revision-Date: 2018-08-24 09:33+0000\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2019\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -81,7 +80,7 @@ msgstr "Creato il"
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_day
 msgid "Day(s)"
-msgstr "Giorno(i)"
+msgstr "Giorno/i"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__display_name
@@ -97,7 +96,7 @@ msgstr "Dozzina/e"
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_hour
 msgid "Hour(s)"
-msgstr "Ora(e)"
+msgstr "Ora/e"
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__factor_inv
@@ -127,19 +126,19 @@ msgstr "ID"
 #: model:ir.model.fields,field_description:uom.field_uom_category____last_update
 #: model:ir.model.fields,field_description:uom.field_uom_uom____last_update
 msgid "Last Modified on"
-msgstr "Data di ultima modifica"
+msgstr "Ultima modifica il"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__write_uid
 #: model:ir.model.fields,field_description:uom.field_uom_uom__write_uid
 msgid "Last Updated by"
-msgstr "Ultima modifica di"
+msgstr "Ultimo aggiornamento di"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__write_date
 #: model:ir.model.fields,field_description:uom.field_uom_uom__write_date
 msgid "Last Updated on"
-msgstr "Ultima modifica il"
+msgstr "Ultimo aggiornamento il"
 
 #. module: uom
 #: selection:uom.category,measure_type:0
@@ -159,12 +158,12 @@ msgstr "Litro/i"
 #. module: uom
 #: model:res.groups,name:uom.group_uom
 msgid "Manage Multiple Units of Measure"
-msgstr "Gestisci più unità di misura"
+msgstr "Gestire unità di misura multiple"
 
 #. module: uom
 #: model:ir.model,name:uom.model_uom_uom
 msgid "Product Unit of Measure"
-msgstr "Unità di misura del prodotto"
+msgstr "Unità di misura prodotto"
 
 #. module: uom
 #: model:ir.model,name:uom.model_uom_category
@@ -184,7 +183,7 @@ msgstr "Unità di misura di riferimento per questa categoria"
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__rounding
 msgid "Rounding Precision"
-msgstr "Precisione Arrotondamento"
+msgstr "Precisione arrotondamento"
 
 #. module: uom
 #: selection:uom.uom,uom_type:0
@@ -208,12 +207,12 @@ msgstr "Il rapporto di conversione per una unità di misura non può essere 0!"
 #. module: uom
 #: sql_constraint:uom.uom:0
 msgid "The reference unit must have a conversion factor equal to 1."
-msgstr ""
+msgstr "L'unità di riferimento deve avere un fattore di conversione pari a 1."
 
 #. module: uom
 #: sql_constraint:uom.uom:0
 msgid "The rounding precision must be strictly positive."
-msgstr ""
+msgstr "La precisione di arrotondamento deve essere strettamente positiva."
 
 #. module: uom
 #: code:addons/uom/models/uom_uom.py:152
@@ -238,12 +237,12 @@ msgstr "Tipo"
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__measure_type
 msgid "Type of Measure"
-msgstr ""
+msgstr "Tipo di misura"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__measure_type
 msgid "Type of measurement category"
-msgstr ""
+msgstr "Tipo di categoria della misura"
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__active
@@ -271,7 +270,7 @@ msgstr "Categorie unità di misura"
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__name
 msgid "Unit of Measure Category"
-msgstr "Categoria di Unità di Misura"
+msgstr "Categoria unità di misura"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_unit
@@ -399,7 +398,7 @@ msgstr "gallone(i)"
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_inch
 msgid "inch(es)"
-msgstr "pollice(i)"
+msgstr "pollice/i"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_kgm
