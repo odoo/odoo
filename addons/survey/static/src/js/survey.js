@@ -5,7 +5,6 @@ require('web.dom_ready');
 var core = require('web.core');
 var time = require('web.time');
 var ajax = require('web.ajax');
-var base = require('web_editor.base');
 var field_utils = require('web.field_utils');
 
 var _t = core._t;
@@ -169,11 +168,10 @@ if(!the_form.length) {
         return ajax.loadJS(url);
     }
 
-    var ready_with_locale = $.when(base.ready(), load_locale());
     // datetimepicker use moment locale to display date format according to language
     // frontend does not load moment locale at all.
     // so wait until DOM ready with locale then init datetimepicker
-    ready_with_locale.then(function(){
+    load_locale().then(function(){
          _.each($('.input-group.date'), function(date_field){
             var minDate = $(date_field).data('mindate') || moment({ y: 1900 });
             var maxDate = $(date_field).data('maxdate') || moment().add(200, "y");
