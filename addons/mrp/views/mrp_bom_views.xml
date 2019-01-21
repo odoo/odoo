@@ -39,16 +39,12 @@
                             <field name="type" widget="radio"/>
                             <p colspan="2" class="oe_grey oe_edit_only" attrs="{'invisible': [('type','=','normal')]}">
                             <ul>
+                                A BoM of type kit is used to split the product into its components.
                                 <li>
-                                    If the product is a finished product: When processing a sales
-                                    order for this product, the delivery order will contain the raw
-                                    materials, instead of the finished product.
+                                    At the creation of a Manufacturing Order.
                                 </li>
                                 <li>
-                                    If the product is a semi-finished product: When processing a
-                                    manufacturing order that contains that product as component,
-                                    the raw materials of that product will be added to the
-                                    manufacturing order of the final product.
+                                    At the creation of a Stock Transfer.
                                 </li>
                             </ul>
                             </p>
@@ -79,8 +75,8 @@
                                     <field name="sequence"/>
                                 </group>
                                 <group>
-                                    <field name="ready_to_produce" string="Manufacturing Readiness"/>
-                                    <field name="picking_type_id" string="Operation"/>
+                                    <field name="ready_to_produce" attrs="{'invisible': [('type','=','phantom')]}" string="Manufacturing Readiness"/>
+                                    <field name="picking_type_id" attrs="{'invisible': [('type','=','phantom')]}" string="Operation"/>
                                 </group>
                             </group>
                         </page>
