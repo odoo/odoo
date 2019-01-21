@@ -3,6 +3,8 @@
     <data noupdate="1">
         <!-- activate B2C portal by default -->
         <function model="ir.config_parameter" name="set_param" eval="('auth_signup.invitation_scope', 'b2c')"/>
+        <!-- activate Reset password by default -->
+        <function model="ir.config_parameter" name="set_param" eval="('auth_signup.reset_password', 'True')"/>
         <!-- Email template for reset password -->
         <record id="reset_password_email" model="mail.template">
             <field name="name">Auth Signup: Reset Password</field>
