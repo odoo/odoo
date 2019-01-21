@@ -1,0 +1,147 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<odoo>
+
+    <!-- Root Menus -->
+
+    <menuitem id="menu_hr_payroll_root" name="Payroll" sequence="45" web_icon="hr_payroll,static/description/icon.png"/>
+
+
+    <menuitem
+        id="menu_hr_payroll_salary_computation"
+        name="Salary Computation"
+        parent="menu_hr_payroll_root"
+        sequence="50"
+        groups="hr_payroll.group_hr_payroll_manager"/>
+
+    <menuitem
+        id="menu_hr_payroll_payslips"
+        name="Employee Payslips"
+        parent="menu_hr_payroll_root"
+        sequence="60"
+        groups="hr_payroll.group_hr_payroll_manager"/>
+
+    <menuitem
+        id="menu_hr_payroll_configuration"
+        name="Configuration"
+        parent="menu_hr_payroll_root"
+        sequence="100"
+        groups="hr_payroll.group_hr_payroll_manager"/>
+
+    <!-- **** Salary Computation **** -->
+    <menuitem
+        id="menu_hr_payroll_employee_payslips"
+        name="Payslips"
+        parent="menu_hr_payroll_salary_computation"
+        sequence="60"
+        action="action_view_hr_payslip_month_form"
+        groups="hr_payroll.group_hr_payroll_manager"/>
+        <!-- TODO add filter-->
+
+    <menuitem
+        id="hr_menu_benefit_menu"
+        name="Benefits"
+        action="hr_benefit_action"
+        parent="menu_hr_payroll_salary_computation"
+        sequence="25"/>
+
+    <!-- **** Employee Payslips **** -->
+    <menuitem
+        id="menu_hr_payslip_run"
+        action="action_hr_payslip_run_tree"
+        name="Batches"
+        parent="menu_hr_payroll_payslips"/>
+
+    <menuitem
+        id="menu_hr_payroll_employee_all_payslips"
+        name="All Payslips"
+        parent="menu_hr_payroll_payslips"
+        sequence="60"
+        action="action_view_hr_payslip_form"
+        groups="hr_payroll.group_hr_payroll_manager"/>
+
+    <!-- **** Configuration **** -->
+    <menuitem
+        id="menu_hr_payroll_global_settings"
+        name="Settings"
+        parent="menu_hr_payroll_configuration"
+        sequence="0"
+        action="action_hr_payroll_configuration"
+        groups="base.group_system"/>
+
+    <!-- Benefits Configuration -->
+    <menuitem
+        id="menu_hr_benefit_confirguration"
+        name="Benefits"
+        parent="menu_hr_payroll_configuration"
+        sequence="50"
+    />
+    <menuitem
+        id="menu_hr_benefit_type_view"
+        action="action_view_hr_benefit_type"
+        parent="menu_hr_benefit_confirguration"
+    />
+
+    <!-- Salary Configuration -->
+    <menuitem
+        id="menu_hr_salary_configuration"
+        name="Salary"
+        parent="menu_hr_payroll_configuration"
+        sequence="30"
+    />
+
+    <menuitem
+        id="menu_action_hr_salary_rule_form"
+        action="action_salary_rule_form"
+        name="Rules"
+        parent="menu_hr_salary_configuration"
+        sequence="10"/>
+
+    <menuitem
+        id="menu_hr_salary_rule_category"
+        action="action_hr_salary_rule_category"
+        name="Rule Categories"
+        parent="menu_hr_salary_configuration"
+        sequence="20"
+        groups="base.group_no_one"
+    />
+
+    <menuitem
+        id="menu_hr_payroll_structure_view"
+        action="action_view_hr_payroll_structure_list_form"
+        name="Structures"
+        parent="menu_hr_salary_configuration"
+        sequence="30"
+    />
+
+    <menuitem
+        id="menu_action_hr_contribution_register_form"
+        action="action_contribution_register_form"
+        parent="menu_hr_salary_configuration"
+        sequence="50"
+    />
+
+    <!-- Repository Configuration -->
+    <menuitem
+        id="menu_hr_repository_confirguration"
+        name="Repository"
+        parent="menu_hr_payroll_configuration"
+        sequence="50"
+    />
+
+    <menuitem
+        id="menu_hr_payroll_employees_configuration"
+        action="hr.open_view_employee_list_my"
+        parent="menu_hr_repository_confirguration"
+        sequence="10"
+    />
+
+    <menuitem
+        id="menu_hr_payroll_contracts_configuration"
+        action="hr_payroll.action_hr_contract_repository"
+        parent="menu_hr_repository_confirguration"
+        sequence="20"
+    />
+
+
+
+</odoo>

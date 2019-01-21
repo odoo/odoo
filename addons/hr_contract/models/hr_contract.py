@@ -36,15 +36,18 @@ class Employee(models.Model):
         """
         Returns the contracts of the employee between date_from and date_to
         """
-        self.ensure_one()
         # a contract is valid if it ends between the given dates
+        if not self:
+            employees = self.env['hr.employee'].search([])
+        else:
+            employees = self
         clause_1 = ['&', ('date_end', '<=', date_to), ('date_end', '>=', date_from)]
         # OR if it starts between the given dates
         clause_2 = ['&', ('date_start', '<=', date_to), ('date_start', '>=', date_from)]
         # OR if it starts before the date_from and finish after the date_end (or never finish)
         clause_3 = ['&', ('date_start', '<=', date_from), '|', ('date_end', '=', False), ('date_end', '>=', date_to)]
         clause_final = expression.AND([
-            [('employee_id', '=', self.id), ('state', '=', 'open')],
+            [('employee_id', 'in', employees.ids), ('state', '=', 'open')],
             expression.OR([clause_1, clause_2, clause_3])])
         return self.env['hr.contract'].search(clause_final)
 

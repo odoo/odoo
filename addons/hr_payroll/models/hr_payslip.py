@@ -18,22 +18,22 @@ class HrPayslip(models.Model):
     _description = 'Pay Slip'
 
     struct_id = fields.Many2one('hr.payroll.structure', string='Structure',
-        readonly=True, states={'draft': [('readonly', False)]},
+        readonly=True, states={'draft': [('readonly', False)], 'verify': [('readonly', False)]},
         help='Defines the rules that have to be applied to this payslip, accordingly '
              'to the contract chosen. If you let empty the field contract, this field isn\'t '
              'mandatory anymore and thus the rules applied will be all the rules set on the '
              'structure of all contracts of the employee valid for the chosen period')
     name = fields.Char(string='Payslip Name', readonly=True,
-        states={'draft': [('readonly', False)]})
+        states={'draft': [('readonly', False)], 'verify': [('readonly', False)]})
     number = fields.Char(string='Reference', readonly=True, copy=False,
-        states={'draft': [('readonly', False)]})
+        states={'draft': [('readonly', False)], 'verify': [('readonly', False)]})
     employee_id = fields.Many2one('hr.employee', string='Employee', required=True, readonly=True,
-        states={'draft': [('readonly', False)]})
-    date_from = fields.Date(string='Date From', readonly=True, required=True,
-        default=lambda self: fields.Date.to_string(date.today().replace(day=1)), states={'draft': [('readonly', False)]})
-    date_to = fields.Date(string='Date To', readonly=True, required=True,
+        states={'draft': [('readonly', False)], 'verify': [('readonly', False)]})
+    date_from = fields.Date(string='From', readonly=True, required=True,
+        default=lambda self: fields.Date.to_string(date.today().replace(day=1)), states={'draft': [('readonly', False)], 'verify': [('readonly', False)]})
+    date_to = fields.Date(string='To', readonly=True, required=True,
         default=lambda self: fields.Date.to_string((datetime.now() + relativedelta(months=+1, day=1, days=-1)).date()),
-        states={'draft': [('readonly', False)]})
+        states={'draft': [('readonly', False)], 'verify': [('readonly', False)]})
     # this is chaos: 4 states are defined, 3 are used ('verify' isn't) and 5 exist ('confirm' seems to have existed)
     state = fields.Selection([
         ('draft', 'Draft'),
@@ -46,32 +46,36 @@ class HrPayslip(models.Model):
                 \n* If the payslip is confirmed then status is set to \'Done\'.
                 \n* When user cancel payslip the status is \'Rejected\'.""")
     line_ids = fields.One2many('hr.payslip.line', 'slip_id', string='Payslip Lines', readonly=True,
-        states={'draft': [('readonly', False)]})
+        states={'draft': [('readonly', False)], 'verify': [('readonly', False)]})
     company_id = fields.Many2one('res.company', string='Company', readonly=True, copy=False,
         default=lambda self: self.env['res.company']._company_default_get(),
-        states={'draft': [('readonly', False)]})
+        states={'draft': [('readonly', False)], 'verify': [('readonly', False)]})
     worked_days_line_ids = fields.One2many('hr.payslip.worked_days', 'payslip_id',
         string='Payslip Worked Days', copy=True, readonly=True,
-        states={'draft': [('readonly', False)]})
+        states={'draft': [('readonly', False)], 'verify': [('readonly', False)]})
     input_line_ids = fields.One2many('hr.payslip.input', 'payslip_id', string='Payslip Inputs',
-        readonly=True, states={'draft': [('readonly', False)]})
+        readonly=True, states={'draft': [('readonly', False)], 'verify': [('readonly', False)]})
     paid = fields.Boolean(string='Made Payment Order ? ', readonly=True, copy=False,
-        states={'draft': [('readonly', False)]})
-    note = fields.Text(string='Internal Note', readonly=True, states={'draft': [('readonly', False)]})
+        states={'draft': [('readonly', False)], 'verify': [('readonly', False)]})
+    note = fields.Text(string='Internal Note', readonly=True, states={'draft': [('readonly', False)], 'verify': [('readonly', False)]})
     contract_id = fields.Many2one('hr.contract', string='Contract', readonly=True,
-        states={'draft': [('readonly', False)]})
+        states={'draft': [('readonly', False)], 'verify': [('readonly', False)]})
     credit_note = fields.Boolean(string='Credit Note', readonly=True,
-        states={'draft': [('readonly', False)]},
+        states={'draft': [('readonly', False)], 'verify': [('readonly', False)]},
         help="Indicates this payslip has a refund of another")
-    payslip_run_id = fields.Many2one('hr.payslip.run', string='Payslip Batches', readonly=True,
-        copy=False, states={'draft': [('readonly', False)]})
-    payslip_count = fields.Integer(compute='_compute_payslip_count', string="Payslip Computation Details")
+    payslip_run_id = fields.Many2one('hr.payslip.run', string='Batche Name', readonly=True,
+        copy=False, states={'draft': [('readonly', False)], 'verify': [('readonly', False)]}, ondelete='cascade')
     compute_date = fields.Date('Computed On')
 
+    basic_wage = fields.Monetary(compute='_compute_basic_net')
+    net_wage = fields.Monetary(compute='_compute_basic_net')
+    currency_id = fields.Many2one(related='contract_id.currency_id')
+
     @api.multi
-    def _compute_payslip_count(self):
+    def _compute_basic_net(self):
         for payslip in self:
-            payslip.payslip_count = len(payslip.line_ids)
+            payslip.basic_wage = payslip.get_salary_line_total('BASIC')
+            payslip.net_wage = payslip.get_salary_line_total('NET')
 
     @api.constrains('date_from', 'date_to')
     def _check_dates(self):

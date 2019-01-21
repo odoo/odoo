@@ -43,16 +43,6 @@ class PurchaseRequisition(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = "id desc"
 
-    def _get_picking_in(self):
-        pick_in = self.env.ref('stock.picking_type_in', raise_if_not_found=False)
-        company = self.env['res.company']._company_default_get('purchase.requisition')
-        if not pick_in or pick_in.sudo().warehouse_id.company_id.id != company.id:
-            pick_in = self.env['stock.picking.type'].search(
-                [('warehouse_id.company_id', '=', company.id), ('code', '=', 'incoming')],
-                limit=1,
-            )
-        return pick_in
-
     def _get_type_id(self):
         return self.env['purchase.requisition.type'].search([], limit=1)
 
@@ -69,12 +59,10 @@ class PurchaseRequisition(models.Model):
     company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env['res.company']._company_default_get('purchase.requisition'))
     purchase_ids = fields.One2many('purchase.order', 'requisition_id', string='Purchase Orders', states={'done': [('readonly', True)]})
     line_ids = fields.One2many('purchase.requisition.line', 'requisition_id', string='Products to Purchase', states={'done': [('readonly', True)]}, copy=True)
-    warehouse_id = fields.Many2one('stock.warehouse', string='Warehouse')
     state = fields.Selection(PURCHASE_REQUISITION_STATES,
                               'Status', tracking=True, required=True,
                               copy=False, default='draft')
     state_blanket_order = fields.Selection(PURCHASE_REQUISITION_STATES, compute='_set_state')
-    picking_type_id = fields.Many2one('stock.picking.type', 'Operation Type', required=True, default=_get_picking_in)
     is_quantity_copy = fields.Selection(related='type_id.quantity_copy', readonly=True)
     currency_id = fields.Many2one('res.currency', 'Currency', required=True,
         default=lambda self: self.env.user.company_id.currency_id.id)
@@ -169,7 +157,6 @@ class PurchaseRequisition(models.Model):
                 'product_id': product_id.id,
                 'product_uom_id': product_uom.id,
                 'product_qty': product_qty,
-                'move_dest_id': values.get('move_dest_ids') and values['move_dest_ids'][0].id or False,
             })],
         }
 
@@ -196,7 +183,6 @@ class PurchaseRequisitionLine(models.Model):
     account_analytic_id = fields.Many2one('account.analytic.account', string='Analytic Account')
     analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags')
     schedule_date = fields.Date(string='Scheduled Date')
-    move_dest_id = fields.Many2one('stock.move', 'Downstream Move')
     supplier_info_ids = fields.One2many('product.supplierinfo', 'purchase_requisition_line_id')
 
     @api.model
@@ -281,5 +267,4 @@ class PurchaseRequisitionLine(models.Model):
             'date_planned': date_planned,
             'account_analytic_id': self.account_analytic_id.id,
             'analytic_tag_ids': self.analytic_tag_ids.ids,
-            'move_dest_ids': self.move_dest_id and [(4, self.move_dest_id.id)] or []
         }

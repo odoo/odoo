@@ -3,9 +3,9 @@ odoo.define('website.theme', function (require) {
 
 var config = require('web.config');
 var core = require('web.core');
-var ColorpickerDialog = require('web.colorpicker');
+var ColorpickerDialog = require('wysiwyg.widgets.ColorpickerDialog');
 var Dialog = require('web.Dialog');
-var widgets = require('web_editor.widget');
+var widgets = require('wysiwyg.widgets');
 var websiteNavbarData = require('website.navbar');
 
 var _t = core._t;
@@ -29,7 +29,7 @@ var ThemeCustomizeDialog = Dialog.extend({
     init: function (parent, options) {
         options = options || {};
         this._super(parent, _.extend({
-            title: _t("Customize this theme"),
+            title: _t("Customize Theme"),
             buttons: [],
         }, options));
 

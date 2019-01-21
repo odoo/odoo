@@ -9,12 +9,11 @@
                 <field name="id" invisible="1"/>
                 <field name="tot_start_survey" invisible="1"/>
                 <field name="is_closed" invisible="1"/>
-                <header groups="survey.group_survey_manager">
-                    <button name="action_test_survey" string="Test Survey" type="object" attrs="{'invisible': [('id', '=', False)]}"/>
-                    <button name="action_print_survey" string="Print Survey" type="object" attrs="{'invisible': [('id', '=', False)]}"/>
-                    <button name="action_send_survey" string="Share and invite by email" type="object" class="oe_highlight"  attrs="{'invisible': [('id', '=', False)]}"/>
-                    <button name="action_result_survey" string="View results" type="object" attrs="{'invisible': ['|',('id', '=', False), ('tot_start_survey', '!=', 0)]}"/>
-                    <button name="action_result_survey" string="View results" type="object" class="oe_highlight" attrs="{'invisible': [('tot_start_survey', '=', 0)]}"/>
+                <header>
+                    <button name="action_test_survey" string="Test" type="object" attrs="{'invisible': [('id', '=', False)]}"/>
+                    <button name="action_print_survey" string="Print" type="object" attrs="{'invisible': [('id', '=', False)]}"/>
+                    <button name="action_send_survey" string="Share and invite" type="object" class="oe_highlight"  attrs="{'invisible': [('id', '=', False)]}"/>
+                    <button name="action_result_survey" string="View results" type="object" class="oe_highlight" attrs="{'invisible': [('id', '=', False)]}"/>
                     <field name="stage_id" widget="statusbar" options="{'clickable': '1'}"/>
                 </header>
                 <sheet>
@@ -25,7 +24,7 @@
                             icon="fa-pencil-square-o">
                             <field string="Answers" name="tot_comp_survey" widget="statinfo"/>
                         </button>
-                        <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive" attrs="{'invisible': [('is_closed', '=', False)]}">
+                        <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
                             <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
                         </button>
                     </div>
@@ -33,24 +32,25 @@
                         <label for="title" class="oe_edit_only"/>
                         <h1><field name="title" placeholder="Survey Title"/></h1>
                     </div>
-                    <notebook>
-                        <page string="Edit Pages and Questions">
-                            <field name="page_ids" mode="tree" context="{'default_survey_id': active_id}" nolabel="1">
-                                <tree>
-                                    <field name="sequence" widget="handle"/>
-                                    <field name="title"/>
-                                    <field name="question_ids"/>
-                                </tree>
-                            </field>
-                        </page>
-                        <page string="Options">
-                            <group class="o_label_nowrap">
-                                <field name="users_can_go_back" string="User can come back in the previous page"/>
-                                <field name="auth_required"/>
-                                <field name="quizz_mode" groups="base.group_no_one"/>
-                            </group>
-                        </page>
-                    </notebook>
+                    <group>
+                        <group>
+                            <field name="access_mode"/>
+                            <field name="users_can_go_back"/>
+                        </group>
+                        <group>
+                            <field name="category" invisible="1"/>
+                            <field name="quizz_mode"/>
+                        </group>
+                    </group>
+                    <group string="Edit Pages and Questions">
+                        <field name="page_ids" mode="tree" context="{'default_survey_id': active_id}" nolabel="1">
+                            <tree>
+                                <field name="sequence" widget="handle"/>
+                                <field name="title"/>
+                                <field name="question_ids"/>
+                            </tree>
+                        </field>
+                    </group>
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_follower_ids" widget="mail_followers"/>
@@ -80,14 +80,12 @@
         <field name="arch" type="xml">
             <kanban default_group_by="stage_id">
                 <field name="stage_id" />
-                <field name="designed" />
                 <field name="title" />
                 <field name="tot_sent_survey" />
                 <field name="tot_start_survey" />
                 <field name="tot_comp_survey" />
                 <field name="color" />
-                <field name="auth_required" />
-                <field name="public_url" />
+                <field name="access_mode"/>
                 <field name="activity_ids" />
                 <field name="activity_state" />
                 <templates>
@@ -110,13 +108,11 @@
                         </div>
                         <div class="o_kanban_record_bottom">
                             <ul class="list-unstyled">
-                                <li id="survey_test">
-                                    <t t-if="record.designed.raw_value"><a type="object" name="action_test_survey">Test</a></t>
-                                    <t t-if="! record.designed.raw_value"><a style="color: #aaaaaa;">Test</a></t>
+                                <li>
+                                    <a type="object" name="action_test_survey">Test</a>
                                 </li>
                                 <li>
-                                    <t t-if="record.designed.raw_value"><a type="object" name="action_send_survey">Share &amp;amp; Invite</a></t>
-                                    <t t-if="! record.designed.raw_value"><a style="color: #aaaaaa;">Share &amp;amp; Invite</a></t>
+                                    <a type="object" name="action_send_survey">Share &amp;amp; Invite</a>
                                 </li>
                                 <li>
                                     <t t-if="record.tot_start_survey.raw_value &gt; 0"><a name="action_result_survey" type="object">Analyze Answers</a> <span t-if="record.tot_start_survey.raw_value &gt; 0">(<field name="tot_start_survey" />)</span></t>
@@ -154,6 +150,9 @@
                 <filter string="Upcoming Activities" name="activities_upcoming_all"
                     domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
                     ]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Category" name="groupby_category" context="{'group_by': 'category'}"/>
+                </group>
             </search>
         </field>
     </record>
@@ -169,12 +168,10 @@
           </p><p>
             You can create surveys for different purposes: customer opinion, services feedback, recruitment interviews, employee's periodical evaluations, marketing campaigns, etc.
           </p><p>
-            Design easily your survey, send invitations to answer by email and analyse answers.
+            Design easily your survey, send invitations to answer by email and analyze answers.
           </p>
         </field>
     </record>
-    <act_window context="{'search_default_survey_id': [active_id], 'default_survey_id': active_id}" id="act_survey_pages" name="Pages" res_model="survey.page" src_model="survey.survey"/>
-    <act_window context="{'search_default_survey_id': [active_id], 'default_survey_id': active_id}" id="act_survey_question" name="Questions" res_model="survey.question" src_model="survey.survey"/>
 
     <menuitem name="Surveys" id="menu_survey_form" action="action_survey_form" parent="menu_surveys" sequence="1"/>
 

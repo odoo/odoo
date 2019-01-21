@@ -4,7 +4,7 @@
     <record model="survey.survey" id="survey_feedback">
         <field name="title">User Feedback Form</field>
         <field name="stage_id" ref="survey.stage_in_progress" />
-        <field name="auth_required" eval="False" />
+        <field name="access_mode">public</field>
         <field name="users_can_go_back" eval="True" />
         <field name="description" type="html">
 <p>This survey allows you to give a feedback about your experience with our eCommerce solution.

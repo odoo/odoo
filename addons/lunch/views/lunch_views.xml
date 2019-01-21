@@ -6,18 +6,21 @@
         <menuitem name="Manager" parent="menu_lunch" id="menu_lunch_admin" sequence="51" groups="group_lunch_manager"/>
         <menuitem name="Configuration" parent="menu_lunch" id="menu_lunch_config" sequence="53" groups="group_lunch_manager"/>
 
-        <menuitem name="New Order" parent="menu_lunch_title" id="lunch_order_menu_form" action="lunch_order_action_form" sequence="1"/>
-        <menuitem name="Previous Orders" parent="menu_lunch_title" id="lunch_order_menu_tree" action="lunch_order_line_action" sequence="2"/>
-        <menuitem name="Your Lunch Account" parent="menu_lunch_title" id="lunch_cashmove_menu_form" action="lunch_cashmove_action_account" sequence="3"/>
+        <menuitem name="New Order" parent="menu_lunch_title" id="lunch_order_menu_form" action="lunch.lunch_product_action_order" sequence="1"/>
+        <menuitem name="Previous Orders" parent="menu_lunch_title" id="lunch_order_menu_tree" action="lunch_order_action" sequence="2"/>
+        <menuitem name="My Lunch Account" parent="menu_lunch_title" id="lunch_cashmove_report_menu_form" action="lunch_cashmove_report_action_account" sequence="3"/>
 
-        <menuitem name="Today's Orders" parent="menu_lunch_admin" id="lunch_order_line_menu_by_supplier" action="lunch_order_line_action_by_supplier" />
-        <menuitem name="Orders by Vendor" parent="menu_lunch_admin" id="lunch_order_line_menu_control_suppliers" action="lunch_order_line_action_control_suppliers" />
-        <menuitem name="Control Accounts" parent="menu_lunch_admin" id="lunch_cashmove_menu_control_accounts" action="lunch_cashmove_action_control_accounts"/>
-        <menuitem name="Employee Payments" parent="menu_lunch_admin" id="lunch_cashmove_menu_payment" action="lunch_cashmove_action_payment"/>
+        <menuitem name="Today's Orders" parent="menu_lunch_admin" id="lunch_order_menu_by_supplier" action="lunch_order_action_by_supplier" />
+        <menuitem name="Orders by Vendor" parent="menu_lunch_admin" id="lunch_order_menu_control_suppliers" action="lunch_order_action_control_suppliers" />
+        <menuitem name="Control Accounts" parent="menu_lunch_admin" id="lunch_cashmove_report_menu_control_accounts" action="lunch_cashmove_report_action_control_accounts"/>
+        <menuitem name="Employee Payments" parent="menu_lunch_admin" id="lunch_cashmove_report_menu_payment" action="lunch_cashmove_action_payment"/>
 
-        <menuitem name="Products" parent="menu_lunch_config" id="lunch_product_menu" action="lunch_product_action"/>
-        <menuitem name="Product Categories" parent="menu_lunch_config" id="lunch_product_category_menu" action="lunch_product_category_action" />
-        <menuitem name="Alerts" parent="menu_lunch_config" id="lunch_alert_menu" action="lunch_alert_action" />
+        <menuitem name="Settings" parent="menu_lunch_config" id="lunch_settings_menu" action="lunch_config_settings_action" sequence="1"/>
+        <menuitem name="Vendors" parent="menu_lunch_config" id="lunch_vendors_menu" action="lunch_vendors_action" sequence="2"/>
+        <menuitem name="Locations" parent="menu_lunch_config" id="lunch_location_menu" action="lunch_location_action" sequence="3"/>
+        <menuitem name="Products" parent="menu_lunch_config" id="lunch_product_menu" action="lunch_product_action" sequence="4"/>
+        <menuitem name="Product Categories" parent="menu_lunch_config" id="lunch_product_category_menu" action="lunch_product_category_action" sequence="5"/>
+        <menuitem name="Alerts" parent="menu_lunch_config" id="lunch_alert_menu" action="lunch_alert_action" sequence="6"/>
 
 
         <record id="action_server_lunch_archive_product" model="ir.actions.server">

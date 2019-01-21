@@ -169,7 +169,6 @@ class Partner(models.Model):
     category_id = fields.Many2many('res.partner.category', column1='partner_id',
                                     column2='category_id', string='Tags', default=_default_category)
     credit_limit = fields.Float(string='Credit Limit')
-    barcode = fields.Char(oldname='ean13', help="Use a barcode to identify this contact from the Point of Sale.")
     active = fields.Boolean(default=True)
     customer = fields.Boolean(string='Is a Customer', default=True,
                                help="Check this box if this contact is a customer. It can be selected in sales orders.")

@@ -7,24 +7,8 @@
             <search string="lunch employee payment">
                 <field name="description"/>
                 <field name="user_id"/>
-                <filter name='is_payment' string="Payment" domain="[('state','=','payment')]"/>
-                <separator/>
                 <filter name='is_mine_group' string="My Account grouped" domain="[('user_id','=',uid)]" context="{'group_by':'user_id'}"/>
                 <filter name="group_by_user" string="By User" context="{'group_by':'user_id'}"/>
-            </search>
-        </field>
-    </record>
-
-    <record id="lunch_cashmove_view_search_2" model="ir.ui.view">
-        <field name='name'>lunch.cashmove.search</field>
-        <field name='model'>lunch.cashmove</field>
-        <field name='arch' type='xml'>
-            <search string="lunch cashmove">
-                <field name="description"/>
-                <field name="user_id"/>
-                <group expand="0" string="Group By">
-                    <filter name='group_by_user' string="By Employee" context="{'group_by':'user_id'}"/>
-                </group>
             </search>
         </field>
     </record>
@@ -34,22 +18,11 @@
         <field name="model">lunch.cashmove</field>
         <field name="arch" type="xml">
             <tree string="cashmove tree">
+                <field name="currency_id" invisible="1"/>
                 <field name="date"/>
                 <field name="user_id"/>
                 <field name="description"/>
-                <field name="amount" sum="Total"/>
-            </tree>
-        </field>
-    </record>
-
-    <record id="lunch_cashmove_view_tree_2" model="ir.ui.view">
-        <field name="name">lunch.cashmove.tree</field>
-        <field name="model">lunch.cashmove</field>
-        <field name="arch" type="xml">
-            <tree string="cashmove tree" create='false'>
-                <field name="date"/>
-                <field name="description"/>
-                <field name="amount" sum="Total"/>
+                <field name="amount" sum="Total" widget="monetary"/>
             </tree>
         </field>
     </record>
@@ -61,9 +34,10 @@
             <form string="cashmove form">
                 <sheet>
                     <group>
+                        <field name="currency_id" invisible="1"/>
                         <field name="user_id" required="1"/>
                         <field name="date"/>
-                        <field name="amount"/>
+                        <field name="amount" widget="monetary"/>
                     </group>
                     <label for='description'/>
                     <field name="description"/>
@@ -81,6 +55,7 @@
                 <field name="user_id"/>
                 <field name="description"/>
                 <field name="amount"/>
+                <field name="currency_id" invisible="1"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div t-attf-class="oe_kanban_global_click">
@@ -92,7 +67,7 @@
                                 </div>
                                 <div class="col-4 text-right">
                                     <span class="badge badge-pill">
-                                        <strong><i class="fa fa-money" role="img" aria-label="Amount" title="Amount"/> <field name="amount"/></strong>
+                                        <strong><i class="fa fa-money" role="img" aria-label="Amount" title="Amount"/> <field name="amount" widget="monetary"/></strong>
                                     </span>
                                 </div>
                             </div>
@@ -112,47 +87,11 @@
         </field>
     </record>
 
-    <record id="lunch_cashmove_action_account" model="ir.actions.act_window">
-        <field name="name">Your Account</field>
-        <field name="res_model">lunch.cashmove</field>
-        <field name="view_mode">tree</field>
-        <field name="search_view_id" ref="lunch_cashmove_view_search"/>
-        <field name="context">{"search_default_is_mine_group":1}</field>
-        <field name="view_id" ref="lunch_cashmove_view_tree_2"/>
-        <field name="help" type="html">
-          <p class="o_view_nocontent_empty_folder">
-            No cash move yet
-          </p><p>
-            Here you can see your cash moves.<br/>A cash move can either be an expense or a payment.
-            An expense is automatically created when an order is received while a payment is a reimbursement to the company encoded by the manager.
-          </p>
-        </field>
-    </record>
-
-    <record id="lunch_cashmove_action_control_accounts" model="ir.actions.act_window">
-        <field name="name">Control Accounts</field>
-        <field name="res_model">lunch.cashmove</field>
-        <field name="view_mode">tree,kanban,form</field>
-        <field name="search_view_id" ref="lunch_cashmove_view_search_2"/>
-        <field name="context">{"search_default_group_by_user":1}</field>
-        <field name="view_id" ref="lunch_cashmove_view_tree"/>
-        <field name="help" type="html">
-          <p class="o_view_nocontent_smiling_face">
-            Create a new payment
-          </p><p>
-            A cashmove can either be an expense or a payment.<br/>
-            An expense is automatically created at the order receipt.<br/>
-            A payment represents the employee reimbursement to the company.
-          </p>
-        </field>
-    </record>
-
     <record id="lunch_cashmove_action_payment" model="ir.actions.act_window">
         <field name="name">Register Cash Moves</field>
         <field name="res_model">lunch.cashmove</field>
         <field name="view_mode">tree,kanban,form</field>
         <field name="search_view_id" ref="lunch_cashmove_view_search"/>
-        <field name="context">{"search_default_is_payment":1}</field>
         <field name="view_id" ref="lunch_cashmove_view_tree"/>
         <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">

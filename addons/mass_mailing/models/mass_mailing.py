@@ -451,18 +451,21 @@ class MassMailing(models.Model):
         return res
 
     active = fields.Boolean(default=True)
+    subject = fields.Char('Subject', help='Subject of emails to send', required=True)
     email_from = fields.Char(string='From', required=True,
         default=lambda self: self.env['mail.message']._get_default_from())
     sent_date = fields.Datetime(string='Sent Date', oldname='date', copy=False)
     schedule_date = fields.Datetime(string='Schedule in the Future')
-    body_html = fields.Html(string='Body', sanitize_attributes=False)
+    # don't translate 'body_arch', the translations are only on 'body_html'
+    body_arch = fields.Html(string='Body', translate=False)
+    body_html = fields.Html(string='Body converted to be send by mail', sanitize_attributes=False)
     attachment_ids = fields.Many2many('ir.attachment', 'mass_mailing_ir_attachments_rel',
         'mass_mailing_id', 'attachment_id', string='Attachments')
     keep_archives = fields.Boolean(string='Keep Archives')
     mass_mailing_campaign_id = fields.Many2one('mail.mass_mailing.campaign', string='Mass Mailing Campaign')
     campaign_id = fields.Many2one('utm.campaign', string='Campaign',
                                   help="This name helps you tracking your different campaign efforts, e.g. Fall_Drive, Christmas_Special")
-    source_id = fields.Many2one('utm.source', string='Subject', required=True, ondelete='cascade',
+    source_id = fields.Many2one('utm.source', string='Source', required=True, ondelete='cascade',
                                 help="This is the link source, e.g. Search Engine, another domain, or name of email list")
     medium_id = fields.Many2one('utm.medium', string='Medium',
                                 help="This is the delivery method, e.g. Postcard, Email, or Banner Ad", default=lambda self: self.env.ref('utm.utm_medium_email'))
@@ -620,7 +623,11 @@ class MassMailing(models.Model):
         else:
             mailing_domain.append((0, '=', 1))
         self.mailing_domain = repr(mailing_domain)
-        self.body_html = "on_change_model_and_list"
+
+    @api.onchange('subject')
+    def _onchange_subject(self):
+        if self.subject and not self.name:
+            self.name = self.subject
 
     #------------------------------------------------------
     # Technical stuff
@@ -629,8 +636,14 @@ class MassMailing(models.Model):
     @api.model
     def name_create(self, name):
         """ _rec_name is source_id, creates a utm.source instead """
-        mass_mailing = self.create({'name': name})
+        mass_mailing = self.create({'name': name, 'subject': name})
         return mass_mailing.name_get()[0]
+
+    @api.model
+    def create(self, vals):
+        if vals.get('name') and not vals.get('subject'):
+            vals['subject'] = vals['name']
+        return super(MassMailing, self).create(vals)
 
     @api.multi
     @api.returns('self', lambda value: value.id)
@@ -862,7 +875,7 @@ class MassMailing(models.Model):
                 'author_id': author_id,
                 'attachment_ids': [(4, attachment.id) for attachment in mailing.attachment_ids],
                 'body': mailing.convert_links()[mailing.id],
-                'subject': mailing.name,
+                'subject': mailing.subject,
                 'model': mailing.mailing_model_real,
                 'email_from': mailing.email_from,
                 'record_name': False,

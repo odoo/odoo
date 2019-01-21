@@ -18,5 +18,8 @@ On a simple click, your visitors can subscribe to mailing lists managed in the E
         'views/mass_mailing_view.xml',
         'views/res_config_settings_views.xml',
     ],
+    'qweb': [
+        'static/src/xml/*.xml',
+    ],
     'auto_install': True,
 }

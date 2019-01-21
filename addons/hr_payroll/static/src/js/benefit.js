@@ -3,9 +3,19 @@ odoo.define('hr_payroll.benefit.view_custo', function(require) {
 
     var core = require('web.core');
     var CalendarController = require("web.CalendarController");
+    var CalendarModel = require('web.CalendarModel');
+    var CalendarRenderer = require('web.CalendarRenderer');
+    var CalendarView = require('web.CalendarView');
+    var viewRegistry = require('web.view_registry');
 
     var _t = core._t;
-    CalendarController.include({
+    var BenefitCalendarController = CalendarController.extend({
+
+        events: {
+            'click .btn-benefit-generate': '_onGenerateBenefits',
+            'click .btn-benefit-validate': '_onValidateBenefits',
+            'click .btn-payslip-generate': '_onGeneratePayslips',
+        },
 
         update: function () {
             var self = this;
@@ -14,35 +24,9 @@ odoo.define('hr_payroll.benefit.view_custo', function(require) {
             });
         },
 
-        _renderGenerateButton: function(date_from, date_to, employee_ids, secondary) {
-            var self = this;
-            var primary = !secondary ? 'btn-primary' : 'btn-secondary';
-            var txt = _t("Generate Benefits");
+        _renderBenefitButton: function (text, event_class) {
             this.$buttons.find('.o_calendar_button_month').after(
-                $('<button class="btn ' + primary + ' btn-benefit" type="button">'+ txt +'</button>')
-                .off('click')
-                .on('click', function (e) {
-                    e.preventDefault();
-                    e.stopImmediatePropagation();
-                    var date_fmt = 'YYYY-MM-DD HH:mm:ss';
-                    var options = {
-                        on_close: function () {
-                            self.reload();
-                        },
-                    };
-                    self.do_action({
-                        type: 'ir.actions.act_window',
-                        name: txt,
-                        res_model: 'hr.benefit.employees',
-                        view_type: 'form',
-                        views: [[false,'form']],
-                        target: 'new',
-                        context: {
-                            'start_benefits': date_from.format(date_fmt),
-                            'stop_benefits':date_to.format(date_fmt),
-                        },
-                    }, options);
-                })
+                $('<button class="btn btn-primary btn-benefit ' + event_class + '" type="button">'+ _t(text) +'</button>')
             );
         },
 
@@ -51,58 +35,59 @@ odoo.define('hr_payroll.benefit.view_custo', function(require) {
                 return;
             }
 
-            var firstDay = this.model.data.target_date.clone().startOf('month');
-            var lastDay = this.model.data.target_date.clone().endOf('month');
-            var events = this._checkDataInRange(firstDay, lastDay, this.model.data.data);
-            var is_validated = this._checkValidation(events);
+            this.firstDay = this.model.data.target_date.clone().startOf('month');
+            this.lastDay = this.model.data.target_date.clone().endOf('month');
+            this.events = this._checkDataInRange(this.firstDay, this.lastDay, this.model.data.data);
+            var is_validated = this._checkValidation(this.events);
             this.$buttons.find('.btn-benefit').remove();
-            var employee_ids = _.map(events, function (event) { return event.record.employee_id[0]; });
-            employee_ids = _.uniq(employee_ids);
+            if (this.events.length === 0) {
+                this._renderBenefitButton("Generate Benefits", 'btn-benefit-generate');
+            }
+            if (is_validated && this.events.length !== 0) {
+                this._renderBenefitButton("Generate Payslips", 'btn-payslip-generate');
+            }
+            else if (!is_validated) {
+                this._renderBenefitButton("Validate Benefits", 'btn-benefit-validate');
+            }
+        },
+
+        _onGeneratePayslips: function (e) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            var date_fmt = 'YYYY-MM-DD';
+            this.do_action('hr_payroll.action_generate_payslips_from_benefits', {
+                additional_context: {
+                    default_date_start: this.firstDay.format(date_fmt),
+                    default_date_end: this.lastDay.format(date_fmt),
+                },
+            });
+        },
+
+        _onValidateBenefits: function (e) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
             var self = this;
-            if (this.model.data.domain.length !== 0) { // select by default the employee in the domain
-                var employee_search_id = (this.model.data.domain[0][0] === 'employee_id' &&  this.model.data.domain[0][1] === '=')? [this.model.data.domain[0][2]]: null;
-            }
-            if (events.length === 0) { // Generate button
-                this._renderGenerateButton(firstDay, lastDay, employee_search_id);
-            } else {
-                this._renderGenerateButton(firstDay, lastDay, employee_ids, true);
-            }
-            if (is_validated && events.length !== 0) { // Generate Payslip button
-                this.$buttons.find('.o_calendar_button_month').after(
-                    $('<button class="btn btn-primary btn-benefit" type="button">'+ _t('Generate Payslips') +'</button>')
-                    .off('click')
-                    // action_hr_payslip_by_employees
-                    .on('click', function (e) {
-                        e.preventDefault();
-                        e.stopImmediatePropagation();
-                        var date_fmt = 'YYYY-MM-DD';
-                        self.do_action('hr_payroll.action_hr_payslip_by_employees', {
-                            additional_context: {
-                                default_employee_ids: employee_ids || [],
-                                default_date_start: firstDay.format(date_fmt),
-                                default_date_end: lastDay.format(date_fmt),
-                            },
-                        });
-                    })
-                );
-            }
-            else if (!is_validated) { // Validate button
-                this.$buttons.find('.o_calendar_button_month').after(
-                    $('<button class="btn btn-primary btn-benefit" type="button">'+ _t('Validate Benefits') +'</button>')
-                    .off('click')
-                    .on('click', function (e) {
-                        e.preventDefault();
-                        e.stopImmediatePropagation();
-                        self._rpc({
-                            model: 'hr.benefit',
-                            method: 'action_validate',
-                            args: [_.map(events, function (event) { return event.record.id; })],
-                        }).then(function () {
-                            return self.reload();
-                        });
-                    })
-                );
-            }
+            this._rpc({
+                model: 'hr.benefit',
+                method: 'action_validate',
+                args: [_.map(this.events, function (event) { return event.record.id; })],
+            }).then(function () {
+                return self.reload();
+            });
+        },
+
+        _onGenerateBenefits: function (e) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            var date_fmt = 'YYYY-MM-DD HH:mm:ss';
+            var self = this;
+            this._rpc({
+                model: 'hr.employee',
+                method: 'generate_benefit',
+                args: [this.firstDay.format(date_fmt), this.lastDay.format(date_fmt)],
+            }).then(function () {
+                self.reload();
+            });
         },
 
         _checkDataInRange: function (firstDay, lastDay, events) {
@@ -125,4 +110,41 @@ odoo.define('hr_payroll.benefit.view_custo', function(require) {
             this._renderBenefitButtons();
         },
     });
+
+    var BenefitCalendarModel = CalendarModel.extend({
+         /**
+          * Display everybody's benefits if no employee filter exists
+          * @private
+          * @override
+          * @param {any} filter
+          * @returns {Deferred}
+         */
+        _loadFilter: function (filter) {
+            return this._super.apply(this, arguments).then(function () {
+                var filters = filter.filters;
+                var all_filter = filters[filters.length - 1];
+
+                if (all_filter) {
+                    all_filter.label = _t("Everybody's benefits");
+
+                    if (filter.write_model && filter.filters.length <= 1 && all_filter.active === undefined) {
+                        filter.all = true;
+                        all_filter.active = true;
+                    }
+                }
+
+            });
+        }
+    });
+
+    var BenefitCalendarView = CalendarView.extend({
+        config: _.extend({}, CalendarView.prototype.config, {
+            Controller: BenefitCalendarController,
+            Model: BenefitCalendarModel,
+            Renderer: CalendarRenderer,
+        }),
+    });
+
+    viewRegistry.add('benefits_calendar', BenefitCalendarView);
+
 });

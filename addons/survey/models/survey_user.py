@@ -25,33 +25,28 @@ class SurveyUserInput(models.Model):
     """ Metadata for a set of one user's answers to a particular survey """
 
     _name = "survey.user_input"
-    _rec_name = 'date_create'
+    _rec_name = 'survey_id'
     _description = 'Survey User Input'
 
-    survey_id = fields.Many2one('survey.survey', string='Survey', required=True, readonly=True, ondelete='restrict')
-    date_create = fields.Datetime('Creation Date', default=fields.Datetime.now, required=True, readonly=True, copy=False)
-    deadline = fields.Datetime('Deadline', help="Date by which the person can open the survey and submit answers", oldname="date_deadline")
-    input_type = fields.Selection([('manually', 'Manually'), ('link', 'Link')], string='Answer Type', default='manually', required=True, readonly=True, oldname="type")
+    # description
+    survey_id = fields.Many2one('survey.survey', string='Survey', required=True, readonly=True, ondelete='cascade')
+    input_type = fields.Selection([
+        ('manually', 'Manually'), ('link', 'Link')],
+        string='Answer Type', default='manually', required=True, readonly=True,
+        oldname="type")
     state = fields.Selection([
         ('new', 'Not started yet'),
         ('skip', 'Partially completed'),
         ('done', 'Completed')], string='Status', default='new', readonly=True)
     test_entry = fields.Boolean(readonly=True)
+    # identification and access
     token = fields.Char('Identification token', default=lambda self: str(uuid.uuid4()), readonly=True, required=True, copy=False)
-
-    # Optional Identification data
     partner_id = fields.Many2one('res.partner', string='Partner', readonly=True)
     email = fields.Char('E-mail', readonly=True)
-
-    # Displaying data
-    last_displayed_page_id = fields.Many2one('survey.page', string='Last displayed page')
-    # The answers !
+    # answers
     user_input_line_ids = fields.One2many('survey.user_input_line', 'user_input_id', string='Answers', copy=True)
-
-    # URLs used to display the answers
-    result_url = fields.Char("Public link to the survey results", related='survey_id.result_url', readonly=False)
-    print_url = fields.Char("Public link to the empty survey", related='survey_id.print_url', readonly=False)
-
+    deadline = fields.Datetime('Deadline', help="Datetime until customer can open the survey and submit answers")
+    last_displayed_page_id = fields.Many2one('survey.page', string='Last displayed page')
     quizz_score = fields.Float("Score for the quiz", compute="_compute_quizz_score", default=0.0)
 
     @api.depends('user_input_line_ids.quizz_mark')
@@ -69,54 +64,47 @@ class SurveyUserInput(models.Model):
             (used as a cronjob declared in data/survey_cron.xml)
         """
         an_hour_ago = fields.Datetime.to_string(datetime.datetime.now() - datetime.timedelta(hours=1))
-        self.search([('input_type', '=', 'manually'), ('state', '=', 'new'),
-                    ('date_create', '<', an_hour_ago)]).unlink()
+        self.search([('input_type', '=', 'manually'),
+                     ('state', '=', 'new'),
+                     ('create_date', '<', an_hour_ago)]).unlink()
 
     @api.multi
-    def action_survey_resend(self):
-        """ Send again the invitation """
-        self.ensure_one()
-        local_context = {
-            'survey_resent_token': True,
-            'default_partner_ids': self.partner_id and [self.partner_id.id] or [],
-            'default_multi_email': self.email or "",
-            'default_public': 'email_private',
-        }
-        return self.survey_id.with_context(local_context).action_send_survey()
+    def action_resend(self):
+        partners = self.env['res.partner']
+        emails = []
+        for user_answer in self:
+            if user_answer.partner_id:
+                partners |= user_answer.partner_id
+            elif user_answer.email:
+                emails.append(user_answer.email)
+
+        return self.survey_id.with_context(
+            default_existing_mode='resend',
+            default_partner_ids=partners.ids,
+            default_emails=','.join(emails)
+        ).action_send_survey()
 
     @api.multi
-    def action_view_answers(self):
+    def action_print_answers(self):
         """ Open the website page with the survey form """
         self.ensure_one()
         return {
             'type': 'ir.actions.act_url',
             'name': "View Answers",
             'target': 'self',
-            'url': '%s/%s' % (self.print_url, self.token)
-        }
-
-    @api.multi
-    def action_survey_results(self):
-        """ Open the website page with the survey results """
-        self.ensure_one()
-        return {
-            'type': 'ir.actions.act_url',
-            'name': "Survey Results",
-            'target': 'self',
-            'url': self.result_url
+            'url': '/survey/print/%s?token=%s' % (self.survey_id.id, self.token)
         }
 
 
 class SurveyUserInputLine(models.Model):
     _name = 'survey.user_input_line'
     _description = 'Survey User Input Line'
-    _rec_name = 'date_create'
+    _rec_name = 'user_input_id'
 
     user_input_id = fields.Many2one('survey.user_input', string='User Input', ondelete='cascade', required=True)
-    question_id = fields.Many2one('survey.question', string='Question', ondelete='restrict', required=True)
+    question_id = fields.Many2one('survey.question', string='Question', ondelete='cascade', required=True)
     page_id = fields.Many2one(related='question_id.page_id', string="Page", readonly=False)
     survey_id = fields.Many2one(related='user_input_id.survey_id', string='Survey', store=True, readonly=False)
-    date_create = fields.Datetime('Create Date', default=fields.Datetime.now, required=True)
     skipped = fields.Boolean('Skipped')
     answer_type = fields.Selection([
         ('text', 'Text'),
