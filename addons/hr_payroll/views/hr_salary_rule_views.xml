@@ -2,6 +2,7 @@
 <odoo>
 
     <!-- Salary structure -->
+    <!-- YTI TODO: One salary structure list view seems to unused -->
     <record id="view_hr_payroll_structure_list_view" model="ir.ui.view">
         <field name="name">hr.payroll.structure.tree</field>
         <field name="model">hr.payroll.structure</field>
@@ -10,7 +11,7 @@
                 <field name="name"/>
                 <field name="code"/>
                 <field name="rule_ids"/>
-                <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                <field name="country_id" options="{'no_create': True}"/>
             </tree>
         </field>
     </record>
@@ -48,7 +49,7 @@
             <tree string="Salary Structure">
                 <field name="name"/>
                 <field name="code"/>
-                <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                <field name="country_id" options="{'no_create': True}"/>
             </tree>
         </field>
     </record>
@@ -74,7 +75,7 @@
                     <field name="code"/>
                     <field name="parent_id"/>
                     <field name="report_id"/>
-                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                    <field name="country_id" options="{'no_create': True}"/>
                 </group>
                 <notebook colspan="4">
                      <page name="salary_rules" string="Salary Rules">
@@ -161,7 +162,6 @@
         <field name="arch" type="xml">
             <tree string="Contribution Registers">
                 <field name="name" />
-                <field name="company_id"  groups="base.group_multi_company" options="{'no_create': True}"/>
             </tree>
         </field>
     </record>
@@ -190,7 +190,6 @@
         <field name="arch" type="xml">
             <search string="Contribution Registers">
                 <field name="name" string="Contribution Registers"/>
-                <field name="company_id" groups="base.group_multi_company"/>
             </search>
         </field>
     </record>
@@ -203,7 +202,6 @@
                 <group name="general_info">
                     <field name="name"/>
                     <field name="partner_id"/>
-                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" class="oe_inline"/>
                 </group>
                 <newline/>
                 <group name="description">
@@ -283,7 +281,6 @@
                 <field name="name"/>
                 <field name="code"/>
                 <field name="category_id" invisible="True"/>
-                <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
             </tree>
         </field>
     </record>
@@ -303,7 +300,6 @@
                    <field name="sequence" />
                    <field name="active"/>
                    <field name="appears_on_payslip"/>
-                   <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                 </group>
                 <notebook colspan="6">
                     <page name="general" string="General">

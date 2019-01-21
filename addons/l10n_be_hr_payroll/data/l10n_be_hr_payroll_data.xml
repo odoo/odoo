@@ -511,7 +511,7 @@ result = -min(ip_amount * tax_rate, 11745)
             ref('hr_salary_rule_ip_part'),
             ref('hr_salary_rule_gross_with_ip')
         ])]" name="rule_ids"/>
-        <field name="company_id" ref="base.main_company"/>    
+        <field name="country_id" ref="base.be"/>
         <field name="parent_id" ref="hr_payroll.structure_base"/>
     </record>
     <record id="hr_payroll_salary_structure_worker" model="hr.payroll.structure">
@@ -529,7 +529,7 @@ result = -min(ip_amount * tax_rate, 11745)
             ref('hr_payroll_rules_suppl_net'),
             ref('hr_payroll_rules_retained_net'),
         ])]" name="rule_ids"/>
-        <field name="company_id" ref="base.main_company"/>
+        <field name="country_id" ref="base.be"/>
         <field name="parent_id" ref="hr_payroll.structure_base"/>
         </record>
 

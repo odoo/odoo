@@ -88,7 +88,6 @@
             <field name="code">ME</field>
             <field name="name">Marketing Executive</field>
             <field eval="[(6, 0, [ref('hr_salary_rule_houserentallowance1'), ref('hr_salary_rule_convanceallowance1'),ref('hr_salary_rule_professionaltax1'),ref('hr_salary_rule_providentfund1')])]" name="rule_ids"/>
-            <field name="company_id" ref="base.main_company"/>
             <field name="parent_id" ref="structure_base"/>
         </record>
 
@@ -96,7 +95,6 @@
             <field name="code">MEGG</field>
             <field name="name">Marketing Executive for Gilles Gravie</field>
             <field eval="[(6, 0, [ref('hr_salary_rule_ca_gravie'), ref('hr_salary_rule_meal_voucher')])]" name="rule_ids"/>
-            <field name="company_id" ref="base.main_company"/>
             <field name="parent_id" ref="structure_001"/>
         </record>
 
