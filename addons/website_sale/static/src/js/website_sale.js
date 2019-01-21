@@ -121,12 +121,12 @@ odoo.define('website_sale.website_sale', function (require) {
 var core = require('web.core');
 var config = require('web.config');
 var publicWidget = require('web.public.widget');
-var ProductConfiguratorMixin = require('sale.ProductConfiguratorMixin');
+var VariantMixin = require('sale.VariantMixin');
 require("website.content.zoomodoo");
 
-publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(ProductConfiguratorMixin, {
+publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
     selector: '.oe_website_sale',
-    events: _.extend({}, ProductConfiguratorMixin.events || {}, {
+    events: _.extend({}, VariantMixin.events || {}, {
         'change form .js_product:first input[name="add_qty"]': '_onChangeAddQuantity',
         'mouseup .js_publish': '_onMouseupPublish',
         'touchend .js_publish': '_onMouseupPublish',
@@ -199,7 +199,7 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(ProductConfigurat
         if (combination) {
             return JSON.parse(combination);
         }
-        return ProductConfiguratorMixin.getSelectedVariantValues.apply(this, arguments);
+        return VariantMixin.getSelectedVariantValues.apply(this, arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -327,7 +327,7 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(ProductConfigurat
             return parseInt($parent.find('input.js_product_change:checked').val());
         }
         else {
-            return ProductConfiguratorMixin._getProductId.apply(this, arguments);
+            return VariantMixin._getProductId.apply(this, arguments);
         }
     },
     /**
@@ -675,7 +675,7 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(ProductConfigurat
             $el.attr('selected', $el.is(':selected'));
         });
 
-        return ProductConfiguratorMixin.onChangeVariant.apply(this, arguments);
+        return VariantMixin.onChangeVariant.apply(this, arguments);
     },
     /**
      * @private

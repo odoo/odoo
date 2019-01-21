@@ -1,7 +1,7 @@
-odoo.define('website_sale_.ProductConfiguratorMixin', function (require) {
+odoo.define('website_sale.VariantMixin', function (require) {
 'use strict';
 
-var ProductConfiguratorMixin = require('sale.ProductConfiguratorMixin');
+var VariantMixin = require('sale.VariantMixin');
 
 /**
  * Website behavior is slightly different from backend so we append
@@ -10,7 +10,7 @@ var ProductConfiguratorMixin = require('sale.ProductConfiguratorMixin');
  * @private
  * @param {string} uri The uri to adapt
  */
-ProductConfiguratorMixin._getUri = function (uri) {
+VariantMixin._getUri = function (uri) {
     if (this.isWebsite){
         return uri + '_website';
     } else {
@@ -18,6 +18,6 @@ ProductConfiguratorMixin._getUri = function (uri) {
     }
 };
 
-return ProductConfiguratorMixin;
+return VariantMixin;
 
 });
