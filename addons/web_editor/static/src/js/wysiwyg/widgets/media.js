@@ -12,7 +12,7 @@ var QWeb = core.qweb;
 var _t = core._t;
 
 var MediaWidget = Widget.extend({
-    xmlDependencies: ['/web_editor/static/src/xml/editor.xml'],
+    xmlDependencies: ['/web_editor/static/src/xml/wysiwyg.xml'],
     events: {
         'input input.o_we_search': '_onSearchInput',
     },

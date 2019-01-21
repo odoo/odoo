@@ -15,7 +15,7 @@ var _t = core._t;
 var MediaDialog = Dialog.extend({
     template: 'wysiwyg.widgets.media',
     xmlDependencies: Dialog.prototype.xmlDependencies.concat(
-        ['/web_editor/static/src/xml/editor.xml']
+        ['/web_editor/static/src/xml/wysiwyg.xml']
     ),
     events: _.extend({}, Dialog.prototype.events, {
         'click a[data-toggle="tab"]': '_onTabChange',
