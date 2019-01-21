@@ -4,13 +4,13 @@ odoo.define('sale_product_configurator.OptionalProductsModal', function (require
 var ajax = require('web.ajax');
 var Dialog = require('web.Dialog');
 var ServicesMixin = require('web.ServicesMixin');
-var ProductConfiguratorMixin = require('sale.ProductConfiguratorMixin');
+var VariantMixin = require('sale.VariantMixin');
 
 var productNameMap = {};
 var optionalProductsMap = {};
 
-var OptionalProductsModal = Dialog.extend(ServicesMixin, ProductConfiguratorMixin, {
-    events:  _.extend({}, Dialog.prototype.events, ProductConfiguratorMixin.events, {
+var OptionalProductsModal = Dialog.extend(ServicesMixin, VariantMixin, {
+    events:  _.extend({}, Dialog.prototype.events, VariantMixin.events, {
         'click a.js_add, a.js_remove': '_onAddOrRemoveOption',
         'change .in_cart.main_product input.js_quantity': '_onChangeQuantity',
         'change .js_raw_price': '_computePriceTotal'
@@ -447,7 +447,7 @@ var OptionalProductsModal = Dialog.extend(ServicesMixin, ProductConfiguratorMixi
             .first()
             .text(combination.display_name);
 
-        ProductConfiguratorMixin._onChangeCombination.apply(this, arguments);
+        VariantMixin._onChangeCombination.apply(this, arguments);
     },
     /**
      * When the quantity of the root product is updated, we need to update

@@ -276,9 +276,9 @@ var ProductConfiguratorFormController = FormController.extend({
     *   {integer} products.product_id: the id of the product
     *   {integer} products.quantity: the added quantity for this product
     *   {Array} products.product_custom_attribute_values:
-    *     see product_configurator_mixin.getCustomVariantValues
+    *     see variant_mixin.getCustomVariantValues
     *   {Array} products.no_variant_attribute_values:
-    *     see product_configurator_mixin.getNoVariantAttributeValues
+    *     see variant_mixin.getNoVariantAttributeValues
     */
     _addProducts: function (products) {
         this.do_action({type: 'ir.actions.act_window_close', infos: {
