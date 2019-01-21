@@ -141,22 +141,20 @@ var MediaDialog = Dialog.extend({
      */
     save: function () {
         var self = this;
-        var args = arguments;
         var _super = this._super;
-        if (this.multiImages) {
+        var args = arguments;
+        return $.when(this.active.save()).then(function (data) {
+            self.final_data = data;
             // In the case of multi images selection we suppose this was not to
             // replace an old media, so we only retrieve the images and save.
-            return $.when(this.active.save()).then(function (data) {
-                self.final_data = data;
-                return _super.apply(self, args);
-            });
-        }
-
-        return $.when(this.active.save()).then(function (media) {
-            self.trigger('saved', {
-                attachments: self.active.images,
-                media: media,
-            });
+            if (!self.multiImages) {
+                // TODO this dialog triggers 'save' and 'saved' with different
+                // data on close... should refactor to avoid confusion...
+                self.trigger('saved', {
+                    attachments: self.active.images,
+                    media: data,
+                });
+            }
             return _super.apply(self, args);
         });
     },
