@@ -3,7 +3,7 @@
 
     <template id="assets_backend" name="sale timesheet assets" inherit_id="web.assets_backend">
         <xpath expr="." position="inside">
-            <link rel="stylesheet" type="text/scss" href="/sale_timesheet/static/src/scss/sale_timesheet.scss"/>
+            <link rel="stylesheet" type="text/scss" href="/sale_project_timesheet/static/src/scss/sale_timesheet.scss"/>
         </xpath>
     </template>
 
@@ -205,19 +205,19 @@
                                                         <div t-if="repartition_employee_max" class="progress" t-attf-style="width: {{employee['total'] / repartition_employee_max * 100}}%">
 
                                                             <t t-set="total" t-value="employee['total'] or 1.0" />
-                                                            <t t-call="sale_timesheet.progressbar">
+                                                            <t t-call="sale_project_timesheet.progressbar">
                                                                 <t t-set="label">Billable fixed</t>
                                                                 <t t-set="key">billable_fixed</t>
                                                             </t>
-                                                            <t t-call="sale_timesheet.progressbar">
+                                                            <t t-call="sale_project_timesheet.progressbar">
                                                                 <t t-set="label">Billable time</t>
                                                                 <t t-set="key">billable_time</t>
                                                             </t>
-                                                            <t t-call="sale_timesheet.progressbar">
+                                                            <t t-call="sale_project_timesheet.progressbar">
                                                                 <t t-set="label">No task found</t>
                                                                 <t t-set="key">non_billable_project</t>
                                                             </t>
-                                                            <t t-call="sale_timesheet.progressbar">
+                                                            <t t-call="sale_project_timesheet.progressbar">
                                                                 <t t-set="label">Non billable</t>
                                                                 <t t-set="key">non_billable</t>
                                                             </t>

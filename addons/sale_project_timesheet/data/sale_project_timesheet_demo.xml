@@ -123,7 +123,7 @@
             <field name="product_uom_qty">4</field>
         </record>
         <record id="sale_line_13" model="sale.order.line">
-            <field name="order_id" ref="sale_timesheet.sale_order_1"/>
+            <field name="order_id" ref="sale_order_1"/>
             <field name="product_id" ref="product_service_deliver_timesheet_1"/>
             <field name="sequence" eval="2"/>
             <field name="discount">10</field>
@@ -132,20 +132,20 @@
 
         <record id="project_task_1" model="project.task">
             <field name="name">Decoration</field>
-            <field name="sale_line_id" ref="sale_timesheet.sale_line_13"/>
-            <field name="sale_order_id" ref="sale_timesheet.sale_order_1"/>
+            <field name="sale_line_id" ref="sale_line_13"/>
+            <field name="sale_order_id" ref="sale_order_1"/>
         </record>
 
         <record id="project_task_2" model="project.task">
             <field name="name">Planning</field>
-            <field name="sale_line_id" ref="sale_timesheet.sale_line_13"/>
-            <field name="sale_order_id" ref="sale_timesheet.sale_order_1"/>
+            <field name="sale_line_id" ref="sale_line_13"/>
+            <field name="sale_order_id" ref="sale_order_1"/>
         </record>
 
         <record id="project_task_3" model="project.task">
             <field name="name">Furniture</field>
-            <field name="sale_line_id" ref="sale_timesheet.sale_line_13"/>
-            <field name="sale_order_id" ref="sale_timesheet.sale_order_1"/>
+            <field name="sale_line_id" ref="sale_line_13"/>
+            <field name="sale_order_id" ref="sale_order_1"/>
         </record>
 
         <record id="project_task_4" model="project.task">
@@ -166,7 +166,7 @@
             <field name="product_uom_qty">150</field>
         </record>
         <record id="sale_line_22" model="sale.order.line">
-            <field name="order_id" ref="sale_timesheet.sale_order_2"/>
+            <field name="order_id" ref="sale_order_2"/>
             <field name="sequence" eval="2"/>
             <field name="product_id" ref="product_service_deliver_timesheet_2"/>
             <field name="product_uom_qty">10</field>

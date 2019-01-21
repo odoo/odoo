@@ -91,7 +91,7 @@ class Project(models.Model):
 
     @api.multi
     def action_view_timesheet_plan(self):
-        action = self.env.ref('sale_timesheet.project_timesheet_action_client_timesheet_plan').read()[0]
+        action = self.env.ref('sale_project_timesheet.project_timesheet_action_client_timesheet_plan').read()[0]
         action['params'] = {
             'project_ids': self.ids,
         }

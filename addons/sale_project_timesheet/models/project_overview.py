@@ -337,7 +337,7 @@ class Project(models.Model):
                     actions.append({
                         'label': _("Create a Sales Order"),
                         'type': 'action',
-                        'action_id': 'sale_timesheet.project_project_action_multi_create_sale_order',
+                        'action_id': 'sale_project_timesheet.project_project_action_multi_create_sale_order',
                         'context': json.dumps({'active_id': self.id, 'active_model': 'project.project'}),
                     })
             if self.env.user.has_group('sales_team.group_sale_salesman_all_leads'):
@@ -355,7 +355,7 @@ class Project(models.Model):
                         actions.append({
                             'label': _("Create Invoice"),
                             'type': 'action',
-                            'action_id': 'sale_timesheet.project_project_action_multi_create_invoice',
+                            'action_id': 'sale_project_timesheet.project_project_action_multi_create_invoice',
                             'context': json.dumps({'active_id': self.id, 'active_model': 'project.project'}),
                         })
         return actions
