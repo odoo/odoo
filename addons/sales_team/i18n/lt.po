@@ -12,21 +12,26 @@
 # Antanas Muliuolis <an.muliuolis@gmail.com>, 2018
 # Monika Raciunaite <monika.raciunaite@gmail.com>, 2018
 # digitouch UAB <digitouchagencyeur@gmail.com>, 2018
-# Linas Versada <linaskrisiukenas@gmail.com>, 2018
+# Linas Versada <linaskrisiukenas@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 06:49+0000\n"
+"POT-Creation-Date: 2019-01-09 10:32+0000\n"
 "PO-Revision-Date: 2018-08-24 09:25+0000\n"
-"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2018\n"
+"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2019\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: lt\n"
 "Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);\n"
+
+#. module: sales_team
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
+msgid "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
+msgstr "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
@@ -107,7 +112,7 @@ msgstr "Įmonė"
 #. module: sales_team
 #: model:ir.ui.menu,name:sales_team.menu_sale_config
 msgid "Configuration"
-msgstr "Nustatymai"
+msgstr "Konfigūracija"
 
 #. module: sales_team
 #: model:ir.model,name:sales_team.model_res_partner
@@ -158,7 +163,7 @@ msgstr "Diena"
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_salesteams_act
 #: model_terms:ir.actions.act_window,help:sales_team.sales_team_config_action
 msgid "Define a new Sales Team"
-msgstr ""
+msgstr "Nustatykite naują pardavimų komandą"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__display_name
@@ -173,7 +178,7 @@ msgstr "Europa"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__favorite_user_ids
 msgid "Favorite Members"
-msgstr "Pamėgti nariai"
+msgstr "Mėgstamiausi nariai"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__is_favorite
@@ -253,6 +258,8 @@ msgid ""
 "If set, this Sales Team will be used for sales and assignations related to "
 "this partner"
 msgstr ""
+"Jei nustatyta, ši pardavimų komanda bus naudojama pardavimams ir "
+"priskyrimams, susijusiems su šiuo partneriu"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__active
@@ -260,6 +267,8 @@ msgid ""
 "If the active field is set to false, it will allow you to hide the Sales "
 "Team without removing it."
 msgstr ""
+"Jei aktyvus laukas nustatytas kaip neigiamas, tai leis jums paslėpti "
+"pardavimų komandą nepašalinant jos."
 
 #. module: sales_team
 #: selection:crm.team,dashboard_graph_model:0
@@ -324,12 +333,12 @@ msgstr "Žinutės pristatymo klaida"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_ids
 msgid "Messages"
-msgstr "Pranešimai"
+msgstr "Žinutės"
 
 #. module: sales_team
 #: selection:crm.team,dashboard_graph_group:0
 msgid "Month"
-msgstr "Mėnesį"
+msgstr "Mėnuo"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
@@ -340,7 +349,7 @@ msgstr "Mano mėgstamiausi"
 #: code:addons/sales_team/models/crm_team.py:260
 #, python-format
 msgid "Not Defined"
-msgstr "Neapibrėžta"
+msgstr "Nenustatyta"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_needaction_counter
@@ -380,7 +389,7 @@ msgstr "Pardavimo taškas"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__reply_to
 msgid "Reply-To"
-msgstr "Atsakyti (kam)"
+msgstr "Atsakyti"
 
 #. module: sales_team
 #: selection:crm.team,dashboard_graph_model:0 selection:crm.team,team_type:0
@@ -406,6 +415,8 @@ msgid ""
 "Sales Team the user is member of. Used to compute the members of a Sales "
 "Team through the inverse one2many"
 msgstr ""
+"Pardavimų komanda, kurios narys yra vartotojas. Naudojama pardavimų komandos"
+" narių skaičiavimui per atvirkštinį one2many"
 
 #. module: sales_team
 #: model:ir.actions.act_window,name:sales_team.sales_team_config_action
@@ -456,12 +467,12 @@ msgstr "Komandos nariai"
 #. module: sales_team
 #: model:ir.actions.act_window,name:sales_team.crm_team_salesteams_act
 msgid "Team Pipelines"
-msgstr ""
+msgstr "Komandos piltuvėliai"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__team_type
 msgid "Team Type"
-msgstr ""
+msgstr "Komandos tipas"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__color
@@ -474,16 +485,18 @@ msgid ""
 "The email address put in the 'Reply-To' of all emails sent by Odoo about "
 "cases in this Sales Team"
 msgstr ""
+"El. pašto adresas, įtraukiamas į atsakymo laukelį visiems \"Odoo\" laiškams,"
+" susijusiems su šia pardavimų komanda"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__dashboard_graph_model
 msgid "The graph this channel will display in the Dashboard.\n"
-msgstr "Šio kanalo grafikas bus rodomas skydelyje.\n"
+msgstr "Grafikas, kurį šis kanalas rodys skydelyje.\n"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__dashboard_graph_period
 msgid "The time period this channel's dashboard graph will consider."
-msgstr "Laiko tarpas,  į kurį šis kanalo grafikas atkreips dėmesį."
+msgstr "Laikotarpis,  į kurį šis kanalo grafikas atkreips dėmesį."
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__dashboard_graph_type
@@ -507,12 +520,12 @@ msgstr "Tipas"
 #: code:addons/sales_team/models/crm_team.py:178
 #, python-format
 msgid "Undefined graph model for Sales Team: %s"
-msgstr ""
+msgstr "Nenustatytas grafiko modelis pardavimų komandai: %s"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_unread
 msgid "Unread Messages"
-msgstr "Neskaityti pranešimai"
+msgstr "Neperskaitytos žinutės"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_unread_counter
@@ -526,11 +539,13 @@ msgid ""
 "Use Sales Teams to organize your sales departments.\n"
 "                    Each channel will work with a separate pipeline."
 msgstr ""
+"Savo pardavimų skyrių veiklos organizavimui naudokite pardavimų skyrius.\n"
+"Kiekvienas kanalas veiks su atskiru piltuvėliu."
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_res_users__sale_team_id
 msgid "User's Sales Team"
-msgstr ""
+msgstr "Vartotojo pardavimų komanda"
 
 #. module: sales_team
 #: model:res.groups,name:sales_team.group_sale_salesman_all_leads

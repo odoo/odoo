@@ -10,9 +10,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:18+0000\n"
+"POT-Creation-Date: 2019-01-09 10:32+0000\n"
 "PO-Revision-Date: 2018-08-24 09:34+0000\n"
 "Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2019\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
@@ -43,9 +43,16 @@ msgid "<p>Attached files : </p>"
 msgstr "<p>Prisegti failai : </p>"
 
 #. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.res_config_settings_view_form
+msgid ""
+"<span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-"
+"specific.\" groups=\"website.group_multi_website\"/>"
+msgstr ""
+
+#. module: website_form
 #: model:ir.model.fields,field_description:website_form.field_ir_model__website_form_access
 msgid "Allowed to use in forms"
-msgstr "Leista naudotis formose"
+msgstr "Leidžiama naudotis formose"
 
 #. module: website_form
 #. openerp-web
@@ -57,7 +64,7 @@ msgstr "Įvyko klaida, išsiųsti formos nepavyko."
 #. module: website_form
 #: model:ir.model.fields,help:website_form.field_ir_model_fields__website_form_blacklisted
 msgid "Blacklist this field for web forms"
-msgstr "Įtraukti šį lauką į svetainės formų juodąjį sąrašą"
+msgstr "Įtraukti į svetainės formų juodąjį sąrašą"
 
 #. module: website_form
 #: model:ir.model.fields,field_description:website_form.field_ir_model_fields__website_form_blacklisted
@@ -149,7 +156,7 @@ msgstr "Pavyko"
 #: model:ir.model.fields,field_description:website_form.field_res_config_settings__website_form_enable_metadata
 #: model:ir.model.fields,field_description:website_form.field_website__website_form_enable_metadata
 msgid "Technical data on contact form"
-msgstr ""
+msgstr "Techniniai duomenys kontaktų formoje"
 
 #. module: website_form
 #. openerp-web
@@ -162,6 +169,7 @@ msgstr "Forma buvo sėkmingai išsiųsta."
 #: model_terms:ir.ui.view,arch_db:website_form.res_config_settings_view_form
 msgid "Track metadata (IP, User Agent, ...) on your Website Forms"
 msgstr ""
+"Sekite metaduomenis (IP, vartotojo naršyklė, ir t.t.) savo svetainės formose"
 
 #. module: website_form
 #: model:ir.model,name:website_form.model_website
@@ -173,3 +181,5 @@ msgstr "Svetainė"
 #: model:ir.model.fields,help:website_form.field_website__website_form_enable_metadata
 msgid "You can choose to log technical data like IP, User Agent ,..."
 msgstr ""
+"Galite pasirinkti sekti tokius techninius duomenis, kaip IP, vartotojo "
+"naršyklė ir t.t."
