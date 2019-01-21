@@ -12,7 +12,7 @@ var _t = core._t;
 var CropImageDialog = Dialog.extend({
     template: 'wysiwyg.widgets.crop_image',
     xmlDependencies: Dialog.prototype.xmlDependencies.concat(
-        ['/web_editor/static/src/xml/editor.xml']
+        ['/web_editor/static/src/xml/wysiwyg.xml']
     ),
     jsLibs: [
         '/web_editor/static/lib/cropper/js/cropper.js',
