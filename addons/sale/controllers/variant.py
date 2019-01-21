@@ -21,8 +21,3 @@ class VariantController(http.Controller):
 
     def _get_pricelist(self, pricelist_id, pricelist_fallback=False):
         return request.env['product.pricelist'].browse(int(pricelist_id or 0))
-
-    def _get_combination_info(self, product_template_id, product_id, combination, add_qty, pricelist, **kw):
-        """deprecated, use product method"""
-        combination = request.env['product.template.attribute.value'].browse(combination)
-        return request.env['product.template'].browse(product_template_id)._get_combination_info(combination, product_id, add_qty, pricelist)

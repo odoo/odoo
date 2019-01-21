@@ -326,8 +326,6 @@ class WebsiteSale(http.Controller):
             'category': category,
             'pricelist': pricelist,
             'attrib_values': attrib_values,
-            # compute_currency deprecated, get from product
-            'compute_currency': compute_currency,
             'attrib_set': attrib_set,
             'keep': keep,
             'categories': categs,
@@ -457,9 +455,6 @@ class WebsiteSale(http.Controller):
 
         value['website_sale.cart_lines'] = request.env['ir.ui.view'].render_template("website_sale.cart_lines", {
             'website_sale_order': order,
-            # compute_currency deprecated (not used in view)
-            'compute_currency': lambda price: from_currency._convert(
-                price, to_currency, order.company_id, fields.Date.today()),
             'date': fields.Date.today(),
             'suggested_products': order._cart_accessories()
         })

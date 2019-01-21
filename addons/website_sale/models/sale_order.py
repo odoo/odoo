@@ -125,28 +125,6 @@ class SaleOrder(models.Model):
         }
 
     @api.multi
-    def _get_line_description(self, order_id, product_id, no_variant_attribute_values=None, custom_values=None):
-        """Deprecated, use `get_sale_order_line_multiline_description_sale`"""
-        order = self.sudo().browse(order_id)
-        product_context = dict(self.env.context)
-        product_context.setdefault('lang', order.partner_id.lang)
-        product = self.env['product.product'].with_context(product_context).browse(product_id)
-
-        name = product.display_name
-
-        if product.description_sale:
-            name += '\n%s' % (product.description_sale)
-
-        if no_variant_attribute_values:
-            name += ''.join(['\n%s: %s' % (attribute_value['attribute_name'], attribute_value['attribute_value_name'])
-                for attribute_value in no_variant_attribute_values])
-
-        if custom_values:
-            name += ''.join(['\n%s: %s' % (custom_value['attribute_value_name'], custom_value['custom_value']) for custom_value in custom_values])
-
-        return name
-
-    @api.multi
     def _cart_update(self, product_id=None, line_id=None, add_qty=0, set_qty=0, **kwargs):
         """ Add or set product quantity, add_qty can be negative """
         self.ensure_one()

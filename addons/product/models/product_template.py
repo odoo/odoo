@@ -677,22 +677,6 @@ class ProductTemplate(models.Model):
         return self.product_variant_ids.filtered(lambda p: p._is_variant_possible(parent_combination))
 
     @api.multi
-    def get_filtered_variants(self, reference_product=None):
-        """deprecated, use _get_possible_variants instead"""
-        self.ensure_one()
-
-        parent_combination = self.env['product.template.attribute.value']
-
-        if reference_product:
-            # append the reference_product if provided
-            parent_combination |= reference_product.product_template_attribute_value_ids
-            if reference_product.env.context.get('no_variant_attribute_values'):
-                # Add "no_variant" attribute values' exclusions
-                # They are kept in the context since they are not linked to this product variant
-                parent_combination |= reference_product.env.context.get('no_variant_attribute_values')
-        return self._get_possible_variants(parent_combination)
-
-    @api.multi
     def _get_attribute_exclusions(self, parent_combination=None, parent_name=None):
         """Return the list of attribute exclusions of a product.
 
