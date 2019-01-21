@@ -272,6 +272,17 @@ class AccountMove(models.Model):
     def open_reconcile_view(self):
         return self.line_ids.open_reconcile_view()
 
+    # FIXME: Clarify me and change me in master
+    @api.multi
+    def action_duplicate(self):
+        self.ensure_one()
+        action = self.env.ref('account.action_move_journal_line').read()[0]
+        action['target'] = 'inline'
+        action['context'] = dict(self.env.context)
+        action['context']['view_no_maturity'] = False
+        action['views'] = [(self.env.ref('account.view_move_form').id, 'form')]
+        action['res_id'] = self.copy().id
+        return action
 
 class AccountMoveLine(models.Model):
     _name = "account.move.line"
@@ -436,7 +447,7 @@ class AccountMoveLine(models.Model):
         index=True, store=True, copy=False)  # related is required
     blocked = fields.Boolean(string='No Follow-up', default=False,
         help="You can check this box to mark this journal item as a litigation with the associated partner")
-    date_maturity = fields.Date(string='Due date', index=True, required=True,
+    date_maturity = fields.Date(string='Due date', index=True, required=True, copy=False,
         help="This field is used for payable and receivable journal entries. You can put the limit date for the payment of this line.")
     date = fields.Date(related='move_id.date', string='Date', index=True, store=True, copy=False)  # related is required
     analytic_line_ids = fields.One2many('account.analytic.line', 'move_id', string='Analytic lines', oldname="analytic_lines")
