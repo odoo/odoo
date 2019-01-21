@@ -145,10 +145,10 @@ class HrPayslip(models.Model):
 class HrSalaryRule(models.Model):
     _inherit = 'hr.salary.rule'
 
-    analytic_account_id = fields.Many2one('account.analytic.account', 'Analytic Account')
-    account_tax_id = fields.Many2one('account.tax', 'Tax')
-    account_debit = fields.Many2one('account.account', 'Debit Account', domain=[('deprecated', '=', False)])
-    account_credit = fields.Many2one('account.account', 'Credit Account', domain=[('deprecated', '=', False)])
+    analytic_account_id = fields.Many2one('account.analytic.account', 'Analytic Account', company_dependent=True)
+    account_tax_id = fields.Many2one('account.tax', 'Tax', company_dependent=True)
+    account_debit = fields.Many2one('account.account', 'Debit Account', company_dependent=True, domain=[('deprecated', '=', False)])
+    account_credit = fields.Many2one('account.account', 'Credit Account', company_dependent=True, domain=[('deprecated', '=', False)])
 
 class HrContract(models.Model):
     _inherit = 'hr.contract'

@@ -46,7 +46,6 @@ class TestHrPayrollAccount(common.TransactionCase):
         self.hr_structure_softwaredeveloper = self.env['hr.payroll.structure'].create({
             'name': 'Salary Structure for Software Developer',
             'code': 'SD',
-            'company_id': self.ref('base.main_company'),
             'parent_id': self.ref('hr_payroll.structure_base'),
             'rule_ids': [(6, 0, [
                     self.ref('hr_payroll.hr_salary_rule_houserentallowance1'),
