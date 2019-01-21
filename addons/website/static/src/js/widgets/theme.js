@@ -5,7 +5,7 @@ var config = require('web.config');
 var core = require('web.core');
 var ColorpickerDialog = require('wysiwyg.widgets.ColorpickerDialog');
 var Dialog = require('web.Dialog');
-var widgets = require('wysiwyg.widgets');
+var weWidgets = require('wysiwyg.widgets');
 var websiteNavbarData = require('website.navbar');
 
 var _t = core._t;
@@ -269,7 +269,10 @@ var ThemeCustomizeDialog = Dialog.extend({
 
         var def = $.Deferred();
         var $image = $('<img/>');
-        var editor = new widgets.MediaDialog(this, {onlyImages: true, firstFilters: ['background']}, null, $image[0]);
+        var editor = new weWidgets.MediaDialog(this, {
+            onlyImages: true,
+            firstFilters: ['background'],
+        }, $image[0]);
 
         editor.on('save', this, function (media) { // TODO use scss customization instead (like for user colors)
             var src = $(media).attr('src');

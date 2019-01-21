@@ -589,12 +589,11 @@ var MetaImageSelector = Widget.extend({
         var mediaDialog = new weWidgets.MediaDialog(this, {
             onlyImages: true,
             res_model: 'ir.ui.view',
-        }, null, $image);
+        }, $image[0]);
         mediaDialog.open();
         mediaDialog.on('save', this, function (image) {
-            var src = image.attr('src');
-            self.activeMetaImg = src;
-            self.customImgUrl = src;
+            self.activeMetaImg = image.src;
+            self.customImgUrl = image.src;
             self._updateTemplateBody();
         });
     },
