@@ -3,7 +3,7 @@
 from odoo.tools import float_is_zero
 from odoo.exceptions import UserError
 
-from odoo.addons.sale_timesheet.tests.common import TestCommonSaleTimesheetNoChart
+from odoo.addons.sale_project_timesheet.tests.common import TestCommonSaleTimesheetNoChart
 
 
 class TestSaleTimesheet(TestCommonSaleTimesheetNoChart):

@@ -16,27 +16,6 @@
                            <field name="timesheet_count" widget="statinfo" string="Timesheets"/>
                        </button>
                     </xpath>
-                    <xpath expr="//button[@name='action_view_invoice']" position="before">
-                       <button type="object"
-                           name="action_view_project_ids"
-                           class="oe_stat_button"
-                           icon="fa-puzzle-piece"
-                           string="Project(s) Overview"
-                           attrs="{'invisible': [('project_ids', '=', [])]}"
-                           groups="project.group_project_manager">
-                          <field name="project_ids" invisible="1"/>
-                       </button>
-                    </xpath>
-                    <xpath expr="//button[@name='action_view_invoice']" position="before">
-                       <button type="object"
-                           name="action_view_task"
-                           class="oe_stat_button"
-                           icon="fa-tasks"
-                           attrs="{'invisible': [('tasks_count', '=', 0)]}"
-                           groups="project.group_project_user">
-                           <field name="tasks_count" widget="statinfo" string="Tasks"/>
-                       </button>
-                    </xpath>
                 </data>
            </field>
         </record>
