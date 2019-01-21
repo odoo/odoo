@@ -391,13 +391,13 @@ ColorpickerDialog.convertColorToRgba = function (color) {
     var rgba = color.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+(?:\.\d+)?))?\)$/);
     if (rgba) {
         if (rgba[4] === undefined) {
-            rgba[4] = 100;
+            rgba[4] = 1;
         }
         return {
             red: parseInt(rgba[1]),
             green: parseInt(rgba[2]),
             blue: parseInt(rgba[3]),
-            opacity: parseInt(rgba[4]),
+            opacity: Math.round(parseFloat(rgba[4]) * 100),
         };
     } else {
         return ColorpickerDialog.convertHexToRgba(color);
