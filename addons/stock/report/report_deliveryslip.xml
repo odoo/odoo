@@ -17,32 +17,22 @@
                     <h2>
                         <span t-field="o.name"/>
                     </h2>
-                    <table class="table table-sm">
-                        <thead>
-                            <tr>
-                                <th t-if="o.origin"><strong>Order</strong></th>
-                                <th name="td_sched_date_h">
-                                    <strong>Date</strong>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td t-if="o.origin">
-                                    <span t-field="o.origin"/>
-                                </td>
-                                <td name="td_sched_date">
-                                   <t t-if="o.state == 'done'">
-                                        <span t-field="o.date_done"/>
-                                   </t>
-                                   <t t-if="o.state != 'done'">
-                                        <span t-field="o.scheduled_date"/>
-                                   </t>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <table class="table table-sm mt48" t-if="o.state!='done'">
+                    <div class="row mt32 mb32">
+                        <div t-if="o.origin" class="col-auto">
+                            <strong>Order:</strong>
+                            <p t-field="o.origin"/>
+                        </div>
+                        <div t-if="o.state" class="col-auto" name="div_sched_date">
+                            <strong>Shipping Date:</strong>
+                            <t t-if="o.state == 'done'">
+                                <p t-field="o.date_done" t-options='{"widget": "date"}'/>
+                            </t>
+                            <t t-if="o.state != 'done'">
+                                <p t-field="o.scheduled_date" t-options='{"widget": "date"}'/>
+                           </t>
+                        </div>
+                    </div>
+                    <table class="table table-sm" t-if="o.state!='done'" name="stock_move_table">
                         <thead>
                             <tr>
                                 <th><strong>Product</strong></th>
@@ -68,7 +58,7 @@
                             </tr>
                         </tbody>
                     </table>
-                    <table class="table table-sm mt48" t-if="o.move_line_ids and o.state=='done'">
+                    <table class="table table-sm mt48" t-if="o.move_line_ids and o.state=='done'" name="stock_move_line_table">
                         <t t-set="has_serial_number" t-value="o.move_line_ids.mapped('lot_id')" />
                         <thead>
                             <tr>
