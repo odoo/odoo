@@ -2476,13 +2476,6 @@ var FieldRadio = FieldSelection.extend({
         });
     },
     /**
-     * @override
-     */
-    _reset: function () {
-        this._super.apply(this, arguments);
-        this._setValues();
-    },
-    /**
      * Sets the possible field values. If the field is a many2one, those values
      * may change during the lifecycle of the widget if the domain change (an
      * onchange may change the domain).
