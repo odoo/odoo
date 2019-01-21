@@ -271,6 +271,37 @@ QUnit.test('open, fold, unfold and close a document thread window', function (as
     messagingMenu.destroy();
 });
 
+QUnit.test('do not open thread window on fetch message failure', function (assert) {
+    // this may happen when the user receives a notification from a document
+    // that he does not have access rights at the moment.
+    assert.expect(4);
+
+    var messagingMenu = new MessagingMenu();
+    testUtils.addMockEnvironment(messagingMenu, {
+        services: this.services,
+        data: this.data,
+        session: this.session,
+        mockRPC: function (route, args) {
+            if (args.method === 'read' && args.model === 'some.res.model' && args.args[0][0] === 1) {
+                assert.step('some.res.model/1/read');
+                return $.Deferred().reject(); // simulate failure
+            }
+            return this._super.apply(this, arguments);
+        },
+    });
+    messagingMenu.appendTo($('#qunit-fixture'));
+
+    testUtils.dom.click(messagingMenu.$('.dropdown-toggle'));
+    assert.containsOnce(messagingMenu, '.o_mail_preview');
+
+    testUtils.dom.click(messagingMenu.$('.o_mail_preview'));
+    assert.verifySteps(['some.res.model/1/read']);
+    assert.strictEqual($('.o_thread_window').length, 0,
+        "should not have open the DocumentThread in a thread window on fetch messages failure");
+
+    messagingMenu.destroy();
+});
+
 });
 });
 });
