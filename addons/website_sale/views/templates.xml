@@ -624,7 +624,7 @@
                     <div t-foreach="filtered_sorted_variants" t-as="variant_id" class="custom-control custom-radio">
                         <t t-set="template_combination_info" t-value="product._get_combination_info(only_template=True, add_qty=add_qty, pricelist=pricelist)"/>
                         <t t-set="combination_info" t-value="variant_id._get_combination_info_variant(add_qty=add_qty, pricelist=pricelist)"/>
-                        <input type="radio" name="product_id" class="custom-control-input product_id js_product_change" t-att-checked="'checked' if variant_id_index == 0 else None" t-attf-id="radio_variant_#{variant_id.id}" t-att-value="variant_id.id" t-att-data-lst_price="combination_info['list_price']" t-att-data-price="combination_info['price']" t-att-data-combination="variant_id.product_template_attribute_value_ids.ids"/>
+                        <input type="radio" name="product_id" class="custom-control-input product_id js_product_change" t-att-checked="'checked' if variant_id_index == 0 else None" t-attf-id="radio_variant_#{variant_id.id}" t-att-value="variant_id.id" t-att-data-price="combination_info['price']" t-att-data-combination="variant_id.product_template_attribute_value_ids.ids"/>
                         <label t-attf-for="radio_variant_#{variant_id.id}" label-default="label-default" class="custom-control-label">
                             <span t-esc="combination_info['display_name']"/>
                             <t t-set="diff_price" t-value="website.currency_id.compare_amounts(combination_info['price'], template_combination_info['price'])"/>

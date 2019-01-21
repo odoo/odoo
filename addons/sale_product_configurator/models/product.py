@@ -37,7 +37,7 @@ class ProductTemplate(models.Model):
         if self.product_variant_count == 1 and not self.has_configurable_attributes:
             has_optional_products = False
             for optional_product in self.product_variant_id.optional_product_ids:
-                if optional_product.has_dynamic_attributes() or optional_product.get_filtered_variants(self.product_variant_id):
+                if optional_product.has_dynamic_attributes() or optional_product._get_possible_variants(self.product_variant_id.product_template_attribute_value_ids):
                     has_optional_products = True
                     break
 
