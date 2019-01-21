@@ -1,4 +1,4 @@
-odoo.define('sale.ProductConfiguratorMixin', function (require) {
+odoo.define('sale.VariantMixin', function (require) {
 'use strict';
 
 var core = require('web.core');
@@ -6,7 +6,7 @@ var utils = require('web.utils');
 var ajax = require('web.ajax');
 var _t = core._t;
 
-var ProductConfiguratorMixin = {
+var VariantMixin = {
     events: {
         'click .css_attribute_color input': '_onChangeColorAttribute',
         'change .main_product:not(.in_cart) input.js_quantity': 'onChangeAddQuantity',
@@ -508,8 +508,8 @@ var ProductConfiguratorMixin = {
         var $price = $parent.find(".oe_price:first .oe_currency_value");
         var $default_price = $parent.find(".oe_default_price:first .oe_currency_value");
         var $optional_price = $parent.find(".oe_optional:first .oe_currency_value");
-        $price.html(self._priceToStr(combination.price));
-        $default_price.html(self._priceToStr(combination.list_price));
+        $price.text(self._priceToStr(combination.price));
+        $default_price.text(self._priceToStr(combination.list_price));
 
         // compatibility_check to remove in master
         // needed for fix in 12.0 in the case of git pull and no server restart
@@ -563,12 +563,12 @@ var ProductConfiguratorMixin = {
         $parent
             .find('.product_display_name')
             .first()
-            .val(combination.display_name);
+            .text(combination.display_name);
 
         $parent
             .find('.js_raw_price')
             .first()
-            .html(combination.price)
+            .text(combination.price)
             .trigger('change');
 
         this.handleCustomValues($(ev.target));
@@ -652,6 +652,6 @@ var ProductConfiguratorMixin = {
     }
 };
 
-return ProductConfiguratorMixin;
+return VariantMixin;
 
 });

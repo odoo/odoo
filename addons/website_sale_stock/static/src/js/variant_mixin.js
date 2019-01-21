@@ -1,7 +1,7 @@
-odoo.define('website_sale_stock.ProductConfiguratorMixin', function (require) {
+odoo.define('website_sale_stock.VariantMixin', function (require) {
 'use strict';
 
-var ProductConfiguratorMixin = require('sale.ProductConfiguratorMixin');
+var VariantMixin = require('sale.VariantMixin');
 var publicWidget = require('web.public.widget');
 var ajax = require('web.ajax');
 var core = require('web.core');
@@ -12,7 +12,7 @@ var xml_load = ajax.loadXML(
 );
 
 /**
- * Addition to the product_configurator_mixin._onChangeCombination
+ * Addition to the variant_mixin._onChangeCombination
  *
  * This will prevent the user from selecting a quantity that is not available in the
  * stock for that product.
@@ -26,7 +26,7 @@ var xml_load = ajax.loadXML(
  * @param {$.Element} $parent
  * @param {Array} combination
  */
-ProductConfiguratorMixin._onChangeCombinationStock = function (ev, $parent, combination) {
+VariantMixin._onChangeCombinationStock = function (ev, $parent, combination) {
     var product_id = 0;
     // needed for list view of variants
     if ($parent.find('input.product_id:checked').length) {
@@ -82,10 +82,10 @@ publicWidget.registry.WebsiteSale.include({
      */
     _onChangeCombination: function (){
         this._super.apply(this, arguments);
-        ProductConfiguratorMixin._onChangeCombinationStock.apply(this, arguments);
+        VariantMixin._onChangeCombinationStock.apply(this, arguments);
     }
 });
 
-return ProductConfiguratorMixin;
+return VariantMixin;
 
 });
