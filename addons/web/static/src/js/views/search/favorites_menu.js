@@ -198,7 +198,7 @@ return Widget.extend({
                 get_context: function () {
                     var filterContext = filter.context;
                     if (typeof filter.context === 'string') {
-                        filterContext = pyeval.eval('context', filter.context);
+                        filterContext = pyUtils.eval('context', filter.context);
                     }
                     var sortParsed = JSON.parse(filter.sort || "[]");
                     var orderedBy = [];
