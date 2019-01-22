@@ -65,6 +65,19 @@ class TestBasic(TransactionCase):
         with self.assertRaises(AssertionError):
             f.f2 = 42
 
+    def test_readonly_save(self):
+        """ Should not save readonly fields unless they're force_save
+        """
+        f = Form(self.env['test_testing_utilities.a'], view='test_testing_utilities.non_normalized_attrs')
+
+        f.f1 = 1
+        f.f2 = 987
+        self.assertEqual(f.f5, 987)
+        self.assertEqual(f.f6, 987)
+        r = f.save()
+        self.assertEqual(r.f5, 0)
+        self.assertEqual(r.f6, 987)
+
     def test_attrs(self):
         """ Checks that attrs/modifiers with non-normalized domains work
         """
