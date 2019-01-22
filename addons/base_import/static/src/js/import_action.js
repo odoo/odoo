@@ -434,7 +434,7 @@ var DataImport = AbstractAction.extend({
 
             var $columnHeader = self.$('.oe_import_grid-header .oe_import_grid-cell:eq(' + k + ') .o_import_header_name');
             var $translateNode = $(QWeb.render('ImportView.translate')).insertAfter($columnHeader);
-            bind_translation_icon = function (data) {
+            var bindTranslationIcon = function (data) {
                 $translateNode.toggleClass('d-none', !data.translate)
                     .attr('data-field', data.id)
                     .attr('data-lang', '')
@@ -454,13 +454,14 @@ var DataImport = AbstractAction.extend({
 
                     var data = item_finder(default_value);
                     bind(data);
+                    bindTranslationIcon(data);
                     callback(data);
                 },
                 placeholder: _t('Don\'t import'),
                 width: 'resolve',
                 dropdownCssClass: 'oe_import_selector'
             }).on('change', function (e) {
-                bind_translation_icon(item_finder(e.currentTarget.value));
+                bindTranslationIcon(item_finder(e.currentTarget.value));
             });
         });
     },
