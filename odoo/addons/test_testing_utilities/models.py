@@ -10,10 +10,14 @@ class A(models.Model):
     f2 = fields.Integer(default=42)
     f3 = fields.Integer()
     f4 = fields.Integer(compute='_compute_f4')
+    f5 = fields.Integer()
+    f6 = fields.Integer()
 
     @api.onchange('f2')
     def _on_change_f2(self):
         self.f3 = int(self.f2 / 2)
+        self.f5 = self.f2
+        self.f6 = self.f2
 
     @api.depends('f1', 'f2')
     def _compute_f4(self):
