@@ -69,10 +69,12 @@ class MailActivityType(models.Model):
         domain="['|', ('res_model_id', '=', False), ('res_model_id', '=', res_model_id)]",
         string='Preceding Activities')
     category = fields.Selection([
-        ('default', 'Standard'), ('upload_file', 'Upload Document')
-    ], default='default', string='Category',
-        help='Categories may trigger specific behavior like opening calendar view or automatically mark as done when a document is uploaded')
+        ('default', 'None'), ('upload_file', 'Upload Document')
+    ], default='default', string='Action to Perform',
+        help='Actions may trigger specific behavior like opening calendar view or automatically mark as done when a document is uploaded')
     mail_template_ids = fields.Many2many('mail.template', string='Email templates')
+    default_user_id = fields.Many2one("res.users", string="Default User")
+    default_description = fields.Html(string="Default Description", translate=True)
 
     #Fields for display purpose only
     initial_res_model_id = fields.Many2one('ir.model', 'Initial model', compute="_compute_initial_res_model_id", store=False,
@@ -216,6 +218,8 @@ class MailActivity(models.Model):
             if self.activity_type_id.delay_from == 'previous_activity' and 'activity_previous_deadline' in self.env.context:
                 base = fields.Date.from_string(self.env.context.get('activity_previous_deadline'))
             self.date_deadline = base + relativedelta(**{self.activity_type_id.delay_unit: self.activity_type_id.delay_count})
+            self.user_id = self.activity_type_id.default_user_id or self.env.user
+            self.note = self.activity_type_id.default_description
 
     @api.onchange('recommended_activity_type_id')
     def _onchange_recommended_activity_type_id(self):
@@ -706,10 +710,11 @@ class MailActivityMixin(models.AbstractModel):
                 'activity_type_id': activity_type.id,
                 'summary': summary or activity_type.summary,
                 'automated': True,
-                'note': note,
+                'note': note or activity_type.default_description,
                 'date_deadline': date_deadline,
                 'res_model_id': model_id,
                 'res_id': record.id,
+                'user_id': act_values.get('user_id') or activity_type.default_user_id.id or self.env.uid
             }
             create_vals.update(act_values)
             activities |= self.env['mail.activity'].create(create_vals)
