@@ -5,13 +5,13 @@ var ajax = require('web.ajax');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var Widget = require('web.Widget');
-var weContext = require('web_editor.context');
+var wContext = require('website.context');
 var WysiwygTranslate = require('web_editor.wysiwyg.multizone.translate');
 
 var qweb = core.qweb;
 var _t = core._t;
 
-if (!weContext.getExtra().edit_translations) {
+if (!wContext.getExtra().edit_translations) {
     // Temporary hack until the editor bar is moved to the web client
     return;
 }
@@ -27,7 +27,7 @@ WysiwygTranslate.include({
         var def = this._super.apply(this, arguments);
 
         var gengo_langs = ["ar_SY","id_ID","nl_NL","fr_CA","pl_PL","zh_TW","sv_SE","ko_KR","pt_PT","en_US","ja_JP","es_ES","zh_CN","de_DE","fr_FR","fr_BE","ru_RU","it_IT","pt_BR","pt_BR","th_TH","nb_NO","ro_RO","tr_TR","bg_BG","da_DK","en_GB","el_GR","vi_VN","he_IL","hu_HU","fi_FI"];
-        if (gengo_langs.indexOf(weContext.get().lang) >= 0) {
+        if (gengo_langs.indexOf(wContext.get().lang) >= 0) {
             this.$('.gengo_post,.gengo_wait,.gengo_inprogress,.gengo_info').remove();
             this.$('button[data-action=save]')
                 .after(qweb.render('website.ButtonGengoTranslator'));
@@ -76,7 +76,7 @@ WysiwygTranslate.include({
                     });
                     ajax.jsonRpc('/website_gengo/set_translations', 'call', {
                         'data': trans,
-                        'lang': weContext.get().lang,
+                        'lang': wContext.get().lang,
                     }).then(function () {
                         ajax.jsonRpc('/website/post_gengo_jobs', 'call', {});
                         self._save();
@@ -100,7 +100,7 @@ WysiwygTranslate.include({
         });
         ajax.jsonRpc('/website/get_translated_length', 'call', {
             'translated_ids': translated_ids,
-            'lang': weContext.get().lang,
+            'lang': wContext.get().lang,
         }).done(function (res){
             var dialog = new GengoTranslatorStatisticDialog(res);
             dialog.appendTo($(document.body));

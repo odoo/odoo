@@ -2,7 +2,7 @@ odoo.define('website.editMenu', function (require) {
 'use strict';
 
 var core = require('web.core');
-var weContext = require('web_editor.context');
+var wContext = require('website.context');
 var EditorMenu = require('website.editor.menu');
 var websiteNavbarData = require('website.navbar');
 
@@ -31,7 +31,7 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
      */
     init: function () {
         this._super.apply(this, arguments);
-        this._editorAutoStart = (weContext.getExtra().editable && window.location.search.indexOf('enable_editor') >= 0);
+        this._editorAutoStart = (wContext.getExtra().editable && window.location.search.indexOf('enable_editor') >= 0);
     },
     /**
      * Auto-starts the editor if necessary or add the welcome message otherwise.

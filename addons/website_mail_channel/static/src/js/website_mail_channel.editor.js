@@ -3,7 +3,7 @@ odoo.define('website_mail_channel.editor', function (require) {
 
 var core = require('web.core');
 var rpc = require('web.rpc');
-var weContext = require('web_editor.context');
+var wContext = require('website.context');
 var options = require('web_editor.snippets.options');
 var wUtils = require('website.utils');
 
@@ -21,7 +21,7 @@ options.registry.subscribe = options.Class.extend({
                         model: 'mail.channel',
                         method: 'name_search',
                         args: ['', [['public','=','public']]],
-                        context: weContext.get(), // TODO use this._rpc
+                        context: wContext.get(), // TODO use this._rpc
                     });
             },
         }).then(function (mail_channel_id) {
