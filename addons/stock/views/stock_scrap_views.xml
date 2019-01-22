@@ -53,15 +53,16 @@
                                 </div>
                             </group>
                             <group>
-                                <field name="lot_id" attrs="{'invisible': [('tracking', '=', 'none')], 'required': [('tracking', '!=', 'none')]}" groups="stock.group_production_lot"/>
+                                <field name="lot_id" attrs="{'invisible': [('tracking', 'in', ['none', False])], 'required': [('tracking', '!=', 'none')]}" groups="stock.group_production_lot"/>
                                 <field name="tracking" invisible="1"/>
                                 <field name="package_id" groups="stock.group_tracking_lot"/>
                                 <field name="owner_id" groups="stock.group_tracking_owner"/>
                                 <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>
                                 <field name="scrap_location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>
                                 <field name="origin"/>
-                                <field name="date_expected"/>
+                                <field name="date_expected" attrs="{'readonly': [('state', '=', 'done')]}"/>
                                 <field name="picking_id" attrs="{'invisible': [('picking_id', '=', False)]}"/>
+                                <field name="company_id" groups="base.group_multi_company"/>
                             </group>
                         </group>
                     </sheet>
@@ -121,6 +122,7 @@
                     <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>
                     <field name="scrap_location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>
                     <field name="state"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
             </field>
         </record>
@@ -162,6 +164,7 @@
                             <field name="lot_id" attrs="{'invisible': [('tracking', '=', 'none')], 'required': [('tracking', '!=', 'none')]}" groups="stock.group_production_lot"/>
                             <field name="package_id" groups="stock.group_tracking_lot"/>
                             <field name="owner_id" groups="stock.group_tracking_owner"/>
+                            <field name="company_id" invisible="1"/>
                             <field name="location_id" groups="stock.group_stock_multi_locations" options="{'no_open': True, 'no_create': True}"/>
                             <field name="scrap_location_id" groups="stock.group_stock_multi_locations" options="{'no_open': True, 'no_create': True}" />
                         </group>

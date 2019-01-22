@@ -25,6 +25,7 @@ class StockScrap(models.Model):
         'Reference',  default=lambda self: _('New'),
         copy=False, readonly=True, required=True,
         states={'done': [('readonly', True)]})
+    company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company, required=True, readonly=True)
     origin = fields.Char(string='Source Document')
     product_id = fields.Many2one(
         'product.product', 'Product', domain=[('type', 'in', ['product', 'consu'])],
@@ -39,16 +40,17 @@ class StockScrap(models.Model):
         states={'done': [('readonly', True)]}, domain="[('product_id', '=', product_id)]")
     package_id = fields.Many2one(
         'stock.quant.package', 'Package',
-        states={'done': [('readonly', True)]})
+        states={'done': [('readonly', True)]},
+        domain="[('company_id', '=', company_id)]")
     owner_id = fields.Many2one('res.partner', 'Owner', states={'done': [('readonly', True)]})
     move_id = fields.Many2one('stock.move', 'Scrap Move', readonly=True)
-    picking_id = fields.Many2one('stock.picking', 'Picking', states={'done': [('readonly', True)]})
+    picking_id = fields.Many2one('stock.picking', 'Picking', states={'done': [('readonly', True)]}, domain="[('company_id', '=', company_id)]")
     location_id = fields.Many2one(
-        'stock.location', 'Location', domain="[('usage', '=', 'internal')]",
+        'stock.location', 'Location', domain="[('usage', '=', 'internal'), ('company_id', 'in', [company_id, False])]",
         required=True, states={'done': [('readonly', True)]}, default=_get_default_location_id)
     scrap_location_id = fields.Many2one(
         'stock.location', 'Scrap Location', default=_get_default_scrap_location_id,
-        domain="[('scrap_location', '=', True)]", required=True, states={'done': [('readonly', True)]})
+        domain="[('scrap_location', '=', True), ('company_id', 'in', [company_id, False])]", required=True, states={'done': [('readonly', True)]})
     scrap_qty = fields.Float('Quantity', default=1.0, required=True, states={'done': [('readonly', True)]})
     state = fields.Selection([
         ('draft', 'Draft'),
@@ -93,6 +95,7 @@ class StockScrap(models.Model):
         return {
             'name': self.name,
             'origin': self.origin or self.picking_id.name or self.name,
+            'company_id': self.company_id.id,
             'product_id': self.product_id.id,
             'product_uom': self.product_uom_id.id,
             'product_uom_qty': self.scrap_qty,
