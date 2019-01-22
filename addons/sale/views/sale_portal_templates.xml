@@ -135,7 +135,7 @@
                                 <a t-if="sale_order.has_to_be_signed(True)" role="button" class="btn btn-primary btn-block mb8" data-toggle="modal" data-target="#modalaccept" href="#">
                                     <i class="fa fa-check"/><t t-if="sale_order.has_to_be_paid(True)"> Sign &amp; Pay</t><t t-else=""> Accept &amp; Sign</t>
                                 </a>
-                                <a t-elif="sale_order.has_to_be_paid(True)" role="button" id="o_sale_portal_paynow" class="btn btn-primary btn-block mb8" data-toggle="modal" data-target="#modalaccept" href="#">
+                                <a t-elif="sale_order.has_to_be_paid(True)" role="button" id="o_sale_portal_paynow" data-toggle="modal" data-target="#modalaccept" href="#" t-att-class="'btn-block mb8 %s' % ('btn btn-light' if sale_order.transaction_ids else 'btn btn-primary')" >
                                     <i class="fa fa-check"/> <t t-if="not sale_order.signature">Accept &amp; Pay</t><t t-else="">Pay now</t>
                                 </a>
                                 <div class="o_download_pdf btn-toolbar flex-sm-nowrap">
@@ -330,7 +330,7 @@
                             </div>
                         </t>
                         <div t-elif="sale_order.has_to_be_paid(True)" class="col-sm-auto mt8">
-                            <a role="button" class="btn btn-primary" data-toggle="modal" data-target="#modalaccept" href="#">
+                            <a role="button" data-toggle="modal" data-target="#modalaccept" href="#" t-att-class="'%s' % ('btn btn-light' if sale_order.transaction_ids else 'btn btn-primary')">
                                 <i class="fa fa-check"/> <t t-if="not sale_order.signature">Accept &amp; Pay</t><t t-else="">Pay now</t>
                             </a>
                         </div>
@@ -373,21 +373,23 @@
                         </t>
                     </t>
                 </div>
-                <div class="mb-3">
-                    <strong>Date:</strong> <span t-field="sale_order.create_date" t-options='{"widget": "date"}'/>
-                </div>
-                <div class="mb-3" t-if="sale_order.validity_date">
-                    <strong>Expiration Date:</strong> <span t-field="sale_order.validity_date" t-options='{"widget": "date"}'/>
+                <div class="row" id="so_date">
+                    <div class="mb-3 col-6">
+                        <strong>Date:</strong> <span t-field="sale_order.create_date" t-options='{"widget": "date"}'/>
+                    </div>
+                    <div class="mb-3 col-6" t-if="sale_order.validity_date">
+                        <strong>Expiration Date:</strong> <span t-field="sale_order.validity_date" t-options='{"widget": "date"}'/>
+                    </div>
                 </div>
                 <div class="row">
                     <div class="col-lg-6">
-                        <strong t-if="sale_order.partner_shipping_id == sale_order.partner_invoice_id" class="d-block mb-1">Invoicing and Shipping Address</strong>
-                        <strong t-if="sale_order.partner_shipping_id != sale_order.partner_invoice_id" class="d-block mb-1">Invoicing Address</strong>
+                        <strong t-if="sale_order.partner_shipping_id == sale_order.partner_invoice_id" class="d-block mb-1">Invoicing and Shipping Address:</strong>
+                        <strong t-if="sale_order.partner_shipping_id != sale_order.partner_invoice_id" class="d-block mb-1">Invoicing Address:</strong>
                         <address t-field="sale_order.partner_invoice_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
                     </div>
                      <t t-if="sale_order.partner_shipping_id != sale_order.partner_invoice_id">
                         <div id="shipping_address" class="col-lg-6">
-                            <strong class="d-block mb-1">Shipping Address</strong>
+                            <strong class="d-block mb-1">Shipping Address:</strong>
                             <address t-field="sale_order.partner_shipping_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
                         </div>
                     </t>
@@ -417,7 +419,7 @@
             </div>
 
             <section id="details" style="page-break-inside: auto;" class="mt32">
-                <h3 id="details">Details</h3>
+                <h3 id="details">Pricing</h3>
 
                 <t t-set="display_discount" t-value="True in [line.discount > 0 for line in sale_order.order_line]"/>
 
@@ -468,7 +470,7 @@
                                     </td>
                                     <td t-if="display_discount" t-attf-class="text-right {{ 'd-none d-sm-table-cell' if report_type == 'html' else '' }}">
                                         <strong t-if="line.discount &gt; 0" class="text-info">
-                                            <t t-esc="((line.discount % 1) and '%s' or '%d') % line.discount"/>% discount
+                                            <t t-esc="((line.discount % 1) and '%s' or '%d') % line.discount"/>%
                                         </strong>
                                     </td>
                                     <td t-attf-class="text-right {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
@@ -577,6 +579,12 @@
                 <h3 class="">Terms &amp; Conditions</h3>
                 <hr class="mt-0 mb-1"/>
                 <em t-field="sale_order.note"/>
+            </section>
+
+            <section class="mt-5" t-if="sale_order.payment_term_id">
+                <h3 class="">Payment terms</h3>
+                <hr class="mt-0 mb-1"/>
+                <span t-field="sale_order.payment_term_id"/>
             </section>
         </div>
     </template>
