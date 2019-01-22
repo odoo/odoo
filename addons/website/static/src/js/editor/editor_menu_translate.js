@@ -5,7 +5,7 @@ require('web_editor.ready');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var localStorage = require('web.local_storage');
-var weContext = require('web_editor.context');
+var wContext = require('website.context');
 var WysiwygTranslate = require('web_editor.wysiwyg.multizone.translate');
 var EditorMenu = require('website.editor.menu');
 
@@ -96,7 +96,7 @@ var TranslatorMenu = EditorMenu.extend({
      * @private
      */
     _wysiwygInstance: function () {
-    	return new WysiwygTranslate(this, {lang: lang || weContext.get().lang});
+        return new WysiwygTranslate(this, {lang: lang || wContext.get().lang});
     },
 });
 

@@ -1,10 +1,11 @@
-odoo.define('web_editor.context', function (require) {
+odoo.define('website.context', function (require) {
 'use strict';
 
 function getContext(context) {
     var html = document.documentElement;
     return _.extend({
         lang: (html.getAttribute('lang') || 'en_US').replace('-', '_'),
+        website_id: html.getAttribute('data-website-id') | 0,
     }, context || {});
 }
 
