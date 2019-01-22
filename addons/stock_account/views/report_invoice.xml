@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="stock_account_report_invoice_document" inherit_id="account.report_invoice_document">
+            <xpath expr="//table[@name='invoice_line_table']/thead/tr/th[3]" position="after">
+                <th groups="stock_account.group_lot_on_invoice" class="text-right">
+                    <span>SN/LN</span>
+                </th>
+            </xpath>
+            <xpath expr="//table[@name='invoice_line_table']/tbody//td[3]" position="after">
+                <td groups="stock_account.group_lot_on_invoice" class="text-right">
+                    <t t-set="lot_quantities" t-value="line._get_moved_quantity_per_lot()"/>
+                    <t t-if="line.product_id.tracking == 'lot'"
+                        t-esc="', '.join(['%s (%s)' % (lot_name, quantity) for lot_name, quantity in lot_quantities.items()])"/>
+                    <t t-else=""
+                        t-esc="', '.join(lot_quantities.keys())"/>
+                </td>
+            </xpath>
+        </template>
+    </data>
+</odoo>

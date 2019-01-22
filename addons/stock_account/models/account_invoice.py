@@ -92,6 +92,30 @@ class AccountInvoice(models.Model):
 class AccountInvoiceLine(models.Model):
     _inherit = "account.invoice.line"
 
+    def _get_last_step_stock_move_lines(self):
+        """ To be overridden for customer invoices in order to return the stock
+        moves related to the current invoice line.
+        """
+        return self.env['stock.move.line']
+
+    def _get_moved_quantity_per_lot(self):
+        """ Returns a dict containing pairs of lot names and quantities for all
+        lots corresponding to the current invoice line.
+        """
+        lot_quantities = {}
+        uninvoiced_move_lines = self._get_last_step_stock_move_lines()
+        for move_line in uninvoiced_move_lines:
+            quantity = -move_line.qty_done if self.invoice_id.type == 'out_invoice' and move_line.location_id.usage == 'customer' else move_line.qty_done
+            if lot_quantities.get(move_line.lot_id.name, False):
+                lot_quantities[move_line.lot_id.name] += quantity
+            else:
+                lot_quantities[move_line.lot_id.name] = quantity
+        if self.user_has_groups('uom.group_uom'):
+            lot_quantities = {k: '%s %s' % (v, self.uom_id.name) for k, v in lot_quantities.items() if v > 0}
+        else:
+            lot_quantities = {k: v for k, v in lot_quantities.items() if v > 0}
+        return lot_quantities
+
     def _get_anglo_saxon_price_unit(self):
         self.ensure_one()
         if not self.product_id:

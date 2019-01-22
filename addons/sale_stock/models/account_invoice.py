@@ -46,3 +46,13 @@ class AccountInvoiceLine(models.Model):
 
     def _compute_average_price(self, qty_done, quantity, moves):
         return self.env['product.product']._compute_average_price(qty_done, quantity, moves)
+
+    def _get_last_step_stock_move_lines(self):
+        """ Overridden from stock_account.
+        Returns the stock moves associated to this invoice line. """
+        rslt = super(AccountInvoiceLine, self)._get_last_step_stock_move_lines()
+        move_lines = self.mapped('sale_line_ids.move_ids.move_line_ids').filtered(lambda ml: ml.state == 'done' and ml.date <= self.create_date)
+        previous_invoices = self.env['account.invoice'].search([('create_date', '<', self.create_date)], order="create_date asc")
+        if previous_invoices:
+            move_lines = move_lines.filtered(lambda ml: ml.date > previous_invoices[-1].create_date)
+        return rslt + move_lines
