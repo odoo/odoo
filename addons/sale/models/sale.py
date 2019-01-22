@@ -463,7 +463,7 @@ class SaleOrder(models.Model):
             order.state = 'sale'
             order.confirmation_date = fields.Datetime.now()
             if self.env.context.get('send_email'):
-                self.force_quotation_send()
+                order.force_quotation_send()
             order.order_line._action_procurement_create()
         if self.env['ir.values'].get_default('sale.config.settings', 'auto_done_setting'):
             self.action_done()
