@@ -5,7 +5,6 @@
 # Translators:
 # Davide Corio <enlightx@gmail.com>, 2018
 # Alessandro Camilli <alessandrocamilli@openforce.it>, 2018
-# mymage <stefano.consolaro@mymage.it>, 2018
 # Alex Siviero <dolanblu@gmail.com>, 2018
 # Luca Tralli, 2018
 # Niccolò Lubello <nlubello@gmail.com>, 2018
@@ -30,19 +29,20 @@
 # efraimbiffi <eab@odoo.com>, 2018
 # mbo_odoo <mbo@odoo.com>, 2018
 # Simone Bernini <simone@aperturelabs.it>, 2018
+# Paolo Valier, 2018
 # Léonie Bouchat <lbo@odoo.com>, 2018
 # Martin Trigaux, 2018
-# Paolo Valier, 2018
-# Sergio Zanchetta <primes2h@gmail.com>, 2019
 # Lorenzo Battistini <lorenzo.battistini@agilebg.com>, 2019
+# Sergio Zanchetta <primes2h@gmail.com>, 2019
+# mymage <stefano.consolaro@mymage.it>, 2019
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-12-19 08:47+0000\n"
+"POT-Creation-Date: 2019-01-09 10:38+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
-"Last-Translator: Lorenzo Battistini <lorenzo.battistini@agilebg.com>, 2019\n"
+"Last-Translator: mymage <stefano.consolaro@mymage.it>, 2019\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -7387,6 +7387,40 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model_terms:ir.ui.view,arch_db:base.view_res_company_kanban
+msgid ""
+"<i class=\"fa fa-building\" role=\"img\" aria-label=\"Enterprise\" "
+"title=\"Enterprise\"/>"
+msgstr ""
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.view_res_users_kanban
+msgid "<i class=\"fa fa-circle\" role=\"img\" aria-label=\"Invalid\" title=\"Invalid\"/>"
+msgstr ""
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.view_res_users_kanban
+msgid "<i class=\"fa fa-circle\" role=\"img\" aria-label=\"Ok\" title=\"Ok\"/>"
+msgstr ""
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.view_res_users_kanban
+msgid "<i class=\"fa fa-envelope\" role=\"img\" aria-label=\"Login\"/>"
+msgstr ""
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.view_rule_form
+msgid ""
+"<i class=\"fa fa-info fa-3x text-info float-left\" role=\"img\" aria-"
+"label=\"Info\" title=\"Info\"/>"
+msgstr ""
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.onboarding_container
+msgid "<i class=\"fa fa-times\" title=\"Close the onboarding panel\"/>"
+msgstr ""
+
+#. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_container
 msgid "<span aria-label=\"Close\">&amp;times;</span>"
 msgstr "<span aria-label=\"Close\">&amp;times;</span>"
@@ -7436,6 +7470,13 @@ msgid ""
 msgstr ""
 "<span class=\"o_form_label\">Suggeriamo di ricaricare la scheda Menu per "
 "vedere i nuovi menu (CTRL+T poi CTRL+R).\"</span>"
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.res_config_settings_view_form
+msgid ""
+"<span class=\"searchIcon\"><i class=\"fa fa-search\" role=\"img\" aria-"
+"label=\"Search\" title=\"Search\"/></span>"
+msgstr ""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
@@ -7785,6 +7826,148 @@ msgid ""
 "<button name=\"validate\" type=\"object\" barcode_trigger=\"validate\"/> will be triggered when a barcode containing\n"
 "\"O-BTN.validate\" is scanned.\n"
 msgstr ""
+"==============================\n"
+"Documentazione modulo codice a barre\n"
+"==============================\n"
+"\n"
+"Questo modulo fornisce la logica della codifica del codice a barre e le utilità di scansione lato cliente.\n"
+"\n"
+"\n"
+"Codifica codici a barre\n"
+"==============================\n"
+"\n"
+"Il modulo definisce le nomenclature del codie a barre le cui regole identificano tipi specifici\n"
+"di oggetti come prodotti, località. Contiene le seguenti funzionalità:\n"
+"\n"
+"- Schemi per identificare codici a barre che contengono un valore numerico (es. peso, prezzo)\n"
+"- Definizione di alias dei codici che consentono di identificare lo stesso prodotto con diversi codici a barre\n"
+"- Illimitato numero di schemi e definizioni di codici a barre,\n"
+"- Supporto per le codifiche EAN-13, EAN-8 e UPC-A\n"
+"\n"
+"Codifiche codice a barre\n"
+"-----------------\n"
+"\n"
+"Un codice a barre è una sequenza di lunghezza arbitraria di caratteri ASCII. Un codice EAN-13 è un codice a barre di 13 cifre,\n"
+"la cui tredicesima cifra è il checksum. \n"
+"\n"
+"Codici a barre semplici e regole\n"
+"-------------------------\n"
+"\n"
+"La nomenclatura standard prevede un codice EAN-13 per i codici a barre dei prodotti. Definisce una regola \n"
+"per i \"prodotti unità\" la cui codifica è EAN-13, e il cui schema è '.', es. ogni codice a barre \n"
+"soddisfa questo schema. Acquisire il codice a barre di un prodotto, es. '5410013101703', soddisfa questa regola. \n"
+"L'oggetto acquisito viene quindi identificato come un \"prodotto unità\", e viene recuperato dalla tabella dei prodotti.\n"
+"\n"
+"Nota: il carattere speciale '.' negli schemi corrisponde a qualsiasi carattere. Per utilizzare esplicitamente \n"
+"il carattere '.' in uno schema, anteporre (escape) il crattere '\\'. Anche il carattere '\\' deve essere gestito con l'escape\n"
+"('\\\\') per essere utilizzato esplicitamente.\n"
+"\n"
+"Supponiamo di identificare altri oggetti con i codici a barre, diciamo ubicazioni di magazzino. Definiamo una\n"
+"nuova regola nella nomenclatura con il tipo corrispondente (nel nostro esempio, il tipo è 'Ubicazione'),\n"
+"e il cui schema è ad esempio '414.', ovvero, ogni codice a barre di ubicazione inizia con '414'. Acquisendo un codice a barre\n"
+"ubicazione, es. '41401', soddisfa la regola Ubicazione, e la corrispondente ubicazione è ottenuta dalla \n"
+"tabella delle ubicazioni.\n"
+"\n"
+"Nota: la regole hanno un campo sequenza che indica l'ordine in cui le regole vengono valutate (ASC). Nel nostro \n"
+"esempio precedente, la regola Prodotto unità deve avere una sequenza superiore alla regola Ubicazione, \n"
+"perché vogliamo che la seconda sia valutata per prima.\n"
+"\n"
+"Codici a barre con contenuto numerico\n"
+"--------------------------------\n"
+"\n"
+"Barcodes may encode numerical content, which is decoded by the barcodes module. To that purpose,\n"
+"one have to define a new rule for barcodes with numerical content (e.g. barcodes for Weighted \n"
+"Products). The numerical content in a pattern is specified between braces (special characters '{' and \n"
+"'}'). The content of the braces must be a sequence of 'N's (representing the whole part of the numerical \n"
+"content) followed by a sequence of 'D's (representing the decimal part of the numerical content). \n"
+"For instance, let us define a new rule for Weighted Products whose pattern is '21.....{NNDDD}.'. Since\n"
+"we assume EAN-13 encoding for product barcodes, the encoding of this rule should be EAN-13 as well.\n"
+"\n"
+"Let us now assume that we want to write a barcode for a given Weighted Product, say oranges. We first \n"
+"have to define in product oranges a barcode that will match the Weighted Product rule. This barcode \n"
+"must start with '21' and be a correct EAN-13 barcode (i.e. the 13th digit must be a correct checksum). \n"
+"Moreover, all the numerical content must be set to a '0'. For instance, let us set the barcode to \n"
+"'2100001000004'. \n"
+"\n"
+"We now want to write a barcode for 2.75kg of oranges. This barcode should be '2100001027506' (the \n"
+"numerical content of this barcode is '02750', and the correct checksum is '6'). When scanned, this \n"
+"barcode matches the Weighted Product rule (since is starts with '21'). The numerical content is extracted, \n"
+"and replaced by a sequence of '0's. The correct checksum is then computed for the obtained barcode \n"
+"('2100001000004') and the corresponding product (oranges) is retrieved from product table.\n"
+"\n"
+"Note: the special characters '{' and '}' in patterns are used to identify numerical content. To \n"
+"explicitely specify '{' or '}' in a pattern, they must be escaped.\n"
+"\n"
+"\n"
+"Strict EAN-13 field of barcode nomenclatures\n"
+"--------------------------------------------\n"
+"\n"
+"Many barcode scanners strip the leading zero when scanning EAN-13 barcodes. Barcode nomenclatures\n"
+"have a boolean field \"Use strict EAN13\". If False, when trying to match a scanned barcode with\n"
+"a rule whose encoding is EAN-13, if the barcode is of length 12 and, by prepending it by a 0,\n"
+"the last digit is the correct checksum, we automatically prepend the barcode by 0 and try to\n"
+"find a match with this new barcode. If \"Use strict EAN13\" is set to True, we look for a pattern\n"
+"matching the original, 12-digit long, barcode.\n"
+"\n"
+"\n"
+"\n"
+"Barcodes scanning\n"
+"==============================\n"
+"\n"
+"Scanning\n"
+"--------\n"
+"\n"
+"Use a USB scanner (that mimics keyboard inputs) in order to work with barcodes in Odoo.\n"
+"The scanner must be configured to use no prefix and a carriage return or tab as suffix.\n"
+"The delay between each character input must be less than or equal to 50 milliseconds.\n"
+"Most barcode scanners will work out of the box.\n"
+"However, make sure the scanner uses the same keyboard layout as the device it's plugged in.\n"
+"Either by setting the device's keyboard layout to US QWERTY (default value for most readers)\n"
+"or by changing the scanner's keyboard layout (check the manual).\n"
+"\n"
+"\n"
+"Barcode events\n"
+"------------------------------\n"
+"\n"
+"When the module barcodes is installed, it instanciate a singleton of the javascript class BarcodeEvents.\n"
+"The purpose of this component is to listen to keypresses to detect barcodes, then dispatch those barcodes\n"
+"on core.bus inside a 'barcode_event'.\n"
+"All keypress events are buffered until there is no more keypress during 50ms or a carriage return / tab is\n"
+"inputted (because most barcode scanners use this as a suffix).\n"
+"If the buffered keys looks like a barcode, an event is triggered :\n"
+"core.bus.trigger('barcode_scanned', barcode);\n"
+"Otherwise, the keypresses are 'resent'. However, for security reasons, a keypress event programmatically\n"
+"crafted doesn't trigger native browser behaviors. For this reason, BarcodeEvents doesn't intercept keypresses\n"
+"whose target is an editable element (eg. input) or when ctrl/cmd/alt is pushed.\n"
+"To catch keypresses targetting an editable element, it must have the attribute barcode_events=\"true\".\n"
+"\n"
+"\n"
+"Barcode handlers\n"
+"------------------------------\n"
+"\n"
+"To keep the web client consistent, components that want to listen to barcode events should include BarcodeHandlerMixin.\n"
+"It requires method on_barcode_scanned(barcode) to be implemented and exposes methods start_listening and stop_listening\n"
+"As long as it is the descendant of a View managed by a ViewManager is only listens while the view is attached.\n"
+"\n"
+"\n"
+"Form view barcode handler\n"
+"------------------------------\n"
+"\n"
+"It is possible for a form view to listen to barcode events, handle them client side and/or server-side.\n"
+"When the barcode is handled server-side, it works like an onchange. The relevant model must include the\n"
+"BarcodeEventsMixin and redefine method on_barcode_scanned. This method receives the barcode scanned and\n"
+"the `self` is a pseudo-record representing the content of the form view, just like in @api.onchange methods.\n"
+"Barcodes prefixed with 'O-CMD' or 'O-BTN' are reserved for special features and are never passed to on_barcode_scanned.\n"
+"The form view barcode handler can be extended to add client-side handling. Please refer to the (hopefully\n"
+"well enough) documented file for more informations.\n"
+"\n"
+"\n"
+"Button barcode handler\n"
+"------------------------------\n"
+"\n"
+"Add an attribute 'barcode_trigger' to a button to be able to trigger it by scanning a barcode. Example :\n"
+"<button name=\"validate\" type=\"object\" barcode_trigger=\"validate\"/> will be triggered when a barcode containing\n"
+"\"O-BTN.validate\" is scanned.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_edi_landing
@@ -8122,7 +8305,7 @@ msgstr "Token di accesso"
 #. module: base
 #: model:res.groups,name:base.group_private_addresses
 msgid "Access to Private Addresses"
-msgstr "Accesso agli indirizzi privati"
+msgstr "Accedere agli indirizzi privati"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_analytic_default
@@ -8375,21 +8558,10 @@ msgid "Active"
 msgstr "Attivo"
 
 #. module: base
-#: selection:ir.actions.act_window.view,view_mode:0
-#: selection:ir.ui.view,type:0
-msgid "Activity"
-msgstr "Attività"
-
-#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence__number_next_actual
 #: model:ir.model.fields,field_description:base.field_ir_sequence_date_range__number_next_actual
 msgid "Actual Next Number"
 msgstr ""
-
-#. module: base
-#: selection:ir.actions.server,state:0
-msgid "Add Followers"
-msgstr "Aggiungi Followers"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mail_bot
@@ -8759,6 +8931,13 @@ msgstr ""
 "contabili."
 
 #. module: base
+#: model_terms:ir.actions.act_window,help:base.action_attachment
+msgid ""
+"Also you will find here all the related documents and download it by "
+"clicking on any individual document."
+msgstr ""
+
+#. module: base
 #: code:addons/base/models/ir_fields.py:394
 #, python-format
 msgid ""
@@ -9032,11 +9211,6 @@ msgid "At least one language must be active."
 msgstr "Almeno una lingua deve essere attiva."
 
 #. module: base
-#: model_terms:ir.actions.act_window,help:base.action_attachment
-msgid "Attach a new document"
-msgstr ""
-
-#. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_search
 msgid "Attached Document Name"
 msgstr "Nome del Documento in Allegato"
@@ -9047,6 +9221,7 @@ msgid "Attached To"
 msgstr "Allegato a"
 
 #. module: base
+#: model:ir.model,name:base.model_ir_attachment
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_search
 msgid "Attachment"
 msgstr "Allegato"
@@ -9132,11 +9307,6 @@ msgstr "Acquirente di Pagamenti Authorize.Net"
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__auto_search
 msgid "Auto Search"
 msgstr "Auto ricerca"
-
-#. module: base
-#: selection:ir.actions.server,usage:0
-msgid "Automated Action"
-msgstr "Azione automatica"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_automation
@@ -10893,11 +11063,6 @@ msgid "Create Menu Wizard"
 msgstr ""
 
 #. module: base
-#: selection:ir.actions.server,state:0
-msgid "Create Next Activity"
-msgstr "Creare attività successiva"
-
-#. module: base
 #: model:ir.module.module,summary:base.module_crm_project
 msgid "Create Tasks from Leads"
 msgstr "Crea Compiti dai Lead"
@@ -10946,6 +11111,11 @@ msgstr "Crea un nuovo tag di contatto"
 #: model_terms:ir.actions.act_window,help:base.action_partner_customer_form
 #: model_terms:ir.actions.act_window,help:base.action_partner_form
 msgid "Create a new customer in your address book"
+msgstr ""
+
+#. module: base
+#: model_terms:ir.actions.act_window,help:base.action_attachment
+msgid "Create a new document"
 msgstr ""
 
 #. module: base
@@ -11456,7 +11626,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_logging__dbname
 msgid "Database Name"
-msgstr "Nome del Database"
+msgstr "Nome database"
 
 #. module: base
 #: model:ir.ui.menu,name:base.next_id_9
@@ -11540,27 +11710,6 @@ msgstr "DateTime"
 #: selection:ir.cron,interval_type:0
 msgid "Days"
 msgstr "Giorni"
-
-#. module: base
-#: model:res.company,overdue_msg:base.main_company
-msgid ""
-"Dear Sir/Madam,\n"
-"\n"
-"Our records indicate that some payments on your account are still due. Please find details below.\n"
-"If the amount has already been paid, please disregard this notice. Otherwise, please forward us the total amount stated below.\n"
-"If you have any queries regarding your account, Please contact us.\n"
-"\n"
-"Thank you in advance for your cooperation.\n"
-"Best Regards,"
-msgstr ""
-"Gentile Sig./Sig.ra, \n"
-"\n"
-"Dalle nostre registrazioni contabili risultano ancora alcuni pagamenti in sospeso, di seguito i relativi dettagli.\n"
-"Se l'importo è già stato pagato, ignorate questo avviso. In caso contrario, Vi chiediamo gentilmente di corrispondere l'importo indicato di seguito.\n"
-"Per qualsiasi dubbio o richiesta a riguardo, non esitate a contattarci.\n"
-"\n"
-"Ringraziamo in anticipo per la Vostra collaborazione.\n"
-"Distinti saluti,"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server__smtp_debug
@@ -12094,7 +12243,6 @@ msgid "Doctor"
 msgstr "Dottore"
 
 #. module: base
-#: model:ir.model,name:base.model_ir_attachment
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_uninstall
 msgid "Document"
 msgstr "Documento"
@@ -12434,11 +12582,6 @@ msgstr "Contratti dipendente"
 #: model:res.partner.category,name:base.res_partner_category_3
 msgid "Employees"
 msgstr "Dipendenti"
-
-#. module: base
-#: selection:ir.attachment,type:0
-msgid "Empty"
-msgstr ""
 
 #. module: base
 #: code:addons/base/models/ir_model.py:466
@@ -13742,7 +13885,7 @@ msgstr "Generico - Contabilità"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_form
 msgid "Generic Form Controller"
-msgstr ""
+msgstr "Controllore modulo generico"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_bank_statement_import
@@ -13764,7 +13907,7 @@ msgstr ""
 #: model:ir.module.module,description:base.module_website_form
 #: model:ir.module.module,summary:base.module_website_form
 msgid "Generic controller for web forms"
-msgstr ""
+msgstr "Controllore generico per modulo web"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_gengo
@@ -14601,14 +14744,9 @@ msgid "ID"
 msgstr "ID"
 
 #. module: base
-#: model:ir.model.fields,help:base.field_ir_actions_server__xml_id
-msgid "ID of the action if defined in a XML file"
-msgstr "ID dell'azione se definito in un file XML"
-
-#. module: base
 #: model:ir.model.fields,help:base.field_ir_model_data__res_id
 msgid "ID of the target record in the database"
-msgstr "ID del record del bersaglio nel database"
+msgstr "ID del record obiettivo nel database"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_ui_view__xml_id
@@ -15269,7 +15407,7 @@ msgstr ""
 #: code:addons/base/models/ir_fields.py:330
 #, python-format
 msgid "Invalid database id '%s' for the field '%%(field)s'"
-msgstr "Id '%s' del database non valido per il campo '%%(field)s'"
+msgstr "ID \"%s\" del database non valido per il campo \"%%(field)s\""
 
 #. module: base
 #: code:addons/base/models/res_lang.py:68
@@ -20083,6 +20221,11 @@ msgid "Partner Titles"
 msgstr "Denominazioni Partner"
 
 #. module: base
+#: model:ir.model.fields,field_description:base.field_res_users__active_partner
+msgid "Partner is Active"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_website_partner
 msgid "Partner module for website"
 msgstr "Modulo partner per sito web"
@@ -20291,6 +20434,8 @@ msgid ""
 "Please confirm that you want to <b>irreversibly</b> make this database a "
 "demo database."
 msgstr ""
+"Confermare la volontà di trasformare in modo <b>irreversibile</b> questo "
+"database in uno demo."
 
 #. module: base
 #: code:addons/base/models/ir_model.py:1231
@@ -21101,6 +21246,7 @@ msgid "Record ID"
 msgstr "ID record"
 
 #. module: base
+#: model:ir.model,name:base.model_ir_rule
 #: model_terms:ir.ui.view,arch_db:base.view_rule_search
 msgid "Record Rule"
 msgstr "Regola su record"
@@ -21467,11 +21613,6 @@ msgstr "Precisione arrotondamento"
 #, python-format
 msgid "Rounding unit"
 msgstr "Unità arrotondamento"
-
-#. module: base
-#: model:ir.model,name:base.model_ir_rule
-msgid "Rule"
-msgstr "Regola"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_form
@@ -21979,11 +22120,6 @@ msgid "Sell your products online"
 msgstr "Vendita di prodotti in rete"
 
 #. module: base
-#: selection:ir.actions.server,state:0
-msgid "Send Email"
-msgstr "Inviare email"
-
-#. module: base
 #: model:ir.module.module,summary:base.module_sign
 msgid "Send documents to sign online and handle filled copies"
 msgstr ""
@@ -22094,7 +22230,6 @@ msgstr "Server"
 
 #. module: base
 #: selection:ir.actions.server,usage:0
-#: model:ir.model,name:base.model_ir_actions_server
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_search
 msgid "Server Action"
@@ -22107,6 +22242,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_server_action
+#: model:ir.model,name:base.model_ir_actions_server
 #: model:ir.ui.menu,name:base.menu_server_action
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_search
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_tree
@@ -23526,7 +23662,6 @@ msgstr "Nome tecnico"
 #. module: base
 #: model:ir.module.category,name:base.module_category_hidden
 #: model:ir.module.category,name:base.module_category_technical_settings
-#: model_terms:ir.ui.view,arch_db:base.user_groups_view
 msgid "Technical Settings"
 msgstr "Impostazioni tecniche"
 

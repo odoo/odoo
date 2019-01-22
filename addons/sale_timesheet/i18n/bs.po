@@ -84,6 +84,11 @@ msgid ""
 "  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"Zavisno od konfiguracije proizvoda, isporučene količine mogu biti automatski izračunate na osnovu mhanizama :\n"
+"  - Ručno: količine se ručno unose na stavke\n"
+"  - Analitički iz troškova: količina je zbir količina na proknjiženim troškovima\n"
+"  - Vremenski listovi: količina je suma sati utrošena na stavkama zadataka povezanih sa ovom prodajnom stavkom\n"
+"  - Kretanja zaliha: zaliha dolazi sa potvrđenih prikupljanja\n"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__amount_to_invoice
@@ -106,7 +111,7 @@ msgstr "Analitički konto"
 #. module: sale_timesheet
 #: selection:sale.order.line,qty_delivered_method:0
 msgid "Analytic From Expenses"
-msgstr ""
+msgstr "Analitički iz troškova"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_account_analytic_line
@@ -559,7 +564,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line__qty_delivered_method
 msgid "Method to update delivered qty"
-msgstr ""
+msgstr "Metoda za ažuriranje isporučenih količina"
 
 #. module: sale_timesheet
 #: selection:product.template,service_policy:0

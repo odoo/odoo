@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-12-19 08:20+0000\n"
+"POT-Creation-Date: 2019-01-09 10:31+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2019\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
@@ -243,9 +243,27 @@ msgid "<em>Draft Invoice</em>"
 msgstr "<em>Concept factuur</em>"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.account_move_line_view_kanban
+#: model_terms:ir.ui.view,arch_db:account.view_account_move_kanban
+msgid "<i class=\"fa fa-clock-o\" aria-label=\"Date\" role=\"img\" title=\"Date\"/>"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_payment_kanban
+msgid "<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
 msgid "<i class=\"fa fa-download\"/> Download"
 msgstr "<i class=\"fa fa-download\"/> Download"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
+msgid ""
+"<i class=\"fa fa-ellipsis-v\" aria-label=\"Selection\" role=\"img\" "
+"title=\"Selection\"/>"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
@@ -322,6 +340,21 @@ msgstr ""
 "<span class=\"badge badge-pill badge-warning\"><i class=\"fa fa-fw fa-"
 "remove\" aria-label=\"Cancelled\" title=\"Cancelled\" role=\"img\"/><span "
 "class=\"d-none d-md-inline\"> Geannuleerd</span></span>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" aria-label=\"Values set here are company-specific.\" "
+"groups=\"base.group_multi_company\" role=\"img\"/>"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\"/>"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.invoice_supplier_form
@@ -734,7 +767,8 @@ msgstr ""
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_bank_statement_line
 msgid "A bank statement line is a financial transaction on a bank account"
-msgstr "Een bankverrichting is een financiële transactie op een bankrekening"
+msgstr ""
+"Een bankafschriftregel is een financiële transactie op een bankrekening"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_journal_line
@@ -5218,8 +5252,8 @@ msgid ""
 "If set, the accounting entries created during the bank statement reconciliation process will be created at this date.\n"
 "This is useful if the accounting period in which the entries should normally be booked is already closed."
 msgstr ""
-"Indien actief,  vanaf deze datum zullen de door het reconciliatieproces der bankverrichtingen gecreerde boekhoudkundige verrichtingen gecreerd worden.\n"
-"Dit is zinvol indien de boekhoudkundige periode waarin deze verrichtingen normaal geboekt diende te worden reeds is afgesloten."
+"Indien ingesteld, worden de boekhoudingsboekingen die tijdens het aflettersproces voor bankafschriften zijn gemaakt, op deze datum gemaakt.\n"
+"Dit is handig als de boekhoudperiode waarin de boekingen normaal moeten worden geboekt, al is gesloten."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__analytic
@@ -6513,7 +6547,7 @@ msgstr "Laat u klanten online facturen betalen"
 #: selection:account.account.type,internal_group:0
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
 msgid "Liability"
-msgstr "Verantwoordelijkheid"
+msgstr "Passiva"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__nbr
@@ -7517,7 +7551,7 @@ msgstr "Herkomst van de BTW"
 #. module: account
 #: model:account.account.type,name:account.data_account_type_other_income
 msgid "Other Income"
-msgstr "Andere opbrengsten"
+msgstr "Overige opbrengsten"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.invoice_form
@@ -8707,7 +8741,7 @@ msgstr "Beperk tot voorstellen met dezelfde valuta als de verrichtings regel."
 #. module: account
 #: model:ir.model.fields,field_description:account.field_digest_digest__kpi_account_total_revenue
 msgid "Revenue"
-msgstr "Opbrengst"
+msgstr "Omzet"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_deferred_revenue
@@ -10259,9 +10293,9 @@ msgid ""
 "                                                                                                       This is useful if you install accounting after having used invoicing for some time and\n"
 "                                                                                                       don't want to reconcile all the past payments with bank statements."
 msgstr ""
-"De bank reconsiliatie widget zal niet vragen om de betalingen te reconsilieren ouder dan deze datum.\n"
-"Dit is zinvol als u boekhouding installeerde nadat u fakturatie reeds geruime tijd in gebruik had en\n"
-"geen reconsiliering wenst van alle voorbije betalingen met bankverrichtingen."
+"De bank  afletterfunctie zal niet vragen om de betalingen af te letteren welke ouder zijn dan deze datum.\n"
+"Dit is zinvol als u boekhouding installeerde nadat u facturatie reeds geruime tijd in gebruik had en\n"
+"niet wil afletteren van oudere betalingen met bankafschriften."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__account_bank_reconciliation_start
@@ -10270,9 +10304,9 @@ msgid ""
 "               This is useful if you install accounting after having used invoicing for some time and\n"
 "               don't want to reconcile all the past payments with bank statements."
 msgstr ""
-"De bank reconsiliatie widget zal niet vragen om de betalingen te reconsilieren ouder dan deze datum. \n"
-"               Dit is zinvol als u boekhouding installeerde nadat u fakturatie reeds geruime tijd in gebruik had en\n"
-"               geen reconsiliering wenst van alle voorbije betalingen met bankverrichtingen."
+"De bank afletterfunctie zal niet vragen om de betalingen af te letteren welke ouder zijn dan deze datum.\n"
+"Dit is zinvol als u boekhouding installeerde nadat u facturatie reeds geruime tijd in gebruik had en\n"
+"niet wil afletteren van oudere betalingen met bankafschriften."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__statement_id
@@ -10412,7 +10446,7 @@ msgstr "De rekeninghouder van het bankdagboek moet het bedrijf zijn (%s)."
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_line__account_id
 msgid "The income or expense account related to the selected product."
-msgstr "De opbrengsten of kostenrekening gerelateerd aan het gekozen product."
+msgstr "De omzet of kostenrekening gerelateerd aan het gekozen product."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__code
@@ -10556,9 +10590,9 @@ msgid ""
 "The payments which have not been matched with a bank statement will not be "
 "shown in bank reconciliation data if they were made before this date."
 msgstr ""
-"De betalingen welke niet gematched werden met een bankverrichting zullen "
-"niet getoond worden in de bank reconsiliatie data indien ze werden "
-"aangemaakt voor deze datum."
+"De betalingen welke niet gematched werden met een bankafschriftregel zullen "
+"niet getoond worden bij het afletteren indien ze werden aangemaakt voor deze"
+" datum."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_partner_category_ids
@@ -11218,7 +11252,7 @@ msgstr "Aantal transactieregels"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Track costs &amp; revenues by project, department, etc."
-msgstr "Volg je kosten &amp; opbrengsten per project, afdeling, enz."
+msgstr "Volg je kosten &amp; omzet per project, afdeling, enz."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_send__tracking_value_ids

@@ -20,7 +20,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 06:48+0000\n"
+"POT-Creation-Date: 2019-01-09 10:31+0000\n"
 "PO-Revision-Date: 2018-08-24 09:23+0000\n"
 "Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2019\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
@@ -58,12 +58,12 @@ msgstr "# užduočių"
 #. module: project
 #: model:mail.template,subject:project.rating_project_request_email_template
 msgid "${object.project_id.company_id.name}: Satisfaction Survey"
-msgstr ""
+msgstr "${object.project_id.company_id.name}: Tenkinimo apklausa"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "% On"
-msgstr ""
+msgstr "%"
 
 #. module: project
 #: code:addons/project/models/project.py:302
@@ -78,6 +78,8 @@ msgid ""
 "(Un)archiving a project automatically (un)archives its tasks. Do you want to"
 " proceed?"
 msgstr ""
+"Projekto (at)archyvavimas automatiškai (at)archyvuoja jo užduotis. Ar norite"
+" tęsti?"
 
 #. module: project
 #. openerp-web
@@ -87,8 +89,8 @@ msgid ""
 "<b>Assign the task</b> to someone. <i>You can create and invite a new user "
 "on the fly.</i>"
 msgstr ""
-"<b>Priskirkite kam nors</b>užduotį. <i>Galite sukurti ir pakviesti naują "
-"vartotoją eigoje.</i>"
+"Kam nors <b>priskirkite užduotį</b>. <i>Eigoje galėsite sukurti ir pakviesti"
+" naują vartotoją.</i>"
 
 #. module: project
 #. openerp-web
@@ -104,7 +106,7 @@ msgstr ""
 #: code:addons/project/static/src/js/tour.js:71
 #, python-format
 msgid "<b>Star tasks</b> to mark team priorities."
-msgstr "<b>Pradėkite užduotis,</b> norėdami pažymėti komandos prioritetus."
+msgstr "Norėdami pažymėti prioritetus, <b>pažymėkite žvaigždute</b>."
 
 #. module: project
 #: model:mail.template,body_html:project.rating_project_request_email_template
@@ -166,6 +168,62 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div>\n"
+"    % set access_token = object.rating_get_access_token()\n"
+"    % set partner = object.rating_get_partner_id()\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"width:100%; margin:0px auto;\">\n"
+"    <tbody>\n"
+"        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"            Sveiki, ${partner.name},<br/>\n"
+"            Prašome įvertinti mūsų paslaugas, susijusias su užduotimi \"<strong>${object.name}</strong>\"\n"
+"            % if object.rating_get_rated_partner_id().name:\n"
+"                assigned to <strong>${object.rating_get_rated_partner_id().name}</strong>.<br/>\n"
+"            % else:\n"
+"                .<br/>\n"
+"            % endif\n"
+"        </td></tr>\n"
+"        <tr><td style=\"text-align: center;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" summary=\"o_mail_notification\" style=\"width:100%; margin: 32px 0px 32px 0px;\">\n"
+"                <tr><td style=\"font-size: 13px;\">\n"
+"                    <strong>Papasakokite, ką galvojate apie mūsų paslaugas</strong><br/>\n"
+"                    <span style=\"text-color: #888888\">(paspauskite ant vieno iš veidukų)</span>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"font-size: 13px;\">\n"
+"                    <table style=\"width:100%;text-align:center;\">\n"
+"                        <tr>\n"
+"                            <td>\n"
+"                                <a href=\"/rating/${access_token}/10\">\n"
+"                                    <img alt=\"Satisfied\" src=\"/rating/static/src/img/rating_10.png\" title=\"Satisfied\"/>\n"
+"                                </a>\n"
+"                            </td>\n"
+"                            <td>\n"
+"                                <a href=\"/rating/${access_token}/5\">\n"
+"                                    <img alt=\"Not satisfied\" src=\"/rating/static/src/img/rating_5.png\" title=\"Not satisfied\"/>\n"
+"                                </a>\n"
+"                            </td>\n"
+"                            <td>\n"
+"                                <a href=\"/rating/${access_token}/1\">\n"
+"                                    <img alt=\"Highly Dissatisfied\" src=\"/rating/static/src/img/rating_1.png\" title=\"Highly Dissatisfied\"/>\n"
+"                                </a>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </table>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td></tr>\n"
+"        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"            Mes labai vertiname jūsų atsiliepimus. Tai padeda mums tobulėti.\n"
+"            % if object.project_id.rating_status == 'stage':\n"
+"                <br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">Gavote šią klientų apklausą, nes jūsų užduotis buvo perkelta į etapą <b>${object.stage_id.name}</b></span>\n"
+"            % endif\n"
+"            % if object.project_id.rating_status == 'periodic':\n"
+"                <br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">Ši klientų apklausa siunčia <b>${object.project_id.rating_status_period}</b>,, kol užduotis yra <b>${object.stage_id.name}</b> etape.</span>\n"
+"            % endif\n"
+"        </td></tr>\n"
+"    </tbody>\n"
+"    </table>\n"
+"</div>\n"
+"            "
 
 #. module: project
 #: model:mail.template,body_html:project.mail_template_data_project_task
@@ -180,6 +238,15 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div>\n"
+"    Gerb. ${object.partner_id.name or 'customer'},<br/>\n"
+"    Dėkojame už jūsų užklausą.<br/>\n"
+"    Jei turite klausimų, susisiekite su mumis.\n"
+"    <br/><br/>\n"
+"    Ačiū,\n"
+"    <br/>\n"
+"</div>\n"
+"        "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_index
@@ -192,9 +259,33 @@ msgid "<i class=\"fa fa-calendar\"/> End date :"
 msgstr "<i class=\"fa fa-calendar\"/> Pabaigos data:"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_task_kanban
+msgid "<i class=\"fa fa-comments\" role=\"img\" aria-label=\"Unread Messages\"/>"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_project_kanban
+msgid "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
+msgstr "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_project_kanban
+msgid ""
+"<i class=\"fa fa-envelope\" role=\"img\" aria-label=\"Domain Alias\" "
+"title=\"Domain Alias\"/>"
+msgstr ""
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_index
 msgid "<i class=\"fa fa-envelope\"/> Email :"
 msgstr "<i class=\"fa fa-envelope\"/> El. paštas:"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_project_kanban
+msgid ""
+"<i class=\"fa fa-smile-o\" role=\"img\" aria-label=\"Percentage of "
+"satisfaction\" title=\"Percentage of satisfaction\"/>"
+msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -211,6 +302,11 @@ msgid ""
 "                        documents to your project.\n"
 "                    </p>"
 msgstr ""
+"<p class=\"o_view_nocontent_smiling_face\">\n"
+"                        Dokumentai yra prisegti prie jūsų projekto užduočių ar problemų.</p><p>\n"
+"                        Norėdami susieti dokumentus su savo projektu, siųskite\n"
+"                        žinutes arba sekite vidines pastabas.\n"
+"                    </p>"
 
 #. module: project
 #: code:addons/project/models/project.py:149
@@ -219,38 +315,45 @@ msgid ""
 "<p class=\"o_view_nocontent_smiling_face\">\n"
 "                    Create a new project</p>"
 msgstr ""
+"<p class=\"o_view_nocontent_smiling_face\">\n"
+"                    Kurti naują projektą</p>"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/tour.js:66
 #, python-format
 msgid "<p>Once your task is ready, you can save it.</p>"
-msgstr ""
+msgstr "<p>Kai užduotis bus paruošta, galėsite ją išsaugoti.</p>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_project
 msgid "<small class=\"text-muted\">Project - </small>"
-msgstr ""
+msgstr "<small class=\"text-muted\">Projektas - </small>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<small class=\"text-right\">Status:</small>"
+msgstr "<small class=\"text-right\">Būsena:</small>"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.portal_my_project
+msgid "<span class=\"fa fa-tasks\" role=\"img\" aria-label=\"Tasks\" title=\"Tasks\"/>"
 msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<strong class=\"d-block mb-2\">Attachments</strong>"
-msgstr ""
+msgstr "<strong class=\"d-block mb-2\">Prisegtukai</strong>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<strong class=\"d-block mb-2\">Description</strong>"
-msgstr ""
+msgstr "<strong class=\"d-block mb-2\">Aprašymas</strong>"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_0
 msgid "<strong style=\"font-size: 16px;\">Try the mail gateway</strong>"
-msgstr ""
+msgstr "<strong style=\"font-size: 16px;\">Išbandyti pašto sietuvą</strong>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -280,7 +383,7 @@ msgstr "<strong>Projektas:</strong>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_popover
 msgid "<strong>Rated by: </strong>"
-msgstr ""
+msgstr "<strong>Įvertino:</strong>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -305,7 +408,7 @@ msgstr "Priimti laiškus iš"
 #: model:ir.model.fields,field_description:project.field_project_project__access_warning
 #: model:ir.model.fields,field_description:project.field_project_task__access_warning
 msgid "Access warning"
-msgstr ""
+msgstr "Prieigos įspėjimas"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__message_needaction
@@ -349,18 +452,20 @@ msgid ""
 "Add columns to configure <b>stages for your tasks</b>.<br/><i>e.g. New - In "
 "Progress - Done</i>"
 msgstr ""
+"Pridėkite stulpelius savo <b>užduočių etapų</b> nustatymui. <br/><i>Pvz., "
+"nauja - vykdoma - atlikta </i>"
 
 #. module: project
 #: model:project.task.type,name:project.project_stage_data_2
 msgid "Advanced"
-msgstr "Papildoma"
+msgstr "Išplėstinis"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:34
 #, python-format
 msgid "Agile"
-msgstr ""
+msgstr "Agile"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_id
@@ -396,7 +501,7 @@ msgstr "Visi"
 #. module: project
 #: model:ir.ui.menu,name:project.menu_project_management
 msgid "All Tasks"
-msgstr ""
+msgstr "Visos užduotys"
 
 #. module: project
 #. openerp-web
@@ -451,7 +556,7 @@ msgid ""
 "                                You can define here labels that will be displayed for the state instead\n"
 "                                of the default labels."
 msgstr ""
-"Kiekvienoje stadijoje darbuotojai gali užblokuoti užduotį arba paversti ją paruošta kitai stadijai.\n"
+"Kiekviename etape darbuotojai gali užblokuoti užduotį arba paversti ją paruošta kitai stadijai.\n"
 "                               Čia galite nustatyti žymas, kurios bus rodomos būsenai\n"
 "                                vietoje numatytų žymų."
 
@@ -491,6 +596,9 @@ msgid ""
 " * A good feedback from the customer will update the kanban state to 'ready for the new stage' (green bullet).\n"
 " * A medium or a bad feedback will set the kanban state to 'blocked' (red bullet).\n"
 msgstr ""
+"Automatiškai keisti Kanban būseną, kai klientas atsako į šio etapo įvertinimą.\n"
+"* Geras kliento įvertinimas atnaujins Kanban būseną į \"paruošta kitam etapui\" (žalia).\n"
+"* Vidutinis arba blogas įvertinimas nustatys Kanban būseną į \"užblokuota\" (raudona).\n"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_progressbar
@@ -548,7 +656,7 @@ msgstr "Blokuota"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:61
 #, python-format
 msgid "Brainstorm"
-msgstr ""
+msgstr "Proto šturmas"
 
 #. module: project
 #: model:project.task,legend_done:project.project_task_10
@@ -591,6 +699,8 @@ msgstr ""
 #, python-format
 msgid "Choose a <b>task name</b>. (e.g. Website Design, Purchase Goods etc.)"
 msgstr ""
+"Pasirinkite <b>užduoties pavadinimą</b>. (pvz., svetainės dizainas, prekių "
+"pirkimas ir pan.)"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
@@ -615,14 +725,14 @@ msgstr "Žiedinės nuorodos tarp užduočių ir dukterinių užduočių neleidž
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.act_project_project_2_project_task_all
 msgid "Click <i>Create</i> to start a new task."
-msgstr ""
+msgstr "Norėdami pradėt naują užduotį, paspauskite <i>Sukurti</i>."
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/tour.js:76
 #, python-format
 msgid "Click on a card to get the details of the task."
-msgstr "Paspauskite ant kortelės, norėdami sužinoti užduoties detales."
+msgstr "Norėdami sužinoti užduoties detales, paspauskite ant kortelės."
 
 #. module: project
 #. openerp-web
@@ -632,13 +742,15 @@ msgid ""
 "Click on the card to write more information about it and collaborate with "
 "your coworkers."
 msgstr ""
+"Norėdami parašyti daugiau informacijos apie tai ir dirbti su kolegomis, "
+"paspauskite ant kortelės."
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/tour.js:86
 #, python-format
 msgid "Click on this button to modify the task."
-msgstr "Paspauskite šį mygtuką, norėdami keisti užduotį."
+msgstr "Norėdami keisti užduotį, paspauskite šį mygtuką."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__color
@@ -656,6 +768,10 @@ msgid ""
 "designs to the task, so that information flow from designers to the workers "
 "who print the t-shirt. Organize priorities amongst orders %s using the icon."
 msgstr ""
+"Bendraukite su klientais užduotyje per laiškų sietuvą. Prisekite logotipų "
+"dizainus prie užduoties, kad vyktų informacijos apsikeitimas tarp dizainerių"
+" ir marškinėlių spausdintojų. Tvarkykite užsakymų prioritetus naudodami %s "
+"piktogramą."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__company_id
@@ -672,6 +788,9 @@ msgid ""
 "Computed using sum of hours planned of all subtasks created from main task. "
 "Usually these hours are less or equal to the Planned Hours (of main task)."
 msgstr ""
+"Suskaičiuota pagal visų šios užduoties dukterinių užduočių valandų sumą. "
+"Dažniausiai šios valandos yra mažesnės arba lygio suplanuotoms valandoms "
+"(pagrindinės užduoties)."
 
 #. module: project
 #: model:ir.model,name:project.model_res_config_settings
@@ -706,7 +825,7 @@ msgstr "Kontaktai"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:64
 #, python-format
 msgid "Copywriting"
-msgstr ""
+msgstr "Kūrybinis rašymas"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__displayed_image_id
@@ -727,17 +846,17 @@ msgstr "Sukurti projektą"
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all_config
 msgid "Create a new project"
-msgstr ""
+msgstr "Sukurti naują projektą"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_task_type_form
 msgid "Create a new stage in the task pipeline"
-msgstr ""
+msgstr "Sukurti naują etapą užduoties piltuvėlyje"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_tags_action
 msgid "Create a new tag"
-msgstr ""
+msgstr "Sukurti naują žymą"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.action_view_task
@@ -813,7 +932,7 @@ msgstr "Kliento el. pašto adresas"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:44
 #, python-format
 msgid "Customer Feedback"
-msgstr ""
+msgstr "Kliento įvertinimas"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__access_url
@@ -838,7 +957,7 @@ msgid ""
 "Settings to activate it."
 msgstr ""
 "Kliento užduočių vertinimai. Jei neturite jokių vertinimų, pakeiskite savo "
-"projekto nustatymus ir aktyvuokite juost."
+"projekto nustatymus ir aktyvuokite juos."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_status
@@ -855,6 +974,10 @@ msgid ""
 "feedback is accepted %s and which feedback is moved to the \"Refused\" "
 "column."
 msgstr ""
+"Klientai pateikia įvertinimus el. paštu, \"Odoo\" automatiškai sukuria "
+"užduotis ir jūs galite bendrauti užduotyje tiesiogiai. Jūsų vadovai "
+"nusprendžia, kurie atsiliepimai yra priimami %s ir kurie atsiliepimai yra "
+"perkeliami į atmestų stulpelį."
 
 #. module: project
 #: selection:project.project,rating_status_period:0
@@ -887,7 +1010,7 @@ msgid ""
 msgstr ""
 "Nustatykite žingsnius, kurie bus naudojami projekte nuo\n"
 "                užduoties sukūrimo iki jos ar problemos uždarymo.\n"
-"                Šias stadijas naudosite progreso sekimui sprendžiant\n"
+"                Šiuos etapus naudosite progreso sekimui sprendžiant\n"
 "                užduotį ar problemą."
 
 #. module: project
@@ -914,7 +1037,7 @@ msgstr "Aprašymas"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:64
 #, python-format
 msgid "Design"
-msgstr "Kurti"
+msgstr "Dizainas"
 
 #. module: project
 #. openerp-web
@@ -927,14 +1050,14 @@ msgstr "Kūrimas"
 #. module: project
 #: model:ir.model,name:project.model_digest_digest
 msgid "Digest"
-msgstr ""
+msgstr "Rinkinys"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:38
 #, python-format
 msgid "Digital Marketing"
-msgstr ""
+msgstr "Skaitmeninė rinkodara"
 
 #. module: project
 #. openerp-web
@@ -958,6 +1081,7 @@ msgstr "Rodomas pavadinimas"
 #, python-format
 msgid "Do not have access, skip this data for user's digest email"
 msgstr ""
+"Neturite prieigos, praleiskite šiuos duomenis vartotojo rinkinio el. paštui"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -1004,13 +1128,15 @@ msgid ""
 "Edit project's stages and set an email template on the stages on which you "
 "want to activate the rating."
 msgstr ""
+"Redaguoti projekto etapus ir nustatyti el. pašto šabloną etapams, kuriems "
+"norite aktyvuoti įvertinimą."
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:39
 #, python-format
 msgid "Editing"
-msgstr ""
+msgstr "Redagavimas"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__email_from
@@ -1049,7 +1175,8 @@ msgstr ""
 #: sql_constraint:project.project:0
 msgid "Error! project start-date must be lower than project end-date."
 msgstr ""
-"Klaida! Projekto pradžios data turi būti mažesnė nei projekto pabaigos data."
+"Klaida! Projekto pradžios data turi būti ankstesnė nei projekto pabaigos "
+"data."
 
 #. module: project
 #. openerp-web
@@ -1060,6 +1187,9 @@ msgid ""
 " all documents or links to the task directly, to have all information about "
 "a research centralized."
 msgstr ""
+"Visi gali siūlyti idėjas, o redaktorius pažymi geriausias kaip %s. Prisekite"
+" visus dokumentus ar nuorodas prie užduoties tiesiogiai, kad centralizuotai "
+"turėtumėte visą informaciją apie tyrimą."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__date
@@ -1095,13 +1225,18 @@ msgid ""
 "review the \"This Week\" column to move important tasks \"Today\". Every "
 "Monday, you review the \"This Month\" column."
 msgstr ""
+"Lengvai užpildykite savo pašto dėžutę per el. pašto sietuvą. Periodiškai "
+"peržvelkite savo pašto dėžutę ir planuokite užduotis perkeldami jas į kitus "
+"stulpelius. Kasdien peržvelkite \"šios savaitės\" stulpelį, kad perkeltumėte"
+" svarbias užduotis į \"šiandien\". Kiekvieną pirmadienį peržvelkite stulpelį"
+" \"šis mėnuo\"."
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:61
 #, python-format
 msgid "Final Document"
-msgstr ""
+msgstr "Baigtinis dokumentas"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__fold
@@ -1160,7 +1295,7 @@ msgstr "GTD"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:50
 #, python-format
 msgid "Getting Things Done (GTD)"
-msgstr ""
+msgstr "Darbų atlikimas (GTD)"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__label_tasks
@@ -1224,7 +1359,7 @@ msgstr "Užduoties tenkinimo %"
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_partner_stat
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Happy face"
-msgstr ""
+msgstr "Laimingas veidas"
 
 #. module: project
 #: selection:report.project.task.user,priority:0
@@ -1241,11 +1376,11 @@ msgid ""
 "   if website is activated, portal users may see project, tasks or issues followed by\n"
 "   them or by someone of their company\n"
 msgstr ""
-"Rodo užduočių ar problemų, priklausančių esamam projektui, matomumą:\n"
+"Saugo užduočių ar problemų, priklausančių esamam projektui, matomumą:\n"
 "- Tik pagal pakvietimą: Darbuotojai gali matyti tik sekamą projektą, užduotis ar problemas\n"
 "- Matoma visiems darbuotojams: Darbuotojai gali matyti visą projektą, užduotis ar problemas\n"
 "- Matoma sekantiems klientams: Darbuotojai mato viską;\n"
-"Jei svetainė yra aktyvuota, portalo naudotojai gali matyti projektus, užduotis arba problemas, kurias seka jie arba kas nors iš jų kompanijos\n"
+"Jei svetainė yra aktyvuota, portalo naudotojai gali matyti projektus, užduotis arba problemas, kurias seka jie arba kas nors iš jų įmonės\n"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -1342,8 +1477,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the project "
 "without removing it."
 msgstr ""
-"Jei laukelis \"aktyvus\" yra nenustatytas, tai bus palikta galimybė paslėpti"
-" projektą jo neištrynus iš sistemos."
+"Jei aktyvus laukelis yra neigiamas, tai leis jums paslėpti projektą jo "
+"nepašalinant."
 
 #. module: project
 #. openerp-web
@@ -1398,7 +1533,7 @@ msgstr "Vykdoma"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:45
 #, python-format
 msgid "In development"
-msgstr ""
+msgstr "Kuriama"
 
 #. module: project
 #. openerp-web
@@ -1435,6 +1570,9 @@ msgid ""
 "It is the time planned to achieve the task. If this document has sub-tasks, "
 "it means the time needed to achieve this tasks and its childs."
 msgstr ""
+"Tai yra laikas, suplanuotas užduočių atlikimui. Jei šis dokumentas turi "
+"dukterinių užduočių, tai reiškia laiką, reikalingą atlikti šią užduotį ir "
+"jos dukterines užduotis."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__legend_blocked
@@ -1455,7 +1593,7 @@ msgstr "Kanban būsena"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__kanban_state_label
 msgid "Kanban State Label"
-msgstr ""
+msgstr "Kanban būsenos etiketė"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__legend_done
@@ -1502,7 +1640,7 @@ msgstr "Paskutinis stadijos atnaujinimas"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__write_date
 msgid "Last Updated On"
-msgstr ""
+msgstr "Paskutinį kartą atnaujinta"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__write_uid
@@ -1542,21 +1680,21 @@ msgstr "Paskutinis įvertinimas: Patenkintas"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "Legend priority"
-msgstr ""
+msgstr "Prioritetų legenda"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/tour.js:24
 #, python-format
 msgid "Let's create your first project."
-msgstr "Sukurkime Jūsų pirmąjį projektą."
+msgstr "Sukurkime jūsų pirmąjį projektą."
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/tour.js:55
 #, python-format
 msgid "Let's create your first task."
-msgstr ""
+msgstr "Sukurkime pirmąją jūsų užduotį."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -1564,34 +1702,34 @@ msgid ""
 "Lets the company customize which Pad installation should be used to link to "
 "new pads (for example: http://etherpad.com/)."
 msgstr ""
-"Leidžia kompanijai nustatyti, kurio tekstų redaktoriaus įdiegimas turėtų "
-"būti susietas su naujais tekstais (pvz.,: http://etherpad.com/)."
+"Leidžia įmonei nustatyti, kurio tekstų redaktoriaus įdiegimas turėtų būti "
+"susietas su naujais tekstais (pvz.,: http://etherpad.com/)."
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:64
 #, python-format
 msgid "Live"
-msgstr ""
+msgstr "Gyvai"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Log time on tasks"
-msgstr ""
+msgstr "Ilgas laikas užduotims"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:67
 #, python-format
 msgid "Logo Design"
-msgstr ""
+msgstr "Logotipo dizainas"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:51
 #, python-format
 msgid "Long Term"
-msgstr ""
+msgstr "Ilgalaikis"
 
 #. module: project
 #: selection:project.task,priority:0
@@ -1630,7 +1768,7 @@ msgstr "Žinutės pristatymo klaida"
 #: model:ir.model.fields,field_description:project.field_project_project__message_ids
 #: model:ir.model.fields,field_description:project.field_project_task__message_ids
 msgid "Messages"
-msgstr "Pranešimai"
+msgstr "Žinutės"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
@@ -1684,7 +1822,7 @@ msgstr "Reikalinga funkcinė ar techninė pagalba"
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_partner_stat
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Neutral face"
-msgstr ""
+msgstr "Neutralus veidas"
 
 #. module: project
 #. openerp-web
@@ -1700,14 +1838,14 @@ msgstr "Naujas"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:67
 #, python-format
 msgid "New Orders"
-msgstr ""
+msgstr "Nauju užsakymai"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:58
 #, python-format
 msgid "New Projects"
-msgstr ""
+msgstr "Nauji projektai"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_0
@@ -1715,6 +1853,8 @@ msgid ""
 "New tasks can be generated from incoming emails. You just need to set email "
 "aliases on your projects.<br>"
 msgstr ""
+"Naujos užduotys gali būti sugeneruotos iš įeinančių laiškų. Jums tiesiog "
+"reikia nustatyti el. pašto pseudonimus savo projektuose.<br>"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:41
@@ -1753,12 +1893,12 @@ msgstr "Nėra temos"
 #: model_terms:ir.actions.act_window,help:project.rating_rating_action_project_report
 #: model_terms:ir.actions.act_window,help:project.rating_rating_action_task
 msgid "No customer ratings yet"
-msgstr ""
+msgstr "Dar nėra kliento įvertinimų"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_index
 msgid "No project rating published for now."
-msgstr ""
+msgstr "Nėra skelbiamo projekto įvertinimo."
 
 #. module: project
 #: selection:project.project,rating_status:0
@@ -1818,7 +1958,7 @@ msgstr "Prisegtų dokumentų skaičius"
 #: model:ir.model.fields,field_description:project.field_project_project__message_has_error_counter
 #: model:ir.model.fields,field_description:project.field_project_task__message_has_error_counter
 msgid "Number of error"
-msgstr "Klaidų skaičius"
+msgstr "Klaidos numeris"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__message_needaction_counter
@@ -1844,6 +1984,8 @@ msgid ""
 "Odoo's project management allows you to manage the pipeline of your tasks efficiently.<br>\n"
 "                    You can track progress, discuss on tasks, attach documents, etc."
 msgstr ""
+"\"Odoo\" projektų valdymas leidžia jums efektyviai valdyti savo užduočių piltuvėlį.<br>\n"
+"Galite sekti progresą, diskutuoti apie užduotis, prisegti dokumentus ir t.t."
 
 #. module: project
 #: selection:project.project,privacy_visibility:0
@@ -1864,11 +2006,14 @@ msgid ""
 "developers know they can pull it. If you work in sprints, use %s to mark "
 "tasks of the current sprint."
 msgstr ""
+"Kai užduotis nurodoma, nustatykite ją %s specifikacijų stulpelyje, kad "
+"programuotojai žinotų, jog gali ją traukti. Jei dirbate sprintais, naudokite"
+" %s šio sprinto užduočių pažymėjimui."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_digest_digest__kpi_project_task_opened
 msgid "Open Tasks"
-msgstr ""
+msgstr "Atidaryti užduotis"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_force_thread_id
@@ -1900,17 +2045,17 @@ msgstr ""
 #: code:addons/project/controllers/portal.py:129
 #, python-format
 msgid "Others"
-msgstr ""
+msgstr "Kiti"
 
 #. module: project
 #: selection:project.task,activity_state:0
 msgid "Overdue"
-msgstr "Pavėluotas"
+msgstr "Vėluoja"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_view_task_overpassed_draft
 msgid "Overpassed Tasks"
-msgstr "Uždelstos užduotys"
+msgstr "Pradelstos užduotys"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__legend_blocked
@@ -1919,8 +2064,8 @@ msgid ""
 "Override the default value displayed for the blocked state for kanban "
 "selection, when the task or issue is in that stage."
 msgstr ""
-"Užgožia numatytąją reikšmę, rodomą užblokuotai stadijai Kanban pasirinkime, "
-"kai užduotis ar problema yra toje stadijoje. "
+"Viršyti numatytąją reikšmę, rodomą užblokuotam etapui Kanban pasirinkime, "
+"kai užduotis ar problema yra tame etape. "
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__legend_done
@@ -1929,8 +2074,8 @@ msgid ""
 "Override the default value displayed for the done state for kanban "
 "selection, when the task or issue is in that stage."
 msgstr ""
-"Viršyti numatytąją reikšmę, rodomą Kanban pasirinkimo atliktai stadijai, kai"
-" užduotis ar problema yra šioje stadijoje."
+"Viršyti numatytąją reikšmę, rodomą Kanban pasirinkimo atliktam etapui, kai "
+"užduotis ar problema yra šiame etape."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__legend_normal
@@ -1939,8 +2084,8 @@ msgid ""
 "Override the default value displayed for the normal state for kanban "
 "selection, when the task or issue is in that stage."
 msgstr ""
-"Viršyti numatytąją reikšmę, rodomą Kanban pasirinkimo normaliai stadijai, "
-"kai užduotis ar problema yra šioje stadijoje."
+"Viršyti numatytąją reikšmę, rodomą Kanban pasirinkimo įprastam etapui, kai "
+"užduotis ar problema yra šiame etape."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_user_id
@@ -1952,7 +2097,7 @@ msgstr "Savininkas"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:64
 #, python-format
 msgid "Page Ideas"
-msgstr ""
+msgstr "Puslapio idėjos"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_parent_model_id
@@ -2001,7 +2146,7 @@ msgstr "Periodinis vertinimas"
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_partner_stat
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_popover
 msgid "Placeholder"
-msgstr ""
+msgstr "Vietaženklis"
 
 #. module: project
 #: selection:project.task,activity_state:0
@@ -2088,7 +2233,7 @@ msgstr "Projekto įvertinimas"
 #. module: project
 #: model:ir.model,name:project.model_project_tags
 msgid "Project Tags"
-msgstr ""
+msgstr "Projekto žymos"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_graph
@@ -2141,7 +2286,7 @@ msgstr "Kas ketvirtį"
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_partner_stat
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_popover
 msgid "Rated partner"
-msgstr ""
+msgstr "Įvertintas partneris"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
@@ -2193,12 +2338,12 @@ msgstr "Įvertinimų kiekis"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__portal_show_rating
 msgid "Rating visible publicly"
-msgstr ""
+msgstr "Įvertinimas matomas viešai"
 
 #. module: project
 #: selection:project.project,rating_status:0
 msgid "Rating when changing stage"
-msgstr "Vertinimas, kai keičiama stadija"
+msgstr "Vertinimas, kai keičiamas etapas"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_rating
@@ -2241,7 +2386,7 @@ msgstr "%s įvertinimai"
 #: model:project.task.type,legend_done:project.project_stage_data_2
 #, python-format
 msgid "Ready for Next Stage"
-msgstr "Paruošta kitai stadijai"
+msgstr "Paruošta kitam etapui"
 
 #. module: project
 #: selection:report.project.task.user,state:0
@@ -2262,7 +2407,7 @@ msgstr "Įvertinimo priežastis"
 #. module: project
 #: model:mail.template,subject:project.mail_template_data_project_task
 msgid "Reception of ${object.name}"
-msgstr " ${object.name} gavimas"
+msgstr " ${object.name} priėmimas"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_force_thread_id
@@ -2296,7 +2441,7 @@ msgstr "Atmesta"
 #: code:addons/project/static/src/js/project.js:74
 #, python-format
 msgid "Remove Cover Image"
-msgstr "Ištrinti viršelio paveikslėlį"
+msgstr "Pašalinti viršelio paveikslėlį"
 
 #. module: project
 #: model:ir.ui.menu,name:project.menu_project_report
@@ -2308,45 +2453,47 @@ msgstr "Ataskaitos"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:61
 #, python-format
 msgid "Research"
-msgstr ""
+msgstr "Tyrimas"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:60
 #, python-format
 msgid "Research Project"
-msgstr ""
+msgstr "Tyrimo projektas"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:39
 #, python-format
 msgid "Researching"
-msgstr ""
+msgstr "Tiriama"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:58
 #, python-format
 msgid "Resources Allocation"
-msgstr ""
+msgstr "Išteklių priskyrimas"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__activity_user_id
 msgid "Responsible User"
-msgstr "Atsakingas naudotojas"
+msgstr "Atsakingas vartotojas"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_partner_stat
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Sad face"
-msgstr ""
+msgstr "Liūdnas veidas"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid ""
 "Schedule your teams across projects and estimate deadlines more accurately."
 msgstr ""
+"Planuokite savo komandų darbus tarp projektų ir tiksliau nustatykite "
+"planuojamus terminus."
 
 #. module: project
 #: code:addons/project/controllers/portal.py:114
@@ -2381,7 +2528,7 @@ msgstr "Ieškoti žinutėse"
 #: code:addons/project/controllers/portal.py:117
 #, python-format
 msgid "Search in Stages"
-msgstr "Ieškoti stadijose"
+msgstr "Ieškoti etapuose"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__access_token
@@ -2411,7 +2558,7 @@ msgstr "Nustatyti viršelio paveikslėlį"
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_0
 msgid "Set Email Aliases"
-msgstr ""
+msgstr "Nustatyti el. pašto paseudonimus"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -2456,14 +2603,14 @@ msgstr ""
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:28
 #, python-format
 msgid "Software Development"
-msgstr ""
+msgstr "Programinės įrangos kūrimas"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:29
 #, python-format
 msgid "Specifications"
-msgstr ""
+msgstr "Specifikacijos"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -2479,7 +2626,7 @@ msgstr "Padalinkite savo užduotis ir organizuokite savo darbą mažais etapais"
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 #, python-format
 msgid "Stage"
-msgstr "Stadija"
+msgstr "Etapas"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_task_stage
@@ -2489,23 +2636,23 @@ msgstr "Etapas pakeistas"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "Stage Description and Tooltips"
-msgstr "Stadijos aprašymas ir paaiškinimas"
+msgstr "Etapo aprašymas ir paaiškinimas"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__name
 msgid "Stage Name"
-msgstr "Stadijos pavadinimas"
+msgstr "Etapo pavadinimas"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_stage
 msgid "Stage changed"
-msgstr "Stadija pakeista"
+msgstr "Etapas pakeistas"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_task_type_form
 #: model:ir.ui.menu,name:project.menu_project_config_project
 msgid "Stages"
-msgstr "Stadijos"
+msgstr "Etapai"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
@@ -2562,19 +2709,19 @@ msgstr "Dukterinės užduotys"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__subtask_planned_hours
 msgid "Subtasks"
-msgstr ""
+msgstr "Dukterinės užduotys"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:66
 #, python-format
 msgid "T-shirt Printing"
-msgstr ""
+msgstr "Marškinėlių spausdinimas"
 
 #. module: project
 #: sql_constraint:project.tags:0
 msgid "Tag name already exists!"
-msgstr ""
+msgstr "Žymos pavadinimas jau egzistuoja!"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_tags_action
@@ -2596,7 +2743,7 @@ msgstr "Užduotis"
 #: code:addons/project/models/project.py:616
 #, python-format
 msgid "Task %s cannot have several subtask levels."
-msgstr ""
+msgstr "Užduotys %s negali turėti kelių dukterinių lygmenų."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__tasks
@@ -2612,19 +2759,19 @@ msgstr "Užduotis užblokuota"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__task_count
 msgid "Task Count"
-msgstr ""
+msgstr "Užduočių skaičius"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_new
 #: model:mail.message.subtype,name:project.mt_project_task_new
 #: model:mail.message.subtype,name:project.mt_task_new
 msgid "Task Created"
-msgstr ""
+msgstr "Užduotis sukurta"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_config_settings__module_hr_timesheet
 msgid "Task Logs"
-msgstr ""
+msgstr "Užduočių žurnalai"
 
 #. module: project
 #: model:ir.filters,name:project.filter_task_report_task_pipe
@@ -2674,12 +2821,12 @@ msgstr "Užduotis užblokuota"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "Task in progress. Click to block or set as done."
-msgstr ""
+msgstr "Užduotis vykdoma. Norėdami užblokuoti ar užbaigti, paspauskite."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "Task is blocked. Click to unblock or set as done."
-msgstr ""
+msgstr "Užduotis užblokuota. Norėdami atblokuoti ar užbaigti, paspauskite."
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_ready
@@ -2721,7 +2868,7 @@ msgstr "Užduočių analizė"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Tasks Management"
-msgstr ""
+msgstr "Užduočių valdymas"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__type_ids
@@ -2784,6 +2931,9 @@ msgid ""
 "the project is too restricted. Set the privacy to 'Visible by following "
 "customers' in order to make it accessible by the recipient(s)."
 msgstr ""
+"Projektu negalima dalintis su gavėjais, nes projekto privatumas yra pernelyg"
+" apribotas. Nustatykite projekto privatumą kaip \"Matomą šiems klientams\", "
+"kad galėtumėte jį padaryti pasiekiamu."
 
 #. module: project
 #: code:addons/project/models/project.py:571
@@ -2793,6 +2943,9 @@ msgid ""
 "project is too restricted. Set the privacy of the project to 'Visible by "
 "following customers' in order to make it accessible by the recipient(s)."
 msgstr ""
+"Užduotimi negalima dalintis su gavėjais, nes projekto privatumas yra "
+"pernelyg apribotas. Nustatykite projekto privatumą kaip \"Matomą šiems "
+"klientams\", kad galėtumėte jį padaryti pasiekiamu."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_projects
@@ -2809,12 +2962,12 @@ msgstr "Užduočių nėra."
 #: code:addons/project/static/src/xml/project.xml:11
 #, python-format
 msgid "There is no available image to be set as cover."
-msgstr ""
+msgstr "Nėra paveikslėlio, kuris galėtų būti nustatytas kaip viršelis. "
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.rating_rating_action_view_project_rating
 msgid "There is no rating for this object at the moment"
-msgstr ""
+msgstr "Šis objektas šiuo metu neturi įvertinimo."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__email_cc
@@ -2861,20 +3014,22 @@ msgid ""
 "This stage is folded in the kanban view when there are no records in that "
 "stage to display."
 msgstr ""
-"Ši stadija bus suskleista kanban tipo peržiūroje, jei šioje stadijoje nebus "
-"nė vieno įrašo."
+"Šis etapas bus suskleistas Kanban tipo peržiūroje, jei šioje stadijoje nebus"
+" nė vieno įrašo."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "This step is done. Click to block or set in progress."
 msgstr ""
+"Šis žingsnis atliktas. Norėdami užblokuoti ar nustatyti kaip vykstantį, "
+"paspauskite."
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/tour.js:33
 #, python-format
 msgid "This will create a new project and redirect us to its stages."
-msgstr ""
+msgstr "Tai sukurs naują projektą ir nukreips mus į jo etapus."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -2889,7 +3044,7 @@ msgstr "Laiko planavimas"
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__resource_calendar_id
 msgid "Timetable working hours to adjust the gantt diagram report"
-msgstr "Darbo valandos, reikalingos pakoreguoti gantt diagramos pranešimą"
+msgstr "Darbo valandos Gantt diagramos ataskaitos koregavimui"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:106
@@ -2908,7 +3063,7 @@ msgstr "Reikia atlikti"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:67
 #, python-format
 msgid "To Print"
-msgstr ""
+msgstr "Atspausdinimui"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.act_project_project_2_project_task_all
@@ -2916,6 +3071,8 @@ msgid ""
 "To get things done, use activities and status on tasks.<br>\n"
 "                    Chat in real time or by email to collaborate efficiently."
 msgstr ""
+"Norint atlikti darbus, užduotyse naudokite veiklas ir būsenas. <br>\n"
+"Susirašinėkite gyvai ar bendraukite laiškais, kad bendradarbiautumėte efektyviai."
 
 #. module: project
 #. openerp-web
@@ -2933,7 +3090,7 @@ msgstr "Šiandienos veiklos"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_partner_stat
 msgid "Top 5 partner ratings of last 15 days."
-msgstr ""
+msgstr "Top 5 partnerių įvertinimai per paskutines 15 dienų."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -2957,7 +3114,7 @@ msgstr "Nepriskirta"
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Unread Messages"
-msgstr "Neskaityti pranešimai"
+msgstr "Neperskaitytos žinutės"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__message_unread_counter
@@ -2970,18 +3127,18 @@ msgstr "Neperskaitytų žinučių skaičiuoklis"
 #: code:addons/project/static/src/js/project.js:72
 #, python-format
 msgid "Upload and Set"
-msgstr ""
+msgstr "Įkelti ir nustatyti"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_config_settings__group_project_rating
 #: model:res.groups,name:project.group_project_rating
 msgid "Use Rating on Project"
-msgstr ""
+msgstr "Projektui naudoti įvertinimą"
 
 #. module: project
 #: model:res.groups,name:project.group_subtask_project
 msgid "Use Subtasks"
-msgstr ""
+msgstr "Naudoti dukterines užduotis"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__label_tasks
@@ -3030,7 +3187,7 @@ msgstr "Matoma šiems klientams"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:36
 #, python-format
 msgid "Waiting for the next stage: use %s and %s bullets."
-msgstr ""
+msgstr "Laukiama kito etapo: naudokite %s ir %s ženklus."
 
 #. module: project
 #. openerp-web
@@ -3059,7 +3216,7 @@ msgstr "Interneto svetainės pranešimai"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:63
 #, python-format
 msgid "Website Redesign"
-msgstr ""
+msgstr "Svetainės dizaino atnaujinimas"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__website_message_ids
@@ -3075,7 +3232,7 @@ msgstr "Kartą per savaitę"
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__is_favorite
 msgid "Whether this project should be displayed on the dashboard or not"
-msgstr "Ar šis projektas turėtų būti rodomas valdymo skydelyje ar ne"
+msgstr "Ar šis projektas turėtų būti rodomas valdymo skydelyje, ar ne"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__resource_calendar_id
@@ -3122,7 +3279,7 @@ msgstr "Darbo krūvis"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:39
 #, python-format
 msgid "Writing"
-msgstr ""
+msgstr "Rašymas"
 
 #. module: project
 #: selection:project.project,rating_status_period:0
@@ -3154,6 +3311,8 @@ msgid ""
 "You cannot delete a project containing tasks. You can either archive it or "
 "first delete all of its tasks."
 msgstr ""
+"Negalite ištrinti projekto, turinčio užduotis. Galite jį archyvuoti arba "
+"pirmiausia ištrinti visas jo užduotis."
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all
@@ -3163,12 +3322,12 @@ msgstr "aktyvuokite pavyzdinį projektą"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_partner_stat
 msgid "average"
-msgstr ""
+msgstr "vidutinis"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_partner_stat
 msgid "bad"
-msgstr ""
+msgstr "blogas"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
@@ -3183,7 +3342,7 @@ msgstr "projektui:"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_partner_stat
 msgid "happy"
-msgstr ""
+msgstr "laimingas"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
@@ -3194,7 +3353,7 @@ msgstr "oe_kanban_text_red"
 #: code:addons/project/models/project.py:635
 #, python-format
 msgid "task"
-msgstr ""
+msgstr "užduotis"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all
