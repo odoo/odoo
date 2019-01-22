@@ -113,6 +113,8 @@ var EditorMenu = Widget.extend({
                 // remove top padding because the connected bar is not visible
                 $('body').removeClass('o_connected_user');
                 return self._reload();
+            } else if (!dirty && reload) {
+                return self._reload();
             } else {
                 self.wysiwyg.destroy();
                 self.trigger_up('edition_was_stopped');
@@ -145,6 +147,13 @@ var EditorMenu = Widget.extend({
 
     /**
      * @private
+     * @returns {boolean}
+     */
+    _hasEditorInUrl: function () {
+        return window.location.search.indexOf(this.LOCATION_SEARCH) >= 0;
+    },
+    /**
+     * @private
      */
     _wysiwygInstance: function () {
         return new WysiwygMultizone(this, {
@@ -166,7 +175,7 @@ var EditorMenu = Widget.extend({
         $('body').addClass('o_wait_reload');
         this.wysiwyg.destroy();
         window.location.hash = 'scrollTop=' + window.document.body.scrollTop;
-        if (window.location.search.indexOf(this.LOCATION_SEARCH) >= 0) {
+        if (this._hasEditorInUrl()) {
             var regExp = new RegExp('[&?]' + this.LOCATION_SEARCH + '(=[^&]*)?', 'g');
             window.location.href = window.location.href.replace(regExp, '?');
         } else {
@@ -185,7 +194,7 @@ var EditorMenu = Widget.extend({
      * @private
      */
     _onCancelClick: function () {
-        this.cancel(false);
+        this.cancel(this._hasEditorInUrl());
     },
     /**
      * Snippet (menu_data) can request to save the document to leave the page
@@ -205,7 +214,7 @@ var EditorMenu = Widget.extend({
      * @private
      */
     _onSaveClick: function () {
-        this.save();
+        this.save(this._hasEditorInUrl());
     },
 });
 
