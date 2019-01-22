@@ -3,10 +3,10 @@
 from odoo.tools import float_is_zero
 from odoo.exceptions import UserError
 
-from odoo.addons.sale_project_timesheet.tests.common import TestCommonSaleTimesheetNoChart
+from odoo.addons.sale_project_timesheet.tests.common import TestCommonSaleProjectTimesheetNoChart
 
 
-class TestSaleTimesheet(TestCommonSaleTimesheetNoChart):
+class TestSaleTimesheet(TestCommonSaleProjectTimesheetNoChart):
     """ This test suite provide tests for the 3 main flows of selling services:
             - Selling services based on ordered quantities
             - Selling timesheet based on delivered quantities

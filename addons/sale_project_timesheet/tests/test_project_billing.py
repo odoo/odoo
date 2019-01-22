@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.sale_project_timesheet.tests.common import TestCommonSaleTimesheetNoChart
+from odoo.addons.sale_project_timesheet.tests.common import TestCommonSaleProjectTimesheetNoChart
 from odoo.exceptions import UserError
 
 
-class TestProjectBilling(TestCommonSaleTimesheetNoChart):
+class TestProjectBilling(TestCommonSaleProjectTimesheetNoChart):
     """ This test suite provide checks for miscellaneous small things. """
 
     @classmethod

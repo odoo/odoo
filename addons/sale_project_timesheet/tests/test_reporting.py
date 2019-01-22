@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.tools import float_is_zero, float_compare
-from odoo.addons.sale_project_timesheet.tests.common import TestCommonSaleTimesheetNoChart
+from odoo.addons.sale_project_timesheet.tests.common import TestCommonSaleProjectTimesheetNoChart
 
 
-class TestReporting(TestCommonSaleTimesheetNoChart):
+class TestReporting(TestCommonSaleProjectTimesheetNoChart):
 
     @classmethod
     def setUpClass(cls):
