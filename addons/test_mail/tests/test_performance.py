@@ -172,7 +172,7 @@ class TestAdvMailPerformance(TransactionCase):
             'default_res_model': 'mail.test.activity',
         })
 
-        with self.assertQueryCount(__system__=10, emp=16):  # com runbot: 9 - 15 // test_mail only: 10 - 15
+        with self.assertQueryCount(__system__=10, emp=17):  # com runbot: 9 - 15 // test_mail only: 10 - 15
             activity = MailActivity.create({
                 'summary': 'Test Activity',
                 'res_id': record.id,
@@ -191,7 +191,7 @@ class TestAdvMailPerformance(TransactionCase):
     def test_adv_activity_mixin(self):
         record = self.env['mail.test.activity'].create({'name': 'Test'})
 
-        with self.assertQueryCount(__system__=10, emp=16):  # com runbot: 9 - 15 // test_mail only: 10 - 15
+        with self.assertQueryCount(__system__=10, emp=17):  # com runbot: 9 - 15 // test_mail only: 10 - 15
             activity = record.action_start('Test Start')
             #read activity_type to normalize cache between enterprise and community
             #voip module read activity_type during create leading to one less query in enterprise on action_close

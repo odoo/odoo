@@ -24,11 +24,13 @@ class AccountReconciliation(models.AbstractModel):
                 'counterpart_aml_dicts', 'payment_aml_ids' and 'new_aml_dicts',
                 whose value is the same as described in process_reconciliation
                 except that ids are used instead of recordsets.
+            :returns dict: used as a hook to add additional keys.
         """
         st_lines = self.env['account.bank.statement.line'].browse(st_line_ids)
         AccountMoveLine = self.env['account.move.line']
         ctx = dict(self._context, force_price_include=False)
 
+        processed_moves = self.env['account.move']
         for st_line, datum in zip(st_lines, data):
             payment_aml_rec = AccountMoveLine.browse(datum.get('payment_aml_ids', []))
 
@@ -40,10 +42,12 @@ class AccountReconciliation(models.AbstractModel):
                 st_line.write({'partner_id': datum['partner_id']})
 
             ctx['default_to_check'] = datum.get('to_check')
-            st_line.with_context(ctx).process_reconciliation(
+            moves = st_line.with_context(ctx).process_reconciliation(
                 datum.get('counterpart_aml_dicts', []),
                 payment_aml_rec,
                 datum.get('new_aml_dicts', []))
+            processed_moves = (processed_moves | moves)
+        return {'moves': processed_moves}
 
     @api.model
     def get_move_lines_for_bank_statement_line(self, st_line_id, partner_id=None, excluded_ids=None, search_str=False, offset=0, limit=None):
@@ -113,7 +117,7 @@ class AccountReconciliation(models.AbstractModel):
             'value_max': 0,
             'reconciled_aml_ids': [],
         }
-        
+
         if not st_line_ids:
             return results
 
