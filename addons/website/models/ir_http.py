@@ -164,7 +164,7 @@ class Http(models.AbstractModel):
 
         redirect = cls._serve_redirect()
         if redirect:
-            return request.redirect(_build_url_w_params(redirect.url_to, request.params), code=redirect.type)
+            return request.redirect(_build_url_w_params(redirect.url_to, request.params), code=redirect.redirect_type)
 
         return False
 
