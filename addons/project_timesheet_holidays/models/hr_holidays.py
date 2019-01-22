@@ -16,26 +16,38 @@ class HolidaysType(models.Model):
         company = self.company_id if self.company_id else self.env.user.company_id
         return company.leave_timesheet_task_id.id
 
-    timesheet_generate = fields.Boolean('Generate Timesheet', default=True, help="If checked, when validating a leave, timesheet will be generated in the Vacation Project of the company.")
-    timesheet_project_id = fields.Many2one('project.project', string="Internal Project", default=_default_project_id, help="The project will contain the timesheet generated when a leave is validated.")
-    timesheet_task_id = fields.Many2one('project.task', string="Internal Task for timesheet", default=_default_task_id, domain="[('project_id', '=', timesheet_project_id)]")
+    timesheet_generate = fields.Boolean('Generate Timesheet', default=True, help="If checked, when validating a time off, timesheet will be generated in the Vacation Project of the company.")
+    timesheet_project_id = fields.Many2one('project.project', string="Project", default=_default_project_id, help="The project will contain the timesheet generated when a time off is validated.")
+    timesheet_task_id = fields.Many2one('project.task', string="Task for timesheet", default=_default_task_id, domain="[('project_id', '=', timesheet_project_id)]")
 
-    @api.onchange('timesheet_generate')
+    @api.onchange('timesheet_task_id')
     def _onchange_timesheet_generate(self):
-        if self.timesheet_generate:
-            company = self.company_id if self.company_id else self.env.user.company_id
-            self.timesheet_project_id = company.leave_timesheet_project_id
-            self.timesheet_task_id = company.leave_timesheet_task_id
+        if self.timesheet_task_id or self.timesheet_project_id:
+            self.timesheet_generate = True
         else:
-            self.timesheet_project_id = False
-            self.timesheet_task_id = False
+            self.timesheet_generate = False
 
-    @api.constrains('timesheet_generate')
+    @api.onchange('timesheet_project_id')
+    def _onchange_timesheet_project(self):
+        company = self.company_id if self.company_id else self.env.user.company_id
+        default_task_id = company.leave_timesheet_task_id
+        if default_task_id and default_task_id.project_id == self.timesheet_project_id:
+            self.timesheet_task_id = default_task_id
+        else:
+            self.timesheet_task_id = False
+        if self.timesheet_project_id:
+            self.timesheet_generate = True
+        else:
+            self.timesheet_generate = False
+
+    @api.constrains('timesheet_generate', 'timesheet_project_id', 'timesheet_task_id')
     def _check_timesheet_generate(self):
         for holiday_status in self:
             if holiday_status.timesheet_generate:
                 if not holiday_status.timesheet_project_id or not holiday_status.timesheet_task_id:
-                    raise ValidationError(_('Both the internal project and task are required to generate timesheet for the leaves.'))
+                    raise ValidationError(_('Both the internal project and task are required to\
+                    generate timesheet for the time of. If you don\'t want timesheet, you must let\
+                    empty internal project and task.'))
 
 
 class Holidays(models.Model):

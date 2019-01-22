@@ -6,6 +6,8 @@
 import datetime
 import logging
 
+from collections import defaultdict
+
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.tools.translate import _
@@ -16,16 +18,16 @@ _logger = logging.getLogger(__name__)
 
 class HolidaysType(models.Model):
     _name = "hr.leave.type"
-    _description = "Leave Type"
+    _description = "Time Off Type"
     _order = "sequence, id"
 
-    name = fields.Char('Leave Type', required=True, translate=True)
+    name = fields.Char('Time Off Type', required=True, translate=True)
     code = fields.Char('Code')
     sequence = fields.Integer(default=100,
-                              help='The type with the smallest sequence is the default value in leave request')
+                              help='The type with the smallest sequence is the default value in time off request')
     categ_id = fields.Many2one(
         'calendar.event.type', string='Meeting Type',
-        help='Once a leave is validated, Odoo will create a corresponding meeting of this type in the calendar.')
+        help='Once a time off is validated, Odoo will create a corresponding meeting of this type in the calendar.')
     color_name = fields.Selection([
         ('red', 'Red'),
         ('blue', 'Blue'),
@@ -43,50 +45,50 @@ class HolidaysType(models.Model):
         ('lavender', 'Lavender'),
         ('wheat', 'Wheat'),
         ('ivory', 'Ivory')], string='Color in Report', required=True, default='red',
-        help='This color will be used in the leaves summary located in Reporting > Leaves by Department.')
+        help='This color will be used in the time off summary located in Reporting > Time off by Department.')
     active = fields.Boolean('Active', default=True,
-                            help="If the active field is set to false, it will allow you to hide the leave type without removing it.")
-    max_leaves = fields.Float(compute='_compute_leaves', string='Maximum Allowed',
-                              help='This value is given by the sum of all leaves requests with a positive value.')
+                            help="If the active field is set to false, it will allow you to hide the time off type without removing it.")
+    max_leaves = fields.Float(compute='_compute_leaves', string='Maximum Allowed', search='_search_max_leaves',
+                              help='This value is given by the sum of all time off requests with a positive value.')
     leaves_taken = fields.Float(
-        compute='_compute_leaves', string='Leaves Already Taken',
-        help='This value is given by the sum of all leaves requests with a negative value.')
+        compute='_compute_leaves', string='Time off Already Taken',
+        help='This value is given by the sum of all time off requests with a negative value.')
     remaining_leaves = fields.Float(
-        compute='_compute_leaves', string='Remaining Leaves',
-        help='Maximum Leaves Allowed - Leaves Already Taken')
+        compute='_compute_leaves', string='Remaining Time Off',
+        help='Maximum Time Off Allowed - Time Off Already Taken')
     virtual_remaining_leaves = fields.Float(
-        compute='_compute_leaves', string='Virtual Remaining Leaves',
-        help='Maximum Leaves Allowed - Leaves Already Taken - Leaves Waiting Approval')
+        compute='_compute_leaves', string='Virtual Remaining Time Off',
+        help='Maximum Time Off Allowed - Time Off Already Taken - Time Off Waiting Approval')
     group_days_allocation = fields.Float(
         compute='_compute_group_days_allocation', string='Days Allocated')
     group_days_leave = fields.Float(
-        compute='_compute_group_days_leave', string='Group Leaves')
+        compute='_compute_group_days_leave', string='Group Time Off')
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.user.company_id)
     validation_type = fields.Selection([
         ('no_validation', 'No Validation'),
         ('hr', 'Payroll Officer'),
         ('manager', 'Team Leader'),
-        ('both', 'Team Leader and Payroll Officer')], default='hr', string='Validation By')
+        ('both', 'Team Leader and Payroll Officer')], default='hr', string='Validation')
     allocation_type = fields.Selection([
-        ('fixed', 'Fixed by HR'),
-        ('fixed_allocation', 'Fixed by HR + allocation request'),
-        ('no', 'No allocation')],
-        default='fixed', string='Mode',
-        help='\tFixed by HR: allocated by HR and cannot be bypassed; users can request leaves;'
-             '\tFixed by HR + allocation request: allocated by HR and users can request leaves and allocations;'
-             '\tNo allocation: no allocation by default, users can freely request leaves;')
-    validity_start = fields.Date("Start Date", default=fields.Date.today,
-                                 help='Adding validity to types of leaves so that it cannot be selected outside this time period')
-    validity_stop = fields.Date("End Date")
+        ('no', 'No Allocation Needed'),
+        ('fixed_allocation', 'Free Allocation Request'),
+        ('fixed', 'Allocated by HR only')],
+        default='no', string='Mode',
+        help='\tNo Allocation Needed: no allocation by default, users can freely request time off;'
+             '\tFree Allocation Request: allocated by HR and users can request time off and allocations;'
+             '\tAllocated by HR only: allocated by HR and cannot be bypassed; users can request time off;')
+    validity_start = fields.Date("From", default=fields.Date.today,
+                                 help='Adding validity to types of time off so that it cannot be selected outside this time period')
+    validity_stop = fields.Date("To")
     valid = fields.Boolean(compute='_compute_valid', search='_search_valid', help='This indicates if it is still possible to use this type of leave')
-    time_type = fields.Selection([('leave', 'Leave'), ('other', 'Other')], default='leave', string="Kind of Leave",
+    time_type = fields.Selection([('leave', 'Time Off'), ('other', 'Other')], default='leave', string="Kind of Leave",
                                  help="Whether this should be computed as a holiday or as work time (eg: formation)")
     request_unit = fields.Selection([
-        ('day', 'Day'), ('hour', 'Hours')],
-        default='day', string='Take Leaves in', required=True)
+        ('day', 'Day'), ('half_day','Half Day'), ('hour', 'Hours')],
+        default='day', string='Take Time Off in', required=True)
     unpaid = fields.Boolean('Is Unpaid', default=False)
-    leave_notif_subtype_id = fields.Many2one('mail.message.subtype', string='Leave Notification Subtype')
-    allocation_notif_subtype_id = fields.Many2one('mail.message.subtype', string='Allocation Notification Subtype')
+    leave_notif_subtype_id = fields.Many2one('mail.message.subtype', string='Time Off Notification Subtype', default=lambda self: self.env.ref('hr_holidays.mt_leave', raise_if_not_found=False))
+    allocation_notif_subtype_id = fields.Many2one('mail.message.subtype', string='Allocation Notification Subtype', default=lambda self: self.env.ref('hr_holidays.mt_leave_allocation', raise_if_not_found=False))
 
     @api.multi
     @api.constrains('validity_start', 'validity_stop')
@@ -117,6 +119,35 @@ class HolidaysType(models.Model):
         return ['|', ('validity_stop', operator, False), '&',
                 ('validity_stop', signs[0] if value else signs[1], dt),
                 ('validity_start', signs[1] if value else signs[0], dt)]
+
+    def _search_max_leaves(self, operator, value):
+        value = float(value)
+        employee_id = self._get_contextual_employee_id()
+        leaves = defaultdict(int)
+
+        if employee_id:
+            allocations = self.env['hr.leave.allocation'].search([
+                ('employee_id', '=', employee_id),
+                ('state', '=', 'validate')
+            ])
+            for allocation in allocations:
+                leaves[allocation.holiday_status_id.id] += allocation.number_of_days
+        valid_leave = []
+        for leave in leaves:
+            if operator == '>':
+                if leaves[leave] > value:
+                    valid_leave.append(leave)
+            elif operator == '<':
+                if leaves[leave] < value:
+                    valid_leave.append(leave)
+            elif operator == '=':
+                if leaves[leave] == value:
+                    valid_leave.append(leave)
+            elif operator == '!=':
+                if leaves[leave] != value:
+                    valid_leave.append(leave)
+
+        return [('id', 'in', valid_leave)]
 
     @api.multi
     def get_days(self, employee_id):
@@ -153,6 +184,19 @@ class HolidaysType(models.Model):
                 status_dict['remaining_leaves'] += allocation.number_of_days
 
         return result
+
+    @api.multi
+    def get_days_all_request(self):
+        employee_id = self._get_contextual_employee_id()
+
+        leaves_type = self.search([])
+        leaves = leaves_type.get_days(employee_id)
+        leave_id_name = dict(zip(leaves_type.ids, leaves_type.mapped('name')))
+        leave_id_allocation_type = dict(zip(leaves_type.ids, leaves_type.mapped('allocation_type')))
+        result = [(leave_id_name[leave_id], {key: round(value, 2) for (key, value) in leave.items()}, leave_id_allocation_type[leave_id]) for leave_id, leave in leaves.items() if leave['virtual_remaining_leaves'] or leave['max_leaves']]
+
+        sort_key = lambda l: (l[2] == 'fixed', l[2] == 'fixed_allocation', l[1]['virtual_remaining_leaves'])
+        return sorted(result, key=sort_key, reverse=True)
 
     def _get_contextual_employee_id(self):
         if 'employee_id' in self._context:
@@ -235,7 +279,7 @@ class HolidaysType(models.Model):
         leave_ids = super(HolidaysType, self)._search(args, offset=offset, limit=limit, order=order, count=count, access_rights_uid=access_rights_uid)
         if not count and not order and employee_id:
             leaves = self.browse(leave_ids)
-            sort_key = lambda l: (l.allocation_type == 'fixed', l.allocation_type == 'fixed_allocation', l.virtual_remaining_leaves)
+            sort_key = lambda l: (l.allocation_type in ['fixed', 'fixed_allocation'], l.virtual_remaining_leaves)
             return leaves.sorted(key=sort_key, reverse=True).ids
         return leave_ids
 

@@ -12,7 +12,7 @@ var _t = core._t;
 var enableFlag = 'enable_new_content';
 
 var NewContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
-    xmlDependencies: ['/web_editor/static/src/xml/editor.xml'],
+    xmlDependencies: ['/website/static/src/xml/website.editor.xml'],
     actions: _.extend({}, websiteNavbarData.WebsiteNavbarActionWidget.prototype.actions || {}, {
         close_all_widgets: '_handleCloseDemand',
         new_page: '_createNewPage',

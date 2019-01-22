@@ -33,7 +33,7 @@
                     <div t-if="record.leave_to_approve_count.raw_value > 0" class="row">
                         <div class="col-9">
                             <a name="%(hr_leave_action_action_approve_department)d" type="action">
-                                Leave Requests
+                                Time Off Requests
                             </a>
                         </div>
                         <div class="col-3">
@@ -69,7 +69,7 @@
                     <div class="row">
                         <div class="col-12 text-left">
                             <a name="%(hr_leave_action_action_approve_department)d" type="action">
-                                <t t-esc="record.leave_to_approve_count.raw_value or 0"/> Leave Requests
+                                <t t-esc="record.leave_to_approve_count.raw_value or 0"/> Time Off Requests
                             </a>
                         </div>
                     </div>
@@ -87,7 +87,7 @@
                     <div class="row">
                         <div class="col-12 text-left">
                             <a name="%(hr_leave_action_action_department)d" type="action">
-                                Leaves
+                                Time Off
                             </a>
                         </div>
                     </div>
@@ -137,7 +137,7 @@
         <field name="inherit_id" ref="hr.view_employee_form"/>
         <field name="arch" type="xml">
             <xpath expr="//group[@name='active_group']" position="after">
-                <group string="Leaves">
+                <group string="Time Off">
                     <label for="remaining_leaves"/>
                     <div>
                         <field name="remaining_leaves" class="oe_inline"/> days
@@ -153,8 +153,8 @@
                         icon="fa-calendar"
                         attrs="{'invisible': [('show_leaves','=', False)]}"
                         groups="base.group_user"
-                        help="Remaining leaves">
-                    <field string="Leaves Left" name="leaves_count" widget="statinfo"/>
+                        help="Remaining time off">
+                    <field string="Time Off Left" name="leaves_count" widget="statinfo"/>
                 </button>
             </button>
         </field>

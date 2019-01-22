@@ -12,7 +12,7 @@ var _t = core._t;
 var AltDialog = Dialog.extend({
     template: 'wysiwyg.widgets.alt',
     xmlDependencies: Dialog.prototype.xmlDependencies.concat(
-        ['/web_editor/static/src/xml/editor.xml']
+        ['/web_editor/static/src/xml/wysiwyg.xml']
     ),
 
     /**

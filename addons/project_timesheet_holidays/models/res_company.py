@@ -9,9 +9,9 @@ class Company(models.Model):
 
     leave_timesheet_project_id = fields.Many2one(
         'project.project', string="Internal Project",
-        help="Default project value for timesheet generated from leave type.")
+        help="Default project value for timesheet generated from time off type.")
     leave_timesheet_task_id = fields.Many2one(
-        'project.task', string="Leave Task",
+        'project.task', string="Time Off Task",
         domain="[('project_id', '=', leave_timesheet_project_id)]")
 
     def init(self):
@@ -37,7 +37,7 @@ class Company(models.Model):
                 })
             if not company.leave_timesheet_task_id:
                 task = self.env['project.task'].sudo().create({
-                    'name': _('Leaves'),
+                    'name': _('Time Off'),
                     'project_id': company.leave_timesheet_project_id.id,
                     'active': False,
                     'company_id': False,

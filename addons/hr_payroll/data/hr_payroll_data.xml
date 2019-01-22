@@ -87,7 +87,6 @@
             <field name="code">BASE</field>
             <field name="name">Base for new structures</field>
             <field eval="[(6, 0, [ref('hr_rule_basic'), ref('hr_rule_taxable'),ref('hr_rule_net')])]" name="rule_ids"/>
-            <field name="company_id" ref="base.main_company"/>
         </record>
 
         <!-- Decimal Precision -->
@@ -111,7 +110,7 @@
         </record>
 
         <record id="benefit_type_leave" model="hr.benefit.type">
-            <field name="name">Generic Leave</field>
+            <field name="name">Generic Time Off</field>
             <field name="code">LEAVE100</field>
             <field name="color">3</field>
             <field name="is_leave">True</field>

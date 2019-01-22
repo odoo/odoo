@@ -168,7 +168,7 @@ class TestHolidaysFlow(TestHrHolidaysBase):
         hol3_status = self.env.ref('hr_holidays.holiday_status_cl').with_context(employee_id=employee_id)
         # I assign the dates in the holiday request for 1 day
         hol3 = Requests.create({
-            'name': 'Sick Leave',
+            'name': 'Sick Time Off',
             'holiday_status_id': hol3_status.id,
             'date_from': datetime.today().strftime('%Y-%m-10 10:00:00'),
             'date_to': datetime.today().strftime('%Y-%m-11 19:00:00'),

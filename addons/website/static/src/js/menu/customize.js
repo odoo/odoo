@@ -9,7 +9,7 @@ var WebsiteAceEditor = require('website.ace');
 var qweb = core.qweb;
 
 var CustomizeMenu = Widget.extend({
-    xmlDependencies: ['/web_editor/static/src/xml/editor.xml'],
+    xmlDependencies: ['/website/static/src/xml/website.editor.xml'],
     events: {
         'show.bs.dropdown': '_onDropdownShow',
         'click .dropdown-item[data-view-id]': '_onCustomizeOptionClick',
