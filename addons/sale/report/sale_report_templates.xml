@@ -12,12 +12,12 @@
                              and doc.partner_invoice_id != doc.partner_id
                              or doc.partner_shipping_id != doc.partner_invoice_id">
             <t t-set="information_block">
-                <strong t-if="doc.partner_shipping_id == doc.partner_invoice_id">Invoicing and shipping address:</strong>
-                <strong t-if="doc.partner_shipping_id != doc.partner_invoice_id">Invoicing address:</strong>
+                <strong t-if="doc.partner_shipping_id == doc.partner_invoice_id">Invoicing and Shipping Address:</strong>
+                <strong t-if="doc.partner_shipping_id != doc.partner_invoice_id">Invoicing Address:</strong>
                 <div t-field="doc.partner_invoice_id"
                 t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
                 <t t-if="doc.partner_shipping_id != doc.partner_invoice_id">
-                    <strong>Shipping address:</strong>
+                    <strong>Shipping Address:</strong>
                     <div t-field="doc.partner_shipping_id"
                         t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
                 </t>
@@ -26,7 +26,7 @@
         <div class="page">
             <div class="oe_structure"/>
 
-            <h2>
+            <h2 class="mt16">
                 <t t-if="not (env.context.get('proforma', False) or is_pro_forma)">
                     <span t-if="doc.state not in ['draft','sent']">Order # </span>
                     <span t-if="doc.state in ['draft','sent']">Quotation # </span>
@@ -48,19 +48,15 @@
                 </div>
                 <div t-if="doc.date_order and doc.state in ['draft','sent']" class="col-auto mw-100 mb-2">
                     <strong>Quotation Date:</strong>
-                    <p class="m-0" t-field="doc.date_order"/>
+                    <p class="m-0" t-field="doc.date_order" t-options='{"widget": "date"}'/>
+                </div>
+                <div t-if="doc.validity_date and doc.state in ['draft', 'sent']" class="col-auto mw-100 mb-2" name="expiration_date">
+                    <strong>Expiration:</strong>
+                    <p class="m-0" t-field="doc.validity_date"/>
                 </div>
                 <div t-if="doc.user_id.name" class="col-auto mw-100 mb-2">
                     <strong>Salesperson:</strong>
                     <p class="m-0" t-field="doc.user_id"/>
-                </div>
-                <div name="payment_term" t-if="doc.payment_term_id" class="col-auto mw-100 mb-2">
-                    <strong>Payment Terms:</strong>
-                    <p class="m-0" t-field="doc.payment_term_id"/>
-                </div>
-                <div t-if="doc.validity_date and doc.state in ['draft', 'sent']" class="col-auto mw-100 mb-2">
-                    <strong>Expiration Date:</strong>
-                    <p class="m-0" t-field="doc.validity_date"/>
                 </div>
             </div>
 
@@ -149,7 +145,7 @@
                 </tbody>
             </table>
 
-            <div class="clearfix">
+            <div class="clearfix" name="so_total_summary">
                 <div id="total" class="row" name="total">
                     <div t-attf-class="#{'col-4' if report_type != 'html' else 'col-sm-7 col-md-5'} ml-auto">
                         <table class="table table-sm">
@@ -193,16 +189,7 @@
                 </div>
             </div>
 
-            <p t-field="doc.note" />
-            <p t-if="doc.payment_term_id.note">
-                <span t-field="doc.payment_term_id.note"/>
-            </p>
-            <p id="fiscal_position_remark" t-if="doc.fiscal_position_id and doc.fiscal_position_id.sudo().note">
-                <strong>Fiscal Position Remark:</strong>
-                <span t-field="doc.fiscal_position_id.sudo().note"/>
-            </p>
-
-            <div t-if="doc.signature" class="mt32 ml16 mr16" name="signature">
+            <div t-if="doc.signature" class="mt32 ml64 mr4" name="signature">
                 <div class="offset-8">
                     <strong>Signature</strong>
                 </div>
@@ -215,6 +202,15 @@
             </div>
 
             <div class="oe_structure"/>
+
+            <p t-field="doc.note" />
+            <p t-if="doc.payment_term_id.note">
+                <span t-field="doc.payment_term_id.note"/>
+            </p>
+            <p id="fiscal_position_remark" t-if="doc.fiscal_position_id and doc.fiscal_position_id.sudo().note">
+                <strong>Fiscal Position Remark:</strong>
+                <span t-field="doc.fiscal_position_id.sudo().note"/>
+            </p>
         </div>
     </t>
 </template>
