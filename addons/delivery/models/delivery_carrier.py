@@ -69,7 +69,7 @@ class DeliveryCarrier(models.Model):
     def install_more_provider(self):
         return {
             'name': 'New Providers',
-            'view_mode': 'kanban',
+            'view_mode': 'kanban,form',
             'res_model': 'ir.module.module',
             'domain': [['name', 'ilike', 'delivery_']],
             'type': 'ir.actions.act_window',
