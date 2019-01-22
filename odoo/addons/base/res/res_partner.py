@@ -34,9 +34,10 @@ ADDRESS_FORMAT_CLASSES = {
 }
 
 ADDRESS_FIELDS = ('street', 'street2', 'zip', 'city', 'state_id', 'country_id')
+
 @api.model
 def _lang_get(self):
-    return self.env['res.lang'].get_installed()
+    return self.env['res.lang'].with_context(prefetch_fields=False).get_installed()
 
 @api.model
 def _tz_get(self):
