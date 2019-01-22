@@ -467,6 +467,14 @@ class Lead(models.Model):
             default['user_id'] = False
         return super(Lead, self.with_context(context)).copy(default=default)
 
+    def name_get(self):
+        if "merge_opportunity_name_get" in self._context:
+            result = []
+            for lead in self:
+                result.append((lead.id, "[%d] %s" % (lead.id, lead.name)))
+            return result
+        return super(Lead, self).name_get()
+
     @api.model
     def _fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
         if self._context.get('opportunity_id'):
@@ -764,12 +772,10 @@ class Lead(models.Model):
         if len(self.ids) <= 1:
             raise UserError(_('Please select more than one element (lead or opportunity) from the list view.'))
 
-        # Sorting the leads/opps according to the confidence level of its stage, which relates to the probability of winning it
+        # Sorting the leads/opps according to the confidence level of its stage, which relates to the progress rate (stage's sequence)
         # The confidence level increases with the stage sequence
         # An Opportunity always has higher confidence level than a lead
-        def opps_key(opportunity):
-            return opportunity.type == 'opportunity', opportunity.stage_id.sequence, -opportunity.id
-        opportunities = self.sorted(key=opps_key, reverse=True)
+        opportunities = self._sort_by_confidence_level(reverse=True)
 
         # get SORTED recordset of head and tail, and complete list
         opportunities_head = opportunities[0]
@@ -796,6 +802,9 @@ class Lead(models.Model):
 
         # write merged data into first opportunity
         opportunities_head.write(merged_data)
+        team = self.env['crm.team'].browse(team_id)
+        if team_id and user_id != team.user_id.id and user_id not in team.member_ids.ids:
+            opportunities_head.write({'team_id': team_id})
 
         # delete tail opportunities
         # we use the SUPERUSER to avoid access rights issues because as the user had the rights to see the records it should be safe to do so
@@ -803,16 +812,22 @@ class Lead(models.Model):
 
         return opportunities_head
 
-    def get_duplicated_leads(self, partner_id, include_lost=False):
+    def _sort_by_confidence_level(self, reverse=False):
+        def opps_key(opportunity):
+            return opportunity.type == 'opportunity', opportunity.stage_id.sequence, -opportunity._origin.id
+
+        return self.sorted(key=opps_key, reverse=reverse)
+
+    def get_duplicated_leads(self, partner_id, include_lost=False, company=False):
         """ Search for opportunities that have the same partner and that arent done or cancelled
             :param partner_id : partner to search
         """
         self.ensure_one()
         email = self.partner_id.email or self.email_from
-        return self._get_duplicated_leads_by_emails(partner_id, email, include_lost=include_lost)
+        return self._get_duplicated_leads_by_emails(partner_id, email, include_lost=include_lost, company=company)
 
     @api.model
-    def _get_duplicated_leads_by_emails(self, partner_id, email, include_lost=False):
+    def _get_duplicated_leads_by_emails(self, partner_id, email, include_lost=False, company=False):
         """ Search for opportunities that have the same partner and that arent done or cancelled """
         if not email:
             return self.env['crm.lead']
@@ -825,6 +840,8 @@ class Lead(models.Model):
         if not partner_match_domain:
             return self.env['crm.lead']
         domain = partner_match_domain
+        if company:
+            domain += [('company_id', '=', company.id)]
         if not include_lost:
             domain += ['&', ('active', '=', True), ('probability', '<', 100)]
         else:
@@ -958,17 +975,21 @@ class Lead(models.Model):
             :param int team_id: salesteam to assign
             :return bool
         """
-        index = 0
-        for lead in self:
-            value = {}
+        team = self.env['crm.team'].browse(team_id)
+        if len(user_ids) <= 1:
+            user_id = user_ids[0] if user_ids else False
+            self.write({'user_id': user_id})
             if team_id:
-                value['team_id'] = team_id
-            if user_ids:
-                value['user_id'] = user_ids[index]
+                if not user_id or (team_id and user_id != team.user_id.id and user_id not in team.member_ids.ids):
+                    self.write({'team_id': team_id})
+        else:
+            index = 0
+            for lead in self:
+                lead.write({'user_id': user_ids[index]})
                 # Cycle through user_ids
+                if team_id and user_ids[index] != team.user_id.id and user_ids[index] not in team.member_ids.ids:
+                    self.write({'team_id': team_id})
                 index = (index + 1) % len(user_ids)
-            if value:
-                lead.write(value)
         return True
 
     def redirect_lead_opportunity_view(self):
