@@ -119,20 +119,22 @@ var ViewEditor = Widget.extend({
     jsLibs: [
         '/web/static/lib/ace/ace.js',
         [
+            '/web/static/lib/ace/javascript_highlight_rules.js',
             '/web/static/lib/ace/mode-xml.js',
             '/web/static/lib/ace/mode-scss.js',
+            '/web/static/lib/ace/mode-js.js',
             '/web/static/lib/ace/theme-monokai.js'
         ]
     ],
     events: {
         'click .o_ace_type_switcher_choice': '_onTypeChoice',
         'change .o_res_list': '_onResChange',
-        'click .js_include_bundles': '_onIncludeBundlesChange',
-        'click .js_include_all_scss': '_onIncludeAllSCSSChange',
+        'click .o_ace_filter': '_onFilterChange',
         'click button[data-action=save]': '_onSaveClick',
         'click button[data-action=reset]': '_onResetClick',
         'click button[data-action=format]': '_onFormatClick',
         'click button[data-action=close]': '_onCloseClick',
+        'click #ace-view-id > .alert-warning .close': '_onCloseWarningClick'
     },
 
     /**
@@ -150,8 +152,9 @@ var ViewEditor = Widget.extend({
      * @param {string} [options.position=right]
      * @param {boolean} [options.doNotLoadViews=false]
      * @param {boolean} [options.doNotLoadSCSS=false]
+     * @param {boolean} [options.doNotLoadJS=false]
      * @param {boolean} [options.includeBundles=false]
-     * @param {boolean} [options.includeAllSCSS=false]
+     * @param {string} [options.filesFilter=custom]
      * @param {string[]} [options.defaultBundlesRestriction]
      */
     init: function (parent, viewKey, options) {
@@ -164,18 +167,20 @@ var ViewEditor = Widget.extend({
             position: 'right',
             doNotLoadViews: false,
             doNotLoadSCSS: false,
+            doNotLoadJS: false,
             includeBundles: false,
-            includeAllSCSS: false,
+            filesFilter: 'custom',
             defaultBundlesRestriction: [],
         });
 
-        this.resources = {xml: {}, scss: {}};
-        this.editingSessions = {xml: {}, scss: {}};
+        this.resources = {xml: {}, scss: {}, js: {}};
+        this.editingSessions = {xml: {}, scss: {}, js: {}};
         this.currentType = 'xml';
 
         // Alias
         this.views = this.resources.xml;
         this.scss = this.resources.scss;
+        this.js = this.resources.js;
     },
     /**
      * Loads everything the ace library needs to work.
@@ -204,11 +209,13 @@ var ViewEditor = Widget.extend({
 
         this.$lists = {
             xml: this.$('#ace-view-list'),
-            scss: this.$('#ace-scss-list')
+            scss: this.$('#ace-scss-list'),
+            js: this.$('#ace-js-list'),
         };
         this.$includeBundlesArea = this.$('.oe_include_bundles');
         this.$includeAllSCSSArea = this.$('.o_include_all_scss');
         this.$viewID = this.$('#ace-view-id > span');
+        this.$warningMessage = this.$('#ace-view-id > .alert-warning');
 
         this.$formatButton = this.$('button[data-action=format]');
         this.$resetButton = this.$('button[data-action=reset]');
@@ -228,11 +235,23 @@ var ViewEditor = Widget.extend({
         var initType;
         if (this.options.initialResID) {
             initResID = this.options.initialResID;
-            initType = (_.isString(initResID) && initResID[0] === '/') ? 'scss' : 'xml';
+            if (_.isString(initResID) && initResID[0] === '/') {
+                if (_.str.endsWith(initResID, '.scss')) {
+                    initType = 'scss';
+                } else {
+                    initType = 'js';
+                }
+            } else {
+                initType = 'xml';
+            }
         } else {
             if (!this.options.doNotLoadSCSS) {
                 initResID = this.sortedSCSS[0][1][0].url; // first bundle, scss files, first one
                 initType = 'scss';
+            }
+            if (!this.options.doNotLoadJS) {
+                initResID = this.sortedJS[0][1][0].url; // first bundle, js files, first one
+                initType = 'js';
             }
             if (!this.options.doNotLoadViews) {
                 if (typeof this.viewKey === "number") {
@@ -321,7 +340,7 @@ var ViewEditor = Widget.extend({
      * Initializes a text editor for the specified resource.
      *
      * @private
-     * @param {integer|string} resID - the ID/URL of the view/scss file
+     * @param {integer|string} resID - the ID/URL of the view/scss/js file
      * @param {string} [type] (default to the currently selected one)
      * @returns {ace.EditSession}
      */
@@ -341,13 +360,13 @@ var ViewEditor = Widget.extend({
         return editingSession;
     },
     /**
-     * Forces the view/scss file identified by its ID/URL to be displayed in the
+     * Forces the view/scss/js file identified by its ID/URL to be displayed in the
      * editor. The method will update the resource select DOM element as well if
      * necessary.
      *
      * @private
      * @param {integer|string} resID
-     * @param {string} [type] - the type of resource (either 'xml' or 'scss')
+     * @param {string} [type] - the type of resource (either 'xml', 'scss' or 'js')
      */
     _displayResource: function (resID, type) {
         if (type) {
@@ -360,14 +379,29 @@ var ViewEditor = Widget.extend({
         }
         this.aceEditor.setSession(editingSession);
 
+        var isCustomized = false;
         if (this.currentType === 'xml') {
             this.$viewID.text(_.str.sprintf(_t("Template ID: %s"), this.views[resID].key));
-        } else {
+        } else if (this.currentType === 'scss') {
+            isCustomized = this.scss[resID].customized;
             this.$viewID.text(_.str.sprintf(_t("SCSS file: %s"), resID));
+        } else {
+            isCustomized = this.js[resID].customized;
+            this.$viewID.text(_.str.sprintf(_t("JS file: %s"), resID));
         }
         this.$lists[this.currentType].select2('val', resID);
 
-        this.$resetButton.toggleClass('d-none', this.currentType === 'xml' || !this.scss[resID].customized);
+        this.$resetButton.toggleClass('d-none', this.currentType === 'xml' || !isCustomized);
+
+        // TODO the warning message is always shown for XML templates but:
+        // 1) We have to implement a way to be able to reset XML templates
+        //    otherwise the warning message is not accurate
+        // 2) We should be able to detect if the XML template is customized to
+        //    not show the warning in that case
+        this.$warningMessage.toggleClass('d-none',
+            this.currentType !== 'xml' && (resID.indexOf('/user_custom_') >= 0 || isCustomized));
+
+        this.aceEditor.resize(true);
     },
     /**
      * Formats the current resource being vizualized.
@@ -403,10 +437,11 @@ var ViewEditor = Widget.extend({
      */
     _loadResources: function () {
         // Reset resources
-        this.resources = {xml: {}, scss: {}};
-        this.editingSessions = {xml: {}, scss: {}};
+        this.resources = {xml: {}, scss: {}, js: {}};
+        this.editingSessions = {xml: {}, scss: {}, js: {}};
         this.views = this.resources.xml;
         this.scss = this.resources.scss;
+        this.js = this.resources.js;
 
         // Load resources
         return this._rpc({
@@ -415,12 +450,15 @@ var ViewEditor = Widget.extend({
                 key: this.viewKey,
                 get_views: !this.options.doNotLoadViews,
                 get_scss: !this.options.doNotLoadSCSS,
+                get_js: !this.options.doNotLoadJS,
                 bundles: this.options.includeBundles,
-                bundles_restriction: this.options.includeAllSCSS ? [] : this.options.defaultBundlesRestriction,
+                bundles_restriction: this.options.filesFilter === 'all' ? [] : this.options.defaultBundlesRestriction,
+                only_user_custom_files: this.options.filesFilter === 'custom',
             },
         }).then((function (resources) {
             _processViews.call(this, resources.views || []);
-            _processSCSS.call(this, resources.scss || []);
+            _processJSorSCSS.call(this, resources.scss || [], 'scss');
+            _processJSorSCSS.call(this, resources.js || [], 'js');
         }).bind(this));
 
         function _processViews(views) {
@@ -461,20 +499,24 @@ var ViewEditor = Widget.extend({
             });
         }
 
-        function _processSCSS(scss) {
-            // The received scss data is already sorted by bundle and DOM order
-            this.sortedSCSS = scss;
+        function _processJSorSCSS(data, type) {
+            // The received scss or js data is already sorted by bundle and DOM order
+            if (type === 'scss') {
+                this.sortedSCSS = data;
+            } else {
+                this.sortedJS = data;
+            }
 
             // Store the URL ungrouped by bundle and use the URL as key (resource ID)
-            var self = this;
-            _.each(scss, function (bundleInfos) {
+            var resources = type === 'scss' ? this.scss : this.js;
+            _.each(data, function (bundleInfos) {
                 _.each(bundleInfos[1], function (info) { info.bundle_xmlid = bundleInfos[0].xmlid; });
-                _.extend(self.scss, _.indexBy(bundleInfos[1], 'url'));
+                _.extend(resources, _.indexBy(bundleInfos[1], 'url'));
             });
         }
     },
     /**
-     * Forces the view/scss file identified by its ID/URL to be reset to the way
+     * Forces the view/scss/js file identified by its ID/URL to be reset to the way
      * it was before the user started editing it.
      *
      * @todo views reset is not supported yet
@@ -491,37 +533,42 @@ var ViewEditor = Widget.extend({
         if (this.currentType === 'xml') {
             return $.Defered().reject(_t("Reseting views is not supported yet"));
         } else {
+            var resource = type === 'scss' ? this.scss[resID] : this.js[resID];
             return this._rpc({
-                route: '/web_editor/reset_scss',
+                route: '/web_editor/reset_scss_or_js',
                 params: {
                     url: resID,
-                    bundle_xmlid: this.scss[resID].bundle_xmlid,
+                    bundle_xmlid: resource.bundle_xmlid,
                 },
             });
         }
     },
     /**
-     * Saves an unique SCSS file.
+     * Saves an unique SCSS or JS file.
      *
      * @private
      * @param {Object} session - contains the 'id' (url) and the 'text' of the
-     *                         SCSS file to save.
+     *                         SCSS or JS file to save.
      * @return {Deferred} status indicates if the save is finished or if an
      *                    error occured.
      */
-    _saveSCSS: function (session) {
+    _saveSCSSorJS: function (session) {
         var def = $.Deferred();
 
         var self = this;
-        this._rpc({
-            route: '/web_editor/save_scss',
+        var sessionIdEndsWithJS = _.string.endsWith(session.id, '.js');
+        var bundleXmlID = sessionIdEndsWithJS ? this.js[session.id].bundle_xmlid : this.scss[session.id].bundle_xmlid;
+        var fileType = sessionIdEndsWithJS ? 'js' : 'scss';
+        self._rpc({
+            route: '/web_editor/save_scss_or_js',
             params: {
                 url: session.id,
-                bundle_xmlid: this.scss[session.id].bundle_xmlid,
+                bundle_xmlid: bundleXmlID,
                 content: session.text,
+                file_type: fileType,
             },
         }).then(function () {
-            self._toggleDirtyInfo(session.id, 'scss', false);
+            self._toggleDirtyInfo(session.id, fileType, false);
             def.resolve();
         }, function (source, error) {
             def.reject(session, error);
@@ -572,7 +619,7 @@ var ViewEditor = Widget.extend({
             _toSave = _.sortBy(_toSave, 'id').reverse();
             _.each(_toSave, function (session) {
                 defs.push(mutex.exec(function () {
-                    return (type === 'xml' ? self._saveView(session) : self._saveSCSS(session));
+                    return (type === 'xml' ? self._saveView(session) : self._saveSCSSorJS(session));
                 }));
             });
         }).bind(this));
@@ -665,11 +712,11 @@ var ViewEditor = Widget.extend({
         }
     },
     /**
-     * Switches to the SCSS or XML edition. Calling this method will adapt all
+     * Switches to the SCSS, XML or JS edition. Calling this method will adapt all
      * DOM elements to keep the editor consistent.
      *
      * @private
-     * @param {string} type - either 'xml' or 'scss'
+     * @param {string} type - either 'xml', 'scss' or 'js'
      */
     _switchType: function (type) {
         this.currentType = type;
@@ -677,9 +724,10 @@ var ViewEditor = Widget.extend({
         _.each(this.$lists, function ($list, _type) { $list.toggleClass('d-none', type !== _type); });
         this.$lists[type].change();
 
-        this.$includeBundlesArea.toggleClass('d-none', this.currentType === 'scss' || !session.debug);
-        this.$includeAllSCSSArea.toggleClass('d-none', this.currentType === 'xml' || !session.debug || this.options.defaultBundlesRestriction.length === 0);
-        this.$formatButton.toggleClass('d-none', this.currentType === 'scss');
+        this.$includeBundlesArea.toggleClass('d-none', this.currentType !== 'xml' || !session.debug);
+        this.$includeAllSCSSArea.toggleClass('d-none', this.currentType !== 'scss' || !session.debug);
+        this.$includeAllSCSSArea.find('[data-value="restricted"]').toggleClass('d-none', this.options.defaultBundlesRestriction.length === 0);
+        this.$formatButton.toggleClass('d-none', this.currentType !== 'xml');
     },
     /**
      * Updates the select option DOM element associated with a particular resID
@@ -724,21 +772,10 @@ var ViewEditor = Widget.extend({
         });
 
         this.$lists.scss.empty();
-        _.each(this.sortedSCSS, function (bundleInfos) {
-            var $optgroup = $('<optgroup/>', {
-                label: bundleInfos[0].name,
-            }).appendTo(self.$lists.scss);
-            _.each(bundleInfos[1], function (scssInfo) {
-                var name = scssInfo.url.substring(_.lastIndexOf(scssInfo.url, '/') + 1, scssInfo.url.length - 5);
-                $optgroup.append($('<option/>', {
-                    value: scssInfo.url,
-                    text: name,
-                    selected: currentId === scssInfo.url,
-                    'data-debug': scssInfo.url,
-                    'data-customized': scssInfo.customized
-                }));
-            });
-        });
+        _populateList(this.sortedSCSS, this.$lists.scss, 5);
+
+        this.$lists.js.empty();
+        _populateList(this.sortedJS, this.$lists.js, 3);
 
         this.$lists.xml.select2('destroy');
         this.$lists.xml.select2({
@@ -752,6 +789,30 @@ var ViewEditor = Widget.extend({
             formatSelection: _formatDisplay.bind(this, true),
         });
         this.$lists.scss.data('select2').dropdown.addClass('o_ace_select2_dropdown');
+        this.$lists.js.select2('destroy');
+        this.$lists.js.select2({
+            formatResult: _formatDisplay.bind(this, false),
+            formatSelection: _formatDisplay.bind(this, true),
+        });
+        this.$lists.js.data('select2').dropdown.addClass('o_ace_select2_dropdown');
+
+        function _populateList(sortedData, $list, lettersToRemove) {
+            _.each(sortedData, function (bundleInfos) {
+                var $optgroup = $('<optgroup/>', {
+                    label: bundleInfos[0].name,
+                }).appendTo($list);
+                _.each(bundleInfos[1], function (dataInfo) {
+                    var name = dataInfo.url.substring(_.lastIndexOf(dataInfo.url, '/') + 1, dataInfo.url.length - lettersToRemove);
+                    $optgroup.append($('<option/>', {
+                        value: dataInfo.url,
+                        text: name,
+                        selected: currentId === dataInfo.url,
+                        'data-debug': dataInfo.url,
+                        'data-customized': dataInfo.customized
+                    }));
+                });
+            });
+        }
 
         function _formatDisplay(isSelected, data) {
             var $elem = $(data.element);
@@ -803,25 +864,20 @@ var ViewEditor = Widget.extend({
         this._formatResource();
     },
     /**
-     * Called when the checkbox which indicates if all SCSS should be included
-     * is toggled -> reloads the resources accordingly.
+     * Called when a filter dropdown item is cliked. Reload the resources
+     * according to the new filter and make it visually active.
      *
      * @private
      * @param {Event} ev
      */
-    _onIncludeAllSCSSChange: function (ev) {
-        this.options.includeAllSCSS = $(ev.target).prop('checked');
-        this._loadResources().then(this._updateViewSelectDOM.bind(this));
-    },
-    /**
-     * Called when the checkbox which indicates if assets bundles should be
-     * included is toggled -> reloads the resources accordingly.
-     *
-     * @private
-     * @param {Event} ev
-     */
-    _onIncludeBundlesChange: function (ev) {
-        this.options.includeBundles = $(ev.target).prop('checked');
+    _onFilterChange: function (ev) {
+        var $item = $(ev.target);
+        $item.addClass('active').siblings().removeClass('active');
+        if ($item.data('type') === 'xml') {
+            this.options.includeBundles = $(ev.target).data('value') === 'all';
+        } else {
+            this.options.filesFilter = $item.data('value');
+        }
         this._loadResources().then(this._updateViewSelectDOM.bind(this));
     },
     /**
@@ -866,6 +922,13 @@ var ViewEditor = Widget.extend({
     _onTypeChoice: function (ev) {
         ev.preventDefault();
         this._switchType($(ev.target).data('type'));
+    },
+    /**
+     * Allows to hide the warning message without removing it from the DOM
+     * -> by default Bootstrap removes alert from the DOM
+     */
+    _onCloseWarningClick: function () {
+        this.$warningMessage.addClass('d-none');
     },
 });
 
