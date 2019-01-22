@@ -2908,6 +2908,7 @@ var AceEditor = DebouncedField.extend({
         if (this.aceEditor) {
             this.aceEditor.destroy();
         }
+        this._super.apply(this, arguments);
     },
 
     //--------------------------------------------------------------------------
