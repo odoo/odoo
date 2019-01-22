@@ -891,6 +891,7 @@ class MrpProduction(models.Model):
             'type': 'ir.actions.act_window',
             'context': {'default_production_id': self.id,
                         'product_ids': (self.move_raw_ids.filtered(lambda x: x.state not in ('done', 'cancel')) | self.move_finished_ids.filtered(lambda x: x.state == 'done')).mapped('product_id').ids,
+                        'default_company_id': self.company_id.id
                         },
             'target': 'new',
         }

@@ -102,15 +102,6 @@
             <field name="company_id"></field>
         </record>
 
-        <record id="sequence_stock_scrap" model="ir.sequence">
-            <field name="name">Scrap</field>
-            <field name="code">stock.scrap</field>
-            <field name="prefix">SP/</field>
-            <field name="padding">5</field>
-            <field name="number_next">1</field>
-            <field name="number_increment">1</field>
-        </record>
-
         <!-- create xml ids for demo data that are widely used in tests or in other codes, for more convenience -->
         <function model="ir.model.data" name="_update_xmlids">
             <value model="base" eval="[{
@@ -150,5 +141,6 @@
         <function model="res.company" name="create_missing_inventory_loss_location"/>
         <function model="res.company" name="create_missing_production_location"/>
         <function model="res.company" name="create_missing_scrap_location"/>
+        <function model="res.company" name="create_missing_scrap_sequence"/>
     </data>
 </odoo>
