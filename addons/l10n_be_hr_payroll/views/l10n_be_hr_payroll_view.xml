@@ -116,13 +116,11 @@
                         <field name="double_holidays" nolabel="1"/>
                         <span>/ year</span>
                     </div>
-                    <field name="holidays_editable" invisible="1"/>
                     <label for="holidays"/>
                     <div class="o_row">
-                        <field name="holidays" nolabel="1" attrs="{'readonly': [('holidays_editable', '=', False)]}"/>
+                        <field name="holidays" nolabel="1"/>
                         <span>/ year</span>
                     </div>
-                    <field name="holidays_compensation" invisible="1"/>
                 </group>
             </xpath>
         </field>
