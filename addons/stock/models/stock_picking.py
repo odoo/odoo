@@ -1093,7 +1093,7 @@ class Picking(models.Model):
             'view_id': view.id,
             'views': [(view.id, 'form')],
             'type': 'ir.actions.act_window',
-            'context': {'default_picking_id': self.id, 'product_ids': products.ids},
+            'context': {'default_picking_id': self.id, 'product_ids': products.ids, 'default_company_id': self.company_id.id},
             'target': 'new',
         }
 
