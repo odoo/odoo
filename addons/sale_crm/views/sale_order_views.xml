@@ -35,11 +35,11 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
-            <field name="user_id" position="after">
+            <field name="client_order_ref" position="after">
                 <field name="tag_ids" widget="many2many_tags"/>
             </field>
             <xpath expr="//group[@name='utm_link']" position="replace">
-                <group string="Marketing" name="utm_link" groups="base.group_no_one">
+                <group name="utm_link" colspan="2" class="mt-0">
                     <field name="campaign_id"/>
                     <field name="medium_id"/>
                     <field name="source_id"/>
