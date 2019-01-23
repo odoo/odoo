@@ -1,8 +1,6 @@
 odoo.define('portal.signature_form', function (require){
     "use strict";
 
-    require('web_editor.ready');
-
     var ajax = require('web.ajax');
     var base = require('web_editor.base');
     var core = require('web.core');
