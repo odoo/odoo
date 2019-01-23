@@ -342,11 +342,11 @@ var KanbanColumn = Widget.extend({
                 $content: $content,
             });
             dialog.opened().then(function () {
-                dialog.$('input[name="o_project_delete_column_option"]').click(function(ev) {
-                    if ($(ev.currentTarget).val() === "move_records" && dialog.$('.o_project_move_column_option').hasClass('d-none')) {
-                        dialog.$('.o_project_move_column_option').toggleClass('d-none');
-                    } else if($(ev.currentTarget).val() === "delete_column" && !dialog.$('.o_project_move_column_option').hasClass('d-none')) {
-                        dialog.$('.o_project_move_column_option').toggleClass('d-none');
+                dialog.$('input[name="o_kanban_delete_column_option"]').click(function(ev) {
+                    if ($(ev.currentTarget).val() === "move_records" && dialog.$('.o_kanban_move_column_option').hasClass('d-none')) {
+                        dialog.$('.o_kanban_move_column_option').toggleClass('d-none');
+                    } else if($(ev.currentTarget).val() === "delete_column" && !dialog.$('.o_kanban_move_column_option').hasClass('d-none')) {
+                        dialog.$('.o_kanban_move_column_option').toggleClass('d-none');
                     }
                 });
             });
