@@ -41,6 +41,7 @@
                             <field name="survey_id"/>
                             <field name="create_date"/>
                             <field name="input_type"/>
+                            <field name="last_displayed_page_id"/>
                             <field name="token" groups="base.group_no_one"/>
                         </group>
                         <group>
@@ -48,7 +49,7 @@
                             <field name="partner_id"/>
                             <field name="email" widget="email"/>
                             <field name="test_entry" groups="base.group_no_one"/>
-                            <field name="quizz_score" groups="base.group_no_one"/>
+                            <field name="quizz_score"/>
                         </group>
                     </group>
                     <field name="user_input_line_ids" mode="tree" attrs="{'readonly': False}">
@@ -58,7 +59,7 @@
                             <field name="answer_type"/>
                             <field name="skipped"/>
                             <field name="create_date"/>
-                            <field name="quizz_mark" groups="base.group_no_one"/>
+                            <field name="quizz_mark"/>
                         </tree>
                     </field>
                 </sheet>
