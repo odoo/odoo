@@ -100,7 +100,8 @@ class WebsiteForum(http.Controller):
 
     @http.route('/forum/notification_read', type='json', auth="user", methods=['POST'], website=True)
     def notification_read(self, **kwargs):
-        request.env['mail.message'].browse([int(kwargs.get('notification_id'))]).set_message_done()
+        if kwargs.get('notification_id'):
+            request.env['mail.message'].browse([int(kwargs.get('notification_id'))]).set_message_done()
         return True
 
     def sitemap_forum(env, rule, qs):
