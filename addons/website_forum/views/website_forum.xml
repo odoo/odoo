@@ -756,11 +756,14 @@
                                 <t t-set="icon" t-value="'fa-check'"/>
                                 <t t-set="karma" t-value="not question.can_moderate and question.forum_id.karma_moderate or 0"/>
                             </t>
-                            <a t-if="question.active" href="#" t-attf-style="#{not question.can_flag and 'display:none;' or ''}"
-                                t-attf-class="flag px-3 py-2 #{not question.can_flag and 'karma_required' or ''}"
-                                t-attf-data-karma="#{not question.can_flag and question.forum_id.karma_flag or 0}"
-                                t-attf-data-href="/forum/#{slug(forum)}/post/#{slug(question)}/flag" title="Flag"
-                                ><i t-attf-class="fa #{not question.can_flag and 'karma_required fa-flag-o' or 'fa-flag'}"/>
+                            <a t-if="question.active" href="#"  t-call="website_forum.link_button">
+                                <t t-set="url" t-value="'/forum/' + slug(forum) +'/post/' + slug(question) + '/flag'"/>
+                                <t t-set="title">Flag</t>
+                                <t t-set="inDropdown" t-value="False"/>
+                                <t t-set="icon" t-value="not question.can_flag and 'fa-flag-o' or 'fa-flag'"/>
+                                <t t-set="karma" t-value="not question.can_flag and question.forum_id.karma_flag or 0"/>
+                                <t t-set="classes" t-value="'flag'"/>
+
                             </a>
                         </div>
                     </div>
