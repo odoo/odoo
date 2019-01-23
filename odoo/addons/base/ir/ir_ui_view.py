@@ -379,7 +379,10 @@ actual arch.
 
     def _compute_defaults(self, values):
         if 'inherit_id' in values:
-            values.setdefault('mode', 'extension' if values['inherit_id'] else 'primary')
+            # Do not automatically change the mode if the view already has an inherit_id,
+            # and the user change it to another.
+            if not values['inherit_id'] or all(not view.inherit_id for view in self):
+                values.setdefault('mode', 'extension' if values['inherit_id'] else 'primary')
         return values
 
     @api.model
