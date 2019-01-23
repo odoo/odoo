@@ -610,6 +610,17 @@ var MockServer = Class.extend({
         return filterValues;
     },
     /**
+     * Simulate a 'get_record_count' operation
+     *
+     * @private
+     * @param {string} modelName
+     * @param {any} kqargs
+     */
+    _mockGetRecordCount: function(model, kwargs) {
+        var args = [kwargs.domain];
+        this._mockSearchCount(model, args);
+    },
+    /**
      * Simulate a call to the '/web/action/load' route
      *
      * @private
@@ -1258,14 +1269,21 @@ var MockServer = Class.extend({
      * @private
      * @param {string} model
      * @param {Array} args
+     * @param {Any} kwargs
      */
-    _mockWritebyDomain: function (model, args) {
+    _mockWritebyDomain: function (model, args, kwargs) {
         var self = this;
-        var field_changed = args[0][0][0];
         var records = this._getRecords(model, args[0]);
-        _.each(records, function(record) {
-            self._writeRecord(model, args[1], record.id);
-        });
+        if (!args[1]) {
+            args = [_.pluck(records, 'id')];
+            this._mockUnlink(model, args);
+            this._mockUnlink(kwargs.related_model, kwargs.record_ids);
+        } else {
+            _.each(records, function(record) {
+                self._writeRecord(model, args[1], record.id);
+            });
+            this._mockUnlink(kwargs.related_model, kwargs.record_ids);
+        }
     },
     /**
      * Dispatch a RPC call to the correct helper function
@@ -1353,7 +1371,10 @@ var MockServer = Class.extend({
                 return Promise.resolve(this._mockWrite(args.model, args.args));
 
             case 'write_by_domain':
-                return Promise.resolve(this._mockWritebyDomain(args.model, args.args));
+                return Promise.resolve(this._mockWritebyDomain(args.model, args.args, args.kwargs));
+
+            case 'get_record_count':
+                return Promise.resolve(this._mockGetRecordCount(args.model, args.kwargs));
         }
         var model = this.data[args.model];
         if (model && typeof model[args.method] === 'function') {
