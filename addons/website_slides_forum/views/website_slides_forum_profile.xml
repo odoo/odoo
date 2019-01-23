@@ -1,0 +1,84 @@
+<?xml version="1.0" ?>
+<odoo>
+    <data>
+        <template id="website_slide_forum_slides_channel_header" inherit_id="website_slides.slides_channel_header">
+            <xpath expr="//h3" position="inside">
+                <t t-if="channel.forum_id">
+                    <a role="button" class="btn btn-primary" title="Go to Forum" t-attf-channel_id="#{channel.id}" aria-label="Go to Forum" t-attf-href="/forum/#{slug(channel.forum_id)}">
+                        Forum
+                    </a>
+                </t>
+            </xpath>
+        </template>
+
+        <template id="user_detail_header_slide_forum" inherit_id="website_profile.user_detail_header" primary="True">
+            <xpath expr="//a[@id='edit_profile_button']" position="replace">
+                <t t-if="channel">
+                    <t t-if="isinstance(channel, bool)">
+                        <a id="edit_profile_button" class="btn btn-primary o_wprofile_edit"
+                            t-if="request.env.user == user"
+                            t-attf-href="/slides/user/edit"><b>EDIT PROFILE</b></a>
+                    </t>
+                    <t t-else="">
+                            <a id="edit_profile_button" class="btn btn-primary o_wprofile_edit"
+                                    t-if="request.env.user == user"
+                                    t-attf-href="/slides/user/edit?channel_id=#{channel.id}"><b>EDIT PROFILE</b></a>
+                    </t>
+                </t>
+                <t t-if="not channel">
+                    <t t-if="forum">
+                        <t t-if="isinstance(forum, bool)">
+                            <a id="edit_profile_button" class="o_profile_edit"
+                                        t-if="request.env.user == user"
+                                        t-attf-href="/forum/user/edit"><b>EDIT PROFILE</b></a>
+                        </t>
+                        <t t-else="">
+                            <a id="edit_profile_button" class="o_profile_edit"
+                                        t-if="request.env.user == user"
+                                        t-attf-href="/forum/user/edit?forum_id=#{forum.id}"><b>EDIT PROFILE</b></a>
+                        </t>
+                    </t>
+                </t>
+            </xpath>
+        </template>
+
+        <template id="user_detail_full">
+            <t t-call="website.layout">
+                <t t-call="website_slides.profile_header">
+                </t>
+                <t t-call="website_slides_forum.user_detail_header_slide_forum"></t>
+                <t t-call="website_slides.user_detail_content"></t>
+            </t>
+        </template>
+
+        <template id="user_detail_cross_full">
+            <t t-call="website.layout">
+                <t t-call="website_slides_forum.user_detail_header_slide_forum"></t>
+                <t t-call="website_slides.user_detail_content"></t>
+            </t>
+        </template>
+
+        <!--Private profile-->
+        <template id="private_profile_slide_forum">
+            <t t-call="website.layout">
+                <div class="container mb32 mt48">
+                    <h1 class="mt32">This profile is private!</h1>
+                    <p>
+                        <a t-attf-href="/slides">Return to the eLearning.</a>
+                    </p>
+                </div>
+            </t>
+        </template>
+
+        <template id="private_profile">
+            <t t-call="website.layout">
+                <div class="container mb32 mt48">
+                    <h1 class="mt32">This profile is private!</h1>
+                    <p>
+                        <a t-attf-href="/">Return to the website.</a>
+                    </p>
+                </div>
+            </t>
+        </template>
+    </data>
+</odoo>
