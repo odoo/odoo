@@ -3201,7 +3201,7 @@ QUnit.module('Views', {
 
         testUtils.kanban.toggleGroupSettings(kanban.$('.o_kanban_group:last'));
         await testUtils.dom.click(kanban.$('.o_kanban_group:last .o_column_delete'));
-        await testUtils.modal.clickButton('Ok');
+        await testUtils.modal.clickButton('Confirm');
 
         assert.containsN(kanban, '.o_kanban_group', 2, "should have twos columns");
 
