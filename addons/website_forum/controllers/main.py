@@ -564,11 +564,8 @@ class WebsiteForum(http.Controller):
         if searches.get('user'):
             dom += [('name', 'ilike', searches.get('user'))]
 
-        user_obj = User.sudo().search(dom, limit=step, offset=pager['offset'], order='karma DESC')
-        # put the users in block of 3 to display them as a table
-        users = [[] for i in range(len(user_obj) // 3 + 1)]
-        for index, user in enumerate(user_obj):
-            users[index // 3].append(user)
+        users = User.sudo().search(dom, limit=step, offset=pager['offset'], order='karma DESC')
+
         searches['users'] = 'True'
         values = self._prepare_forum_values(forum=forum, searches=searches)
         values .update({
